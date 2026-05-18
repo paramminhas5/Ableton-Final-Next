@@ -15,12 +15,12 @@ export async function POST(request: Request) {
     const stripe = await getStripeClient();
     const webhookSecret = await getStripeWebhookSecret();
 
-    let event;
-    if (webhookSecret) {
-      event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
-    } else {
-      event = JSON.parse(payload.toString());
+    if (!webhookSecret) {
+      console.error("STRIPE_WEBHOOK_SECRET is not configured");
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
+
+    const event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
 
     switch (event.type) {
       case "checkout.session.completed": {

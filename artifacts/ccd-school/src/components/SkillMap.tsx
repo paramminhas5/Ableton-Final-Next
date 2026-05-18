@@ -131,7 +131,7 @@ export function SkillMap() {
                   const score = completed[m.slug]?.score;
 
                   return (
-                    <Link key={m.slug} to="/mission/$slug" params={{ slug: m.slug }}>
+                    <Link key={m.slug} href={`/mission/${m.slug}`}>
                       <g className="cursor-pointer" style={{ transition: "opacity 0.15s" }}>
                         <HexPath cx={cx} cy={cy} size={size - 1.5} />
                         <polygon

@@ -10,7 +10,7 @@ export function DeviceLabBySlug({ slug }: { slug: string }) {
     <div className="space-y-3">
       <DeviceLab title={d.name} subtitle={d.tagline} deviceLabel={d.name.toUpperCase()}
         factory={d.factory} params={d.params} presets={d.presets} listenFor={d.listenFor} signalFlow={d.signalFlow} />
-      <Link to="/device/$slug" params={{ slug: d.slug }}
+      <Link href={`/device/${d.slug}`}
         className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-xs uppercase brutal-press inline-block">
         OPEN FULL {d.name.toUpperCase()} LAB →
       </Link>

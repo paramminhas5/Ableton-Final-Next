@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
   typedRoutes: false,
   allowedDevOrigins: ["*.replit.dev", "*.worf.replit.dev", "*.replit.app"],
   images: {

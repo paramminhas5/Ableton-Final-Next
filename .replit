@@ -1,4 +1,4 @@
-modules = ["nodejs-24", "postgresql-16"]
+modules = ["nodejs-24", "postgresql-16", "python-3.11"]
 
 [deployment]
 router = "application"
@@ -29,4 +29,3 @@ externalPort = 80
 [userenv]
 
 [userenv.shared]
-AUTH_SECRET = "GC7XtxfsYeb3KlwCb757YSy0pUoFmB2yrZe6m5ryjak="

@@ -1,0 +1,11 @@
+# Next.js build output — never commit
+.next/
+out/
+dist/
+
+# Dependencies
+node_modules/
+
+# Misc
+.env*.local
+*.log

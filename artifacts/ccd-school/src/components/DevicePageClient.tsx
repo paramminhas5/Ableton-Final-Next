@@ -35,15 +35,9 @@ export function DevicePageClient({ slug }: { slug: string }) {
         </div>
       </section>
       <ClientOnly fallback={<div className="brutal-border bg-bone p-6 font-mono text-xs uppercase">Loading audio engine…</div>}>
-        <DeviceLab key={d.slug} title={d.name} subtitle={d.tagline} deviceLabel={d.name.toUpperCase()} factory={d.factory} knobs={d.knobs} />
+        <DeviceLab key={d.slug} title={d.name} subtitle={d.tagline} deviceLabel={d.name.toUpperCase()} factory={d.factory} params={d.params} listenFor={d.listenFor} signalFlow={d.signalFlow} presets={d.presets} />
       </ClientOnly>
-      {explainer && <DeviceExplainers explainer={explainer} />}
-      {d.tips && (
-        <div className="brutal-border bg-sun p-4">
-          <div className="font-mono text-xs uppercase mb-2">★ TIPS</div>
-          <ul className="space-y-1 font-mono text-sm">{d.tips.map((t, i) => <li key={i}>• {t}</li>)}</ul>
-        </div>
-      )}
+      {explainer && <DeviceExplainers blocks={explainer} />}
       <nav className="flex gap-3 flex-wrap">
         {prev && <Link href={`/device/${prev.slug}`} className="brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun">← {prev.name}</Link>}
         {next && <Link href={`/device/${next.slug}`} className="brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun">{next.name} →</Link>}

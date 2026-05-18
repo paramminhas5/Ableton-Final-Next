@@ -4,7 +4,7 @@
 // and a one-tap share prompt. Duolingo-style dopamine hit.
 import { useEffect, useRef, useState } from "react";
 import { playFanfare } from "@/lib/audio";
-import { Link } from "next/link";
+import Link from "next/link";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
 import { MISSIONS } from "@/content/missions";
@@ -223,8 +223,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
           <div className="flex gap-2 flex-wrap">
             {nextSlug && (
               <Link
-                to="/mission/$slug"
-                params={{ slug: nextSlug }}
+                href={`/mission/${nextSlug}`}
                 onClick={onClose}
                 className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press flex-1 text-center"
               >

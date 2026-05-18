@@ -1,5 +1,5 @@
 "use client";
-import { V2_SignalFlowDiagram } from "@/components/V2_SignalFlowDiagram";
+import { SignalFlowDiagram, SIMPLE_DEVICE_FLOW } from "@/components/V2_SignalFlowDiagram";
 
 export function SignalFlowPageClient() {
   return (
@@ -12,7 +12,7 @@ export function SignalFlowPageClient() {
         </div>
       </header>
       <div className="max-w-5xl mx-auto px-4 py-6 pb-24">
-        <V2_SignalFlowDiagram />
+        <SignalFlowDiagram diagram={SIMPLE_DEVICE_FLOW} />
       </div>
     </main>
   );

@@ -1,5 +1,4 @@
 // Helpers for ear-training drills + score persistence.
-import { supabase } from "@/integrations/supabase/client";
 import { getCtx, getMaster, midiToFreq, playTone, startLoop, type LoopHandle } from "./audio";
 
 export type DrillKey =
@@ -365,12 +364,7 @@ export async function saveDrillScore(drill: DrillKey, score: number, total: numb
   const cur = s[drill] || { best: 0, played: 0 };
   s[drill] = { best: Math.max(cur.best, score), played: cur.played + 1 };
   writeLocal(s);
-  // cloud if signed in
-  try {
-    const { data } = await supabase.auth.getSession();
-    const uid = data.session?.user?.id;
-    if (uid) await supabase.from("drill_scores").insert({ user_id: uid, drill, score, total });
-  } catch {}
+  // cloud sync is handled via the progress sync endpoint on mission completion
 }
 
 export function getLocalDrillStats(): LocalScores {

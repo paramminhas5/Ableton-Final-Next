@@ -1,5 +1,5 @@
 "use client";
-import { Link } from "next/link";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { MISSIONS } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
@@ -35,8 +35,7 @@ export function DailyChallenge() {
       <div className="font-mono text-xs uppercase">// DAILY CHALLENGE</div>
       <div className="grid md:grid-cols-2 gap-3 mt-2">
         <Link
-          to="/mission/$slug"
-          params={{ slug: today.mission.slug }}
+          href={`/mission/${today.mission.slug}`}
           className="brutal-border bg-bone p-3 brutal-press block"
         >
           <div className="font-mono text-[10px] uppercase">
@@ -47,7 +46,7 @@ export function DailyChallenge() {
           </div>
           <div className="font-mono text-xs opacity-70 mt-1">{today.mission.tagline}</div>
         </Link>
-        <Link to="/train" className="brutal-border bg-bone p-3 brutal-press block">
+        <Link href="/train" className="brutal-border bg-bone p-3 brutal-press block">
           <div className="font-mono text-[10px] uppercase">Drill of the day</div>
           <div className="font-display text-2xl">{today.drill.label}</div>
           <div className="font-mono text-xs opacity-70 mt-1">
@@ -80,8 +79,7 @@ export function SpacedReview() {
         {candidates.map((c) => (
           <Link
             key={c.slug}
-            to="/mission/$slug"
-            params={{ slug: c.slug }}
+            href={`/mission/${c.slug}`}
             className="brutal-border bg-card p-3 brutal-press block"
           >
             <div className="font-mono text-[10px] uppercase">

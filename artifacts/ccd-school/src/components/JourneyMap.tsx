@@ -57,8 +57,7 @@ export function JourneyMap({ currentSlug }: { currentSlug?: string }) {
                   return (
                     <Link
                       key={m.slug}
-                      to="/mission/$slug"
-                      params={{ slug: m.slug }}
+                      href={`/mission/${m.slug}`}
                       title={`#${m.number} ${m.title}`}
                       className={`${tone} brutal-border aspect-square md:w-8 md:h-8 flex items-center justify-center font-mono text-[10px] brutal-press`}
                     >
