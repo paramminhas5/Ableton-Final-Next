@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { HomeClient } from "@/components/HomeClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "CCD.SCHOOL — Learn Music Production & DJing",
   description:

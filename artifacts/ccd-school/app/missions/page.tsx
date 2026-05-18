@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { MissionsPageClient } from "@/components/MissionsPageClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Missions — CCD.SCHOOL",
   description:

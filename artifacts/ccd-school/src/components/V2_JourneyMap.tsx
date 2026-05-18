@@ -2,7 +2,7 @@
 // V2: Journey Map - Brutalist subway-style mission navigator with progress tracking
 // Place in: src/components/JourneyMap.tsx
 
-import { Link } from '@tanstack/react-router';
+import Link from 'next/link';
 
 export type Mission = {
   id: string;
@@ -120,7 +120,7 @@ export function JourneyMap({
                   return (
                     <Link
                       key={mission.id}
-                      to={canAccess ? `/mission/${mission.id}` : '#'}
+                      href={canAccess ? `/mission/${mission.id}` : '#'}
                       className={`brutal-border p-4 transition-all ${
                         isCurrentMission
                           ? 'bg-acid text-ink brutal-shadow scale-105'
@@ -130,7 +130,6 @@ export function JourneyMap({
                               ? 'bg-ink opacity-40 cursor-not-allowed'
                               : 'bg-bone text-ink hover:brutal-shadow brutal-press'
                       }`}
-                      disabled={!canAccess}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">

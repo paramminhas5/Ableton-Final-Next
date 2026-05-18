@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { UpgradePageClient } from "@/components/UpgradePageClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Upgrade to PRO",
   description:

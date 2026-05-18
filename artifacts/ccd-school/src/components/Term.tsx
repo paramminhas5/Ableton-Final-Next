@@ -51,8 +51,7 @@ export function Term({
         </div>
         <div className="leading-relaxed">{found.def}</div>
         <Link
-          to="/glossary"
-          hash={slugTerm(found.term)}
+          href={`/glossary#${slugTerm(found.term)}`}
           className="brutal-border bg-acid text-ink px-2 py-1 text-[10px] uppercase brutal-press inline-block"
         >
           → Open in glossary

@@ -3,7 +3,7 @@
 
 type AppRoutes = "/" | "/admin" | "/device/[slug]" | "/devices" | "/glossary" | "/leaderboard" | "/learn" | "/login" | "/match" | "/mission/[slug]" | "/missions" | "/path/[slug]" | "/playground" | "/profile" | "/shortcuts" | "/signal-flow" | "/train" | "/upgrade" | "/world/[slug]" | "/worlds"
 type AppRouteHandlerRoutes = "/api/admin/gating-mode" | "/api/auth/[...nextauth]" | "/api/gating" | "/api/leaderboard" | "/api/progress/sync" | "/api/stripe/checkout" | "/api/stripe/portal" | "/api/stripe/webhook"
-type PageRoutes = "/not-found"
+type PageRoutes = never
 type LayoutRoutes = "/"
 type RedirectRoutes = never
 type RewriteRoutes = never
@@ -30,7 +30,6 @@ interface ParamMap {
   "/match": {}
   "/mission/[slug]": { "slug": string; }
   "/missions": {}
-  "/not-found": {}
   "/path/[slug]": { "slug": string; }
   "/playground": {}
   "/profile": {}

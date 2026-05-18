@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { missionBySlug } from "@/content/missions";
+
+export const dynamic = 'force-dynamic';
 import { MissionPageClient } from "@/components/MissionPageClient";
 
 type Props = { params: Promise<{ slug: string }> };
