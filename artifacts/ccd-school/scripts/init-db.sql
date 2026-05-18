@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS oauth_accounts (
-  id                TEXT PRIMARY KEY,
+  id                TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   user_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   provider          TEXT NOT NULL,
   provider_account_id TEXT NOT NULL,
