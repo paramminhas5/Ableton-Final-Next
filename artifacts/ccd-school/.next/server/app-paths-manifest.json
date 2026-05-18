@@ -1,0 +1,9 @@
+{
+  "/page": "app/page.js",
+  "/worlds/page": "app/worlds/page.js",
+  "/missions/page": "app/missions/page.js",
+  "/mission/[slug]/page": "app/mission/[slug]/page.js",
+  "/devices/page": "app/devices/page.js",
+  "/world/[slug]/page": "app/world/[slug]/page.js",
+  "/path/[slug]/page": "app/path/[slug]/page.js"
+}

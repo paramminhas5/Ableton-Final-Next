@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "CCD School - Music Learning Platform"
+version = "1.0.0"
+id = "artifacts/ccd-school"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24094
+
+[services.development]
+run = "pnpm --filter @workspace/ccd-school run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ccd-school", "run", "build" ]
+publicDir = "artifacts/ccd-school/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24094"
+BASE_PATH = "/"

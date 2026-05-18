@@ -1,22 +1,32 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CCD School Music Learning Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: courses
+    description: Course management
+  - name: lessons
+    description: Lesson management
+  - name: modules
+    description: Learning modules
+  - name: progress
+    description: User progress tracking
+  - name: quizzes
+    description: Quiz operations
+  - name: dashboard
+    description: Dashboard summary data
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +34,354 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List all courses
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: level
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+    post:
+      operationId: createCourse
+      tags: [courses]
+      summary: Create a new course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /courses/{id}:
+    get:
+      operationId: getCourse
+      tags: [courses]
+      summary: Get a course by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+        "404":
+          description: Not found
+
+  /courses/{id}/lessons:
+    get:
+      operationId: listCourseLessons
+      tags: [lessons]
+      summary: List lessons in a course
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of lessons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lesson"
+
+  /lessons:
+    post:
+      operationId: createLesson
+      tags: [lessons]
+      summary: Create a lesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+
+  /lessons/{id}:
+    get:
+      operationId: getLesson
+      tags: [lessons]
+      summary: Get a lesson by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lesson details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+        "404":
+          description: Not found
+
+  /modules:
+    get:
+      operationId: listModules
+      tags: [modules]
+      summary: List all learning modules
+      responses:
+        "200":
+          description: List of modules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Module"
+    post:
+      operationId: createModule
+      tags: [modules]
+      summary: Create a learning module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ModuleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Module"
+
+  /modules/{id}:
+    get:
+      operationId: getModule
+      tags: [modules]
+      summary: Get a module by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Module details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Module"
+        "404":
+          description: Not found
+
+  /quizzes:
+    get:
+      operationId: listQuizzes
+      tags: [quizzes]
+      summary: List quizzes
+      parameters:
+        - name: lessonId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of quizzes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Quiz"
+    post:
+      operationId: createQuiz
+      tags: [quizzes]
+      summary: Create a quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuizInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quiz"
+
+  /quizzes/{id}/submit:
+    post:
+      operationId: submitQuiz
+      tags: [quizzes]
+      summary: Submit quiz answers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuizSubmission"
+      responses:
+        "200":
+          description: Quiz result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizResult"
+
+  /progress:
+    get:
+      operationId: listProgress
+      tags: [progress]
+      summary: Get all user progress records
+      responses:
+        "200":
+          description: Progress records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Progress"
+    post:
+      operationId: upsertProgress
+      tags: [progress]
+      summary: Create or update progress for a lesson
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProgressInput"
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+
+  /progress/{lessonId}/complete:
+    post:
+      operationId: completeLesson
+      tags: [progress]
+      summary: Mark a lesson as complete
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Progress"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get overall platform summary stats
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/featured-courses:
+    get:
+      operationId: getFeaturedCourses
+      tags: [dashboard]
+      summary: Get featured/popular courses
+      responses:
+        "200":
+          description: Featured courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent learning activity
+      responses:
+        "200":
+          description: Recent activity items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/user-progress:
+    get:
+      operationId: getUserProgressSummary
+      tags: [dashboard]
+      summary: Get aggregated user progress across all courses
+      responses:
+        "200":
+          description: User progress summary
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourseProgressSummary"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +392,267 @@ components:
       required:
         - status
 
+    Course:
+      type: object
+      required: [id, title, description, level, category, imageUrl, totalLessons, durationMinutes, createdAt]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        level:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        category:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        totalLessons:
+          type: integer
+        durationMinutes:
+          type: integer
+        instructor:
+          type: ["string", "null"]
+        isFeatured:
+          type: boolean
+        createdAt:
+          type: string
+
+    CourseInput:
+      type: object
+      required: [title, description, level, category]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        level:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        category:
+          type: string
+        imageUrl:
+          type: string
+        instructor:
+          type: string
+        isFeatured:
+          type: boolean
+
+    Lesson:
+      type: object
+      required: [id, courseId, title, type, orderIndex, durationMinutes, createdAt]
+      properties:
+        id:
+          type: integer
+        courseId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [video, text, interactive, quiz]
+        orderIndex:
+          type: integer
+        durationMinutes:
+          type: integer
+        videoUrl:
+          type: ["string", "null"]
+        content:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    LessonInput:
+      type: object
+      required: [courseId, title, type, orderIndex, durationMinutes]
+      properties:
+        courseId:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        type:
+          type: string
+          enum: [video, text, interactive, quiz]
+        orderIndex:
+          type: integer
+        durationMinutes:
+          type: integer
+        videoUrl:
+          type: string
+        content:
+          type: string
+
+    Module:
+      type: object
+      required: [id, courseId, title, orderIndex, createdAt]
+      properties:
+        id:
+          type: integer
+        courseId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+        createdAt:
+          type: string
+
+    ModuleInput:
+      type: object
+      required: [courseId, title, orderIndex]
+      properties:
+        courseId:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        orderIndex:
+          type: integer
+
+    Quiz:
+      type: object
+      required: [id, lessonId, question, options, correctAnswerIndex, createdAt]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctAnswerIndex:
+          type: integer
+        explanation:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    QuizInput:
+      type: object
+      required: [lessonId, question, options, correctAnswerIndex]
+      properties:
+        lessonId:
+          type: integer
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctAnswerIndex:
+          type: integer
+        explanation:
+          type: string
+
+    QuizSubmission:
+      type: object
+      required: [selectedAnswerIndex]
+      properties:
+        selectedAnswerIndex:
+          type: integer
+
+    QuizResult:
+      type: object
+      required: [correct, explanation, correctAnswerIndex]
+      properties:
+        correct:
+          type: boolean
+        explanation:
+          type: ["string", "null"]
+        correctAnswerIndex:
+          type: integer
+
+    Progress:
+      type: object
+      required: [id, lessonId, completed, updatedAt]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        completed:
+          type: boolean
+        watchedSeconds:
+          type: ["integer", "null"]
+        quizScore:
+          type: ["integer", "null"]
+        updatedAt:
+          type: string
+
+    ProgressInput:
+      type: object
+      required: [lessonId]
+      properties:
+        lessonId:
+          type: integer
+        completed:
+          type: boolean
+        watchedSeconds:
+          type: integer
+        quizScore:
+          type: integer
+
+    DashboardSummary:
+      type: object
+      required: [totalCourses, totalLessons, completedLessons, totalMinutesLearned, streakDays]
+      properties:
+        totalCourses:
+          type: integer
+        totalLessons:
+          type: integer
+        completedLessons:
+          type: integer
+        totalMinutesLearned:
+          type: integer
+        streakDays:
+          type: integer
+        coursesInProgress:
+          type: integer
+
+    ActivityItem:
+      type: object
+      required: [id, type, title, timestamp]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [lesson_complete, quiz_passed, course_started, achievement]
+        title:
+          type: string
+        subtitle:
+          type: ["string", "null"]
+        timestamp:
+          type: string
+
+    CourseProgressSummary:
+      type: object
+      required: [courseId, courseTitle, totalLessons, completedLessons, progressPercent]
+      properties:
+        courseId:
+          type: integer
+        courseTitle:
+          type: string
+        totalLessons:
+          type: integer
+        completedLessons:
+          type: integer
+        progressPercent:
+          type: integer
+        lastAccessedAt:
+          type: ["string", "null"]

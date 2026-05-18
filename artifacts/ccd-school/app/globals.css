@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap");
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Archivo Black", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+
+  --color-bone: var(--bone);
+  --color-ink: var(--ink);
+  --color-acid: var(--acid);
+  --color-hot: var(--hot);
+  --color-volt: var(--volt);
+  --color-sun: var(--sun);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+}
+
+:root,
+[data-theme="ccd-classic"] {
+  --bone: oklch(0.96 0.012 90);
+  --ink: oklch(0.12 0 0);
+  --acid: oklch(0.92 0.24 125);
+  --hot: oklch(0.66 0.27 0);
+  --volt: oklch(0.55 0.27 265);
+  --sun: oklch(0.88 0.18 90);
+
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--bone);
+  --secondary: var(--acid);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.92 0.01 90);
+  --muted-foreground: oklch(0.4 0 0);
+  --accent: var(--hot);
+  --accent-foreground: var(--bone);
+  --destructive: oklch(0.55 0.25 27);
+  --destructive-foreground: var(--bone);
+  --border: var(--ink);
+  --input: var(--ink);
+  --ring: var(--volt);
+  --radius: 0;
+}
+
+[data-theme="midnight"] {
+  --bone: oklch(0.16 0.04 280);
+  --ink: oklch(0.96 0.012 90);
+  --acid: oklch(0.78 0.2 295);
+  --hot: oklch(0.7 0.25 30);
+  --volt: oklch(0.72 0.22 265);
+  --sun: oklch(0.82 0.15 80);
+
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.2 0.04 280);
+  --card-foreground: var(--ink);
+  --popover: oklch(0.2 0.04 280);
+  --popover-foreground: var(--ink);
+  --primary: var(--acid);
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.25 0.04 280);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.22 0.04 280);
+  --muted-foreground: oklch(0.65 0.01 280);
+  --accent: var(--volt);
+  --accent-foreground: var(--bone);
+  --destructive: var(--hot);
+  --destructive-foreground: var(--bone);
+  --border: oklch(0.35 0.06 280);
+  --input: oklch(0.35 0.06 280);
+  --ring: var(--acid);
+  --radius: 0;
+}
+
+[data-theme="acid-rain"] {
+  --bone: oklch(0.1 0.02 130);
+  --ink: oklch(0.92 0.24 125);
+  --acid: oklch(0.92 0.24 125);
+  --hot: oklch(0.66 0.27 0);
+  --volt: oklch(0.55 0.27 265);
+  --sun: oklch(0.88 0.18 90);
+
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.15 0.03 130);
+  --card-foreground: var(--ink);
+  --primary: var(--acid);
+  --primary-foreground: oklch(0.1 0 0);
+  --border: var(--acid);
+  --input: var(--acid);
+  --ring: var(--acid);
+  --muted: oklch(0.18 0.03 130);
+  --muted-foreground: oklch(0.6 0.1 125);
+  --radius: 0;
+}
+
+/* ── Brutalist utilities ─────────────────────────────────────────────── */
+.brutal-border {
+  border: 2px solid var(--border);
+}
+
+.brutal-shadow {
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.brutal-press {
+  transition: transform 60ms, box-shadow 60ms;
+}
+.brutal-press:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* ── Animations ──────────────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes slide-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+.animate-slide-right {
+  animation: slide-right 0.2s ease-out;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.3s ease-out both;
+}
+
+/* ── Hover glitch ────────────────────────────────────────────────────── */
+.hover-glitch:hover {
+  letter-spacing: 0.02em;
+  transition: letter-spacing 0.1s;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bone); }
+::-webkit-scrollbar-thumb { background: var(--ink); }
+
+/* ── Focus ring ─────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+* { box-sizing: border-box; }
