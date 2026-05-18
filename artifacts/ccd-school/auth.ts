@@ -37,30 +37,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
         if (!email || !password) return null;
 
-        if (action === "signup") {
-          const existing = await db.query(
-            "SELECT id FROM users WHERE email = $1",
-            [email],
-          );
-          if (existing.rows.length > 0) throw new Error("Email already in use");
-          const hash = await bcrypt.hash(password, 10);
-          const result = await db.query(
-            "INSERT INTO users (email, name, password_hash) VALUES ($1, $2, $3) RETURNING id, email, name, plan",
-            [email, name || email.split("@")[0], hash],
-          );
-          const u = result.rows[0];
-          return { id: u.id, email: u.email, name: u.name, plan: u.plan };
-        } else {
-          const result = await db.query(
-            "SELECT id, email, name, password_hash, plan FROM users WHERE email = $1",
-            [email],
-          );
-          if (!result.rows.length) return null;
-          const u = result.rows[0];
-          if (!u.password_hash) return null;
-          const valid = await bcrypt.compare(password, u.password_hash);
-          if (!valid) return null;
-          return { id: u.id, email: u.email, name: u.name, plan: u.plan };
+        try {
+          if (action === "signup") {
+            const existing = await db.query(
+              "SELECT id FROM users WHERE email = $1",
+              [email],
+            );
+            if (existing.rows.length > 0)
+              throw new Error("Email already in use");
+            const hash = await bcrypt.hash(password, 10);
+            const result = await db.query(
+              "INSERT INTO users (email, name, password_hash) VALUES ($1, $2, $3) RETURNING id, email, name, plan",
+              [email, name || email.split("@")[0], hash],
+            );
+            const u = result.rows[0];
+            return { id: u.id, email: u.email, name: u.name, plan: u.plan };
+          } else {
+            const result = await db.query(
+              "SELECT id, email, name, password_hash, plan FROM users WHERE email = $1",
+              [email],
+            );
+            if (!result.rows.length) return null;
+            const u = result.rows[0];
+            if (!u.password_hash) return null;
+            const valid = await bcrypt.compare(password, u.password_hash);
+            if (!valid) return null;
+            return { id: u.id, email: u.email, name: u.name, plan: u.plan };
+          }
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "Sign-in failed";
+          throw new Error(msg);
         }
       },
     }),

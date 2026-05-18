@@ -39,7 +39,9 @@ export function LoginPageClient() {
         setError(
           result.error === "CredentialsSignin"
             ? "Invalid email or password"
-            : result.error,
+            : result.error === "Configuration"
+              ? "Server error — check Vercel logs"
+              : result.error,
         );
         setLoading(false);
         return;
