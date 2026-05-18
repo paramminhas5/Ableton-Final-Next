@@ -74,21 +74,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google" && user.email) {
-        await db.query(
-          `INSERT INTO users (email, name, image)
-           VALUES ($1, $2, $3)
-           ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, image = EXCLUDED.image`,
-          [user.email, user.name ?? "", user.image ?? ""],
-        );
-        const r = await db.query("SELECT id FROM users WHERE email = $1", [
-          user.email,
-        ]);
-        if (r.rows[0]) {
+        try {
           await db.query(
-            `INSERT INTO oauth_accounts (provider, provider_account_id, user_id)
-             VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`,
-            ["google", account.providerAccountId, r.rows[0].id],
+            `INSERT INTO users (email, name, image)
+             VALUES ($1, $2, $3)
+             ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, image = EXCLUDED.image`,
+            [user.email, user.name ?? "", user.image ?? ""],
           );
+          const r = await db.query("SELECT id FROM users WHERE email = $1", [
+            user.email,
+          ]);
+          if (r.rows[0]) {
+            await db.query(
+              `INSERT INTO oauth_accounts (provider, provider_account_id, user_id)
+               VALUES ($1, $2, $3) ON CONFLICT DO NOTHING`,
+              ["google", account.providerAccountId, r.rows[0].id],
+            );
+          }
+        } catch (err) {
+          // Log but don't block sign-in — user can still auth even if DB write fails
+          console.error("[auth] Google signIn DB error:", err);
         }
       }
       return true;
@@ -96,14 +101,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         if (account?.provider === "google" && user.email) {
-          const r = await db.query(
-            "SELECT id, plan FROM users WHERE email = $1",
-            [user.email],
-          );
-          if (r.rows[0]) {
-            token.userId = r.rows[0].id;
-            token.plan = r.rows[0].plan;
-            token.planCheckedAt = Date.now();
+          try {
+            const r = await db.query(
+              "SELECT id, plan FROM users WHERE email = $1",
+              [user.email],
+            );
+            if (r.rows[0]) {
+              token.userId = r.rows[0].id;
+              token.plan = r.rows[0].plan;
+              token.planCheckedAt = Date.now();
+            }
+          } catch (err) {
+            console.error("[auth] Google jwt DB error:", err);
           }
         } else {
           token.userId = user.id;
@@ -114,12 +123,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const now = Date.now();
         const last = (token.planCheckedAt as number) ?? 0;
         if (now - last > 5 * 60 * 1000) {
-          const r = await db.query("SELECT plan FROM users WHERE id = $1", [
-            token.userId,
-          ]);
-          if (r.rows[0]) {
-            token.plan = r.rows[0].plan;
-            token.planCheckedAt = now;
+          try {
+            const r = await db.query("SELECT plan FROM users WHERE id = $1", [
+              token.userId,
+            ]);
+            if (r.rows[0]) {
+              token.plan = r.rows[0].plan;
+              token.planCheckedAt = now;
+            }
+          } catch (err) {
+            console.error("[auth] jwt plan refresh DB error:", err);
           }
         }
       }
