@@ -1,12 +1,17 @@
 "use client";
-// Auth stub — localStorage-only in this build (Supabase removed)
-// Sign-in with Supabase can be wired back in when SUPABASE_URL env is present
-export const useAuth = () => ({
-  session: null,
-  user: null,
-  loading: false,
-});
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
 
-export const signOut = () => {
-  // no-op in localStorage-only mode
+export type UserPlan = "free" | "pro";
+
+export const useAuth = () => {
+  const { data: session, status } = useSession();
+  return {
+    session,
+    user: session?.user ?? null,
+    loading: status === "loading",
+    isPro: (session?.user as { plan?: string } | null)?.plan === "pro",
+    plan: ((session?.user as { plan?: string } | null)?.plan ?? "free") as UserPlan,
+  };
 };
+
+export const signOut = () => nextAuthSignOut({ callbackUrl: "/" });

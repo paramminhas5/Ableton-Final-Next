@@ -1,5 +1,4 @@
 "use client";
-// Progress store: localStorage only (cloud sync via Supabase removed for Next.js migration)
 import { useEffect, useState, useCallback } from "react";
 
 const KEY = "ccd.progress.v1";
@@ -42,14 +41,19 @@ const empty = (): Progress => ({
 const applyHeartRefill = (p: Progress): Progress => {
   if (p.hearts >= MAX_HEARTS || p.heartRefillAt === 0) return p;
   const elapsed = (Date.now() - p.heartRefillAt) / 1000;
-  const refilled = Math.min(Math.floor(elapsed / HEART_REFILL_SECS), MAX_HEARTS - p.hearts);
+  const refilled = Math.min(
+    Math.floor(elapsed / HEART_REFILL_SECS),
+    MAX_HEARTS - p.hearts,
+  );
   if (refilled <= 0) return p;
   const newHearts = p.hearts + refilled;
   return {
     ...p,
     hearts: newHearts,
     heartRefillAt:
-      newHearts >= MAX_HEARTS ? 0 : p.heartRefillAt + refilled * HEART_REFILL_SECS * 1000,
+      newHearts >= MAX_HEARTS
+        ? 0
+        : p.heartRefillAt + refilled * HEART_REFILL_SECS * 1000,
   };
 };
 
@@ -78,17 +82,53 @@ const writeLocal = (p: Progress) => {
   window.dispatchEvent(new Event("progress:update"));
 };
 
+function mergeProgress(local: Progress, cloud: Partial<Progress>): Progress {
+  const localMissions = local.completedMissions ?? {};
+  const cloudMissions = (cloud.completedMissions as Record<string, { score: number; at: number }>) ?? {};
+  const merged = { ...cloudMissions, ...localMissions };
+  for (const [slug, cm] of Object.entries(cloudMissions)) {
+    if (!localMissions[slug] || cm.at > localMissions[slug].at) {
+      merged[slug] = cm;
+    }
+  }
+  const localBadges = new Set(local.badges ?? []);
+  const cloudBadges = cloud.badges ?? [];
+  for (const b of cloudBadges) localBadges.add(b);
+
+  return {
+    xp: Math.max(local.xp, cloud.xp ?? 0),
+    streakDays: Math.max(local.streakDays, cloud.streakDays ?? 0),
+    lastDay: local.lastDay ?? cloud.lastDay ?? null,
+    completedMissions: merged,
+    badges: Array.from(localBadges),
+    hearts: Math.max(local.hearts, cloud.hearts ?? 0),
+    heartRefillAt: local.heartRefillAt || (cloud.heartRefillAt ?? 0),
+    dailyXp: local.dailyXp,
+    dailyXpDate: local.dailyXpDate,
+    streakShield: local.streakShield || (cloud.streakShield ?? false),
+  };
+}
+
 export const useProgress = () => {
   const [p, setP] = useState<Progress>(empty());
 
   useEffect(() => {
     setP(readLocal());
-    const h = () => setP(readLocal());
-    window.addEventListener("progress:update", h);
-    window.addEventListener("storage", h);
+    const onUpdate = () => setP(readLocal());
+    const onCloud = (e: Event) => {
+      const cloud = (e as CustomEvent<Partial<Progress>>).detail;
+      const local = readLocal();
+      const merged = mergeProgress(local, cloud);
+      writeLocal(merged);
+      setP(merged);
+    };
+    window.addEventListener("progress:update", onUpdate);
+    window.addEventListener("storage", onUpdate);
+    window.addEventListener("progress:cloud", onCloud);
     return () => {
-      window.removeEventListener("progress:update", h);
-      window.removeEventListener("storage", h);
+      window.removeEventListener("progress:update", onUpdate);
+      window.removeEventListener("storage", onUpdate);
+      window.removeEventListener("progress:cloud", onCloud);
     };
   }, []);
 
@@ -113,8 +153,10 @@ export const useProgress = () => {
 
       const already = cur.completedMissions[slug];
       const earnedXp = already ? 0 : xp;
-      const newDailyXp = cur.dailyXpDate === today ? cur.dailyXp + earnedXp : earnedXp;
-      const earnShield = streak > 0 && streak % 7 === 0 && !cur.streakShield;
+      const newDailyXp =
+        cur.dailyXpDate === today ? cur.dailyXp + earnedXp : earnedXp;
+      const earnShield =
+        streak > 0 && streak % 7 === 0 && !cur.streakShield;
 
       const next: Progress = {
         ...cur,
@@ -123,8 +165,14 @@ export const useProgress = () => {
         streakDays: streak,
         dailyXp: newDailyXp,
         dailyXpDate: today,
-        completedMissions: { ...cur.completedMissions, [slug]: { score, at: Date.now() } },
-        badges: badge && !cur.badges.includes(badge) ? [...cur.badges, badge] : cur.badges,
+        completedMissions: {
+          ...cur.completedMissions,
+          [slug]: { score, at: Date.now() },
+        },
+        badges:
+          badge && !cur.badges.includes(badge)
+            ? [...cur.badges, badge]
+            : cur.badges,
         streakShield: earnShield ? true : cur.streakShield,
       };
       setP(next);
@@ -139,7 +187,8 @@ export const useProgress = () => {
     const next: Progress = {
       ...cur,
       hearts: cur.hearts - 1,
-      heartRefillAt: cur.heartRefillAt === 0 ? Date.now() : cur.heartRefillAt,
+      heartRefillAt:
+        cur.heartRefillAt === 0 ? Date.now() : cur.heartRefillAt,
     };
     setP(next);
     writeLocal(next);
@@ -153,8 +202,14 @@ export const useProgress = () => {
   const addXp = useCallback((amount: number) => {
     const cur = readLocal();
     const today = todayKey();
-    const newDailyXp = cur.dailyXpDate === today ? cur.dailyXp + amount : amount;
-    const next: Progress = { ...cur, xp: cur.xp + amount, dailyXp: newDailyXp, dailyXpDate: today };
+    const newDailyXp =
+      cur.dailyXpDate === today ? cur.dailyXp + amount : amount;
+    const next: Progress = {
+      ...cur,
+      xp: cur.xp + amount,
+      dailyXp: newDailyXp,
+      dailyXpDate: today,
+    };
     setP(next);
     writeLocal(next);
   }, []);
@@ -162,7 +217,11 @@ export const useProgress = () => {
   const heartRefillSeconds =
     p.hearts >= MAX_HEARTS || p.heartRefillAt === 0
       ? 0
-      : Math.max(0, HEART_REFILL_SECS - Math.floor((Date.now() - p.heartRefillAt) / 1000));
+      : Math.max(
+          0,
+          HEART_REFILL_SECS -
+            Math.floor((Date.now() - p.heartRefillAt) / 1000),
+        );
 
   const dailyGoalPct = Math.min(1, p.dailyXp / DAILY_GOAL_XP);
   const dailyGoalDone = p.dailyXp >= DAILY_GOAL_XP;

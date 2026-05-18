@@ -6,6 +6,9 @@ import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { useProgress } from "@/lib/progress";
+import { useAuth } from "@/lib/auth";
+import { useGatingMode } from "@/components/ClientProviders";
+import { isPaidMission, isLocked } from "@/lib/gating";
 import { useState, useMemo } from "react";
 
 type WorldTab = "fundamentals" | "dj" | "producer";
@@ -25,6 +28,8 @@ const SIM_ICONS: Record<string, string> = {
 
 export function MissionsPageClient() {
   const { progress } = useProgress();
+  const { plan } = useAuth();
+  const gatingMode = useGatingMode();
   const completed = progress.completedMissions;
   const [activeWorld, setActiveWorld] = useState<WorldTab>("fundamentals");
   const [search, setSearch] = useState("");
@@ -32,15 +37,6 @@ export function MissionsPageClient() {
   const chapters = chaptersByWorld(activeWorld);
   const allPaths = pathsByWorld(activeWorld);
   const worldMissions = WORLD_MISSIONS[activeWorld];
-
-  const missionMap = useMemo(() => {
-    const map: Record<string, { chapterTitle: string; pathTitle: string; pathSlug: string }> = {};
-    allPaths.forEach((path) => {
-      const chapter = chapters.find((c) => c.slug === path.chapter);
-      path.missionSlugs.forEach((s) => { map[s] = { chapterTitle: chapter?.title ?? "", pathTitle: path.title, pathSlug: path.slug }; });
-    });
-    return map;
-  }, [allPaths, chapters]);
 
   const ws = useMemo(() => {
     const done = worldMissions.filter((m) => !!completed[m.slug]).length;
@@ -129,15 +125,24 @@ export function MissionsPageClient() {
                       <div className="brutal-border divide-y divide-ink/5">
                         {missions.filter((m) => !search || filteredMissions.includes(m)).map((mission, idx) => {
                           const isDone = !!completed[mission.slug];
-                          const simIcon = SIM_ICONS[(mission as any).sim?.type ?? "none"] ?? "—";
+                          const locked = isLocked(mission, plan, gatingMode);
+                          const isPaid = isPaidMission(mission);
+                          const simIcon = SIM_ICONS[(mission as { sim?: { type?: string } }).sim?.type ?? "none"] ?? "—";
                           return (
                             <Link key={mission.slug} href={`/mission/${mission.slug}`}
-                              className={`flex items-center gap-3 px-3 py-2.5 brutal-press transition-colors ${isDone ? "bg-ink/5 hover:bg-acid/20" : "hover:bg-sun/40"}`}>
-                              <span className={`w-5 h-5 brutal-border flex items-center justify-center font-mono text-[9px] shrink-0 ${isDone ? "bg-ink text-bone" : "bg-bone"}`}>{isDone ? "✓" : idx + 1}</span>
-                              <span className="font-mono text-[9px] opacity-30 w-6 shrink-0 text-right">{(mission as any).number}</span>
+                              className={`flex items-center gap-3 px-3 py-2.5 brutal-press transition-colors ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked ? "opacity-60 hover:bg-ink/5" : "hover:bg-sun/40"}`}>
+                              <span className={`w-5 h-5 brutal-border flex items-center justify-center font-mono text-[9px] shrink-0 ${isDone ? "bg-ink text-bone" : locked ? "bg-bone" : "bg-bone"}`}>
+                                {isDone ? "✓" : locked ? "🔒" : idx + 1}
+                              </span>
+                              <span className="font-mono text-[9px] opacity-30 w-6 shrink-0 text-right">{(mission as { number?: number }).number}</span>
                               <span className={`font-display text-sm flex-1 min-w-0 truncate ${isDone ? "opacity-60" : ""}`}>{mission.title}</span>
+                              {isPaid && gatingMode === "paid" && (
+                                <span className={`font-mono text-[8px] px-1 py-0.5 brutal-border shrink-0 ${locked ? "bg-ink text-bone" : "bg-volt text-ink"}`}>
+                                  {locked ? "PRO" : "PRO ✓"}
+                                </span>
+                              )}
                               <span className="font-mono text-[9px] opacity-30 shrink-0 hidden sm:block w-4 text-center">{simIcon}</span>
-                              <span className="font-mono text-[9px] opacity-50 shrink-0">{(mission as any).xp ?? 40} XP</span>
+                              <span className="font-mono text-[9px] opacity-50 shrink-0">{(mission as { xp?: number }).xp ?? 40} XP</span>
                             </Link>
                           );
                         })}
