@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://ccd.school";
 const OG_IMAGE =
@@ -117,6 +118,7 @@ export default function RootLayout({
             </footer>
           </div>
         </ClientProviders>
+        <Analytics />
       </body>
     </html>
   );
