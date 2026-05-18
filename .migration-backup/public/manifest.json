@@ -1,0 +1,19 @@
+{
+  "name": "ABLETON.SCHOOL",
+  "short_name": "A.SCHOOL",
+  "description": "Learn Ableton Live 12 through gamified missions, interactive simulators, and ear training drills.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F0E8",
+  "theme_color": "#CDFF00",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "categories": ["education", "music"],
+  "shortcuts": [
+    { "name": "Daily Challenge", "url": "/learn", "description": "Jump to today's challenge" },
+    { "name": "Ear Training",    "url": "/train", "description": "Open drill runner" }
+  ]
+}

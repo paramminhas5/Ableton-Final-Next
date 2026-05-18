@@ -1,0 +1,535 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap");
+
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Archivo Black", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+
+  --color-bone: var(--bone);
+  --color-ink: var(--ink);
+  --color-acid: var(--acid);
+  --color-hot: var(--hot);
+  --color-volt: var(--volt);
+  --color-sun: var(--sun);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+}
+
+:root,
+[data-theme="ccd-classic"] {
+  /* brutalist palette — CCD Classic (default) */
+  --bone: oklch(0.96 0.012 90);
+  --ink: oklch(0.12 0 0);
+  --acid: oklch(0.92 0.24 125);
+  --hot: oklch(0.66 0.27 0);
+  --volt: oklch(0.55 0.27 265);
+  --sun: oklch(0.88 0.18 90);
+
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--bone);
+  --secondary: var(--acid);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.92 0.01 90);
+  --muted-foreground: oklch(0.4 0 0);
+  --accent: var(--hot);
+  --accent-foreground: var(--bone);
+  --destructive: oklch(0.55 0.25 27);
+  --destructive-foreground: var(--bone);
+  --border: var(--ink);
+  --input: var(--ink);
+  --ring: var(--volt);
+  --radius: 0;
+}
+
+[data-theme="midnight"] {
+  --bone: oklch(0.16 0.04 280);
+  --ink: oklch(0.96 0.012 90);
+  --acid: oklch(0.78 0.2 295);
+  --hot: oklch(0.7 0.22 350);
+  --volt: oklch(0.78 0.18 200);
+  --sun: oklch(0.65 0.2 60);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.2 0.04 280);
+  --card-foreground: var(--ink);
+  --border: var(--ink);
+}
+
+[data-theme="paper-ink"] {
+  --bone: oklch(0.97 0.008 70);
+  --ink: oklch(0.16 0.01 30);
+  --acid: oklch(0.72 0.22 45);
+  --hot: oklch(0.6 0.24 25);
+  --volt: oklch(0.55 0.18 260);
+  --sun: oklch(0.85 0.18 80);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --border: var(--ink);
+}
+
+[data-theme="neon-mint"] {
+  --bone: oklch(0.15 0.03 220);
+  --ink: oklch(0.97 0.02 150);
+  --acid: oklch(0.85 0.22 165);
+  --hot: oklch(0.68 0.25 10);
+  --volt: oklch(0.78 0.18 200);
+  --sun: oklch(0.85 0.2 100);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.2 0.04 220);
+  --border: var(--ink);
+}
+
+[data-theme="sunset"] {
+  --bone: oklch(0.18 0.06 320);
+  --ink: oklch(0.96 0.04 70);
+  --acid: oklch(0.75 0.2 45);
+  --hot: oklch(0.65 0.25 0);
+  --volt: oklch(0.7 0.22 320);
+  --sun: oklch(0.82 0.18 70);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.22 0.06 320);
+  --border: var(--ink);
+}
+
+[data-theme="cherry"] {
+  --bone: oklch(0.97 0.02 350);
+  --ink: oklch(0.22 0.08 350);
+  --acid: oklch(0.75 0.18 350);
+  --hot: oklch(0.6 0.22 0);
+  --volt: oklch(0.55 0.22 295);
+  --sun: oklch(0.88 0.12 80);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --border: var(--ink);
+}
+
+/* ── CCD reference palettes (paramminhas5/ccdfinal) ───────────────────── */
+/* Each block remaps the six core tokens — bone (surface), ink (text),
+   acid (accent), hot (hotPink), volt (electricBlue), sun (warm spark).
+   Values use hsl() so they read cleanly against the original HSL palette. */
+
+[data-theme="default"] {
+  --bone: hsl(20 6% 90%);
+  --ink: hsl(222 47% 4%);
+  --acid: hsl(84 81% 56%);
+  --hot: hsl(0 72% 51%);
+  --volt: hsl(221 83% 53%);
+  --sun: hsl(45 95% 55%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 100%); --border: var(--ink);
+}
+
+[data-theme="brutalist"] {
+  --bone: hsl(20 6% 90%);
+  --ink: hsl(222 47% 4%);
+  --acid: hsl(84 81% 56%);
+  --hot: hsl(0 72% 51%);
+  --volt: hsl(221 83% 53%);
+  --sun: hsl(21 90% 53%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(20 6% 82%); --border: var(--ink);
+}
+
+[data-theme="midnight"] {
+  --bone: hsl(222 47% 8%);
+  --ink: hsl(20 6% 90%);
+  --acid: hsl(142 76% 73%);
+  --hot: hsl(338 90% 65%);
+  --volt: hsl(221 83% 60%);
+  --sun: hsl(32 95% 60%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(222 47% 12%); --border: var(--ink);
+}
+
+[data-theme="sunburn"] {
+  --bone: hsl(20 6% 90%);
+  --ink: hsl(222 47% 4%);
+  --acid: hsl(84 81% 56%);
+  --hot: hsl(21 90% 53%);
+  --volt: hsl(10 80% 55%);
+  --sun: hsl(45 100% 55%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 100%); --border: var(--ink);
+}
+
+[data-theme="original"] {
+  --bone: hsl(42 80% 94%);
+  --ink: hsl(0 0% 6%);
+  --acid: hsl(52 100% 56%);
+  --hot: hsl(330 100% 72%);
+  --volt: hsl(200 100% 55%);
+  --sun: hsl(22 100% 58%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 100%); --border: var(--ink);
+}
+
+[data-theme="synthwave"] {
+  --bone: hsl(250 64% 11%);
+  --ink: hsl(270 60% 97%);
+  --acid: hsl(330 100% 62%);
+  --hot: hsl(330 100% 62%);
+  --volt: hsl(188 100% 50%);
+  --sun: hsl(46 98% 59%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(250 64% 16%); --border: var(--ink);
+}
+
+[data-theme="y2k"] {
+  --bone: hsl(265 100% 95%);
+  --ink: hsl(262 67% 14%);
+  --acid: hsl(60 100% 50%);
+  --hot: hsl(344 100% 72%);
+  --volt: hsl(190 100% 50%);
+  --sun: hsl(27 100% 60%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(326 80% 92%); --border: var(--ink);
+}
+
+[data-theme="matcha"] {
+  --bone: hsl(48 41% 90%);
+  --ink: hsl(130 16% 18%);
+  --acid: hsl(45 90% 55%);
+  --hot: hsl(10 70% 60%);
+  --volt: hsl(180 30% 45%);
+  --sun: hsl(28 85% 50%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(48 30% 82%); --border: var(--ink);
+}
+
+[data-theme="mono"] {
+  --bone: hsl(0 0% 98%);
+  --ink: hsl(0 0% 4%);
+  --acid: hsl(16 100% 50%);
+  --hot: hsl(16 100% 50%);
+  --volt: hsl(0 0% 20%);
+  --sun: hsl(16 100% 50%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 92%); --border: var(--ink);
+}
+
+[data-theme="sunset"] {
+  --bone: hsl(26 100% 92%);
+  --ink: hsl(350 50% 12%);
+  --acid: hsl(1 100% 68%);
+  --hot: hsl(1 100% 68%);
+  --volt: hsl(270 75% 63%);
+  --sun: hsl(42 100% 55%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(20 80% 86%); --border: var(--ink);
+}
+
+[data-theme="oceanic"] {
+  --bone: hsl(212 95% 11%);
+  --ink: hsl(190 100% 95%);
+  --acid: hsl(42 100% 51%);
+  --hot: hsl(340 90% 65%);
+  --volt: hsl(192 100% 50%);
+  --sun: hsl(20 100% 58%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(212 80% 16%); --border: var(--ink);
+}
+
+[data-theme="candy"] {
+  --bone: hsl(340 100% 97%);
+  --ink: hsl(330 60% 15%);
+  --acid: hsl(338 100% 65%);
+  --hot: hsl(338 100% 65%);
+  --volt: hsl(195 95% 60%);
+  --sun: hsl(50 100% 62%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(330 80% 92%); --border: var(--ink);
+}
+
+[data-theme="forest"] {
+  --bone: hsl(130 20% 13%);
+  --ink: hsl(45 60% 90%);
+  --acid: hsl(75 55% 56%);
+  --hot: hsl(359 45% 51%);
+  --volt: hsl(180 40% 55%);
+  --sun: hsl(25 75% 55%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(130 20% 18%); --border: var(--ink);
+}
+
+[data-theme="pinkpunk"] {
+  --bone: hsl(0 0% 0%);
+  --ink: hsl(0 0% 100%);
+  --acid: hsl(330 100% 59%);
+  --hot: hsl(330 100% 59%);
+  --volt: hsl(0 0% 100%);
+  --sun: hsl(330 100% 75%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 12%); --border: var(--ink);
+}
+
+[data-theme="linework"] {
+  --bone: hsl(0 0% 100%);
+  --ink: hsl(0 0% 0%);
+  --acid: hsl(0 0% 0%);
+  --hot: hsl(0 0% 0%);
+  --volt: hsl(0 0% 0%);
+  --sun: hsl(0 0% 96%);
+  --background: var(--bone); --foreground: var(--ink);
+  --card: hsl(0 0% 96%); --border: var(--ink);
+}
+
+
+.dark {
+  --background: var(--ink);
+  --foreground: var(--bone);
+  --card: oklch(0.18 0 0);
+  --card-foreground: var(--bone);
+  --popover: oklch(0.18 0 0);
+  --popover-foreground: var(--bone);
+  --primary: var(--acid);
+  --primary-foreground: var(--ink);
+  --secondary: var(--hot);
+  --secondary-foreground: var(--bone);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: var(--volt);
+  --accent-foreground: var(--bone);
+  --border: var(--bone);
+  --input: var(--bone);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+  body {
+    font-family: var(--font-sans);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .brutal-border {
+    border: 3px solid var(--color-border);
+  }
+  .brutal-shadow {
+    box-shadow: 6px 6px 0 0 var(--color-border);
+  }
+  .brutal-shadow-sm {
+    box-shadow: 3px 3px 0 0 var(--color-border);
+  }
+  .brutal-shadow-lg {
+    box-shadow: 10px 10px 0 0 var(--color-border);
+  }
+  .brutal-press {
+    transition:
+      transform 0.08s ease,
+      box-shadow 0.08s ease;
+  }
+  .brutal-press:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 0 var(--color-border);
+  }
+  .brutal-press:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 0 var(--color-border);
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    opacity: 1;
+  }
+  .noise {
+    background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    transform: translate(2px, -1px);
+  }
+  60% {
+    transform: translate(-1px, 2px);
+  }
+  80% {
+    transform: translate(1px, -2px);
+  }
+}
+.hover-glitch:hover {
+  animation: glitch 0.35s steps(2, end) infinite;
+}
+
+/* --- Page & content animations -------------------------------------------- */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in-fast {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  70% {
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes pulse-acid {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--acid);
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out both;
+}
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out both;
+}
+.animate-slide-right {
+  animation: slide-right 0.25s ease-out both;
+}
+.animate-pop-in {
+  animation: pop-in 0.28s ease-out both;
+}
+.animate-fade-fast {
+  animation: fade-in-fast 0.15s ease-out both;
+}
+
+/* Stagger children — add to parent, children get sequential delays */
+.stagger > * {
+  animation: slide-up 0.25s ease-out both;
+}
+.stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 40ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 80ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 120ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 160ms;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 200ms;
+}
