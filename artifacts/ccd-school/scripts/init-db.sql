@@ -28,15 +28,18 @@ CREATE TABLE IF NOT EXISTS oauth_accounts (
 );
 
 CREATE TABLE IF NOT EXISTS user_progress (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id     UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  mission_slug TEXT NOT NULL,
-  completed   BOOLEAN NOT NULL DEFAULT FALSE,
-  score       INTEGER,
-  xp_earned   INTEGER NOT NULL DEFAULT 0,
-  completed_at TIMESTAMPTZ,
-  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE (user_id, mission_slug)
+  user_id           UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  xp                INTEGER NOT NULL DEFAULT 0,
+  streak_days       INTEGER NOT NULL DEFAULT 0,
+  last_day          DATE,
+  daily_xp          INTEGER NOT NULL DEFAULT 0,
+  daily_xp_date     DATE,
+  hearts            INTEGER NOT NULL DEFAULT 3,
+  heart_refill_at   BIGINT NOT NULL DEFAULT 0,
+  streak_shield     BOOLEAN NOT NULL DEFAULT FALSE,
+  completed_missions JSONB NOT NULL DEFAULT '{}',
+  badges            JSONB NOT NULL DEFAULT '[]',
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS app_settings (
