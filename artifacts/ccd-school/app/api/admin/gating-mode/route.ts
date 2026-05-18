@@ -25,8 +25,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid mode" }, { status: 400 });
   }
   await db.query(
-    `INSERT INTO app_settings (key, value, updated_at) VALUES ('gating_mode', $1, NOW())
-     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,
+    `INSERT INTO app_settings (key, value) VALUES ('gating_mode', $1)
+     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`,
     [mode],
   );
   revalidatePath("/", "layout");
