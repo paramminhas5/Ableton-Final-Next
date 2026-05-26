@@ -1,7 +1,16 @@
 import type { Mission } from "./types";
+import { FOUNDATIONS_SCREENS } from "./missions-foundations-screens";
 
 // WORLD: FOUNDATIONS — 40 missions, numbers 201-240
 // 5 paths: Sound (201-208), Rhythm (209-216), Melody (217-224), Harmony (225-232), Tech (233-240)
+// Each mission now carries screens[] for the Duolingo lesson player.
+// The legacy explainer/quiz fields are preserved for the Classic tab.
+
+/** Merge screens into a mission from the screens map */
+function withScreens(m: Mission): Mission {
+  const screens = FOUNDATIONS_SCREENS[m.slug];
+  return screens ? { ...m, screens } : m;
+}
 
 const soundPath: Mission[] = [
   {
@@ -603,4 +612,5 @@ export const FOUNDATIONS_MISSIONS: Mission[] = [
   ...melodyPath,
   ...harmonyPath,
   ...techPath,
-];
+].map(withScreens);
+

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useProgress } from "@/lib/progress";
+import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
@@ -10,6 +10,8 @@ import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState } from "react";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { PlacementTest } from "@/components/PlacementTest";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
@@ -64,89 +66,206 @@ const FAQ = [
 ];
 
 function Dashboard() {
-  const { progress } = useProgress();
+  const { progress, missionsNeedingReview } = useProgress();
+  const { user } = useAuth();
   const completed = progress.completedMissions;
-  const { current: rank } = rankFor(progress.xp);
-  const totalDone = ALL_MISSIONS.filter((m) => !!completed[m.slug]).length;
+  const { current: rank, next: nextRank } = rankFor(progress.xp);
+  const totalDone = ALL_MISSIONS.filter(m => !!completed[m.slug]).length;
   const totalMissions = ALL_MISSIONS.length;
-  const allDoneSlugs = Object.keys(completed).filter((s) => completed[s]);
+
+  // Find next mission to continue
+  const allDoneSlugs = Object.keys(completed).filter(s => completed[s]);
   const lastSlug = allDoneSlugs[allDoneSlugs.length - 1];
   const lastCtx = lastSlug ? getMissionContext(lastSlug) : null;
-  const nextMission = lastCtx?.path
+  const nextSlug = lastCtx?.path
     ? (() => {
         const idx = lastCtx.path.missionSlugs.indexOf(lastSlug);
-        const nextSlug = lastCtx.path.missionSlugs[idx + 1];
-        return nextSlug && !completed[nextSlug] ? nextSlug : null;
+        const ns = lastCtx.path.missionSlugs[idx + 1];
+        return ns && !completed[ns] ? ns : null;
       })()
     : null;
+  const continueSlug = nextSlug ?? (totalDone === 0 ? "what-is-sound" : null);
+  const continueLabel = continueSlug === "what-is-sound" && totalDone === 0
+    ? "Start your first lesson"
+    : continueSlug
+    ? `Continue: ${continueSlug.replace(/-/g, " ")}`
+    : "All caught up!";
 
   const worldStats = (world: WorldTab) => {
     const paths = pathsByWorld(world);
-    const slugs = paths.flatMap((p) => p.missionSlugs);
-    const done = slugs.filter((s) => !!completed[s]).length;
-    return { done, total: slugs.length, pct: Math.round((done / slugs.length) * 100) };
+    const slugs = paths.flatMap(p => p.missionSlugs);
+    const done = slugs.filter(s => !!completed[s]).length;
+    return { done, total: slugs.length, pct: slugs.length > 0 ? Math.round((done / slugs.length) * 100) : 0 };
   };
 
+  const rankPct = nextRank
+    ? Math.min(100, Math.round(((progress.xp - rank.minXp) / (nextRank.minXp - rank.minXp)) * 100))
+    : 100;
+
+  const dailyGoalDone = progress.dailyXp >= DAILY_GOAL_XP;
+
   return (
-    <main className="min-h-screen bg-bone">
+    <main className="min-h-screen bg-bone pb-24">
+      {/* Hero bar */}
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
-        <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// CCD.SCHOOL DASHBOARD</div>
-          <h1 className="font-display text-5xl md:text-7xl leading-none">KEEP<br /><span className="text-acid">GOING.</span></h1>
-          <div className="mt-6 grid grid-cols-3 md:grid-cols-4 gap-3">
-            <div className="brutal-border bg-acid text-ink p-3"><div className="font-display text-4xl">{progress.xp}</div><div className="font-mono text-[9px] uppercase mt-1">XP</div></div>
-            <div className="brutal-border bg-volt text-bone p-3"><div className="font-display text-4xl">{progress.streakDays}</div><div className="font-mono text-[9px] uppercase mt-1">Streak 🔥</div></div>
-            <div className="brutal-border p-3"><div className="font-display text-4xl">{totalDone}</div><div className="font-mono text-[9px] uppercase mt-1">Missions</div></div>
-            <div className="brutal-border p-3 hidden md:block"><div className="font-display text-2xl leading-tight">{rank.name}</div><div className="font-mono text-[9px] uppercase mt-1">Rank</div></div>
+        <div className="max-w-4xl mx-auto px-4 py-8 md:py-10">
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// YOUR DASHBOARD</div>
+          <h1 className="font-display text-5xl md:text-7xl leading-none">
+            KEEP<br /><span className="text-acid">GOING.</span>
+          </h1>
+          {/* Stats grid */}
+          <div className="mt-6 grid grid-cols-4 gap-2">
+            <div className="brutal-border bg-acid text-ink p-3">
+              <div className="font-display text-3xl tabular-nums">{progress.xp}</div>
+              <div className="font-mono text-[9px] uppercase mt-1">XP</div>
+            </div>
+            <div className="brutal-border bg-volt text-bone p-3">
+              <div className="font-display text-3xl tabular-nums">
+                🔥{progress.streakDays}{progress.streakShield ? "🛡" : ""}
+              </div>
+              <div className="font-mono text-[9px] uppercase mt-1">Streak</div>
+            </div>
+            <div className="brutal-border bg-bone text-ink p-3">
+              <div className="font-display text-3xl tabular-nums">{totalDone}</div>
+              <div className="font-mono text-[9px] uppercase mt-1">Lessons</div>
+            </div>
+            <div className="brutal-border bg-bone text-ink p-3">
+              <div className="font-mono text-[10px] font-bold mt-1">{rank.emoji}</div>
+              <div className="font-display text-sm leading-tight mt-1">{rank.name}</div>
+              <div className="font-mono text-[9px] uppercase opacity-50 mt-0.5">Rank</div>
+            </div>
           </div>
-          <div className="mt-4 h-2 brutal-border overflow-hidden bg-bone/10">
-            <div className="h-full bg-acid transition-all duration-700" style={{ width: `${Math.round((totalDone / totalMissions) * 100)}%` }} />
+          {/* Rank progress */}
+          {nextRank && (
+            <div className="mt-3">
+              <div className="flex justify-between font-mono text-[9px] uppercase opacity-50 mb-1">
+                <span>{rank.name}</span>
+                <span>{nextRank.minXp - progress.xp} XP to {nextRank.name}</span>
+              </div>
+              <div className="h-2 brutal-border bg-bone/20 overflow-hidden">
+                <div className="h-full bg-acid transition-all duration-700" style={{ width: `${rankPct}%` }} />
+              </div>
+            </div>
+          )}
+          {/* Gems + daily goal */}
+          <div className="flex items-center gap-3 mt-3 font-mono text-[10px] uppercase">
+            <span className="opacity-60">💎 {progress.gems} gems</span>
+            <span className={`opacity-60 ${dailyGoalDone ? "text-acid" : ""}`}>
+              {dailyGoalDone ? "✓ Daily goal done" : `Daily: ${progress.dailyXp}/${DAILY_GOAL_XP} XP`}
+            </span>
+            {!user && (
+              <Link href="/login" className="brutal-border bg-acid text-ink px-2 py-0.5 ml-auto">
+                Save progress →
+              </Link>
+            )}
           </div>
-          <div className="font-mono text-[9px] uppercase opacity-50 mt-1">{totalDone}/{totalMissions} missions complete</div>
         </div>
       </header>
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-10 pb-24">
-        {(nextMission || lastCtx?.path) && (
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// CONTINUE</div>
-            <Link href={`/mission/${nextMission ?? lastSlug}`}
-              className="brutal-border bg-acid text-ink p-5 flex items-start justify-between gap-4 brutal-press brutal-shadow block">
+
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+
+        {/* ── TODAY'S LESSON ── */}
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S LESSON</div>
+          {continueSlug ? (
+            <Link
+              href={`/learn/${continueSlug}`}
+              className="brutal-border bg-acid text-ink p-5 flex items-start justify-between gap-4 brutal-press brutal-shadow block hover:bg-sun transition-colors">
               <div>
-                <div className="font-mono text-[9px] uppercase opacity-60">{lastCtx?.world?.toUpperCase()} › {lastCtx?.chapter?.title} › {lastCtx?.path?.title}</div>
-                <div className="font-display text-2xl mt-1">{nextMission ? `Next: Mission →` : `Review: ${lastSlug?.replace(/-/g, " ")}`}</div>
-                <div className="font-mono text-xs opacity-70 mt-1">{nextMission ? nextMission.replace(/-/g, " ") : "You finished this path"}</div>
+                <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
+                  {lastCtx?.world?.toUpperCase()} › {lastCtx?.chapter?.title ?? "Start here"}
+                </div>
+                <div className="font-display text-2xl">{continueLabel}</div>
+                <div className="font-mono text-xs opacity-70 mt-1">
+                  {totalDone === 0 ? "No account needed · Free to start" : `${totalDone}/${totalMissions} complete`}
+                </div>
               </div>
-              <div className="font-display text-3xl shrink-0">→</div>
+              <div className="font-display text-4xl shrink-0">▶</div>
+            </Link>
+          ) : (
+            <div className="brutal-border bg-volt text-bone p-5">
+              <div className="font-display text-2xl">🎉 ALL CAUGHT UP!</div>
+              <div className="font-mono text-sm opacity-70 mt-1">Check the review session or explore another world.</div>
+            </div>
+          )}
+        </section>
+
+        {/* ── REVIEW SESSION ── */}
+        {missionsNeedingReview.length > 0 && (
+          <section>
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
+              // REVIEW ({missionsNeedingReview.length} lessons fading)
+            </div>
+            <Link
+              href={`/learn/${missionsNeedingReview[0]}?review=1`}
+              className="brutal-border bg-hot text-bone p-5 flex items-start justify-between gap-4 brutal-press block">
+              <div>
+                <div className="font-display text-xl">🔥 REVIEW SESSION</div>
+                <div className="font-mono text-xs opacity-80 mt-1">
+                  {missionsNeedingReview.length} lesson{missionsNeedingReview.length > 1 ? "s" : ""} need a refresh
+                </div>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {missionsNeedingReview.slice(0, 3).map(slug => (
+                    <span key={slug} className="brutal-border bg-bone/20 px-2 py-0.5 font-mono text-[9px] uppercase">
+                      {slug.replace(/-/g, " ")}
+                    </span>
+                  ))}
+                  {missionsNeedingReview.length > 3 && (
+                    <span className="font-mono text-[9px] opacity-60">+{missionsNeedingReview.length - 3} more</span>
+                  )}
+                </div>
+              </div>
+              <div className="font-display text-4xl shrink-0">↺</div>
             </Link>
           </section>
         )}
+
+        {/* ── WORLDS PROGRESS ── */}
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR WORLDS</div>
           <div className="grid md:grid-cols-3 gap-3">
-            {(["fundamentals", "dj", "producer"] as WorldTab[]).map((world) => {
+            {(["fundamentals", "dj", "producer"] as WorldTab[]).map(world => {
               const ws = worldStats(world);
               const meta = WORLD_DATA[world];
               return (
-                <Link key={world} href={meta.to} className={`brutal-border ${meta.color} p-4 brutal-press block`}>
+                <Link key={world} href={meta.to}
+                  className={`brutal-border ${meta.color} p-4 brutal-press block transition-opacity hover:opacity-90`}>
                   <div className="opacity-60 mb-2">{meta.icon}</div>
                   <div className="font-display text-xl">{meta.label}</div>
                   <div className="h-1.5 brutal-border bg-bone/20 mt-3 overflow-hidden">
-                    <div className="h-full bg-current opacity-80 transition-all" style={{ width: `${ws.pct}%` }} />
+                    <div className="h-full bg-current opacity-80 transition-all duration-700"
+                      style={{ width: `${ws.pct}%` }} />
                   </div>
-                  <div className="font-mono text-[9px] uppercase opacity-60 mt-1">{ws.done}/{ws.total} · {ws.pct}%</div>
+                  <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
+                    {ws.done}/{ws.total} · {ws.pct}%
+                  </div>
                 </Link>
               );
             })}
           </div>
         </section>
+
+        {/* ── QUICK LINKS ── */}
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// QUICK ACCESS</div>
           <div className="flex flex-wrap gap-2">
-            {[{ to: "/worlds", label: "All Worlds" }, { to: "/learn", label: "All Paths" }, { to: "/missions", label: "All Missions" }, { to: "/profile", label: "Trophies & Profile" }, { to: "/devices", label: "Devices" }].map(({ to, label }) => (
-              <Link key={to} href={to} className="brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun">{label} →</Link>
+            {[
+              { to: "/world/fundamentals", label: "🎵 Fundamentals Path" },
+              { to: "/world/dj",           label: "🎧 DJ World Path" },
+              { to: "/world/producer",     label: "🎛 Producer Path" },
+              { to: "/shop",               label: "💎 Gem Shop" },
+              { to: "/leaderboard",        label: "🏆 Leaderboard" },
+              { to: "/profile",            label: "👤 Profile & Trophies" },
+              { to: "/placement",          label: "📍 Placement Test" },
+            ].map(({ to, label }) => (
+              <Link key={to} href={to}
+                className="brutal-border px-3 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun transition-colors">
+                {label}
+              </Link>
             ))}
           </div>
         </section>
+
       </div>
     </main>
   );
@@ -303,7 +422,25 @@ function Landing() {
 export function HomeClient() {
   const { user } = useAuth();
   const { progress } = useProgress();
+  const [showPlacement, setShowPlacement] = useState(false);
   const hasMissions = Object.keys(progress.completedMissions).length > 0;
+
+  // Brand-new user who hasn't done onboarding → show onboarding
+  if (!progress.onboardingDone && !hasMissions) {
+    if (showPlacement) {
+      return (
+        <PlacementTest
+          world={progress.selectedWorld ?? "fundamentals"}
+          onSkip={() => setShowPlacement(false)}
+        />
+      );
+    }
+    return <OnboardingFlow />;
+  }
+
+  // Returning user or has progress → Dashboard
   if (user || hasMissions) return <Dashboard />;
+
+  // Fallback: Landing (shouldn't normally be reached after onboarding)
   return <Landing />;
 }

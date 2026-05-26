@@ -4,6 +4,7 @@ import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
+import { LeagueBoard } from "@/components/LeagueBoard";
 
 type Entry = {
   rank: number;
@@ -17,6 +18,8 @@ type Entry = {
   isCurrentUser: boolean;
 };
 
+type Tab = "league" | "alltime";
+
 export function LeaderboardPageClient() {
   const { progress } = useProgress();
   const { current: rank } = rankFor(progress.xp);
@@ -24,6 +27,7 @@ export function LeaderboardPageClient() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<Tab>("league");
 
   useEffect(() => {
     fetch("/api/leaderboard")
@@ -44,21 +48,46 @@ export function LeaderboardPageClient() {
           <h1 className="font-display text-5xl md:text-7xl leading-none">LEADERBOARD</h1>
         </div>
       </header>
+
+      {/* Tab switcher */}
+      <div className="brutal-border border-x-0 border-t-0 bg-bone sticky top-[52px] md:top-[56px] z-20 flex max-w-4xl mx-auto">
+        <button onClick={() => setTab("league")}
+          className={`flex-1 py-2.5 font-mono text-[10px] uppercase brutal-press transition-colors brutal-border border-y-0 border-l-0 ${tab === "league" ? "bg-acid text-ink font-bold" : "bg-bone hover:bg-sun"}`}>
+          🏆 My League
+        </button>
+        <button onClick={() => setTab("alltime")}
+          className={`flex-1 py-2.5 font-mono text-[10px] uppercase brutal-press transition-colors ${tab === "alltime" ? "bg-acid text-ink font-bold" : "bg-bone hover:bg-sun"}`}>
+          🌍 All-Time
+        </button>
+      </div>
+
       <div className="max-w-4xl mx-auto px-4 py-8 pb-24">
-        <div className="brutal-border bg-sun p-6 mb-6">
+
+        {/* Your position pill */}
+        <div className="brutal-border bg-sun p-5 mb-6">
           <div className="font-mono text-[10px] uppercase opacity-60 mb-1">YOUR POSITION</div>
-          <div className="font-display text-3xl">{rank.name} · {progress.xp} XP · 🔥 {progress.streakDays}</div>
+          <div className="font-display text-2xl">{rank.name} · {progress.xp} XP · 🔥 {progress.streakDays}</div>
           <div className="font-mono text-xs opacity-60 mt-1">
-            {Object.keys(progress.completedMissions).length} missions completed
-            {currentUserRank && <span> · Rank #{currentUserRank} globally</span>}
+            {Object.keys(progress.completedMissions).length} missions · 💎 {progress.gems} gems · {progress.weeklyXp} XP this week
+            {currentUserRank && <span> · #{currentUserRank} globally</span>}
           </div>
           {!user && (
             <div className="mt-3">
-              <Link href="/login" className="brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press inline-block">SIGN IN TO JOIN →</Link>
+              <Link href="/login" className="brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press inline-block">
+                SIGN IN TO COMPETE →
+              </Link>
             </div>
           )}
         </div>
 
+        {/* League tab */}
+        {tab === "league" && (
+          <LeagueBoard />
+        )}
+
+        {/* All-time tab */}
+        {tab === "alltime" && (
+          <>
         {loading ? (
           <div className="brutal-border bg-bone p-6 text-center font-mono text-xs uppercase opacity-40">Loading...</div>
         ) : entries.length === 0 ? (
@@ -96,7 +125,10 @@ export function LeaderboardPageClient() {
             ))}
           </div>
         )}
+          </>
+        )}
       </div>
     </main>
   );
 }
+

@@ -64,7 +64,16 @@ export function ProfilePageClient() {
               <span className="brutal-border bg-volt text-ink px-3 py-1 font-mono text-xs uppercase mb-1">PRO</span>
             )}
           </div>
-          {user && <div className="font-mono text-sm mt-2 opacity-60">{user.email}</div>}
+          {user && (
+            <div className="flex items-center gap-3 mt-2">
+              <div className="font-mono text-sm opacity-60">{user.email}</div>
+              <a
+                href={`/u/${user.name ?? user.email?.split("@")[0] ?? "me"}`}
+                className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase brutal-press hover:bg-sun transition-colors">
+                Public Profile →
+              </a>
+            </div>
+          )}
         </div>
       </header>
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 pb-24">
@@ -170,7 +179,10 @@ export function ProfilePageClient() {
               </div>
             )}
             <div className="brutal-border p-4">
-              <div className="font-display text-lg mb-1">Data</div>
+              <div className="font-display text-lg mb-1">Placement Test</div>
+              <div className="font-mono text-xs opacity-60 mb-3">Already know the basics? Skip ahead to the right chapter.</div>
+              <a href="/placement" className="brutal-border bg-acid text-ink px-4 py-2 font-mono text-xs uppercase brutal-press inline-block">TAKE TEST →</a>
+            </div>
               <div className="font-mono text-xs opacity-60 mb-3">
                 {user ? "Progress synced to cloud. Local copy kept as backup." : "Progress stored locally in your browser."}
               </div>

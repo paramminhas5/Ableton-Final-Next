@@ -16,6 +16,21 @@ import { useAuth } from "@/lib/auth";
 import { useGatingMode } from "@/components/ClientProviders";
 import { isLocked } from "@/lib/gating";
 
+/** Tab toggle shown at top of classic mission page */
+function ClassicModeBar({ slug }: { slug: string }) {
+  return (
+    <div className="brutal-border border-x-0 border-t-0 bg-bone sticky top-[52px] md:top-[56px] z-20 flex">
+      <Link href={`/learn/${slug}`}
+        className="flex-1 py-2.5 text-center font-mono text-[10px] uppercase brutal-press hover:bg-acid transition-colors">
+        ← Path View
+      </Link>
+      <div className="flex-1 py-2.5 text-center font-mono text-[10px] uppercase bg-acid text-ink font-bold">
+        📋 Classic
+      </div>
+    </div>
+  );
+}
+
 export function MissionPageClient({ slug }: { slug: string }) {
   const m = missionBySlug(slug);
   if (!m) return <div className="p-12 font-mono text-xl">Mission not found: {slug}</div>;
@@ -87,6 +102,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
 
   return (
     <GlossaryScope resetKey={slug} texts={allTexts}>
+    <ClassicModeBar slug={slug} />
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
       {showModal && <CompletionModal mission={m} xpEarned={earnedXp} score={earnedScore} badgeName={earnedBadge} nextSlug={next?.slug} onClose={() => setShowModal(false)} />}
 

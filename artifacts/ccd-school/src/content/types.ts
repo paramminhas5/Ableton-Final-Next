@@ -11,13 +11,14 @@ export type WorldSlug =
   | "midi-instruments"
   | "live12-power";
 
+// ─── SIM TYPES ────────────────────────────────────────────────────────────────
+// Sims marked ADVANCED are only shown in tier:"deep" missions (Pro, chapter 5+)
 export type SimType =
   | "drum-pad"
   | "piano-roll"
   | "mixer"
   | "device-chain"
   | "warp-lab"
-  | "knob-trainer"
   | "session-grid"
   | "arrangement"
   | "routing-puzzle"
@@ -30,16 +31,8 @@ export type SimType =
   | "sidechain"
   | "send-return"
   | "comp-lake"
-  | "midi-transform"
-  | "scale-aware"
-  | "stem-splitter"
   | "groove-extractor"
-  | "push3"
   | "bpm-tap"
-  | "granular"
-  | "synth-playground"
-  | "buffer-sim"
-  | "tempo-compare"
   | "beat-builder"
   | "note-explorer"
   | "chord-stacker"
@@ -54,16 +47,72 @@ export type SimType =
   | "osc-mixer"
   | "filter-envelope"
   | "lfo-lab"
+  // NEW sims replacing old ones
+  | "waveform-visualizer"   // replaces synth-playground on theory missions
+  | "decibel-meter"         // replaces knob-trainer on amplitude missions
+  | "chord-progression"     // NEW: I-IV-V-I tension/resolution
+  | "signal-flow-builder"   // NEW: drag-and-drop signal chain
+  // ADVANCED only (chapter 5+, tier:"deep")
+  | "granular"
+  | "stem-splitter"
+  | "midi-transform"
+  | "scale-aware"
+  | "push3"
   | "none";
 
+// ─── QUIZ ─────────────────────────────────────────────────────────────────────
 export type QuizQ = {
   q: string;
   options: string[];
-  answer: number; // index
-  explain?: string; // shown after submitting — reinforces the correct answer
-  hint?: string; // shown on demand before submitting — doesn't reveal the answer
+  answer: number;
+  explain?: string;
+  hint?: string;
 };
 
+// ─── LESSON SCREENS (Duolingo-style) ──────────────────────────────────────────
+// Each lesson is 5-8 screens. Every screen has an interactive element.
+export type ScreenKind =
+  | "hook"        // Screen 1: bold hook sentence + emoji, tap-to-continue
+  | "concept"     // Screen 2-3: 2 sentences + one key fact, tap-to-continue
+  | "interact"    // Screen 4: full simulator / interactive element
+  | "quiz"        // Screen 5-7: one question, immediate feedback
+  | "summary";    // Screen 8: recap 3 bullet points, lesson complete
+
+export type LessonScreen =
+  | {
+      kind: "hook";
+      emoji: string;
+      headline: string;      // ≤ 8 words
+      subtext: string;       // 1 sentence, ≤ 15 words
+    }
+  | {
+      kind: "concept";
+      title: string;         // ≤ 5 words
+      body: string;          // ≤ 2 sentences (30 words max)
+      keyFact?: string;      // 1 bold callout line ≤ 10 words
+      visual?: "waveform" | "frequency-bar" | "piano" | "eq-curve" | "none";
+    }
+  | {
+      kind: "interact";
+      sim: SimType;
+      prompt: string;        // instruction ≤ 10 words
+      preset?: Record<string, unknown>;
+    }
+  | {
+      kind: "quiz";
+      q: string;
+      options: string[];
+      answer: number;
+      explain: string;       // shown after answer, ≤ 2 sentences
+      hint?: string;
+    }
+  | {
+      kind: "summary";
+      learned: string[];     // 3 bullet points, ≤ 8 words each
+      badge?: { slug: string; name: string };
+    };
+
+// ─── EXPLAINER BLOCKS (legacy, kept for "Classic" tab) ────────────────────────
 export type ExplainerBlock =
   | { kind: "lead"; text: string }
   | { kind: "para"; text: string }
@@ -72,27 +121,30 @@ export type ExplainerBlock =
   | { kind: "diagram"; id: string; caption?: string }
   | { kind: "link"; to: "mission" | "device" | "glossary"; slug: string; label: string };
 
+// ─── MISSION ──────────────────────────────────────────────────────────────────
 export type Mission = {
   slug: string;
   world: WorldSlug;
-  number: number; // global mission number
+  number: number;
   title: string;
   tagline: string;
   xp: number;
-  tier?: "core" | "deep"; // beginner mode shows only "core"
+  tier?: "core" | "deep";
   badge?: { slug: string; name: string };
+  // Duolingo screens (new format — shown by default)
+  screens?: LessonScreen[];
+  // Legacy format (shown in "Classic" tab)
   explainer: ExplainerBlock[];
   sim: { type: SimType; preset?: Record<string, unknown> };
   quiz: QuizQ[];
 };
 
-// Long-form lesson content overlay. Optional per-slug. Lets us deepen
-// missions without rewriting the entire missions.ts file.
+// ─── DEEP LESSON OVERLAY (legacy, kept for Classic tab) ───────────────────────
 export type LessonDeep = {
-  hook?: string; // 1-line "why this matters"
-  definition?: string[]; // 2-3 plain-English paragraphs
-  mechanism?: string; // how it actually works
-  flow?: string; // SignalFlowSVG string e.g. "A → B → C"
+  hook?: string;
+  definition?: string[];
+  mechanism?: string;
+  flow?: string;
   walkthrough?: { do: string; listen: string }[];
   listenFor?: string[];
   mistakes?: string[];
@@ -102,17 +154,8 @@ export type LessonDeep = {
     source: "drum-loop" | "bass-loop" | "chord-pad" | "vox-chop" | "full-mix";
     chain: string[];
   };
-  // Two-track content (NEW)
-  beginner?: {
-    what: string[]; // 2-3 plain-English paragraphs
-    why: string[]; // musical outcomes
-    analogy?: string; // one fun analogy
-  };
-  advanced?: {
-    what: string[]; // 2-3 manual-grade paragraphs
-    edgeCases?: string[];
-    engineerNotes?: string[];
-  };
+  beginner?: { what: string[]; why: string[]; analogy?: string };
+  advanced?: { what: string[]; edgeCases?: string[]; engineerNotes?: string[] };
   quizEasy?: QuizQ[];
   quizHard?: QuizQ[];
   sources?: { label: string; section: string }[];
