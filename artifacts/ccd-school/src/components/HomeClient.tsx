@@ -10,6 +10,8 @@ import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState } from "react";
+import { OnboardingFlow } from "@/components/OnboardingFlow";
+import { PlacementTest } from "@/components/PlacementTest";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
@@ -303,7 +305,25 @@ function Landing() {
 export function HomeClient() {
   const { user } = useAuth();
   const { progress } = useProgress();
+  const [showPlacement, setShowPlacement] = useState(false);
   const hasMissions = Object.keys(progress.completedMissions).length > 0;
+
+  // Brand-new user who hasn't done onboarding → show onboarding
+  if (!progress.onboardingDone && !hasMissions) {
+    if (showPlacement) {
+      return (
+        <PlacementTest
+          world={progress.selectedWorld ?? "fundamentals"}
+          onSkip={() => setShowPlacement(false)}
+        />
+      );
+    }
+    return <OnboardingFlow />;
+  }
+
+  // Returning user or has progress → Dashboard
   if (user || hasMissions) return <Dashboard />;
+
+  // Fallback: Landing (shouldn't normally be reached after onboarding)
   return <Landing />;
 }
