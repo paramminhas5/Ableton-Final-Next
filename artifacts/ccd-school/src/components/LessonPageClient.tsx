@@ -4,11 +4,13 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { LessonPlayer } from "@/components/LessonPlayer";
 import { missionBySlug, nextMission } from "@/content/missions";
+import { BeatCoach, useBeatCoach } from "@/components/BeatCoach";
 
 function Inner({ slug }: { slug: string }) {
   const router = useRouter();
   const params = useSearchParams();
   const isReview = params.get("review") === "1";
+  const { wrongCount, showCoach, onWrong, onCorrect, dismissCoach } = useBeatCoach();
 
   const mission = missionBySlug(slug);
   if (!mission) {
@@ -21,18 +23,37 @@ function Inner({ slug }: { slug: string }) {
 
   const next = nextMission(slug);
   const handleComplete = () => {
-    // Navigate back to the world path map after a short delay
     const world = mission.world === "foundations" ? "fundamentals" : mission.world;
     setTimeout(() => router.push(`/world/${world}`), 2200);
   };
 
+  const coachContext = `${mission.title} — ${mission.tagline}`;
+
   return (
-    <LessonPlayer
-      mission={mission}
-      nextSlug={next?.slug}
-      isReview={isReview}
-      onComplete={handleComplete}
-    />
+    <div>
+      {showCoach && (
+        <div className="max-w-2xl mx-auto px-4 pt-4">
+          <BeatCoach
+            context={coachContext}
+            autoOpen
+            onClose={dismissCoach}
+          />
+        </div>
+      )}
+      <LessonPlayer
+        mission={mission}
+        nextSlug={next?.slug}
+        isReview={isReview}
+        onComplete={handleComplete}
+        onWrong={onWrong}
+        onCorrect={onCorrect}
+      />
+      {!showCoach && (
+        <div className="max-w-2xl mx-auto px-4 pb-8">
+          <BeatCoach context={coachContext} />
+        </div>
+      )}
+    </div>
   );
 }
 

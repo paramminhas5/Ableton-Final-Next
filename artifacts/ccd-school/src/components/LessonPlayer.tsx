@@ -379,9 +379,11 @@ interface Props {
   nextSlug?: string;
   isReview?: boolean;
   onComplete: () => void;
+  onWrong?: () => void;
+  onCorrect?: () => void;
 }
 
-export function LessonPlayer({ mission, nextSlug, isReview, onComplete }: Props) {
+export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong, onCorrect }: Props) {
   const screens = mission.screens ?? [];
   const [screenIdx, setScreenIdx] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
@@ -411,9 +413,10 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete }: Props)
     }
   }, [screenIdx, total, correctCount, screens, mission, isReview, completeMission, reviewMission, onComplete]);
 
-  const handleCorrect = () => setCorrectCount(c => c + 1);
+  const handleCorrect = () => { setCorrectCount(c => c + 1); onCorrect?.(); };
   const handleWrong = () => {
     if (learnMode === "ccd") loseHeart();
+    onWrong?.();
   };
 
   // No screens fallback — redirect to classic
