@@ -37,8 +37,8 @@ export function MissionPageClient({ slug }: { slug: string }) {
 
   const ctx = getMissionContext(slug);
   const deep = LESSONS[slug];
-  const hasAdvanced = !!(deep?.advanced);
-  const [advancedTab, setAdvancedTab] = useState(false);
+  const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
+  const [hardMode, setHardMode] = useState(false);
   const { learnMode } = useLearnMode();
   const { progress, completeMission, loseHeart, addXp } = useProgress();
   const { plan } = useAuth();
@@ -56,6 +56,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
   useEffect(() => {
     setFlowKey(0);
     setShowModal(false);
+    setHardMode(false);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
   }, [slug]);
 
@@ -68,32 +69,41 @@ export function MissionPageClient({ slug }: { slug: string }) {
   const colorClass = { acid: "bg-acid", hot: "bg-hot text-bone", volt: "bg-volt text-bone", sun: "bg-sun", bone: "bg-bone", ink: "bg-ink text-bone" }[ctx.world === "fundamentals" ? "acid" : ctx.world === "dj" ? "ink" : ctx.world === "producer" ? "sun" : "bone"] ?? "bg-bone text-ink";
 
   const fallbackWhat = m.explainer.find((b) => b.kind === "lead" || b.kind === "para");
-  const track = advancedTab ? deep?.advanced : deep?.beginner;
+  const track = hardMode ? deep?.advanced : deep?.beginner;
   const whatParas = track?.what ?? deep?.definition;
 
   const allTexts = useMemo(() => {
     const out: string[] = [];
     if (whatParas) out.push(...whatParas);
     else if (fallbackWhat && "text" in fallbackWhat) out.push(fallbackWhat.text);
-    if (!advancedTab && deep?.beginner?.analogy) out.push(deep.beginner.analogy);
-    if (!advancedTab && deep?.beginner?.why) out.push(...deep.beginner.why);
-    if (advancedTab && deep?.advanced?.edgeCases) out.push(...deep.advanced.edgeCases);
-    if (advancedTab && deep?.advanced?.engineerNotes) out.push(...deep.advanced.engineerNotes);
-    if (deep?.listenFor) out.push(...deep.listenFor.slice(0, advancedTab ? 99 : 3));
+    if (!hardMode && deep?.beginner?.analogy) out.push(deep.beginner.analogy);
+    if (!hardMode && deep?.beginner?.why) out.push(...deep.beginner.why);
+    if (hardMode && deep?.advanced?.edgeCases) out.push(...deep.advanced.edgeCases);
+    if (hardMode && deep?.advanced?.engineerNotes) out.push(...deep.advanced.engineerNotes);
+    if (deep?.listenFor) out.push(...deep.listenFor.slice(0, hardMode ? 99 : 3));
     if (deep?.walkthrough) { for (const s of deep.walkthrough) { out.push(s.do); out.push(s.listen); } }
-    if (advancedTab && deep?.proMoves) out.push(...deep.proMoves);
+    if (hardMode && deep?.proMoves) out.push(...deep.proMoves);
     if (deep?.mistakes) out.push(...deep.mistakes);
     return out;
-  }, [slug, advancedTab, deep, whatParas, fallbackWhat]);
+  }, [slug, hardMode, deep, whatParas, fallbackWhat]);
 
-  const quizQs = useMemo(() => m.quiz, [slug]);
-  const passThreshold = advancedTab ? 0.6 : 0.5;
+  // Hard mode: use quizHard if available, strip hints. Normal: standard quiz.
+  const quizQs = useMemo(() => {
+    if (hardMode && deep?.quizHard?.length) {
+      return deep.quizHard.map(q => ({ ...q, hint: undefined }));
+    }
+    if (hardMode) {
+      // No quizHard — use normal quiz but strip hints to increase difficulty
+      return m.quiz.map(q => ({ ...q, hint: undefined }));
+    }
+    return m.quiz;
+  }, [slug, hardMode, deep, m.quiz]);
+  const passThreshold = hardMode ? 0.7 : 0.5;
 
   const onQuizDone = (score: number) => {
     const alreadyDone = !!progress.completedMissions[slug];
     const xp = alreadyDone ? 0 : m.xp;
-    const badge = score >= passThreshold ? m.badge?.slug : undefined;
-    completeMission(slug, m.xp, score, badge);
+    const badge = score >= passThreshold ? m.badge?.slug : undefined;    completeMission(slug, m.xp, score, badge);
     setEarnedXp(xp);
     setEarnedScore(score);
     setEarnedBadge(badge ? m.badge?.name : undefined);
@@ -121,8 +131,14 @@ export function MissionPageClient({ slug }: { slug: string }) {
           <a href="#how" className="brutal-border px-2 py-1 bg-volt text-bone">How</a>
           <a href="#quiz" className="brutal-border px-2 py-1 bg-hot text-bone">Quiz</a>
           <span className="ml-auto flex items-center gap-1">
-            <button onClick={() => setAdvancedTab(false)} disabled={!hasAdvanced} className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}>Standard</button>
-            <button onClick={() => setAdvancedTab(true)} disabled={!hasAdvanced} className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}>Advanced</button>
+            <button onClick={() => setHardMode(false)}
+              className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!hardMode ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
+              Normal
+            </button>
+            <button onClick={() => setHardMode(true)} disabled={!hasHard}
+              className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${hardMode ? "bg-hot text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}>
+              {hardMode ? "🔥 Hard" : "Hard"}
+            </button>
             <span className="opacity-50 font-mono text-[9px] ml-1">M{m.number}</span>
           </span>
         </nav>
@@ -138,6 +154,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
           {m.badge && <span className="brutal-border bg-ink text-bone px-2 py-1">🏅 {m.badge.name}</span>}
           {completed && !locked && <span className="brutal-border bg-acid text-ink px-2 py-1">✓ COMPLETE</span>}
           {locked && <span className="brutal-border bg-ink text-bone px-2 py-1">🔒 PRO</span>}
+          {hardMode && <span className="brutal-border bg-hot text-bone px-2 py-1 animate-pulse">🔥 HARD MODE</span>}
         </div>
       </header>
 
@@ -168,12 +185,12 @@ export function MissionPageClient({ slug }: { slug: string }) {
             ) : fallbackWhat && "text" in fallbackWhat ? (
               <p className="font-mono text-sm md:text-base leading-relaxed"><Glossarized text={fallbackWhat.text} /></p>
             ) : null}
-            {!advancedTab && deep?.beginner?.analogy && (
+            {!hardMode && deep?.beginner?.analogy && (
               <div className="mt-3 brutal-border bg-acid p-3 font-mono text-sm">
                 <span className="font-bold uppercase text-xs">Think of it like →</span>{" "}<Glossarized text={deep.beginner.analogy} />
               </div>
             )}
-            {!advancedTab && deep?.beginner?.why && (
+            {!hardMode && deep?.beginner?.why && (
               <div className="mt-3 brutal-border bg-volt text-bone p-3">
                 <div className="font-mono text-xs uppercase font-bold mb-1">▸ WHY YOU CARE</div>
                 <ul className="space-y-1 font-mono text-sm">{deep.beginner.why.map((item, i) => <li key={i}>• <Glossarized text={item} /></li>)}</ul>
@@ -187,7 +204,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
           </section>
 
           {(deep?.mechanism || deep?.flow) && (
-            <details id="how" open={advancedTab} className="brutal-border bg-card p-4"
+            <details id="how" open={hardMode} className="brutal-border bg-card p-4"
               onToggle={(e) => { if ((e.currentTarget as HTMLDetailsElement).open) setFlowKey((k) => k + 1); }}>
               <summary className="font-mono text-xs uppercase cursor-pointer font-bold">▸ HOW IT WORKS</summary>
               <div className="mt-3 space-y-3">
@@ -205,15 +222,15 @@ export function MissionPageClient({ slug }: { slug: string }) {
             </details>
           )}
 
-          {deep?.listenFor && (
-            <div className="brutal-border bg-sun p-3">
-              <div className="font-mono text-xs uppercase mb-2 font-bold">▸ LISTEN FOR</div>
-              <ul className="space-y-1 font-mono text-sm">{deep.listenFor.slice(0, advancedTab ? 99 : 3).map((x, i) => <li key={i}>• <Glossarized text={x} /></li>)}</ul>
-            </div>
-          )}
+            {deep?.listenFor && (
+              <div className="brutal-border bg-sun p-3">
+                <div className="font-mono text-xs uppercase mb-2 font-bold">▸ LISTEN FOR</div>
+                <ul className="space-y-1 font-mono text-sm">{deep.listenFor.slice(0, hardMode ? 99 : 3).map((x, i) => <li key={i}>• <Glossarized text={x} /></li>)}</ul>
+              </div>
+            )}
 
-          {deep?.walkthrough && (
-            <details open={!advancedTab} className="brutal-border bg-card p-4">
+            {deep?.walkthrough && (
+              <details open={!hardMode} className="brutal-border bg-card p-4">
               <summary className="font-mono text-xs uppercase cursor-pointer font-bold">▸ WALKTHROUGH ({deep.walkthrough.length} steps)</summary>
               <ol className="space-y-2 mt-3">{deep.walkthrough.map((s, i) => (
                 <li key={i} className="brutal-border bg-bone p-2 font-mono text-sm">
@@ -224,15 +241,15 @@ export function MissionPageClient({ slug }: { slug: string }) {
             </details>
           )}
 
-          {advancedTab && deep?.proMoves && (
+            {hardMode && deep?.proMoves && (
             <details open className="brutal-border bg-ink text-bone p-4">
               <summary className="font-mono text-xs uppercase cursor-pointer font-bold">▸ PRO MOVES</summary>
               <ul className="space-y-1 mt-2 font-mono text-sm">{deep.proMoves.map((x, i) => <li key={i}>★ <Glossarized text={x} /></li>)}</ul>
             </details>
           )}
 
-          {deep?.mistakes && (
-            <details open={advancedTab} className="brutal-border bg-hot text-bone p-4">
+            {deep?.mistakes && (
+              <details open={hardMode} className="brutal-border bg-hot text-bone p-4">
               <summary className="font-mono text-xs uppercase cursor-pointer font-bold">▸ COMMON MISTAKES</summary>
               <ul className="space-y-1 mt-2 font-mono text-sm">{deep.mistakes.map((x, i) => <li key={i}>✗ <Glossarized text={x} /></li>)}</ul>
             </details>
@@ -248,10 +265,17 @@ export function MissionPageClient({ slug }: { slug: string }) {
           )}
 
           <section id="quiz">
-            <h2 className="font-display text-2xl mb-2">// QUIZ {advancedTab ? "(PRO)" : "(QUICK)"}</h2>
+            <h2 className="font-display text-2xl mb-2">
+              // QUIZ {hardMode ? <span className="text-hot">🔥 HARD</span> : "(NORMAL)"}
+            </h2>
+            {hardMode && (
+              <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-[10px] uppercase mb-3">
+                Hard mode — no hints · pass threshold 70% · {deep?.quizHard?.length ? "harder questions loaded" : "hints removed from standard questions"}
+              </div>
+            )}
             {learnMode === "ccd" && progress.hearts === 0 ? <HeartsWall /> : learnMode === "ccd" ? (
               <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-[10px] uppercase mb-3 flex items-center gap-2">
-                <span>CCD Mode — wrong answers cost a ♥ · {progress.hearts} remaining</span>
+                <span>Path Mode — wrong answers cost a ♥ · {progress.hearts} remaining</span>
               </div>
             ) : null}
             {!(learnMode === "ccd" && progress.hearts === 0) && (
