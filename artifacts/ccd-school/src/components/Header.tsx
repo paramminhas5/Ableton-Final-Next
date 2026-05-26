@@ -28,6 +28,7 @@ const PRIMARY = [
 
 const MORE_LINKS = [
   { to: "/train",        label: "Ear Training" },
+  { to: "/challenge",    label: "Daily Challenge ⚡" },
   { to: "/leaderboard",  label: "Leaderboard" },
   { to: "/shop",         label: "Gem Shop 💎" },
   { to: "/placement",    label: "Placement Test" },
