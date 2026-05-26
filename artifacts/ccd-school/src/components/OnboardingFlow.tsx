@@ -55,7 +55,7 @@ const LEARN_MODES: { id: "ccd" | "classic"; emoji: string; title: string; desc: 
     id: "classic",
     emoji: "🗺",
     title: "Explorer Mode",
-    desc: "All lessons open from the start. Jump anywhere, no hearts, no gates. Perfect if you know some basics already.",
+    desc: "All lessons open from the start. Jump anywhere, no hearts, no gates. Normal or Hard quiz difficulty.",
     color: "bg-bone text-ink",
   },
 ];
@@ -195,7 +195,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
               </div>
               <div className="flex items-center gap-3 font-mono text-sm">
                 <span className="text-acid">✓</span>
-                Mode: <strong>{LEARN_MODES.find(m => m.id === selectedMode)!.title}</strong>
+                Mode: <strong>{selectedMode === "ccd" ? "🔒 Path Mode" : "🗺 Explorer Mode"}</strong>
               </div>
               <div className="flex items-center gap-3 font-mono text-sm">
                 <span className="text-acid">✓</span>
