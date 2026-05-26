@@ -90,7 +90,35 @@ export type LessonScreen =
       title: string;         // ≤ 5 words
       body: string;          // ≤ 2 sentences (30 words max)
       keyFact?: string;      // 1 bold callout line ≤ 10 words
-      visual?: "waveform" | "frequency-bar" | "piano" | "eq-curve" | "none";
+      visual?:
+        | "waveform"           // animated sine wave SVG
+        | "waveform-compare"   // sine vs square vs saw comparison
+        | "frequency-bar"      // spectrum bar chart with labels
+        | "piano"              // piano keyboard with note labels
+        | "piano-octave"       // single octave with Hz labels
+        | "eq-curve"           // EQ frequency curve with zones
+        | "amplitude-dial"     // circular dial showing dB levels
+        | "bpm-grid"           // beat grid with subdivisions
+        | "signal-chain"       // linear signal chain arrows
+        | "stereo-field"       // left/right stereo pan diagram
+        | "note-lengths"       // whole→half→quarter→8th→16th
+        | "scale-steps"        // W-W-H-W-W-W-H step diagram
+        | "chord-stack"        // stacked interval blocks
+        | "rhythm-dots"        // rhythm dot notation
+        | "vinyl-platter"      // DJ turntable platter top-view
+        | "mixer-channel"      // vertical mixer channel strip
+        | "camelot-wheel"      // 12-key Camelot/harmonic mixing wheel
+        | "waveform-zoom"      // waveform with beatgrid overlay
+        | "headroom-meter"     // vertical dB headroom meter
+        | "none";
+    }
+  | {
+      kind: "diagram";
+      title: string;
+      // SVG diagram with labelled nodes and arrows — fully custom
+      nodes: { id: string; label: string; x: number; y: number; color?: string }[];
+      arrows: { from: string; to: string; label?: string }[];
+      caption?: string;
     }
   | {
       kind: "interact";

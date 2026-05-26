@@ -12,12 +12,13 @@
  *   • Mobile drawer updated with hearts + gems
  */
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { rankFor } from "@/lib/ranks";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
+import { useLearnMode } from "@/lib/mode";
 
 const PRIMARY = [
   { to: "/world/fundamentals", label: "Fundamentals" },
@@ -37,6 +38,45 @@ const MORE_LINKS = [
   { to: "/devices",      label: "Devices" },
   { to: "/playground",   label: "Workbench" },
 ] as const;
+
+// ─── mode toggle pill ─────────────────────────────────────────────────────────
+
+function ModeTogglePill({ compact = false }: { compact?: boolean }) {
+  const { learnMode, setLearnMode } = useLearnMode();
+  const [toast, setToast] = useState<string | null>(null);
+
+  const toggle = useCallback(() => {
+    const next = learnMode === "ccd" ? "classic" : "ccd";
+    setLearnMode(next);
+    setToast(
+      next === "ccd"
+        ? "🔒 Path Mode — sequential, hearts on"
+        : "🗺 Explorer Mode — all lessons open"
+    );
+    setTimeout(() => setToast(null), 2800);
+  }, [learnMode, setLearnMode]);
+
+  const isPath = learnMode === "ccd";
+
+  return (
+    <div className="relative">
+      <button
+        onClick={toggle}
+        title={isPath ? "Path Mode — click to switch to Explorer" : "Explorer Mode — click to switch to Path"}
+        className={`brutal-border px-2.5 py-1 font-mono text-[9px] uppercase brutal-press transition-all flex items-center gap-1.5
+          ${isPath ? "bg-volt text-bone" : "bg-bone text-ink hover:bg-sun"}`}
+      >
+        <span>{isPath ? "🔒" : "🗺"}</span>
+        {!compact && <span>{isPath ? "PATH" : "EXPLORE"}</span>}
+      </button>
+      {toast && (
+        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-3 py-2 font-mono text-[10px] uppercase whitespace-nowrap brutal-shadow animate-fade-in">
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── sub-components ───────────────────────────────────────────────────────────
 
@@ -138,6 +178,7 @@ function UserIcon() {
 export function Header() {
   const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
+  const { learnMode } = useLearnMode();
   const [moreOpen, setMoreOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -230,6 +271,9 @@ export function Header() {
           {/* Rank badge */}
           <RankBadge />
 
+          {/* Mode toggle */}
+          <ModeTogglePill />
+
           {/* Theme */}
           <ThemeSwitcher compact />
 
@@ -313,6 +357,17 @@ export function Header() {
               <span className="font-mono text-[9px] uppercase opacity-60 ml-2">
                 {progress.hearts}/{MAX_HEARTS} hearts
               </span>
+            </div>
+
+            {/* Mode toggle in drawer */}
+            <div className="px-4 py-3 brutal-border border-x-0 border-t-0 flex items-center justify-between gap-3">
+              <div>
+                <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Learning Mode</div>
+                <div className="font-mono text-[10px] uppercase font-bold">
+                  {learnMode === "ccd" ? "🔒 Path Mode" : "🗺 Explorer Mode"}
+                </div>
+              </div>
+              <ModeTogglePill compact />
             </div>
 
             {/* Search */}

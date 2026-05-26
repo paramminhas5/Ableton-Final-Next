@@ -21,6 +21,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
+import { InlineVisual, DiagramVisual } from "@/components/LessonVisuals";
 import { useProgress, MAX_HEARTS } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
@@ -73,52 +74,6 @@ function Confetti() {
       ))}
     </div>
   );
-}
-
-// ─── visual inline element for concept screens ───────────────────────────────
-
-function InlineVisual({ type }: { type: "waveform" | "frequency-bar" | "piano" | "eq-curve" | "none" }) {
-  if (type === "none" || !type) return null;
-
-  if (type === "waveform") {
-    return (
-      <svg viewBox="0 0 200 60" className="w-full h-14 brutal-border bg-ink" fill="none" stroke="#C6FF00" strokeWidth="2.5" strokeLinecap="round">
-        <path d="M0 30 Q25 5 50 30 Q75 55 100 30 Q125 5 150 30 Q175 55 200 30" />
-      </svg>
-    );
-  }
-  if (type === "frequency-bar") {
-    const bars = [20, 45, 70, 90, 60, 35, 55, 80, 40, 25];
-    return (
-      <div className="brutal-border bg-ink flex items-end justify-center gap-1 px-3 py-2 h-14">
-        {bars.map((h, i) => (
-          <div key={i} className="w-4 bg-acid" style={{ height: `${h}%` }} />
-        ))}
-      </div>
-    );
-  }
-  if (type === "piano") {
-    return (
-      <div className="brutal-border bg-ink flex h-14 overflow-hidden">
-        {Array.from({ length: 14 }).map((_, i) => {
-          const isBlack = [1, 3, 6, 8, 10].includes(i % 12);
-          return (
-            <div key={i} className={`flex-1 brutal-border ${isBlack ? "bg-ink" : "bg-bone"}`}
-              style={isBlack ? { height: "60%", zIndex: 1, margin: "0 -4px" } : {}} />
-          );
-        })}
-      </div>
-    );
-  }
-  if (type === "eq-curve") {
-    return (
-      <svg viewBox="0 0 200 60" className="w-full h-14 brutal-border bg-ink" fill="none" stroke="#FFB800" strokeWidth="2.5" strokeLinecap="round">
-        <path d="M0 45 Q30 45 50 20 Q70 5 90 15 Q110 25 130 30 Q160 35 200 35" />
-        <line x1="0" y1="35" x2="200" y2="35" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="4 4" />
-      </svg>
-    );
-  }
-  return null;
 }
 
 // ─── individual screen renderers ─────────────────────────────────────────────
@@ -372,6 +327,20 @@ function SummaryScreen({
   );
 }
 
+function DiagramScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: "diagram" }>; onNext: () => void }) {
+  return (
+    <div className="space-y-4">
+      <DiagramVisual screen={screen} />
+      <button
+        onClick={onNext}
+        className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+      >
+        GOT IT →
+      </button>
+    </div>
+  );
+}
+
 // ─── main LessonPlayer ────────────────────────────────────────────────────────
 
 interface Props {
@@ -473,6 +442,8 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
         <ConceptScreen screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "interact" ? (
         <InteractScreen screen={currentScreen} onNext={advance} />
+      ) : currentScreen?.kind === "diagram" ? (
+        <DiagramScreen screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "quiz" ? (
         <QuizScreen
           screen={currentScreen}
