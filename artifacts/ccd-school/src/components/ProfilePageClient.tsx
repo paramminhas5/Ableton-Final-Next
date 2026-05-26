@@ -64,7 +64,16 @@ export function ProfilePageClient() {
               <span className="brutal-border bg-volt text-ink px-3 py-1 font-mono text-xs uppercase mb-1">PRO</span>
             )}
           </div>
-          {user && <div className="font-mono text-sm mt-2 opacity-60">{user.email}</div>}
+          {user && (
+            <div className="flex items-center gap-3 mt-2">
+              <div className="font-mono text-sm opacity-60">{user.email}</div>
+              <a
+                href={`/u/${user.name ?? user.email?.split("@")[0] ?? "me"}`}
+                className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase brutal-press hover:bg-sun transition-colors">
+                Public Profile →
+              </a>
+            </div>
+          )}
         </div>
       </header>
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8 pb-24">
