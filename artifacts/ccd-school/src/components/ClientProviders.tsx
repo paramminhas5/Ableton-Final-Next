@@ -8,6 +8,8 @@ import { MasterTransportBar } from "@/components/MasterTransportBar";
 import { useProgress } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import type { GatingMode } from "@/lib/gating";
+import { CelebrationOverlay } from "@/components/CelebrationOverlay";
+import { useCelebration } from "@/lib/useCelebration";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +92,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
           <GatingLoader>
             <ThemeInit />
             <CloudSyncEffect />
+            <CelebrationLayer />
             {children}
             <MasterTransportBar />
             <CommandPalette />
@@ -98,4 +101,9 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       </QueryClientProvider>
     </SessionProvider>
   );
+}
+
+function CelebrationLayer() {
+  const { celebrationEvent, dismissCelebration } = useCelebration();
+  return <CelebrationOverlay event={celebrationEvent} onDone={dismissCelebration} />;
 }
