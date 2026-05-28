@@ -433,7 +433,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Start with same-key, similar-BPM tracks", "SYNC is acceptable while learning other skills", "Record every session and listen back critically"],
-      badge: "first-mix",
+      badge: { slug: "first-mix", name: "First Mix" },
     },
   ],
 
@@ -756,7 +756,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Crate dig across Beatport, Bandcamp, Juno, Traxsource", "Follow labels you love — trust their new releases", "Exclusive music creates unrepeatable moments"],
-      badge: "crate-digger",
+      badge: { slug: "crate-digger", name: "Crate Digger" },
     },
   ],
 
@@ -865,7 +865,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Dense waveform = busy. Sparse = quiet or breakdown", "Blue = bass. Yellow = treble on colour waveforms", "See the drop or breakdown coming — prepare, not react"],
-      badge: "waveform-reader",
+      badge: { slug: "waveform-reader", name: "Waveform Reader" },
     },
   ],
 
@@ -920,7 +920,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Pitch fader = speed. Jog wheel = beat position", "Faster incoming = lower pitch fader", "Listen for kick drums to lock — stop the flutter"],
-      badge: "beat-surgeon",
+      badge: { slug: "beat-surgeon", name: "Beat Surgeon" },
     },
   ],
 
@@ -1299,7 +1299,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Loop holds a section indefinitely — buy time to prep", "Loop halve builds tension: 4 → 2 → 1 → 1 beat", "Loop roll = temporary stutter, snaps back to position"],
-      badge: "loop-architect",
+      badge: { slug: "loop-architect", name: "Loop Architect" },
     },
   ],
 
@@ -1353,7 +1353,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Watch body language: dancing or facing the bar?", "People leaving the floor = adapt immediately", "Time of night dictates energy level and genre"],
-      badge: "crowd-whisperer",
+      badge: { slug: "crowd-whisperer", name: "Crowd Whisperer" },
     },
   ],
 
@@ -1727,7 +1727,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Train wreck: cut to one track immediately and reset", "Confidence in recovery = crowd doesn't notice", "Mistakes are universal. Recovery is the skill."],
-      badge: "steady-hands",
+      badge: { slug: "steady-hands", name: "Steady Hands" },
     },
   ],
 
@@ -1782,7 +1782,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Echo size changes character: tight vs spacious", "Flanger = jet-plane sweep on hi-hats and snares", "Restraint: one effect, right moment, maximum impact"],
-      badge: "fx-architect",
+      badge: { slug: "fx-architect", name: "FX Architect" },
     },
   ],
 
@@ -1945,7 +1945,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Stems: Bass, Drums, Melody, Vocals — AI separated", "Keep both drums, swap melody and bass for seamless transition", "AI stems are impressive but imperfect — expect some leakage"],
-      badge: "stem-sculptor",
+      badge: { slug: "stem-sculptor", name: "Stem Sculptor" },
     },
   ],
 
@@ -2160,7 +2160,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "summary",
       learned: ["Artistry = unique voice beyond technical skill", "Original productions create exclusive moments", "Evolution: let your sound develop naturally over years"],
-      badge: "dj-advanced",
+      badge: { slug: "dj-advanced", name: "DJ Advanced" },
     },
   ],
 };
