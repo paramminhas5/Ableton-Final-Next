@@ -183,6 +183,7 @@ export function ProfilePageClient() {
               <div className="font-mono text-xs opacity-60 mb-3">Already know the basics? Skip ahead to the right chapter.</div>
               <a href="/placement" className="brutal-border bg-acid text-ink px-4 py-2 font-mono text-xs uppercase brutal-press inline-block">TAKE TEST →</a>
             </div>
+            <div className="brutal-border p-4">
               <div className="font-mono text-xs opacity-60 mb-3">
                 {user ? "Progress synced to cloud. Local copy kept as backup." : "Progress stored locally in your browser."}
               </div>
