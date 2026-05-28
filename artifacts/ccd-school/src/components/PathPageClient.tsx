@@ -91,7 +91,7 @@ export function PathPageClient({ slug }: { slug: string }) {
             );
             return (
               <div key={mSlug} className={`${indent} transition-all`}>
-                {locked ? <div>{nodeContent}</div> : <Link href={`/mission/${mSlug}`}>{nodeContent}</Link>}
+                {locked ? <div>{nodeContent}</div> : <Link href={`/learn/${mSlug}`}>{nodeContent}</Link>}
               </div>
             );
           })}

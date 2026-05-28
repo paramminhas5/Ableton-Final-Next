@@ -2,30 +2,24 @@
 /**
  * LessonPlayer — Duolingo-style 5-8 screen lesson engine.
  *
- * Screen types (from types.ts):
- *   hook     → full-bleed emoji + bold headline, tap anywhere to continue
- *   concept  → title + body (≤30 words) + optional key-fact callout + optional visual
- *   interact → full simulator with a short prompt
- *   quiz     → one question, 4 options, immediate colour feedback + explanation
- *   summary  → 3 bullet recap + XP award + confetti
- *
- * Features:
- *   • Green progress bar across top (fills as screens advance)
- *   • Heart counter top-right (CCD mode only)
- *   • Wrong answer loses a heart, shows shake animation
- *   • NEXT button only appears after answering / completing interaction
- *   • Summary triggers CompletionModal
- *   • "Classic" tab escape hatch links back to /mission/[slug]
+ * Fixes applied:
+ *   #5  — Back button (✕) uses getMissionContext for correct world route
+ *   #7  — Breadcrumb bar: World › Chapter › Path › Mission N of M
+ *   #8  — Quiz screens show "Question N of M" + hearts warning on first quiz
+ *   #9  — First-time hearts explainer modal, −1 heart message on wrong answer
+ *   #10 — Mode indicator only shows in PATH mode (not in classic fallback)
+ *   #11 — "Save progress" nudge on SummaryScreen for logged-out users
  */
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
 import { InlineVisual, DiagramVisual } from "@/components/LessonVisuals";
 import { useProgress, MAX_HEARTS } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
+import { useAuth } from "@/lib/auth";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
-import { rankFor } from "@/lib/ranks";
+import { getMissionContext } from "@/lib/missionContext";
 import Link from "next/link";
 
 // ─── tiny visual helpers ──────────────────────────────────────────────────────
@@ -44,9 +38,9 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 
 function HeartsRow({ count }: { count: number }) {
   return (
-    <div className="flex items-center gap-0.5">
+    <div className="flex items-center gap-0.5" title={`${count}/${MAX_HEARTS} hearts — wrong answers cost 1 heart`}>
       {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-        <span key={i} className={`text-lg leading-none ${i < count ? "text-hot" : "opacity-20"}`}>
+        <span key={i} className={`text-lg leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
           ♥
         </span>
       ))}
@@ -72,6 +66,35 @@ function Confetti() {
           animation: `cfall ${p.dur} ${p.delay} ease-in forwards`,
         }} />
       ))}
+    </div>
+  );
+}
+
+// ─── Hearts explainer modal — shown once per session ─────────────────────────
+
+const HEARTS_SEEN_KEY = "ccd.hearts_explained";
+
+function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 bg-ink/70 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Hearts explained">
+      <div className="brutal-border bg-bone max-w-sm w-full brutal-shadow">
+        <div className="brutal-border border-x-0 border-t-0 bg-hot text-bone px-5 py-4">
+          <div className="font-display text-3xl">♥ PATH MODE HEARTS</div>
+        </div>
+        <div className="p-5 space-y-3 font-mono text-sm leading-relaxed">
+          <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
+          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to Explorer Mode (no hearts) to keep going.</p>
+          <p className="opacity-60 text-xs">You can switch modes anytime using the toggle in the header.</p>
+        </div>
+        <div className="p-4">
+          <button
+            onClick={onDismiss}
+            className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press"
+          >
+            GOT IT — LET&apos;S GO →
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -161,11 +184,17 @@ type QuizPhase = "picking" | "correct" | "wrong";
 
 function QuizScreen({
   screen,
+  quizNumber,
+  quizTotal,
+  isPathMode,
   onCorrect,
   onWrong,
   onNext,
 }: {
   screen: Extract<LessonScreen, { kind: "quiz" }>;
+  quizNumber: number;
+  quizTotal: number;
+  isPathMode: boolean;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -195,7 +224,17 @@ function QuizScreen({
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}`}</style>
 
       <div className="brutal-border bg-bone p-5">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-2">QUESTION</div>
+        {/* Question counter + hearts warning */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="font-mono text-[10px] uppercase opacity-60">
+            QUESTION {quizNumber} OF {quizTotal}
+          </div>
+          {isPathMode && phase === "picking" && (
+            <div className="font-mono text-[9px] uppercase opacity-50 text-hot">
+              ♥ wrong = −1 heart
+            </div>
+          )}
+        </div>
         <div className="font-display text-xl md:text-2xl leading-snug">{screen.q}</div>
       </div>
 
@@ -228,9 +267,16 @@ function QuizScreen({
             {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
           </div>
           {phase === "wrong" && (
-            <div className="font-mono text-xs opacity-80 mb-1">
-              Correct answer: <strong>{screen.options[screen.answer]}</strong>
-            </div>
+            <>
+              <div className="font-mono text-xs opacity-80 mb-1">
+                Correct answer: <strong>{screen.options[screen.answer]}</strong>
+              </div>
+              {isPathMode && (
+                <div className="font-mono text-[10px] uppercase opacity-80 mb-1">
+                  −1 heart deducted
+                </div>
+              )}
+            </>
           )}
           <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
             {screen.explain}
@@ -255,12 +301,14 @@ function SummaryScreen({
   mission,
   xpEarned,
   nextSlug,
+  isLoggedIn,
   onClose,
 }: {
   screen: Extract<LessonScreen, { kind: "summary" }>;
   mission: Mission;
   xpEarned: number;
   nextSlug?: string;
+  isLoggedIn: boolean;
   onClose: () => void;
 }) {
   useEffect(() => { playFanfare(); }, []);
@@ -293,6 +341,22 @@ function SummaryScreen({
             <div className="font-display text-xl">{screen.badge.name}</div>
           </div>
         </div>
+      )}
+
+      {/* Save progress nudge for logged-out users */}
+      {!isLoggedIn && (
+        <Link
+          href="/login"
+          className="brutal-border bg-volt text-bone p-4 flex items-start gap-3 hover:opacity-90 transition-opacity block"
+        >
+          <span className="text-2xl shrink-0">🔒</span>
+          <div>
+            <div className="font-display text-lg">Save your progress — sign up free</div>
+            <div className="font-mono text-xs opacity-80 mt-0.5 leading-relaxed">
+              Your XP & completed lessons are stored locally right now. Create a free account to back them up and access from any device.
+            </div>
+          </div>
+        </Link>
       )}
 
       <div className="brutal-border bg-bone p-5">
@@ -341,29 +405,124 @@ function DiagramScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
   );
 }
 
+// ─── Breadcrumb ───────────────────────────────────────────────────────────────
+
+function LessonBreadcrumb({
+  mission,
+  missionIndex,
+  missionTotal,
+}: {
+  mission: Mission;
+  missionIndex: number;
+  missionTotal: number;
+}) {
+  const ctx = getMissionContext(mission.slug);
+  const worldLabel = ctx.worldLabel || "Unknown";
+  const chapterTitle = ctx.chapter?.title || null;
+  const pathTitle = ctx.path?.title || null;
+
+  return (
+    <div className="flex items-center gap-1 flex-wrap font-mono text-[9px] uppercase opacity-50 tracking-wide">
+      <Link href={ctx.worldRoute} className="hover:opacity-100 hover:text-acid transition-colors">
+        {worldLabel}
+      </Link>
+      {chapterTitle && (
+        <>
+          <span>›</span>
+          <span>{chapterTitle}</span>
+        </>
+      )}
+      {pathTitle && (
+        <>
+          <span>›</span>
+          <Link
+            href={ctx.path ? `/path/${ctx.path.slug}` : "#"}
+            className="hover:opacity-100 hover:text-acid transition-colors"
+          >
+            {pathTitle}
+          </Link>
+        </>
+      )}
+      {missionTotal > 1 && (
+        <>
+          <span>›</span>
+          <span className="opacity-100 text-ink font-bold">
+            {mission.title} ({missionIndex}/{missionTotal})
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
+
 // ─── main LessonPlayer ────────────────────────────────────────────────────────
 
 interface Props {
   mission: Mission;
   nextSlug?: string;
   isReview?: boolean;
+  /** Index (1-based) of this mission within its path */
+  missionIndex?: number;
+  /** Total missions in the path */
+  missionTotal?: number;
   onComplete: () => void;
   onWrong?: () => void;
   onCorrect?: () => void;
 }
 
-export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong, onCorrect }: Props) {
+export function LessonPlayer({
+  mission,
+  nextSlug,
+  isReview,
+  missionIndex = 1,
+  missionTotal = 1,
+  onComplete,
+  onWrong,
+  onCorrect,
+}: Props) {
   const screens = mission.screens ?? [];
   const [screenIdx, setScreenIdx] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
+  const [showHeartsExplainer, setShowHeartsExplainer] = useState(false);
+
   const { progress, completeMission, reviewMission, loseHeart } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
+  const { user } = useAuth();
   const alreadyDone = !!progress.completedMissions[mission.slug];
   const xpEarned = alreadyDone ? 0 : mission.xp;
+  const isPathMode = learnMode === "ccd";
+
+  // Resolve correct back-route via missionContext (fixes Producer world slug bug)
+  const ctx = getMissionContext(mission.slug);
+  const backRoute = ctx.worldRoute || "/worlds";
 
   const currentScreen = screens[screenIdx];
   const total = screens.length;
+
+  // Count quiz screens for "Question N of M"
+  const quizScreens = screens.filter(s => s.kind === "quiz");
+  const quizScreenIndices = screens.reduce<number[]>((acc, s, i) => {
+    if (s.kind === "quiz") acc.push(i);
+    return acc;
+  }, []);
+  const currentQuizNumber = currentScreen?.kind === "quiz"
+    ? quizScreenIndices.indexOf(screenIdx) + 1
+    : 0;
+
+  // Show hearts explainer on first CCD lesson if never seen
+  useEffect(() => {
+    if (!isPathMode) return;
+    try {
+      const seen = sessionStorage.getItem(HEARTS_SEEN_KEY);
+      if (!seen) setShowHeartsExplainer(true);
+    } catch {}
+  }, [isPathMode]);
+
+  const dismissHeartsExplainer = () => {
+    try { sessionStorage.setItem(HEARTS_SEEN_KEY, "1"); } catch {}
+    setShowHeartsExplainer(false);
+  };
 
   // Persist lesson progress to sessionStorage — survives page refresh
   const SESSION_KEY = `lesson_progress_${mission.slug}`;
@@ -374,7 +533,7 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
       const saved = sessionStorage.getItem(SESSION_KEY);
       if (saved) {
         const { idx, correct } = JSON.parse(saved);
-        if (typeof idx === 'number' && idx > 0 && idx < screens.length) {
+        if (typeof idx === "number" && idx > 0 && idx < screens.length) {
           setScreenIdx(idx);
           setCorrectCount(correct ?? 0);
         }
@@ -398,8 +557,7 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
       setScreenIdx(idx => idx + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // Lesson complete
-      const score = correctCount / Math.max(1, screens.filter(s => s.kind === "quiz").length);
+      const score = correctCount / Math.max(1, quizScreens.length);
       if (isReview) {
         reviewMission(mission.slug, score);
       } else {
@@ -408,90 +566,118 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
       setDone(true);
       onComplete();
     }
-  }, [screenIdx, total, correctCount, screens, mission, isReview, completeMission, reviewMission, onComplete]);
+  }, [screenIdx, total, correctCount, quizScreens.length, mission, isReview, completeMission, reviewMission, onComplete]);
 
   const handleCorrect = () => { setCorrectCount(c => c + 1); onCorrect?.(); };
   const handleWrong = () => {
-    if (learnMode === "ccd") loseHeart();
+    if (isPathMode) loseHeart();
     onWrong?.();
   };
 
-  // No screens — LessonPageClient handles this case with InlineClassicLesson fallback
+  // No screens — LessonPageClient handles this with InlineClassicLesson fallback
   if (!screens.length) return null;
 
-  const summaryScreen = done ? screens.find(s => s.kind === "summary") as Extract<LessonScreen, { kind: "summary" }> | undefined : undefined;
+  const summaryScreen = done
+    ? (screens.find(s => s.kind === "summary") as Extract<LessonScreen, { kind: "summary" }> | undefined)
+    : undefined;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
-      {/* Top bar */}
-      <div className="flex items-center gap-3">
-        <Link href={`/learn/${mission.world === "foundations" ? "fundamentals" : mission.world}`}
-          className="brutal-border bg-bone px-3 py-2 font-mono text-[10px] uppercase brutal-press shrink-0">
-          ✕
-        </Link>
-        <div className="flex-1">
-          <ProgressBar current={screenIdx} total={total} />
-        </div>
-        {learnMode === "ccd" && <HeartsRow count={progress.hearts} />}
-      </div>
-
-      {/* Mode indicator + Classic escape */}
-      <div className="flex items-center justify-between">
-        <div className="brutal-border bg-volt text-bone px-2.5 py-1 font-mono text-[9px] uppercase">
-          🔒 PATH MODE · ♥ {progress.hearts}
-        </div>
-        <button
-          onClick={() => { setLearnMode("classic"); }}
-          className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
-        >
-          Switch to Classic →
-        </button>
-      </div>
-
-      {/* Screen renderer — key={screenIdx} ensures React remounts each screen
-          fresh, resetting all internal state (quiz phase, interacted flag, etc.) */}
-      {done && summaryScreen ? (
-        <SummaryScreen
-          key="summary-done"
-          screen={summaryScreen}
-          mission={mission}
-          xpEarned={xpEarned}
-          nextSlug={nextSlug}
-          onClose={onComplete}
-        />
-      ) : currentScreen?.kind === "hook" ? (
-        <HookScreen key={screenIdx} screen={currentScreen} onNext={advance} />
-      ) : currentScreen?.kind === "concept" ? (
-        <ConceptScreen key={screenIdx} screen={currentScreen} onNext={advance} />
-      ) : currentScreen?.kind === "interact" ? (
-        <InteractScreen key={screenIdx} screen={currentScreen} onNext={advance} />
-      ) : currentScreen?.kind === "diagram" ? (
-        <DiagramScreen key={screenIdx} screen={currentScreen} onNext={advance} />
-      ) : currentScreen?.kind === "quiz" ? (
-        <QuizScreen
-          key={screenIdx}
-          screen={currentScreen}
-          onCorrect={handleCorrect}
-          onWrong={handleWrong}
-          onNext={advance}
-        />
-      ) : currentScreen?.kind === "summary" ? (
-        <SummaryScreen
-          key={screenIdx}
-          screen={currentScreen}
-          mission={mission}
-          xpEarned={xpEarned}
-          nextSlug={nextSlug}
-          onClose={onComplete}
-        />
-      ) : null}
-
-      {/* Screen counter */}
-      {!done && (
-        <div className="text-center font-mono text-[9px] uppercase opacity-30">
-          {screenIdx + 1} / {total}
-        </div>
+    <>
+      {/* Hearts explainer modal — shown once per session in path mode */}
+      {showHeartsExplainer && (
+        <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
-    </div>
+
+      <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
+
+        {/* ── Top bar: close button + progress bar + hearts ── */}
+        <div className="flex items-center gap-3">
+          <Link
+            href={backRoute}
+            className="brutal-border bg-bone px-3 py-2 font-mono text-[10px] uppercase brutal-press shrink-0"
+            title="Back to world"
+          >
+            ✕
+          </Link>
+          <div className="flex-1">
+            <ProgressBar current={screenIdx} total={total} />
+          </div>
+          {isPathMode && <HeartsRow count={progress.hearts} />}
+        </div>
+
+        {/* ── Breadcrumb: World › Chapter › Path › Mission N/M ── */}
+        <LessonBreadcrumb
+          mission={mission}
+          missionIndex={missionIndex}
+          missionTotal={missionTotal}
+        />
+
+        {/* ── Mode indicator — only show in PATH mode ── */}
+        {isPathMode && (
+          <div className="flex items-center justify-between">
+            <div className="brutal-border bg-volt text-bone px-2.5 py-1 font-mono text-[9px] uppercase">
+              🔒 PATH MODE · ♥ {progress.hearts}/{MAX_HEARTS}
+            </div>
+            <button
+              onClick={() => setLearnMode("classic")}
+              className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
+            >
+              Switch to Explorer →
+            </button>
+          </div>
+        )}
+
+        {/* ── Screen renderer ──
+            key={screenIdx} ensures React remounts each screen,
+            resetting internal state (quiz phase, interacted flag, etc.) */}
+        {done && summaryScreen ? (
+          <SummaryScreen
+            key="summary-done"
+            screen={summaryScreen}
+            mission={mission}
+            xpEarned={xpEarned}
+            nextSlug={nextSlug}
+            isLoggedIn={!!user}
+            onClose={onComplete}
+          />
+        ) : currentScreen?.kind === "hook" ? (
+          <HookScreen key={screenIdx} screen={currentScreen} onNext={advance} />
+        ) : currentScreen?.kind === "concept" ? (
+          <ConceptScreen key={screenIdx} screen={currentScreen} onNext={advance} />
+        ) : currentScreen?.kind === "interact" ? (
+          <InteractScreen key={screenIdx} screen={currentScreen} onNext={advance} />
+        ) : currentScreen?.kind === "diagram" ? (
+          <DiagramScreen key={screenIdx} screen={currentScreen} onNext={advance} />
+        ) : currentScreen?.kind === "quiz" ? (
+          <QuizScreen
+            key={screenIdx}
+            screen={currentScreen}
+            quizNumber={currentQuizNumber}
+            quizTotal={quizScreens.length}
+            isPathMode={isPathMode}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+            onNext={advance}
+          />
+        ) : currentScreen?.kind === "summary" ? (
+          <SummaryScreen
+            key={screenIdx}
+            screen={currentScreen}
+            mission={mission}
+            xpEarned={xpEarned}
+            nextSlug={nextSlug}
+            isLoggedIn={!!user}
+            onClose={onComplete}
+          />
+        ) : null}
+
+        {/* ── Screen counter ── */}
+        {!done && (
+          <div className="text-center font-mono text-[9px] uppercase opacity-30">
+            {screenIdx + 1} / {total}
+          </div>
+        )}
+      </div>
+    </>
   );
 }

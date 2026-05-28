@@ -22,12 +22,18 @@ import { useAuth, signOut } from "@/lib/auth";
 import { rankFor } from "@/lib/ranks";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { useLearnMode } from "@/lib/mode";
+import { getMissionContext } from "@/lib/missionContext";
+import { MISSIONS } from "@/content/missions";
+import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
+import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
+
+const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
 // ─── Nav data ─────────────────────────────────────────────────────────────────
 
 /** Primary nav — 3 items max; deliberately short for quick scanning */
 const PRIMARY_NAV = [
-  { to: "/dashboard",  label: "Learn"    },
+  { to: "/learn",      label: "Learn"    },
   { to: "/worlds",     label: "Worlds"   },
   { to: "/dashboard",  label: "Progress" },
 ] as const;
@@ -387,6 +393,24 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
 
   const handleSearch = () => { onClose(); onSearch(); };
 
+  // Compute "continue" slug for quick-resume
+  const completed = progress.completedMissions;
+  const hasMissions = Object.keys(completed).length > 0;
+  const allDoneSlugs = Object.entries(completed)
+    .filter(([, v]) => v)
+    .sort(([, a], [, b]) => (b?.at ?? 0) - (a?.at ?? 0))
+    .map(([slug]) => slug);
+  const lastSlug = allDoneSlugs[0];
+  const lastCtx = lastSlug ? getMissionContext(lastSlug) : null;
+  const nextSlug = lastCtx?.path
+    ? (() => {
+        const idx = lastCtx.path.missionSlugs.indexOf(lastSlug);
+        const ns = lastCtx.path.missionSlugs[idx + 1];
+        return ns && !completed[ns] ? ns : null;
+      })()
+    : null;
+  const continueSlug = nextSlug ?? (Object.keys(completed).length === 0 ? "what-is-sound" : null);
+
   return (
     <div
       className="md:hidden fixed inset-0 z-50 bg-ink/80"
@@ -410,6 +434,25 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             ✕
           </button>
         </div>
+
+        {/* ▶ Continue shortcut — shown only if user has progress */}
+        {continueSlug && (
+          <Link
+            href={`/learn/${continueSlug}`}
+            onClick={onClose}
+            className="block px-4 py-3 brutal-border border-x-0 border-t-0 bg-acid text-ink font-display text-base brutal-press hover:bg-sun transition-colors flex items-center gap-3"
+          >
+            <span className="text-2xl shrink-0">▶</span>
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-60">
+                {hasMissions ? "CONTINUE WHERE YOU LEFT OFF" : "START YOUR FIRST LESSON"}
+              </div>
+              <div className="font-display text-base leading-tight">
+                {continueSlug.replace(/-/g, " ")}
+              </div>
+            </div>
+          </Link>
+        )}
 
         {/* Compact stats row — 3 columns */}
         <div className="grid grid-cols-3 brutal-border border-x-0 border-t-0">

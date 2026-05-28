@@ -50,6 +50,12 @@ const MidiTransformSim  = lazy(() => import("./MidiTransformSim").then(m => ({ d
 const ScaleAwareSim     = lazy(() => import("./ScaleAwareSim").then(m => ({ default: m.ScaleAwareSim })));
 const Push3Sim          = lazy(() => import("./Push3Sim").then(m => ({ default: m.Push3Sim })));
 
+// ─── LEGACY SIMS (DJ world + older missions) ──────────────────────────────────
+const TempoCompareSim   = lazy(() => import("./TempoCompareSim").then(m => ({ default: m.TempoCompareSim })));
+const BufferSim         = lazy(() => import("./BufferSim").then(m => ({ default: m.BufferSim })));
+const KnobTrainerSim    = lazy(() => import("./KnobTrainerSim").then(m => ({ default: m.KnobTrainerSim })));
+const SynthPlaygroundSim = lazy(() => import("./SynthPlaygroundSim").then(m => ({ default: m.SynthPlaygroundSim })));
+
 function SimSkeleton() {
   return (
     <div className="brutal-border bg-bone p-6 space-y-3 animate-pulse">
@@ -130,6 +136,11 @@ function SimInner({ type, preset }: { type: SimType; preset?: Record<string, unk
     case "midi-transform":      return <MidiTransformSim />;
     case "scale-aware":         return <ScaleAwareSim />;
     case "push3":               return <Push3Sim />;
+    // LEGACY sims
+    case "tempo-compare":       return <TempoCompareSim />;
+    case "buffer-sim":          return <BufferSim />;
+    case "knob-trainer":        return <KnobTrainerSim preset={preset} />;
+    case "synth-playground":    return <SynthPlaygroundSim />;
     case "none":
     default:
       return (
@@ -183,6 +194,11 @@ export const SIM_LIST: { type: SimType; label: string; color: string }[] = [
   { type: "midi-transform",      label: "MIDI Transform",      color: "bg-acid text-ink" },
   { type: "scale-aware",         label: "Scale Aware",         color: "bg-volt text-bone" },
   { type: "push3",               label: "Push 3",              color: "bg-sun text-ink" },
+  // Legacy
+  { type: "tempo-compare",      label: "Tempo Compare",       color: "bg-acid text-ink" },
+  { type: "buffer-sim",         label: "Buffer",              color: "bg-volt text-bone" },
+  { type: "knob-trainer",       label: "Knob Trainer",        color: "bg-sun text-ink" },
+  { type: "synth-playground",   label: "Synth Playground",    color: "bg-acid text-ink" },
 ];
 
 export function Simulator({ type, preset }: { type: SimType; preset?: Record<string, unknown> }) {

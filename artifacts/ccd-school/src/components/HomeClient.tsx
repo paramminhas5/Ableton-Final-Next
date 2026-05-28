@@ -11,7 +11,6 @@ import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
-import { PlacementTest } from "@/components/PlacementTest";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
@@ -427,31 +426,20 @@ export function HomeClient() {
   const { user } = useAuth();
   const { progress } = useProgress();
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showPlacement, setShowPlacement] = useState(false);
   const hasMissions = Object.keys(progress.completedMissions).length > 0;
 
-  // Brand-new user who hasn't done onboarding → show onboarding
-  if (!progress.onboardingDone && !hasMissions) {
-    if (showPlacement) {
-      return (
-        <PlacementTest
-          world={progress.selectedWorld ?? "fundamentals"}
-          onSkip={() => setShowPlacement(false)}
-        />
-      );
-    }
-    return <OnboardingFlow />;
-  }
-
-  // User explicitly clicked GET STARTED from the landing page
+  // User explicitly clicked GET STARTED from the landing page → run onboarding
   if (showOnboarding) {
     return <OnboardingFlow onDone={() => setShowOnboarding(false)} />;
   }
 
-  // Returning user or has progress → Dashboard
-  if (user || hasMissions) return <Dashboard />;
+  // Returning user: signed in, has completed missions, OR has already done
+  // onboarding (picked a world + mode but hasn't started lessons yet)
+  if (user || hasMissions || progress.onboardingDone) {
+    return <Dashboard />;
+  }
 
-  // Fallback: Landing page (shown after onboarding is done but no missions yet,
-  // or when user has cleared progress)
+  // Brand-new user with no history → show the Landing page first.
+  // Clicking GET STARTED triggers the OnboardingFlow.
   return <Landing onGetStarted={() => setShowOnboarding(true)} />;
 }
