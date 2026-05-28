@@ -106,6 +106,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var t = localStorage.getItem('ccd.theme') || 'ccd-classic';
+            document.documentElement.setAttribute('data-theme', t);
+            var m = localStorage.getItem('ccd.learnMode') || 'classic';
+            document.documentElement.setAttribute('data-learn-mode', m);
+          } catch(e) {}
+        ` }} />
       </head>
       <body>
         <ClientProviders>

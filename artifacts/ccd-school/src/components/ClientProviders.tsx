@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { TransportProvider } from "@/components/TransportProvider";
 import { MasterTransportBar } from "@/components/MasterTransportBar";
+import { LearnModeProvider } from "@/lib/mode";
 import { useProgress } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import type { GatingMode } from "@/lib/gating";
@@ -89,6 +90,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
         <TransportProvider>
+          <LearnModeProvider>
           <GatingLoader>
             <ThemeInit />
             <CloudSyncEffect />
@@ -97,6 +99,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
             <MasterTransportBar />
             <CommandPalette />
           </GatingLoader>
+          </LearnModeProvider>
         </TransportProvider>
       </QueryClientProvider>
     </SessionProvider>

@@ -1,29 +1,14 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { missionBySlug } from "@/content/missions";
+import { redirect } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
-import { MissionPageClient } from "@/components/MissionPageClient";
-
-type Props = { params: Promise<{ slug: string }> };
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const m = missionBySlug(slug);
-  if (!m) return { title: "Mission Not Found" };
-  return {
-    title: `${m.title} — CCD.SCHOOL`,
-    description: m.tagline,
-    openGraph: {
-      title: `${m.title} | CCD.SCHOOL`,
-      description: m.tagline,
-    },
-  };
+// Redirect /mission/[slug] → /learn/[slug]
+// This unifies all lesson URLs to /learn/[slug]
+export default function MissionSlugPage({ params }: { params: { slug: string } }) {
+  redirect(`/learn/${params.slug}`);
 }
 
-export default async function MissionPage({ params }: Props) {
-  const { slug } = await params;
-  const m = missionBySlug(slug);
-  if (!m) notFound();
-  return <MissionPageClient slug={slug} />;
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  return {
+    title: `Redirecting… | CCD.SCHOOL`,
+    robots: { index: false },
+  };
 }
