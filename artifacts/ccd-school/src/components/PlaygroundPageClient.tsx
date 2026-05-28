@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Simulator } from "@/components/sims/Simulator";
-import { SIM_LIST } from "@/components/sims/Simulator";
+import { Simulator, SIM_LIST } from "@/components/sims/Simulator";
 import type { SimType } from "@/content/types";
 
 export function PlaygroundPageClient() {
