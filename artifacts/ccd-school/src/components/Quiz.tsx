@@ -139,6 +139,8 @@ export function Quiz({
   const resultsRef = useRef<boolean[]>([]);
   const phaseRef = useRef<Phase>("picking");
   const autoRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Track which option index the user actually picked (for red coloring on wrong)
+  const pickedOptRef = useRef<number | null>(null);
 
   // React state — only for triggering re-renders
   const [tick, setTick] = useState(0); // bump to re-render
@@ -159,6 +161,7 @@ export function Quiz({
     qIdxRef.current = 0;
     resultsRef.current = [];
     phaseRef.current = "picking";
+    pickedOptRef.current = null;
     setShowShare(false);
     setTick(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,6 +197,7 @@ export function Quiz({
     } else {
       qIdxRef.current = idx + 1;
       phaseRef.current = "picking";
+      pickedOptRef.current = null;
       rerender();
       requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(topRef.current)));
     }
@@ -207,6 +211,7 @@ export function Quiz({
 
       const isPass = optIdx === q.answer;
       resultsRef.current = [...resultsRef.current, isPass];
+      pickedOptRef.current = optIdx;
       phaseRef.current = "feedback";
       rerender();
 
@@ -229,6 +234,7 @@ export function Quiz({
   const q = qs[qIdx];
   const isLast = qIdx === qs.length - 1;
   const results = resultsRef.current;
+  const pickedOpt = pickedOptRef.current;
 
   // ── Done screen ─────────────────────────────────────────────────────────
   if (phase === "done") {
@@ -331,7 +337,7 @@ export function Quiz({
           )}
           {meta?.nextSlug && (
             <a
-              href={`/mission/${meta.nextSlug}`}
+              href={`/learn/${meta.nextSlug}`}
               className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press"
             >
               NEXT MISSION →
@@ -346,10 +352,6 @@ export function Quiz({
   if (!q) return null;
 
   const progressPct = Math.round((results.length / qs.length) * 100);
-  const pickedIdx = phase === "feedback" ? results.length - 1 : null; // last pick index
-  // We can't know which option was picked from resultsRef alone — store it
-  // Actually we need to track which option was picked for coloring
-  // Let's use a separate ref for this
   const correctAns = q.answer;
 
   return (
@@ -377,10 +379,12 @@ export function Quiz({
       <div className="grid sm:grid-cols-2 gap-2">
         {q.options.map((opt, oi) => {
           const isCorrect = oi === correctAns;
-          // In feedback phase: color correct answer green, disable others
+          const isPickedWrong = phase === "feedback" && oi === pickedOpt && !isCorrect;
+
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
           if (phase === "feedback") {
             if (isCorrect) cls = "bg-acid text-ink font-bold";
+            else if (isPickedWrong) cls = "bg-hot text-bone font-bold";
             else cls = "bg-bone opacity-40 cursor-default";
           }
           return (
@@ -393,6 +397,7 @@ export function Quiz({
               <span className="opacity-40 mr-2">{String.fromCharCode(65 + oi)}.</span>
               {opt}
               {phase === "feedback" && isCorrect && <span className="ml-2">✓</span>}
+              {phase === "feedback" && isPickedWrong && <span className="ml-2">✗</span>}
             </button>
           );
         })}

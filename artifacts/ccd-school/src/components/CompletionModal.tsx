@@ -223,7 +223,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
           <div className="flex gap-2 flex-wrap">
             {nextSlug && (
               <Link
-                href={`/mission/${nextSlug}`}
+                href={`/learn/${nextSlug}`}
                 onClick={onClose}
                 className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press flex-1 text-center"
               >

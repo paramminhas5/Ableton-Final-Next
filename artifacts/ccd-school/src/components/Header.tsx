@@ -120,10 +120,22 @@ function GoalRing({ pct, done }: { pct: number; done: boolean }) {
 
 
 
-// ─── Hearts — 5 ♥ with live countdown timer ───────────────────────────────────
+// ─── Hearts — 5 ♥ with live countdown timer + first-time tooltip ─────────────
+
+const HEARTS_TOOLTIP_KEY = "ccd.hearts_header_seen";
 
 function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number }) {
   const [secs, setSecs] = useState(refillSeconds);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [hasSeenTooltip, setHasSeenTooltip] = useState(true); // assume seen until hydrated
+
+  useEffect(() => {
+    // Hydrate — check if user has seen the header hearts tooltip
+    try {
+      setHasSeenTooltip(!!sessionStorage.getItem(HEARTS_TOOLTIP_KEY));
+    } catch {}
+  }, []);
+
   useEffect(() => setSecs(refillSeconds), [refillSeconds]);
   useEffect(() => {
     if (count >= MAX_HEARTS || secs <= 0) return;
@@ -131,25 +143,78 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
     return () => clearInterval(id);
   }, [count, secs]);
 
+  const dismissTooltip = () => {
+    try { sessionStorage.setItem(HEARTS_TOOLTIP_KEY, "1"); } catch {}
+    setHasSeenTooltip(true);
+    setTooltipOpen(false);
+  };
+
   const hh   = String(Math.floor(secs / 3600)).padStart(1, "0");
   const mm   = String(Math.floor((secs % 3600) / 60)).padStart(2, "0");
   const full = count >= MAX_HEARTS;
 
   return (
-    <div
-      className="flex items-center gap-0.5"
-      title={full ? "Full hearts" : `${count}/${MAX_HEARTS} hearts · refills in ${hh}h${mm}m`}
-    >
-      {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-        <span key={i} aria-hidden="true"
-          className={`text-sm leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
-          ♥
-        </span>
-      ))}
-      {!full && secs > 0 && (
-        <span className="font-mono text-[8px] opacity-50 ml-0.5 tabular-nums">
-          {hh}h{mm}
-        </span>
+    <div className="relative">
+      <button
+        onClick={() => {
+          setTooltipOpen(o => !o);
+          if (!hasSeenTooltip) {
+            try { sessionStorage.setItem(HEARTS_TOOLTIP_KEY, "1"); } catch {}
+            setHasSeenTooltip(true);
+          }
+        }}
+        aria-label={`Hearts: ${count} of ${MAX_HEARTS}`}
+        className="flex items-center gap-0.5 brutal-press hover:opacity-80 transition-opacity"
+      >
+        {Array.from({ length: MAX_HEARTS }).map((_, i) => (
+          <span key={i} aria-hidden="true"
+            className={`text-sm leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
+            ♥
+          </span>
+        ))}
+        {!full && secs > 0 && (
+          <span className="font-mono text-[8px] opacity-50 ml-0.5 tabular-nums">
+            {hh}h{mm}
+          </span>
+        )}
+        {/* Pulsing dot for first-time users who haven't clicked yet */}
+        {!hasSeenTooltip && (
+          <span className="ml-1 w-1.5 h-1.5 rounded-full bg-acid animate-ping absolute -top-0.5 -right-0.5" aria-hidden />
+        )}
+      </button>
+
+      {/* Tooltip panel */}
+      {tooltipOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={dismissTooltip} aria-hidden />
+          <div className="absolute right-0 top-full mt-2 z-50 brutal-border bg-bone brutal-shadow w-56">
+            <div className="px-4 pt-3 pb-2">
+              <div className="font-display text-base mb-1">♥ Hearts</div>
+              <div className="font-mono text-[10px] leading-relaxed opacity-70">
+                You have <strong>{count}/{MAX_HEARTS}</strong> hearts.
+                Each wrong answer in <strong>Path Mode</strong> costs 1 heart.
+              </div>
+              {!full && (
+                <div className="font-mono text-[10px] mt-1.5 opacity-60">
+                  Next refill in {hh}h{mm}m · 1 heart per 4 hours
+                </div>
+              )}
+              {full && (
+                <div className="font-mono text-[10px] mt-1.5 text-acid font-bold">
+                  ♥ Full — you&apos;re good to go
+                </div>
+              )}
+            </div>
+            <div className="brutal-border border-x-0 border-b-0 px-4 py-2">
+              <button
+                onClick={dismissTooltip}
+                className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 transition-opacity"
+              >
+                Got it ✕
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
@@ -595,6 +660,62 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
 
 
 
+// ─── StreakWarningBanner — shown when streak is at risk tonight ───────────────
+
+function StreakWarningBanner() {
+  const { progress, dailyGoalDone } = useProgress();
+  const [isAtRisk, setIsAtRisk] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    // At risk if: streak > 0, daily goal NOT done, and it's past 20:00 local time
+    const check = () => {
+      const hour = new Date().getHours();
+      setIsAtRisk(
+        progress.streakDays > 0 &&
+        !dailyGoalDone &&
+        hour >= 20
+      );
+    };
+    check();
+    const id = setInterval(check, 60_000); // re-check every minute
+    return () => clearInterval(id);
+  }, [progress.streakDays, dailyGoalDone]);
+
+  if (!isAtRisk || dismissed) return null;
+
+  return (
+    <div className="bg-hot text-bone px-4 py-2 flex items-center justify-between gap-3 text-sm">
+      <div className="flex items-center gap-2 font-mono text-[11px] uppercase">
+        <span className="text-base">🔥</span>
+        <span>
+          Your <strong>{progress.streakDays}-day streak</strong> is at risk!
+          {progress.streakShield
+            ? " Your shield will protect it tonight."
+            : " Do at least one lesson before midnight."}
+        </span>
+      </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <a
+          href="/learn"
+          className="brutal-border bg-bone text-hot px-3 py-1 font-mono text-[10px] uppercase brutal-press hover:bg-acid hover:text-ink transition-colors"
+        >
+          LEARN NOW →
+        </a>
+        <button
+          onClick={() => setDismissed(true)}
+          aria-label="Dismiss streak warning"
+          className="font-mono text-[10px] opacity-60 hover:opacity-100"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+
 // ─── Main Header export ───────────────────────────────────────────────────────
 
 export function Header() {
@@ -742,6 +863,9 @@ export function Header() {
 
       {/* ── 1px separator line (replaces marquee) ──────────────────────── */}
       <div className="h-px bg-ink hidden md:block" aria-hidden="true" />
+
+      {/* ── Streak-at-risk warning banner ─────────────────────────────── */}
+      <StreakWarningBanner />
 
       {/* ── Mobile drawer ─────────────────────────────────────────────── */}
       <MobileDrawer

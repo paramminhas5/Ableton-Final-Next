@@ -14,6 +14,7 @@ import { useState, useEffect, useMemo } from "react";
 import type { Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
 import { Quiz } from "@/components/Quiz";
+import { CompletionModal } from "@/components/CompletionModal";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { LESSONS } from "@/content/lesson-deep";
@@ -44,6 +45,7 @@ export function InlineClassicLesson({
   const { learnMode } = useLearnMode();
   const [earnedXp, setEarnedXp] = useState(0);
   const [done, setDone] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
   const ctx = getMissionContext(m.slug);
   const deep = LESSONS[m.slug];
@@ -116,6 +118,7 @@ export function InlineClassicLesson({
     completeMission(m.slug, m.xp, score, badge);
     setEarnedXp(xp);
     setDone(true);
+    setShowModal(true); // fire CompletionModal
     onComplete();
   };
 
@@ -151,7 +154,7 @@ export function InlineClassicLesson({
         {/* Top bar — matches LessonPlayer chrome */}
         <div className="flex items-center gap-3">
           <Link
-            href={`/world/${m.world === "foundations" ? "fundamentals" : m.world}`}
+            href={ctx.worldRoute || `/world/${m.world === "foundations" ? "fundamentals" : m.world}`}
             className="brutal-border bg-bone px-3 py-2 font-mono text-[10px] uppercase brutal-press shrink-0"
           >
             ✕
@@ -423,6 +426,18 @@ export function InlineClassicLesson({
           </Link>
         )}
       </div>
+
+      {/* ── COMPLETION MODAL ─────────────────────────────────────────────── */}
+      {showModal && (
+        <CompletionModal
+          mission={m}
+          xpEarned={earnedXp}
+          score={done ? 1 : 0}
+          badgeName={m.badge?.name}
+          nextSlug={nextSlug}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </GlossaryScope>
   );
 }
