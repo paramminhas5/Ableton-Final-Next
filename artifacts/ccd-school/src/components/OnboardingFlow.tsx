@@ -19,6 +19,12 @@ type World = "fundamentals" | "dj" | "producer";
 type LearnMode = "ccd" | "classic";
 type Difficulty = "normal" | "hard";
 
+const WORLD_ETAS: Record<string, string> = {
+  fundamentals: "~3–4 weeks at 30 min/day",
+  dj: "~3–4 weeks at 30 min/day",
+  producer: "~6–8 weeks at 30 min/day",
+};
+
 // ─── static data ─────────────────────────────────────────────────────────────
 
 const WORLDS: {
@@ -164,7 +170,8 @@ function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") =>
 }
 
 // Step 1 — Pick world
-function StepWorld({ onPick }: { onPick: (w: World) => void }) {
+function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experience: "none" | "some" | "lots" | null }) {
+  const isPlacementNext = experience === "some";
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
@@ -174,7 +181,9 @@ function StepWorld({ onPick }: { onPick: (w: World) => void }) {
           <span className="text-acid">WANT TO LEARN?</span>
         </h1>
         <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
-          Pick a world. You can switch anytime from your profile.
+          {isPlacementNext
+            ? "Pick a world — we'll run a quick placement test to find your level."
+            : "Pick a world. You can switch anytime from your profile."}
         </p>
       </div>
       <div className="space-y-3">
@@ -190,7 +199,7 @@ function StepWorld({ onPick }: { onPick: (w: World) => void }) {
                 <div className="font-display text-2xl">{w.title}</div>
                 <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">{w.tagline}</div>
               </div>
-              <span className="font-display text-2xl opacity-60 shrink-0">→</span>
+              <span className="font-display text-2xl opacity-60 shrink-0">{isPlacementNext ? "→ test" : "→"}</span>
             </div>
           </button>
         ))}
@@ -388,6 +397,7 @@ function StepOverview({
           <span className="brutal-border bg-ink/10 px-2 py-1">{chapters.length} chapters</span>
           <span className="brutal-border bg-ink/10 px-2 py-1">{allPaths.length} paths</span>
           <span className="brutal-border bg-ink/10 px-2 py-1">{totalMissions} missions</span>
+          <span className="brutal-border bg-acid/80 text-ink px-2 py-1">⏱ {WORLD_ETAS[world]}</span>
         </div>
       </div>
 
@@ -493,16 +503,18 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
 
   const handleExperiencePick = (exp: "none" | "some" | "lots") => {
     setExperience(exp);
-    if (exp === "some") {
-      setShowPlacement(true); // show placement quiz inline
-    } else {
-      setStep(1); // go straight to world pick
-    }
+    // Always go to world selection first — placement test (if needed) comes after
+    setStep(1);
   };
 
   const handleWorldPick = (w: World) => {
     setSelectedWorld(w);
-    setStep(2);
+    if (experience === "some") {
+      // Now that we have a world, show the placement test
+      setShowPlacement(true);
+    } else {
+      setStep(2);
+    }
   };
 
   const handleModePick = (m: LearnMode) => {
@@ -534,12 +546,12 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   const visualStep =
     step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 4 : step + 1;
 
-  // Show placement test inline when experience === "some"
+  // Show placement test inline when experience === "some" (world already chosen)
   if (showPlacement) {
     return (
       <PlacementTest
         world={selectedWorld ?? "fundamentals"}
-        onSkip={() => { setShowPlacement(false); setStep(1); }}
+        onSkip={() => { setShowPlacement(false); setStep(2); }}
       />
     );
   }
@@ -553,7 +565,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
       <div className="flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto">
         {step === 0 && !showPlacement && <StepExperience onPick={handleExperiencePick} />}
 
-        {step === 1 && <StepWorld onPick={handleWorldPick} />}
+        {step === 1 && <StepWorld onPick={handleWorldPick} experience={experience} />}
 
         {step === 2 && selectedWorld && (
           <StepMode

@@ -5,13 +5,17 @@
  * PATH MODE   (learnMode === "ccd"):
  *   → LessonPlayer  (Duolingo screens: hook→concept→interact→quiz→summary)
  *   → Hearts active, sequential gating, XP on completion
- *   → If mission has no screens yet, falls back to InlineClassic with a banner
+ *   → If mission has no screens yet, falls back to InlineClassic with improved banner (#10)
  *
  * EXPLORER MODE (learnMode === "classic"):
  *   → InlineClassic  (scrolling explainer + sim + quiz, no hearts)
  *   → All missions always accessible, no gating
  *
  * Both modes live at /learn/[slug] — same URL, completely different experience.
+ *
+ * Fixes:
+ *   #6  — handleComplete uses getMissionContext for correct world route
+ *   #10 — CcdFallbackBanner is clean, informative, not misleading
  */
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
@@ -21,17 +25,32 @@ import { InlineClassicLesson } from "@/components/InlineClassicLesson";
 import { missionBySlug, nextMission } from "@/content/missions";
 import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
+import { getMissionContext } from "@/lib/missionContext";
 
-function CcdFallbackBanner() {
+// ── Improved CCD fallback banner (#10) ────────────────────────────────────────
+// Clean, informative — makes it clear this is the classic format, not broken CCD
+function CcdFallbackBanner({ missionTitle }: { missionTitle: string }) {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-4">
-      <div className="brutal-border bg-bone text-ink px-5 py-4 flex items-start gap-3">
-        <span className="text-2xl shrink-0">🛠</span>
-        <div>
-          <div className="font-display text-base mb-1">Classic View</div>
-          <div className="font-mono text-xs opacity-70 leading-relaxed">
-            Full CCD interactive lesson coming soon. Enjoy the Classic format — same content, simulator, quiz, and XP.
+      <div className="brutal-border bg-bone text-ink px-5 py-4">
+        <div className="flex items-start gap-3 mb-2">
+          <span className="text-xl shrink-0">📖</span>
+          <div>
+            <div className="font-display text-base">Classic Format</div>
+            <div className="font-mono text-xs opacity-60 mt-0.5">
+              {missionTitle}
+            </div>
           </div>
+        </div>
+        <div className="font-mono text-xs opacity-70 leading-relaxed">
+          This lesson hasn&apos;t been converted to the Duolingo-style format yet — 
+          but the <strong>content, simulator, quiz and XP</strong> are all here. 
+          Work through it top to bottom and hit the quiz at the end.
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2 font-mono text-[9px] uppercase">
+          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Full content</span>
+          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Interactive sim</span>
+          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Quiz + XP</span>
         </div>
       </div>
     </div>
@@ -57,27 +76,38 @@ function Inner({ slug }: { slug: string }) {
   const hasScreens = (mission.screens?.length ?? 0) > 0;
   const coachContext = `${mission.title} — ${mission.tagline}`;
 
+  // Resolve correct world route via context (fixes Producer sub-world slug bug)
+  const ctx = getMissionContext(slug);
+  const worldRoute = ctx.worldRoute || "/worlds";
+
+  // Mission position within its path (for breadcrumb "N of M")
+  const missionIndex = ctx.path
+    ? ctx.path.missionSlugs.indexOf(slug) + 1
+    : 1;
+  const missionTotal = ctx.path?.missionSlugs.length ?? 1;
+
   const handleComplete = () => {
-    const world = mission.world === "foundations" ? "fundamentals" : mission.world;
-    setTimeout(() => router.push(`/world/${world}`), 2200);
+    setTimeout(() => router.push(worldRoute), 2200);
   };
 
-  // ── PATH MODE ─────────────────────────────────────────────────────────────
+  // ── PATH MODE ──────────────────────────────────────────────────────────────
   if (learnMode === "ccd") {
     return (
       <div>
-        {/* Has Duolingo screens → full LessonPlayer */}
         {hasScreens ? (
+          /* Full Duolingo-style lesson */
           <LessonPlayer
             mission={mission}
             nextSlug={next?.slug}
             isReview={isReview}
+            missionIndex={missionIndex}
+            missionTotal={missionTotal}
             onComplete={handleComplete}
           />
         ) : (
-          /* No screens yet → show banner + inline classic */
+          /* No screens yet → informative banner + inline classic (no hearts deducted) */
           <>
-            <CcdFallbackBanner />
+            <CcdFallbackBanner missionTitle={mission.title} />
             <InlineClassicLesson
               mission={mission}
               nextSlug={next?.slug}
@@ -92,7 +122,7 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  // ── EXPLORER MODE ─────────────────────────────────────────────────────────
+  // ── EXPLORER MODE ──────────────────────────────────────────────────────────
   return (
     <div>
       <InlineClassicLesson
