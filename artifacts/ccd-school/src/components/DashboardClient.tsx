@@ -23,6 +23,7 @@ import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
+import { CoachPanel } from "@/components/BeatCoach";
 import { useEffect, useState, useMemo } from "react";
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
@@ -296,6 +297,7 @@ export function DashboardClient() {
   >([]);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
+  const [coachOpen, setCoachOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/leaderboard")
@@ -706,9 +708,9 @@ export function DashboardClient() {
         {/* ══ SECTION 7: Beat Coach Card ══════════════════════════════════ */}
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
-          <Link
-            href="/#beat-coach"
-            className="brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors brutal-shadow block"
+          <button
+            onClick={() => setCoachOpen(true)}
+            className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors brutal-shadow text-left"
           >
             <div className="w-14 h-14 brutal-border bg-bone/10 flex items-center justify-center text-3xl shrink-0">
               🎧
@@ -720,7 +722,13 @@ export function DashboardClient() {
               </div>
             </div>
             <div className="font-display text-3xl shrink-0 opacity-60">→</div>
-          </Link>
+          </button>
+          {coachOpen && (
+            <CoachPanel
+              context="CCD.SCHOOL Dashboard — music production and DJing tutor"
+              onClose={() => setCoachOpen(false)}
+            />
+          )}
         </section>
 
         {/* ══ SECTION 8: Leaderboard Peek ════════════════════════════════ */}

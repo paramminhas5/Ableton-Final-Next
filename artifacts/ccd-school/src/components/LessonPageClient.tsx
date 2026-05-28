@@ -19,21 +19,20 @@ import { Suspense } from "react";
 import { LessonPlayer } from "@/components/LessonPlayer";
 import { InlineClassicLesson } from "@/components/InlineClassicLesson";
 import { missionBySlug, nextMission } from "@/content/missions";
-import { BeatCoach, useBeatCoach } from "@/components/BeatCoach";
+import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
-import Link from "next/link";
 
-function ModeModeBanner({ slug }: { slug: string }) {
+function CcdFallbackBanner() {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-4">
-      <div className="brutal-border bg-sun text-ink px-4 py-3 flex items-center justify-between gap-3">
+      <div className="brutal-border bg-bone text-ink px-5 py-4 flex items-start gap-3">
+        <span className="text-2xl shrink-0">🛠</span>
         <div>
-          <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Path Mode — screens not built yet</div>
-          <div className="font-mono text-xs">Loading classic view for this lesson.</div>
+          <div className="font-display text-base mb-1">Classic View</div>
+          <div className="font-mono text-xs opacity-70 leading-relaxed">
+            Full CCD interactive lesson coming soon. Enjoy the Classic format — same content, simulator, quiz, and XP.
+          </div>
         </div>
-        <Link href={`/mission/${slug}`} className="brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-[9px] uppercase brutal-press shrink-0">
-          Full Classic →
-        </Link>
       </div>
     </div>
   );
@@ -44,7 +43,6 @@ function Inner({ slug }: { slug: string }) {
   const params = useSearchParams();
   const isReview = params.get("review") === "1";
   const { learnMode } = useLearnMode();
-  const { wrongCount, showCoach, onWrong, onCorrect, dismissCoach } = useBeatCoach();
 
   const mission = missionBySlug(slug);
   if (!mission) {
@@ -68,12 +66,6 @@ function Inner({ slug }: { slug: string }) {
   if (learnMode === "ccd") {
     return (
       <div>
-        {showCoach && (
-          <div className="max-w-2xl mx-auto px-4 pt-4">
-            <BeatCoach context={coachContext} autoOpen onClose={dismissCoach} />
-          </div>
-        )}
-
         {/* Has Duolingo screens → full LessonPlayer */}
         {hasScreens ? (
           <LessonPlayer
@@ -81,30 +73,21 @@ function Inner({ slug }: { slug: string }) {
             nextSlug={next?.slug}
             isReview={isReview}
             onComplete={handleComplete}
-            onWrong={onWrong}
-            onCorrect={onCorrect}
           />
         ) : (
           /* No screens yet → show banner + inline classic */
           <>
-            <ModeModeBanner slug={slug} />
+            <CcdFallbackBanner />
             <InlineClassicLesson
               mission={mission}
               nextSlug={next?.slug}
               isReview={isReview}
               mode="path"
               onComplete={handleComplete}
-              onWrong={onWrong}
-              onCorrect={onCorrect}
             />
           </>
         )}
-
-        {!showCoach && (
-          <div className="max-w-2xl mx-auto px-4 pb-8">
-            <BeatCoach context={coachContext} />
-          </div>
-        )}
+        <FloatingCoachButton context={coachContext} />
       </div>
     );
   }
@@ -112,27 +95,14 @@ function Inner({ slug }: { slug: string }) {
   // ── EXPLORER MODE ─────────────────────────────────────────────────────────
   return (
     <div>
-      {showCoach && (
-        <div className="max-w-2xl mx-auto px-4 pt-4">
-          <BeatCoach context={coachContext} autoOpen onClose={dismissCoach} />
-        </div>
-      )}
-
       <InlineClassicLesson
         mission={mission}
         nextSlug={next?.slug}
         isReview={isReview}
         mode="explore"
         onComplete={handleComplete}
-        onWrong={onWrong}
-        onCorrect={onCorrect}
       />
-
-      {!showCoach && (
-        <div className="max-w-2xl mx-auto px-4 pb-8">
-          <BeatCoach context={coachContext} />
-        </div>
-      )}
+      <FloatingCoachButton context={coachContext} />
     </div>
   );
 }
