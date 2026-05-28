@@ -384,26 +384,46 @@ export function DashboardClient() {
     };
   }, [completed]);
 
-  // ── Skill Radar (Fundamentals chapters) ──────────────────────────────────
+  // ── Skill Radar — shows the world the user is most active in ─────────────
+  // Priority: world with most completed missions → fallback to fundamentals
+  const radarWorld = useMemo((): WorldKey => {
+    const counts = (["fundamentals", "dj", "producer"] as WorldKey[]).map((w) => {
+      const slugs = pathsByWorld(w).flatMap((p) => p.missionSlugs);
+      return { world: w, done: slugs.filter((s) => !!completed[s]).length };
+    });
+    const best = counts.reduce((a, b) => (b.done > a.done ? b : a), counts[0]);
+    return best.done > 0 ? best.world : "fundamentals";
+  }, [completed]);
+
+  // Short label map per world
+  const RADAR_LABELS: Record<string, Record<string, string>> = {
+    fundamentals: {
+      "Sound Science": "Sound", "Rhythm & Time": "Rhythm",
+      "Melody & Pitch": "Melody", "Harmony & Chords": "Harmony", "Music Technology": "Tech",
+    },
+    dj: {
+      "Setup & Culture": "Setup", "The Library": "Library",
+      "The Mix": "The Mix", "DJ Performance": "Perform", "DJ Mastery": "Mastery",
+    },
+    producer: {
+      "First Contact": "Contact", "Sound & MIDI": "S&MIDI",
+      "The Mix": "Mix", "Performance & Flow": "Perform", "Advanced Producer": "Advanced",
+    },
+  };
+
   const radarSkills = useMemo(() => {
-    const fundChapters = chaptersByWorld("fundamentals");
-    const fundPaths = pathsByWorld("fundamentals");
-    return fundChapters.map((ch) => {
-      const chPaths = fundPaths.filter((p) => p.chapter === ch.slug);
+    const chapters = chaptersByWorld(radarWorld);
+    const paths = pathsByWorld(radarWorld);
+    const labelMap = RADAR_LABELS[radarWorld] ?? {};
+    return chapters.map((ch) => {
+      const chPaths = paths.filter((p) => p.chapter === ch.slug);
       const slugs = chPaths.flatMap((p) => p.missionSlugs);
       const done = slugs.filter((s) => !!completed[s]).length;
       const pct = slugs.length ? Math.round((done / slugs.length) * 100) : 0;
-      // Short label for radar
-      const shortLabel =
-        ch.title === "Sound Science" ? "Sound" :
-        ch.title === "Rhythm & Time" ? "Rhythm" :
-        ch.title === "Melody & Pitch" ? "Melody" :
-        ch.title === "Harmony & Chords" ? "Harmony" :
-        ch.title === "Music Technology" ? "Tech" :
-        ch.title;
+      const shortLabel = labelMap[ch.title] ?? ch.title.split(" ")[0];
       return { label: shortLabel, pct };
     });
-  }, [completed]);
+  }, [completed, radarWorld]);
 
   // ── Stats strip ───────────────────────────────────────────────────────────
   const stats = [
@@ -606,9 +626,11 @@ export function DashboardClient() {
               <SkillRadar skills={radarSkills} />
             </div>
             <div className="flex-1">
-              <div className="font-display text-xl mb-1">Fundamentals Coverage</div>
+              <div className="font-display text-xl mb-1">
+                {radarWorld === "fundamentals" ? "Fundamentals" : radarWorld === "dj" ? "DJ World" : "Producer"} Coverage
+              </div>
               <div className="font-mono text-[10px] opacity-50 mb-4">
-                Based on completed Fundamentals missions
+                Based on your most active world
               </div>
               <div className="space-y-2">
                 {radarSkills.map((s) => (

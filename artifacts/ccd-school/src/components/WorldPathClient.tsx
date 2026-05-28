@@ -6,6 +6,8 @@
  */
 import Link from "next/link";
 import { useState } from "react";
+import type { ReactNode } from "react";
+// Note: LessonNode uses <a> tags for simplicity; Link is used elsewhere in this file
 import { useProgress, getLessonStrength, REVIEW_THRESHOLD } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
@@ -340,50 +342,86 @@ function LessonNode({
   node: PathNode;
   meta: typeof WORLD_META[string];
 }) {
-  const size = "w-20 h-20";
-  const base = `${size} brutal-border flex flex-col items-center justify-center text-center px-1 select-none`;
+  // Outer wrapper: icon circle on top, label below
+  const Wrap = ({ children, href, className, title }: {
+    children: ReactNode;
+    href?: string;
+    className?: string;
+    title?: string;
+  }) => {
+    const inner = (
+      <div className="flex flex-col items-center gap-1.5 group" title={title}>
+        {children}
+      </div>
+    );
+    if (href) {
+      return (
+        <a href={href} className={`block brutal-press ${className ?? ""}`}>
+          {inner}
+        </a>
+      );
+    }
+    return <div className={className}>{inner}</div>;
+  };
+
+  // Label shown below every node
+  const Label = ({ text, dim }: { text: string; dim?: boolean }) => (
+    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[88px] line-clamp-2
+      ${dim ? "opacity-30" : "opacity-70"}`}>
+      {text}
+    </span>
+  );
 
   if (node.state === "locked") {
     return (
-      <div className={`${base} bg-bone/50 opacity-30 cursor-not-allowed`}
-        title={node.title}>
-        <span className="text-xl">🔒</span>
-        <span className="font-mono text-[7px] uppercase mt-1 leading-tight line-clamp-2">{node.title}</span>
-      </div>
+      <Wrap title={node.title} className="cursor-not-allowed">
+        <div className="w-14 h-14 rounded-full brutal-border bg-bone/30 opacity-30 flex items-center justify-center">
+          <span className="text-xl">🔒</span>
+        </div>
+        <Label text={node.title} dim />
+      </Wrap>
     );
   }
 
   if (node.state === "complete") {
     return (
-      <Link href={`/learn/${node.slug}`}
-        className={`${base} ${meta.nodeDone} brutal-press`}
-        title={`${node.title} — completed`}>
-        <span className="text-lg">✓</span>
-        <span className="font-mono text-[7px] uppercase mt-0.5 leading-tight line-clamp-2">{node.title}</span>
-      </Link>
+      <Wrap href={`/learn/${node.slug}`} title={`${node.title} — completed`}>
+        <div className={`w-14 h-14 rounded-full brutal-border flex items-center justify-center
+          ${meta.nodeDone} transition-transform group-hover:scale-105`}>
+          <span className="text-2xl">✓</span>
+        </div>
+        <Label text={node.title} />
+      </Wrap>
     );
   }
 
   if (node.state === "review") {
     return (
-      <Link href={`/learn/${node.slug}?review=1`}
-        className={`${base} bg-hot text-bone brutal-press`}
-        style={{ animation: "pulse 2s ease-in-out infinite" }}
-        title={`${node.title} — needs review`}>
-        <span className="text-lg">🔥</span>
-        <span className="font-mono text-[7px] uppercase mt-0.5 leading-tight line-clamp-2">Review</span>
-      </Link>
+      <Wrap href={`/learn/${node.slug}?review=1`} title={`${node.title} — needs review`}>
+        <div className="w-14 h-14 rounded-full brutal-border bg-hot text-bone flex items-center justify-center
+          transition-transform group-hover:scale-105"
+          style={{ animation: "pulse 2s ease-in-out infinite" }}>
+          <span className="text-2xl">🔥</span>
+        </div>
+        <Label text="Review" />
+      </Wrap>
     );
   }
 
-  // available — glowing accent
+  // available — glowing, pulsing accent
   return (
-    <Link href={`/learn/${node.slug}`}
-      className={`${base} ${meta.nodeAvail} brutal-press brutal-shadow`}
-      style={{ boxShadow: "0 0 0 4px rgba(198,255,0,0.25), 0 0 16px rgba(198,255,0,0.15)" }}
-      title={node.title}>
-      <span className="font-display text-[11px] leading-tight font-bold line-clamp-2">{node.title}</span>
-      <span className="font-mono text-[8px] opacity-70 mt-0.5">+{node.xp} XP</span>
-    </Link>
+    <Wrap href={`/learn/${node.slug}`} title={node.title}>
+      <div
+        className={`w-16 h-16 rounded-full brutal-border flex flex-col items-center justify-center gap-0.5
+          ${meta.nodeAvail} transition-transform group-hover:scale-110`}
+        style={{ boxShadow: "0 0 0 5px rgba(198,255,0,0.2), 0 0 18px rgba(198,255,0,0.15)" }}
+      >
+        <span className="font-display text-xs font-bold leading-tight text-center px-1 line-clamp-2">
+          {node.title}
+        </span>
+        <span className="font-mono text-[8px] opacity-70">+{node.xp} XP</span>
+      </div>
+      <Label text={node.title} />
+    </Wrap>
   );
 }

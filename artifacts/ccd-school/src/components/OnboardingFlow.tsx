@@ -376,7 +376,9 @@ function StepOverview({
         <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
           ← back
         </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 4 OF 4</div>
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">
+          {mode === "ccd" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
+        </div>
         <h1 className="font-display text-5xl leading-none">
           HERE&apos;S WHAT<br />
           <span className="text-acid">YOU&apos;LL LEARN</span>

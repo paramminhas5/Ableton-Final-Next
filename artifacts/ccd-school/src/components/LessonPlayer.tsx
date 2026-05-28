@@ -9,9 +9,10 @@
  *   #9  — First-time hearts explainer modal, −1 heart message on wrong answer
  *   #10 — Mode indicator only shows in PATH mode (not in classic fallback)
  *   #11 — "Save progress" nudge on SummaryScreen for logged-out users
+ *   #EB — Error boundary wraps entire lesson to catch bad content data gracefully
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
 import { InlineVisual, DiagramVisual } from "@/components/LessonVisuals";
@@ -21,6 +22,51 @@ import { useAuth } from "@/lib/auth";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import { getMissionContext } from "@/lib/missionContext";
 import Link from "next/link";
+
+// ─── Error boundary ───────────────────────────────────────────────────────────
+
+class LessonErrorBoundary extends Component<
+  { children: ReactNode; missionSlug: string },
+  { error: Error | null }
+> {
+  state = { error: null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("[LessonPlayer] Content error in mission", this.props.missionSlug, error, info);
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="max-w-2xl mx-auto px-4 py-12 space-y-4">
+          <div className="brutal-border bg-hot text-bone p-6">
+            <div className="font-display text-3xl mb-2">LESSON ERROR</div>
+            <div className="font-mono text-sm opacity-80 mb-4 leading-relaxed">
+              This lesson has malformed content data. The error has been logged.
+            </div>
+            <div className="font-mono text-xs opacity-60 brutal-border bg-bone/10 p-3 leading-relaxed break-all">
+              {(this.state.error as Error).message}
+            </div>
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={() => this.setState({ error: null })}
+              className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press"
+            >
+              ↺ Retry
+            </button>
+            <Link
+              href="/learn"
+              className="brutal-border bg-bone text-ink px-5 py-3 font-display text-xl brutal-press"
+            >
+              ← Back to Paths
+            </Link>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // ─── tiny visual helpers ──────────────────────────────────────────────────────
 
@@ -470,16 +516,15 @@ interface Props {
   onCorrect?: () => void;
 }
 
-export function LessonPlayer({
-  mission,
-  nextSlug,
-  isReview,
-  missionIndex = 1,
-  missionTotal = 1,
-  onComplete,
-  onWrong,
-  onCorrect,
-}: Props) {
+export function LessonPlayer(props: Props) {
+  return (
+    <LessonErrorBoundary missionSlug={props.mission.slug}>
+      <LessonPlayerInner {...props} />
+    </LessonErrorBoundary>
+  );
+}
+
+function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, missionTotal = 1, onComplete, onWrong, onCorrect }: Props) {
   const screens = mission.screens ?? [];
   const [screenIdx, setScreenIdx] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);

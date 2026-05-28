@@ -6,7 +6,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { TransportProvider } from "@/components/TransportProvider";
 import { MasterTransportBar } from "@/components/MasterTransportBar";
 import { LearnModeProvider } from "@/lib/mode";
-import { useProgress } from "@/lib/progress";
+import { useProgress, ProgressProvider } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import type { GatingMode } from "@/lib/gating";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
@@ -91,14 +91,16 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <TransportProvider>
           <LearnModeProvider>
-          <GatingLoader>
-            <ThemeInit />
-            <CloudSyncEffect />
-            <CelebrationLayer />
-            {children}
-            <MasterTransportBar />
-            <CommandPalette />
-          </GatingLoader>
+            <ProgressProvider>
+              <GatingLoader>
+                <ThemeInit />
+                <CloudSyncEffect />
+                <CelebrationLayer />
+                {children}
+                <MasterTransportBar />
+                <CommandPalette />
+              </GatingLoader>
+            </ProgressProvider>
           </LearnModeProvider>
         </TransportProvider>
       </QueryClientProvider>
