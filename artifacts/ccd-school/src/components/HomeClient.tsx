@@ -74,8 +74,12 @@ function Dashboard() {
   const totalMissions = ALL_MISSIONS.length;
 
   // Find next mission to continue
-  const allDoneSlugs = Object.keys(completed).filter(s => completed[s]);
-  const lastSlug = allDoneSlugs[allDoneSlugs.length - 1];
+  // Sort by completion timestamp (most recent first)
+  const allDoneSlugs = Object.entries(completed)
+    .filter(([, v]) => v)
+    .sort(([, a], [, b]) => (b?.at ?? 0) - (a?.at ?? 0))
+    .map(([slug]) => slug);
+  const lastSlug = allDoneSlugs[0];
   const lastCtx = lastSlug ? getMissionContext(lastSlug) : null;
   const nextSlug = lastCtx?.path
     ? (() => {
