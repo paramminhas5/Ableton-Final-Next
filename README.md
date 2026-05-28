@@ -1,6 +1,6 @@
 # CCD.SCHOOL
 
-> The most structured music education on the internet — 153 missions across Fundamentals, DJ World and Producer. Every concept sourced from real manuals and taught two ways: a Duolingo-style interactive path, and a scrolling classic lesson.
+> The most structured music education on the internet — 153 missions across Fundamentals, DJ World and Producer. Gamified, source-verified, brutally effective.
 
 [![Next.js](https://img.shields.io/badge/Next.js-15.3-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev/)
@@ -17,11 +17,11 @@ CCD.SCHOOL is a gamified music-education platform covering three worlds:
 |---|---|---|
 | **Fundamentals** | learningmusic.ableton.com | 40 missions — sound, rhythm, melody, harmony, music tech |
 | **DJ World** | Pioneer DJ rekordbox 6.0.0 Manual | 40 missions — setup, library, the mix, performance, mastery |
-| **Producer** | Ableton Live 12 Reference Manual | 73 missions — first contact, sound & MIDI, the mix, performance, advanced |
+| **Producer** | Ableton Live 12 Reference Manual | 73 missions — first contact, sound & MIDI, the mix, performance, advanced, synthesis |
 
-Every mission has:
-- A **Duolingo-style lesson** (Path Mode): hook → concept screens with visuals → interactive sim → quiz → summary
-- A **Classic lesson** (Explorer Mode): scrolling explainer + sim + Normal/Hard quiz
+Every mission has two complete learning formats:
+- **CCD Mode** (🔒 Path): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
+- **Classic Mode** (🗺 Explorer): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
 
 ---
 
@@ -30,172 +30,28 @@ Every mission has:
 ```
 Framework       Next.js 15.3 (App Router, React 19)
 Styling         Tailwind CSS v4 (CSS-first, no config file)
-State           TanStack Query v5 + localStorage + PostgreSQL (pg)
-Auth            next-auth v5 beta (magic link + OAuth)
+State           LearnModeContext + TanStack Query + localStorage + PostgreSQL (pg)
+Auth            next-auth v5 beta
 Payments        Stripe
+AI Coach        Kimi API (platform.moonshot.cn) via /api/beat-coach
 Audio           Web Audio API — no asset files
-Hosting         Vercel (target)
+Hosting         Vercel
 Package mgr     npm
 ```
 
 ---
 
-## Project Structure
-
-```
-artifacts/ccd-school/          ← Live Next.js app
-  app/                         ← 28 App Router routes
-    page.tsx                   ← Home (onboarding / dashboard)
-    learn/[slug]/              ← Lesson engine (mode-aware)
-    mission/[slug]/            ← Classic full-page lesson
-    world/[slug]/              ← Duolingo path map
-    worlds/                    ← World chooser
-    missions/                  ← All missions browse/search
-    ...20+ more routes
-  src/
-    components/                ← UI components
-      LessonPlayer.tsx          ← Duolingo screen engine (hook/concept/interact/quiz/summary)
-      LessonVisuals.tsx         ← 19 animated inline visual types (waveform, piano, camelot, etc.)
-      InlineClassicLesson.tsx   ← Explorer mode inline lesson
-      LessonPageClient.tsx      ← Mode-aware router
-      WorldPathClient.tsx       ← Duolingo winding path map
-      Header.tsx                ← Mode toggle pill + gamification strip
-      OnboardingFlow.tsx        ← 3-step new user welcome
-      MissionPageClient.tsx     ← Classic /mission/[slug] page (Normal/Hard)
-      sims/                     ← 47 interactive simulators
-    content/
-      missions-foundations.ts  ← 40 Fundamentals missions (all with screens[])
-      missions-foundations-screens.ts  ← 40×8 Duolingo screen sets
-      missions-dj.ts            ← 40 DJ World missions (screens pending)
-      missions.ts               ← 73 Producer missions (screens pending)
-      lesson-deep.ts            ← Deep lesson overlays (beginner/advanced/quizHard)
-      types.ts                  ← All TypeScript types
-    lib/
-      mode.ts                   ← learnMode: "ccd" | "classic"
-      progress.ts               ← XP, streak, hearts, gems, spaced repetition
-      audio.ts                  ← Web Audio API engine
-.migration-backup/             ← Previous Vite/React SPA (reference only)
-```
-
----
-
-## Learning Modes
-
-Two completely different experiences, one toggle (always visible in Header):
-
-### 🔒 Path Mode (`learnMode === "ccd"`)
-- Lessons unlock **sequentially** — complete one to unlock the next
-- **Hearts** active — wrong quiz answer costs ♥
-- Routes to `LessonPlayer` (Duolingo screens):
-  - **hook** → full-bleed emoji + headline, tap to continue
-  - **concept** → title + 2-sentence body + **inline visual diagram** + KEY FACT
-  - **interact** → full simulator
-  - **quiz** → 4-option multiple choice, shake on wrong, explain on reveal
-  - **summary** → confetti + XP + "You Learned" bullets + Next Lesson
-- For missions without `screens[]` yet, falls back to inline classic with a banner
-
-### 🗺 Explorer Mode (`learnMode === "classic"`)
-- All 153 lessons open from the start — **no gates**
-- No hearts
-- Routes to `InlineClassicLesson` at the same `/learn/[slug]` URL
-- Scrolling page: explainer blocks → sim → **Normal / Hard** quiz toggle
-  - **Hard**: uses `quizHard` questions if available, otherwise strips hints, pass threshold 70%
-
----
-
-## Concept Screen Visuals (`LessonVisuals.tsx`)
-
-19 animated SVG/HTML visual types available for concept screens:
-
-| Type | Description |
-|---|---|
-| `waveform` | Animated sine wave (requestAnimationFrame) |
-| `waveform-compare` | Sine vs Square vs Saw, colour-coded |
-| `frequency-bar` | Spectrum with Sub/Bass/Mid/Hi-Mid/Air zones |
-| `piano` | 2-octave labelled piano keyboard |
-| `piano-octave` | Single octave with Hz values per key |
-| `eq-curve` | EQ frequency curve with zone labels |
-| `amplitude-dial` | dB levels from silence → clip |
-| `bpm-grid` | 1 bar beat grid with subdivisions |
-| `signal-chain` | Arrow-connected chain blocks |
-| `stereo-field` | Top-view pan map with instrument positions |
-| `note-lengths` | Whole → half → quarter → 8th → 16th bar chart |
-| `scale-steps` | W-W-H step diagram (major or minor) |
-| `chord-stack` | Stacked intervals for Major, Minor, Dom7 |
-| `rhythm-dots` | 16-step beat grid pattern |
-| `vinyl-platter` | Spinning turntable (requestAnimationFrame) |
-| `mixer-channel` | Two-deck EQ + fader mixer |
-| `camelot-wheel` | 12-key harmonic mixing wheel |
-| `waveform-zoom` | Waveform with beatgrid overlay + loop region |
-| `headroom-meter` | Vertical dB headroom meter |
-
-Plus `diagram` screen kind — fully custom SVG diagrams with labelled nodes and arrows.
-
----
-
-## Gamification
-
-| Feature | Description |
-|---|---|
-| XP | Earned on first completion of each mission |
-| Hearts | 5 hearts, lose 1 per wrong answer in Path Mode, refill over time |
-| Streak | Daily XP goal, streak shield at milestones |
-| Gems | Earned via daily challenges, spendable in the gem shop |
-| Rank | 10+ ranks from Novice to CCD Master based on total XP |
-| Trophies | Path → Chapter → World → CCD Master (completion trophies) |
-| Spaced repetition | Lessons that need review surface in a review queue |
-| Leaderboard | Weekly XP ranking |
-| Beat Coach AI | Context-aware AI at `/api/beat-coach` |
-
----
-
-## Routes
-
-| Route | Description |
-|---|---|
-| `/` | Home — onboarding for new users, dashboard for returning |
-| `/learn/[slug]` | **Mode-aware lesson** — Path Mode = Duolingo, Explorer = classic |
-| `/mission/[slug]` | Full classic lesson page (deep content) |
-| `/world/[slug]` | Duolingo winding path map for a world |
-| `/worlds` | World chooser |
-| `/missions` | Browse/search all 153 missions |
-| `/train` | Ear training drill runner |
-| `/challenge` | Daily challenge |
-| `/leaderboard` | Weekly XP leaderboard |
-| `/shop` | Gem shop |
-| `/placement` | Placement test (skip-ahead) |
-| `/playground` | Device chain workbench |
-| `/signal-flow` | Animated signal routing diagram |
-| `/devices` + `/device/[slug]` | Ableton device explorer |
-| `/glossary` | Music production glossary |
-| `/shortcuts` | Keyboard shortcut trainer |
-| `/profile` | XP, rank, trophies, badges |
-| `/login` | Auth (next-auth) |
-| `/upgrade` | Stripe PRO upgrade |
-
----
-
-## Local Development
-
-### Prerequisites
-- Node 20+
-- PostgreSQL database (or Supabase free tier)
-
-### Setup
+## Quick Start
 
 ```bash
 git clone https://github.com/paramminhas5/Ableton-Final-Next.git
 cd Ableton-Final-Next/artifacts/ccd-school
 npm install
+cp .env.example .env.local   # fill in required vars
+npm run dev                  # → http://localhost:3000
 ```
 
-Copy environment variables:
-
-```bash
-cp .env.example .env.local
-```
-
-Required variables:
+### Required `.env.local`
 
 ```env
 DATABASE_URL=postgresql://...
@@ -203,124 +59,260 @@ NEXTAUTH_SECRET=your-secret
 NEXTAUTH_URL=http://localhost:3000
 STRIPE_SECRET_KEY=sk_test_...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# Optional — Beat Coach AI. Without this it degrades gracefully.
+KIMI_API_KEY=your-moonshot-key
 ```
 
-Start the dev server:
+Get a Kimi API key at [platform.moonshot.cn](https://platform.moonshot.cn).
 
-```bash
-npm run dev
-# → http://localhost:3000
+---
+
+## Project Structure
+
+```
+artifacts/ccd-school/
+  app/
+    page.tsx                      ← Home (onboarding / dashboard)
+    dashboard/page.tsx            ← Unified progress dashboard ✦ NEW
+    learn/[slug]/page.tsx         ← Mode-aware lesson (CCD or Classic)
+    mission/[slug]/page.tsx       ← Redirects → /learn/[slug] ✦ NEW
+    world/[slug]/page.tsx         ← Duolingo path map
+    worlds/page.tsx               ← World chooser
+    missions/page.tsx             ← Browse/search all 153 missions
+    ... 20+ more routes
+  src/
+    components/
+      Header.tsx                  ← 3-item nav, 5-element strip ✦ REBUILT
+      DashboardClient.tsx         ← 8-section unified dashboard ✦ NEW
+      OnboardingFlow.tsx          ← 5-step onboarding (Step 0 = experience picker) ✦ UPDATED
+      LessonPlayer.tsx            ← CCD Duolingo engine (hook/concept/interact/quiz/summary)
+      LessonVisuals.tsx           ← 19 animated inline visual types
+      InlineClassicLesson.tsx     ← Explorer mode (Normal/Hard) ✦ UPDATED
+      LessonPageClient.tsx        ← Mode-aware lesson router ✦ UPDATED
+      BeatCoach.tsx               ← FloatingCoachButton + CoachPanel chat ✦ REBUILT
+      HeartsWall.tsx              ← Out-of-hearts blocker w/ gem-spend ✦ UPDATED
+      WorldPathClient.tsx         ← Duolingo winding path map
+      sims/                       ← 47 interactive simulators
+    content/
+      missions-foundations.ts     ← 40 Fundamentals missions
+      missions-foundations-screens.ts ← 40 × 8 CCD screen sets
+      missions-dj.ts              ← 40 DJ World missions ✦ NOW WITH SCREENS
+      missions-dj-screens.ts      ← 40 × 8 DJ CCD screen sets ✦ NEW
+      missions.ts                 ← 73 Producer missions ✦ NOW WITH SCREENS
+      missions-producer-screens.ts← 91 × 8 Producer CCD screen sets ✦ NEW
+      lesson-deep.ts              ← Deep content (beginner/advanced/quizHard)
+      types.ts                    ← All TypeScript types
+    lib/
+      mode.ts                     ← LearnModeContext (zero hydration flicker) ✦ REBUILT
+      progress.ts                 ← XP, streak, hearts, gems, spaced repetition
+      audio.ts                    ← Web Audio API engine
 ```
 
 ---
 
-## Content Structure
+## Learning Modes
 
-### Adding screens to a mission (Path Mode)
+Two axes, both always-changeable:
 
-Missions need a `screens[]` array to use the Duolingo lesson engine. Follow the pattern in `missions-foundations-screens.ts`:
+### Axis 1: CCD vs Classic
 
-```typescript
-export const SCREENS_YOUR_MISSION: LessonScreen[] = [
-  { kind: "hook", emoji: "🎵", headline: "Your hook headline", subtext: "One sentence." },
-  {
-    kind: "concept",
-    title: "Concept title",
-    body: "2 sentences max. Plain language.",
-    keyFact: "Bold 1-liner fact.",
-    visual: "waveform",  // one of the 19 visual types
-  },
-  { kind: "interact", sim: "ear-training", prompt: "Try it" },
-  { kind: "quiz", q: "Question?", options: ["A", "B", "C", "D"], answer: 1, explain: "Why B is correct." },
-  { kind: "summary", learned: ["Fact 1", "Fact 2", "Fact 3"] },
-];
-```
+| | 🔒 Path Mode (CCD) | 🗺 Explorer Mode (Classic) |
+|---|---|---|
+| Access | Sequential — unlock one at a time | All 153 lessons open immediately |
+| Hearts | 5 hearts; wrong answer costs ♥ | No hearts |
+| Format | Duolingo: hook → concept → sim → quiz → summary | Scrolling: explainer → sim → quiz |
+| Difficulty | Fixed (standard) | Normal or Hard (your choice per lesson) |
 
-Then merge into the mission with `withScreens()`.
+Toggle lives in the Header (desktop right strip) and mobile drawer. Persists in localStorage with zero hydration flicker (React Context + inline `<head>` script).
 
-### Adding a Hard mode quiz
+### Axis 2: Normal vs Hard (Classic only)
 
-Add `quizHard: QuizQ[]` to the mission's `LessonDeep` entry in `lesson-deep.ts`:
-
-```typescript
-LESSONS["your-mission-slug"] = {
-  quizHard: [
-    { q: "Harder question?", options: [...], answer: 2, explain: "..." }
-    // no hint field — hard mode strips hints
-  ]
-}
-```
+| | Normal | Hard 🔥 |
+|---|---|---|
+| Hints | Shown | Hidden |
+| Questions | Standard `quiz` array | `quizHard` if available, else hints stripped |
+| Pass threshold | 50% | 70% |
+| Content | `beginner.what` paragraphs | `advanced.what` + `edgeCases` + `engineerNotes` |
 
 ---
 
-## What Was Built (May 2026)
+## Concept Screen Visuals (`LessonVisuals.tsx`)
 
-### 🔒/🗺 Mode Toggle System
-A permanent mode toggle pill was added to the Header (desktop + mobile drawer) and the World Path map. One click switches between **Path Mode** (Duolingo-style, hearts, sequential) and **Explorer Mode** (all open, Normal/Hard quiz).
+19 animated SVG/HTML visual types for CCD concept screens:
 
-### Mode-Aware Lesson Routing (`LessonPageClient.tsx`)
-`/learn/[slug]` is now fully bifurcated by mode:
-- **Path Mode** → `LessonPlayer` (Duolingo screens). If screens not built yet for a mission, shows inline classic with a "screens coming soon" banner.
-- **Explorer Mode** → `InlineClassicLesson` (scrolling explainer + sim + quiz), no redirect.
+`waveform` · `waveform-compare` · `frequency-bar` · `piano` · `piano-octave` · `eq-curve` · `amplitude-dial` · `bpm-grid` · `signal-chain` · `stereo-field` · `note-lengths` · `scale-steps` · `chord-stack` · `rhythm-dots` · `vinyl-platter` · `mixer-channel` · `camelot-wheel` · `waveform-zoom` · `headroom-meter`
 
-### `LessonVisuals.tsx` — 19 Rich Concept Screen Visuals
-A new component library providing self-contained animated SVG/HTML visuals for concept screens, replacing the 4 static placeholder SVGs. Includes an animated spinning vinyl platter, the full Camelot harmonic mixing wheel, a labelled piano with Hz values, animated waveforms, spectrum bar charts, and more.
+Plus `diagram` screen kind — custom SVG node-and-arrow diagrams with labelled nodes.
 
-### `LessonPlayer.tsx` — Diagram Screen Kind
-A new `diagram` screen kind renders fully custom SVG node-and-arrow diagrams with captions, wired into the lesson engine switch.
+---
 
-### `MissionPageClient.tsx` — Normal / Hard Mode
-Renamed Standard/Advanced to **Normal/Hard**. Hard mode:
-- Uses `quizHard` questions from `lesson-deep.ts` if available
-- Falls back to normal questions with all hints stripped
-- Pass threshold raised from 50% to 70%
-- Shows a pulsing `🔥 HARD MODE` badge in the mission header
+## Routes
 
-### `WorldPathClient.tsx` — Mode Banner
-A live mode banner appears below the world header on every path map, showing the current mode with description and a one-click "Switch →" button.
+| Route | Description |
+|---|---|
+| `/` | Home — onboarding (new users) or dashboard redirect (returning) |
+| `/dashboard` | **Unified progress hub** ✦ NEW |
+| `/learn/[slug]` | Mode-aware lesson — CCD or Classic at one URL |
+| `/mission/[slug]` | → 301 redirect to `/learn/[slug]` ✦ NEW |
+| `/world/[slug]` | Duolingo winding path map |
+| `/worlds` | Three worlds overview |
+| `/missions` | Browse + search all 153 missions |
+| `/train` | Ear training |
+| `/challenge` | Daily challenge |
+| `/review` | Spaced-repetition review session |
+| `/match` | Flashcard match game |
+| `/leaderboard` | Weekly XP leaderboard |
+| `/shop` | Gem shop (heart refills, streak shields) |
+| `/placement` | Placement test (skip-ahead) |
+| `/playground` | Device chain workbench |
+| `/signal-flow` | Animated signal routing |
+| `/devices` + `/device/[slug]` | Ableton device explorer |
+| `/glossary` | Music production glossary |
+| `/shortcuts` | Keyboard shortcut trainer |
+| `/profile` | XP, rank, trophies, badges |
+| `/login` | Auth (next-auth) |
+| `/upgrade` | Stripe PRO upgrade |
+| `/api/beat-coach` | AI coach (Kimi API) |
+| `/api/progress/sync` | Cloud sync (GET/POST) |
 
-### `OnboardingFlow.tsx` — Naming Consistency
-Step 2 of onboarding updated: "Path Mode" and "Explorer Mode" now match the Header toggle exactly. Explorer Mode description updated to mention the Normal/Hard quiz feature.
+---
+
+## Gamification
+
+| Feature | How it works |
+|---|---|
+| **XP** | Earned on first completion of each mission |
+| **Hearts** | 5 hearts in CCD Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
+| **Streak** | Daily XP goal (50 XP); streak shield earned every 7 days |
+| **Gems** | Earned on completion; spend in gem shop |
+| **Rank** | 10+ ranks from Novice → CCD Master based on total XP |
+| **Badges** | Per-mission and per-chapter completion badges |
+| **Trophies** | Path → Chapter → World → CCD Master |
+| **Spaced repetition** | Lesson strength decays 10%/day; review queue surfaces weakest lessons |
+| **Leaderboard** | Weekly XP ranking with league tiers |
+| **Beat Coach** | Floating 🎧 button on every lesson — multi-turn Kimi AI chat |
+
+---
+
+## Dashboard (`/dashboard`)
+
+The unified progress hub has 8 sections:
+
+1. **Hero Next Step** — Smart continue card. Finds the true next lesson by sorting completed missions by `.at` timestamp. Shows breadcrumb, XP reward, mode indicator, ▶ play button.
+2. **Today's Stats** — 5 stat cards: Streak · Daily XP · Hearts · Gems · Rank
+3. **My Worlds** — 3 world cards with progress bars and per-chapter completion pills (Ch1 100%, Ch2 45%...)
+4. **Skill Radar** — 5-axis SVG radar chart (Sound / Rhythm / Melody / Harmony / Tech) computed from Fundamentals chapter completion
+5. **Recent Badges** — Last 3 earned + "View all →" to profile
+6. **Review Queue** — Conditional; lessons with decayed strength shown as chips with colour-coded strength bars
+7. **Beat Coach** — Entry card opening the CoachPanel inline with dashboard context
+8. **Leaderboard Peek** — Top 3 weekly XP + current user rank, skeleton loading
+
+---
+
+## Beat Coach AI
+
+A floating 🎧 button appears at the bottom-right of every lesson page. Clicking opens `CoachPanel` — a persistent multi-turn chat panel:
+
+- Posts to `/api/beat-coach` with `{ context, question }`
+- Receives `{ reply }` from the Kimi AI model
+- Message history persists for the session
+- Gracefully shows offline message if API key is missing
+- Also accessible from the Dashboard Beat Coach card
+
+**To activate:** set `KIMI_API_KEY` in `.env.local`. Get a key at [platform.moonshot.cn](https://platform.moonshot.cn).
+
+---
+
+## CCD Screens Status
+
+All 153 missions now have complete CCD (`screens[]`) data:
+
+| World | Missions | Status |
+|---|---|---|
+| Fundamentals | 40 | ✅ Complete |
+| DJ World | 40 | ✅ Complete ✦ NEW |
+| Producer (6 chapters) | 73 | ✅ Complete ✦ NEW |
+| **Total** | **153** | **✅ 100% coverage** |
+
+Each mission: 7–8 screens following the pattern: `hook → concept → concept → interact → quiz × 3 → summary`
+
+---
+
+## What Changed — May 2026 Overhaul (PR #8)
+
+### Phase 1 — Foundation Fixes
+- `LearnModeContext` (React Context): replaces scattered `useEffect` localStorage reads. Zero hydration flicker. Inline `<head>` script sets theme + mode before React renders.
+- 2-axis difficulty: CCD/Classic + Normal/Hard only. Dead `ModeToggle.tsx` (Beginner/Intermediate/Advanced) deleted.
+- `/mission/[slug]` → 301 redirect to `/learn/[slug]`. One canonical URL per lesson.
+- `InlineClassicLesson` Hard Mode: full `advanced` content, `quizHard`, mechanism, flow, walkthrough, proMoves, mistakes, related links.
+- Dashboard "continue" card: fixed to sort by `.at` timestamp.
+- Onboarding Step 0: "How much experience do you have?" — routes beginners direct, "Some Experience" to PlacementTest inline, "Experienced" to world pick with all chapters unlocked.
+
+### Phase 2 — Header Overhaul
+- **3 primary nav items** (was 4+9+marquee noise).
+- **5-element right strip**: Search · Hearts · XpStreak badge (with rank/XP/streak/gems popover) · Mode pill · Profile avatar.
+- `More ▾` dropdown: three clean sections — Practice / Reference / Account.
+- `ThemeSwitcher` moved to More → Account.
+- Marquee ticker → single 1px separator line.
+- Mobile drawer: compact stats row, sectioned nav, mode toggle.
+
+### Phase 3 — Unified Dashboard
+- New `/dashboard` route.
+- `DashboardClient.tsx`: 8-section progress hub (see Dashboard section above).
+
+### Phase 4 — Lesson Flow Polish
+- `LessonPlayer`: `sessionStorage` mid-lesson persistence (screen index + score survive refresh). Mode indicator bar. No-screens returns `null` cleanly.
+- `HeartsWall`: 💎 Spend 20 gems button wired to `spendGems` + `refillHeart`. Proper `Xh MM:SS` countdown.
+- `LessonPageClient`: `CcdFallbackBanner` redesign — informative, not broken-looking.
+
+### Phase 6 — All CCD Screens
+- `missions-dj-screens.ts`: 40 DJ missions × 8 screens. Visuals: `vinyl-platter`, `camelot-wheel`, `waveform-zoom`, `mixer-channel`, `bpm-grid`. Sims: `beatmatch-trainer`, `harmonic-mix-wheel`, `loop-roll`, `hot-cue-drill`.
+- `missions-producer-screens.ts`: 91 Producer missions × 8 screens across all 6 chapters including the full Synthesis chapter.
+
+### Phase 7 — AI Coach Rebuilt
+- `FloatingCoachButton`: always-visible 🎧 on every lesson.
+- `CoachPanel`: multi-turn chat (scrollable, Enter key, auto-scroll to latest).
+- Wired to Dashboard Beat Coach card.
+- Legacy `BeatCoach` + `useBeatCoach` kept for backward compat.
 
 ---
 
 ## Next Steps
 
-### 🔥 Highest Priority
+### 🔥 P0 — Ship Before Any Marketing
 
-1. **Build `missions-dj-screens.ts`** — 40 DJ World missions each need a `screens[]` array (hook→concept→interact→quiz→summary). This unlocks the full Duolingo engine for the DJ World. Pattern to follow: `missions-foundations-screens.ts`. Every mission already has `explainer` + `quiz` data to convert from. Estimated: 40 × 8 screens = 320 screen objects.
+1. **Set `KIMI_API_KEY` in production env** — Beat Coach is wired and ready; just needs the key. Get at [platform.moonshot.cn](https://platform.moonshot.cn). Strongly differentiated feature.
 
-2. **Build `missions-producer-screens.ts`** — Same for the 73 Producer missions. These have even richer `explainer` data in `missions.ts`. 73 × 8 = ~584 screen objects.
+2. **Add `lesson-deep.ts` content for DJ + Producer** — `lesson-deep-foundations.ts` and `lesson-deep-dj.ts` exist with partial content. The `advanced.what`, `proMoves`, `walkthrough`, `mistakes` fields power Hard Mode in Classic lessons AND the "Deep Dive" section. Complete the DJ World entries first (the DJ lessons are already widely used).
 
-3. **Wire `missions-synths.ts`** — The Synthesis chapter (`missions-synths.ts`) exists but unclear if it's fully integrated into the Producer world paths. Audit and connect.
+3. **`WorldPathClient` gating in CCD mode** — World page and Missions page currently show all missions as clickable even in CCD mode. Only `PathPageClient` enforces sequential gating. Users can bypass CCD gating by going to `/worlds` or `/missions`. Add CCD lock icons and disabled states to `WorldPageClient` and `MissionsPageClient`.
 
-### ⚡ High Impact UX
+4. **Test cloud sync end-to-end** — `CloudSyncEffect` in `ClientProviders.tsx` syncs to `/api/progress/sync` (PostgreSQL). Verify the GET (initial load) and POST (on change) work correctly with a real `DATABASE_URL`. The merge strategy (`mergeProgress`) is solid — just needs a live DB to test against.
 
-4. **Surface Deep Lesson content** — `lesson-deep-dj.ts`, `lesson-deep-foundations.ts`, etc. contain exceptional pro-level content (`beginner.what`, `advanced.edgeCases`, `proMoves`, `walkthrough`, `listenFor`, `mistakes`) that is available in Classic lessons but not surfaced in the Duolingo path. Add a "Deep Dive" expandable section on the summary screen of LessonPlayer.
+### ⚡ P1 — High Impact UX
 
-5. **Add audio examples to concept screens** — The `audio.ts` engine, `AudioUnlock.tsx`, and `MasterTransportBar` are all wired. Short audio clips (synthesised via Web Audio, no files) on concept screens — e.g. a sine tone on the waveforms lesson, a beatmatching example clip in the DJ world.
+5. **`/dashboard` as the default home for returning users** — Currently `/` shows Landing or Dashboard based on `hasMissions`. Change so any user with `onboardingDone === true` is immediately redirected to `/dashboard`. Landing page stays at `/welcome` or `/about`.
 
-6. **Mobile swipe gestures in LessonPlayer** — Framer Motion is already in the stack. Add left-swipe to advance screens and right-swipe to go back on concept/hook screens.
+6. **Lesson completion → Dashboard redirect** — After completing a lesson, `handleComplete` in `LessonPageClient` currently redirects to `/world/[slug]` after 2.2s. Change to `/dashboard` so users see their updated stats, badge, and next lesson immediately.
 
-### 🎯 Quality & Completeness
+7. **Audio examples in concept screens** — `audio.ts` already generates tones via Web Audio. Add short synthesised audio previews for the Fundamentals audio lessons (waveform, frequency-bar, amplitude-dial screen types). No file dependencies needed — pure Web Audio API.
 
-7. **Spaced repetition review flow audit** — The review system tracks `lessonStrengths` and `/review` page exists. Confirm the review queue at `/review` correctly routes to `/learn/[slug]?review=1` and that completing a review updates the strength score.
+8. **PlacementTest result → chapter unlock** — `setPlacement(chapter)` writes `unlockedChapter` to progress, but `WorldPathClient` and `WorldPageClient` don't yet read `unlockedChapter` to skip locked chapters. Wire the output to actually unlock the recommended starting chapter.
 
-8. **Leaderboard data audit** — `/api/leaderboard` and `leagues.ts` exist. Confirm `LeagueBoard` component is pulling live data and rendering correctly.
+### 🌟 P2 — "Best on the Web" Features
 
-9. **Beat Coach context-per-world** — `/api/beat-coach` already receives a `context` string. Enrich it with the world slug and chapter so the AI gives world-specific advice (DJ tips in DJ World, Ableton-specific tips in Producer).
+9. **Offline PWA** — `public/manifest.json` exists. Add a service worker (`next-pwa` or custom) to cache lesson pages and simulator bundles. Producers should learn on a plane.
 
-10. **Source citations in lessons** — Every mission has source page references in the data. Surface them visibly at the bottom of each concept screen: *"Source: rekordbox 6.0.0 Manual — p.77"*.
+10. **Web MIDI input** — Wire `navigator.requestMIDIAccess()` to `PianoRollSim`, `BeatBuilderSim`, `DrumPadSim`, and `ChordStackerSim`. Let users plug in a MIDI controller. Massive differentiator for a production-education tool.
 
-### 🌟 "Best on the Web" Features
+11. **Share cards after trophies** — `ShareCard.tsx` exists. Surface it after path/chapter/world trophy completion with a branded "I just completed DJ World on CCD.SCHOOL" card. Add social share buttons.
 
-11. **Offline PWA** — The PWA manifest exists. Add a service worker for offline lesson caching — producers should be able to learn on a plane.
+12. **Source citations on lesson pages** — Every mission has `source` fields in `paths.ts` (e.g. `"rekordbox 6.0.0 Instruction Manual — p.77"`). Display them at the bottom of concept screens and Classic lesson pages.
 
-12. **Public profile pages** — `/u/[username]` page exists via `PublicProfileClient`. Wire a share flow from the profile page so users can share their progress.
+13. **Public profile at `/u/[username]`** — `PublicProfileClient.tsx` exists. Wire a "Share my profile" button on `/profile` that generates a unique public URL showing XP, rank, completed worlds, and badges.
 
-13. **Share card after milestones** — `ShareCard.tsx` exists. Add a "Share" prompt after path/chapter/world trophy completions. `HeartsWall.tsx` could be surfaced on a public page.
-
-14. **Web MIDI input** — Let users plug in a MIDI controller to trigger the PianoRollSim, BeatBuilderSim, and DrumPadSim. Massive differentiator for a production-education tool.
+14. **Kimi AI context enrichment** — The `/api/beat-coach` route receives a `context` string. Enrich it per-lesson with: world slug, chapter name, lesson title, current mode (CCD/Classic), and hard mode status. Responses will be more targeted.
 
 ---
 
@@ -330,7 +322,8 @@ Step 2 of onboarding updated: "Path Mode" and "Explorer Mode" now match the Head
 |---|---|
 | Fundamentals | [learningmusic.ableton.com](https://learningmusic.ableton.com) |
 | DJ World | Pioneer DJ rekordbox 6.0.0 Instruction Manual |
-| Producer | Ableton Live 12 Reference Manual |
+| Producer (instruments/effects/workflow) | Ableton Live 12 Reference Manual |
+| Producer (Synthesis chapter) | [learningsynths.ableton.com](https://learningsynths.ableton.com) |
 
 ---
 
