@@ -58,6 +58,11 @@ export type SimType =
   | "midi-transform"
   | "scale-aware"
   | "push3"
+  // Legacy / DJ-world sims
+  | "tempo-compare"
+  | "buffer-sim"
+  | "knob-trainer"
+  | "synth-playground"
   | "none";
 
 // ─── QUIZ ─────────────────────────────────────────────────────────────────────

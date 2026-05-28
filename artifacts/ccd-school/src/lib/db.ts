@@ -20,14 +20,23 @@ function getConnectionString() {
   }
 }
 
-export const db: Pool =
-  globalForPg._pgPool ??
-  new Pool({
-    connectionString: getConnectionString(),
-    ssl: { rejectUnauthorized: false },
-    max: 10,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
-  });
+function getPool(): Pool {
+  if (!globalForPg._pgPool) {
+    globalForPg._pgPool = new Pool({
+      connectionString: getConnectionString(),
+      ssl: { rejectUnauthorized: false },
+      max: 10,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
+    });
+  }
+  return globalForPg._pgPool;
+}
 
-if (process.env.NODE_ENV !== "production") globalForPg._pgPool = db;
+// Lazy proxy — the pool (and DB connection string check) is only
+// created on first actual query, not at module-import time.
+export const db: Pool = new Proxy({} as Pool, {
+  get(_target, prop) {
+    return (getPool() as unknown as Record<string | symbol, unknown>)[prop];
+  },
+});
