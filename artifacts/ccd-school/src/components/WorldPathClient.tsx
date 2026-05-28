@@ -5,6 +5,7 @@
  * Chapter banners break up sections. Nodes pulse when available.
  */
 import Link from "next/link";
+import { useState } from "react";
 import { useProgress, getLessonStrength, REVIEW_THRESHOLD } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
@@ -14,6 +15,8 @@ import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
 import { rankFor } from "@/lib/ranks";
 import type { Mission } from "@/content/types";
+import type { Chapter } from "@/content/chapters";
+import type { LearningPath } from "@/content/paths";
 
 type WorldId = "fundamentals" | "dj" | "producer";
 
@@ -58,6 +61,108 @@ const CHAPTER_EMOJIS: Record<string, string> = {
   "first-contact": "🖥", "sound-and-midi": "🎼", "the-mix-producer": "🎚",
   "performance-and-flow": "🚀", "advanced-producer": "⚡", "synthesis": "🌀",
 };
+
+// ─── World Overview — collapsible chapter/path breakdown ──────────────────────
+
+function WorldOverview({
+  world,
+  meta,
+  chapters,
+  paths,
+  nodes,
+}: {
+  world: WorldId;
+  meta: typeof WORLD_META[string];
+  chapters: Chapter[];
+  paths: LearningPath[];
+  nodes: PathNode[];
+}) {
+  const [open, setOpen] = useState(false);
+  const totalMissions = paths.flatMap((p) => p.missionSlugs).length;
+  const doneMissions = nodes.filter((n) => n.state === "complete" || n.state === "review").length;
+
+  return (
+    <div className={`brutal-border border-x-0 border-t-0 ${world === "dj" ? "bg-ink/40" : "bg-bone/80"}`}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className={`w-full flex items-center justify-between px-5 py-3 brutal-press transition-colors ${
+          world === "dj" ? "hover:bg-bone/10 text-bone" : "hover:bg-ink/5 text-ink"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[10px] uppercase opacity-60">// WHAT&apos;S IN THIS WORLD</span>
+          <span className="font-mono text-[9px] uppercase opacity-40">
+            {chapters.length} chapters · {paths.length} paths · {totalMissions} missions
+          </span>
+        </div>
+        <span className={`font-display text-lg opacity-60 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
+          ▾
+        </span>
+      </button>
+
+      {open && (
+        <div className="px-4 pb-5 space-y-3 border-t border-current/10">
+          <div className="font-mono text-[9px] uppercase opacity-40 pt-3">
+            {doneMissions}/{totalMissions} missions complete
+          </div>
+          {chapters.map((ch) => {
+            const chPaths = paths.filter((p) => p.chapter === ch.slug);
+            const chMissions = chPaths.flatMap((p) => p.missionSlugs);
+            const chDone = nodes.filter(
+              (n) => n.chapterSlug === ch.slug && (n.state === "complete" || n.state === "review")
+            ).length;
+            const chPct = chMissions.length > 0 ? Math.round((chDone / chMissions.length) * 100) : 0;
+            const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
+
+            return (
+              <div
+                key={ch.slug}
+                className={`brutal-border p-4 ${world === "dj" ? "bg-bone/5" : "bg-bone"}`}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl shrink-0">{emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div className={`font-display text-base leading-tight ${world === "dj" ? "text-bone" : "text-ink"}`}>
+                        {ch.title}
+                      </div>
+                      <div className="font-mono text-[9px] uppercase opacity-50 shrink-0">
+                        {chDone}/{chMissions.length}
+                      </div>
+                    </div>
+                    <div className={`font-mono text-xs opacity-60 mt-0.5 leading-snug ${world === "dj" ? "text-bone" : ""}`}>
+                      {ch.tagline}
+                    </div>
+                    {/* Chapter progress bar */}
+                    <div className="mt-2 h-1.5 brutal-border bg-ink/10 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-500 ${meta.accent.split(" ")[0]}`}
+                        style={{ width: `${chPct}%` }}
+                      />
+                    </div>
+                    {/* Paths within chapter */}
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {chPaths.map((p) => (
+                        <span
+                          key={p.slug}
+                          className={`font-mono text-[9px] uppercase brutal-border px-1.5 py-0.5 ${
+                            world === "dj" ? "bg-bone/10 text-bone opacity-60" : "bg-ink/5 opacity-60"
+                          }`}
+                        >
+                          {p.title}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function getMissions(world: WorldId): Mission[] {
   if (world === "fundamentals") return FOUNDATIONS_MISSIONS;
@@ -152,6 +257,9 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
           </div>
         </div>
       </div>
+
+      {/* World overview — collapsible chapter breakdown */}
+      <WorldOverview world={world} meta={meta} chapters={chapters} paths={paths} nodes={nodes} />
 
       {/* Mode banner */}
       <div className={`brutal-border border-x-0 border-t-0 px-4 py-3 flex items-center justify-between gap-3

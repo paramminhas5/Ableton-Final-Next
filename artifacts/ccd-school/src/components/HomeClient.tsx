@@ -271,7 +271,7 @@ function Dashboard() {
   );
 }
 
-function Landing() {
+function Landing({ onGetStarted }: { onGetStarted: () => void }) {
   const [worldTab, setWorldTab] = useState<WorldTab>("fundamentals");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const chapters = chaptersByWorld(worldTab);
@@ -285,7 +285,7 @@ function Landing() {
           <h1 className="font-display leading-[0.85] text-[min(18vw,160px)]">LEARN<br />MUSIC.<br /><span className="text-acid">BRUTALLY.</span></h1>
           <p className="font-mono text-sm md:text-base opacity-60 leading-relaxed max-w-xl mt-6">The most structured music education on the internet. 153 missions across 3 worlds — Fundamentals, DJ and Producer. Every concept sourced from real manuals.</p>
           <div className="flex flex-wrap gap-3 mt-8">
-            <Link href="/world/fundamentals" className="brutal-border bg-acid text-ink px-6 py-3 font-display text-xl brutal-press brutal-shadow">START LEARNING →</Link>
+            <button onClick={onGetStarted} className="brutal-border bg-acid text-ink px-6 py-3 font-display text-xl brutal-press brutal-shadow">GET STARTED →</button>
             <a href="#how-it-works" className="brutal-border bg-transparent text-bone px-6 py-3 font-display text-xl brutal-press hover:bg-bone/10">HOW IT WORKS ↓</a>
           </div>
         </div>
@@ -410,7 +410,7 @@ function Landing() {
           <h2 className="font-display text-5xl md:text-8xl leading-[0.85] mb-6">Ready?</h2>
           <p className="font-mono text-sm opacity-70 max-w-lg mx-auto mb-8 leading-relaxed">Begin with Fundamentals — 40 missions covering the vocabulary of music. Free, no account required.</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/world/fundamentals" className="brutal-border bg-ink text-bone px-8 py-4 font-display text-2xl brutal-press brutal-shadow">START FUNDAMENTALS →</Link>
+            <button onClick={onGetStarted} className="brutal-border bg-ink text-bone px-8 py-4 font-display text-2xl brutal-press brutal-shadow">GET STARTED →</button>
             <Link href="/worlds" className="brutal-border bg-transparent px-8 py-4 font-display text-2xl brutal-press hover:bg-ink/10">ALL WORLDS</Link>
           </div>
         </div>
@@ -422,6 +422,7 @@ function Landing() {
 export function HomeClient() {
   const { user } = useAuth();
   const { progress } = useProgress();
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showPlacement, setShowPlacement] = useState(false);
   const hasMissions = Object.keys(progress.completedMissions).length > 0;
 
@@ -438,9 +439,15 @@ export function HomeClient() {
     return <OnboardingFlow />;
   }
 
+  // User explicitly clicked GET STARTED from the landing page
+  if (showOnboarding) {
+    return <OnboardingFlow onDone={() => setShowOnboarding(false)} />;
+  }
+
   // Returning user or has progress → Dashboard
   if (user || hasMissions) return <Dashboard />;
 
-  // Fallback: Landing (shouldn't normally be reached after onboarding)
-  return <Landing />;
+  // Fallback: Landing page (shown after onboarding is done but no missions yet,
+  // or when user has cleared progress)
+  return <Landing onGetStarted={() => setShowOnboarding(true)} />;
 }

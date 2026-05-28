@@ -38,13 +38,15 @@ export function MissionPageClient({ slug }: { slug: string }) {
   const ctx = getMissionContext(slug);
   const deep = LESSONS[slug];
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
-  const [hardMode, setHardMode] = useState(false);
   const { learnMode } = useLearnMode();
   const { progress, completeMission, loseHeart, addXp } = useProgress();
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
-
   const locked = isLocked(m, plan, gatingMode);
+
+  // Default hard mode from stored difficulty preference (classic/explorer mode only)
+  const defaultHard = learnMode !== "ccd" && progress.difficulty === "hard";
+  const [hardMode, setHardMode] = useState(defaultHard);
 
   const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);

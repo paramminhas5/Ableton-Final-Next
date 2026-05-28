@@ -140,6 +140,51 @@ function SimInner({ type, preset }: { type: SimType; preset?: Record<string, unk
   }
 }
 
+export const SIM_LIST: { type: SimType; label: string; color: string }[] = [
+  { type: "drum-pad",            label: "Drum Pad",            color: "bg-acid text-ink" },
+  { type: "piano-roll",          label: "Piano Roll",          color: "bg-volt text-bone" },
+  { type: "mixer",               label: "Mixer",               color: "bg-sun text-ink" },
+  { type: "device-chain",        label: "Device Chain",        color: "bg-acid text-ink" },
+  { type: "warp-lab",            label: "Warp Lab",            color: "bg-volt text-bone" },
+  { type: "session-grid",        label: "Session Grid",        color: "bg-sun text-ink" },
+  { type: "arrangement",         label: "Arrangement",         color: "bg-acid text-ink" },
+  { type: "routing-puzzle",      label: "Routing Puzzle",      color: "bg-volt text-bone" },
+  { type: "midi-map",            label: "MIDI Map",            color: "bg-sun text-ink" },
+  { type: "ear-training",        label: "Ear Training",        color: "bg-acid text-ink" },
+  { type: "interface-tour",      label: "Interface Tour",      color: "bg-volt text-bone" },
+  { type: "browser-tour",        label: "Browser Tour",        color: "bg-sun text-ink" },
+  { type: "midi-vs-audio",       label: "MIDI vs Audio",       color: "bg-acid text-ink" },
+  { type: "device-lab",          label: "Device Lab",          color: "bg-volt text-bone" },
+  { type: "sidechain",           label: "Sidechain",           color: "bg-sun text-ink" },
+  { type: "send-return",         label: "Send & Return",       color: "bg-acid text-ink" },
+  { type: "comp-lake",           label: "Comp Lake",           color: "bg-volt text-bone" },
+  { type: "groove-extractor",    label: "Groove Extractor",    color: "bg-sun text-ink" },
+  { type: "bpm-tap",             label: "BPM Tap",             color: "bg-acid text-ink" },
+  { type: "beat-builder",        label: "Beat Builder",        color: "bg-volt text-bone" },
+  { type: "note-explorer",       label: "Note Explorer",       color: "bg-sun text-ink" },
+  { type: "chord-stacker",       label: "Chord Stacker",       color: "bg-acid text-ink" },
+  { type: "bassline-lab",        label: "Bassline Lab",        color: "bg-volt text-bone" },
+  { type: "melody-shaper",       label: "Melody Shaper",       color: "bg-sun text-ink" },
+  { type: "song-structure",      label: "Song Structure",      color: "bg-acid text-ink" },
+  { type: "subtractive-synth",   label: "Subtractive Synth",   color: "bg-volt text-bone" },
+  { type: "beatmatch-trainer",   label: "Beatmatch Trainer",   color: "bg-sun text-ink" },
+  { type: "hot-cue-drill",       label: "Hot Cue Drill",       color: "bg-acid text-ink" },
+  { type: "loop-roll",           label: "Loop Roll",           color: "bg-volt text-bone" },
+  { type: "harmonic-mix-wheel",  label: "Harmonic Mix Wheel",  color: "bg-sun text-ink" },
+  { type: "osc-mixer",           label: "Osc Mixer",           color: "bg-acid text-ink" },
+  { type: "filter-envelope",     label: "Filter Envelope",     color: "bg-volt text-bone" },
+  { type: "lfo-lab",             label: "LFO Lab",             color: "bg-sun text-ink" },
+  { type: "waveform-visualizer", label: "Waveform Visualizer", color: "bg-acid text-ink" },
+  { type: "decibel-meter",       label: "Decibel Meter",       color: "bg-volt text-bone" },
+  { type: "chord-progression",   label: "Chord Progression",   color: "bg-sun text-ink" },
+  { type: "signal-flow-builder", label: "Signal Flow Builder", color: "bg-acid text-ink" },
+  { type: "granular",            label: "Granular",            color: "bg-volt text-bone" },
+  { type: "stem-splitter",       label: "Stem Splitter",       color: "bg-sun text-ink" },
+  { type: "midi-transform",      label: "MIDI Transform",      color: "bg-acid text-ink" },
+  { type: "scale-aware",         label: "Scale Aware",         color: "bg-volt text-bone" },
+  { type: "push3",               label: "Push 3",              color: "bg-sun text-ink" },
+];
+
 export function Simulator({ type, preset }: { type: SimType; preset?: Record<string, unknown> }) {
   return (
     <SimErrorBoundary>

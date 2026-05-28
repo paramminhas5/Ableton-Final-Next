@@ -35,6 +35,8 @@ export type Progress = {
   // Onboarding
   onboardingDone: boolean;
   selectedWorld: "fundamentals" | "dj" | "producer" | null;
+  // Difficulty preference (classic/explorer mode only)
+  difficulty: "normal" | "hard";
   // Placement test
   placementDone: boolean;
   unlockedChapter: number; // 1-3, chapter to start from
@@ -75,6 +77,7 @@ export const empty = (): Progress => ({
   dailyXpDate: todayKey(),
   onboardingDone: false,
   selectedWorld: null,
+  difficulty: "normal",
   placementDone: false,
   unlockedChapter: 1,
   leagueId: null,
@@ -287,9 +290,21 @@ export const useProgress = () => {
     writeLocal(next);
   }, []);
 
-  const setOnboarding = useCallback((world: Progress["selectedWorld"]) => {
+  const setOnboarding = useCallback((world: Progress["selectedWorld"], difficulty?: Progress["difficulty"]) => {
     const cur = readLocal();
-    const next: Progress = { ...cur, onboardingDone: true, selectedWorld: world };
+    const next: Progress = {
+      ...cur,
+      onboardingDone: true,
+      selectedWorld: world,
+      difficulty: difficulty ?? cur.difficulty,
+    };
+    setP(next);
+    writeLocal(next);
+  }, []);
+
+  const setDifficulty = useCallback((difficulty: Progress["difficulty"]) => {
+    const cur = readLocal();
+    const next: Progress = { ...cur, difficulty };
     setP(next);
     writeLocal(next);
   }, []);
@@ -342,6 +357,7 @@ export const useProgress = () => {
     addXp,
     reset,
     setOnboarding,
+    setDifficulty,
     setPlacement,
     heartRefillSeconds,
     dailyGoalPct,

@@ -427,9 +427,11 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
         </Link>
       </div>
 
-      {/* Screen renderer */}
+      {/* Screen renderer — key={screenIdx} ensures React remounts each screen
+          fresh, resetting all internal state (quiz phase, interacted flag, etc.) */}
       {done && summaryScreen ? (
         <SummaryScreen
+          key="summary-done"
           screen={summaryScreen}
           mission={mission}
           xpEarned={xpEarned}
@@ -437,15 +439,16 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
           onClose={onComplete}
         />
       ) : currentScreen?.kind === "hook" ? (
-        <HookScreen screen={currentScreen} onNext={advance} />
+        <HookScreen key={screenIdx} screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "concept" ? (
-        <ConceptScreen screen={currentScreen} onNext={advance} />
+        <ConceptScreen key={screenIdx} screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "interact" ? (
-        <InteractScreen screen={currentScreen} onNext={advance} />
+        <InteractScreen key={screenIdx} screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "diagram" ? (
-        <DiagramScreen screen={currentScreen} onNext={advance} />
+        <DiagramScreen key={screenIdx} screen={currentScreen} onNext={advance} />
       ) : currentScreen?.kind === "quiz" ? (
         <QuizScreen
+          key={screenIdx}
           screen={currentScreen}
           onCorrect={handleCorrect}
           onWrong={handleWrong}
@@ -453,6 +456,7 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
         />
       ) : currentScreen?.kind === "summary" ? (
         <SummaryScreen
+          key={screenIdx}
           screen={currentScreen}
           mission={mission}
           xpEarned={xpEarned}
