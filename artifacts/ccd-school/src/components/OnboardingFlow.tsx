@@ -13,6 +13,7 @@ import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
+import { PlacementTest } from "@/components/PlacementTest";
 
 type World = "fundamentals" | "dj" | "producer";
 type LearnMode = "ccd" | "classic";
@@ -98,12 +99,76 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
   );
 }
 
+// Step 0 — Experience level
+function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") => void }) {
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div>
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 1 OF 4</div>
+        <h1 className="font-display text-5xl leading-none">
+          BEFORE WE START,<br />
+          <span className="text-acid">HOW MUCH DO YOU KNOW?</span>
+        </h1>
+        <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
+          This helps us put you in the right place.
+        </p>
+      </div>
+      <div className="space-y-3">
+        <button
+          onClick={() => onPick("none")}
+          className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press brutal-shadow"
+        >
+          <div className="flex items-start gap-3">
+            <span className="text-3xl shrink-0 mt-0.5">🌱</span>
+            <div>
+              <div className="font-display text-xl">Total Beginner</div>
+              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
+                I have never made music or DJed. Start me from the very beginning.
+              </div>
+            </div>
+          </div>
+        </button>
+        <button
+          onClick={() => onPick("some")}
+          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun/30 transition-colors"
+        >
+          <div className="flex items-start gap-3">
+            <span className="text-3xl shrink-0 mt-0.5">🎛</span>
+            <div>
+              <div className="font-display text-xl">Some Experience</div>
+              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
+                I have dabbled — made some beats, played around in a DAW, or DJed a little. Help me find my level.
+              </div>
+              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">Short placement test → skip ahead if ready</div>
+            </div>
+          </div>
+        </button>
+        <button
+          onClick={() => onPick("lots")}
+          className="w-full brutal-border bg-ink text-bone p-5 text-left brutal-press brutal-shadow"
+        >
+          <div className="flex items-start gap-3">
+            <span className="text-3xl shrink-0 mt-0.5">🏆</span>
+            <div>
+              <div className="font-display text-xl">Experienced</div>
+              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
+                I know music theory, have produced tracks, or DJ regularly. Let me jump straight in.
+              </div>
+              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">Skip to world selection → all chapters unlocked</div>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // Step 1 — Pick world
 function StepWorld({ onPick }: { onPick: (w: World) => void }) {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 1 OF 4</div>
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 2 OF 4</div>
         <h1 className="font-display text-5xl leading-none">
           WHAT DO YOU<br />
           <span className="text-acid">WANT TO LEARN?</span>
@@ -151,7 +216,7 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
         <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
           ← back
         </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 2 OF 4</div>
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 3 OF 4</div>
         <h1 className="font-display text-5xl leading-none">
           HOW DO YOU<br />
           <span className="text-acid">WANT TO LEARN IT?</span>
@@ -220,7 +285,7 @@ function StepDifficulty({
         <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
           ← back
         </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 3 OF 4</div>
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 4 OF 5</div>
         <h1 className="font-display text-5xl leading-none">
           ADJUST THE<br />
           <span className="text-acid">DIFFICULTY</span>
@@ -280,12 +345,14 @@ function StepOverview({
   world,
   mode,
   difficulty,
+  experience,
   onStart,
   onBack,
 }: {
   world: World;
   mode: LearnMode;
   difficulty: Difficulty;
+  experience: "none" | "some" | "lots" | null;
   onStart: () => void;
   onBack: () => void;
 }) {
@@ -380,6 +447,18 @@ function StepOverview({
           <span className="text-acid font-bold shrink-0">✓</span>
           No account needed to start
         </div>
+        {experience === "lots" && (
+          <div className="flex items-center gap-3 font-mono text-sm text-acid">
+            <span className="font-bold shrink-0">★</span>
+            All chapters unlocked — you can start anywhere.
+          </div>
+        )}
+        {experience === "some" && (
+          <div className="flex items-center gap-3 font-mono text-sm text-acid">
+            <span className="font-bold shrink-0">★</span>
+            Starting from your placement result.
+          </div>
+        )}
       </div>
 
       <button
@@ -398,17 +477,28 @@ function StepOverview({
 // ─── main export ──────────────────────────────────────────────────────────────
 
 export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [selectedWorld, setSelectedWorld] = useState<World | null>(null);
   const [selectedMode, setSelectedMode] = useState<LearnMode | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("normal");
+  const [experience, setExperience] = useState<"none" | "some" | "lots" | null>(null);
+  const [showPlacement, setShowPlacement] = useState(false);
 
   const { setOnboarding } = useProgress();
   const { setLearnMode } = useLearnMode();
   const router = useRouter();
 
-  // total steps: CCD skips difficulty → 3 real steps visible; Classic has 4
-  const totalSteps = selectedMode === "ccd" ? 3 : 4;
+  // total steps: CCD skips difficulty → 4 real steps visible; Classic has 5
+  const totalSteps = selectedMode === "ccd" ? 4 : 5;
+
+  const handleExperiencePick = (exp: "none" | "some" | "lots") => {
+    setExperience(exp);
+    if (exp === "some") {
+      setShowPlacement(true); // show placement quiz inline
+    } else {
+      setStep(1); // go straight to world pick
+    }
+  };
 
   const handleWorldPick = (w: World) => {
     setSelectedWorld(w);
@@ -440,9 +530,19 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
     router.push(`/learn/${firstLesson}`);
   };
 
-  // Visual step index for the indicator (always 1-4 but CCD shows 1-3)
+  // Visual step index for the indicator (step 0 = index 0, etc.)
   const visualStep =
-    step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 3 : step;
+    step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 4 : step + 1;
+
+  // Show placement test inline when experience === "some"
+  if (showPlacement) {
+    return (
+      <PlacementTest
+        world={selectedWorld ?? "fundamentals"}
+        onSkip={() => { setShowPlacement(false); setStep(1); }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-ink text-bone flex flex-col">
@@ -451,6 +551,8 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
       </div>
 
       <div className="flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto">
+        {step === 0 && !showPlacement && <StepExperience onPick={handleExperiencePick} />}
+
         {step === 1 && <StepWorld onPick={handleWorldPick} />}
 
         {step === 2 && selectedWorld && (
@@ -474,6 +576,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
             world={selectedWorld}
             mode={selectedMode}
             difficulty={selectedMode === "ccd" ? "normal" : selectedDifficulty}
+            experience={experience}
             onStart={handleStart}
             onBack={() => setStep(selectedMode === "ccd" ? 2 : 3)}
           />
