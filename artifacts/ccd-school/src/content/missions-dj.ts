@@ -1,4 +1,5 @@
 import type { Mission } from "./types";
+import { DJ_SCREENS } from "./missions-dj-screens";
 
 // WORLD: DJ — 40 missions (301-340)
 // Sources: rekordbox 6.0.0 Instruction Manual (Pioneer DJ), Wikipedia — Disc jockey / House music / Techno / Turntablism
@@ -154,10 +155,16 @@ const advancedDJPath: Mission[] = [
   { slug: "dj-advanced-complete", world: "dj", number: 40, title: "From DJ to Artist", tagline: "The path forward — developing your unique voice.", xp: 70, badge: { slug: "dj-advanced", name: "Advanced DJ" }, explainer: [{ kind: "lead", text: "You have built a complete DJing toolkit. The technical skills the theory the preparation workflow the business knowledge. What separates a competent DJ from a great one now is artistic identity." }, { kind: "list", items: ["Unique selection: play tracks others are not playing. Your crate digging pays off here.", "Signature sound: consistent musical character that defines your sets.", "Production skills: many DJs produce their own music — original tracks and edits create exclusivity", "Long-form thinking: develop your sets over months and years not just individual gigs", "Community: build genuine relationships with other artists promoters and labels in your scene", "Evolution: let your sound evolve naturally as your taste develops."] }, { kind: "callout", tone: "key", text: "The DJs who leave the deepest mark are not always the most technically precise. They are the ones who made you feel something unique — who took you somewhere you had not been before. That is your goal." }], sim: { type: "none" }, quiz: [{ q: "What separates a competent DJ from a great one?", options: ["More expensive equipment", "Artistic identity — a unique voice and vision expressed through music selection and performance", "Faster beatmatching", "Playing in more venues"], answer: 1, explain: "Technical competence can be learned by most people willing to practice. Artistic identity — a genuinely unique perspective — is what makes a DJ unforgettable.", hint: "Competence = doing it right. Artistry = making people feel something unique." }, { q: "Producing your own music as a DJ gives you", options: ["Only work for the studio", "Exclusive tracks no other DJ has — differentiation and artistic identity", "Required for DJ bookings", "A separate career only"], answer: 1, explain: "Original productions and edits give you tracks nobody else can play. Playing your own music during a set creates moments of complete exclusivity.", hint: "Your own music = nobody else has it. Ultimate differentiation." }, { q: "Allowing your DJ sound to evolve over time means", options: ["Changing your name and brand completely every year", "Naturally following your developing taste — not being trapped by who you were when you started", "Playing different genres randomly each gig", "Avoiding any consistency"], answer: 1, explain: "Your taste will evolve as you dig deeper into music. An authentic evolution of your sound reflects genuine artistic growth.", hint: "You change. Your music changes. That is authentic artistic development." }, { q: "The ultimate goal in DJing is", options: ["Technical perfection on every mix", "Playing to the largest possible audience", "Taking your audience somewhere they have not been before — creating a unique emotional journey", "Having the largest music library"], answer: 2, explain: "The most memorable DJ sets created a feeling told a story or took an audience through an emotional journey they will remember years later.", hint: "Feeling beats technique. Journey beats perfection." }] },
 ];
 
+function withDJScreens(m: Mission): Mission {
+  const screens = DJ_SCREENS[m.slug];
+  return screens ? { ...m, screens } : m;
+}
+
 export const DJ_WORLD_MISSIONS: Mission[] = [
   ...djFundamentals,
   ...libraryPath,
   ...mixPath,
   ...performancePath,
   ...advancedDJPath,
-];
+].map(withDJScreens);
+
