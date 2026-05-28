@@ -2,6 +2,12 @@ import type { Mission } from "./types";
 import { FOUNDATIONS_MISSIONS } from "./missions-foundations";
 import { DJ_WORLD_MISSIONS } from "./missions-dj";
 import { SYNTHS_MISSIONS } from "./missions-synths";
+import { PRODUCER_SCREENS } from "./missions-producer-screens";
+
+function withProducerScreens(m: Mission): Mission {
+  const screens = PRODUCER_SCREENS[m.slug];
+  return screens ? { ...m, screens } : m;
+}
 
 const w1: Mission[] = [
   {
@@ -3920,10 +3926,7 @@ const w8: Mission[] = [
   },
 ];
 
-export const MISSIONS: Mission[] = [
-  ...FOUNDATIONS_MISSIONS,
-  ...DJ_WORLD_MISSIONS,
-  ...SYNTHS_MISSIONS,
+const allProducerMissions: Mission[] = [
   ...w1,
   ...w2,
   ...w3,
@@ -3933,6 +3936,13 @@ export const MISSIONS: Mission[] = [
   ...wExtra,
   ...w7,
   ...w8,
+].map(withProducerScreens);
+
+export const MISSIONS: Mission[] = [
+  ...FOUNDATIONS_MISSIONS,
+  ...DJ_WORLD_MISSIONS,
+  ...SYNTHS_MISSIONS,
+  ...allProducerMissions,
 ];
 
 export const missionsByWorld = (world: string) =>
