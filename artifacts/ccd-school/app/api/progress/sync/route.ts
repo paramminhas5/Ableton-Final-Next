@@ -67,7 +67,7 @@ export async function POST(request: Request) {
                       THEN EXCLUDED.last_day ELSE user_progress.last_day END,
       daily_xp = EXCLUDED.daily_xp,
       daily_xp_date = EXCLUDED.daily_xp_date,
-      hearts = LEAST(user_progress.hearts + EXCLUDED.hearts, 3),
+      hearts = LEAST(GREATEST(user_progress.hearts, EXCLUDED.hearts), 5),
       heart_refill_at = EXCLUDED.heart_refill_at,
       streak_shield = (user_progress.streak_shield OR EXCLUDED.streak_shield),
       completed_missions = user_progress.completed_missions || EXCLUDED.completed_missions,

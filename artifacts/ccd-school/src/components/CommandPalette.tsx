@@ -47,15 +47,22 @@ export function CommandPalette() {
 
   const items: Item[] = useMemo(() => {
     const out: Item[] = [];
-    MISSIONS.forEach((m) =>
+    const WORLD_LABEL: Record<string, string> = {
+      foundations: "Fundamentals",
+      dj: "DJ",
+    };
+    MISSIONS.forEach((m) => {
+      const worldPrefix =
+        WORLD_LABEL[m.world] ??
+        m.world.charAt(0).toUpperCase() + m.world.slice(1).replace(/-/g, " ");
       out.push({
         id: `m-${m.slug}`,
-        label: `#${m.number} ${m.title}`,
+        label: `[${worldPrefix}] #${m.number} ${m.title}`,
         sub: m.tagline ?? "",
         tag: "MISSION",
         go: () => router.push(`/mission/${m.slug}`),
-      }),
-    );
+      });
+    });
     WORLDS.forEach((w) =>
       out.push({
         id: `w-${w.slug}`,

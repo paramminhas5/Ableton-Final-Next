@@ -3951,11 +3951,21 @@ export const missionsByWorld = (world: string) =>
 export const missionBySlug = (slug: string) => MISSIONS.find((m) => m.slug === slug);
 
 export const nextMission = (slug: string) => {
-  const i = MISSIONS.findIndex((m) => m.slug === slug);
-  return i >= 0 && i < MISSIONS.length - 1 ? MISSIONS[i + 1] : null;
+  const m = MISSIONS.find((m) => m.slug === slug);
+  if (!m) return null;
+  const worldMissions = MISSIONS.filter((x) => x.world === m.world).sort(
+    (a, b) => a.number - b.number,
+  );
+  const i = worldMissions.findIndex((x) => x.slug === slug);
+  return i >= 0 && i < worldMissions.length - 1 ? worldMissions[i + 1] : null;
 };
 
 export const prevMission = (slug: string) => {
-  const i = MISSIONS.findIndex((m) => m.slug === slug);
-  return i > 0 ? MISSIONS[i - 1] : null;
+  const m = MISSIONS.find((m) => m.slug === slug);
+  if (!m) return null;
+  const worldMissions = MISSIONS.filter((x) => x.world === m.world).sort(
+    (a, b) => a.number - b.number,
+  );
+  const i = worldMissions.findIndex((x) => x.slug === slug);
+  return i > 0 ? worldMissions[i - 1] : null;
 };
