@@ -1,10 +1,10 @@
 "use client";
-import { useProgress, MAX_HEARTS, HEART_REFILL_SECS } from "@/lib/progress";
+import { useProgress, MAX_HEARTS } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { useEffect, useState } from "react";
 
 export function HeartsWall() {
-  const { progress, heartRefillSeconds } = useProgress();
+  const { progress, heartRefillSeconds, spendGems, refillHeart } = useProgress();
   const { setLearnMode } = useLearnMode();
   const [secs, setSecs] = useState(heartRefillSeconds);
 
@@ -17,8 +17,16 @@ export function HeartsWall() {
     return () => clearInterval(id);
   }, [secs]);
 
-  const mm = String(Math.floor(secs / 60)).padStart(2, "0");
+  const hh = Math.floor(secs / 3600);
+  const mm = String(Math.floor((secs % 3600) / 60)).padStart(2, "0");
   const ss = String(secs % 60).padStart(2, "0");
+  const timeStr = hh > 0 ? `${hh}h ${mm}m` : `${mm}:${ss}`;
+
+  const handleSpendGems = () => {
+    if (spendGems(20)) {
+      refillHeart();
+    }
+  };
 
   if (progress.hearts > 0) return null;
 
@@ -40,13 +48,21 @@ export function HeartsWall() {
         <div className="brutal-border bg-bone text-ink px-4 py-3 font-mono text-xl">
           Next heart in{" "}
           <strong>
-            {mm}:{ss}
+            {timeStr}
           </strong>
         </div>
       ) : (
         <div className="brutal-border bg-acid text-ink px-4 py-3 font-mono text-sm uppercase font-bold">
           ♥ Heart refilled — refresh to continue
         </div>
+      )}
+      {progress.gems >= 20 && (
+        <button
+          onClick={handleSpendGems}
+          className="brutal-border bg-acid text-ink px-4 py-2 font-mono text-xs uppercase brutal-press"
+        >
+          💎 Spend 20 gems for a heart ({progress.gems} available)
+        </button>
       )}
       <div className="flex gap-3 flex-wrap">
         <button
@@ -57,8 +73,7 @@ export function HeartsWall() {
         </button>
       </div>
       <div className="font-mono text-[10px] opacity-70 leading-relaxed">
-        Tip: Hearts refill every {HEART_REFILL_SECS}s. You can also earn hearts back by completing
-        missions in Classic mode.
+        Tip: Hearts refill one every 4 hours. Spend 20 💎 gems to refill immediately.
       </div>
     </div>
   );

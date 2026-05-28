@@ -358,12 +358,40 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
   const { progress, completeMission, reviewMission, loseHeart } = useProgress();
-  const { learnMode } = useLearnMode();
+  const { learnMode, setLearnMode } = useLearnMode();
   const alreadyDone = !!progress.completedMissions[mission.slug];
   const xpEarned = alreadyDone ? 0 : mission.xp;
 
   const currentScreen = screens[screenIdx];
   const total = screens.length;
+
+  // Persist lesson progress to sessionStorage — survives page refresh
+  const SESSION_KEY = `lesson_progress_${mission.slug}`;
+
+  // Restore on mount
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(SESSION_KEY);
+      if (saved) {
+        const { idx, correct } = JSON.parse(saved);
+        if (typeof idx === 'number' && idx > 0 && idx < screens.length) {
+          setScreenIdx(idx);
+          setCorrectCount(correct ?? 0);
+        }
+      }
+    } catch {}
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Save on every screen advance
+  useEffect(() => {
+    if (done) {
+      try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+      return;
+    }
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ idx: screenIdx, correct: correctCount }));
+    } catch {}
+  }, [screenIdx, correctCount, done, SESSION_KEY]);
 
   const advance = useCallback(() => {
     if (screenIdx < total - 1) {
@@ -388,18 +416,8 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
     onWrong?.();
   };
 
-  // No screens fallback — redirect to classic
-  if (!screens.length) {
-    return (
-      <div className="brutal-border bg-sun p-6 text-center space-y-4">
-        <div className="font-display text-2xl">Classic lesson</div>
-        <p className="font-mono text-sm opacity-70">This lesson hasn&apos;t been converted to the new format yet.</p>
-        <Link href={`/mission/${mission.slug}`} className="brutal-border bg-ink text-bone px-5 py-3 font-mono text-xs uppercase brutal-press inline-block">
-          OPEN CLASSIC →
-        </Link>
-      </div>
-    );
-  }
+  // No screens — LessonPageClient handles this case with InlineClassicLesson fallback
+  if (!screens.length) return null;
 
   const summaryScreen = done ? screens.find(s => s.kind === "summary") as Extract<LessonScreen, { kind: "summary" }> | undefined : undefined;
 
@@ -417,14 +435,17 @@ export function LessonPlayer({ mission, nextSlug, isReview, onComplete, onWrong,
         {learnMode === "ccd" && <HeartsRow count={progress.hearts} />}
       </div>
 
-      {/* Classic tab escape hatch */}
-      <div className="flex justify-end">
-        <Link
-          href={`/mission/${mission.slug}`}
+      {/* Mode indicator + Classic escape */}
+      <div className="flex items-center justify-between">
+        <div className="brutal-border bg-volt text-bone px-2.5 py-1 font-mono text-[9px] uppercase">
+          🔒 PATH MODE · ♥ {progress.hearts}
+        </div>
+        <button
+          onClick={() => { setLearnMode("classic"); }}
           className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
         >
-          Switch to Classic view
-        </Link>
+          Switch to Classic →
+        </button>
       </div>
 
       {/* Screen renderer — key={screenIdx} ensures React remounts each screen
