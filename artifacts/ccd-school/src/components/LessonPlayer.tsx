@@ -12,7 +12,7 @@
  *   #EB — Error boundary wraps entire lesson to catch bad content data gracefully
  */
 
-import { useState, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from "react";
+import { useState, useRef, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
 import { InlineVisual, DiagramVisual } from "@/components/LessonVisuals";
@@ -86,10 +86,30 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
 }
 
 function HeartsRow({ count }: { count: number }) {
+  // Track which heart index just got lost so we can animate it
+  const prevCount = useRef(count);
+  const [crumbling, setCrumbling] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (count < prevCount.current) {
+      // The heart at index `count` just disappeared (0-indexed)
+      setCrumbling(count);
+      const t = setTimeout(() => setCrumbling(null), 600);
+      prevCount.current = count;
+      return () => clearTimeout(t);
+    }
+    prevCount.current = count;
+  }, [count]);
+
   return (
     <div className="flex items-center gap-0.5" title={`${count}/${MAX_HEARTS} hearts — wrong answers cost 1 heart`}>
       {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-        <span key={i} className={`text-lg leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
+        <span
+          key={i}
+          className={`text-lg leading-none transition-all select-none
+            ${i < count ? "text-hot" : "opacity-20"}
+            ${crumbling === i ? "animate-heart-crumble inline-block" : ""}`}
+        >
           ♥
         </span>
       ))}
@@ -116,6 +136,20 @@ function Confetti() {
         }} />
       ))}
     </div>
+  );
+}
+
+// ─── XP Float — "+N XP" rises and fades after a correct answer ───────────────
+
+function XpFloat({ xp, active }: { xp: number; active: boolean }) {
+  if (!active || xp <= 0) return null;
+  return (
+    <span
+      aria-hidden
+      className="absolute -top-6 left-1/2 -translate-x-1/2 font-display text-base text-acid animate-xp-float whitespace-nowrap select-none"
+    >
+      +{xp} XP
+    </span>
   );
 }
 
@@ -242,6 +276,7 @@ function QuizScreen({
   quizNumber,
   quizTotal,
   isPathMode,
+  xpPerCorrect,
   onCorrect,
   onWrong,
   onNext,
@@ -250,6 +285,7 @@ function QuizScreen({
   quizNumber: number;
   quizTotal: number;
   isPathMode: boolean;
+  xpPerCorrect?: number;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -257,6 +293,7 @@ function QuizScreen({
   const [phase, setPhase] = useState<QuizPhase>("picking");
   const [picked, setPicked] = useState<number | null>(null);
   const [shake, setShake] = useState(false);
+  const [showXpFloat, setShowXpFloat] = useState(false);
 
   // Keyboard shortcuts: 1-4 to pick, Enter to advance
   useEffect(() => {
@@ -290,6 +327,11 @@ function QuizScreen({
         isPathMode,
       });
       onCorrect();
+      // Trigger XP float animation
+      if (xpPerCorrect && xpPerCorrect > 0) {
+        setShowXpFloat(true);
+        setTimeout(() => setShowXpFloat(false), 950);
+      }
     } else {
       setPhase("wrong");
       playWrong();
@@ -339,11 +381,15 @@ function QuizScreen({
               disabled={phase !== "picking"}
               data-kbd-hint={phase === "picking" ? String(i + 1) : undefined}
               aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}${phase !== "picking" ? (i === screen.answer ? " (correct)" : "") : ""}`}
-              className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
+              className={`relative brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
             >
               <span className="opacity-40 mr-2" aria-hidden>{String.fromCharCode(65 + i)}.</span>
               {opt}
               {phase !== "picking" && i === screen.answer && <span className="ml-2" aria-hidden>✓</span>}
+              {/* XP float anchored to the correct answer button */}
+              {i === screen.answer && (
+                <XpFloat xp={xpPerCorrect ?? 0} active={showXpFloat} />
+              )}
             </button>
           );
         })}
@@ -835,6 +881,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             quizNumber={currentQuizNumber}
             quizTotal={quizScreens.length}
             isPathMode={isPathMode}
+            xpPerCorrect={alreadyDone ? 0 : Math.round(mission.xp / Math.max(1, quizScreens.length))}
             onCorrect={handleCorrect}
             onWrong={handleWrong}
             onNext={advance}

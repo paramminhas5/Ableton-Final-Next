@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap");
+/* Fonts loaded via <link rel="preload"> in layout.tsx — no blocking @import */
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -581,6 +581,59 @@
   animation: fade-up 0.3s ease-out both;
 }
 
+/* Fix #1: animate-fade-in — was referenced in OnboardingFlow but never defined */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out both;
+}
+
+/* Fix #3: heart-crumble — heart breaks apart when losing one in path mode */
+@keyframes heart-crumble {
+  0%   { transform: scale(1);    opacity: 1; filter: none; }
+  20%  { transform: scale(1.3);  opacity: 1; filter: brightness(1.4); }
+  40%  { transform: scale(0.9) rotate(-15deg); }
+  60%  { transform: scale(1.1) rotate(10deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(25deg);   opacity: 0; }
+}
+.animate-heart-crumble {
+  animation: heart-crumble 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+/* Fix #4: xp-float — "+XP" flies upward and fades after correct answer */
+@keyframes xp-float {
+  0%   { opacity: 1; transform: translateY(0)   scale(1);    }
+  30%  { opacity: 1; transform: translateY(-12px) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.9); }
+}
+.animate-xp-float {
+  animation: xp-float 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Fix #10: shield-earn — shield materialises when streak hits milestone */
+@keyframes shield-earn {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(8deg);  opacity: 1; }
+  70%  { transform: scale(0.9) rotate(-4deg); }
+  85%  { transform: scale(1.1) rotate(2deg);  }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+.animate-shield-earn {
+  animation: shield-earn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Pulse glow for the shield badge after it appears */
+@keyframes shield-pulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(198,255,0,0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(198,255,0,0);   }
+}
+.animate-shield-pulse {
+  animation: shield-pulse 1.4s ease-in-out 0.6s 3;
+}
+
 /* ── Hover glitch ────────────────────────────────────────────────────── */
 .hover-glitch:hover {
   letter-spacing: 0.02em;
@@ -752,10 +805,18 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
 
 /* ── Mobile bottom nav clearance ────────────────────────────────────── */
 /* Prevents content from being hidden behind the 72px bottom nav bar    */
+/* Suppressed on lesson pages via [data-page="lesson"] wrapper div      */
 @media (max-width: 767px) {
-  /* Only apply when NOT in a lesson (lesson pages hide the nav) */
+  main:not(:has([data-page="lesson"])) {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Fallback for browsers without :has() support */
   body:not([data-page="lesson"]) main {
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  /* When the lesson wrapper IS present, force no extra padding */
+  main:has([data-page="lesson"]) {
+    padding-bottom: 0 !important;
   }
 }
 
@@ -778,12 +839,26 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
   }
 }
 
+/* ── Fix #9: Hide the header ≡ menu on pages where MobileBottomNav is shown ── */
+/* The bottom nav covers Learn/Daily/Review/Profile — the drawer is redundant  */
+/* Hide it on all mobile pages EXCEPT lesson/placement/onboarding               */
+@media (max-width: 767px) {
+  /* Default: hide the ≡ button (bottom nav pages) */
+  [aria-label="Open menu"] {
+    display: none !important;
+  }
+  /* Show it back on lesson pages (bottom nav is hidden there) */
+  [data-page="lesson"] [aria-label="Open menu"],
+  [data-page="placement"] [aria-label="Open menu"],
+  [data-page="onboarding"] [aria-label="Open menu"] {
+    display: flex !important;
+  }
+}
+
 /* ── Touch callout and tap highlight ────────────────────────────────── */
 button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
-
-/* ── Install banner slide-in ────────────────────────────────────────── */
 /* The banner uses animate-fade-up which is already defined above;       */
 /* ensure it also accounts for safe area when at bottom                  */
 .install-banner-offset {
