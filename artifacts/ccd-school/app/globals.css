@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&family=Archivo+Black&display=swap");
+/* Fonts loaded via <link rel="preload"> in layout.tsx — no blocking @import */
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -581,6 +581,59 @@
   animation: fade-up 0.3s ease-out both;
 }
 
+/* Fix #1: animate-fade-in — was referenced in OnboardingFlow but never defined */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.25s ease-out both;
+}
+
+/* Fix #3: heart-crumble — heart breaks apart when losing one in path mode */
+@keyframes heart-crumble {
+  0%   { transform: scale(1);    opacity: 1; filter: none; }
+  20%  { transform: scale(1.3);  opacity: 1; filter: brightness(1.4); }
+  40%  { transform: scale(0.9) rotate(-15deg); }
+  60%  { transform: scale(1.1) rotate(10deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(25deg);   opacity: 0; }
+}
+.animate-heart-crumble {
+  animation: heart-crumble 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+}
+
+/* Fix #4: xp-float — "+XP" flies upward and fades after correct answer */
+@keyframes xp-float {
+  0%   { opacity: 1; transform: translateY(0)   scale(1);    }
+  30%  { opacity: 1; transform: translateY(-12px) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-48px) scale(0.9); }
+}
+.animate-xp-float {
+  animation: xp-float 0.9s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Fix #10: shield-earn — shield materialises when streak hits milestone */
+@keyframes shield-earn {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  50%  { transform: scale(1.3) rotate(8deg);  opacity: 1; }
+  70%  { transform: scale(0.9) rotate(-4deg); }
+  85%  { transform: scale(1.1) rotate(2deg);  }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+.animate-shield-earn {
+  animation: shield-earn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Pulse glow for the shield badge after it appears */
+@keyframes shield-pulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(198,255,0,0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(198,255,0,0);   }
+}
+.animate-shield-pulse {
+  animation: shield-pulse 1.4s ease-in-out 0.6s 3;
+}
+
 /* ── Hover glitch ────────────────────────────────────────────────────── */
 .hover-glitch:hover {
   letter-spacing: 0.02em;
@@ -599,3 +652,215 @@
 }
 
 * { box-sizing: border-box; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY UPGRADES — WCAG AA compliance (Phase 3.1)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Enforce minimum readable font sizes ─────────────────────────── */
+/* text-[9px] and text-[10px] are used 95× — bump to at least 11px      */
+.text-\[9px\]  { font-size: 0.6875rem !important; } /* 11px */
+.text-\[10px\] { font-size: 0.6875rem !important; } /* 11px */
+
+/* All body copy must be at least 13px */
+.font-mono.text-xs  { font-size: 0.8125rem; } /* 13px */
+
+/* ── 2. Improved focus ring ─────────────────────────────────────────── */
+/* Replaces the 2px outline with a more visible 3px acid-color ring      */
+:focus-visible {
+  outline: 3px solid #C6FF00;
+  outline-offset: 3px;
+  border-radius: 1px;
+  z-index: 9999;
+  position: relative;
+}
+
+/* Keyboard-nav shortcut: users can press 1-4 to pick quiz answers       */
+/* (implemented via JS) — these classes mark the keyboard-active state   */
+.kbd-active {
+  outline: 3px solid #C6FF00 !important;
+  outline-offset: 3px !important;
+}
+
+/* ── 3. Reduce opacity floor to maintain contrast ───────────────────── */
+/* opacity-20 on non-decorative elements is too low (fails WCAG AA)      */
+/* Raise to 0.45 for body copy, 0.35 for labels                          */
+.opacity-20:not([aria-hidden="true"]):not(.decorative) {
+  opacity: 0.45 !important;
+}
+.opacity-30:not([aria-hidden="true"]):not(.decorative) {
+  opacity: 0.45 !important;
+}
+
+/* ── 4. Improve tap target sizes (min 44×44px per WCAG 2.5.5) ───────── */
+button, [role="button"], a, [role="menuitem"], [role="option"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+/* Exception: icon-only inline buttons that have aria-label */
+button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
+
+/* ── 5. Screen-reader only utility class ────────────────────────────── */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ── 6. Skip-to-content link ────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #C6FF00;
+  color: #111;
+  padding: 0.75rem 1.5rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  z-index: 10000;
+  border: 2px solid #111;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+/* ── 7. Reduce motion support ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 8. High contrast mode support ─────────────────────────────────── */
+@media (forced-colors: active) {
+  .brutal-border { border-color: ButtonText; }
+  .brutal-shadow { box-shadow: none; }
+  :focus-visible { outline-color: Highlight; }
+}
+
+/* ── 9. aria-live feedback region base styles ───────────────────────── */
+[aria-live] {
+  /* Ensure live regions are never hidden from AT                        */
+  clip: auto !important;
+  height: auto !important;
+  width: auto !important;
+  overflow: visible !important;
+}
+
+/* ── 10. Interactive element contrast helpers ───────────────────────── */
+/* bg-acid (#C6FF00) on bg-ink (#111) = contrast ratio ~11:1 ✓          */
+/* bg-hot (#FF2D2D) on white = ~4.5:1 ✓                                 */
+/* bg-volt (#7B2FFF) on white: text must be white (bone) ✓              */
+/* bg-sun (#FFB800) on ink: contrast ~9:1 ✓                             */
+
+/* ── 11. Keyboard navigation for quiz answers ───────────────────────── */
+/* Press 1, 2, 3, 4 to select options. Implemented in ExerciseScreens.  */
+/* This CSS ensures the highlighted option is clearly visible            */
+[data-kbd-hint]::before {
+  content: attr(data-kbd-hint);
+  display: inline-block;
+  font-size: 0.6875rem;
+  opacity: 0.5;
+  margin-right: 0.4em;
+  font-family: monospace;
+  border: 1px solid currentColor;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PWA / MOBILE APP STYLES (Phase: Phone App)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Safe-area utilities (iPhone notch / Dynamic Island) ────────────── */
+/* pb-safe: padding-bottom that respects the iOS home indicator */
+.pb-safe  { padding-bottom: env(safe-area-inset-bottom, 16px); }
+.pt-safe  { padding-top:    env(safe-area-inset-top,    0px);  }
+.mb-safe  { margin-bottom:  env(safe-area-inset-bottom, 16px); }
+
+/* ── Slide-up animation for iOS install sheet ───────────────────────── */
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0);    }
+}
+.animate-slide-up {
+  animation: slide-up 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* ── Mobile bottom nav clearance ────────────────────────────────────── */
+/* Prevents content from being hidden behind the 72px bottom nav bar    */
+/* Suppressed on lesson pages via [data-page="lesson"] wrapper div      */
+@media (max-width: 767px) {
+  main:not(:has([data-page="lesson"])) {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  /* Fallback for browsers without :has() support */
+  body:not([data-page="lesson"]) main {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  /* When the lesson wrapper IS present, force no extra padding */
+  main:has([data-page="lesson"]) {
+    padding-bottom: 0 !important;
+  }
+}
+
+/* ── Standalone / installed app overrides ───────────────────────────── */
+@media (display-mode: standalone) {
+  /* Hide browser-chrome elements that are redundant in app mode */
+  .browser-only { display: none !important; }
+
+  /* Extend header bg behind iOS status bar when black-translucent */
+  header:first-of-type {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* ── Prevent rubber-band overscroll on the app shell ────────────────── */
+/* (Only on iOS standalone — let individual scroll containers scroll)   */
+@media (display-mode: standalone) {
+  html, body {
+    overscroll-behavior: none;
+  }
+}
+
+/* ── Fix #9: Hide the header ≡ menu on pages where MobileBottomNav is shown ── */
+/* The bottom nav covers Learn/Daily/Review/Profile — the drawer is redundant  */
+/* Hide it on all mobile pages EXCEPT lesson/placement/onboarding               */
+@media (max-width: 767px) {
+  /* Default: hide the ≡ button (bottom nav pages) */
+  [aria-label="Open menu"] {
+    display: none !important;
+  }
+  /* Show it back on lesson pages (bottom nav is hidden there) */
+  [data-page="lesson"] [aria-label="Open menu"],
+  [data-page="placement"] [aria-label="Open menu"],
+  [data-page="onboarding"] [aria-label="Open menu"] {
+    display: flex !important;
+  }
+}
+
+/* ── Touch callout and tap highlight ────────────────────────────────── */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+/* The banner uses animate-fade-up which is already defined above;       */
+/* ensure it also accounts for safe area when at bottom                  */
+.install-banner-offset {
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}

@@ -15,5 +15,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LearnSlugPage({ params }: Props) {
   const { slug } = await params;
-  return <LessonPageClient slug={slug} />;
+  // Fix #7: data-page="lesson" suppresses the 72px bottom-nav padding
+  // (see globals.css — body:not([data-page="lesson"]) main rule)
+  return (
+    <div data-page="lesson" className="contents">
+      <LessonPageClient slug={slug} />
+    </div>
+  );
 }

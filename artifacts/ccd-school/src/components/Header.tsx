@@ -838,11 +838,22 @@ export function Header() {
         </div>
 
         {/* Mobile strip ─────────────────────────────────────────────────── */}
+        {/* Fix #9: When the MobileBottomNav is shown (< md), the hamburger
+            drawer is redundant — it duplicates Learn/Review/Profile tabs.
+            We strip it down to: logo (already rendered) + hearts + streak
+            badge + search. The ≡ drawer is hidden on lesson-free pages;
+            shown only on pages where the bottom nav is absent (placement,
+            onboarding, etc.) via the `data-no-bottom-nav` attribute. */}
         <div className="md:hidden flex items-center gap-1.5 px-2">
+          {/* Hearts — always visible on mobile for quick reference */}
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
+
+          {/* Compact streak + XP badge */}
           <span className="brutal-border bg-ink text-bone px-1.5 py-1 font-mono text-[9px] tabular-nums">
             🔥{progress.streakDays} · {progress.xp}xp
           </span>
+
+          {/* Search — available on all pages */}
           <button
             onClick={openSearch}
             aria-label="Search"
@@ -850,6 +861,12 @@ export function Header() {
           >
             <SearchIcon />
           </button>
+
+          {/* ≡ Menu — only shown on pages without the bottom nav (e.g. lesson,
+              placement, onboarding). On all other mobile pages the bottom nav
+              handles navigation so the drawer would be redundant clutter.
+              We detect lesson pages via [data-page="lesson"] and hide it there;
+              on other non-tabbed pages it's still useful. */}
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"

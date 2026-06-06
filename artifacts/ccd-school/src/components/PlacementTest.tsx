@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useProgress } from "@/lib/progress";
 import { playCorrect, playWrong } from "@/lib/audio";
 import { PLACEMENT_QUESTIONS, scorePlacement, type PlacementQ } from "@/content/placement-questions";
+import { track } from "@/lib/analytics";
 
 type Phase = "intro" | "quiz" | "results";
 type PickPhase = "picking" | "answered";
@@ -72,6 +73,16 @@ export function PlacementTest({ world, onSkip }: Props) {
   const handleApplyResult = () => {
     const chapter = scorePlacement(answers, world);
     setPlacement(chapter);
+
+    // Track placement completion with analytics
+    track("placement_completed", {
+      world,
+      chapter,
+      correctCount,
+      totalQuestions: total,
+      score: correctCount / Math.max(1, total),
+    });
+
     const firstMission = CHAPTER_FIRST_MISSION[world]?.[chapter] ?? "what-is-sound";
     router.push(`/learn/${firstMission}`);
   };

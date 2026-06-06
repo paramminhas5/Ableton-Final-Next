@@ -3,14 +3,14 @@
  * DashboardClient — the unified progress hub.
  *
  * Sections:
- *  1. Hero "Next Step" card — smart continue button
- *  2. Today's Stats strip — 5 stat cards (streak, daily XP, gems, hearts, rank)
- *  3. My Worlds — 3 world progress cards with chapter-level pills
- *  4. Skill Radar — 5-axis SVG radar chart (computed from completed missions per chapter group)
- *  5. Recent Badges — last 3 earned badges + "View all" link
- *  6. Review Queue — missions needing spaced-repetition review
- *  7. Beat Coach card — entry point to AI coach
- *  8. Leaderboard peek — top 3 weekly XP + your rank
+ *  1. Hero "Next Step" card — smart continue button  [skeleton on cold load]
+ *  2. Today's Stats strip — 5 stat cards             [scroll dots on mobile]
+ *  3. My Worlds — 3 world progress cards
+ *  4. Skill Radar
+ *  5. Recent Badges
+ *  6. Review Queue
+ *  7. Beat Coach card
+ *  8. Leaderboard peek
  */
 import Link from "next/link";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, getLessonStrength } from "@/lib/progress";
@@ -24,7 +24,7 @@ import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
 import { CoachPanel } from "@/components/BeatCoach";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
 const BADGE_REGISTRY: Record<string, { name: string; emoji: string; description: string }> = {
@@ -487,6 +487,26 @@ export function DashboardClient() {
 
   const modeLabel = learnMode === "ccd" ? "🔒 Path Mode" : "🗺 Explorer Mode";
 
+  // Fix #5: hydration guard — progress reads from localStorage, which is
+  // unavailable during SSR. Show skeleton for the first render tick.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
+
+  // Fix #6: scroll-dot tracking for the stats strip on mobile
+  const statsRef = useRef<HTMLDivElement>(null);
+  const [activeDot, setActiveDot] = useState(0);
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const cardW = el.scrollWidth / stats.length;
+      setActiveDot(Math.round(el.scrollLeft / cardW));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stats.length]);
+
   return (
     <main className="min-h-screen bg-bone pb-24">
 
@@ -500,7 +520,21 @@ export function DashboardClient() {
             </span>
           </div>
 
-          {continueSlug ? (
+          {/* Fix #5: skeleton while localStorage hydrates */}
+          {!hydrated ? (
+            <div className="brutal-border overflow-hidden animate-pulse">
+              <div className="flex flex-col md:flex-row items-stretch">
+                <div className="flex-1 p-5 md:p-7 space-y-3">
+                  <div className="h-3 w-32 bg-bone/20 rounded" />
+                  <div className="h-10 w-3/4 bg-bone/20 rounded" />
+                  <div className="h-6 w-24 bg-bone/20 rounded" />
+                </div>
+                <div className="bg-bone/10 flex items-center justify-center px-8 py-6 min-w-[100px]">
+                  <div className="w-12 h-12 rounded-full bg-bone/20" />
+                </div>
+              </div>
+            </div>
+          ) : continueSlug ? (
             <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden">
               <div className="flex-1 p-5 md:p-7">
                 <div className="font-mono text-[9px] uppercase opacity-50 mb-2">
@@ -548,11 +582,50 @@ export function DashboardClient() {
         {/* ══ SECTION 2: Today's Stats ════════════════════════════════════ */}
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S STATS</div>
-          <div className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:overflow-visible scrollbar-hide">
-            {stats.map((s) => (
-              <StatCard key={s.label} {...s} />
-            ))}
-          </div>
+
+          {/* Fix #5: skeleton for stats strip */}
+          {!hydrated ? (
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="brutal-border p-4 space-y-2 animate-pulse">
+                  <div className="h-2 w-12 bg-ink/10 rounded" />
+                  <div className="h-7 w-16 bg-ink/10 rounded" />
+                  <div className="h-2 w-14 bg-ink/10 rounded" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Fix #6: scroll-dots container */}
+              <div
+                ref={statsRef}
+                className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:overflow-visible scrollbar-hide snap-x snap-mandatory"
+              >
+                {stats.map((s) => (
+                  <div key={s.label} className="snap-start shrink-0 md:shrink w-[calc(33vw-1rem)] md:w-auto min-w-[120px]">
+                    <StatCard {...s} />
+                  </div>
+                ))}
+              </div>
+
+              {/* Scroll dots — mobile only, hidden on md+ */}
+              <div className="flex justify-center gap-1.5 mt-2 md:hidden" aria-hidden>
+                {stats.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      const el = statsRef.current;
+                      if (!el) return;
+                      const cardW = el.scrollWidth / stats.length;
+                      el.scrollTo({ left: cardW * i, behavior: "smooth" });
+                    }}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200
+                      ${activeDot === i ? "bg-ink scale-125" : "bg-ink/25"}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
         {/* ══ SECTION 3: My Worlds ════════════════════════════════════════ */}

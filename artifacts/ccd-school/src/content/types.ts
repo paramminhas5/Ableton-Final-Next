@@ -80,7 +80,11 @@ export type ScreenKind =
   | "hook"        // Screen 1: bold hook sentence + emoji, tap-to-continue
   | "concept"     // Screen 2-3: 2 sentences + one key fact, tap-to-continue
   | "interact"    // Screen 4: full simulator / interactive element
-  | "quiz"        // Screen 5-7: one question, immediate feedback
+  | "quiz"        // Screen 5-7: one MCQ question, immediate feedback
+  | "audio-id"    // NEW: hear audio → identify what it is (4 options)
+  | "match"       // NEW: drag/tap pairs to match (term → definition)
+  | "type-answer" // NEW: free-text answer (exact or fuzzy match)
+  | "sequence"    // NEW: arrange items in correct order
   | "summary";    // Screen 8: recap 3 bullet points, lesson complete
 
 export type LessonScreen =
@@ -138,6 +142,48 @@ export type LessonScreen =
       answer: number;
       explain: string;       // shown after answer, ≤ 2 sentences
       hint?: string;
+    }
+  | {
+      /**
+       * audio-id — hear a synthesised example, identify what it is.
+       * audioType maps to a built-in demo in ConceptAudio.ts.
+       */
+      kind: "audio-id";
+      prompt: string;        // e.g. "What type of waveform is this?"
+      audioType: string;     // key into the DEMOS map in ConceptAudio
+      options: string[];     // 4 text options
+      answer: number;        // correct option index
+      explain: string;
+    }
+  | {
+      /**
+       * match — tap pairs: left column → right column.
+       * All pairs must be matched to advance.
+       */
+      kind: "match";
+      prompt: string;
+      pairs: { left: string; right: string }[];  // 3–5 pairs
+    }
+  | {
+      /**
+       * type-answer — free-text input, checked against acceptable answers.
+       * Matching is case-insensitive. First acceptableAnswer is shown on reveal.
+       */
+      kind: "type-answer";
+      q: string;
+      acceptableAnswers: string[];   // first = canonical
+      caseSensitive?: boolean;
+      explain: string;
+      hint?: string;
+    }
+  | {
+      /**
+       * sequence — arrange items into the correct order by tapping.
+       */
+      kind: "sequence";
+      prompt: string;
+      items: string[];        // already in correct order — will be shuffled for display
+      explain: string;
     }
   | {
       kind: "summary";

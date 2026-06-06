@@ -32,6 +32,7 @@ export function useCelebration() {
   const [event, setEvent] = useState<CelebrationEvent | null>(null);
   const prevXp = useRef(progress.xp);
   const prevStreak = useRef(progress.streakDays);
+  const prevShield = useRef(progress.streakShield);
   const prevMissions = useRef<Record<string, unknown>>({});
 
   useEffect(() => {
@@ -69,6 +70,22 @@ export function useCelebration() {
       }
       prevStreak.current = progress.streakDays;
     }
+
+    // ── Fix #10: Streak shield earned (every 7-day milestone) ─────────────
+    // The shield flips from false→true when a 7-day multiple is hit.
+    // Show a lightweight shield animation instead of the full CelebrationOverlay
+    // (the streak milestone overlay already fires; the shield is a bonus moment
+    //  on the *next* lesson after the milestone when the shield is actually set).
+    if (!prevShield.current && progress.streakShield) {
+      prevShield.current = progress.streakShield;
+      const celebId = `shield-${progress.streakDays}`;
+      if (!seen.has(celebId)) {
+        markSeen(celebId);
+        setEvent({ kind: "shield-earned", streakDays: progress.streakDays });
+        return;
+      }
+    }
+    prevShield.current = progress.streakShield;
 
     // ── Path / Chapter / World trophies ───────────────────────────────────
     const completed = progress.completedMissions;

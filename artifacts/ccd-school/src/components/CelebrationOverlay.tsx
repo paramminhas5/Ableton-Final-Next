@@ -21,6 +21,7 @@ import { playFanfare } from "@/lib/audio";
 export type CelebrationEvent =
   | { kind: "rank-up";     rankName: string; rankEmoji: string }
   | { kind: "streak";      days: number }
+  | { kind: "shield-earned"; streakDays: number }
   | { kind: "path-trophy"; trophyName: string; pathTitle: string }
   | { kind: "chapter-trophy"; trophyName: string; chapterTitle: string }
   | { kind: "world-trophy";   worldName: string; }
@@ -78,6 +79,28 @@ function EventContent({ event }: { event: CelebrationEvent }) {
   const days = useCountUp(event.kind === "streak" ? event.days : 0, true);
 
   switch (event.kind) {
+    case "shield-earned":
+      return (
+        <div className="text-center space-y-4">
+          {/* Shield materialises with the keyframe defined in globals.css */}
+          <div
+            className="text-8xl animate-shield-earn inline-block animate-shield-pulse"
+            style={{ transformOrigin: "center" }}
+          >
+            🛡
+          </div>
+          <div className="font-mono text-[10px] uppercase opacity-60">STREAK SHIELD EARNED</div>
+          <div className="font-display text-4xl md:text-5xl leading-none text-acid">
+            {event.streakDays}-DAY STREAK
+          </div>
+          <div className="brutal-border bg-acid text-ink px-6 py-3 font-display text-xl inline-block">
+            +1 STREAK FREEZE
+          </div>
+          <div className="font-mono text-sm opacity-70 max-w-xs mx-auto leading-relaxed">
+            Your streak is protected for one missed day. Keep the chain going!
+          </div>
+        </div>
+      );
     case "rank-up":
       return (
         <div className="text-center space-y-4">
@@ -158,6 +181,60 @@ export function CelebrationOverlay({ event, onDone }: Props) {
 
   if (!event) return null;
 
+  // ── Fix #10: Shield-earned uses a lightweight toast-style overlay ──────────
+  // It doesn't need the full-screen takeover — just a slick banner that
+  // auto-dismisses after 3.5s or on tap.
+  if (event.kind === "shield-earned") {
+    return (
+      <div
+        className={`fixed bottom-[80px] md:bottom-6 left-3 right-3 md:left-auto md:right-6 md:w-80 z-[300]
+          brutal-border bg-ink text-bone brutal-shadow transition-all duration-400
+          ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+        style={{ transition: "opacity 0.35s ease, transform 0.35s ease" }}
+        role="status"
+        aria-live="polite"
+      >
+        <div className="flex items-center gap-4 p-4">
+          <span
+            className="text-4xl shrink-0 animate-shield-earn inline-block"
+            style={{ transformOrigin: "center" }}
+          >
+            🛡
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="font-display text-lg leading-tight">Streak Shield Earned!</div>
+            <div className="font-mono text-[10px] uppercase opacity-60 mt-0.5">
+              {event.streakDays}-day streak · 1 missed day protected
+            </div>
+          </div>
+          <button
+            onClick={onDone}
+            aria-label="Dismiss"
+            className="shrink-0 opacity-40 hover:opacity-100 transition-opacity font-mono text-sm"
+          >
+            ✕
+          </button>
+        </div>
+        {/* Auto-dismiss progress bar */}
+        <div className="h-0.5 bg-acid/40 overflow-hidden">
+          <div
+            className="h-full bg-acid"
+            style={{
+              width: visible ? "0%" : "100%",
+              transition: visible ? "width 3.5s linear" : "none",
+            }}
+          />
+        </div>
+        {/* Auto-dismiss */}
+        {visible && (() => {
+          setTimeout(onDone, 3500);
+          return null;
+        })()}
+      </div>
+    );
+  }
+
+  // ── All other events: full-screen overlay ─────────────────────────────────
   const isEpic = event.kind === "world-trophy" || event.kind === "ccd-master";
   const bgColor = isEpic ? "bg-ink" : "bg-bone";
   const textColor = isEpic ? "text-bone" : "text-ink";
