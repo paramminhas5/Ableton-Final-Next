@@ -135,50 +135,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* ── Fonts: preload prevents render-blocking, display=swap eliminates FOUT ── */}
+        {/* ── Fonts: single stylesheet link with display=swap ─────────────────
+            This is the simplest, correct approach for Next.js App Router.
+            Google Fonts with display=swap renders text in the fallback font
+            immediately, then swaps in the custom font when loaded —
+            no render-blocking, no FOUT, no JSX type errors.              */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Archivo Black — display font (headings) */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
-        />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
-          media="print"
-          onLoad="this.media='all'"
+          href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:ital,wght@0,400;0,700&family=Space+Grotesk:wght@400;500;700&display=swap"
         />
-        {/* Space Mono — monospaced body + labels */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
-          media="print"
-          onLoad="this.media='all'"
-        />
-        {/* Space Grotesk — sans body text */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
-          media="print"
-          onLoad="this.media='all'"
-        />
-        {/* Fallback noscript for environments without JS */}
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
-        </noscript>
 
         {/* Structured data */}
         <script

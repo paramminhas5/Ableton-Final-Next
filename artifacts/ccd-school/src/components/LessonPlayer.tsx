@@ -530,7 +530,7 @@ function SummaryScreen({
 
       {/* Adaptive difficulty nudge — shown when score is low */}
       {xpEarned > 0 && screen.learned && (
-        <AdaptiveDifficultyNudge score={correctCount / Math.max(1, quizScreens.length)} missionSlug={mission.slug} />
+        <AdaptiveDifficultyNudge score={correctCount / Math.max(1, quizTotal)} missionSlug={mission.slug} />
       )}
 
       <div className="brutal-border bg-bone p-5">

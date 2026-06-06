@@ -63,7 +63,10 @@ export async function subscribeToPush(): Promise<PushSubscriptionData | null> {
 
     const sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidKey),
+      // Cast to BufferSource: urlBase64ToUint8Array returns Uint8Array<ArrayBufferLike>
+      // but applicationServerKey needs ArrayBufferView<ArrayBuffer>; the cast is safe
+      // because window.atob always produces a plain ArrayBuffer-backed Uint8Array.
+      applicationServerKey: urlBase64ToUint8Array(vapidKey) as unknown as BufferSource,
     });
 
     const json = sub.toJSON() as PushSubscriptionData;
