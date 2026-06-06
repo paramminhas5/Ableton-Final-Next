@@ -2,49 +2,103 @@
   "name": "CCD.SCHOOL — Learn Music Production & DJing",
   "short_name": "CCD.SCHOOL",
   "description": "The Duolingo for music. 153 bite-sized lessons across Fundamentals, DJ World, and Producer.",
-  "start_url": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "id": "ccd-school-app",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
   "background_color": "#F5F0E8",
-  "theme_color": "#C6FF00",
-  "orientation": "portrait",
-  "categories": ["education", "music"],
+  "theme_color": "#FF3C00",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "music", "lifestyle"],
+  "iarc_rating_id": "",
+
   "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    },
     {
       "src": "/favicon.svg",
       "type": "image/svg+xml",
       "sizes": "any",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Today's Lesson",
-      "short_name": "Daily",
-      "description": "Jump to today's lesson",
-      "url": "/daily",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
-    },
-    {
-      "name": "Review Session",
-      "short_name": "Review",
-      "description": "Review fading lessons",
-      "url": "/review",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
-    },
-    {
-      "name": "Fundamentals",
-      "short_name": "Fundamentals",
-      "description": "Continue Fundamentals world",
-      "url": "/world/fundamentals",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
-    }
-  ],
+
   "screenshots": [
     {
       "src": "/opengraph.jpg",
       "type": "image/jpeg",
       "sizes": "1200x630",
+      "label": "CCD.SCHOOL — Home",
       "form_factor": "wide"
     }
-  ]
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Today's Lesson",
+      "short_name": "Daily",
+      "description": "Jump to today's daily challenge",
+      "url": "/daily?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Review Session",
+      "short_name": "Review",
+      "description": "Review fading lessons with spaced repetition",
+      "url": "/review?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fundamentals",
+      "short_name": "Fundamentals",
+      "description": "Continue Fundamentals world",
+      "url": "/world/fundamentals?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "DJ World",
+      "short_name": "DJ",
+      "description": "Continue DJ World",
+      "url": "/world/dj?source=shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+
+  "share_target": {
+    "action": "/learn",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+
+  "related_applications": [],
+  "prefer_related_applications": false
 }

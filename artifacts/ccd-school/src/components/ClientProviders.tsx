@@ -12,6 +12,8 @@ import type { GatingMode } from "@/lib/gating";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
 import { useCelebration } from "@/lib/useCelebration";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { InstallPromptBanner } from "@/components/InstallPromptBanner";
 
 const queryClient = new QueryClient();
 
@@ -63,7 +65,6 @@ function CloudSyncEffect() {
     if (!user) return;
     if (!initialised.current) {
       initialised.current = true;
-      // Pull server-authoritative state and merge into client
       fetch("/api/progress/sync")
         .then((r) => r.json())
         .then((d) => {
@@ -76,7 +77,6 @@ function CloudSyncEffect() {
         .catch(() => {});
       return;
     }
-    // Debounced backup sync (read-only mirror, NOT the source of truth for XP)
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       fetch("/api/progress/sync", {
@@ -98,18 +98,13 @@ function CloudSyncEffect() {
  * dispatched by the lesson/quiz completion handlers, then POSTs them to
  * /api/progress/events. On success, merges the authoritative response
  * back into client state via "progress:cloud".
- *
- * Dispatch from anywhere:
- *   window.dispatchEvent(new CustomEvent("progress:server_event", {
- *     detail: { type: "mission_complete", missionSlug, xp, score }
- *   }))
  */
 function ServerEventQueue() {
   const { user } = useAuth();
 
   useEffect(() => {
     const handler = async (e: Event) => {
-      if (!user) return; // offline / logged-out — client-only progress already committed
+      if (!user) return;
       const event = (e as CustomEvent).detail;
       if (!event?.type) return;
 
@@ -122,7 +117,6 @@ function ServerEventQueue() {
         if (!res.ok) return;
         const data = await res.json();
         if (data.progress) {
-          // Reconcile client state with authoritative server values
           window.dispatchEvent(
             new CustomEvent("progress:cloud", { detail: data.progress }),
           );
@@ -153,6 +147,10 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   <ServerEventQueue />
                   <CelebrationLayer />
                   {children}
+                  {/* Mobile phone UI — hidden on desktop via CSS */}
+                  <MobileBottomNav />
+                  <InstallPromptBanner />
+                  {/* Desktop UI */}
                   <MasterTransportBar />
                   <CommandPalette />
                 </AnalyticsProvider>

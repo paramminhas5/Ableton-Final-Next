@@ -729,3 +729,63 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
   padding: 0 3px;
   border-radius: 2px;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PWA / MOBILE APP STYLES (Phase: Phone App)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Safe-area utilities (iPhone notch / Dynamic Island) ────────────── */
+/* pb-safe: padding-bottom that respects the iOS home indicator */
+.pb-safe  { padding-bottom: env(safe-area-inset-bottom, 16px); }
+.pt-safe  { padding-top:    env(safe-area-inset-top,    0px);  }
+.mb-safe  { margin-bottom:  env(safe-area-inset-bottom, 16px); }
+
+/* ── Slide-up animation for iOS install sheet ───────────────────────── */
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0);    }
+}
+.animate-slide-up {
+  animation: slide-up 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* ── Mobile bottom nav clearance ────────────────────────────────────── */
+/* Prevents content from being hidden behind the 72px bottom nav bar    */
+@media (max-width: 767px) {
+  /* Only apply when NOT in a lesson (lesson pages hide the nav) */
+  body:not([data-page="lesson"]) main {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Standalone / installed app overrides ───────────────────────────── */
+@media (display-mode: standalone) {
+  /* Hide browser-chrome elements that are redundant in app mode */
+  .browser-only { display: none !important; }
+
+  /* Extend header bg behind iOS status bar when black-translucent */
+  header:first-of-type {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* ── Prevent rubber-band overscroll on the app shell ────────────────── */
+/* (Only on iOS standalone — let individual scroll containers scroll)   */
+@media (display-mode: standalone) {
+  html, body {
+    overscroll-behavior: none;
+  }
+}
+
+/* ── Touch callout and tap highlight ────────────────────────────────── */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Install banner slide-in ────────────────────────────────────────── */
+/* The banner uses animate-fade-up which is already defined above;       */
+/* ensure it also accounts for safe area when at bottom                  */
+.install-banner-offset {
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
