@@ -21,6 +21,9 @@ import { useLearnMode } from "@/lib/mode";
 import { useAuth } from "@/lib/auth";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import { getMissionContext } from "@/lib/missionContext";
+import { track } from "@/lib/analytics";
+import { ConceptAudioButton } from "@/components/ConceptAudio";
+import { AudioIdScreen, MatchScreen, TypeAnswerScreen, SequenceScreen } from "@/components/ExerciseScreens";
 import Link from "next/link";
 
 // ─── Error boundary ───────────────────────────────────────────────────────────
@@ -174,7 +177,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
       )}
 
       <div className="brutal-border bg-bone p-5">
-        <p className="font-mono text-base md:text-lg leading-relaxed">{screen.body}</p>
+        <p className="font-mono text-sm md:text-base leading-relaxed">{screen.body}</p>
       </div>
 
       {screen.keyFact && (
@@ -183,6 +186,12 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
           <div className="font-display text-xl">{screen.keyFact}</div>
         </div>
       )}
+
+      {/* Audio-first: always show a "hear it" button */}
+      <div className="flex items-center gap-3">
+        <ConceptAudioButton visual={screen.visual} />
+        <span className="font-mono text-[9px] uppercase opacity-40">tap to hear an example</span>
+      </div>
 
       <button
         onClick={onNext}
@@ -249,16 +258,47 @@ function QuizScreen({
   const [picked, setPicked] = useState<number | null>(null);
   const [shake, setShake] = useState(false);
 
+  // Keyboard shortcuts: 1-4 to pick, Enter to advance
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const n = parseInt(e.key);
+      if (n >= 1 && n <= screen.options.length && phase === "picking") {
+        pick(n - 1);
+        return;
+      }
+      if ((e.key === "Enter" || e.key === " ") && phase !== "picking") {
+        e.preventDefault();
+        onNext();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, screen.options.length]);
+
   const pick = (idx: number) => {
     if (phase !== "picking") return;
     setPicked(idx);
     if (idx === screen.answer) {
       setPhase("correct");
       playCorrect();
+      track("quiz_answered", {
+        missionSlug: "unknown",
+        questionIndex: quizNumber,
+        correct: true,
+        isPathMode,
+      });
       onCorrect();
     } else {
       setPhase("wrong");
       playWrong();
+      track("quiz_answered", {
+        missionSlug: "unknown",
+        questionIndex: quizNumber,
+        correct: false,
+        isPathMode,
+      });
       onWrong();
       setShake(true);
       setTimeout(() => setShake(false), 500);
@@ -284,7 +324,7 @@ function QuizScreen({
         <div className="font-display text-xl md:text-2xl leading-snug">{screen.q}</div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-2">
+      <div className="grid sm:grid-cols-2 gap-2" role="group" aria-label="Answer options">
         {screen.options.map((opt, i) => {
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
           if (phase !== "picking") {
@@ -297,18 +337,24 @@ function QuizScreen({
               key={i}
               onClick={() => pick(i)}
               disabled={phase !== "picking"}
+              data-kbd-hint={phase === "picking" ? String(i + 1) : undefined}
+              aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}${phase !== "picking" ? (i === screen.answer ? " (correct)" : "") : ""}`}
               className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
             >
-              <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
+              <span className="opacity-40 mr-2" aria-hidden>{String.fromCharCode(65 + i)}.</span>
               {opt}
-              {phase !== "picking" && i === screen.answer && <span className="ml-2">✓</span>}
+              {phase !== "picking" && i === screen.answer && <span className="ml-2" aria-hidden>✓</span>}
             </button>
           );
         })}
       </div>
 
       {phase !== "picking" && (
-        <div className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}>
+        <div
+          className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}
+          role="alert"
+          aria-live="assertive"
+        >
           <div className="font-display text-2xl mb-1">
             {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
           </div>
@@ -342,12 +388,41 @@ function QuizScreen({
   );
 }
 
+function AdaptiveDifficultyNudge({ score, missionSlug }: { score: number; missionSlug: string }) {
+  if (score >= 0.7) return null; // Good score — no nudge needed
+  return (
+    <div className="brutal-border bg-sun/30 text-ink p-4 flex items-start gap-3">
+      <span className="text-2xl shrink-0">💡</span>
+      <div>
+        <div className="font-display text-base mb-1">
+          {score < 0.4 ? "Tough one! Review recommended." : "Almost there — keep going!"}
+        </div>
+        <div className="font-mono text-xs opacity-70 leading-relaxed">
+          {score < 0.4
+            ? "This lesson will come up in your Review queue soon. A second pass always helps."
+            : "You got most of it. Try the lesson again for a perfect score and bonus gems."}
+        </div>
+        {score < 0.4 && (
+          <Link
+            href="/review"
+            className="inline-block brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-[10px] uppercase mt-2 brutal-press"
+          >
+            Review Session →
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SummaryScreen({
   screen,
   mission,
   xpEarned,
   nextSlug,
   isLoggedIn,
+  correctCount,
+  quizTotal,
   onClose,
 }: {
   screen: Extract<LessonScreen, { kind: "summary" }>;
@@ -355,6 +430,8 @@ function SummaryScreen({
   xpEarned: number;
   nextSlug?: string;
   isLoggedIn: boolean;
+  correctCount: number;
+  quizTotal: number;
   onClose: () => void;
 }) {
   useEffect(() => { playFanfare(); }, []);
@@ -403,6 +480,11 @@ function SummaryScreen({
             </div>
           </div>
         </Link>
+      )}
+
+      {/* Adaptive difficulty nudge — shown when score is low */}
+      {xpEarned > 0 && screen.learned && (
+        <AdaptiveDifficultyNudge score={correctCount / Math.max(1, quizScreens.length)} missionSlug={mission.slug} />
       )}
 
       <div className="brutal-border bg-bone p-5">
@@ -538,6 +620,19 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
   const xpEarned = alreadyDone ? 0 : mission.xp;
   const isPathMode = learnMode === "ccd";
 
+  // Analytics: track lesson start once
+  useEffect(() => {
+    track("lesson_started", {
+      missionSlug: mission.slug,
+      world: mission.world,
+      xp: mission.xp,
+      isReview: !!isReview,
+      alreadyCompleted: alreadyDone,
+      learnMode,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Resolve correct back-route via missionContext (fixes Producer world slug bug)
   const ctx = getMissionContext(mission.slug);
   const backRoute = ctx.worldRoute || "/worlds";
@@ -545,10 +640,12 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
   const currentScreen = screens[screenIdx];
   const total = screens.length;
 
-  // Count quiz screens for "Question N of M"
-  const quizScreens = screens.filter(s => s.kind === "quiz");
+  // Count quiz screens (MCQ + audio-id + type-answer + sequence all count as "quiz-like")
+  const quizScreens = screens.filter(s =>
+    s.kind === "quiz" || s.kind === "audio-id" || s.kind === "type-answer" || s.kind === "sequence"
+  );
   const quizScreenIndices = screens.reduce<number[]>((acc, s, i) => {
-    if (s.kind === "quiz") acc.push(i);
+    if (s.kind === "quiz" || s.kind === "audio-id" || s.kind === "type-answer" || s.kind === "sequence") acc.push(i);
     return acc;
   }, []);
   const currentQuizNumber = currentScreen?.kind === "quiz"
@@ -599,6 +696,15 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
   const advance = useCallback(() => {
     if (screenIdx < total - 1) {
+      // Track per-screen progress for drop-off analysis
+      const screen = screens[screenIdx];
+      track("lesson_screen_viewed", {
+        missionSlug: mission.slug,
+        world: mission.world,
+        screenIndex: screenIdx,
+        screenKind: screen?.kind ?? "unknown",
+        totalScreens: total,
+      });
       setScreenIdx(idx => idx + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -607,15 +713,42 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         reviewMission(mission.slug, score);
       } else {
         completeMission(mission.slug, mission.xp, score, mission.badge?.slug);
+        // Fire server-authoritative event (patches XP spoofing)
+        window.dispatchEvent(new CustomEvent("progress:server_event", {
+          detail: {
+            type: "mission_complete",
+            missionSlug: mission.slug,
+            xp: mission.xp,
+            score,
+            badge: mission.badge?.slug,
+          },
+        }));
       }
+      // Track completion
+      track("lesson_completed", {
+        missionSlug: mission.slug,
+        world: mission.world,
+        xpEarned: alreadyDone ? 0 : mission.xp,
+        score,
+        quizTotal: quizScreens.length,
+        correctCount,
+        isReview: !!isReview,
+        learnMode,
+      });
       setDone(true);
       onComplete();
     }
-  }, [screenIdx, total, correctCount, quizScreens.length, mission, isReview, completeMission, reviewMission, onComplete]);
+  }, [screenIdx, total, correctCount, quizScreens.length, mission, isReview, completeMission, reviewMission, onComplete, alreadyDone, learnMode, screens]);
 
   const handleCorrect = () => { setCorrectCount(c => c + 1); onCorrect?.(); };
   const handleWrong = () => {
-    if (isPathMode) loseHeart();
+    if (isPathMode) {
+      loseHeart();
+      // Server-authoritative heart deduction
+      window.dispatchEvent(new CustomEvent("progress:server_event", {
+        detail: { type: "heart_lost" },
+      }));
+    }
     onWrong?.();
   };
 
@@ -683,6 +816,8 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             xpEarned={xpEarned}
             nextSlug={nextSlug}
             isLoggedIn={!!user}
+            correctCount={correctCount}
+            quizTotal={quizScreens.length}
             onClose={onComplete}
           />
         ) : currentScreen?.kind === "hook" ? (
@@ -704,6 +839,40 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             onWrong={handleWrong}
             onNext={advance}
           />
+        ) : currentScreen?.kind === "audio-id" ? (
+          <AudioIdScreen
+            key={screenIdx}
+            screen={currentScreen}
+            isPathMode={isPathMode}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+            onNext={advance}
+          />
+        ) : currentScreen?.kind === "match" ? (
+          <MatchScreen
+            key={screenIdx}
+            screen={currentScreen}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+            onNext={advance}
+          />
+        ) : currentScreen?.kind === "type-answer" ? (
+          <TypeAnswerScreen
+            key={screenIdx}
+            screen={currentScreen}
+            isPathMode={isPathMode}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+            onNext={advance}
+          />
+        ) : currentScreen?.kind === "sequence" ? (
+          <SequenceScreen
+            key={screenIdx}
+            screen={currentScreen}
+            onCorrect={handleCorrect}
+            onWrong={handleWrong}
+            onNext={advance}
+          />
         ) : currentScreen?.kind === "summary" ? (
           <SummaryScreen
             key={screenIdx}
@@ -712,6 +881,8 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             xpEarned={xpEarned}
             nextSlug={nextSlug}
             isLoggedIn={!!user}
+            correctCount={correctCount}
+            quizTotal={quizScreens.length}
             onClose={onComplete}
           />
         ) : null}

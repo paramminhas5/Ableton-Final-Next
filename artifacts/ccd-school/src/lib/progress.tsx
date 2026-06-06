@@ -11,8 +11,14 @@
  *
  * This eliminates the race condition where two hooks calling readLocal()
  * concurrently would each see stale state and overwrite each other.
+ *
+ * FSRS integration (v4):
+ *   - fsrsCards: Record<slug, FSRSCard> stored in progress
+ *   - completeMission/reviewMission now update FSRS card alongside XP
+ *   - missionsNeedingReview uses FSRS retrievability instead of linear decay
  */
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
+import { completionToFSRS, reviewToFSRS, getMissionsNeedingReview, legacyStrengthToFSRS, fsrsStrength, type FSRSCard } from "@/lib/fsrs";
 
 const KEY = "ccd.progress.v2";
 
@@ -22,12 +28,20 @@ export const HEART_REFILL_SECS = 14400; // 4 hours
 export const GEMS_PER_LESSON = 10;
 export const GEMS_PER_PERFECT = 25;
 
-export const STRENGTH_DECAY_PER_DAY = 0.1;
+export const STRENGTH_DECAY_PER_DAY = 0.1; // kept for backward compat — FSRS supersedes this
 export const REVIEW_THRESHOLD = 0.5;
 
 export type LessonStrength = {
   strength: number;
   lastReviewed: number;
+};
+
+// FSRS card stored per mission
+export type FSRSCardStored = {
+  stability: number;    // days until 90% retention
+  difficulty: number;   // 1–10
+  lastReview: number;   // Unix ms
+  reps: number;
 };
 
 export type Progress = {
@@ -38,7 +52,8 @@ export type Progress = {
   streakShieldUsedAt: string | null;
   lastDay: string | null;
   completedMissions: Record<string, { score: number; at: number }>;
-  lessonStrengths: Record<string, LessonStrength>;
+  lessonStrengths: Record<string, LessonStrength>;  // legacy — kept for migration
+  fsrsCards: Record<string, FSRSCardStored>;          // NEW: FSRS cards per mission
   badges: string[];
   hearts: number;
   heartRefillAt: number;
@@ -72,7 +87,7 @@ const weekKey = () => {
 
 export const empty = (): Progress => ({
   xp: 0, gems: 0, streakDays: 0, streakShield: false, streakShieldUsedAt: null,
-  lastDay: null, completedMissions: {}, lessonStrengths: {}, badges: [],
+  lastDay: null, completedMissions: {}, lessonStrengths: {}, fsrsCards: {}, badges: [],
   hearts: MAX_HEARTS, heartRefillAt: 0,
   dailyXp: 0, dailyXpDate: todayKey(),
   onboardingDone: false, selectedWorld: null, difficulty: "normal",
@@ -85,7 +100,6 @@ export const getLessonStrength = (ls: LessonStrength): number => {
   const daysSince = (Date.now() - ls.lastReviewed) / (1000 * 60 * 60 * 24);
   return Math.max(0, ls.strength - daysSince * STRENGTH_DECAY_PER_DAY);
 };
-
 const applyHeartRefill = (p: Progress): Progress => {
   if (p.hearts >= MAX_HEARTS || p.heartRefillAt === 0) return p;
   const elapsed = (Date.now() - p.heartRefillAt) / 1000;
@@ -185,6 +199,10 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
     const newDailyXp = cur.dailyXpDate === today ? cur.dailyXp + earnedXp : earnedXp;
     const earnShield = streak > 0 && streak % 7 === 0 && !shield;
 
+    // FSRS: update card for this mission
+    const existingCard = cur.fsrsCards?.[slug] as FSRSCard | undefined;
+    const newFsrsCard = completionToFSRS(score, existingCard);
+
     commit({
       ...cur,
       xp: cur.xp + earnedXp,
@@ -197,13 +215,27 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
       dailyXpDate: today,
       weeklyXp: cur.weeklyXp + earnedXp,
       completedMissions: { ...cur.completedMissions, [slug]: { score, at: Date.now() } },
+      // Keep legacy lessonStrengths for backward compat with any existing consumers
       lessonStrengths: { ...cur.lessonStrengths, [slug]: { strength: 1.0, lastReviewed: Date.now() } },
+      // FSRS card update
+      fsrsCards: { ...(cur.fsrsCards ?? {}), [slug]: newFsrsCard },
       badges: badge && !cur.badges.includes(badge) ? [...cur.badges, badge] : cur.badges,
     });
   };
 
   const reviewMission = (slug: string, score: number) => {
-    commit({ ...p, lessonStrengths: { ...p.lessonStrengths, [slug]: { strength: Math.min(1.0, score + 0.2), lastReviewed: Date.now() } } });
+    const existingCard = (p.fsrsCards?.[slug] ?? p.lessonStrengths?.[slug]
+      ? legacyStrengthToFSRS(p.lessonStrengths[slug])
+      : null) as FSRSCard | null;
+
+    const card = existingCard ?? { stability: 2, difficulty: 5, lastReview: Date.now(), reps: 1 };
+    const result = reviewToFSRS(score, card);
+
+    commit({
+      ...p,
+      lessonStrengths: { ...p.lessonStrengths, [slug]: { strength: Math.min(1.0, score + 0.2), lastReviewed: Date.now() } },
+      fsrsCards: { ...(p.fsrsCards ?? {}), [slug]: result.newCard },
+    });
   };
 
   const loseHeart = () => {
@@ -237,10 +269,25 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
   const setPlacement = (chapter: number) => commit({ ...p, placementDone: true, unlockedChapter: chapter });
   const reset = () => commit(empty());
 
-  const missionsNeedingReview = Object.entries(p.lessonStrengths)
-    .filter(([, ls]) => getLessonStrength(ls as LessonStrength) < REVIEW_THRESHOLD)
-    .sort(([, a], [, b]) => getLessonStrength(a as LessonStrength) - getLessonStrength(b as LessonStrength))
-    .map(([slug]) => slug);
+  // FSRS-powered review queue (uses retrievability < 0.9 threshold)
+  const missionsNeedingReview = (() => {
+    const fsrsCards = p.fsrsCards ?? {};
+    // Build merged card set: prefer FSRS cards, fall back to legacy strength → FSRS migration
+    const allCards: Record<string, FSRSCard> = {};
+    // Migrate legacy lessonStrengths that don't yet have FSRS cards
+    for (const [slug, ls] of Object.entries(p.lessonStrengths ?? {})) {
+      if (!fsrsCards[slug] && p.completedMissions[slug]) {
+        allCards[slug] = legacyStrengthToFSRS(ls as LessonStrength);
+      }
+    }
+    // Use FSRS cards where available (overrides legacy)
+    for (const [slug, card] of Object.entries(fsrsCards)) {
+      if (p.completedMissions[slug]) {
+        allCards[slug] = card as FSRSCard;
+      }
+    }
+    return getMissionsNeedingReview(allCards, 0.9);
+  })();
 
   const heartRefillSeconds =
     p.hearts >= MAX_HEARTS || p.heartRefillAt === 0

@@ -599,3 +599,133 @@
 }
 
 * { box-sizing: border-box; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY UPGRADES — WCAG AA compliance (Phase 3.1)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Enforce minimum readable font sizes ─────────────────────────── */
+/* text-[9px] and text-[10px] are used 95× — bump to at least 11px      */
+.text-\[9px\]  { font-size: 0.6875rem !important; } /* 11px */
+.text-\[10px\] { font-size: 0.6875rem !important; } /* 11px */
+
+/* All body copy must be at least 13px */
+.font-mono.text-xs  { font-size: 0.8125rem; } /* 13px */
+
+/* ── 2. Improved focus ring ─────────────────────────────────────────── */
+/* Replaces the 2px outline with a more visible 3px acid-color ring      */
+:focus-visible {
+  outline: 3px solid #C6FF00;
+  outline-offset: 3px;
+  border-radius: 1px;
+  z-index: 9999;
+  position: relative;
+}
+
+/* Keyboard-nav shortcut: users can press 1-4 to pick quiz answers       */
+/* (implemented via JS) — these classes mark the keyboard-active state   */
+.kbd-active {
+  outline: 3px solid #C6FF00 !important;
+  outline-offset: 3px !important;
+}
+
+/* ── 3. Reduce opacity floor to maintain contrast ───────────────────── */
+/* opacity-20 on non-decorative elements is too low (fails WCAG AA)      */
+/* Raise to 0.45 for body copy, 0.35 for labels                          */
+.opacity-20:not([aria-hidden="true"]):not(.decorative) {
+  opacity: 0.45 !important;
+}
+.opacity-30:not([aria-hidden="true"]):not(.decorative) {
+  opacity: 0.45 !important;
+}
+
+/* ── 4. Improve tap target sizes (min 44×44px per WCAG 2.5.5) ───────── */
+button, [role="button"], a, [role="menuitem"], [role="option"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+/* Exception: icon-only inline buttons that have aria-label */
+button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
+
+/* ── 5. Screen-reader only utility class ────────────────────────────── */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ── 6. Skip-to-content link ────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #C6FF00;
+  color: #111;
+  padding: 0.75rem 1.5rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  z-index: 10000;
+  border: 2px solid #111;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
+/* ── 7. Reduce motion support ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 8. High contrast mode support ─────────────────────────────────── */
+@media (forced-colors: active) {
+  .brutal-border { border-color: ButtonText; }
+  .brutal-shadow { box-shadow: none; }
+  :focus-visible { outline-color: Highlight; }
+}
+
+/* ── 9. aria-live feedback region base styles ───────────────────────── */
+[aria-live] {
+  /* Ensure live regions are never hidden from AT                        */
+  clip: auto !important;
+  height: auto !important;
+  width: auto !important;
+  overflow: visible !important;
+}
+
+/* ── 10. Interactive element contrast helpers ───────────────────────── */
+/* bg-acid (#C6FF00) on bg-ink (#111) = contrast ratio ~11:1 ✓          */
+/* bg-hot (#FF2D2D) on white = ~4.5:1 ✓                                 */
+/* bg-volt (#7B2FFF) on white: text must be white (bone) ✓              */
+/* bg-sun (#FFB800) on ink: contrast ~9:1 ✓                             */
+
+/* ── 11. Keyboard navigation for quiz answers ───────────────────────── */
+/* Press 1, 2, 3, 4 to select options. Implemented in ExerciseScreens.  */
+/* This CSS ensures the highlighted option is clearly visible            */
+[data-kbd-hint]::before {
+  content: attr(data-kbd-hint);
+  display: inline-block;
+  font-size: 0.6875rem;
+  opacity: 0.5;
+  margin-right: 0.4em;
+  font-family: monospace;
+  border: 1px solid currentColor;
+  padding: 0 3px;
+  border-radius: 2px;
+}

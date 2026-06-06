@@ -116,10 +116,11 @@ export default function RootLayout({
         ` }} />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <ClientProviders>
           <div className="min-h-screen flex flex-col bg-bone text-ink">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1">{children}</main>
             <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone px-4 py-2 font-mono text-[10px] uppercase tracking-widest">
               CCD.SCHOOL · CATSCANDANCE · 2026
             </footer>
