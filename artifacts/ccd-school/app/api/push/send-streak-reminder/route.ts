@@ -53,8 +53,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ sent: 0 });
   }
 
-  // Dynamic import to avoid breaking the build if web-push is not installed
-  let webpush: typeof import("web-push");
+  // Dynamic import — web-push is an optional dependency.
+  // We use `any` here intentionally: `typeof import("web-push")` is a static
+  // type reference that fails at compile time when the package isn't installed.
+  // The runtime try/catch below handles the case where it isn't present.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let webpush: any;
   try {
     webpush = await import("web-push");
     webpush.setVapidDetails(vapidEmail, vapidPublic, vapidPrivate);
