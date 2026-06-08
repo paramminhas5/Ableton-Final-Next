@@ -7,7 +7,7 @@
  *   → Hearts active, sequential gating, XP on completion
  *   → If mission has no screens yet, falls back to InlineClassic with improved banner (#10)
  *
- * EXPLORE MODE (learnMode === "classic"):
+ * FREE MODE (learnMode === "classic"):
  *   → InlineClassic  (scrolling explainer + sim + quiz, no hearts)
  *   → All missions always accessible, no gating
  *
@@ -121,7 +121,7 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  // ── EXPLORER MODE ──────────────────────────────────────────────────────────
+  // ── FREE MODE ───────────────────────────────────────────────────────────────
   return (
     <div>
       <InlineClassicLesson

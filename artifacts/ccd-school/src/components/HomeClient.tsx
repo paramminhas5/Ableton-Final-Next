@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { MISSIONS } from "@/content/missions";
@@ -9,7 +10,7 @@ import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
@@ -57,8 +58,8 @@ const WORLD_DATA = {
 } as const;
 
 const FAQ = [
-  { q: "What's the difference between Path Mode and Explore Mode?", a: "Explore Mode is fully open — every mission, path and chapter is accessible from the start. Path Mode gates content sequentially like Duolingo: you must complete each mission before the next unlocks. Wrong answers cost a heart. Run out and you wait for refills or switch back to Explore Mode." },
-  { q: "Do I need to start with Fundamentals?", a: "In Explore Mode, no — jump in anywhere. In Path Mode, Fundamentals is a hard prerequisite before DJ World and Producer unlock. Either way, we recommend it if you're new to music theory." },
+  { q: "What's the difference between Flow Mode and Free Mode?", a: "Free Mode is fully open — every mission, path and chapter is accessible from the start. Flow Mode gates content sequentially like Duolingo: you must complete each mission before the next unlocks. Wrong answers cost a heart. Run out and you wait for refills or switch back to Free Mode." },
+  { q: "Do I need to start with Fundamentals?", a: "In Free Mode, no — jump in anywhere. In Flow Mode, Fundamentals is a hard prerequisite before DJ World and Producer unlock. Either way, we recommend it if you're new to music theory." },
   { q: "What are the sources for the content?", a: "Fundamentals is built from learningmusic.ableton.com. DJ World is built chapter-by-chapter from the Pioneer DJ rekordbox 6.0.0 Instruction Manual. Producer is built from the Ableton Live 12 Reference Manual. All quiz questions and explainers cite their source." },
   { q: "How long does it take to complete a world?", a: "At 30 minutes per day: Fundamentals ≈ 3–4 weeks (40 missions), DJ World ≈ 3–4 weeks (40 missions), Producer ≈ 6–8 weeks (73 missions). The full curriculum is about 4–6 months of consistent practice." },
   { q: "What are trophies for?", a: "Path trophies (bronze) for completing a path. Chapter trophies (silver) for finishing all paths in a chapter. World trophies (gold) for completing a whole world. The CCD Master trophy requires all three worlds." },
@@ -304,7 +305,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
           <div className="font-mono text-[10px] uppercase opacity-40 mb-2">// THE SYSTEM</div>
           <h2 className="font-display text-4xl md:text-6xl mb-12">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-0 brutal-border">
-            {[{ icon: <WaveIcon />, num: "01", title: "Pick a World", body: "Start with Fundamentals (sound, rhythm, melody, harmony, tech) or jump directly into DJ World or Producer if you already have the basics." }, { icon: <SnakeIcon />, num: "02", title: "Follow the Path", body: "Each world has chapters. Each chapter has paths. Each path is a mission snake — complete missions in order, earn XP, unlock trophies." }, { icon: <TrophyIcon />, num: "03", title: "Earn Trophies", body: "Path trophies → Chapter trophies → World trophies → CCD Master. Choose Path Mode (sequential, like Duolingo) or Explore Mode (everything open, your pace)." }].map((step, i) => (
+            {[{ icon: <WaveIcon />, num: "01", title: "Pick a World", body: "Start with Fundamentals (sound, rhythm, melody, harmony, tech) or jump directly into DJ World or Producer if you already have the basics." }, { icon: <SnakeIcon />, num: "02", title: "Follow the Path", body: "Each world has chapters. Each chapter has paths. Each path is a mission snake — complete missions in order, earn XP, unlock trophies." }, { icon: <TrophyIcon />, num: "03", title: "Earn Trophies", body: "Path trophies → Chapter trophies → World trophies → CCD Master. Choose Flow Mode (sequential, like Duolingo) or Free Mode (everything open, your pace)." }].map((step, i) => (
               <div key={i} className={`p-6 md:p-8 ${i < 2 ? "brutal-border border-y-0 border-l-0" : ""}`}>
                 <div className="opacity-40 mb-4">{step.icon}</div>
                 <div className="font-mono text-[9px] uppercase opacity-40 mb-1">{step.num}</div>
@@ -424,19 +425,34 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
 
 export function HomeClient() {
   const { user } = useAuth();
+  const router = useRouter();
   const { progress } = useProgress();
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const hasMissions = Object.keys(progress.completedMissions).length > 0;
+
+  // Guard against localStorage being unavailable (e.g. private browsing).
+  // If reading completedMissions or onboardingDone throws, default to false
+  // so the landing page is shown rather than redirecting.
+  let shouldRedirect = false;
+  try {
+    const hasMissions = Object.keys(progress.completedMissions).length > 0;
+    shouldRedirect = !!(user || hasMissions || progress.onboardingDone);
+  } catch {
+    shouldRedirect = false;
+  }
+
+  // Redirect returning users to /dashboard before first paint
+  useEffect(() => {
+    if (shouldRedirect) {
+      router.replace("/dashboard");
+    }
+  }, [shouldRedirect, router]);
+
+  // Prevent flash: return null while redirecting
+  if (shouldRedirect) return null;
 
   // User explicitly clicked GET STARTED from the landing page → run onboarding
   if (showOnboarding) {
     return <OnboardingFlow onDone={() => setShowOnboarding(false)} />;
-  }
-
-  // Returning user: signed in, has completed missions, OR has already done
-  // onboarding (picked a world + mode but hasn't started lessons yet)
-  if (user || hasMissions || progress.onboardingDone) {
-    return <Dashboard />;
   }
 
   // Brand-new user with no history → show the Landing page first.

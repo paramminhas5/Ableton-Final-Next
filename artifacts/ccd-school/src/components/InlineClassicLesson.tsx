@@ -2,8 +2,8 @@
 /**
  * InlineClassicLesson — scrolling lesson rendered inside /learn/[slug].
  * Used in two situations:
- *   1. Explorer Mode  (learnMode === "classic") — all missions, no hearts
- *   2. Path Mode fallback — missions that have no screens[] yet
+ *   1. Free Mode  (learnMode === "classic") — all missions, no hearts
+ *   2. Flow Mode fallback — missions that have no screens[] yet
  *
  * Renders: mode badge → difficulty toggle → explainer blocks → sim → quiz → next CTA
  * Supports Normal / Hard mode matching the experience in MissionPageClient.
@@ -51,7 +51,7 @@ export function InlineClassicLesson({
   const ctx = getMissionContext(m.slug);
   const deep = LESSONS[m.slug];
 
-  // Hard mode state — default from stored difficulty preference (explorer mode only)
+  // Hard mode state — default from stored difficulty preference (free mode only)
   const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
   const [internalHardMode, setInternalHardMode] = useState(defaultHard);
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
@@ -163,7 +163,7 @@ export function InlineClassicLesson({
           {/* Mode badge */}
           <div className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase font-bold
             ${mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"}`}>
-            {mode === "explore" ? "🔓 Explore Mode" : "🗺 Path Mode"}
+            {mode === "explore" ? "🔓 Free Mode" : "🌊 Flow Mode"}
           </div>
           <div className="flex-1" />
           {internalHardMode && (

@@ -7,7 +7,7 @@
  *   #7  — Breadcrumb bar: World › Chapter › Path › Mission N of M
  *   #8  — Quiz screens show "Question N of M" + hearts warning on first quiz
  *   #9  — First-time hearts explainer modal, −1 heart message on wrong answer
- *   #10 — Mode indicator only shows in PATH mode (not in classic fallback)
+ *   #10 — Mode indicator only shows in FLOW mode (not in free/classic fallback)
  *   #11 — "Save progress" nudge on SummaryScreen for logged-out users
  *   #EB — Error boundary wraps entire lesson to catch bad content data gracefully
  */
@@ -167,7 +167,7 @@ function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
         </div>
         <div className="p-5 space-y-3 font-mono text-sm leading-relaxed">
           <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
-          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Explore Mode</strong> (no hearts) to keep going.</p>
+          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> (no hearts) to keep going.</p>
           <p className="opacity-60 text-xs">Switch modes anytime using the toggle in the header.</p>
         </div>
         <div className="p-4">
@@ -823,7 +823,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
   return (
     <>
-      {/* Hearts explainer modal — shown once per session in path mode */}
+      {/* Hearts explainer modal — shown once per session in flow mode */}
       {showHeartsExplainer && (
         <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
@@ -852,7 +852,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           missionTotal={missionTotal}
         />
 
-        {/* ── Mode indicator — only show in PATH mode ── */}
+        {/* ── Mode indicator — only show in FLOW mode ── */}
         {isFlowMode && (
           <div className="flex items-center justify-between">
             <div className="brutal-border bg-acid text-ink px-2.5 py-1 font-mono text-[9px] uppercase font-bold">
