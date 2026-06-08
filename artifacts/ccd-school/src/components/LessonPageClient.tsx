@@ -7,7 +7,7 @@
  *   → Hearts active, sequential gating, XP on completion
  *   → If mission has no screens yet, falls back to InlineClassic with improved banner (#10)
  *
- * EXPLORER MODE (learnMode === "classic"):
+ * EXPLORE MODE (learnMode === "classic"):
  *   → InlineClassic  (scrolling explainer + sim + quiz, no hearts)
  *   → All missions always accessible, no gating
  *
@@ -15,7 +15,7 @@
  *
  * Fixes:
  *   #6  — handleComplete uses getMissionContext for correct world route
- *   #10 — CcdFallbackBanner is clean, informative, not misleading
+ *   #10 — PathFallbackBanner is clean, informative, not misleading
  */
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
@@ -27,30 +27,29 @@ import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
 
-// ── Improved CCD fallback banner (#10) ────────────────────────────────────────
-// Clean, informative — makes it clear this is the classic format, not broken CCD
+// ── Path Mode fallback banner — shown when a lesson has no screens yet ────────
+// Clean, informative — makes it clear this is the explore format, not broken PATH MODE
 function CcdFallbackBanner({ missionTitle }: { missionTitle: string }) {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-4">
-      <div className="brutal-border bg-bone text-ink px-5 py-4">
+      <div className="brutal-border bg-acid text-ink px-5 py-4">
         <div className="flex items-start gap-3 mb-2">
-          <span className="text-xl shrink-0">📖</span>
+          <span className="text-xl shrink-0">🗺</span>
           <div>
-            <div className="font-display text-base">Classic Format</div>
+            <div className="font-display text-base">PATH MODE — Explore Format</div>
             <div className="font-mono text-xs opacity-60 mt-0.5">
               {missionTitle}
             </div>
           </div>
         </div>
-        <div className="font-mono text-xs opacity-70 leading-relaxed">
-          This lesson hasn&apos;t been converted to the Duolingo-style format yet — 
-          but the <strong>content, simulator, quiz and XP</strong> are all here. 
-          Work through it top to bottom and hit the quiz at the end.
+        <div className="font-mono text-xs opacity-80 leading-relaxed">
+          This lesson uses the explore format — but the <strong>content, simulator, quiz and XP</strong> are all here. 
+          Work through it top to bottom and complete the quiz to unlock the next lesson.
         </div>
         <div className="mt-3 flex flex-wrap gap-2 font-mono text-[9px] uppercase">
-          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Full content</span>
-          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Interactive sim</span>
-          <span className="brutal-border bg-acid/30 px-2 py-1">✓ Quiz + XP</span>
+          <span className="brutal-border bg-ink/20 px-2 py-1">✓ Full content</span>
+          <span className="brutal-border bg-ink/20 px-2 py-1">✓ Interactive sim</span>
+          <span className="brutal-border bg-ink/20 px-2 py-1">✓ Quiz + XP</span>
         </div>
       </div>
     </div>

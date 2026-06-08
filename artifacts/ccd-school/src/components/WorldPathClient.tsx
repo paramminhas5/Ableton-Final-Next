@@ -19,6 +19,7 @@ import { rankFor } from "@/lib/ranks";
 import type { Mission } from "@/content/types";
 import type { Chapter } from "@/content/chapters";
 import type { LearningPath } from "@/content/paths";
+import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 
 type WorldId = "fundamentals" | "dj" | "producer";
 
@@ -178,7 +179,7 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const world = worldSlug as WorldId;
   const meta = WORLD_META[world];
   const { progress } = useProgress();
-  const { learnMode, setLearnMode } = useLearnMode();
+  const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const strengths = progress.lessonStrengths;
 
@@ -263,29 +264,8 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
       {/* World overview — collapsible chapter breakdown */}
       <WorldOverview world={world} meta={meta} chapters={chapters} paths={paths} nodes={nodes} />
 
-      {/* Mode banner */}
-      <div className={`brutal-border border-x-0 border-t-0 px-4 py-3 flex items-center justify-between gap-3
-        ${learnMode === "ccd" ? "bg-volt text-ink" : "bg-bone text-ink"}`}>
-        <div className="flex items-center gap-3">
-          <span className="text-xl">{learnMode === "ccd" ? "🔒" : "🗺"}</span>
-          <div>
-            <div className="font-mono text-[9px] uppercase opacity-70 leading-tight">
-              {learnMode === "ccd" ? "Path Mode" : "Explorer Mode"}
-            </div>
-            <div className="font-mono text-[10px] font-bold leading-tight">
-              {learnMode === "ccd"
-                ? "Sequential · ❤️ hearts on · XP gated"
-                : "All lessons open · No hearts · Jump anywhere"}
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={() => setLearnMode(learnMode === "ccd" ? "classic" : "ccd")}
-          className="brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-[9px] uppercase brutal-press shrink-0 hover:bg-volt hover:text-ink transition-colors"
-        >
-          Switch →
-        </button>
-      </div>
+      {/* Mode switcher banner */}
+      <ModeSwitcherBanner variant="bar" />
 
       {/* Path */}
       <div className="relative max-w-sm mx-auto px-4 py-8 pb-32">

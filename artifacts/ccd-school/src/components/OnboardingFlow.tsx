@@ -2,10 +2,11 @@
 /**
  * OnboardingFlow — shown once to brand-new users.
  *
- * Step 1: What do you want to learn?   (Fundamentals / DJ / Producer)
- * Step 2: How do you want to learn?    (CCD Path Mode / Classic Explorer)
- * Step 3: Adjust difficulty            (Classic only — Normal / Hard)
- * Step 4: World overview               (Chapters + missions in chosen world, then START)
+ * Step 1: Experience level        (Beginner / Some / Expert)
+ * Step 2: What to learn?          (Fundamentals / DJ / Producer)
+ * Step 3: How to learn?           (PATH MODE / EXPLORE MODE)
+ * Step 4: Adjust difficulty       (Explore only — Normal / Hard)
+ * Step 5: World overview          (Chapters + missions in chosen world, then START)
  */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -227,51 +228,90 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
         </button>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 3 OF 4</div>
         <h1 className="font-display text-5xl leading-none">
-          HOW DO YOU<br />
-          <span className="text-acid">WANT TO LEARN IT?</span>
+          PICK YOUR<br />
+          <span className="text-acid">LEARNING STYLE</span>
         </h1>
         <div className={`brutal-border ${w.color} px-4 py-2 inline-flex items-center gap-2 mt-3`}>
           <span>{w.emoji}</span>
           <span className="font-mono text-xs uppercase">{w.title}</span>
         </div>
       </div>
-      <div className="space-y-3">
+
+      <div className="space-y-4">
+        {/* PATH MODE */}
         <button
           onClick={() => onPick("ccd")}
-          className="w-full brutal-border bg-volt text-bone p-5 text-left brutal-press brutal-shadow"
+          className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun transition-colors"
         >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0 mt-0.5">🔒</span>
-            <div>
-              <div className="font-display text-xl">CCD Mode</div>
-              <div className="font-mono text-xs opacity-80 mt-1 leading-relaxed">
-                Structured like Duolingo — lessons unlock one by one. Wrong answers cost a heart.
-                Keeps you accountable and moving forward.
+          <div className="flex items-start gap-4">
+            <span className="text-4xl shrink-0 mt-0.5">🗺</span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="font-display text-2xl">PATH MODE</div>
+                <span className="brutal-border bg-ink text-bone px-2 py-0.5 font-mono text-[9px] uppercase">RECOMMENDED</span>
               </div>
-              <div className="font-mono text-[10px] uppercase opacity-60 mt-2">
-                Sequential · Hearts on · XP gated
+              <div className="font-mono text-xs opacity-80 leading-relaxed mb-3">
+                Structured like Duolingo — missions unlock one by one. Wrong answers cost a heart.
+                Complete each lesson before the next opens. Keeps you accountable.
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 font-mono text-[9px] uppercase">
+                {[
+                  { icon: "🔒", text: "Sequential unlocking" },
+                  { icon: "❤️", text: "Hearts on wrong answers" },
+                  { icon: "⚡", text: "XP gating between paths" },
+                  { icon: "🏆", text: "Trophy rewards" },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="flex items-center gap-1.5 opacity-80">
+                    <span>{icon}</span><span>{text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px bg-ink/20" />
+          <span className="font-mono text-[9px] uppercase opacity-40">or</span>
+          <div className="flex-1 h-px bg-ink/20" />
+        </div>
+
+        {/* EXPLORE MODE */}
         <button
           onClick={() => onPick("classic")}
-          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun/30 transition-colors"
+          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun/40 transition-colors"
         >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0 mt-0.5">🗺</span>
-            <div>
-              <div className="font-display text-xl">Classic Mode</div>
-              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
+          <div className="flex items-start gap-4">
+            <span className="text-4xl shrink-0 mt-0.5">🔓</span>
+            <div className="flex-1">
+              <div className="font-display text-2xl mb-1">EXPLORE MODE</div>
+              <div className="font-mono text-xs opacity-70 leading-relaxed mb-3">
                 All lessons open from day one. Browse freely, jump to any topic, no hearts, no gates.
-                You control the pace.
+                You control the pace entirely.
               </div>
-              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">
-                All open · No hearts · Jump anywhere
+              <div className="grid grid-cols-2 gap-1.5 font-mono text-[9px] uppercase">
+                {[
+                  { icon: "🔓", text: "All lessons unlocked" },
+                  { icon: "🚫", text: "No hearts / no limits" },
+                  { icon: "🎯", text: "Jump to any topic" },
+                  { icon: "📖", text: "Normal & hard difficulty" },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="flex items-center gap-1.5 opacity-60">
+                    <span>{icon}</span><span>{text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </button>
+      </div>
+
+      <div className="brutal-border bg-bone/50 p-4">
+        <div className="font-mono text-[9px] uppercase opacity-50 mb-1">💡 YOU CAN SWITCH ANYTIME</div>
+        <div className="font-mono text-xs opacity-60 leading-relaxed">
+          The mode toggle is always visible in the top navigation bar. Switch between PATH MODE and EXPLORE MODE at any point — your progress carries over.
+        </div>
       </div>
     </div>
   );
@@ -301,7 +341,7 @@ function StepDifficulty({
         </h1>
         <div className={`brutal-border ${w.color} px-4 py-2 inline-flex items-center gap-2 mt-3`}>
           <span>{w.emoji}</span>
-          <span className="font-mono text-xs uppercase">{w.title} · Classic Mode</span>
+          <span className="font-mono text-xs uppercase">{w.title} · Explore Mode</span>
         </div>
         <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
           You can change this at any time from the mission page.
@@ -447,7 +487,7 @@ function StepOverview({
         </div>
         <div className="flex items-center gap-3 font-mono text-sm">
           <span className="text-acid font-bold shrink-0">✓</span>
-          Mode: <strong>{mode === "ccd" ? "🔒 CCD Mode" : "🗺 Classic Mode"}</strong>
+          Mode: <strong>{mode === "ccd" ? "🗺 Path Mode" : "🔓 Explore Mode"}</strong>
         </div>
         {mode === "classic" && (
           <div className="flex items-center gap-3 font-mono text-sm">
@@ -554,7 +594,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
    */
   const handlePlacementComplete = (firstMissionSlug: string) => {
     if (!selectedWorld) return;
-    // Default placement users to CCD mode — they want structure since they
+    // Default placement users to PATH mode — they want structure since they
     // indicated some existing knowledge but want guidance on where to start.
     const mode: LearnMode = selectedMode ?? "ccd";
     const difficulty: Difficulty = selectedDifficulty ?? "normal";

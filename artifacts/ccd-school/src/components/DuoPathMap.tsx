@@ -28,9 +28,9 @@ interface PathNode {
 }
 
 const WORLD_COLORS: Record<WorldId, { accent: string; node: string; locked: string; complete: string }> = {
-  fundamentals: { accent: "bg-acid text-ink", node: "border-acid", locked: "border-ink/20", complete: "bg-ink text-bone" },
-  dj:           { accent: "bg-volt text-ink", node: "border-volt", locked: "border-bone/20", complete: "bg-volt text-ink" },
-  producer:     { accent: "bg-sun text-ink",  node: "border-sun",  locked: "border-ink/20", complete: "bg-sun text-ink"  },
+  fundamentals: { accent: "bg-acid",  node: "border-acid", locked: "border-ink/20",  complete: "bg-ink text-bone" },
+  dj:           { accent: "bg-volt",  node: "border-volt", locked: "border-bone/20", complete: "bg-volt text-ink" },
+  producer:     { accent: "bg-sun",   node: "border-sun",  locked: "border-ink/20",  complete: "bg-sun text-ink"  },
 };
 
 const CHAPTER_EMOJIS: Record<string, string> = {
@@ -102,15 +102,39 @@ export function DuoPathMap({ world }: { world: WorldId }) {
     });
   });
 
+  const totalDone = nodes.filter(n => n.state === "complete" || n.state === "review").length;
+  const totalNodes = nodes.length;
+  const pct = totalNodes > 0 ? Math.round((totalDone / totalNodes) * 100) : 0;
+  const nextAvailable = nodes.find(n => n.state === "available");
+
   return (
     <div className="relative max-w-sm mx-auto px-4 py-6 pb-32">
+
+      {/* Summary bar */}
+      <div className="brutal-border bg-bone p-4 mb-6 space-y-2">
+        <div className="flex justify-between items-center">
+          <div className="font-mono text-[9px] uppercase opacity-50">{totalDone}/{totalNodes} lessons complete</div>
+          <div className="font-mono text-[9px] uppercase opacity-50">{pct}%</div>
+        </div>
+        <div className="h-2.5 brutal-border bg-ink/10 overflow-hidden">
+          <div
+            className={`h-full transition-all duration-700 ${colors.accent.split(" ")[0]}`}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        {nextAvailable && (
+          <div className="font-mono text-[9px] uppercase opacity-60 truncate">
+            Next: {nextAvailable.title} · +{nextAvailable.xp} XP
+          </div>
+        )}
+      </div>
+
       {/* Vertical connector line */}
       <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-ink/10 -translate-x-0.5 z-0" />
 
       {nodes.map((node, idx) => {
         const isLeft = node.side === "left";
         const isRight = node.side === "right";
-        const isCenter = node.side === "center";
 
         return (
           <div key={node.slug}>
@@ -135,6 +159,14 @@ export function DuoPathMap({ world }: { world: WorldId }) {
           </div>
         );
       })}
+
+      {/* World complete */}
+      {pct === 100 && (
+        <div className="relative z-10 mt-6 brutal-border bg-acid text-ink p-5 text-center brutal-shadow">
+          <div className="text-4xl mb-2">🏆</div>
+          <div className="font-display text-2xl">WORLD COMPLETE!</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -179,7 +211,7 @@ function NodeButton({
   // available — pulsing accent node
   return (
     <Link href={`/learn/${node.slug}`}
-      className={`${baseSize} brutal-border ${colors.accent} flex flex-col items-center justify-center brutal-press brutal-shadow relative`}
+      className={`${baseSize} brutal-border ${colors.accent} text-ink flex flex-col items-center justify-center brutal-press brutal-shadow relative`}
       style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
     >
       <div className="font-mono text-[8px] uppercase text-center px-1 leading-tight font-bold">{node.title}</div>

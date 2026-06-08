@@ -161,13 +161,13 @@ function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-ink/70 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Hearts explained">
       <div className="brutal-border bg-bone max-w-sm w-full brutal-shadow">
-        <div className="brutal-border border-x-0 border-t-0 bg-hot text-bone px-5 py-4">
-          <div className="font-display text-3xl">♥ PATH MODE HEARTS</div>
+        <div className="brutal-border border-x-0 border-t-0 bg-acid text-ink px-5 py-4">
+          <div className="font-display text-3xl">🗺 PATH MODE HEARTS</div>
         </div>
         <div className="p-5 space-y-3 font-mono text-sm leading-relaxed">
           <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
-          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to Explorer Mode (no hearts) to keep going.</p>
-          <p className="opacity-60 text-xs">You can switch modes anytime using the toggle in the header.</p>
+          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Explore Mode</strong> (no hearts) to keep going.</p>
+          <p className="opacity-60 text-xs">Switch modes anytime using the toggle in the header.</p>
         </div>
         <div className="p-4">
           <button
@@ -368,7 +368,7 @@ function QuizScreen({
           </div>
           {isPathMode && phase === "picking" && (
             <div className="font-mono text-[9px] uppercase opacity-50 text-hot">
-              ♥ wrong = −1 heart
+              ❤️ wrong = −1 heart
             </div>
           )}
         </div>
@@ -848,14 +848,14 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         {/* ── Mode indicator — only show in PATH mode ── */}
         {isPathMode && (
           <div className="flex items-center justify-between">
-            <div className="brutal-border bg-volt text-bone px-2.5 py-1 font-mono text-[9px] uppercase">
-              🔒 PATH MODE · ♥ {progress.hearts}/{MAX_HEARTS}
+            <div className="brutal-border bg-acid text-ink px-2.5 py-1 font-mono text-[9px] uppercase font-bold">
+              🗺 PATH MODE · ❤️ {progress.hearts}/{MAX_HEARTS}
             </div>
             <button
               onClick={() => setLearnMode("classic")}
               className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
             >
-              Switch to Explorer →
+              Switch to Explore →
             </button>
           </div>
         )}

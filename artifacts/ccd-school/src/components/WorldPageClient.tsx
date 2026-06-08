@@ -3,6 +3,7 @@ import Link from "next/link";
 import { chaptersByWorld, WORLD_TROPHIES } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
+import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 import { useState } from "react";
 
 type WorldSlug = "fundamentals" | "dj" | "producer";
@@ -77,6 +78,9 @@ export function WorldPageClient({ slug }: { slug: string }) {
           </div>
         </div>
       </section>
+
+      {/* Mode switcher — sticky just below the chapter nav */}
+      <ModeSwitcherBanner variant="bar" />
 
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-4 pb-24">
         {chapters.map((ch) => {
