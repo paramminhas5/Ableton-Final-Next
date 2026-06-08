@@ -144,10 +144,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           as="style"
           href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
           media="print"
+          // @ts-expect-error – string onLoad is intentional for perf (not a React event)
           onLoad="this.media='all'"
         />
         {/* Space Mono — monospaced body + labels */}
@@ -156,10 +158,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           as="style"
           href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
           media="print"
+          // @ts-expect-error – string onLoad is intentional for perf (not a React event)
           onLoad="this.media='all'"
         />
         {/* Space Grotesk — sans body text */}
@@ -168,10 +172,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           as="style"
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
         />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
           media="print"
+          // @ts-expect-error – string onLoad is intentional for perf (not a React event)
           onLoad="this.media='all'"
         />
         {/* Fallback noscript for environments without JS */}
