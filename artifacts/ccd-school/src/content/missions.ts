@@ -3938,10 +3938,14 @@ const allProducerMissions: Mission[] = [
   ...w8,
 ].map(withProducerScreens);
 
+// SYNTHS_MISSIONS are part of the Producer world — apply the same screen merge
+// so the 18 authored synth screen sets in missions-producer-screens.ts go live.
+const allSynthMissions: Mission[] = SYNTHS_MISSIONS.map(withProducerScreens);
+
 export const MISSIONS: Mission[] = [
   ...FOUNDATIONS_MISSIONS,
   ...DJ_WORLD_MISSIONS,
-  ...SYNTHS_MISSIONS,
+  ...allSynthMissions,
   ...allProducerMissions,
 ];
 

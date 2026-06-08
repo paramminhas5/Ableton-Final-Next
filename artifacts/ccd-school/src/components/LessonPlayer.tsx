@@ -207,7 +207,14 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
       </div>
 
       {screen.visual && screen.visual !== "none" && (
-        <InlineVisual type={screen.visual} />
+        <InlineVisual
+          type={screen.visual}
+          bpm={screen.visualProps?.bpm}
+          minor={screen.visualProps?.minor}
+          root={screen.visualProps?.root}
+          scaleLabel={screen.visualProps?.scaleLabel}
+          signalNodes={screen.visualProps?.signalNodes}
+        />
       )}
 
       <div className="brutal-border bg-bone p-5">
@@ -277,6 +284,7 @@ function QuizScreen({
   quizTotal,
   isPathMode,
   xpPerCorrect,
+  missionSlug,
   onCorrect,
   onWrong,
   onNext,
@@ -286,6 +294,7 @@ function QuizScreen({
   quizTotal: number;
   isPathMode: boolean;
   xpPerCorrect?: number;
+  missionSlug: string;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -321,7 +330,7 @@ function QuizScreen({
       setPhase("correct");
       playCorrect();
       track("quiz_answered", {
-        missionSlug: "unknown",
+        missionSlug: missionSlug,
         questionIndex: quizNumber,
         correct: true,
         isPathMode,
@@ -336,7 +345,7 @@ function QuizScreen({
       setPhase("wrong");
       playWrong();
       track("quiz_answered", {
-        missionSlug: "unknown",
+        missionSlug: missionSlug,
         questionIndex: quizNumber,
         correct: false,
         isPathMode,
@@ -882,6 +891,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             quizTotal={quizScreens.length}
             isPathMode={isPathMode}
             xpPerCorrect={alreadyDone ? 0 : Math.round(mission.xp / Math.max(1, quizScreens.length))}
+            missionSlug={mission.slug}
             onCorrect={handleCorrect}
             onWrong={handleWrong}
             onNext={advance}

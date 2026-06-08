@@ -24,6 +24,10 @@ type PickPhase = "picking" | "answered";
 interface Props {
   world: "fundamentals" | "dj" | "producer";
   onSkip: () => void; // go back to normal onboarding
+  /** Called with the first mission slug when the user applies a placement result.
+   *  When provided, the caller is responsible for routing and setting onboardingDone.
+   *  When omitted (standalone /placement page), PlacementTest routes itself. */
+  onComplete?: (firstMissionSlug: string) => void;
 }
 
 const WORLD_LABELS: Record<string, string> = {
@@ -38,7 +42,7 @@ const CHAPTER_FIRST_MISSION: Record<string, Record<number, string>> = {
   producer:     { 1: "what-is-live",  2: "midi-piano-roll", 3: "the-mixer" },
 };
 
-export function PlacementTest({ world, onSkip }: Props) {
+export function PlacementTest({ world, onSkip, onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [qIdx, setQIdx] = useState(0);
   const [pickPhase, setPickPhase] = useState<PickPhase>("picking");
@@ -84,7 +88,14 @@ export function PlacementTest({ world, onSkip }: Props) {
     });
 
     const firstMission = CHAPTER_FIRST_MISSION[world]?.[chapter] ?? "what-is-sound";
-    router.push(`/learn/${firstMission}`);
+
+    if (onComplete) {
+      // Embedded in OnboardingFlow — let the parent handle routing + setOnboarding
+      onComplete(firstMission);
+    } else {
+      // Standalone /placement page — route directly
+      router.push(`/learn/${firstMission}`);
+    }
   };
 
   const correctCount = Object.values(answers).filter(Boolean).length;

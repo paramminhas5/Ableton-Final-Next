@@ -234,24 +234,144 @@ function playHeadroomDemo() {
   o.start(); o.stop(c.currentTime + 2.3);
 }
 
+// ─── NEW: contextual audio demos ─────────────────────────────────────────────
+
+function playMinorScale() {
+  const notes = [69, 71, 72, 74, 76, 77, 79, 81]; // A3 natural minor
+  notes.forEach((n, i) => playTone(midiToFreq(n), i * 0.22, 0.3, "triangle", 0.2));
+}
+function playPentatonicScale() {
+  const notes = [60, 62, 64, 67, 69, 72]; // C major pentatonic
+  notes.forEach((n, i) => playTone(midiToFreq(n), i * 0.22, 0.32, "triangle", 0.22));
+}
+function playMajorMinorCompare() {
+  const major = [60, 64, 67]; const minor = [60, 63, 67];
+  major.forEach(n => playTone(midiToFreq(n), 0, 0.8, "triangle", 0.16));
+  minor.forEach(n => playTone(midiToFreq(n), 1.2, 0.8, "triangle", 0.16));
+}
+function playDominantResolution() {
+  const g7 = [55, 59, 62, 65]; const cMaj = [60, 64, 67];
+  g7.forEach(n => playTone(midiToFreq(n), 0, 0.9, "triangle", 0.14));
+  cMaj.forEach(n => playTone(midiToFreq(n), 1.1, 1.2, "triangle", 0.16));
+}
+function playIVVI() {
+  [[60,64,67],[65,69,72],[67,71,74],[60,64,67]].forEach((chord, ci) => {
+    chord.forEach(n => playTone(midiToFreq(n), ci * 0.9, 0.75, "triangle", 0.14));
+  });
+}
+function playEqBright() {
+  const c = getCtx(); if (!c) return;
+  const osc = c.createOscillator(); const g = c.createGain(); const lp = c.createBiquadFilter();
+  lp.type = "lowpass"; osc.type = "sawtooth"; osc.frequency.value = 220;
+  lp.frequency.setValueAtTime(8000, c.currentTime);
+  lp.frequency.exponentialRampToValueAtTime(400, c.currentTime + 1.5);
+  g.gain.setValueAtTime(0.18, c.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 2.2);
+  osc.connect(lp); lp.connect(g); g.connect(getMaster());
+  osc.start(); osc.stop(c.currentTime + 2.3);
+}
+function playFilterSweep() {
+  const c = getCtx(); if (!c) return;
+  const osc = c.createOscillator(); const g = c.createGain(); const lp = c.createBiquadFilter();
+  lp.type = "lowpass"; osc.type = "sawtooth"; osc.frequency.value = 110;
+  lp.frequency.setValueAtTime(200, c.currentTime);
+  lp.frequency.exponentialRampToValueAtTime(6000, c.currentTime + 2.0);
+  g.gain.setValueAtTime(0.22, c.currentTime);
+  g.gain.linearRampToValueAtTime(0.0001, c.currentTime + 2.5);
+  osc.connect(lp); lp.connect(g); g.connect(getMaster());
+  osc.start(); osc.stop(c.currentTime + 2.5);
+}
+function playADSRDemo() {
+  const c = getCtx(); if (!c) return;
+  const osc1 = c.createOscillator(); osc1.type = "triangle"; osc1.frequency.value = midiToFreq(60);
+  const g1 = c.createGain();
+  g1.gain.setValueAtTime(0.0001, c.currentTime);
+  g1.gain.linearRampToValueAtTime(0.22, c.currentTime + 0.5);
+  g1.gain.linearRampToValueAtTime(0.0001, c.currentTime + 2.0);
+  osc1.connect(g1); g1.connect(getMaster()); osc1.start(); osc1.stop(c.currentTime + 2.1);
+  const osc2 = c.createOscillator(); osc2.type = "sawtooth"; osc2.frequency.value = midiToFreq(60);
+  const g2 = c.createGain();
+  g2.gain.setValueAtTime(0.0001, c.currentTime + 2.5);
+  g2.gain.exponentialRampToValueAtTime(0.35, c.currentTime + 2.52);
+  g2.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 3.0);
+  osc2.connect(g2); g2.connect(getMaster()); osc2.start(c.currentTime + 2.5); osc2.stop(c.currentTime + 3.1);
+}
+function playLFOVibrato() {
+  const c = getCtx(); if (!c) return;
+  const osc = c.createOscillator(); osc.type = "triangle"; osc.frequency.value = midiToFreq(64);
+  const lfo = c.createOscillator(); lfo.type = "sine"; lfo.frequency.value = 5.5;
+  const lfoGain = c.createGain(); lfoGain.gain.value = 8;
+  const g = c.createGain(); g.gain.value = 0.22;
+  lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+  osc.connect(g); g.connect(getMaster());
+  lfo.start(c.currentTime + 0.3); osc.start(); osc.stop(c.currentTime + 2.5); lfo.stop(c.currentTime + 2.5);
+}
+function playDelayDemo() {
+  playTone(midiToFreq(64), 0, 0.4, "triangle", 0.25);
+  [0.5, 1.0, 1.5, 2.0].forEach((t, i) => {
+    playTone(midiToFreq(64), t, 0.35, "triangle", 0.25 * Math.pow(0.5, i + 1));
+  });
+}
+function playStereoWide() {
+  const c = getCtx(); if (!c) return;
+  [{ pan: -0.8, midi: 64, t: 0 }, { pan: 0, midi: 67, t: 0.4 }, { pan: 0.8, midi: 71, t: 0.8 }, { pan: 0, midi: 72, t: 1.2 }]
+    .forEach(({ pan, midi, t }) => {
+      const time = c.currentTime + t;
+      const o = c.createOscillator(); const g = c.createGain(); const p = c.createStereoPanner(); p.pan.value = pan;
+      o.type = "triangle"; o.frequency.value = midiToFreq(midi);
+      g.gain.setValueAtTime(0.0001, time); g.gain.exponentialRampToValueAtTime(0.22, time + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, time + 0.3);
+      o.connect(g); g.connect(p); p.connect(getMaster()); o.start(time); o.stop(time + 0.35);
+    });
+}
+function playFullDrumLoop() {
+  const beat = 60 / 128;
+  playKick(0); playKick(beat * 2); playSnare(beat); playSnare(beat * 3);
+  [0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5].forEach(b => playHat(b * beat));
+}
+function playHarmonicMix() {
+  [[60,64,67],[67,71,74]].forEach((chord, ci) => {
+    chord.forEach(n => playTone(midiToFreq(n), ci * 0.8, 1.5, "triangle", 0.14));
+  });
+}
+function playSwingGroove() {
+  const c = getCtx(); if (!c) return;
+  const beat = 60 / 120;
+  for (let i = 0; i < 8; i++) {
+    const t = c.currentTime + 0.1 + i * (beat / 2);
+    const o = c.createOscillator(); const g = c.createGain();
+    o.type = "triangle"; o.frequency.value = i % 2 === 0 ? 880 : 660;
+    g.gain.setValueAtTime(i % 2 === 0 ? 0.3 : 0.18, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+    o.connect(g); g.connect(getMaster()); o.start(t); o.stop(t + 0.09);
+  }
+  const swingOff = beat * 0.33;
+  for (let i = 0; i < 8; i++) {
+    const baseT = c.currentTime + 2.2 + Math.floor(i / 2) * beat;
+    const t = i % 2 === 0 ? baseT : baseT + swingOff + beat * 0.17;
+    const o = c.createOscillator(); const g = c.createGain();
+    o.type = "triangle"; o.frequency.value = i % 2 === 0 ? 880 : 660;
+    g.gain.setValueAtTime(i % 2 === 0 ? 0.3 : 0.18, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+    o.connect(g); g.connect(getMaster()); o.start(t); o.stop(t + 0.09);
+  }
+}
+
 const DEMOS: Partial<Record<VisualType, () => void>> = {
   waveform:          playSine,
   "waveform-compare": playWaveformCompare,
   "frequency-bar":   playFreqSweep,
   piano:             playCMajorScale,
   "piano-octave":    playCMajorScale,
-  "eq-curve":        playEqDemo,
+  "eq-curve":        playEqBright,
   "amplitude-dial":  playAmplitudeDemo,
   "bpm-grid":        playBpmGrid,
   "signal-chain":    playSignalChainDemo,
-  "stereo-field":    playStereoField,
+  "stereo-field":    playStereoWide,
   "note-lengths":    playNoteLengths,
   "scale-steps":     playScaleSteps,
   "chord-stack":     playChordStack,
   "rhythm-dots":     playRhythmDots,
   "vinyl-platter":   playVinylDemo,
   "mixer-channel":   playMixerDemo,
-  "camelot-wheel":   playCamelotDemo,
+  "camelot-wheel":   playHarmonicMix,
   "waveform-zoom":   playWaveformZoom,
   "headroom-meter":  playHeadroomDemo,
 };
@@ -323,17 +443,17 @@ const DEMO_LABELS: Partial<Record<VisualType, string>> = {
   "waveform-compare": "HEAR SINE → SQUARE → SAW",
   "frequency-bar":   "HEAR FREQUENCY SWEEP",
   piano:             "HEAR C-MAJOR SCALE",
-  "piano-octave":    "HEAR C-MAJOR SCALE",
-  "eq-curve":        "HEAR EQ IN ACTION",
+  "piano-octave":    "HEAR OCTAVE RELATIONSHIPS",
+  "eq-curve":        "HEAR EQ SWEEP",
   "amplitude-dial":  "HEAR VOLUME LEVELS",
-  "bpm-grid":        "HEAR 120 BPM",
+  "bpm-grid":        "HEAR THE BEAT GRID",
   "signal-chain":    "HEAR SIGNAL CHAIN",
   "stereo-field":    "HEAR STEREO PANNING",
   "note-lengths":    "HEAR NOTE LENGTHS",
   "scale-steps":     "HEAR MAJOR SCALE",
   "chord-stack":     "HEAR CHORD TYPES",
   "rhythm-dots":     "HEAR THIS RHYTHM",
-  "vinyl-platter":   "HEAR THE LOOP",
+  "vinyl-platter":   "HEAR A DRUM LOOP",
   "mixer-channel":   "HEAR FADER PULL",
   "camelot-wheel":   "HEAR HARMONIC MIX",
   "waveform-zoom":   "HEAR BEAT GRID",

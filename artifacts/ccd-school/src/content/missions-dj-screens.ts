@@ -25,6 +25,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Types of DJs",
       body: "Radio DJs broadcast pre-planned sets. Club DJs read the dance floor in real time. Turntablists use the deck as a musical instrument, scratching and cutting rhythmically.",
       keyFact: "Every DJ type shares one goal: connecting music to audience.",
+      visual: "vinyl-platter",
     },
     {
       kind: "interact",
@@ -79,6 +80,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The mixer's role",
       body: "The mixer is the creative heart: it controls volume faders, three-band EQ per channel, the crossfader for blending, and effects routing.",
       keyFact: "Mixer = where actual mixing happens — not just volume.",
+      visual: "mixer-channel",
     },
     {
       kind: "interact",
@@ -133,6 +135,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Auto-analysis power",
       body: "rekordbox analyses every imported track and detects BPM, musical key, waveform shape, and beat grid — automatically.",
       keyFact: "One import → BPM, key, waveform, grid all detected.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -187,6 +190,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Split cue monitoring",
       body: "Split cue divides your headphone output: left ear hears the master mix, right ear hears the incoming cued channel. Both simultaneously — the DJ's superpower.",
       keyFact: "Left = master mix. Right = incoming track. Listen to both.",
+      visual: "stereo-field",
     },
     {
       kind: "interact",
@@ -241,6 +245,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Gain staging",
       body: "Set channel gains so peaks hit +3 to +6 dB on the mixer meter — not clipping. The booth monitor is a separate speaker only the DJ hears, set independently from the main output.",
       keyFact: "Gain: not clipping, not too quiet. Booth ≠ main speakers.",
+      visual: "mixer-channel",
     },
     {
       kind: "interact",
@@ -295,11 +300,12 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "House and techno origins",
       body: "House emerged from Chicago's underground clubs in the late 1970s–80s (Frankie Knuckles, The Warehouse). Techno was developed in Detroit by the Belleville Three.",
       keyFact: "House = Chicago warehouse. Techno = Detroit. Both underground.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Think about why DJ culture matters to you",
+      sim: "song-structure",
+      prompt: "Map a DJ journey — where did your genre come from?",
     },
     {
       kind: "quiz",
@@ -349,6 +355,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Half-time feel explained",
       body: "Trap is technically 130–150 BPM but the kick and snare pattern creates a half-time feel — it grooves at 65–75 BPM. Dubstep works similarly at 138–142 BPM.",
       keyFact: "Half-time: groove feels half as fast as the technical BPM.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -403,6 +410,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Record and listen back",
       body: "Record every practice session. You cannot accurately evaluate your mixing while performing it. Listening back reveals mistakes you missed in the moment.",
       keyFact: "Record → listen back → identify one fix → repeat.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -458,6 +466,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Know your music deeply",
       body: "1000 tracks you know deeply is far more useful than 10,000 tracks you cannot navigate under pressure at 2am. Depth beats size every time.",
       keyFact: "Know 1000 deeply > own 10,000 half-known.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -512,6 +521,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Common grid errors",
       body: "Complex rhythms, tempo changes, or unusual time signatures can cause incorrect grid detection. Always verify grids for tracks you plan to SYNC — especially drum and bass (often detected at half BPM).",
       keyFact: "DnB at 85 BPM? Hit x2. The real tempo is 170.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -566,6 +576,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Compatible key moves",
       body: "Mixing 8A into 8A or 8B is seamless. Moving to 9A creates a subtle energy boost (a fifth relationship). Moving to 7A creates a small tension release.",
       keyFact: "Clockwise = energy lift. Same position = seamless blend.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -613,12 +624,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "My Tags system",
       body: "My Tags in rekordbox let you create custom colour-coded labels: Peak Hour, Warm Up, Closing, Request, New, Classic. One track can carry multiple tags.",
       keyFact: "One track, multiple tags. Filter by any of them instantly.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Filtering in real time",
       body: "During a set you can filter your entire library by any tag — showing only Peak Hour tracks, or only Closing tracks, instantly. Your Comment field stores personal transition notes.",
       keyFact: "Filter live → only relevant tracks visible under pressure.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -666,12 +679,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Playlist organisation strategy",
       body: "Organise playlists by genre (House, Techno, DnB), by energy level (Warm Up, Build, Peak, Wind Down), and by venue or event type for specific gigs.",
       keyFact: "Genre + energy + venue = complete playlist system.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "History and focused set playlists",
       body: "rekordbox automatically logs every track you play with timestamps. Prepare a focused 50–100 track playlist for each gig — narrow choices force deliberate curation.",
       keyFact: "History log auto-records every played track. Review it.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -726,11 +741,12 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Sources and strategy",
       body: "Follow labels you love — if you love four releases, trust the fifth. Study top DJ monthly charts to see what's cutting-edge. Mix and radio show sets reveal tracks before release.",
       keyFact: "Labels have a sound. Trust the ones you already love.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Plan your crate digging strategy",
+      sim: "browser-tour",
+      prompt: "Navigate the music library — find tracks by label",
     },
     {
       kind: "quiz",
@@ -781,6 +797,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Always bring two USBs",
       body: "Hardware fails at the worst possible moments. Export an identical copy to a second USB drive. One is your primary; the other is your insurance policy.",
       keyFact: "Two identical USBs. One fails → plug in the other. Never stop.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -835,11 +852,12 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Colour waveforms",
       body: "On Pioneer CDJ colour waveforms: blue/green represents sub and bass frequencies; red/orange represents midrange; yellow/bright represents high-frequency treble content.",
       keyFact: "Blue = bass. Yellow = treble. Read colour to read frequency.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Identify a breakdown from the waveform shape",
+      sim: "waveform-visualizer",
+      prompt: "Read the waveform — spot the breakdown and drop",
     },
     {
       kind: "quiz",
@@ -890,6 +908,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Pitch fader vs jog wheel",
       body: "The pitch fader changes the permanent BPM. The jog wheel nudges the track forward or back momentarily — adjusting beat phase without changing the tempo.",
       keyFact: "Pitch fader = speed. Jog wheel = position. Both are needed.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -945,6 +964,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "When to use SYNC",
       body: "SYNC is most useful when your hands are busy managing EQ transitions or effects. SYNC is least useful when a track has an incorrect or missing beat grid.",
       keyFact: "SYNC frees hands. Bad grid = SYNC fails. Learn manual too.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -999,6 +1019,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Where to set cue points",
       body: "Mark key structural moments: intro beat 1, first drop, main breakdown, outro start. These four positions let you navigate any track instantly under pressure.",
       keyFact: "Intro → drop → breakdown → outro. Four cues, total coverage.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -1053,6 +1074,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Bass clash explained",
       body: "Bass frequencies are the most powerful in a mix. Two full bass lines simultaneously create an overwhelming, muddy, distorted sound that destroys a mix. The bass swap prevents this.",
       keyFact: "Bass clash = muddiness and distortion. Avoid it always.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -1107,6 +1129,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Crossfader curve and style",
       body: "Sharp (battle) curve for cutting and scratching — immediate transition. Smooth (blend) curve for gradual long crossfades. Professional electronic music DJs rarely use the crossfader — channel faders and EQ do the work.",
       keyFact: "House/techno = channel faders. Hip-hop = crossfader cuts.",
+      visual: "mixer-channel",
     },
     {
       kind: "interact",
@@ -1161,6 +1184,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "DJ-friendly track structure",
       body: "Most dance music is structured for DJs. DJ tool tracks have long intros and outros (32 bars+) designed as mixing zones. Learn to identify them by waveform shape.",
       keyFact: "Long sparse intro + outro = DJ-friendly track. Use those zones.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -1215,6 +1239,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Echo out and reverb wash",
       body: "Trigger an echo effect on the last beat before a breakdown — it decays naturally into the new track. Or wash the outgoing track in reverb before cutting to mask the transition.",
       keyFact: "Echo out: musical bridge. Reverb wash: disguises the join.",
+      visual: "signal-chain",
     },
     {
       kind: "interact",
@@ -1269,6 +1294,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Loop roll",
       body: "A loop roll plays a short repeated section but when you release it, playback returns to where the track would be if it had been playing normally. A rhythmic performance effect, not a sustained hold.",
       keyFact: "Loop roll = temporary rhythmic stutter that snaps back.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -1317,17 +1343,19 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Reading body language",
       body: "Watch the dance floor: are people dancing or facing the bar? Grouped or dispersed? Energy rising or fading? Dance floor density and body language are your real-time feedback.",
       keyFact: "People facing the bar = they are not dancing. Read the signals.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Time of night matters",
       body: "10pm crowd is arriving, socialising, sober. 2am crowd is in peak mode. 4am crowd is winding down or in a second wind. Each phase needs different music and different energy.",
       keyFact: "10pm ≠ 2am ≠ 4am. Match the crowd's current state.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Assess what this crowd needs right now",
+      sim: "song-structure",
+      prompt: "Read the energy map — what phase is this crowd in?",
     },
     {
       kind: "quiz",
@@ -1371,12 +1399,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The energy arc",
       body: "Warm up (lower energy, early crowd) → Build (escalating energy) → Peak (maximum energy, best tracks) → Wind down (gradual resolution). Save your best for when the crowd is most receptive.",
       keyFact: "Peak too early → nowhere to go. Build to the peak.",
+      visual: "bpm-grid",
     },
     {
       kind: "concept",
       title: "Time management",
       body: "Know your slot length. Calculate roughly when each phase should start. A 2-hour set: 30 min warm-up, 45 min build, 30 min peak, 15 min wind-down.",
       keyFact: "Know your slot length. Plan each phase in advance.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -1431,6 +1461,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Key shifting on CDJ",
       body: "Master Tempo + semitone shift buttons allow real-time key adjustment without tempo change. A track 1 semitone away from perfect compatibility can be shifted to match.",
       keyFact: "Shift up/down 1–2 semitones max. Beyond that = artifacts.",
+      visual: "camelot-wheel",
     },
     {
       kind: "interact",
@@ -1485,11 +1516,12 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Key effect techniques",
       body: "Echo hold: trigger on the last beat before a breakdown — it decays naturally. Filter sweep: close a low-pass filter before the drop for a tunnel effect. Reverb wash: mask a transition join.",
       keyFact: "Restraint: one effect, right moment, maximum impact.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Apply a filter sweep before a breakdown",
+      sim: "mixer",
+      prompt: "Apply the filter sweep — close the LP filter into the drop",
     },
     {
       kind: "quiz",
@@ -1532,17 +1564,19 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The energy arc toolkit",
       body: "Energy tools: BPM, track intensity, arrangement density, effects, mixing style. Building: increase BPM and density gradually. Releasing: sudden drop to lower energy or breakdown — crowd exhales.",
       keyFact: "Peaks and valleys. Contrast makes peaks feel higher.",
+      visual: "bpm-grid",
     },
     {
       kind: "concept",
       title: "The double-drop",
       body: "A double-drop is when the outgoing and incoming tracks both hit their drops simultaneously — doubling the bass, doubling the percussion, maximising energy impact at one moment.",
       keyFact: "Double-drop = two drops at once. Rare but devastating.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Plan a build-peak-valley energy sequence",
+      sim: "arrangement",
+      prompt: "Map a build-peak-valley energy arc on the timeline",
     },
     {
       kind: "quiz",
@@ -1585,17 +1619,19 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Define your sound",
       body: "Every DJ has a sound — a musical identity. What genres? What BPM range? What energy range? What time slot? Clear identity = promoters know what to book you for.",
       keyFact: "Identity = recognisability = bookability. Be known for something.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Expanding gradually",
       body: "Expand to adjacent genres — not random jumps. A deep house DJ expands to tech house, then to techno. Authentic enthusiasm is audible. Play what you genuinely love.",
       keyFact: "Adjacent expansion. One step at a time. Authentic always.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Define your DJ sound and genre niche",
+      sim: "note-explorer",
+      prompt: "Explore genres — find your BPM range and key flavour",
     },
     {
       kind: "quiz",
@@ -1638,17 +1674,19 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Research and curate",
       body: "Research the event: audience type, time slot, context. Then curate 60–100 tracks specific to this gig. Not your full library — every track must be relevant to this specific night.",
       keyFact: "Know the gig. Curate for it. Not your full library.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Know your opening three tracks",
       body: "The first track is your statement of intent. Know your opening three tracks before you arrive. Everything after adapts to the room — but start with a clear intention.",
       keyFact: "First track = your statement of intent. Prepare it.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Plan an opening sequence for a warm-up set",
+      sim: "arrangement",
+      prompt: "Lay out your first three tracks — set your opening intention",
     },
     {
       kind: "quiz",
@@ -1691,17 +1729,19 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The train wreck and recovery",
       body: "A train wreck: two tracks playing wildly out of sync. Recovery: cut to one track immediately, reset. Cue the second track, beatmatch, bring it back in. Quick and confident.",
       keyFact: "Cut to one. Reset the other. Fast recovery erases mistakes.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Confidence over perfection",
       body: "The crowd does not know your plan. They only hear what happens. A confident recovery often goes unnoticed. Panic makes mistakes visible. Stay calm — recover — move on.",
       keyFact: "Confidence in recovery erases the mistake. Panic amplifies it.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
-      sim: "none",
-      prompt: "Practice a confident recovery from a train wreck",
+      sim: "beatmatch-trainer",
+      prompt: "Recover from a train wreck — cut, reset, re-cue, re-enter",
     },
     {
       kind: "quiz",
@@ -1752,6 +1792,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Reverb and phaser",
       body: "Reverb wash: high reverb feedback lets the reverb swell dramatically before you cut the dry signal. Phaser: slower phase-shift creates movement and depth for building texture without aggression.",
       keyFact: "Reverb wash: swell the reverb then cut. Dramatic and musical.",
+      visual: "signal-chain",
     },
     {
       kind: "interact",
@@ -1807,6 +1848,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Loop rolls as percussion",
       body: "Loop rolls create rhythmic stutter effects — use on snare or hi-hat sections for performance flair. Loop size matches musical feel: 1/8 or 1/16 bar for rapid stutter, 1 bar for a held effect.",
       keyFact: "Loop roll on snare = rhythmic stutter effect. Release = snaps back.",
+      visual: "bpm-grid",
     },
     {
       kind: "interact",
@@ -1861,6 +1903,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Safe shift range",
       body: "Shifting 1–2 semitones is generally undetectable. Beyond 2–3 semitones, pitch-shifting algorithms introduce audible artifacts — especially on vocals and acoustic instruments.",
       keyFact: "1–2 semitones = safe. Beyond 3 = artifacts become audible.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -1915,6 +1958,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Creative transition use",
       body: "During a transition: keep drums of both tracks, fade out melody of Track A while fading in melody of Track B. Rhythm is continuous — only the melodic content changes.",
       keyFact: "Keep both drums. Swap bass and melody. Seamless rhythm.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -1970,6 +2014,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Critical listening practice",
       body: "Focused critical listening — identify one specific thing to improve and one success per session. Specific beats vague. Write it down. Fix it in the next session.",
       keyFact: "One fix target + one success per session. Specific, not vague.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -2024,6 +2069,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "DVS platforms and requirements",
       body: "Serato DJ Pro dominates hip-hop and turntablist scenes. Traktor Scratch Pro is the Native Instruments solution. Both require a specific certified audio interface to handle timecode input.",
       keyFact: "DVS needs: timecode vinyl + certified audio interface + software.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -2071,12 +2117,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Promotional mix and brand",
       body: "Your promotional mix is your audio CV — 60–90 minutes of your sound at its best. Pair it with a consistent artist identity across all platforms: name, photo, social presence.",
       keyFact: "Promo mix = audio CV. Consistent identity = recognisable brand.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "Rates, rider, and reliability",
       body: "Research local market rates — don't undercut significantly or you devalue the scene. Your rider lists technical and personal requirements in writing before the gig. Show up on time every time.",
       keyFact: "Reliability + professionalism = repeat bookings. Talent is baseline.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",
@@ -2124,12 +2172,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "From competent to great",
       body: "Technical competence can be learned by most people willing to practice. Artistic identity — a genuinely unique perspective expressed through music selection and performance — is what makes a DJ unforgettable.",
       keyFact: "Competence = doing it right. Artistry = feeling something unique.",
+      visual: "waveform-zoom",
     },
     {
       kind: "concept",
       title: "The path forward",
       body: "Unique track selection from deep crate digging. Production skills for exclusive edits. Long-form thinking across months and years. Genuine community relationships. Let your sound evolve naturally.",
       keyFact: "Your own music = nobody else has it. Ultimate differentiation.",
+      visual: "waveform-zoom",
     },
     {
       kind: "interact",

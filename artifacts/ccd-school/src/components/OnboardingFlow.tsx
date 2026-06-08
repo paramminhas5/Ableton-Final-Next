@@ -544,6 +544,26 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
     router.push(`/learn/${firstLesson}`);
   };
 
+  /**
+   * Called when the PlacementTest completes with a chapter result.
+   * The placement path previously skipped mode/difficulty selection and never
+   * called setOnboarding — so onboardingDone stayed false and learnMode was
+   * never written. This handler fixes that: it defaults to CCD mode (most
+   * structured) for placement users, marks onboarding done, and routes to
+   * the correct chapter start.
+   */
+  const handlePlacementComplete = (firstMissionSlug: string) => {
+    if (!selectedWorld) return;
+    // Default placement users to CCD mode — they want structure since they
+    // indicated some existing knowledge but want guidance on where to start.
+    const mode: LearnMode = selectedMode ?? "ccd";
+    const difficulty: Difficulty = selectedDifficulty ?? "normal";
+    setOnboarding(selectedWorld, difficulty);
+    setLearnMode(mode);
+    onDone?.();
+    router.push(`/learn/${firstMissionSlug}`);
+  };
+
   // Visual step index for the indicator (step 0 = index 0, etc.)
   const visualStep =
     step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 4 : step + 1;
@@ -554,6 +574,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
       <PlacementTest
         world={selectedWorld ?? "fundamentals"}
         onSkip={() => { setShowPlacement(false); setStep(2); }}
+        onComplete={handlePlacementComplete}
       />
     );
   }
