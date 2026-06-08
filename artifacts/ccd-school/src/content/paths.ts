@@ -22,7 +22,7 @@ export const PATHS: LearningPath[] = [
     tagline: "How sound travels, vibrates and reaches your ear",
     description: "Sound as mechanical pressure waves, frequency and pitch, amplitude and decibels, timbre and the harmonic series — the physical foundation of everything you hear in music.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com",
+    source: "learningmusic.ableton.com — What Is Sound section",
     missionSlugs: ["what-is-sound", "frequency-pitch", "amplitude-volume", "timbre-tone"],
   },
   {
@@ -32,7 +32,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Waveforms, acoustics and how the brain processes sound",
     description: "The four fundamental waveforms, reverb and room acoustics, overtones and the harmonic series, equal-loudness contours and why your ears work the way they do.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com",
+    source: "learningmusic.ableton.com — What Is Sound section",
     missionSlugs: ["waveforms", "sound-in-space", "overtones-harmonics", "how-we-hear"],
   },
 
@@ -44,7 +44,7 @@ export const PATHS: LearningPath[] = [
     tagline: "The heartbeat of music — BPM, bars and groove",
     description: "What rhythm is, how tempo is measured in BPM, how music is divided into bars and time signatures, and what groove and feel mean in practice.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/make-beats",
+    source: "learningmusic.ableton.com — Make a Beat section",
     missionSlugs: ["what-is-rhythm", "tempo-bpm", "bars-time-signatures", "groove-feel"],
   },
   {
@@ -54,7 +54,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Syncopation, polyrhythm and the maths of rhythm",
     description: "Syncopation and the off-beat, polyrhythm and why it hypnotises, note values from whole notes to 32nds, and how all of this lives inside a DAW.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/make-beats",
+    source: "learningmusic.ableton.com — Make a Beat section",
     missionSlugs: ["syncopation", "polyrhythm", "note-values", "rhythm-in-production"],
   },
 
@@ -66,7 +66,7 @@ export const PATHS: LearningPath[] = [
     tagline: "The 12 notes, octaves, major and minor scales and intervals",
     description: "How pitch is named and organised, octaves and frequency doubling, the major scale pattern, the minor scale and its variants, and what an interval is.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/notes-and-scales",
+    source: "learningmusic.ableton.com — Play a Melody section",
     missionSlugs: ["notes-and-octaves", "major-scale", "minor-scale", "intervals"],
   },
   {
@@ -76,7 +76,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Pentatonic scales, writing hooks and training your ear",
     description: "The universal pentatonic scale, melodic contour and what makes a hook memorable, ear training fundamentals and interval recognition, transposition and the seven modes.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/notes-and-scales",
+    source: "learningmusic.ableton.com — Play a Melody section",
     missionSlugs: ["pentatonic-scales", "melody-writing", "ear-training", "transposition-modes"],
   },
 
@@ -88,7 +88,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Triads, chord types, progressions and tonal centres",
     description: "What a chord is and how voicing changes everything, major vs minor vs diminished vs augmented, chord progressions and Roman numerals, and what it means to be in a key.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/chords",
+    source: "learningmusic.ableton.com — Chords section",
     missionSlugs: ["what-are-chords", "chord-types", "chord-progressions", "keys-tonality"],
   },
   {
@@ -98,7 +98,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Tension, resolution, structure and active listening",
     description: "How tension and resolution drive music forward, chord pads and arpeggios in production, song structure from verse-chorus to drop, and how to listen actively as a producer.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com/chords",
+    source: "learningmusic.ableton.com — Chords section",
     missionSlugs: ["tension-resolution", "harmony-in-production", "song-structure", "listening-actively"],
   },
 
@@ -110,7 +110,7 @@ export const PATHS: LearningPath[] = [
     tagline: "DAWs, MIDI, digital audio and samples",
     description: "What a DAW replaces, MIDI as instructions vs audio as sound, sample rate and bit depth, samples vs loops and how copyright affects production.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com — Ableton Live manual",
+    source: "learningmusic.ableton.com — Making Music with a Computer section",
     missionSlugs: ["daw-explained", "midi-explained", "digital-audio", "samples-loops"],
   },
   {
@@ -120,7 +120,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Signal chain, effects, mixing basics and putting it all together",
     description: "The full signal chain from source to speaker, the four core effects (EQ, compression, reverb, delay), mixing as balancing, and how every concept from Fundamentals connects.",
     color: "bg-acid",
-    source: "learningmusic.ableton.com — Ableton Live manual",
+    source: "learningmusic.ableton.com — Making Music with a Computer section",
     missionSlugs: ["signal-chain", "effects-overview", "mixing-basics", "music-tech-integration"],
   },
 
@@ -244,7 +244,7 @@ export const PATHS: LearningPath[] = [
     tagline: "The Live mental model, browser, preferences and Session View",
     description: "What Ableton Live is and how it compares to other DAWs, the browser and file management, preferences and audio setup, and Session View — the clip launcher at the heart of Live's unique workflow.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 2: First Steps",
     missionSlugs: ["what-is-live", "interface-tour", "browser", "preferences", "files-projects", "session-view"],
   },
   {
@@ -254,7 +254,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Arrangement View, clips, tracks, scenes and workflow upgrades",
     description: "Arrangement View for timeline production, the MIDI vs Audio clip distinction, tracks and their types, Scenes and Follow Actions for live performance, Capture MIDI and Take Lanes for non-destructive recording.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 8: Clip View",
     missionSlugs: ["arrangement-view", "clips", "tracks", "scenes-follow", "capture-midi", "take-lanes"],
   },
 
@@ -266,7 +266,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Piano Roll, warping, recording, comping, slicing and MPE",
     description: "The MIDI Piano Roll in full detail, audio clips and clip properties, all warp modes and when to use each, recording audio with overdub and punch-in, comping takes, slicing to MIDI, MPE and microtuning, and warp modes deep dive.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 9: Editing MIDI Notes",
     missionSlugs: ["midi-piano-roll", "audio-clips", "warping", "recording-audio", "comping", "slicing", "mpe-tuning", "warp-modes-deep"],
   },
   {
@@ -276,7 +276,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Every built-in Live instrument from Drum Rack to Sampler",
     description: "Instruments Overview, Drum Rack as beat construction centre, Wavetable for modern synthesis, Operator for FM synthesis, Sampler and Simpler for sample-based production.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 24: Live Instruments",
     missionSlugs: ["instruments-overview", "drum-rack", "wavetable", "operator", "sampler-simpler"],
   },
   {
@@ -286,7 +286,7 @@ export const PATHS: LearningPath[] = [
     tagline: "EQ Eight, Compressor, Reverb, Delay, Saturator and Racks",
     description: "EQ Eight for surgical and broad tonal shaping, Compressor for dynamic control, Reverb and Delay for space, Saturator and Distortion for harmonic content, MIDI Effects as compositional tools, and Racks with Macros for flexible routing.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 17: Audio Effects",
     missionSlugs: ["eq-eight", "compressor", "reverb-delay", "saturator-distortion", "midi-effects", "racks-macros"],
   },
 
@@ -298,7 +298,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Mixer, sends, routing, automation and modulation",
     description: "The Live mixer and gain staging, Sends and Returns for shared effects buses, Groups and complex routing architectures, Automation lanes for parameter changes over time, and Modulation Lanes for LFO-style automation.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 14: Mixing",
     missionSlugs: ["the-mixer", "sends-returns", "groups-routing", "automation", "modulation-lanes"],
   },
   {
@@ -308,7 +308,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Sidechain, Max for Live, Glue Compressor and True Peak",
     description: "Sidechain compression and the pumping effect, Max for Live as an extension platform, the Glue Compressor for bus glue, and the Limiter with True Peak mode for mastering-safe output.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 17: Audio Effects",
     missionSlugs: ["sidechain", "max-for-live", "glue-compressor", "limiter-truepeak"],
   },
 
@@ -320,7 +320,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Push 3, MIDI mapping, Link, Push workflow and Macro Variations",
     description: "Push 3 as a standalone instrument, MIDI Mapping mode for custom control, Tempo Following for reactive tempo, Ableton Link in practice for multi-device sync, Push 3 Workflow deep dive, and Macro Variations for live performance.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 29: Controlling Live with MIDI and Key Remotes",
     missionSlugs: ["push-controllers", "midi-mapping", "tempo-following", "ableton-link-sync", "push3-workflow", "macro-variations"],
   },
   {
@@ -330,7 +330,7 @@ export const PATHS: LearningPath[] = [
     tagline: "CV Tools, Ableton Link, exporting and project management",
     description: "CV Tools for modular synthesis integration, Ableton Link protocol, export settings for streaming and distribution, Live Sets and Projects organisation, and Troubleshooting common audio and MIDI issues.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 5: Managing Files and Sets",
     missionSlugs: ["cv-tools", "ableton-link", "exporting", "live-sets-projects", "troubleshooting"],
   },
 
@@ -342,7 +342,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Sampler, Drift, Granulator III, physical modelling and more",
     description: "Sampler in full depth for advanced sample manipulation, Drift for analog-character synthesis, Granulator III for granular processing, Collision/Tension/Electric/Analog physical modelling instruments, Bass & Poli, Instrument Rack stacking, MIDI Effects Tour and External Instrument.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 24: Live Instruments",
     missionSlugs: ["sampler-deep", "drift", "granulator-iii", "collision-tension-electric", "bass-poli", "instrument-rack", "midi-effects-tour", "external-instrument"],
   },
   {
@@ -352,7 +352,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Meld, Drum Sampler, Hybrid Reverb and Roar",
     description: "The four new devices introduced in Live 12: Meld for harmonic layering, Drum Sampler for next-generation drum sound design, Hybrid Reverb for algorithmic and convolution reverb, and Roar for analog-character saturation.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 17: Audio Effects",
     missionSlugs: ["meld", "drum-sampler", "hybrid-reverb", "roar"],
   },
   {
@@ -362,7 +362,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Stem separation, MIDI transforms, Scale Awareness and more",
     description: "Stem Separation for isolating elements of any audio file, MIDI Transformations for generative composition, Scale Awareness for key-locked production, Sound Similarity Search, Comping Flow improvements, Groove Pool, Linked-Track Editing, Push 3 Standalone mode, CPU and audio optimisation, and Accessibility features.",
     color: "bg-sun",
-    source: "Ableton Live 12 Reference Manual",
+    source: "Ableton Live 12 Reference Manual — Chapter 9: Editing MIDI Notes",
     missionSlugs: ["stem-separation", "midi-transforms", "scale-awareness", "sound-similarity", "comping-flow", "groove-pool", "linked-track-editing", "push3-standalone", "cpu-audio-setup", "accessibility-features"],
   },
 
@@ -374,7 +374,7 @@ export const PATHS: LearningPath[] = [
     tagline: "What sound is — before you touch a synth",
     description: "Pressure waves, pitch vs amplitude, timbre, harmonics and noise. The physical vocabulary every synth knob ultimately changes.",
     color: "bg-sun",
-    source: "learningsynths.ableton.com",
+    source: "learningsynths.ableton.com — Sound chapter",
     missionSlugs: ["synth-what-is-sound", "synth-pitch-vs-amplitude", "synth-timbre", "synth-harmonics", "synth-noise"],
   },
   {
@@ -384,7 +384,7 @@ export const PATHS: LearningPath[] = [
     tagline: "Pick a wave, blend it, filter it, give it an envelope",
     description: "Sine, saw, square and triangle oscillators. Mixing and detuning two oscillators. Low-pass and high-pass filters. Amp and filter envelopes — the four-stage ADSR that turns a buzz into a pluck, a pad or a bass.",
     color: "bg-sun",
-    source: "learningsynths.ableton.com",
+    source: "learningsynths.ableton.com — Oscillators chapter · Filters chapter · Envelopes chapter",
     missionSlugs: ["synth-oscillators", "synth-mixing-oscillators", "synth-detune-unison", "synth-filters", "synth-amp-envelope", "synth-filter-envelope", "synth-amp-vs-filter-env"],
   },
   {
@@ -394,7 +394,7 @@ export const PATHS: LearningPath[] = [
     tagline: "LFOs, modulation, FM, effects and building your own patch",
     description: "LFOs for vibrato, wobble and tremolo. Modulation routing. FM basics. Chorus/delay/reverb on synths. Anatomy of bass, lead, pad and pluck presets — then build your own from scratch.",
     color: "bg-sun",
-    source: "learningsynths.ableton.com",
+    source: "learningsynths.ableton.com — LFOs chapter · Making a Full Patch chapter",
     missionSlugs: ["synth-lfo", "synth-modulation-routing", "synth-fm-basics", "synth-effects", "synth-preset-anatomy", "synth-build-your-own"],
   },
 ];
