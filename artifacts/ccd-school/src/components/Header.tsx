@@ -349,17 +349,17 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const [toast, setToast] = useState<string | null>(null);
 
   const toggle = useCallback(() => {
-    const next = learnMode === "ccd" ? "classic" : "ccd";
+    const next = learnMode === "flow" ? "classic" : "flow";
     setLearnMode(next);
     setToast(
-      next === "ccd"
-        ? "🗺 PATH MODE — sequential, hearts on"
-        : "🔓 EXPLORE MODE — all lessons open"
+      next === "flow"
+        ? "🌊 FLOW MODE — locked in, hearts on, sequential"
+        : "🔓 FREE MODE — all lessons open"
     );
     setTimeout(() => setToast(null), 2800);
   }, [learnMode, setLearnMode]);
 
-  const isPath = learnMode === "ccd";
+  const isPath = learnMode === "flow";
 
   return (
     <div className="relative">

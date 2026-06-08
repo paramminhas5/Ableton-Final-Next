@@ -16,11 +16,11 @@ interface Props {
 
 export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const { learnMode, setLearnMode } = useLearnMode();
-  const isPath = learnMode === "ccd";
+  const isPath = learnMode === "flow";
   const [justSwitched, setJustSwitched] = useState(false);
 
   const switchMode = () => {
-    setLearnMode(isPath ? "classic" : "ccd");
+    setLearnMode(isPath ? "classic" : "flow");
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
   };
@@ -40,7 +40,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
         <div className="grid grid-cols-2 gap-0">
           {/* PATH MODE */}
           <button
-            onClick={() => !isPath && setLearnMode("ccd")}
+            onClick={() => !isPath && setLearnMode("flow")}
             className={`p-5 text-left transition-all brutal-border border-b-0 border-l-0 border-t-0
               ${isPath
                 ? "bg-acid text-ink cursor-default"

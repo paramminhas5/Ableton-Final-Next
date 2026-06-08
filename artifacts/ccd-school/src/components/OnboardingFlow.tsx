@@ -17,7 +17,7 @@ import { pathsByWorld } from "@/content/paths";
 import { PlacementTest } from "@/components/PlacementTest";
 
 type World = "fundamentals" | "dj" | "producer";
-type LearnMode = "ccd" | "classic";
+type LearnMode = "flow" | "classic";
 type Difficulty = "normal" | "hard";
 
 const WORLD_ETAS: Record<string, string> = {
@@ -240,7 +240,7 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
       <div className="space-y-4">
         {/* PATH MODE */}
         <button
-          onClick={() => onPick("ccd")}
+          onClick={() => onPick("flow")}
           className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun transition-colors"
         >
           <div className="flex items-start gap-4">
@@ -417,7 +417,7 @@ function StepOverview({
           ← back
         </button>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">
-          {mode === "ccd" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
+          {mode === "flow" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
         </div>
         <h1 className="font-display text-5xl leading-none">
           HERE&apos;S WHAT<br />
@@ -487,7 +487,7 @@ function StepOverview({
         </div>
         <div className="flex items-center gap-3 font-mono text-sm">
           <span className="text-acid font-bold shrink-0">✓</span>
-          Mode: <strong>{mode === "ccd" ? "🗺 Path Mode" : "🔓 Explore Mode"}</strong>
+          Mode: <strong>{mode === "flow" ? "🗺 Path Mode" : "🔓 Explore Mode"}</strong>
         </div>
         {mode === "classic" && (
           <div className="flex items-center gap-3 font-mono text-sm">
@@ -541,7 +541,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   const router = useRouter();
 
   // total steps: CCD skips difficulty → 4 real steps visible; Classic has 5
-  const totalSteps = selectedMode === "ccd" ? 4 : 5;
+  const totalSteps = selectedMode === "flow" ? 4 : 5;
 
   const handleExperiencePick = (exp: "none" | "some" | "lots") => {
     setExperience(exp);
@@ -561,7 +561,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
 
   const handleModePick = (m: LearnMode) => {
     setSelectedMode(m);
-    if (m === "ccd") {
+    if (m === "flow") {
       // Skip difficulty step for CCD — go straight to overview
       setStep(4);
     } else {
@@ -576,7 +576,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
 
   const handleStart = () => {
     if (!selectedWorld || !selectedMode) return;
-    const difficulty = selectedMode === "ccd" ? "normal" : selectedDifficulty;
+    const difficulty = selectedMode === "flow" ? "normal" : selectedDifficulty;
     setOnboarding(selectedWorld, difficulty);
     setLearnMode(selectedMode);
     const firstLesson = WORLDS.find((w) => w.id === selectedWorld)!.firstLesson;
@@ -596,7 +596,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
     if (!selectedWorld) return;
     // Default placement users to PATH mode — they want structure since they
     // indicated some existing knowledge but want guidance on where to start.
-    const mode: LearnMode = selectedMode ?? "ccd";
+    const mode: LearnMode = selectedMode ?? "flow";
     const difficulty: Difficulty = selectedDifficulty ?? "normal";
     setOnboarding(selectedWorld, difficulty);
     setLearnMode(mode);
@@ -650,10 +650,10 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
           <StepOverview
             world={selectedWorld}
             mode={selectedMode}
-            difficulty={selectedMode === "ccd" ? "normal" : selectedDifficulty}
+            difficulty={selectedMode === "flow" ? "normal" : selectedDifficulty}
             experience={experience}
             onStart={handleStart}
-            onBack={() => setStep(selectedMode === "ccd" ? 2 : 3)}
+            onBack={() => setStep(selectedMode === "flow" ? 2 : 3)}
           />
         )}
       </div>

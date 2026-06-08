@@ -1,28 +1,42 @@
 "use client";
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
-export type LearnMode = "classic" | "ccd";
+export type LearnMode = "flow" | "classic";
 // Mode labels (public-facing):
-//   "ccd"     → PATH MODE   — sequential, hearts on, Duolingo-style
-//   "classic" → EXPLORE MODE — all lessons open, no hearts, free-browse
-// Mode/difficulty: only two axes now — learnMode (ccd/classic) and progress.difficulty (normal/hard)
+//   "flow"    → FLOW MODE    — sequential, hearts on, Duolingo-style
+//   "classic" → FREE MODE    — all lessons open, no hearts, free-browse
+// Mode/difficulty: only two axes now — learnMode (flow/classic) and progress.difficulty (normal/hard)
 // The old Beginner/Intermediate/Advanced axis is removed.
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
-  ccd:     { name: "PATH MODE",    icon: "🗺",  tagline: "Sequential · Hearts on · XP gated" },
-  classic: { name: "EXPLORE MODE", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
+  flow:    { name: "Flow Mode", icon: "🌊", tagline: "Sequential · Hearts on · XP gated" },
+  classic: { name: "Free Mode", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
 };
 
 const MODE_KEY = "ccd.learnMode";
 
+/**
+ * Normalises legacy "ccd" value to "flow".
+ * Any stored "classic" value is preserved as-is.
+ * Called before any component receives the mode value.
+ */
+export function normaliseCcdToFlow(raw: string | null): LearnMode {
+  if (raw === "ccd") return "flow";
+  if (raw === "classic") return "classic";
+  return "flow"; // new default is "flow"
+}
+
 function getInitialMode(): LearnMode {
-  if (typeof window === "undefined") return "classic";
+  if (typeof window === "undefined") return "flow";
   try {
-    const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
-    return saved === "ccd" || saved === "classic" ? saved : "classic";
+    const raw = localStorage.getItem(MODE_KEY);
+    const normalised = normaliseCcdToFlow(raw);
+    // Write back immediately so "ccd" never persists beyond this read
+    if (raw !== normalised) localStorage.setItem(MODE_KEY, normalised);
+    return normalised;
   } catch {
-    return "classic";
+    return "flow";
   }
 }
 
@@ -34,7 +48,7 @@ type LearnModeContextType = {
 };
 
 const LearnModeContext = createContext<LearnModeContextType>({
-  learnMode: "classic",
+  learnMode: "flow",
   setLearnMode: () => {},
 });
 
