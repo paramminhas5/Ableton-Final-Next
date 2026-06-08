@@ -5,6 +5,7 @@
  * Chapter banners break up sections. Nodes pulse when available.
  */
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import type { ReactNode } from "react";
 // Note: LessonNode uses <a> tags for simplicity; Link is used elsewhere in this file
@@ -37,22 +38,25 @@ interface PathNode {
 
 const WORLD_META: Record<string, {
   bg: string; accent: string; nodeAvail: string; nodeDone: string;
-  emoji: string; title: string; tagline: string;
+  emoji: string; title: string; tagline: string; heroImage: string;
 }> = {
   fundamentals: {
     bg: "bg-bone", accent: "bg-acid text-ink", nodeAvail: "bg-acid text-ink border-acid",
     nodeDone: "bg-ink text-bone border-ink", emoji: "🎵", title: "Fundamentals",
     tagline: "Sound · Rhythm · Melody · Harmony · Music Tech",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
   },
   dj: {
     bg: "bg-ink", accent: "bg-volt text-ink", nodeAvail: "bg-volt text-ink border-volt",
     nodeDone: "bg-volt/20 text-bone border-volt", emoji: "🎧", title: "DJ World",
     tagline: "Setup · Library · The Mix · Performance · Mastery",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
   },
   producer: {
     bg: "bg-bone", accent: "bg-sun text-ink", nodeAvail: "bg-sun text-ink border-sun",
     nodeDone: "bg-ink text-bone border-ink", emoji: "🎛", title: "Producer",
     tagline: "First Contact · Sound & MIDI · Mix · Performance · Advanced",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
   },
 };
 
@@ -228,35 +232,51 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   return (
     <div className={`min-h-screen ${meta.bg}`}>
       {/* World header */}
-      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} p-5`}>
-        <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-2">← ALL WORLDS</Link>
-        <div className="flex items-center gap-3">
-          <span className="text-4xl">{meta.emoji}</span>
-          <div>
-            <h1 className="font-display text-4xl leading-none">{meta.title}</h1>
-            <p className="font-mono text-xs opacity-70 mt-0.5">{meta.tagline}</p>
+      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} p-5 relative overflow-hidden`}>
+        {/* Hero image — producer uses sun bg so skip image to keep text readable */}
+        {worldSlug !== "producer" && (
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src={meta.heroImage}
+              alt=""
+              fill
+              priority
+              className="object-cover opacity-20 mix-blend-multiply"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-current/20" />
           </div>
-        </div>
-        {/* Progress bar */}
-        <div className="mt-4 space-y-1">
-          <div className="h-3 brutal-border bg-bone/30 overflow-hidden">
-            <div className="h-full bg-ink/70 transition-all duration-700" style={{ width: `${pct}%` }} />
+        )}
+        <div className="relative z-10">
+          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-2">← ALL WORLDS</Link>
+          <div className="flex items-center gap-3">
+            <span className="text-4xl">{meta.emoji}</span>
+            <div>
+              <h1 className="font-display text-4xl leading-none">{meta.title}</h1>
+              <p className="font-mono text-xs opacity-70 mt-0.5">{meta.tagline}</p>
+            </div>
           </div>
-          <div className="flex justify-between font-mono text-[9px] uppercase opacity-60">
-            <span>{done}/{total} lessons</span>
-            <span>{pct}% complete</span>
+          {/* Progress bar */}
+          <div className="mt-4 space-y-1">
+            <div className="h-3 brutal-border bg-bone/30 overflow-hidden">
+              <div className="h-full bg-ink/70 transition-all duration-700" style={{ width: `${pct}%` }} />
+            </div>
+            <div className="flex justify-between font-mono text-[9px] uppercase opacity-60">
+              <span>{done}/{total} lessons</span>
+              <span>{pct}% complete</span>
+            </div>
           </div>
-        </div>
-        {/* Stats pills */}
-        <div className="flex flex-wrap gap-2 mt-3">
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            🔥 {progress.streakDays} day streak
-          </div>
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            {progress.xp} XP · {rank.name}
-          </div>
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            💎 {progress.gems} gems
+          {/* Stats pills */}
+          <div className="flex flex-wrap gap-2 mt-3">
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              🔥 {progress.streakDays} day streak
+            </div>
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              {progress.xp} XP · {rank.name}
+            </div>
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              💎 {progress.gems} gems
+            </div>
           </div>
         </div>
       </div>

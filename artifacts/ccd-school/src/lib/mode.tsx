@@ -1,12 +1,17 @@
 "use client";
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 export type LearnMode = "classic" | "ccd";
 // Mode labels (public-facing):
 //   "ccd"     → PATH MODE   — sequential, hearts on, Duolingo-style
 //   "classic" → EXPLORE MODE — all lessons open, no hearts, free-browse
-// Mode/difficulty: only two axes now — learnMode (ccd/classic) and progress.difficulty (normal/hard)
-// The old Beginner/Intermediate/Advanced axis is removed.
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
@@ -15,16 +20,6 @@ export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; taglin
 };
 
 const MODE_KEY = "ccd.learnMode";
-
-function getInitialMode(): LearnMode {
-  if (typeof window === "undefined") return "classic";
-  try {
-    const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
-    return saved === "ccd" || saved === "classic" ? saved : "classic";
-  } catch {
-    return "classic";
-  }
-}
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
@@ -39,7 +34,21 @@ const LearnModeContext = createContext<LearnModeContextType>({
 });
 
 export function LearnModeProvider({ children }: { children: ReactNode }) {
-  const [learnMode, setLearnModeState] = useState<LearnMode>(getInitialMode);
+  // Always start with "classic" on the server so SSR HTML matches the
+  // initial client render (no hydration mismatch). We then sync from
+  // localStorage in a useEffect (client-only) immediately after mount.
+  const [learnMode, setLearnModeState] = useState<LearnMode>("classic");
+
+  // Hydrate from localStorage after first paint — runs client-side only.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
+      const resolved: LearnMode =
+        saved === "ccd" || saved === "classic" ? saved : "classic";
+      setLearnModeState(resolved);
+      document.documentElement.setAttribute("data-learn-mode", resolved);
+    } catch {}
+  }, []);
 
   const setLearnMode = useCallback((m: LearnMode) => {
     setLearnModeState(m);

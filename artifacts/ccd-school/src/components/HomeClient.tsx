@@ -13,12 +13,13 @@ import { rankFor } from "@/lib/ranks";
 import { useState } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 
-// ─── FAL AI generated images ──────────────────────────────────────────────────
+// ─── FAL AI generated images (v2 — higher contrast, dark backgrounds) ─────────
 const IMAGES = {
-  hero:         "https://v3b.fal.media/files/b/0a9d852a/6oC38Qc77l_V_FUOAgmNJ.jpg",
-  fundamentals: "https://v3b.fal.media/files/b/0a9d852c/4cBbZJSrw81eA5b0qfQuA.jpg",
-  dj:           "https://v3b.fal.media/files/b/0a9d852c/FKRbD_L9z5M74j5rMSykT.jpg",
-  producer:     "https://v3b.fal.media/files/b/0a9d852c/fkQMKnPjSktmYsoXjFu6k.jpg",
+  hero:         "https://v3b.fal.media/files/b/0a9d8573/t3x6Pf5Z8pjp4mqwCqgTO.jpg",
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  // Producer uses dark modular synth image — shown only on ink-bg cards, NOT on sun-bg
+  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
 } as const;
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
@@ -242,16 +243,18 @@ function Dashboard() {
               return (
                 <Link key={world} href={meta.to}
                   className={`brutal-border ${meta.color} p-4 brutal-press block transition-opacity hover:opacity-90 relative overflow-hidden`}>
-                  {/* World banner image */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <Image
-                      src={IMAGES[world]}
-                      alt=""
-                      fill
-                      className="object-cover opacity-10 mix-blend-multiply"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
+                  {/* Image only on dark-bg cards — producer (sun/yellow) stays clean for text legibility */}
+                  {world !== "producer" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Image
+                        src={IMAGES[world]}
+                        alt=""
+                        fill
+                        className="object-cover opacity-10 mix-blend-multiply"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
+                  )}
                   <div className="relative z-10">
                     <div className="opacity-60 mb-2">{meta.icon}</div>
                     <div className="font-display text-xl">{meta.label}</div>
@@ -370,16 +373,18 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
               const totalMissions = paths.flatMap((p) => p.missionSlugs).length;
               return (
                 <Link key={world} href={meta.to} className={`brutal-border ${meta.color} p-5 md:p-7 flex items-start justify-between gap-4 brutal-press brutal-shadow block relative overflow-hidden`}>
-                  {/* World banner image */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <Image
-                      src={IMAGES[world]}
-                      alt=""
-                      fill
-                      className="object-cover opacity-15 mix-blend-multiply"
-                      sizes="(max-width: 768px) 100vw, 80vw"
-                    />
-                  </div>
+                  {/* Image only on dark-bg cards — producer (sun/yellow) stays clean for legibility */}
+                  {world !== "producer" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Image
+                        src={IMAGES[world]}
+                        alt=""
+                        fill
+                        className="object-cover opacity-15 mix-blend-multiply"
+                        sizes="(max-width: 768px) 100vw, 80vw"
+                      />
+                    </div>
+                  )}
                   <div className="relative z-10">
                     <div className="mb-3 opacity-70">{meta.icon}</div>
                     <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{chs.length} CHAPTERS · {paths.length} PATHS · {totalMissions} MISSIONS</div>

@@ -6,11 +6,11 @@ import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
 import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 
-// ─── FAL AI generated world banner images ─────────────────────────────────────
+// ─── FAL AI generated world banner images (v2) ───────────────────────────────
 const WORLD_IMAGES: Record<string, string> = {
-  fundamentals: "https://v3b.fal.media/files/b/0a9d852c/4cBbZJSrw81eA5b0qfQuA.jpg",
-  dj:           "https://v3b.fal.media/files/b/0a9d852c/FKRbD_L9z5M74j5rMSykT.jpg",
-  producer:     "https://v3b.fal.media/files/b/0a9d852c/fkQMKnPjSktmYsoXjFu6k.jpg",
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
 };
 
 type WorldId = "fundamentals" | "dj" | "producer";
@@ -59,17 +59,20 @@ export function WorldsPageClient() {
           return (
             <Link key={world} href={meta.to} className="block brutal-border brutal-press overflow-hidden">
               <div className={`${meta.heroColor} p-6 md:p-8 relative overflow-hidden`}>
-                {/* FAL AI world banner */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <Image
-                    src={WORLD_IMAGES[world]}
-                    alt=""
-                    fill
-                    className="object-cover opacity-20 mix-blend-multiply"
-                    sizes="(max-width: 768px) 100vw, 80vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-current/30 to-transparent opacity-40" />
-                </div>
+                {/* Image — skipped on producer (sun/yellow bg) to keep text readable.
+                    Fundamentals (acid) and DJ (ink) both have enough contrast with multiply blend. */}
+                {world !== "producer" && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <Image
+                      src={WORLD_IMAGES[world]}
+                      alt=""
+                      fill
+                      className="object-cover opacity-20 mix-blend-multiply"
+                      sizes="(max-width: 768px) 100vw, 80vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-current/30 to-transparent opacity-40" />
+                  </div>
+                )}
                 <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="font-mono text-[9px] uppercase opacity-60 mb-1">WORLD · {stats.chapters} CHAPTERS · {stats.paths} PATHS · {stats.total} MISSIONS</div>
