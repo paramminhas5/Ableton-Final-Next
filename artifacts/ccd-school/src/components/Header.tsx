@@ -192,7 +192,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
               <div className="font-display text-base mb-1">♥ Hearts</div>
               <div className="font-mono text-[10px] leading-relaxed opacity-70">
                 You have <strong>{count}/{MAX_HEARTS}</strong> hearts.
-                Each wrong answer in <strong>Path Mode</strong> costs 1 heart.
+                Each wrong answer in <strong>PATH MODE</strong> costs 1 heart.
               </div>
               {!full && (
                 <div className="font-mono text-[10px] mt-1.5 opacity-60">
@@ -342,7 +342,7 @@ function XpStreakBadge() {
 
 
 
-// ─── ModeTogglePill — 🔒 PATH / 🗺 EXPLORE ────────────────────────────────────
+// ─── ModeTogglePill — PATH MODE / EXPLORE MODE ───────────────────────────────
 
 function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const { learnMode, setLearnMode } = useLearnMode();
@@ -353,8 +353,8 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
     setLearnMode(next);
     setToast(
       next === "ccd"
-        ? "🔒 Path Mode — sequential, hearts on"
-        : "🗺 Explorer Mode — all lessons open"
+        ? "🗺 PATH MODE — sequential, hearts on"
+        : "🔓 EXPLORE MODE — all lessons open"
     );
     setTimeout(() => setToast(null), 2800);
   }, [learnMode, setLearnMode]);
@@ -366,16 +366,24 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
       <button
         onClick={toggle}
         title={isPath
-          ? "Path Mode — click to switch to Explorer"
-          : "Explorer Mode — click to switch to Path"}
-        className={`brutal-border px-2.5 py-1 font-mono text-[9px] uppercase brutal-press transition-all flex items-center gap-1.5
-          ${isPath ? "bg-volt text-bone" : "bg-bone text-ink hover:bg-sun"}`}
+          ? "PATH MODE — click to switch to Explore Mode"
+          : "EXPLORE MODE — click to switch to Path Mode"}
+        aria-label={isPath ? "Currently in PATH MODE. Click to switch to EXPLORE MODE" : "Currently in EXPLORE MODE. Click to switch to PATH MODE"}
+        className={`brutal-border px-3 py-1.5 font-mono text-[10px] uppercase brutal-press transition-all flex items-center gap-2 font-bold
+          ${isPath
+            ? "bg-acid text-ink hover:bg-sun border-2"
+            : "bg-bone text-ink hover:bg-sun border-2"}`}
       >
-        <span>{isPath ? "🔒" : "🗺"}</span>
-        {!compact && <span>{isPath ? "PATH" : "EXPLORE"}</span>}
+        <span className="text-sm">{isPath ? "🗺" : "🔓"}</span>
+        {!compact && (
+          <span className="tracking-wider">{isPath ? "PATH" : "EXPLORE"}</span>
+        )}
+        {!compact && (
+          <span className="opacity-40 text-[8px]">▼</span>
+        )}
       </button>
       {toast && (
-        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-3 py-2 font-mono text-[10px] uppercase whitespace-nowrap brutal-shadow animate-fade-in">
+        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-4 py-2.5 font-mono text-[10px] uppercase whitespace-nowrap brutal-shadow animate-fade-in">
           {toast}
         </div>
       )}
@@ -547,7 +555,10 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           <div>
             <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Learning Mode</div>
             <div className="font-mono text-[10px] uppercase font-bold">
-              {learnMode === "ccd" ? "🔒 Path Mode" : "🗺 Explorer Mode"}
+              {learnMode === "ccd" ? "🗺 PATH MODE" : "🔓 EXPLORE MODE"}
+            </div>
+            <div className="font-mono text-[8px] uppercase opacity-50 mt-0.5 leading-tight">
+              {learnMode === "ccd" ? "Sequential · hearts on" : "All open · no hearts"}
             </div>
           </div>
           <ModeTogglePill compact />

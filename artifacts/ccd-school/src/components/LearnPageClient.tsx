@@ -4,6 +4,7 @@ import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
+import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 import { useState } from "react";
 
 type WorldTab = "fundamentals" | "dj" | "producer";
@@ -15,7 +16,7 @@ const WORLD_LABELS: Record<WorldTab, { label: string; emoji: string; active: str
 
 export function LearnPageClient() {
   const { progress } = useProgress();
-  const { learnMode, setLearnMode } = useLearnMode();
+  const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const [activeWorld, setActiveWorld] = useState<WorldTab>("fundamentals");
 
@@ -50,18 +51,12 @@ export function LearnPageClient() {
         <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// PATHS — ALL CHAPTERS · ALL PATHS</div>
           <h1 className="font-display text-5xl leading-none">PATHS</h1>
-          <div className="flex gap-2 mt-4 flex-wrap">
-            <button onClick={() => setLearnMode("classic")}
-              className={`brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press ${learnMode === "classic" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-              {learnMode === "classic" ? "● " : ""}CLASSIC — All open
-            </button>
-            <button onClick={() => setLearnMode("ccd")}
-              className={`brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press ${learnMode === "ccd" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-              {learnMode === "ccd" ? "● " : ""}CCD MODE — Sequential ❤️ {learnMode === "ccd" ? `${progress.hearts}` : ""}
-            </button>
-          </div>
         </div>
       </header>
+
+      {/* Prominent mode switcher */}
+      <ModeSwitcherBanner variant="bar" />
+
       <div className="sticky top-0 z-10 bg-bone brutal-border border-x-0 border-t-0">
         <div className="max-w-5xl mx-auto px-4 flex gap-0">
           {(["fundamentals", "dj", "producer"] as WorldTab[]).map((w) => {

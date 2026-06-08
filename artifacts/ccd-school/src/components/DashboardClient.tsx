@@ -485,7 +485,7 @@ export function DashboardClient() {
     return [...progress.badges].reverse().slice(0, 3);
   }, [progress.badges]);
 
-  const modeLabel = learnMode === "ccd" ? "🔒 Path Mode" : "🗺 Explorer Mode";
+  const modeLabel = learnMode === "ccd" ? "🗺 Path Mode" : "🔓 Explore Mode";
 
   // Fix #5: hydration guard — progress reads from localStorage, which is
   // unavailable during SSR. Show skeleton for the first render tick.

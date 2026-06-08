@@ -3,6 +3,7 @@ import Link from "next/link";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
+import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 
 type WorldId = "fundamentals" | "dj" | "producer";
 const WORLD_META: Record<WorldId, { title: string; emoji: string; tagline: string; color: string; heroColor: string; description: string; to: string }> = {
@@ -38,6 +39,10 @@ export function WorldsPageClient() {
           <p className="font-mono text-sm mt-3 opacity-70 max-w-xl leading-relaxed">Start with Fundamentals — it unlocks everything. Then specialise as a DJ, a Producer, or both.</p>
         </div>
       </header>
+
+      {/* Prominent mode switcher */}
+      <ModeSwitcherBanner variant="bar" />
+
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 pb-24">
         {(["fundamentals", "dj", "producer"] as WorldId[]).map((world) => {
           const meta = WORLD_META[world];

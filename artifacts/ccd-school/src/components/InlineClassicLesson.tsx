@@ -161,8 +161,8 @@ export function InlineClassicLesson({
           </Link>
           {/* Mode badge */}
           <div className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase font-bold
-            ${mode === "explore" ? "bg-bone text-ink" : "bg-sun text-ink"}`}>
-            {mode === "explore" ? "🗺 Explorer Mode" : "🔒 Path Mode"}
+            ${mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"}`}>
+            {mode === "explore" ? "🔓 Explore Mode" : "🗺 Path Mode"}
           </div>
           <div className="flex-1" />
           {internalHardMode && (

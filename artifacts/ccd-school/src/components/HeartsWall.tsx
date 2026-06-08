@@ -41,7 +41,7 @@ export function HeartsWall() {
       </div>
       <div className="font-display text-4xl">OUT OF HEARTS</div>
       <div className="font-mono text-sm leading-relaxed opacity-90">
-        You've used all your hearts. Wrong answers in CCD mode cost a heart — review your answers
+        You&apos;ve used all your hearts. Wrong answers in PATH MODE cost a heart — review your answers
         carefully before submitting.
       </div>
       {secs > 0 ? (
@@ -69,7 +69,7 @@ export function HeartsWall() {
           onClick={() => setLearnMode("classic")}
           className="brutal-border bg-bone text-ink px-4 py-2 font-mono text-xs uppercase brutal-press"
         >
-          Switch to Classic mode →
+          Switch to Explore Mode →
         </button>
       </div>
       <div className="font-mono text-[10px] opacity-70 leading-relaxed">
