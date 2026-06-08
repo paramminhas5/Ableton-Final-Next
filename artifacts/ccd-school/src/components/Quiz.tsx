@@ -3,6 +3,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { XP_PER_CORRECT, XP_PERFECT_BONUS } from "@/lib/ranks";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import type { QuizQ } from "@/content/types";
+import Image from "next/image";
+
+const COMPLETION_BG = "https://v3b.fal.media/files/b/0a9d85ab/gJ3EpG-ChAh0FOsmJgoNq.jpg";
 
 export interface QuizMeta {
   missionTitle: string;
@@ -32,12 +35,12 @@ function scrollToCenter(el: HTMLElement | null) {
 }
 
 function Confetti() {
-  const pieces = Array.from({ length: 28 }, (_, i) => ({
-    left: `${(i / 28) * 100}%`,
-    delay: `${(i * 0.05).toFixed(2)}s`,
+  const pieces = Array.from({ length: 40 }, (_, i) => ({
+    left: `${(i / 40) * 100}%`,
+    delay: `${(i * 0.04).toFixed(2)}s`,
     dur: `${(0.8 + (i % 5) * 0.1).toFixed(1)}s`,
     color: ["#CDFF00", "#FF2D2D", "#7B2FFF", "#FFB800", "#111111"][i % 5],
-    size: `${7 + (i % 4)}px`,
+    size: `${8 + (i % 5)}px`,
   }));
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 h-64 overflow-hidden" aria-hidden>
@@ -251,23 +254,36 @@ export function Quiz({
         {perfect && <Confetti />}
 
         {/* Grade */}
-        <div className={`${grade.color} brutal-border p-5`}>
-          <div className="font-mono text-[10px] uppercase opacity-70">Quiz complete</div>
-          <div className="font-display text-5xl mt-1">{grade.label}</div>
-          <div className="font-mono text-sm mt-2 flex items-center gap-3 flex-wrap">
-            <span>
-              {passed} / {qs.length} correct · {pct}%
-            </span>
-            {meta && meta.xpEarned > 0 && (
-              <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-xs">
-                +{meta.xpEarned} XP
+        <div className={`${grade.color} brutal-border p-5 relative overflow-hidden`}>
+          {perfect && (
+            <div className="absolute inset-0 pointer-events-none">
+              <Image
+                src={COMPLETION_BG}
+                alt=""
+                fill
+                className="object-cover opacity-20 mix-blend-multiply"
+                sizes="100vw"
+              />
+            </div>
+          )}
+          <div className="relative z-10">
+            <div className="font-mono text-[10px] uppercase opacity-70">Quiz complete</div>
+            <div className="font-display text-6xl mt-1 leading-none">{grade.label}</div>
+            <div className="font-mono text-sm mt-2 flex items-center gap-3 flex-wrap">
+              <span>
+                {passed} / {qs.length} correct · {pct}%
               </span>
-            )}
-            {meta?.badgeName && (
-              <span className="brutal-border bg-ink text-bone px-2 py-1 font-mono text-xs">
-                🏅 {meta.badgeName}
-              </span>
-            )}
+              {meta && meta.xpEarned > 0 && (
+                <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-xs">
+                  +{meta.xpEarned} XP
+                </span>
+              )}
+              {meta?.badgeName && (
+                <span className="brutal-border bg-ink text-bone px-2 py-1 font-mono text-xs">
+                  🏅 {meta.badgeName}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -330,7 +346,7 @@ export function Quiz({
                   requestAnimationFrame(() => scrollToCenter(topRef.current)),
                 );
               }}
-              className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
+              className="brutal-border bg-ink text-bone px-5 py-4 font-display text-xl brutal-press brutal-shadow"
             >
               ↺ RETRY
             </button>
@@ -338,7 +354,7 @@ export function Quiz({
           {meta?.nextSlug && (
             <a
               href={`/learn/${meta.nextSlug}`}
-              className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press"
+              className="brutal-border bg-acid text-ink px-5 py-4 font-display text-xl brutal-press brutal-shadow"
             >
               NEXT MISSION →
             </a>
@@ -364,10 +380,10 @@ export function Quiz({
           </span>
           <span>{results.filter(Boolean).length} correct</span>
         </div>
-        <div className="h-2 brutal-border bg-bone overflow-hidden">
+        <div className="h-3 brutal-border bg-bone overflow-hidden">
           <div
             className="h-full bg-acid transition-all duration-500"
-            style={{ width: `${progressPct}%` }}
+            style={{ width: `${progressPct}%`, boxShadow: '0 0 8px #C6FF00' }}
           />
         </div>
       </div>
@@ -382,22 +398,29 @@ export function Quiz({
           const isPickedWrong = phase === "feedback" && oi === pickedOpt && !isCorrect;
 
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
+          let leftBorder = "";
           if (phase === "feedback") {
-            if (isCorrect) cls = "bg-acid text-ink font-bold";
-            else if (isPickedWrong) cls = "bg-hot text-bone font-bold";
-            else cls = "bg-bone opacity-40 cursor-default";
+            if (isCorrect) {
+              cls = "bg-acid text-ink font-bold";
+              leftBorder = "border-l-4 border-l-[#C6FF00]";
+            } else if (isPickedWrong) {
+              cls = "bg-hot text-bone font-bold";
+              leftBorder = "border-l-4 border-l-[#FF2D2D]";
+            } else cls = "bg-bone opacity-40 cursor-default";
           }
           return (
             <button
               key={oi}
               onClick={() => pick(oi)}
               disabled={phase === "feedback"}
-              className={`brutal-border px-4 py-3 text-left font-mono text-sm transition-colors ${cls}`}
+              className={`brutal-border px-4 py-5 text-left font-mono text-sm transition-colors flex items-center gap-3 ${cls} ${leftBorder}`}
             >
-              <span className="opacity-40 mr-2">{String.fromCharCode(65 + oi)}.</span>
-              {opt}
-              {phase === "feedback" && isCorrect && <span className="ml-2">✓</span>}
-              {phase === "feedback" && isPickedWrong && <span className="ml-2">✗</span>}
+              <span className={`brutal-border w-8 h-8 flex items-center justify-center font-display text-sm shrink-0 ${phase === "picking" ? "bg-ink/10" : isCorrect ? "bg-ink/20" : "bg-bone/20"}`} aria-hidden>
+                {String.fromCharCode(65 + oi)}
+              </span>
+              <span className="flex-1">{opt}</span>
+              {phase === "feedback" && isCorrect && <span>✓</span>}
+              {phase === "feedback" && isPickedWrong && <span>✗</span>}
             </button>
           );
         })}
@@ -455,9 +478,9 @@ function HintBlock({ q, phase }: { q: QuizQ; phase: Phase }) {
     return (
       <button
         onClick={() => setShown(true)}
-        className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
+        className="brutal-border bg-bone text-ink px-4 py-2 font-mono text-[10px] uppercase brutal-press hover:bg-sun/40 transition-colors"
       >
-        Stuck? See a hint
+        💡 Stuck? See a hint
       </button>
     );
   return (

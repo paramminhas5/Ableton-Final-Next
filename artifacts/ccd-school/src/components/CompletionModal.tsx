@@ -5,10 +5,13 @@
 import { useEffect, useRef, useState } from "react";
 import { playFanfare } from "@/lib/audio";
 import Link from "next/link";
+import Image from "next/image";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
 import { MISSIONS } from "@/content/missions";
 import type { Mission } from "@/content/types";
+
+const COMPLETION_BG = "https://v3b.fal.media/files/b/0a9d85ab/gJ3EpG-ChAh0FOsmJgoNq.jpg";
 
 interface Props {
   mission: Mission;
@@ -44,13 +47,13 @@ function useCountUp(target: number, active: boolean) {
 
 // Simple confetti burst — pure CSS, no libraries
 function Confetti() {
-  const pieces = Array.from({ length: 24 }, (_, i) => ({
+  const pieces = Array.from({ length: 36 }, (_, i) => ({
     i,
     x: Math.random() * 100,
     delay: Math.random() * 0.4,
     dur: 0.8 + Math.random() * 0.6,
     color: ["#CDFF00", "#FF2D2D", "#7B2FFF", "#FFB800", "#111111"][i % 5],
-    size: 6 + Math.round(Math.random() * 6),
+    size: 8 + Math.round(Math.random() * 8),
   }));
 
   return (
@@ -101,12 +104,12 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
 
   const grade =
     pct === 100
-      ? { label: "PERFECT", color: "bg-acid text-ink" }
+      ? { label: "PERFECT", color: "bg-acid text-ink", borderColor: "border-b-4 border-b-ink" }
       : pct >= 70
-        ? { label: "SOLID", color: "bg-volt text-bone" }
+        ? { label: "SOLID", color: "bg-volt text-bone", borderColor: "border-b-4 border-b-acid" }
         : pct >= 50
-          ? { label: "DONE", color: "bg-sun text-ink" }
-          : { label: "RETRY", color: "bg-ink text-bone" };
+          ? { label: "DONE", color: "bg-sun text-ink", borderColor: "border-b-4 border-b-ink" }
+          : { label: "RETRY", color: "bg-ink text-bone", borderColor: "border-b-4 border-b-acid" };
 
   // Generate and download share card
   const share = () => {
@@ -177,22 +180,32 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
         ].join(" ")}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* COMPLETION_BG background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={COMPLETION_BG}
+            alt=""
+            fill
+            className="object-cover opacity-10 mix-blend-luminosity"
+            sizes="100vw"
+          />
+        </div>
         {visible && <Confetti />}
 
         {/* Grade header */}
-        <div className={`${grade.color} brutal-border border-x-0 border-t-0 p-5`}>
+        <div className={`${grade.color} ${grade.borderColor} brutal-border border-x-0 border-t-0 p-5 relative z-10`}>
           <div className="font-mono text-[10px] uppercase opacity-80">
             Mission {String(mission.number).padStart(2, "0")} complete
           </div>
-          <div className="font-display text-5xl mt-1">{grade.label}</div>
+          <div className="font-display text-6xl mt-1 leading-none">{grade.label}</div>
           <div className="font-mono text-sm mt-1">{pct}% correct</div>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-5 space-y-4 relative z-10">
           {/* XP earned */}
           <div className="flex items-center gap-3">
-            <div className="brutal-border bg-acid px-4 py-3 font-display text-4xl min-w-[100px] text-center">
-              +{animatedXp}
+            <div className="brutal-border bg-acid px-4 py-3 font-display text-5xl min-w-[100px] text-center">
+              <span style={{ textShadow: '0 0 20px #C6FF00' }}>+{animatedXp}</span>
             </div>
             <div className="font-mono text-xs uppercase">
               <div className="text-sm font-bold">XP earned</div>
@@ -225,20 +238,20 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
               <Link
                 href={`/learn/${nextSlug}`}
                 onClick={onClose}
-                className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press flex-1 text-center"
+                className="brutal-border bg-acid text-ink px-5 py-4 font-display text-xl brutal-press brutal-shadow flex-1 text-center"
               >
                 NEXT →
               </Link>
             )}
             <button
               onClick={share}
-              className="brutal-border bg-volt text-bone px-4 py-3 font-mono text-xs uppercase brutal-press"
+              className="brutal-border bg-volt text-bone px-4 py-4 font-mono text-xs uppercase brutal-press"
             >
               {showShare ? "Downloaded ✓" : "Share card"}
             </button>
             <button
               onClick={onClose}
-              className="brutal-border bg-bone px-4 py-3 font-mono text-xs uppercase brutal-press"
+              className="brutal-border bg-bone px-4 py-4 font-mono text-xs uppercase brutal-press"
             >
               Close
             </button>
