@@ -72,10 +72,16 @@ function Inner({ slug }: { slug: string }) {
 
   const next = nextMission(slug);
   const hasScreens = (mission.screens?.length ?? 0) > 0;
-  const coachContext = `${mission.title} — ${mission.tagline}`;
 
   // Resolve correct world route via context (fixes Producer sub-world slug bug)
   const ctx = getMissionContext(slug);
+
+  const coachContext = [
+    `[World: ${ctx?.world ?? "unknown"}]`,
+    `[${learnMode === "flow" ? "Flow Mode" : "Free Mode"}]`,
+    `Lesson: ${mission.title} — ${mission.tagline}.`,
+    ctx?.chapter?.title ? `Chapter: ${ctx.chapter.title}.` : "",
+  ].filter(Boolean).join(" ");
   const worldRoute = ctx.worldRoute || "/worlds";
 
   // Mission position within its path (for breadcrumb "N of M")

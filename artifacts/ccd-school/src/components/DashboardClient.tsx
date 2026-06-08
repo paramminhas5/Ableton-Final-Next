@@ -24,6 +24,7 @@ import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { getMissionContext } from "@/lib/missionContext";
 import { CoachPanel } from "@/components/BeatCoach";
+import { formatDashboardContext } from "@/types/coach";
 import { useEffect, useState, useMemo, useRef } from "react";
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
@@ -485,7 +486,7 @@ export function DashboardClient() {
     return [...progress.badges].reverse().slice(0, 3);
   }, [progress.badges]);
 
-  const modeLabel = learnMode === "ccd" ? "🗺 Path Mode" : "🔓 Explore Mode";
+  const modeLabel = learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode";
 
   // Fix #5: hydration guard — progress reads from localStorage, which is
   // unavailable during SSR. Show skeleton for the first render tick.
@@ -820,7 +821,12 @@ export function DashboardClient() {
           </button>
           {coachOpen && (
             <CoachPanel
-              context="CCD.SCHOOL Dashboard — music production and DJing tutor"
+              context={formatDashboardContext({
+                streak: progress.streakDays ?? 0,
+                xp: progress.xp ?? 0,
+                world: lastCtx?.world ?? null,
+                nextSlug: continueSlug ?? null,
+              })}
               onClose={() => setCoachOpen(false)}
             />
           )}
