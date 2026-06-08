@@ -21,13 +21,13 @@ import { ConceptAudioButton } from "@/components/ConceptAudio";
 
 export function AudioIdScreen({
   screen,
-  isPathMode,
+  isFlowMode,
   onCorrect,
   onWrong,
   onNext,
 }: {
   screen: Extract<LessonScreen, { kind: "audio-id" }>;
-  isPathMode: boolean;
+  isFlowMode: boolean;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -129,7 +129,7 @@ export function AudioIdScreen({
             {phase === "wrong" && (
               <div className="font-mono text-xs opacity-80 mb-1">
                 Correct: <strong>{screen.options[screen.answer]}</strong>
-                {isPathMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
               </div>
             )}
             <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
@@ -294,13 +294,13 @@ export function MatchScreen({
 
 export function TypeAnswerScreen({
   screen,
-  isPathMode,
+  isFlowMode,
   onCorrect,
   onWrong,
   onNext,
 }: {
   screen: Extract<LessonScreen, { kind: "type-answer" }>;
-  isPathMode: boolean;
+  isFlowMode: boolean;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -403,7 +403,7 @@ export function TypeAnswerScreen({
             {phase === "wrong" && (
               <div className="font-mono text-xs opacity-80 mb-1">
                 Accepted: <strong>{screen.acceptableAnswers[0]}</strong>
-                {isPathMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
               </div>
             )}
             <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">

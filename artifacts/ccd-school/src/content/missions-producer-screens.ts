@@ -249,7 +249,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "drum-rack": [
     { kind: "hook", emoji: "🥁", headline: "16 pads, infinite kits", subtext: "Each pad is its own instrument chain with effects." },
-    { kind: "concept", title: "Drum Rack structure", body: "Drum Rack is a container holding up to 128 pads, each mapped to a MIDI note. Every pad hosts a device chain (typically a Simpler), its own mixer, and its own send amounts.", keyFact: "Drag any sample directly onto a pad to load it instantly.", visual: "signal-chain"},
+    { kind: "concept", title: "Drum Rack structure", body: "Drum Rack is a container holding up to 128 pads, each mapped to a MIDI note. Every pad hosts a device chain (typically a Simpler), its own mixer, and its own send amounts.", keyFact: "Drag any sample directly onto a pad to load it instantly.", visual: "fal-image", imageUrl: "/generated/drum-rack-1.webp"},
     { kind: "concept", title: "Choke groups and macros", body: "Assign pads to Choke groups to make them cut each other off — essential for hi-hats (closed hat cuts open hat). Macro knobs at the top control assigned parameters across the whole rack.", keyFact: "Choke group = open hat + closed hat in same group number.", visual: "signal-chain"},
     { kind: "interact", sim: "beat-builder", prompt: "Build a 4-on-the-floor pattern using the Drum Rack pads" },
     { kind: "quiz", q: "Choke groups are useful for…", options: ["Reverb busses", "Hi-hat open/close relationships", "Bass lines", "Master volume"], answer: 1, explain: "Choke groups silence other pads in the same group — essential for realistic hi-hat behaviour." },
@@ -260,7 +260,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "wavetable": [
     { kind: "hook", emoji: "🌀", headline: "Wavetable is Live's modern workhorse synth", subtext: "Two oscillators scan through waveforms in real time." },
-    { kind: "concept", title: "Wavetable architecture", body: "Two oscillators each scan through a wavetable (a library of single-cycle waveforms). Sweep the Position knob to morph through timbres. Each oscillator has a sub-oscillator and noise source.", keyFact: "Two oscillators. Two filters. Two envelopes. Two LFOs.", visual: "signal-chain"},
+    { kind: "concept", title: "Wavetable architecture", body: "Two oscillators each scan through a wavetable (a library of single-cycle waveforms). Sweep the Position knob to morph through timbres. Each oscillator has a sub-oscillator and noise source.", keyFact: "Two oscillators. Two filters. Two envelopes. Two LFOs.", visual: "fal-image", imageUrl: "/generated/wavetable-1.webp"},
     { kind: "concept", title: "Modulation matrix", body: "The modulation matrix at the bottom lets you drag any source (LFO, envelope, MIDI expression, velocity) to any destination. Connect Env 2 to Filter Cutoff for a classic synth filter sweep.", keyFact: "Drag from source row to destination column to patch modulation.", visual: "waveform"},
     { kind: "interact", sim: "device-lab", prompt: "Sweep the oscillator Position knob — hear the wavetable scan" },
     { kind: "quiz", q: "Wavetable's modulation matrix is at the…", options: ["Top of the device", "Bottom of the device", "Side panel", "Separate window"], answer: 1, explain: "The mod matrix occupies the bottom section of Wavetable — drag source to destination to create modulation." },

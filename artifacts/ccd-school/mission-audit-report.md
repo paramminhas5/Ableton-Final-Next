@@ -1,6 +1,6 @@
 # Mission Audit Report
 
-Generated: 2026-06-08T20:45:49.314Z
+Generated: 2026-06-08T20:49:32.725Z
 Total missions scanned: 153
 Total quiz questions: 539
 

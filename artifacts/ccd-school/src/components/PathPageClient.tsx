@@ -28,7 +28,7 @@ export function PathPageClient({ slug }: { slug: string }) {
     const isDone = !!completed[s];
     const prevSlug = path.missionSlugs[idx - 1];
     const prevDone = idx === 0 || !!completed[prevSlug];
-    const locked = learnMode === "ccd" && !prevDone && !isDone;
+    const locked = learnMode === "flow" && !prevDone && !isDone;
     return { slug: s, mission, isDone, locked, index: idx };
   });
 

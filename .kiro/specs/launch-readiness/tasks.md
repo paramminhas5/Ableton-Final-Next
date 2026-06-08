@@ -12,7 +12,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 1 — Foundation (no upstream dependencies, do first)
 
-- [ ] T1. Rename `LearnMode` type and add `normaliseCcdToFlow()` in `lib/mode.ts`
+- [x] T1. Rename `LearnMode` type and add `normaliseCcdToFlow()` in `lib/mode.ts`
   - Update `LearnMode` type: `"classic" | "ccd"` → `"flow" | "classic"`
   - Implement `normaliseCcdToFlow(raw: string | null): LearnMode` — maps `"ccd"` → `"flow"`, `"classic"` → `"classic"`, anything else → `"flow"`
   - Update `getInitialMode()` to call `normaliseCcdToFlow`, write-back immediately if value changed (`localStorage.setItem`)
@@ -23,7 +23,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `normaliseCcdToFlow("ccd")` returns `"flow"`. `normaliseCcdToFlow("classic")` returns `"classic"`. `normaliseCcdToFlow(null)` returns `"flow"`. TypeScript type `LearnMode` is `"flow" | "classic"`. Default context value is `"flow"`. No compile errors.
   - **Dependencies:** none
 
-- [ ] T2. Grep-replace all `learnMode === "ccd"` comparisons across 8 component files
+- [x] T2. Grep-replace all `learnMode === "ccd"` comparisons across 8 component files
   - Replace every occurrence of `learnMode === "ccd"` with `learnMode === "flow"` in:
     - `artifacts/ccd-school/src/components/LessonPageClient.tsx` — `if (learnMode === "ccd")` + `// ── PATH MODE ──` comment → `// ── FLOW MODE ──`
     - `artifacts/ccd-school/src/components/LessonPlayer.tsx` — `const isPathMode = learnMode === "ccd"` → `const isFlowMode = learnMode === "flow"` (update all downstream uses of `isPathMode` variable to `isFlowMode`)
@@ -39,7 +39,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `grep -r '"ccd"' artifacts/ccd-school/src/` returns zero results related to mode comparisons. All 8 files compile without TypeScript errors. Existing tests pass.
   - **Dependencies:** T1
 
-- [ ] T3. Update all user-facing copy to "Flow Mode" / "Free Mode" across UI components
+- [x] T3. Update all user-facing copy to "Flow Mode" / "Free Mode" across UI components
   - **Header.tsx ModeTogglePill:** pill shows `"🌊 FLOW"` with `bg-acid text-ink` when `learnMode === "flow"`; shows `"🔓 FREE"` with `bg-bone text-ink` when `learnMode === "classic"`
   - **Header.tsx toast messages:** switch-to-Flow toast: `"🌊 FLOW MODE — locked in, hearts on, sequential"`; switch-to-Free toast: `"🔓 FREE MODE — all lessons open"`
   - **Header.tsx mobile drawer:** labels `"FLOW MODE"` / `"FREE MODE"`; Flow subtitle: `"Sequential · earn XP · hearts on"`; Free subtitle: `"All open · no hearts · Normal or Hard"`
@@ -55,7 +55,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `grep -ri "path mode\|ccd mode\|explore mode\|explorer mode" artifacts/ccd-school/src/` returns zero results in user-facing strings. All mode pills, toasts, drawer labels, and modal copy match the specified strings exactly. README has no legacy mode names.
   - **Dependencies:** T2
 
-- [ ] T4. Rename `CcdFallbackBanner` → `FlowFallbackBanner` with updated copy in `LessonPageClient.tsx`
+- [x] T4. Rename `CcdFallbackBanner` → `FlowFallbackBanner` with updated copy in `LessonPageClient.tsx`
   - Rename the component function from `CcdFallbackBanner` to `FlowFallbackBanner`
   - Update the component body copy:
     - Header line: `"FLOW MODE — Explore Format"`
@@ -72,7 +72,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 2 — UX Fixes (depends on Phase 1 completion)
 
-- [ ] T5. `handleComplete` in `LessonPageClient.tsx` → redirect to `/dashboard` (except review flow)
+- [x] T5. `handleComplete` in `LessonPageClient.tsx` → redirect to `/dashboard` (except review flow)
   - Replace `setTimeout(() => router.push(worldRoute), 2200)` with:
     ```typescript
     const destination = isReview ? "/review" : "/dashboard";
@@ -85,7 +85,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** After lesson completion (non-review), `router.push` is called with `"/dashboard"` after ~2200 ms. After completion when `?review=1` is in the URL, `router.push` is called with `"/review"`. The `✕` back-button still navigates to `worldRoute`.
   - **Dependencies:** T4
 
-- [ ] T6. `HomeClient.tsx` returning-user redirect → `router.replace("/dashboard")` with `return null` guard
+- [x] T6. `HomeClient.tsx` returning-user redirect → `router.replace("/dashboard")` with `return null` guard
   - Replace the existing conditional render of `<Dashboard />` (or equivalent) with a `useEffect`-based redirect:
     ```typescript
     const shouldRedirect = !!(user || hasMissions || progress.onboardingDone);
@@ -102,7 +102,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** Visiting `/` with `onboardingDone: true` in localStorage triggers `router.replace("/dashboard")` and renders nothing in between. Visiting `/` with no localStorage state shows the landing/onboarding flow. `router.replace` (not `router.push`) is used.
   - **Dependencies:** T1 (needs mode.ts updated; no direct dep on T2–T4 but should run after Phase 1 is stable)
 
-- [ ] T7. Create `src/components/LessonSourceBar.tsx`
+- [x] T7. Create `src/components/LessonSourceBar.tsx`
   - Create new file with the `LessonSourceBar` component:
     ```tsx
     "use client";
@@ -128,7 +128,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** Component file exists and exports `LessonSourceBar`. Renders `null` for `null`/`undefined`/`""`. Renders `📄 SOURCE: {text}` for non-empty strings. `aria-label` present. No TypeScript errors.
   - **Dependencies:** T1 (stable type environment)
 
-- [ ] T8. Wire `LessonSourceBar` into `InlineClassicLesson.tsx` (after quiz, before next-lesson CTA)
+- [x] T8. Wire `LessonSourceBar` into `InlineClassicLesson.tsx` (after quiz, before next-lesson CTA)
   - Import `LessonSourceBar` from `./LessonSourceBar`
   - Resolve `ctx` using `getMissionContext(m.slug)` (already present at top of component — verify or add)
   - Insert `<LessonSourceBar source={ctx?.path?.source} />` after the `QUICK QUIZ` section and before the `NEXT LESSON →` CTA
@@ -137,7 +137,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** In a lesson whose parent `LearningPath` has a non-empty `source` field, the `LessonSourceBar` div appears below the quiz and above the next-lesson link. For a lesson with no `source` on its path, nothing renders in that position (no empty div, no "SOURCE:" label).
   - **Dependencies:** T7
 
-- [ ] T9. Wire `LessonSourceBar` into `LessonPlayer.tsx` `SummaryScreen` (after learned-bullets list)
+- [x] T9. Wire `LessonSourceBar` into `LessonPlayer.tsx` `SummaryScreen` (after learned-bullets list)
   - In `LessonPlayerInner` (or wherever mission slug and path are in scope), resolve source:
     ```typescript
     const ctx = getMissionContext(mission.slug);
@@ -155,7 +155,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 3 — Content (T10 and T11 can be parallelised with each other)
 
-- [ ] T10. Complete `lesson-deep-dj.ts` — all 40 DJ World missions with Hard Mode content
+- [x] T10. Complete `lesson-deep-dj.ts` — all 40 DJ World missions with Hard Mode content
   - Ensure `DJ_LESSONS` in `artifacts/ccd-school/src/content/lesson-deep-dj.ts` contains a `LessonDeep` entry for every one of the 40 DJ World mission slugs:
     - Chapter 1 `setup-and-culture`: `what-is-djing`, `dj-equipment`, `rekordbox-intro`, `dj-culture-history`, `dj-ethics-sets`, `dj-software-overview`, `dj-hardware-tour`, `dj-setup-flow`
     - Chapter 2 `the-library`: `importing-music`, `beatgrid-analysis`, `cue-points-dj`, `memory-cues`, `playlists-collections`, `hot-cues-performance`, `rekordbox-export`, `smart-playlists`
@@ -174,12 +174,12 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `Object.keys(DJ_LESSONS).length === 40`. Every entry passes the field-count checks: `quizHard.length >= 3`, `proMoves.length >= 3`, `walkthrough.length >= 4`, `mistakes.length >= 3`, `advanced.what.length >= 3`, `sources.length >= 1`, and `sources[0].label !== ""` and `sources[0].section !== ""`. File compiles with no TypeScript errors.
   - **Dependencies:** T1 (stable types)
 
-  - [ ]* T10.1 Write property tests for `DJ_LESSONS` content requirements
+  - [x]* T10.1 Write property tests for `DJ_LESSONS` content requirements
     - **Property 5: All DJ_LESSONS entries meet minimum Hard Mode content thresholds**
     - **Validates: Requirements 5.1–5.8**
     - See design Section 10, Property 5
 
-- [ ] T11. Complete `lesson-deep-synths.ts` — all 18 Synthesis missions with Hard Mode content
+- [x] T11. Complete `lesson-deep-synths.ts` — all 18 Synthesis missions with Hard Mode content
   - Ensure `SYNTHS_LESSONS` in `artifacts/ccd-school/src/content/lesson-deep-synths.ts` contains a `LessonDeep` entry for all 18 Synthesis mission slugs:
     - Path `synth-sound`: `what-is-synthesis`, `oscillators`, `waveforms-synth`, `subtractive-basics`, `additive-synthesis`, `wavetable-ableton`
     - Path `synth-shaping`: `filters-synth`, `filter-types`, `envelopes-adsr`, `lfo-basics`, `modulation-matrix`, `wavetable-operator`
@@ -196,7 +196,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `Object.keys(SYNTHS_LESSONS).length === 18`. Every entry passes: `quizHard.length >= 3`, `proMoves.length >= 3`, `walkthrough.length >= 4`, `mistakes.length >= 3`, `advanced.what.length >= 3`, `sources.length >= 1`. At least one `sources[0].section` contains a `learningsynths.ableton.com` chapter path. File compiles.
   - **Dependencies:** T1 (stable types)
 
-- [ ] T12. Create `scripts/audit-missions.mjs`, run it, and apply fixes to flagged missions
+- [x] T12. Create `scripts/audit-missions.mjs`, run it, and apply fixes to flagged missions
   - **Step A — Create the script** at `artifacts/ccd-school/scripts/audit-missions.mjs`:
     - Import all mission data (dynamically or via a compiled JSON dump)
     - Implement 4 audit checks:
@@ -220,7 +220,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 4 — FAL Pipeline
 
-- [ ] T13. Add `"fal-image"` visual type to `types.ts`
+- [x] T13. Add `"fal-image"` visual type to `types.ts`
   - In the concept-screen member of the `LessonScreen` union in `artifacts/ccd-school/src/content/types.ts`:
     - Extend the `visual?:` union to include `| "fal-image"`
     - Add `imageUrl?: string` field alongside it (only used when `visual === "fal-image"`)
@@ -230,7 +230,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `types.ts` compiles. A concept screen object with `visual: "fal-image"` and `imageUrl: "/generated/foo.webp"` passes TypeScript type checking. No existing visual types are broken.
   - **Dependencies:** T1
 
-- [ ] T14. Add `FalImage` renderer to `LessonVisuals.tsx`
+- [x] T14. Add `FalImage` renderer to `LessonVisuals.tsx`
   - Import React `useState` (if not already imported)
   - Add a `FalImage` sub-component:
     ```tsx
@@ -258,7 +258,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** A concept screen with `visual: "fal-image"` and a valid `imageUrl` renders an `<img>` with `loading="lazy"`, `max-width: 600px`, `object-fit: contain`. A missing/failed `imageUrl` renders the error state `[image unavailable]` without crashing. A loading skeleton appears while the image loads.
   - **Dependencies:** T13
 
-- [ ] T15. Create `fal-image-priority.md` with 11 priority entries and draft prompts
+- [x] T15. Create `fal-image-priority.md` with 11 priority entries and draft prompts
   - Create the file at `artifacts/ccd-school/fal-image-priority.md`
   - Include exactly 11 entries in the format `- {missionSlug} | {screenIndex} | {prompt}`:
     1. `what-is-djing` | `1` | Photorealistic Pioneer CDJ-3000 and DJM-A9 mixer on a club DJ booth, neutral dark studio background, no text overlay, high detail, professional photography
@@ -277,7 +277,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** File exists with exactly 11 entries. All 6 DJ World equipment slugs are covered (`what-is-djing`, `dj-equipment`, `rekordbox-intro`, `beatmatching-manual`, `sync-function`, `cue-points-dj`). All 5 Producer instrument slugs are covered (`wavetable`, `operator`, `drum-rack`, `eq-eight`, `compressor`). Every prompt specifies "no text overlay" and "neutral/dark background".
   - **Dependencies:** T13
 
-- [ ] T16. Create `scripts/generate-fal-images.mjs` build-time script
+- [x] T16. Create `scripts/generate-fal-images.mjs` build-time script
   - Create `artifacts/ccd-school/scripts/generate-fal-images.mjs` implementing:
     - Reads `fal-image-priority.md` and parses lines matching `- {slug} | {index} | {prompt}`
     - For each entry: constructs output path `public/generated/{slug}-{index}.webp`
@@ -294,7 +294,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `node scripts/generate-fal-images.mjs --dry-run` runs without error and logs each of the 11 prompts. `FAL_API_KEY` is never a string literal in the file. `--overwrite` and `--dry-run` flags work correctly. Script does not use `import` from any application source files (standalone Node.js ESM only).
   - **Dependencies:** T15
 
-- [ ] T17. Wire FAL images into mission `screens` data for the 11 priority missions
+- [x] T17. Wire FAL images into mission `screens` data for the 11 priority missions
   - For each of the 11 missions in `fal-image-priority.md`, locate the relevant concept screen in the mission data files and update:
     - Set `visual: "fal-image"`
     - Set `imageUrl: "/generated/{slug}-{screenIndex}.webp"` (the static path where the build script outputs)
@@ -309,7 +309,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 5 — Beat Coach & Source Verification
 
-- [ ] T18. Enrich `coachContext` string in `LessonPageClient.tsx` with world/mode/chapter
+- [x] T18. Enrich `coachContext` string in `LessonPageClient.tsx` with world/mode/chapter
   - Locate the `coachContext` variable (currently `\`${mission.title} — ${mission.tagline}\`` or similar)
   - Replace with the canonical format:
     ```typescript
@@ -327,7 +327,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `coachContext` string matches the format `"[World: X] [Y Mode] Lesson: T — G. Chapter: C."`. The string never contains `"ccd"` or `"PATH MODE"`. Both Flow Mode and Free Mode labels produce the correct bracketed string.
   - **Dependencies:** T2 (learnMode uses `"flow"`)
 
-- [ ] T19. Move context to system prompt in `/api/beat-coach/route.ts`
+- [x] T19. Move context to system prompt in `/api/beat-coach/route.ts`
   - In the POST handler of `artifacts/ccd-school/app/api/beat-coach/route.ts`:
     - Extract `context` from the request body
     - Build `systemContent`:
@@ -351,7 +351,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** The Kimi API `messages` array has `[{ role: "system", content: SYSTEM_PROMPT + "\n\nCurrent lesson context: ..." }, { role: "user", content: "Quiz question: ..." }]`. Context does NOT appear in the user message. Existing functionality (question answering) is preserved.
   - **Dependencies:** T18
 
-- [ ] T20. Wire Dashboard Beat Coach context using `formatDashboardContext()`
+- [x] T20. Wire Dashboard Beat Coach context using `formatDashboardContext()`
   - Add `DashboardCoachContext` type and `formatDashboardContext()` function (from design Section 9.3) — place in `artifacts/ccd-school/src/types/coach.ts` (new file) or at the top of `BeatCoach.tsx`
   - In `DashboardClient.tsx` (or wherever the dashboard renders `<FloatingCoachButton>` / `<CoachPanel>`), compute:
     ```typescript
@@ -368,7 +368,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** When Beat Coach is opened from the dashboard, the `context` sent to `/api/beat-coach` contains `[Dashboard]`, `[Streak: N days]`, `[XP: N]`, and either `[Last World: X]` or `Next lesson: {slug}`. TypeScript compiles.
   - **Dependencies:** T19
 
-- [ ] T21. Audit and update `LearningPath.source` fields in `paths.ts` — ensure all 32 paths have specific chapter citations
+- [x] T21. Audit and update `LearningPath.source` fields in `paths.ts` — ensure all 32 paths have specific chapter citations
   - Open `artifacts/ccd-school/src/content/paths.ts` (or wherever `LearningPath[]` is defined)
   - For every path, verify `source` field is non-empty and specific (not just `"Ableton Live 12 Reference Manual"` without a chapter):
     - **DJ World paths:** must cite `"rekordbox 6.0.0 Instruction Manual"` with a specific chapter/page range
@@ -385,24 +385,24 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
 
 ### Phase 6 — Property Tests
 
-- [ ] T22. Write 5 correctness property tests in `tests/correctness.test.ts` using `fast-check`
-  - [ ] T22.1 Property 1 — `normaliseCcdToFlow` never returns `"ccd"` for any input
+- [x] T22. Write 5 correctness property tests in `tests/correctness.test.ts` using `fast-check`
+  - [x] T22.1 Property 1 — `normaliseCcdToFlow` never returns `"ccd"` for any input
     - **Property 1: `localStorage("ccd")` normalises to `"flow"`**
     - **Validates: Requirements 1.3, 1.4, 9.1, 9.3**
     - Test that for all inputs from `fc.constantFrom("ccd", "CCD", null, undefined, "", "classic", "flow")`, `normaliseCcdToFlow()` returns a value that is not `"ccd"` and is within `["flow", "classic"]`
-  - [ ] T22.2 Property 2 — Non-review lesson completion always routes to `/dashboard`
+  - [x] T22.2 Property 2 — Non-review lesson completion always routes to `/dashboard`
     - **Property 2: `handleComplete` with `isReview=false` always routes to `/dashboard`**
     - **Validates: Requirements 2.1, 2.3**
     - Test that `destination = isReview ? "/review" : "/dashboard"` with `isReview=false` always equals `"/dashboard"` regardless of any other prop
-  - [ ] T22.3 Property 3 — `LessonSourceBar` renders null for empty/absent source
+  - [x] T22.3 Property 3 — `LessonSourceBar` renders null for empty/absent source
     - **Property 3: `LessonSourceBar` never renders for empty or absent source**
     - **Validates: Requirements 3.5, 3.7**
     - Using `@testing-library/react`, render `<LessonSourceBar source={source} />` for `source ∈ {null, undefined, ""}` — assert `container.firstChild === null` for all three
-  - [ ] T22.4 Property 4 — `FlowFallbackBanner` copy never contains legacy mode strings
+  - [x] T22.4 Property 4 — `FlowFallbackBanner` copy never contains legacy mode strings
     - **Property 4: `FlowFallbackBanner` copy contains no "PATH MODE" or "CCD"**
     - **Validates: Requirements 1.9, 10.3**
     - For arbitrary `missionTitle` strings (`fc.string({ minLength: 1, maxLength: 80 })`), render `<FlowFallbackBanner missionTitle={missionTitle} />` and assert `document.body.textContent` does not match `/PATH MODE/i` or `/\bCCD\b/i`, and does match `/FLOW MODE/i`
-  - [ ] T22.5 Property 5 — All `DJ_LESSONS` entries meet minimum Hard Mode content requirements
+  - [x] T22.5 Property 5 — All `DJ_LESSONS` entries meet minimum Hard Mode content requirements
     - **Property 5: All `DJ_LESSONS` entries meet minimum Hard Mode content thresholds**
     - **Validates: Requirements 5.1–5.8**
     - For each `[slug, entry]` from `Object.entries(DJ_LESSONS)`, assert `quizHard.length >= 3`, `proMoves.length >= 3`, `walkthrough.length >= 4`, `mistakes.length >= 3`, `advanced.what.length >= 3`, `sources.length >= 1`
@@ -413,7 +413,7 @@ All code lives under `artifacts/ccd-school/` inside the repository root.
   - **Acceptance:** `vitest --run tests/correctness.test.ts` (or `jest`) passes all 5 property tests. No test is skipped. `fast-check` is in `devDependencies`. All 5 properties are tested.
   - **Dependencies:** T1, T5, T7, T4, T10
 
-- [ ] T23. Final checkpoint — ensure all tests pass
+- [x] T23. Final checkpoint — ensure all tests pass
   - Run the full test suite: `vitest --run` (or `jest --passWithNoTests`)
   - Confirm zero TypeScript errors: `tsc --noEmit`
   - Confirm zero `"ccd"` mode references remain: `grep -r '"ccd"' artifacts/ccd-school/src/ --include="*.ts" --include="*.tsx"`
