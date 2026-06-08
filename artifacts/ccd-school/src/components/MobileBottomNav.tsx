@@ -115,7 +115,7 @@ export function MobileBottomNav() {
               {/* Icon with optional badge */}
               <span className="relative">
                 <Icon active={active} />
-                {tab.badge && reviewCount > 0 && (
+                {('badge' in tab && tab.badge) && reviewCount > 0 && (
                   <span
                     aria-label={`${reviewCount} lessons to review`}
                     className="
