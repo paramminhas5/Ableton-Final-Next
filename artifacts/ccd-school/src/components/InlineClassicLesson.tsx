@@ -21,6 +21,7 @@ import { LESSONS } from "@/content/lesson-deep";
 import { Glossarized, GlossaryScope } from "@/components/Term";
 import { getMissionContext } from "@/lib/missionContext";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
+import { LessonSourceBar } from "@/components/LessonSourceBar";
 
 interface Props {
   mission: Mission;
@@ -51,7 +52,7 @@ export function InlineClassicLesson({
   const deep = LESSONS[m.slug];
 
   // Hard mode state — default from stored difficulty preference (explorer mode only)
-  const defaultHard = learnMode !== "ccd" && progress.difficulty === "hard";
+  const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
   const [internalHardMode, setInternalHardMode] = useState(defaultHard);
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
 
@@ -415,6 +416,9 @@ export function InlineClassicLesson({
             onPerfect={onCorrect}
           />
         </section>
+
+        {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
+        <LessonSourceBar source={ctx?.path?.source} />
 
         {/* ── NEXT LESSON CTA ─────────────────────────────────────────────── */}
         {nextSlug && done && (
