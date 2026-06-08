@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { MISSIONS } from "@/content/missions";
@@ -11,6 +12,14 @@ import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
+
+// ─── FAL AI generated images ──────────────────────────────────────────────────
+const IMAGES = {
+  hero:         "https://v3b.fal.media/files/b/0a9d852a/6oC38Qc77l_V_FUOAgmNJ.jpg",
+  fundamentals: "https://v3b.fal.media/files/b/0a9d852c/4cBbZJSrw81eA5b0qfQuA.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d852c/FKRbD_L9z5M74j5rMSykT.jpg",
+  producer:     "https://v3b.fal.media/files/b/0a9d852c/fkQMKnPjSktmYsoXjFu6k.jpg",
+} as const;
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
@@ -232,15 +241,27 @@ function Dashboard() {
               const meta = WORLD_DATA[world];
               return (
                 <Link key={world} href={meta.to}
-                  className={`brutal-border ${meta.color} p-4 brutal-press block transition-opacity hover:opacity-90`}>
-                  <div className="opacity-60 mb-2">{meta.icon}</div>
-                  <div className="font-display text-xl">{meta.label}</div>
-                  <div className="h-1.5 brutal-border bg-bone/20 mt-3 overflow-hidden">
-                    <div className="h-full bg-current opacity-80 transition-all duration-700"
-                      style={{ width: `${ws.pct}%` }} />
+                  className={`brutal-border ${meta.color} p-4 brutal-press block transition-opacity hover:opacity-90 relative overflow-hidden`}>
+                  {/* World banner image */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    <Image
+                      src={IMAGES[world]}
+                      alt=""
+                      fill
+                      className="object-cover opacity-10 mix-blend-multiply"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
-                  <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
-                    {ws.done}/{ws.total} · {ws.pct}%
+                  <div className="relative z-10">
+                    <div className="opacity-60 mb-2">{meta.icon}</div>
+                    <div className="font-display text-xl">{meta.label}</div>
+                    <div className="h-1.5 brutal-border bg-bone/20 mt-3 overflow-hidden">
+                      <div className="h-full bg-current opacity-80 transition-all duration-700"
+                        style={{ width: `${ws.pct}%` }} />
+                    </div>
+                    <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
+                      {ws.done}/{ws.total} · {ws.pct}%
+                    </div>
                   </div>
                 </Link>
               );
@@ -282,6 +303,18 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
   return (
     <main className="min-h-screen bg-bone">
       <section className="brutal-border border-x-0 border-t-0 bg-ink text-bone min-h-[90vh] flex flex-col justify-between relative overflow-hidden">
+        {/* FAL AI generated hero background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={IMAGES.hero}
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-20 mix-blend-luminosity"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/40 to-ink/80" />
+        </div>
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{ backgroundImage: "radial-gradient(oklch(1 0 0) 1px, transparent 1px)", backgroundSize: "4px 4px" }} />
         <div className="max-w-5xl mx-auto px-4 pt-12 md:pt-20 relative z-10">
           <div className="font-mono text-[10px] uppercase tracking-[0.3em] opacity-40 mb-4">// CCD.SCHOOL · MUSIC EDUCATION · NO FLUFF</div>
@@ -336,15 +369,25 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
               const paths = pathsByWorld(world);
               const totalMissions = paths.flatMap((p) => p.missionSlugs).length;
               return (
-                <Link key={world} href={meta.to} className={`brutal-border ${meta.color} p-5 md:p-7 flex items-start justify-between gap-4 brutal-press brutal-shadow block`}>
-                  <div>
+                <Link key={world} href={meta.to} className={`brutal-border ${meta.color} p-5 md:p-7 flex items-start justify-between gap-4 brutal-press brutal-shadow block relative overflow-hidden`}>
+                  {/* World banner image */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    <Image
+                      src={IMAGES[world]}
+                      alt=""
+                      fill
+                      className="object-cover opacity-15 mix-blend-multiply"
+                      sizes="(max-width: 768px) 100vw, 80vw"
+                    />
+                  </div>
+                  <div className="relative z-10">
                     <div className="mb-3 opacity-70">{meta.icon}</div>
                     <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{chs.length} CHAPTERS · {paths.length} PATHS · {totalMissions} MISSIONS</div>
                     <div className="font-display text-3xl md:text-5xl">{meta.label}</div>
                     <div className="font-mono text-sm opacity-70 mt-1">{meta.tagline}</div>
                     <div className="font-mono text-xs opacity-50 mt-2 max-w-lg leading-relaxed">{meta.detail}</div>
                   </div>
-                  <div className="font-display text-4xl shrink-0 opacity-60">→</div>
+                  <div className="font-display text-4xl shrink-0 opacity-60 relative z-10">→</div>
                 </Link>
               );
             })}

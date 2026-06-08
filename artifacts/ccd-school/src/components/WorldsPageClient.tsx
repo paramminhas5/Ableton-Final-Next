@@ -1,9 +1,17 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
 import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
+
+// ─── FAL AI generated world banner images ─────────────────────────────────────
+const WORLD_IMAGES: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d852c/4cBbZJSrw81eA5b0qfQuA.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d852c/FKRbD_L9z5M74j5rMSykT.jpg",
+  producer:     "https://v3b.fal.media/files/b/0a9d852c/fkQMKnPjSktmYsoXjFu6k.jpg",
+};
 
 type WorldId = "fundamentals" | "dj" | "producer";
 const WORLD_META: Record<WorldId, { title: string; emoji: string; tagline: string; color: string; heroColor: string; description: string; to: string }> = {
@@ -50,8 +58,19 @@ export function WorldsPageClient() {
           const chapters = chaptersByWorld(world);
           return (
             <Link key={world} href={meta.to} className="block brutal-border brutal-press overflow-hidden">
-              <div className={`${meta.heroColor} p-6 md:p-8`}>
-                <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className={`${meta.heroColor} p-6 md:p-8 relative overflow-hidden`}>
+                {/* FAL AI world banner */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <Image
+                    src={WORLD_IMAGES[world]}
+                    alt=""
+                    fill
+                    className="object-cover opacity-20 mix-blend-multiply"
+                    sizes="(max-width: 768px) 100vw, 80vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-current/30 to-transparent opacity-40" />
+                </div>
+                <div className="relative z-10 flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <div className="font-mono text-[9px] uppercase opacity-60 mb-1">WORLD · {stats.chapters} CHAPTERS · {stats.paths} PATHS · {stats.total} MISSIONS</div>
                     <h2 className="font-display text-4xl md:text-6xl leading-none">{meta.emoji} {meta.title}</h2>
@@ -64,7 +83,7 @@ export function WorldsPageClient() {
                     <div className="font-mono text-[9px] uppercase opacity-60">{stats.chaptersComplete}/{stats.chapters} chapters complete</div>
                   </div>
                 </div>
-                <div className="mt-6 flex items-center gap-2">
+                <div className="mt-6 flex items-center gap-2 relative z-10">
                   {chapters.map((ch, i) => {
                     const paths = pathsByWorld(world).filter((p) => p.chapter === ch.slug);
                     const chDone = paths.flatMap((p) => p.missionSlugs).filter((s) => !!completed[s]).length;
@@ -82,7 +101,7 @@ export function WorldsPageClient() {
                   })}
                   <div className="ml-2 font-mono text-[9px] uppercase opacity-50">{chapters.map((ch) => ch.title.split(" ")[0]).join(" → ")}</div>
                 </div>
-                <div className={`mt-4 h-2 brutal-border overflow-hidden ${world === "dj" ? "bg-bone/10" : "bg-ink/10"}`}>
+                <div className={`mt-4 h-2 brutal-border overflow-hidden relative z-10 ${world === "dj" ? "bg-bone/10" : "bg-ink/10"}`}>
                   <div className={`h-full transition-all duration-700 ${world === "dj" ? "bg-volt" : "bg-ink"}`} style={{ width: `${stats.pct}%` }} />
                 </div>
               </div>
