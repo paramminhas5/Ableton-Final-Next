@@ -234,12 +234,13 @@ function AmplitudeDial() {
 }
 
 // ─── BPM Grid ─────────────────────────────────────────────────────────────────
-function BpmGrid() {
+function BpmGrid({ bpm = 120, label }: { bpm?: number; label?: string }) {
   const beats = [1, 2, 3, 4];
   const subs = [1, 2, 3, 4];
+  const secPerBeat = (60 / bpm).toFixed(2);
   return (
     <div className="brutal-border bg-ink p-3">
-      <div className="font-mono text-[9px] text-bone/40 uppercase mb-2">1 bar @ 120 BPM</div>
+      <div className="font-mono text-[9px] text-bone/40 uppercase mb-2">{label ?? `1 bar @ ${bpm} BPM`}</div>
       <div className="flex gap-1">
         {beats.map(b => (
           <div key={b} className="flex-1 space-y-1">
@@ -249,7 +250,7 @@ function BpmGrid() {
                 <div key={s} className={`h-3 brutal-border ${s === 1 ? "bg-acid/50" : "bg-bone/10"}`} />
               ))}
             </div>
-            <div className="font-mono text-[7px] text-bone/30 text-center">0.5s</div>
+            <div className="font-mono text-[7px] text-bone/30 text-center">{secPerBeat}s</div>
           </div>
         ))}
       </div>
@@ -329,16 +330,24 @@ function NoteLengths() {
 
 
 // ─── Scale Steps ─────────────────────────────────────────────────────────────
-function ScaleSteps({ minor = false }: { minor?: boolean }) {
+function ScaleSteps({ minor = false, root = "C", label }: { minor?: boolean; root?: string; label?: string }) {
   const major = ["W", "W", "H", "W", "W", "W", "H"];
-  const min = ["W", "H", "W", "W", "H", "W", "W"];
+  const min =   ["W", "H", "W", "W", "H", "W", "W"];
   const steps = minor ? min : major;
-  const notes = minor
-    ? ["A", "B", "C", "D", "E", "F", "G", "A"]
-    : ["C", "D", "E", "F", "G", "A", "B", "C"];
+
+  // Build the scale notes from the given root
+  const chromatic = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const stepSizes = steps.map(s => s === "W" ? 2 : 1);
+  const rootIdx = chromatic.indexOf(root.replace("b", "#")); // rough enharmonic
+  const noteIndices: number[] = [rootIdx >= 0 ? rootIdx : 0];
+  stepSizes.forEach(s => noteIndices.push((noteIndices[noteIndices.length - 1] + s) % 12));
+  const notes = noteIndices.map(i => chromatic[i]);
+
+  const modeName = label ?? (minor ? `${root} Natural Minor` : `${root} Major`);
+
   return (
     <div className="brutal-border bg-ink p-3">
-      <div className="font-mono text-[8px] text-bone/40 uppercase mb-2">{minor ? "Natural Minor" : "Major Scale"} · W = whole step · H = half step</div>
+      <div className="font-mono text-[8px] text-bone/40 uppercase mb-2">{modeName} · W = whole step · H = half step</div>
       <div className="flex items-end gap-px">
         {notes.map((note, i) => (
           <div key={i} className="flex-1 text-center">
@@ -567,7 +576,21 @@ function HeadroomMeter() {
 }
 
 // ─── master InlineVisual router ──────────────────────────────────────────────
-export function InlineVisual({ type }: { type: NonNullable<VisualType> }) {
+export function InlineVisual({
+  type,
+  bpm,
+  minor,
+  root,
+  scaleLabel,
+  signalNodes,
+}: {
+  type: NonNullable<VisualType>;
+  bpm?: number;
+  minor?: boolean;
+  root?: string;
+  scaleLabel?: string;
+  signalNodes?: string[];
+}) {
   if (!type || type === "none") return null;
   switch (type) {
     case "waveform":          return <AnimatedWaveform />;
@@ -577,11 +600,11 @@ export function InlineVisual({ type }: { type: NonNullable<VisualType> }) {
     case "piano-octave":      return <PianoOctave />;
     case "eq-curve":          return <EqCurve />;
     case "amplitude-dial":    return <AmplitudeDial />;
-    case "bpm-grid":          return <BpmGrid />;
-    case "signal-chain":      return <SignalChain />;
+    case "bpm-grid":          return <BpmGrid bpm={bpm} />;
+    case "signal-chain":      return <SignalChain nodes={signalNodes} />;
     case "stereo-field":      return <StereoField />;
     case "note-lengths":      return <NoteLengths />;
-    case "scale-steps":       return <ScaleSteps />;
+    case "scale-steps":       return <ScaleSteps minor={minor} root={root} label={scaleLabel} />;
     case "chord-stack":       return <ChordStack />;
     case "rhythm-dots":       return <RhythmDots />;
     case "vinyl-platter":     return <VinylPlatter />;

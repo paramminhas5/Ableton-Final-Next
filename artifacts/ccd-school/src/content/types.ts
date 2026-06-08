@@ -99,6 +99,14 @@ export type LessonScreen =
       title: string;         // ≤ 5 words
       body: string;          // ≤ 2 sentences (30 words max)
       keyFact?: string;      // 1 bold callout line ≤ 10 words
+      /** Optional config props passed through to InlineVisual */
+      visualProps?: {
+        bpm?: number;        // for bpm-grid visual
+        minor?: boolean;     // for scale-steps visual
+        root?: string;       // for scale-steps visual (e.g. "A")
+        scaleLabel?: string; // for scale-steps visual (override label)
+        signalNodes?: string[]; // for signal-chain visual
+      };
       visual?:
         | "waveform"           // animated sine wave SVG
         | "waveform-compare"   // sine vs square vs saw comparison
