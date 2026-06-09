@@ -9,10 +9,10 @@ import Link from "next/link";
 import { useProgress } from "@/lib/progress";
 
 const TABS = [
-  { href: "/worlds",   label: "Worlds",  matchFn: (p: string) => p === "/worlds" || p === "/learn" || p.startsWith("/world") || p.startsWith("/path"), icon: LearnIcon },
-  { href: "/daily",    label: "Daily",   matchFn: (p: string) => p === "/daily",   icon: DailyIcon },
-  { href: "/review",   label: "Review",  matchFn: (p: string) => p === "/review",  icon: ReviewIcon, badge: true },
-  { href: "/profile",  label: "Profile", matchFn: (p: string) => p === "/profile" || p.startsWith("/u/"), icon: ProfileIcon },
+  { href: "/worlds",    label: "Worlds",   matchFn: (p: string) => p === "/worlds" || p.startsWith("/world") || p.startsWith("/path") || p === "/learn", icon: WorldsIcon },
+  { href: "/missions",  label: "Missions", matchFn: (p: string) => p === "/missions", icon: MissionsIcon },
+  { href: "/review",    label: "Review",   matchFn: (p: string) => p === "/review",  icon: ReviewIcon, badge: true },
+  { href: "/dashboard", label: "Progress", matchFn: (p: string) => p === "/dashboard" || p === "/profile" || p.startsWith("/u/"), icon: ProgressIcon },
 ] as const;
 
 const HIDDEN_PATTERNS = [
@@ -88,21 +88,23 @@ export function MobileBottomNav() {
 
 // ── SVG Icons ──────────────────────────────────────────────────────────────────
 
-function LearnIcon({ active }: { active: boolean }) {
+function WorldsIcon({ active }: { active: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth={active ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
     </svg>
   );
 }
 
-function DailyIcon({ active }: { active: boolean }) {
+function MissionsIcon({ active }: { active: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth={active ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      <path d="M9 11l3 3L22 4" />
+      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
     </svg>
   );
 }
@@ -118,12 +120,13 @@ function ReviewIcon({ active }: { active: boolean }) {
   );
 }
 
-function ProfileIcon({ active }: { active: boolean }) {
+function ProgressIcon({ active }: { active: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth={active ? 2.5 : 2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <line x1="18" y1="20" x2="18" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="6" y1="20" x2="6" y2="14" />
     </svg>
   );
 }
