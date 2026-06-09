@@ -78,6 +78,13 @@ function Inner({ slug }: { slug: string }) {
 
   const ctx = getMissionContext(slug);
 
+  const worldRoute = ctx.worldRoute || "/worlds";
+
+  const missionIndex = ctx.path
+    ? ctx.path.missionSlugs.indexOf(slug) + 1
+    : 1;
+  const missionTotal = ctx.path?.missionSlugs.length ?? 1;
+
   const coachContext = [
     `[World: ${ctx?.world ?? "unknown"}]`,
     `[${learnMode === "flow" ? "Flow Mode" : "Free Mode"}]`,
@@ -87,12 +94,6 @@ function Inner({ slug }: { slug: string }) {
     `Lesson: "${mission.title}" — ${mission.tagline}.`,
     `Mission ${missionIndex} of ${missionTotal} in this path.`,
   ].filter(Boolean).join(" ");
-  const worldRoute = ctx.worldRoute || "/worlds";
-
-  const missionIndex = ctx.path
-    ? ctx.path.missionSlugs.indexOf(slug) + 1
-    : 1;
-  const missionTotal = ctx.path?.missionSlugs.length ?? 1;
 
   const handleComplete = () => {
     // Always route to /dashboard after lesson completion so users see updated
