@@ -1,31 +1,36 @@
 "use client";
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
 
-export type LearnMode = "classic" | "ccd";
+export type LearnMode = "flow" | "classic";
 // Mode labels (public-facing):
-//   "ccd"     → PATH MODE   — sequential, hearts on, Duolingo-style
-//   "classic" → EXPLORE MODE — all lessons open, no hearts, free-browse
-// Mode/difficulty: only two axes now — learnMode (ccd/classic) and progress.difficulty (normal/hard)
-// The old Beginner/Intermediate/Advanced axis is removed.
+//   "flow"    → FLOW MODE    — sequential, hearts on, Duolingo-style
+//   "classic" → FREE MODE    — all lessons open, no hearts, free-browse
+// Mode/difficulty: only two axes — learnMode (flow/classic) and progress.difficulty (normal/hard)
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
-  ccd:     { name: "PATH MODE",    icon: "🗺",  tagline: "Sequential · Hearts on · XP gated" },
-  classic: { name: "EXPLORE MODE", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
+  flow:    { name: "Flow Mode", icon: "🌊", tagline: "Sequential · Hearts on · XP gated" },
+  classic: { name: "Free Mode", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
 };
 
 const MODE_KEY = "ccd.learnMode";
 
-function getInitialMode(): LearnMode {
-  if (typeof window === "undefined") return "classic";
-  try {
-    const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
-    return saved === "ccd" || saved === "classic" ? saved : "classic";
-  } catch {
-    return "classic";
-  }
+/**
+ * Normalises legacy "ccd" value to "flow".
+ * Any stored "classic" value is preserved as-is.
+ */
+export function normaliseCcdToFlow(raw: string | null): LearnMode {
+  if (raw === "ccd" || raw === "flow") return "flow";
+  if (raw === "classic") return "classic";
+  return "classic"; // default is classic (open)
 }
-
 // ─── Context ─────────────────────────────────────────────────────────────────
 
 type LearnModeContextType = {
@@ -34,12 +39,27 @@ type LearnModeContextType = {
 };
 
 const LearnModeContext = createContext<LearnModeContextType>({
-  learnMode: "classic",
+  learnMode: "flow",
   setLearnMode: () => {},
 });
 
 export function LearnModeProvider({ children }: { children: ReactNode }) {
-  const [learnMode, setLearnModeState] = useState<LearnMode>(getInitialMode);
+  // Always start with "classic" on the server so SSR HTML matches the
+  // initial client render (no hydration mismatch). We then sync from
+  // localStorage in a useEffect (client-only) immediately after mount.
+  const [learnMode, setLearnModeState] = useState<LearnMode>("classic");
+
+  // Hydrate from localStorage after first paint — runs client-side only.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(MODE_KEY);
+      const resolved = normaliseCcdToFlow(saved);
+      // Write back so legacy "ccd" value is migrated
+      if (saved !== resolved) localStorage.setItem(MODE_KEY, resolved);
+      setLearnModeState(resolved);
+      document.documentElement.setAttribute("data-learn-mode", resolved);
+    } catch {}
+  }, []);
 
   const setLearnMode = useCallback((m: LearnMode) => {
     setLearnModeState(m);

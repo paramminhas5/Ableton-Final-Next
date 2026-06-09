@@ -20,8 +20,8 @@ CCD.SCHOOL is a gamified music-education platform covering three worlds:
 | **Producer** | Ableton Live 12 Reference Manual | 73 missions — first contact, sound & MIDI, the mix, performance, advanced, synthesis |
 
 Every mission has two complete learning formats:
-- **CCD Mode** (🔒 Path): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
-- **Classic Mode** (🗺 Explorer): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
+- **Flow Mode** (🌊): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
+- **Free Mode** (🔓): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
 
 ---
 
@@ -115,9 +115,9 @@ artifacts/ccd-school/
 
 Two axes, both always-changeable:
 
-### Axis 1: CCD vs Classic
+### Axis 1: Flow Mode vs Free Mode
 
-| | 🔒 Path Mode (CCD) | 🗺 Explorer Mode (Classic) |
+| | 🌊 Flow Mode | 🔓 Free Mode |
 |---|---|---|
 | Access | Sequential — unlock one at a time | All 153 lessons open immediately |
 | Hearts | 5 hearts; wrong answer costs ♥ | No hearts |
@@ -139,11 +139,16 @@ Toggle lives in the Header (desktop right strip) and mobile drawer. Persists in 
 
 ## Concept Screen Visuals (`LessonVisuals.tsx`)
 
-19 animated SVG/HTML visual types for CCD concept screens:
+19 animated SVG/HTML visual types for CCD concept screens — **now assigned to every concept screen across all 153 missions** ✦ UPDATED:
 
 `waveform` · `waveform-compare` · `frequency-bar` · `piano` · `piano-octave` · `eq-curve` · `amplitude-dial` · `bpm-grid` · `signal-chain` · `stereo-field` · `note-lengths` · `scale-steps` · `chord-stack` · `rhythm-dots` · `vinyl-platter` · `mixer-channel` · `camelot-wheel` · `waveform-zoom` · `headroom-meter`
 
 Plus `diagram` screen kind — custom SVG node-and-arrow diagrams with labelled nodes.
+
+**Data-driven props** ✦ NEW — visuals now accept content-specific configuration:
+- `BpmGrid` — accepts `bpm` + `label` props (shows actual lesson tempo, not hardcoded 120)
+- `ScaleSteps` — accepts `root` + `minor` + `label` props (builds any scale from any root, not always C major)
+- `InlineVisual` — passes all config props through via optional `visualProps` on concept screens
 
 ---
 
@@ -183,7 +188,7 @@ Plus `diagram` screen kind — custom SVG node-and-arrow diagrams with labelled 
 | Feature | How it works |
 |---|---|
 | **XP** | Earned on first completion of each mission |
-| **Hearts** | 5 hearts in CCD Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
+| **Hearts** | 5 hearts in Flow Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
 | **Streak** | Daily XP goal (50 XP); streak shield earned every 7 days |
 | **Gems** | Earned on completion; spend in gem shop |
 | **Rank** | 10+ ranks from Novice → CCD Master based on total XP |
@@ -226,16 +231,67 @@ A floating 🎧 button appears at the bottom-right of every lesson page. Clickin
 
 ## CCD Screens Status
 
-All 153 missions now have complete CCD (`screens[]`) data:
+All 153 missions have complete CCD (`screens[]`) data with visuals, varied exercise types, and contextual audio:
 
-| World | Missions | Status |
-|---|---|---|
-| Fundamentals | 40 | ✅ Complete |
-| DJ World | 40 | ✅ Complete ✦ NEW |
-| Producer (6 chapters) | 73 | ✅ Complete ✦ NEW |
-| **Total** | **153** | **✅ 100% coverage** |
+| World | Missions | Screens | Visuals | Exercise types |
+|---|---|---|---|---|
+| Fundamentals | 40 | ✅ Complete | ✅ All 80 concept screens | ✅ match · type-answer · sequence · audio-id · MCQ |
+| DJ World | 40 | ✅ Complete | ✅ All 80 concept screens ✦ NEW | MCQ |
+| Producer (6 chapters) | 73 | ✅ Complete | ✅ All 182 concept screens ✦ NEW | MCQ |
+| **Total** | **153** | **✅ 100%** | **✅ 342 concept screens** | |
 
-Each mission: 7–8 screens following the pattern: `hook → concept → concept → interact → quiz × 3 → summary`
+Each mission: 7–8 screens — `hook → concept → concept → interact → quiz × 3 → summary`
+
+Exercise types used across the platform:
+- `quiz` (MCQ) — all worlds
+- `match` — tap pairs to connect terms to definitions (Fundamentals)
+- `type-answer` — free-text with fuzzy matching (Fundamentals)
+- `sequence` — arrange items in correct order (Fundamentals)
+- `audio-id` — listen and identify from 4 options (Fundamentals)
+
+---
+
+## What Changed — June 2026 Overhaul (PR #18) ✦ LATEST
+
+### Bug Fixes
+- **Synth missions wired**: `SYNTHS_MISSIONS` was spread into `MISSIONS` without the screen-merge — all 22 synthesis missions showed "not converted to Duolingo format yet" even though 18 fully-authored screen sets existed in `missions-producer-screens.ts`. One-line fix in `missions.ts`. Synth chapter is now fully live.
+- **Onboarding placement path fixed**: Users who selected "Some Experience" → placement test had `onboardingDone` never set and `learnMode` never written. `PlacementTest` now receives an `onComplete` prop; `OnboardingFlow.handlePlacementComplete` calls `setOnboarding + setLearnMode` before routing.
+- **12 `sim:"none"` interact screens fixed**: DJ world had 9 and Producer had 3 interact screens whose prompts promised hands-on interaction ("Adjust buffer size — observe the trade-off") but rendered a blank placeholder. Each is now wired to a real sim: `buffer-sim`, `arrangement`, `device-chain`, `mixer`, `beatmatch-trainer`, `song-structure`, `waveform-visualizer`, etc.
+- **Quiz analytics fixed**: `QuizScreen` was logging `missionSlug: "unknown"` for every quiz answer. Now receives and logs the actual mission slug.
+
+### Duolingo-style Exercise Variety (Fundamentals)
+All 40 Fundamentals missions now use the full range of built-but-unused exercise types:
+- `match` — tap pairs (e.g. waveform shape → harmonic content, interval → semitone count, genre → BPM range)
+- `type-answer` — free text with fuzzy matching (e.g. "What does MIDI stand for?", "Target peak level?", "RT60 abbreviation?")
+- `sequence` — drag/tap to order items correctly (e.g. signal chain stages, note values longest→shortest, scale steps W/H pattern)
+- `audio-id` — hear a synthesised example, identify it from 4 options (e.g. "Which waveform?", "Major or minor chord?", "Is this resolved?")
+
+### Visuals — All Three Worlds
+Every concept screen across all 153 missions now has a contextual visual (previously ~85% were plain text):
+- **Fundamentals** (40 missions, 80 concept screens): all 19 visual types used, chosen by topic — `waveform-compare` for timbre, `frequency-bar` for spectrum, `amplitude-dial` for dynamics, `piano` for melody/MIDI, `scale-steps` for scales, `chord-stack` for harmony, `bpm-grid` for rhythm, `stereo-field` for mixing, etc.
+- **DJ World** (40 missions, 80 concept screens): `vinyl-platter` for culture/history, `mixer-channel` for EQ/faders, `camelot-wheel` for harmonic mixing, `waveform-zoom` for waveform reading, `bpm-grid` for beatmatching/tempo
+- **Producer** (73 missions, 182 concept screens): `waveform-compare` for oscillators/synthesis, `eq-curve` for filters/EQ, `amplitude-dial` for compressor/ADSR, `piano` for MIDI/scales, `headroom-meter` for levels/export
+
+### Data-Driven Visuals
+- `BpmGrid` now accepts `bpm` + `label` props — shows the lesson's actual tempo instead of always "120 BPM"
+- `ScaleSteps` now accepts `root` + `minor` + `label` props — builds the correct scale from any root note instead of always C major
+- `types.ts`: concept screen type extended with optional `visualProps: { bpm?, minor?, root?, scaleLabel?, signalNodes? }`
+
+### Contextual Audio
+14 new specific audio demos added to `ConceptAudio.tsx` — "Tap to hear an example" now plays something genuinely relevant:
+- `playMinorScale` — A natural minor ascending
+- `playPentatonicScale` — C major pentatonic
+- `playMajorMinorCompare` — C major → C minor chord (one semitone difference)
+- `playDominantResolution` — G7 → C major (V7→I cadence, strongest resolution)
+- `playIVVI` — Full I–IV–V–I progression in C major
+- `playEqBright` / `playFilterSweep` — sawtooth with LP filter sweeping open/closed
+- `playADSRDemo` — slow pad vs fast pluck (ADSR comparison back-to-back)
+- `playLFOVibrato` — sine wave with LFO pitch modulation
+- `playDelayDemo` — note with four decaying echo repeats
+- `playStereoWide` — notes panning across the stereo field
+- `playFullDrumLoop` — kick + snare + hi-hat at 128 BPM
+- `playHarmonicMix` — two Camelot-adjacent chords (C major → G major, 8B → 9B)
+- `playSwingGroove` — straight 8ths vs swung 8ths played back-to-back
 
 ---
 
@@ -296,23 +352,25 @@ Each mission: 7–8 screens following the pattern: `hook → concept → concept
 
 6. **Lesson completion → Dashboard redirect** — After completing a lesson, `handleComplete` in `LessonPageClient` currently redirects to `/world/[slug]` after 2.2s. Change to `/dashboard` so users see their updated stats, badge, and next lesson immediately.
 
-7. **Audio examples in concept screens** — `audio.ts` already generates tones via Web Audio. Add short synthesised audio previews for the Fundamentals audio lessons (waveform, frequency-bar, amplitude-dial screen types). No file dependencies needed — pure Web Audio API.
+7. ~~**Audio examples in concept screens**~~ ✅ Done in PR #18 — 14 contextual demos added; every concept screen with a visual plays a relevant audio example.
 
 8. **PlacementTest result → chapter unlock** — `setPlacement(chapter)` writes `unlockedChapter` to progress, but `WorldPathClient` and `WorldPageClient` don't yet read `unlockedChapter` to skip locked chapters. Wire the output to actually unlock the recommended starting chapter.
 
+9. **Exercise variety for DJ + Producer worlds** — PR #18 added `match`, `type-answer`, `sequence`, `audio-id` to Fundamentals only. Apply the same treatment to DJ and Producer missions: convert some MCQs to richer exercise types for variety. The engine already supports them fully — it's a content authoring pass.
+
 ### 🌟 P2 — "Best on the Web" Features
 
-9. **Offline PWA** — `public/manifest.json` exists. Add a service worker (`next-pwa` or custom) to cache lesson pages and simulator bundles. Producers should learn on a plane.
+10. **Offline PWA** — `public/manifest.json` exists. Add a service worker (`next-pwa` or custom) to cache lesson pages and simulator bundles. Producers should learn on a plane.
 
-10. **Web MIDI input** — Wire `navigator.requestMIDIAccess()` to `PianoRollSim`, `BeatBuilderSim`, `DrumPadSim`, and `ChordStackerSim`. Let users plug in a MIDI controller. Massive differentiator for a production-education tool.
+11. **Web MIDI input** — Wire `navigator.requestMIDIAccess()` to `PianoRollSim`, `BeatBuilderSim`, `DrumPadSim`, and `ChordStackerSim`. Let users plug in a MIDI controller. Massive differentiator for a production-education tool.
 
-11. **Share cards after trophies** — `ShareCard.tsx` exists. Surface it after path/chapter/world trophy completion with a branded "I just completed DJ World on CCD.SCHOOL" card. Add social share buttons.
+12. **Share cards after trophies** — `ShareCard.tsx` exists. Surface it after path/chapter/world trophy completion with a branded "I just completed DJ World on CCD.SCHOOL" card. Add social share buttons.
 
-12. **Source citations on lesson pages** — Every mission has `source` fields in `paths.ts` (e.g. `"rekordbox 6.0.0 Instruction Manual — p.77"`). Display them at the bottom of concept screens and Classic lesson pages.
+13. **Source citations on lesson pages** — Every mission has `source` fields in `paths.ts` (e.g. `"rekordbox 6.0.0 Instruction Manual — p.77"`). Display them at the bottom of concept screens and Classic lesson pages.
 
-13. **Public profile at `/u/[username]`** — `PublicProfileClient.tsx` exists. Wire a "Share my profile" button on `/profile` that generates a unique public URL showing XP, rank, completed worlds, and badges.
+14. **Public profile at `/u/[username]`** — `PublicProfileClient.tsx` exists. Wire a "Share my profile" button on `/profile` that generates a unique public URL showing XP, rank, completed worlds, and badges.
 
-14. **Kimi AI context enrichment** — The `/api/beat-coach` route receives a `context` string. Enrich it per-lesson with: world slug, chapter name, lesson title, current mode (CCD/Classic), and hard mode status. Responses will be more targeted.
+15. **Kimi AI context enrichment** — The `/api/beat-coach` route receives a `context` string. Enrich it per-lesson with: world slug, chapter name, lesson title, current mode (CCD/Classic), and hard mode status. Responses will be more targeted.
 
 ---
 

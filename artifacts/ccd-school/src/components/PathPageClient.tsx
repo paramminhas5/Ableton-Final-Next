@@ -1,10 +1,18 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { pathBySlug } from "@/content/paths";
 import { chapterBySlug } from "@/content/chapters";
 import { missionBySlug, MISSIONS } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
+
+const PATH_BG = "https://v3b.fal.media/files/b/0a9d85ab/lT7J8iyOqxw23WB3lEe_u.jpg";
+const WORLD_BANNERS: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  producer: "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
+};
 
 const WORLD_COLORS = {
   fundamentals: { hero: "bg-acid text-ink", accent: "bg-acid", node: "bg-ink text-bone", bar: "bg-ink", cta: "bg-acid text-ink" },
@@ -28,7 +36,7 @@ export function PathPageClient({ slug }: { slug: string }) {
     const isDone = !!completed[s];
     const prevSlug = path.missionSlugs[idx - 1];
     const prevDone = idx === 0 || !!completed[prevSlug];
-    const locked = learnMode === "ccd" && !prevDone && !isDone;
+    const locked = learnMode === "flow" && !prevDone && !isDone;
     return { slug: s, mission, isDone, locked, index: idx };
   });
 
@@ -46,15 +54,37 @@ export function PathPageClient({ slug }: { slug: string }) {
 
   return (
     <main className="min-h-screen bg-bone">
-      <header className={`brutal-border border-x-0 border-t-0 ${colors.hero}`}>
-        <div className="max-w-3xl mx-auto px-4 py-6 md:py-8">
+      <header className={`brutal-border border-x-0 border-t-0 ${colors.hero} relative overflow-hidden`}>
+        {/* PATH_BG layer */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={PATH_BG}
+            alt=""
+            fill
+            className="object-cover opacity-20 mix-blend-multiply"
+            sizes="100vw"
+          />
+        </div>
+        {/* World banner secondary layer */}
+        {WORLD_BANNERS[path.world] && (
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src={WORLD_BANNERS[path.world]}
+              alt=""
+              fill
+              className="object-cover opacity-10 mix-blend-multiply"
+              sizes="100vw"
+            />
+          </div>
+        )}
+        <div className="max-w-3xl mx-auto px-4 py-8 md:py-12 relative z-10">
           <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-60 mb-3 flex-wrap">
             <Link href="/worlds" className="hover:opacity-100">Worlds</Link>
-            <span>›</span>
+            <span className="text-acid font-bold">›</span>
             <Link href={`/world/${path.world}`} className="hover:opacity-100 capitalize">{path.world === "dj" ? "DJ World" : path.world}</Link>
-            <span>›</span>
+            <span className="text-acid font-bold">›</span>
             {chapter && <Link href={`/world/${path.world}`} className="hover:opacity-100">{chapter.title}</Link>}
-            <span>›</span>
+            <span className="text-acid font-bold">›</span>
             <span className="opacity-100">{path.title}</span>
           </div>
           <div className="font-mono text-[9px] uppercase opacity-50 mb-1">PATH {path.number} of {chapter?.pathSlugs.length ?? "?"} in {chapter?.title ?? ""}</div>
@@ -71,15 +101,22 @@ export function PathPageClient({ slug }: { slug: string }) {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 py-10 pb-24">
-        <div className="font-mono text-[9px] uppercase opacity-40 mb-6">// MISSION SNAKE — {totalCount} MISSIONS</div>
+        <div className="font-mono text-[9px] uppercase opacity-40 mb-6 bg-ink text-acid px-4 py-2.5 brutal-border">// MISSION SNAKE — {totalCount} MISSIONS</div>
         <div className="relative space-y-3">
           {missions.map(({ slug: mSlug, mission, isDone, locked, index }) => {
             const indent = getIndent(index);
             const title = mission?.title ?? mSlug.replace(/-/g, " ");
             const xp = mission?.xp ?? 40;
             const isNext = !isDone && !locked && missions.slice(0, index).every((m) => m.isDone || index === 0);
+            const leftBorderColor = isDone
+              ? "border-l-4 border-l-ink"
+              : locked
+              ? "border-l-4 border-l-transparent"
+              : isNext
+              ? "border-l-4 border-l-acid"
+              : "border-l-4 border-l-acid/50";
             const nodeContent = (
-              <div className={`brutal-border flex items-center gap-3 px-4 py-3 w-full max-w-xs transition-all ${isDone ? colors.node : locked ? "bg-bone opacity-35 cursor-not-allowed" : isNext ? `${colors.cta} brutal-press` : "bg-bone hover:bg-sun brutal-press"}`}>
+              <div className={`brutal-border flex items-center gap-3 px-4 w-full max-w-xs transition-all min-h-[72px] ${leftBorderColor} ${isDone ? colors.node : locked ? "bg-bone opacity-35 cursor-not-allowed" : isNext ? `${colors.cta} brutal-press` : "bg-bone hover:bg-sun brutal-press"}`}>
                 <span className={`brutal-border w-8 h-8 shrink-0 flex items-center justify-center font-display text-sm ${isDone ? (path.world === "dj" ? "bg-ink text-bone" : "bg-bone text-ink") : locked ? "bg-bone/50" : "bg-ink text-bone"}`}>
                   {isDone ? "✓" : locked ? "🔒" : index + 1}
                 </span>
@@ -96,8 +133,9 @@ export function PathPageClient({ slug }: { slug: string }) {
             );
           })}
           <div className="mt-8 ml-0">
-            <div className={`brutal-border p-5 max-w-xs ${pathComplete ? (path.world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink") : "bg-bone opacity-40"}`}>
-              <div className="font-display text-2xl">🏆 PATH COMPLETE</div>
+            <div className={`brutal-border p-8 max-w-xs brutal-shadow ${pathComplete ? (path.world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink") : "bg-bone opacity-40"}`}>
+              <div className="font-display text-5xl mb-2">🏆</div>
+              <div className="font-display text-2xl">PATH COMPLETE</div>
               <div className="font-mono text-xs mt-1 opacity-70">{pathComplete ? `You've finished ${path.title}. ${pct}% of this path done.` : `Finish all ${totalCount} missions to earn the path trophy`}</div>
             </div>
           </div>

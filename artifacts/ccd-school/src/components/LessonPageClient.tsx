@@ -19,9 +19,10 @@
  */
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { LessonPlayer } from "@/components/LessonPlayer";
 import { InlineClassicLesson } from "@/components/InlineClassicLesson";
+import { MissionIntroCard } from "@/components/MissionIntroCard";
 import { missionBySlug, nextMission } from "@/content/missions";
 import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
@@ -61,6 +62,8 @@ function Inner({ slug }: { slug: string }) {
   const params = useSearchParams();
   const isReview = params.get("review") === "1";
   const { learnMode } = useLearnMode();
+  // Show the intro card first — user must tap "START LESSON" to begin
+  const [started, setStarted] = useState(false);
 
   const mission = missionBySlug(slug);
   if (!mission) {
@@ -75,19 +78,33 @@ function Inner({ slug }: { slug: string }) {
   const hasScreens = (mission.screens?.length ?? 0) > 0;
   const coachContext = `${mission.title} — ${mission.tagline}`;
 
-  // Resolve correct world route via context (fixes Producer sub-world slug bug)
   const ctx = getMissionContext(slug);
   const worldRoute = ctx.worldRoute || "/worlds";
 
-  // Mission position within its path (for breadcrumb "N of M")
   const missionIndex = ctx.path
     ? ctx.path.missionSlugs.indexOf(slug) + 1
     : 1;
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
 
   const handleComplete = () => {
-    setTimeout(() => router.push(worldRoute), 2200);
+    setTimeout(() => router.push("/dashboard"), 2200);
   };
+
+  // ── Show intro card until user taps START ──────────────────────────────────
+  if (!started) {
+    return (
+      <div>
+        <MissionIntroCard
+          mission={mission}
+          missionIndex={missionIndex}
+          missionTotal={missionTotal}
+          isReview={isReview}
+          onStart={() => setStarted(true)}
+        />
+        <FloatingCoachButton context={coachContext} />
+      </div>
+    );
+  }
 
   // ── PATH MODE ──────────────────────────────────────────────────────────────
   if (learnMode === "ccd") {

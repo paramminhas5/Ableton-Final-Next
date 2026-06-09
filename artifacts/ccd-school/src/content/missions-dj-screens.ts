@@ -18,7 +18,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "What DJs actually do",
       body: "A DJ curates music for an audience — building excitement, peaking at the right moment, and winding down smoothly. The transition from one track to the next is the fundamental skill.",
       keyFact: "The crowd follows your energy. You lead the room.",
-      visual: "vinyl-platter",
+      visual: "fal-image",
+      imageUrl: "/generated/what-is-djing-1.webp",
     },
     {
       kind: "concept",
@@ -73,7 +74,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The core DJ setup",
       body: "Two playback sources (CDJs or turntables), a mixer, and headphones form the classic setup. CDJs are the industry standard — found in every major club worldwide.",
       keyFact: "CDJs + mixer + headphones = professional DJ setup.",
-      visual: "mixer-channel",
+      visual: "fal-image",
+      imageUrl: "/generated/dj-equipment-1.webp",
     },
     {
       kind: "concept",
@@ -128,7 +130,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Two essential modes",
       body: "EXPORT mode prepares USB drives with analysed tracks and playlists for club CDJs. PERFORMANCE mode uses rekordbox itself as playback software with a controller.",
       keyFact: "EXPORT = prepare for clubs. PERFORMANCE = play live with a laptop.",
-      visual: "waveform-zoom",
+      visual: "fal-image",
+      imageUrl: "/generated/rekordbox-intro-1.webp",
     },
     {
       kind: "concept",
@@ -901,7 +904,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "The beatmatching process",
       body: "Listen in headphones. Is the incoming track faster or slower? Adjust the pitch fader. Then nudge the jog wheel to align beat position. When both kick drums lock and stop fluttering — you are beatmatched.",
       keyFact: "Faster incoming = lower pitch fader. Nudge jog to align phase.",
-      visual: "bpm-grid",
+      visual: "fal-image",
+      imageUrl: "/generated/beatmatching-manual-1.webp",
     },
     {
       kind: "concept",
@@ -957,7 +961,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "How SYNC works",
       body: "The SYNC button automatically matches the BPM and beat phase of the incoming deck to the master deck using beat grid data. One deck is always the master tempo reference.",
       keyFact: "SYNC = automatic BPM + phase lock. Grid must be accurate.",
-      visual: "bpm-grid",
+      visual: "fal-image",
+      imageUrl: "/generated/sync-function-1.webp",
     },
     {
       kind: "concept",
@@ -1012,7 +1017,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       title: "Memory cues and hot cues",
       body: "Memory cues are saved in rekordbox and exported to USB — available on any club CDJ. Hot cues give you up to 8 instant-jump performance buttons per deck.",
       keyFact: "Memory cues = permanent. Hot cues = instant performance triggers.",
-      visual: "waveform-zoom",
+      visual: "fal-image",
+      imageUrl: "/generated/cue-points-dj-1.webp",
     },
     {
       kind: "concept",

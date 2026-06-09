@@ -2,14 +2,15 @@
 /**
  * InlineClassicLesson — scrolling lesson rendered inside /learn/[slug].
  * Used in two situations:
- *   1. Explorer Mode  (learnMode === "classic") — all missions, no hearts
- *   2. Path Mode fallback — missions that have no screens[] yet
+ *   1. Free Mode  (learnMode === "classic") — all missions, no hearts
+ *   2. Flow Mode fallback — missions that have no screens[] yet
  *
  * Renders: mode badge → difficulty toggle → explainer blocks → sim → quiz → next CTA
  * Supports Normal / Hard mode matching the experience in MissionPageClient.
  * No redirect. No separate /mission/ page needed.
  */
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
 import type { Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
@@ -21,6 +22,13 @@ import { LESSONS } from "@/content/lesson-deep";
 import { Glossarized, GlossaryScope } from "@/components/Term";
 import { getMissionContext } from "@/lib/missionContext";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
+import { LessonSourceBar } from "@/components/LessonSourceBar";
+
+const WORLD_BANNERS: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  foundations: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+};
 
 interface Props {
   mission: Mission;
@@ -50,8 +58,8 @@ export function InlineClassicLesson({
   const ctx = getMissionContext(m.slug);
   const deep = LESSONS[m.slug];
 
-  // Hard mode state — default from stored difficulty preference (explorer mode only)
-  const defaultHard = learnMode !== "ccd" && progress.difficulty === "hard";
+  // Hard mode state — default from stored difficulty preference (free mode only)
+  const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
   const [internalHardMode, setInternalHardMode] = useState(defaultHard);
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
 
@@ -155,14 +163,14 @@ export function InlineClassicLesson({
         <div className="flex items-center gap-3">
           <Link
             href={ctx.worldRoute || `/world/${m.world === "foundations" ? "fundamentals" : m.world}`}
-            className="brutal-border bg-bone px-3 py-2 font-mono text-[10px] uppercase brutal-press shrink-0"
+            className="brutal-border bg-bone px-4 py-3 font-mono text-[10px] uppercase brutal-press shrink-0"
           >
             ✕
           </Link>
           {/* Mode badge */}
           <div className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase font-bold
             ${mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"}`}>
-            {mode === "explore" ? "🔓 Explore Mode" : "🗺 Path Mode"}
+            {mode === "explore" ? "🔓 Free Mode" : "🌊 Flow Mode"}
           </div>
           <div className="flex-1" />
           {internalHardMode && (
@@ -174,21 +182,35 @@ export function InlineClassicLesson({
         </div>
 
         {/* Mission header */}
-        <header className={`brutal-border ${worldColor} p-5 brutal-shadow`}>
-          <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
-            {ctx.chapter?.title} › {ctx.path?.title}
-          </div>
-          <h1 className="font-display text-4xl leading-none">{m.title}</h1>
-          <p className="font-mono text-sm opacity-70 mt-2 leading-relaxed">{m.tagline}</p>
-          <div className="flex flex-wrap gap-2 mt-3 font-mono text-[9px] uppercase">
-            <span className="brutal-border bg-bone/20 px-2 py-1">+{m.xp} XP</span>
-            {m.badge && <span className="brutal-border bg-bone/20 px-2 py-1">🏅 {m.badge.name}</span>}
+        <header className={`brutal-border ${worldColor} brutal-shadow relative overflow-hidden min-h-[180px] flex flex-col justify-end`}>
+          {/* World banner image */}
+          {WORLD_BANNERS[m.world] && (
+            <div className="absolute inset-0 pointer-events-none">
+              <Image
+                src={WORLD_BANNERS[m.world]}
+                alt=""
+                fill
+                className="object-cover opacity-20 mix-blend-multiply"
+                sizes="100vw"
+              />
+            </div>
+          )}
+          <div className="relative z-10 p-5">
+            <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
+              {ctx.chapter?.title} › {ctx.path?.title}
+            </div>
+            <h1 className="font-display text-4xl leading-none">{m.title}</h1>
+            <p className="font-mono text-sm opacity-70 mt-2 leading-relaxed">{m.tagline}</p>
+            <div className="flex flex-wrap gap-2 mt-3 font-mono text-[9px] uppercase">
+              <span className="brutal-border bg-bone/20 px-2 py-1">+{m.xp} XP</span>
+              {m.badge && <span className="brutal-border bg-bone/20 px-2 py-1">🏅 {m.badge.name}</span>}
+            </div>
           </div>
         </header>
 
         {/* ── WHAT YOU NEED TO KNOW ─────────────────────────────────────── */}
         <section className="space-y-3">
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-1.5 font-mono text-[9px] uppercase font-bold`}>
+          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold tracking-widest w-full`}>
             WHAT YOU NEED TO KNOW
           </div>
 
@@ -196,7 +218,7 @@ export function InlineClassicLesson({
           {internalHardMode && deep?.advanced?.what ? (
             <div className="space-y-2">
               {deep.advanced.what.map((para, i) => (
-                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed">
+                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
                   <Glossarized text={para} />
                 </p>
               ))}
@@ -204,7 +226,7 @@ export function InlineClassicLesson({
           ) : deep?.beginner?.what ? (
             <div className="space-y-2">
               {deep.beginner.what.map((para, i) => (
-                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed">
+                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
                   <Glossarized text={para} />
                 </p>
               ))}
@@ -213,7 +235,7 @@ export function InlineClassicLesson({
             m.explainer.map((block, i) => {
               if (block.kind === "lead" || block.kind === "para") {
                 return (
-                  <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed">
+                  <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
                     <Glossarized text={block.text} />
                   </p>
                 );
@@ -247,9 +269,10 @@ export function InlineClassicLesson({
 
           {/* Normal mode: beginner analogy + why */}
           {!internalHardMode && deep?.beginner?.analogy && (
-            <div className="brutal-border bg-acid text-ink p-4 font-mono text-sm">
-              <span className="font-bold uppercase text-[9px] block mb-1">THINK OF IT LIKE →</span>
-              <Glossarized text={deep.beginner.analogy} />
+            <div className="brutal-border bg-acid text-ink p-5 font-mono text-sm relative overflow-hidden">
+              <span className="font-display text-4xl opacity-20 absolute left-3 top-1 leading-none select-none">&ldquo;</span>
+              <span className="font-bold uppercase text-[9px] block mb-1 relative z-10">THINK OF IT LIKE →</span>
+              <div className="relative z-10"><Glossarized text={deep.beginner.analogy} /></div>
             </div>
           )}
           {!internalHardMode && deep?.beginner?.why && (
@@ -388,15 +411,18 @@ export function InlineClassicLesson({
 
         {/* ── SIMULATOR ───────────────────────────────────────────────────── */}
         <section>
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-1.5 font-mono text-[9px] uppercase font-bold mb-3`}>
+          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest w-full`}>
             TRY IT
+          </div>
+          <div className={`brutal-border ${accentBar} text-ink px-4 py-2 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest`}>
+            // INTERACTIVE SIM
           </div>
           <Simulator type={m.sim.type} preset={m.sim.preset} />
         </section>
 
         {/* ── QUIZ ────────────────────────────────────────────────────────── */}
         <section>
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-1.5 font-mono text-[9px] uppercase font-bold mb-3`}>
+          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest w-full`}>
             QUICK QUIZ {internalHardMode ? <span className="text-bone">🔥 HARD</span> : ""}
           </div>
           {internalHardMode && (
@@ -404,6 +430,16 @@ export function InlineClassicLesson({
               Hard mode — no hints · pass threshold 70% · {deep?.quizHard?.length ? "harder questions loaded" : "hints removed from standard questions"}
             </div>
           )}
+          {/* Context banner — ties quiz questions back to what was just taught */}
+          <div className="brutal-border bg-volt text-bone px-4 py-3 flex items-start gap-3 mb-3">
+            <span className="text-lg shrink-0">🧠</span>
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">TEST YOUR KNOWLEDGE</div>
+              <div className="font-mono text-xs leading-relaxed opacity-90">
+                These questions are based on <strong>{m.title}</strong>. Use what you just read above — not general knowledge.
+              </div>
+            </div>
+          </div>
           <Quiz
             key={`${m.slug}-${internalHardMode}`}
             qs={quizQs}
@@ -415,6 +451,9 @@ export function InlineClassicLesson({
             onPerfect={onCorrect}
           />
         </section>
+
+        {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
+        <LessonSourceBar source={ctx?.path?.source} />
 
         {/* ── NEXT LESSON CTA ─────────────────────────────────────────────── */}
         {nextSlug && done && (

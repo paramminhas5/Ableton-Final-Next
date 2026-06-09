@@ -192,7 +192,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
               <div className="font-display text-base mb-1">♥ Hearts</div>
               <div className="font-mono text-[10px] leading-relaxed opacity-70">
                 You have <strong>{count}/{MAX_HEARTS}</strong> hearts.
-                Each wrong answer in <strong>PATH MODE</strong> costs 1 heart.
+                Each wrong answer in <strong>Flow Mode</strong> costs 1 heart.
               </div>
               {!full && (
                 <div className="font-mono text-[10px] mt-1.5 opacity-60">
@@ -342,41 +342,41 @@ function XpStreakBadge() {
 
 
 
-// ─── ModeTogglePill — PATH MODE / EXPLORE MODE ───────────────────────────────
+// ─── ModeTogglePill — FLOW MODE / FREE MODE ──────────────────────────────────
 
 function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const { learnMode, setLearnMode } = useLearnMode();
   const [toast, setToast] = useState<string | null>(null);
 
   const toggle = useCallback(() => {
-    const next = learnMode === "ccd" ? "classic" : "ccd";
+    const next = learnMode === "flow" ? "classic" : "flow";
     setLearnMode(next);
     setToast(
-      next === "ccd"
-        ? "🗺 PATH MODE — sequential, hearts on"
-        : "🔓 EXPLORE MODE — all lessons open"
+      next === "flow"
+        ? "🌊 FLOW MODE — locked in, hearts on, sequential"
+        : "🔓 FREE MODE — all lessons open"
     );
     setTimeout(() => setToast(null), 2800);
   }, [learnMode, setLearnMode]);
 
-  const isPath = learnMode === "ccd";
+  const isPath = learnMode === "flow";
 
   return (
     <div className="relative">
       <button
         onClick={toggle}
         title={isPath
-          ? "PATH MODE — click to switch to Explore Mode"
-          : "EXPLORE MODE — click to switch to Path Mode"}
-        aria-label={isPath ? "Currently in PATH MODE. Click to switch to EXPLORE MODE" : "Currently in EXPLORE MODE. Click to switch to PATH MODE"}
+          ? "FLOW MODE — click to switch to Free Mode"
+          : "FREE MODE — click to switch to Flow Mode"}
+        aria-label={isPath ? "Currently in FLOW MODE. Click to switch to FREE MODE" : "Currently in FREE MODE. Click to switch to FLOW MODE"}
         className={`brutal-border px-3 py-1.5 font-mono text-[10px] uppercase brutal-press transition-all flex items-center gap-2 font-bold
           ${isPath
             ? "bg-acid text-ink hover:bg-sun border-2"
             : "bg-bone text-ink hover:bg-sun border-2"}`}
       >
-        <span className="text-sm">{isPath ? "🗺" : "🔓"}</span>
+        <span className="text-sm">{isPath ? "🌊" : "🔓"}</span>
         {!compact && (
-          <span className="tracking-wider">{isPath ? "PATH" : "EXPLORE"}</span>
+          <span className="tracking-wider">{isPath ? "FLOW" : "FREE"}</span>
         )}
         {!compact && (
           <span className="opacity-40 text-[8px]">▼</span>
@@ -555,10 +555,10 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           <div>
             <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Learning Mode</div>
             <div className="font-mono text-[10px] uppercase font-bold">
-              {learnMode === "ccd" ? "🗺 PATH MODE" : "🔓 EXPLORE MODE"}
+              {learnMode === "flow" ? "🌊 FLOW MODE" : "🔓 FREE MODE"}
             </div>
             <div className="font-mono text-[8px] uppercase opacity-50 mt-0.5 leading-tight">
-              {learnMode === "ccd" ? "Sequential · hearts on" : "All open · no hearts"}
+              {learnMode === "flow" ? "Sequential · hearts on" : "All open · no hearts"}
             </div>
           </div>
           <ModeTogglePill compact />
