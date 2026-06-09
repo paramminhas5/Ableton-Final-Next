@@ -1,12 +1,8 @@
 "use client";
 /**
- * OnboardingFlow — shown once to brand-new users.
- *
- * Step 1: Experience level        (Beginner / Some / Expert)
- * Step 2: What to learn?          (Fundamentals / DJ / Producer)
- * Step 3: How to learn?           (FLOW MODE / FREE MODE)
- * Step 4: Adjust difficulty       (Explore only — Normal / Hard)
- * Step 5: World overview          (Chapters + missions in chosen world, then START)
+ * OnboardingFlow — DJ Pawsworth guides new users through setup.
+ * CCD-style: electric-blue background, Bowlby One headings,
+ * chunk-shadow cards, border-4, DJ Cat mascot on every step.
  */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,209 +12,171 @@ import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { PlacementTest } from "@/components/PlacementTest";
+import { motion, AnimatePresence } from "framer-motion";
 
-const ONBOARDING_BG = "https://v3b.fal.media/files/b/0a9d85a6/QJa9Aa24ygZJULRgwCBws.jpg";
-const WORLD_BANNERS: Record<string, string> = {
-  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
-  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
-};
-
-type World = "fundamentals" | "dj" | "producer";
-type LearnMode = "flow" | "classic";
+type World      = "fundamentals" | "dj" | "producer";
+type LearnMode  = "flow" | "classic";
 type Difficulty = "normal" | "hard";
 
 const WORLD_ETAS: Record<string, string> = {
   fundamentals: "~3–4 weeks at 30 min/day",
-  dj: "~3–4 weeks at 30 min/day",
-  producer: "~6–8 weeks at 30 min/day",
+  dj:           "~3–4 weeks at 30 min/day",
+  producer:     "~6–8 weeks at 30 min/day",
 };
 
-// ─── static data ─────────────────────────────────────────────────────────────
-
 const WORLDS: {
-  id: World;
-  emoji: string;
-  title: string;
-  tagline: string;
-  detail: string;
-  color: string;
-  border: string;
-  firstLesson: string;
+  id: World; emoji: string; title: string; tagline: string; detail: string;
+  color: string; firstLesson: string;
 }[] = [
-  {
-    id: "fundamentals",
-    emoji: "🎵",
-    title: "Fundamentals",
+  { id: "fundamentals", emoji: "🎵", title: "Fundamentals",
     tagline: "Sound, rhythm, melody, harmony & music tech",
     detail: "The vocabulary of music — built from zero. Perfect if you're new or want to fill gaps.",
-    color: "bg-acid text-ink",
-    border: "border-ink",
-    firstLesson: "what-is-sound",
-  },
-  {
-    id: "dj",
-    emoji: "🎧",
-    title: "DJ World",
+    color: "bg-acid text-ink", firstLesson: "what-is-sound" },
+  { id: "dj", emoji: "🎧", title: "DJ World",
     tagline: "Beatmatching, crowd reading, rekordbox, set building",
-    detail: "Learn to DJ properly — from gear setup through to reading a room. Built from the rekordbox 6.0 Manual.",
-    color: "bg-ink text-bone",
-    border: "border-bone",
-    firstLesson: "what-is-djing",
-  },
-  {
-    id: "producer",
-    emoji: "🎛",
-    title: "Producer",
+    detail: "Learn to DJ properly — from gear setup through to reading a room.",
+    color: "bg-ink text-bone", firstLesson: "what-is-djing" },
+  { id: "producer", emoji: "🎛", title: "Producer",
     tagline: "Ableton Live 12 — from zero to full track production",
-    detail: "Every instrument, effect, and workflow in Ableton Live 12. Built from the official Reference Manual.",
-    color: "bg-sun text-ink",
-    border: "border-ink",
-    firstLesson: "what-is-live",
-  },
+    detail: "Every instrument, effect, and workflow in Ableton Live 12.",
+    color: "bg-electric-blue text-bone", firstLesson: "what-is-live" },
 ];
 
 const CHAPTER_EMOJIS: Record<string, string> = {
-  "sound-science": "🔊",
-  "rhythm-and-time": "🥁",
-  "melody-and-pitch": "🎵",
-  "harmony-and-chords": "🎹",
-  "music-technology": "💻",
-  "setup-and-culture": "🎧",
-  "the-library": "📚",
-  "the-mix-dj": "🎛",
-  "dj-performance": "🎤",
-  "dj-mastery": "🏆",
-  "first-contact": "🖥",
-  "sound-and-midi": "🎼",
-  "the-mix-producer": "🎚",
-  "performance-and-flow": "🚀",
-  "advanced-producer": "⚡",
+  "sound-science": "🔊", "rhythm-and-time": "🥁", "melody-and-pitch": "🎵",
+  "harmony-and-chords": "🎹", "music-technology": "💻", "setup-and-culture": "🎧",
+  "the-library": "📚", "the-mix-dj": "🎛", "dj-performance": "🎤",
+  "dj-mastery": "🏆", "first-contact": "🖥", "sound-and-midi": "🎼",
+  "the-mix-producer": "🎚", "performance-and-flow": "🚀", "advanced-producer": "⚡",
   synthesis: "🌀",
 };
 
-// ─── step components ──────────────────────────────────────────────────────────
+// ─── DJ Cat speech bubble messages per step ───────────────────────────────────
+const CAT_MESSAGES: Record<number, string> = {
+  0: "Hey! I'm DJ Pawsworth. Let me help you get started. First — how much do you already know? 🎵",
+  1: "Nice! Now pick the world you want to conquer. You can always switch later. 🌍",
+  2: "Almost there! Choose your learning style — I recommend Flow Mode for structure. 🌊",
+  3: "You're hardcore! Pick your difficulty level. No wrong answer here. 🔥",
+  4: "This is it — let's see what you're getting into. Ready to press play? 🎧",
+};
 
+// Pose per step
+const CAT_POSES = ["handstand", "cap", "play", "neutral", "celebrate"] as const;
+const CAT_SRCS  = [
+  "/cats/cat-handstand.png",
+  "/cats/cat-cap.png",
+  "/cats/cat-dj.png",
+  "/cats/cat-dj-hero.png",
+  "/cats/cat-headphones-dance.png",
+];
+
+// ─── Step indicator ───────────────────────────────────────────────────────────
 function StepIndicator({ current, total }: { current: number; total: number }) {
   return (
-    <div className="flex gap-2 justify-center mb-8">
+    <div className="flex gap-2 justify-center mb-6">
       {Array.from({ length: total }).map((_, i) => (
-        <div
-          key={i}
+        <div key={i}
           className={`h-3 w-10 brutal-border transition-all duration-300 ${
             i < current ? "bg-acid" : i === current ? "bg-acid/60" : "bg-bone/20"
           }`}
-          style={i <= current ? { boxShadow: '0 0 8px #C6FF00' } : undefined}
+          style={i <= current ? { boxShadow: "0 0 8px hsl(84 81% 56%)" } : undefined}
         />
       ))}
     </div>
   );
 }
 
-// Step 0 — Experience level
+// ─── DJ Cat mascot header for each step ──────────────────────────────────────
+function StepCat({ step }: { step: number }) {
+  const src = CAT_SRCS[step % CAT_SRCS.length];
+  const msg = CAT_MESSAGES[step] ?? "Let's do this! 🐱";
+
+  return (
+    <motion.div
+      key={step}
+      initial={{ opacity: 0, scale: 0.7, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+      className="flex flex-col items-center gap-3 mb-8"
+    >
+      {/* Speech bubble */}
+      <div className="relative bg-bone text-ink brutal-border px-4 py-3 chunk-shadow max-w-[280px] text-center">
+        <p className="font-sans text-sm leading-snug">{msg}</p>
+        {/* Arrow */}
+        <span className="absolute -bottom-[18px] left-1/2 -translate-x-1/2 w-0 h-0"
+          style={{ borderLeft: "10px solid transparent", borderRight: "10px solid transparent", borderTop: "14px solid hsl(222 47% 4%)" }}
+          aria-hidden />
+        <span className="absolute -bottom-[12px] left-1/2 -translate-x-1/2 w-0 h-0"
+          style={{ borderLeft: "8px solid transparent", borderRight: "8px solid transparent", borderTop: "11px solid hsl(20 6% 90%)" }}
+          aria-hidden />
+      </div>
+      {/* Cat */}
+      <div className="relative w-28 h-28 mt-4 wiggle"
+        style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}>
+        <Image src={src} alt="DJ Pawsworth" fill className="object-contain" sizes="112px" priority />
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Step 0 — Experience ──────────────────────────────────────────────────────
 function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") => void }) {
   return (
     <div className="space-y-6 animate-fade-in">
+      <StepCat step={0} />
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 1 OF 4</div>
-        <h1 className="font-display text-6xl md:text-7xl leading-none">
-          BEFORE WE START,<br />
-          <span className="text-acid">HOW MUCH DO YOU KNOW?</span>
+        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 1 OF 4</div>
+        <h1 className="font-display text-5xl md:text-6xl leading-none">
+          HOW MUCH DO<br /><span className="text-acid">YOU KNOW?</span>
         </h1>
-        <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
-          This helps us put you in the right place.
-        </p>
+        <p className="font-sans text-sm opacity-60 mt-3 leading-relaxed">This helps me put you in the right place.</p>
       </div>
       <div className="space-y-3">
-        <button
-          onClick={() => onPick("none")}
-          className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press brutal-shadow"
-        >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0 mt-0.5">🌱</span>
-            <div>
-              <div className="font-display text-xl">Total Beginner</div>
-              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
-                I have never made music or DJed. Start me from the very beginning.
+        {[
+          { id: "none" as const,  icon: "🌱", title: "Total Beginner",  sub: "I've never made music or DJed. Start me from scratch.", color: "bg-acid text-ink" },
+          { id: "some" as const,  icon: "🎛", title: "Some Experience", sub: "I've dabbled — beats, a DAW, or DJed a little.", color: "bg-bone text-ink" },
+          { id: "lots" as const,  icon: "🏆", title: "Experienced",     sub: "I know music theory, produce tracks, or DJ regularly.", color: "bg-ink text-bone" },
+        ].map(opt => (
+          <button key={opt.id} onClick={() => onPick(opt.id)}
+            className={`w-full brutal-border ${opt.color} p-5 text-left brutal-press chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform`}>
+            <div className="flex items-start gap-3">
+              <span className="text-3xl shrink-0 mt-0.5">{opt.icon}</span>
+              <div>
+                <div className="font-display text-xl">{opt.title}</div>
+                <div className="font-sans text-xs opacity-70 mt-1 leading-relaxed">{opt.sub}</div>
               </div>
             </div>
-          </div>
-        </button>
-        <button
-          onClick={() => onPick("some")}
-          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun/30 transition-colors"
-        >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0 mt-0.5">🎛</span>
-            <div>
-              <div className="font-display text-xl">Some Experience</div>
-              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
-                I have dabbled — made some beats, played around in a DAW, or DJed a little. Help me find my level.
-              </div>
-              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">Short placement test → skip ahead if ready</div>
-            </div>
-          </div>
-        </button>
-        <button
-          onClick={() => onPick("lots")}
-          className="w-full brutal-border bg-ink text-bone p-5 text-left brutal-press brutal-shadow"
-        >
-          <div className="flex items-start gap-3">
-            <span className="text-3xl shrink-0 mt-0.5">🏆</span>
-            <div>
-              <div className="font-display text-xl">Experienced</div>
-              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
-                I know music theory, have produced tracks, or DJ regularly. Let me jump straight in.
-              </div>
-              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">Skip to world selection → all chapters unlocked</div>
-            </div>
-          </div>
-        </button>
+          </button>
+        ))}
       </div>
     </div>
   );
 }
 
-// Step 1 — Pick world
+// ─── Step 1 — World ───────────────────────────────────────────────────────────
 function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experience: "none" | "some" | "lots" | null }) {
   const isPlacementNext = experience === "some";
   return (
     <div className="space-y-6 animate-fade-in">
+      <StepCat step={1} />
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 2 OF 4</div>
-        <h1 className="font-display text-6xl md:text-7xl leading-none">
-          WHAT DO YOU<br />
-          <span className="text-acid">WANT TO LEARN?</span>
+        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 2 OF 4</div>
+        <h1 className="font-display text-5xl md:text-6xl leading-none">
+          WHAT DO YOU<br /><span className="text-acid">WANT TO LEARN?</span>
         </h1>
-        <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
-          {isPlacementNext
-            ? "Pick a world — we'll run a quick placement test to find your level."
-            : "Pick a world. You can switch anytime from your profile."}
+        <p className="font-sans text-sm opacity-60 mt-3 leading-relaxed">
+          {isPlacementNext ? "Pick a world — I'll run a quick placement test." : "Pick a world. Switch anytime from your profile."}
         </p>
       </div>
       <div className="space-y-3">
-        {WORLDS.map((w) => (
-          <button
-            key={w.id}
-            onClick={() => onPick(w.id)}
-            className={`w-full brutal-border ${w.color} p-7 text-left brutal-press brutal-shadow transition-all hover:scale-[1.01] relative overflow-hidden`}
-          >
-            {/* World banner image for fundamentals and dj */}
-            {WORLD_BANNERS[w.id] && (
-              <div className="absolute inset-0 pointer-events-none">
-                <Image
-                  src={WORLD_BANNERS[w.id]}
-                  alt=""
-                  fill
-                  className="object-cover opacity-15 mix-blend-multiply"
-                  sizes="100vw"
-                />
-              </div>
-            )}
-            <div className="relative z-10 flex items-center gap-3">
+        {WORLDS.map(w => (
+          <button key={w.id} onClick={() => onPick(w.id)}
+            className={`w-full brutal-border ${w.color} p-6 text-left brutal-press chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform`}>
+            <div className="flex items-center gap-3">
               <span className="text-4xl shrink-0">{w.emoji}</span>
               <div className="flex-1 min-w-0">
                 <div className="font-display text-2xl">{w.title}</div>
-                <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">{w.tagline}</div>
+                <div className="font-sans text-xs opacity-70 mt-0.5 leading-relaxed">{w.tagline}</div>
               </div>
               <span className="font-display text-2xl opacity-60 shrink-0">{isPlacementNext ? "→ test" : "→"}</span>
             </div>
@@ -226,10 +184,8 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
         ))}
       </div>
       <div className="text-center">
-        <button
-          onClick={() => onPick("fundamentals")}
-          className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
-        >
+        <button onClick={() => onPick("fundamentals")}
+          className="font-mono text-xs uppercase opacity-40 hover:opacity-70 underline underline-offset-2">
           Not sure? Start with Fundamentals
         </button>
       </div>
@@ -237,32 +193,26 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
   );
 }
 
-// Step 2 — Pick mode
+// ─── Step 2 — Mode ────────────────────────────────────────────────────────────
 function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMode) => void; onBack: () => void }) {
-  const w = WORLDS.find((x) => x.id === world)!;
+  const w = WORLDS.find(x => x.id === world)!;
   return (
     <div className="space-y-6 animate-fade-in">
+      <StepCat step={2} />
       <div>
-        <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
-          ← back
-        </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 3 OF 4</div>
-        <h1 className="font-display text-6xl md:text-7xl leading-none">
-          PICK YOUR<br />
-          <span className="text-acid">LEARNING STYLE</span>
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 3 OF 4</div>
+        <h1 className="font-display text-5xl md:text-6xl leading-none">
+          PICK YOUR<br /><span className="text-acid">LEARNING STYLE</span>
         </h1>
         <div className={`brutal-border ${w.color} px-4 py-2 inline-flex items-center gap-2 mt-3`}>
           <span>{w.emoji}</span>
           <span className="font-mono text-xs uppercase">{w.title}</span>
         </div>
       </div>
-
       <div className="space-y-4">
-        {/* FLOW MODE */}
-        <button
-          onClick={() => onPick("flow")}
-          className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun transition-colors"
-        >
+        <button onClick={() => onPick("flow")}
+          className="w-full brutal-border bg-acid text-ink p-5 text-left brutal-press chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">
           <div className="flex items-start gap-4">
             <span className="text-4xl shrink-0 mt-0.5">🌊</span>
             <div className="flex-1">
@@ -270,137 +220,70 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
                 <div className="font-display text-2xl">FLOW MODE</div>
                 <span className="brutal-border bg-ink text-bone px-2 py-0.5 font-mono text-[9px] uppercase">RECOMMENDED</span>
               </div>
-              <div className="font-mono text-xs opacity-80 leading-relaxed mb-3">
+              <div className="font-sans text-xs opacity-80 leading-relaxed mb-3">
                 Structured like Duolingo — missions unlock one by one. Wrong answers cost a heart.
-                Complete each lesson before the next opens. Keeps you accountable.
               </div>
               <div className="grid grid-cols-2 gap-1.5 font-mono text-[9px] uppercase">
-                {[
-                  { icon: "🔒", text: "Sequential unlocking" },
-                  { icon: "❤️", text: "Hearts on wrong answers" },
-                  { icon: "⚡", text: "XP gating between paths" },
-                  { icon: "🏆", text: "Trophy rewards" },
-                ].map(({ icon, text }) => (
-                  <div key={text} className="flex items-center gap-1.5 opacity-80">
-                    <span>{icon}</span><span>{text}</span>
-                  </div>
+                {[["🔒","Sequential unlocking"],["❤️","Hearts on wrong answers"],["⚡","XP gating"],["🏆","Trophy rewards"]].map(([ic,tx]) => (
+                  <div key={tx} className="flex items-center gap-1.5 opacity-80"><span>{ic}</span><span>{tx}</span></div>
                 ))}
               </div>
             </div>
           </div>
         </button>
-
-        {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-ink/20" />
           <span className="font-mono text-[9px] uppercase opacity-40">or</span>
           <div className="flex-1 h-px bg-ink/20" />
         </div>
-
-        {/* FREE MODE */}
-        <button
-          onClick={() => onPick("classic")}
-          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-sun/40 transition-colors"
-        >
+        <button onClick={() => onPick("classic")}
+          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">
           <div className="flex items-start gap-4">
             <span className="text-4xl shrink-0 mt-0.5">🔓</span>
             <div className="flex-1">
               <div className="font-display text-2xl mb-1">FREE MODE</div>
-              <div className="font-mono text-xs opacity-70 leading-relaxed mb-3">
-                All lessons open from day one. Browse freely, jump to any topic, no hearts, no gates.
-                You control the pace entirely.
-              </div>
-              <div className="grid grid-cols-2 gap-1.5 font-mono text-[9px] uppercase">
-                {[
-                  { icon: "🔓", text: "All lessons unlocked" },
-                  { icon: "🚫", text: "No hearts / no limits" },
-                  { icon: "🎯", text: "Jump to any topic" },
-                  { icon: "📖", text: "Normal & hard difficulty" },
-                ].map(({ icon, text }) => (
-                  <div key={text} className="flex items-center gap-1.5 opacity-60">
-                    <span>{icon}</span><span>{text}</span>
-                  </div>
-                ))}
+              <div className="font-sans text-xs opacity-70 leading-relaxed">
+                All lessons open from day one. Browse freely, no hearts, no gates.
               </div>
             </div>
           </div>
         </button>
       </div>
-
-      <div className="brutal-border bg-bone/50 p-4">
-        <div className="font-mono text-[9px] uppercase opacity-50 mb-1">💡 YOU CAN SWITCH ANYTIME</div>
-        <div className="font-mono text-xs opacity-60 leading-relaxed">
-          The mode toggle is always visible in the top navigation bar. Switch between FLOW MODE and FREE MODE at any point — your progress carries over.
-        </div>
-      </div>
     </div>
   );
 }
 
-// Step 3 — Difficulty (Classic only)
-function StepDifficulty({
-  world,
-  onPick,
-  onBack,
-}: {
-  world: World;
-  onPick: (d: Difficulty) => void;
-  onBack: () => void;
-}) {
-  const w = WORLDS.find((x) => x.id === world)!;
+// ─── Step 3 — Difficulty ──────────────────────────────────────────────────────
+function StepDifficulty({ world, onPick, onBack }: { world: World; onPick: (d: Difficulty) => void; onBack: () => void }) {
+  const w = WORLDS.find(x => x.id === world)!;
   return (
     <div className="space-y-6 animate-fade-in">
+      <StepCat step={3} />
       <div>
-        <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
-          ← back
-        </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 4 OF 5</div>
-        <h1 className="font-display text-6xl md:text-7xl leading-none">
-          ADJUST THE<br />
-          <span className="text-acid">DIFFICULTY</span>
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 4 OF 5</div>
+        <h1 className="font-display text-5xl md:text-6xl leading-none">
+          ADJUST THE<br /><span className="text-acid">DIFFICULTY</span>
         </h1>
-        <div className={`brutal-border ${w.color} px-4 py-2 inline-flex items-center gap-2 mt-3`}>
-          <span>{w.emoji}</span>
-          <span className="font-mono text-xs uppercase">{w.title} · Free Mode</span>
-        </div>
-        <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
-          You can change this at any time from the mission page.
-        </p>
       </div>
       <div className="space-y-3">
-        <button
-          onClick={() => onPick("normal")}
-          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press brutal-shadow hover:bg-acid/30 transition-colors"
-        >
+        <button onClick={() => onPick("normal")}
+          className="w-full brutal-border bg-bone text-ink p-5 text-left brutal-press chunk-shadow hover:bg-acid/30 transition-colors">
           <div className="flex items-start gap-3">
             <span className="text-3xl shrink-0 mt-0.5">📖</span>
             <div>
               <div className="font-display text-xl">Normal</div>
-              <div className="font-mono text-xs opacity-70 mt-1 leading-relaxed">
-                Full hints available, standard questions, 50% pass threshold. 
-                Recommended if you're new to this topic.
-              </div>
-              <div className="font-mono text-[10px] uppercase opacity-50 mt-2">
-                Hints on · Standard questions · 50% to pass
-              </div>
+              <div className="font-sans text-xs opacity-70 mt-1 leading-relaxed">Full hints, standard questions, 50% pass threshold.</div>
             </div>
           </div>
         </button>
-        <button
-          onClick={() => onPick("hard")}
-          className="w-full brutal-border bg-hot text-bone p-5 text-left brutal-press brutal-shadow"
-        >
+        <button onClick={() => onPick("hard")}
+          className="w-full brutal-border bg-hot text-bone p-5 text-left brutal-press chunk-shadow">
           <div className="flex items-start gap-3">
             <span className="text-3xl shrink-0 mt-0.5">🔥</span>
             <div>
               <div className="font-display text-xl">Hard</div>
-              <div className="font-mono text-xs opacity-80 mt-1 leading-relaxed">
-                No hints, harder questions where available, 70% pass threshold.
-                For those who already have some background.
-              </div>
-              <div className="font-mono text-[10px] uppercase opacity-60 mt-2">
-                No hints · Harder questions · 70% to pass
-              </div>
+              <div className="font-sans text-xs opacity-80 mt-1 leading-relaxed">No hints, harder questions, 70% pass threshold.</div>
             </div>
           </div>
         </button>
@@ -409,53 +292,39 @@ function StepDifficulty({
   );
 }
 
-// Step 4 — World overview + launch
-function StepOverview({
-  world,
-  mode,
-  difficulty,
-  experience,
-  onStart,
-  onBack,
-}: {
-  world: World;
-  mode: LearnMode;
-  difficulty: Difficulty;
-  experience: "none" | "some" | "lots" | null;
-  onStart: () => void;
-  onBack: () => void;
+// ─── Step 4 — Overview + Launch ───────────────────────────────────────────────
+function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: {
+  world: World; mode: LearnMode; difficulty: Difficulty;
+  experience: "none" | "some" | "lots" | null; onStart: () => void; onBack: () => void;
 }) {
-  const w = WORLDS.find((x) => x.id === world)!;
+  const w = WORLDS.find(x => x.id === world)!;
   const chapters = chaptersByWorld(world);
   const allPaths = pathsByWorld(world);
-  const totalMissions = allPaths.flatMap((p) => p.missionSlugs).length;
+  const totalMissions = allPaths.flatMap(p => p.missionSlugs).length;
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <StepCat step={4} />
       <div>
-        <button onClick={onBack} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block">
-          ← back
-        </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-50 mb-2">
           {mode === "flow" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
         </div>
-        <h1 className="font-display text-6xl md:text-7xl leading-none">
-          HERE&apos;S WHAT<br />
-          <span className="text-acid">YOU&apos;LL LEARN</span>
+        <h1 className="font-display text-5xl md:text-6xl leading-none">
+          HERE&apos;S WHAT<br /><span className="text-acid">YOU&apos;LL LEARN</span>
         </h1>
       </div>
 
       {/* World hero card */}
-      <div className={`brutal-border ${w.color} p-5 brutal-shadow`}>
+      <div className={`brutal-border ${w.color} p-5 chunk-shadow`}>
         <div className="flex items-center gap-3 mb-3">
           <span className="text-4xl">{w.emoji}</span>
           <div>
             <div className="font-display text-3xl">{w.title}</div>
-            <div className="font-mono text-xs opacity-70 mt-0.5">{w.tagline}</div>
+            <div className="font-sans text-xs opacity-70 mt-0.5">{w.tagline}</div>
           </div>
         </div>
-        <div className="font-mono text-xs opacity-70 leading-relaxed mb-3">{w.detail}</div>
-        <div className="flex flex-wrap gap-2 font-mono text-[10px] uppercase">
+        <div className="flex flex-wrap gap-2 font-mono text-[10px] uppercase mt-3">
           <span className="brutal-border bg-ink/10 px-2 py-1">{chapters.length} chapters</span>
           <span className="brutal-border bg-ink/10 px-2 py-1">{allPaths.length} paths</span>
           <span className="brutal-border bg-ink/10 px-2 py-1">{totalMissions} missions</span>
@@ -465,11 +334,11 @@ function StepOverview({
 
       {/* Chapter breakdown */}
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-3">// CHAPTERS</div>
+        <div className="font-mono text-xs uppercase opacity-50 mb-3">// CHAPTERS</div>
         <div className="space-y-2">
           {chapters.map((ch, i) => {
-            const paths = allPaths.filter((p) => p.chapter === ch.slug);
-            const missionCount = paths.flatMap((p) => p.missionSlugs).length;
+            const paths = allPaths.filter(p => p.chapter === ch.slug);
+            const missionCount = paths.flatMap(p => p.missionSlugs).length;
             const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
             return (
               <div key={ch.slug} className="brutal-border bg-bone/10 p-4">
@@ -478,18 +347,9 @@ function StepOverview({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
                       <div className="font-display text-base leading-tight">{ch.title}</div>
-                      <div className="font-mono text-[9px] uppercase opacity-50 shrink-0">
-                        {missionCount} missions
-                      </div>
+                      <div className="font-mono text-[9px] uppercase opacity-50 shrink-0">{missionCount} missions</div>
                     </div>
-                    <div className="font-mono text-xs opacity-60 mt-0.5 leading-snug">{ch.tagline}</div>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {paths.map((p) => (
-                        <span key={p.slug} className="font-mono text-[9px] uppercase opacity-40 brutal-border bg-bone/10 px-1.5 py-0.5">
-                          {p.title}
-                        </span>
-                      ))}
-                    </div>
+                    <div className="font-sans text-xs opacity-60 mt-0.5 leading-snug">{ch.tagline}</div>
                   </div>
                 </div>
               </div>
@@ -500,138 +360,78 @@ function StepOverview({
 
       {/* Setup summary */}
       <div className="brutal-border bg-bone/10 p-4 space-y-2">
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-1">YOUR SETUP</div>
-        <div className="flex items-center gap-3 font-mono text-sm">
-          <span className="text-acid font-bold shrink-0">✓</span>
-          World: <strong>{w.title}</strong>
-        </div>
-        <div className="flex items-center gap-3 font-mono text-sm">
-          <span className="text-acid font-bold shrink-0">✓</span>
-          Mode: <strong>{mode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}</strong>
-        </div>
-        {mode === "classic" && (
-          <div className="flex items-center gap-3 font-mono text-sm">
+        <div className="font-mono text-xs uppercase opacity-50 mb-1">YOUR SETUP</div>
+        {[
+          ["World", w.title],
+          ["Mode", mode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"],
+          ...(mode === "classic" ? [["Difficulty", difficulty === "hard" ? "🔥 Hard" : "📖 Normal"]] : []),
+        ].map(([label, value]) => (
+          <div key={label} className="flex items-center gap-3 font-sans text-sm">
             <span className="text-acid font-bold shrink-0">✓</span>
-            Difficulty: <strong>{difficulty === "hard" ? "🔥 Hard" : "📖 Normal"}</strong>
+            {label}: <strong>{value}</strong>
           </div>
-        )}
-        <div className="flex items-center gap-3 font-mono text-sm">
-          <span className="text-acid font-bold shrink-0">✓</span>
-          No account needed to start
-        </div>
-        {experience === "lots" && (
-          <div className="flex items-center gap-3 font-mono text-sm text-acid">
-            <span className="font-bold shrink-0">★</span>
-            All chapters unlocked — you can start anywhere.
-          </div>
-        )}
-        {experience === "some" && (
-          <div className="flex items-center gap-3 font-mono text-sm text-acid">
-            <span className="font-bold shrink-0">★</span>
-            Starting from your placement result.
-          </div>
-        )}
+        ))}
       </div>
 
-      <button
-        onClick={onStart}
-        className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press brutal-shadow brutal-hover"
-        style={{ animation: 'pulse-glow 2s ease-in-out infinite' }}
-      >
-        <style>{`@keyframes pulse-glow{0%,100%{box-shadow:0 4px 0 #0B0B0B,0 0 20px rgba(198,255,0,0.4)}50%{box-shadow:0 4px 0 #0B0B0B,0 0 40px rgba(198,255,0,0.7)}}`}</style>
+      {/* CTA */}
+      <button onClick={onStart}
+        className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press chunk-shadow ccd-btn-hover animate-pulse-glow">
         START FIRST LESSON →
       </button>
-      <div className="font-mono text-[10px] uppercase opacity-40 text-center">
-        Free to start · No sign-up required
-      </div>
+      <div className="font-mono text-[10px] uppercase opacity-40 text-center">Free to start · No sign-up required</div>
 
-      {/* P2 #21: Sticky CTA on mobile — appears fixed at bottom when user scrolls past inline CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-ink/95 border-t-2 border-acid md:hidden"
-        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
-        <button
-          onClick={onStart}
-          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press"
-        >
+      {/* Mobile sticky CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-ink/95 border-t-4 border-acid md:hidden"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}>
+        <button onClick={onStart}
+          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press chunk-shadow">
           START NOW →
         </button>
       </div>
-      {/* Spacer to prevent content being hidden behind sticky bar on mobile */}
       <div className="h-20 md:hidden" aria-hidden />
     </div>
   );
 }
 
-// ─── main export ──────────────────────────────────────────────────────────────
-
+// ─── Main export ──────────────────────────────────────────────────────────────
 export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   const [step, setStep] = useState<0 | 1 | 2 | 3 | 4>(0);
-  const [selectedWorld, setSelectedWorld] = useState<World | null>(null);
-  const [selectedMode, setSelectedMode] = useState<LearnMode | null>(null);
+  const [selectedWorld,      setSelectedWorld]      = useState<World | null>(null);
+  const [selectedMode,       setSelectedMode]       = useState<LearnMode | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("normal");
-  const [experience, setExperience] = useState<"none" | "some" | "lots" | null>(null);
-  const [showPlacement, setShowPlacement] = useState(false);
+  const [experience,         setExperience]         = useState<"none" | "some" | "lots" | null>(null);
+  const [showPlacement,      setShowPlacement]      = useState(false);
 
   const { setOnboarding } = useProgress();
-  const { setLearnMode } = useLearnMode();
-  const router = useRouter();
+  const { setLearnMode }  = useLearnMode();
+  const router            = useRouter();
 
-  // total steps: Flow skips difficulty → 4 real steps visible; Classic has 5
   const totalSteps = selectedMode === "flow" ? 4 : 5;
 
-  const handleExperiencePick = (exp: "none" | "some" | "lots") => {
-    setExperience(exp);
-    // Always go to world selection first — placement test (if needed) comes after
-    setStep(1);
-  };
-
+  const handleExperiencePick = (exp: "none" | "some" | "lots") => { setExperience(exp); setStep(1); };
   const handleWorldPick = (w: World) => {
     setSelectedWorld(w);
-    if (experience === "some") {
-      // Now that we have a world, show the placement test
-      setShowPlacement(true);
-    } else {
-      setStep(2);
-    }
+    if (experience === "some") { setShowPlacement(true); } else { setStep(2); }
   };
-
   const handleModePick = (m: LearnMode) => {
     setSelectedMode(m);
-    if (m === "flow") {
-      // Skip difficulty step for Flow Mode — go straight to overview
-      setStep(4);
-    } else {
-      setStep(3);
-    }
+    if (m === "flow") { setStep(4); } else { setStep(3); }
   };
-
-  const handleDifficultyPick = (d: Difficulty) => {
-    setSelectedDifficulty(d);
-    setStep(4);
-  };
+  const handleDifficultyPick = (d: Difficulty) => { setSelectedDifficulty(d); setStep(4); };
 
   const handleStart = () => {
     if (!selectedWorld || !selectedMode) return;
     const difficulty = selectedMode === "flow" ? "normal" : selectedDifficulty;
     setOnboarding(selectedWorld, difficulty);
     setLearnMode(selectedMode);
-    const firstLesson = WORLDS.find((w) => w.id === selectedWorld)!.firstLesson;
+    const firstLesson = WORLDS.find(w => w.id === selectedWorld)!.firstLesson;
     onDone?.();
     router.push(`/learn/${firstLesson}`);
   };
 
-  /**
-   * Called when the PlacementTest completes with a chapter result.
-   * The placement path previously skipped mode/difficulty selection and never
-   * called setOnboarding — so onboardingDone stayed false and learnMode was
-   * never written. This handler fixes that: it defaults to Flow Mode (most
-   * structured) for placement users, marks onboarding done, and routes to
-   * the correct chapter start.
-   */
   const handlePlacementComplete = (firstMissionSlug: string) => {
     if (!selectedWorld) return;
-    // Default placement users to Flow Mode — they want structure since they
-    // indicated some existing knowledge but want guidance on where to start.
-    const mode: LearnMode = selectedMode ?? "flow";
+    const mode: LearnMode      = selectedMode ?? "flow";
     const difficulty: Difficulty = selectedDifficulty ?? "normal";
     setOnboarding(selectedWorld, difficulty);
     setLearnMode(mode);
@@ -639,11 +439,8 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
     router.push(`/learn/${firstMissionSlug}`);
   };
 
-  // Visual step index for the indicator (step 0 = index 0, etc.)
-  const visualStep =
-    step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 4 : step + 1;
+  const visualStep = step === 4 ? totalSteps : step === 3 && selectedMode === "classic" ? 4 : step + 1;
 
-  // Show placement test inline when experience === "some" (world already chosen)
   if (showPlacement) {
     return (
       <PlacementTest
@@ -655,54 +452,43 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-bone flex flex-col relative overflow-hidden">
-      {/* ONBOARDING_BG full-screen background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <Image
-          src={ONBOARDING_BG}
-          alt=""
-          fill
-          className="object-cover opacity-10 mix-blend-luminosity"
-          sizes="100vw"
-          priority
-        />
-      </div>
-      <div className="relative z-10 max-w-lg mx-auto w-full px-4 pt-8 pb-4">
+    <div className="min-h-screen bg-electric-blue text-bone flex flex-col relative overflow-hidden">
+      {/* Dot-grid texture */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.06]"
+        style={{ backgroundImage: "radial-gradient(hsl(222 47% 4%) 1px, transparent 1px)", backgroundSize: "4px 4px" }}
+        aria-hidden />
+
+      {/* Step indicator */}
+      <div className="relative z-10 max-w-lg mx-auto w-full px-4 pt-8 pb-2">
         <StepIndicator current={visualStep - 1} total={totalSteps} />
       </div>
 
-      <div className="relative z-10 flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto">
-        {step === 0 && !showPlacement && <StepExperience onPick={handleExperiencePick} />}
-
-        {step === 1 && <StepWorld onPick={handleWorldPick} experience={experience} />}
-
-        {step === 2 && selectedWorld && (
-          <StepMode
-            world={selectedWorld}
-            onPick={handleModePick}
-            onBack={() => setStep(1)}
-          />
-        )}
-
-        {step === 3 && selectedWorld && selectedMode === "classic" && (
-          <StepDifficulty
-            world={selectedWorld}
-            onPick={handleDifficultyPick}
-            onBack={() => setStep(2)}
-          />
-        )}
-
-        {step === 4 && selectedWorld && selectedMode && (
-          <StepOverview
-            world={selectedWorld}
-            mode={selectedMode}
-            difficulty={selectedMode === "flow" ? "normal" : selectedDifficulty}
-            experience={experience}
-            onStart={handleStart}
-            onBack={() => setStep(selectedMode === "flow" ? 2 : 3)}
-          />
-        )}
-      </div>
+      {/* Step content */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.2 }}
+          className="relative z-10 flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto"
+        >
+          {step === 0 && <StepExperience onPick={handleExperiencePick} />}
+          {step === 1 && <StepWorld onPick={handleWorldPick} experience={experience} />}
+          {step === 2 && selectedWorld && <StepMode world={selectedWorld} onPick={handleModePick} onBack={() => setStep(1)} />}
+          {step === 3 && selectedWorld && selectedMode === "classic" && (
+            <StepDifficulty world={selectedWorld} onPick={handleDifficultyPick} onBack={() => setStep(2)} />
+          )}
+          {step === 4 && selectedWorld && selectedMode && (
+            <StepOverview
+              world={selectedWorld} mode={selectedMode}
+              difficulty={selectedMode === "flow" ? "normal" : selectedDifficulty}
+              experience={experience} onStart={handleStart}
+              onBack={() => setStep(selectedMode === "flow" ? 2 : 3)}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

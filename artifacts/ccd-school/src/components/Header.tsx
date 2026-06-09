@@ -1,10 +1,17 @@
 "use client";
 /**
- * Header v4 — World-class polish
- * Same structure as v3, refined typography + spacing throughout.
+ * Header — CCD.SCHOOL navigation
+ * Styled as a true child of CatsCanDance:
+ *   - Electric-blue logo area
+ *   - border-4 border-ink everywhere
+ *   - chunk-shadow on dropdowns
+ *   - Bowlby One (font-display) for all nav labels
+ *   - CCD hover: acid-yellow highlight
+ *   - DJ Cat avatar in mobile drawer
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
@@ -19,52 +26,45 @@ import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
-// ─── Nav data ─────────────────────────────────────────────────────────────────
-
-/** Primary nav — 3 items max; deliberately short for quick scanning */
 const PRIMARY_NAV = [
-  { to: "/learn",      label: "Learn"    },
-  { to: "/worlds",     label: "Worlds"   },
-  { to: "/dashboard",  label: "Progress" },
+  { to: "/learn",     label: "Learn"    },
+  { to: "/worlds",    label: "Worlds"   },
+  { to: "/dashboard", label: "Progress" },
 ] as const;
 
-/** Sections for the "More ▾" dropdown */
 const MORE_SECTIONS = [
   {
     heading: "PRACTICE",
     links: [
-      { to: "/train",    label: "Ear Training"       },
-      { to: "/challenge",label: "Daily Challenge ⚡"  },
-      { to: "/match",    label: "Flashcard Match"     },
-      { to: "/review",   label: "Review Session"      },
+      { to: "/train",     label: "Ear Training"      },
+      { to: "/challenge", label: "Daily Challenge ⚡" },
+      { to: "/match",     label: "Flashcard Match"    },
+      { to: "/review",    label: "Review Session"     },
     ],
   },
   {
     heading: "REFERENCE",
     links: [
-      { to: "/missions",     label: "All Missions"  },
-      { to: "/glossary",     label: "Glossary"      },
-      { to: "/shortcuts",    label: "Shortcuts"     },
-      { to: "/devices",      label: "Devices"       },
-      { to: "/signal-flow",  label: "Signal Flow"   },
+      { to: "/missions",    label: "All Missions" },
+      { to: "/glossary",    label: "Glossary"     },
+      { to: "/shortcuts",   label: "Shortcuts"    },
+      { to: "/devices",     label: "Devices"      },
+      { to: "/signal-flow", label: "Signal Flow"  },
     ],
   },
   {
     heading: "ACCOUNT",
     links: [
-      { to: "/profile",    label: "Profile & Trophies" },
-      { to: "/leaderboard",label: "Leaderboard"        },
-      { to: "/shop",       label: "Gem Shop 💎"         },
-      { to: "/placement",  label: "Placement Test"     },
+      { to: "/profile",     label: "Profile & Trophies" },
+      { to: "/leaderboard", label: "Leaderboard"        },
+      { to: "/shop",        label: "Gem Shop 💎"         },
+      { to: "/placement",   label: "Placement Test"     },
     ],
-    // NOTE: "Settings / Theme" is rendered separately as a ThemeSwitcher button
     includeTheme: true,
   },
 ] as const;
 
-
-
-// ─── Shared tiny SVG icons ────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 function SearchIcon() {
   return (
@@ -86,7 +86,7 @@ function UserIcon() {
   );
 }
 
-// ─── GoalRing — SVG arc showing daily XP progress ────────────────────────────
+// ─── GoalRing ─────────────────────────────────────────────────────────────────
 
 function GoalRing({ pct, done }: { pct: number; done: boolean }) {
   const r    = 8;
@@ -97,7 +97,7 @@ function GoalRing({ pct, done }: { pct: number; done: boolean }) {
       <circle cx="11" cy="11" r={r} fill="none" stroke="currentColor"
         strokeWidth="2.5" opacity="0.18" />
       <circle cx="11" cy="11" r={r} fill="none"
-        stroke={done ? "#7B2FFF" : "#C6FF00"}
+        stroke={done ? "hsl(221 83% 53%)" : "hsl(84 81% 56%)"}
         strokeWidth="2.5"
         strokeDasharray={`${circ * pct} ${circ}`}
         strokeLinecap="round"
@@ -108,9 +108,7 @@ function GoalRing({ pct, done }: { pct: number; done: boolean }) {
   );
 }
 
-
-
-// ─── Hearts — 5 ♥ with live countdown timer + first-time tooltip ─────────────
+// ─── Hearts ───────────────────────────────────────────────────────────────────
 
 const HEARTS_TOOLTIP_KEY = "ccd.hearts_header_seen";
 
@@ -154,18 +152,13 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
         className="flex items-center gap-0.5 brutal-press hover:opacity-80 transition-opacity"
       >
         {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-          <span
-            key={i}
-            aria-hidden="true"
-            className={`text-base leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}
-          >
+          <span key={i} aria-hidden="true"
+            className={`text-base leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
             ♥
           </span>
         ))}
         {!full && secs > 0 && (
-          <span className="font-mono text-xs opacity-45 ml-1 tabular-nums">
-            {hh}h{mm}
-          </span>
+          <span className="font-mono text-xs opacity-45 ml-1 tabular-nums">{hh}h{mm}</span>
         )}
         {!hasSeenTooltip && (
           <span className="ml-1 w-1.5 h-1.5 rounded-full bg-acid animate-ping absolute -top-0.5 -right-0.5" aria-hidden />
@@ -175,7 +168,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
       {tooltipOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={dismissTooltip} aria-hidden />
-          <div className="absolute right-0 top-full mt-2 z-50 brutal-border rounded-lg bg-bone brutal-shadow w-60 animate-fade-in">
+          <div className="absolute right-0 top-full mt-2 z-50 brutal-border bg-bone chunk-shadow w-60 animate-fade-in">
             <div className="px-4 pt-3.5 pb-3">
               <p className="font-display text-lg mb-2">♥ Hearts</p>
               <p className="font-sans text-sm leading-relaxed opacity-70">
@@ -188,16 +181,12 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
                 </p>
               )}
               {full && (
-                <p className="font-sans text-xs mt-2 text-acid font-bold">
-                  ♥ Full — you&apos;re good to go
-                </p>
+                <p className="font-sans text-xs mt-2 text-acid font-bold">♥ Full — you&apos;re good to go</p>
               )}
             </div>
-            <div className="border-t-2 border-border px-4 py-2.5">
-              <button
-                onClick={dismissTooltip}
-                className="font-mono text-xs uppercase opacity-45 hover:opacity-100 transition-opacity"
-              >
+            <div className="border-t-4 border-ink px-4 py-2.5">
+              <button onClick={dismissTooltip}
+                className="font-mono text-xs uppercase opacity-45 hover:opacity-100 transition-opacity">
                 Got it ✕
               </button>
             </div>
@@ -208,9 +197,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
   );
 }
 
-
-
-// ─── XpStreakPopover — small panel opened by clicking the combo badge ─────────
+// ─── XpStreakPopover ──────────────────────────────────────────────────────────
 
 interface XpStreakPopoverProps {
   progress: ReturnType<typeof useProgress>["progress"];
@@ -234,35 +221,27 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
   const xpToNext = next ? next.minXp - progress.xp : 0;
 
   return (
-    <div
-      ref={ref}
-      className="absolute right-0 top-full mt-2 z-[60] brutal-border rounded-lg bg-bone brutal-shadow min-w-[230px] animate-fade-in"
-      role="dialog"
-      aria-label="XP and streak details"
-    >
-      {/* Rank */}
-      <div className="px-4 py-3 border-b-2 border-border flex items-center gap-3">
+    <div ref={ref}
+      className="absolute right-0 top-full mt-2 z-[60] brutal-border bg-bone chunk-shadow min-w-[230px] animate-fade-in"
+      role="dialog" aria-label="XP and streak details">
+      <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
         <span className="text-2xl leading-none">{rank.emoji}</span>
         <div className="flex-1">
           <p className="font-display text-base">{rank.name}</p>
           <p className="font-mono text-xs opacity-45 uppercase">{rank.tagline}</p>
         </div>
       </div>
-
-      {/* XP progress */}
-      <div className="px-4 py-3 border-b-2 border-border">
+      <div className="px-4 py-3 border-b-4 border-ink">
         <div className="flex justify-between items-baseline mb-2">
           <span className="font-mono text-xs uppercase opacity-50">XP to next rank</span>
           <span className="font-mono text-xs tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
         </div>
-        <div className="w-full bg-ink/10 h-2 rounded-full overflow-hidden">
-          <div className="bg-acid h-full rounded-full transition-all" style={{ width: `${rankPct * 100}%` }} />
+        <div className="w-full bg-ink/10 h-2 overflow-hidden border-2 border-ink">
+          <div className="bg-acid h-full transition-all" style={{ width: `${rankPct * 100}%` }} />
         </div>
         <p className="font-mono text-xs opacity-45 mt-1.5 tabular-nums">{progress.xp} XP total</p>
       </div>
-
-      {/* Streak + gems */}
-      <div className="px-4 py-3 border-b-2 border-border flex items-center justify-between">
+      <div className="px-4 py-3 border-b-4 border-ink flex items-center justify-between">
         <div>
           <p className="font-mono text-xs uppercase opacity-45 mb-1">Streak</p>
           <p className="font-display text-lg">
@@ -275,8 +254,6 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
           <p className="font-display text-lg">💎 {progress.gems}</p>
         </div>
       </div>
-
-      {/* Daily goal */}
       <div className="px-4 py-3 flex items-center gap-3">
         <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
         <div>
@@ -291,10 +268,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
   );
 }
 
-
-
-// ─── XpStreakBadge — compact combo badge that opens the popover ───────────────
-// P1 #8: animates XP counter when XP increases  P1 #12: animates streak  P2 #25: clarity
+// ─── XpStreakBadge ────────────────────────────────────────────────────────────
 
 function useAnimatedNumber(value: number) {
   const [display, setDisplay] = useState(value);
@@ -306,15 +280,12 @@ function useAnimatedNumber(value: number) {
     const prev = prevRef.current;
     prevRef.current = value;
     if (value <= prev) { setDisplay(value); return; }
-    // Tick up from prev to value over ~600ms
     const steps = Math.min(value - prev, 20);
     const stepSize = (value - prev) / steps;
-    let cur = prev;
-    let i = 0;
+    let cur = prev; let i = 0;
     setFlash(true);
     const interval = setInterval(() => {
-      i++;
-      cur += stepSize;
+      i++; cur += stepSize;
       setDisplay(Math.round(cur));
       if (i >= steps) {
         clearInterval(interval);
@@ -341,7 +312,7 @@ function XpStreakBadge() {
         aria-expanded={open}
         aria-haspopup="dialog"
         title="View XP, streak and daily goal"
-        className="brutal-border rounded-md bg-ink text-bone px-3 py-1.5 font-sans text-sm brutal-press flex items-center gap-2.5 hover:bg-volt transition-colors"
+        className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-sm brutal-press flex items-center gap-2.5 hover:bg-electric-blue transition-colors ccd-btn-hover"
       >
         <span className={`flex items-center gap-1 transition-all duration-200 ${streakFlash ? "scale-125 text-acid" : ""}`}>
           <span>🔥</span>
@@ -366,9 +337,7 @@ function XpStreakBadge() {
   );
 }
 
-
-
-// ─── ModeTogglePill — FLOW MODE / FREE MODE ──────────────────────────────────
+// ─── ModeTogglePill ───────────────────────────────────────────────────────────
 
 function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const { learnMode, setLearnMode } = useLearnMode();
@@ -377,11 +346,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const toggle = useCallback(() => {
     const next = learnMode === "flow" ? "classic" : "flow";
     setLearnMode(next);
-    setToast(
-      next === "flow"
-        ? "🌊 Flow Mode — sequential, hearts on"
-        : "🔓 Free Mode — all lessons open"
-    );
+    setToast(next === "flow" ? "🌊 Flow Mode — sequential, hearts on" : "🔓 Free Mode — all lessons open");
     setTimeout(() => setToast(null), 2800);
   }, [learnMode, setLearnMode]);
 
@@ -393,15 +358,15 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
         onClick={toggle}
         title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
         aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
-        className={`brutal-border rounded-md px-3 py-1.5 font-sans text-sm font-semibold brutal-press transition-all flex items-center gap-2
-          ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-sun"}`}
+        className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover
+          ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}
       >
         <span>{isFlow ? "🌊" : "🔓"}</span>
         {!compact && <span>{isFlow ? "Flow" : "Free"}</span>}
         {!compact && <span className="opacity-30 text-xs">▼</span>}
       </button>
       {toast && (
-        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border rounded-md bg-ink text-bone px-4 py-2.5 font-sans text-xs whitespace-nowrap brutal-shadow animate-fade-in">
+        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-4 py-2.5 font-display text-xs whitespace-nowrap chunk-shadow animate-fade-in">
           {toast}
         </div>
       )}
@@ -409,44 +374,30 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   );
 }
 
+// ─── MoreDropdown ─────────────────────────────────────────────────────────────
 
-
-// ─── MoreDropdown — sectioned "More ▾" menu ──────────────────────────────────
-
-interface MoreDropdownProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-function MoreDropdown({ open, onClose }: MoreDropdownProps) {
+function MoreDropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
-
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} aria-hidden="true" />
       <div
-        className="absolute top-full left-0 brutal-border rounded-lg bg-bone z-50 min-w-[220px] brutal-shadow animate-fade-in"
-        role="menu"
-        aria-label="More navigation"
+        className="absolute top-full left-0 brutal-border bg-bone z-50 min-w-[220px] chunk-shadow animate-fade-in"
+        role="menu" aria-label="More navigation"
       >
         {MORE_SECTIONS.map((section) => (
           <div key={section.heading}>
-            <div className="px-4 pt-3 pb-1 font-mono text-xs uppercase opacity-40 tracking-widest">
+            <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-40 tracking-widest border-b-2 border-ink/10">
               {section.heading}
             </div>
             {section.links.map((l) => (
-              <Link
-                key={l.to}
-                href={l.to}
-                onClick={onClose}
-                role="menuitem"
-                className="block px-4 py-2.5 font-sans text-sm hover:bg-sun border-t border-border/30 transition-colors"
-              >
+              <Link key={l.to} href={l.to} onClick={onClose} role="menuitem"
+                className="block px-4 py-2.5 font-display text-sm hover:bg-acid border-b border-ink/10 transition-colors">
                 {l.label}
               </Link>
             ))}
             {"includeTheme" in section && section.includeTheme && (
-              <div className="px-3 py-2.5 border-t border-border/30">
+              <div className="px-3 py-2.5 border-t-2 border-ink/20">
                 <div className="font-mono text-xs uppercase opacity-40 mb-2">Theme</div>
                 <ThemeSwitcher compact />
               </div>
@@ -458,9 +409,7 @@ function MoreDropdown({ open, onClose }: MoreDropdownProps) {
   );
 }
 
-
-
-// ─── MobileDrawer — full-screen side panel ────────────────────────────────────
+// ─── MobileDrawer ─────────────────────────────────────────────────────────────
 
 interface MobileDrawerProps {
   open: boolean;
@@ -472,12 +421,10 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
   const { progress, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
   const { learnMode } = useLearnMode();
-
   if (!open) return null;
 
   const handleSearch = () => { onClose(); onSearch(); };
 
-  // Compute "continue" slug for quick-resume
   const completed = progress.completedMissions;
   const hasMissions = Object.keys(completed).length > 0;
   const allDoneSlugs = Object.entries(completed)
@@ -496,36 +443,28 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
   const continueSlug = nextSlug ?? (Object.keys(completed).length === 0 ? "what-is-sound" : null);
 
   return (
-    <div
-      className="md:hidden fixed inset-0 z-50 bg-ink/80"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Navigation menu"
-    >
-      <div
-        className="absolute right-0 top-0 bottom-0 w-[82%] max-w-[340px] bg-bone brutal-border border-y-0 border-r-0 overflow-y-auto"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Drawer header */}
-        <div className="flex items-center justify-between p-3.5 border-b-2 border-border bg-acid">
-          <span className="font-display text-lg">CCD.SCHOOL</span>
-          <button
-            onClick={onClose}
-            aria-label="Close menu"
-            className="brutal-border rounded bg-ink text-bone px-3 py-1.5 font-mono text-xs brutal-press"
-          >
+    <div className="md:hidden fixed inset-0 z-50 bg-ink/80"
+      onClick={onClose} role="dialog" aria-modal="true" aria-label="Navigation menu">
+      <div className="absolute right-0 top-0 bottom-0 w-[82%] max-w-[340px] bg-bone brutal-border border-y-0 border-r-0 overflow-y-auto"
+        onClick={e => e.stopPropagation()}>
+
+        {/* Drawer header — electric-blue CCD style */}
+        <div className="flex items-center justify-between p-3.5 border-b-4 border-ink bg-electric-blue">
+          <div className="flex items-center gap-2">
+            <Image src="/cats/cat-dj-hero.png" alt="" width={36} height={36}
+              className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)]" />
+            <span className="font-display text-lg text-bone">CCD<span className="text-acid">.</span>SCHOOL</span>
+          </div>
+          <button onClick={onClose} aria-label="Close menu"
+            className="brutal-border bg-bone text-ink px-3 py-1.5 font-display text-xs brutal-press">
             ✕
           </button>
         </div>
 
-        {/* ▶ Continue shortcut */}
+        {/* Continue shortcut */}
         {continueSlug && (
-          <Link
-            href={`/learn/${continueSlug}`}
-            onClick={onClose}
-            className="block px-4 py-3.5 border-b-2 border-border bg-acid text-ink font-sans text-base font-medium brutal-press hover:bg-sun transition-colors flex items-center gap-3"
-          >
+          <Link href={`/learn/${continueSlug}`} onClick={onClose}
+            className="block px-4 py-3.5 border-b-4 border-ink bg-acid text-ink font-display text-base brutal-press hover:bg-sun transition-colors flex items-center gap-3">
             <span className="text-2xl shrink-0">▶</span>
             <div>
               <p className="font-mono text-xs uppercase opacity-55">
@@ -538,104 +477,76 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           </Link>
         )}
 
-        {/* Compact stats row — 3 columns */}
-        <div className="grid grid-cols-3 border-b-2 border-border">
+        {/* Stats row */}
+        <div className="grid grid-cols-3 border-b-4 border-ink">
           {[
             { value: `${progress.xp}`, label: "XP" },
             { value: `🔥${progress.streakDays}${progress.streakShield ? "🛡" : ""}`, label: "Streak" },
             { value: `💎${progress.gems}`, label: "Gems" },
           ].map(({ value, label }, i) => (
-            <div
-              key={label}
-              className={`p-3.5 text-center${i < 2 ? " border-r-2 border-border" : ""}`}
-            >
+            <div key={label} className={`p-3.5 text-center${i < 2 ? " border-r-4 border-ink" : ""}`}>
               <div className="font-display text-xl tabular-nums">{value}</div>
               <div className="font-mono text-xs uppercase opacity-45 mt-0.5">{label}</div>
             </div>
           ))}
         </div>
 
-        {/* Hearts row */}
-        <div className="px-4 py-3 border-b-2 border-border flex items-center gap-3">
+        {/* Hearts */}
+        <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-          <span className="font-sans text-sm opacity-55">
-            {progress.hearts}/{MAX_HEARTS} hearts
-          </span>
+          <span className="font-sans text-sm opacity-55">{progress.hearts}/{MAX_HEARTS} hearts</span>
         </div>
 
-        {/* Mode toggle row */}
-        <div className="px-4 py-3.5 border-b-2 border-border flex items-center justify-between gap-3">
+        {/* Mode toggle */}
+        <div className="px-4 py-3.5 border-b-4 border-ink flex items-center justify-between gap-3">
           <div>
             <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
-            <p className="font-sans text-sm font-semibold">
-              {learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}
-            </p>
-            <p className="font-mono text-xs opacity-40 mt-0.5">
-              {learnMode === "flow" ? "Sequential · hearts on" : "All open · no hearts"}
-            </p>
+            <p className="font-display text-sm">{learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}</p>
           </div>
           <ModeTogglePill compact />
         </div>
 
         {/* Search */}
-        <button
-          onClick={handleSearch}
-          className="w-full text-left px-4 py-3 border-b-2 border-border hover:bg-sun font-sans text-sm flex items-center gap-2.5 transition-colors"
-        >
+        <button onClick={handleSearch}
+          className="w-full text-left px-4 py-3 border-b-4 border-ink hover:bg-acid font-display text-sm flex items-center gap-2.5 transition-colors">
           <SearchIcon /> Search ⌘K
         </button>
 
         {/* Nav sections */}
         <nav aria-label="Mobile navigation">
           {[
-            {
-              heading: "Learn",
-              links: [
-                { to: "/world/fundamentals", label: "Fundamentals" },
-                { to: "/world/dj",           label: "DJ World"     },
-                { to: "/world/producer",     label: "Producer"     },
-                { to: "/missions",           label: "All Missions" },
-              ],
-            },
-            {
-              heading: "Practice",
-              links: [
-                { to: "/train",    label: "Ear Training"    },
-                { to: "/challenge",label: "Daily Challenge" },
-                { to: "/review",   label: "Review Session"  },
-                { to: "/match",    label: "Flashcard Match" },
-              ],
-            },
-            {
-              heading: "Reference",
-              links: [
-                { to: "/glossary",    label: "Glossary"    },
-                { to: "/shortcuts",   label: "Shortcuts"   },
-                { to: "/devices",     label: "Devices"     },
-                { to: "/signal-flow", label: "Signal Flow" },
-              ],
-            },
-            {
-              heading: "Account",
-              links: [
-                { to: "/profile",     label: "Profile"       },
-                { to: "/leaderboard", label: "Leaderboard"   },
-                { to: "/shop",        label: "Gem Shop 💎"   },
-                { to: "/placement",   label: "Placement Test" },
-              ],
-            },
+            { heading: "Learn", links: [
+              { to: "/world/fundamentals", label: "🎵 Fundamentals" },
+              { to: "/world/dj",           label: "🎧 DJ World"     },
+              { to: "/world/producer",     label: "🎛 Producer"     },
+              { to: "/missions",           label: "All Missions"    },
+            ]},
+            { heading: "Practice", links: [
+              { to: "/train",     label: "Ear Training"    },
+              { to: "/challenge", label: "Daily Challenge" },
+              { to: "/review",    label: "Review Session"  },
+              { to: "/match",     label: "Flashcard Match" },
+            ]},
+            { heading: "Reference", links: [
+              { to: "/glossary",    label: "Glossary"    },
+              { to: "/shortcuts",   label: "Shortcuts"   },
+              { to: "/devices",     label: "Devices"     },
+              { to: "/signal-flow", label: "Signal Flow" },
+            ]},
+            { heading: "Account", links: [
+              { to: "/profile",     label: "Profile"        },
+              { to: "/leaderboard", label: "Leaderboard"    },
+              { to: "/shop",        label: "Gem Shop 💎"    },
+              { to: "/placement",   label: "Placement Test" },
+            ]},
           ].map(({ heading, links }) => (
             <div key={heading}>
-              <div className="px-4 pt-3 pb-1 font-mono text-xs uppercase opacity-40 tracking-widest border-t-2 border-border">
+              <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-40 tracking-widest border-t-4 border-ink">
                 {heading}
               </div>
               {links.map((l) => (
-                <Link
-                  key={l.to}
-                  href={l.to}
-                  onClick={onClose}
-                  className="block px-4 py-3 border-t border-border/25 hover:bg-acid font-sans text-sm transition-colors"
-                >
+                <Link key={l.to} href={l.to} onClick={onClose}
+                  className="block px-4 py-3 border-t border-ink/25 hover:bg-acid font-display text-sm transition-colors">
                   {l.label}
                 </Link>
               ))}
@@ -643,36 +554,28 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           ))}
         </nav>
 
-        {/* Theme (in drawer) */}
-        <div className="px-4 py-3.5 border-t-2 border-border">
+        {/* Theme */}
+        <div className="px-4 py-3.5 border-t-4 border-ink">
           <div className="font-mono text-xs uppercase opacity-40 mb-2.5">Theme</div>
           <ThemeSwitcher compact />
         </div>
 
         {/* Auth */}
-        <div className="p-4 space-y-2 border-t-2 border-border">
+        <div className="p-4 space-y-2 border-t-4 border-ink">
           {user ? (
             <>
-              <Link
-                href="/profile"
-                onClick={onClose}
-                className="flex items-center gap-2 brutal-border rounded-md bg-volt text-bone px-3 py-2.5 font-sans text-sm font-medium text-center brutal-press justify-center"
-              >
+              <Link href="/profile" onClick={onClose}
+                className="flex items-center gap-2 brutal-border bg-electric-blue text-bone px-3 py-2.5 font-display text-sm text-center brutal-press justify-center chunk-shadow ccd-btn-hover">
                 <UserIcon /> Profile
               </Link>
-              <button
-                onClick={() => { signOut(); onClose(); }}
-                className="w-full brutal-border rounded-md bg-bone px-3 py-2.5 font-sans text-sm text-left brutal-press hover:bg-sun transition-colors"
-              >
+              <button onClick={() => { signOut(); onClose(); }}
+                className="w-full brutal-border bg-bone px-3 py-2.5 font-display text-sm text-left brutal-press hover:bg-acid transition-colors">
                 Sign out
               </button>
             </>
           ) : (
-            <Link
-              href="/login"
-              onClick={onClose}
-              className="block brutal-border rounded-md bg-volt text-bone px-3 py-2.5 font-sans text-sm font-medium text-center brutal-press"
-            >
+            <Link href="/login" onClick={onClose}
+              className="block brutal-border bg-electric-blue text-bone px-3 py-2.5 font-display text-sm font-medium text-center brutal-press chunk-shadow ccd-btn-hover">
               Sign in
             </Link>
           )}
@@ -682,9 +585,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
   );
 }
 
-
-
-// ─── StreakWarningBanner — shown when streak is at risk tonight ───────────────
+// ─── StreakWarningBanner ──────────────────────────────────────────────────────
 
 function StreakWarningBanner() {
   const { progress, dailyGoalDone } = useProgress();
@@ -704,53 +605,37 @@ function StreakWarningBanner() {
   if (!isAtRisk || dismissed) return null;
 
   return (
-    <div className="bg-hot text-bone px-4 py-2.5 flex items-center justify-between gap-3">
+    <div className="bg-hot text-bone px-4 py-2.5 flex items-center justify-between gap-3 border-b-4 border-ink">
       <div className="flex items-center gap-2.5 font-sans text-sm">
         <span className="text-base">🔥</span>
         <span>
           Your <strong>{progress.streakDays}-day streak</strong> is at risk!{" "}
-          {progress.streakShield
-            ? "Your shield will protect it tonight."
-            : "Do at least one lesson before midnight."}
+          {progress.streakShield ? "Your shield will protect it tonight." : "Do at least one lesson before midnight."}
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <a
-          href="/learn"
-          className="brutal-border rounded bg-bone text-hot px-3 py-1.5 font-sans text-xs font-semibold brutal-press hover:bg-acid hover:text-ink transition-colors"
-        >
+        <a href="/learn"
+          className="brutal-border bg-bone text-hot px-3 py-1.5 font-display text-xs brutal-press hover:bg-acid hover:text-ink transition-colors">
           Learn now →
         </a>
-        <button
-          onClick={() => setDismissed(true)}
-          aria-label="Dismiss streak warning"
-          className="font-mono text-xs opacity-55 hover:opacity-100"
-        >
-          ✕
-        </button>
+        <button onClick={() => setDismissed(true)} aria-label="Dismiss"
+          className="font-mono text-xs opacity-55 hover:opacity-100">✕</button>
       </div>
     </div>
   );
 }
 
-
-
-// ─── Main Header export ───────────────────────────────────────────────────────
+// ─── Main Header ──────────────────────────────────────────────────────────────
 
 export function Header() {
   const { progress, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
-
   const [moreOpen,   setMoreOpen]   = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Close all panels on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMoreOpen(false);
-        setDrawerOpen(false);
-      }
+      if (e.key === "Escape") { setMoreOpen(false); setDrawerOpen(false); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -761,64 +646,58 @@ export function Header() {
     []
   );
 
-  // User initials for avatar
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
     : null;
 
   return (
-    <header className="border-b-2 border-border bg-bone sticky top-0 z-40" role="banner">
+    <header className="border-b-4 border-ink bg-bone sticky top-0 z-40" role="banner">
 
-      {/* ── Main bar ─────────────────────────────────────────────────────── */}
-      <div className="flex items-stretch h-13 md:h-14">
+      {/* ── Main bar ── */}
+      <div className="flex items-stretch h-14 md:h-16">
 
-        {/* 1. Logo */}
+        {/* Logo — electric-blue CCD style */}
         <Link
           href="/"
-          className="border-r-2 border-border px-3 md:px-5 flex items-center font-display text-base md:text-lg bg-acid hover:bg-sun transition-colors shrink-0"
+          className="border-r-4 border-ink px-3 md:px-5 flex items-center gap-2 font-display text-base md:text-lg bg-electric-blue text-bone hover:bg-ink transition-colors shrink-0"
           aria-label="CCD.SCHOOL home"
         >
-          CCD.SCHOOL
+          <Image
+            src="/cats/cat-dj-hero.png"
+            alt=""
+            width={28}
+            height={28}
+            className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block"
+          />
+          CCD<span className="text-acid">.</span>SCHOOL
         </Link>
 
-        {/* 2. Primary nav — desktop */}
-        <nav className="hidden md:flex items-stretch font-sans text-sm" aria-label="Main navigation">
+        {/* Primary nav — desktop */}
+        <nav className="hidden md:flex items-stretch font-display text-sm" aria-label="Main navigation">
           {PRIMARY_NAV.map((l) => (
-            <Link
-              key={`${l.to}-${l.label}`}
-              href={l.to}
-              className="px-4 flex items-center border-r-2 border-border hover:bg-sun transition-colors whitespace-nowrap font-medium"
-            >
+            <Link key={`${l.to}-${l.label}`} href={l.to}
+              className="px-4 flex items-center border-r-4 border-ink hover:bg-acid transition-colors whitespace-nowrap">
               {l.label}
             </Link>
           ))}
-
-          {/* More ▾ dropdown */}
           <div className="relative flex items-stretch">
             <button
               onClick={() => setMoreOpen((o) => !o)}
               aria-expanded={moreOpen}
               aria-haspopup="menu"
-              className="px-4 flex items-center border-r-2 border-border hover:bg-sun transition-colors font-sans text-sm font-medium whitespace-nowrap"
-            >
+              className="px-4 flex items-center border-r-4 border-ink hover:bg-acid transition-colors font-display text-sm whitespace-nowrap">
               More ▾
             </button>
             <MoreDropdown open={moreOpen} onClose={() => setMoreOpen(false)} />
           </div>
         </nav>
 
-        {/* 3. Spacer */}
         <div className="flex-1" />
 
-        {/* 4. Right strip — desktop ────────────────────────────────────── */}
+        {/* Right strip — desktop */}
         <div className="hidden md:flex items-center gap-2 px-3">
-          {/* Search */}
-          <button
-            onClick={openSearch}
-            title="Search (⌘K)"
-            aria-label="Open search"
-            className="brutal-border rounded-md bg-bone px-2.5 py-1.5 hover:bg-sun flex items-center gap-1.5 font-sans text-sm transition-colors brutal-press"
-          >
+          <button onClick={openSearch} title="Search (⌘K)" aria-label="Open search"
+            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-acid flex items-center gap-1.5 font-display text-sm transition-colors brutal-press ccd-btn-hover">
             <SearchIcon />
             <span className="hidden lg:inline font-mono text-xs opacity-55">⌘K</span>
           </button>
@@ -828,60 +707,39 @@ export function Header() {
           <ModeTogglePill />
 
           {user ? (
-            <Link
-              href="/profile"
-              aria-label="View profile"
-              title={user.name ?? "Profile"}
-              className="brutal-border rounded-md bg-bone w-9 h-9 flex items-center justify-center font-sans text-xs font-semibold hover:bg-sun transition-colors brutal-press"
-            >
+            <Link href="/profile" aria-label="View profile" title={user.name ?? "Profile"}
+              className="brutal-border bg-bone w-10 h-10 flex items-center justify-center font-display text-xs hover:bg-acid transition-colors brutal-press ccd-btn-hover">
               {initials ?? <UserIcon />}
             </Link>
           ) : (
-            <Link
-              href="/login"
-              className="brutal-border rounded-md bg-volt text-bone px-3 py-1.5 font-sans text-sm font-medium brutal-press"
-            >
+            <Link href="/login"
+              className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-sm brutal-press chunk-shadow hover:bg-ink transition-colors ccd-btn-hover">
               Sign in
             </Link>
           )}
         </div>
 
-        {/* 5. Mobile strip ──────────────────────────────────────────────── */}
+        {/* Mobile strip */}
         <div className="md:hidden flex items-center gap-2 px-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-
-          <span className="brutal-border rounded bg-ink text-bone px-2 py-1 font-mono text-xs tabular-nums">
+          <span className="brutal-border bg-ink text-bone px-2 py-1 font-display text-xs tabular-nums">
             🔥{progress.streakDays} · {progress.xp}xp
           </span>
-
-          <button
-            onClick={openSearch}
-            aria-label="Search"
-            className="brutal-border rounded bg-bone px-2 py-1.5 flex items-center brutal-press"
-          >
+          <button onClick={openSearch} aria-label="Search"
+            className="brutal-border bg-bone px-2 py-1.5 flex items-center brutal-press">
             <SearchIcon />
           </button>
-
           <button
             onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
-            aria-expanded={drawerOpen}
-            className="brutal-border rounded bg-ink text-bone px-3 py-1.5 font-display text-lg"
-          >
+            aria-label="Open menu" aria-expanded={drawerOpen}
+            className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-xl">
             ≡
           </button>
         </div>
       </div>
 
-      {/* ── Streak-at-risk warning banner ─────────────────────────────── */}
       <StreakWarningBanner />
-
-      {/* ── Mobile drawer ─────────────────────────────────────────────── */}
-      <MobileDrawer
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        onSearch={openSearch}
-      />
+      <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSearch={openSearch} />
     </header>
   );
 }
