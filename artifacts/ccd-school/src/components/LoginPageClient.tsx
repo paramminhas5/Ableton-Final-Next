@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -50,6 +50,14 @@ function NoDbNotice() {
 }
 
 export function LoginPageClient() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
+  );
+}
+
+function LoginPageInner() {
   const { progress } = useProgress();
   const { current: rank } = rankFor(progress.xp);
   const router = useRouter();
