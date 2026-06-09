@@ -1,13 +1,17 @@
 "use client";
 /**
- * ModeSwitcherBanner — prominent inline mode toggle shown on /learn, /world/*, /worlds pages.
+ * ModeSwitcherBanner — inline mode toggle shown on /learn, /world/* pages.
  *
  * Two variants:
  *   "bar"  — compact horizontal strip (used at page top)
  *   "card" — full comparison card (used on first visit or settings screens)
+ *
+ * When rendered on a /world/[slug] page, switching mode also navigates to/from
+ * ?view=classic so the URL param and the mode context stay in sync.
  */
 import { useState } from "react";
 import { useLearnMode } from "@/lib/mode";
+import { useRouter, usePathname } from "next/navigation";
 
 interface Props {
   variant?: "bar" | "card";
@@ -16,134 +20,148 @@ interface Props {
 
 export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const { learnMode, setLearnMode } = useLearnMode();
-  const isPath = learnMode === "flow";
+  const isFlow = learnMode === "flow";
   const [justSwitched, setJustSwitched] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Detect if we're on a /world/[slug] page so we can sync the ?view= param
+  const worldMatch = pathname?.match(/^\/world\/([^/]+)$/);
+  const worldSlug = worldMatch ? worldMatch[1] : null;
 
   const switchMode = () => {
-    setLearnMode(isPath ? "classic" : "flow");
+    const nextMode = isFlow ? "classic" : "flow";
+    setLearnMode(nextMode);
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
+    // Sync URL param when on a world page
+    if (worldSlug) {
+      if (nextMode === "classic") {
+        router.push(`/world/${worldSlug}?view=classic`);
+      } else {
+        router.push(`/world/${worldSlug}`);
+      }
+    }
   };
 
+  /* ── CARD variant ──────────────────────────────────────────────────── */
   if (variant === "card") {
     return (
-      <div className={`brutal-border bg-bone brutal-shadow ${className}`}>
+      <div className={`brutal-border rounded-xl bg-bone brutal-shadow ${className}`}>
         {/* Header */}
-        <div className="brutal-border border-x-0 border-t-0 bg-ink text-bone px-5 py-3">
-          <div className="font-mono text-[9px] uppercase opacity-50 mb-0.5">// LEARNING MODE</div>
-          <div className="font-display text-2xl">
-            {isPath ? "🌊 FLOW MODE" : "🔓 FREE MODE"}
-          </div>
+        <div className="border-b-2 border-border bg-ink text-bone px-5 py-4 rounded-t-xl">
+          <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
+          <p className="font-display text-2xl">
+            {isFlow ? "🌊 Flow Mode" : "🔓 Free Mode"}
+          </p>
         </div>
 
         {/* Mode cards side by side */}
-        <div className="grid grid-cols-2 gap-0">
+        <div className="grid grid-cols-2">
           {/* FLOW MODE */}
           <button
-            onClick={() => !isPath && setLearnMode("flow")}
-            className={`p-5 text-left transition-all brutal-border border-b-0 border-l-0 border-t-0
-              ${isPath
+            onClick={() => !isFlow && setLearnMode("flow")}
+            className={`p-5 text-left transition-all border-r-2 border-border rounded-bl-xl
+              ${isFlow
                 ? "bg-acid text-ink cursor-default"
-                : "bg-bone hover:bg-acid/20 cursor-pointer brutal-press"}`}
-            aria-pressed={isPath}
+                : "bg-bone hover:bg-acid/15 cursor-pointer brutal-press"}`}
+            aria-pressed={isFlow}
           >
             <div className="text-3xl mb-3">🌊</div>
-            <div className="font-display text-lg leading-tight mb-2">FLOW MODE</div>
-            <ul className="space-y-1 font-mono text-[9px] uppercase">
+            <p className="font-display text-lg leading-tight mb-2.5">Flow Mode</p>
+            <ul className="space-y-1.5">
               {[
-                { ok: true,  text: "Sequential unlock" },
-                { ok: true,  text: "Hearts on errors" },
-                { ok: true,  text: "XP gating" },
-                { ok: true,  text: "Structured progress" },
-              ].map(({ ok, text }) => (
-                <li key={text} className={`flex items-center gap-1.5 ${ok ? "opacity-80" : "opacity-40"}`}>
-                  <span>{ok ? "✓" : "✗"}</span> {text}
+                "Sequential unlock",
+                "Hearts on errors",
+                "XP gating",
+                "Structured progress",
+              ].map((text) => (
+                <li key={text} className="flex items-center gap-2 font-sans text-sm opacity-75">
+                  <span className="text-xs">✓</span> {text}
                 </li>
               ))}
             </ul>
-            {isPath && (
-              <div className="mt-3 font-mono text-[9px] uppercase font-bold opacity-70">● ACTIVE</div>
+            {isFlow && (
+              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-60">● Active</p>
             )}
           </button>
 
           {/* FREE MODE */}
           <button
-            onClick={() => isPath && setLearnMode("classic")}
-            className={`p-5 text-left transition-all brutal-border border-b-0 border-r-0 border-t-0
-              ${!isPath
-                ? "bg-bone text-ink cursor-default border-ink"
+            onClick={() => isFlow && setLearnMode("classic")}
+            className={`p-5 text-left transition-all rounded-br-xl
+              ${!isFlow
+                ? "bg-bone text-ink cursor-default"
                 : "bg-bone hover:bg-sun/30 cursor-pointer brutal-press"}`}
-            aria-pressed={!isPath}
+            aria-pressed={!isFlow}
           >
             <div className="text-3xl mb-3">🔓</div>
-            <div className="font-display text-lg leading-tight mb-2">FREE MODE</div>
-            <ul className="space-y-1 font-mono text-[9px] uppercase">
+            <p className="font-display text-lg leading-tight mb-2.5">Free Mode</p>
+            <ul className="space-y-1.5">
               {[
-                { ok: true,  text: "All lessons open" },
-                { ok: true,  text: "No hearts" },
-                { ok: true,  text: "Jump anywhere" },
-                { ok: true,  text: "Normal & hard diff." },
-              ].map(({ ok, text }) => (
-                <li key={text} className={`flex items-center gap-1.5 ${ok ? "opacity-70" : "opacity-30"}`}>
-                  <span>{ok ? "✓" : "✗"}</span> {text}
+                "All lessons open",
+                "No hearts",
+                "Jump anywhere",
+                "Normal & hard diff.",
+              ].map((text) => (
+                <li key={text} className="flex items-center gap-2 font-sans text-sm opacity-65">
+                  <span className="text-xs">✓</span> {text}
                 </li>
               ))}
             </ul>
-            {!isPath && (
-              <div className="mt-3 font-mono text-[9px] uppercase font-bold opacity-70">● ACTIVE</div>
+            {!isFlow && (
+              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-60">● Active</p>
             )}
           </button>
         </div>
 
         {/* Switch CTA */}
-        <div className="px-5 py-3 flex items-center justify-between gap-3">
-          <div className="font-mono text-[9px] uppercase opacity-50 leading-relaxed">
+        <div className="px-5 py-3.5 border-t-2 border-border flex items-center justify-between gap-3">
+          <p className="font-sans text-sm opacity-50">
             Switch anytime — progress carries over
-          </div>
+          </p>
           <button
             onClick={switchMode}
-            className="brutal-border bg-ink text-bone px-4 py-2 font-mono text-[9px] uppercase brutal-press hover:bg-acid hover:text-ink transition-colors shrink-0"
+            className="brutal-border rounded-md bg-ink text-bone px-4 py-2 font-sans text-sm font-medium brutal-press hover:bg-acid hover:text-ink transition-colors shrink-0"
           >
-            {justSwitched ? "✓ SWITCHED" : `SWITCH TO ${isPath ? "FREE" : "FLOW"} →`}
+            {justSwitched ? "✓ Switched" : `Switch to ${isFlow ? "Free" : "Flow"} →`}
           </button>
         </div>
       </div>
     );
   }
 
-  // variant === "bar"
+  /* ── BAR variant (default) ─────────────────────────────────────────── */
   return (
     <div
-      className={`brutal-border border-x-0 flex items-center justify-between gap-3 px-4 py-3
-        ${isPath ? "bg-acid text-ink" : "bg-bone text-ink border-ink/20"}
+      className={`border-b-2 border-border flex items-center justify-between gap-3 px-4 py-3
+        ${isFlow ? "bg-acid text-ink" : "bg-bone text-ink"}
         ${className}`}
     >
       {/* Left: mode info */}
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-2xl shrink-0">{isPath ? "🌊" : "🔓"}</span>
+        <span className="text-xl shrink-0">{isFlow ? "🌊" : "🔓"}</span>
         <div className="min-w-0">
-          <div className="font-display text-base leading-tight">
-            {isPath ? "FLOW MODE" : "FREE MODE"}
-          </div>
-          <div className="font-mono text-[9px] uppercase opacity-60 truncate">
-            {isPath
+          <p className="font-display text-base leading-tight">
+            {isFlow ? "Flow Mode" : "Free Mode"}
+          </p>
+          <p className="font-sans text-xs opacity-55 truncate mt-0.5">
+            {isFlow
               ? "Sequential · hearts on · XP gated"
               : "All lessons open · no hearts · jump anywhere"}
-          </div>
+          </p>
         </div>
       </div>
 
       {/* Right: switch button */}
       <button
         onClick={switchMode}
-        className={`shrink-0 brutal-border px-3 py-1.5 font-mono text-[9px] uppercase brutal-press transition-colors
-          ${isPath
-            ? "bg-ink text-bone hover:bg-volt hover:text-ink"
-            : "bg-bone text-ink hover:bg-acid brutal-border"}`}
+        className={`shrink-0 brutal-border rounded-md px-3.5 py-1.5 font-sans text-sm font-medium brutal-press transition-colors
+          ${isFlow
+            ? "bg-ink text-bone hover:bg-volt"
+            : "bg-bone text-ink hover:bg-acid"}`}
       >
-        {justSwitched
-          ? "✓"
-          : `SWITCH TO ${isPath ? "FREE" : "FLOW"} →`}
+        {justSwitched ? "✓" : `Switch to ${isFlow ? "Free" : "Flow"} →`}
       </button>
     </div>
   );
