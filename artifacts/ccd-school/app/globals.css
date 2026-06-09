@@ -36,10 +36,25 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
+
+  /* ── Radius tokens — 6px gives polish without losing brutalist edge ── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
+
+  /* ── Motion tokens — codified easings ───────────────────────────────── */
+  --ease-pop:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-glide: cubic-bezier(0.22, 1,    0.36, 1);
+  --ease-snap:  cubic-bezier(0.4,  0,    0.2,  1);
+  --duration-fast:   150ms;
+  --duration-normal: 280ms;
+  --duration-slow:   480ms;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   THEMES
+   ═══════════════════════════════════════════════════════════════════════ */
 
 :root,
 [data-theme="ccd-classic"] {
@@ -69,7 +84,6 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
 [data-theme="midnight"] {
@@ -99,10 +113,8 @@
   --border: oklch(0.35 0.06 280);
   --input: oklch(0.35 0.06 280);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Default ─────────────────────────────────────────────────────────── */
 [data-theme="default"] {
   --bone: hsl(20 6% 90%);
   --ink: hsl(222 47% 4%);
@@ -110,7 +122,6 @@
   --hot: hsl(0 72% 51%);
   --volt: hsl(221 83% 53%);
   --sun: hsl(142 76% 73%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(20 6% 96%);
@@ -130,10 +141,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Brutalist ───────────────────────────────────────────────────────── */
 [data-theme="brutalist"] {
   --bone: hsl(20 6% 90%);
   --ink: hsl(222 47% 4%);
@@ -141,7 +150,6 @@
   --hot: hsl(0 72% 51%);
   --volt: hsl(221 83% 53%);
   --sun: hsl(142 76% 73%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(20 6% 84%);
@@ -161,10 +169,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Sunburn ─────────────────────────────────────────────────────────── */
 [data-theme="sunburn"] {
   --bone: hsl(20 6% 90%);
   --ink: hsl(222 47% 4%);
@@ -172,7 +178,6 @@
   --hot: hsl(21 90% 53%);
   --volt: hsl(10 80% 55%);
   --sun: hsl(44 100% 60%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(20 6% 96%);
@@ -192,10 +197,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--hot);
-  --radius: 0;
 }
 
-/* ── Original ────────────────────────────────────────────────────────── */
 [data-theme="original"] {
   --bone: hsl(42 80% 94%);
   --ink: hsl(0 0% 6%);
@@ -203,7 +206,6 @@
   --hot: hsl(330 100% 72%);
   --volt: hsl(200 100% 55%);
   --sun: hsl(80 90% 55%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(42 80% 98%);
@@ -223,10 +225,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Synthwave ───────────────────────────────────────────────────────── */
 [data-theme="synthwave"] {
   --bone: hsl(250 64% 11%);
   --ink: hsl(270 60% 97%);
@@ -234,7 +234,6 @@
   --hot: hsl(46 98% 59%);
   --volt: hsl(188 100% 50%);
   --sun: hsl(111 100% 54%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(250 64% 15%);
@@ -254,10 +253,8 @@
   --border: hsl(270 40% 30%);
   --input: hsl(270 40% 30%);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Y2K ─────────────────────────────────────────────────────────────── */
 [data-theme="y2k"] {
   --bone: hsl(265 100% 95%);
   --ink: hsl(262 67% 14%);
@@ -265,7 +262,6 @@
   --hot: hsl(344 100% 72%);
   --volt: hsl(190 100% 50%);
   --sun: hsl(111 100% 54%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(326 80% 92%);
@@ -285,10 +281,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Matcha ──────────────────────────────────────────────────────────── */
 [data-theme="matcha"] {
   --bone: hsl(48 41% 90%);
   --ink: hsl(130 16% 18%);
@@ -296,7 +290,6 @@
   --hot: hsl(10 70% 60%);
   --volt: hsl(180 30% 45%);
   --sun: hsl(125 25% 55%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(48 30% 94%);
@@ -316,10 +309,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Mono+1 ──────────────────────────────────────────────────────────── */
 [data-theme="mono"] {
   --bone: hsl(0 0% 98%);
   --ink: hsl(0 0% 4%);
@@ -327,7 +318,6 @@
   --hot: hsl(16 100% 50%);
   --volt: hsl(0 0% 20%);
   --sun: hsl(0 0% 75%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(0 0% 93%);
@@ -347,10 +337,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Sunset ──────────────────────────────────────────────────────────── */
 [data-theme="sunset"] {
   --bone: hsl(26 100% 92%);
   --ink: hsl(350 50% 12%);
@@ -358,7 +346,6 @@
   --hot: hsl(42 100% 50%);
   --volt: hsl(270 75% 63%);
   --sun: hsl(160 60% 55%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(20 80% 87%);
@@ -378,10 +365,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Oceanic ─────────────────────────────────────────────────────────── */
 [data-theme="oceanic"] {
   --bone: hsl(212 95% 11%);
   --ink: hsl(190 100% 95%);
@@ -389,7 +374,6 @@
   --hot: hsl(340 90% 65%);
   --volt: hsl(192 100% 42%);
   --sun: hsl(165 70% 55%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(212 80% 15%);
@@ -409,10 +393,8 @@
   --border: hsl(212 50% 28%);
   --input: hsl(212 50% 28%);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Candy Pop ───────────────────────────────────────────────────────── */
 [data-theme="candy"] {
   --bone: hsl(340 100% 97%);
   --ink: hsl(330 60% 15%);
@@ -420,7 +402,6 @@
   --hot: hsl(50 100% 62%);
   --volt: hsl(195 95% 60%);
   --sun: hsl(155 85% 72%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(330 80% 93%);
@@ -440,10 +421,8 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--volt);
-  --radius: 0;
 }
 
-/* ── Forest ──────────────────────────────────────────────────────────── */
 [data-theme="forest"] {
   --bone: hsl(130 20% 13%);
   --ink: hsl(45 60% 90%);
@@ -451,7 +430,6 @@
   --hot: hsl(359 45% 51%);
   --volt: hsl(180 40% 55%);
   --sun: hsl(85 50% 60%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(130 20% 17%);
@@ -471,10 +449,8 @@
   --border: hsl(130 20% 28%);
   --input: hsl(130 20% 28%);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Pink Punk ───────────────────────────────────────────────────────── */
 [data-theme="pinkpunk"] {
   --bone: hsl(0 0% 0%);
   --ink: hsl(0 0% 100%);
@@ -482,7 +458,6 @@
   --hot: hsl(330 100% 59%);
   --volt: hsl(0 0% 100%);
   --sun: hsl(330 100% 75%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(0 0% 10%);
@@ -502,10 +477,8 @@
   --border: hsl(0 0% 22%);
   --input: hsl(0 0% 22%);
   --ring: var(--acid);
-  --radius: 0;
 }
 
-/* ── Linework ────────────────────────────────────────────────────────── */
 [data-theme="linework"] {
   --bone: hsl(0 0% 100%);
   --ink: hsl(0 0% 0%);
@@ -513,7 +486,6 @@
   --hot: hsl(0 0% 0%);
   --volt: hsl(0 0% 0%);
   --sun: hsl(0 0% 92%);
-
   --background: var(--bone);
   --foreground: var(--ink);
   --card: hsl(0 0% 96%);
@@ -533,64 +505,212 @@
   --border: var(--ink);
   --input: var(--ink);
   --ring: var(--ink);
-  --radius: 0;
 }
 
-/* ── Brutalist utilities ─────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Default text selection */
+::selection {
+  background-color: var(--acid);
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BRUTALIST UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Core border — used on every card/panel ──────────────────────────── */
 .brutal-border {
   border: 2px solid var(--border);
+  border-radius: var(--radius-sm, 4px);
 }
 
+/* ── Elevated shadow — chunk-style offset ────────────────────────────── */
 .brutal-shadow {
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.brutal-shadow-lg {
+  box-shadow: 10px 10px 0 var(--ink);
+}
+.brutal-shadow-sm {
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
+/* ── Acid-coloured shadow (CTA buttons) ──────────────────────────────── */
+.brutal-shadow-acid {
+  box-shadow: 6px 6px 0 var(--acid);
+}
+
+/* ── Press & hover interactions ──────────────────────────────────────── */
 .brutal-press {
-  transition: transform 60ms, box-shadow 60ms;
+  transition: transform var(--duration-fast) var(--ease-snap),
+              box-shadow var(--duration-fast) var(--ease-snap);
 }
 .brutal-press:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 var(--ink);
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 var(--ink) !important;
 }
 
-/* ── Animations ──────────────────────────────────────────────────────── */
+/* Lift up on hover — complementary to brutal-press */
+.brutal-hover {
+  transition: transform var(--duration-normal) var(--ease-glide),
+              box-shadow var(--duration-normal) var(--ease-glide);
+}
+.brutal-hover:hover:not(:active) {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+/* ── Grain texture overlay ───────────────────────────────────────────── */
+.bg-grain {
+  background-image: radial-gradient(var(--ink) / 0.06 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+/* ── Section label — clean "/ TITLE" pattern ─────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+}
+
+/* ── Content card — consistent card style ────────────────────────────── */
+.content-card {
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md, 6px);
+  background-color: var(--card);
+  padding: 1.25rem; /* 20px */
+}
+
+/* ── Hover glitch ────────────────────────────────────────────────────── */
+.hover-glitch:hover {
+  letter-spacing: 0.02em;
+  transition: letter-spacing 0.1s;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY SYSTEM
+   Rules: font-display for titles, font-sans for ALL body/paragraphs,
+   font-mono ONLY for technical labels, codes, metadata.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Minimum readable sizes — replaces the old !important hacks */
+.text-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+}
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+
+.text-body-sm {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.6;
+}
+
+/* Clamp-based responsive headline */
+.headline-fluid {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+}
+
+/* Force minimum 11px on all the legacy text-[9px]/text-[10px] classes */
+.text-\[8px\]  { font-size: 0.6875rem !important; }
+.text-\[9px\]  { font-size: 0.6875rem !important; }
+.text-\[10px\] { font-size: 0.6875rem !important; }
+
+/* Body copy never below 13px */
+.font-mono.text-xs { font-size: 0.8125rem; } /* 13px */
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════ */
+
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
-
-@keyframes slide-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .animate-marquee {
   animation: marquee 24s linear infinite;
 }
 
+@keyframes slide-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
 .animate-slide-right {
-  animation: slide-right 0.2s ease-out;
+  animation: slide-right 0.2s var(--ease-glide);
 }
 
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .animate-fade-up {
-  animation: fade-up 0.3s ease-out both;
+  animation: fade-up 0.35s var(--ease-glide) both;
 }
 
-/* Fix #1: animate-fade-in — was referenced in OnboardingFlow but never defined */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in {
-  animation: fade-in 0.25s ease-out both;
+  animation: fade-in 0.28s var(--ease-glide) both;
 }
 
-/* Fix #3: heart-crumble — heart breaks apart when losing one in path mode */
+/* Pop in — spring-like entrance for modals/cards */
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.92) translateY(10px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.animate-pop-in {
+  animation: pop-in 0.4s var(--ease-pop) both;
+}
+
+/* Staggered fade-in for lists */
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-up 0.4s var(--ease-glide) forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay:   0ms; }
+.stagger-children > *:nth-child(2) { animation-delay:  60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+
+.lesson-screen-enter {
+  animation: fade-up 0.28s var(--ease-glide) both;
+}
+
+/* Heart crumble — losing a heart in flow mode */
 @keyframes heart-crumble {
   0%   { transform: scale(1);    opacity: 1; filter: none; }
   20%  { transform: scale(1.3);  opacity: 1; filter: brightness(1.4); }
@@ -602,18 +722,18 @@
   animation: heart-crumble 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
 }
 
-/* Fix #4: xp-float — "+XP" flies upward and fades after correct answer */
+/* XP float — "+XP" after correct answer */
 @keyframes xp-float {
-  0%   { opacity: 1; transform: translateY(0)   scale(1);    }
-  30%  { opacity: 1; transform: translateY(-12px) scale(1.15); }
-  100% { opacity: 0; transform: translateY(-48px) scale(0.9); }
+  0%   { opacity: 1; transform: translateY(0)    scale(1);    }
+  30%  { opacity: 1; transform: translateY(-14px) scale(1.18); }
+  100% { opacity: 0; transform: translateY(-52px) scale(0.9); }
 }
 .animate-xp-float {
-  animation: xp-float 0.9s ease-out forwards;
+  animation: xp-float 0.9s var(--ease-glide) forwards;
   pointer-events: none;
 }
 
-/* Fix #10: shield-earn — shield materialises when streak hits milestone */
+/* Shield earn — streak shield materialises */
 @keyframes shield-earn {
   0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
   50%  { transform: scale(1.3) rotate(8deg);  opacity: 1; }
@@ -625,7 +745,6 @@
   animation: shield-earn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-/* Pulse glow for the shield badge after it appears */
 @keyframes shield-pulse {
   0%, 100% { box-shadow: 0 0 0 0   rgba(198,255,0,0.4); }
   50%       { box-shadow: 0 0 0 12px rgba(198,255,0,0);   }
@@ -634,107 +753,42 @@
   animation: shield-pulse 1.4s ease-in-out 0.6s 3;
 }
 
-/* ── Hover glitch ────────────────────────────────────────────────────── */
-.hover-glitch:hover {
-  letter-spacing: 0.02em;
-  transition: letter-spacing 0.1s;
-}
 
-/* ── World-class button glow (acid CTA) ─────────────────────────────── */
-.brutal-shadow-acid {
-  box-shadow: 4px 4px 0 var(--acid);
-}
+/* ═══════════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── P2 #25: brutal-hover — lift effect on interactive elements ──────── */
-/* Complementary to brutal-press (which presses down); this lifts UP on hover */
-.brutal-hover {
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-.brutal-hover:hover:not(:active) {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--ink);
-}
-
-/* ── P2 #24: ensure animate-fade-up is defined for screen transitions ── */
-/* Already defined above; this re-ensures the 0.25s variant for screen renders */
-.lesson-screen-enter {
-  animation: fade-up 0.25s ease-out both;
-}
-
-/* ── Staggered fade-in for lists ───────────────────────────────────── */
-.stagger-children > * {
-  opacity: 0;
-  animation: fade-up 0.4s ease-out forwards;
-}
-.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
-
-/* ── Scrollbar ───────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bone); }
-::-webkit-scrollbar-thumb { background: var(--ink); }
-
-/* ── Focus ring ─────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-}
-
-* { box-sizing: border-box; }
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: var(--bone); }
+::-webkit-scrollbar-thumb    { background: var(--ink); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--volt); }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   ACCESSIBILITY UPGRADES — WCAG AA compliance (Phase 3.1)
+   FOCUS & ACCESSIBILITY
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── 1. Enforce minimum readable font sizes ─────────────────────────── */
-/* text-[9px] and text-[10px] are used 95× — bump to at least 11px      */
-.text-\[9px\]  { font-size: 0.6875rem !important; } /* 11px */
-.text-\[10px\] { font-size: 0.6875rem !important; } /* 11px */
-
-/* All body copy must be at least 13px */
-.font-mono.text-xs  { font-size: 0.8125rem; } /* 13px */
-
-/* ── 2. Improved focus ring ─────────────────────────────────────────── */
-/* Replaces the 2px outline with a more visible 3px acid-color ring      */
 :focus-visible {
-  outline: 3px solid #C6FF00;
+  outline: 3px solid var(--acid);
   outline-offset: 3px;
-  border-radius: 1px;
+  border-radius: 2px;
   z-index: 9999;
   position: relative;
 }
 
-/* Keyboard-nav shortcut: users can press 1-4 to pick quiz answers       */
-/* (implemented via JS) — these classes mark the keyboard-active state   */
 .kbd-active {
-  outline: 3px solid #C6FF00 !important;
+  outline: 3px solid var(--acid) !important;
   outline-offset: 3px !important;
 }
 
-/* ── 3. Reduce opacity floor to maintain contrast ───────────────────── */
-/* opacity-20 on non-decorative elements is too low (fails WCAG AA)      */
-/* Raise to 0.45 for body copy, 0.35 for labels                          */
-.opacity-20:not([aria-hidden="true"]):not(.decorative) {
-  opacity: 0.45 !important;
-}
-.opacity-30:not([aria-hidden="true"]):not(.decorative) {
-  opacity: 0.45 !important;
-}
-
-/* ── 4. Improve tap target sizes (min 44×44px per WCAG 2.5.5) ───────── */
+/* Tap targets — minimum 44×44px */
 button, [role="button"], a, [role="menuitem"], [role="option"] {
   min-height: 44px;
   min-width: 44px;
 }
-/* Exception: icon-only inline buttons that have aria-label */
 button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
 
-/* ── 5. Screen-reader only utility class ────────────────────────────── */
+/* Screen-reader only */
 .sr-only {
   position: absolute !important;
   width: 1px !important;
@@ -747,29 +801,53 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
   border: 0 !important;
 }
 
-/* ── 6. Skip-to-content link ────────────────────────────────────────── */
+/* Skip-to-content */
 .skip-link {
   position: absolute;
   top: -100%;
   left: 50%;
   transform: translateX(-50%);
-  background: #C6FF00;
-  color: #111;
+  background: var(--acid);
+  color: var(--ink);
   padding: 0.75rem 1.5rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   font-weight: bold;
   text-transform: uppercase;
   z-index: 10000;
-  border: 2px solid #111;
+  border: 2px solid var(--ink);
   text-decoration: none;
   transition: top 0.1s;
+  border-radius: var(--radius-sm);
 }
-.skip-link:focus {
-  top: 8px;
+.skip-link:focus { top: 8px; }
+
+/* Keyboard quiz hints */
+[data-kbd-hint]::before {
+  content: attr(data-kbd-hint);
+  display: inline-block;
+  font-size: 0.6875rem;
+  opacity: 0.45;
+  margin-right: 0.4em;
+  font-family: var(--font-mono);
+  border: 1px solid currentColor;
+  padding: 0 3px;
+  border-radius: 2px;
 }
 
-/* ── 7. Reduce motion support ───────────────────────────────────────── */
+/* Reduce opacity floor for contrast */
+.opacity-20:not([aria-hidden="true"]):not(.decorative) { opacity: 0.45 !important; }
+.opacity-30:not([aria-hidden="true"]):not(.decorative) { opacity: 0.45 !important; }
+
+/* aria-live regions always visible */
+[aria-live] {
+  clip: auto !important;
+  height: auto !important;
+  width: auto !important;
+  overflow: visible !important;
+}
+
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -779,121 +857,65 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
   }
 }
 
-/* ── 8. High contrast mode support ─────────────────────────────────── */
+/* High contrast mode */
 @media (forced-colors: active) {
   .brutal-border { border-color: ButtonText; }
-  .brutal-shadow { box-shadow: none; }
+  .brutal-shadow, .brutal-shadow-lg, .brutal-shadow-sm { box-shadow: none; }
   :focus-visible { outline-color: Highlight; }
-}
-
-/* ── 9. aria-live feedback region base styles ───────────────────────── */
-[aria-live] {
-  /* Ensure live regions are never hidden from AT                        */
-  clip: auto !important;
-  height: auto !important;
-  width: auto !important;
-  overflow: visible !important;
-}
-
-/* ── 10. Interactive element contrast helpers ───────────────────────── */
-/* bg-acid (#C6FF00) on bg-ink (#111) = contrast ratio ~11:1 ✓          */
-/* bg-hot (#FF2D2D) on white = ~4.5:1 ✓                                 */
-/* bg-volt (#7B2FFF) on white: text must be white (bone) ✓              */
-/* bg-sun (#FFB800) on ink: contrast ~9:1 ✓                             */
-
-/* ── 11. Keyboard navigation for quiz answers ───────────────────────── */
-/* Press 1, 2, 3, 4 to select options. Implemented in ExerciseScreens.  */
-/* This CSS ensures the highlighted option is clearly visible            */
-[data-kbd-hint]::before {
-  content: attr(data-kbd-hint);
-  display: inline-block;
-  font-size: 0.6875rem;
-  opacity: 0.5;
-  margin-right: 0.4em;
-  font-family: monospace;
-  border: 1px solid currentColor;
-  padding: 0 3px;
-  border-radius: 2px;
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   PWA / MOBILE APP STYLES (Phase: Phone App)
+   PWA / MOBILE APP STYLES
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── Safe-area utilities (iPhone notch / Dynamic Island) ────────────── */
-/* pb-safe: padding-bottom that respects the iOS home indicator */
-.pb-safe  { padding-bottom: env(safe-area-inset-bottom, 16px); }
-.pt-safe  { padding-top:    env(safe-area-inset-top,    0px);  }
-.mb-safe  { margin-bottom:  env(safe-area-inset-bottom, 16px); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+.pt-safe { padding-top:    env(safe-area-inset-top,    0px);  }
+.mb-safe { margin-bottom:  env(safe-area-inset-bottom, 16px); }
 
-/* ── Slide-up animation for iOS install sheet ───────────────────────── */
 @keyframes slide-up {
   from { transform: translateY(100%); }
-  to   { transform: translateY(0);    }
+  to   { transform: translateY(0); }
 }
 .animate-slide-up {
   animation: slide-up 0.28s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
-/* ── Mobile bottom nav clearance ────────────────────────────────────── */
-/* Prevents content from being hidden behind the 72px bottom nav bar    */
-/* Suppressed on lesson pages via [data-page="lesson"] wrapper div      */
+/* Mobile bottom nav clearance */
 @media (max-width: 767px) {
   main:not(:has([data-page="lesson"])) {
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
-  /* Fallback for browsers without :has() support */
   body:not([data-page="lesson"]) main {
     padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
-  /* When the lesson wrapper IS present, force no extra padding */
   main:has([data-page="lesson"]) {
     padding-bottom: 0 !important;
   }
 }
 
-/* ── Standalone / installed app overrides ───────────────────────────── */
+/* Standalone PWA overrides */
 @media (display-mode: standalone) {
-  /* Hide browser-chrome elements that are redundant in app mode */
   .browser-only { display: none !important; }
-
-  /* Extend header bg behind iOS status bar when black-translucent */
-  header:first-of-type {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
+  header:first-of-type { padding-top: env(safe-area-inset-top, 0px); }
+  html, body { overscroll-behavior: none; }
 }
 
-/* ── Prevent rubber-band overscroll on the app shell ────────────────── */
-/* (Only on iOS standalone — let individual scroll containers scroll)   */
-@media (display-mode: standalone) {
-  html, body {
-    overscroll-behavior: none;
-  }
-}
-
-/* ── Fix #9: Hide the header ≡ menu on pages where MobileBottomNav is shown ── */
-/* The bottom nav covers Learn/Daily/Review/Profile — the drawer is redundant  */
-/* Hide it on all mobile pages EXCEPT lesson/placement/onboarding               */
+/* Hide ≡ menu on pages where MobileBottomNav is shown */
 @media (max-width: 767px) {
-  /* Default: hide the ≡ button (bottom nav pages) */
-  [aria-label="Open menu"] {
-    display: none !important;
-  }
-  /* Show it back on lesson pages (bottom nav is hidden there) */
-  [data-page="lesson"] [aria-label="Open menu"],
-  [data-page="placement"] [aria-label="Open menu"],
+  [aria-label="Open menu"] { display: none !important; }
+  [data-page="lesson"]     [aria-label="Open menu"],
+  [data-page="placement"]  [aria-label="Open menu"],
   [data-page="onboarding"] [aria-label="Open menu"] {
     display: flex !important;
   }
 }
 
-/* ── Touch callout and tap highlight ────────────────────────────────── */
+/* Touch callout and tap highlight */
 button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
-/* The banner uses animate-fade-up which is already defined above;       */
-/* ensure it also accounts for safe area when at bottom                  */
+
 .install-banner-offset {
   bottom: calc(72px + env(safe-area-inset-bottom, 0px));
 }

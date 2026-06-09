@@ -1,17 +1,7 @@
 "use client";
 /**
- * Header v3 — Streamlined Brutalista
- *
- * Desktop (left → right):
- *   Logo | Learn · Worlds · Progress | More ▾ | <flex spacer> |
- *   Search | Hearts | XP+Streak badge (popover) | Mode pill | Profile/Sign in
- *
- * The old marquee ticker is replaced with a single 1px separator line.
- * The right strip is trimmed to exactly 5 elements.
- * ThemeSwitcher is accessible via the More ▾ → ACCOUNT section.
- *
- * Mobile: ≡ drawer with compact stats, hearts, mode toggle, and
- * categorised nav sections.
+ * Header v4 — World-class polish
+ * Same structure as v3, refined typography + spacing throughout.
  */
 
 import Link from "next/link";
@@ -127,19 +117,16 @@ const HEARTS_TOOLTIP_KEY = "ccd.hearts_header_seen";
 function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number }) {
   const [secs, setSecs] = useState(refillSeconds);
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const [hasSeenTooltip, setHasSeenTooltip] = useState(true); // assume seen until hydrated
+  const [hasSeenTooltip, setHasSeenTooltip] = useState(true);
 
   useEffect(() => {
-    // Hydrate — check if user has seen the header hearts tooltip
-    try {
-      setHasSeenTooltip(!!sessionStorage.getItem(HEARTS_TOOLTIP_KEY));
-    } catch {}
+    try { setHasSeenTooltip(!!sessionStorage.getItem(HEARTS_TOOLTIP_KEY)); } catch {}
   }, []);
 
   useEffect(() => setSecs(refillSeconds), [refillSeconds]);
   useEffect(() => {
     if (count >= MAX_HEARTS || secs <= 0) return;
-    const id = setInterval(() => setSecs(s => Math.max(0, s - 1)), 1000);
+    const id = setInterval(() => setSecs((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
   }, [count, secs]);
 
@@ -157,7 +144,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
     <div className="relative">
       <button
         onClick={() => {
-          setTooltipOpen(o => !o);
+          setTooltipOpen((o) => !o);
           if (!hasSeenTooltip) {
             try { sessionStorage.setItem(HEARTS_TOOLTIP_KEY, "1"); } catch {}
             setHasSeenTooltip(true);
@@ -167,48 +154,49 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
         className="flex items-center gap-0.5 brutal-press hover:opacity-80 transition-opacity"
       >
         {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-          <span key={i} aria-hidden="true"
-            className={`text-sm leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
+          <span
+            key={i}
+            aria-hidden="true"
+            className={`text-base leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}
+          >
             ♥
           </span>
         ))}
         {!full && secs > 0 && (
-          <span className="font-mono text-[8px] opacity-50 ml-0.5 tabular-nums">
+          <span className="font-mono text-xs opacity-45 ml-1 tabular-nums">
             {hh}h{mm}
           </span>
         )}
-        {/* Pulsing dot for first-time users who haven't clicked yet */}
         {!hasSeenTooltip && (
           <span className="ml-1 w-1.5 h-1.5 rounded-full bg-acid animate-ping absolute -top-0.5 -right-0.5" aria-hidden />
         )}
       </button>
 
-      {/* Tooltip panel */}
       {tooltipOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={dismissTooltip} aria-hidden />
-          <div className="absolute right-0 top-full mt-2 z-50 brutal-border bg-bone brutal-shadow w-56">
-            <div className="px-4 pt-3 pb-2">
-              <div className="font-display text-base mb-1">♥ Hearts</div>
-              <div className="font-mono text-[10px] leading-relaxed opacity-70">
-                You have <strong>{count}/{MAX_HEARTS}</strong> hearts.
-                Each wrong answer in <strong>Flow Mode</strong> costs 1 heart.
-              </div>
+          <div className="absolute right-0 top-full mt-2 z-50 brutal-border rounded-lg bg-bone brutal-shadow w-60 animate-fade-in">
+            <div className="px-4 pt-3.5 pb-3">
+              <p className="font-display text-lg mb-2">♥ Hearts</p>
+              <p className="font-sans text-sm leading-relaxed opacity-70">
+                You have <strong>{count}/{MAX_HEARTS}</strong> hearts. Each wrong
+                answer in <strong>Flow Mode</strong> costs 1 heart.
+              </p>
               {!full && (
-                <div className="font-mono text-[10px] mt-1.5 opacity-60">
+                <p className="font-sans text-xs mt-2 opacity-55">
                   Next refill in {hh}h{mm}m · 1 heart per 4 hours
-                </div>
+                </p>
               )}
               {full && (
-                <div className="font-mono text-[10px] mt-1.5 text-acid font-bold">
+                <p className="font-sans text-xs mt-2 text-acid font-bold">
                   ♥ Full — you&apos;re good to go
-                </div>
+                </p>
               )}
             </div>
-            <div className="brutal-border border-x-0 border-b-0 px-4 py-2">
+            <div className="border-t-2 border-border px-4 py-2.5">
               <button
                 onClick={dismissTooltip}
-                className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 transition-opacity"
+                className="font-mono text-xs uppercase opacity-45 hover:opacity-100 transition-opacity"
               >
                 Got it ✕
               </button>
@@ -235,7 +223,6 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
   const ref = useRef<HTMLDivElement>(null);
   const { current: rank, next, progress: rankPct } = rankFor(progress.xp);
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) onClose();
@@ -249,58 +236,55 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-full mt-2 z-[60] brutal-border bg-bone brutal-shadow min-w-[220px]"
+      className="absolute right-0 top-full mt-2 z-[60] brutal-border rounded-lg bg-bone brutal-shadow min-w-[230px] animate-fade-in"
       role="dialog"
       aria-label="XP and streak details"
     >
-      {/* Rank row */}
-      <div className="px-4 py-3 brutal-border border-x-0 border-t-0 flex items-center gap-3">
+      {/* Rank */}
+      <div className="px-4 py-3 border-b-2 border-border flex items-center gap-3">
         <span className="text-2xl leading-none">{rank.emoji}</span>
         <div className="flex-1">
-          <div className="font-display text-sm uppercase">{rank.name}</div>
-          <div className="font-mono text-[9px] uppercase opacity-50">{rank.tagline}</div>
+          <p className="font-display text-base">{rank.name}</p>
+          <p className="font-mono text-xs opacity-45 uppercase">{rank.tagline}</p>
         </div>
       </div>
 
-      {/* XP progress to next rank */}
-      <div className="px-4 py-3 brutal-border border-x-0 border-t-0">
-        <div className="flex justify-between items-baseline mb-1.5">
-          <span className="font-mono text-[9px] uppercase opacity-60">XP to next rank</span>
-          <span className="font-mono text-[9px] tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
+      {/* XP progress */}
+      <div className="px-4 py-3 border-b-2 border-border">
+        <div className="flex justify-between items-baseline mb-2">
+          <span className="font-mono text-xs uppercase opacity-50">XP to next rank</span>
+          <span className="font-mono text-xs tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
         </div>
-        <div className="w-full bg-ink/10 h-2 brutal-border">
-          <div
-            className="bg-acid h-full transition-all"
-            style={{ width: `${rankPct * 100}%` }}
-          />
+        <div className="w-full bg-ink/10 h-2 rounded-full overflow-hidden">
+          <div className="bg-acid h-full rounded-full transition-all" style={{ width: `${rankPct * 100}%` }} />
         </div>
-        <div className="font-mono text-[9px] opacity-50 mt-1 tabular-nums">{progress.xp} XP total</div>
+        <p className="font-mono text-xs opacity-45 mt-1.5 tabular-nums">{progress.xp} XP total</p>
       </div>
 
-      {/* Streak + shield */}
-      <div className="px-4 py-3 brutal-border border-x-0 border-t-0 flex items-center justify-between">
+      {/* Streak + gems */}
+      <div className="px-4 py-3 border-b-2 border-border flex items-center justify-between">
         <div>
-          <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Streak</div>
-          <div className="font-display text-lg">
+          <p className="font-mono text-xs uppercase opacity-45 mb-1">Streak</p>
+          <p className="font-display text-lg">
             🔥 {progress.streakDays}
-            {progress.streakShield && <span className="ml-1 text-sm">🛡</span>}
-          </div>
+            {progress.streakShield && <span className="ml-1 text-base">🛡</span>}
+          </p>
         </div>
         <div className="text-right">
-          <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Gems</div>
-          <div className="font-display text-lg">💎 {progress.gems}</div>
+          <p className="font-mono text-xs uppercase opacity-45 mb-1">Gems</p>
+          <p className="font-display text-lg">💎 {progress.gems}</p>
         </div>
       </div>
 
-      {/* Daily goal ring */}
+      {/* Daily goal */}
       <div className="px-4 py-3 flex items-center gap-3">
         <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
         <div>
-          <div className="font-mono text-[9px] uppercase opacity-60">Daily goal</div>
-          <div className="font-mono text-[10px] tabular-nums">
+          <p className="font-mono text-xs uppercase opacity-45">Daily goal</p>
+          <p className="font-sans text-sm tabular-nums">
             {progress.dailyXp} / {DAILY_GOAL_XP} XP
-            {dailyGoalDone && <span className="ml-1 text-[9px]">✓</span>}
-          </div>
+            {dailyGoalDone && <span className="ml-1 text-xs">✓</span>}
+          </p>
         </div>
       </div>
     </div>
@@ -352,26 +336,22 @@ function XpStreakBadge() {
 
   return (
     <div className="relative flex items-center gap-1">
-      {/* P2 #25: separate streak and XP as clearly labelled pills */}
       <button
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="dialog"
         title="View XP, streak and daily goal"
-        className="brutal-border bg-ink text-bone px-2.5 py-1 font-mono text-[10px] uppercase tabular-nums brutal-press flex items-center gap-2 hover:bg-volt transition-colors"
+        className="brutal-border rounded-md bg-ink text-bone px-3 py-1.5 font-sans text-sm brutal-press flex items-center gap-2.5 hover:bg-volt transition-colors"
       >
-        {/* Streak pill */}
         <span className={`flex items-center gap-1 transition-all duration-200 ${streakFlash ? "scale-125 text-acid" : ""}`}>
           <span>🔥</span>
-          <span className="font-display text-sm leading-none">{streakDisplay}</span>
+          <span className="font-display text-base leading-none tabular-nums">{streakDisplay}</span>
         </span>
-        <span className="opacity-20">|</span>
-        {/* XP pill */}
-        <span className={`flex items-center gap-0.5 transition-all duration-200 ${xpFlash ? "scale-110 text-acid" : ""}`}>
-          <span className="opacity-60 text-[9px]">XP</span>
-          <span className="font-display text-sm leading-none">{xpDisplay}</span>
+        <span className="opacity-20 text-xs">|</span>
+        <span className={`flex items-center gap-1 transition-all duration-200 ${xpFlash ? "scale-110 text-acid" : ""}`}>
+          <span className="opacity-50 text-xs font-mono">XP</span>
+          <span className="font-display text-base leading-none tabular-nums">{xpDisplay}</span>
         </span>
-        {/* Daily goal ring */}
         <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
       </button>
       {open && (
@@ -399,37 +379,29 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
     setLearnMode(next);
     setToast(
       next === "flow"
-        ? "🌊 FLOW MODE — locked in, hearts on, sequential"
-        : "🔓 FREE MODE — all lessons open"
+        ? "🌊 Flow Mode — sequential, hearts on"
+        : "🔓 Free Mode — all lessons open"
     );
     setTimeout(() => setToast(null), 2800);
   }, [learnMode, setLearnMode]);
 
-  const isPath = learnMode === "flow";
+  const isFlow = learnMode === "flow";
 
   return (
     <div className="relative">
       <button
         onClick={toggle}
-        title={isPath
-          ? "FLOW MODE — click to switch to Free Mode"
-          : "FREE MODE — click to switch to Flow Mode"}
-        aria-label={isPath ? "Currently in FLOW MODE. Click to switch to FREE MODE" : "Currently in FREE MODE. Click to switch to FLOW MODE"}
-        className={`brutal-border px-3 py-1.5 font-mono text-[10px] uppercase brutal-press transition-all flex items-center gap-2 font-bold
-          ${isPath
-            ? "bg-acid text-ink hover:bg-sun border-2"
-            : "bg-bone text-ink hover:bg-sun border-2"}`}
+        title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
+        aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
+        className={`brutal-border rounded-md px-3 py-1.5 font-sans text-sm font-semibold brutal-press transition-all flex items-center gap-2
+          ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-sun"}`}
       >
-        <span className="text-sm">{isPath ? "🌊" : "🔓"}</span>
-        {!compact && (
-          <span className="tracking-wider">{isPath ? "FLOW" : "FREE"}</span>
-        )}
-        {!compact && (
-          <span className="opacity-40 text-[8px]">▼</span>
-        )}
+        <span>{isFlow ? "🌊" : "🔓"}</span>
+        {!compact && <span>{isFlow ? "Flow" : "Free"}</span>}
+        {!compact && <span className="opacity-30 text-xs">▼</span>}
       </button>
       {toast && (
-        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-4 py-2.5 font-mono text-[10px] uppercase whitespace-nowrap brutal-shadow animate-fade-in">
+        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border rounded-md bg-ink text-bone px-4 py-2.5 font-sans text-xs whitespace-nowrap brutal-shadow animate-fade-in">
           {toast}
         </div>
       )}
@@ -451,38 +423,31 @@ function MoreDropdown({ open, onClose }: MoreDropdownProps) {
 
   return (
     <>
-      {/* Transparent backdrop to catch outside clicks */}
       <div className="fixed inset-0 z-40" onClick={onClose} aria-hidden="true" />
-
       <div
-        className="absolute top-full left-0 brutal-border bg-bone z-50 min-w-[220px] brutal-shadow"
+        className="absolute top-full left-0 brutal-border rounded-lg bg-bone z-50 min-w-[220px] brutal-shadow animate-fade-in"
         role="menu"
         aria-label="More navigation"
       >
         {MORE_SECTIONS.map((section) => (
           <div key={section.heading}>
-            {/* Section header */}
-            <div className="px-4 pt-3 pb-1 font-mono text-[9px] uppercase opacity-50 tracking-widest">
+            <div className="px-4 pt-3 pb-1 font-mono text-xs uppercase opacity-40 tracking-widest">
               {section.heading}
             </div>
-
-            {/* Section links */}
             {section.links.map((l) => (
               <Link
                 key={l.to}
                 href={l.to}
                 onClick={onClose}
                 role="menuitem"
-                className="block px-4 py-2 font-mono text-[11px] uppercase hover:bg-acid brutal-border border-x-0 border-t-0 transition-colors"
+                className="block px-4 py-2.5 font-sans text-sm hover:bg-sun border-t border-border/30 transition-colors"
               >
                 {l.label}
               </Link>
             ))}
-
-            {/* Theme switcher injected at the bottom of ACCOUNT */}
             {"includeTheme" in section && section.includeTheme && (
-              <div className="px-3 py-2 brutal-border border-x-0 border-t-0">
-                <div className="font-mono text-[9px] uppercase opacity-50 mb-1.5">Settings / Theme</div>
+              <div className="px-3 py-2.5 border-t border-border/30">
+                <div className="font-mono text-xs uppercase opacity-40 mb-2">Theme</div>
                 <ThemeSwitcher compact />
               </div>
             )}
@@ -543,69 +508,71 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         onClick={e => e.stopPropagation()}
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between p-3 brutal-border border-x-0 border-t-0 bg-acid">
+        <div className="flex items-center justify-between p-3.5 border-b-2 border-border bg-acid">
           <span className="font-display text-lg">CCD.SCHOOL</span>
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="brutal-border bg-ink text-bone px-3 py-1 font-mono text-xs brutal-press"
+            className="brutal-border rounded bg-ink text-bone px-3 py-1.5 font-mono text-xs brutal-press"
           >
             ✕
           </button>
         </div>
 
-        {/* ▶ Continue shortcut — shown only if user has progress */}
+        {/* ▶ Continue shortcut */}
         {continueSlug && (
           <Link
             href={`/learn/${continueSlug}`}
             onClick={onClose}
-            className="block px-4 py-3 brutal-border border-x-0 border-t-0 bg-acid text-ink font-display text-base brutal-press hover:bg-sun transition-colors flex items-center gap-3"
+            className="block px-4 py-3.5 border-b-2 border-border bg-acid text-ink font-sans text-base font-medium brutal-press hover:bg-sun transition-colors flex items-center gap-3"
           >
             <span className="text-2xl shrink-0">▶</span>
             <div>
-              <div className="font-mono text-[9px] uppercase opacity-60">
-                {hasMissions ? "CONTINUE WHERE YOU LEFT OFF" : "START YOUR FIRST LESSON"}
-              </div>
-              <div className="font-display text-base leading-tight">
+              <p className="font-mono text-xs uppercase opacity-55">
+                {hasMissions ? "Continue where you left off" : "Start your first lesson"}
+              </p>
+              <p className="font-display text-base leading-tight mt-0.5">
                 {continueSlug.replace(/-/g, " ")}
-              </div>
+              </p>
             </div>
           </Link>
         )}
 
         {/* Compact stats row — 3 columns */}
-        <div className="grid grid-cols-3 brutal-border border-x-0 border-t-0">
+        <div className="grid grid-cols-3 border-b-2 border-border">
           {[
             { value: `${progress.xp}`, label: "XP" },
             { value: `🔥${progress.streakDays}${progress.streakShield ? "🛡" : ""}`, label: "Streak" },
             { value: `💎${progress.gems}`, label: "Gems" },
           ].map(({ value, label }, i) => (
-            <div key={label}
-              className={`p-3 text-center${i < 2 ? " brutal-border border-y-0 border-l-0" : ""}`}>
+            <div
+              key={label}
+              className={`p-3.5 text-center${i < 2 ? " border-r-2 border-border" : ""}`}
+            >
               <div className="font-display text-xl tabular-nums">{value}</div>
-              <div className="font-mono text-[8px] uppercase opacity-60">{label}</div>
+              <div className="font-mono text-xs uppercase opacity-45 mt-0.5">{label}</div>
             </div>
           ))}
         </div>
 
         {/* Hearts row */}
-        <div className="px-4 py-3 brutal-border border-x-0 border-t-0 flex items-center gap-3">
+        <div className="px-4 py-3 border-b-2 border-border flex items-center gap-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-          <span className="font-mono text-[9px] uppercase opacity-60">
+          <span className="font-sans text-sm opacity-55">
             {progress.hearts}/{MAX_HEARTS} hearts
           </span>
         </div>
 
         {/* Mode toggle row */}
-        <div className="px-4 py-3 brutal-border border-x-0 border-t-0 flex items-center justify-between gap-3">
+        <div className="px-4 py-3.5 border-b-2 border-border flex items-center justify-between gap-3">
           <div>
-            <div className="font-mono text-[9px] uppercase opacity-60 mb-0.5">Learning Mode</div>
-            <div className="font-mono text-[10px] uppercase font-bold">
-              {learnMode === "flow" ? "🌊 FLOW MODE" : "🔓 FREE MODE"}
-            </div>
-            <div className="font-mono text-[8px] uppercase opacity-50 mt-0.5 leading-tight">
+            <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
+            <p className="font-sans text-sm font-semibold">
+              {learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}
+            </p>
+            <p className="font-mono text-xs opacity-40 mt-0.5">
               {learnMode === "flow" ? "Sequential · hearts on" : "All open · no hearts"}
-            </div>
+            </p>
           </div>
           <ModeTogglePill compact />
         </div>
@@ -613,7 +580,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         {/* Search */}
         <button
           onClick={handleSearch}
-          className="w-full text-left px-4 py-3 brutal-border border-x-0 border-t-0 hover:bg-sun font-mono text-[11px] uppercase flex items-center gap-2 transition-colors"
+          className="w-full text-left px-4 py-3 border-b-2 border-border hover:bg-sun font-sans text-sm flex items-center gap-2.5 transition-colors"
         >
           <SearchIcon /> Search ⌘K
         </button>
@@ -622,7 +589,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         <nav aria-label="Mobile navigation">
           {[
             {
-              heading: "LEARN",
+              heading: "Learn",
               links: [
                 { to: "/world/fundamentals", label: "Fundamentals" },
                 { to: "/world/dj",           label: "DJ World"     },
@@ -631,7 +598,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               ],
             },
             {
-              heading: "PRACTICE",
+              heading: "Practice",
               links: [
                 { to: "/train",    label: "Ear Training"    },
                 { to: "/challenge",label: "Daily Challenge" },
@@ -640,7 +607,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               ],
             },
             {
-              heading: "REFERENCE",
+              heading: "Reference",
               links: [
                 { to: "/glossary",    label: "Glossary"    },
                 { to: "/shortcuts",   label: "Shortcuts"   },
@@ -649,25 +616,25 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               ],
             },
             {
-              heading: "ACCOUNT",
+              heading: "Account",
               links: [
-                { to: "/profile",     label: "Profile"     },
-                { to: "/leaderboard", label: "Leaderboard" },
-                { to: "/shop",        label: "Gem Shop 💎"  },
+                { to: "/profile",     label: "Profile"       },
+                { to: "/leaderboard", label: "Leaderboard"   },
+                { to: "/shop",        label: "Gem Shop 💎"   },
                 { to: "/placement",   label: "Placement Test" },
               ],
             },
           ].map(({ heading, links }) => (
             <div key={heading}>
-              <div className="px-4 pt-3 pb-1 font-mono text-[9px] uppercase opacity-50 tracking-widest brutal-border border-x-0 border-t-0">
+              <div className="px-4 pt-3 pb-1 font-mono text-xs uppercase opacity-40 tracking-widest border-t-2 border-border">
                 {heading}
               </div>
-              {links.map(l => (
+              {links.map((l) => (
                 <Link
                   key={l.to}
                   href={l.to}
                   onClick={onClose}
-                  className="block px-4 py-3 brutal-border border-x-0 border-t-0 hover:bg-acid font-mono text-[11px] uppercase transition-colors"
+                  className="block px-4 py-3 border-t border-border/25 hover:bg-acid font-sans text-sm transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -677,25 +644,25 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         </nav>
 
         {/* Theme (in drawer) */}
-        <div className="px-4 py-3 brutal-border border-x-0 border-t-0">
-          <div className="font-mono text-[9px] uppercase opacity-50 mb-2">Settings / Theme</div>
+        <div className="px-4 py-3.5 border-t-2 border-border">
+          <div className="font-mono text-xs uppercase opacity-40 mb-2.5">Theme</div>
           <ThemeSwitcher compact />
         </div>
 
         {/* Auth */}
-        <div className="p-3 space-y-2">
+        <div className="p-4 space-y-2 border-t-2 border-border">
           {user ? (
             <>
               <Link
                 href="/profile"
                 onClick={onClose}
-                className="block brutal-border bg-volt text-bone px-3 py-2 font-mono text-xs uppercase text-center brutal-press"
+                className="flex items-center gap-2 brutal-border rounded-md bg-volt text-bone px-3 py-2.5 font-sans text-sm font-medium text-center brutal-press justify-center"
               >
                 <UserIcon /> Profile
               </Link>
               <button
                 onClick={() => { signOut(); onClose(); }}
-                className="w-full brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase text-left brutal-press hover:bg-sun transition-colors"
+                className="w-full brutal-border rounded-md bg-bone px-3 py-2.5 font-sans text-sm text-left brutal-press hover:bg-sun transition-colors"
               >
                 Sign out
               </button>
@@ -704,7 +671,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             <Link
               href="/login"
               onClick={onClose}
-              className="block brutal-border bg-volt text-bone px-3 py-2 font-mono text-xs uppercase text-center brutal-press"
+              className="block brutal-border rounded-md bg-volt text-bone px-3 py-2.5 font-sans text-sm font-medium text-center brutal-press"
             >
               Sign in
             </Link>
@@ -725,44 +692,39 @@ function StreakWarningBanner() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // At risk if: streak > 0, daily goal NOT done, and it's past 20:00 local time
     const check = () => {
       const hour = new Date().getHours();
-      setIsAtRisk(
-        progress.streakDays > 0 &&
-        !dailyGoalDone &&
-        hour >= 20
-      );
+      setIsAtRisk(progress.streakDays > 0 && !dailyGoalDone && hour >= 20);
     };
     check();
-    const id = setInterval(check, 60_000); // re-check every minute
+    const id = setInterval(check, 60_000);
     return () => clearInterval(id);
   }, [progress.streakDays, dailyGoalDone]);
 
   if (!isAtRisk || dismissed) return null;
 
   return (
-    <div className="bg-hot text-bone px-4 py-2 flex items-center justify-between gap-3 text-sm">
-      <div className="flex items-center gap-2 font-mono text-[11px] uppercase">
+    <div className="bg-hot text-bone px-4 py-2.5 flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5 font-sans text-sm">
         <span className="text-base">🔥</span>
         <span>
-          Your <strong>{progress.streakDays}-day streak</strong> is at risk!
+          Your <strong>{progress.streakDays}-day streak</strong> is at risk!{" "}
           {progress.streakShield
-            ? " Your shield will protect it tonight."
-            : " Do at least one lesson before midnight."}
+            ? "Your shield will protect it tonight."
+            : "Do at least one lesson before midnight."}
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <a
           href="/learn"
-          className="brutal-border bg-bone text-hot px-3 py-1 font-mono text-[10px] uppercase brutal-press hover:bg-acid hover:text-ink transition-colors"
+          className="brutal-border rounded bg-bone text-hot px-3 py-1.5 font-sans text-xs font-semibold brutal-press hover:bg-acid hover:text-ink transition-colors"
         >
-          LEARN NOW →
+          Learn now →
         </a>
         <button
           onClick={() => setDismissed(true)}
           aria-label="Dismiss streak warning"
-          className="font-mono text-[10px] opacity-60 hover:opacity-100"
+          className="font-mono text-xs opacity-55 hover:opacity-100"
         >
           ✕
         </button>
@@ -805,42 +767,39 @@ export function Header() {
     : null;
 
   return (
-    <header className="brutal-border border-x-0 border-t-0 bg-bone sticky top-0 z-40" role="banner">
+    <header className="border-b-2 border-border bg-bone sticky top-0 z-40" role="banner">
 
       {/* ── Main bar ─────────────────────────────────────────────────────── */}
-      <div className="flex items-stretch h-12 md:h-14">
+      <div className="flex items-stretch h-13 md:h-14">
 
         {/* 1. Logo */}
         <Link
           href="/"
-          className="brutal-border border-y-0 border-l-0 px-3 md:px-4 flex items-center font-display text-base md:text-xl bg-acid hover:bg-sun transition-colors shrink-0"
+          className="border-r-2 border-border px-3 md:px-5 flex items-center font-display text-base md:text-lg bg-acid hover:bg-sun transition-colors shrink-0"
           aria-label="CCD.SCHOOL home"
         >
           CCD.SCHOOL
         </Link>
 
-        {/* 2. Primary nav — desktop only, 3 items */}
-        <nav
-          className="hidden md:flex items-stretch font-mono uppercase text-xs"
-          aria-label="Main navigation"
-        >
-          {PRIMARY_NAV.map(l => (
+        {/* 2. Primary nav — desktop */}
+        <nav className="hidden md:flex items-stretch font-sans text-sm" aria-label="Main navigation">
+          {PRIMARY_NAV.map((l) => (
             <Link
               key={`${l.to}-${l.label}`}
               href={l.to}
-              className="px-3 flex items-center brutal-border border-y-0 border-l-0 hover:bg-sun transition-colors whitespace-nowrap"
+              className="px-4 flex items-center border-r-2 border-border hover:bg-sun transition-colors whitespace-nowrap font-medium"
             >
               {l.label}
             </Link>
           ))}
 
-          {/* 3. More ▾ dropdown trigger */}
+          {/* More ▾ dropdown */}
           <div className="relative flex items-stretch">
             <button
-              onClick={() => setMoreOpen(o => !o)}
+              onClick={() => setMoreOpen((o) => !o)}
               aria-expanded={moreOpen}
               aria-haspopup="menu"
-              className="px-3 flex items-center brutal-border border-y-0 border-l-0 hover:bg-sun transition-colors font-mono uppercase text-xs whitespace-nowrap"
+              className="px-4 flex items-center border-r-2 border-border hover:bg-sun transition-colors font-sans text-sm font-medium whitespace-nowrap"
             >
               More ▾
             </button>
@@ -848,95 +807,71 @@ export function Header() {
           </div>
         </nav>
 
-        {/* 4. Spacer */}
+        {/* 3. Spacer */}
         <div className="flex-1" />
 
-        {/* 5. Right strip — desktop, exactly 5 elements ─────────────────── */}
-        <div className="hidden md:flex items-center gap-1.5 px-3">
-
-          {/* 5a. Search */}
+        {/* 4. Right strip — desktop ────────────────────────────────────── */}
+        <div className="hidden md:flex items-center gap-2 px-3">
+          {/* Search */}
           <button
             onClick={openSearch}
             title="Search (⌘K)"
             aria-label="Open search"
-            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-sun flex items-center gap-1.5 font-mono text-[10px] uppercase transition-colors brutal-press"
+            className="brutal-border rounded-md bg-bone px-2.5 py-1.5 hover:bg-sun flex items-center gap-1.5 font-sans text-sm transition-colors brutal-press"
           >
             <SearchIcon />
-            <span className="hidden lg:inline">⌘K</span>
+            <span className="hidden lg:inline font-mono text-xs opacity-55">⌘K</span>
           </button>
 
-          {/* 5b. Hearts */}
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-
-          {/* 5c. XP+Streak combo badge → opens popover */}
           <XpStreakBadge />
-
-          {/* 5d. Mode pill */}
           <ModeTogglePill />
 
-          {/* 5e. Profile / Sign in */}
           {user ? (
             <Link
               href="/profile"
               aria-label="View profile"
               title={user.name ?? "Profile"}
-              className="brutal-border bg-bone w-8 h-8 flex items-center justify-center font-mono text-[10px] uppercase hover:bg-sun transition-colors brutal-press"
+              className="brutal-border rounded-md bg-bone w-9 h-9 flex items-center justify-center font-sans text-xs font-semibold hover:bg-sun transition-colors brutal-press"
             >
               {initials ?? <UserIcon />}
             </Link>
           ) : (
             <Link
               href="/login"
-              className="brutal-border bg-volt text-bone px-3 py-1.5 font-mono text-[10px] uppercase brutal-press"
+              className="brutal-border rounded-md bg-volt text-bone px-3 py-1.5 font-sans text-sm font-medium brutal-press"
             >
               Sign in
             </Link>
           )}
         </div>
 
-        {/* Mobile strip ─────────────────────────────────────────────────── */}
-        {/* Fix #9: When the MobileBottomNav is shown (< md), the hamburger
-            drawer is redundant — it duplicates Learn/Review/Profile tabs.
-            We strip it down to: logo (already rendered) + hearts + streak
-            badge + search. The ≡ drawer is hidden on lesson-free pages;
-            shown only on pages where the bottom nav is absent (placement,
-            onboarding, etc.) via the `data-no-bottom-nav` attribute. */}
-        <div className="md:hidden flex items-center gap-1.5 px-2">
-          {/* Hearts — always visible on mobile for quick reference */}
+        {/* 5. Mobile strip ──────────────────────────────────────────────── */}
+        <div className="md:hidden flex items-center gap-2 px-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
 
-          {/* Compact streak + XP badge */}
-          <span className="brutal-border bg-ink text-bone px-1.5 py-1 font-mono text-[9px] tabular-nums">
+          <span className="brutal-border rounded bg-ink text-bone px-2 py-1 font-mono text-xs tabular-nums">
             🔥{progress.streakDays} · {progress.xp}xp
           </span>
 
-          {/* Search — available on all pages */}
           <button
             onClick={openSearch}
             aria-label="Search"
-            className="brutal-border bg-bone px-2 py-1.5 flex items-center brutal-press"
+            className="brutal-border rounded bg-bone px-2 py-1.5 flex items-center brutal-press"
           >
             <SearchIcon />
           </button>
 
-          {/* ≡ Menu — only shown on pages without the bottom nav (e.g. lesson,
-              placement, onboarding). On all other mobile pages the bottom nav
-              handles navigation so the drawer would be redundant clutter.
-              We detect lesson pages via [data-page="lesson"] and hide it there;
-              on other non-tabbed pages it's still useful. */}
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
             aria-expanded={drawerOpen}
-            className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-lg"
+            className="brutal-border rounded bg-ink text-bone px-3 py-1.5 font-display text-lg"
           >
             ≡
           </button>
         </div>
       </div>
-
-      {/* ── 1px separator line (replaces marquee) ──────────────────────── */}
-      <div className="h-px bg-ink hidden md:block" aria-hidden="true" />
 
       {/* ── Streak-at-risk warning banner ─────────────────────────────── */}
       <StreakWarningBanner />
