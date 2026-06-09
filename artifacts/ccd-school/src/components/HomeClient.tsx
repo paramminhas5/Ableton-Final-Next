@@ -141,35 +141,38 @@ function Dashboard() {
         </div>
       </header>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        {continueSlug ? (
+        {continueSlug && (
           <Link href={`/learn/${continueSlug}`}
-            className="brutal-border bg-acid text-ink p-5 flex items-center justify-between gap-4 brutal-press brutal-shadow block hover:bg-sun transition-colors">
+            className="brutal-border bg-acid text-ink p-5 flex items-center justify-between gap-4 brutal-press brutal-shadow block hover:bg-sun transition-colors mb-3">
             <div>
               <div className="font-mono text-[9px] uppercase opacity-60 mb-1">CONTINUE LEARNING</div>
               <div className="font-display text-2xl">{continueSlug.replace(/-/g, " ")}</div>
             </div>
-            <Link
-              href={`/learn/${missionsNeedingReview[0]}?review=1`}
-              className="brutal-border bg-hot text-bone p-5 flex items-start justify-between gap-4 brutal-press block">
-              <div>
-                <div className="font-display text-xl">🔥 REVIEW SESSION</div>
-                <div className="font-mono text-xs opacity-80 mt-1">
-                  {missionsNeedingReview.length} lesson{missionsNeedingReview.length > 1 ? "s" : ""} need a refresh
-                </div>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {missionsNeedingReview.slice(0, 3).map(slug => (
-                    <span key={slug} className="brutal-border bg-bone/20 px-2 py-0.5 font-mono text-[9px] uppercase">
-                      {slug.replace(/-/g, " ")}
-                    </span>
-                  ))}
-                  {missionsNeedingReview.length > 3 && (
-                    <span className="font-mono text-[9px] opacity-60">+{missionsNeedingReview.length - 3} more</span>
-                  )}
-                </div>
+          </Link>
+        )}
+
+        {missionsNeedingReview.length > 0 && (
+          <Link
+            href={`/learn/${missionsNeedingReview[0]}?review=1`}
+            className="brutal-border bg-hot text-bone p-5 flex items-start justify-between gap-4 brutal-press block mb-3">
+            <div>
+              <div className="font-display text-xl">🔥 REVIEW SESSION</div>
+              <div className="font-mono text-xs opacity-80 mt-1">
+                {missionsNeedingReview.length} lesson{missionsNeedingReview.length > 1 ? "s" : ""} need a refresh
               </div>
-              <div className="font-display text-4xl shrink-0">↺</div>
-            </Link>
-          </section>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {missionsNeedingReview.slice(0, 3).map(slug => (
+                  <span key={slug} className="brutal-border bg-bone/20 px-2 py-0.5 font-mono text-[9px] uppercase">
+                    {slug.replace(/-/g, " ")}
+                  </span>
+                ))}
+                {missionsNeedingReview.length > 3 && (
+                  <span className="font-mono text-[9px] opacity-60">+{missionsNeedingReview.length - 3} more</span>
+                )}
+              </div>
+            </div>
+            <div className="font-display text-4xl shrink-0">↺</div>
+          </Link>
         )}
 
         {/* ── WORLDS PROGRESS ── */}
