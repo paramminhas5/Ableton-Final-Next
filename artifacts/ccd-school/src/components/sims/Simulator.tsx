@@ -69,20 +69,42 @@ function SimSkeleton() {
   );
 }
 
-class SimErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+class SimErrorBoundary extends Component<
+  { children: ReactNode; onSkip?: () => void },
+  { error: Error | null }
+> {
   state = { error: null };
   static getDerivedStateFromError(error: Error) { return { error }; }
   componentDidCatch(error: Error, info: ErrorInfo) { console.error("[Sim]", error, info); }
   render() {
     if (this.state.error) {
       return (
-        <div className="brutal-border bg-hot text-bone p-6 space-y-3">
-          <div className="font-display text-2xl">SIMULATOR CRASHED</div>
-          <div className="font-mono text-xs opacity-80">{(this.state.error as Error).message}</div>
-          <button onClick={() => this.setState({ error: null })}
-            className="brutal-border bg-bone text-ink px-4 py-2 font-mono uppercase brutal-press">
-            ↺ Retry
-          </button>
+        <div className="brutal-border bg-bone text-ink p-6 space-y-4 border-l-4 border-l-hot">
+          <div className="flex items-start gap-3">
+            <span className="text-3xl shrink-0">🐱</span>
+            <div>
+              <div className="font-display text-xl mb-1">Sim took a nap 😴</div>
+              <div className="font-mono text-xs opacity-60 leading-relaxed">
+                This interactive exercise couldn&apos;t load. You can retry or skip it — the quiz still works fine.
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={() => this.setState({ error: null })}
+              className="brutal-border bg-bone text-ink px-4 py-2 font-display text-sm brutal-press hover:bg-acid transition-colors"
+            >
+              ↺ Retry
+            </button>
+            {this.props.onSkip && (
+              <button
+                onClick={this.props.onSkip}
+                className="brutal-border bg-ink text-bone px-4 py-2 font-display text-sm brutal-press hover:bg-electric-blue transition-colors"
+              >
+                Skip Exercise →
+              </button>
+            )}
+          </div>
         </div>
       );
     }
@@ -201,9 +223,17 @@ export const SIM_LIST: { type: SimType; label: string; color: string }[] = [
   { type: "synth-playground",   label: "Synth Playground",    color: "bg-acid text-ink" },
 ];
 
-export function Simulator({ type, preset }: { type: SimType; preset?: Record<string, unknown> }) {
+export function Simulator({
+  type,
+  preset,
+  onSkip,
+}: {
+  type: SimType;
+  preset?: Record<string, unknown>;
+  onSkip?: () => void;
+}) {
   return (
-    <SimErrorBoundary>
+    <SimErrorBoundary onSkip={onSkip}>
       <Suspense fallback={<SimSkeleton />}>
         <SimInner type={type} preset={preset} />
       </Suspense>

@@ -1,14 +1,18 @@
 "use client";
 /**
  * WorldPathClient — Duolingo-style world path map.
+ *
+ * Flow Mode default view at /world/[slug].
  * Shows a vertical winding trail of lesson nodes per world.
- * Chapter banners break up sections. Nodes pulse when available.
+ * Chapter banners + cat mascot break up sections.
+ * "YOU ARE HERE" paw-marker auto-scrolls on mount.
+ * First-visit welcome card from DJ Pawsworth.
+ * Single "Browse Lessons" pill to escape to Free mode.
  */
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
-// Note: LessonNode uses <a> tags for simplicity; Link is used elsewhere in this file
 import { useProgress, getLessonStrength, REVIEW_THRESHOLD } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
@@ -19,11 +23,8 @@ import { MISSIONS } from "@/content/missions";
 import { rankFor } from "@/lib/ranks";
 import type { Mission } from "@/content/types";
 import type { Chapter } from "@/content/chapters";
-import type { LearningPath } from "@/content/paths";
-import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 
 type WorldId = "fundamentals" | "dj" | "producer";
-
 type NodeState = "locked" | "available" | "complete" | "review";
 
 interface PathNode {
@@ -31,32 +32,38 @@ interface PathNode {
   title: string;
   xp: number;
   chapterSlug: string;
+  chapterIndex: number;
   state: NodeState;
   isFirstInChapter: boolean;
   side: "left" | "center" | "right";
 }
 
+// ─── World config ─────────────────────────────────────────────────────────────
 const WORLD_META: Record<string, {
   bg: string; accent: string; nodeAvail: string; nodeDone: string;
-  emoji: string; title: string; tagline: string; heroImage: string;
+  emoji: string; title: string; tagline: string; catSrc: string;
+  glowColor: string;
 }> = {
   fundamentals: {
-    bg: "bg-bone", accent: "bg-acid text-ink", nodeAvail: "bg-acid text-ink border-acid",
-    nodeDone: "bg-ink text-bone border-ink", emoji: "🎵", title: "Fundamentals",
+    bg: "bg-bone", accent: "bg-acid text-ink", nodeAvail: "bg-acid text-ink",
+    nodeDone: "bg-ink text-bone", emoji: "🎵", title: "Fundamentals",
     tagline: "Sound · Rhythm · Melody · Harmony · Music Tech",
-    heroImage: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+    catSrc: "/cats/cat-handstand.png",
+    glowColor: "rgba(198,255,0,0.3)",
   },
   dj: {
-    bg: "bg-ink", accent: "bg-volt text-ink", nodeAvail: "bg-volt text-ink border-volt",
-    nodeDone: "bg-volt/20 text-bone border-volt", emoji: "🎧", title: "DJ World",
+    bg: "bg-ink", accent: "bg-volt text-ink", nodeAvail: "bg-volt text-ink",
+    nodeDone: "bg-volt/30 text-bone", emoji: "🎧", title: "DJ World",
     tagline: "Setup · Library · The Mix · Performance · Mastery",
-    heroImage: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+    catSrc: "/cats/cat-dj.png",
+    glowColor: "rgba(198,255,0,0.3)",
   },
   producer: {
-    bg: "bg-bone", accent: "bg-sun text-ink", nodeAvail: "bg-sun text-ink border-sun",
-    nodeDone: "bg-ink text-bone border-ink", emoji: "🎛", title: "Producer",
+    bg: "bg-bone", accent: "bg-sun text-ink", nodeAvail: "bg-sun text-ink",
+    nodeDone: "bg-ink text-bone", emoji: "🎛", title: "Producer",
     tagline: "First Contact · Sound & MIDI · Mix · Performance · Advanced",
-    heroImage: "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
+    catSrc: "/cats/cat-dj-hero.png",
+    glowColor: "rgba(255,184,0,0.3)",
   },
 };
 
@@ -69,107 +76,12 @@ const CHAPTER_EMOJIS: Record<string, string> = {
   "performance-and-flow": "🚀", "advanced-producer": "⚡", "synthesis": "🌀",
 };
 
-// ─── World Overview — collapsible chapter/path breakdown ──────────────────────
-
-function WorldOverview({
-  world,
-  meta,
-  chapters,
-  paths,
-  nodes,
-}: {
-  world: WorldId;
-  meta: typeof WORLD_META[string];
-  chapters: Chapter[];
-  paths: LearningPath[];
-  nodes: PathNode[];
-}) {
-  const [open, setOpen] = useState(false);
-  const totalMissions = paths.flatMap((p) => p.missionSlugs).length;
-  const doneMissions = nodes.filter((n) => n.state === "complete" || n.state === "review").length;
-
-  return (
-    <div className={`brutal-border border-x-0 border-t-0 ${world === "dj" ? "bg-ink/40" : "bg-bone/80"}`}>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className={`w-full flex items-center justify-between px-5 py-3 brutal-press transition-colors ${
-          world === "dj" ? "hover:bg-bone/10 text-bone" : "hover:bg-ink/5 text-ink"
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] uppercase opacity-60">// WHAT&apos;S IN THIS WORLD</span>
-          <span className="font-mono text-[9px] uppercase opacity-40">
-            {chapters.length} chapters · {paths.length} paths · {totalMissions} missions
-          </span>
-        </div>
-        <span className={`font-display text-lg opacity-60 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>
-          ▾
-        </span>
-      </button>
-
-      {open && (
-        <div className="px-4 pb-5 space-y-3 border-t border-current/10">
-          <div className="font-mono text-[9px] uppercase opacity-40 pt-3">
-            {doneMissions}/{totalMissions} missions complete
-          </div>
-          {chapters.map((ch) => {
-            const chPaths = paths.filter((p) => p.chapter === ch.slug);
-            const chMissions = chPaths.flatMap((p) => p.missionSlugs);
-            const chDone = nodes.filter(
-              (n) => n.chapterSlug === ch.slug && (n.state === "complete" || n.state === "review")
-            ).length;
-            const chPct = chMissions.length > 0 ? Math.round((chDone / chMissions.length) * 100) : 0;
-            const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
-
-            return (
-              <div
-                key={ch.slug}
-                className={`brutal-border p-4 ${world === "dj" ? "bg-bone/5" : "bg-bone"}`}
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl shrink-0">{emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <div className={`font-display text-base leading-tight ${world === "dj" ? "text-bone" : "text-ink"}`}>
-                        {ch.title}
-                      </div>
-                      <div className="font-mono text-[9px] uppercase opacity-50 shrink-0">
-                        {chDone}/{chMissions.length}
-                      </div>
-                    </div>
-                    <div className={`font-mono text-xs opacity-60 mt-0.5 leading-snug ${world === "dj" ? "text-bone" : ""}`}>
-                      {ch.tagline}
-                    </div>
-                    {/* Chapter progress bar */}
-                    <div className="mt-2 h-1.5 brutal-border bg-ink/10 overflow-hidden">
-                      <div
-                        className={`h-full transition-all duration-500 ${meta.accent.split(" ")[0]}`}
-                        style={{ width: `${chPct}%` }}
-                      />
-                    </div>
-                    {/* Paths within chapter */}
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {chPaths.map((p) => (
-                        <span
-                          key={p.slug}
-                          className={`font-mono text-[9px] uppercase brutal-border px-1.5 py-0.5 ${
-                            world === "dj" ? "bg-bone/10 text-bone opacity-60" : "bg-ink/5 opacity-60"
-                          }`}
-                        >
-                          {p.title}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+// Cat commentary per world for chapter banners
+const CHAPTER_CAT_QUIPS: Record<string, string[]> = {
+  fundamentals: ["Let's learn this! 🎵", "Building your foundation!", "Theory time 🧠", "Almost there!", "Final chapter!"],
+  dj: ["DJ school is in! 🎧", "Your library is your weapon.", "Time to mix! 🎚", "Read the crowd.", "Master level unlocked! 🏆"],
+  producer: ["Welcome to Live! 🖥", "Sound design time!", "Mix it down 🎛", "Take it live! 🚀", "Expert territory!"],
+};
 
 function getMissions(world: WorldId): Mission[] {
   if (world === "fundamentals") return FOUNDATIONS_MISSIONS;
@@ -177,8 +89,114 @@ function getMissions(world: WorldId): Mission[] {
   return MISSIONS;
 }
 
-const SIDE_PATTERN: ("left" | "center" | "right" | "center")[] = ["left", "center", "right", "center"];
+const SIDE_PATTERN: ("left" | "center" | "right")[] = ["left", "center", "right", "center"];
 
+// ─── Chapter Dots — progress indicator below world header ─────────────────────
+function ChapterDots({
+  chapters,
+  nodes,
+  world,
+  meta,
+}: {
+  chapters: Chapter[];
+  nodes: PathNode[];
+  world: WorldId;
+  meta: typeof WORLD_META[string];
+}) {
+  return (
+    <div className="flex items-center justify-center gap-1.5 px-4 py-3 flex-wrap">
+      {chapters.map((ch, i) => {
+        const chNodes = nodes.filter(n => n.chapterSlug === ch.slug);
+        const done = chNodes.filter(n => n.state === "complete" || n.state === "review").length;
+        const total = chNodes.length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        const complete = pct === 100;
+        const started = done > 0;
+        const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
+
+        return (
+          <div key={ch.slug} className="flex items-center gap-1">
+            <div
+              title={`${ch.title} — ${pct}%`}
+              className={`flex items-center gap-1 px-2 py-1 brutal-border font-mono text-[9px] uppercase transition-all ${
+                complete
+                  ? world === "dj" ? "bg-volt text-ink" : "bg-ink text-bone"
+                  : started
+                  ? world === "dj" ? "bg-volt/30 text-bone" : "bg-acid/60 text-ink"
+                  : world === "dj" ? "bg-bone/10 text-bone/40" : "bg-ink/10 text-ink/30"
+              }`}
+            >
+              <span className="text-sm leading-none">{complete ? "✓" : emoji}</span>
+              <span className="hidden sm:inline">{i + 1}</span>
+            </div>
+            {i < chapters.length - 1 && (
+              <div className={`w-3 h-px ${world === "dj" ? "bg-bone/20" : "bg-ink/20"}`} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Beginner welcome card ─────────────────────────────────────────────────────
+function BeginnerWelcomeCard({
+  meta,
+  world,
+  firstSlug,
+}: {
+  meta: typeof WORLD_META[string];
+  world: WorldId;
+  firstSlug: string;
+}) {
+  const WELCOME: Record<WorldId, { headline: string; body: string }> = {
+    fundamentals: {
+      headline: "Hi! I'm DJ Pawsworth 🐱",
+      body: "We'll start with the basics of sound. Each lesson takes about 5 minutes. Just tap START and follow along!",
+    },
+    dj: {
+      headline: "Ready to DJ? Let's go! 🎧",
+      body: "I'll guide you through the art of mixing step by step. First lesson: what DJing actually is. 5 minutes, let's do this!",
+    },
+    producer: {
+      headline: "Welcome to the studio 🎛",
+      body: "We'll start by touring Ableton Live together. One lesson at a time — before you know it, you'll be making tracks!",
+    },
+  };
+  const w = WELCOME[world];
+
+  return (
+    <div className={`relative z-10 flex justify-center mb-8`}>
+      <div className={`brutal-border p-5 max-w-[300px] w-full brutal-shadow ${
+        world === "dj" ? "bg-ink text-bone border-t-4 border-t-volt"
+        : world === "fundamentals" ? "bg-acid text-ink"
+        : "bg-sun text-ink"
+      }`}>
+        {/* Cat */}
+        <div className="flex items-start gap-3 mb-4">
+          <div style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }} className="shrink-0">
+            <Image src={meta.catSrc} alt="DJ Pawsworth" width={56} height={56} className="object-contain" />
+          </div>
+          <div>
+            <div className="font-display text-lg leading-tight">{w.headline}</div>
+            <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">Your guide</div>
+          </div>
+        </div>
+        <p className="font-mono text-xs leading-relaxed opacity-80 mb-4">{w.body}</p>
+        <Link
+          href={`/learn/${firstSlug}`}
+          className={`block w-full text-center font-display text-base py-3 brutal-border brutal-press transition-colors ${
+            world === "dj" ? "bg-volt text-ink hover:bg-acid" : "bg-ink text-bone hover:bg-electric-blue"
+          }`}
+        >
+          START FIRST LESSON →
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────────
 export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const world = worldSlug as WorldId;
   const meta = WORLD_META[world];
@@ -186,7 +204,6 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const strengths = progress.lessonStrengths;
-  // P0 #3: read unlockedChapter so placement test results actually skip ahead
   const unlockedChapter = progress.unlockedChapter ?? 1;
 
   const chapters = chaptersByWorld(world);
@@ -198,31 +215,29 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   let prevComplete = true;
 
   chapters.forEach((ch, chIdx) => {
-    // P0 #3: if user placed into chapter N, treat all missions before that chapter as
-    // "complete" for gating purposes so the snake unlocks from their placement point
     const chapterNumber = chIdx + 1;
     const placedPast = chapterNumber < unlockedChapter;
-
     const chPaths = paths.filter(p => p.chapter === ch.slug).sort((a, b) => a.number - b.number);
+
     chPaths.forEach((path, pIdx) => {
       path.missionSlugs.forEach((slug, mIdx) => {
         const isDone = !!completed[slug];
         const ls = strengths[slug];
-        const strength = ls ? getLessonStrength(ls) : 1;
-        const needsReview = isDone && strength < REVIEW_THRESHOLD;
-
-        // For placement-skipped chapters, treat as done for gating but not visually complete
+        const needsReview = isDone && ls && getLessonStrength(ls) < REVIEW_THRESHOLD;
         const effectivelyDone = isDone || placedPast;
 
         let state: NodeState = "locked";
         if (isDone) state = needsReview ? "review" : "complete";
-        else if (placedPast) state = "available"; // show placement-skipped as accessible
+        else if (placedPast) state = "available";
         else if (prevComplete) state = "available";
 
         nodes.push({
-          slug, xp: missions.find(m => m.slug === slug)?.xp ?? 40,
+          slug,
+          xp: missions.find(m => m.slug === slug)?.xp ?? 40,
           title: missions.find(m => m.slug === slug)?.title ?? slug,
-          chapterSlug: ch.slug, state,
+          chapterSlug: ch.slug,
+          chapterIndex: chIdx,
+          state,
           isFirstInChapter: pIdx === 0 && mIdx === 0,
           side: SIDE_PATTERN[nodes.length % 4],
         });
@@ -232,106 +247,139 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
     });
   });
 
-  // Stats
   const total = nodes.length;
   const done = nodes.filter(n => n.state === "complete" || n.state === "review").length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const { current: rank } = rankFor(progress.xp);
+  const isNewUser = done === 0;
 
-  // P1 #11: ref for "You Are Here" auto-scroll
+  // "YOU ARE HERE" auto-scroll
   const youAreHereRef = useRef<HTMLDivElement>(null);
   const firstAvailableIdx = nodes.findIndex(n => n.state === "available");
 
   useEffect(() => {
-    if (youAreHereRef.current) {
+    if (!isNewUser && youAreHereRef.current) {
       setTimeout(() => {
         youAreHereRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 400);
     }
-  }, []);
+  }, [isNewUser]);
 
   if (!meta) return <div className="p-8 font-mono">World not found: {worldSlug}</div>;
 
+  const firstAvailableSlug = nodes.find(n => n.state === "available")?.slug;
+
   return (
     <div className={`min-h-screen ${meta.bg}`}>
-      {/* World header */}
-      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} p-7 md:p-10 relative overflow-hidden`}>
-        {/* Hero image — producer uses sun bg so skip image to keep text readable */}
-        {worldSlug !== "producer" && (
-          <div className="absolute inset-0 pointer-events-none">
-            <Image
-              src={meta.heroImage}
-              alt=""
-              fill
-              priority
-              className="object-cover opacity-20 mix-blend-multiply"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-current/20" />
-          </div>
-        )}
-        <div className="relative z-10">
-          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-2">← ALL WORLDS</Link>
-          <div className="flex items-center gap-3">
-            <span className="text-4xl">{meta.emoji}</span>
-            <div>
-              <h1 className="font-display text-5xl leading-none">{meta.title}</h1>
-              <p className="font-mono text-xs opacity-70 mt-0.5">{meta.tagline}</p>
+
+      {/* ── World header ───────────────────────────────────────────────── */}
+      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} px-4 py-6 md:py-8`}>
+        <div className="max-w-lg mx-auto">
+          <Link
+            href="/worlds"
+            className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-3"
+          >
+            ← ALL WORLDS
+          </Link>
+
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <span className="text-4xl">{meta.emoji}</span>
+              <div>
+                <h1 className="font-display text-4xl md:text-5xl leading-none">{meta.title}</h1>
+                <p className="font-mono text-[10px] uppercase opacity-70 mt-0.5">{meta.tagline}</p>
+              </div>
+            </div>
+            {/* Cat decoration */}
+            <div
+              className="shrink-0 w-16 h-16 wiggle"
+              style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}
+              aria-hidden
+            >
+              <Image src={meta.catSrc} alt="" width={64} height={64} className="w-full h-full object-contain" />
             </div>
           </div>
+
           {/* Progress bar */}
-          <div className="mt-4 space-y-1">
-            <div className="h-4 brutal-border bg-bone/30 overflow-hidden">
-              <div className="h-full bg-ink/70 transition-all duration-700" style={{ width: `${pct}%`, boxShadow: '0 0 8px rgba(198,255,0,0.5)' }} />
-            </div>
-            <div className="flex justify-between font-mono text-[9px] uppercase opacity-60">
-              <span>{done}/{total} lessons</span>
-              <span>{pct}% complete</span>
-            </div>
+          <div className="h-3 brutal-border bg-bone/30 overflow-hidden mb-2">
+            <div
+              className="h-full bg-ink/70 transition-all duration-700"
+              style={{ width: `${pct}%`, boxShadow: `0 0 8px ${meta.glowColor}` }}
+            />
           </div>
-          {/* Stats pills */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-              🔥 {progress.streakDays} day streak
+          <div className="flex justify-between font-mono text-[9px] uppercase opacity-70">
+            <span>{done}/{total} lessons · {rank.name}</span>
+            <span>{pct}%</span>
+          </div>
+
+          {/* Browse lessons pill — single escape to free mode */}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="flex gap-2">
+              <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+                🔥 {progress.streakDays}d
+              </div>
+              <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+                💎 {progress.gems}
+              </div>
             </div>
-            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-              {progress.xp} XP · {rank.name}
-            </div>
-            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-              💎 {progress.gems} gems
-            </div>
+            <Link
+              href={`/world/${worldSlug}?view=free`}
+              className={`brutal-border px-3 py-1.5 font-mono text-[9px] uppercase brutal-press transition-colors ${
+                world === "dj"
+                  ? "bg-bone/10 text-bone hover:bg-bone/20"
+                  : "bg-ink/10 text-ink hover:bg-ink/20"
+              }`}
+            >
+              📋 Browse Lessons
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* World overview — collapsible chapter breakdown */}
-      <WorldOverview world={world} meta={meta} chapters={chapters} paths={paths} nodes={nodes} />
+      {/* ── Chapter progress dots ──────────────────────────────────────── */}
+      <div className={`brutal-border border-x-0 border-b-0 ${world === "dj" ? "bg-ink/50" : "bg-bone/80"}`}>
+        <div className="max-w-lg mx-auto">
+          <ChapterDots chapters={chapters} nodes={nodes} world={world} meta={meta} />
+        </div>
+      </div>
 
-      {/* Mode switcher banner */}
-      <ModeSwitcherBanner variant="bar" />
-
-      {/* Path */}
+      {/* ── The snake path ─────────────────────────────────────────────── */}
       <div className="relative max-w-sm mx-auto px-4 py-8 pb-32">
         {/* Spine line */}
         <div className="absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-px pointer-events-none" />
 
+        {/* First-visit welcome card */}
+        {isNewUser && firstAvailableSlug && (
+          <BeginnerWelcomeCard meta={meta} world={world} firstSlug={firstAvailableSlug} />
+        )}
+
         {nodes.map((node, idx) => {
-          // Chapter banner
           const isChapterStart = node.isFirstInChapter;
-          const chMeta = CHAPTER_EMOJIS[node.chapterSlug] ?? "📖";
+          const chEmoji = CHAPTER_EMOJIS[node.chapterSlug] ?? "📖";
           const chapter = chapters.find(c => c.slug === node.chapterSlug);
+          const chQuip = (CHAPTER_CAT_QUIPS[world] ?? [])[node.chapterIndex] ?? "Let's go!";
 
           return (
             <div key={node.slug}>
+              {/* Chapter banner with cat quip */}
               {isChapterStart && (
                 <div className="relative z-10 flex justify-center my-8">
-                  <div className={`brutal-border px-5 py-4 text-center max-w-[280px] brutal-shadow
-                    ${world === "dj" ? "bg-ink text-bone border-t-4 border-t-[#7B2FFF]"
-                    : world === "fundamentals" ? "bg-acid/10 text-ink border-t-4 border-t-acid"
-                    : "bg-sun/10 text-ink border-t-4 border-t-[#FFB800]"}`}>
-                    <div className="text-5xl mb-2">{chMeta}</div>
+                  <div className={`brutal-border px-5 py-4 text-center max-w-[280px] brutal-shadow ${
+                    world === "dj"
+                      ? "bg-ink text-bone border-t-4 border-t-volt"
+                      : world === "fundamentals"
+                      ? "bg-acid/20 text-ink border-t-4 border-t-acid"
+                      : "bg-sun/20 text-ink border-t-4 border-t-sun"
+                  }`}>
+                    <div className="text-4xl mb-1">{chEmoji}</div>
                     <div className="font-display text-base leading-tight">{chapter?.title ?? node.chapterSlug}</div>
                     <div className="font-mono text-[9px] opacity-50 mt-0.5 uppercase">{chapter?.tagline ?? ""}</div>
+                    {/* Cat speech bubble */}
+                    <div className={`mt-3 font-mono text-[9px] italic opacity-70 px-2 py-1 brutal-border ${
+                      world === "dj" ? "bg-bone/10 text-bone" : "bg-ink/10 text-ink"
+                    }`}>
+                      🐱 &ldquo;{chQuip}&rdquo;
+                    </div>
                   </div>
                 </div>
               )}
@@ -342,16 +390,20 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
                 node.side === "right" ? "justify-end pr-4" :
                 "justify-center"
               }`}>
-                {/* P1 #11: "You Are Here" marker on first available node */}
                 {idx === firstAvailableIdx ? (
                   <div ref={youAreHereRef} className="flex flex-col items-center gap-1">
-                    <div className="brutal-border bg-acid text-ink px-2 py-0.5 font-mono text-[8px] uppercase mb-1 animate-pulse">
-                      ▼ YOU ARE HERE
-                    </div>
-                    <LessonNode node={node} meta={meta} isFlowMode={learnMode === "flow"} />
+                    {/* Paw "you are here" marker */}
+                    {!isNewUser && (
+                      <div className={`brutal-border px-2 py-0.5 font-mono text-[8px] uppercase mb-1 animate-pulse ${
+                        world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink"
+                      }`}>
+                        🐾 YOU ARE HERE
+                      </div>
+                    )}
+                    <LessonNode node={node} meta={meta} />
                   </div>
                 ) : (
-                  <LessonNode node={node} meta={meta} isFlowMode={learnMode === "flow"} />
+                  <LessonNode node={node} meta={meta} />
                 )}
               </div>
             </div>
@@ -361,16 +413,21 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
         {/* World complete banner */}
         {pct === 100 && (
           <div className="relative z-10 mt-8 brutal-border bg-acid text-ink p-6 text-center brutal-shadow">
-            <div className="text-5xl mb-2">🏆</div>
-            {/* Star burst decoration */}
-            <div className="font-display text-4xl opacity-10 absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-              ✦✦✦✦✦✦✦✦
+            <div className="flex justify-center mb-3">
+              <Image
+                src={meta.catSrc}
+                alt="Cat celebrating"
+                width={80}
+                height={80}
+                className="drop-shadow-[3px_3px_0_hsl(222_47%_4%)] animate-bounce-bob"
+              />
             </div>
-            <div className="font-display text-3xl relative z-10">WORLD COMPLETE!</div>
-            <div className="font-mono text-sm opacity-70 mt-1 relative z-10">You finished {meta.title}</div>
-            <div className="flex justify-center gap-2 mt-3 relative z-10 font-display text-2xl">
-              <span>⭐</span><span>⭐</span><span>⭐</span>
-            </div>
+            <div className="text-4xl mb-2">🏆</div>
+            <div className="font-display text-3xl">WORLD COMPLETE!</div>
+            <div className="font-mono text-sm opacity-70 mt-1">You finished {meta.title}</div>
+            <Link href="/worlds" className="mt-4 brutal-border bg-ink text-bone px-6 py-3 font-display text-base inline-block brutal-press hover:bg-electric-blue transition-colors">
+              EXPLORE OTHER WORLDS →
+            </Link>
           </div>
         )}
       </div>
@@ -378,22 +435,17 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   );
 }
 
+// ─── Lesson Node ───────────────────────────────────────────────────────────────
 function LessonNode({
   node,
   meta,
-  isFlowMode,
 }: {
   node: PathNode;
   meta: typeof WORLD_META[string];
-  isFlowMode?: boolean;
 }) {
-  // Outer wrapper: icon circle on top, label below
-  const Wrap = ({ children, href, className, title }: {
-    children: ReactNode;
-    href?: string;
-    className?: string;
-    title?: string;
-  }) => {
+  const Wrap = ({
+    children, href, className, title,
+  }: { children: ReactNode; href?: string; className?: string; title?: string }) => {
     const inner = (
       <div className="flex flex-col items-center gap-1.5 group" title={title}>
         {children}
@@ -409,10 +461,8 @@ function LessonNode({
     return <div className={className}>{inner}</div>;
   };
 
-  // Label shown below every node
   const Label = ({ text, dim }: { text: string; dim?: boolean }) => (
-    <span className={`font-mono text-xs uppercase leading-tight text-center max-w-[88px] line-clamp-2
-      ${dim ? "opacity-30" : "opacity-70"}`}>
+    <span className={`font-mono text-xs uppercase leading-tight text-center max-w-[88px] line-clamp-2 ${dim ? "opacity-30" : "opacity-70"}`}>
       {text}
     </span>
   );
@@ -431,8 +481,7 @@ function LessonNode({
   if (node.state === "complete") {
     return (
       <Wrap href={`/learn/${node.slug}`} title={`${node.title} — completed`}>
-        <div className={`w-14 h-14 rounded-full brutal-border flex items-center justify-center
-          ${meta.nodeDone} transition-transform group-hover:scale-105`}>
+        <div className={`w-14 h-14 rounded-full brutal-border flex items-center justify-center ${meta.nodeDone} transition-transform group-hover:scale-105`}>
           <span className="text-2xl">✓</span>
         </div>
         <Label text={node.title} />
@@ -443,9 +492,10 @@ function LessonNode({
   if (node.state === "review") {
     return (
       <Wrap href={`/learn/${node.slug}?review=1`} title={`${node.title} — needs review`}>
-        <div className="w-14 h-14 rounded-full brutal-border bg-hot text-bone flex items-center justify-center
-          transition-transform group-hover:scale-105"
-          style={{ animation: "pulse 2s ease-in-out infinite" }}>
+        <div
+          className="w-14 h-14 rounded-full brutal-border bg-hot text-bone flex items-center justify-center transition-transform group-hover:scale-105"
+          style={{ animation: "pulse 2s ease-in-out infinite" }}
+        >
           <span className="text-2xl">🔥</span>
         </div>
         <Label text="Review" />
@@ -453,13 +503,12 @@ function LessonNode({
     );
   }
 
-  // available — glowing, pulsing accent
+  // Available — glowing, pulsing
   return (
     <Wrap href={`/learn/${node.slug}`} title={node.title}>
       <div
-        className={`w-20 h-20 rounded-full brutal-border flex flex-col items-center justify-center gap-0.5
-          ${meta.nodeAvail} transition-transform group-hover:scale-110`}
-        style={{ boxShadow: "0 0 0 6px rgba(198,255,0,0.25), 0 0 28px rgba(198,255,0,0.2)" }}
+        className={`w-20 h-20 rounded-full brutal-border flex flex-col items-center justify-center gap-0.5 ${meta.nodeAvail} transition-transform group-hover:scale-110`}
+        style={{ boxShadow: `0 0 0 6px ${meta.glowColor}, 0 0 24px ${meta.glowColor}` }}
       >
         <span className="font-display text-xs font-bold leading-tight text-center px-1 line-clamp-2">
           {node.title}

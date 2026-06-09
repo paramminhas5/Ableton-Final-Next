@@ -2,34 +2,151 @@
 /**
  * LessonPageClient — mode-aware lesson router.
  *
- * FLOW MODE   (learnMode === "flow"):
- *   → LessonPlayer  (Duolingo screens: hook→concept→interact→quiz→summary)
- *   → Hearts active, sequential gating, XP on completion
- *   → If mission has no screens yet, falls back to InlineClassic with improved banner (#10)
+ * FLOW MODE (learnMode === "flow"):
+ *   → LessonPlayer (Duolingo screens) if screens exist, else InlineClassic fallback
+ *   → On complete: shows NextLessonInterstitial then auto-advances to next lesson
+ *   → If no next lesson: routes back to the world snake
  *
  * FREE MODE (learnMode === "classic"):
- *   → InlineClassic  (scrolling explainer + sim + quiz, no hearts)
- *   → All missions always accessible, no gating
- *
- * Both modes live at /learn/[slug] — same URL, completely different experience.
- *
- * Fixes:
- *   #6  — handleComplete uses getMissionContext for correct world route
- *   #10 — PathFallbackBanner is clean, informative, not misleading
+ *   → InlineClassic (scrolling explainer + sim + quiz, no hearts)
+ *   → On complete: routes to /dashboard
  */
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import Image from "next/image";
+import { Suspense, useState, useEffect } from "react";
 import { LessonPlayer } from "@/components/LessonPlayer";
 import { InlineClassicLesson } from "@/components/InlineClassicLesson";
-import { MissionIntroCard } from "@/components/MissionIntroCard";
 import { missionBySlug, nextMission } from "@/content/missions";
 import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
 
-// ── Flow Mode fallback banner — shown when a lesson has no screens yet ────────
-// Clean, informative — makes it clear this is the explore format, not broken FLOW MODE
+// ── Cat speech-bubble quips per world ─────────────────────────────────────────
+const NEXT_QUIPS: Record<string, string[]> = {
+  fundamentals: [
+    "That's the foundation. Now let's build on it! 🎵",
+    "You're getting it! Music theory unlocked. 🔑",
+    "Knowledge stacking nicely. Keep going! 📚",
+    "One more piece of the puzzle. You've got this! 🧩",
+  ],
+  dj: [
+    "The dancefloor awaits. Next lesson incoming! 🎧",
+    "DJ skills loading... one lesson at a time. 🎚",
+    "Your mix is getting smoother. Keep pushing! 🔊",
+    "The crowd can feel the difference. Let's go! 🕺",
+  ],
+  producer: [
+    "Ableton mastery in progress. You're killing it! 🎛",
+    "Studio skills unlocked. Next chapter awaits! 🎼",
+    "Your sound is evolving. Keep building! ⚡",
+    "Production level up! Don't stop now. 🚀",
+  ],
+};
+
+const CAT_IMAGES: Record<string, string> = {
+  fundamentals: "/cats/cat-handstand.png",
+  dj: "/cats/cat-dj.png",
+  producer: "/cats/cat-dj-hero.png",
+};
+
+// ── Next Lesson Interstitial — full-screen celebration before advancing ────────
+function NextLessonInterstitial({
+  currentTitle,
+  nextSlug,
+  nextTitle,
+  nextTagline,
+  nextXp,
+  world,
+  worldRoute,
+  onContinue,
+}: {
+  currentTitle: string;
+  nextSlug: string | null;
+  nextTitle: string | null;
+  nextTagline: string | null;
+  nextXp: number;
+  world: string | null;
+  worldRoute: string;
+  onContinue: () => void;
+}) {
+  const [countdown, setCountdown] = useState(4);
+  const catSrc = CAT_IMAGES[world ?? "fundamentals"] ?? "/cats/cat-dj-hero.png";
+  const quips = NEXT_QUIPS[world ?? "fundamentals"] ?? NEXT_QUIPS.fundamentals;
+  const quip = quips[Math.floor(Math.random() * quips.length)];
+
+  // Auto-advance after countdown
+  useEffect(() => {
+    if (countdown <= 0) { onContinue(); return; }
+    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [countdown, onContinue]);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-acid flex flex-col items-center justify-center px-4 text-ink">
+      {/* Cat mascot */}
+      <div className="relative mb-4" style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}>
+        <Image
+          src={catSrc}
+          alt="DJ Pawsworth celebrating"
+          width={140}
+          height={140}
+          className="animate-bounce-bob"
+        />
+        {/* Speech bubble */}
+        <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-max max-w-[200px]">
+          <div className="brutal-border bg-bone text-ink px-3 py-2 font-display text-xs text-center leading-snug">
+            {quip}
+          </div>
+          {/* Bubble tail */}
+          <div className="w-3 h-3 bg-bone border-r-2 border-b-2 border-ink mx-auto -mt-0.5 rotate-45" />
+        </div>
+      </div>
+
+      {/* Completed pill */}
+      <div className="brutal-border bg-ink text-bone px-4 py-1 font-mono text-[10px] uppercase mb-6">
+        ✓ COMPLETED — {currentTitle}
+      </div>
+
+      {nextSlug && nextTitle ? (
+        <>
+          <div className="font-mono text-[10px] uppercase opacity-60 mb-2">UP NEXT</div>
+          <div className="brutal-border bg-bone text-ink p-5 max-w-sm w-full text-center brutal-shadow mb-6">
+            <div className="font-display text-2xl leading-tight mb-1">{nextTitle}</div>
+            {nextTagline && (
+              <div className="font-mono text-xs opacity-60 leading-snug mb-3">{nextTagline}</div>
+            )}
+            <div className="font-mono text-[10px] uppercase opacity-50">+{nextXp} XP</div>
+          </div>
+          <button
+            onClick={onContinue}
+            className="brutal-border bg-ink text-bone px-8 py-4 font-display text-xl brutal-press chunk-shadow hover:bg-electric-blue transition-colors mb-3"
+          >
+            START NEXT LESSON →
+          </button>
+          <div className="font-mono text-[10px] uppercase opacity-50">
+            Auto-continuing in {countdown}s…
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="font-display text-3xl mb-2">🏆 PATH COMPLETE!</div>
+          <div className="font-mono text-sm opacity-70 mb-6 text-center max-w-xs">
+            You finished this section. Head back to your world map to see what&apos;s unlocked.
+          </div>
+          <button
+            onClick={onContinue}
+            className="brutal-border bg-ink text-bone px-8 py-4 font-display text-xl brutal-press chunk-shadow hover:bg-electric-blue transition-colors"
+          >
+            BACK TO WORLD MAP →
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── Flow Mode fallback banner ─────────────────────────────────────────────────
 function FlowFallbackBanner({ missionTitle }: { missionTitle: string }) {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-4">
@@ -37,14 +154,12 @@ function FlowFallbackBanner({ missionTitle }: { missionTitle: string }) {
         <div className="flex items-start gap-3 mb-2">
           <span className="text-xl shrink-0">🌊</span>
           <div>
-            <div className="font-display text-base">FLOW MODE — Explore Format</div>
-            <div className="font-mono text-xs opacity-60 mt-0.5">
-              {missionTitle}
-            </div>
+            <div className="font-display text-base">FLOW MODE</div>
+            <div className="font-mono text-xs opacity-60 mt-0.5">{missionTitle}</div>
           </div>
         </div>
         <div className="font-mono text-xs opacity-80 leading-relaxed">
-          This lesson uses the scrolling format. Complete the quiz to unlock the next lesson and earn your XP.
+          Complete the quiz below to unlock the next lesson and earn your XP.
         </div>
         <div className="mt-3 flex flex-wrap gap-2 font-mono text-[9px] uppercase">
           <span className="brutal-border bg-ink/20 px-2 py-1">✓ Full content</span>
@@ -61,8 +176,7 @@ function Inner({ slug }: { slug: string }) {
   const params = useSearchParams();
   const isReview = params.get("review") === "1";
   const { learnMode } = useLearnMode();
-  // Show the intro card first — user must tap "START LESSON" to begin
-  const [started, setStarted] = useState(false);
+  const [showInterstitial, setShowInterstitial] = useState(false);
 
   const mission = missionBySlug(slug);
   if (!mission) {
@@ -75,9 +189,7 @@ function Inner({ slug }: { slug: string }) {
 
   const next = nextMission(slug);
   const hasScreens = (mission.screens?.length ?? 0) > 0;
-
   const ctx = getMissionContext(slug);
-
   const worldRoute = ctx.worldRoute || "/worlds";
 
   const missionIndex = ctx.path
@@ -88,26 +200,54 @@ function Inner({ slug }: { slug: string }) {
   const coachContext = [
     `[World: ${ctx?.world ?? "unknown"}]`,
     `[${learnMode === "flow" ? "Flow Mode" : "Free Mode"}]`,
-    // P1 #10: enriched Beat Coach context with full lesson metadata
     ctx?.chapter?.title ? `[Chapter: ${ctx.chapter.title}]` : "",
     ctx?.path?.title ? `[Path: ${ctx.path.title}]` : "",
     `Lesson: "${mission.title}" — ${mission.tagline}.`,
     `Mission ${missionIndex} of ${missionTotal} in this path.`,
   ].filter(Boolean).join(" ");
 
+  // Find next mission details for interstitial
+  const nextMissionData = next ? missionBySlug(next.slug) : null;
+
   const handleComplete = () => {
-    // Always route to /dashboard after lesson completion so users see updated
-    // stats, earned badge, rank progress and clear next action (P0 fix #1)
-    const destination = isReview ? "/review" : "/dashboard";
-    setTimeout(() => router.push(destination), 2200);
+    if (isReview) {
+      setTimeout(() => router.push("/review"), 1500);
+      return;
+    }
+    if (learnMode === "flow") {
+      // Show the cat interstitial, then navigate
+      setShowInterstitial(true);
+    } else {
+      // Free mode: just go to dashboard
+      setTimeout(() => router.push("/dashboard"), 1500);
+    }
+  };
+
+  const handleInterstitialContinue = () => {
+    if (next?.slug) {
+      router.push(`/learn/${next.slug}`);
+    } else {
+      router.push(worldRoute);
+    }
   };
 
   // ── FLOW MODE ──────────────────────────────────────────────────────────────
   if (learnMode === "flow") {
     return (
       <div>
+        {showInterstitial && (
+          <NextLessonInterstitial
+            currentTitle={mission.title}
+            nextSlug={next?.slug ?? null}
+            nextTitle={nextMissionData?.title ?? next?.title ?? null}
+            nextTagline={nextMissionData?.tagline ?? null}
+            nextXp={nextMissionData?.xp ?? 40}
+            world={ctx.world}
+            worldRoute={worldRoute}
+            onContinue={handleInterstitialContinue}
+          />
+        )}
         {hasScreens ? (
-          /* Full Duolingo-style lesson */
           <LessonPlayer
             mission={mission}
             nextSlug={next?.slug}
@@ -117,7 +257,6 @@ function Inner({ slug }: { slug: string }) {
             onComplete={handleComplete}
           />
         ) : (
-          /* No screens yet → informative banner + inline classic (no hearts deducted) */
           <>
             <FlowFallbackBanner missionTitle={mission.title} />
             <InlineClassicLesson

@@ -430,6 +430,86 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       {/* Marquee 2b */}
       <CcdMarquee items={["🌊 FLOW MODE","🔓 FREE MODE","SWITCH ANYTIME","153 MISSIONS","HEARTS SYSTEM","SEQUENTIAL PATH","CHAPTER BROWSER","YOUR CHOICE"]} bg="bg-electric-blue" textColor="text-bone" size="sm" />
 
+      {/* TOOLS & FEATURES */}
+      <SectionReveal>
+        <section className="bg-ink text-bone border-b-4 border-ink">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// MORE THAN JUST LESSONS</div>
+            <h2 className="font-display text-5xl md:text-7xl mb-4">Everything You Need.</h2>
+            <p className="font-sans text-sm opacity-60 max-w-xl leading-relaxed mb-12">
+              CCD.SCHOOL is a full toolkit — not just a quiz app. Every feature is built to help you actually understand and use what you learn.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                {
+                  icon: "🎛",
+                  title: "47 Interactive Sims",
+                  body: "Every lesson has a hands-on simulator — drum pads, piano rolls, beatmatch trainer, Camelot wheel, signal flow builder and more. Learn by doing.",
+                  href: "/playground",
+                  accent: "border-t-4 border-t-acid",
+                },
+                {
+                  icon: "📖",
+                  title: "Music Glossary",
+                  body: "200+ terms defined — from ADSR to zero-crossing. Search any word you encounter in a lesson and get a plain-English explanation instantly.",
+                  href: "/glossary",
+                  accent: "border-t-4 border-t-volt",
+                },
+                {
+                  icon: "⌨️",
+                  title: "Shortcuts Reference",
+                  body: "Every Ableton Live keyboard shortcut in one place, organised by workflow. Print it, bookmark it, use it.",
+                  href: "/shortcuts",
+                  accent: "border-t-4 border-t-sun",
+                },
+                {
+                  icon: "🔌",
+                  title: "Device Dictionary",
+                  body: "Every Ableton built-in device explained — parameters, use cases, signal flow diagrams. From EQ Eight to Roar to Granulator III.",
+                  href: "/devices",
+                  accent: "border-t-4 border-t-acid",
+                },
+                {
+                  icon: "🧠",
+                  title: "Spaced Repetition",
+                  body: "FSRS v4 tracks how well you remember each lesson. Your review queue brings fading knowledge back at exactly the right moment.",
+                  href: "/review",
+                  accent: "border-t-4 border-t-volt",
+                },
+                {
+                  icon: "🤖",
+                  title: "Beat Coach AI",
+                  body: "Your personal AI music tutor. Ask anything about music production, DJing, or Ableton Live. Powered by Kimi AI, available on every page.",
+                  href: "/dashboard",
+                  accent: "border-t-4 border-t-[#7B2FFF]",
+                },
+              ].map(({ icon, title, body, href, accent }) => (
+                <Link
+                  key={title}
+                  href={href}
+                  className={`brutal-border bg-bone/5 hover:bg-bone/10 p-5 flex flex-col gap-3 transition-colors brutal-press ${accent}`}
+                >
+                  <span className="text-3xl">{icon}</span>
+                  <div>
+                    <div className="font-display text-lg mb-1">{title}</div>
+                    <div className="font-sans text-sm opacity-60 leading-relaxed">{body}</div>
+                  </div>
+                  <div className="font-mono text-[9px] uppercase opacity-40 mt-auto">EXPLORE →</div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Cat decoration */}
+            <div className="flex justify-end mt-10">
+              <div style={{ filter: "drop-shadow(4px 4px 0 hsl(84 81% 56%))" }}>
+                <Image src="/cats/cat-headphones.png" alt="" width={100} height={100} className="wiggle opacity-80" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </SectionReveal>
+
       {/* THREE WORLDS */}
       <SectionReveal>
         <section className="bg-electric-blue text-bone border-b-4 border-ink">
