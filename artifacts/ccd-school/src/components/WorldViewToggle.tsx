@@ -22,7 +22,7 @@ export function WorldViewToggle({ slug, showClassic }: Props) {
       <div className="max-w-5xl mx-auto flex">
         <Link
           href={`/world/${slug}`}
-          onClick={() => setLearnMode("ccd")}
+          onClick={() => setLearnMode("flow")}
           className={`flex-1 py-2.5 text-center font-mono text-[10px] uppercase brutal-border border-y-0 border-l-0 brutal-press transition-colors ${
             !showClassic ? "bg-acid text-ink font-bold" : "bg-bone hover:bg-sun"
           }`}

@@ -68,9 +68,8 @@ export function LearnModeProvider({ children }: { children: ReactNode }) {
   // Hydrate from localStorage after first paint — runs client-side only.
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
-      const resolved: LearnMode =
-        saved === "ccd" || saved === "classic" ? saved : "classic";
+      const saved = localStorage.getItem(MODE_KEY);
+      const resolved = normaliseCcdToFlow(saved);
       setLearnModeState(resolved);
       document.documentElement.setAttribute("data-learn-mode", resolved);
     } catch {}
