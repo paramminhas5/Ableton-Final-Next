@@ -28,7 +28,6 @@ import { trackCatClick } from "@/components/EasterEggs";
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
 const PRIMARY_NAV = [
-  { to: "/learn",     label: "Learn"    },
   { to: "/worlds",    label: "Worlds"   },
   { to: "/dashboard", label: "Progress" },
 ] as const;
@@ -516,7 +515,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         {/* Nav sections */}
         <nav aria-label="Mobile navigation">
           {[
-            { heading: "Learn", links: [
+            { heading: "Worlds", links: [
               { to: "/world/fundamentals", label: "🎵 Fundamentals" },
               { to: "/world/dj",           label: "🎧 DJ World"     },
               { to: "/world/producer",     label: "🎛 Producer"     },
@@ -615,7 +614,7 @@ function StreakWarningBanner() {
         </span>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <a href="/learn"
+        <a href="/worlds"
           className="brutal-border bg-bone text-hot px-3 py-1.5 font-display text-xs brutal-press hover:bg-acid hover:text-ink transition-colors">
           Learn now →
         </a>

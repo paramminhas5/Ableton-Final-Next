@@ -52,20 +52,7 @@ export function WorldPageClient({ slug }: { slug: string }) {
   return (
     <main className="min-h-screen bg-bone">
       <header className={`brutal-border border-x-0 border-t-0 ${cfg.hero} relative overflow-hidden`}>
-        {/* Hero image — skipped on producer (sun/yellow) to keep text legible */}
-        {world !== "producer" && (
-          <div className="absolute inset-0 pointer-events-none">
-            <Image
-              src={WORLD_HERO_IMAGES[world]}
-              alt=""
-              fill
-              priority
-              className="object-cover opacity-20 mix-blend-multiply"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-current/30" />
-          </div>
-        )}
+        {/* No background overlay — clean solid colour hero */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 md:py-12">
           <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 transition-opacity">← ALL WORLDS</Link>
           <h1 className="font-display text-5xl md:text-8xl leading-none mt-3">{cfg.emoji} {cfg.title.toUpperCase()}</h1>
@@ -101,8 +88,8 @@ export function WorldPageClient({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* Mode switcher — sticky just below the chapter nav */}
-      <ModeSwitcherBanner variant="bar" />
+        {/* Mode switcher — sticky just below the chapter nav */}
+        <ModeSwitcherBanner variant="bar" />
 
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-4 pb-24">
         {chapters.map((ch) => {

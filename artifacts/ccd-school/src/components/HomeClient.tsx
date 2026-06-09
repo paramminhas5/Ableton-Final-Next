@@ -144,11 +144,10 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
       {/* ── HEADLINE — centred, massive, CCD-style ── */}
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center px-4 text-center pointer-events-none">
         <motion.h1
-          style={{ scale: titleScale, y: titleY, transformOrigin: "center center", willChange: "transform" }}
+          style={{ scale: titleScale, y: titleY, transformOrigin: "center center", willChange: "transform", fontSize: "clamp(56px, 15vw, 160px)", lineHeight: 0.85, textShadow: "6px 6px 0 hsl(222 47% 4%)" }}
           className="font-display leading-[0.85] text-bone"
-          style={{ fontSize: "clamp(56px, 15vw, 160px)", lineHeight: 0.85, textShadow: "6px 6px 0 hsl(222 47% 4%)" }}
         >
-          LEARN<br />MUSIC<span className="text-acid">.</span><br />PROPERLY<span className="text-acid">.</span>
+          CATS CAN<br />LEARN<span className="text-acid">.</span>
         </motion.h1>
       </div>
 
