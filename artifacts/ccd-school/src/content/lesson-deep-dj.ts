@@ -401,6 +401,10 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { q: "The Belleville Three are credited with the foundation of", options: ["Chicago house", "Detroit techno", "UK garage", "Trance"], answer: 1, explain: "Juan Atkins, Derrick May and Kevin Saunderson, all from Belleville, Michigan, defined Detroit techno in the early '80s.", hint: "Detroit, three teenagers, futurist sound." },
       { q: "Why does scene literacy matter for getting booked?", options: ["It doesn't", "Promoters book DJs who fit a scene's identity; knowing the lineage means you can program sets that feel native to a room", "It only matters for older DJs", "Promoters only check social numbers"], answer: 1, explain: "Beyond stats, promoters want DJs whose taste fits the room. Lineage knowledge shows in selection.", hint: "What gets you the second booking, not the first." },
     ],
+    sources: [
+      { label: "Wikipedia — Disc jockey", section: "History of DJing" },
+      { label: "Wikipedia — House music / Techno / Turntablism", section: "Origins and key figures" },
+    ],
   },
 
   "genre-bpm-reference": {
@@ -463,6 +467,10 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { q: "Why is Master Tempo / Key Lock essential beyond ±3% pitch?", options: ["It isn't", "Pitch shift becomes audible on vocals and melodic content — Key Lock holds perceived pitch while tempo changes", "It only matters for techno", "It changes the BPM display"], answer: 1, explain: "Without Key Lock, ±5% is a ~80 cent pitch shift — clearly perceptible on vocals.", hint: "What does your ear tolerate without flagging?" },
       { q: "A 174 BPM DnB track detected at 87 BPM means", options: ["Bad audio file", "The detector locked onto the half-time pulse — kicks fall on beats 1 and 3, doubling the apparent beat interval", "Wrong file format", "Corrupted analysis"], answer: 1, explain: "DnB's strong snare on 3 reads as a downbeat, halving the perceived BPM. Use ×2 in rekordbox to correct.", hint: "Half-time feel fools the algorithm." },
       { q: "Half-time bridging means", options: ["Slowing the tempo by half mid-mix", "Playing a track at half the BPM of the other so each beat lands on every other beat of the faster track — used to bridge between tempo zones", "Using only the first half of each track", "Loop length set to half a bar"], answer: 1, explain: "70 BPM kicks every 2nd 140 BPM beat = same felt pulse. Useful for genre transitions across big tempo gaps.", hint: "Same pulse felt, different number printed." },
+    ],
+    sources: [
+      { label: "Wikipedia — Electronic dance music / House music / Techno", section: "Genre BPM ranges and history" },
+      { label: "rekordbox 6.0.0 Instruction Manual", section: "Key analysis display and Master Tempo" },
     ],
   },
 
@@ -923,6 +931,10 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { q: "Pre-release drops on Bandcamp/Beatport are valuable for DJs because", options: ["They sound better", "They give you 2-4 weeks of exclusivity before peers play the same track", "They are cheaper", "They include stems"], answer: 1, explain: "Being first on a track that catches fire is one of the cheapest ways to differentiate a set.", hint: "Early access = scarcity = perceived value." },
       { q: "Discogs is most useful for", options: ["Streaming music", "Mapping artist discographies, label catalogues, collaborations and remix histories — and buying physical media", "Detecting BPM", "Hot cue management"], answer: 1, explain: "Discogs is a music database with marketplace bolted on. It excels at relational digging.", hint: "What's behind the marketplace?" },
     ],
+    sources: [
+      { label: "Beatport / Traxsource / Juno Download", section: "DJ music procurement and pre-release access" },
+      { label: "Discogs — Music Database", section: "Label and artist discography research" },
+    ],
   },
 
   "export-mode-dj": {
@@ -1073,6 +1085,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       what: [
         "Beatmatching = matching BPM (tempo) and phase (where in the bar each beat falls). Tempo fader handles speed; jog wheel handles phase.",
         "Drift: even matched tracks drift over time on analog gear because crystals are imperfect. Listen and re-nudge every 16–32 bars.",
+        "On the CDJ-3000, the jog wheel operates in two modes (rekordbox 6.0.0 Manual §CDJ-3000 Integration): VINYL mode engages the platter as a scratch surface; CDJ mode uses the outer ring for pitch-bend nudging during beatmatch. The CDJ-3000's multi-colour waveform display lets you visually confirm phase alignment — when both waveform beat markers align, you have lock.",
       ],
       edgeCases: [
         "Tracks with swung or shuffled drums confuse the ear — match the kick, ignore the hats.",
@@ -1117,6 +1130,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       what: [
         "SYNC reads BPM and downbeat position from the analyzed grid. It corrects pitch and triggers a phase realignment.",
         "Beat Sync (rekordbox) vs Tempo Sync — Beat Sync aligns both tempo and downbeat; Tempo Sync only matches BPM, you align phase manually.",
+        "rekordbox 6.0.0 Manual §SYNC covers the SYNC MASTER button: the deck assigned as master sets the reference tempo and phase. When using Pro DJ Link, the CDJ-3000 with SYNC active locks its internal pitch-bend servo to the master CDJ's clock signal — this is hardware-level sync, not just software matching. Enabling QUANTIZE alongside SYNC ensures all hot-cue triggers and loop activations snap to the nearest beat in the master grid.",
       ],
       edgeCases: [
         "Tracks with tempo changes (live drums, rock, hip-hop) often have shifting grids — SYNC will drift mid-track.",

@@ -8,15 +8,15 @@ import {
   type ReactNode,
 } from "react";
 
-export type LearnMode = "classic" | "ccd";
+export type LearnMode = "flow" | "classic";
 // Mode labels (public-facing):
 //   "ccd"     → PATH MODE   — sequential, hearts on, Duolingo-style
 //   "classic" → EXPLORE MODE — all lessons open, no hearts, free-browse
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
-  ccd:     { name: "PATH MODE",    icon: "🗺",  tagline: "Sequential · Hearts on · XP gated" },
-  classic: { name: "EXPLORE MODE", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
+  flow:    { name: "Flow Mode", icon: "🌊", tagline: "Sequential · Hearts on · XP gated" },
+  classic: { name: "Free Mode", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
 };
 
 const MODE_KEY = "ccd.learnMode";
@@ -29,7 +29,7 @@ type LearnModeContextType = {
 };
 
 const LearnModeContext = createContext<LearnModeContextType>({
-  learnMode: "classic",
+  learnMode: "flow",
   setLearnMode: () => {},
 });
 

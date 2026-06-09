@@ -127,7 +127,10 @@ export type LessonScreen =
         | "camelot-wheel"      // 12-key Camelot/harmonic mixing wheel
         | "waveform-zoom"      // waveform with beatgrid overlay
         | "headroom-meter"     // vertical dB headroom meter
+        | "fal-image"          // FAL.ai-generated image (see imageUrl)
         | "none";
+      /** Path to FAL.ai-generated image — only used when visual === "fal-image" */
+      imageUrl?: string;
     }
   | {
       kind: "diagram";

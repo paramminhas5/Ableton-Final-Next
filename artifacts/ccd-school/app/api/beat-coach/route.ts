@@ -47,8 +47,13 @@ export async function POST(req: NextRequest) {
 
   const { context = "", question = "", wrongAnswers = [] } = body;
 
+  // Build system content with lesson context injected
+  const systemContent = context
+    ? `${SYSTEM_PROMPT}\n\nCurrent lesson context: ${context}`
+    : SYSTEM_PROMPT;
+
+  // New clean userMessage — no context
   const userMessage = [
-    context && `Lesson context: ${context}`,
     `Quiz question: ${question}`,
     wrongAnswers.length > 0 && `The student answered: "${wrongAnswers.join('", "')}" — which was wrong.`,
     "Please explain why this is tricky and what concept they should focus on.",
@@ -64,8 +69,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: KIMI_MODEL,
         messages: [
-          { role: "system",    content: SYSTEM_PROMPT },
-          { role: "user",      content: userMessage },
+          { role: "system", content: systemContent },
+          { role: "user",   content: userMessage },
         ],
         max_tokens: 150,
         temperature: 0.7,

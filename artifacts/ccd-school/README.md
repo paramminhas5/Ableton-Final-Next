@@ -203,16 +203,16 @@ World (3)
 ```
 
 Every mission supports two formats simultaneously:
-- **CCD Mode** (`screens[]`): Duolingo-style sequential screens with hearts, XP gating
-- **Classic Mode** (`explainer` blocks): Scrolling explainer + simulator + Normal/Hard quiz
+- **Flow Mode** (`screens[]`): Duolingo-style sequential screens with hearts, XP gating
+- **Free Mode** (`explainer` blocks): Scrolling explainer + simulator + Normal/Hard quiz
 
 ---
 
 ## Learning Modes
 
-### Axis 1: CCD vs Classic (always changeable)
+### Axis 1: Flow Mode vs Free Mode (always changeable)
 
-| | 🔒 Path Mode (CCD) | 🗺 Explorer Mode (Classic) |
+| | 🌊 Flow Mode | 🔓 Free Mode |
 |---|---|---|
 | Access | Sequential unlock — one mission at a time | All 153 missions open immediately |
 | Hearts | 5 hearts; wrong answer costs ♥; refill 1/4h | No hearts |

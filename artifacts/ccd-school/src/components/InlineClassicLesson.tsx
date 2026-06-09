@@ -2,8 +2,8 @@
 /**
  * InlineClassicLesson — scrolling lesson rendered inside /learn/[slug].
  * Used in two situations:
- *   1. Explorer Mode  (learnMode === "classic") — all missions, no hearts
- *   2. Path Mode fallback — missions that have no screens[] yet
+ *   1. Free Mode  (learnMode === "classic") — all missions, no hearts
+ *   2. Flow Mode fallback — missions that have no screens[] yet
  *
  * Renders: mode badge → difficulty toggle → explainer blocks → sim → quiz → next CTA
  * Supports Normal / Hard mode matching the experience in MissionPageClient.
@@ -22,6 +22,13 @@ import { LESSONS } from "@/content/lesson-deep";
 import { Glossarized, GlossaryScope } from "@/components/Term";
 import { getMissionContext } from "@/lib/missionContext";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
+import { LessonSourceBar } from "@/components/LessonSourceBar";
+
+const WORLD_BANNERS: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  foundations: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+};
 
 const WORLD_BANNERS: Record<string, string> = {
   fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
@@ -57,8 +64,8 @@ export function InlineClassicLesson({
   const ctx = getMissionContext(m.slug);
   const deep = LESSONS[m.slug];
 
-  // Hard mode state — default from stored difficulty preference (explorer mode only)
-  const defaultHard = learnMode !== "ccd" && progress.difficulty === "hard";
+  // Hard mode state — default from stored difficulty preference (free mode only)
+  const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
   const [internalHardMode, setInternalHardMode] = useState(defaultHard);
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
 
@@ -169,7 +176,7 @@ export function InlineClassicLesson({
           {/* Mode badge */}
           <div className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase font-bold
             ${mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"}`}>
-            {mode === "explore" ? "🔓 Explore Mode" : "🗺 Path Mode"}
+            {mode === "explore" ? "🔓 Free Mode" : "🌊 Flow Mode"}
           </div>
           <div className="flex-1" />
           {internalHardMode && (
@@ -429,6 +436,16 @@ export function InlineClassicLesson({
               Hard mode — no hints · pass threshold 70% · {deep?.quizHard?.length ? "harder questions loaded" : "hints removed from standard questions"}
             </div>
           )}
+          {/* Context banner — ties quiz questions back to what was just taught */}
+          <div className="brutal-border bg-volt text-bone px-4 py-3 flex items-start gap-3 mb-3">
+            <span className="text-lg shrink-0">🧠</span>
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">TEST YOUR KNOWLEDGE</div>
+              <div className="font-mono text-xs leading-relaxed opacity-90">
+                These questions are based on <strong>{m.title}</strong>. Use what you just read above — not general knowledge.
+              </div>
+            </div>
+          </div>
           <Quiz
             key={`${m.slug}-${internalHardMode}`}
             qs={quizQs}
@@ -440,6 +457,9 @@ export function InlineClassicLesson({
             onPerfect={onCorrect}
           />
         </section>
+
+        {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
+        <LessonSourceBar source={ctx?.path?.source} />
 
         {/* ── NEXT LESSON CTA ─────────────────────────────────────────────── */}
         {nextSlug && done && (

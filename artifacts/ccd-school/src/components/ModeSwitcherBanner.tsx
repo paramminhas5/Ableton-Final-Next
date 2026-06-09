@@ -16,11 +16,11 @@ interface Props {
 
 export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const { learnMode, setLearnMode } = useLearnMode();
-  const isPath = learnMode === "ccd";
+  const isPath = learnMode === "flow";
   const [justSwitched, setJustSwitched] = useState(false);
 
   const switchMode = () => {
-    setLearnMode(isPath ? "classic" : "ccd");
+    setLearnMode(isPath ? "classic" : "flow");
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
   };
@@ -32,23 +32,23 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
         <div className="brutal-border border-x-0 border-t-0 bg-ink text-bone px-5 py-3">
           <div className="font-mono text-[9px] uppercase opacity-50 mb-0.5">// LEARNING MODE</div>
           <div className="font-display text-2xl">
-            {isPath ? "🗺 PATH MODE" : "🔓 EXPLORE MODE"}
+            {isPath ? "🌊 FLOW MODE" : "🔓 FREE MODE"}
           </div>
         </div>
 
         {/* Mode cards side by side */}
         <div className="grid grid-cols-2 gap-0">
-          {/* PATH MODE */}
+          {/* FLOW MODE */}
           <button
-            onClick={() => !isPath && setLearnMode("ccd")}
+            onClick={() => !isPath && setLearnMode("flow")}
             className={`p-5 text-left transition-all brutal-border border-b-0 border-l-0 border-t-0
               ${isPath
                 ? "bg-acid text-ink cursor-default"
                 : "bg-bone hover:bg-acid/20 cursor-pointer brutal-press"}`}
             aria-pressed={isPath}
           >
-            <div className="text-3xl mb-3">🗺</div>
-            <div className="font-display text-lg leading-tight mb-2">PATH MODE</div>
+            <div className="text-3xl mb-3">🌊</div>
+            <div className="font-display text-lg leading-tight mb-2">FLOW MODE</div>
             <ul className="space-y-1 font-mono text-[9px] uppercase">
               {[
                 { ok: true,  text: "Sequential unlock" },
@@ -66,7 +66,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
             )}
           </button>
 
-          {/* EXPLORE MODE */}
+          {/* FREE MODE */}
           <button
             onClick={() => isPath && setLearnMode("classic")}
             className={`p-5 text-left transition-all brutal-border border-b-0 border-r-0 border-t-0
@@ -76,7 +76,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
             aria-pressed={!isPath}
           >
             <div className="text-3xl mb-3">🔓</div>
-            <div className="font-display text-lg leading-tight mb-2">EXPLORE MODE</div>
+            <div className="font-display text-lg leading-tight mb-2">FREE MODE</div>
             <ul className="space-y-1 font-mono text-[9px] uppercase">
               {[
                 { ok: true,  text: "All lessons open" },
@@ -104,7 +104,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
             onClick={switchMode}
             className="brutal-border bg-ink text-bone px-4 py-2 font-mono text-[9px] uppercase brutal-press hover:bg-acid hover:text-ink transition-colors shrink-0"
           >
-            {justSwitched ? "✓ SWITCHED" : `SWITCH TO ${isPath ? "EXPLORE" : "PATH"} →`}
+            {justSwitched ? "✓ SWITCHED" : `SWITCH TO ${isPath ? "FREE" : "FLOW"} →`}
           </button>
         </div>
       </div>
@@ -120,10 +120,10 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
     >
       {/* Left: mode info */}
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-2xl shrink-0">{isPath ? "🗺" : "🔓"}</span>
+        <span className="text-2xl shrink-0">{isPath ? "🌊" : "🔓"}</span>
         <div className="min-w-0">
           <div className="font-display text-base leading-tight">
-            {isPath ? "PATH MODE" : "EXPLORE MODE"}
+            {isPath ? "FLOW MODE" : "FREE MODE"}
           </div>
           <div className="font-mono text-[9px] uppercase opacity-60 truncate">
             {isPath
@@ -143,7 +143,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
       >
         {justSwitched
           ? "✓"
-          : `SWITCH TO ${isPath ? "EXPLORE" : "PATH"} →`}
+          : `SWITCH TO ${isPath ? "FREE" : "FLOW"} →`}
       </button>
     </div>
   );

@@ -2551,12 +2551,12 @@ const wExtra: Mission[] = [
     sim: { type: "knob-trainer" },
     quiz: [
       {
-        q: "Roar is a…",
-        options: ["Multiband saturator", "Reverb", "Synth"],
-        answer: 0,
+        q: "How many saturation algorithms does Roar offer?",
+        options: ["3", "7", "13"],
+        answer: 2,
         explain:
-          "Roar is specifically a multiband saturator/distortion — it splits the signal into bands so you can saturate lows, mids, and highs independently.",
-        hint: "Multi + saturation — what does 'multi' refer to?",
+          "Roar offers 13 distortion algorithms including Tube, Diode, Wavefolder, Bit Crush, and Digital Clip — each with a distinct harmonic character.",
+        hint: "More than you'd expect — think of all the flavours of distortion.",
       },
       {
         q: "Max bands?",
@@ -3788,12 +3788,12 @@ const w8: Mission[] = [
     sim: { type: "push3" },
     quiz: [
       {
-        q: "Push 3 Standalone runs…",
-        options: ["Live's engine on-device", "A separate DAW"],
+        q: "Push 3 Standalone connects to a computer via…",
+        options: ["USB-C or Wi-Fi", "Bluetooth only", "Audio cable only", "HDMI"],
         answer: 0,
         explain:
-          "Push 3 Standalone contains Live's complete audio engine — record, produce, perform without a laptop on stage or in the field.",
-        hint: "Standalone = no dependency on external hardware. What does it not need?",
+          "Push 3 Standalone can connect to your computer via USB-C (it appears as a network drive) or Wi-Fi for project transfer and Live integration.",
+        hint: "Two wireless/wired options — one cable, one wireless.",
       },
       {
         q: "Projects move between Push and Live…",
@@ -3907,12 +3907,12 @@ const w8: Mission[] = [
         hint: "It reads something aloud — what does it read?",
       },
       {
-        q: "Live 12 adds…",
-        options: ["Screen reader support", "Removes keyboard nav"],
+        q: "High-contrast mode in Live 12 helps…",
+        options: ["Users with visual sensitivity", "Reduces CPU load", "Speeds up export", "Adds more colours"],
         answer: 0,
         explain:
-          "Live 12 introduced screen reader support, high-contrast mode, and keyboard navigation improvements for accessibility.",
-        hint: "Which version added accessibility improvements?",
+          "Live 12's high-contrast mode increases visual distinction between UI elements, reducing eye strain and improving readability for users with visual sensitivities.",
+        hint: "More contrast = easier to see differences. Who benefits most?",
       },
       {
         q: "Accessibility is for…",
