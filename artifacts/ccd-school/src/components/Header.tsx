@@ -29,6 +29,8 @@ const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS
 
 const PRIMARY_NAV = [
   { to: "/worlds",    label: "Worlds"   },
+  { to: "/learn",     label: "Paths"    },
+  { to: "/missions",  label: "Missions" },
   { to: "/dashboard", label: "Progress" },
 ] as const;
 
@@ -45,7 +47,6 @@ const MORE_SECTIONS = [
   {
     heading: "REFERENCE",
     links: [
-      { to: "/missions",    label: "All Missions" },
       { to: "/glossary",    label: "Glossary"     },
       { to: "/shortcuts",   label: "Shortcuts"    },
       { to: "/devices",     label: "Devices"      },
@@ -519,7 +520,11 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               { to: "/world/fundamentals", label: "🎵 Fundamentals" },
               { to: "/world/dj",           label: "🎧 DJ World"     },
               { to: "/world/producer",     label: "🎛 Producer"     },
-              { to: "/missions",           label: "All Missions"    },
+            ]},
+            { heading: "Learn", links: [
+              { to: "/learn",    label: "📚 All Paths"    },
+              { to: "/missions", label: "🎯 All Missions" },
+              { to: "/daily",    label: "⚡ Daily Challenge" },
             ]},
             { heading: "Practice", links: [
               { to: "/train",     label: "Ear Training"    },

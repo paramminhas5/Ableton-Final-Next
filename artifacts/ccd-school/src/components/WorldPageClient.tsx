@@ -221,17 +221,27 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
           {/* Back to snake pill */}
           <div className="mt-4 flex items-center gap-3">
-            <Link
-              href={`/world/${world}`}
-              className={`brutal-border px-3 py-1.5 font-mono text-[9px] uppercase brutal-press transition-colors ${
-                world === "dj"
-                  ? "bg-bone/10 text-bone hover:bg-volt/30"
-                  : "bg-ink/10 text-ink hover:bg-acid/60"
-              }`}
-            >
-              🌊 Back to Path View
-            </Link>
-            <span className="font-mono text-[9px] opacity-40 uppercase">Free Mode — all lessons open</span>
+            <div className="flex items-center brutal-border overflow-hidden">
+              {/* Flow — inactive link */}
+              <Link
+                href={`/world/${world}`}
+                className={`px-3 py-1.5 flex items-center gap-1.5 font-display text-xs brutal-press transition-colors ${
+                  world === "dj" ? "bg-bone/10 text-bone hover:bg-volt/30" : "bg-ink/10 text-ink hover:bg-acid/60"
+                }`}
+              >
+                <span>🌊</span>
+                <span>Flow</span>
+              </Link>
+              {/* Browse — active */}
+              <div className={`px-3 py-1.5 flex items-center gap-1.5 font-display text-xs border-l-2 border-current/20 ${
+                world === "dj" ? "bg-volt text-ink" : "bg-ink text-bone"
+              }`}>
+                <span>📋</span>
+                <span>Browse</span>
+                <span className="font-mono text-[8px] opacity-60 ml-0.5">● ON</span>
+              </div>
+            </div>
+            <span className="font-mono text-[9px] opacity-40 uppercase">All lessons open</span>
           </div>
         </div>
       </header>

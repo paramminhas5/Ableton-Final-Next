@@ -1,23 +1,25 @@
 "use client";
 /**
- * DashboardClient — the unified progress hub.
+ * DashboardClient — visual progress hub.
  *
- * Sections:
- *  1. Hero "Next Step" card
- *  2. Today's Stats strip
- *  3. My Worlds — clean 3-card grid (no bg images)
- *  4. Skill Radar
- *  5. Recent Badges
- *  6. Review Queue
- *  7. Beat Coach card
- *  8. Leaderboard peek
+ * Redesigned sections:
+ *  1. Hero header — electric-blue, rank badge, cat, "PROGRESS" heading
+ *  2. Next Lesson card
+ *  3. Stats — 2×2 animated grid (XP, Streak, Missions, Gems)
+ *  4. Rank progress bar
+ *  5. World progress — 3 full-width animated bars with CTA
+ *  6. Skill radar + Recent badges (side by side desktop)
+ *  7. Review queue
+ *  8. Beat Coach + Leaderboard
+ *  9. Footer nudge
  */
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, getLessonStrength } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { useLearnMode } from "@/lib/mode";
-import { rankFor } from "@/lib/ranks";
+import { rankFor, RANKS } from "@/lib/ranks";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
@@ -31,693 +33,395 @@ import SectionReveal from "@/components/SectionReveal";
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
 const BADGE_REGISTRY: Record<string, { name: string; emoji: string; description: string }> = {
-  "first-wave":       { name: "First Wave",       emoji: "🌊", description: "Completed: What Is Sound?" },
-  "dj-initiate":      { name: "DJ Initiate",       emoji: "🎧", description: "Completed: What Is DJing?" },
-  "first-mix":        { name: "First Mix",         emoji: "🎚", description: "Completed: Your First Mix" },
-  "first-boot":       { name: "First Boot",        emoji: "💻", description: "Completed: What Is Live?" },
-  "acoustician":      { name: "Acoustician",       emoji: "🔬", description: "Completed Sound Science chapter" },
-  "timekeeper-trophy":{ name: "Timekeeper",        emoji: "⏱", description: "Completed Rhythm & Time chapter" },
-  "melodist":         { name: "Melodist",          emoji: "🎵", description: "Completed Melody & Pitch chapter" },
-  "harmonist":        { name: "Harmonist",         emoji: "🎼", description: "Completed Harmony & Chords chapter" },
-  "studio-ready":     { name: "Studio Ready",      emoji: "🎛", description: "Completed Music Technology chapter" },
-  "dj-initiate-chapter": { name: "DJ Initiate",   emoji: "🎧", description: "Completed Setup & Culture chapter" },
-  "library-curator":  { name: "Library Curator",   emoji: "📚", description: "Completed The Library chapter" },
-  "blendmaster":      { name: "Blendmaster",       emoji: "🎚", description: "Completed The Mix chapter" },
-  "crowd-reader":     { name: "Crowd Reader",      emoji: "👁", description: "Completed Performance chapter" },
-  "club-ready":       { name: "Club Ready",        emoji: "🕺", description: "Completed DJ Mastery chapter" },
-  "live-initiated":   { name: "Live Initiated",    emoji: "🟢", description: "Completed First Contact chapter" },
-  "sound-sculptor":   { name: "Sound Sculptor",    emoji: "🌀", description: "Completed Sound & MIDI chapter" },
-  "mix-engineer":     { name: "Mix Engineer",      emoji: "🎛", description: "Completed The Mix chapter" },
-  "performance-ready":{ name: "Performance Ready", emoji: "🎤", description: "Completed Performance & Flow chapter" },
-  "live12-expert":    { name: "Live 12 Expert",    emoji: "👑", description: "Completed Advanced chapter" },
-  "synth-architect":  { name: "Synth Architect",   emoji: "⚡", description: "Completed Synthesis chapter" },
+  "first-wave":           { name: "First Wave",       emoji: "🌊", description: "Completed: What Is Sound?" },
+  "dj-initiate":          { name: "DJ Initiate",       emoji: "🎧", description: "Completed: What Is DJing?" },
+  "first-mix":            { name: "First Mix",         emoji: "🎚", description: "Completed: Your First Mix" },
+  "first-boot":           { name: "First Boot",        emoji: "💻", description: "Completed: What Is Live?" },
+  "acoustician":          { name: "Acoustician",       emoji: "🔬", description: "Completed Sound Science" },
+  "timekeeper-trophy":    { name: "Timekeeper",        emoji: "⏱",  description: "Completed Rhythm & Time" },
+  "melodist":             { name: "Melodist",          emoji: "🎵", description: "Completed Melody & Pitch" },
+  "harmonist":            { name: "Harmonist",         emoji: "🎼", description: "Completed Harmony & Chords" },
+  "studio-ready":         { name: "Studio Ready",      emoji: "🎛", description: "Completed Music Technology" },
+  "dj-initiate-chapter":  { name: "DJ Initiate",       emoji: "🎧", description: "Completed Setup & Culture" },
+  "library-curator":      { name: "Library Curator",   emoji: "📚", description: "Completed The Library" },
+  "blendmaster":          { name: "Blendmaster",       emoji: "🎚", description: "Completed The Mix" },
+  "crowd-reader":         { name: "Crowd Reader",      emoji: "👁",  description: "Completed Performance" },
+  "club-ready":           { name: "Club Ready",        emoji: "🕺", description: "Completed DJ Mastery" },
+  "live-initiated":       { name: "Live Initiated",    emoji: "🟢", description: "Completed First Contact" },
+  "sound-sculptor":       { name: "Sound Sculptor",    emoji: "🌀", description: "Completed Sound & MIDI" },
+  "mix-engineer":         { name: "Mix Engineer",      emoji: "🎛", description: "Completed The Mix" },
+  "performance-ready":    { name: "Performance Ready", emoji: "🎤", description: "Completed Performance & Flow" },
+  "live12-expert":        { name: "Live 12 Expert",    emoji: "👑", description: "Completed Advanced" },
+  "synth-architect":      { name: "Synth Architect",   emoji: "⚡", description: "Completed Synthesis" },
 };
-
 function getBadge(slug: string) {
   return BADGE_REGISTRY[slug] ?? { name: slug.replace(/-/g, " "), emoji: "🏅", description: "Achievement unlocked" };
 }
 
-
-// ─── World Config ─────────────────────────────────────────────────────────────
 type WorldKey = "fundamentals" | "dj" | "producer";
-
 const WORLD_CONFIG: Record<WorldKey, {
-  emoji: string;
-  label: string;
-  color: string;
-  headerText: string;
-  bar: string;
-  href: string;
-  pillActive: string;
-  pillPartial: string;
+  emoji: string; label: string; bg: string; textColor: string;
+  bar: string; href: string; catSrc: string;
 }> = {
-  fundamentals: {
-    emoji: "🎵",
-    label: "Fundamentals",
-    color: "bg-acid text-ink",
-    headerText: "text-ink",
-    bar: "bg-ink",
-    href: "/world/fundamentals",
-    pillActive: "bg-ink text-bone",
-    pillPartial: "bg-ink/40 text-ink",
-  },
-  dj: {
-    emoji: "🎧",
-    label: "DJ World",
-    color: "bg-ink text-bone",
-    headerText: "text-bone",
-    bar: "bg-volt",
-    href: "/world/dj",
-    pillActive: "bg-volt text-bone",
-    pillPartial: "bg-volt/40 text-bone",
-  },
-  producer: {
-    emoji: "🎛",
-    label: "Producer",
-    color: "bg-sun text-ink",
-    headerText: "text-ink",
-    bar: "bg-ink",
-    href: "/world/producer",
-    pillActive: "bg-ink text-bone",
-    pillPartial: "bg-ink/40 text-ink",
-  },
+  fundamentals: { emoji: "🎵", label: "Fundamentals", bg: "bg-acid",     textColor: "text-ink",  bar: "bg-ink",  href: "/world/fundamentals", catSrc: "/cats/cat-handstand.png" },
+  dj:           { emoji: "🎧", label: "DJ World",     bg: "bg-ink",      textColor: "text-bone", bar: "bg-volt", href: "/world/dj",           catSrc: "/cats/cat-dj.png" },
+  producer:     { emoji: "🎛", label: "Producer",     bg: "bg-sun",      textColor: "text-ink",  bar: "bg-ink",  href: "/world/producer",     catSrc: "/cats/cat-dj-hero.png" },
 };
 
 // ─── Skill Radar ──────────────────────────────────────────────────────────────
 function SkillRadar({ skills }: { skills: { label: string; pct: number }[] }) {
-  const cx = 120, cy = 120, r = 85;
+  const cx = 120, cy = 120, r = 82;
   const n = skills.length;
-  // P2 #26: zero-state — check if all skills are 0
   const allZero = skills.every(s => s.pct === 0);
-
   const point = (i: number, scale: number) => {
     const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-    return {
-      x: cx + Math.cos(angle) * r * scale,
-      y: cy + Math.sin(angle) * r * scale,
-    };
+    return { x: cx + Math.cos(angle) * r * scale, y: cy + Math.sin(angle) * r * scale };
   };
-
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
-
-  // P2 #26: show aspirational ghost shape when all zero, real shape otherwise
-  const polyPoints = skills
-    .map((s, i) => {
-      // If all zero, show a small minimum shape so it's visible
-      const scale = allZero ? 0.08 : Math.max(0.04, s.pct / 100);
-      const p = point(i, scale);
-      return `${p.x},${p.y}`;
-    })
-    .join(" ");
-
-  // Aspirational (100%) ghost points shown when user has < 10% overall
-  const ghostPoints = allZero ? skills.map((_, i) => {
-    const p = point(i, 1.0);
+  const polyPoints = skills.map((s, i) => {
+    const scale = allZero ? 0.07 : Math.max(0.04, s.pct / 100);
+    const p = point(i, scale);
     return `${p.x},${p.y}`;
-  }).join(" ") : null;
+  }).join(" ");
+  const ghostPoints = allZero ? skills.map((_, i) => { const p = point(i, 1.0); return `${p.x},${p.y}`; }).join(" ") : null;
 
   return (
-    <svg viewBox="0 0 240 240" className="w-full max-w-[280px]" aria-label="Skill radar chart">
-      {/* Grid polygons */}
-      {gridLevels.map((scale) => {
-        const pts = skills
-          .map((_, i) => {
-            const p = point(i, scale);
-            return `${p.x},${p.y}`;
-          })
-          .join(" ");
-        return (
-          <polygon
-            key={scale}
-            points={pts}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            opacity="0.15"
-          />
-        );
+    <svg viewBox="0 0 240 240" className="w-full max-w-[260px]" aria-label="Skill radar chart">
+      {gridLevels.map(scale => {
+        const pts = skills.map((_, i) => { const p = point(i, scale); return `${p.x},${p.y}`; }).join(" ");
+        return <polygon key={scale} points={pts} fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.12" />;
       })}
-
-      {/* Axis lines */}
       {skills.map((_, i) => {
         const p = point(i, 1);
-        return (
-          <line
-            key={i}
-            x1={cx}
-            y1={cy}
-            x2={p.x}
-            y2={p.y}
-            stroke="currentColor"
-            strokeWidth="0.5"
-            opacity="0.2"
-          />
-        );
+        return <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="currentColor" strokeWidth="0.5" opacity="0.18" />;
       })}
-
-      {/* P2 #26: aspirational ghost shape when all zero */}
-      {ghostPoints && (
-        <polygon
-          points={ghostPoints}
-          fill="currentColor"
-          opacity="0.04"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeDasharray="4 3"
-        />
-      )}
-
-      {/* Filled area */}
-      <polygon
-        points={polyPoints}
-        fill="currentColor"
-        opacity={allZero ? 0.06 : 0.15}
-        stroke="currentColor"
-        strokeWidth={allZero ? 1 : 2}
-        strokeDasharray={allZero ? "3 2" : undefined}
-      />
-
-      {/* P2 #26: zero state center label */}
+      {ghostPoints && <polygon points={ghostPoints} fill="currentColor" opacity="0.04" stroke="currentColor" strokeWidth="1" strokeDasharray="4 3" />}
+      <polygon points={polyPoints} fill="currentColor" opacity={allZero ? 0.06 : 0.18} stroke="currentColor" strokeWidth={allZero ? 1 : 2} strokeDasharray={allZero ? "3 2" : undefined} />
       {allZero && (
         <>
-          <text x={cx} y={cy - 8} textAnchor="middle" dominantBaseline="middle"
-            fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">
-            COMPLETE LESSONS
-          </text>
-          <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="middle"
-            fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">
-            TO FILL THIS
-          </text>
+          <text x={cx} y={cy - 8} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">COMPLETE LESSONS</text>
+          <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">TO FILL THIS</text>
         </>
       )}
-
-      {/* Labels */}
       {skills.map((s, i) => {
-        const p = point(i, 1.28);
-        return (
-          <text
-            key={i}
-            x={p.x}
-            y={p.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            className="font-mono"
-            fontSize="7.5"
-            fill="currentColor"
-            opacity="0.7"
-          >
-            {s.label}
-          </text>
-        );
-      })}
-
-      {/* Pct labels on filled area */}
-      {!allZero && skills.map((s, i) => {
-        const p = point(i, Math.max(0.1, s.pct / 100) + 0.1);
-        if (s.pct === 0) return null;
-        return (
-          <text
-            key={`pct-${i}`}
-            x={p.x}
-            y={p.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="6"
-            fill="currentColor"
-            opacity="0.9"
-            fontWeight="bold"
-          >
-            {s.pct}%
-          </text>
-        );
+        const p = point(i, 1.3);
+        return <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="7.5" fill="currentColor" opacity="0.7">{s.label}</text>;
       })}
     </svg>
   );
 }
 
-
-// ─── Stat Card ────────────────────────────────────────────────────────────────
-function StatCard({
-  label,
-  value,
-  sub,
-  color,
-  href,
-}: {
-  label: string;
-  value: string;
-  sub: string;
-  color: string;
-  href?: string;
-}) {
-  // Map card background to top border color
-  const topBorder =
-    color.includes("bg-volt") ? "border-t-4 border-t-[#7B2FFF]"
-    : color.includes("bg-acid") ? "border-t-4 border-t-[#C6FF00]"
-    : color.includes("bg-hot") ? "border-t-4 border-t-[#FF2D2D]"
-    : color.includes("bg-sun") ? "border-t-4 border-t-[#FFB800]"
-    : "";
-  const inner = (
-    <div className={`brutal-border ${color} ${topBorder} p-4 flex flex-col gap-1 min-w-[120px] h-full`}>
-      <div className="font-mono text-[9px] uppercase opacity-50 leading-none">{label}</div>
-      <div className="font-display text-2xl leading-tight">{value}</div>
-      <div className="font-mono text-[9px] opacity-60 leading-tight">{sub}</div>
-    </div>
-  );
-  if (href) {
-    return (
-      <Link href={href} className="brutal-press hover:opacity-90 transition-opacity shrink-0">
-        {inner}
-      </Link>
-    );
-  }
-  return <div className="shrink-0">{inner}</div>;
-}
-
 // ─── Strength Bar ─────────────────────────────────────────────────────────────
 function StrengthBar({ pct }: { pct: number }) {
-  const color =
-    pct >= 70 ? "bg-acid" : pct >= 40 ? "bg-sun" : "bg-hot";
+  const color = pct >= 70 ? "bg-acid" : pct >= 40 ? "bg-sun" : "bg-hot";
   return (
-    <div className="h-1 brutal-border bg-bone/20 overflow-hidden w-16 shrink-0">
-      <div
-        className={`h-full ${color} transition-all duration-500`}
-        style={{ width: `${pct}%` }}
-      />
+    <div className="h-1 brutal-border bg-bone/20 overflow-hidden w-14 shrink-0">
+      <div className={`h-full ${color} transition-all duration-500`} style={{ width: `${pct}%` }} />
     </div>
   );
 }
 
-// ─── Skeleton ────────────────────────────────────────────────────────────────
 function Skeleton({ className }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse bg-ink/10 ${className ?? ""}`}
-    />
-  );
+  return <div className={`animate-pulse bg-ink/10 ${className ?? ""}`} />;
 }
-
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export function DashboardClient() {
-  const {
-    progress,
-    missionsNeedingReview,
-    dailyGoalPct,
-    dailyGoalDone,
-    heartRefillSeconds,
-  } = useProgress();
+  const { progress, missionsNeedingReview, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
   const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
-  const { current: rank, next: nextRank } = rankFor(progress.xp);
+  const { current: rank, next: nextRank, progress: rankPct } = rankFor(progress.xp);
 
-  const allMissions = useMemo(
-    () => [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS],
-    []
-  );
-  const totalDone = allMissions.filter((m) => !!completed[m.slug]).length;
+  const allMissions = useMemo(() => [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS], []);
+  const totalDone = allMissions.filter(m => !!completed[m.slug]).length;
   const totalMissions = allMissions.length;
 
-  // ── Leaderboard state ──────────────────────────────────────────────────────
-  const [leaders, setLeaders] = useState<
-    { name: string; xp: number; rank: number; isCurrentUser?: boolean }[]
-  >([]);
+  const [leaders, setLeaders] = useState<{ name: string; xp: number; rank: number; isCurrentUser?: boolean }[]>([]);
   const [loadingLeaders, setLoadingLeaders] = useState(true);
   const [currentUserRank, setCurrentUserRank] = useState<number | null>(null);
   const [coachOpen, setCoachOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/leaderboard")
-      .then((r) => r.json())
-      .then((d) => {
-        const entries: { name: string; xp: number; rank: number; isCurrentUser?: boolean }[] =
-          (d.entries ?? []).slice(0, 3).map(
-            (e: { name?: string; xp?: number; rank?: number; isCurrentUser?: boolean }) => ({
-              name: e.name ?? "Anonymous",
-              xp: e.xp ?? 0,
-              rank: e.rank ?? 0,
-              isCurrentUser: e.isCurrentUser ?? false,
-            })
-          );
-        setLeaders(entries);
+      .then(r => r.json())
+      .then(d => {
+        setLeaders((d.entries ?? []).slice(0, 3).map((e: { name?: string; xp?: number; rank?: number; isCurrentUser?: boolean }) => ({
+          name: e.name ?? "Anonymous", xp: e.xp ?? 0, rank: e.rank ?? 0, isCurrentUser: e.isCurrentUser ?? false,
+        })));
         setCurrentUserRank(d.currentUserRank ?? null);
         setLoadingLeaders(false);
       })
       .catch(() => setLoadingLeaders(false));
   }, []);
 
-  // ── Hero: find next mission ────────────────────────────────────────────────
+  // Next mission
   const { continueSlug, lastCtx } = useMemo(() => {
-    const allDoneSlugs = Object.entries(completed)
-      .filter(([, v]) => v)
-      .sort(([, a], [, b]) => (b?.at ?? 0) - (a?.at ?? 0))
-      .map(([slug]) => slug);
+    const allDoneSlugs = Object.entries(completed).filter(([, v]) => v).sort(([, a], [, b]) => (b?.at ?? 0) - (a?.at ?? 0)).map(([slug]) => slug);
     const lastSlug = allDoneSlugs[0];
     const ctx = lastSlug ? getMissionContext(lastSlug) : null;
-    const nextSlug = ctx?.path
-      ? (() => {
-          const idx = ctx.path.missionSlugs.indexOf(lastSlug!);
-          const ns = ctx.path.missionSlugs[idx + 1];
-          return ns && !completed[ns] ? ns : null;
-        })()
-      : null;
-    const slug = nextSlug ?? (totalDone === 0 ? "what-is-sound" : null);
-    return { continueSlug: slug, lastCtx: ctx };
+    const nextSlug = ctx?.path ? (() => {
+      const idx = ctx.path.missionSlugs.indexOf(lastSlug!);
+      const ns = ctx.path.missionSlugs[idx + 1];
+      return ns && !completed[ns] ? ns : null;
+    })() : null;
+    return { continueSlug: nextSlug ?? (totalDone === 0 ? "what-is-sound" : null), lastCtx: ctx };
   }, [completed, totalDone]);
 
   const continueTitle = useMemo(() => {
     if (!continueSlug) return null;
-    const m = allMissions.find((m) => m.slug === continueSlug);
-    return m?.title ?? continueSlug.replace(/-/g, " ");
+    return allMissions.find(m => m.slug === continueSlug)?.title ?? continueSlug.replace(/-/g, " ");
+  }, [continueSlug, allMissions]);
+
+  const continueTagline = useMemo(() => {
+    if (!continueSlug) return null;
+    return allMissions.find(m => m.slug === continueSlug)?.tagline ?? null;
   }, [continueSlug, allMissions]);
 
   const continueXp = useMemo(() => {
     if (!continueSlug) return 0;
-    return allMissions.find((m) => m.slug === continueSlug)?.xp ?? 0;
+    return allMissions.find(m => m.slug === continueSlug)?.xp ?? 0;
   }, [continueSlug, allMissions]);
 
-  // P2 #20: tagline and world-path label for rich preview card
-  const continueTagline = useMemo(() => {
-    if (!continueSlug) return null;
-    return allMissions.find((m) => m.slug === continueSlug)?.tagline ?? null;
-  }, [continueSlug, allMissions]);
-
-
-  // ── World stats ───────────────────────────────────────────────────────────
+  // World stats
   const worldStats = useMemo(() => {
     const compute = (world: WorldKey) => {
       const paths = pathsByWorld(world);
-      const chapters = chaptersByWorld(world);
-      const slugs = paths.flatMap((p) => p.missionSlugs);
-      const done = slugs.filter((s) => !!completed[s]).length;
-      const chapterData = chapters.map((ch) => {
-        const chPaths = paths.filter((p) => p.chapter === ch.slug);
-        const chSlugs = chPaths.flatMap((p) => p.missionSlugs);
-        const chDone = chSlugs.filter((s) => !!completed[s]).length;
-        return {
-          slug: ch.slug,
-          number: ch.number,
-          title: ch.title,
-          done: chDone,
-          total: chSlugs.length,
-          pct: chSlugs.length ? Math.round((chDone / chSlugs.length) * 100) : 0,
-        };
-      });
-      return {
-        done,
-        total: slugs.length,
-        pct: slugs.length ? Math.round((done / slugs.length) * 100) : 0,
-        chapters: chapterData,
-      };
+      const slugs = paths.flatMap(p => p.missionSlugs);
+      const done = slugs.filter(s => !!completed[s]).length;
+      return { done, total: slugs.length, pct: slugs.length ? Math.round((done / slugs.length) * 100) : 0 };
     };
-    return {
-      fundamentals: compute("fundamentals"),
-      dj: compute("dj"),
-      producer: compute("producer"),
-    };
+    return { fundamentals: compute("fundamentals"), dj: compute("dj"), producer: compute("producer") };
   }, [completed]);
 
-  // ── Skill Radar — shows the world the user is most active in ─────────────
-  // Priority: world with most completed missions → fallback to fundamentals
+  // Radar
   const radarWorld = useMemo((): WorldKey => {
-    const counts = (["fundamentals", "dj", "producer"] as WorldKey[]).map((w) => {
-      const slugs = pathsByWorld(w).flatMap((p) => p.missionSlugs);
-      return { world: w, done: slugs.filter((s) => !!completed[s]).length };
-    });
-    const best = counts.reduce((a, b) => (b.done > a.done ? b : a), counts[0]);
+    const counts = (["fundamentals", "dj", "producer"] as WorldKey[]).map(w => ({
+      world: w, done: pathsByWorld(w).flatMap(p => p.missionSlugs).filter(s => !!completed[s]).length,
+    }));
+    const best = counts.reduce((a, b) => b.done > a.done ? b : a, counts[0]);
     return best.done > 0 ? best.world : "fundamentals";
   }, [completed]);
 
-  // Short label map per world
   const RADAR_LABELS: Record<string, Record<string, string>> = {
-    fundamentals: {
-      "Sound Science": "Sound", "Rhythm & Time": "Rhythm",
-      "Melody & Pitch": "Melody", "Harmony & Chords": "Harmony", "Music Technology": "Tech",
-    },
-    dj: {
-      "Setup & Culture": "Setup", "The Library": "Library",
-      "The Mix": "The Mix", "DJ Performance": "Perform", "DJ Mastery": "Mastery",
-    },
-    producer: {
-      "First Contact": "Contact", "Sound & MIDI": "S&MIDI",
-      "The Mix": "Mix", "Performance & Flow": "Perform", "Advanced Producer": "Advanced",
-    },
+    fundamentals: { "Sound Science": "Sound", "Rhythm & Time": "Rhythm", "Melody & Pitch": "Melody", "Harmony & Chords": "Harmony", "Music Technology": "Tech" },
+    dj: { "Setup & Culture": "Setup", "The Library": "Library", "The Mix": "Mix", "DJ Performance": "Perform", "DJ Mastery": "Mastery" },
+    producer: { "First Contact": "Contact", "Sound & MIDI": "S&MIDI", "The Mix": "Mix", "Performance & Flow": "Perform", "Advanced Producer": "Advanced" },
   };
 
   const radarSkills = useMemo(() => {
     const chapters = chaptersByWorld(radarWorld);
     const paths = pathsByWorld(radarWorld);
     const labelMap = RADAR_LABELS[radarWorld] ?? {};
-    return chapters.map((ch) => {
-      const chPaths = paths.filter((p) => p.chapter === ch.slug);
-      const slugs = chPaths.flatMap((p) => p.missionSlugs);
-      const done = slugs.filter((s) => !!completed[s]).length;
+    return chapters.map(ch => {
+      const slugs = paths.filter(p => p.chapter === ch.slug).flatMap(p => p.missionSlugs);
+      const done = slugs.filter(s => !!completed[s]).length;
       const pct = slugs.length ? Math.round((done / slugs.length) * 100) : 0;
-      const shortLabel = labelMap[ch.title] ?? ch.title.split(" ")[0];
-      return { label: shortLabel, pct };
+      return { label: labelMap[ch.title] ?? ch.title.split(" ")[0], pct };
     });
   }, [completed, radarWorld]);
 
-  // ── Stats strip ───────────────────────────────────────────────────────────
-  const stats = [
-    {
-      label: "Streak",
-      value: `🔥 ${progress.streakDays}${progress.streakShield ? "🛡" : ""}`,
-      sub: progress.streakDays === 1 ? "1 day" : `${progress.streakDays} days`,
-      color: "bg-volt text-bone",
-      href: undefined,
-    },
-    {
-      label: "Daily XP",
-      value: `${progress.dailyXp}/${DAILY_GOAL_XP}`,
-      sub: dailyGoalDone ? "✓ Goal done!" : `${DAILY_GOAL_XP - progress.dailyXp} to go`,
-      color: dailyGoalDone ? "bg-acid text-ink" : "bg-bone text-ink",
-      href: undefined,
-    },
-    {
-      label: "Hearts",
-      value: `${progress.hearts}/${MAX_HEARTS}`,
-      sub:
-        heartRefillSeconds > 0
-          ? `+1 in ${Math.ceil(heartRefillSeconds / 60)}m`
-          : "Full",
-      color: "bg-bone text-ink",
-      href: undefined,
-    },
-    {
-      label: "Gems",
-      value: `💎 ${progress.gems}`,
-      sub: "visit shop →",
-      color: "bg-bone text-ink",
-      href: "/shop",
-    },
-    {
-      label: "Rank",
-      value: `${rank.emoji} ${rank.name}`,
-      sub: nextRank
-        ? `${nextRank.minXp - progress.xp} XP to ${nextRank.name}`
-        : "Max rank!",
-      color: "bg-bone text-ink",
-      href: "/profile",
-    },
-  ];
+  // Review
+  const reviewData = useMemo(() => missionsNeedingReview.slice(0, 8).map(slug => {
+    const m = allMissions.find(m => m.slug === slug);
+    const ls = progress.lessonStrengths[slug];
+    return { slug, title: m?.title ?? slug.replace(/-/g, " "), pct: ls ? Math.round(getLessonStrength(ls) * 100) : 0 };
+  }), [missionsNeedingReview, allMissions, progress.lessonStrengths]);
 
+  const recentBadges = useMemo(() => [...progress.badges].reverse().slice(0, 3), [progress.badges]);
 
-  // ── Review queue with strength data ──────────────────────────────────────
-  const reviewData = useMemo(() => {
-    return missionsNeedingReview.slice(0, 8).map((slug) => {
-      const m = allMissions.find((m) => m.slug === slug);
-      const ls = progress.lessonStrengths[slug];
-      const pct = ls ? Math.round(getLessonStrength(ls) * 100) : 0;
-      return { slug, title: m?.title ?? slug.replace(/-/g, " "), pct };
-    });
-  }, [missionsNeedingReview, allMissions, progress.lessonStrengths]);
-
-  // ── Recent badges ─────────────────────────────────────────────────────────
-  const recentBadges = useMemo(() => {
-    return [...progress.badges].reverse().slice(0, 3);
-  }, [progress.badges]);
-
-  const modeLabel = learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode";
-
-  // Fix #5: hydration guard — progress reads from localStorage, which is
-  // unavailable during SSR. Show skeleton for the first render tick.
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => { setHydrated(true); }, []);
 
-  // Fix #6: scroll-dot tracking for the stats strip on mobile
-  const statsRef = useRef<HTMLDivElement>(null);
-  const [activeDot, setActiveDot] = useState(0);
-  useEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    const onScroll = () => {
-      const cardW = el.scrollWidth / stats.length;
-      setActiveDot(Math.round(el.scrollLeft / cardW));
-    };
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stats.length]);
+  const modeLabel = learnMode === "flow" ? "🌊 Flow" : "🔓 Free";
 
   return (
     <main className="min-h-screen bg-bone pb-24">
 
-      {/* ══ SECTION 1: Hero Next Step ══════════════════════════════════════ */}
-      <section className="brutal-border border-x-0 border-t-0 bg-electric-blue text-bone relative overflow-hidden">
-        <div className="absolute bottom-0 right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none wiggle z-10" aria-hidden
-          style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}>
-          <Image src="/cats/cat-dj-hero.png" alt="" width={128} height={128} className="w-full h-full object-contain" />
+      {/* ══ HERO HEADER ════════════════════════════════════════════════════ */}
+      <header className="border-b-4 border-ink bg-electric-blue text-bone relative overflow-hidden">
+        {/* Cat decoration */}
+        <div
+          className="absolute right-4 bottom-0 w-28 h-28 md:w-36 md:h-36 pointer-events-none animate-bounce-bob"
+          style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}
+          aria-hidden
+        >
+          <Image src="/cats/cat-dj-hero.png" alt="" width={144} height={144} className="w-full h-full object-contain" />
         </div>
-        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="font-mono text-xs uppercase opacity-60">// YOUR NEXT LESSON</div>
-            <span className="font-mono text-[9px] brutal-border px-2 py-0.5 opacity-60">{modeLabel}</span>
+        <div className="max-w-4xl mx-auto px-4 py-8 md:py-10 relative z-10">
+          <div className="font-mono text-xs uppercase opacity-60 mb-2">// YOUR PROGRESS</div>
+          <h1 className="font-display text-5xl md:text-7xl leading-none mb-4" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
+            PROGRESS
+          </h1>
+          {/* Rank badge */}
+          <div className="inline-flex items-center gap-3 brutal-border bg-ink text-bone px-4 py-2 chunk-shadow mb-3">
+            <span className="text-2xl">{rank.emoji}</span>
+            <div>
+              <div className="font-display text-xl">{rank.name}</div>
+              <div className="font-mono text-[10px] uppercase opacity-50">{rank.tagline}</div>
+            </div>
+            <div className="font-mono text-[9px] brutal-border bg-bone/10 px-2 py-0.5 ml-2 uppercase opacity-70">{modeLabel}</div>
           </div>
+          {user && (
+            <div className="flex items-center gap-3 mt-1">
+              <div className="font-mono text-sm opacity-60">{user.email}</div>
+              <a href={`/u/${user.name ?? user.email?.split("@")[0] ?? "me"}`}
+                className="brutal-border bg-acid text-ink px-3 py-1 font-display text-xs hover:bg-sun transition-colors">
+                Public Profile →
+              </a>
+            </div>
+          )}
+        </div>
+      </header>
 
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
+
+        {/* ══ NEXT LESSON ════════════════════════════════════════════════ */}
+        <SectionReveal>
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// NEXT LESSON</div>
           {!hydrated ? (
-            <div className="brutal-border overflow-hidden animate-pulse">
-              <div className="flex flex-col md:flex-row items-stretch">
-                <div className="flex-1 p-5 md:p-7 space-y-3">
-                  <div className="h-3 w-32 bg-bone/20 rounded" />
-                  <div className="h-10 w-3/4 bg-bone/20 rounded" />
-                  <div className="h-6 w-24 bg-bone/20 rounded" />
-                </div>
-                <div className="bg-bone/10 flex items-center justify-center px-8 py-6 min-w-[100px]">
-                  <div className="w-12 h-12 rounded-full bg-bone/20" />
-                </div>
-              </div>
+            <div className="brutal-border animate-pulse p-5 space-y-3">
+              <div className="h-3 w-32 bg-ink/10 rounded" /><div className="h-8 w-2/3 bg-ink/10 rounded" /><div className="h-5 w-24 bg-ink/10 rounded" />
             </div>
           ) : continueSlug ? (
-            <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid">
-              <div className="flex-1 p-5 md:p-7">
-                <div className="font-mono text-[9px] uppercase opacity-50 mb-2">
-                  {lastCtx?.worldLabel ?? "Fundamentals"}
-                  {lastCtx?.chapter ? ` › ${lastCtx.chapter.title}` : ""}
-                  {lastCtx?.path ? ` › ${lastCtx.path.title}` : ""}
+            <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid chunk-shadow">
+              <div className="flex-1 p-5">
+                <div className="font-mono text-[9px] uppercase opacity-50 mb-1">
+                  {lastCtx?.worldLabel ?? "Fundamentals"}{lastCtx?.chapter ? ` › ${lastCtx.chapter.title}` : ""}{lastCtx?.path ? ` › ${lastCtx.path.title}` : ""}
                 </div>
-                <div className="font-display text-3xl md:text-5xl leading-tight mb-1">{continueTitle}</div>
-                {continueTagline && (
-                  <div className="font-sans text-sm opacity-60 mb-3 leading-snug">{continueTagline}</div>
-                )}
+                <div className="font-display text-3xl md:text-4xl leading-tight mb-1">{continueTitle}</div>
+                {continueTagline && <div className="font-sans text-sm opacity-60 mb-3 leading-snug">{continueTagline}</div>}
                 <div className="flex items-center gap-3 flex-wrap">
-                  {continueXp > 0 && (
-                    <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">+{continueXp} XP</span>
-                  )}
+                  {continueXp > 0 && <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">+{continueXp} XP</span>}
                   <span className="font-mono text-[9px] opacity-50">{totalDone}/{totalMissions} complete</span>
                 </div>
               </div>
               <Link href={`/learn/${continueSlug}`}
-                className="brutal-border border-y-0 border-r-0 md:border-l-4 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press chunk-shadow hover:bg-sun transition-colors min-w-[100px] ccd-btn-hover"
+                className="brutal-border border-y-0 border-r-0 md:border-l-4 bg-acid text-ink flex items-center justify-center px-8 py-5 md:py-0 brutal-press chunk-shadow hover:bg-sun transition-colors min-w-[80px] ccd-btn-hover"
                 aria-label="Start lesson">
-                <span className="font-display text-5xl md:text-6xl">▶</span>
+                <span className="font-display text-5xl">▶</span>
               </Link>
             </div>
           ) : (
             <div className="brutal-border bg-volt text-bone p-6">
-              <div className="font-display text-2xl md:text-3xl">🎉 ALL CAUGHT UP</div>
+              <div className="font-display text-2xl">🎉 ALL CAUGHT UP</div>
               <div className="font-mono text-sm opacity-70 mt-1">Check your review queue below or explore another world.</div>
             </div>
-          )}
-        </div>
-      </section>
-
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
-
-        {/* ══ SECTION 2: Stats Grid ════════════════════════════════════════ */}
-        <SectionReveal>
-        <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY</div>
-          {!hydrated ? (
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="brutal-border p-4 space-y-2 animate-pulse">
-                  <div className="h-2 w-12 bg-ink/10 rounded" />
-                  <div className="h-7 w-16 bg-ink/10 rounded" />
-                  <div className="h-2 w-14 bg-ink/10 rounded" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <div
-                ref={statsRef}
-                className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:overflow-visible scrollbar-hide snap-x snap-mandatory"
-              >
-                {stats.map((s) => (
-                  <div key={s.label} className="snap-start shrink-0 md:shrink w-[calc(33vw-1rem)] md:w-auto min-w-[120px]">
-                    <StatCard {...s} />
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-center gap-1.5 mt-2 md:hidden" aria-hidden>
-                {stats.map((_, i) => (
-                  <button key={i}
-                    onClick={() => {
-                      const el = statsRef.current;
-                      if (!el) return;
-                      el.scrollTo({ left: (el.scrollWidth / stats.length) * i, behavior: "smooth" });
-                    }}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${activeDot === i ? "bg-ink scale-125" : "bg-ink/25"}`}
-                  />
-                ))}
-              </div>
-            </>
           )}
         </section>
         </SectionReveal>
 
-        {/* ══ SECTION 3: My Worlds ════════════════════════════════════════ */}
-        <SectionReveal delay={0.05}>
+        {/* ══ STATS 2×2 GRID ═════════════════════════════════════════════ */}
+        <SectionReveal delay={0.04}>
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY</div>
+          {!hydrated ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[...Array(4)].map((_, i) => <div key={i} className="brutal-border p-5 space-y-2 animate-pulse"><div className="h-10 bg-ink/10 rounded" /><div className="h-3 w-16 bg-ink/10 rounded" /></div>)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {/* XP */}
+              <div className="brutal-border bg-acid text-ink p-5 chunk-shadow">
+                <motion.div className="font-display text-4xl md:text-5xl tabular-nums leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                  {progress.xp.toLocaleString()}
+                </motion.div>
+                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Total XP</div>
+              </div>
+              {/* Streak */}
+              <div className="brutal-border bg-hot text-bone p-5 chunk-shadow">
+                <motion.div className="font-display text-4xl md:text-5xl leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}>
+                  🔥{progress.streakDays}{progress.streakShield && <span className="text-2xl ml-1">🛡</span>}
+                </motion.div>
+                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Day Streak</div>
+              </div>
+              {/* Missions */}
+              <div className="brutal-border bg-bone p-5 chunk-shadow">
+                <motion.div className="font-display text-4xl md:text-5xl tabular-nums leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.10 }}>
+                  {totalDone}
+                </motion.div>
+                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Missions Done</div>
+              </div>
+              {/* Gems */}
+              <div className="brutal-border bg-electric-blue text-bone p-5 chunk-shadow">
+                <motion.div className="font-display text-4xl md:text-5xl leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+                  💎{progress.gems}
+                </motion.div>
+                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Gems</div>
+              </div>
+            </div>
+          )}
+        </section>
+        </SectionReveal>
+
+        {/* ══ RANK PROGRESS ══════════════════════════════════════════════ */}
+        {hydrated && nextRank && (
+          <SectionReveal delay={0.06}>
+          <section>
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// RANK PROGRESS</div>
+            <div className="brutal-border p-4 chunk-shadow">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{rank.emoji}</span>
+                  <div className="font-display text-base">{rank.name}</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="font-display text-base">{nextRank.emoji} {nextRank.name}</div>
+                </div>
+              </div>
+              <div className="h-4 brutal-border bg-ink/10 overflow-hidden">
+                <motion.div
+                  className="h-full bg-acid"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.round(rankPct * 100)}%` }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                />
+              </div>
+              <div className="flex items-center justify-between mt-1.5">
+                <div className="font-mono text-[10px] uppercase opacity-50">{progress.xp} XP</div>
+                <div className="font-mono text-[10px] uppercase opacity-50">{nextRank.minXp - progress.xp} XP to go</div>
+              </div>
+            </div>
+          </section>
+          </SectionReveal>
+        )}
+
+        {/* ══ WORLD PROGRESS ═════════════════════════════════════════════ */}
+        <SectionReveal delay={0.08}>
         <section>
           <div className="flex items-center justify-between mb-3">
-            <div className="font-mono text-[10px] uppercase opacity-40">// MY WORLDS</div>
+            <div className="font-mono text-[10px] uppercase opacity-40">// WORLD PROGRESS</div>
             <Link href="/worlds" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL WORLDS →</Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {(["fundamentals", "dj", "producer"] as WorldKey[]).map((world) => {
+          <div className="space-y-3">
+            {(["fundamentals", "dj", "producer"] as WorldKey[]).map((world, i) => {
               const cfg = WORLD_CONFIG[world];
               const ws = worldStats[world];
               return (
                 <Link key={world} href={cfg.href}
-                  className={`brutal-border ${cfg.color} flex flex-col overflow-hidden brutal-press hover:opacity-90 transition-opacity chunk-shadow`}>
-                  {/* Top accent bar */}
-                  <div className={`h-1.5 ${cfg.bar}`} />
-                  <div className="p-4 flex-1 flex flex-col gap-3">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <div className="font-display text-2xl flex items-center gap-2">
-                        <span>{cfg.emoji}</span>
-                        <span className="text-base">{cfg.label}</span>
-                      </div>
-                      <div className={`font-display text-3xl tabular-nums ${ws.pct === 100 ? "text-current" : "opacity-80"}`}>
-                        {ws.pct}%
-                      </div>
-                    </div>
-                    {/* Progress bar */}
-                    <div className="h-2 brutal-border bg-bone/25 overflow-hidden">
-                      <div className={`h-full ${cfg.bar} transition-all duration-700`} style={{ width: `${ws.pct}%` }} />
-                    </div>
-                    {/* Missions count */}
-                    <div className="font-mono text-[9px] uppercase opacity-60">{ws.done}/{ws.total} missions</div>
-                    {/* Chapter dots */}
-                    <div className="flex gap-1 flex-wrap mt-auto">
-                      {ws.chapters.map((ch) => (
-                        <div key={ch.slug}
-                          className={`w-2 h-2 rounded-sm brutal-border transition-all ${
-                            ch.pct === 100 ? cfg.pillActive :
-                            ch.pct > 0 ? cfg.pillPartial :
-                            "bg-bone/15"
-                          }`}
-                          title={`${ch.title} — ${ch.pct}%`}
-                        />
-                      ))}
-                    </div>
+                  className={`brutal-border ${cfg.bg} ${cfg.textColor} p-4 flex items-center gap-4 brutal-press hover:opacity-90 transition-opacity chunk-shadow relative overflow-hidden`}>
+                  {/* Cat */}
+                  <div className="absolute right-3 bottom-0 w-14 h-14 pointer-events-none wiggle opacity-50" aria-hidden>
+                    <Image src={cfg.catSrc} alt="" width={56} height={56} className="w-full h-full object-contain" />
                   </div>
-                  {/* CTA footer */}
-                  <div className="border-t-2 border-current/20 px-4 py-2.5 font-display text-xs text-right opacity-70">
-                    {ws.done === 0 ? "Start →" : ws.pct === 100 ? "Completed ✓" : "Continue →"}
+                  <div className="text-3xl shrink-0">{cfg.emoji}</div>
+                  <div className="flex-1 min-w-0 relative z-10">
+                    <div className="flex items-baseline justify-between mb-1.5">
+                      <div className="font-display text-lg">{cfg.label}</div>
+                      <div className="font-display text-2xl tabular-nums">{ws.pct}%</div>
+                    </div>
+                    <div className="h-2.5 brutal-border bg-bone/25 overflow-hidden">
+                      <motion.div
+                        className={`h-full ${cfg.bar}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${ws.pct}%` }}
+                        transition={{ duration: 1.2, ease: "easeOut", delay: i * 0.15 }}
+                      />
+                    </div>
+                    <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
+                      {ws.done}/{ws.total} missions · {ws.done === 0 ? "Start →" : ws.pct === 100 ? "Completed ✓" : "Continue →"}
+                    </div>
                   </div>
                 </Link>
               );
@@ -726,79 +430,73 @@ export function DashboardClient() {
         </section>
         </SectionReveal>
 
-        {/* ══ SECTION 4: Skill Radar ══════════════════════════════════════ */}
-        <SectionReveal delay={0.08}>
-        <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// SKILL COVERAGE</div>
-          <div className="brutal-border p-5 flex flex-col md:flex-row items-center gap-6">
-            <div className="flex justify-center w-full md:w-auto shrink-0">
+        {/* ══ SKILL RADAR + RECENT BADGES (side by side) ═════════════════ */}
+        <SectionReveal delay={0.1}>
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Skill radar */}
+          <section>
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// SKILL COVERAGE</div>
+            <div className="brutal-border p-5 flex flex-col items-center gap-4">
               <SkillRadar skills={radarSkills} />
-            </div>
-            <div className="flex-1 w-full">
-              <div className="font-display text-lg mb-1">
-                {radarWorld === "fundamentals" ? "Fundamentals" : radarWorld === "dj" ? "DJ World" : "Producer"}
-              </div>
-              <div className="font-mono text-[9px] uppercase opacity-40 mb-4">Most active world</div>
-              <div className="space-y-2">
-                {radarSkills.map((s) => (
-                  <div key={s.label} className="flex items-center gap-3">
-                    <div className="font-mono text-[10px] uppercase w-14 shrink-0 opacity-60">{s.label}</div>
-                    <div className="flex-1 h-2 brutal-border bg-ink/10 overflow-hidden">
+              <div className="w-full space-y-1.5">
+                {radarSkills.map(s => (
+                  <div key={s.label} className="flex items-center gap-2">
+                    <div className="font-mono text-[9px] uppercase w-12 shrink-0 opacity-60">{s.label}</div>
+                    <div className="flex-1 h-1.5 brutal-border bg-ink/10 overflow-hidden">
                       <div className="h-full bg-acid transition-all duration-700" style={{ width: `${s.pct}%` }} />
                     </div>
-                    <div className="font-mono text-[9px] w-8 text-right opacity-50">{s.pct}%</div>
+                    <div className="font-mono text-[9px] w-7 text-right opacity-50">{s.pct}%</div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+          {/* Recent badges */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-mono text-[10px] uppercase opacity-40">// RECENT BADGES</div>
+              <Link href="/profile" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL →</Link>
+            </div>
+            {recentBadges.length === 0 ? (
+              <div className="brutal-border p-6 text-center h-full flex flex-col items-center justify-center gap-3">
+                <div className="text-5xl">🏅</div>
+                <div className="font-mono text-[10px] uppercase opacity-40">Complete your first lesson to earn a badge</div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {recentBadges.map((slug, i) => {
+                  const badge = getBadge(slug);
+                  const BADGE_COLORS = ["bg-acid text-ink", "bg-electric-blue text-bone", "bg-magenta text-bone"];
+                  return (
+                    <div key={slug} className={`brutal-border ${BADGE_COLORS[i % BADGE_COLORS.length]} p-4 flex items-center gap-4 chunk-shadow`}>
+                      <div className="text-4xl shrink-0">{badge.emoji}</div>
+                      <div>
+                        <div className="font-display text-lg leading-tight">{badge.name}</div>
+                        <div className="font-mono text-[9px] opacity-60 leading-snug">{badge.description}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        </div>
         </SectionReveal>
 
-        {/* ══ SECTION 5: Recent Badges ════════════════════════════════════ */}
-        <SectionReveal delay={0.1}>
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <div className="font-mono text-[10px] uppercase opacity-40">// RECENT BADGES</div>
-            <Link href="/profile" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL BADGES →</Link>
-          </div>
-          {recentBadges.length === 0 ? (
-            <div className="brutal-border p-6 text-center">
-              <div className="text-4xl mb-2">🏅</div>
-              <div className="font-mono text-[10px] uppercase opacity-40">Complete your first lesson to earn a badge</div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-3 gap-3">
-              {recentBadges.map((slug) => {
-                const badge = getBadge(slug);
-                return (
-                  <div key={slug} className="brutal-border p-4 flex flex-col items-center text-center gap-2">
-                    <div className="text-4xl">{badge.emoji}</div>
-                    <div className="font-display text-sm leading-tight">{badge.name}</div>
-                    <div className="font-mono text-[8px] opacity-40 leading-snug">{badge.description}</div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
-        </SectionReveal>
-
-        {/* ══ SECTION 6: Review Queue ══════════════════════════════════════ */}
+        {/* ══ REVIEW QUEUE ═══════════════════════════════════════════════ */}
         {reviewData.length > 0 && (
           <SectionReveal delay={0.12}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
-              // REVIEW QUEUE — {missionsNeedingReview.length} FADING
-            </div>
-            <div className="brutal-border overflow-hidden">
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// REVIEW QUEUE — {missionsNeedingReview.length} FADING</div>
+            <div className="brutal-border overflow-hidden chunk-shadow">
               <div className="flex items-center justify-between p-4 border-b-2 border-ink/10">
                 <div>
                   <div className="font-display text-lg">Review Session</div>
                   <div className="font-mono text-[9px] uppercase opacity-40">{missionsNeedingReview.length} lesson{missionsNeedingReview.length !== 1 ? "s" : ""} need a refresh</div>
                 </div>
                 <Link href={`/learn/${missionsNeedingReview[0]}?review=1`}
-                  className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm brutal-press brutal-shadow shrink-0">
+                  className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm brutal-press shrink-0">
                   START →
                 </Link>
               </div>
@@ -806,7 +504,7 @@ export function DashboardClient() {
                 {reviewData.map(({ slug, title, pct }) => (
                   <Link key={slug} href={`/learn/${slug}?review=1`}
                     className="brutal-border bg-bone px-3 py-2 flex items-center gap-2 brutal-press hover:bg-acid/20 transition-colors">
-                    <span className="font-mono text-[9px] uppercase max-w-[110px] truncate">{title}</span>
+                    <span className="font-mono text-[9px] uppercase max-w-[100px] truncate">{title}</span>
                     <StrengthBar pct={pct} />
                   </Link>
                 ))}
@@ -816,15 +514,14 @@ export function DashboardClient() {
           </SectionReveal>
         )}
 
-        {/* ══ SECTION 7: Beat Coach + Leaderboard side by side ═══════════ */}
+        {/* ══ BEAT COACH + LEADERBOARD ═══════════════════════════════════ */}
         <SectionReveal delay={0.14}>
         <div className="grid md:grid-cols-2 gap-4">
 
-          {/* Beat Coach */}
           <section>
             <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
             <button onClick={() => setCoachOpen(true)}
-              className="w-full h-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors text-left border-l-4 border-l-[#7B2FFF]">
+              className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors text-left border-l-4 border-l-[#7B2FFF] chunk-shadow">
               <div className="text-4xl shrink-0">🎧</div>
               <div className="flex-1 min-w-0">
                 <div className="font-display text-lg">Ask Beat Coach</div>
@@ -834,33 +531,21 @@ export function DashboardClient() {
             </button>
             {coachOpen && (
               <CoachPanel
-                context={formatDashboardContext({
-                  streak: progress.streakDays ?? 0,
-                  xp: progress.xp ?? 0,
-                  world: lastCtx?.world ?? null,
-                  nextSlug: continueSlug ?? null,
-                })}
+                context={formatDashboardContext({ streak: progress.streakDays ?? 0, xp: progress.xp ?? 0, world: lastCtx?.world ?? null, nextSlug: continueSlug ?? null })}
                 onClose={() => setCoachOpen(false)}
               />
             )}
           </section>
 
-          {/* Leaderboard peek */}
           <section>
             <div className="flex items-center justify-between mb-3">
               <div className="font-mono text-[10px] uppercase opacity-40">// LEADERBOARD</div>
               <Link href="/leaderboard" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">FULL →</Link>
             </div>
-            <div className="brutal-border overflow-hidden h-[calc(100%-28px)]">
+            <div className="brutal-border overflow-hidden chunk-shadow">
               {loadingLeaders ? (
                 <div className="p-4 space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <Skeleton className="w-6 h-6" />
-                      <Skeleton className="flex-1 h-4" />
-                      <Skeleton className="w-16 h-4" />
-                    </div>
-                  ))}
+                  {[1, 2, 3].map(i => <div key={i} className="flex items-center gap-3"><Skeleton className="w-6 h-6" /><Skeleton className="flex-1 h-4" /><Skeleton className="w-16 h-4" /></div>)}
                 </div>
               ) : leaders.length === 0 ? (
                 <div className="p-5 font-mono text-[10px] opacity-40 text-center uppercase">No data yet</div>
@@ -869,12 +554,9 @@ export function DashboardClient() {
                   {leaders.map((entry, i) => {
                     const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉";
                     return (
-                      <div key={entry.rank}
-                        className={`flex items-center gap-3 px-4 py-3 border-b border-ink/10 last:border-b-0 ${entry.isCurrentUser ? "bg-acid/20" : ""}`}>
+                      <div key={entry.rank} className={`flex items-center gap-3 px-4 py-3 border-b border-ink/10 last:border-b-0 ${entry.isCurrentUser ? "bg-acid/20" : ""}`}>
                         <span className="text-lg w-7 shrink-0">{medal}</span>
-                        <span className="font-mono text-sm flex-1 truncate">
-                          {entry.name}{entry.isCurrentUser && <span className="opacity-40 ml-1">(you)</span>}
-                        </span>
+                        <span className="font-mono text-sm flex-1 truncate">{entry.name}{entry.isCurrentUser && <span className="opacity-40 ml-1">(you)</span>}</span>
                         <span className="font-display text-sm tabular-nums shrink-0">{entry.xp.toLocaleString()} XP</span>
                       </div>
                     );
@@ -893,19 +575,17 @@ export function DashboardClient() {
               )}
             </div>
           </section>
-
         </div>
         </SectionReveal>
 
-        {/* ══ Footer nudge ══════════════════════════════════════════════════ */}
+        {/* ══ FOOTER NUDGE ═══════════════════════════════════════════════ */}
         {!user && (
           <div className="brutal-border bg-ink text-bone p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="font-display text-lg">Save your progress</div>
               <div className="font-mono text-[10px] opacity-50 mt-0.5">Sync across devices · appear on the leaderboard</div>
             </div>
-            <Link href="/login"
-              className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-base brutal-press brutal-shadow shrink-0">
+            <Link href="/login" className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-base brutal-press brutal-shadow shrink-0">
               SIGN UP FREE →
             </Link>
           </div>
