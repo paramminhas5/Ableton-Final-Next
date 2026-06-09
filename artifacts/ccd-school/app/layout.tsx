@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://ccd.school";
 // FAL AI generated OG image — brutalist three-zone music poster (v2)
@@ -237,6 +238,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </footer>
           </div>
         </ClientProviders>
+        <Analytics />
       </body>
     </html>
   );
