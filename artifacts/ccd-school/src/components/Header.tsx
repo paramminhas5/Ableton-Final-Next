@@ -23,6 +23,7 @@ import { getMissionContext } from "@/lib/missionContext";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
+import { trackCatClick } from "@/components/EasterEggs";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
@@ -667,7 +668,8 @@ export function Header() {
             alt=""
             width={28}
             height={28}
-            className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block"
+            onClick={trackCatClick}
+            className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block cursor-pointer hover:scale-110 transition-transform"
           />
           CCD<span className="text-acid">.</span>SCHOOL
         </Link>

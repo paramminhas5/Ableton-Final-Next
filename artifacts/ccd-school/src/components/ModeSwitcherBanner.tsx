@@ -134,7 +134,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   /* ── BAR variant (default) ─────────────────────────────────────────── */
   return (
     <div
-      className={`border-b-2 border-border flex items-center justify-between gap-3 px-4 py-3
+      className={`flex items-center justify-between gap-3 px-4 py-3
         ${isFlow ? "bg-acid text-ink" : "bg-bone text-ink"}
         ${className}`}
     >
@@ -156,12 +156,12 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
       {/* Right: switch button */}
       <button
         onClick={switchMode}
-        className={`shrink-0 brutal-border rounded-md px-3.5 py-1.5 font-sans text-sm font-medium brutal-press transition-colors
+        className={`shrink-0 brutal-border px-4 py-2 font-display text-sm transition-colors chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none
           ${isFlow
-            ? "bg-ink text-bone hover:bg-volt"
-            : "bg-bone text-ink hover:bg-acid"}`}
+            ? "bg-ink text-bone hover:bg-electric-blue"
+            : "bg-ink text-bone hover:bg-acid"}`}
       >
-        {justSwitched ? "✓" : `Switch to ${isFlow ? "Free" : "Flow"} →`}
+        {justSwitched ? "✓ Switched!" : `Switch to ${isFlow ? "Free" : "Flow"} →`}
       </button>
     </div>
   );

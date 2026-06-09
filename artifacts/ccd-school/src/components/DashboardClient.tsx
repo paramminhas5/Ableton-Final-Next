@@ -33,6 +33,7 @@ import { getMissionContext } from "@/lib/missionContext";
 import { CoachPanel } from "@/components/BeatCoach";
 import { formatDashboardContext } from "@/types/coach";
 import { useEffect, useState, useMemo, useRef } from "react";
+import SectionReveal from "@/components/SectionReveal";
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
 const BADGE_REGISTRY: Record<string, { name: string; emoji: string; description: string }> = {
@@ -574,7 +575,7 @@ export function DashboardClient() {
         {/* DJ Cat decoration */}
         <div className="absolute bottom-0 right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none wiggle z-10" aria-hidden
           style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}>
-          <Image src="/cats/cat-dj-hero.png" alt="" fill className="object-contain" sizes="128px" />
+          <Image src="/cats/cat-dj-hero.png" alt="" width={128} height={128} className="w-full h-full object-contain" />
         </div>
         <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           <div className="flex items-center gap-2 mb-3">
@@ -649,6 +650,7 @@ export function DashboardClient() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
 
         {/* ══ SECTION 2: Today's Stats ════════════════════════════════════ */}
+        <SectionReveal>
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S STATS</div>
 
@@ -696,8 +698,10 @@ export function DashboardClient() {
             </>
           )}
         </section>
+        </SectionReveal>
 
         {/* ══ SECTION 3: My Worlds ════════════════════════════════════════ */}
+        <SectionReveal delay={0.05}>
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// MY WORLDS</div>
           <div className="space-y-4">
@@ -771,8 +775,10 @@ export function DashboardClient() {
             })}
           </div>
         </section>
+        </SectionReveal>
 
         {/* ══ SECTION 4: Skill Radar ══════════════════════════════════════ */}
+        <SectionReveal delay={0.08}>
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR SKILL RADAR</div>
           <div className="brutal-border p-5 flex flex-col md:flex-row items-center gap-6">
@@ -807,8 +813,10 @@ export function DashboardClient() {
             </div>
           </div>
         </section>
+        </SectionReveal>
 
         {/* ══ SECTION 5: Recent Badges ════════════════════════════════════ */}
+        <SectionReveal delay={0.1}>
         <section>
           <div className="flex items-center justify-between mb-3">
             <div className="font-mono text-[10px] uppercase opacity-40">// RECENT BADGES</div>
@@ -839,9 +847,11 @@ export function DashboardClient() {
             </div>
           )}
         </section>
+        </SectionReveal>
 
-        {/* ══ SECTION 6: Review Queue (conditional) ═══════════════════════ */}
+        {/* ══ SECTION 6: Review Queue ══════════════════════════════════════ */}
         {reviewData.length > 0 && (
+          <SectionReveal delay={0.12}>
           <section>
             <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
               // REVIEW QUEUE ({missionsNeedingReview.length} lessons fading)
@@ -882,6 +892,7 @@ export function DashboardClient() {
         )}
 
         {/* ══ SECTION 7: Beat Coach Card ══════════════════════════════════ */}
+        <SectionReveal delay={0.14}>
         <section>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
           <button
@@ -911,8 +922,10 @@ export function DashboardClient() {
             />
           )}
         </section>
+        </SectionReveal>
 
         {/* ══ SECTION 8: Leaderboard Peek ════════════════════════════════ */}
+        <SectionReveal delay={0.16}>
         <section>
           <div className="flex items-center justify-between mb-3">
             <div className="font-mono text-[10px] uppercase opacity-40">// LEADERBOARD</div>
@@ -980,6 +993,7 @@ export function DashboardClient() {
             )}
           </div>
         </section>
+        </SectionReveal>
 
         {/* ══ Footer nudge ══════════════════════════════════════════════════ */}
         {!user && (
