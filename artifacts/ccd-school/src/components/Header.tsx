@@ -473,7 +473,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           <div className="flex items-center gap-2">
             <Image src="/cats/cat-dj-hero.png" alt="" width={36} height={36}
               className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)]" />
-            <span className="font-display text-lg text-bone">CCD<span className="text-acid">.</span>SCHOOL</span>
+            <span className="font-display text-lg text-bone">CCD<span className="text-acid">.</span><span className="text-bone">SCHOOL</span></span>
           </div>
           <button onClick={onClose} aria-label="Close menu"
             className="brutal-border bg-bone text-ink px-3 py-1.5 font-display text-xs brutal-press">
@@ -515,15 +515,6 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           <span className="font-sans text-sm opacity-55">{progress.hearts}/{MAX_HEARTS} hearts</span>
-        </div>
-
-        {/* Mode toggle */}
-        <div className="px-4 py-3.5 border-b-4 border-ink flex items-center justify-between gap-3">
-          <div>
-            <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
-            <p className="font-display text-sm">{learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}</p>
-          </div>
-          <ModeTogglePill compact />
         </div>
 
         {/* Search */}
@@ -694,7 +685,7 @@ export function Header() {
             onClick={trackCatClick}
             className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block cursor-pointer hover:scale-110 transition-transform"
           />
-          <span className="text-bone">CATS CAN</span><span className="text-acid"> DANCE</span>
+          <span className="text-bone">CCD</span><span className="text-acid">.</span><span className="text-bone">SCHOOL</span>
         </Link>
 
         {/* Primary nav — desktop */}
@@ -729,7 +720,6 @@ export function Header() {
 
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           <XpStreakBadge />
-          <ModeTogglePill />
 
           {user ? (
             <Link href="/profile" aria-label="View profile" title={user.name ?? "Profile"}

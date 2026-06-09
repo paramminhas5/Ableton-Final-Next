@@ -1,25 +1,23 @@
 "use client";
 /**
- * LearnPageClient — /learn — Paths browser.
+ * LearnPageClient — /learn
  *
- * Two view modes toggled inline:
- *   Cards view (default): 2-3 col grid of path cards per chapter
- *   List view:            compact single-column rows — title, tagline, progress, CTA
+ * Default view: Snake (Duolingo-style world path) for the active world.
+ * Toggle: "Paths" button switches to the paths cards/list browser.
  *
- * World tabs (Fundamentals / DJ / Producer) stay the same.
- * Cat decoration in header changes per world.
+ * World tabs (Fundamentals / DJ / Producer) stay the same across both views.
  */
 import Link from "next/link";
 import Image from "next/image";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
-import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 import SectionReveal from "@/components/SectionReveal";
+import { WorldPathClient } from "@/components/WorldPathClient";
 import { useState } from "react";
 
 type WorldTab = "fundamentals" | "dj" | "producer";
-type ViewMode = "cards" | "list";
+type ViewMode = "snake" | "paths";
 
 const WORLD_META: Record<WorldTab, {
   label: string; emoji: string;
@@ -42,7 +40,7 @@ export function LearnPageClient() {
   const { progress } = useProgress();
   const completed = progress.completedMissions;
   const [activeWorld, setActiveWorld] = useState<WorldTab>("fundamentals");
-  const [viewMode, setViewMode] = useState<ViewMode>("cards");
+  const [viewMode, setViewMode] = useState<ViewMode>("snake");
 
   const chapters = chaptersByWorld(activeWorld);
   const allPaths = pathsByWorld(activeWorld);
@@ -81,10 +79,10 @@ export function LearnPageClient() {
         >
           <Image src={wm.catSrc} alt="" width={112} height={112} className="w-full h-full object-contain" />
         </div>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 relative z-10">
-          <p className="font-mono text-xs uppercase opacity-60 tracking-widest mb-1">All chapters · all worlds</p>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 relative z-10">
+          <p className="font-mono text-xs uppercase opacity-60 tracking-widest mb-1">Your learning path</p>
           <h1 className="font-display text-5xl md:text-6xl leading-none" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
-            PATHS
+            LEARN
           </h1>
           <div className="flex items-center gap-3 mt-3 font-mono text-xs uppercase opacity-70">
             <span>{ws.done}/{ws.total} missions</span>
@@ -93,12 +91,7 @@ export function LearnPageClient() {
         </div>
       </header>
 
-      {/* ── Mode switcher ────────────────────────────────────────────────── */}
-      <div className="border-b-4 border-ink">
-        <ModeSwitcherBanner variant="bar" />
-      </div>
-
-      {/* ── World tabs ───────────────────────────────────────────────────── */}
+      {/* ── World tabs + view toggle ──────────────────────────────────────── */}
       <div className="sticky top-0 z-10 bg-bone border-b-4 border-ink">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex items-stretch">
           {(["fundamentals", "dj", "producer"] as WorldTab[]).map(w => {
@@ -119,39 +112,25 @@ export function LearnPageClient() {
             );
           })}
 
-          {/* View mode toggle — right-aligned */}
-          <div className="flex items-center px-3 border-l-4 border-ink gap-1">
+          {/* View toggle — snake vs paths */}
+          <div className="flex items-center px-3 border-l-4 border-ink gap-1 shrink-0">
             <button
-              onClick={() => setViewMode("cards")}
-              title="Cards view"
-              className={`w-8 h-8 brutal-border flex items-center justify-center brutal-press transition-colors ${
-                viewMode === "cards" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+              onClick={() => setViewMode("snake")}
+              title="Snake path (default)"
+              className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
+                viewMode === "snake" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              {/* Grid icon */}
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden>
-                <rect x="0" y="0" width="6" height="6" rx="1"/>
-                <rect x="8" y="0" width="6" height="6" rx="1"/>
-                <rect x="0" y="8" width="6" height="6" rx="1"/>
-                <rect x="8" y="8" width="6" height="6" rx="1"/>
-              </svg>
+              🌊 Path
             </button>
             <button
-              onClick={() => setViewMode("list")}
-              title="List view"
-              className={`w-8 h-8 brutal-border flex items-center justify-center brutal-press transition-colors ${
-                viewMode === "list" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+              onClick={() => setViewMode("paths")}
+              title="Paths browser"
+              className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
+                viewMode === "paths" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              {/* List icon */}
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
-                <line x1="4" y1="3" x2="14" y2="3"/>
-                <line x1="4" y1="7" x2="14" y2="7"/>
-                <line x1="4" y1="11" x2="14" y2="11"/>
-                <circle cx="1.5" cy="3" r="1" fill="currentColor" stroke="none"/>
-                <circle cx="1.5" cy="7" r="1" fill="currentColor" stroke="none"/>
-                <circle cx="1.5" cy="11" r="1" fill="currentColor" stroke="none"/>
-              </svg>
+              📋 Browse
             </button>
           </div>
         </div>
@@ -162,50 +141,48 @@ export function LearnPageClient() {
         </div>
       </div>
 
-      {/* ── Main content ─────────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-10 pb-28">
+      {/* ── SNAKE VIEW (default) ─────────────────────────────────────────── */}
+      {viewMode === "snake" && (
+        <WorldPathClient worldSlug={activeWorld} embedded />
+      )}
 
-        {/* Link to world page */}
-        <Link href={`/world/${activeWorld}`}
-          className="brutal-border inline-flex items-center gap-2 px-4 py-2.5 font-display text-sm border-4 border-ink hover:bg-acid transition-colors chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none">
-          View {WORLD_META[activeWorld].label} world path →
-        </Link>
+      {/* ── PATHS BROWSER VIEW ───────────────────────────────────────────── */}
+      {viewMode === "paths" && (
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-10 pb-28">
+          {chapters.map((chapter, chIdx) => {
+            const cStats = chapterStats(chapter.slug);
+            const chPaths = allPaths.filter(p => p.chapter === chapter.slug).sort((a, b) => a.number - b.number);
+            const catSrc = CHAPTER_CATS[chIdx % CHAPTER_CATS.length];
 
-        {chapters.map((chapter, chIdx) => {
-          const cStats = chapterStats(chapter.slug);
-          const chPaths = allPaths.filter(p => p.chapter === chapter.slug).sort((a, b) => a.number - b.number);
-          const catSrc = CHAPTER_CATS[chIdx % CHAPTER_CATS.length];
-
-          return (
-            <SectionReveal key={chapter.slug} delay={chIdx * 0.05}>
-              <section>
-                {/* Chapter header */}
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <div className="flex items-start gap-3">
-                    <div className="shrink-0 w-11 h-11 wiggle" style={{ filter: "drop-shadow(2px 2px 0 hsl(222 47% 4%))" }} aria-hidden>
-                      <Image src={catSrc} alt="" width={44} height={44} className="w-full h-full object-contain" />
+            return (
+              <SectionReveal key={chapter.slug} delay={chIdx * 0.05}>
+                <section>
+                  {/* Chapter header */}
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="shrink-0 w-11 h-11 wiggle" style={{ filter: "drop-shadow(2px 2px 0 hsl(222 47% 4%))" }} aria-hidden>
+                        <Image src={catSrc} alt="" width={44} height={44} className="w-full h-full object-contain" />
+                      </div>
+                      <div>
+                        <p className="font-mono text-xs uppercase opacity-40 tracking-widest mb-0.5">
+                          Chapter {chapter.number} · {chPaths.length} paths · {cStats.total} missions
+                        </p>
+                        <h2 className="font-display text-2xl md:text-3xl leading-tight">{chapter.title}</h2>
+                        <p className="font-sans text-sm opacity-55 mt-0.5 leading-snug">{chapter.tagline}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-mono text-xs uppercase opacity-40 tracking-widest mb-0.5">
-                        Chapter {chapter.number} · {chPaths.length} paths · {cStats.total} missions
-                      </p>
-                      <h2 className="font-display text-2xl md:text-3xl leading-tight">{chapter.title}</h2>
-                      <p className="font-sans text-sm opacity-55 mt-0.5 leading-snug">{chapter.tagline}</p>
+                    <div className="text-right shrink-0">
+                      <p className="font-mono text-xs uppercase opacity-50">{cStats.done}/{cStats.total}</p>
+                      {cStats.complete && <p className="font-mono text-xs mt-0.5">🏆 {chapter.trophy.name}</p>}
                     </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className="font-mono text-xs uppercase opacity-50">{cStats.done}/{cStats.total}</p>
-                    {cStats.complete && <p className="font-mono text-xs mt-0.5">🏆 {chapter.trophy.name}</p>}
+
+                  {/* Chapter progress bar */}
+                  <div className="h-2.5 brutal-border bg-ink/8 mb-5 overflow-hidden">
+                    <div className={`h-full ${wm.bar} transition-all duration-700`} style={{ width: `${cStats.pct}%` }} />
                   </div>
-                </div>
 
-                {/* Chapter progress bar */}
-                <div className="h-2.5 brutal-border bg-ink/8 mb-5 overflow-hidden">
-                  <div className={`h-full ${wm.bar} transition-all duration-700`} style={{ width: `${cStats.pct}%` }} />
-                </div>
-
-                {/* ── CARDS VIEW ─────────────────────────────────────────── */}
-                {viewMode === "cards" && (
+                  {/* Path cards — 2-3 col grid */}
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {chPaths.map(path => {
                       const pStats = pathStats(path.missionSlugs);
@@ -239,50 +216,12 @@ export function LearnPageClient() {
                       );
                     })}
                   </div>
-                )}
-
-                {/* ── LIST VIEW ──────────────────────────────────────────── */}
-                {viewMode === "list" && (
-                  <div className="brutal-border divide-y divide-ink/10 chunk-shadow">
-                    {chPaths.map(path => {
-                      const pStats = pathStats(path.missionSlugs);
-                      return (
-                        <div key={path.slug} className="flex items-center gap-4 px-4 py-3 hover:bg-acid/10 transition-colors">
-                          {/* Status indicator */}
-                          <div className={`shrink-0 w-8 h-8 brutal-border flex items-center justify-center font-display text-sm ${
-                            pStats.complete ? "bg-ink text-bone" : pStats.done > 0 ? `${wm.activeBg} ${wm.activeText}` : "bg-bone"
-                          }`}>
-                            {pStats.complete ? "✓" : pStats.done > 0 ? `${pStats.pct}%` : path.number}
-                          </div>
-                          {/* Text */}
-                          <div className="flex-1 min-w-0">
-                            <div className="font-display text-base leading-tight">{path.title}</div>
-                            <div className="font-mono text-[10px] opacity-50 mt-0.5 truncate">{path.tagline}</div>
-                          </div>
-                          {/* Progress bar (thin) */}
-                          <div className="shrink-0 w-20 hidden sm:block">
-                            <div className="h-1.5 brutal-border bg-ink/10 overflow-hidden">
-                              <div className={`h-full ${wm.bar}`} style={{ width: `${pStats.pct}%` }} />
-                            </div>
-                            <div className="font-mono text-[9px] opacity-40 mt-0.5 text-right">{pStats.done}/{pStats.total}</div>
-                          </div>
-                          {/* CTA */}
-                          <Link href={`/path/${path.slug}`}
-                            className={`shrink-0 brutal-border px-3 py-1.5 font-display text-xs brutal-press transition-colors ${
-                              pStats.complete ? "bg-ink text-bone" : `${wm.activeBg} ${wm.activeText} hover:opacity-80`
-                            }`}>
-                            {pStats.complete ? "Done ✓" : pStats.done > 0 ? "Go →" : "Start →"}
-                          </Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </section>
-            </SectionReveal>
-          );
-        })}
-      </div>
+                </section>
+              </SectionReveal>
+            );
+          })}
+        </div>
+      )}
     </main>
   );
 }

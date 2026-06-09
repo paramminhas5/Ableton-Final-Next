@@ -105,21 +105,6 @@ export function MissionsPageClient() {
           <div className="flex items-center gap-3 mt-2">
             <span className="font-mono text-xs uppercase opacity-70">{ws.done}/{ws.total} done · {ws.pct}%</span>
           </div>
-          {/* Mode toggle */}
-          <div className="mt-3 brutal-border overflow-hidden inline-flex">
-            <button
-              onClick={() => setLearnMode("flow")}
-              className={`px-4 py-2 font-display text-sm flex items-center gap-2 transition-colors ${isFlowMode ? "bg-acid text-ink" : "bg-bone/20 text-bone hover:bg-bone/30"}`}>
-              🌊 Flow
-              {isFlowMode && <span className="font-mono text-[9px] opacity-70">ACTIVE</span>}
-            </button>
-            <button
-              onClick={() => setLearnMode("classic")}
-              className={`px-4 py-2 font-display text-sm flex items-center gap-2 transition-colors border-l-2 border-current/20 ${!isFlowMode ? "bg-acid text-ink" : "bg-bone/20 text-bone hover:bg-bone/30"}`}>
-              🔓 Free
-              {!isFlowMode && <span className="font-mono text-[9px] opacity-70">ACTIVE</span>}
-            </button>
-          </div>
         </div>
       </header>
 

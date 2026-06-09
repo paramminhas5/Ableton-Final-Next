@@ -723,40 +723,35 @@ function LessonBreadcrumb({
   missionTotal: number;
 }) {
   const ctx = getMissionContext(mission.slug);
-  const worldLabel = ctx.worldLabel || "Unknown";
   const chapterTitle = ctx.chapter?.title || null;
   const pathTitle = ctx.path?.title || null;
 
   return (
-    <div className="flex items-center gap-1 flex-wrap font-mono text-[9px] uppercase opacity-50 tracking-wide border-t-2 border-acid/30 pt-2">
-      <Link href={ctx.worldRoute} className="hover:opacity-100 hover:text-acid transition-colors">
-        {worldLabel}
+    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[9px] uppercase opacity-40 tracking-wide">
+      <Link href={ctx.worldRoute} className="hover:opacity-100 hover:text-acid transition-colors shrink-0 truncate max-w-[80px]">
+        {ctx.worldLabel}
       </Link>
       {chapterTitle && (
         <>
-          <span>›</span>
-          <span>{chapterTitle}</span>
+          <span className="shrink-0">›</span>
+          <span className="truncate max-w-[90px] shrink-0">{chapterTitle}</span>
         </>
       )}
       {pathTitle && (
         <>
-          <span>›</span>
+          <span className="shrink-0">›</span>
           <Link
             href={ctx.path ? `/path/${ctx.path.slug}` : "#"}
-            className="hover:opacity-100 hover:text-acid transition-colors"
+            className="hover:opacity-100 hover:text-acid transition-colors truncate max-w-[90px] shrink-0"
           >
             {pathTitle}
           </Link>
         </>
       )}
-      {missionTotal > 1 && (
-        <>
-          <span>›</span>
-          <span className="opacity-100 text-ink font-bold">
-            {mission.title} ({missionIndex}/{missionTotal})
-          </span>
-        </>
-      )}
+      <span className="shrink-0">›</span>
+      <span className="text-ink/70 font-bold opacity-100 truncate">
+        {missionIndex}/{missionTotal}
+      </span>
     </div>
   );
 }
@@ -947,14 +942,15 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
 
-      <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-2xl mx-auto px-4 py-3 space-y-3 pb-8">
 
         {/* ── Top bar: close button + progress bar + hearts ── */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Link
             href={backRoute}
-            className="brutal-border bg-bone px-3 py-2 font-mono text-[10px] uppercase brutal-press shrink-0"
+            className="brutal-border bg-bone w-8 h-8 flex items-center justify-center font-mono text-sm brutal-press shrink-0 hover:bg-acid transition-colors"
             title="Back to world"
+            aria-label="Close lesson"
           >
             ✕
           </Link>
@@ -969,27 +965,12 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           <ScreenPhaseDots screens={screens} currentIdx={screenIdx} />
         )}
 
-        {/* ── Breadcrumb: World › Chapter › Path › Mission N/M ── */}
+        {/* ── Breadcrumb: compact single line ── */}
         <LessonBreadcrumb
           mission={mission}
           missionIndex={missionIndex}
           missionTotal={missionTotal}
         />
-
-        {/* ── Mode indicator — only show in FLOW mode ── */}
-        {isFlowMode && (
-          <div className="flex items-center justify-between">
-            <div className="brutal-border bg-acid text-ink px-2.5 py-1 font-mono text-[9px] uppercase font-bold">
-              🌊 FLOW MODE · ❤️ {progress.hearts}/{MAX_HEARTS}
-            </div>
-            <button
-              onClick={() => setLearnMode("classic")}
-              className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
-            >
-              Switch to Free →
-            </button>
-          </div>
-        )}
 
         {/* ── Screen renderer ──
             key={screenIdx} ensures React remounts each screen,

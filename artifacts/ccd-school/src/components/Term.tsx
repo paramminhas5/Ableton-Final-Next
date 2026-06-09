@@ -77,9 +77,9 @@ const ScopeCtx = createContext<AllowMap | null>(null);
 
 function buildAllowMap(texts: string[]): AllowMap {
   const map: AllowMap = new Map();
-  const globalSeen = new Set<string>();
+  const globalSeen = new Set<string>(); // tracks terms already wrapped anywhere in this mission
   for (const t of texts) {
-    if (!t || map.has(t)) continue; // duplicate text → no wraps (handled below)
+    if (!t) continue;
     const allowed = new Set<string>();
     const re = makeRe();
     let m: RegExpExecArray | null;
@@ -90,7 +90,11 @@ function buildAllowMap(texts: string[]): AllowMap {
         allowed.add(lower);
       }
     }
-    map.set(t, allowed);
+    // Always store the entry (even if empty) so Glossarized knows it's in-scope
+    if (!map.has(t)) {
+      map.set(t, allowed);
+    }
+    // If this exact string appeared before, the terms were already wrapped — keep empty set
   }
   return map;
 }
@@ -117,12 +121,14 @@ export function Glossarized({ text }: { text: string }) {
   const map = useContext(ScopeCtx);
   if (!text) return null;
 
-  // No scope → wrap every term (fallback for routes that don't set up scope).
-  const allowed = map?.get(text);
-  if (!map) {
-    return <>{wrapAll(text, null)}</>;
-  }
-  return <>{wrapAll(text, allowed ?? new Set())}</>;
+  // No scope → render plain text (no auto-wrapping outside a mission context)
+  if (!map) return <>{text}</>;
+
+  const allowed = map.get(text);
+  // allowed === undefined means this text wasn't registered in the scope — render plain
+  if (allowed === undefined) return <>{text}</>;
+
+  return <>{wrapAll(text, allowed)}</>;
 }
 
 function wrapAll(text: string, allowed: Set<string> | null): React.ReactNode[] {
