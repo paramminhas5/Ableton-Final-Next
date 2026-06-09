@@ -2,14 +2,13 @@
 /**
  * WorldPathClient — Duolingo-style world path map.
  *
- * ✓ Full-bleed image hero with dark overlay (not cramped compact header)
- * ✓ Cat placed BELOW hero as a character entering the scene
- * ✓ No spine line — connector dots between nodes instead
- * ✓ Full-width Flow / Browse toggle band
- * ✓ Chapter banners: CH 01 + full name + tagline + cat quip
- * ✓ ChapterDots: emoji + short chapter name always visible
- * ✓ DJ world: deep blue (#0a0f2e) not pure black
- * ✓ Bigger nodes, better positioning
+ * Overhaul:
+ * ✓ NO full-bleed images — solid color hero block with cat + decorative elements
+ * ✓ Inline mode indicator (not a sticky toggle band) — synced to Header pill
+ * ✓ Chapter progress strip: expanded full-width pills, not tiny squished dots
+ * ✓ ModeToggleBand removed — Header ModeTogglePill is the single source of truth
+ * ✓ All cats used liberally
+ * ✓ DJ world: deep blue (#0a0f2e)
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -40,66 +39,88 @@ interface PathNode {
   side: "left" | "center" | "right";
 }
 
-// FAL AI hero images
-const WORLD_IMAGES: Record<string, string> = {
-  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
-  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
-  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
-};
-
-const WORLD_OVERLAY: Record<string, string> = {
-  fundamentals: "from-acid/80 via-acid/70 to-acid/50",
-  dj:           "from-[#0a0f2e]/90 via-[#0a0f2e]/80 to-[#0a0f2e]/60",
-  producer:     "from-sun/80 via-sun/70 to-sun/50",
-};
-
-// ─── World config ─────────────────────────────────────────────────────────────
+// ─── World config — NO images, pure color ─────────────────────────────────────
 const WORLD_META: Record<string, {
-  bg: string; textColor: string; accent: string;
+  bg: string; heroBg: string; textColor: string; accent: string;
   nodeAvail: string; nodeDone: string; nodeReview: string;
   emoji: string; title: string; tagline: string;
-  catSrc: string; glowColor: string;
-  toggleBg: string; toggleText: string;
+  catMain: string; catDeco1: string; catDeco2: string;
+  deco1: string; deco2: string;
+  glowColor: string;
+  heroBorder: string;
+  pillDone: string; pillPartial: string; pillEmpty: string;
   chapterBannerBg: string; chapterBannerBorder: string;
+  modeBg: string; modeText: string;
+  freeModeLinkClass: string;
 }> = {
   fundamentals: {
-    bg: "bg-bone", textColor: "text-ink", accent: "bg-acid text-ink",
+    bg: "bg-bone", heroBg: "bg-acid", textColor: "text-ink", accent: "bg-acid text-ink",
     nodeAvail: "bg-acid text-ink border-4 border-ink",
     nodeDone: "bg-ink text-bone border-4 border-ink",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎵", title: "Fundamentals",
     tagline: "Sound · Rhythm · Melody · Harmony · Music Tech",
-    catSrc: "/cats/cat-handstand.png",
-    glowColor: "rgba(198,255,0,0.4)",
-    toggleBg: "bg-ink text-bone", toggleText: "text-ink/60",
-    chapterBannerBg: "bg-acid/20 backdrop-blur-sm",
+    catMain: "/cats/cat-handstand.png",
+    catDeco1: "/cats/cat-headphones.png",
+    catDeco2: "/cats/cat-dancer.png",
+    deco1: "/cats/music-note.png",
+    deco2: "/cats/star.png",
+    glowColor: "rgba(198,255,0,0.45)",
+    heroBorder: "border-b-4 border-ink",
+    pillDone: "bg-ink text-bone",
+    pillPartial: "bg-ink/30 text-ink",
+    pillEmpty: "bg-ink/10 text-ink/40",
+    chapterBannerBg: "bg-acid/25",
     chapterBannerBorder: "border-t-4 border-t-acid",
+    modeBg: "bg-ink text-bone",
+    modeText: "text-bone",
+    freeModeLinkClass: "bg-ink/10 text-ink hover:bg-ink/20",
   },
   dj: {
-    bg: "bg-[#0a0f2e]", textColor: "text-bone", accent: "bg-volt text-ink",
+    bg: "bg-[#0a0f2e]", heroBg: "bg-[#0a0f2e]", textColor: "text-bone", accent: "bg-volt text-ink",
     nodeAvail: "bg-volt text-ink border-4 border-volt",
     nodeDone: "bg-volt/20 text-bone border-4 border-volt/50",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎧", title: "DJ World",
     tagline: "Setup · Library · The Mix · Performance · Mastery",
-    catSrc: "/cats/cat-dj.png",
-    glowColor: "rgba(198,255,0,0.4)",
-    toggleBg: "bg-volt text-ink", toggleText: "text-bone/60",
-    chapterBannerBg: "bg-volt/10 backdrop-blur-sm",
+    catMain: "/cats/cat-dj.png",
+    catDeco1: "/cats/cat-dj-new.png",
+    catDeco2: "/cats/cat-cap.png",
+    deco1: "/cats/disco-ball.png",
+    deco2: "/cats/headphones.png",
+    glowColor: "rgba(198,255,0,0.45)",
+    heroBorder: "border-b-4 border-volt",
+    pillDone: "bg-volt text-ink",
+    pillPartial: "bg-volt/30 text-bone",
+    pillEmpty: "bg-bone/10 text-bone/30",
+    chapterBannerBg: "bg-volt/10",
     chapterBannerBorder: "border-t-4 border-t-volt",
+    modeBg: "bg-volt text-ink",
+    modeText: "text-ink",
+    freeModeLinkClass: "bg-bone/10 text-bone hover:bg-bone/20",
   },
   producer: {
-    bg: "bg-bone", textColor: "text-ink", accent: "bg-sun text-ink",
+    bg: "bg-bone", heroBg: "bg-sun", textColor: "text-ink", accent: "bg-sun text-ink",
     nodeAvail: "bg-sun text-ink border-4 border-ink",
     nodeDone: "bg-ink text-bone border-4 border-ink",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎛", title: "Producer",
     tagline: "First Contact · Sound & MIDI · Mix · Performance · Advanced",
-    catSrc: "/cats/cat-dj-hero.png",
-    glowColor: "rgba(255,184,0,0.4)",
-    toggleBg: "bg-ink text-bone", toggleText: "text-ink/60",
-    chapterBannerBg: "bg-sun/20 backdrop-blur-sm",
+    catMain: "/cats/cat-dj-hero.png",
+    catDeco1: "/cats/cat-raver.png",
+    catDeco2: "/cats/cat-source.png",
+    deco1: "/cats/boombox.png",
+    deco2: "/cats/vinyl-music.png",
+    glowColor: "rgba(255,184,0,0.45)",
+    heroBorder: "border-b-4 border-ink",
+    pillDone: "bg-ink text-bone",
+    pillPartial: "bg-ink/30 text-ink",
+    pillEmpty: "bg-ink/10 text-ink/40",
+    chapterBannerBg: "bg-sun/25",
     chapterBannerBorder: "border-t-4 border-t-sun",
+    modeBg: "bg-ink text-bone",
+    modeText: "text-bone",
+    freeModeLinkClass: "bg-ink/10 text-ink hover:bg-ink/20",
   },
 };
 
@@ -115,7 +136,7 @@ const CHAPTER_EMOJIS: Record<string, string> = {
 const CHAPTER_CAT_QUIPS: Record<string, string[]> = {
   fundamentals: ["Let's start with sound! 🎵", "Rhythm is everything.", "Melody unlocked 🎶", "Chords = emotion.", "Final stretch!"],
   dj: ["DJ school is in! 🎧", "Your library is power.", "Time to mix! 🎚", "Read the crowd.", "Master level! 🏆"],
-  producer: ["Welcome to Live! 🖥", "Sound design time!", "Mix it down 🎛", "Take it live! 🚀", "Expert territory!"],
+  producer: ["Welcome to Live! 🖥", "Sound design time!", "Mix it down 🎛", "Take it live! 🚀", "Expert territory!", "Synths unlocked 🌀"],
 };
 
 function getMissions(world: WorldId): Mission[] {
@@ -156,14 +177,14 @@ function AnimatedCatIntro({ meta, world, firstSlug }: {
         }`}>
           <div className="flex items-start gap-4 mb-4">
             <div style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.4))" }} className="shrink-0 animate-bounce-bob">
-              <Image src={meta.catSrc} alt="DJ Pawsworth" width={68} height={68} className="object-contain" />
+              <Image src={meta.catMain} alt="DJ Pawsworth" width={68} height={68} className="object-contain" />
             </div>
-            <div className={`transition-all duration-400 ease-out ${bubbleVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"}`}>
+            <div className={`transition-all duration-[400ms] ease-out ${bubbleVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"}`}>
               <div className="font-display text-xl leading-tight">{w.headline}</div>
               <div className="font-mono text-[10px] uppercase opacity-60 mt-0.5">Your guide for this world</div>
             </div>
           </div>
-          <p className={`font-mono text-xs leading-relaxed opacity-80 mb-5 transition-all duration-500 delay-100 ${bubbleVisible ? "opacity-80 translate-y-0" : "opacity-0 translate-y-2"}`}>
+          <p className={`font-mono text-xs leading-relaxed mb-5 transition-all duration-500 delay-100 ${bubbleVisible ? "opacity-80 translate-y-0" : "opacity-0 translate-y-2"}`}>
             {w.body}
           </p>
           <Link href={`/learn/${firstSlug}`} className={`block w-full text-center font-display text-base py-4 brutal-border brutal-press transition-colors ${
@@ -177,80 +198,181 @@ function AnimatedCatIntro({ meta, world, firstSlug }: {
   );
 }
 
-// ─── Chapter dots row — with short names ──────────────────────────────────────
-function ChapterDots({ chapters, nodes, world, meta }: {
+// ─── Chapter progress strip — expanded pills ──────────────────────────────────
+function ChapterStrip({ chapters, nodes, world, meta, worldSlug }: {
   chapters: Chapter[]; nodes: PathNode[]; world: WorldId;
-  meta: typeof WORLD_META[string];
+  meta: typeof WORLD_META[string]; worldSlug: string;
 }) {
   return (
     <div className={`border-b-4 border-ink ${world === "dj" ? "bg-[#0a0f2e]" : "bg-bone"}`}>
-      <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-center gap-1 flex-wrap">
-        {chapters.map((ch, i) => {
+      {/* Section label */}
+      <div className={`px-4 pt-3 pb-2 font-mono text-[9px] uppercase ${world === "dj" ? "text-bone/40" : "text-ink/40"}`}>
+        // CHAPTERS
+      </div>
+      <div className="px-4 pb-4 flex flex-col gap-2">
+        {chapters.map((ch) => {
           const chNodes = nodes.filter(n => n.chapterSlug === ch.slug);
           const done = chNodes.filter(n => n.state === "complete" || n.state === "review").length;
           const total = chNodes.length;
           const pct = total > 0 ? Math.round((done / total) * 100) : 0;
           const complete = pct === 100;
           const started = done > 0;
-          const shortName = ch.title.split(" ")[0];
+          const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
+
+          const stateClass = complete
+            ? meta.pillDone
+            : started
+            ? meta.pillPartial
+            : meta.pillEmpty;
 
           return (
-            <div key={ch.slug} className="flex items-center gap-0.5">
-              <div
-                title={`${ch.title} — ${pct}%`}
-                className={`flex items-center gap-1.5 px-2.5 py-1 brutal-border font-mono text-[9px] uppercase transition-all ${
-                  complete
-                    ? world === "dj" ? "bg-volt text-ink" : "bg-ink text-bone"
-                    : started
-                    ? world === "dj" ? "bg-volt/30 text-bone" : "bg-acid/70 text-ink"
-                    : world === "dj" ? "bg-bone/10 text-bone/40" : "bg-ink/10 text-ink/30"
-                }`}
-              >
-                <span className="text-sm leading-none">{complete ? "✓" : CHAPTER_EMOJIS[ch.slug] ?? "📖"}</span>
-                <span className="font-bold">{shortName}</span>
+            <div
+              key={ch.slug}
+              className={`brutal-border flex items-center gap-3 px-3 py-2.5 transition-all ${stateClass}`}
+            >
+              {/* Number + emoji */}
+              <div className="shrink-0 flex items-center gap-2 w-12">
+                <span className="font-mono text-[9px] opacity-50">{String(ch.number).padStart(2, "0")}</span>
+                <span className="text-base leading-none">{complete ? "✓" : emoji}</span>
               </div>
-              {i < chapters.length - 1 && (
-                <div className={`w-2 h-px ${world === "dj" ? "bg-bone/20" : "bg-ink/20"}`} />
-              )}
+
+              {/* Title + tagline */}
+              <div className="flex-1 min-w-0">
+                <div className="font-display text-sm leading-tight">{ch.title}</div>
+                <div className="font-mono text-[9px] opacity-55 mt-0.5 truncate">{ch.tagline}</div>
+              </div>
+
+              {/* Progress */}
+              <div className="shrink-0 text-right min-w-[48px]">
+                {complete ? (
+                  <span className="font-mono text-[9px] uppercase opacity-70">done</span>
+                ) : started ? (
+                  <span className="font-display text-base tabular-nums">{pct}%</span>
+                ) : (
+                  <span className="font-mono text-[9px] opacity-40">{total}</span>
+                )}
+              </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Inline mode indicator — NOT a toggle, just shows current state */}
+      <div className={`border-t-4 border-ink px-4 py-3 flex items-center justify-between gap-3 ${world === "dj" ? "bg-[#060b1e]" : "bg-bone/50"}`}>
+        <div className="flex items-center gap-2">
+          <span className="text-base">🌊</span>
+          <div>
+            <div className={`font-display text-sm leading-none ${world === "dj" ? "text-bone" : "text-ink"}`}>
+              Flow Mode
+            </div>
+            <div className={`font-mono text-[9px] uppercase mt-0.5 ${world === "dj" ? "text-bone/50" : "text-ink/50"}`}>
+              Sequential · hearts on · XP gated
+            </div>
+          </div>
+        </div>
+        <Link
+          href={`/world/${worldSlug}?view=free`}
+          className={`brutal-border px-3 py-1.5 font-display text-xs brutal-press transition-colors ${meta.freeModeLinkClass}`}
+        >
+          Switch to Free →
+        </Link>
       </div>
     </div>
   );
 }
 
-// ─── Full-width Flow / Browse toggle band ─────────────────────────────────────
-function ModeToggleBand({ worldSlug, meta }: { worldSlug: string; meta: typeof WORLD_META[string] }) {
-  const world = worldSlug as WorldId;
+// ─── Solid color hero — NO images ─────────────────────────────────────────────
+function WorldHero({ world, meta, done, total, pct, rank, progress: prog }: {
+  world: WorldId;
+  meta: typeof WORLD_META[string];
+  done: number; total: number; pct: number;
+  rank: string;
+  progress: { streakDays: number; xp: number; gems: number };
+}) {
   return (
-    <div className={`border-b-4 border-ink flex ${world === "dj" ? "bg-[#0a0f2e]" : "bg-bone"}`}>
-      {/* Flow Mode — active */}
-      <div className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 ${meta.toggleBg}`}>
-        <span className="text-lg">🌊</span>
-        <div>
-          <div className="font-display text-sm leading-none">Flow Mode</div>
-          <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">Sequential · hearts on</div>
-        </div>
-        <span className="font-mono text-[8px] bg-current/20 px-1.5 py-0.5 uppercase ml-1 opacity-80 rounded-sm">
-          ACTIVE
-        </span>
+    <div className={`${meta.heroBg} ${meta.textColor} ${meta.heroBorder} relative overflow-hidden`}>
+
+      {/* Decorative floating elements */}
+      <div className="absolute top-4 right-48 w-12 h-12 opacity-20 float pointer-events-none" aria-hidden style={{ animationDelay: "0.5s" }}>
+        <Image src={meta.deco1} alt="" fill className="object-contain" />
       </div>
-      {/* Divider */}
-      <div className="w-px bg-ink/30" />
-      {/* Browse / Free — inactive link */}
-      <Link
-        href={`/world/${worldSlug}?view=free`}
-        className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 brutal-press transition-colors hover:opacity-80 ${
-          world === "dj" ? "text-bone/60 hover:bg-bone/5" : "text-ink/50 hover:bg-acid/10"
-        }`}
-      >
-        <span className="text-lg">📋</span>
-        <div>
-          <div className="font-display text-sm leading-none">Browse</div>
-          <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">All lessons open</div>
+      <div className="absolute bottom-8 right-16 w-16 h-16 opacity-15 spin-slow pointer-events-none" aria-hidden>
+        <Image src={meta.deco2} alt="" fill className="object-contain" />
+      </div>
+      <div className="absolute top-12 right-4 w-10 h-10 opacity-10 float pointer-events-none" aria-hidden style={{ animationDelay: "1.8s" }}>
+        <Image src={meta.deco1} alt="" fill className="object-contain" />
+      </div>
+
+      <div className="relative z-10 max-w-2xl mx-auto px-4 pt-6 pb-8 md:pt-8 md:pb-10">
+        {/* Back link */}
+        <Link href="/worlds" className={`font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-5 transition-opacity ${meta.textColor}`}>
+          ← ALL WORLDS
+        </Link>
+
+        {/* Title row */}
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-6xl md:text-7xl leading-none">{meta.emoji}</span>
+              <div>
+                <h1 className="font-display text-4xl md:text-6xl leading-none">
+                  {meta.title.toUpperCase()}
+                </h1>
+                <p className={`font-mono text-xs uppercase mt-1 opacity-70`}>{meta.tagline}</p>
+              </div>
+            </div>
+
+            {/* Progress bar */}
+            <div className={`h-3 brutal-border overflow-hidden mb-2 max-w-md ${world === "dj" ? "bg-bone/10" : "bg-ink/15"}`}>
+              <div
+                className={`h-full transition-all duration-700 ${world === "dj" ? "bg-volt" : "bg-ink"}`}
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <div className={`flex items-center gap-4 font-mono text-[10px] uppercase opacity-70 mb-5`}>
+              <span>{done}/{total} lessons</span>
+              <span>{pct}%</span>
+              <span>{rank}</span>
+            </div>
+
+            {/* Stats pills */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: `🔥 ${prog.streakDays}d streak` },
+                { label: `${prog.xp} XP` },
+                { label: `💎 ${prog.gems}` },
+              ].map(({ label }) => (
+                <div
+                  key={label}
+                  className={`brutal-border px-3 py-1 font-mono text-[10px] uppercase ${world === "dj" ? "bg-bone/10 text-bone" : "bg-ink/10 text-ink"}`}
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Main cat — large, prominent */}
+          <div className="shrink-0 flex flex-col items-center gap-3">
+            <div
+              className="w-24 h-24 md:w-32 md:h-32 wiggle"
+              style={{ filter: "drop-shadow(4px 4px 0 rgba(0,0,0,0.25))" }}
+              aria-hidden
+            >
+              <Image src={meta.catMain} alt="" width={128} height={128} className="w-full h-full object-contain" />
+            </div>
+            {/* Deco cats below */}
+            <div className="flex items-end gap-2">
+              <div className="w-8 h-8 opacity-70 float" style={{ animationDelay: "0.4s" }} aria-hidden>
+                <Image src={meta.catDeco1} alt="" width={32} height={32} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))" }} />
+              </div>
+              <div className="w-7 h-7 opacity-60 float" style={{ animationDelay: "1.2s" }} aria-hidden>
+                <Image src={meta.catDeco2} alt="" width={28} height={28} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))" }} />
+              </div>
+            </div>
+          </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
@@ -328,76 +450,27 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   return (
     <div className={`min-h-screen ${meta.bg}`}>
 
-      {/* ── Full-bleed hero header ──────────────────────────────────────── */}
-      <div className="relative overflow-hidden border-b-4 border-ink" style={{ minHeight: "320px" }}>
-        {/* Background image */}
-        <Image
-          src={WORLD_IMAGES[world]}
-          alt=""
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        {/* Dark gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-r ${WORLD_OVERLAY[world]}`} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+      {/* ── Solid color hero — no image ────────────────────────────────── */}
+      <WorldHero
+        world={world}
+        meta={meta}
+        done={done}
+        total={total}
+        pct={pct}
+        rank={rank.name}
+        progress={{ streakDays: progress.streakDays, xp: progress.xp, gems: progress.gems }}
+      />
 
-        {/* Content */}
-        <div className={`relative z-10 max-w-2xl mx-auto px-4 pt-6 pb-8 md:pt-8 md:pb-12 ${meta.textColor}`}>
-          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 block mb-5">
-            ← ALL WORLDS
-          </Link>
+      {/* ── Chapter progress strip — expanded pills ─────────────────────── */}
+      <ChapterStrip
+        chapters={chapters}
+        nodes={nodes}
+        world={world}
+        meta={meta}
+        worldSlug={worldSlug}
+      />
 
-          {/* Big title */}
-          <div className="flex items-center gap-4 mb-4">
-            <span className="text-6xl md:text-8xl leading-none">{meta.emoji}</span>
-            <div>
-              <h1
-                className="font-display text-5xl md:text-7xl leading-none"
-                style={{ textShadow: "3px 3px 0 rgba(0,0,0,0.3)" }}
-              >
-                {meta.title}
-              </h1>
-              <p className="font-mono text-xs uppercase opacity-80 mt-1">{meta.tagline}</p>
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          <div className="h-3 brutal-border bg-black/30 overflow-hidden mb-2 max-w-md">
-            <div
-              className="h-full bg-current/70 transition-all duration-700"
-              style={{ width: `${pct}%`, boxShadow: `0 0 12px rgba(255,255,255,0.3)` }}
-            />
-          </div>
-          <div className="flex items-center gap-4 font-mono text-[10px] uppercase opacity-80 mb-5">
-            <span>{done}/{total} lessons</span>
-            <span>{pct}%</span>
-            <span>{rank.name}</span>
-          </div>
-
-          {/* Stats pills */}
-          <div className="flex flex-wrap gap-2">
-            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
-              🔥 {progress.streakDays}d streak
-            </div>
-            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
-              {progress.xp} XP
-            </div>
-            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
-              💎 {progress.gems}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Flow / Browse toggle band ───────────────────────────────────── */}
-      <ModeToggleBand worldSlug={worldSlug} meta={meta} />
-
-      {/* ── Chapter dots ───────────────────────────────────────────────── */}
-      <ChapterDots chapters={chapters} nodes={nodes} world={world} meta={meta} />
-
-      {/* ── Snake path — NO spine line ──────────────────────────────────── */}
+      {/* ── Snake path ──────────────────────────────────────────────────── */}
       <div className="max-w-sm mx-auto px-4 pt-10 pb-32">
 
         {/* First-visit animated cat */}
@@ -414,22 +487,18 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
 
           return (
             <div key={node.slug}>
-              {/* Chapter banner — full name + number */}
+              {/* Chapter banner */}
               {isChapterStart && (
                 <div className="flex justify-center my-10">
                   <div className={`brutal-border text-center max-w-[300px] w-full brutal-shadow overflow-hidden ${meta.chapterBannerBg} ${meta.chapterBannerBorder} ${meta.textColor}`}>
-                    {/* Chapter label row */}
-                    <div className={`px-5 pt-4 pb-3`}>
-                      <div className="font-mono text-[10px] uppercase opacity-60 mb-1">
-                        CH {chNum}
-                      </div>
+                    <div className="px-5 pt-4 pb-3">
+                      <div className="font-mono text-[10px] uppercase opacity-60 mb-1">CH {chNum}</div>
                       <div className="text-5xl mb-2">{chEmoji}</div>
                       <div className="font-display text-xl leading-tight">{chapter?.title ?? node.chapterSlug}</div>
                       <div className="font-mono text-[10px] opacity-60 mt-1 leading-snug uppercase">{chapter?.tagline ?? ""}</div>
                     </div>
-                    {/* Cat quip strip */}
                     <div className={`px-4 py-2.5 border-t-2 border-current/20 flex items-center justify-center gap-2 font-mono text-[10px] italic ${
-                      world === "dj" ? "bg-volt/10 text-bone" : "bg-ink/8 text-ink"
+                      world === "dj" ? "bg-volt/10 text-bone" : "bg-ink/5 text-ink"
                     }`}>
                       <span className="shrink-0">🐱</span>
                       <span className="opacity-75">&ldquo;{chQuip}&rdquo;</span>
@@ -438,10 +507,10 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
                 </div>
               )}
 
-              {/* Node — positioned left/center/right with safe padding */}
+              {/* Node */}
               <div className={`relative flex mb-12 ${
-                node.side === "left" ? "justify-start pl-8" :
-                node.side === "right" ? "justify-end pr-8" :
+                node.side === "left"   ? "justify-start pl-8" :
+                node.side === "right"  ? "justify-end pr-8"   :
                 "justify-center"
               }`}>
                 {idx === firstAvailableIdx ? (
@@ -467,12 +536,22 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
 
         {/* World complete */}
         {pct === 100 && (
-          <div className="brutal-border bg-acid text-ink p-8 text-center brutal-shadow mt-8">
+          <div className={`brutal-border p-8 text-center brutal-shadow mt-8 ${
+            world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink"
+          }`}>
             <div className="flex justify-center mb-4">
-              <Image src={meta.catSrc} alt="" width={100} height={100}
+              <Image src={meta.catMain} alt="" width={100} height={100}
                 className="drop-shadow-[4px_4px_0_rgba(0,0,0,0.3)] animate-bounce-bob" />
             </div>
-            <div className="text-5xl mb-3">🏆</div>
+            <div className="flex justify-center gap-3 mb-3">
+              <div className="w-10 h-10 float" aria-hidden style={{ animationDelay: "0.2s" }}>
+                <Image src={meta.catDeco1} alt="" width={40} height={40} className="w-full h-full object-contain" />
+              </div>
+              <span className="text-5xl">🏆</span>
+              <div className="w-10 h-10 float" aria-hidden style={{ animationDelay: "0.8s" }}>
+                <Image src={meta.catDeco2} alt="" width={40} height={40} className="w-full h-full object-contain" />
+              </div>
+            </div>
             <div className="font-display text-4xl">WORLD COMPLETE!</div>
             <div className="font-mono text-sm opacity-70 mt-2">You finished {meta.title}. Incredible.</div>
             <Link href="/worlds" className="mt-5 brutal-border bg-ink text-bone px-7 py-3.5 font-display text-base inline-block brutal-press hover:bg-electric-blue transition-colors">
@@ -537,7 +616,7 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
     );
   }
 
-  // Available — big, glowing, pulsing
+  // Available
   return (
     <Wrap href={`/learn/${node.slug}`} title={node.title}>
       <div
