@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WorldPathClient } from "@/components/WorldPathClient";
 import { WorldPageClient } from "@/components/WorldPageClient";
-import { WorldViewToggle } from "@/components/WorldViewToggle";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -30,19 +29,10 @@ export default async function WorldPage({ params, searchParams }: Props) {
   const { view } = await searchParams;
   if (!WORLD_TITLES[slug]) notFound();
 
-  // Default is Flow Mode (Duolingo path snake).
-  // ?view=free switches to the accordion chapter/path browser (Free Mode).
+  // Default: Flow Mode snake path. ?view=free: Free Mode accordion browser.
   const showFree = view === "free";
 
-  return (
-    <>
-      {/* Sticky tab bar — always visible so user can switch at any point */}
-      <WorldViewToggle slug={slug} showFree={showFree} />
-
-      {showFree
-        ? <WorldPageClient slug={slug} />
-        : <WorldPathClient worldSlug={slug} />
-      }
-    </>
-  );
+  return showFree
+    ? <WorldPageClient slug={slug} />
+    : <WorldPathClient worldSlug={slug} />;
 }
