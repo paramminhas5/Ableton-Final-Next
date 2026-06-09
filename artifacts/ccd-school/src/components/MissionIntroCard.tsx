@@ -65,7 +65,7 @@ export function MissionIntroCard({
   const ctx = getMissionContext(m.slug);
   const alreadyDone = !!progress.completedMissions[m.slug];
   const accent = WORLD_ACCENT[m.world] ?? "bg-bone text-ink";
-  const bar = WORLD_BAR[ctx.worldSlug ?? m.world] ?? "bg-acid";
+  const bar = WORLD_BAR[ctx.world ?? m.world] ?? "bg-acid";
   const xpEarned = alreadyDone ? 0 : m.xp;
 
   // Count exercises in screens
