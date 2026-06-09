@@ -889,6 +889,7 @@ export function DashboardClient() {
               </div>
             </div>
           </section>
+          </SectionReveal>
         )}
 
         {/* ══ SECTION 7: Beat Coach Card ══════════════════════════════════ */}
