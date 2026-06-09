@@ -2,12 +2,12 @@
 /**
  * LessonPageClient — mode-aware lesson router.
  *
- * PATH MODE   (learnMode === "ccd"):
+ * FLOW MODE   (learnMode === "flow"):
  *   → LessonPlayer  (Duolingo screens: hook→concept→interact→quiz→summary)
  *   → Hearts active, sequential gating, XP on completion
  *   → If mission has no screens yet, falls back to InlineClassic with improved banner (#10)
  *
- * EXPLORE MODE (learnMode === "classic"):
+ * FREE MODE (learnMode === "classic"):
  *   → InlineClassic  (scrolling explainer + sim + quiz, no hearts)
  *   → All missions always accessible, no gating
  *
@@ -28,24 +28,23 @@ import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
 
-// ── Path Mode fallback banner — shown when a lesson has no screens yet ────────
-// Clean, informative — makes it clear this is the explore format, not broken PATH MODE
-function CcdFallbackBanner({ missionTitle }: { missionTitle: string }) {
+// ── Flow Mode fallback banner — shown when a lesson has no screens yet ────────
+// Clean, informative — makes it clear this is the explore format, not broken FLOW MODE
+function FlowFallbackBanner({ missionTitle }: { missionTitle: string }) {
   return (
     <div className="max-w-2xl mx-auto px-4 pt-4">
       <div className="brutal-border bg-acid text-ink px-5 py-4">
         <div className="flex items-start gap-3 mb-2">
-          <span className="text-xl shrink-0">🗺</span>
+          <span className="text-xl shrink-0">🌊</span>
           <div>
-            <div className="font-display text-base">PATH MODE — Explore Format</div>
+            <div className="font-display text-base">FLOW MODE — Explore Format</div>
             <div className="font-mono text-xs opacity-60 mt-0.5">
               {missionTitle}
             </div>
           </div>
         </div>
         <div className="font-mono text-xs opacity-80 leading-relaxed">
-          This lesson uses the explore format — but the <strong>content, simulator, quiz and XP</strong> are all here. 
-          Work through it top to bottom and complete the quiz to unlock the next lesson.
+          This lesson uses the scrolling format. Complete the quiz to unlock the next lesson and earn your XP.
         </div>
         <div className="mt-3 flex flex-wrap gap-2 font-mono text-[9px] uppercase">
           <span className="brutal-border bg-ink/20 px-2 py-1">✓ Full content</span>
@@ -76,9 +75,15 @@ function Inner({ slug }: { slug: string }) {
 
   const next = nextMission(slug);
   const hasScreens = (mission.screens?.length ?? 0) > 0;
-  const coachContext = `${mission.title} — ${mission.tagline}`;
 
   const ctx = getMissionContext(slug);
+
+  const coachContext = [
+    `[World: ${ctx?.world ?? "unknown"}]`,
+    `[${learnMode === "flow" ? "Flow Mode" : "Free Mode"}]`,
+    `Lesson: ${mission.title} — ${mission.tagline}.`,
+    ctx?.chapter?.title ? `Chapter: ${ctx.chapter.title}.` : "",
+  ].filter(Boolean).join(" ");
   const worldRoute = ctx.worldRoute || "/worlds";
 
   const missionIndex = ctx.path
@@ -87,27 +92,12 @@ function Inner({ slug }: { slug: string }) {
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
 
   const handleComplete = () => {
-    setTimeout(() => router.push("/dashboard"), 2200);
+    const destination = isReview ? "/review" : "/dashboard";
+    setTimeout(() => router.push(destination), 2200);
   };
 
-  // ── Show intro card until user taps START ──────────────────────────────────
-  if (!started) {
-    return (
-      <div>
-        <MissionIntroCard
-          mission={mission}
-          missionIndex={missionIndex}
-          missionTotal={missionTotal}
-          isReview={isReview}
-          onStart={() => setStarted(true)}
-        />
-        <FloatingCoachButton context={coachContext} />
-      </div>
-    );
-  }
-
-  // ── PATH MODE ──────────────────────────────────────────────────────────────
-  if (learnMode === "ccd") {
+  // ── FLOW MODE ──────────────────────────────────────────────────────────────
+  if (learnMode === "flow") {
     return (
       <div>
         {hasScreens ? (
@@ -123,7 +113,7 @@ function Inner({ slug }: { slug: string }) {
         ) : (
           /* No screens yet → informative banner + inline classic (no hearts deducted) */
           <>
-            <CcdFallbackBanner missionTitle={mission.title} />
+            <FlowFallbackBanner missionTitle={mission.title} />
             <InlineClassicLesson
               mission={mission}
               nextSlug={next?.slug}
@@ -138,7 +128,7 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  // ── EXPLORER MODE ──────────────────────────────────────────────────────────
+  // ── FREE MODE ───────────────────────────────────────────────────────────────
   return (
     <div>
       <InlineClassicLesson

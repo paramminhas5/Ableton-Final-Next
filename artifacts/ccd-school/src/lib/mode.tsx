@@ -10,8 +10,10 @@ import {
 
 export type LearnMode = "flow" | "classic";
 // Mode labels (public-facing):
-//   "ccd"     → PATH MODE   — sequential, hearts on, Duolingo-style
-//   "classic" → EXPLORE MODE — all lessons open, no hearts, free-browse
+//   "flow"    → FLOW MODE    — sequential, hearts on, Duolingo-style
+//   "classic" → FREE MODE    — all lessons open, no hearts, free-browse
+// Mode/difficulty: only two axes now — learnMode (flow/classic) and progress.difficulty (normal/hard)
+// The old Beginner/Intermediate/Advanced axis is removed.
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
@@ -20,6 +22,30 @@ export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; taglin
 };
 
 const MODE_KEY = "ccd.learnMode";
+
+/**
+ * Normalises legacy "ccd" value to "flow".
+ * Any stored "classic" value is preserved as-is.
+ * Called before any component receives the mode value.
+ */
+export function normaliseCcdToFlow(raw: string | null): LearnMode {
+  if (raw === "ccd") return "flow";
+  if (raw === "classic") return "classic";
+  return "flow"; // new default is "flow"
+}
+
+function getInitialMode(): LearnMode {
+  if (typeof window === "undefined") return "flow";
+  try {
+    const raw = localStorage.getItem(MODE_KEY);
+    const normalised = normaliseCcdToFlow(raw);
+    // Write back immediately so "ccd" never persists beyond this read
+    if (raw !== normalised) localStorage.setItem(MODE_KEY, normalised);
+    return normalised;
+  } catch {
+    return "flow";
+  }
+}
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
