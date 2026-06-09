@@ -140,21 +140,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── Fonts: preload prevents render-blocking, display=swap eliminates FOUT ── */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Archivo Black — display font (headings) */}
+
+        {/* Bowlby One — CCD display font (all headlines) */}
         <link
           rel="preload"
           as="style"
-          href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap"
         />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap"
           media="print"
           // @ts-expect-error – string onLoad is intentional for perf (not a React event)
           onLoad="this.media='all'"
         />
-        {/* Space Mono — monospaced body + labels */}
+        {/* Space Mono — monospaced labels */}
         <link
           rel="preload"
           as="style"
@@ -182,10 +183,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           // @ts-expect-error – string onLoad is intentional for perf (not a React event)
           onLoad="this.media='all'"
         />
-        {/* Fallback noscript for environments without JS */}
+        {/* Fallback noscript */}
         <noscript>
           {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
         </noscript>
 
         {/* Structured data */}
@@ -233,8 +234,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main id="main-content" className="flex-1">{children}</main>
             {/* Footer hidden on mobile — bottom nav takes its place */}
-            <footer className="hidden md:block brutal-border border-x-0 border-b-0 bg-ink text-bone px-4 py-2 font-mono text-[10px] uppercase tracking-widest">
-              CCD.SCHOOL · CATSCANDANCE · 2026
+            <footer className="hidden md:block border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest flex items-center justify-between gap-4">
+              <span>CCD<span className="text-acid">.</span>SCHOOL</span>
+              <span className="font-mono text-[10px] opacity-50">CATSCANDANCE · LEARN.CATSCANDANCE.COM · 2026</span>
+              <span className="text-acid">★</span>
             </footer>
           </div>
         </ClientProviders>
