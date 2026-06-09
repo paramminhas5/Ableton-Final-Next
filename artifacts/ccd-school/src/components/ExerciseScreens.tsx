@@ -152,40 +152,46 @@ export function AudioIdScreen({
 
           {/* Answer options */}
           {phase !== "listening" && (
-            <div className="grid sm:grid-cols-2 gap-2">
-              {screen.options.map((opt, i) => {
-                let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
-                if (phase === "correct" || phase === "wrong") {
-                  if (i === screen.answer) cls = "bg-acid text-ink font-bold";
-                  else if (i === picked && phase === "wrong") cls = "bg-hot text-bone";
-                  else cls = "bg-bone opacity-40 cursor-default";
-                }
-                return (
-                  <button
-                    key={i}
-                    onClick={() => pick(i)}
-                    disabled={phase !== "picking"}
-                    aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
-                    className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
-                  >
-                    <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
-                    {opt}
-                    {(phase === "correct" || phase === "wrong") && i === screen.answer && <span className="ml-2">✓</span>}
-                  </button>
-                );
-              })}
-            </div>
-            {phase === "wrong" && (
-              <div className="font-mono text-xs opacity-80 mb-1">
-                Correct: <strong>{screen.options[screen.answer]}</strong>
-                {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
+            <>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {screen.options.map((opt, i) => {
+                  let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
+                  if (phase === "correct" || phase === "wrong") {
+                    if (i === screen.answer) cls = "bg-acid text-ink font-bold";
+                    else if (i === picked && phase === "wrong") cls = "bg-hot text-bone";
+                    else cls = "bg-bone opacity-40 cursor-default";
+                  }
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => pick(i)}
+                      disabled={phase !== "picking"}
+                      aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
+                      className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
+                    >
+                      <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
+                      {opt}
+                      {(phase === "correct" || phase === "wrong") && i === screen.answer && <span className="ml-2">✓</span>}
+                    </button>
+                  );
+                })}
               </div>
-              <button
-                onClick={onNext}
-                className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
-              >
-                NEXT →
-              </button>
+              {(phase === "correct" || phase === "wrong") && (
+                <>
+                  {phase === "wrong" && (
+                    <div className="font-mono text-xs opacity-80 mb-1">
+                      Correct: <strong>{screen.options[screen.answer]}</strong>
+                      {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                    </div>
+                  )}
+                  <button
+                    onClick={onNext}
+                    className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+                  >
+                    NEXT →
+                  </button>
+                </>
+              )}
             </>
           )}
         </>
