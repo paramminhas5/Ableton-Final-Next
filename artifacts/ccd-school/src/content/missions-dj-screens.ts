@@ -34,11 +34,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       prompt: "Blend two tracks — feel the transition",
     },
     {
-      kind: "quiz",
-      q: "A DJ primary job is",
-      options: ["Producing original music in a studio", "Selecting and playing music to control the energy of an audience", "Teaching music theory", "Selling records"],
-      answer: 1,
-      explain: "DJing is about curation and energy management — choosing the right track at the right moment.",
+      kind: "match",
+      prompt: "Match each DJ role to its description",
+      pairs: [
+        { left: "Radio DJ", right: "Pre-planned sets for broadcast audiences" },
+        { left: "Club DJ", right: "Reads the dance floor in real time" },
+        { left: "Turntablist", right: "Uses decks as a musical instrument" },
+        { left: "Resident DJ", right: "Regular slot at one venue, knows the crowd" },
+      ],
     },
     {
       kind: "quiz",
@@ -48,11 +51,11 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       explain: "Modern DJing grew from radio DJs, the disco era, hip-hop culture, and the underground scenes of Chicago and Detroit in the 1970s–80s.",
     },
     {
-      kind: "quiz",
-      q: "The most fundamental DJ skill is",
-      options: ["Scratching records", "The transition — moving seamlessly from one track to the next", "Knowing every track BPM by heart", "Having the newest equipment"],
-      answer: 1,
-      explain: "The transition is the core of DJing — beatmatching, timing, and smoothly moving between tracks without disrupting the crowd.",
+      kind: "type-answer",
+      q: "What is the most fundamental skill in DJing? (two words)",
+      acceptableAnswers: ["the transition", "transition", "beatmatching", "beat matching"],
+      explain: "The transition — moving seamlessly from one track to the next — is the core of DJing. Everything else supports this one skill.",
+      hint: "Think about what happens between two tracks.",
     },
     {
       kind: "summary",
@@ -90,11 +93,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       prompt: "Use the mixer — adjust EQ and faders",
     },
     {
-      kind: "quiz",
-      q: "CDJs are",
-      options: ["A type of headphone", "Industry-standard club media players that read USB drives", "A music streaming service", "A type of amplifier"],
-      answer: 1,
-      explain: "CDJs are Pioneer DJ industry-standard club players found on virtually every professional DJ booth worldwide.",
+      kind: "match",
+      prompt: "Match each DJ equipment piece to its function",
+      pairs: [
+        { left: "CDJ", right: "Plays and navigates your music library" },
+        { left: "Mixer", right: "Blends channels via EQ, faders and crossfader" },
+        { left: "Headphones", right: "Pre-listens to the next track before the crowd hears it" },
+        { left: "Crossfader", right: "Blends between two channels A and B" },
+      ],
     },
     {
       kind: "quiz",

@@ -1,22 +1,12 @@
 "use client";
 /**
  * CelebrationOverlay — full-screen moment for major achievements.
- *
- * Triggered by:
- *   • Rank-up (new rank unlocked)
- *   • 7-day streak milestone
- *   • Path trophy earned
- *   • Chapter trophy earned
- *   • World trophy earned
- *
- * Usage:
- *   <CelebrationOverlay event={event} onDone={() => setEvent(null)} />
- *
- * The parent decides when to show it — typically after CompletionModal closes,
- * or when progress changes are detected via useCelebration() hook.
+ * P3 #33: Now offers a share card after path/chapter/world trophy completion.
  */
 import { useEffect, useState, useRef } from "react";
 import { playFanfare } from "@/lib/audio";
+import { useProgress } from "@/lib/progress";
+import { TrophyShareModal } from "@/components/TrophyShareModal";
 
 export type CelebrationEvent =
   | { kind: "rank-up";     rankName: string; rankEmoji: string }
@@ -172,6 +162,8 @@ function EventContent({ event }: { event: CelebrationEvent }) {
 
 export function CelebrationOverlay({ event, onDone }: Props) {
   const [visible, setVisible] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const { progress } = useProgress();
 
   useEffect(() => {
     if (!event) return;
@@ -257,9 +249,19 @@ export function CelebrationOverlay({ event, onDone }: Props) {
       <div className="relative z-10 max-w-lg w-full space-y-8">
         <EventContent event={event} />
 
+        {/* P3 #33: Share button for trophy events */}
+        {(event.kind === "path-trophy" || event.kind === "chapter-trophy" || event.kind === "world-trophy" || event.kind === "ccd-master") && (
+          <button
+            onClick={() => setShowShare(true)}
+            className="w-full brutal-border bg-bone text-ink py-3 font-mono text-xs uppercase brutal-press brutal-hover flex items-center justify-center gap-2"
+          >
+            <span>📤</span> Share this achievement
+          </button>
+        )}
+
         <button
           onClick={onDone}
-          className="brutal-border bg-acid text-ink w-full py-4 font-display text-2xl brutal-press brutal-shadow"
+          className="brutal-border bg-acid text-ink w-full py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
           aria-label="Continue"
         >
           {event.kind === "ccd-master" ? "👑 CLAIM THE CROWN" :
@@ -271,6 +273,32 @@ export function CelebrationOverlay({ event, onDone }: Props) {
           Tap anywhere to continue
         </div>
       </div>
+
+      {/* P3 #33: Trophy share modal */}
+      {showShare && (event.kind === "path-trophy" || event.kind === "chapter-trophy" || event.kind === "world-trophy" || event.kind === "ccd-master") && (
+        <TrophyShareModal
+          trophyName={
+            event.kind === "path-trophy" ? event.trophyName :
+            event.kind === "chapter-trophy" ? event.trophyName :
+            event.kind === "world-trophy" ? `${event.worldName} Complete` :
+            "CCD Master"
+          }
+          trophyEmoji={
+            event.kind === "path-trophy" ? "🏅" :
+            event.kind === "chapter-trophy" ? "🏆" :
+            event.kind === "world-trophy" ? "🌟" : "👑"
+          }
+          trophyKind={
+            event.kind === "path-trophy" ? "path" :
+            event.kind === "chapter-trophy" ? "chapter" :
+            event.kind === "world-trophy" ? "world" : "master"
+          }
+          worldName={event.kind === "world-trophy" ? event.worldName : undefined}
+          xp={progress.xp}
+          streakDays={progress.streakDays}
+          onClose={() => setShowShare(false)}
+        />
+      )}
     </div>
   );
 }

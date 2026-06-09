@@ -6,7 +6,7 @@
  */
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 // Note: LessonNode uses <a> tags for simplicity; Link is used elsewhere in this file
 import { useProgress, getLessonStrength, REVIEW_THRESHOLD } from "@/lib/progress";
@@ -186,6 +186,8 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const strengths = progress.lessonStrengths;
+  // P0 #3: read unlockedChapter so placement test results actually skip ahead
+  const unlockedChapter = progress.unlockedChapter ?? 1;
 
   const chapters = chaptersByWorld(world);
   const paths = pathsByWorld(world);
@@ -195,7 +197,12 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const nodes: PathNode[] = [];
   let prevComplete = true;
 
-  chapters.forEach(ch => {
+  chapters.forEach((ch, chIdx) => {
+    // P0 #3: if user placed into chapter N, treat all missions before that chapter as
+    // "complete" for gating purposes so the snake unlocks from their placement point
+    const chapterNumber = chIdx + 1;
+    const placedPast = chapterNumber < unlockedChapter;
+
     const chPaths = paths.filter(p => p.chapter === ch.slug).sort((a, b) => a.number - b.number);
     chPaths.forEach((path, pIdx) => {
       path.missionSlugs.forEach((slug, mIdx) => {
@@ -204,8 +211,12 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
         const strength = ls ? getLessonStrength(ls) : 1;
         const needsReview = isDone && strength < REVIEW_THRESHOLD;
 
+        // For placement-skipped chapters, treat as done for gating but not visually complete
+        const effectivelyDone = isDone || placedPast;
+
         let state: NodeState = "locked";
         if (isDone) state = needsReview ? "review" : "complete";
+        else if (placedPast) state = "available"; // show placement-skipped as accessible
         else if (prevComplete) state = "available";
 
         nodes.push({
@@ -216,7 +227,7 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
           side: SIDE_PATTERN[nodes.length % 4],
         });
 
-        prevComplete = isDone;
+        prevComplete = effectivelyDone;
       });
     });
   });
@@ -226,6 +237,18 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const done = nodes.filter(n => n.state === "complete" || n.state === "review").length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const { current: rank } = rankFor(progress.xp);
+
+  // P1 #11: ref for "You Are Here" auto-scroll
+  const youAreHereRef = useRef<HTMLDivElement>(null);
+  const firstAvailableIdx = nodes.findIndex(n => n.state === "available");
+
+  useEffect(() => {
+    if (youAreHereRef.current) {
+      setTimeout(() => {
+        youAreHereRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 400);
+    }
+  }, []);
 
   if (!meta) return <div className="p-8 font-mono">World not found: {worldSlug}</div>;
 
@@ -319,7 +342,17 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
                 node.side === "right" ? "justify-end pr-4" :
                 "justify-center"
               }`}>
-                <LessonNode node={node} meta={meta} />
+                {/* P1 #11: "You Are Here" marker on first available node */}
+                {idx === firstAvailableIdx ? (
+                  <div ref={youAreHereRef} className="flex flex-col items-center gap-1">
+                    <div className="brutal-border bg-acid text-ink px-2 py-0.5 font-mono text-[8px] uppercase mb-1 animate-pulse">
+                      ▼ YOU ARE HERE
+                    </div>
+                    <LessonNode node={node} meta={meta} isFlowMode={learnMode === "flow"} />
+                  </div>
+                ) : (
+                  <LessonNode node={node} meta={meta} isFlowMode={learnMode === "flow"} />
+                )}
               </div>
             </div>
           );
@@ -348,9 +381,11 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
 function LessonNode({
   node,
   meta,
+  isFlowMode,
 }: {
   node: PathNode;
   meta: typeof WORLD_META[string];
+  isFlowMode?: boolean;
 }) {
   // Outer wrapper: icon circle on top, label below
   const Wrap = ({ children, href, className, title }: {

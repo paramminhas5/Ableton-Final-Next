@@ -645,6 +645,22 @@
   box-shadow: 4px 4px 0 var(--acid);
 }
 
+/* ── P2 #25: brutal-hover — lift effect on interactive elements ──────── */
+/* Complementary to brutal-press (which presses down); this lifts UP on hover */
+.brutal-hover {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.brutal-hover:hover:not(:active) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* ── P2 #24: ensure animate-fade-up is defined for screen transitions ── */
+/* Already defined above; this re-ensures the 0.25s variant for screen renders */
+.lesson-screen-enter {
+  animation: fade-up 0.25s ease-out both;
+}
+
 /* ── Staggered fade-in for lists ───────────────────────────────────── */
 .stagger-children > * {
   opacity: 0;

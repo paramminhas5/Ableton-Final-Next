@@ -535,7 +535,7 @@ function StepOverview({
 
       <button
         onClick={onStart}
-        className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press brutal-shadow"
+        className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press brutal-shadow brutal-hover"
         style={{ animation: 'pulse-glow 2s ease-in-out infinite' }}
       >
         <style>{`@keyframes pulse-glow{0%,100%{box-shadow:0 4px 0 #0B0B0B,0 0 20px rgba(198,255,0,0.4)}50%{box-shadow:0 4px 0 #0B0B0B,0 0 40px rgba(198,255,0,0.7)}}`}</style>
@@ -544,6 +544,19 @@ function StepOverview({
       <div className="font-mono text-[10px] uppercase opacity-40 text-center">
         Free to start · No sign-up required
       </div>
+
+      {/* P2 #21: Sticky CTA on mobile — appears fixed at bottom when user scrolls past inline CTA */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-ink/95 border-t-2 border-acid md:hidden"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
+        <button
+          onClick={onStart}
+          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press"
+        >
+          START NOW →
+        </button>
+      </div>
+      {/* Spacer to prevent content being hidden behind sticky bar on mobile */}
+      <div className="h-20 md:hidden" aria-hidden />
     </div>
   );
 }

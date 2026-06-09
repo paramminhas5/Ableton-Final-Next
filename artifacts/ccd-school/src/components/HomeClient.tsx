@@ -12,7 +12,6 @@ import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState, useEffect } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
-import { useRouter } from "next/navigation";
 
 // ─── FAL AI generated images (v2 — higher contrast, dark backgrounds) ─────────
 const IMAGES = {
