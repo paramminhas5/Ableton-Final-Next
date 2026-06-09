@@ -3,9 +3,9 @@
  * DashboardClient — the unified progress hub.
  *
  * Sections:
- *  1. Hero "Next Step" card — smart continue button  [skeleton on cold load]
- *  2. Today's Stats strip — 5 stat cards             [scroll dots on mobile]
- *  3. My Worlds — 3 world progress cards
+ *  1. Hero "Next Step" card
+ *  2. Today's Stats strip
+ *  3. My Worlds — clean 3-card grid (no bg images)
  *  4. Skill Radar
  *  5. Recent Badges
  *  6. Review Queue
@@ -15,12 +15,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, getLessonStrength } from "@/lib/progress";
-
-const DASHBOARD_BG = "https://v3b.fal.media/files/b/0a9d85a6/5ncScsflwn_0wVLbzZJlu.jpg";
-const WORLD_BANNERS: Record<string, string> = {
-  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
-  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
-};
 import { useAuth } from "@/lib/auth";
 import { useLearnMode } from "@/lib/mode";
 import { rankFor } from "@/lib/ranks";
@@ -572,7 +566,6 @@ export function DashboardClient() {
 
       {/* ══ SECTION 1: Hero Next Step ══════════════════════════════════════ */}
       <section className="brutal-border border-x-0 border-t-0 bg-electric-blue text-bone relative overflow-hidden">
-        {/* DJ Cat decoration */}
         <div className="absolute bottom-0 right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none wiggle z-10" aria-hidden
           style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}>
           <Image src="/cats/cat-dj-hero.png" alt="" width={128} height={128} className="w-full h-full object-contain" />
@@ -580,12 +573,9 @@ export function DashboardClient() {
         <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           <div className="flex items-center gap-2 mb-3">
             <div className="font-mono text-xs uppercase opacity-60">// YOUR NEXT LESSON</div>
-            <span className="font-mono text-[9px] brutal-border px-2 py-0.5 opacity-60">
-              {modeLabel}
-            </span>
+            <span className="font-mono text-[9px] brutal-border px-2 py-0.5 opacity-60">{modeLabel}</span>
           </div>
 
-          {/* Fix #5: skeleton while localStorage hydrates */}
           {!hydrated ? (
             <div className="brutal-border overflow-hidden animate-pulse">
               <div className="flex flex-col md:flex-row items-stretch">
@@ -602,46 +592,32 @@ export function DashboardClient() {
           ) : continueSlug ? (
             <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid">
               <div className="flex-1 p-5 md:p-7">
-                {/* P2 #20: breadcrumb */}
                 <div className="font-mono text-[9px] uppercase opacity-50 mb-2">
                   {lastCtx?.worldLabel ?? "Fundamentals"}
                   {lastCtx?.chapter ? ` › ${lastCtx.chapter.title}` : ""}
                   {lastCtx?.path ? ` › ${lastCtx.path.title}` : ""}
                 </div>
-                <div className="font-display text-3xl md:text-5xl leading-tight mb-1">
-                  {continueTitle}
-                </div>
-                {/* P2 #20: tagline for rich preview */}
+                <div className="font-display text-3xl md:text-5xl leading-tight mb-1">{continueTitle}</div>
                 {continueTagline && (
                   <div className="font-sans text-sm opacity-60 mb-3 leading-snug">{continueTagline}</div>
                 )}
                 <div className="flex items-center gap-3 flex-wrap">
                   {continueXp > 0 && (
-                    <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">
-                      +{continueXp} XP
-                    </span>
+                    <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">+{continueXp} XP</span>
                   )}
-                  <span className="font-mono text-[9px] opacity-50">
-                    {totalDone}/{totalMissions} complete
-                  </span>
+                  <span className="font-mono text-[9px] opacity-50">{totalDone}/{totalMissions} complete</span>
                 </div>
               </div>
-              <Link
-                href={`/learn/${continueSlug}`}
+              <Link href={`/learn/${continueSlug}`}
                 className="brutal-border border-y-0 border-r-0 md:border-l-4 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press chunk-shadow hover:bg-sun transition-colors min-w-[100px] ccd-btn-hover"
-                aria-label="Start lesson"
-              >
+                aria-label="Start lesson">
                 <span className="font-display text-5xl md:text-6xl">▶</span>
               </Link>
             </div>
           ) : (
             <div className="brutal-border bg-volt text-bone p-6">
-              <div className="font-display text-2xl md:text-3xl">
-                🎉 ALL CAUGHT UP
-              </div>
-              <div className="font-mono text-sm opacity-70 mt-1">
-                Check your review queue below or explore another world.
-              </div>
+              <div className="font-display text-2xl md:text-3xl">🎉 ALL CAUGHT UP</div>
+              <div className="font-mono text-sm opacity-70 mt-1">Check your review queue below or explore another world.</div>
             </div>
           )}
         </div>
@@ -649,14 +625,12 @@ export function DashboardClient() {
 
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
 
-        {/* ══ SECTION 2: Today's Stats ════════════════════════════════════ */}
+        {/* ══ SECTION 2: Stats Grid ════════════════════════════════════════ */}
         <SectionReveal>
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S STATS</div>
-
-          {/* Fix #5: skeleton for stats strip */}
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY</div>
           {!hydrated ? (
-            <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="brutal-border p-4 space-y-2 animate-pulse">
                   <div className="h-2 w-12 bg-ink/10 rounded" />
@@ -667,7 +641,6 @@ export function DashboardClient() {
             </div>
           ) : (
             <>
-              {/* Fix #6: scroll-dots container */}
               <div
                 ref={statsRef}
                 className="flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-5 md:overflow-visible scrollbar-hide snap-x snap-mandatory"
@@ -678,20 +651,15 @@ export function DashboardClient() {
                   </div>
                 ))}
               </div>
-
-              {/* Scroll dots — mobile only, hidden on md+ */}
               <div className="flex justify-center gap-1.5 mt-2 md:hidden" aria-hidden>
                 {stats.map((_, i) => (
-                  <button
-                    key={i}
+                  <button key={i}
                     onClick={() => {
                       const el = statsRef.current;
                       if (!el) return;
-                      const cardW = el.scrollWidth / stats.length;
-                      el.scrollTo({ left: cardW * i, behavior: "smooth" });
+                      el.scrollTo({ left: (el.scrollWidth / stats.length) * i, behavior: "smooth" });
                     }}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200
-                      ${activeDot === i ? "bg-ink scale-125" : "bg-ink/25"}`}
+                    className={`w-1.5 h-1.5 rounded-full transition-all duration-200 ${activeDot === i ? "bg-ink scale-125" : "bg-ink/25"}`}
                   />
                 ))}
               </div>
@@ -703,74 +671,55 @@ export function DashboardClient() {
         {/* ══ SECTION 3: My Worlds ════════════════════════════════════════ */}
         <SectionReveal delay={0.05}>
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// MY WORLDS</div>
-          <div className="space-y-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="font-mono text-[10px] uppercase opacity-40">// MY WORLDS</div>
+            <Link href="/worlds" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL WORLDS →</Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {(["fundamentals", "dj", "producer"] as WorldKey[]).map((world) => {
               const cfg = WORLD_CONFIG[world];
               const ws = worldStats[world];
               return (
-                <div key={world} className={`brutal-border ${cfg.color} overflow-hidden relative`}>
-                  {/* World banner image for fundamentals and dj */}
-                  {WORLD_BANNERS[world] && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      <Image
-                        src={WORLD_BANNERS[world]}
-                        alt=""
-                        fill
-                        className="object-cover opacity-10 mix-blend-multiply"
-                        sizes="100vw"
-                      />
-                    </div>
-                  )}
-                  {/* World header */}
-                  <div className="p-4 pb-2 relative z-10">
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="font-display text-xl flex items-center gap-2">
+                <Link key={world} href={cfg.href}
+                  className={`brutal-border ${cfg.color} flex flex-col overflow-hidden brutal-press hover:opacity-90 transition-opacity chunk-shadow`}>
+                  {/* Top accent bar */}
+                  <div className={`h-1.5 ${cfg.bar}`} />
+                  <div className="p-4 flex-1 flex flex-col gap-3">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="font-display text-2xl flex items-center gap-2">
                         <span>{cfg.emoji}</span>
-                        <span>{cfg.label}</span>
+                        <span className="text-base">{cfg.label}</span>
                       </div>
-                      <div className="font-mono text-[10px] opacity-60">
-                        {ws.pct}% · {ws.done}/{ws.total}
+                      <div className={`font-display text-3xl tabular-nums ${ws.pct === 100 ? "text-current" : "opacity-80"}`}>
+                        {ws.pct}%
                       </div>
                     </div>
                     {/* Progress bar */}
-                    <div className="h-2 brutal-border bg-bone/20 overflow-hidden mt-2">
-                      <div
-                        className={`h-full ${cfg.bar} transition-all duration-700`}
-                        style={{ width: `${ws.pct}%` }}
-                      />
+                    <div className="h-2 brutal-border bg-bone/25 overflow-hidden">
+                      <div className={`h-full ${cfg.bar} transition-all duration-700`} style={{ width: `${ws.pct}%` }} />
+                    </div>
+                    {/* Missions count */}
+                    <div className="font-mono text-[9px] uppercase opacity-60">{ws.done}/{ws.total} missions</div>
+                    {/* Chapter dots */}
+                    <div className="flex gap-1 flex-wrap mt-auto">
+                      {ws.chapters.map((ch) => (
+                        <div key={ch.slug}
+                          className={`w-2 h-2 rounded-sm brutal-border transition-all ${
+                            ch.pct === 100 ? cfg.pillActive :
+                            ch.pct > 0 ? cfg.pillPartial :
+                            "bg-bone/15"
+                          }`}
+                          title={`${ch.title} — ${ch.pct}%`}
+                        />
+                      ))}
                     </div>
                   </div>
-                  {/* Chapter pills */}
-                  <div className="px-4 pb-3 flex flex-wrap gap-2 mt-2 relative z-10">
-                    {ws.chapters.map((ch) => {
-                      const pillColor =
-                        ch.pct === 100
-                          ? cfg.pillActive
-                          : ch.pct > 0
-                          ? cfg.pillPartial
-                          : "bg-bone/10";
-                      return (
-                        <Link
-                          key={ch.slug}
-                          href={`${cfg.href}#${ch.slug}`}
-                          className={`brutal-border ${pillColor} px-2.5 py-1 font-mono text-[9px] uppercase brutal-press hover:opacity-90 transition-opacity`}
-                        >
-                          Ch{ch.number} {ch.pct}%
-                        </Link>
-                      );
-                    })}
+                  {/* CTA footer */}
+                  <div className="border-t-2 border-current/20 px-4 py-2.5 font-display text-xs text-right opacity-70">
+                    {ws.done === 0 ? "Start →" : ws.pct === 100 ? "Completed ✓" : "Continue →"}
                   </div>
-                  {/* CTA */}
-                  <div className="border-t-2 border-current/20 relative z-10">
-                    <Link
-                      href={cfg.href}
-                      className="block p-3 px-4 font-display text-sm brutal-press hover:bg-bone/10 transition-colors text-right"
-                    >
-                      {ws.done === 0 ? "Start →" : ws.pct === 100 ? "Completed ✓" : "Continue →"}
-                    </Link>
-                  </div>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -780,33 +729,24 @@ export function DashboardClient() {
         {/* ══ SECTION 4: Skill Radar ══════════════════════════════════════ */}
         <SectionReveal delay={0.08}>
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR SKILL RADAR</div>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// SKILL COVERAGE</div>
           <div className="brutal-border p-5 flex flex-col md:flex-row items-center gap-6">
-            <div className="flex justify-center w-full md:w-auto">
+            <div className="flex justify-center w-full md:w-auto shrink-0">
               <SkillRadar skills={radarSkills} />
             </div>
-            <div className="flex-1">
-              <div className="font-display text-xl mb-1">
-                {radarWorld === "fundamentals" ? "Fundamentals" : radarWorld === "dj" ? "DJ World" : "Producer"} Coverage
+            <div className="flex-1 w-full">
+              <div className="font-display text-lg mb-1">
+                {radarWorld === "fundamentals" ? "Fundamentals" : radarWorld === "dj" ? "DJ World" : "Producer"}
               </div>
-              <div className="font-mono text-[10px] opacity-50 mb-4">
-                Based on your most active world
-              </div>
+              <div className="font-mono text-[9px] uppercase opacity-40 mb-4">Most active world</div>
               <div className="space-y-2">
                 {radarSkills.map((s) => (
                   <div key={s.label} className="flex items-center gap-3">
-                    <div className="font-mono text-[10px] uppercase w-16 shrink-0 opacity-70">
-                      {s.label}
+                    <div className="font-mono text-[10px] uppercase w-14 shrink-0 opacity-60">{s.label}</div>
+                    <div className="flex-1 h-2 brutal-border bg-ink/10 overflow-hidden">
+                      <div className="h-full bg-acid transition-all duration-700" style={{ width: `${s.pct}%` }} />
                     </div>
-                    <div className="flex-1 h-2 brutal-border bg-bone/20 overflow-hidden">
-                      <div
-                        className="h-full bg-acid transition-all duration-700"
-                        style={{ width: `${s.pct}%` }}
-                      />
-                    </div>
-                    <div className="font-mono text-[9px] w-8 text-right opacity-60">
-                      {s.pct}%
-                    </div>
+                    <div className="font-mono text-[9px] w-8 text-right opacity-50">{s.pct}%</div>
                   </div>
                 ))}
               </div>
@@ -820,27 +760,22 @@ export function DashboardClient() {
         <section>
           <div className="flex items-center justify-between mb-3">
             <div className="font-mono text-[10px] uppercase opacity-40">// RECENT BADGES</div>
-            <Link href="/profile" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">
-              VIEW ALL BADGES →
-            </Link>
+            <Link href="/profile" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL BADGES →</Link>
           </div>
-
           {recentBadges.length === 0 ? (
-            <div className="brutal-border p-5 text-center">
+            <div className="brutal-border p-6 text-center">
               <div className="text-4xl mb-2">🏅</div>
-              <div className="font-mono text-[10px] uppercase opacity-50">
-                Complete your first lesson to earn your first badge!
-              </div>
+              <div className="font-mono text-[10px] uppercase opacity-40">Complete your first lesson to earn a badge</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               {recentBadges.map((slug) => {
                 const badge = getBadge(slug);
                 return (
                   <div key={slug} className="brutal-border p-4 flex flex-col items-center text-center gap-2">
                     <div className="text-4xl">{badge.emoji}</div>
-                    <div className="font-display text-lg leading-tight">{badge.name}</div>
-                    <div className="font-mono text-[9px] opacity-50 leading-snug">{badge.description}</div>
+                    <div className="font-display text-sm leading-tight">{badge.name}</div>
+                    <div className="font-mono text-[8px] opacity-40 leading-snug">{badge.description}</div>
                   </div>
                 );
               })}
@@ -854,35 +789,24 @@ export function DashboardClient() {
           <SectionReveal delay={0.12}>
           <section>
             <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
-              // REVIEW QUEUE ({missionsNeedingReview.length} lessons fading)
+              // REVIEW QUEUE — {missionsNeedingReview.length} FADING
             </div>
-            <div className="brutal-border p-5">
-              <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="brutal-border overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b-2 border-ink/10">
                 <div>
-                  <div className="font-display text-xl mb-0.5">REVIEW SESSION</div>
-                  <div className="font-mono text-[10px] opacity-50">
-                    {missionsNeedingReview.length} lesson
-                    {missionsNeedingReview.length !== 1 ? "s" : ""} need a refresh
-                  </div>
+                  <div className="font-display text-lg">Review Session</div>
+                  <div className="font-mono text-[9px] uppercase opacity-40">{missionsNeedingReview.length} lesson{missionsNeedingReview.length !== 1 ? "s" : ""} need a refresh</div>
                 </div>
-                <Link
-                  href={`/learn/${missionsNeedingReview[0]}?review=1`}
-                  className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm brutal-press brutal-shadow shrink-0"
-                >
-                  START REVIEW →
+                <Link href={`/learn/${missionsNeedingReview[0]}?review=1`}
+                  className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm brutal-press brutal-shadow shrink-0">
+                  START →
                 </Link>
               </div>
-              {/* Lesson chips with strength bars */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 p-4">
                 {reviewData.map(({ slug, title, pct }) => (
-                  <Link
-                    key={slug}
-                    href={`/learn/${slug}?review=1`}
-                    className="brutal-border bg-bone/10 px-3 py-2 flex items-center gap-2 brutal-press hover:bg-bone/20 transition-colors"
-                  >
-                    <span className="font-mono text-[9px] uppercase max-w-[120px] truncate">
-                      {title}
-                    </span>
+                  <Link key={slug} href={`/learn/${slug}?review=1`}
+                    className="brutal-border bg-bone px-3 py-2 flex items-center gap-2 brutal-press hover:bg-acid/20 transition-colors">
+                    <span className="font-mono text-[9px] uppercase max-w-[110px] truncate">{title}</span>
                     <StrengthBar pct={pct} />
                   </Link>
                 ))}
@@ -892,108 +816,85 @@ export function DashboardClient() {
           </SectionReveal>
         )}
 
-        {/* ══ SECTION 7: Beat Coach Card ══════════════════════════════════ */}
+        {/* ══ SECTION 7: Beat Coach + Leaderboard side by side ═══════════ */}
         <SectionReveal delay={0.14}>
-        <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
-          <button
-            onClick={() => setCoachOpen(true)}
-            className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors brutal-shadow text-left border-l-4 border-l-[#7B2FFF]"
-          >
-            <div className="w-16 h-16 brutal-border bg-bone/10 flex items-center justify-center text-4xl shrink-0">
-              🎧
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="font-display text-xl">Ask Beat Coach</div>
-              <div className="font-mono text-xs opacity-80 mt-0.5 leading-relaxed">
-                AI music tutor. Ask anything about music production, DJing, or Ableton Live. Powered by Kimi AI.
-              </div>
-            </div>
-            <div className="font-display text-3xl shrink-0 opacity-60">→</div>
-          </button>
-          {coachOpen && (
-            <CoachPanel
-              context={formatDashboardContext({
-                streak: progress.streakDays ?? 0,
-                xp: progress.xp ?? 0,
-                world: lastCtx?.world ?? null,
-                nextSlug: continueSlug ?? null,
-              })}
-              onClose={() => setCoachOpen(false)}
-            />
-          )}
-        </section>
-        </SectionReveal>
+        <div className="grid md:grid-cols-2 gap-4">
 
-        {/* ══ SECTION 8: Leaderboard Peek ════════════════════════════════ */}
-        <SectionReveal delay={0.16}>
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <div className="font-mono text-[10px] uppercase opacity-40">// LEADERBOARD</div>
-            <Link href="/leaderboard" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">
-              FULL LEADERBOARD →
-            </Link>
-          </div>
-          <div className="brutal-border overflow-hidden">
-            {loadingLeaders ? (
-              <div className="p-4 space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Skeleton className="w-6 h-6" />
-                    <Skeleton className="flex-1 h-4" />
-                    <Skeleton className="w-16 h-4" />
-                  </div>
-                ))}
+          {/* Beat Coach */}
+          <section>
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
+            <button onClick={() => setCoachOpen(true)}
+              className="w-full h-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors text-left border-l-4 border-l-[#7B2FFF]">
+              <div className="text-4xl shrink-0">🎧</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-display text-lg">Ask Beat Coach</div>
+                <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">AI music tutor · Powered by Kimi AI</div>
               </div>
-            ) : leaders.length === 0 ? (
-              <div className="p-5 font-mono text-[10px] opacity-50 text-center uppercase">
-                No leaderboard data yet
-              </div>
-            ) : (
-              <>
-                {leaders.map((entry, i) => {
-                  const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉";
-                  return (
-                    <div
-                      key={entry.rank}
-                      className={`flex items-center gap-3 px-4 py-3 ${
-                        i < leaders.length - 1 ? "border-b-2 border-ink" : ""
-                      } ${entry.isCurrentUser ? "bg-acid/20" : ""}`}
-                    >
-                      <span className="text-xl w-7 shrink-0">{medal}</span>
-                      <span className="font-mono text-sm flex-1 truncate">
-                        {entry.name}
-                        {entry.isCurrentUser && (
-                          <span className="opacity-50 ml-1">(you)</span>
-                        )}
-                      </span>
-                      <span className="font-display text-sm tabular-nums shrink-0">
-                        {entry.xp.toLocaleString()} XP
-                      </span>
-                    </div>
-                  );
+              <div className="font-display text-2xl shrink-0 opacity-50">→</div>
+            </button>
+            {coachOpen && (
+              <CoachPanel
+                context={formatDashboardContext({
+                  streak: progress.streakDays ?? 0,
+                  xp: progress.xp ?? 0,
+                  world: lastCtx?.world ?? null,
+                  nextSlug: continueSlug ?? null,
                 })}
-                {user && currentUserRank && currentUserRank > 3 && (
-                  <>
-                    <div className="px-4 py-1 font-mono text-[9px] uppercase opacity-30 text-center border-t-2 border-ink border-dashed">
-                      ···
-                    </div>
-                    <div className="flex items-center gap-3 px-4 py-3 bg-acid/20 border-t-2 border-ink">
-                      <span className="font-mono text-sm w-7 shrink-0">#{currentUserRank}</span>
-                      <span className="font-mono text-sm flex-1 truncate">
-                        {user.name ?? "You"}
-                        <span className="opacity-50 ml-1">(you)</span>
-                      </span>
-                      <span className="font-display text-sm tabular-nums shrink-0">
-                        {progress.xp.toLocaleString()} XP
-                      </span>
-                    </div>
-                  </>
-                )}
-              </>
+                onClose={() => setCoachOpen(false)}
+              />
             )}
-          </div>
-        </section>
+          </section>
+
+          {/* Leaderboard peek */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <div className="font-mono text-[10px] uppercase opacity-40">// LEADERBOARD</div>
+              <Link href="/leaderboard" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">FULL →</Link>
+            </div>
+            <div className="brutal-border overflow-hidden h-[calc(100%-28px)]">
+              {loadingLeaders ? (
+                <div className="p-4 space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Skeleton className="w-6 h-6" />
+                      <Skeleton className="flex-1 h-4" />
+                      <Skeleton className="w-16 h-4" />
+                    </div>
+                  ))}
+                </div>
+              ) : leaders.length === 0 ? (
+                <div className="p-5 font-mono text-[10px] opacity-40 text-center uppercase">No data yet</div>
+              ) : (
+                <>
+                  {leaders.map((entry, i) => {
+                    const medal = i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉";
+                    return (
+                      <div key={entry.rank}
+                        className={`flex items-center gap-3 px-4 py-3 border-b border-ink/10 last:border-b-0 ${entry.isCurrentUser ? "bg-acid/20" : ""}`}>
+                        <span className="text-lg w-7 shrink-0">{medal}</span>
+                        <span className="font-mono text-sm flex-1 truncate">
+                          {entry.name}{entry.isCurrentUser && <span className="opacity-40 ml-1">(you)</span>}
+                        </span>
+                        <span className="font-display text-sm tabular-nums shrink-0">{entry.xp.toLocaleString()} XP</span>
+                      </div>
+                    );
+                  })}
+                  {user && currentUserRank && currentUserRank > 3 && (
+                    <>
+                      <div className="px-4 py-1 font-mono text-[9px] opacity-25 text-center border-t border-ink/10">···</div>
+                      <div className="flex items-center gap-3 px-4 py-3 bg-acid/20">
+                        <span className="font-mono text-sm w-7 shrink-0">#{currentUserRank}</span>
+                        <span className="font-mono text-sm flex-1 truncate">{user.name ?? "You"}<span className="opacity-40 ml-1">(you)</span></span>
+                        <span className="font-display text-sm tabular-nums shrink-0">{progress.xp.toLocaleString()} XP</span>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          </section>
+
+        </div>
         </SectionReveal>
 
         {/* ══ Footer nudge ══════════════════════════════════════════════════ */}
@@ -1001,14 +902,10 @@ export function DashboardClient() {
           <div className="brutal-border bg-ink text-bone p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="font-display text-lg">Save your progress</div>
-              <div className="font-mono text-[10px] opacity-60 mt-0.5">
-                Create a free account to sync across devices and appear on the leaderboard.
-              </div>
+              <div className="font-mono text-[10px] opacity-50 mt-0.5">Sync across devices · appear on the leaderboard</div>
             </div>
-            <Link
-              href="/login"
-              className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-base brutal-press brutal-shadow shrink-0"
-            >
+            <Link href="/login"
+              className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-base brutal-press brutal-shadow shrink-0">
               SIGN UP FREE →
             </Link>
           </div>

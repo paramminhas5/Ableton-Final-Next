@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useProgress } from "@/lib/progress";
 
 const TABS = [
-  { href: "/learn",    label: "Learn",   matchFn: (p: string) => p === "/learn" || p.startsWith("/world") || p.startsWith("/path"), icon: LearnIcon },
+  { href: "/worlds",   label: "Worlds",  matchFn: (p: string) => p === "/worlds" || p === "/learn" || p.startsWith("/world") || p.startsWith("/path"), icon: LearnIcon },
   { href: "/daily",    label: "Daily",   matchFn: (p: string) => p === "/daily",   icon: DailyIcon },
   { href: "/review",   label: "Review",  matchFn: (p: string) => p === "/review",  icon: ReviewIcon, badge: true },
   { href: "/profile",  label: "Profile", matchFn: (p: string) => p === "/profile" || p.startsWith("/u/"), icon: ProfileIcon },

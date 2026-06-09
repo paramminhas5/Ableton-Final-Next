@@ -147,7 +147,7 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
           style={{ scale: titleScale, y: titleY, transformOrigin: "center center", willChange: "transform", fontSize: "clamp(56px, 15vw, 160px)", lineHeight: 0.85, textShadow: "6px 6px 0 hsl(222 47% 4%)" }}
           className="font-display leading-[0.85] text-bone"
         >
-          LEARN<br />MUSIC<span className="text-acid">.</span><br />PROPERLY<span className="text-acid">.</span>
+          CATS CAN<br />LEARN<span className="text-acid">.</span>
         </motion.h1>
       </div>
 
