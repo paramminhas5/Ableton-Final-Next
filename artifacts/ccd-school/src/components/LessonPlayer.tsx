@@ -7,7 +7,7 @@
  *   #7  — Breadcrumb bar: World › Chapter › Path › Mission N of M
  *   #8  — Quiz screens show "Question N of M" + hearts warning on first quiz
  *   #9  — First-time hearts explainer modal, −1 heart message on wrong answer
- *   #10 — Mode indicator only shows in PATH mode (not in classic fallback)
+ *   #10 — Mode indicator only shows in FLOW mode (not in free/classic fallback)
  *   #11 — "Save progress" nudge on SummaryScreen for logged-out users
  *   #EB — Error boundary wraps entire lesson to catch bad content data gracefully
  */
@@ -24,6 +24,7 @@ import { getMissionContext } from "@/lib/missionContext";
 import { track } from "@/lib/analytics";
 import { ConceptAudioButton } from "@/components/ConceptAudio";
 import { AudioIdScreen, MatchScreen, TypeAnswerScreen, SequenceScreen } from "@/components/ExerciseScreens";
+import { LessonSourceBar } from "@/components/LessonSourceBar";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -166,11 +167,11 @@ function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
     <div className="fixed inset-0 z-50 bg-ink/70 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Hearts explained">
       <div className="brutal-border bg-bone max-w-sm w-full brutal-shadow">
         <div className="brutal-border border-x-0 border-t-0 bg-acid text-ink px-5 py-4">
-          <div className="font-display text-3xl">🗺 PATH MODE HEARTS</div>
+          <div className="font-display text-3xl">🌊 FLOW MODE HEARTS</div>
         </div>
         <div className="p-5 space-y-3 font-mono text-sm leading-relaxed">
           <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
-          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Explore Mode</strong> (no hearts) to keep going.</p>
+          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> (no hearts) to keep going.</p>
           <p className="opacity-60 text-xs">Switch modes anytime using the toggle in the header.</p>
         </div>
         <div className="p-4">
@@ -301,7 +302,7 @@ function QuizScreen({
   screen,
   quizNumber,
   quizTotal,
-  isPathMode,
+  isFlowMode,
   xpPerCorrect,
   missionSlug,
   missionTitle,
@@ -312,7 +313,7 @@ function QuizScreen({
   screen: Extract<LessonScreen, { kind: "quiz" }>;
   quizNumber: number;
   quizTotal: number;
-  isPathMode: boolean;
+  isFlowMode: boolean;
   xpPerCorrect?: number;
   missionSlug: string;
   missionTitle?: string;
@@ -354,7 +355,7 @@ function QuizScreen({
         missionSlug: missionSlug,
         questionIndex: quizNumber,
         correct: true,
-        isPathMode,
+        isFlowMode,
       });
       onCorrect();
       // Trigger XP float animation
@@ -369,7 +370,7 @@ function QuizScreen({
         missionSlug: missionSlug,
         questionIndex: quizNumber,
         correct: false,
-        isPathMode,
+        isFlowMode,
       });
       onWrong();
       setShake(true);
@@ -400,7 +401,7 @@ function QuizScreen({
           <div className="font-mono text-[10px] uppercase opacity-60">
             QUESTION {quizNumber} OF {quizTotal}
           </div>
-          {isPathMode && phase === "picking" && (
+          {isFlowMode && phase === "picking" && (
             <div className="font-mono text-[9px] uppercase opacity-50 text-hot">
               ❤️ wrong = −1 heart
             </div>
@@ -459,7 +460,7 @@ function QuizScreen({
               <div className="font-mono text-xs opacity-80 mb-1">
                 Correct answer: <strong>{screen.options[screen.answer]}</strong>
               </div>
-              {isPathMode && (
+              {isFlowMode && (
                 <div className="font-mono text-[10px] uppercase opacity-80 mb-1">
                   −1 heart deducted
                 </div>
@@ -519,6 +520,7 @@ function SummaryScreen({
   isLoggedIn,
   correctCount,
   quizTotal,
+  source,
   onClose,
 }: {
   screen: Extract<LessonScreen, { kind: "summary" }>;
@@ -528,6 +530,7 @@ function SummaryScreen({
   isLoggedIn: boolean;
   correctCount: number;
   quizTotal: number;
+  source?: string | null;
   onClose: () => void;
 }) {
   useEffect(() => { playFanfare(); }, []);
@@ -606,6 +609,9 @@ function SummaryScreen({
           ))}
         </ul>
       </div>
+
+      {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
+      <LessonSourceBar source={source} />
 
       <div className="flex gap-2">
         {nextSlug && (
@@ -726,7 +732,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
   const { user } = useAuth();
   const alreadyDone = !!progress.completedMissions[mission.slug];
   const xpEarned = alreadyDone ? 0 : mission.xp;
-  const isPathMode = learnMode === "ccd";
+  const isFlowMode = learnMode === "flow";
 
   // Analytics: track lesson start once
   useEffect(() => {
@@ -744,6 +750,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
   // Resolve correct back-route via missionContext (fixes Producer world slug bug)
   const ctx = getMissionContext(mission.slug);
   const backRoute = ctx.worldRoute || "/worlds";
+  const sourceStr = ctx?.path?.source ?? null;
 
   const currentScreen = screens[screenIdx];
   const total = screens.length;
@@ -760,14 +767,14 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
     ? quizScreenIndices.indexOf(screenIdx) + 1
     : 0;
 
-  // Show hearts explainer on first CCD lesson if never seen
+  // Show hearts explainer on first Flow Mode lesson if never seen
   useEffect(() => {
-    if (!isPathMode) return;
+    if (!isFlowMode) return;
     try {
       const seen = sessionStorage.getItem(HEARTS_SEEN_KEY);
       if (!seen) setShowHeartsExplainer(true);
     } catch {}
-  }, [isPathMode]);
+  }, [isFlowMode]);
 
   const dismissHeartsExplainer = () => {
     try { sessionStorage.setItem(HEARTS_SEEN_KEY, "1"); } catch {}
@@ -850,7 +857,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
   const handleCorrect = () => { setCorrectCount(c => c + 1); onCorrect?.(); };
   const handleWrong = () => {
-    if (isPathMode) {
+    if (isFlowMode) {
       loseHeart();
       // Server-authoritative heart deduction
       window.dispatchEvent(new CustomEvent("progress:server_event", {
@@ -869,7 +876,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
   return (
     <>
-      {/* Hearts explainer modal — shown once per session in path mode */}
+      {/* Hearts explainer modal — shown once per session in flow mode */}
       {showHeartsExplainer && (
         <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
@@ -888,7 +895,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           <div className="flex-1">
             <ProgressBar current={screenIdx} total={total} />
           </div>
-          {isPathMode && <HeartsRow count={progress.hearts} />}
+          {isFlowMode && <HeartsRow count={progress.hearts} />}
         </div>
 
         {/* ── Breadcrumb: World › Chapter › Path › Mission N/M ── */}
@@ -898,17 +905,17 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           missionTotal={missionTotal}
         />
 
-        {/* ── Mode indicator — only show in PATH mode ── */}
-        {isPathMode && (
+        {/* ── Mode indicator — only show in FLOW mode ── */}
+        {isFlowMode && (
           <div className="flex items-center justify-between">
             <div className="brutal-border bg-acid text-ink px-2.5 py-1 font-mono text-[9px] uppercase font-bold">
-              🗺 PATH MODE · ❤️ {progress.hearts}/{MAX_HEARTS}
+              🌊 FLOW MODE · ❤️ {progress.hearts}/{MAX_HEARTS}
             </div>
             <button
               onClick={() => setLearnMode("classic")}
               className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
             >
-              Switch to Explore →
+              Switch to Free →
             </button>
           </div>
         )}
@@ -926,6 +933,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             isLoggedIn={!!user}
             correctCount={correctCount}
             quizTotal={quizScreens.length}
+            source={sourceStr}
             onClose={onComplete}
           />
         ) : currentScreen?.kind === "hook" ? (
@@ -942,7 +950,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             screen={currentScreen}
             quizNumber={currentQuizNumber}
             quizTotal={quizScreens.length}
-            isPathMode={isPathMode}
+            isFlowMode={isFlowMode}
             xpPerCorrect={alreadyDone ? 0 : Math.round(mission.xp / Math.max(1, quizScreens.length))}
             missionSlug={mission.slug}
             missionTitle={mission.title}
@@ -954,7 +962,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           <AudioIdScreen
             key={screenIdx}
             screen={currentScreen}
-            isPathMode={isPathMode}
+            isFlowMode={isFlowMode}
             onCorrect={handleCorrect}
             onWrong={handleWrong}
             onNext={advance}
@@ -971,7 +979,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           <TypeAnswerScreen
             key={screenIdx}
             screen={currentScreen}
-            isPathMode={isPathMode}
+            isFlowMode={isFlowMode}
             onCorrect={handleCorrect}
             onWrong={handleWrong}
             onNext={advance}
@@ -994,6 +1002,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             isLoggedIn={!!user}
             correctCount={correctCount}
             quizTotal={quizScreens.length}
+            source={sourceStr}
             onClose={onComplete}
           />
         ) : null}

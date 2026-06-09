@@ -5,7 +5,7 @@
  * Rules:
  *   • 5 questions, drawn from all 3 worlds
  *   • 30 seconds per question — timer counts down
- *   • Timeout = wrong answer (costs a heart in CCD mode)
+ *   • Timeout = wrong answer (costs a heart in Flow Mode)
  *   • Score is speed × accuracy: (correct / 5) × (avg remaining seconds)
  *   • Global challenge leaderboard score saved to /api/challenge/submit
  *   • Resets daily (date-keyed in localStorage)
@@ -159,7 +159,7 @@ export function ChallengePageClient() {
           </div>
         )}
         <div className="space-y-2 font-mono text-sm opacity-70">
-          {["5 questions from all 3 worlds", "30 seconds per question or it's wrong", "Speed + accuracy = your score", "Wrong answers cost a heart in PATH MODE", "Resets every day at midnight UTC"].map((rule, i) => (
+          {["5 questions from all 3 worlds", "30 seconds per question or it's wrong", "Speed + accuracy = your score", "Wrong answers cost a heart in Flow Mode", "Resets every day at midnight UTC"].map((rule, i) => (
             <div key={i} className="flex items-center gap-2"><span className="text-acid">→</span>{rule}</div>
           ))}
         </div>

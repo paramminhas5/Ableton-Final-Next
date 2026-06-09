@@ -97,7 +97,9 @@ export interface FSRSResult {
 
 export function scheduleReview(card: FSRSCard, grade: FSRSGrade): FSRSResult {
   const gradeIdx = { again: 0, hard: 1, good: 2, easy: 3 }[grade];
-  const daysSince = Math.max(0, (Date.now() - card.lastReview) / (1000 * 60 * 60 * 24));
+  // Use at least 0.001 days (~1.4 min) so R < 1.0 and the recall formula
+  // always produces a meaningful stability increase even in rapid-fire tests.
+  const daysSince = Math.max(0.001, (Date.now() - card.lastReview) / (1000 * 60 * 60 * 24));
 
   // ── Difficulty update ────────────────────────────────────────────────────────
   const gradeValue = [1, 2, 3, 4][gradeIdx]; // 1=again, 4=easy

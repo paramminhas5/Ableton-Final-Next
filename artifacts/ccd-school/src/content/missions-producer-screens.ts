@@ -249,7 +249,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "drum-rack": [
     { kind: "hook", emoji: "🥁", headline: "16 pads, infinite kits", subtext: "Each pad is its own instrument chain with effects." },
-    { kind: "concept", title: "Drum Rack structure", body: "Drum Rack is a container holding up to 128 pads, each mapped to a MIDI note. Every pad hosts a device chain (typically a Simpler), its own mixer, and its own send amounts.", keyFact: "Drag any sample directly onto a pad to load it instantly.", visual: "signal-chain"},
+    { kind: "concept", title: "Drum Rack structure", body: "Drum Rack is a container holding up to 128 pads, each mapped to a MIDI note. Every pad hosts a device chain (typically a Simpler), its own mixer, and its own send amounts.", keyFact: "Drag any sample directly onto a pad to load it instantly.", visual: "fal-image", imageUrl: "/generated/drum-rack-1.webp"},
     { kind: "concept", title: "Choke groups and macros", body: "Assign pads to Choke groups to make them cut each other off — essential for hi-hats (closed hat cuts open hat). Macro knobs at the top control assigned parameters across the whole rack.", keyFact: "Choke group = open hat + closed hat in same group number.", visual: "signal-chain"},
     { kind: "interact", sim: "beat-builder", prompt: "Build a 4-on-the-floor pattern using the Drum Rack pads" },
     { kind: "quiz", q: "Choke groups are useful for…", options: ["Reverb busses", "Hi-hat open/close relationships", "Bass lines", "Master volume"], answer: 1, explain: "Choke groups silence other pads in the same group — essential for realistic hi-hat behaviour." },
@@ -260,7 +260,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "wavetable": [
     { kind: "hook", emoji: "🌀", headline: "Wavetable is Live's modern workhorse synth", subtext: "Two oscillators scan through waveforms in real time." },
-    { kind: "concept", title: "Wavetable architecture", body: "Two oscillators each scan through a wavetable (a library of single-cycle waveforms). Sweep the Position knob to morph through timbres. Each oscillator has a sub-oscillator and noise source.", keyFact: "Two oscillators. Two filters. Two envelopes. Two LFOs.", visual: "signal-chain"},
+    { kind: "concept", title: "Wavetable architecture", body: "Two oscillators each scan through a wavetable (a library of single-cycle waveforms). Sweep the Position knob to morph through timbres. Each oscillator has a sub-oscillator and noise source.", keyFact: "Two oscillators. Two filters. Two envelopes. Two LFOs.", visual: "fal-image", imageUrl: "/generated/wavetable-1.webp"},
     { kind: "concept", title: "Modulation matrix", body: "The modulation matrix at the bottom lets you drag any source (LFO, envelope, MIDI expression, velocity) to any destination. Connect Env 2 to Filter Cutoff for a classic synth filter sweep.", keyFact: "Drag from source row to destination column to patch modulation.", visual: "waveform"},
     { kind: "interact", sim: "device-lab", prompt: "Sweep the oscillator Position knob — hear the wavetable scan" },
     { kind: "quiz", q: "Wavetable's modulation matrix is at the…", options: ["Top of the device", "Bottom of the device", "Side panel", "Separate window"], answer: 1, explain: "The mod matrix occupies the bottom section of Wavetable — drag source to destination to create modulation." },
@@ -271,7 +271,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "operator": [
     { kind: "hook", emoji: "🔔", headline: "FM synthesis demystified", subtext: "One oscillator modulates another — complex harmonics emerge." },
-    { kind: "concept", title: "Operators and algorithms", body: "Operator has 4 operators (A, B, C, D) arranged in one of 11 algorithms. Carriers make sound; modulators colour it. The algorithm determines which operators feed into which.", keyFact: "Higher modulator output level = more harmonics = brighter sound.", visual: "signal-chain"},
+    { kind: "concept", title: "Operators and algorithms", body: "Operator has 4 operators (A, B, C, D) arranged in one of 11 algorithms. Carriers make sound; modulators colour it. The algorithm determines which operators feed into which.", keyFact: "Higher modulator output level = more harmonics = brighter sound.", visual: "fal-image", imageUrl: "/generated/operator-1.webp"},
     { kind: "concept", title: "FM ratios and timbre", body: "The Coarse and Fine ratio controls set the harmonic relationship between operators. Whole-number ratios (1:1, 2:1) produce harmonic timbres. Fractional ratios (1.5, 2.35) produce inharmonic, bell-like tones.", keyFact: "Integer ratios = harmonic. Fractional = metallic/inharmonic.", visual: "waveform-compare"},
     { kind: "interact", sim: "device-lab", prompt: "Adjust operator B's output level — hear harmonics change" },
     { kind: "quiz", q: "Operator has how many operators?", options: ["2", "4", "6", "8"], answer: 1, explain: "Operator has 4 operators in 11 configurable algorithms — same structure as the classic Yamaha DX7." },
@@ -293,7 +293,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "eq-eight": [
     { kind: "hook", emoji: "📊", headline: "Shape every frequency with 8 bands", subtext: "Cut what's wrong before boosting what's right." },
-    { kind: "concept", title: "EQ Eight essentials", body: "EQ Eight provides 8 independent parametric bands — each switchable between bell, shelf, high-pass, low-pass, and notch shapes. Boost or cut any frequency range with frequency, gain, and Q controls.", keyFact: "High-pass filter removes low-end rumble below your set frequency.", visual: "eq-curve"},
+    { kind: "concept", title: "EQ Eight essentials", body: "EQ Eight provides 8 independent parametric bands — each switchable between bell, shelf, high-pass, low-pass, and notch shapes. Boost or cut any frequency range with frequency, gain, and Q controls.", keyFact: "High-pass filter removes low-end rumble below your set frequency.", visual: "fal-image", imageUrl: "/generated/eq-eight-1.webp"},
     { kind: "concept", title: "Subtractive EQ philosophy", body: "Cut problem frequencies before adding any boosts. Narrow cuts remove resonances cleanly. Broad boosts enhance character. Sweep a boosted band to find the problem — then cut that instead.", keyFact: "EQ subtractive first = more headroom, more transparent mix.", visual: "eq-curve"},
     { kind: "interact", sim: "device-lab", prompt: "Apply a high-pass filter at 80 Hz to remove sub rumble" },
     { kind: "quiz", q: "EQ Eight has how many bands?", options: ["4", "6", "8", "10"], answer: 2, explain: "8 independent bands cover the full spectrum with multiple filter shapes per band." },
@@ -304,7 +304,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "compressor": [
     { kind: "hook", emoji: "🗜", headline: "Tame dynamics, add punch", subtext: "Six parameters, one device — the most important in the chain." },
-    { kind: "concept", title: "The six parameters", body: "Threshold sets when compression starts. Ratio sets how much. Attack sets how fast it clamps. Release sets how fast it lets go. Knee controls the transition smoothness. Makeup gain restores level.", keyFact: "Slow attack lets transients through. Fast attack squashes them.", visual: "signal-chain"},
+    { kind: "concept", title: "The six parameters", body: "Threshold sets when compression starts. Ratio sets how much. Attack sets how fast it clamps. Release sets how fast it lets go. Knee controls the transition smoothness. Makeup gain restores level.", keyFact: "Slow attack lets transients through. Fast attack squashes them.", visual: "fal-image", imageUrl: "/generated/compressor-1.webp"},
     { kind: "concept", title: "Compression for feel", body: "Compressor doesn't just control dynamics — it shapes feel. Fast attack + medium release = punch and pump. Slow attack + fast release = transparent levelling. Sidechain view = frequency-dependent shaping.", keyFact: "Knee: hard = abrupt. Soft = gradual. Soft knee sounds more natural.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Compress a drum loop — find the attack/release sweet spot" },
     { kind: "quiz", q: "Slower attack lets through more…", options: ["Bass", "Transients", "Reverb tail", "Pitch information"], answer: 1, explain: "Slow attack means the compressor takes time to engage — transients (fast hits) pass through before it clamps down." },

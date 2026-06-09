@@ -20,8 +20,8 @@ CCD.SCHOOL is a gamified music-education platform covering three worlds:
 | **Producer** | Ableton Live 12 Reference Manual | 73 missions — first contact, sound & MIDI, the mix, performance, advanced, synthesis |
 
 Every mission has two complete learning formats:
-- **CCD Mode** (🔒 Path): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
-- **Classic Mode** (🗺 Explorer): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
+- **Flow Mode** (🌊): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
+- **Free Mode** (🔓): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
 
 ---
 
@@ -115,9 +115,9 @@ artifacts/ccd-school/
 
 Two axes, both always-changeable:
 
-### Axis 1: CCD vs Classic
+### Axis 1: Flow Mode vs Free Mode
 
-| | 🔒 Path Mode (CCD) | 🗺 Explorer Mode (Classic) |
+| | 🌊 Flow Mode | 🔓 Free Mode |
 |---|---|---|
 | Access | Sequential — unlock one at a time | All 153 lessons open immediately |
 | Hearts | 5 hearts; wrong answer costs ♥ | No hearts |
@@ -188,7 +188,7 @@ Plus `diagram` screen kind — custom SVG node-and-arrow diagrams with labelled 
 | Feature | How it works |
 |---|---|
 | **XP** | Earned on first completion of each mission |
-| **Hearts** | 5 hearts in CCD Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
+| **Hearts** | 5 hearts in Flow Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
 | **Streak** | Daily XP goal (50 XP); streak shield earned every 7 days |
 | **Gems** | Earned on completion; spend in gem shop |
 | **Rank** | 10+ ranks from Novice → CCD Master based on total XP |

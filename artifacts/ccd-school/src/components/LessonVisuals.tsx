@@ -575,6 +575,35 @@ function HeadroomMeter() {
   );
 }
 
+// ─── FalImage ─────────────────────────────────────────────────────────────────
+function FalImage({ url, alt }: { url?: string; alt?: string }) {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
+  if (!url) return null;
+  return (
+    <div className="brutal-border overflow-hidden bg-ink/10 relative min-h-[200px]">
+      {status === "loading" && (
+        <div className="absolute inset-0 bg-ink/10 animate-pulse" aria-hidden />
+      )}
+      {status === "error" && (
+        <div className="absolute inset-0 flex items-center justify-center font-mono text-xs opacity-40">
+          [image unavailable]
+        </div>
+      )}
+      <img
+        src={url}
+        alt={alt ?? "Lesson visual"}
+        loading="lazy"
+        className={`w-full max-w-[600px] mx-auto block object-contain transition-opacity duration-300 ${
+          status === "loaded" ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ maxHeight: "360px" }}
+        onLoad={() => setStatus("loaded")}
+        onError={() => setStatus("error")}
+      />
+    </div>
+  );
+}
+
 // ─── master InlineVisual router ──────────────────────────────────────────────
 export function InlineVisual({
   type,
@@ -583,6 +612,8 @@ export function InlineVisual({
   root,
   scaleLabel,
   signalNodes,
+  imageUrl,
+  imageAlt,
 }: {
   type: NonNullable<VisualType>;
   bpm?: number;
@@ -590,6 +621,10 @@ export function InlineVisual({
   root?: string;
   scaleLabel?: string;
   signalNodes?: string[];
+  /** URL for fal-image visual type */
+  imageUrl?: string;
+  /** Alt text for fal-image visual type */
+  imageAlt?: string;
 }) {
   if (!type || type === "none") return null;
   switch (type) {
@@ -612,6 +647,7 @@ export function InlineVisual({
     case "camelot-wheel":     return <CamelotWheel />;
     case "waveform-zoom":     return <WaveformZoom />;
     case "headroom-meter":    return <HeadroomMeter />;
+    case "fal-image":         return <FalImage url={imageUrl} alt={imageAlt} />;
     default:                  return null;
   }
 }
