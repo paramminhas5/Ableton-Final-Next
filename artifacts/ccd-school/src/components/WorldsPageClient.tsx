@@ -2,14 +2,15 @@
 /**
  * WorldsPageClient — /worlds index.
  *
- * Complete overhaul:
- * - NO images at all — pure color-block CCD cards
- * - Cats everywhere: different cat per world, floating decorative cats
- * - Scroll-linked entrance animations via IntersectionObserver
- * - Marquee ticker strip
- * - Big chapter pills (expanded, not tiny badges)
- * - Brutalist CCD design system throughout
+ * Design:
+ * - NO images — pure CCD color-block cards
+ * - Compact horizontal chapter breadcrumb rail (one scrollable row, not 5+ full rows)
+ * - DUAL CTA: 🌊 FLOW and 🔓 FREE buttons clearly separated on every card
+ * - Scroll-linked card entrance animations
+ * - Cats and decorative elements
+ * - Marquee ticker
  */
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -31,128 +32,90 @@ const CHAPTER_EMOJIS: Record<string, string> = {
 
 const WORLD_META = {
   fundamentals: {
-    title: "Fundamentals",
-    emoji: "🎵",
+    title: "Fundamentals", emoji: "🎵",
     tagline: "The vocabulary of music",
     description: "Sound, rhythm, melody, harmony and music technology. The foundation for everything.",
-    to: "/world/fundamentals",
-    // Color system
-    bg: "bg-acid",           // card background
-    textPrimary: "text-ink",
-    textMuted: "text-ink/60",
-    border: "border-ink",
-    barBg: "bg-ink/20",
-    barFill: "bg-ink",
-    ctaBg: "bg-ink",
-    ctaText: "text-bone",
-    ctaHover: "hover:bg-electric-blue",
-    pillDone: "bg-ink text-bone",
-    pillPartial: "bg-ink/40 text-ink",
-    pillEmpty: "bg-ink/10 text-ink/40",
+    bg: "bg-acid", textPrimary: "text-ink", textMuted: "text-ink/55",
+    barBg: "bg-ink/20", barFill: "bg-ink",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-ink/35 text-ink", pillEmpty: "bg-ink/10 text-ink/40",
+    pillConnector: "bg-ink/25",
+    flowBtn: "bg-ink text-bone hover:bg-electric-blue",
+    freeBtn: "bg-ink/15 text-ink hover:bg-ink/30 border-ink/40",
     shadow: "chunk-shadow",
-    // Cats for this world
     catMain: "/cats/cat-handstand.png",
     catDeco1: "/cats/cat-headphones.png",
-    catDeco2: "/cats/star.png",
-    // Decorative elements
+    catDeco2: "/cats/cat-dancer.png",
     deco1: "/cats/music-note.png",
     deco2: "/cats/vinyl.png",
   },
   dj: {
-    title: "DJ World",
-    emoji: "🎧",
+    title: "DJ World", emoji: "🎧",
     tagline: "The art of playing for people",
     description: "rekordbox, beatmatching, cue points, the mix, crowd reading and career.",
-    to: "/world/dj",
-    bg: "bg-[#0a0f2e]",
-    textPrimary: "text-bone",
-    textMuted: "text-bone/60",
-    border: "border-volt",
-    barBg: "bg-volt/20",
-    barFill: "bg-volt",
-    ctaBg: "bg-volt",
-    ctaText: "text-ink",
-    ctaHover: "hover:bg-acid",
-    pillDone: "bg-volt text-ink",
-    pillPartial: "bg-volt/40 text-bone",
-    pillEmpty: "bg-bone/10 text-bone/30",
+    bg: "bg-[#0a0f2e]", textPrimary: "text-bone", textMuted: "text-bone/55",
+    barBg: "bg-volt/20", barFill: "bg-volt",
+    pillDone: "bg-volt text-ink", pillPartial: "bg-volt/35 text-bone", pillEmpty: "bg-bone/10 text-bone/35",
+    pillConnector: "bg-volt/25",
+    flowBtn: "bg-volt text-ink hover:bg-acid",
+    freeBtn: "bg-bone/10 text-bone hover:bg-bone/20 border-bone/20",
     shadow: "brutal-shadow-acid",
     catMain: "/cats/cat-dj.png",
     catDeco1: "/cats/cat-dj-new.png",
-    catDeco2: "/cats/disco-ball.png",
-    deco1: "/cats/headphones.png",
-    deco2: "/cats/vinyl-music.png",
+    catDeco2: "/cats/cat-cap.png",
+    deco1: "/cats/disco-ball.png",
+    deco2: "/cats/headphones.png",
   },
   producer: {
-    title: "Producer",
-    emoji: "🎛",
+    title: "Producer", emoji: "🎛",
     tagline: "Build music in Ableton Live 12",
     description: "From opening Live for the first time to deep instruments, Live 12 power features and pro output.",
-    to: "/world/producer",
-    bg: "bg-sun",
-    textPrimary: "text-ink",
-    textMuted: "text-ink/60",
-    border: "border-ink",
-    barBg: "bg-ink/20",
-    barFill: "bg-ink",
-    ctaBg: "bg-ink",
-    ctaText: "text-bone",
-    ctaHover: "hover:bg-hot",
-    pillDone: "bg-ink text-bone",
-    pillPartial: "bg-ink/40 text-ink",
-    pillEmpty: "bg-ink/10 text-ink/40",
+    bg: "bg-sun", textPrimary: "text-ink", textMuted: "text-ink/55",
+    barBg: "bg-ink/20", barFill: "bg-ink",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-ink/35 text-ink", pillEmpty: "bg-ink/10 text-ink/40",
+    pillConnector: "bg-ink/25",
+    flowBtn: "bg-ink text-bone hover:bg-hot",
+    freeBtn: "bg-ink/15 text-ink hover:bg-ink/30 border-ink/40",
     shadow: "chunk-shadow",
     catMain: "/cats/cat-dj-hero.png",
     catDeco1: "/cats/cat-raver.png",
-    catDeco2: "/cats/boombox.png",
-    deco1: "/cats/music-note.png",
+    catDeco2: "/cats/cat-source.png",
+    deco1: "/cats/boombox.png",
     deco2: "/cats/star.png",
   },
 } as const;
 
-// ─── Scroll reveal hook ────────────────────────────────────────────────────────
+// ─── Scroll reveal ────────────────────────────────────────────────────────────
 function useScrollReveal() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-
   return { ref, visible };
 }
 
-// ─── Marquee strip ────────────────────────────────────────────────────────────
+// ─── Marquee ──────────────────────────────────────────────────────────────────
 function MarqueeStrip() {
   const items = [
-    "🎵 153 MISSIONS",
-    "🌍 3 WORLDS",
-    "📚 16 CHAPTERS",
-    "🎧 DJ WORLD",
-    "🎛 PRODUCER",
-    "🔊 FUNDAMENTALS",
-    "🐱 CATS CAN DANCE",
-    "⚡ GAMIFIED LEARNING",
-    "🏆 EARN TROPHIES",
-    "🌊 FLOW MODE",
-    "🔓 FREE MODE",
+    "🎵 153 MISSIONS", "🌍 3 WORLDS", "📚 16 CHAPTERS",
+    "🎧 DJ WORLD", "🎛 PRODUCER", "🔊 FUNDAMENTALS",
+    "🐱 CATS CAN DANCE", "⚡ GAMIFIED", "🏆 EARN TROPHIES",
+    "🌊 FLOW MODE", "🔓 FREE MODE",
   ];
-  const repeated = [...items, ...items];
-
+  const doubled = [...items, ...items];
   return (
     <div className="border-b-4 border-ink bg-ink text-bone overflow-hidden py-2.5">
       <div className="flex gap-8 animate-marquee whitespace-nowrap">
-        {repeated.map((item, i) => (
-          <span key={i} className="font-display text-sm uppercase shrink-0 flex items-center gap-2">
-            {item}
-            <span className="text-acid opacity-60 mx-1">·</span>
+        {doubled.map((item, i) => (
+          <span key={i} className="font-display text-sm uppercase shrink-0">
+            {item}<span className="text-acid mx-3 opacity-50">·</span>
           </span>
         ))}
       </div>
@@ -160,59 +123,64 @@ function MarqueeStrip() {
   );
 }
 
-// ─── Chapter pills strip ──────────────────────────────────────────────────────
-function ChapterPills({
-  world,
+// ─── Chapter breadcrumb rail ──────────────────────────────────────────────────
+// A single scrollable horizontal row — compact pills connected by a line.
+// Shows: number, emoji, name (truncated), completion state.
+function ChapterRail({
   meta,
   chapterStats,
 }: {
-  world: WorldId;
   meta: typeof WORLD_META[WorldId];
-  chapterStats: { slug: string; title: string; number: number; pct: number; complete: boolean; tagline: string }[];
+  chapterStats: { slug: string; title: string; number: number; pct: number; complete: boolean }[];
 }) {
   return (
-    <div className="mt-5 pt-4 border-t-2 border-current/20">
-      <div className={`font-mono text-[9px] uppercase mb-3 ${meta.textMuted}`}>
+    <div className="mt-5 pt-4 border-t-2 border-current/15">
+      <div className={`font-mono text-[9px] uppercase mb-2.5 ${meta.textMuted}`}>
         {chapterStats.length} CHAPTERS
       </div>
-      <div className="flex flex-col gap-2">
-        {chapterStats.map((ch) => {
-          const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
-          const stateClass = ch.complete
-            ? meta.pillDone
-            : ch.pct > 0
-            ? meta.pillPartial
-            : meta.pillEmpty;
 
-          return (
-            <div
-              key={ch.slug}
-              className={`brutal-border flex items-center gap-3 px-3 py-2.5 transition-all ${stateClass}`}
-            >
-              {/* Left: number + emoji */}
-              <div className="shrink-0 flex items-center gap-2 w-12">
-                <span className="font-mono text-[9px] opacity-50">{String(ch.number).padStart(2, "0")}</span>
-                <span className="text-base leading-none">{ch.complete ? "✓" : emoji}</span>
-              </div>
+      {/* Scrollable horizontal rail */}
+      <div className="overflow-x-auto pb-1 -mx-1 px-1">
+        <div className="flex items-center gap-0 min-w-max">
+          {chapterStats.map((ch, i) => {
+            const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
+            const isDone = ch.complete;
+            const isStarted = ch.pct > 0 && !isDone;
 
-              {/* Middle: title + tagline */}
-              <div className="flex-1 min-w-0">
-                <div className="font-display text-sm leading-tight">{ch.title}</div>
-                <div className="font-mono text-[9px] opacity-55 mt-0.5 truncate">{ch.tagline}</div>
-              </div>
+            const pillClass = isDone
+              ? meta.pillDone
+              : isStarted
+              ? meta.pillPartial
+              : meta.pillEmpty;
 
-              {/* Right: progress */}
-              <div className="shrink-0 text-right">
-                {ch.pct > 0 && !ch.complete && (
-                  <div className="font-display text-base tabular-nums">{ch.pct}%</div>
+            return (
+              <div key={ch.slug} className="flex items-center">
+                {/* Connector line between pills */}
+                {i > 0 && (
+                  <div className={`w-4 h-px shrink-0 ${meta.pillConnector}`} />
                 )}
-                {ch.complete && (
-                  <div className="font-mono text-[9px] uppercase opacity-70">done</div>
-                )}
+
+                {/* Pill */}
+                <div className={`brutal-border flex items-center gap-1.5 px-2.5 py-1.5 shrink-0 transition-all ${pillClass}`}>
+                  <span className="font-mono text-[8px] opacity-50 leading-none">
+                    {String(ch.number).padStart(2, "0")}
+                  </span>
+                  <span className="text-sm leading-none">
+                    {isDone ? "✓" : emoji}
+                  </span>
+                  <span className="font-display text-xs leading-none max-w-[64px] truncate">
+                    {ch.title.split(" ")[0]}
+                  </span>
+                  {isStarted && (
+                    <span className="font-mono text-[8px] opacity-60 leading-none ml-0.5">
+                      {ch.pct}%
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -238,24 +206,15 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
     const chDone = chSlugs.filter(s => !!completed[s]).length;
     const chPct = chSlugs.length > 0 ? Math.round((chDone / chSlugs.length) * 100) : 0;
     return {
-      slug: ch.slug,
-      title: ch.title,
-      tagline: ch.tagline,
-      number: ch.number,
-      pct: chPct,
-      complete: chDone === chSlugs.length && chSlugs.length > 0,
+      slug: ch.slug, title: ch.title, number: ch.number,
+      pct: chPct, complete: chDone === chSlugs.length && chSlugs.length > 0,
     };
   });
 
-  const ctaLabel = done === 0 ? "START →" : pct === 100 ? "REVIEW →" : "CONTINUE →";
   const progressLabel = done === 0
-    ? `${total} missions waiting`
-    : pct === 100
-    ? "World complete 🏆"
-    : `${done} / ${total} missions done`;
-
-  // Stagger delay per card
-  const delay = index * 120;
+    ? `${total} missions`
+    : pct === 100 ? "Complete 🏆"
+    : `${done}/${total}`;
 
   return (
     <div
@@ -263,178 +222,171 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
       className="transition-all duration-700 ease-out"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(40px)",
-        transitionDelay: `${delay}ms`,
+        transform: visible ? "translateY(0)" : "translateY(36px)",
+        transitionDelay: `${index * 100}ms`,
       }}
     >
       <div className={`brutal-border ${meta.shadow} overflow-hidden`}>
 
-        {/* ── Card body — solid color ──────────────────────────────── */}
-        <div className={`${meta.bg} ${meta.textPrimary} p-6 md:p-8 relative overflow-hidden`}>
+        {/* ── Card body ── */}
+        <div className={`${meta.bg} ${meta.textPrimary} p-5 md:p-7 relative overflow-hidden`}>
 
-          {/* Decorative background cats — large, low opacity, positioned absolutely */}
-          <div
-            className="absolute -bottom-4 -right-4 w-40 h-40 opacity-10 pointer-events-none"
-            aria-hidden
-          >
+          {/* Decorative bg elements */}
+          <div className="absolute -bottom-6 -right-6 w-36 h-36 opacity-[0.07] pointer-events-none" aria-hidden>
             <Image src={meta.deco1} alt="" fill className="object-contain" />
           </div>
-          <div
-            className="absolute top-4 right-32 w-12 h-12 opacity-15 pointer-events-none spin-slow"
-            aria-hidden
-          >
+          <div className="absolute top-4 right-28 w-10 h-10 opacity-[0.12] spin-slow pointer-events-none" aria-hidden>
             <Image src={meta.deco2} alt="" fill className="object-contain" />
           </div>
 
-          {/* Top row: meta label + big % */}
-          <div className="flex items-start justify-between gap-4 mb-5">
-            <div>
+          {/* Top: title + cat */}
+          <div className="flex items-start justify-between gap-4">
+
+            {/* Left: title block */}
+            <div className="flex-1 min-w-0">
               <div className={`font-mono text-[9px] uppercase mb-1 ${meta.textMuted}`}>
-                {chapters.length} CHAPTERS · {paths.length} PATHS · {total} MISSIONS
+                {chapters.length} CH · {paths.length} PATHS · {total} MISSIONS
               </div>
-              {/* World title */}
-              <div className="flex items-center gap-3">
-                <span className="text-5xl md:text-6xl leading-none">{meta.emoji}</span>
-                <h2 className="font-display text-4xl md:text-6xl leading-none">
+              <div className="flex items-center gap-2.5 mb-1">
+                <span className="text-4xl md:text-5xl leading-none">{meta.emoji}</span>
+                <h2 className="font-display text-3xl md:text-5xl leading-none">
                   {meta.title.toUpperCase()}
                 </h2>
               </div>
-              <p className={`font-display text-base md:text-lg mt-1 ${meta.textMuted}`}>
+              <p className={`font-display text-sm md:text-base ${meta.textMuted}`}>
                 {meta.tagline}
               </p>
             </div>
 
             {/* Right: % + cat */}
-            <div className="shrink-0 flex flex-col items-end gap-3">
+            <div className="shrink-0 flex flex-col items-end gap-2">
               <div className="text-right">
-                <div className="font-display text-5xl md:text-6xl tabular-nums leading-none">
+                <div className="font-display text-4xl md:text-5xl tabular-nums leading-none">
                   {pct}%
                 </div>
-                <div className={`font-mono text-[9px] uppercase mt-1 ${meta.textMuted}`}>
-                  {done}/{total}
+                <div className={`font-mono text-[8px] uppercase mt-0.5 ${meta.textMuted}`}>
+                  {progressLabel}
                 </div>
               </div>
               <div
-                className="w-20 h-20 md:w-24 md:h-24 wiggle"
-                style={{ filter: "drop-shadow(4px 4px 0 rgba(0,0,0,0.25))" }}
+                className="w-16 h-16 md:w-20 md:h-20 wiggle"
+                style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.2))" }}
                 aria-hidden
               >
-                <Image
-                  src={meta.catMain}
-                  alt=""
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-contain"
-                />
+                <Image src={meta.catMain} alt="" width={80} height={80} className="w-full h-full object-contain" />
               </div>
             </div>
           </div>
 
           {/* Description */}
-          <p className={`font-mono text-xs leading-relaxed mb-5 max-w-lg ${meta.textMuted}`}>
+          <p className={`font-mono text-xs leading-relaxed mt-3 mb-4 max-w-lg ${meta.textMuted}`}>
             {meta.description}
           </p>
 
           {/* Progress bar */}
-          <div className={`h-3 brutal-border overflow-hidden mb-1 ${meta.barBg}`}>
+          <div className={`h-2.5 brutal-border overflow-hidden mb-1 ${meta.barBg}`}>
             <div
               className={`h-full ${meta.barFill} transition-all duration-1000`}
               style={{ width: visible ? `${pct}%` : "0%" }}
             />
           </div>
-          <div className={`font-mono text-[9px] uppercase ${meta.textMuted}`}>{progressLabel}</div>
 
-          {/* Chapter pills — expanded, full-width */}
-          <ChapterPills world={world} meta={meta} chapterStats={chapterStats} />
+          {/* Chapter breadcrumb rail — compact, single row */}
+          <ChapterRail meta={meta} chapterStats={chapterStats} />
 
-          {/* Bottom: decorative cat row */}
-          <div className="flex items-end justify-between mt-5 pt-4 border-t-2 border-current/15">
-            <div className="flex items-end gap-3">
-              <div
-                className="w-12 h-12 float"
-                style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))", animationDelay: "0.3s" }}
-                aria-hidden
-              >
-                <Image src={meta.catDeco1} alt="" width={48} height={48} className="w-full h-full object-contain" />
-              </div>
-              <div
-                className="w-10 h-10 float"
-                style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))", animationDelay: "1.1s" }}
-                aria-hidden
-              >
-                <Image src={meta.catDeco2} alt="" width={40} height={40} className="w-full h-full object-contain" />
-              </div>
+          {/* Bottom deco cats */}
+          <div className="flex items-end gap-2 mt-4 pt-3 border-t-2 border-current/10">
+            <div className="w-9 h-9 float opacity-60" style={{ animationDelay: "0.3s" }} aria-hidden>
+              <Image src={meta.catDeco1} alt="" width={36} height={36} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
             </div>
-            <div className={`font-mono text-[9px] uppercase ${meta.textMuted}`}>
-              🐾 {world === "dj" ? "rekordbox · pioneer · serato" : world === "producer" ? "ableton live 12" : "music theory basics"}
+            <div className="w-8 h-8 float opacity-50" style={{ animationDelay: "1.2s" }} aria-hidden>
+              <Image src={meta.catDeco2} alt="" width={32} height={32} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.12))" }} />
             </div>
           </div>
         </div>
 
-        {/* ── CTA footer strip ─────────────────────────────────────── */}
-        <Link
-          href={meta.to}
-          className={`block ${meta.ctaBg} ${meta.ctaText} px-6 py-4 flex items-center justify-between brutal-press ${meta.ctaHover} transition-colors group`}
-        >
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs uppercase opacity-60">{progressLabel}</span>
-          </div>
-          <span className="font-display text-lg group-hover:translate-x-1 transition-transform">
-            {ctaLabel}
-          </span>
-        </Link>
+        {/* ── Dual CTA footer — FLOW and FREE clearly separated ── */}
+        <div className="flex border-t-4 border-ink">
+          {/* FLOW: Duolingo snake */}
+          <Link
+            href={`/world/${world}`}
+            className={`flex-1 brutal-border border-y-0 border-l-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.flowBtn}`}
+          >
+            <span className="text-lg">🌊</span>
+            <div className="text-left">
+              <div className="font-display text-sm leading-none">FLOW</div>
+              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Snake path · hearts on</div>
+            </div>
+            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+
+          {/* Divider */}
+          <div className="w-px bg-ink/30 shrink-0" />
+
+          {/* FREE: Open browser */}
+          <Link
+            href={`/world/${world}?view=free`}
+            className={`flex-1 brutal-border border-y-0 border-r-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.freeBtn}`}
+          >
+            <span className="text-lg">🔓</span>
+            <div className="text-left">
+              <div className="font-display text-sm leading-none">FREE</div>
+              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Open browser · no locks</div>
+            </div>
+            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
 }
 
-// ─── Hero header ──────────────────────────────────────────────────────────────
+// ─── Page hero ────────────────────────────────────────────────────────────────
 function Hero() {
   const { learnMode } = useLearnMode();
   const isFlow = learnMode === "flow";
 
   return (
     <header className="border-b-4 border-ink bg-bone relative overflow-hidden">
-      {/* Decorative cats scattered in background */}
-      <div className="absolute top-3 right-4 w-14 h-14 opacity-20 wiggle pointer-events-none" aria-hidden>
+      <div className="absolute top-3 right-6 w-12 h-12 opacity-15 wiggle pointer-events-none" aria-hidden>
         <Image src="/cats/cat-dancer.png" alt="" fill className="object-contain" />
       </div>
-      <div className="absolute bottom-2 right-32 w-10 h-10 opacity-15 spin-slow pointer-events-none" aria-hidden>
+      <div className="absolute bottom-2 right-28 w-9 h-9 opacity-10 spin-slow pointer-events-none" aria-hidden>
         <Image src="/cats/star.png" alt="" fill className="object-contain" />
       </div>
-      <div className="absolute top-6 right-24 w-8 h-8 opacity-10 float pointer-events-none" aria-hidden>
-        <Image src="/cats/music-note.png" alt="" fill className="object-contain" />
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 py-7 md:py-10 relative z-10">
         <div className="font-mono text-[10px] uppercase opacity-40 mb-2">
-          // THREE WORLDS · 153 MISSIONS · 16 CHAPTERS
+          // 3 WORLDS · 153 MISSIONS · 16 CHAPTERS
         </div>
         <h1 className="font-display text-6xl md:text-8xl leading-none mb-3">WORLDS</h1>
-        <p className="font-mono text-sm opacity-60 max-w-xl leading-relaxed mb-4">
-          Start with Fundamentals — it unlocks everything. Then specialise as a DJ, a Producer, or both.
+        <p className="font-mono text-sm opacity-55 max-w-lg leading-relaxed mb-4">
+          Start with Fundamentals — it unlocks everything. Then specialise as a DJ, Producer, or both.
         </p>
-        {/* Mode indicator — inline, linked to header toggle */}
-        <div className={`inline-flex items-center gap-2 brutal-border px-3 py-2 font-mono text-xs uppercase ${
-          isFlow ? "bg-acid text-ink" : "bg-bone text-ink"
-        }`}>
-          <span>{isFlow ? "🌊" : "🔓"}</span>
-          <span className="font-display text-xs">{isFlow ? "Flow Mode" : "Free Mode"}</span>
-          <span className="opacity-40">— toggle in header</span>
+
+        {/* Mode indicator — purely informational, toggle is in the header */}
+        <div className={`inline-flex items-center gap-2.5 brutal-border px-3 py-2 ${isFlow ? "bg-acid text-ink" : "bg-bone text-ink"}`}>
+          <span className="text-base">{isFlow ? "🌊" : "🔓"}</span>
+          <div>
+            <span className="font-display text-sm">{isFlow ? "Flow Mode" : "Free Mode"}</span>
+            <span className="font-mono text-[9px] opacity-50 ml-2">
+              {isFlow ? "sequential · hearts on" : "all lessons open"}
+            </span>
+          </div>
+          <span className="font-mono text-[8px] opacity-35 ml-1">← toggle in header</span>
         </div>
       </div>
     </header>
   );
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 export function WorldsPageClient() {
   return (
     <main className="min-h-screen bg-bone">
       <Hero />
       <MarqueeStrip />
-
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 pb-24">
+      <div className="max-w-5xl mx-auto px-4 py-7 space-y-5 pb-24">
         {(["fundamentals", "dj", "producer"] as WorldId[]).map((world, i) => (
           <WorldCard key={world} world={world} index={i} />
         ))}

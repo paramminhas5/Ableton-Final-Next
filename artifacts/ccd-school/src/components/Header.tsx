@@ -13,6 +13,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
@@ -339,17 +340,35 @@ function XpStreakBadge() {
 }
 
 // ─── ModeTogglePill ───────────────────────────────────────────────────────────
+// URL-aware: when on /world/[slug] navigates to/from ?view=free instead of
+// only toggling context. This makes the header pill the single source of truth
+// that actually changes the visible page.
 
 function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const { learnMode, setLearnMode } = useLearnMode();
   const [toast, setToast] = useState<string | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Detect /world/[slug] — any deeper path is not a world page
+  const worldMatch = pathname?.match(/^\/world\/([^/]+)$/);
+  const worldSlug = worldMatch ? worldMatch[1] : null;
 
   const toggle = useCallback(() => {
     const next = learnMode === "flow" ? "classic" : "flow";
     setLearnMode(next);
-    setToast(next === "flow" ? "🌊 Flow Mode — sequential, hearts on" : "🔓 Free Mode — all lessons open");
-    setTimeout(() => setToast(null), 2800);
-  }, [learnMode, setLearnMode]);
+    setToast(next === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode");
+    setTimeout(() => setToast(null), 2000);
+
+    // On a world page: navigate to/from ?view=free so the page actually switches
+    if (worldSlug) {
+      if (next === "classic") {
+        router.push(`/world/${worldSlug}?view=free`);
+      } else {
+        router.push(`/world/${worldSlug}`);
+      }
+    }
+  }, [learnMode, setLearnMode, worldSlug, router]);
 
   const isFlow = learnMode === "flow";
 
