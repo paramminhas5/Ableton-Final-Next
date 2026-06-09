@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { WorldShell } from "@/components/world/WorldShell";
 import { WorldPathClient } from "@/components/WorldPathClient";
 import { WorldPageClient } from "@/components/WorldPageClient";
 
@@ -31,8 +32,15 @@ export default async function WorldPage({ params, searchParams }: Props) {
 
   // Default: Flow Mode snake path. ?view=free: Free Mode accordion browser.
   const showFree = view === "free";
-
-  return showFree
+  
+  // Wrap the appropriate component in WorldShell
+  const content = showFree
     ? <WorldPageClient slug={slug} />
     : <WorldPathClient worldSlug={slug} />;
+
+  return (
+    <WorldShell worldSlug={slug as any}>
+      {content}
+    </WorldShell>
+  );
 }

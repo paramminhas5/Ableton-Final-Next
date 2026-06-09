@@ -5,10 +5,11 @@
  * Design:
  * - NO images — pure CCD color-block cards
  * - Compact horizontal chapter breadcrumb rail (one scrollable row, not 5+ full rows)
- * - DUAL CTA: 🌊 FLOW and 🔓 FREE buttons clearly separated on every card
+ * - SINGLE CTA: Based on hero-level mode selection (Flow or Free)
  * - Scroll-linked card entrance animations
  * - Cats and decorative elements
  * - Marquee ticker
+ * - Hero-level mode picker for all worlds
  */
 "use client";
 import Link from "next/link";
@@ -18,6 +19,7 @@ import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
+import { WorldModePicker } from "./world/ModeSwitch";
 
 type WorldId = "fundamentals" | "dj" | "producer";
 
@@ -182,6 +184,7 @@ function ChapterRail({
 // ─── World Card ───────────────────────────────────────────────────────────────
 function WorldCard({ world, index }: { world: WorldId; index: number }) {
   const { progress } = useProgress();
+  const { learnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const { ref, visible } = useScrollReveal();
 
@@ -192,6 +195,9 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
   const done = allSlugs.filter(s => !!completed[s]).length;
   const total = allSlugs.length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  
+  const isFlow = learnMode === "flow";
+  const href = isFlow ? `/world/${world}` : `/world/${world}?view=free`;
 
   const chapterStats = chapters.map(ch => {
     const chPaths = paths.filter(p => p.chapter === ch.slug);
@@ -298,36 +304,24 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
           </div>
         </div>
 
-        {/* ── Dual CTA footer — FLOW and FREE clearly separated ── */}
-        <div className="flex border-t-4 border-ink divide-x-4 divide-ink">
-          {/* FLOW: Duolingo snake */}
+        {/* ── Single CTA footer — Based on current mode selection ── */}
+        <div className="border-t-4 border-ink">
           <Link
-            href={`/world/${world}`}
-            className={`flex-1 brutal-press transition-colors flex items-center justify-between gap-3 py-4 px-5 group ${meta.flowBtn}`}
+            href={href}
+            className={`brutal-press transition-colors flex items-center justify-between gap-3 py-4 px-5 group ${
+              isFlow ? meta.flowBtn : meta.freeBtn
+            }`}
           >
             <div className="flex items-center gap-3">
-              <span className="text-xl shrink-0">🌊</span>
+              <span className="text-xl shrink-0">{isFlow ? "🌊" : "🔓"}</span>
               <div>
-                <div className="font-display text-sm leading-none">FLOW</div>
-                <div className="font-mono text-[8px] uppercase opacity-60 mt-1 leading-tight max-w-[140px]">
-                  Guided snake path · lessons unlock in order · hearts on wrong answers
+                <div className="font-display text-sm leading-none">
+                  {isFlow ? "FLOW MODE" : "FREE MODE"}
                 </div>
-              </div>
-            </div>
-            <span className="font-display text-lg shrink-0 group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
-
-          {/* FREE: Open browser */}
-          <Link
-            href={`/world/${world}?view=free`}
-            className={`flex-1 brutal-press transition-colors flex items-center justify-between gap-3 py-4 px-5 group ${meta.freeBtn}`}
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-xl shrink-0">🔓</span>
-              <div>
-                <div className="font-display text-sm leading-none">FREE</div>
                 <div className="font-mono text-[8px] uppercase opacity-60 mt-1 leading-tight max-w-[140px]">
-                  All lessons open · jump anywhere · browse by chapter and path
+                  {isFlow
+                    ? "Guided path · lessons unlock in order"
+                    : "All lessons open · jump anywhere"}
                 </div>
               </div>
             </div>
@@ -341,9 +335,6 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
 
 // ─── Page hero ────────────────────────────────────────────────────────────────
 function Hero() {
-  const { learnMode } = useLearnMode();
-  const isFlow = learnMode === "flow";
-
   return (
     <header className="border-b-4 border-ink bg-bone relative overflow-hidden">
       <div className="absolute top-3 right-6 w-12 h-12 opacity-15 wiggle pointer-events-none" aria-hidden>
@@ -361,18 +352,6 @@ function Hero() {
         <p className="font-mono text-sm opacity-55 max-w-lg leading-relaxed mb-4">
           Start with Fundamentals — it unlocks everything. Then specialise as a DJ, Producer, or both.
         </p>
-
-        {/* Mode indicator — purely informational, toggle is in the header */}
-        <div className={`inline-flex items-center gap-2.5 brutal-border px-3 py-2 ${isFlow ? "bg-acid text-ink" : "bg-bone text-ink"}`}>
-          <span className="text-base">{isFlow ? "🌊" : "🔓"}</span>
-          <div>
-            <span className="font-display text-sm">{isFlow ? "Flow Mode" : "Free Mode"}</span>
-            <span className="font-mono text-[9px] opacity-50 ml-2">
-              {isFlow ? "sequential · hearts on" : "all lessons open"}
-            </span>
-          </div>
-          <span className="font-mono text-[8px] opacity-35 ml-1">← toggle in header</span>
-        </div>
       </div>
     </header>
   );
@@ -383,6 +362,7 @@ export function WorldsPageClient() {
   return (
     <main className="min-h-screen bg-bone">
       <Hero />
+      <WorldModePicker />
       <MarqueeStrip />
       <div className="max-w-5xl mx-auto px-4 py-7 space-y-5 pb-24">
         {(["fundamentals", "dj", "producer"] as WorldId[]).map((world, i) => (

@@ -108,7 +108,7 @@ export function MissionsPageClient() {
         </div>
       </header>
 
-      {/* ── World tabs + search ─────────────────────────────────────────── */}
+      {/* ── World tabs + mode toggle ─────────────────────────────────────── */}
       <div className="sticky top-0 z-10 bg-bone border-b-4 border-ink">
         <div className="max-w-5xl mx-auto px-4 flex">
           {(["fundamentals","dj","producer"] as WorldTab[]).map(w => {
@@ -126,6 +126,28 @@ export function MissionsPageClient() {
               </button>
             );
           })}
+          
+          {/* Mode toggle */}
+          <div className="flex items-center px-3 border-l-4 border-ink gap-1 shrink-0">
+            <button
+              onClick={() => setLearnMode("flow")}
+              title="Flow mode: Guided progression"
+              className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
+                isFlowMode ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+              }`}
+            >
+              🌊 Flow
+            </button>
+            <button
+              onClick={() => setLearnMode("classic")}
+              title="Free mode: Browse all"
+              className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
+                !isFlowMode ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+              }`}
+            >
+              🔓 Free
+            </button>
+          </div>
         </div>
         <div className="h-2 bg-ink/10">
           <div className={`h-full ${wStyle.bar} transition-all duration-700`} style={{ width: `${ws.pct}%` }} />
@@ -189,62 +211,113 @@ export function MissionsPageClient() {
                     style={{ width: `${chTotal > 0 ? Math.round((chDone/chTotal)*100) : 0}%` }} />
                 </div>
 
-                <div className="space-y-4">
-                  {paths.map(({ path, missions }) => {
-                    const pDone = missions.filter(m => !!completed[m.slug]).length;
-                    return (
-                      <div key={path.slug}>
-                        <div className="mb-2">
-                          <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
-                          <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
-                            VIEW PATH →
-                          </Link>
-                        </div>
-                        <div className="brutal-border divide-y-2 divide-ink/10 chunk-shadow-sm">
-                          {missions.filter(m => !search || filteredMissions.includes(m)).map((mission, idx) => {
-                            const isDone     = !!completed[mission.slug];
-                            const locked     = isLocked(mission, plan, gatingMode);
-                            const flowLocked = isFlowMode && flowUnlockedSlugs !== null && !flowUnlockedSlugs.has(mission.slug) && !isDone;
-                            const isPaid     = isPaidMission(mission);
-                            const simIcon    = SIM_ICONS[(mission as { sim?: { type?: string } }).sim?.type ?? "none"] ?? "—";
-                            return (
-                              <Link key={mission.slug}
-                                href={flowLocked ? "#" : `/mission/${mission.slug}`}
-                                onClick={flowLocked ? e => e.preventDefault() : undefined}
-                                aria-disabled={flowLocked}
-                                title={flowLocked ? "Complete previous lessons in Flow Mode to unlock" : mission.title}
-                                className={`flex items-start gap-3 px-4 py-3.5 transition-colors group
-                                  ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked || flowLocked ? "opacity-50 cursor-not-allowed bg-ink/5" : "hover:bg-acid/20"}`}>
-                                {/* Status indicator */}
-                                <span className={`w-7 h-7 brutal-border flex items-center justify-center font-mono text-[10px] shrink-0 mt-0.5 transition-colors
-                                  ${isDone ? "bg-ink text-bone" : locked || flowLocked ? "bg-bone" : "bg-bone group-hover:bg-acid"}`}>
-                                  {isDone ? "✓" : (locked || flowLocked) ? "🔒" : idx + 1}
-                                </span>
-                                {/* Title — 2 lines, not truncated */}
-                                <div className="flex-1 min-w-0">
-                                  <div className={`font-display text-sm leading-tight line-clamp-2 ${isDone ? "opacity-60" : ""}`}>{mission.title}</div>
-                                  {mission.tagline && (
-                                    <div className="font-mono text-[10px] opacity-40 mt-0.5 truncate">{mission.tagline}</div>
+                {isFlowMode ? (
+                  /* FLOW VIEW: Mission circles */
+                  <div className="space-y-6">
+                    {paths.map(({ path, missions }) => {
+                      const pDone = missions.filter(m => !!completed[m.slug]).length;
+                      return (
+                        <div key={path.slug}>
+                          <div className="mb-3">
+                            <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
+                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
+                              VIEW PATH →
+                            </Link>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {missions.filter(m => !search || filteredMissions.includes(m)).map((mission, idx) => {
+                              const isDone = !!completed[mission.slug];
+                              const locked = isLocked(mission, plan, gatingMode);
+                              const flowLocked = isFlowMode && flowUnlockedSlugs !== null && !flowUnlockedSlugs.has(mission.slug) && !isDone;
+                              const isPaid = isPaidMission(mission);
+                              return (
+                                <Link
+                                  key={mission.slug}
+                                  href={flowLocked ? "#" : `/mission/${mission.slug}`}
+                                  onClick={flowLocked ? e => e.preventDefault() : undefined}
+                                  aria-disabled={flowLocked}
+                                  title={mission.title + (flowLocked ? " (Locked - complete previous lessons)" : "")}
+                                  className={`w-16 h-16 brutal-border flex flex-col items-center justify-center transition-all relative ${
+                                    isDone
+                                      ? "bg-ink text-bone"
+                                      : flowLocked
+                                      ? "bg-ink/5 text-ink/40 cursor-not-allowed"
+                                      : "bg-bone hover:bg-acid hover:text-ink hover:scale-105"
+                                  }`}
+                                >
+                                  {flowLocked && (
+                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-ink text-bone text-[8px] flex items-center justify-center rounded-full">
+                                      🔒
+                                    </div>
                                   )}
-                                </div>
-                                {/* Right side — lock or XP */}
-                                <div className="shrink-0 flex items-center gap-2">
-                                  {flowLocked && <span className="font-mono text-[9px] px-1.5 py-0.5 brutal-border bg-ink/15 uppercase">Locked</span>}
-                                  {isPaid && gatingMode === "paid" && !flowLocked && (
-                                    <span className={`font-mono text-[9px] px-1.5 py-0.5 brutal-border ${locked ? "bg-ink text-bone" : "bg-electric-blue text-bone"}`}>
-                                      PRO
-                                    </span>
-                                  )}
-                                  <span className="font-mono text-[10px] opacity-50 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
-                                </div>
-                              </Link>
-                            );
-                          })}
+                                  <span className="text-2xl leading-none mb-0.5">
+                                    {isDone ? "✓" : idx + 1}
+                                  </span>
+                                  <span className="font-mono text-[6px] uppercase opacity-60 text-center px-0.5 leading-tight">
+                                    {mission.title.split(" ")[0]}
+                                  </span>
+                                </Link>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  /* FREE VIEW: Mission list */
+                  <div className="space-y-4">
+                    {paths.map(({ path, missions }) => {
+                      const pDone = missions.filter(m => !!completed[m.slug]).length;
+                      return (
+                        <div key={path.slug}>
+                          <div className="mb-2">
+                            <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
+                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
+                              VIEW PATH →
+                            </Link>
+                          </div>
+                          <div className="brutal-border divide-y-2 divide-ink/10 chunk-shadow-sm">
+                            {missions.filter(m => !search || filteredMissions.includes(m)).map((mission, idx) => {
+                              const isDone = !!completed[mission.slug];
+                              const locked = isLocked(mission, plan, gatingMode);
+                              const isPaid = isPaidMission(mission);
+                              const simIcon = SIM_ICONS[(mission as { sim?: { type?: string } }).sim?.type ?? "none"] ?? "—";
+                              return (
+                                <Link key={mission.slug}
+                                  href={`/mission/${mission.slug}`}
+                                  className={`flex items-start gap-3 px-4 py-3.5 transition-colors group
+                                    ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked ? "opacity-50 cursor-not-allowed bg-ink/5" : "hover:bg-acid/20"}`}>
+                                  {/* Status indicator */}
+                                  <span className={`w-7 h-7 brutal-border flex items-center justify-center font-mono text-[10px] shrink-0 mt-0.5 transition-colors
+                                    ${isDone ? "bg-ink text-bone" : locked ? "bg-bone" : "bg-bone group-hover:bg-acid"}`}>
+                                    {isDone ? "✓" : locked ? "🔒" : idx + 1}
+                                  </span>
+                                  {/* Title — 2 lines, not truncated */}
+                                  <div className="flex-1 min-w-0">
+                                    <div className={`font-display text-sm leading-tight line-clamp-2 ${isDone ? "opacity-60" : ""}`}>{mission.title}</div>
+                                    {mission.tagline && (
+                                      <div className="font-mono text-[10px] opacity-40 mt-0.5 truncate">{mission.tagline}</div>
+                                    )}
+                                  </div>
+                                  {/* Right side — lock or XP */}
+                                  <div className="shrink-0 flex items-center gap-2">
+                                    {isPaid && gatingMode === "paid" && !locked && (
+                                      <span className={`font-mono text-[9px] px-1.5 py-0.5 brutal-border bg-electric-blue text-bone`}>
+                                        PRO
+                                      </span>
+                                    )}
+                                    <span className="font-mono text-[10px] opacity-50 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </section>
             </SectionReveal>
           );
