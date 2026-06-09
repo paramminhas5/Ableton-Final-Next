@@ -37,7 +37,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
     // Sync URL param when on a world page
     if (worldSlug) {
       if (next === "classic") {
-        router.push(`/world/${worldSlug}?view=classic`);
+        router.push(`/world/${worldSlug}?view=free`);
       } else {
         router.push(`/world/${worldSlug}`);
       }
