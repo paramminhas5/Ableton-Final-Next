@@ -18,6 +18,52 @@ import { playCorrect, playWrong, ensureAudio } from "@/lib/audio";
 import { ConceptAudioButton } from "@/components/ConceptAudio";
 
 // ─── AudioIdScreen ────────────────────────────────────────────────────────────
+// Shows a context explanation BEFORE playing audio — learner knows what to
+// listen for before the sound plays.
+
+// Maps audioType → a short contextual explanation shown before the audio plays
+const AUDIO_CONTEXT: Record<string, { title: string; explain: string }> = {
+  "waveform-compare": {
+    title: "Waveform shapes",
+    explain: "Different waveform shapes produce different timbres — the 'colour' of a sound. Sine = smooth & pure. Square = hollow & buzzy. Sawtooth = bright & rich. Triangle = warm & flute-like.",
+  },
+  "waveform": {
+    title: "A single waveform",
+    explain: "A waveform shows how air pressure changes over time. One complete cycle = one period. The faster the cycles, the higher the pitch.",
+  },
+  "freq-sweep": {
+    title: "Frequency sweep",
+    explain: "Frequency = pitch. Low Hz = deep bass. High Hz = bright treble. The human ear hears roughly 20 Hz to 20 kHz.",
+  },
+  "chord-stack": {
+    title: "A chord",
+    explain: "A chord is 3+ notes played simultaneously. The combination of intervals creates the chord's mood — major sounds happy, minor sounds sad.",
+  },
+  "rhythm-dots": {
+    title: "A rhythm pattern",
+    explain: "Rhythm is the pattern of sounds over time. The kick falls on beats 1 and 3, the snare on 2 and 4 in most house music.",
+  },
+  "bpm-grid": {
+    title: "A beat grid at a given BPM",
+    explain: "BPM = beats per minute. 120 BPM is 2 beats per second. The beat grid divides time into evenly spaced pulses.",
+  },
+  "eq-curve": {
+    title: "EQ frequency balance",
+    explain: "EQ (equaliser) boosts or cuts specific frequency ranges. A low-cut removes rumble below 80 Hz. A high-shelf adds air above 10 kHz.",
+  },
+  "scale-steps": {
+    title: "A musical scale",
+    explain: "A scale is a set of notes with specific step intervals. Major scale = W-W-H-W-W-W-H (W = whole step, H = half step). Each note has a distinct 'flavour'.",
+  },
+  "stereo-field": {
+    title: "The stereo field",
+    explain: "Stereo uses two channels (left + right) to create width. A sound panned hard left only comes from the left speaker. Centre = equal in both.",
+  },
+  "camelot-wheel": {
+    title: "Harmonic compatibility",
+    explain: "The Camelot Wheel maps musical keys to numbers and letters. Adjacent keys are harmonically compatible — mixing between them sounds smooth.",
+  },
+};
 
 export function AudioIdScreen({
   screen,
@@ -32,9 +78,11 @@ export function AudioIdScreen({
   onWrong: () => void;
   onNext: () => void;
 }) {
-  const [phase, setPhase] = useState<"listening" | "picking" | "correct" | "wrong">("listening");
+  const [phase, setPhase] = useState<"context" | "listening" | "picking" | "correct" | "wrong">("context");
   const [picked, setPicked] = useState<number | null>(null);
   const [hasListened, setHasListened] = useState(false);
+
+  const context = AUDIO_CONTEXT[screen.audioType];
 
   const pick = (idx: number) => {
     if (phase !== "picking") return;
@@ -52,96 +100,112 @@ export function AudioIdScreen({
 
   return (
     <div className="space-y-4">
-      {/* Prompt */}
-      <div className="brutal-border bg-ink text-bone p-5">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-2">🎧 LISTEN FIRST</div>
-        <div className="font-display text-xl md:text-2xl leading-snug">{screen.prompt}</div>
-      </div>
-
-      {/* Audio play button */}
-      <div className="brutal-border bg-bone p-4 flex flex-col items-center gap-3">
-        <ConceptAudioButton
-          visual={screen.audioType as Parameters<typeof ConceptAudioButton>[0]["visual"]}
-          label="PLAY AUDIO EXAMPLE"
-        />
-        {!hasListened && (
-          <button
-            onClick={() => { setHasListened(true); setPhase("picking"); }}
-            className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline"
-          >
-            skip → answer anyway
-          </button>
-        )}
-        {!hasListened && (
-          <div className="font-mono text-[9px] uppercase opacity-40 text-center">
-            Play the audio above, then choose your answer
+      {/* ── STEP 1: Context card — explain before playing ── */}
+      {context && phase === "context" && (
+        <div className="space-y-3 animate-fade-in">
+          <div className="brutal-border bg-volt text-bone p-5">
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-2">📖 BEFORE YOU LISTEN</div>
+            <div className="font-display text-xl mb-2">{context.title}</div>
+            <p className="font-mono text-sm leading-relaxed opacity-90">{context.explain}</p>
           </div>
-        )}
-        {!hasListened && (
-          // Auto-reveal answer buttons after first play
           <button
-            onClick={() => { setHasListened(true); setPhase("picking"); }}
-            className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press mt-1"
+            onClick={() => setPhase("listening")}
+            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
           >
-            I&apos;VE LISTENED — SHOW ANSWERS →
+            GOT IT — PLAY THE AUDIO →
           </button>
-        )}
-      </div>
-
-      {/* Answer options — only shown after listening */}
-      {phase !== "listening" && (
-        <div className="grid sm:grid-cols-2 gap-2">
-          {screen.options.map((opt, i) => {
-            let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
-            if (phase === "correct" || phase === "wrong") {
-              if (i === screen.answer) cls = "bg-acid text-ink font-bold";
-              else if (i === picked && phase === "wrong") cls = "bg-hot text-bone";
-              else cls = "bg-bone opacity-40 cursor-default";
-            }
-            return (
-              <button
-                key={i}
-                onClick={() => pick(i)}
-                disabled={phase !== "picking"}
-                aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
-                className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
-              >
-                <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
-                {opt}
-                {(phase === "correct" || phase === "wrong") && i === screen.answer && <span className="ml-2">✓</span>}
-              </button>
-            );
-          })}
         </div>
       )}
 
-      {/* Feedback */}
-      {(phase === "correct" || phase === "wrong") && (
+      {/* ── STEP 2 & 3: Audio player + answer ── */}
+      {phase !== "context" && (
         <>
-          <div
-            className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}
-            role="alert"
-            aria-live="polite"
-          >
-            <div className="font-display text-2xl mb-1">
-              {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
-            </div>
-            {phase === "wrong" && (
-              <div className="font-mono text-xs opacity-80 mb-1">
-                Correct: <strong>{screen.options[screen.answer]}</strong>
-                {isPathMode && <span className="ml-2 opacity-70">−1 heart</span>}
-              </div>
-            )}
-            <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
-              {screen.explain}
-            </div>
+          {/* Prompt */}
+          <div className="brutal-border bg-ink text-bone p-5">
+            <div className="font-mono text-[10px] uppercase opacity-60 mb-2">🎧 LISTEN &amp; IDENTIFY</div>
+            <div className="font-display text-xl md:text-2xl leading-snug">{screen.prompt}</div>
           </div>
-          <button
-            onClick={onNext}
-            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
-          >
-            NEXT →
-          </button>
+
+          {/* Audio play button */}
+          <div className="brutal-border bg-bone p-4 flex flex-col items-center gap-3">
+            <ConceptAudioButton
+              visual={screen.audioType as Parameters<typeof ConceptAudioButton>[0]["visual"]}
+              label="▶ PLAY AUDIO EXAMPLE"
+            />
+            {phase === "listening" && (
+              <button
+                onClick={() => { setHasListened(true); setPhase("picking"); }}
+                className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press mt-1"
+              >
+                I&apos;VE LISTENED — SHOW ANSWERS →
+              </button>
+            )}
+            {phase === "listening" && (
+              <button
+                onClick={() => { setHasListened(true); setPhase("picking"); }}
+                className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline"
+              >
+                skip → answer anyway
+              </button>
+            )}
+          </div>
+
+          {/* Answer options */}
+          {phase !== "listening" && (
+            <div className="grid sm:grid-cols-2 gap-2">
+              {screen.options.map((opt, i) => {
+                let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
+                if (phase === "correct" || phase === "wrong") {
+                  if (i === screen.answer) cls = "bg-acid text-ink font-bold";
+                  else if (i === picked && phase === "wrong") cls = "bg-hot text-bone";
+                  else cls = "bg-bone opacity-40 cursor-default";
+                }
+                return (
+                  <button
+                    key={i}
+                    onClick={() => pick(i)}
+                    disabled={phase !== "picking"}
+                    aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
+                    className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
+                  >
+                    <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
+                    {opt}
+                    {(phase === "correct" || phase === "wrong") && i === screen.answer && <span className="ml-2">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Feedback */}
+          {(phase === "correct" || phase === "wrong") && (
+            <>
+              <div
+                className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}
+                role="alert"
+                aria-live="polite"
+              >
+                <div className="font-display text-2xl mb-1">
+                  {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
+                </div>
+                {phase === "wrong" && (
+                  <div className="font-mono text-xs opacity-80 mb-1">
+                    Correct: <strong>{screen.options[screen.answer]}</strong>
+                    {isPathMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                  </div>
+                )}
+                <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
+                  {screen.explain}
+                </div>
+              </div>
+              <button
+                onClick={onNext}
+                className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+              >
+                NEXT →
+              </button>
+            </>
+          )}
         </>
       )}
     </div>
