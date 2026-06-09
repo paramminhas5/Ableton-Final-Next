@@ -310,23 +310,69 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
 
 
 // ─── XpStreakBadge — compact combo badge that opens the popover ───────────────
+// P1 #8: animates XP counter when XP increases  P1 #12: animates streak  P2 #25: clarity
+
+function useAnimatedNumber(value: number) {
+  const [display, setDisplay] = useState(value);
+  const [flash, setFlash] = useState(false);
+  const prevRef = useRef(value);
+
+  useEffect(() => {
+    if (value === prevRef.current) return;
+    const prev = prevRef.current;
+    prevRef.current = value;
+    if (value <= prev) { setDisplay(value); return; }
+    // Tick up from prev to value over ~600ms
+    const steps = Math.min(value - prev, 20);
+    const stepSize = (value - prev) / steps;
+    let cur = prev;
+    let i = 0;
+    setFlash(true);
+    const interval = setInterval(() => {
+      i++;
+      cur += stepSize;
+      setDisplay(Math.round(cur));
+      if (i >= steps) {
+        clearInterval(interval);
+        setDisplay(value);
+        setTimeout(() => setFlash(false), 500);
+      }
+    }, 30);
+    return () => clearInterval(interval);
+  }, [value]);
+
+  return { display, flash };
+}
 
 function XpStreakBadge() {
   const { progress, dailyGoalPct, dailyGoalDone } = useProgress();
   const [open, setOpen] = useState(false);
+  const { display: xpDisplay, flash: xpFlash } = useAnimatedNumber(progress.xp);
+  const { display: streakDisplay, flash: streakFlash } = useAnimatedNumber(progress.streakDays);
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center gap-1">
+      {/* P2 #25: separate streak and XP as clearly labelled pills */}
       <button
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
         aria-haspopup="dialog"
         title="View XP, streak and daily goal"
-        className="brutal-border bg-ink text-bone px-2.5 py-1 font-mono text-[10px] uppercase tabular-nums brutal-press flex items-center gap-1.5 hover:bg-volt transition-colors"
+        className="brutal-border bg-ink text-bone px-2.5 py-1 font-mono text-[10px] uppercase tabular-nums brutal-press flex items-center gap-2 hover:bg-volt transition-colors"
       >
-        🔥{progress.streakDays}
-        <span className="opacity-40">·</span>
-        {progress.xp}XP
+        {/* Streak pill */}
+        <span className={`flex items-center gap-1 transition-all duration-200 ${streakFlash ? "scale-125 text-acid" : ""}`}>
+          <span>🔥</span>
+          <span className="font-display text-sm leading-none">{streakDisplay}</span>
+        </span>
+        <span className="opacity-20">|</span>
+        {/* XP pill */}
+        <span className={`flex items-center gap-0.5 transition-all duration-200 ${xpFlash ? "scale-110 text-acid" : ""}`}>
+          <span className="opacity-60 text-[9px]">XP</span>
+          <span className="font-display text-sm leading-none">{xpDisplay}</span>
+        </span>
+        {/* Daily goal ring */}
+        <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
       </button>
       {open && (
         <XpStreakPopover

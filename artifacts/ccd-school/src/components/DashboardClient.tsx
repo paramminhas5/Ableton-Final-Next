@@ -112,6 +112,8 @@ const WORLD_CONFIG: Record<WorldKey, {
 function SkillRadar({ skills }: { skills: { label: string; pct: number }[] }) {
   const cx = 120, cy = 120, r = 85;
   const n = skills.length;
+  // P2 #26: zero-state — check if all skills are 0
+  const allZero = skills.every(s => s.pct === 0);
 
   const point = (i: number, scale: number) => {
     const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
@@ -123,12 +125,21 @@ function SkillRadar({ skills }: { skills: { label: string; pct: number }[] }) {
 
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
+  // P2 #26: show aspirational ghost shape when all zero, real shape otherwise
   const polyPoints = skills
     .map((s, i) => {
-      const p = point(i, Math.max(0.04, s.pct / 100));
+      // If all zero, show a small minimum shape so it's visible
+      const scale = allZero ? 0.08 : Math.max(0.04, s.pct / 100);
+      const p = point(i, scale);
       return `${p.x},${p.y}`;
     })
     .join(" ");
+
+  // Aspirational (100%) ghost points shown when user has < 10% overall
+  const ghostPoints = allZero ? skills.map((_, i) => {
+    const p = point(i, 1.0);
+    return `${p.x},${p.y}`;
+  }).join(" ") : null;
 
   return (
     <svg viewBox="0 0 240 240" className="w-full max-w-[280px]" aria-label="Skill radar chart">
@@ -169,14 +180,41 @@ function SkillRadar({ skills }: { skills: { label: string; pct: number }[] }) {
         );
       })}
 
+      {/* P2 #26: aspirational ghost shape when all zero */}
+      {ghostPoints && (
+        <polygon
+          points={ghostPoints}
+          fill="currentColor"
+          opacity="0.04"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeDasharray="4 3"
+        />
+      )}
+
       {/* Filled area */}
       <polygon
         points={polyPoints}
         fill="currentColor"
-        opacity="0.15"
+        opacity={allZero ? 0.06 : 0.15}
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth={allZero ? 1 : 2}
+        strokeDasharray={allZero ? "3 2" : undefined}
       />
+
+      {/* P2 #26: zero state center label */}
+      {allZero && (
+        <>
+          <text x={cx} y={cy - 8} textAnchor="middle" dominantBaseline="middle"
+            fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">
+            COMPLETE LESSONS
+          </text>
+          <text x={cx} y={cy + 8} textAnchor="middle" dominantBaseline="middle"
+            fontSize="9" fill="currentColor" opacity="0.35" fontFamily="monospace">
+            TO FILL THIS
+          </text>
+        </>
+      )}
 
       {/* Labels */}
       {skills.map((s, i) => {
@@ -199,7 +237,7 @@ function SkillRadar({ skills }: { skills: { label: string; pct: number }[] }) {
       })}
 
       {/* Pct labels on filled area */}
-      {skills.map((s, i) => {
+      {!allZero && skills.map((s, i) => {
         const p = point(i, Math.max(0.1, s.pct / 100) + 0.1);
         if (s.pct === 0) return null;
         return (
@@ -362,6 +400,12 @@ export function DashboardClient() {
   const continueXp = useMemo(() => {
     if (!continueSlug) return 0;
     return allMissions.find((m) => m.slug === continueSlug)?.xp ?? 0;
+  }, [continueSlug, allMissions]);
+
+  // P2 #20: tagline and world-path label for rich preview card
+  const continueTagline = useMemo(() => {
+    if (!continueSlug) return null;
+    return allMissions.find((m) => m.slug === continueSlug)?.tagline ?? null;
   }, [continueSlug, allMissions]);
 
 
@@ -563,14 +607,19 @@ export function DashboardClient() {
           ) : continueSlug ? (
             <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid">
               <div className="flex-1 p-5 md:p-7">
+                {/* P2 #20: breadcrumb */}
                 <div className="font-mono text-[9px] uppercase opacity-50 mb-2">
                   {lastCtx?.worldLabel ?? "Fundamentals"}
                   {lastCtx?.chapter ? ` › ${lastCtx.chapter.title}` : ""}
                   {lastCtx?.path ? ` › ${lastCtx.path.title}` : ""}
                 </div>
-                <div className="font-display text-3xl md:text-5xl leading-tight mb-3">
+                <div className="font-display text-3xl md:text-5xl leading-tight mb-1">
                   {continueTitle}
                 </div>
+                {/* P2 #20: tagline for rich preview */}
+                {continueTagline && (
+                  <div className="font-sans text-sm opacity-60 mb-3 leading-snug">{continueTagline}</div>
+                )}
                 <div className="flex items-center gap-3 flex-wrap">
                   {continueXp > 0 && (
                     <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">
@@ -584,7 +633,7 @@ export function DashboardClient() {
               </div>
               <Link
                 href={`/learn/${continueSlug}`}
-                className="brutal-border border-y-0 border-r-0 md:border-l-2 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press brutal-shadow hover:bg-sun transition-colors min-w-[100px]"
+                className="brutal-border border-y-0 border-r-0 md:border-l-2 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press brutal-shadow brutal-hover hover:bg-sun transition-colors min-w-[100px]"
                 aria-label="Start lesson"
               >
                 <span className="font-display text-5xl md:text-6xl">▶</span>

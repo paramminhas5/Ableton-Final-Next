@@ -6,6 +6,7 @@ import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { useProgress } from "@/lib/progress";
+import { useLearnMode } from "@/lib/mode";
 import { useAuth } from "@/lib/auth";
 import { useGatingMode } from "@/components/ClientProviders";
 import { isPaidMission, isLocked } from "@/lib/gating";
@@ -29,6 +30,7 @@ const SIM_ICONS: Record<string, string> = {
 export function MissionsPageClient() {
   const { progress } = useProgress();
   const { plan } = useAuth();
+  const { learnMode } = useLearnMode();
   const gatingMode = useGatingMode();
   const completed = progress.completedMissions;
   const [activeWorld, setActiveWorld] = useState<WorldTab>("fundamentals");
@@ -37,6 +39,21 @@ export function MissionsPageClient() {
   const chapters = chaptersByWorld(activeWorld);
   const allPaths = pathsByWorld(activeWorld);
   const worldMissions = WORLD_MISSIONS[activeWorld];
+  const isFlowMode = learnMode === "flow";
+
+  // P0 #2: Build sequential unlock state for flow mode gating
+  const flowUnlockedSlugs = useMemo(() => {
+    if (!isFlowMode) return null; // null = all unlocked
+    const unlocked = new Set<string>();
+    let prevDone = true;
+    for (const path of allPaths.sort((a, b) => a.number - b.number)) {
+      for (const slug of path.missionSlugs) {
+        if (prevDone) unlocked.add(slug);
+        prevDone = !!completed[slug];
+      }
+    }
+    return unlocked;
+  }, [isFlowMode, allPaths, completed]);
 
   const ws = useMemo(() => {
     const done = worldMissions.filter((m) => !!completed[m.slug]).length;
@@ -68,6 +85,13 @@ export function MissionsPageClient() {
         <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// 153 MISSIONS TOTAL</div>
           <h1 className="font-display text-5xl leading-none">MISSIONS</h1>
+          {/* P0 #2: Flow mode gating notice */}
+          {isFlowMode && (
+            <div className="mt-3 brutal-border bg-acid text-ink px-4 py-2 flex items-center gap-2 font-mono text-[10px] uppercase">
+              <span>🌊</span>
+              <span>Flow Mode — lessons unlock sequentially. <button onClick={() => {}} className="underline opacity-60">Switch to Free Mode</button> to browse freely.</span>
+            </div>
+          )}
           <div className="mt-4 flex gap-2">
             <input type="text" placeholder="Search missions..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="brutal-border px-4 py-2 font-mono text-sm bg-bone w-full max-w-sm focus:outline-none focus:bg-sun/20" />
@@ -126,24 +150,34 @@ export function MissionsPageClient() {
                         {missions.filter((m) => !search || filteredMissions.includes(m)).map((mission, idx) => {
                           const isDone = !!completed[mission.slug];
                           const locked = isLocked(mission, plan, gatingMode);
+                          // P0 #2: flow mode sequential gating
+                          const flowLocked = isFlowMode && flowUnlockedSlugs !== null && !flowUnlockedSlugs.has(mission.slug) && !isDone;
                           const isPaid = isPaidMission(mission);
                           const simIcon = SIM_ICONS[(mission as { sim?: { type?: string } }).sim?.type ?? "none"] ?? "—";
                           return (
-                            <Link key={mission.slug} href={`/mission/${mission.slug}`}
-                              className={`flex items-center gap-3 px-3 py-2.5 brutal-press transition-colors ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked ? "opacity-60 hover:bg-ink/5" : "hover:bg-sun/40"}`}>
-                              <span className={`w-5 h-5 brutal-border flex items-center justify-center font-mono text-[9px] shrink-0 ${isDone ? "bg-ink text-bone" : locked ? "bg-bone" : "bg-bone"}`}>
-                                {isDone ? "✓" : locked ? "🔒" : idx + 1}
-                              </span>
-                              <span className="font-mono text-[9px] opacity-30 w-6 shrink-0 text-right">{(mission as { number?: number }).number}</span>
-                              <span className={`font-display text-sm flex-1 min-w-0 truncate ${isDone ? "opacity-60" : ""}`}>{mission.title}</span>
-                              {isPaid && gatingMode === "paid" && (
-                                <span className={`font-mono text-[8px] px-1 py-0.5 brutal-border shrink-0 ${locked ? "bg-ink text-bone" : "bg-volt text-ink"}`}>
-                                  {locked ? "PRO" : "PRO ✓"}
+                            <div key={mission.slug} className="relative">
+                              <Link href={flowLocked ? "#" : `/mission/${mission.slug}`}
+                                onClick={flowLocked ? (e) => e.preventDefault() : undefined}
+                                aria-disabled={flowLocked}
+                                title={flowLocked ? "Complete previous lessons in Flow Mode to unlock" : mission.title}
+                                className={`flex items-center gap-3 px-3 py-2.5 brutal-press transition-colors ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked || flowLocked ? "opacity-60 cursor-not-allowed" : "hover:bg-sun/40"}`}>
+                                <span className={`w-5 h-5 brutal-border flex items-center justify-center font-mono text-[9px] shrink-0 ${isDone ? "bg-ink text-bone" : "bg-bone"}`}>
+                                  {isDone ? "✓" : (locked || flowLocked) ? "🔒" : idx + 1}
                                 </span>
-                              )}
-                              <span className="font-mono text-[9px] opacity-30 shrink-0 hidden sm:block w-4 text-center">{simIcon}</span>
-                              <span className="font-mono text-[9px] opacity-50 shrink-0">{(mission as { xp?: number }).xp ?? 40} XP</span>
-                            </Link>
+                                <span className="font-mono text-[9px] opacity-30 w-6 shrink-0 text-right">{(mission as { number?: number }).number}</span>
+                                <span className={`font-display text-sm flex-1 min-w-0 truncate ${isDone ? "opacity-60" : ""}`}>{mission.title}</span>
+                                {flowLocked && (
+                                  <span className="font-mono text-[8px] px-1 py-0.5 brutal-border bg-ink/20 shrink-0 uppercase">Flow locked</span>
+                                )}
+                                {isPaid && gatingMode === "paid" && !flowLocked && (
+                                  <span className={`font-mono text-[8px] px-1 py-0.5 brutal-border shrink-0 ${locked ? "bg-ink text-bone" : "bg-volt text-ink"}`}>
+                                    {locked ? "PRO" : "PRO ✓"}
+                                  </span>
+                                )}
+                                <span className="font-mono text-[9px] opacity-30 shrink-0 hidden sm:block w-4 text-center">{simIcon}</span>
+                                <span className="font-mono text-[9px] opacity-50 shrink-0">{(mission as { xp?: number }).xp ?? 40} XP</span>
+                              </Link>
+                            </div>
                           );
                         })}
                       </div>

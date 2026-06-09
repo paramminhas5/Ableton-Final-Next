@@ -232,6 +232,18 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
     };
     const pct = Math.round((correctCount / total) * 100);
 
+    // P3 #37: Skill gap analysis — group questions by difficulty
+    const byDifficulty = questions.reduce<Record<number, { total: number; correct: number }>>((acc, q) => {
+      const d = q.difficulty ?? 1;
+      if (!acc[d]) acc[d] = { total: 0, correct: 0 };
+      acc[d].total++;
+      if (answers[q.id]) acc[d].correct++;
+      return acc;
+    }, {});
+
+    const difficultyLabels: Record<number, string> = { 1: "Beginner", 2: "Intermediate", 3: "Advanced" };
+    const difficultyColors: Record<number, string> = { 1: "bg-acid text-ink", 2: "bg-volt text-bone", 3: "bg-hot text-bone" };
+
     return (
       <div className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
         <div>
@@ -240,6 +252,29 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
             {pct >= 75 ? "IMPRESSIVE!" : pct >= 50 ? "SOLID BASE." : "LET'S BUILD IT."}<br />
             <span className="text-acid">{correctCount}/{total} CORRECT</span>
           </h1>
+        </div>
+
+        {/* P3 #37: Skill gap analysis by difficulty tier */}
+        <div className="space-y-2">
+          <div className="font-mono text-[10px] uppercase opacity-50 mb-1">// YOUR SKILL MAP</div>
+          {Object.entries(byDifficulty).sort(([a], [b]) => Number(a) - Number(b)).map(([diff, data]) => {
+            const diffNum = Number(diff);
+            const diffPct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+            const statusEmoji = diffPct === 100 ? "✓" : diffPct >= 50 ? "~" : "✗";
+            return (
+              <div key={diff} className="brutal-border bg-bone/10 p-3 flex items-center gap-3">
+                <span className={`brutal-border ${difficultyColors[diffNum]} px-2 py-1 font-mono text-[9px] uppercase shrink-0`}>
+                  {difficultyLabels[diffNum]}
+                </span>
+                <div className="flex-1 h-2 brutal-border bg-bone/20 overflow-hidden">
+                  <div className={`h-full transition-all duration-700 ${diffPct >= 70 ? "bg-acid" : diffPct >= 40 ? "bg-sun" : "bg-hot"}`}
+                    style={{ width: `${diffPct}%` }} />
+                </div>
+                <span className="font-mono text-[9px] shrink-0 opacity-70">{data.correct}/{data.total}</span>
+                <span className="font-mono text-[9px] shrink-0">{statusEmoji}</span>
+              </div>
+            );
+          })}
         </div>
 
         {/* Per-question recap */}
@@ -258,7 +293,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
         <div className="brutal-border bg-acid text-ink p-5 space-y-2">
           <div className="font-mono text-[10px] uppercase opacity-60">YOUR STARTING POINT</div>
           <div className="font-display text-2xl">{chapterLabels[chapter]}</div>
-          <div className="font-mono text-xs opacity-70">
+          <div className="font-sans text-xs opacity-70 leading-relaxed">
             {chapter === 1
               ? "We recommend starting from the top — the foundations matter."
               : chapter === 2
@@ -270,7 +305,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
         <div className="space-y-3">
           <button
             onClick={handleApplyResult}
-            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
           >
             START AT CHAPTER {chapter} →
           </button>

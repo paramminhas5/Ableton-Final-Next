@@ -81,8 +81,11 @@ function Inner({ slug }: { slug: string }) {
   const coachContext = [
     `[World: ${ctx?.world ?? "unknown"}]`,
     `[${learnMode === "flow" ? "Flow Mode" : "Free Mode"}]`,
-    `Lesson: ${mission.title} — ${mission.tagline}.`,
-    ctx?.chapter?.title ? `Chapter: ${ctx.chapter.title}.` : "",
+    // P1 #10: enriched Beat Coach context with full lesson metadata
+    ctx?.chapter?.title ? `[Chapter: ${ctx.chapter.title}]` : "",
+    ctx?.path?.title ? `[Path: ${ctx.path.title}]` : "",
+    `Lesson: "${mission.title}" — ${mission.tagline}.`,
+    `Mission ${missionIndex} of ${missionTotal} in this path.`,
   ].filter(Boolean).join(" ");
   const worldRoute = ctx.worldRoute || "/worlds";
 
@@ -92,6 +95,8 @@ function Inner({ slug }: { slug: string }) {
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
 
   const handleComplete = () => {
+    // Always route to /dashboard after lesson completion so users see updated
+    // stats, earned badge, rank progress and clear next action (P0 fix #1)
     const destination = isReview ? "/review" : "/dashboard";
     setTimeout(() => router.push(destination), 2200);
   };

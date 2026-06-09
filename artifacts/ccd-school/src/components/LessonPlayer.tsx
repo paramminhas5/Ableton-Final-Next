@@ -90,6 +90,45 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
   );
 }
 
+// P1 #6: Section-phase dots showing hook/concept/interact/quiz/summary phases
+function ScreenPhaseDots({
+  screens,
+  currentIdx,
+}: {
+  screens: readonly { kind: string }[];
+  currentIdx: number;
+}) {
+  const phaseColor = (kind: string) => {
+    if (kind === "hook")    return "bg-ink/30";
+    if (kind === "concept" || kind === "diagram") return "bg-volt";
+    if (kind === "interact") return "bg-sun";
+    if (kind === "quiz" || kind === "audio-id" || kind === "type-answer" || kind === "sequence") return "bg-hot";
+    if (kind === "match")   return "bg-acid";
+    return "bg-acid"; // summary
+  };
+
+  return (
+    <div className="flex items-center gap-1 justify-center" aria-hidden>
+      {screens.map((s, i) => {
+        const isActive = i === currentIdx;
+        const isDone   = i < currentIdx;
+        return (
+          <div
+            key={i}
+            className={`rounded-full transition-all duration-300 ${
+              isDone
+                ? "w-1.5 h-1.5 bg-acid/60"
+                : isActive
+                ? `w-3 h-3 ${phaseColor(s.kind)} ring-2 ring-acid/40`
+                : "w-1.5 h-1.5 bg-ink/15"
+            }`}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function HeartsRow({ count }: { count: number }) {
   // Track which heart index just got lost so we can animate it
   const prevCount = useRef(count);
@@ -221,7 +260,9 @@ function HookScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: 
 
 function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: "concept" }>; onNext: () => void }) {
   return (
-    <div className="space-y-4">
+    // P2 #24: animate-fade-up on mount via key remount in parent
+    <div className="space-y-4 animate-fade-up">
+      {/* P2 #18: visual hierarchy — title block */}
       <div className="brutal-border bg-ink text-bone p-5">
         <h2 className="font-display text-3xl md:text-4xl leading-tight">{screen.title}</h2>
       </div>
@@ -237,14 +278,19 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
         />
       )}
 
-      <div className="brutal-border bg-bone p-5">
-        <p className="font-mono text-sm md:text-base leading-relaxed">{screen.body}</p>
+      {/* P2 #16 + P2 #15: larger body text with font-sans for readability */}
+      <div className="brutal-border bg-bone p-5 border-l-4 border-l-acid/60">
+        <p className="font-sans text-base md:text-lg leading-relaxed text-ink">{screen.body}</p>
       </div>
 
+      {/* P2 #16: key fact more prominent — moved after body, styled as callout */}
       {screen.keyFact && (
-        <div className="brutal-border bg-acid text-ink px-5 py-4">
-          <div className="font-mono text-[10px] uppercase opacity-60 mb-1">KEY FACT</div>
-          <div className="font-display text-xl">{screen.keyFact}</div>
+        <div className="brutal-border bg-acid text-ink px-5 py-4 flex items-start gap-3">
+          <span className="text-xl shrink-0 mt-0.5">⚡</span>
+          <div>
+            <div className="font-mono text-[10px] uppercase opacity-60 mb-1">KEY FACT</div>
+            <div className="font-display text-xl leading-tight">{screen.keyFact}</div>
+          </div>
         </div>
       )}
 
@@ -256,7 +302,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
 
       <button
         onClick={onNext}
-        className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+        className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
       >
         GOT IT →
       </button>
@@ -379,7 +425,7 @@ function QuizScreen({
   };
 
   return (
-    <div className={`space-y-4 ${shake ? "animate-[shake_0.4s_ease-in-out]" : ""}`}>
+    <div className={`space-y-4 animate-fade-up ${shake ? "animate-[shake_0.4s_ease-in-out]" : ""}`}>
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}`}</style>
 
       {/* Context banner — ties this question back to what was just taught */}
@@ -388,7 +434,7 @@ function QuizScreen({
           <span className="text-lg shrink-0">🧠</span>
           <div>
             <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">NOW LET&apos;S TEST WHAT YOU LEARNED</div>
-            <div className="font-mono text-xs leading-relaxed opacity-90">
+            <div className="font-sans text-xs leading-relaxed opacity-90">
               These questions are based on <strong>{missionTitle}</strong>. Answer from what the lesson just taught you — not general knowledge.
             </div>
           </div>
@@ -407,10 +453,12 @@ function QuizScreen({
             </div>
           )}
         </div>
-        <div className="font-display text-xl md:text-2xl leading-snug">{screen.q}</div>
+        {/* P2 #15: font-sans for question body text */}
+        <div className="font-sans text-xl md:text-2xl leading-snug font-semibold">{screen.q}</div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-2" role="group" aria-label="Answer options">
+      {/* P2 #19: grid-cols-2 always (not just sm:) so mobile gets side-by-side */}
+      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Answer options">
         {screen.options.map((opt, i) => {
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
           let leftBorder = "";
@@ -430,13 +478,13 @@ function QuizScreen({
               disabled={phase !== "picking"}
               data-kbd-hint={phase === "picking" ? String(i + 1) : undefined}
               aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}${phase !== "picking" ? (i === screen.answer ? " (correct)" : "") : ""}`}
-              className={`relative brutal-border px-4 py-5 text-left font-mono text-sm transition-colors flex items-center gap-3 ${cls} ${leftBorder}`}
+              className={`relative brutal-border px-3 py-4 text-left font-sans text-sm transition-colors flex items-start gap-2 ${cls} ${leftBorder}`}
             >
-              <span className={`brutal-border w-8 h-8 flex items-center justify-center font-display text-sm shrink-0 ${phase === "picking" ? "bg-ink/10" : i === screen.answer ? "bg-ink/20" : "bg-bone/20"}`} aria-hidden>
+              <span className={`brutal-border w-7 h-7 flex items-center justify-center font-display text-xs shrink-0 mt-0.5 ${phase === "picking" ? "bg-ink/10" : i === screen.answer ? "bg-ink/20" : "bg-bone/20"}`} aria-hidden>
                 {String.fromCharCode(65 + i)}
               </span>
-              <span className="flex-1">{opt}</span>
-              {phase !== "picking" && i === screen.answer && <span aria-hidden>✓</span>}
+              <span className="flex-1 leading-tight">{opt}</span>
+              {phase !== "picking" && i === screen.answer && <span aria-hidden className="shrink-0">✓</span>}
               {/* XP float anchored to the correct answer button */}
               {i === screen.answer && (
                 <XpFloat xp={xpPerCorrect ?? 0} active={showXpFloat} />
@@ -467,7 +515,8 @@ function QuizScreen({
               )}
             </>
           )}
-          <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
+          {/* P2 #15: font-sans for explanation text */}
+          <div className="font-sans text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
             {screen.explain}
           </div>
         </div>
@@ -476,7 +525,7 @@ function QuizScreen({
       {phase !== "picking" && (
         <button
           onClick={onNext}
-          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow"
+          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
         >
           NEXT →
         </button>
@@ -898,6 +947,11 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
           {isFlowMode && <HeartsRow count={progress.hearts} />}
         </div>
 
+        {/* P1 #6: Section-phase dots — shows position within lesson phases */}
+        {!done && (
+          <ScreenPhaseDots screens={screens} currentIdx={screenIdx} />
+        )}
+
         {/* ── Breadcrumb: World › Chapter › Path › Mission N/M ── */}
         <LessonBreadcrumb
           mission={mission}
@@ -922,7 +976,8 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
         {/* ── Screen renderer ──
             key={screenIdx} ensures React remounts each screen,
-            resetting internal state (quiz phase, interacted flag, etc.) */}
+            resetting internal state (quiz phase, interacted flag, etc.)
+            animate-fade-up added to individual screen components for P2 #24 */}
         {done && summaryScreen ? (
           <SummaryScreen
             key="summary-done"
