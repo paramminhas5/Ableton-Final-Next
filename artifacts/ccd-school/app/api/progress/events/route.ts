@@ -21,6 +21,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@auth";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // ─── Constants (must stay in sync with progress.tsx client constants) ─────────
 const MAX_HEARTS = 5;
 const HEART_REFILL_SECS = 14400; // 4 hours

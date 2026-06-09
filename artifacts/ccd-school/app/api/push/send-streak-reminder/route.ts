@@ -23,6 +23,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSign, createHmac } from "crypto";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 const DAILY_GOAL_XP = 50;
 
 // ─── VAPID JWT builder (RFC 8292) ─────────────────────────────────────────────
