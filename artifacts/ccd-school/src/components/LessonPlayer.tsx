@@ -727,30 +727,37 @@ function LessonBreadcrumb({
   const pathTitle = ctx.path?.title || null;
 
   return (
-    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[9px] uppercase opacity-40 tracking-wide">
-      <Link href={ctx.worldRoute} className="hover:opacity-100 hover:text-acid transition-colors shrink-0 truncate max-w-[80px]">
+    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[8px] uppercase opacity-60 tracking-wide justify-center">
+      <Link 
+        href={ctx.worldRoute} 
+        className="hover:opacity-100 hover:text-acid transition-colors shrink-0 truncate max-w-[60px] px-1 py-0.5 rounded"
+        title={`Back to ${ctx.worldLabel}`}
+      >
         {ctx.worldLabel}
       </Link>
       {chapterTitle && (
         <>
-          <span className="shrink-0">›</span>
-          <span className="truncate max-w-[90px] shrink-0">{chapterTitle}</span>
+          <span className="shrink-0 opacity-30">/</span>
+          <span className="truncate max-w-[70px] shrink-0 px-1 py-0.5" title={chapterTitle}>
+            {chapterTitle}
+          </span>
         </>
       )}
       {pathTitle && (
         <>
-          <span className="shrink-0">›</span>
+          <span className="shrink-0 opacity-30">/</span>
           <Link
             href={ctx.path ? `/path/${ctx.path.slug}` : "#"}
-            className="hover:opacity-100 hover:text-acid transition-colors truncate max-w-[90px] shrink-0"
+            className="hover:opacity-100 hover:text-acid transition-colors truncate max-w-[70px] shrink-0 px-1 py-0.5 rounded"
+            title={pathTitle}
           >
             {pathTitle}
           </Link>
         </>
       )}
-      <span className="shrink-0">›</span>
-      <span className="text-ink/70 font-bold opacity-100 truncate">
-        {missionIndex}/{missionTotal}
+      <span className="shrink-0 opacity-30">/</span>
+      <span className="text-acid font-bold opacity-100 truncate px-1 py-0.5">
+        {missionIndex} of {missionTotal}
       </span>
     </div>
   );
@@ -942,35 +949,47 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
 
-      <div className="max-w-2xl mx-auto px-4 py-3 space-y-3 pb-8">
+      <div className="max-w-2xl mx-auto px-4 py-3 pb-8">
 
-        {/* ── Top bar: close button + progress bar + hearts ── */}
-        <div className="flex items-center gap-2">
-          <Link
-            href={backRoute}
-            className="brutal-border bg-bone w-8 h-8 flex items-center justify-center font-mono text-sm brutal-press shrink-0 hover:bg-acid transition-colors"
-            title="Back to world"
-            aria-label="Close lesson"
-          >
-            ✕
-          </Link>
-          <div className="flex-1">
+        {/* ── Clean top navigation ── */}
+        <div className="mb-4 space-y-2">
+          {/* Header with back button and location info */}
+          <div className="flex items-center justify-between gap-2">
+            <Link
+              href={backRoute}
+              className="brutal-border bg-bone w-10 h-10 flex items-center justify-center font-mono text-lg brutal-press shrink-0 hover:bg-acid transition-colors group"
+              title="Back to world"
+              aria-label="Close lesson"
+            >
+              <span className="group-hover:scale-110 transition-transform">←</span>
+            </Link>
+            
+            <div className="flex-1 min-w-0">
+              <div className="font-display text-sm text-center truncate px-2">
+                {mission.title}
+              </div>
+              <div className="font-mono text-[9px] uppercase opacity-50 text-center">
+                Mission {missionIndex} of {missionTotal}
+              </div>
+            </div>
+            
+            {isFlowMode && <HeartsRow count={progress.hearts} />}
+          </div>
+          
+          {/* Progress bar */}
+          <div className="px-1">
             <ProgressBar current={screenIdx} total={total} />
           </div>
-          {isFlowMode && <HeartsRow count={progress.hearts} />}
+          
+          {/* Compact breadcrumb */}
+          <div className="px-1">
+            <LessonBreadcrumb
+              mission={mission}
+              missionIndex={missionIndex}
+              missionTotal={missionTotal}
+            />
+          </div>
         </div>
-
-        {/* P1 #6: Section-phase dots — shows position within lesson phases */}
-        {!done && (
-          <ScreenPhaseDots screens={screens} currentIdx={screenIdx} />
-        )}
-
-        {/* ── Breadcrumb: compact single line ── */}
-        <LessonBreadcrumb
-          mission={mission}
-          missionIndex={missionIndex}
-          missionTotal={missionTotal}
-        />
 
         {/* ── Screen renderer ──
             key={screenIdx} ensures React remounts each screen,

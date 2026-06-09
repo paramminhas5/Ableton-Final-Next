@@ -3,7 +3,7 @@
  * LearnPageClient — /learn
  *
  * Default view: Snake (Duolingo-style world path) for the active world.
- * Toggle: "Paths" button switches to the paths cards/list browser.
+ * Toggle: "Flow" and "Free" buttons switch between guided path and free browser.
  *
  * World tabs (Fundamentals / DJ / Producer) stay the same across both views.
  */
@@ -12,12 +12,13 @@ import Image from "next/image";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
+import { useLearnMode } from "@/lib/mode";
 import SectionReveal from "@/components/SectionReveal";
 import { WorldPathClient } from "@/components/WorldPathClient";
 import { useState } from "react";
 
 type WorldTab = "fundamentals" | "dj" | "producer";
-type ViewMode = "snake" | "paths";
+type ViewMode = "flow" | "free";
 
 const WORLD_META: Record<WorldTab, {
   label: string; emoji: string;
@@ -38,9 +39,10 @@ const CHAPTER_CATS = [
 
 export function LearnPageClient() {
   const { progress } = useProgress();
+  const { learnMode, setLearnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const [activeWorld, setActiveWorld] = useState<WorldTab>("fundamentals");
-  const [viewMode, setViewMode] = useState<ViewMode>("snake");
+  const [viewMode, setViewMode] = useState<ViewMode>(learnMode === "flow" ? "flow" : "free");
 
   const chapters = chaptersByWorld(activeWorld);
   const allPaths = pathsByWorld(activeWorld);
@@ -112,25 +114,25 @@ export function LearnPageClient() {
             );
           })}
 
-          {/* View toggle — snake vs paths */}
+          {/* View toggle — flow vs free */}
           <div className="flex items-center px-3 border-l-4 border-ink gap-1 shrink-0">
             <button
-              onClick={() => setViewMode("snake")}
-              title="Snake path (default)"
+              onClick={() => { setViewMode("flow"); setLearnMode("flow"); }}
+              title="Flow mode: Guided snake path"
               className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
-                viewMode === "snake" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+                viewMode === "flow" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              🌊 Path
+              🌊 Flow
             </button>
             <button
-              onClick={() => setViewMode("paths")}
-              title="Paths browser"
+              onClick={() => { setViewMode("free"); setLearnMode("classic"); }}
+              title="Free mode: Browse all lessons"
               className={`px-3 py-1.5 brutal-border font-display text-xs brutal-press transition-colors whitespace-nowrap ${
-                viewMode === "paths" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
+                viewMode === "free" ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              📋 Browse
+              🔓 Free
             </button>
           </div>
         </div>
@@ -141,13 +143,13 @@ export function LearnPageClient() {
         </div>
       </div>
 
-      {/* ── SNAKE VIEW (default) ─────────────────────────────────────────── */}
-      {viewMode === "snake" && (
+      {/* ── FLOW VIEW (default) ─────────────────────────────────────────── */}
+      {viewMode === "flow" && (
         <WorldPathClient worldSlug={activeWorld} embedded />
       )}
 
-      {/* ── PATHS BROWSER VIEW ───────────────────────────────────────────── */}
-      {viewMode === "paths" && (
+      {/* ── FREE BROWSER VIEW ───────────────────────────────────────────── */}
+      {viewMode === "free" && (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-10 pb-28">
           {chapters.map((chapter, chIdx) => {
             const cStats = chapterStats(chapter.slug);
