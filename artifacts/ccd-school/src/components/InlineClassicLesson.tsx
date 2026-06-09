@@ -5,9 +5,12 @@
  *   1. Free Mode  (learnMode === "classic") — all missions, no hearts
  *   2. Flow Mode fallback — missions that have no screens[] yet
  *
- * Renders: mode badge → difficulty toggle → explainer blocks → sim → quiz → next CTA
- * Supports Normal / Hard mode matching the experience in MissionPageClient.
- * No redirect. No separate /mission/ page needed.
+ * Redesigned for world-class readability:
+ *   - font-sans for all body text (Space Grotesk, not monospaced)
+ *   - Consistent card-based layout with uniform padding
+ *   - Clear visual hierarchy: title → body → callouts → quiz
+ *   - Removed duplicate simulator headers
+ *   - Clean section dividers instead of competing colored bars
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -39,6 +42,91 @@ interface Props {
   onCorrect?: () => void;
 }
 
+// ── Shared section wrapper ────────────────────────────────────────────────────
+function Section({
+  label,
+  icon,
+  accent,
+  children,
+}: {
+  label: string;
+  icon?: string;
+  accent?: string; // tailwind bg class for the left border accent
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="animate-fade-up">
+      {/* Section header */}
+      <div className="flex items-center gap-2 mb-3">
+        {icon && <span className="text-base leading-none">{icon}</span>}
+        <span className="font-mono text-xs font-bold uppercase tracking-widest opacity-50">
+          {label}
+        </span>
+        <div className="flex-1 h-px bg-ink/10" />
+      </div>
+      <div className={accent ? `border-l-4 ${accent} pl-4` : ""}>{children}</div>
+    </section>
+  );
+}
+
+// ── Content card ──────────────────────────────────────────────────────────────
+function Card({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`brutal-border bg-card rounded-md p-5 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+// ── Difficulty pill ───────────────────────────────────────────────────────────
+function DifficultyToggle({
+  hard,
+  onNormal,
+  onHard,
+}: {
+  hard: boolean;
+  onNormal: () => void;
+  onHard: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="font-mono text-xs uppercase opacity-50 tracking-wide">
+        Difficulty
+      </span>
+      <div className="flex brutal-border rounded-md overflow-hidden">
+        <button
+          onClick={onNormal}
+          className={`px-4 py-1.5 font-sans text-sm font-medium transition-colors brutal-press ${
+            !hard ? "bg-ink text-bone" : "bg-bone hover:bg-ink/10"
+          }`}
+        >
+          📖 Normal
+        </button>
+        <button
+          onClick={onHard}
+          className={`px-4 py-1.5 font-sans text-sm font-medium transition-colors brutal-press border-l-2 border-border ${
+            hard ? "bg-hot text-bone" : "bg-bone hover:bg-hot/10"
+          }`}
+        >
+          🔥 Hard
+        </button>
+      </div>
+      {hard && (
+        <span className="font-mono text-xs uppercase text-hot font-bold animate-fade-in">
+          harder questions loaded
+        </span>
+      )}
+    </div>
+  );
+}
+
+// ── Main component ────────────────────────────────────────────────────────────
 export function InlineClassicLesson({
   mission: m,
   nextSlug,
@@ -57,7 +145,7 @@ export function InlineClassicLesson({
   const ctx = getMissionContext(m.slug);
   const deep = LESSONS[m.slug];
 
-  // Hard mode state — default from stored difficulty preference (free mode only)
+  // Hard mode state
   const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
   const [internalHardMode, setInternalHardMode] = useState(defaultHard);
   const hasHard = !!(deep?.quizHard?.length || deep?.advanced);
@@ -66,37 +154,41 @@ export function InlineClassicLesson({
     setDone(!!progress.completedMissions[m.slug]);
   }, [m.slug, progress.completedMissions]);
 
-  // Reset hard mode when slug changes
   useEffect(() => {
     setInternalHardMode(false);
     setFlowKey(0);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
   }, [m.slug]);
 
-  const worldColor =
+  // World accent colours
+  const worldHeaderBg =
     m.world === "foundations" ? "bg-acid text-ink"
-    : m.world === "dj" ? "bg-ink text-bone"
+    : m.world === "dj"        ? "bg-ink text-bone"
     : "bg-sun text-ink";
 
-  const accentBar =
+  const accentBorder =
+    m.world === "foundations" ? "border-acid"
+    : m.world === "dj"        ? "border-volt"
+    : "border-sun";
+
+  const accentBg =
     m.world === "foundations" ? "bg-acid"
-    : m.world === "dj" ? "bg-volt"
+    : m.world === "dj"        ? "bg-volt"
     : "bg-sun";
 
-  // Hard mode: use quizHard if available, strip hints. Normal: standard quiz.
+  // Quiz questions
   const quizQs = useMemo(() => {
     if (internalHardMode && deep?.quizHard?.length) {
-      return deep.quizHard.map(q => ({ ...q, hint: undefined }));
+      return deep.quizHard.map((q) => ({ ...q, hint: undefined }));
     }
     if (internalHardMode) {
-      return m.quiz.map(q => ({ ...q, hint: undefined }));
+      return m.quiz.map((q) => ({ ...q, hint: undefined }));
     }
     return m.quiz;
   }, [m.slug, internalHardMode, deep, m.quiz]);
 
   const passThreshold = internalHardMode ? 0.7 : 0.5;
 
-  // Which content track to show
   const track = internalHardMode ? deep?.advanced : deep?.beginner;
   const whatParas = track?.what ?? deep?.definition;
 
@@ -104,7 +196,7 @@ export function InlineClassicLesson({
     const out: string[] = [];
     if (whatParas) out.push(...whatParas);
     else {
-      const lead = m.explainer.find(b => b.kind === "lead" || b.kind === "para");
+      const lead = m.explainer.find((b) => b.kind === "lead" || b.kind === "para");
       if (lead && "text" in lead) out.push(lead.text);
     }
     if (!internalHardMode && deep?.beginner?.analogy) out.push(deep.beginner.analogy);
@@ -112,7 +204,12 @@ export function InlineClassicLesson({
     if (internalHardMode && deep?.advanced?.edgeCases) out.push(...deep.advanced.edgeCases);
     if (internalHardMode && deep?.advanced?.engineerNotes) out.push(...deep.advanced.engineerNotes);
     if (deep?.listenFor) out.push(...deep.listenFor.slice(0, internalHardMode ? 99 : 3));
-    if (deep?.walkthrough) { for (const s of deep.walkthrough) { out.push(s.do); out.push(s.listen); } }
+    if (deep?.walkthrough) {
+      for (const s of deep.walkthrough) {
+        out.push(s.do);
+        out.push(s.listen);
+      }
+    }
     if (internalHardMode && deep?.proMoves) out.push(...deep.proMoves);
     if (deep?.mistakes) out.push(...deep.mistakes);
     return out;
@@ -125,64 +222,58 @@ export function InlineClassicLesson({
     completeMission(m.slug, m.xp, score, badge);
     setEarnedXp(xp);
     setDone(true);
-    setShowModal(true); // fire CompletionModal
+    setShowModal(true);
     onComplete();
   };
 
-  // Fallback explainer blocks when no deep content exists
-  const fallbackWhat = m.explainer.find(b => b.kind === "lead" || b.kind === "para");
-
   return (
     <GlossaryScope resetKey={m.slug} texts={allTexts}>
-      {/* Sticky difficulty toggle — only shown when deep lesson content has hard mode */}
+      {/* ── Sticky difficulty toggle ───────────────────────────────────────── */}
       {hasHard && (
-        <div className="sticky top-[52px] md:top-[56px] z-20 brutal-border border-x-0 border-t-0 bg-bone flex items-center gap-2 px-4 py-2">
-          <span className="font-mono text-[9px] uppercase opacity-50 mr-2">DIFFICULTY:</span>
-          <button
-            onClick={() => setInternalHardMode(false)}
-            className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!internalHardMode ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}
-          >
-            📖 Normal
-          </button>
-          <button
-            onClick={() => setInternalHardMode(true)}
-            className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${internalHardMode ? "bg-hot text-bone" : "bg-bone hover:bg-sun"}`}
-          >
-            🔥 Hard
-          </button>
-          {internalHardMode && deep?.quizHard?.length && (
-            <span className="font-mono text-[9px] opacity-50 ml-2">harder questions loaded</span>
-          )}
+        <div className="sticky top-[52px] md:top-[56px] z-20 bg-bone/95 backdrop-blur-sm border-b-2 border-border px-4 py-2.5">
+          <DifficultyToggle
+            hard={internalHardMode}
+            onNormal={() => setInternalHardMode(false)}
+            onHard={() => setInternalHardMode(true)}
+          />
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto px-4 py-4 space-y-5 pb-24">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-7 pb-28">
 
-        {/* Top bar — matches LessonPlayer chrome */}
+        {/* ── Top nav bar ──────────────────────────────────────────────────── */}
         <div className="flex items-center gap-3">
           <Link
             href={ctx.worldRoute || `/world/${m.world === "foundations" ? "fundamentals" : m.world}`}
-            className="brutal-border bg-bone px-4 py-3 font-mono text-[10px] uppercase brutal-press shrink-0"
+            className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press shrink-0 rounded-md"
           >
             ✕
           </Link>
           {/* Mode badge */}
-          <div className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase font-bold
-            ${mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"}`}>
+          <div
+            className={`brutal-border px-3 py-1.5 font-mono text-xs font-bold rounded-md ${
+              mode === "explore" ? "bg-bone text-ink" : "bg-acid text-ink"
+            }`}
+          >
             {mode === "explore" ? "🔓 Free Mode" : "🌊 Flow Mode"}
           </div>
           <div className="flex-1" />
           {internalHardMode && (
-            <span className="brutal-border bg-hot text-bone px-2 py-1 font-mono text-[9px] uppercase animate-pulse">🔥 HARD MODE</span>
+            <span className="brutal-border bg-hot text-bone px-3 py-1.5 font-mono text-xs uppercase rounded-md animate-pulse">
+              🔥 Hard
+            </span>
           )}
           {done && (
-            <span className="brutal-border bg-acid text-ink px-2 py-1 font-mono text-[9px] uppercase">✓ Done</span>
+            <span className="brutal-border bg-acid text-ink px-3 py-1.5 font-mono text-xs uppercase rounded-md">
+              ✓ Done
+            </span>
           )}
         </div>
 
-        {/* Mission header */}
-        <header className={`brutal-border ${worldColor} brutal-shadow relative overflow-hidden min-h-[180px] flex flex-col justify-end`}>
-          {/* World banner image */}
+        {/* ── Mission hero card ─────────────────────────────────────────────── */}
+        <header
+          className={`brutal-border brutal-shadow ${worldHeaderBg} relative overflow-hidden rounded-lg min-h-[200px] flex flex-col justify-end`}
+        >
           {WORLD_BANNERS[m.world] && (
             <div className="absolute inset-0 pointer-events-none">
               <Image
@@ -194,278 +285,369 @@ export function InlineClassicLesson({
               />
             </div>
           )}
-          <div className="relative z-10 p-5">
-            <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
+          <div className="relative z-10 p-6">
+            <p className="font-mono text-xs opacity-60 mb-1.5 uppercase tracking-wide">
               {ctx.chapter?.title} › {ctx.path?.title}
-            </div>
-            <h1 className="font-display text-4xl leading-none">{m.title}</h1>
-            <p className="font-mono text-sm opacity-70 mt-2 leading-relaxed">{m.tagline}</p>
-            <div className="flex flex-wrap gap-2 mt-3 font-mono text-[9px] uppercase">
-              <span className="brutal-border bg-bone/20 px-2 py-1">+{m.xp} XP</span>
-              {m.badge && <span className="brutal-border bg-bone/20 px-2 py-1">🏅 {m.badge.name}</span>}
+            </p>
+            <h1 className="font-display text-4xl md:text-5xl leading-none mb-3">
+              {m.title}
+            </h1>
+            <p className="font-sans text-base opacity-80 leading-relaxed max-w-lg">
+              {m.tagline}
+            </p>
+            <div className="flex flex-wrap gap-2 mt-4 font-mono text-xs uppercase">
+              <span className="brutal-border bg-bone/20 px-2.5 py-1 rounded">
+                +{m.xp} XP
+              </span>
+              {m.badge && (
+                <span className="brutal-border bg-bone/20 px-2.5 py-1 rounded">
+                  🏅 {m.badge.name}
+                </span>
+              )}
             </div>
           </div>
         </header>
 
-        {/* ── WHAT YOU NEED TO KNOW ─────────────────────────────────────── */}
-        <section className="space-y-3">
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold tracking-widest w-full`}>
-            WHAT YOU NEED TO KNOW
-          </div>
-
-          {/* Hard mode: advanced.what paragraphs */}
-          {internalHardMode && deep?.advanced?.what ? (
-            <div className="space-y-2">
-              {deep.advanced.what.map((para, i) => (
-                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
-                  <Glossarized text={para} />
-                </p>
-              ))}
-            </div>
-          ) : deep?.beginner?.what ? (
-            <div className="space-y-2">
-              {deep.beginner.what.map((para, i) => (
-                <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
-                  <Glossarized text={para} />
-                </p>
-              ))}
-            </div>
-          ) : (
-            m.explainer.map((block, i) => {
-              if (block.kind === "lead" || block.kind === "para") {
-                return (
-                  <p key={i} className="brutal-border bg-bone p-4 font-mono text-sm leading-relaxed border-l-4 border-l-acid/40">
-                    <Glossarized text={block.text} />
+        {/* ── WHAT YOU NEED TO KNOW ──────────────────────────────────────────── */}
+        <Section label="What you need to know" icon="📖" accent={accentBorder}>
+          <div className="space-y-3">
+            {/* Hard mode: advanced paragraphs */}
+            {internalHardMode && deep?.advanced?.what ? (
+              deep.advanced.what.map((para, i) => (
+                <Card key={i}>
+                  <p className="font-sans text-base leading-relaxed">
+                    <Glossarized text={para} />
                   </p>
-                );
-              }
-              if (block.kind === "callout") {
-                const tone = block.tone === "tip" ? "bg-acid text-ink" : block.tone === "warn" ? "bg-hot text-bone" : "bg-volt text-bone";
-                return (
-                  <div key={i} className={`brutal-border ${tone} p-4 font-mono text-sm leading-relaxed`}>
-                    <span className="font-bold uppercase text-[9px] block mb-1">
-                      {block.tone === "tip" ? "💡 TIP" : block.tone === "warn" ? "⚠ WATCH OUT" : "🔑 KEY"}
-                    </span>
-                    <Glossarized text={block.text} />
-                  </div>
-                );
-              }
-              if (block.kind === "list") {
-                return (
-                  <ul key={i} className="brutal-border bg-bone p-4 space-y-1.5">
-                    {block.items.map((item, j) => (
-                      <li key={j} className="font-mono text-sm flex gap-2">
-                        <span className="text-acid font-bold shrink-0">›</span>
-                        <Glossarized text={item} />
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }
-              return null;
-            })
-          )}
+                </Card>
+              ))
+            ) : deep?.beginner?.what ? (
+              deep.beginner.what.map((para, i) => (
+                <Card key={i}>
+                  <p className="font-sans text-base leading-relaxed">
+                    <Glossarized text={para} />
+                  </p>
+                </Card>
+              ))
+            ) : (
+              m.explainer.map((block, i) => {
+                if (block.kind === "lead" || block.kind === "para") {
+                  return (
+                    <Card key={i}>
+                      <p className="font-sans text-base leading-relaxed">
+                        <Glossarized text={block.text} />
+                      </p>
+                    </Card>
+                  );
+                }
+                if (block.kind === "callout") {
+                  const styles =
+                    block.tone === "tip"
+                      ? "bg-acid text-ink"
+                      : block.tone === "warn"
+                      ? "bg-hot text-bone"
+                      : "bg-volt text-bone";
+                  return (
+                    <div key={i} className={`brutal-border rounded-md p-5 ${styles}`}>
+                      <span className="font-mono text-xs font-bold uppercase block mb-2 opacity-70">
+                        {block.tone === "tip"
+                          ? "💡 Tip"
+                          : block.tone === "warn"
+                          ? "⚠ Watch out"
+                          : "🔑 Key point"}
+                      </span>
+                      <p className="font-sans text-base leading-relaxed">
+                        <Glossarized text={block.text} />
+                      </p>
+                    </div>
+                  );
+                }
+                if (block.kind === "list") {
+                  return (
+                    <Card key={i}>
+                      <ul className="space-y-2">
+                        {block.items.map((item, j) => (
+                          <li key={j} className="font-sans text-base flex gap-3">
+                            <span className="text-acid font-bold shrink-0 mt-0.5">›</span>
+                            <Glossarized text={item} />
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                  );
+                }
+                return null;
+              })
+            )}
 
-          {/* Normal mode: beginner analogy + why */}
-          {!internalHardMode && deep?.beginner?.analogy && (
-            <div className="brutal-border bg-acid text-ink p-5 font-mono text-sm relative overflow-hidden">
-              <span className="font-display text-4xl opacity-20 absolute left-3 top-1 leading-none select-none">&ldquo;</span>
-              <span className="font-bold uppercase text-[9px] block mb-1 relative z-10">THINK OF IT LIKE →</span>
-              <div className="relative z-10"><Glossarized text={deep.beginner.analogy} /></div>
-            </div>
-          )}
-          {!internalHardMode && deep?.beginner?.why && (
-            <div className="brutal-border bg-volt text-bone p-4">
-              <div className="font-mono text-[9px] uppercase font-bold mb-2">▸ WHY YOU CARE</div>
-              <ul className="space-y-1 font-mono text-sm">
-                {deep.beginner.why.map((item, i) => (
-                  <li key={i}>• <Glossarized text={item} /></li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Hard mode: advanced edge cases + engineer notes */}
-          {internalHardMode && deep?.advanced?.edgeCases && (
-            <div className="brutal-border bg-hot text-bone p-4">
-              <div className="font-mono text-[9px] uppercase font-bold mb-2">⚠ EDGE CASES</div>
-              <ul className="space-y-1 font-mono text-sm">
-                {deep.advanced.edgeCases.map((item, i) => (
-                  <li key={i}>• <Glossarized text={item} /></li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {internalHardMode && deep?.advanced?.engineerNotes && (
-            <div className="brutal-border bg-ink text-bone p-4">
-              <div className="font-mono text-[9px] uppercase font-bold mb-2">🔧 ENGINEER NOTES</div>
-              <ul className="space-y-1 font-mono text-sm">
-                {deep.advanced.engineerNotes.map((item, i) => (
-                  <li key={i}>• <Glossarized text={item} /></li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
-
-        {/* ── HOW IT WORKS (mechanism + signal flow) ──────────────────────── */}
-        {(deep?.mechanism || deep?.flow) && (
-          <details open={internalHardMode} className="brutal-border bg-card p-4"
-            onToggle={(e) => { if ((e.currentTarget as HTMLDetailsElement).open) setFlowKey(k => k + 1); }}>
-            <summary className="font-mono text-[9px] uppercase cursor-pointer font-bold">▸ HOW IT WORKS</summary>
-            <div className="mt-3 space-y-3">
-              {deep?.mechanism && (
-                <p className="font-mono text-sm leading-relaxed brutal-border bg-volt text-bone p-3">
-                  {deep.mechanism}
+            {/* Analogy block — Normal mode only */}
+            {!internalHardMode && deep?.beginner?.analogy && (
+              <div className="brutal-border bg-acid text-ink p-5 rounded-md relative overflow-hidden">
+                <span className="font-display text-5xl opacity-15 absolute left-3 top-0 leading-none select-none pointer-events-none">
+                  &ldquo;
+                </span>
+                <p className="font-mono text-xs uppercase font-bold mb-2 opacity-60 relative z-10">
+                  Think of it like →
                 </p>
+                <p className="font-sans text-base leading-relaxed relative z-10">
+                  <Glossarized text={deep.beginner.analogy} />
+                </p>
+              </div>
+            )}
+
+            {/* Why you care — Normal mode */}
+            {!internalHardMode && deep?.beginner?.why && (
+              <Card className="bg-volt/10 border-volt/40">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-60">
+                  ▸ Why this matters
+                </p>
+                <ul className="space-y-2">
+                  {deep.beginner.why.map((item, i) => (
+                    <li key={i} className="font-sans text-base flex gap-3">
+                      <span className="shrink-0 text-volt font-bold">•</span>
+                      <Glossarized text={item} />
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+
+            {/* Hard mode: edge cases */}
+            {internalHardMode && deep?.advanced?.edgeCases && (
+              <Card className="bg-hot/10 border-hot/40">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-60">
+                  ⚠ Edge cases
+                </p>
+                <ul className="space-y-2">
+                  {deep.advanced.edgeCases.map((item, i) => (
+                    <li key={i} className="font-sans text-base flex gap-3">
+                      <span className="shrink-0 font-bold">•</span>
+                      <Glossarized text={item} />
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+
+            {/* Hard mode: engineer notes */}
+            {internalHardMode && deep?.advanced?.engineerNotes && (
+              <Card className="bg-ink text-bone">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-50">
+                  🔧 Engineer notes
+                </p>
+                <ul className="space-y-2">
+                  {deep.advanced.engineerNotes.map((item, i) => (
+                    <li key={i} className="font-sans text-base flex gap-3 opacity-90">
+                      <span className="shrink-0 font-bold">•</span>
+                      <Glossarized text={item} />
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+          </div>
+        </Section>
+
+        {/* ── HOW IT WORKS ───────────────────────────────────────────────────── */}
+        {(deep?.mechanism || deep?.flow) && (
+          <Section label="How it works" icon="⚙️">
+            <div className="space-y-3">
+              {deep?.mechanism && (
+                <Card className="bg-volt/10 border-volt/30">
+                  <p className="font-sans text-base leading-relaxed">
+                    {deep.mechanism}
+                  </p>
+                </Card>
               )}
               {deep?.flow && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="font-mono text-[10px] uppercase opacity-70">▸ Signal flow — watch the dot</div>
+                    <p className="font-mono text-xs uppercase opacity-50 tracking-wide">
+                      Signal flow — watch the dot
+                    </p>
                     <button
                       type="button"
-                      onClick={() => setFlowKey(k => k + 1)}
-                      className="brutal-border bg-acid px-2 py-1 font-mono text-[10px] uppercase brutal-press"
+                      onClick={() => setFlowKey((k) => k + 1)}
+                      className="brutal-border bg-acid px-3 py-1.5 font-mono text-xs uppercase brutal-press rounded"
                     >
                       ▶ Replay
                     </button>
                   </div>
-                  <AnimatedSignalFlow flow={deep.flow} replayKey={flowKey} legend="Glowing dot = your signal travelling through Live." />
+                  <AnimatedSignalFlow
+                    flow={deep.flow}
+                    replayKey={flowKey}
+                    legend="Glowing dot = your signal travelling through Live."
+                  />
                 </div>
               )}
             </div>
-          </details>
+          </Section>
         )}
 
-        {/* ── LISTEN FOR ──────────────────────────────────────────────────── */}
+        {/* ── LISTEN FOR ─────────────────────────────────────────────────────── */}
         {deep?.listenFor && (
-          <div className="brutal-border bg-sun p-3">
-            <div className="font-mono text-[9px] uppercase mb-2 font-bold">▸ LISTEN FOR</div>
-            <ul className="space-y-1 font-mono text-sm">
-              {deep.listenFor.slice(0, internalHardMode ? 99 : 3).map((x, i) => (
-                <li key={i}>• <Glossarized text={x} /></li>
-              ))}
-            </ul>
-          </div>
+          <Section label="Listen for" icon="🎧">
+            <Card className={`${accentBg}/10`}>
+              <ul className="space-y-2.5">
+                {deep.listenFor
+                  .slice(0, internalHardMode ? 99 : 3)
+                  .map((x, i) => (
+                    <li key={i} className="font-sans text-base flex gap-3">
+                      <span className="shrink-0 text-lg leading-tight">🎵</span>
+                      <Glossarized text={x} />
+                    </li>
+                  ))}
+              </ul>
+            </Card>
+          </Section>
         )}
 
-        {/* ── WALKTHROUGH ─────────────────────────────────────────────────── */}
+        {/* ── WALKTHROUGH ────────────────────────────────────────────────────── */}
         {deep?.walkthrough && (
-          <details open={!internalHardMode} className="brutal-border bg-card p-4">
-            <summary className="font-mono text-[9px] uppercase cursor-pointer font-bold">
-              ▸ WALKTHROUGH ({deep.walkthrough.length} steps)
-            </summary>
-            <ol className="space-y-2 mt-3">
+          <Section label={`Walkthrough · ${deep.walkthrough.length} steps`} icon="🚶">
+            <ol className="space-y-3">
               {deep.walkthrough.map((s, i) => (
-                <li key={i} className="brutal-border bg-bone p-2 font-mono text-sm">
-                  <div><span className="font-bold">{i + 1}. DO:</span> <Glossarized text={s.do} /></div>
-                  <div className="opacity-80 mt-1">▸ LISTEN: <Glossarized text={s.listen} /></div>
+                <li key={i} className="flex gap-4">
+                  {/* Step number */}
+                  <div className="brutal-border bg-acid text-ink w-8 h-8 rounded-full flex items-center justify-center font-display text-sm shrink-0 mt-0.5">
+                    {i + 1}
+                  </div>
+                  <Card className="flex-1">
+                    <p className="font-sans text-base font-semibold mb-1">
+                      <Glossarized text={s.do} />
+                    </p>
+                    <p className="font-sans text-sm opacity-70 leading-relaxed">
+                      🎧 <Glossarized text={s.listen} />
+                    </p>
+                  </Card>
                 </li>
               ))}
             </ol>
-          </details>
+          </Section>
         )}
 
-        {/* ── PRO MOVES (hard mode only) ───────────────────────────────────── */}
+        {/* ── PRO MOVES — hard mode only ─────────────────────────────────────── */}
         {internalHardMode && deep?.proMoves && (
-          <details open className="brutal-border bg-ink text-bone p-4">
-            <summary className="font-mono text-[9px] uppercase cursor-pointer font-bold">▸ PRO MOVES</summary>
-            <ul className="space-y-1 mt-2 font-mono text-sm">
-              {deep.proMoves.map((x, i) => (
-                <li key={i}>★ <Glossarized text={x} /></li>
-              ))}
-            </ul>
-          </details>
+          <Section label="Pro moves" icon="⭐">
+            <Card className="bg-ink text-bone">
+              <ul className="space-y-2.5">
+                {deep.proMoves.map((x, i) => (
+                  <li key={i} className="font-sans text-base flex gap-3 opacity-90">
+                    <span className="shrink-0 text-acid font-bold">★</span>
+                    <Glossarized text={x} />
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </Section>
         )}
 
-        {/* ── COMMON MISTAKES ─────────────────────────────────────────────── */}
+        {/* ── COMMON MISTAKES ────────────────────────────────────────────────── */}
         {deep?.mistakes && (
-          <details open={internalHardMode} className="brutal-border bg-hot text-bone p-4">
-            <summary className="font-mono text-[9px] uppercase cursor-pointer font-bold">▸ COMMON MISTAKES</summary>
-            <ul className="space-y-1 mt-2 font-mono text-sm">
-              {deep.mistakes.map((x, i) => (
-                <li key={i}>✗ <Glossarized text={x} /></li>
-              ))}
-            </ul>
-          </details>
+          <Section label="Common mistakes" icon="⚠️">
+            <Card className="bg-hot/8 border-hot/30">
+              <ul className="space-y-2.5">
+                {deep.mistakes.map((x, i) => (
+                  <li key={i} className="font-sans text-base flex gap-3">
+                    <span className="shrink-0 text-hot font-bold">✗</span>
+                    <Glossarized text={x} />
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </Section>
         )}
 
-        {/* ── RELATED ─────────────────────────────────────────────────────── */}
+        {/* ── RELATED ────────────────────────────────────────────────────────── */}
         {deep?.related && deep.related.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {deep.related.map((r, i) => {
-              const href =
-                r.kind === "mission" ? `/learn/${r.slug}`
-                : r.kind === "device" ? `/device/${r.slug}`
-                : `/glossary#${r.slug}`;
-              return (
-                <a key={i} href={href} className="brutal-border bg-volt text-bone px-3 py-2 font-mono text-[9px] uppercase brutal-press">
-                  → {r.label}
-                </a>
-              );
-            })}
-          </div>
+          <Section label="Related" icon="🔗">
+            <div className="flex flex-wrap gap-2">
+              {deep.related.map((r, i) => {
+                const href =
+                  r.kind === "mission"
+                    ? `/learn/${r.slug}`
+                    : r.kind === "device"
+                    ? `/device/${r.slug}`
+                    : `/glossary#${r.slug}`;
+                return (
+                  <a
+                    key={i}
+                    href={href}
+                    className="brutal-border bg-bone hover:bg-sun px-3 py-2 font-sans text-sm brutal-press transition-colors rounded"
+                  >
+                    → {r.label}
+                  </a>
+                );
+              })}
+            </div>
+          </Section>
         )}
 
-        {/* ── SIMULATOR ───────────────────────────────────────────────────── */}
-        <section>
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest w-full`}>
-            TRY IT
+        {/* ── INTERACTIVE SIM ────────────────────────────────────────────────── */}
+        <Section label="Try it" icon="🎛">
+          <div className="brutal-border rounded-lg overflow-hidden">
+            <Simulator type={m.sim.type} preset={m.sim.preset} />
           </div>
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-2 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest`}>
-            // INTERACTIVE SIM
-          </div>
-          <Simulator type={m.sim.type} preset={m.sim.preset} />
-        </section>
+        </Section>
 
-        {/* ── QUIZ ────────────────────────────────────────────────────────── */}
-        <section>
-          <div className={`brutal-border ${accentBar} text-ink px-4 py-2.5 font-mono text-[9px] uppercase font-bold mb-3 tracking-widest w-full`}>
-            QUICK QUIZ {internalHardMode ? <span className="text-bone">🔥 HARD</span> : ""}
-          </div>
+        {/* ── QUIZ ───────────────────────────────────────────────────────────── */}
+        <Section label={internalHardMode ? "Quiz · Hard mode 🔥" : "Quick quiz"} icon="🧠">
           {internalHardMode && (
-            <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-[10px] uppercase mb-3">
-              Hard mode — no hints · pass threshold 70% · {deep?.quizHard?.length ? "harder questions loaded" : "hints removed from standard questions"}
+            <div className="brutal-border bg-hot/10 border-hot/30 text-ink px-4 py-3 rounded-md font-sans text-sm mb-4">
+              <strong>Hard mode:</strong> no hints · pass threshold 70% ·{" "}
+              {deep?.quizHard?.length
+                ? "harder questions loaded"
+                : "hints removed from standard questions"}
             </div>
           )}
-          {/* Context banner — ties quiz questions back to what was just taught */}
-          <div className="brutal-border bg-volt text-bone px-4 py-3 flex items-start gap-3 mb-3">
-            <span className="text-lg shrink-0">🧠</span>
-            <div>
-              <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">TEST YOUR KNOWLEDGE</div>
-              <div className="font-mono text-xs leading-relaxed opacity-90">
-                These questions are based on <strong>{m.title}</strong>. Use what you just read above — not general knowledge.
+
+          {/* Context banner */}
+          <Card className="bg-volt/10 border-volt/30 mb-4">
+            <div className="flex items-start gap-3">
+              <span className="text-xl shrink-0">🧠</span>
+              <div>
+                <p className="font-mono text-xs uppercase opacity-60 mb-1">
+                  Test your knowledge
+                </p>
+                <p className="font-sans text-sm leading-relaxed opacity-90">
+                  Based on <strong>{m.title}</strong>. Use what you just read —
+                  not general knowledge.
+                </p>
               </div>
             </div>
-          </div>
+          </Card>
+
           <Quiz
             key={`${m.slug}-${internalHardMode}`}
             qs={quizQs}
             resetKey={`${m.slug}-${internalHardMode}`}
-            meta={{ missionTitle: m.title, missionNumber: m.number, xpEarned: earnedXp, nextSlug }}
+            meta={{
+              missionTitle: m.title,
+              missionNumber: m.number,
+              xpEarned: earnedXp,
+              nextSlug,
+            }}
             onComplete={onQuizDone}
             onWrongAnswer={onWrong}
             onCorrectAnswer={onCorrect}
             onPerfect={onCorrect}
           />
-        </section>
+        </Section>
 
-        {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
+        {/* ── SOURCE CITATION ────────────────────────────────────────────────── */}
         <LessonSourceBar source={ctx?.path?.source} />
 
-        {/* ── NEXT LESSON CTA ─────────────────────────────────────────────── */}
+        {/* ── NEXT LESSON CTA ────────────────────────────────────────────────── */}
         {nextSlug && done && (
           <Link
             href={`/learn/${nextSlug}`}
-            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press text-center block"
+            className="w-full brutal-border brutal-shadow bg-acid text-ink py-5 font-display text-2xl brutal-press brutal-hover text-center block rounded-lg"
           >
-            NEXT LESSON →
+            Next Lesson →
           </Link>
         )}
       </div>
 
-      {/* ── COMPLETION MODAL ─────────────────────────────────────────────── */}
+      {/* ── COMPLETION MODAL ───────────────────────────────────────────────── */}
       {showModal && (
         <CompletionModal
           mission={m}
