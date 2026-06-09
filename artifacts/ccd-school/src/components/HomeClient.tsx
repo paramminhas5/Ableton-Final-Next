@@ -349,6 +349,87 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       {/* Marquee 2 */}
       <CcdMarquee items={["BEATMATCHING","CAMELOT WHEEL","SPACED REPETITION","XP SYSTEM","STREAK SHIELDS","LEADERBOARD","BADGES","PLACEMENT TEST"]} bg="bg-ink" textColor="text-bone" reverse />
 
+      {/* FLOW vs FREE MODE EXPLAINER */}
+      <SectionReveal>
+        <section className="bg-bone border-b-4 border-ink">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
+            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// TWO WAYS TO LEARN</div>
+            <h2 className="font-display text-5xl md:text-7xl mb-4">Pick Your Mode.</h2>
+            <p className="font-sans text-sm opacity-60 max-w-xl leading-relaxed mb-10">
+              You choose how structured your experience is. Switch anytime — your progress always carries over.
+            </p>
+
+            <div className="brutal-border chunk-shadow overflow-hidden">
+              <div className="grid md:grid-cols-2">
+
+                {/* ── Flow Mode ── */}
+                <div className="p-7 md:p-10 bg-acid text-ink border-b-4 md:border-b-0 md:border-r-4 border-ink">
+                  <div className="text-5xl mb-4">🌊</div>
+                  <div className="font-display text-3xl md:text-4xl mb-2">Flow Mode</div>
+                  <div className="font-mono text-xs uppercase opacity-60 mb-5">Recommended · Default</div>
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      { icon: "🗺", text: "Duolingo-style path — missions unlock one by one" },
+                      { icon: "♥", text: "Hearts system — wrong answers cost a life" },
+                      { icon: "🔒", text: "Sequential gating — finish each mission to advance" },
+                      { icon: "🏆", text: "Full XP, trophies, streak — the complete game" },
+                    ].map(({ icon, text }) => (
+                      <li key={text} className="flex items-start gap-3">
+                        <span className="text-xl shrink-0 mt-0.5">{icon}</span>
+                        <span className="font-sans text-sm leading-snug">{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="brutal-border bg-ink text-bone px-4 py-2 font-display text-sm inline-block">
+                    DEFAULT ON FIRST VISIT
+                  </div>
+                </div>
+
+                {/* ── Free Mode ── */}
+                <div className="p-7 md:p-10 bg-bone text-ink">
+                  <div className="text-5xl mb-4">🔓</div>
+                  <div className="font-display text-3xl md:text-4xl mb-2">Free Mode</div>
+                  <div className="font-mono text-xs uppercase opacity-40 mb-5">For explorers & returners</div>
+                  <ul className="space-y-3 mb-8">
+                    {[
+                      { icon: "📋", text: "Full chapter browser — jump to any mission instantly" },
+                      { icon: "💚", text: "No hearts — learn without penalty pressure" },
+                      { icon: "🔓", text: "All lessons unlocked — pick what interests you" },
+                      { icon: "⚡", text: "Still earns XP, badges and streaks" },
+                    ].map(({ icon, text }) => (
+                      <li key={text} className="flex items-start gap-3">
+                        <span className="text-xl shrink-0 mt-0.5">{icon}</span>
+                        <span className="font-sans text-sm leading-snug opacity-80">{text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="brutal-border bg-bone text-ink px-4 py-2 font-display text-sm inline-block opacity-60">
+                    SWITCH ANYTIME IN SETTINGS
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Footer strip */}
+              <div className="border-t-4 border-ink px-7 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-ink text-bone">
+                <p className="font-mono text-xs uppercase opacity-60">
+                  You can switch mode on any world page — progress always carries over
+                </p>
+                <button
+                  onClick={onGetStarted}
+                  className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-sm brutal-press hover:bg-sun transition-colors shrink-0"
+                >
+                  START IN FLOW MODE →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </SectionReveal>
+
+      {/* Marquee 2b */}
+      <CcdMarquee items={["🌊 FLOW MODE","🔓 FREE MODE","SWITCH ANYTIME","153 MISSIONS","HEARTS SYSTEM","SEQUENTIAL PATH","CHAPTER BROWSER","YOUR CHOICE"]} bg="bg-electric-blue" textColor="text-bone" size="sm" />
+
       {/* THREE WORLDS */}
       <SectionReveal>
         <section className="bg-electric-blue text-bone border-b-4 border-ink">

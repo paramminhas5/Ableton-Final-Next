@@ -192,7 +192,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           try {
             var t = localStorage.getItem('ccd.theme') || 'ccd-classic';
             document.documentElement.setAttribute('data-theme', t);
-            var m = localStorage.getItem('ccd.learnMode') || 'classic';
+            var m = localStorage.getItem('ccd.learnMode') || 'flow';
             document.documentElement.setAttribute('data-learn-mode', m);
           } catch(e) {}
         ` }} />

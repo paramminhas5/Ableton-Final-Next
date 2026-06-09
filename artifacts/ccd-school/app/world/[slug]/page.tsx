@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { WorldPathClient } from "@/components/WorldPathClient";
 import { WorldPageClient } from "@/components/WorldPageClient";
+import { WorldViewToggle } from "@/components/WorldViewToggle";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ view?: string }>;
+};
 
 const WORLD_TITLES: Record<string, string> = {
   fundamentals: "Fundamentals",
@@ -20,8 +25,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function WorldPage({ params }: Props) {
+export default async function WorldPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { view } = await searchParams;
   if (!WORLD_TITLES[slug]) notFound();
-  return <WorldPageClient slug={slug} />;
+
+  // Default is Flow Mode (Duolingo path snake).
+  // ?view=free switches to the accordion chapter/path browser (Free Mode).
+  const showFree = view === "free";
+
+  return (
+    <>
+      {/* Sticky tab bar — always visible so user can switch at any point */}
+      <WorldViewToggle slug={slug} showFree={showFree} />
+
+      {showFree
+        ? <WorldPageClient slug={slug} />
+        : <WorldPathClient worldSlug={slug} />
+      }
+    </>
+  );
 }
