@@ -437,13 +437,13 @@ function ChapterTrack({
               return (
                 <div key={ch.slug} className="flex items-center">
                   {/* Gap between nodes — connection implied by the line */}
-                  {i > 0 && <div className="w-6 shrink-0" />}
+                  {i > 0 && <div className="w-5 shrink-0" />}
 
                   {/* Track node — click scrolls to that chapter */}
                   <button
                     onClick={() => onChapterClick(ch.slug)}
                     title={`${ch.title} — ${complete ? "done" : started ? `${pct}%` : "not started"}`}
-                    className={`brutal-border w-10 h-10 flex flex-col items-center justify-center shrink-0 brutal-press transition-all hover:scale-110 relative z-10 ${nodeClass}`}
+                    className={`brutal-border w-11 h-11 flex flex-col items-center justify-center shrink-0 brutal-press transition-all hover:scale-110 relative z-10 ${nodeClass}`}
                   >
                     <span className="text-base leading-none">{complete ? "✓" : emoji}</span>
                     <span className="font-mono text-[7px] opacity-60 mt-0.5 leading-none">
@@ -461,12 +461,12 @@ function ChapterTrack({
           <div className="flex items-start min-w-max gap-0">
             {chapters.map((ch, i) => (
               <div key={ch.slug} className="flex items-start">
-                {i > 0 && <div className="w-6 shrink-0" />}
+                {i > 0 && <div className="w-5 shrink-0" />}
                 <button
                   onClick={() => onChapterClick(ch.slug)}
-                  className={`w-10 text-center font-mono text-[7px] leading-tight opacity-45 hover:opacity-80 transition-opacity ${world === "dj" ? "text-bone" : "text-ink"}`}
+                  className={`w-11 text-center font-mono text-[7px] leading-tight opacity-45 hover:opacity-80 transition-opacity ${world === "dj" ? "text-bone" : "text-ink"}`}
                 >
-                  {ch.title.split(" ")[0]}
+                  {ch.title.split(" ").slice(0, 2).join(" ")}
                 </button>
               </div>
             ))}
@@ -675,7 +675,7 @@ function ChapterBanner({
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
+export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: string; embedded?: boolean }) {
   const world = worldSlug as WorldId;
   const meta = WORLD_META[world];
   const { progress, setPlacement } = useProgress();
@@ -771,20 +771,24 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   return (
     <div className={`min-h-screen ${meta.bg}`}>
 
-      {/* Hero */}
-      <WorldHero
-        world={world} meta={meta}
-        done={done} total={total} pct={pct} rank={rank.name}
-        streakDays={progress.streakDays} xp={progress.xp} gems={progress.gems}
-      />
+      {/* Hero — hidden when embedded in /learn (has its own header) */}
+      {!embedded && (
+        <WorldHero
+          world={world} meta={meta}
+          done={done} total={total} pct={pct} rank={rank.name}
+          streakDays={progress.streakDays} xp={progress.xp} gems={progress.gems}
+        />
+      )}
 
-      {/* Linear chapter track */}
-      <ChapterTrack
-        chapters={chapters} nodes={nodes}
-        world={world} meta={meta}
-        worldSlug={worldSlug}
-        onChapterClick={scrollToChapter}
-      />
+      {/* Linear chapter track — hidden when embedded */}
+      {!embedded && (
+        <ChapterTrack
+          chapters={chapters} nodes={nodes}
+          world={world} meta={meta}
+          worldSlug={worldSlug}
+          onChapterClick={scrollToChapter}
+        />
+      )}
 
       {/* Snake path */}
       <div className="max-w-sm mx-auto px-4 pt-10 pb-32">

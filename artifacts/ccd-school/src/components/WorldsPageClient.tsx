@@ -125,7 +125,6 @@ function MarqueeStrip() {
 
 // ─── Chapter breadcrumb rail ──────────────────────────────────────────────────
 // A single scrollable horizontal row — compact pills connected by a line.
-// Shows: number, emoji, name (truncated), completion state.
 function ChapterRail({
   meta,
   chapterStats,
@@ -134,8 +133,8 @@ function ChapterRail({
   chapterStats: { slug: string; title: string; number: number; pct: number; complete: boolean }[];
 }) {
   return (
-    <div className="mt-5 pt-4 border-t-2 border-current/15">
-      <div className={`font-mono text-[9px] uppercase mb-2.5 ${meta.textMuted}`}>
+    <div className="mt-4 pt-3 border-t-2 border-current/15">
+      <div className={`font-mono text-[8px] uppercase mb-2 ${meta.textMuted}`}>
         {chapterStats.length} CHAPTERS
       </div>
 
@@ -155,24 +154,18 @@ function ChapterRail({
 
             return (
               <div key={ch.slug} className="flex items-center">
-                {/* Connector line between pills */}
                 {i > 0 && (
-                  <div className={`w-4 h-px shrink-0 ${meta.pillConnector}`} />
+                  <div className={`w-3 h-px shrink-0 ${meta.pillConnector}`} />
                 )}
-
-                {/* Pill */}
-                <div className={`brutal-border flex items-center gap-1.5 px-2.5 py-1.5 shrink-0 transition-all ${pillClass}`}>
-                  <span className="font-mono text-[8px] opacity-50 leading-none">
-                    {String(ch.number).padStart(2, "0")}
-                  </span>
-                  <span className="text-sm leading-none">
+                <div className={`brutal-border flex items-center gap-1 px-2 py-1 shrink-0 transition-all ${pillClass}`}>
+                  <span className="text-xs leading-none">
                     {isDone ? "✓" : emoji}
                   </span>
-                  <span className="font-display text-xs leading-none max-w-[64px] truncate">
+                  <span className="font-display text-[10px] leading-none max-w-[52px] truncate">
                     {ch.title.split(" ")[0]}
                   </span>
                   {isStarted && (
-                    <span className="font-mono text-[8px] opacity-60 leading-none ml-0.5">
+                    <span className="font-mono text-[7px] opacity-60 leading-none">
                       {ch.pct}%
                     </span>
                   )}
@@ -229,7 +222,7 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
       <div className={`brutal-border ${meta.shadow} overflow-hidden`}>
 
         {/* ── Card body ── */}
-        <div className={`${meta.bg} ${meta.textPrimary} p-5 md:p-7 relative overflow-hidden`}>
+        <div className={`${meta.bg} ${meta.textPrimary} p-4 md:p-6 relative overflow-hidden`}>
 
           {/* Decorative bg elements */}
           <div className="absolute -bottom-6 -right-6 w-36 h-36 opacity-[0.07] pointer-events-none" aria-hidden>
@@ -294,46 +287,51 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
           {/* Chapter breadcrumb rail — compact, single row */}
           <ChapterRail meta={meta} chapterStats={chapterStats} />
 
-          {/* Bottom deco cats */}
-          <div className="flex items-end gap-2 mt-4 pt-3 border-t-2 border-current/10">
-            <div className="w-9 h-9 float opacity-60" style={{ animationDelay: "0.3s" }} aria-hidden>
-              <Image src={meta.catDeco1} alt="" width={36} height={36} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
+          {/* Bottom deco cats — slim row */}
+          <div className="flex items-end gap-2 mt-3 pt-2 border-t-2 border-current/10">
+            <div className="w-7 h-7 float opacity-55" style={{ animationDelay: "0.3s" }} aria-hidden>
+              <Image src={meta.catDeco1} alt="" width={28} height={28} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
             </div>
-            <div className="w-8 h-8 float opacity-50" style={{ animationDelay: "1.2s" }} aria-hidden>
-              <Image src={meta.catDeco2} alt="" width={32} height={32} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.12))" }} />
+            <div className="w-6 h-6 float opacity-45" style={{ animationDelay: "1.2s" }} aria-hidden>
+              <Image src={meta.catDeco2} alt="" width={24} height={24} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.12))" }} />
             </div>
           </div>
         </div>
 
         {/* ── Dual CTA footer — FLOW and FREE clearly separated ── */}
-        <div className="flex border-t-4 border-ink">
+        <div className="flex border-t-4 border-ink divide-x-4 divide-ink">
           {/* FLOW: Duolingo snake */}
           <Link
             href={`/world/${world}`}
-            className={`flex-1 brutal-border border-y-0 border-l-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.flowBtn}`}
+            className={`flex-1 brutal-press transition-colors flex items-center justify-between gap-3 py-4 px-5 group ${meta.flowBtn}`}
           >
-            <span className="text-lg">🌊</span>
-            <div className="text-left">
-              <div className="font-display text-sm leading-none">FLOW</div>
-              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Snake path · hearts on</div>
+            <div className="flex items-center gap-3">
+              <span className="text-xl shrink-0">🌊</span>
+              <div>
+                <div className="font-display text-sm leading-none">FLOW</div>
+                <div className="font-mono text-[8px] uppercase opacity-60 mt-1 leading-tight max-w-[140px]">
+                  Guided snake path · lessons unlock in order · hearts on wrong answers
+                </div>
+              </div>
             </div>
-            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
+            <span className="font-display text-lg shrink-0 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
-
-          {/* Divider */}
-          <div className="w-px bg-ink/30 shrink-0" />
 
           {/* FREE: Open browser */}
           <Link
             href={`/world/${world}?view=free`}
-            className={`flex-1 brutal-border border-y-0 border-r-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.freeBtn}`}
+            className={`flex-1 brutal-press transition-colors flex items-center justify-between gap-3 py-4 px-5 group ${meta.freeBtn}`}
           >
-            <span className="text-lg">🔓</span>
-            <div className="text-left">
-              <div className="font-display text-sm leading-none">FREE</div>
-              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Open browser · no locks</div>
+            <div className="flex items-center gap-3">
+              <span className="text-xl shrink-0">🔓</span>
+              <div>
+                <div className="font-display text-sm leading-none">FREE</div>
+                <div className="font-mono text-[8px] uppercase opacity-60 mt-1 leading-tight max-w-[140px]">
+                  All lessons open · jump anywhere · browse by chapter and path
+                </div>
+              </div>
             </div>
-            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
+            <span className="font-display text-lg shrink-0 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
       </div>
