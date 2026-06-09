@@ -5,9 +5,13 @@
  * Two variants:
  *   "bar"  — compact horizontal strip (used at page top)
  *   "card" — full comparison card (used on first visit or settings screens)
+ *
+ * When rendered on a /world/[slug] page, switching mode also navigates to/from
+ * ?view=classic so the URL param and the mode context stay in sync.
  */
 import { useState } from "react";
 import { useLearnMode } from "@/lib/mode";
+import { useRouter, usePathname } from "next/navigation";
 
 interface Props {
   variant?: "bar" | "card";
@@ -18,11 +22,26 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const { learnMode, setLearnMode } = useLearnMode();
   const isPath = learnMode === "flow";
   const [justSwitched, setJustSwitched] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Detect if we're on a /world/[slug] page so we can sync the ?view= param
+  const worldMatch = pathname?.match(/^\/world\/([^/]+)$/);
+  const worldSlug = worldMatch ? worldMatch[1] : null;
 
   const switchMode = () => {
-    setLearnMode(isPath ? "classic" : "flow");
+    const next = isPath ? "classic" : "flow";
+    setLearnMode(next);
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
+    // Sync URL param when on a world page
+    if (worldSlug) {
+      if (next === "classic") {
+        router.push(`/world/${worldSlug}?view=classic`);
+      } else {
+        router.push(`/world/${worldSlug}`);
+      }
+    }
   };
 
   if (variant === "card") {
@@ -40,7 +59,12 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
         <div className="grid grid-cols-2 gap-0">
           {/* FLOW MODE */}
           <button
-            onClick={() => !isPath && setLearnMode("flow")}
+            onClick={() => {
+              if (!isPath) {
+                setLearnMode("flow");
+                if (worldSlug) router.push(`/world/${worldSlug}`);
+              }
+            }}
             className={`p-5 text-left transition-all brutal-border border-b-0 border-l-0 border-t-0
               ${isPath
                 ? "bg-acid text-ink cursor-default"
@@ -68,7 +92,12 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
 
           {/* FREE MODE */}
           <button
-            onClick={() => isPath && setLearnMode("classic")}
+            onClick={() => {
+              if (isPath) {
+                setLearnMode("classic");
+                if (worldSlug) router.push(`/world/${worldSlug}?view=classic`);
+              }
+            }}
             className={`p-5 text-left transition-all brutal-border border-b-0 border-r-0 border-t-0
               ${!isPath
                 ? "bg-bone text-ink cursor-default border-ink"

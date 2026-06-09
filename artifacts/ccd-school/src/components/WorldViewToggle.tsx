@@ -2,11 +2,13 @@
 /**
  * WorldViewToggle — tab switcher between Duolingo Path and Classic views.
  *
- * Fix: also syncs learnMode context so the lesson page view matches the
- * world page view. Path View → "ccd" mode, Classic View → "classic" mode.
- * This resolves the disconnect where switching here had no effect on lessons.
+ * Fix: syncs learnMode context with the URL ?view= param on mount AND on click,
+ * so the banner and the lesson page view always stay consistent.
+ *   Path View   → learnMode "flow"    → no ?view param
+ *   Classic View → learnMode "classic" → ?view=classic
  */
 import Link from "next/link";
+import { useEffect } from "react";
 import { useLearnMode } from "@/lib/mode";
 
 interface Props {
@@ -15,7 +17,14 @@ interface Props {
 }
 
 export function WorldViewToggle({ slug, showClassic }: Props) {
-  const { setLearnMode } = useLearnMode();
+  const { learnMode, setLearnMode } = useLearnMode();
+
+  // On mount: sync mode context to match the URL param so the banner reflects reality
+  useEffect(() => {
+    if (showClassic && learnMode !== "classic") setLearnMode("classic");
+    if (!showClassic && learnMode !== "flow")   setLearnMode("flow");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showClassic]);
 
   return (
     <div className="brutal-border border-x-0 border-t-0 bg-bone sticky top-[52px] md:top-[56px] z-30">
