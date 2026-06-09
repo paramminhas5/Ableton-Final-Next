@@ -14,11 +14,13 @@ import { useState, useEffect } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
 import { useRouter } from "next/navigation";
 
+// ─── FAL AI generated images (v2 — higher contrast, dark backgrounds) ─────────
 const IMAGES = {
-  hero:         "https://v3b.fal.media/files/b/0a9d852a/6oC38Qc77l_V_FUOAgmNJ.jpg",
-  fundamentals: "https://v3b.fal.media/files/b/0a9d852c/4cBbZJSrw81eA5b0qfQuA.jpg",
-  dj:           "https://v3b.fal.media/files/b/0a9d852c/FKRbD_L9z5M74j5rMSykT.jpg",
-  producer:     "https://v3b.fal.media/files/b/0a9d852c/fkQMKnPjSktmYsoXjFu6k.jpg",
+  hero:         "https://v3b.fal.media/files/b/0a9d8573/t3x6Pf5Z8pjp4mqwCqgTO.jpg",
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  // Producer uses dark modular synth image — shown only on ink-bg cards, NOT on sun-bg
+  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
 } as const;
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
@@ -146,10 +148,90 @@ function Dashboard() {
               <div className="font-mono text-[9px] uppercase opacity-60 mb-1">CONTINUE LEARNING</div>
               <div className="font-display text-2xl">{continueSlug.replace(/-/g, " ")}</div>
             </div>
-            <div className="font-display text-4xl shrink-0">▶</div>
-          </Link>
-        ) : null}
-        <div className="mt-4 font-mono text-sm opacity-50 text-center">Redirecting to your dashboard…</div>
+            <Link
+              href={`/learn/${missionsNeedingReview[0]}?review=1`}
+              className="brutal-border bg-hot text-bone p-5 flex items-start justify-between gap-4 brutal-press block">
+              <div>
+                <div className="font-display text-xl">🔥 REVIEW SESSION</div>
+                <div className="font-mono text-xs opacity-80 mt-1">
+                  {missionsNeedingReview.length} lesson{missionsNeedingReview.length > 1 ? "s" : ""} need a refresh
+                </div>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {missionsNeedingReview.slice(0, 3).map(slug => (
+                    <span key={slug} className="brutal-border bg-bone/20 px-2 py-0.5 font-mono text-[9px] uppercase">
+                      {slug.replace(/-/g, " ")}
+                    </span>
+                  ))}
+                  {missionsNeedingReview.length > 3 && (
+                    <span className="font-mono text-[9px] opacity-60">+{missionsNeedingReview.length - 3} more</span>
+                  )}
+                </div>
+              </div>
+              <div className="font-display text-4xl shrink-0">↺</div>
+            </Link>
+          </section>
+        )}
+
+        {/* ── WORLDS PROGRESS ── */}
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR WORLDS</div>
+          <div className="grid md:grid-cols-3 gap-3">
+            {(["fundamentals", "dj", "producer"] as WorldTab[]).map(world => {
+              const ws = worldStats(world);
+              const meta = WORLD_DATA[world];
+              return (
+                <Link key={world} href={meta.to}
+                  className={`brutal-border ${meta.color} p-4 brutal-press block transition-opacity hover:opacity-90 relative overflow-hidden`}>
+                  {/* Image only on dark-bg cards — producer (sun/yellow) stays clean for text legibility */}
+                  {world !== "producer" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Image
+                        src={IMAGES[world]}
+                        alt=""
+                        fill
+                        className="object-cover opacity-10 mix-blend-multiply"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
+                  )}
+                  <div className="relative z-10">
+                    <div className="opacity-60 mb-2">{meta.icon}</div>
+                    <div className="font-display text-xl">{meta.label}</div>
+                    <div className="h-1.5 brutal-border bg-bone/20 mt-3 overflow-hidden">
+                      <div className="h-full bg-current opacity-80 transition-all duration-700"
+                        style={{ width: `${ws.pct}%` }} />
+                    </div>
+                    <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
+                      {ws.done}/{ws.total} · {ws.pct}%
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── QUICK LINKS ── */}
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// QUICK ACCESS</div>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { to: "/world/fundamentals", label: "🎵 Fundamentals Path" },
+              { to: "/world/dj",           label: "🎧 DJ World Path" },
+              { to: "/world/producer",     label: "🎛 Producer Path" },
+              { to: "/shop",               label: "💎 Gem Shop" },
+              { to: "/leaderboard",        label: "🏆 Leaderboard" },
+              { to: "/profile",            label: "👤 Profile & Trophies" },
+              { to: "/placement",          label: "📍 Placement Test" },
+            ].map(({ to, label }) => (
+              <Link key={to} href={to}
+                className="brutal-border px-3 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun transition-colors">
+                {label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
       </div>
     </main>
   );
@@ -341,29 +423,25 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
               const paths = pathsByWorld(world);
               const totalMissions = paths.flatMap(p => p.missionSlugs).length;
               return (
-                <Link key={world} href={meta.to}
-                  className={`group brutal-border ${meta.color} p-0 flex overflow-hidden brutal-press brutal-shadow block relative`}>
-                  {/* World image */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <Image src={IMAGES[world]} alt="" fill
-                      className="object-cover opacity-10 mix-blend-multiply group-hover:opacity-20 transition-opacity duration-300"
-                      sizes="(max-width: 768px) 100vw, 80vw" />
-                  </div>
-                  <div className="relative z-10 flex-1 p-5 md:p-7">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="font-mono text-[9px] uppercase opacity-50 mb-1">
-                          {paths.length} paths · {totalMissions} missions
-                        </div>
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-2xl">{meta.icon}</span>
-                          <span className="font-display text-3xl md:text-4xl">{meta.label}</span>
-                        </div>
-                        <div className="font-mono text-sm opacity-70 leading-relaxed max-w-lg">{meta.tagline}</div>
-                        <div className="font-mono text-xs opacity-50 mt-2 max-w-lg leading-relaxed hidden md:block">{meta.detail}</div>
-                      </div>
-                      <div className="font-display text-4xl shrink-0 opacity-60 group-hover:translate-x-1 transition-transform duration-150">→</div>
+                <Link key={world} href={meta.to} className={`brutal-border ${meta.color} p-5 md:p-7 flex items-start justify-between gap-4 brutal-press brutal-shadow block relative overflow-hidden`}>
+                  {/* Image only on dark-bg cards — producer (sun/yellow) stays clean for legibility */}
+                  {world !== "producer" && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Image
+                        src={IMAGES[world]}
+                        alt=""
+                        fill
+                        className="object-cover opacity-15 mix-blend-multiply"
+                        sizes="(max-width: 768px) 100vw, 80vw"
+                      />
                     </div>
+                  )}
+                  <div className="relative z-10">
+                    <div className="mb-3 opacity-70">{meta.icon}</div>
+                    <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{chs.length} CHAPTERS · {paths.length} PATHS · {totalMissions} MISSIONS</div>
+                    <div className="font-display text-3xl md:text-5xl">{meta.label}</div>
+                    <div className="font-mono text-sm opacity-70 mt-1">{meta.tagline}</div>
+                    <div className="font-mono text-xs opacity-50 mt-2 max-w-lg leading-relaxed">{meta.detail}</div>
                   </div>
                 </Link>
               );
