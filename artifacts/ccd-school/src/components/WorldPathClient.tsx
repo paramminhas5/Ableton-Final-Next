@@ -2,12 +2,14 @@
 /**
  * WorldPathClient — Duolingo-style world path map.
  *
- * ✓ Inline Flow/Browse toggle in the header
- * ✓ Animated cat intro that slides up on first visit
- * ✓ Bigger nodes (available: w-24 h-24, complete: w-16 h-16)
- * ✓ Thicker spine, more breathing room between nodes
- * ✓ Chapter banners with cat speech bubbles
- * ✓ YOU ARE HERE paw marker
+ * ✓ Full-bleed image hero with dark overlay (not cramped compact header)
+ * ✓ Cat placed BELOW hero as a character entering the scene
+ * ✓ No spine line — connector dots between nodes instead
+ * ✓ Full-width Flow / Browse toggle band
+ * ✓ Chapter banners: CH 01 + full name + tagline + cat quip
+ * ✓ ChapterDots: emoji + short chapter name always visible
+ * ✓ DJ world: deep blue (#0a0f2e) not pure black
+ * ✓ Bigger nodes, better positioning
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -38,50 +40,66 @@ interface PathNode {
   side: "left" | "center" | "right";
 }
 
+// FAL AI hero images
+const WORLD_IMAGES: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
+};
+
+const WORLD_OVERLAY: Record<string, string> = {
+  fundamentals: "from-acid/80 via-acid/70 to-acid/50",
+  dj:           "from-[#0a0f2e]/90 via-[#0a0f2e]/80 to-[#0a0f2e]/60",
+  producer:     "from-sun/80 via-sun/70 to-sun/50",
+};
+
 // ─── World config ─────────────────────────────────────────────────────────────
 const WORLD_META: Record<string, {
-  bg: string; accent: string; nodeAvail: string; nodeDone: string;
-  nodeReview: string; emoji: string; title: string; tagline: string;
-  catSrc: string; glowColor: string; toggleActive: string; toggleInactive: string;
+  bg: string; textColor: string; accent: string;
+  nodeAvail: string; nodeDone: string; nodeReview: string;
+  emoji: string; title: string; tagline: string;
+  catSrc: string; glowColor: string;
+  toggleBg: string; toggleText: string;
+  chapterBannerBg: string; chapterBannerBorder: string;
 }> = {
   fundamentals: {
-    bg: "bg-bone",
-    accent: "bg-acid text-ink",
+    bg: "bg-bone", textColor: "text-ink", accent: "bg-acid text-ink",
     nodeAvail: "bg-acid text-ink border-4 border-ink",
     nodeDone: "bg-ink text-bone border-4 border-ink",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎵", title: "Fundamentals",
     tagline: "Sound · Rhythm · Melody · Harmony · Music Tech",
     catSrc: "/cats/cat-handstand.png",
-    glowColor: "rgba(198,255,0,0.35)",
-    toggleActive: "bg-ink text-bone",
-    toggleInactive: "bg-bone/30 text-ink hover:bg-bone/50",
+    glowColor: "rgba(198,255,0,0.4)",
+    toggleBg: "bg-ink text-bone", toggleText: "text-ink/60",
+    chapterBannerBg: "bg-acid/20 backdrop-blur-sm",
+    chapterBannerBorder: "border-t-4 border-t-acid",
   },
   dj: {
-    bg: "bg-ink",
-    accent: "bg-volt text-ink",
+    bg: "bg-[#0a0f2e]", textColor: "text-bone", accent: "bg-volt text-ink",
     nodeAvail: "bg-volt text-ink border-4 border-volt",
-    nodeDone: "bg-bone/20 text-bone border-4 border-bone/40",
+    nodeDone: "bg-volt/20 text-bone border-4 border-volt/50",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎧", title: "DJ World",
     tagline: "Setup · Library · The Mix · Performance · Mastery",
     catSrc: "/cats/cat-dj.png",
-    glowColor: "rgba(198,255,0,0.35)",
-    toggleActive: "bg-ink text-bone",
-    toggleInactive: "bg-bone/10 text-bone hover:bg-bone/20",
+    glowColor: "rgba(198,255,0,0.4)",
+    toggleBg: "bg-volt text-ink", toggleText: "text-bone/60",
+    chapterBannerBg: "bg-volt/10 backdrop-blur-sm",
+    chapterBannerBorder: "border-t-4 border-t-volt",
   },
   producer: {
-    bg: "bg-bone",
-    accent: "bg-sun text-ink",
+    bg: "bg-bone", textColor: "text-ink", accent: "bg-sun text-ink",
     nodeAvail: "bg-sun text-ink border-4 border-ink",
     nodeDone: "bg-ink text-bone border-4 border-ink",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎛", title: "Producer",
     tagline: "First Contact · Sound & MIDI · Mix · Performance · Advanced",
     catSrc: "/cats/cat-dj-hero.png",
-    glowColor: "rgba(255,184,0,0.35)",
-    toggleActive: "bg-ink text-bone",
-    toggleInactive: "bg-bone/30 text-ink hover:bg-bone/50",
+    glowColor: "rgba(255,184,0,0.4)",
+    toggleBg: "bg-ink text-bone", toggleText: "text-ink/60",
+    chapterBannerBg: "bg-sun/20 backdrop-blur-sm",
+    chapterBannerBorder: "border-t-4 border-t-sun",
   },
 };
 
@@ -108,90 +126,49 @@ function getMissions(world: WorldId): Mission[] {
 
 const SIDE_PATTERN: ("left" | "center" | "right")[] = ["left", "center", "right", "center"];
 
-// ─── Animated cat intro card (slides up on mount) ─────────────────────────────
-function AnimatedCatIntro({
-  meta, world, firstSlug,
-}: {
-  meta: typeof WORLD_META[string];
-  world: WorldId;
-  firstSlug: string;
+// ─── Animated cat intro ───────────────────────────────────────────────────────
+function AnimatedCatIntro({ meta, world, firstSlug }: {
+  meta: typeof WORLD_META[string]; world: WorldId; firstSlug: string;
 }) {
   const [visible, setVisible] = useState(false);
   const [bubbleVisible, setBubbleVisible] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setVisible(true), 80);
-    const t2 = setTimeout(() => setBubbleVisible(true), 350);
+    const t1 = setTimeout(() => setVisible(true), 100);
+    const t2 = setTimeout(() => setBubbleVisible(true), 400);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const WELCOME: Record<WorldId, { headline: string; body: string }> = {
-    fundamentals: {
-      headline: "Hi! I'm DJ Pawsworth 🐱",
-      body: "Start with the basics of sound. Each lesson takes ~5 min. Tap START and follow along!",
-    },
-    dj: {
-      headline: "Ready to DJ? 🎧",
-      body: "I'll guide you through mixing step by step. First lesson: what DJing actually is.",
-    },
-    producer: {
-      headline: "Welcome to the studio 🎛",
-      body: "We'll tour Ableton Live together. One lesson at a time — before long you'll be making tracks!",
-    },
+    fundamentals: { headline: "Hi! I'm DJ Pawsworth 🐱", body: "Start with the basics of sound. Each lesson takes ~5 min. Tap START and follow along!" },
+    dj: { headline: "Ready to DJ? 🎧", body: "I'll guide you through mixing step by step. First: what DJing actually is." },
+    producer: { headline: "Welcome to the studio 🎛", body: "We'll tour Ableton Live together. One lesson at a time — you'll be making tracks before long!" },
   };
   const w = WELCOME[world];
 
   return (
-    <div className="relative z-10 flex justify-center mb-10">
-      {/* Outer slide-up wrapper */}
-      <div
-        className={`transition-all duration-500 ease-out w-full max-w-[320px] ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <div className={`brutal-border brutal-shadow p-5 ${
-          world === "dj"
-            ? "bg-ink text-bone border-t-4 border-t-volt"
-            : world === "fundamentals"
-            ? "bg-acid text-ink"
-            : "bg-sun text-ink"
+    <div className="flex justify-center mb-12">
+      <div className={`transition-all duration-500 ease-out w-full max-w-[340px] ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+        <div className={`brutal-border brutal-shadow p-6 ${
+          world === "dj" ? "bg-[#0a1a3e] text-bone border-t-4 border-t-volt"
+          : world === "fundamentals" ? "bg-acid text-ink"
+          : "bg-sun text-ink"
         }`}>
-          {/* Cat + headline row */}
-          <div className="flex items-start gap-3 mb-3">
-            <div
-              style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}
-              className="shrink-0 animate-bounce-bob"
-            >
-              <Image src={meta.catSrc} alt="DJ Pawsworth" width={60} height={60} className="object-contain" />
+          <div className="flex items-start gap-4 mb-4">
+            <div style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.4))" }} className="shrink-0 animate-bounce-bob">
+              <Image src={meta.catSrc} alt="DJ Pawsworth" width={68} height={68} className="object-contain" />
             </div>
-            <div
-              className={`transition-all duration-400 ease-out ${
-                bubbleVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"
-              }`}
-            >
+            <div className={`transition-all duration-400 ease-out ${bubbleVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"}`}>
               <div className="font-display text-xl leading-tight">{w.headline}</div>
-              <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">Your guide for this world</div>
+              <div className="font-mono text-[10px] uppercase opacity-60 mt-0.5">Your guide for this world</div>
             </div>
           </div>
-
-          {/* Body text */}
-          <p
-            className={`font-mono text-xs leading-relaxed opacity-80 mb-4 transition-all duration-500 ease-out delay-100 ${
-              bubbleVisible ? "opacity-80 translate-y-0" : "opacity-0 translate-y-2"
-            }`}
-          >
+          <p className={`font-mono text-xs leading-relaxed opacity-80 mb-5 transition-all duration-500 delay-100 ${bubbleVisible ? "opacity-80 translate-y-0" : "opacity-0 translate-y-2"}`}>
             {w.body}
           </p>
-
-          {/* CTA */}
-          <Link
-            href={`/learn/${firstSlug}`}
-            className={`block w-full text-center font-display text-base py-3.5 brutal-border brutal-press transition-colors ${
-              world === "dj"
-                ? "bg-volt text-ink hover:bg-acid"
-                : "bg-ink text-bone hover:bg-electric-blue"
-            }`}
-          >
+          <Link href={`/learn/${firstSlug}`} className={`block w-full text-center font-display text-base py-4 brutal-border brutal-press transition-colors ${
+            world === "dj" ? "bg-volt text-ink hover:bg-acid" : "bg-ink text-bone hover:bg-electric-blue"
+          }`}>
             START FIRST LESSON →
           </Link>
         </div>
@@ -200,67 +177,79 @@ function AnimatedCatIntro({
   );
 }
 
-// ─── Chapter progress dots ─────────────────────────────────────────────────────
-function ChapterDots({
-  chapters, nodes, world,
-}: {
-  chapters: Chapter[];
-  nodes: PathNode[];
-  world: WorldId;
+// ─── Chapter dots row — with short names ──────────────────────────────────────
+function ChapterDots({ chapters, nodes, world, meta }: {
+  chapters: Chapter[]; nodes: PathNode[]; world: WorldId;
+  meta: typeof WORLD_META[string];
 }) {
   return (
-    <div className="flex items-center justify-center gap-1 px-4 py-2.5 flex-wrap">
-      {chapters.map((ch, i) => {
-        const chNodes = nodes.filter(n => n.chapterSlug === ch.slug);
-        const done = chNodes.filter(n => n.state === "complete" || n.state === "review").length;
-        const total = chNodes.length;
-        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-        const complete = pct === 100;
-        const started = done > 0;
-        const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
+    <div className={`border-b-4 border-ink ${world === "dj" ? "bg-[#0a0f2e]" : "bg-bone"}`}>
+      <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-center gap-1 flex-wrap">
+        {chapters.map((ch, i) => {
+          const chNodes = nodes.filter(n => n.chapterSlug === ch.slug);
+          const done = chNodes.filter(n => n.state === "complete" || n.state === "review").length;
+          const total = chNodes.length;
+          const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+          const complete = pct === 100;
+          const started = done > 0;
+          const shortName = ch.title.split(" ")[0];
 
-        return (
-          <div key={ch.slug} className="flex items-center gap-0.5">
-            <div
-              title={`${ch.title} — ${pct}%`}
-              className={`flex items-center gap-1 px-2 py-1 brutal-border font-mono text-[9px] uppercase transition-all cursor-default ${
-                complete
-                  ? world === "dj" ? "bg-volt text-ink" : "bg-ink text-bone"
-                  : started
-                  ? world === "dj" ? "bg-volt/30 text-bone" : "bg-acid/60 text-ink"
-                  : world === "dj" ? "bg-bone/10 text-bone/40" : "bg-ink/10 text-ink/30"
-              }`}
-            >
-              <span className="text-sm leading-none">{complete ? "✓" : emoji}</span>
-              <span className="hidden sm:inline opacity-70">{i + 1}</span>
+          return (
+            <div key={ch.slug} className="flex items-center gap-0.5">
+              <div
+                title={`${ch.title} — ${pct}%`}
+                className={`flex items-center gap-1.5 px-2.5 py-1 brutal-border font-mono text-[9px] uppercase transition-all ${
+                  complete
+                    ? world === "dj" ? "bg-volt text-ink" : "bg-ink text-bone"
+                    : started
+                    ? world === "dj" ? "bg-volt/30 text-bone" : "bg-acid/70 text-ink"
+                    : world === "dj" ? "bg-bone/10 text-bone/40" : "bg-ink/10 text-ink/30"
+                }`}
+              >
+                <span className="text-sm leading-none">{complete ? "✓" : CHAPTER_EMOJIS[ch.slug] ?? "📖"}</span>
+                <span className="font-bold">{shortName}</span>
+              </div>
+              {i < chapters.length - 1 && (
+                <div className={`w-2 h-px ${world === "dj" ? "bg-bone/20" : "bg-ink/20"}`} />
+              )}
             </div>
-            {i < chapters.length - 1 && (
-              <div className={`w-3 h-px ${world === "dj" ? "bg-bone/20" : "bg-ink/20"}`} />
-            )}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-// ─── Inline Flow / Browse toggle ──────────────────────────────────────────────
-function ModeToggle({ worldSlug, meta }: { worldSlug: string; meta: typeof WORLD_META[string] }) {
+// ─── Full-width Flow / Browse toggle band ─────────────────────────────────────
+function ModeToggleBand({ worldSlug, meta }: { worldSlug: string; meta: typeof WORLD_META[string] }) {
+  const world = worldSlug as WorldId;
   return (
-    <div className="flex items-center brutal-border overflow-hidden">
-      {/* Flow Mode — active (no ?view param) */}
-      <div className={`px-3 py-1.5 flex items-center gap-1.5 font-display text-xs ${meta.toggleActive}`}>
-        <span>🌊</span>
-        <span>Flow</span>
-        <span className="font-mono text-[8px] opacity-60 ml-0.5">● ON</span>
+    <div className={`border-b-4 border-ink flex ${world === "dj" ? "bg-[#0a0f2e]" : "bg-bone"}`}>
+      {/* Flow Mode — active */}
+      <div className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 ${meta.toggleBg}`}>
+        <span className="text-lg">🌊</span>
+        <div>
+          <div className="font-display text-sm leading-none">Flow Mode</div>
+          <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">Sequential · hearts on</div>
+        </div>
+        <span className="font-mono text-[8px] bg-current/20 px-1.5 py-0.5 uppercase ml-1 opacity-80 rounded-sm">
+          ACTIVE
+        </span>
       </div>
-      {/* Browse — inactive link */}
+      {/* Divider */}
+      <div className="w-px bg-ink/30" />
+      {/* Browse / Free — inactive link */}
       <Link
         href={`/world/${worldSlug}?view=free`}
-        className={`px-3 py-1.5 flex items-center gap-1.5 font-display text-xs border-l-2 border-current/20 brutal-press transition-colors ${meta.toggleInactive}`}
+        className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 brutal-press transition-colors hover:opacity-80 ${
+          world === "dj" ? "text-bone/60 hover:bg-bone/5" : "text-ink/50 hover:bg-acid/10"
+        }`}
       >
-        <span>📋</span>
-        <span>Browse</span>
+        <span className="text-lg">📋</span>
+        <div>
+          <div className="font-display text-sm leading-none">Browse</div>
+          <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">All lessons open</div>
+        </div>
       </Link>
     </div>
   );
@@ -280,7 +269,7 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   const paths = pathsByWorld(world);
   const missions = getMissions(world);
 
-  // Build flat ordered node list
+  // Build flat node list
   const nodes: PathNode[] = [];
   let prevComplete = true;
 
@@ -305,9 +294,7 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
           slug,
           xp: missions.find(m => m.slug === slug)?.xp ?? 40,
           title: missions.find(m => m.slug === slug)?.title ?? slug,
-          chapterSlug: ch.slug,
-          chapterIndex: chIdx,
-          state,
+          chapterSlug: ch.slug, chapterIndex: chIdx, state,
           isFirstInChapter: pIdx === 0 && mIdx === 0,
           side: SIDE_PATTERN[nodes.length % 4],
         });
@@ -341,76 +328,79 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   return (
     <div className={`min-h-screen ${meta.bg}`}>
 
-      {/* ── World header ───────────────────────────────────────────────── */}
-      <div className={`${meta.accent} px-4 pt-5 pb-6 md:pt-7 md:pb-8 border-b-4 border-ink`}>
-        <div className="max-w-lg mx-auto">
-          {/* Back link */}
-          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-4">
+      {/* ── Full-bleed hero header ──────────────────────────────────────── */}
+      <div className="relative overflow-hidden border-b-4 border-ink" style={{ minHeight: "320px" }}>
+        {/* Background image */}
+        <Image
+          src={WORLD_IMAGES[world]}
+          alt=""
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        {/* Dark gradient overlay */}
+        <div className={`absolute inset-0 bg-gradient-to-r ${WORLD_OVERLAY[world]}`} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+        {/* Content */}
+        <div className={`relative z-10 max-w-2xl mx-auto px-4 pt-6 pb-8 md:pt-8 md:pb-12 ${meta.textColor}`}>
+          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 block mb-5">
             ← ALL WORLDS
           </Link>
 
-          {/* Title row with cat */}
-          <div className="flex items-center justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="text-5xl leading-none shrink-0">{meta.emoji}</span>
-              <div className="min-w-0">
-                <h1 className="font-display text-4xl md:text-5xl leading-none">{meta.title}</h1>
-                <p className="font-mono text-[10px] uppercase opacity-70 mt-0.5 truncate">{meta.tagline}</p>
-              </div>
-            </div>
-            <div
-              className="shrink-0 w-16 h-16 md:w-20 md:h-20 wiggle"
-              style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}
-              aria-hidden
-            >
-              <Image src={meta.catSrc} alt="" width={80} height={80} className="w-full h-full object-contain" />
+          {/* Big title */}
+          <div className="flex items-center gap-4 mb-4">
+            <span className="text-6xl md:text-8xl leading-none">{meta.emoji}</span>
+            <div>
+              <h1
+                className="font-display text-5xl md:text-7xl leading-none"
+                style={{ textShadow: "3px 3px 0 rgba(0,0,0,0.3)" }}
+              >
+                {meta.title}
+              </h1>
+              <p className="font-mono text-xs uppercase opacity-80 mt-1">{meta.tagline}</p>
             </div>
           </div>
 
           {/* Progress bar */}
-          <div className="h-3 brutal-border bg-bone/30 overflow-hidden mb-1.5">
+          <div className="h-3 brutal-border bg-black/30 overflow-hidden mb-2 max-w-md">
             <div
-              className="h-full bg-ink/70 transition-all duration-700"
-              style={{ width: `${pct}%`, boxShadow: `0 0 10px ${meta.glowColor}` }}
+              className="h-full bg-current/70 transition-all duration-700"
+              style={{ width: `${pct}%`, boxShadow: `0 0 12px rgba(255,255,255,0.3)` }}
             />
           </div>
-          <div className="flex justify-between font-mono text-[9px] uppercase opacity-70 mb-4">
-            <span>{done}/{total} lessons · {rank.name}</span>
+          <div className="flex items-center gap-4 font-mono text-[10px] uppercase opacity-80 mb-5">
+            <span>{done}/{total} lessons</span>
             <span>{pct}%</span>
+            <span>{rank.name}</span>
           </div>
 
-          {/* Stats + mode toggle row */}
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex gap-2">
-              <div className="brutal-border bg-ink/20 px-2.5 py-1 font-mono text-[10px] uppercase">
-                🔥 {progress.streakDays}d
-              </div>
-              <div className="brutal-border bg-ink/20 px-2.5 py-1 font-mono text-[10px] uppercase">
-                💎 {progress.gems}
-              </div>
-              <div className="brutal-border bg-ink/20 px-2.5 py-1 font-mono text-[10px] uppercase">
-                {progress.xp} XP
-              </div>
+          {/* Stats pills */}
+          <div className="flex flex-wrap gap-2">
+            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
+              🔥 {progress.streakDays}d streak
             </div>
-            {/* Inline Flow/Browse toggle */}
-            <ModeToggle worldSlug={worldSlug} meta={meta} />
+            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
+              {progress.xp} XP
+            </div>
+            <div className="brutal-border bg-black/30 backdrop-blur-sm px-3 py-1 font-mono text-[10px] uppercase">
+              💎 {progress.gems}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* ── Flow / Browse toggle band ───────────────────────────────────── */}
+      <ModeToggleBand worldSlug={worldSlug} meta={meta} />
 
       {/* ── Chapter dots ───────────────────────────────────────────────── */}
-      <div className={`border-b-4 border-ink ${world === "dj" ? "bg-ink/60" : "bg-bone/90"}`}>
-        <div className="max-w-lg mx-auto">
-          <ChapterDots chapters={chapters} nodes={nodes} world={world} />
-        </div>
-      </div>
+      <ChapterDots chapters={chapters} nodes={nodes} world={world} meta={meta} />
 
-      {/* ── Snake path ─────────────────────────────────────────────────── */}
-      <div className="relative max-w-sm mx-auto px-4 pt-10 pb-32">
-        {/* Spine — thicker & more visible */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-ink/15 -translate-x-px pointer-events-none" />
+      {/* ── Snake path — NO spine line ──────────────────────────────────── */}
+      <div className="max-w-sm mx-auto px-4 pt-10 pb-32">
 
-        {/* First-visit animated cat intro */}
+        {/* First-visit animated cat */}
         {isNewUser && firstAvailableSlug && (
           <AnimatedCatIntro meta={meta} world={world} firstSlug={firstAvailableSlug} />
         )}
@@ -420,42 +410,44 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
           const chEmoji = CHAPTER_EMOJIS[node.chapterSlug] ?? "📖";
           const chapter = chapters.find(c => c.slug === node.chapterSlug);
           const chQuip = (CHAPTER_CAT_QUIPS[world] ?? [])[node.chapterIndex] ?? "Let's go!";
+          const chNum = String(node.chapterIndex + 1).padStart(2, "0");
 
           return (
             <div key={node.slug}>
-              {/* Chapter banner */}
+              {/* Chapter banner — full name + number */}
               {isChapterStart && (
-                <div className="relative z-10 flex justify-center my-10">
-                  <div className={`brutal-border px-5 py-5 text-center max-w-[290px] w-full brutal-shadow ${
-                    world === "dj"
-                      ? "bg-ink text-bone border-t-4 border-t-volt"
-                      : world === "fundamentals"
-                      ? "bg-acid/25 text-ink border-t-4 border-t-acid"
-                      : "bg-sun/25 text-ink border-t-4 border-t-sun"
-                  }`}>
-                    <div className="text-5xl mb-2">{chEmoji}</div>
-                    <div className="font-display text-lg leading-tight">{chapter?.title ?? node.chapterSlug}</div>
-                    <div className="font-mono text-[9px] opacity-50 mt-0.5 uppercase leading-snug">{chapter?.tagline ?? ""}</div>
-                    <div className={`mt-3 flex items-center justify-center gap-2 font-mono text-[9px] italic px-2 py-1.5 brutal-border ${
-                      world === "dj" ? "bg-bone/10 text-bone" : "bg-ink/10 text-ink"
+                <div className="flex justify-center my-10">
+                  <div className={`brutal-border text-center max-w-[300px] w-full brutal-shadow overflow-hidden ${meta.chapterBannerBg} ${meta.chapterBannerBorder} ${meta.textColor}`}>
+                    {/* Chapter label row */}
+                    <div className={`px-5 pt-4 pb-3`}>
+                      <div className="font-mono text-[10px] uppercase opacity-60 mb-1">
+                        CH {chNum}
+                      </div>
+                      <div className="text-5xl mb-2">{chEmoji}</div>
+                      <div className="font-display text-xl leading-tight">{chapter?.title ?? node.chapterSlug}</div>
+                      <div className="font-mono text-[10px] opacity-60 mt-1 leading-snug uppercase">{chapter?.tagline ?? ""}</div>
+                    </div>
+                    {/* Cat quip strip */}
+                    <div className={`px-4 py-2.5 border-t-2 border-current/20 flex items-center justify-center gap-2 font-mono text-[10px] italic ${
+                      world === "dj" ? "bg-volt/10 text-bone" : "bg-ink/8 text-ink"
                     }`}>
                       <span className="shrink-0">🐱</span>
-                      <span className="opacity-70">&ldquo;{chQuip}&rdquo;</span>
+                      <span className="opacity-75">&ldquo;{chQuip}&rdquo;</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Node */}
-              <div className={`relative z-10 flex mb-10 ${
-                node.side === "left" ? "justify-start pl-2" :
-                node.side === "right" ? "justify-end pr-2" :
+              {/* Node — positioned left/center/right with safe padding */}
+              <div className={`relative flex mb-12 ${
+                node.side === "left" ? "justify-start pl-8" :
+                node.side === "right" ? "justify-end pr-8" :
                 "justify-center"
               }`}>
                 {idx === firstAvailableIdx ? (
-                  <div className="flex flex-col items-center gap-1">
+                  <div className="flex flex-col items-center gap-1.5">
                     {!isNewUser && (
-                      <div className={`brutal-border px-2.5 py-1 font-mono text-[8px] uppercase mb-1.5 animate-pulse font-bold ${
+                      <div className={`brutal-border px-3 py-1 font-display text-[10px] uppercase mb-2 animate-pulse ${
                         world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink"
                       }`}>
                         🐾 YOU ARE HERE
@@ -475,18 +467,15 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
 
         {/* World complete */}
         {pct === 100 && (
-          <div className="relative z-10 mt-8 brutal-border bg-acid text-ink p-7 text-center brutal-shadow">
-            <div className="flex justify-center mb-3">
-              <Image
-                src={meta.catSrc} alt="Cat celebrating"
-                width={90} height={90}
-                className="drop-shadow-[3px_3px_0_hsl(222_47%_4%)] animate-bounce-bob"
-              />
+          <div className="brutal-border bg-acid text-ink p-8 text-center brutal-shadow mt-8">
+            <div className="flex justify-center mb-4">
+              <Image src={meta.catSrc} alt="" width={100} height={100}
+                className="drop-shadow-[4px_4px_0_rgba(0,0,0,0.3)] animate-bounce-bob" />
             </div>
-            <div className="text-5xl mb-2">🏆</div>
+            <div className="text-5xl mb-3">🏆</div>
             <div className="font-display text-4xl">WORLD COMPLETE!</div>
-            <div className="font-mono text-sm opacity-70 mt-1">You finished {meta.title}</div>
-            <Link href="/worlds" className="mt-5 brutal-border bg-ink text-bone px-6 py-3 font-display text-base inline-block brutal-press hover:bg-electric-blue transition-colors">
+            <div className="font-mono text-sm opacity-70 mt-2">You finished {meta.title}. Incredible.</div>
+            <Link href="/worlds" className="mt-5 brutal-border bg-ink text-bone px-7 py-3.5 font-display text-base inline-block brutal-press hover:bg-electric-blue transition-colors">
               EXPLORE OTHER WORLDS →
             </Link>
           </div>
@@ -501,32 +490,21 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
   const Wrap = ({ children, href, className, title }: {
     children: ReactNode; href?: string; className?: string; title?: string;
   }) => {
-    const inner = (
-      <div className="flex flex-col items-center gap-2 group" title={title}>
-        {children}
-      </div>
-    );
-    if (href) {
-      return (
-        <a href={href} className={`block brutal-press ${className ?? ""}`}>{inner}</a>
-      );
-    }
+    const inner = <div className="flex flex-col items-center gap-2 group" title={title}>{children}</div>;
+    if (href) return <a href={href} className={`block brutal-press ${className ?? ""}`}>{inner}</a>;
     return <div className={className}>{inner}</div>;
   };
 
   const Label = ({ text, dim }: { text: string; dim?: boolean }) => (
-    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[96px] line-clamp-2 ${
-      dim ? "opacity-25" : "opacity-65"
-    }`}>
+    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[88px] line-clamp-2 ${dim ? "opacity-20" : "opacity-60"}`}>
       {text}
     </span>
   );
 
-  // ── LOCKED ──
   if (node.state === "locked") {
     return (
       <Wrap title={node.title} className="cursor-not-allowed">
-        <div className="w-14 h-14 rounded-full border-2 border-ink/20 bg-ink/5 flex items-center justify-center opacity-30">
+        <div className="w-14 h-14 rounded-full border-2 border-current/15 bg-current/5 flex items-center justify-center opacity-25">
           <span className="text-lg">🔒</span>
         </div>
         <Label text={node.title} dim />
@@ -534,7 +512,6 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
     );
   }
 
-  // ── COMPLETE ──
   if (node.state === "complete") {
     return (
       <Wrap href={`/learn/${node.slug}`} title={`${node.title} — completed`}>
@@ -546,7 +523,6 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
     );
   }
 
-  // ── REVIEW ──
   if (node.state === "review") {
     return (
       <Wrap href={`/learn/${node.slug}?review=1`} title={`${node.title} — needs review`}>
@@ -561,19 +537,17 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
     );
   }
 
-  // ── AVAILABLE — glowing, big, pulsing ──
+  // Available — big, glowing, pulsing
   return (
     <Wrap href={`/learn/${node.slug}`} title={node.title}>
       <div
-        className={`w-24 h-24 rounded-full flex flex-col items-center justify-center gap-1 ${meta.nodeAvail} transition-all group-hover:scale-110`}
-        style={{
-          boxShadow: `0 0 0 6px ${meta.glowColor}, 0 0 28px ${meta.glowColor}, 0 0 50px ${meta.glowColor}`,
-        }}
+        className={`w-28 h-28 rounded-full flex flex-col items-center justify-center gap-1.5 ${meta.nodeAvail} transition-all group-hover:scale-110`}
+        style={{ boxShadow: `0 0 0 8px ${meta.glowColor}, 0 0 32px ${meta.glowColor}` }}
       >
-        <span className="font-display text-sm font-bold leading-tight text-center px-2 line-clamp-2">
+        <span className="font-display text-sm font-bold leading-tight text-center px-3 line-clamp-2">
           {node.title}
         </span>
-        <span className="font-mono text-[9px] opacity-80 font-bold">+{node.xp} XP</span>
+        <span className="font-mono text-[9px] opacity-90 font-bold">+{node.xp} XP</span>
       </div>
       <Label text={node.title} />
     </Wrap>
