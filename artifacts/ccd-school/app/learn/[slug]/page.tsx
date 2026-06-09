@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { LessonPageClient } from "@/components/LessonPageClient";
 import { missionBySlug } from "@/content/missions";
 
@@ -19,7 +20,9 @@ export default async function LearnSlugPage({ params }: Props) {
   // (see globals.css — body:not([data-page="lesson"]) main rule)
   return (
     <div data-page="lesson" className="contents">
-      <LessonPageClient slug={slug} />
+      <Suspense>
+        <LessonPageClient slug={slug} />
+      </Suspense>
     </div>
   );
 }

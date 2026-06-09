@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getStripeClient, getStripeWebhookSecret } from "@/lib/stripe-client";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   const body = await request.arrayBuffer();
   const payload = Buffer.from(body);

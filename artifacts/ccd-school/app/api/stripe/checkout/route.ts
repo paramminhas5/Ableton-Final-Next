@@ -3,6 +3,8 @@ import { auth } from "@auth";
 import { getStripeClient } from "@/lib/stripe-client";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user?.id) {
