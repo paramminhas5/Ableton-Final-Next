@@ -1,16 +1,13 @@
 "use client";
 /**
- * WorldsPageClient — /worlds index.
+ * WorldsPageClient — /worlds landing grid.
  *
  * Design:
  * - NO images — pure CCD color-block cards
- * - Compact horizontal chapter breadcrumb rail (one scrollable row, not 5+ full rows)
- * - DUAL CTA: 🌊 FLOW and 🔓 FREE buttons clearly separated on every card
- * - Scroll-linked card entrance animations
- * - Cats and decorative elements
- * - Marquee ticker
+ * - Compact horizontal chapter breadcrumb rail (one scrollable row)
+ * - Single ENTER CTA per world (mode switch lives inside the world shell)
+ * - Scroll-linked card entrance animations, cats, marquee ticker
  */
-"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -189,6 +186,9 @@ function ChapterRail({
 // ─── World Card ───────────────────────────────────────────────────────────────
 function WorldCard({ world, index }: { world: WorldId; index: number }) {
   const { progress } = useProgress();
+  const { learnMode } = useLearnMode();
+  const isFree = learnMode === "classic";
+  const enterHref = isFree ? `/world/${world}?view=free` : `/world/${world}`;
   const completed = progress.completedMissions;
   const { ref, visible } = useScrollReveal();
 
@@ -305,37 +305,20 @@ function WorldCard({ world, index }: { world: WorldId; index: number }) {
           </div>
         </div>
 
-        {/* ── Dual CTA footer — FLOW and FREE clearly separated ── */}
-        <div className="flex border-t-4 border-ink">
-          {/* FLOW: Duolingo snake */}
-          <Link
-            href={`/world/${world}`}
-            className={`flex-1 brutal-border border-y-0 border-l-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.flowBtn}`}
-          >
-            <span className="text-lg">🌊</span>
-            <div className="text-left">
-              <div className="font-display text-sm leading-none">FLOW</div>
-              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Snake path · hearts on</div>
-            </div>
-            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
-
-          {/* Divider */}
-          <div className="w-px bg-ink/30 shrink-0" />
-
-          {/* FREE: Open browser */}
-          <Link
-            href={`/world/${world}?view=free`}
-            className={`flex-1 brutal-border border-y-0 border-r-0 brutal-press transition-colors flex items-center justify-center gap-2 py-4 px-4 group ${meta.freeBtn}`}
-          >
-            <span className="text-lg">🔓</span>
-            <div className="text-left">
-              <div className="font-display text-sm leading-none">FREE</div>
-              <div className="font-mono text-[8px] uppercase opacity-60 mt-0.5">Open browser · no locks</div>
-            </div>
-            <span className="ml-auto font-display text-sm group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
-        </div>
+        {/* ── Single ENTER CTA — opens the world; mode switch lives inside ── */}
+        <Link
+          href={enterHref}
+          className={`block border-t-4 border-ink brutal-press transition-colors flex items-center justify-between py-4 px-6 group ${meta.flowBtn}`}
+        >
+          <span className="flex items-center gap-2.5">
+            <span className="text-lg">{isFree ? "📖" : "🌊"}</span>
+            <span className="font-display text-base">ENTER {meta.title.toUpperCase()}</span>
+            <span className="font-mono text-[8px] uppercase opacity-60">
+              {isFree ? "free · open wiki" : "flow · guided path"}
+            </span>
+          </span>
+          <span className="font-display text-lg group-hover:translate-x-1 transition-transform">→</span>
+        </Link>
       </div>
     </div>
   );

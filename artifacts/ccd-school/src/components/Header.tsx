@@ -14,6 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { ModeSwitch } from "@/components/world/ModeSwitch";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
@@ -339,61 +340,6 @@ function XpStreakBadge() {
   );
 }
 
-// ─── ModeTogglePill ───────────────────────────────────────────────────────────
-// URL-aware: when on /world/[slug] navigates to/from ?view=free instead of
-// only toggling context. This makes the header pill the single source of truth
-// that actually changes the visible page.
-
-function ModeTogglePill({ compact = false }: { compact?: boolean }) {
-  const { learnMode, setLearnMode } = useLearnMode();
-  const [toast, setToast] = useState<string | null>(null);
-  const router = useRouter();
-  const pathname = usePathname();
-
-  // Detect /world/[slug] — any deeper path is not a world page
-  const worldMatch = pathname?.match(/^\/world\/([^/]+)$/);
-  const worldSlug = worldMatch ? worldMatch[1] : null;
-
-  const toggle = useCallback(() => {
-    const next = learnMode === "flow" ? "classic" : "flow";
-    setLearnMode(next);
-    setToast(next === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode");
-    setTimeout(() => setToast(null), 2000);
-
-    // On a world page: navigate to/from ?view=free so the page actually switches
-    if (worldSlug) {
-      if (next === "classic") {
-        router.push(`/world/${worldSlug}?view=free`);
-      } else {
-        router.push(`/world/${worldSlug}`);
-      }
-    }
-  }, [learnMode, setLearnMode, worldSlug, router]);
-
-  const isFlow = learnMode === "flow";
-
-  return (
-    <div className="relative">
-      <button
-        onClick={toggle}
-        title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
-        aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
-        className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover
-          ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}
-      >
-        <span>{isFlow ? "🌊" : "🔓"}</span>
-        {!compact && <span>{isFlow ? "Flow" : "Free"}</span>}
-        {!compact && <span className="opacity-30 text-xs">▼</span>}
-      </button>
-      {toast && (
-        <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-4 py-2.5 font-display text-xs whitespace-nowrap chunk-shadow animate-fade-in">
-          {toast}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── MoreDropdown ─────────────────────────────────────────────────────────────
 
 function MoreDropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -517,13 +463,10 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           <span className="font-sans text-sm opacity-55">{progress.hearts}/{MAX_HEARTS} hearts</span>
         </div>
 
-        {/* Mode toggle */}
-        <div className="px-4 py-3.5 border-b-4 border-ink flex items-center justify-between gap-3">
-          <div>
-            <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
-            <p className="font-display text-sm">{learnMode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"}</p>
-          </div>
-          <ModeTogglePill compact />
+        {/* Mode toggle — shared ModeSwitch (context-driven in the global menu) */}
+        <div className="px-4 py-3.5 border-b-4 border-ink">
+          <p className="font-mono text-xs uppercase opacity-45 mb-2">Learning Mode</p>
+          <ModeSwitch full size="md" />
         </div>
 
         {/* Search */}
@@ -656,6 +599,9 @@ export function Header() {
   const { user } = useAuth();
   const [moreOpen,   setMoreOpen]   = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const pathname = usePathname();
+  // On /world/* the rail owns the mode switch — hide the header one to avoid duplication.
+  const isWorldPage = pathname?.startsWith("/world/") ?? false;
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -729,7 +675,7 @@ export function Header() {
 
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           <XpStreakBadge />
-          <ModeTogglePill />
+          {!isWorldPage && <ModeSwitch />}
 
           {user ? (
             <Link href="/profile" aria-label="View profile" title={user.name ?? "Profile"}

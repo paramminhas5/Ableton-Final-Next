@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { WorldPathClient } from "@/components/WorldPathClient";
-import { WorldPageClient } from "@/components/WorldPageClient";
+import { WorldShell } from "@/components/world/WorldShell";
+import { isWorldId } from "@/components/world/worldTheme";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -27,12 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function WorldPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { view } = await searchParams;
-  if (!WORLD_TITLES[slug]) notFound();
+  if (!isWorldId(slug)) notFound();
 
-  // Default: Flow Mode snake path. ?view=free: Free Mode accordion browser.
-  const showFree = view === "free";
-
-  return showFree
-    ? <WorldPageClient slug={slug} />
-    : <WorldPathClient worldSlug={slug} />;
+  // Unified Library shell. ?view=free → Free wiki, default → Flow snake.
+  return <WorldShell slug={slug} view={view === "free" ? "free" : "flow"} />;
 }
