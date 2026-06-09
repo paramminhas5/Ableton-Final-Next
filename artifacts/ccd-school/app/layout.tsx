@@ -141,19 +141,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Bowlby One — CCD display font (all headlines) */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap"
-        />
+        {/* Bowlby One — CCD display font (all headlines) — BLOCKING load for zero FOUT */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap"
-          media="print"
-          // @ts-expect-error – string onLoad is intentional for perf (not a React event)
-          onLoad="this.media='all'"
+          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=block"
         />
         {/* Space Mono — monospaced labels */}
         <link

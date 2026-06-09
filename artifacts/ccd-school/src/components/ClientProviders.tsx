@@ -14,6 +14,7 @@ import { useCelebration } from "@/lib/useCelebration";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { InstallPromptBanner } from "@/components/InstallPromptBanner";
+import { EasterEggs } from "@/components/EasterEggs";
 
 const queryClient = new QueryClient();
 
@@ -153,6 +154,8 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   {/* Desktop UI */}
                   <MasterTransportBar />
                   <CommandPalette />
+                  {/* Easter eggs — Konami code, idle cat, secret clicks */}
+                  <EasterEggs />
                 </AnalyticsProvider>
               </GatingLoader>
             </ProgressProvider>
