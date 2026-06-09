@@ -285,6 +285,7 @@ function QuizScreen({
   isPathMode,
   xpPerCorrect,
   missionSlug,
+  missionTitle,
   onCorrect,
   onWrong,
   onNext,
@@ -295,6 +296,7 @@ function QuizScreen({
   isPathMode: boolean;
   xpPerCorrect?: number;
   missionSlug: string;
+  missionTitle?: string;
   onCorrect: () => void;
   onWrong: () => void;
   onNext: () => void;
@@ -359,6 +361,19 @@ function QuizScreen({
   return (
     <div className={`space-y-4 ${shake ? "animate-[shake_0.4s_ease-in-out]" : ""}`}>
       <style>{`@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}`}</style>
+
+      {/* Context banner — ties this question back to what was just taught */}
+      {quizNumber === 1 && missionTitle && (
+        <div className="brutal-border bg-volt text-bone px-4 py-3 flex items-start gap-3">
+          <span className="text-lg shrink-0">🧠</span>
+          <div>
+            <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">NOW LET&apos;S TEST WHAT YOU LEARNED</div>
+            <div className="font-mono text-xs leading-relaxed opacity-90">
+              These questions are based on <strong>{missionTitle}</strong>. Answer from what the lesson just taught you — not general knowledge.
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="brutal-border bg-bone p-5">
         {/* Question counter + hearts warning */}
@@ -892,6 +907,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             isPathMode={isPathMode}
             xpPerCorrect={alreadyDone ? 0 : Math.round(mission.xp / Math.max(1, quizScreens.length))}
             missionSlug={mission.slug}
+            missionTitle={mission.title}
             onCorrect={handleCorrect}
             onWrong={handleWrong}
             onNext={advance}

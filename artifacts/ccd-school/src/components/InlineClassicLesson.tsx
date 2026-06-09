@@ -404,6 +404,16 @@ export function InlineClassicLesson({
               Hard mode — no hints · pass threshold 70% · {deep?.quizHard?.length ? "harder questions loaded" : "hints removed from standard questions"}
             </div>
           )}
+          {/* Context banner — ties quiz questions back to what was just taught */}
+          <div className="brutal-border bg-volt text-bone px-4 py-3 flex items-start gap-3 mb-3">
+            <span className="text-lg shrink-0">🧠</span>
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">TEST YOUR KNOWLEDGE</div>
+              <div className="font-mono text-xs leading-relaxed opacity-90">
+                These questions are based on <strong>{m.title}</strong>. Use what you just read above — not general knowledge.
+              </div>
+            </div>
+          </div>
           <Quiz
             key={`${m.slug}-${internalHardMode}`}
             qs={quizQs}
