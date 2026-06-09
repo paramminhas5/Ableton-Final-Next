@@ -16,6 +16,7 @@ import Image from "next/image";
 import { chaptersByWorld, WORLD_TROPHIES } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
+import { useLearnMode } from "@/lib/mode";
 import { useState } from "react";
 
 type WorldSlug = "fundamentals" | "dj" | "producer";
@@ -321,6 +322,7 @@ export function WorldPageClient({ slug }: { slug: string }) {
   const world = slug as WorldSlug;
   const cfg = WORLD_CONFIG[world];
   const { progress } = useProgress();
+  const { setLearnMode } = useLearnMode();
   const completed = progress.completedMissions;
   const chapters = chaptersByWorld(world);
   const allPaths = pathsByWorld(world);
@@ -401,6 +403,7 @@ export function WorldPageClient({ slug }: { slug: string }) {
             </div>
             <Link
               href={`/world/${world}`}
+              onClick={() => setLearnMode("flow")}
               className={`brutal-border px-3 py-2 font-display text-xs brutal-press transition-colors ${cfg.flowLinkClass}`}
             >
               Switch to Flow →
