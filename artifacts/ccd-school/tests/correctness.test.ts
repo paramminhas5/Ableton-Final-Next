@@ -26,7 +26,7 @@ describe("Property 1 — normaliseCcdToFlow never returns 'ccd'", () => {
     fc.assert(
       fc.property(
         fc.string(),
-        (raw) => {
+        (raw: string) => {
           const result = normaliseCcdToFlow(raw);
           expect(result).not.toBe("ccd");
           expect(["flow", "classic"]).toContain(result);
@@ -84,7 +84,12 @@ describe("Property 2 — non-review completion always routes to /dashboard", () 
           learnMode: fc.constantFrom("flow", "classic"),
           missionTitle: fc.string(),
         }),
-        ({ isReview, slug: _slug, learnMode: _mode, missionTitle: _title }) => {
+        ({ isReview, slug: _slug, learnMode: _mode, missionTitle: _title }: {
+          isReview: boolean;
+          slug: string;
+          learnMode: string;
+          missionTitle: string;
+        }) => {
           // This is the exact redirect logic from LessonPageClient.tsx handleComplete()
           const destination = isReview ? "/review" : "/dashboard";
           expect(destination).toBe("/dashboard");
@@ -106,7 +111,7 @@ describe("Property 2 — non-review completion always routes to /dashboard", () 
     fc.assert(
       fc.property(
         fc.string({ minLength: 3 }),   // worldRoute values like "/worlds/dj"
-        (worldRoute) => {
+        (worldRoute: string) => {
           const isReview = false;
           const destination = isReview ? "/review" : "/dashboard";
           // destination must never equal worldRoute (which was the old behaviour)
@@ -152,7 +157,7 @@ describe("Property 3 — LessonSourceBar renders null for empty/absent source", 
     fc.assert(
       fc.property(
         fc.string({ minLength: 1 }),
-        (source) => {
+        (source: string) => {
           expect(shouldRender(source)).toBe(true);
         }
       )
@@ -213,7 +218,7 @@ describe("Property 4 — FlowFallbackBanner copy has no legacy mode strings", ()
     fc.assert(
       fc.property(
         fc.string({ minLength: 0, maxLength: 80 }),
-        (_missionTitle) => {
+        (_missionTitle: string) => {
           // The fixed copy strings are constant regardless of missionTitle
           expect(HEADER_COPY).toMatch(/FLOW MODE/i);
           expect(HEADER_COPY).not.toMatch(/PATH MODE/i);

@@ -30,7 +30,8 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const worldSlug = worldMatch ? worldMatch[1] : null;
 
   const switchMode = () => {
-    setLearnMode(isFlow ? "classic" : "flow");
+    const next = isFlow ? "classic" : "flow";
+    setLearnMode(next);
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
     // Sync URL param when on a world page
