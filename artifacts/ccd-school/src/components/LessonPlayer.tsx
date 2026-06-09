@@ -81,10 +81,10 @@ class LessonErrorBoundary extends Component<
 function ProgressBar({ current, total }: { current: number; total: number }) {
   const pct = total > 0 ? Math.round((current / total) * 100) : 0;
   return (
-    <div className="h-3 brutal-border bg-bone overflow-hidden">
+    <div className="h-3 brutal-border bg-bone overflow-hidden border-4 border-ink">
       <div
         className="h-full bg-acid transition-all duration-500 ease-out"
-        style={{ width: `${pct}%`, boxShadow: '0 0 8px #C6FF00' }}
+        style={{ width: `${pct}%`, boxShadow: "0 0 10px hsl(84 81% 56%)" }}
       />
     </div>
   );
@@ -204,20 +204,20 @@ const HEARTS_SEEN_KEY = "ccd.hearts_explained";
 function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-ink/70 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Hearts explained">
-      <div className="brutal-border bg-bone max-w-sm w-full brutal-shadow">
-        <div className="brutal-border border-x-0 border-t-0 bg-acid text-ink px-5 py-4">
-          <div className="font-display text-3xl">🌊 FLOW MODE HEARTS</div>
+      <div className="brutal-border bg-bone max-w-sm w-full chunk-shadow-lg">
+        <div className="brutal-border border-x-0 border-t-0 bg-electric-blue text-bone px-5 py-4 flex items-center gap-3">
+          <div className="relative w-12 h-12 shrink-0 wiggle" style={{ filter: "drop-shadow(2px 2px 0 hsl(222 47% 4%))" }}>
+            <Image src="/cats/cat-dj-hero.png" alt="" fill className="object-contain" sizes="48px" />
+          </div>
+          <div className="font-display text-2xl">🌊 FLOW MODE HEARTS</div>
         </div>
-        <div className="p-5 space-y-3 font-mono text-sm leading-relaxed">
+        <div className="p-5 space-y-3 font-sans text-sm leading-relaxed">
           <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
-          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> (no hearts) to keep going.</p>
+          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> to keep going.</p>
           <p className="opacity-60 text-xs">Switch modes anytime using the toggle in the header.</p>
         </div>
         <div className="p-4">
-          <button
-            onClick={onDismiss}
-            className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press"
-          >
+          <button onClick={onDismiss} className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press chunk-shadow ccd-btn-hover">
             GOT IT — LET&apos;S GO →
           </button>
         </div>
@@ -232,9 +232,14 @@ function HookScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: 
   return (
     <button
       onClick={onNext}
-      className="w-full min-h-[75vh] flex flex-col items-center justify-center text-center p-8 bg-ink text-bone brutal-border brutal-press relative overflow-hidden"
+      className="w-full min-h-[75vh] flex flex-col items-center justify-center text-center p-8 bg-electric-blue text-bone brutal-border brutal-press relative overflow-hidden"
       aria-label="Tap to continue"
     >
+      {/* DJ Cat decorating the hook screen */}
+      <div className="absolute bottom-4 right-4 w-20 h-20 pointer-events-none wiggle" aria-hidden
+        style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}>
+        <Image src="/cats/cat-dj-hero.png" alt="" fill className="object-contain" sizes="80px" />
+      </div>
       {/* Background image */}
       <div className="absolute inset-0 pointer-events-none">
         <Image
@@ -496,28 +501,40 @@ function QuizScreen({
 
       {phase !== "picking" && (
         <div
-          className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}
+          className={`brutal-border p-4 flex items-start gap-3 ${phase === "correct" ? "bg-acid text-ink" : "bg-hot text-bone"}`}
           role="alert"
           aria-live="assertive"
         >
-          <div className="font-display text-2xl mb-1">
-            {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
+          {/* Cat reaction */}
+          <div className="relative w-12 h-12 shrink-0 mt-0.5 flex-shrink-0"
+            style={{ filter: "drop-shadow(2px 2px 0 hsl(222 47% 4%))" }}>
+            <Image
+              src={phase === "correct" ? "/cats/cat-headphones-dance.png" : "/cats/cat-raver.png"}
+              alt=""
+              fill
+              className={`object-contain ${phase === "correct" ? "animate-cat-celebrate" : "wiggle"}`}
+              sizes="48px"
+            />
           </div>
-          {phase === "wrong" && (
-            <>
-              <div className="font-mono text-xs opacity-80 mb-1">
-                Correct answer: <strong>{screen.options[screen.answer]}</strong>
-              </div>
-              {isFlowMode && (
-                <div className="font-mono text-[10px] uppercase opacity-80 mb-1">
-                  −1 heart deducted
+          <div className="flex-1 min-w-0">
+            <div className="font-display text-2xl mb-1">
+              {phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}
+            </div>
+            {phase === "wrong" && (
+              <>
+                <div className="font-mono text-xs opacity-80 mb-1">
+                  Correct answer: <strong>{screen.options[screen.answer]}</strong>
                 </div>
-              )}
-            </>
-          )}
-          {/* P2 #15: font-sans for explanation text */}
-          <div className="font-sans text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
-            {screen.explain}
+                {isFlowMode && (
+                  <div className="font-mono text-[10px] uppercase opacity-80 mb-1">
+                    −1 heart deducted
+                  </div>
+                )}
+              </>
+            )}
+            <div className="font-sans text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">
+              {screen.explain}
+            </div>
           </div>
         </div>
       )}
@@ -525,7 +542,7 @@ function QuizScreen({
       {phase !== "picking" && (
         <button
           onClick={onNext}
-          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
+          className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press chunk-shadow hover:bg-sun transition-colors ccd-btn-hover"
         >
           NEXT →
         </button>
@@ -588,21 +605,18 @@ function SummaryScreen({
     <div className="relative space-y-4">
       <Confetti />
 
-      <div className="brutal-border bg-acid text-ink p-6 text-center brutal-shadow relative overflow-hidden" style={{ boxShadow: '0 0 30px rgba(198,255,0,0.3)' }}>
-        {/* Completion BG */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src={COMPLETION_BG}
-            alt=""
-            fill
-            className="object-cover opacity-15 mix-blend-luminosity"
-            sizes="100vw"
-          />
+      <div className="brutal-border bg-electric-blue text-bone p-6 text-center chunk-shadow-lg relative overflow-hidden">
+        {/* DJ Cat celebrating */}
+        <div className="flex justify-center mb-3">
+          <div className="relative w-28 h-28 animate-cat-celebrate"
+            style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}>
+            <Image src="/cats/cat-headphones-dance.png" alt="DJ Pawsworth celebrating!" fill
+              className="object-contain" sizes="112px" priority />
+          </div>
         </div>
         <div className="relative z-10">
-          <div className="font-display text-5xl mb-2">🎉</div>
-          <div className="font-display text-6xl leading-none">LESSON COMPLETE</div>
-          <div className="font-mono text-sm opacity-70 mt-1">{mission.title}</div>
+          <div className="font-display text-6xl leading-none drop-shadow-[3px_3px_0_hsl(222_47%_4%)]">LESSON COMPLETE</div>
+          <div className="font-sans text-sm opacity-70 mt-1">{mission.title}</div>
         </div>
       </div>
 

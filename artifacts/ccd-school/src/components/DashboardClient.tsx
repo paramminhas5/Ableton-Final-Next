@@ -570,21 +570,15 @@ export function DashboardClient() {
     <main className="min-h-screen bg-bone pb-24">
 
       {/* ══ SECTION 1: Hero Next Step ══════════════════════════════════════ */}
-      <section className="brutal-border border-x-0 border-t-0 bg-ink text-bone relative overflow-hidden">
-        {/* DASHBOARD_BG layer */}
-        <div className="absolute inset-0 pointer-events-none">
-          <Image
-            src={DASHBOARD_BG}
-            alt=""
-            fill
-            className="object-cover opacity-15 mix-blend-luminosity"
-            sizes="100vw"
-            priority
-          />
+      <section className="brutal-border border-x-0 border-t-0 bg-electric-blue text-bone relative overflow-hidden">
+        {/* DJ Cat decoration */}
+        <div className="absolute bottom-0 right-4 w-24 h-24 md:w-32 md:h-32 pointer-events-none wiggle z-10" aria-hidden
+          style={{ filter: "drop-shadow(3px 3px 0 hsl(222 47% 4%))" }}>
+          <Image src="/cats/cat-dj-hero.png" alt="" fill className="object-contain" sizes="128px" />
         </div>
         <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           <div className="flex items-center gap-2 mb-3">
-            <div className="font-mono text-[10px] uppercase opacity-40">// YOUR NEXT LESSON</div>
+            <div className="font-mono text-xs uppercase opacity-60">// YOUR NEXT LESSON</div>
             <span className="font-mono text-[9px] brutal-border px-2 py-0.5 opacity-60">
               {modeLabel}
             </span>
@@ -633,7 +627,7 @@ export function DashboardClient() {
               </div>
               <Link
                 href={`/learn/${continueSlug}`}
-                className="brutal-border border-y-0 border-r-0 md:border-l-2 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press brutal-shadow brutal-hover hover:bg-sun transition-colors min-w-[100px]"
+                className="brutal-border border-y-0 border-r-0 md:border-l-4 bg-acid text-ink flex items-center justify-center px-8 py-6 md:py-0 brutal-press chunk-shadow hover:bg-sun transition-colors min-w-[100px] ccd-btn-hover"
                 aria-label="Start lesson"
               >
                 <span className="font-display text-5xl md:text-6xl">▶</span>
