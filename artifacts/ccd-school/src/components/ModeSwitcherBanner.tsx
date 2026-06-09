@@ -5,9 +5,13 @@
  * Two variants:
  *   "bar"  — compact horizontal strip (used at page top)
  *   "card" — full comparison card (used on first visit or settings screens)
+ *
+ * When rendered on a /world/[slug] page, switching mode also navigates to/from
+ * ?view=classic so the URL param and the mode context stay in sync.
  */
 import { useState } from "react";
 import { useLearnMode } from "@/lib/mode";
+import { useRouter, usePathname } from "next/navigation";
 
 interface Props {
   variant?: "bar" | "card";
@@ -18,11 +22,25 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
   const { learnMode, setLearnMode } = useLearnMode();
   const isFlow = learnMode === "flow";
   const [justSwitched, setJustSwitched] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Detect if we're on a /world/[slug] page so we can sync the ?view= param
+  const worldMatch = pathname?.match(/^\/world\/([^/]+)$/);
+  const worldSlug = worldMatch ? worldMatch[1] : null;
 
   const switchMode = () => {
     setLearnMode(isFlow ? "classic" : "flow");
     setJustSwitched(true);
     setTimeout(() => setJustSwitched(false), 1500);
+    // Sync URL param when on a world page
+    if (worldSlug) {
+      if (next === "classic") {
+        router.push(`/world/${worldSlug}?view=classic`);
+      } else {
+        router.push(`/world/${worldSlug}`);
+      }
+    }
   };
 
   /* ── CARD variant ──────────────────────────────────────────────────── */

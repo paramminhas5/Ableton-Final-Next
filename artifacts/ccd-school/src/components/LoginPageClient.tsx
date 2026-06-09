@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
@@ -53,6 +53,7 @@ export function LoginPageClient() {
   const { progress } = useProgress();
   const { current: rank } = rankFor(progress.xp);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -62,6 +63,21 @@ export function LoginPageClient() {
   const [loading, setLoading] = useState(false);
   const [dbMissing, setDbMissing] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Pick up ?error= param that NextAuth adds on redirect-based sign-in failures
+  useEffect(() => {
+    const urlError = searchParams?.get("error");
+    if (!urlError) return;
+    const msg = friendlyError(urlError);
+    if (
+      urlError === "Configuration" ||
+      msg.toLowerCase().includes("database") ||
+      msg.toLowerCase().includes("environment variable")
+    ) {
+      setDbMissing(true);
+    }
+    setError(msg);
+  }, [searchParams]);
 
   const handleGoogle = () => {
     setError("");
