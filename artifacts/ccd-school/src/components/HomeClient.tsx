@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { MISSIONS } from "@/content/missions";
@@ -12,7 +13,6 @@ import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
 import { useState, useEffect } from "react";
 import { OnboardingFlow } from "@/components/OnboardingFlow";
-import { useRouter } from "next/navigation";
 
 // ─── FAL AI generated images (v2 — higher contrast, dark backgrounds) ─────────
 const IMAGES = {
@@ -76,6 +76,43 @@ function FeaturePill({ icon, text }: { icon: string; text: string }) {
       <span>{icon}</span>
       <span className="font-mono text-[10px] uppercase opacity-70">{text}</span>
     </div>
+  );
+}
+
+// ─── World progress helper ────────────────────────────────────────────────────
+function worldStats(world: WorldTab, completed: Record<string, unknown>) {
+  const missions = ALL_MISSIONS.filter(m => {
+    if (world === "fundamentals") return m.world === "foundations";
+    return m.world === world;
+  });
+  const done = missions.filter(m => !!completed[m.slug]).length;
+  const total = missions.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  return { done, total, pct };
+}
+
+// ─── Inline SVG icons for HOW IT WORKS section ───────────────────────────────
+function WaveIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M1 10 Q4 4 7 10 Q10 16 13 10 Q16 4 19 10" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function SnakeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M2 5h7a2 2 0 0 1 0 4H5a2 2 0 0 0 0 4h11" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+function TrophyIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M4 3h12v6a6 6 0 0 1-12 0V3Z" stroke="currentColor" strokeWidth="2" fill="none"/>
+      <path d="M10 15v3M7 18h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M4 6H2a2 2 0 0 0 0 4h2M16 6h2a2 2 0 0 1 0 4h-2" stroke="currentColor" strokeWidth="2" fill="none"/>
+    </svg>
   );
 }
 
@@ -180,7 +217,7 @@ function Dashboard() {
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR WORLDS</div>
           <div className="grid md:grid-cols-3 gap-3">
             {(["fundamentals", "dj", "producer"] as WorldTab[]).map(world => {
-              const ws = worldStats(world);
+              const ws = worldStats(world, completed);
               const meta = WORLD_DATA[world];
               return (
                 <Link key={world} href={meta.to}
@@ -362,7 +399,11 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
           </p>
 
           <div className="grid md:grid-cols-3 gap-0 brutal-border">
-            {[{ icon: <WaveIcon />, num: "01", title: "Pick a World", body: "Start with Fundamentals (sound, rhythm, melody, harmony, tech) or jump directly into DJ World or Producer if you already have the basics." }, { icon: <SnakeIcon />, num: "02", title: "Follow the Path", body: "Each world has chapters. Each chapter has paths. Each path is a mission snake — complete missions in order, earn XP, unlock trophies." }, { icon: <TrophyIcon />, num: "03", title: "Earn Trophies", body: "Path trophies → Chapter trophies → World trophies → CCD Master. Choose Flow Mode (sequential, like Duolingo) or Free Mode (everything open, your pace)." }].map((step, i) => (
+            {[
+              { icon: <WaveIcon />, num: "01", title: "Pick a World", body: "Start with Fundamentals (sound, rhythm, melody, harmony, tech) or jump directly into DJ World or Producer if you already have the basics.", accent: "bg-acid", emoji: "🎵" },
+              { icon: <SnakeIcon />, num: "02", title: "Follow the Path", body: "Each world has chapters. Each chapter has paths. Each path is a mission snake — complete missions in order, earn XP, unlock trophies.", accent: "bg-volt", emoji: "🐍" },
+              { icon: <TrophyIcon />, num: "03", title: "Earn Trophies", body: "Path trophies → Chapter trophies → World trophies → CCD Master. Choose Flow Mode (sequential, like Duolingo) or Free Mode (everything open, your pace).", accent: "bg-sun", emoji: "🏆" },
+            ].map((step, i) => (
               <div key={i} className={`p-6 md:p-8 ${i < 2 ? "brutal-border border-y-0 border-l-0" : ""}`}>
                 <div className={`brutal-border ${step.accent} text-ink w-10 h-10 flex items-center justify-center font-display text-xl mb-4`}>
                   {step.emoji}
@@ -425,7 +466,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                   )}
                   <div className="relative z-10">
                     <div className="mb-3 opacity-70">{meta.icon}</div>
-                    <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{chs.length} CHAPTERS · {paths.length} PATHS · {totalMissions} MISSIONS</div>
+                    <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{chapters.length} CHAPTERS · {paths.length} PATHS · {totalMissions} MISSIONS</div>
                     <div className="font-display text-3xl md:text-5xl">{meta.label}</div>
                     <div className="font-mono text-sm opacity-70 mt-1">{meta.tagline}</div>
                     <div className="font-mono text-xs opacity-50 mt-2 max-w-lg leading-relaxed">{meta.detail}</div>
