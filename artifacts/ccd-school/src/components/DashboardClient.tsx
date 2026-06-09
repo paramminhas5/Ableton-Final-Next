@@ -2,16 +2,17 @@
 /**
  * DashboardClient — visual progress hub.
  *
- * Redesigned sections:
- *  1. Hero header — electric-blue, rank badge, cat, "PROGRESS" heading
+ * Sections:
+ *  1. Hero header
  *  2. Next Lesson card
- *  3. Stats — 2×2 animated grid (XP, Streak, Missions, Gems)
- *  4. Rank progress bar
- *  5. World progress — 3 full-width animated bars with CTA
- *  6. Skill radar + Recent badges (side by side desktop)
- *  7. Review queue
- *  8. Beat Coach + Leaderboard
- *  9. Footer nudge
+ *  3. Daily Goal ring + Daily Challenge cards  ← NEW
+ *  4. Stats 2×2 grid
+ *  5. Rank progress bar
+ *  6. World progress bars (DJ uses deep blue)
+ *  7. Skill radar + Recent badges
+ *  8. Review queue
+ *  9. Beat Coach + Leaderboard
+ * 10. Footer nudge
  */
 import Link from "next/link";
 import Image from "next/image";
@@ -30,6 +31,30 @@ import { CoachPanel } from "@/components/BeatCoach";
 import { formatDashboardContext } from "@/types/coach";
 import { useEffect, useState, useMemo, useRef } from "react";
 import SectionReveal from "@/components/SectionReveal";
+
+// ─── Daily Goal Ring ──────────────────────────────────────────────────────────
+function GoalRing({ pct, done }: { pct: number; done: boolean }) {
+  const r = 38;
+  const circ = 2 * Math.PI * r;
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100" aria-label={`Daily goal ${Math.round(pct * 100)}%`}>
+      <circle cx="50" cy="50" r={r} fill="none" stroke="currentColor" strokeWidth="7" opacity="0.15" />
+      <circle
+        cx="50" cy="50" r={r} fill="none"
+        stroke={done ? "#7B2FFF" : "#C6FF00"}
+        strokeWidth="7"
+        strokeDasharray={`${circ * Math.min(pct, 1)} ${circ}`}
+        strokeLinecap="round"
+        transform="rotate(-90 50 50)"
+        style={{ transition: "stroke-dasharray 0.8s ease" }}
+      />
+      <text x="50" y="54" textAnchor="middle" dominantBaseline="middle"
+        fontSize="18" fontWeight="bold" fill="currentColor" fontFamily="inherit">
+        {Math.round(pct * 100)}%
+      </text>
+    </svg>
+  );
+}
 
 // ─── Badge Registry ───────────────────────────────────────────────────────────
 const BADGE_REGISTRY: Record<string, { name: string; emoji: string; description: string }> = {
@@ -64,7 +89,7 @@ const WORLD_CONFIG: Record<WorldKey, {
   bar: string; href: string; catSrc: string;
 }> = {
   fundamentals: { emoji: "🎵", label: "Fundamentals", bg: "bg-acid",     textColor: "text-ink",  bar: "bg-ink",  href: "/world/fundamentals", catSrc: "/cats/cat-handstand.png" },
-  dj:           { emoji: "🎧", label: "DJ World",     bg: "bg-ink",      textColor: "text-bone", bar: "bg-volt", href: "/world/dj",           catSrc: "/cats/cat-dj.png" },
+  dj:           { emoji: "🎧", label: "DJ World",     bg: "bg-[#0a0f2e]",  textColor: "text-bone", bar: "bg-volt", href: "/world/dj",           catSrc: "/cats/cat-dj.png" },
   producer:     { emoji: "🎛", label: "Producer",     bg: "bg-sun",      textColor: "text-ink",  bar: "bg-ink",  href: "/world/producer",     catSrc: "/cats/cat-dj-hero.png" },
 };
 
@@ -312,6 +337,59 @@ export function DashboardClient() {
         </section>
         </SectionReveal>
 
+        {/* ══ DAILY GOAL + CHALLENGE ══════════════════════════════════ */}
+        {hydrated && (
+          <SectionReveal delay={0.03}>
+          <section>
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S PRACTICE</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+              {/* Daily Goal card */}
+              <Link href="/daily" className="brutal-border bg-ink text-bone p-5 flex items-center gap-5 brutal-press hover:bg-[#0a1a3e] transition-colors chunk-shadow">
+                <div className="shrink-0">
+                  <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-display text-xl leading-tight mb-1">
+                    {dailyGoalDone ? "Goal Done! 🎉" : "Daily Goal"}
+                  </div>
+                  <div className="font-mono text-xs opacity-60 mb-2">
+                    {progress.dailyXp} / {DAILY_GOAL_XP} XP today
+                  </div>
+                  {dailyGoalDone ? (
+                    <div className="font-mono text-[10px] uppercase text-acid">✓ Streak protected</div>
+                  ) : (
+                    <div className="font-mono text-[10px] uppercase opacity-50">
+                      {DAILY_GOAL_XP - progress.dailyXp} XP to go
+                    </div>
+                  )}
+                  {progress.streakDays > 0 && (
+                    <div className="font-mono text-[10px] uppercase opacity-60 mt-1">
+                      🔥 {progress.streakDays}-day streak{progress.streakShield ? " 🛡" : ""}
+                    </div>
+                  )}
+                </div>
+              </Link>
+
+              {/* Daily Challenge card */}
+              <Link href="/challenge" className="brutal-border bg-volt text-ink p-5 flex items-center gap-4 brutal-press hover:bg-acid transition-colors chunk-shadow border-l-4 border-l-[#7B2FFF]">
+                <div className="text-5xl shrink-0">⚡</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-display text-xl leading-tight mb-1">Daily Challenge</div>
+                  <div className="font-mono text-xs opacity-70 mb-3 leading-snug">
+                    Test your knowledge with today&apos;s timed challenge. New every day.
+                  </div>
+                  <div className="brutal-border bg-ink text-bone px-4 py-2 font-display text-sm inline-block">
+                    START CHALLENGE →
+                  </div>
+                </div>
+              </Link>
+
+            </div>
+          </section>
+          </SectionReveal>
+        )}
+
         {/* ══ STATS 2×2 GRID ═════════════════════════════════════════════ */}
         <SectionReveal delay={0.04}>
         <section>
@@ -504,7 +582,7 @@ export function DashboardClient() {
                 {reviewData.map(({ slug, title, pct }) => (
                   <Link key={slug} href={`/learn/${slug}?review=1`}
                     className="brutal-border bg-bone px-3 py-2 flex items-center gap-2 brutal-press hover:bg-acid/20 transition-colors">
-                    <span className="font-mono text-[9px] uppercase max-w-[100px] truncate">{title}</span>
+                    <span className="font-mono text-xs uppercase flex-1 min-w-0 truncate">{title}</span>
                     <StrengthBar pct={pct} />
                   </Link>
                 ))}

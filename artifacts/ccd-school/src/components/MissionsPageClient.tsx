@@ -105,40 +105,25 @@ export function MissionsPageClient() {
           <div className="flex items-center gap-3 mt-2">
             <span className="font-mono text-xs uppercase opacity-70">{ws.done}/{ws.total} done · {ws.pct}%</span>
           </div>
-
-          {/* Mode banner — wired correctly */}
-          {isFlowMode ? (
-            <div className="mt-3 brutal-border bg-acid text-ink px-4 py-2 flex items-center gap-2 font-display text-sm">
-              <span>🌊</span>
-              <span>Flow Mode — lessons unlock sequentially.</span>
-              <button
-                onClick={() => setLearnMode("classic")}
-                className="underline font-display text-sm ml-1 hover:opacity-70">
-                Switch to Free Mode
-              </button>
-            </div>
-          ) : (
-            <div className="mt-3 brutal-border bg-bone/20 text-bone px-4 py-2 flex items-center gap-2 font-display text-sm">
-              <span>🔓</span>
-              <span>Free Mode — all missions open.</span>
-              <button
-                onClick={() => setLearnMode("flow")}
-                className="underline font-display text-sm ml-1 hover:opacity-70">
-                Switch to Flow Mode
-              </button>
-            </div>
-          )}
-
-          {/* Search */}
-          <div className="mt-4 flex gap-2">
-            <input type="text" placeholder="Search missions..." value={search} onChange={e => setSearch(e.target.value)}
-              className="brutal-border px-4 py-2 font-mono text-sm bg-bone text-ink w-full max-w-sm focus:outline-none focus:bg-acid/20" />
-            {search && <button onClick={() => setSearch("")} className="brutal-border bg-bone text-ink px-3 py-2 font-display text-sm hover:bg-acid transition-colors">CLEAR</button>}
+          {/* Mode toggle */}
+          <div className="mt-3 brutal-border overflow-hidden inline-flex">
+            <button
+              onClick={() => setLearnMode("flow")}
+              className={`px-4 py-2 font-display text-sm flex items-center gap-2 transition-colors ${isFlowMode ? "bg-acid text-ink" : "bg-bone/20 text-bone hover:bg-bone/30"}`}>
+              🌊 Flow
+              {isFlowMode && <span className="font-mono text-[9px] opacity-70">ACTIVE</span>}
+            </button>
+            <button
+              onClick={() => setLearnMode("classic")}
+              className={`px-4 py-2 font-display text-sm flex items-center gap-2 transition-colors border-l-2 border-current/20 ${!isFlowMode ? "bg-acid text-ink" : "bg-bone/20 text-bone hover:bg-bone/30"}`}>
+              🔓 Free
+              {!isFlowMode && <span className="font-mono text-[9px] opacity-70">ACTIVE</span>}
+            </button>
           </div>
         </div>
       </header>
 
-      {/* ── World tabs — CCD border-4 style ── */}
+      {/* ── World tabs + search ─────────────────────────────────────────── */}
       <div className="sticky top-0 z-10 bg-bone border-b-4 border-ink">
         <div className="max-w-5xl mx-auto px-4 flex">
           {(["fundamentals","dj","producer"] as WorldTab[]).map(w => {
@@ -149,16 +134,39 @@ export function MissionsPageClient() {
             const wst = WORLD_STYLE[w];
             return (
               <button key={w} onClick={() => { setActiveWorld(w); setSearch(""); }}
-                className={`flex-1 px-3 py-3.5 font-display text-sm border-r-4 border-ink last:border-r-0 transition-colors
+                className={`flex-1 px-2 py-3 font-display text-xs sm:text-sm border-r-4 border-ink last:border-r-0 transition-colors
                   ${isActive ? `${wst.activeBg} ${wst.activeText}` : "bg-bone hover:bg-acid/20 opacity-70 hover:opacity-100"}`}>
-                <div>{wst.label}</div>
-                <div className="font-mono text-[10px] opacity-60 mt-0.5">{done2}/{ws2.length} · {pct2}%</div>
+                <div className="truncate">{wst.label}</div>
+                <div className="font-mono text-[9px] opacity-60 mt-0.5">{done2}/{ws2.length}</div>
               </button>
             );
           })}
         </div>
         <div className="h-2 bg-ink/10">
           <div className={`h-full ${wStyle.bar} transition-all duration-700`} style={{ width: `${ws.pct}%` }} />
+        </div>
+        {/* Search row — below tabs, on white bg */}
+        <div className="border-t-2 border-ink/10 px-4 py-2.5 flex gap-2 items-center">
+          <div className="relative flex-1 max-w-md">
+            <input
+              type="text"
+              placeholder={`Search in ${activeWorld === "fundamentals" ? "Fundamentals" : activeWorld === "dj" ? "DJ World" : "Producer"}…`}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full brutal-border bg-bone text-ink px-4 py-2 font-mono text-sm focus:outline-none focus:bg-acid/10 pr-8"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 font-mono text-xs opacity-50 hover:opacity-100"
+              >✕</button>
+            )}
+          </div>
+          {search && (
+            <div className="font-mono text-[10px] uppercase opacity-50 shrink-0">
+              {filteredMissions.length} result{filteredMissions.length !== 1 ? "s" : ""}
+            </div>
+          )}
         </div>
       </div>
 
@@ -201,9 +209,11 @@ export function MissionsPageClient() {
                     const pDone = missions.filter(m => !!completed[m.slug]).length;
                     return (
                       <div key={path.slug}>
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="mb-2">
                           <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
-                          <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">VIEW PATH →</Link>
+                          <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
+                            VIEW PATH →
+                          </Link>
                         </div>
                         <div className="brutal-border divide-y-2 divide-ink/10 chunk-shadow-sm">
                           {missions.filter(m => !search || filteredMissions.includes(m)).map((mission, idx) => {
@@ -218,23 +228,30 @@ export function MissionsPageClient() {
                                 onClick={flowLocked ? e => e.preventDefault() : undefined}
                                 aria-disabled={flowLocked}
                                 title={flowLocked ? "Complete previous lessons in Flow Mode to unlock" : mission.title}
-                                className={`flex items-center gap-3 px-4 py-3 transition-colors group
+                                className={`flex items-start gap-3 px-4 py-3.5 transition-colors group
                                   ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked || flowLocked ? "opacity-50 cursor-not-allowed bg-ink/5" : "hover:bg-acid/20"}`}>
-                                {/* Done/locked indicator */}
-                                <span className={`w-6 h-6 brutal-border flex items-center justify-center font-mono text-[9px] shrink-0 transition-colors
+                                {/* Status indicator */}
+                                <span className={`w-7 h-7 brutal-border flex items-center justify-center font-mono text-[10px] shrink-0 mt-0.5 transition-colors
                                   ${isDone ? "bg-ink text-bone" : locked || flowLocked ? "bg-bone" : "bg-bone group-hover:bg-acid"}`}>
                                   {isDone ? "✓" : (locked || flowLocked) ? "🔒" : idx + 1}
                                 </span>
-                                <span className="font-mono text-[9px] opacity-30 w-6 shrink-0 text-right tabular-nums">{(mission as { number?: number }).number}</span>
-                                <span className={`font-display text-sm flex-1 min-w-0 truncate ${isDone ? "opacity-60" : ""}`}>{mission.title}</span>
-                                {flowLocked && <span className="font-mono text-[8px] px-1 py-0.5 brutal-border bg-ink/20 shrink-0 uppercase">Locked</span>}
-                                {isPaid && gatingMode === "paid" && !flowLocked && (
-                                  <span className={`font-mono text-[8px] px-1 py-0.5 brutal-border shrink-0 ${locked ? "bg-ink text-bone" : "bg-electric-blue text-bone"}`}>
-                                    {locked ? "PRO" : "PRO ✓"}
-                                  </span>
-                                )}
-                                <span className="font-mono text-[9px] opacity-30 shrink-0 hidden sm:block w-4 text-center">{simIcon}</span>
-                                <span className="font-mono text-[9px] opacity-50 shrink-0 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
+                                {/* Title — 2 lines, not truncated */}
+                                <div className="flex-1 min-w-0">
+                                  <div className={`font-display text-sm leading-tight line-clamp-2 ${isDone ? "opacity-60" : ""}`}>{mission.title}</div>
+                                  {mission.tagline && (
+                                    <div className="font-mono text-[10px] opacity-40 mt-0.5 truncate">{mission.tagline}</div>
+                                  )}
+                                </div>
+                                {/* Right side — lock or XP */}
+                                <div className="shrink-0 flex items-center gap-2">
+                                  {flowLocked && <span className="font-mono text-[9px] px-1.5 py-0.5 brutal-border bg-ink/15 uppercase">Locked</span>}
+                                  {isPaid && gatingMode === "paid" && !flowLocked && (
+                                    <span className={`font-mono text-[9px] px-1.5 py-0.5 brutal-border ${locked ? "bg-ink text-bone" : "bg-electric-blue text-bone"}`}>
+                                      PRO
+                                    </span>
+                                  )}
+                                  <span className="font-mono text-[10px] opacity-50 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
+                                </div>
                               </Link>
                             );
                           })}

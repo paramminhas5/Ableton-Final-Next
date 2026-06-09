@@ -35,7 +35,7 @@ const WORLD_CONFIG: Record<WorldSlug, {
     title: "DJ World", emoji: "🎧",
     tagline: "The art of playing recorded music for people",
     description: "5 chapters · 10 paths · 40 missions",
-    hero: "bg-ink text-bone", bar: "bg-volt", accent: "bg-volt text-ink",
+    hero: "bg-[#0a0f2e] text-bone", bar: "bg-volt", accent: "bg-volt text-ink",
     cta: "bg-volt text-ink", catSrc: "/cats/cat-dj.png",
   },
   producer: {

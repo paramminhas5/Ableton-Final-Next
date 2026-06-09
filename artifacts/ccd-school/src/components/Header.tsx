@@ -675,7 +675,7 @@ export function Header() {
             onClick={trackCatClick}
             className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block cursor-pointer hover:scale-110 transition-transform"
           />
-          CCD<span className="text-acid">.</span>SCHOOL
+          <span className="text-bone">CATS CAN</span><span className="text-acid"> DANCE</span>
         </Link>
 
         {/* Primary nav — desktop */}
@@ -725,20 +725,19 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile strip */}
-        <div className="md:hidden flex items-center gap-2 px-3">
-          <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-          <span className="brutal-border bg-ink text-bone px-2 py-1 font-display text-xs tabular-nums">
-            🔥{progress.streakDays} · {progress.xp}xp
+        {/* Mobile strip — decluttered: just streak pill + search + menu */}
+        <div className="md:hidden flex items-center gap-1.5 px-3">
+          <span className="brutal-border bg-ink text-bone px-2.5 py-1.5 font-display text-xs tabular-nums leading-none">
+            🔥{progress.streakDays}
           </span>
           <button onClick={openSearch} aria-label="Search"
-            className="brutal-border bg-bone px-2 py-1.5 flex items-center brutal-press">
+            className="brutal-border bg-bone px-3 py-2 flex items-center brutal-press hover:bg-acid transition-colors">
             <SearchIcon />
           </button>
           <button
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu" aria-expanded={drawerOpen}
-            className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-xl">
+            className="brutal-border bg-electric-blue text-bone px-3 py-2 font-display text-xl leading-none">
             ≡
           </button>
         </div>
