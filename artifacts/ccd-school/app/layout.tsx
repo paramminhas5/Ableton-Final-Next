@@ -2,10 +2,12 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = "https://ccd.school";
+// FAL AI generated OG image — brutalist three-zone music poster (v2)
 const OG_IMAGE =
-  "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c50e31e5-eb8c-4cc9-ad9a-bc948d5719c2";
+  "https://v3b.fal.media/files/b/0a9d8573/kIC5zvi9T5FiU2uyp8GEM.jpg";
 
 // ─── Viewport — controls status bar colour on mobile ─────────────────────────
 export const viewport: Viewport = {
@@ -236,6 +238,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </footer>
           </div>
         </ClientProviders>
+        <Analytics />
       </body>
     </html>
   );

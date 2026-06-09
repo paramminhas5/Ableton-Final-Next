@@ -37,6 +37,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         };
         if (!email || !password) return null;
 
+        // Guard: fail clearly if no DB is configured
+        const dbUrl =
+          process.env.DATABASE_URL ??
+          process.env.POSTGRES_URL ??
+          process.env.POSTGRES_PRISMA_URL;
+        if (!dbUrl) {
+          throw new Error(
+            "No database connection string found in env. " +
+            "Add DATABASE_URL to your environment variables.",
+          );
+        }
+
         try {
           if (action === "signup") {
             const existing = await db.query(
@@ -57,11 +69,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               "SELECT id, email, name, password_hash, plan FROM users WHERE email = $1",
               [email],
             );
-            if (!result.rows.length) return null;
+            if (!result.rows.length) throw new Error("CredentialsSignin");
             const u = result.rows[0];
-            if (!u.password_hash) return null;
+            if (!u.password_hash) throw new Error("CredentialsSignin");
             const valid = await bcrypt.compare(password, u.password_hash);
-            if (!valid) return null;
+            if (!valid) throw new Error("CredentialsSignin");
             return { id: u.id, email: u.email, name: u.name, plan: u.plan };
           }
         } catch (err) {

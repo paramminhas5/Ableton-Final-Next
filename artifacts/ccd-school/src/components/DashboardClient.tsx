@@ -13,7 +13,14 @@
  *  8. Leaderboard peek
  */
 import Link from "next/link";
+import Image from "next/image";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, getLessonStrength } from "@/lib/progress";
+
+const DASHBOARD_BG = "https://v3b.fal.media/files/b/0a9d85a6/5ncScsflwn_0wVLbzZJlu.jpg";
+const WORLD_BANNERS: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+};
 import { useAuth } from "@/lib/auth";
 import { useLearnMode } from "@/lib/mode";
 import { rankFor } from "@/lib/ranks";
@@ -230,8 +237,15 @@ function StatCard({
   color: string;
   href?: string;
 }) {
+  // Map card background to top border color
+  const topBorder =
+    color.includes("bg-volt") ? "border-t-4 border-t-[#7B2FFF]"
+    : color.includes("bg-acid") ? "border-t-4 border-t-[#C6FF00]"
+    : color.includes("bg-hot") ? "border-t-4 border-t-[#FF2D2D]"
+    : color.includes("bg-sun") ? "border-t-4 border-t-[#FFB800]"
+    : "";
   const inner = (
-    <div className={`brutal-border ${color} p-4 flex flex-col gap-1 min-w-[120px] h-full`}>
+    <div className={`brutal-border ${color} ${topBorder} p-4 flex flex-col gap-1 min-w-[120px] h-full`}>
       <div className="font-mono text-[9px] uppercase opacity-50 leading-none">{label}</div>
       <div className="font-display text-2xl leading-tight">{value}</div>
       <div className="font-mono text-[9px] opacity-60 leading-tight">{sub}</div>
@@ -512,8 +526,19 @@ export function DashboardClient() {
     <main className="min-h-screen bg-bone pb-24">
 
       {/* ══ SECTION 1: Hero Next Step ══════════════════════════════════════ */}
-      <section className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+      <section className="brutal-border border-x-0 border-t-0 bg-ink text-bone relative overflow-hidden">
+        {/* DASHBOARD_BG layer */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={DASHBOARD_BG}
+            alt=""
+            fill
+            className="object-cover opacity-15 mix-blend-luminosity"
+            sizes="100vw"
+            priority
+          />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           <div className="flex items-center gap-2 mb-3">
             <div className="font-mono text-[10px] uppercase opacity-40">// YOUR NEXT LESSON</div>
             <span className="font-mono text-[9px] brutal-border px-2 py-0.5 opacity-60">
@@ -536,7 +561,7 @@ export function DashboardClient() {
               </div>
             </div>
           ) : continueSlug ? (
-            <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden">
+            <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid">
               <div className="flex-1 p-5 md:p-7">
                 <div className="font-mono text-[9px] uppercase opacity-50 mb-2">
                   {lastCtx?.worldLabel ?? "Fundamentals"}
@@ -637,9 +662,21 @@ export function DashboardClient() {
               const cfg = WORLD_CONFIG[world];
               const ws = worldStats[world];
               return (
-                <div key={world} className={`brutal-border ${cfg.color} overflow-hidden`}>
+                <div key={world} className={`brutal-border ${cfg.color} overflow-hidden relative`}>
+                  {/* World banner image for fundamentals and dj */}
+                  {WORLD_BANNERS[world] && (
+                    <div className="absolute inset-0 pointer-events-none">
+                      <Image
+                        src={WORLD_BANNERS[world]}
+                        alt=""
+                        fill
+                        className="object-cover opacity-10 mix-blend-multiply"
+                        sizes="100vw"
+                      />
+                    </div>
+                  )}
                   {/* World header */}
-                  <div className="p-4 pb-2">
+                  <div className="p-4 pb-2 relative z-10">
                     <div className="flex items-center justify-between mb-1">
                       <div className="font-display text-xl flex items-center gap-2">
                         <span>{cfg.emoji}</span>
@@ -658,7 +695,7 @@ export function DashboardClient() {
                     </div>
                   </div>
                   {/* Chapter pills */}
-                  <div className="px-4 pb-3 flex flex-wrap gap-2 mt-2">
+                  <div className="px-4 pb-3 flex flex-wrap gap-2 mt-2 relative z-10">
                     {ws.chapters.map((ch) => {
                       const pillColor =
                         ch.pct === 100
@@ -678,7 +715,7 @@ export function DashboardClient() {
                     })}
                   </div>
                   {/* CTA */}
-                  <div className="border-t-2 border-current/20">
+                  <div className="border-t-2 border-current/20 relative z-10">
                     <Link
                       href={cfg.href}
                       className="block p-3 px-4 font-display text-sm brutal-press hover:bg-bone/10 transition-colors text-right"
@@ -806,9 +843,9 @@ export function DashboardClient() {
           <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
           <button
             onClick={() => setCoachOpen(true)}
-            className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors brutal-shadow text-left"
+            className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors brutal-shadow text-left border-l-4 border-l-[#7B2FFF]"
           >
-            <div className="w-14 h-14 brutal-border bg-bone/10 flex items-center justify-center text-3xl shrink-0">
+            <div className="w-16 h-16 brutal-border bg-bone/10 flex items-center justify-center text-4xl shrink-0">
               🎧
             </div>
             <div className="flex-1 min-w-0">

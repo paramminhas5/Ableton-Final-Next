@@ -1,5 +1,12 @@
 "use client";
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  type ReactNode,
+} from "react";
 
 export type LearnMode = "flow" | "classic";
 // Mode labels (public-facing):
@@ -53,7 +60,21 @@ const LearnModeContext = createContext<LearnModeContextType>({
 });
 
 export function LearnModeProvider({ children }: { children: ReactNode }) {
-  const [learnMode, setLearnModeState] = useState<LearnMode>(getInitialMode);
+  // Always start with "classic" on the server so SSR HTML matches the
+  // initial client render (no hydration mismatch). We then sync from
+  // localStorage in a useEffect (client-only) immediately after mount.
+  const [learnMode, setLearnModeState] = useState<LearnMode>("classic");
+
+  // Hydrate from localStorage after first paint — runs client-side only.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(MODE_KEY) as LearnMode | null;
+      const resolved: LearnMode =
+        saved === "ccd" || saved === "classic" ? saved : "classic";
+      setLearnModeState(resolved);
+      document.documentElement.setAttribute("data-learn-mode", resolved);
+    } catch {}
+  }, []);
 
   const setLearnMode = useCallback((m: LearnMode) => {
     setLearnModeState(m);

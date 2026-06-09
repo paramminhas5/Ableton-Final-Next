@@ -1,4 +1,4 @@
-// File: /home/runner/workspace/artifacts/ccd-school/app/page.tsx
+// File: /vercel/sandbox/primary/artifacts/ccd-school/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
