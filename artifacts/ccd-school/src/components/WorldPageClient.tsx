@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { chaptersByWorld, WORLD_TROPHIES } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
@@ -7,6 +8,13 @@ import { ModeSwitcherBanner } from "@/components/ModeSwitcherBanner";
 import { useState } from "react";
 
 type WorldSlug = "fundamentals" | "dj" | "producer";
+
+// ─── FAL AI hero images ────────────────────────────────────────────────────────
+const WORLD_HERO_IMAGES: Record<WorldSlug, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj:           "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+  producer:     "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
+};
 
 const WORLD_CONFIG: Record<WorldSlug, { title: string; emoji: string; tagline: string; description: string; hero: string; accent: string; nodeActive: string; nodeInactive: string; bar: string }> = {
   fundamentals: { title: "Fundamentals", emoji: "🎵", tagline: "The vocabulary of music — before you produce or DJ", description: "5 chapters · 10 paths · 40 missions. Source: learningmusic.ableton.com + Ableton Live manual", hero: "bg-acid text-ink", accent: "bg-acid", nodeActive: "bg-ink text-bone", nodeInactive: "bg-bone text-ink/40", bar: "bg-ink" },
@@ -43,8 +51,22 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
   return (
     <main className="min-h-screen bg-bone">
-      <header className={`brutal-border border-x-0 border-t-0 ${cfg.hero}`}>
-        <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <header className={`brutal-border border-x-0 border-t-0 ${cfg.hero} relative overflow-hidden`}>
+        {/* Hero image — skipped on producer (sun/yellow) to keep text legible */}
+        {world !== "producer" && (
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src={WORLD_HERO_IMAGES[world]}
+              alt=""
+              fill
+              priority
+              className="object-cover opacity-20 mix-blend-multiply"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-current/30" />
+          </div>
+        )}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 py-8 md:py-12">
           <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 transition-opacity">← ALL WORLDS</Link>
           <h1 className="font-display text-5xl md:text-8xl leading-none mt-3">{cfg.emoji} {cfg.title.toUpperCase()}</h1>
           <p className="font-display text-xl md:text-2xl mt-2 opacity-80">{cfg.tagline}</p>

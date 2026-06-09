@@ -25,6 +25,10 @@ import { track } from "@/lib/analytics";
 import { ConceptAudioButton } from "@/components/ConceptAudio";
 import { AudioIdScreen, MatchScreen, TypeAnswerScreen, SequenceScreen } from "@/components/ExerciseScreens";
 import Link from "next/link";
+import Image from "next/image";
+
+const HOOK_BG = "https://v3b.fal.media/files/b/0a9d85ab/DsI5ZMF4jHgvpcE6JERhJ.jpg";
+const COMPLETION_BG = "https://v3b.fal.media/files/b/0a9d85ab/gJ3EpG-ChAh0FOsmJgoNq.jpg";
 
 // ─── Error boundary ───────────────────────────────────────────────────────────
 
@@ -79,7 +83,7 @@ function ProgressBar({ current, total }: { current: number; total: number }) {
     <div className="h-3 brutal-border bg-bone overflow-hidden">
       <div
         className="h-full bg-acid transition-all duration-500 ease-out"
-        style={{ width: `${pct}%` }}
+        style={{ width: `${pct}%`, boxShadow: '0 0 8px #C6FF00' }}
       />
     </div>
   );
@@ -188,13 +192,28 @@ function HookScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: 
   return (
     <button
       onClick={onNext}
-      className="w-full min-h-[60vh] flex flex-col items-center justify-center text-center p-8 bg-ink text-bone brutal-border brutal-press"
+      className="w-full min-h-[75vh] flex flex-col items-center justify-center text-center p-8 bg-ink text-bone brutal-border brutal-press relative overflow-hidden"
       aria-label="Tap to continue"
     >
-      <div className="text-7xl mb-6 select-none">{screen.emoji}</div>
-      <h2 className="font-display text-4xl md:text-5xl leading-none mb-4">{screen.headline}</h2>
-      <p className="font-mono text-base opacity-70 max-w-xs leading-relaxed">{screen.subtext}</p>
-      <div className="mt-8 font-mono text-[10px] uppercase opacity-40 animate-bounce">TAP TO CONTINUE</div>
+      {/* Background image */}
+      <div className="absolute inset-0 pointer-events-none">
+        <Image
+          src={HOOK_BG}
+          alt=""
+          fill
+          className="object-cover opacity-30 mix-blend-luminosity"
+          sizes="100vw"
+        />
+      </div>
+      {/* Pulsing acid bottom border animation */}
+      <style>{`@keyframes pulse-border{0%,100%{opacity:1;box-shadow:0 4px 0 0 #C6FF00,0 0 20px #C6FF00}50%{opacity:0.5;box-shadow:0 4px 0 0 #C6FF00,0 0 40px #C6FF00}}`}</style>
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-acid" style={{ animation: 'pulse-border 2s ease-in-out infinite' }} />
+      <div className="relative z-10">
+        <div className="text-8xl mb-6 select-none">{screen.emoji}</div>
+        <h2 className="font-display text-5xl md:text-7xl leading-none mb-4">{screen.headline}</h2>
+        <p className="font-mono text-base opacity-70 max-w-xs leading-relaxed">{screen.subtext}</p>
+        <div className="mt-8 font-mono text-[10px] uppercase opacity-40 animate-bounce">TAP TO CONTINUE</div>
+      </div>
     </button>
   );
 }
@@ -393,10 +412,15 @@ function QuizScreen({
       <div className="grid sm:grid-cols-2 gap-2" role="group" aria-label="Answer options">
         {screen.options.map((opt, i) => {
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
+          let leftBorder = "";
           if (phase !== "picking") {
-            if (i === screen.answer) cls = "bg-acid text-ink font-bold";
-            else if (i === picked && phase === "wrong") cls = "bg-hot text-bone";
-            else cls = "bg-bone opacity-40 cursor-default";
+            if (i === screen.answer) {
+              cls = "bg-acid text-ink font-bold";
+              leftBorder = "border-l-4 border-l-[#C6FF00]";
+            } else if (i === picked && phase === "wrong") {
+              cls = "bg-hot text-bone";
+              leftBorder = "border-l-4 border-l-[#FF2D2D]";
+            } else cls = "bg-bone opacity-40 cursor-default";
           }
           return (
             <button
@@ -405,11 +429,13 @@ function QuizScreen({
               disabled={phase !== "picking"}
               data-kbd-hint={phase === "picking" ? String(i + 1) : undefined}
               aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}${phase !== "picking" ? (i === screen.answer ? " (correct)" : "") : ""}`}
-              className={`relative brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}
+              className={`relative brutal-border px-4 py-5 text-left font-mono text-sm transition-colors flex items-center gap-3 ${cls} ${leftBorder}`}
             >
-              <span className="opacity-40 mr-2" aria-hidden>{String.fromCharCode(65 + i)}.</span>
-              {opt}
-              {phase !== "picking" && i === screen.answer && <span className="ml-2" aria-hidden>✓</span>}
+              <span className={`brutal-border w-8 h-8 flex items-center justify-center font-display text-sm shrink-0 ${phase === "picking" ? "bg-ink/10" : i === screen.answer ? "bg-ink/20" : "bg-bone/20"}`} aria-hidden>
+                {String.fromCharCode(65 + i)}
+              </span>
+              <span className="flex-1">{opt}</span>
+              {phase !== "picking" && i === screen.answer && <span aria-hidden>✓</span>}
               {/* XP float anchored to the correct answer button */}
               {i === screen.answer && (
                 <XpFloat xp={xpPerCorrect ?? 0} active={showXpFloat} />
@@ -510,10 +536,22 @@ function SummaryScreen({
     <div className="relative space-y-4">
       <Confetti />
 
-      <div className="brutal-border bg-acid text-ink p-6 text-center brutal-shadow">
-        <div className="font-display text-5xl mb-2">🎉</div>
-        <div className="font-display text-4xl">LESSON COMPLETE</div>
-        <div className="font-mono text-sm opacity-70 mt-1">{mission.title}</div>
+      <div className="brutal-border bg-acid text-ink p-6 text-center brutal-shadow relative overflow-hidden" style={{ boxShadow: '0 0 30px rgba(198,255,0,0.3)' }}>
+        {/* Completion BG */}
+        <div className="absolute inset-0 pointer-events-none">
+          <Image
+            src={COMPLETION_BG}
+            alt=""
+            fill
+            className="object-cover opacity-15 mix-blend-luminosity"
+            sizes="100vw"
+          />
+        </div>
+        <div className="relative z-10">
+          <div className="font-display text-5xl mb-2">🎉</div>
+          <div className="font-display text-6xl leading-none">LESSON COMPLETE</div>
+          <div className="font-mono text-sm opacity-70 mt-1">{mission.title}</div>
+        </div>
       </div>
 
       <div className="brutal-border bg-ink text-bone p-5 flex items-center gap-4">
@@ -620,7 +658,7 @@ function LessonBreadcrumb({
   const pathTitle = ctx.path?.title || null;
 
   return (
-    <div className="flex items-center gap-1 flex-wrap font-mono text-[9px] uppercase opacity-50 tracking-wide">
+    <div className="flex items-center gap-1 flex-wrap font-mono text-[9px] uppercase opacity-50 tracking-wide border-t-2 border-acid/30 pt-2">
       <Link href={ctx.worldRoute} className="hover:opacity-100 hover:text-acid transition-colors">
         {worldLabel}
       </Link>

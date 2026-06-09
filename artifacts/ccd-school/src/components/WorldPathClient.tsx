@@ -5,6 +5,7 @@
  * Chapter banners break up sections. Nodes pulse when available.
  */
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import type { ReactNode } from "react";
 // Note: LessonNode uses <a> tags for simplicity; Link is used elsewhere in this file
@@ -37,22 +38,25 @@ interface PathNode {
 
 const WORLD_META: Record<string, {
   bg: string; accent: string; nodeAvail: string; nodeDone: string;
-  emoji: string; title: string; tagline: string;
+  emoji: string; title: string; tagline: string; heroImage: string;
 }> = {
   fundamentals: {
     bg: "bg-bone", accent: "bg-acid text-ink", nodeAvail: "bg-acid text-ink border-acid",
     nodeDone: "bg-ink text-bone border-ink", emoji: "🎵", title: "Fundamentals",
     tagline: "Sound · Rhythm · Melody · Harmony · Music Tech",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
   },
   dj: {
     bg: "bg-ink", accent: "bg-volt text-ink", nodeAvail: "bg-volt text-ink border-volt",
     nodeDone: "bg-volt/20 text-bone border-volt", emoji: "🎧", title: "DJ World",
     tagline: "Setup · Library · The Mix · Performance · Mastery",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
   },
   producer: {
     bg: "bg-bone", accent: "bg-sun text-ink", nodeAvail: "bg-sun text-ink border-sun",
     nodeDone: "bg-ink text-bone border-ink", emoji: "🎛", title: "Producer",
     tagline: "First Contact · Sound & MIDI · Mix · Performance · Advanced",
+    heroImage: "https://v3b.fal.media/files/b/0a9d8573/FWDTuawui9X18aCB004I0.jpg",
   },
 };
 
@@ -228,35 +232,51 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
   return (
     <div className={`min-h-screen ${meta.bg}`}>
       {/* World header */}
-      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} p-5`}>
-        <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-2">← ALL WORLDS</Link>
-        <div className="flex items-center gap-3">
-          <span className="text-4xl">{meta.emoji}</span>
-          <div>
-            <h1 className="font-display text-4xl leading-none">{meta.title}</h1>
-            <p className="font-mono text-xs opacity-70 mt-0.5">{meta.tagline}</p>
+      <div className={`brutal-border border-x-0 border-t-0 ${meta.accent} p-7 md:p-10 relative overflow-hidden`}>
+        {/* Hero image — producer uses sun bg so skip image to keep text readable */}
+        {worldSlug !== "producer" && (
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src={meta.heroImage}
+              alt=""
+              fill
+              priority
+              className="object-cover opacity-20 mix-blend-multiply"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-current/20" />
           </div>
-        </div>
-        {/* Progress bar */}
-        <div className="mt-4 space-y-1">
-          <div className="h-3 brutal-border bg-bone/30 overflow-hidden">
-            <div className="h-full bg-ink/70 transition-all duration-700" style={{ width: `${pct}%` }} />
+        )}
+        <div className="relative z-10">
+          <Link href="/worlds" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 block mb-2">← ALL WORLDS</Link>
+          <div className="flex items-center gap-3">
+            <span className="text-4xl">{meta.emoji}</span>
+            <div>
+              <h1 className="font-display text-5xl leading-none">{meta.title}</h1>
+              <p className="font-mono text-xs opacity-70 mt-0.5">{meta.tagline}</p>
+            </div>
           </div>
-          <div className="flex justify-between font-mono text-[9px] uppercase opacity-60">
-            <span>{done}/{total} lessons</span>
-            <span>{pct}% complete</span>
+          {/* Progress bar */}
+          <div className="mt-4 space-y-1">
+            <div className="h-4 brutal-border bg-bone/30 overflow-hidden">
+              <div className="h-full bg-ink/70 transition-all duration-700" style={{ width: `${pct}%`, boxShadow: '0 0 8px rgba(198,255,0,0.5)' }} />
+            </div>
+            <div className="flex justify-between font-mono text-[9px] uppercase opacity-60">
+              <span>{done}/{total} lessons</span>
+              <span>{pct}% complete</span>
+            </div>
           </div>
-        </div>
-        {/* Stats pills */}
-        <div className="flex flex-wrap gap-2 mt-3">
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            🔥 {progress.streakDays} day streak
-          </div>
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            {progress.xp} XP · {rank.name}
-          </div>
-          <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
-            💎 {progress.gems} gems
+          {/* Stats pills */}
+          <div className="flex flex-wrap gap-2 mt-3">
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              🔥 {progress.streakDays} day streak
+            </div>
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              {progress.xp} XP · {rank.name}
+            </div>
+            <div className="brutal-border bg-ink/20 px-3 py-1 font-mono text-[10px] uppercase">
+              💎 {progress.gems} gems
+            </div>
           </div>
         </div>
       </div>
@@ -282,8 +302,11 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
             <div key={node.slug}>
               {isChapterStart && (
                 <div className="relative z-10 flex justify-center my-8">
-                  <div className="brutal-border bg-ink text-bone px-5 py-3 text-center max-w-[220px]">
-                    <div className="text-3xl mb-1">{chMeta}</div>
+                  <div className={`brutal-border px-5 py-4 text-center max-w-[280px] brutal-shadow
+                    ${world === "dj" ? "bg-ink text-bone border-t-4 border-t-[#7B2FFF]"
+                    : world === "fundamentals" ? "bg-acid/10 text-ink border-t-4 border-t-acid"
+                    : "bg-sun/10 text-ink border-t-4 border-t-[#FFB800]"}`}>
+                    <div className="text-5xl mb-2">{chMeta}</div>
                     <div className="font-display text-base leading-tight">{chapter?.title ?? node.chapterSlug}</div>
                     <div className="font-mono text-[9px] opacity-50 mt-0.5 uppercase">{chapter?.tagline ?? ""}</div>
                   </div>
@@ -306,8 +329,15 @@ export function WorldPathClient({ worldSlug }: { worldSlug: string }) {
         {pct === 100 && (
           <div className="relative z-10 mt-8 brutal-border bg-acid text-ink p-6 text-center brutal-shadow">
             <div className="text-5xl mb-2">🏆</div>
-            <div className="font-display text-3xl">WORLD COMPLETE!</div>
-            <div className="font-mono text-sm opacity-70 mt-1">You finished {meta.title}</div>
+            {/* Star burst decoration */}
+            <div className="font-display text-4xl opacity-10 absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+              ✦✦✦✦✦✦✦✦
+            </div>
+            <div className="font-display text-3xl relative z-10">WORLD COMPLETE!</div>
+            <div className="font-mono text-sm opacity-70 mt-1 relative z-10">You finished {meta.title}</div>
+            <div className="flex justify-center gap-2 mt-3 relative z-10 font-display text-2xl">
+              <span>⭐</span><span>⭐</span><span>⭐</span>
+            </div>
           </div>
         )}
       </div>
@@ -346,7 +376,7 @@ function LessonNode({
 
   // Label shown below every node
   const Label = ({ text, dim }: { text: string; dim?: boolean }) => (
-    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[88px] line-clamp-2
+    <span className={`font-mono text-xs uppercase leading-tight text-center max-w-[88px] line-clamp-2
       ${dim ? "opacity-30" : "opacity-70"}`}>
       {text}
     </span>
@@ -392,9 +422,9 @@ function LessonNode({
   return (
     <Wrap href={`/learn/${node.slug}`} title={node.title}>
       <div
-        className={`w-16 h-16 rounded-full brutal-border flex flex-col items-center justify-center gap-0.5
+        className={`w-20 h-20 rounded-full brutal-border flex flex-col items-center justify-center gap-0.5
           ${meta.nodeAvail} transition-transform group-hover:scale-110`}
-        style={{ boxShadow: "0 0 0 5px rgba(198,255,0,0.2), 0 0 18px rgba(198,255,0,0.15)" }}
+        style={{ boxShadow: "0 0 0 6px rgba(198,255,0,0.25), 0 0 28px rgba(198,255,0,0.2)" }}
       >
         <span className="font-display text-xs font-bold leading-tight text-center px-1 line-clamp-2">
           {node.title}

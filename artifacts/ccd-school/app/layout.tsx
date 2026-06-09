@@ -4,9 +4,9 @@ import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
 
 const SITE_URL = "https://ccd.school";
-// FAL AI generated OG image — brutalist music education poster
+// FAL AI generated OG image — brutalist three-zone music poster (v2)
 const OG_IMAGE =
-  "https://v3b.fal.media/files/b/0a9d852c/RPnVfuGPBvhROWjgKhx5i.jpg";
+  "https://v3b.fal.media/files/b/0a9d8573/kIC5zvi9T5FiU2uyp8GEM.jpg";
 
 // ─── Viewport — controls status bar colour on mobile ─────────────────────────
 export const viewport: Viewport = {

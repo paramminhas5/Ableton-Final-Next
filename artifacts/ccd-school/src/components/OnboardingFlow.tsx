@@ -10,11 +10,18 @@
  */
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { chaptersByWorld } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { PlacementTest } from "@/components/PlacementTest";
+
+const ONBOARDING_BG = "https://v3b.fal.media/files/b/0a9d85a6/QJa9Aa24ygZJULRgwCBws.jpg";
+const WORLD_BANNERS: Record<string, string> = {
+  fundamentals: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
+  dj: "https://v3b.fal.media/files/b/0a9d8573/vkzVEVke8UdYZtUAJEt5P.jpg",
+};
 
 type World = "fundamentals" | "dj" | "producer";
 type LearnMode = "ccd" | "classic";
@@ -97,9 +104,10 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
-          className={`h-2 w-10 brutal-border transition-all duration-300 ${
+          className={`h-3 w-10 brutal-border transition-all duration-300 ${
             i < current ? "bg-acid" : i === current ? "bg-acid/60" : "bg-bone/20"
           }`}
+          style={i <= current ? { boxShadow: '0 0 8px #C6FF00' } : undefined}
         />
       ))}
     </div>
@@ -112,7 +120,7 @@ function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") =>
     <div className="space-y-6 animate-fade-in">
       <div>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 1 OF 4</div>
-        <h1 className="font-display text-5xl leading-none">
+        <h1 className="font-display text-6xl md:text-7xl leading-none">
           BEFORE WE START,<br />
           <span className="text-acid">HOW MUCH DO YOU KNOW?</span>
         </h1>
@@ -177,7 +185,7 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
     <div className="space-y-6 animate-fade-in">
       <div>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 2 OF 4</div>
-        <h1 className="font-display text-5xl leading-none">
+        <h1 className="font-display text-6xl md:text-7xl leading-none">
           WHAT DO YOU<br />
           <span className="text-acid">WANT TO LEARN?</span>
         </h1>
@@ -192,9 +200,21 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
           <button
             key={w.id}
             onClick={() => onPick(w.id)}
-            className={`w-full brutal-border ${w.color} p-5 text-left brutal-press brutal-shadow transition-all hover:scale-[1.01]`}
+            className={`w-full brutal-border ${w.color} p-7 text-left brutal-press brutal-shadow transition-all hover:scale-[1.01] relative overflow-hidden`}
           >
-            <div className="flex items-center gap-3">
+            {/* World banner image for fundamentals and dj */}
+            {WORLD_BANNERS[w.id] && (
+              <div className="absolute inset-0 pointer-events-none">
+                <Image
+                  src={WORLD_BANNERS[w.id]}
+                  alt=""
+                  fill
+                  className="object-cover opacity-15 mix-blend-multiply"
+                  sizes="100vw"
+                />
+              </div>
+            )}
+            <div className="relative z-10 flex items-center gap-3">
               <span className="text-4xl shrink-0">{w.emoji}</span>
               <div className="flex-1 min-w-0">
                 <div className="font-display text-2xl">{w.title}</div>
@@ -227,7 +247,7 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
           ← back
         </button>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 3 OF 4</div>
-        <h1 className="font-display text-5xl leading-none">
+        <h1 className="font-display text-6xl md:text-7xl leading-none">
           PICK YOUR<br />
           <span className="text-acid">LEARNING STYLE</span>
         </h1>
@@ -335,7 +355,7 @@ function StepDifficulty({
           ← back
         </button>
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">STEP 4 OF 5</div>
-        <h1 className="font-display text-5xl leading-none">
+        <h1 className="font-display text-6xl md:text-7xl leading-none">
           ADJUST THE<br />
           <span className="text-acid">DIFFICULTY</span>
         </h1>
@@ -419,7 +439,7 @@ function StepOverview({
         <div className="font-mono text-[10px] uppercase opacity-50 mb-2">
           {mode === "ccd" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
         </div>
-        <h1 className="font-display text-5xl leading-none">
+        <h1 className="font-display text-6xl md:text-7xl leading-none">
           HERE&apos;S WHAT<br />
           <span className="text-acid">YOU&apos;LL LEARN</span>
         </h1>
@@ -515,8 +535,10 @@ function StepOverview({
 
       <button
         onClick={onStart}
-        className="w-full brutal-border bg-acid text-ink py-5 font-display text-3xl brutal-press brutal-shadow"
+        className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press brutal-shadow"
+        style={{ animation: 'pulse-glow 2s ease-in-out infinite' }}
       >
+        <style>{`@keyframes pulse-glow{0%,100%{box-shadow:0 4px 0 #0B0B0B,0 0 20px rgba(198,255,0,0.4)}50%{box-shadow:0 4px 0 #0B0B0B,0 0 40px rgba(198,255,0,0.7)}}`}</style>
         START FIRST LESSON →
       </button>
       <div className="font-mono text-[10px] uppercase opacity-40 text-center">
@@ -620,12 +642,23 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   }
 
   return (
-    <div className="min-h-screen bg-ink text-bone flex flex-col">
-      <div className="max-w-lg mx-auto w-full px-4 pt-8 pb-4">
+    <div className="min-h-screen bg-ink text-bone flex flex-col relative overflow-hidden">
+      {/* ONBOARDING_BG full-screen background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <Image
+          src={ONBOARDING_BG}
+          alt=""
+          fill
+          className="object-cover opacity-10 mix-blend-luminosity"
+          sizes="100vw"
+          priority
+        />
+      </div>
+      <div className="relative z-10 max-w-lg mx-auto w-full px-4 pt-8 pb-4">
         <StepIndicator current={visualStep - 1} total={totalSteps} />
       </div>
 
-      <div className="flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto">
+      <div className="relative z-10 flex-1 max-w-lg mx-auto w-full px-4 pb-16 overflow-y-auto">
         {step === 0 && !showPlacement && <StepExperience onPick={handleExperiencePick} />}
 
         {step === 1 && <StepWorld onPick={handleWorldPick} experience={experience} />}
