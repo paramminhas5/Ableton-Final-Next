@@ -60,6 +60,7 @@ function MarqueeStrip() {
 }
 
 // ─── Chapter breadcrumb rail ──────────────────────────────────────────────────
+// Full chapter names, bigger tap targets, progress bar per chapter button
 function ChapterRail({
   world,
   chapterStats,
@@ -72,39 +73,58 @@ function ChapterRail({
   const t = WORLD_THEMES[world];
   return (
     <div className={`mt-5 pt-4 border-t-2 ${t.dark ? "border-bone/15" : "border-ink/15"}`}>
-      <div className={`font-mono text-[9px] uppercase mb-2.5 ${t.textMuted}`}>
+      <div className={`font-mono text-[9px] uppercase mb-3 ${t.textMuted}`}>
         {chapterStats.length} chapters
       </div>
-      <div className="overflow-x-auto pb-1 -mx-1 px-1">
-        <div className="flex items-center gap-0 min-w-max">
+      {/* Horizontal scroll — bigger cards */}
+      <div className="overflow-x-auto pb-2 -mx-1 px-1">
+        <div className="flex items-stretch gap-2 min-w-max">
           {chapterStats.map((ch, i) => {
             const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
             const isDone = ch.complete;
             const isStarted = ch.pct > 0 && !isDone;
-            const pillClass = isDone
+
+            const cardClass = isDone
               ? t.pillDone
               : isStarted
               ? t.pillPartial
               : t.pillEmpty;
 
             return (
-              <div key={ch.slug} className="flex items-center">
-                {i > 0 && <div className={`w-3 h-px shrink-0 ${t.pillConnector}`} />}
-                <div
-                  className={`brutal-border flex items-center gap-1.5 px-2 py-1.5 shrink-0 transition-all duration-500 ${pillClass}`}
-                  style={{ transitionDelay: visible ? `${i * 60}ms` : "0ms" }}
-                >
-                  <span className={`font-mono text-[7px] opacity-50 leading-none`}>
+              <div
+                key={ch.slug}
+                className={`brutal-border flex flex-col justify-between px-3 py-2.5 shrink-0 min-w-[110px] max-w-[130px] transition-all duration-500 ${cardClass}`}
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible ? "translateY(0)" : "translateY(8px)",
+                  transitionDelay: visible ? `${i * 55}ms` : "0ms",
+                }}
+              >
+                {/* Top: number + emoji */}
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <span className={`font-mono text-[8px] opacity-50 tabular-nums`}>
                     {String(ch.number).padStart(2, "0")}
                   </span>
-                  <span className="text-sm leading-none">{isDone ? "✓" : emoji}</span>
-                  <span className="font-display text-[10px] leading-none max-w-[60px] truncate">
-                    {ch.title.split(" ")[0]}
-                  </span>
-                  {isStarted && (
-                    <span className="font-mono text-[7px] opacity-60 leading-none">{ch.pct}%</span>
-                  )}
+                  <span className="text-base leading-none">{isDone ? "✓" : emoji}</span>
                 </div>
+
+                {/* Full chapter title */}
+                <div className="font-display text-xs leading-tight mb-2">
+                  {ch.title}
+                </div>
+
+                {/* Progress bar */}
+                <div className={`h-0.5 overflow-hidden ${t.dark ? "bg-current/15" : "bg-current/12"}`}>
+                  <div
+                    className="h-full bg-current/55 transition-all duration-700"
+                    style={{ width: `${ch.pct}%` }}
+                  />
+                </div>
+
+                {/* Pct label */}
+                {isStarted && (
+                  <div className={`font-mono text-[7px] mt-1 opacity-55 tabular-nums`}>{ch.pct}%</div>
+                )}
               </div>
             );
           })}
