@@ -30,17 +30,14 @@ export default async function WorldPage({ params, searchParams }: Props) {
   const { view } = await searchParams;
   if (!WORLD_TITLES[slug]) notFound();
 
-  // Default: Flow Mode snake path. ?view=free: Free Mode accordion browser.
-  const showFree = view === "free";
-  
-  // Wrap the appropriate component in WorldShell
-  const content = showFree
-    ? <WorldPageClient slug={slug} />
-    : <WorldPathClient worldSlug={slug} />;
+  const isFree = view === "free";
+  const activeView = isFree ? "free" : "flow";
 
   return (
-    <WorldShell worldSlug={slug as any}>
-      {content}
+    <WorldShell worldSlug={slug as any} view={activeView}>
+      {isFree
+        ? <WorldPageClient slug={slug} />
+        : <WorldPathClient worldSlug={slug} />}
     </WorldShell>
   );
 }

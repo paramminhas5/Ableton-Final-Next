@@ -1,50 +1,55 @@
 "use client";
 /**
- * WorldWiki — full reference wiki for a world.
+ * WorldWiki — full reference wiki for a single world.
  *
- * Structure per chapter:
- * - Chapter header (emoji, title, tagline, description, progress, trophy)
- * - Paths within chapter: title, tagline, description
- * - Mission list: slug → title as pill links
+ * Used inside WorldShell (free view) AND by the standalone WikiPageClient.
  *
- * Themed to the world's color palette via worldTheme.ts
+ * Per chapter:
+ *  - Accordion header (emoji, title, tagline, progress, ▶ Start CTA)
+ *  - Chapter description
+ *  - Path cards (title, tagline, description, progress, mission list toggle)
+ *  - Each mission → direct /learn/[slug] link with title + tagline
+ *  - Chapter trophy when complete
+ * World trophy at bottom.
  */
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { chaptersByWorld, WORLD_TROPHIES } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { useProgress } from "@/lib/progress";
-import { getWorldTheme, getChapterEmoji, type WorldSlug } from "./worldTheme";
-
-// ─── Mission title map (slug → readable title) ────────────────────────────────
-// We pull titles from the missions content but keep it lightweight with a
-// shared import so we don't duplicate data.
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
+import { getWorldTheme, getChapterEmoji, type WorldSlug } from "@/components/world/worldTheme";
 
-function getMissionTitle(slug: string): string {
-  const all = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-  return all.find((m) => m.slug === slug)?.title ?? slug.replace(/-/g, " ");
+// ─── Mission lookup ───────────────────────────────────────────────────────────
+const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
+function getMissionTitle(slug: string) {
+  return ALL_MISSIONS.find((m) => m.slug === slug)?.title ?? slug.replace(/-/g, " ");
 }
-
 function getMissionTagline(slug: string): string | null {
-  const all = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-  return all.find((m) => m.slug === slug)?.tagline ?? null;
+  return ALL_MISSIONS.find((m) => m.slug === slug)?.tagline ?? null;
 }
 
-// ─── Path card in wiki ────────────────────────────────────────────────────────
+// ─── Path card ────────────────────────────────────────────────────────────────
 function WikiPathCard({
   path,
   completed,
-  theme,
   isDark,
+  pillDone,
+  pillPartial,
+  pillEmpty,
+  barBg,
+  barFill,
 }: {
   path: ReturnType<typeof pathsByWorld>[number];
-  completed: Record<string, { at?: number } | boolean | undefined>;
-  theme: ReturnType<typeof getWorldTheme>;
+  completed: Record<string, unknown>;
   isDark: boolean;
+  pillDone: string;
+  pillPartial: string;
+  pillEmpty: string;
+  barBg: string;
+  barFill: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const done = path.missionSlugs.filter((s) => !!completed[s]).length;
@@ -52,74 +57,73 @@ function WikiPathCard({
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const complete = done === total && total > 0;
 
+  const textBase = isDark ? "text-bone" : "text-ink";
+  const textMuted = isDark ? "text-bone/55" : "text-ink/55";
+  const borderMuted = isDark ? "border-bone/12" : "border-ink/10";
+  const hoverBg = isDark ? "hover:bg-bone/5" : "hover:bg-ink/4";
+  const missionRow = isDark
+    ? "bg-bone/5 text-bone border-bone/12 hover:bg-bone/10"
+    : "bg-ink/4 text-ink border-ink/10 hover:bg-acid/15";
+  const missionDone = complete ? pillDone : "";
+
   return (
-    <div className={`brutal-border overflow-hidden ${isDark ? "border-bone/20" : ""}`}>
+    <div className={`brutal-border overflow-hidden ${isDark ? "border-bone/15" : ""}`}>
       {/* Path header */}
-      <div className={`p-4 ${isDark ? "bg-white/5" : "bg-bone"}`}>
+      <div className={`p-4 ${isDark ? "bg-bone/3" : "bg-bone"}`}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <div className={`font-mono text-[9px] uppercase mb-1 ${isDark ? "text-bone/40" : "text-ink/40"}`}>
+            <div className={`font-mono text-[8px] uppercase mb-1 ${textMuted}`}>
               PATH {path.number} · {total} MISSIONS
             </div>
-            <div className={`font-display text-lg leading-tight mb-0.5 ${isDark ? "text-bone" : "text-ink"}`}>
-              {path.title}
-            </div>
-            <div className={`font-mono text-[10px] leading-snug ${isDark ? "text-bone/55" : "text-ink/55"}`}>
-              {path.tagline}
-            </div>
+            <div className={`font-display text-lg leading-tight mb-0.5 ${textBase}`}>{path.title}</div>
+            <div className={`font-mono text-xs leading-snug ${textMuted}`}>{path.tagline}</div>
           </div>
-
-          {/* Progress badge */}
-          <div className={`shrink-0 brutal-border px-2.5 py-1.5 text-center min-w-[52px] ${
-            complete ? theme.pillDone : pct > 0 ? theme.pillPartial : theme.pillEmpty
-          }`}>
-            <div className="font-display text-base leading-none tabular-nums">
+          {/* Badge */}
+          <div
+            className={`shrink-0 brutal-border px-2.5 py-1.5 text-center min-w-[50px] ${
+              complete ? pillDone : pct > 0 ? pillPartial : pillEmpty
+            }`}
+          >
+            <div className="font-display text-sm leading-none tabular-nums">
               {complete ? "✓" : `${pct}%`}
             </div>
-            <div className="font-mono text-[7px] uppercase opacity-60 mt-0.5">
-              {done}/{total}
-            </div>
+            <div className="font-mono text-[7px] uppercase opacity-55 mt-0.5">{done}/{total}</div>
           </div>
         </div>
 
-        {/* Description */}
         {path.description && (
-          <p className={`font-mono text-[10px] leading-relaxed mt-2 ${isDark ? "text-bone/50" : "text-ink/50"}`}>
+          <p className={`font-mono text-[10px] leading-relaxed mt-2 ${textMuted}`}>
             {path.description}
           </p>
         )}
 
         {/* Progress bar */}
-        <div className={`h-1 mt-3 overflow-hidden ${theme.barBg}`}>
+        <div className={`h-1 mt-3 overflow-hidden ${barBg}`}>
           <div
-            className={`h-full ${theme.barFill} transition-all duration-700`}
+            className={`h-full ${barFill} transition-all duration-700`}
             style={{ width: `${pct}%` }}
           />
         </div>
       </div>
 
       {/* Mission toggle */}
-      <div className={`border-t ${isDark ? "border-bone/10" : "border-ink/10"}`}>
+      <div className={`border-t ${borderMuted}`}>
         <button
           onClick={() => setExpanded((v) => !v)}
-          className={`w-full px-4 py-2.5 flex items-center justify-between brutal-press transition-colors ${
-            isDark
-              ? "text-bone/50 hover:text-bone/80 hover:bg-white/5"
-              : "text-ink/45 hover:text-ink/80 hover:bg-ink/5"
-          }`}
+          className={`w-full px-4 py-2.5 flex items-center justify-between brutal-press transition-colors ${hoverBg} ${textMuted}`}
         >
           <span className="font-mono text-[9px] uppercase">
             {expanded ? "▲ Hide lessons" : `▼ ${total} lessons`}
           </span>
           {complete && (
-            <span className={`font-mono text-[9px] uppercase ${theme.barFill.replace("bg-", "text-")}`}>
+            <span className={`font-mono text-[9px] uppercase ${isDark ? "text-volt" : "text-ink"}`}>
               Complete ✓
             </span>
           )}
         </button>
 
         {expanded && (
-          <div className={`px-4 pb-4 pt-1 ${isDark ? "bg-white/3" : "bg-ink/3"}`}>
+          <div className={`px-4 pb-4 pt-1 ${isDark ? "bg-bone/2" : "bg-ink/2"}`}>
             <div className="space-y-1.5">
               {path.missionSlugs.map((slug, idx) => {
                 const isDone = !!completed[slug];
@@ -130,28 +134,23 @@ function WikiPathCard({
                     key={slug}
                     href={`/learn/${slug}`}
                     className={`flex items-start gap-3 brutal-border px-3 py-2.5 brutal-press transition-colors group ${
-                      isDone
-                        ? theme.pillDone
-                        : isDark
-                        ? "bg-white/5 text-bone hover:bg-white/10 border-bone/20"
-                        : "bg-bone text-ink hover:bg-acid/20 border-ink/15"
+                      isDone ? (complete ? pillDone : pillDone) : missionRow
                     }`}
                   >
-                    {/* Index / done */}
-                    <span className={`font-mono text-[9px] shrink-0 mt-0.5 w-4 ${isDone ? "opacity-80" : "opacity-40"}`}>
+                    <span className={`font-mono text-[8px] shrink-0 mt-0.5 w-4 ${isDone ? "opacity-75" : "opacity-35"}`}>
                       {isDone ? "✓" : `${idx + 1}.`}
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="font-display text-xs leading-tight">{title}</div>
                       {tagline && (
-                        <div className={`font-mono text-[9px] leading-snug mt-0.5 truncate ${
-                          isDone ? "opacity-60" : isDark ? "text-bone/45" : "text-ink/45"
-                        }`}>
+                        <div className={`font-mono text-[8px] leading-snug mt-0.5 truncate ${isDone ? "opacity-55" : textMuted}`}>
                           {tagline}
                         </div>
                       )}
                     </div>
-                    <span className={`font-mono text-[9px] shrink-0 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity`}>→</span>
+                    <span className="font-mono text-[9px] shrink-0 mt-0.5 opacity-0 group-hover:opacity-50 transition-opacity">
+                      →
+                    </span>
                   </Link>
                 );
               })}
@@ -163,21 +162,23 @@ function WikiPathCard({
   );
 }
 
-// ─── Chapter section ──────────────────────────────────────────────────────────
-function WikiChapterSection({
+// ─── Chapter accordion ────────────────────────────────────────────────────────
+function WikiChapter({
   ch,
   paths,
   completed,
-  theme,
   isDark,
+  theme,
   defaultOpen,
+  worldSlug,
 }: {
   ch: ReturnType<typeof chaptersByWorld>[number];
   paths: ReturnType<typeof pathsByWorld>;
-  completed: Record<string, { at?: number } | boolean | undefined>;
-  theme: ReturnType<typeof getWorldTheme>;
+  completed: Record<string, unknown>;
   isDark: boolean;
+  theme: ReturnType<typeof getWorldTheme>;
   defaultOpen: boolean;
+  worldSlug: WorldSlug;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const chPaths = paths.filter((p) => p.chapter === ch.slug).sort((a, b) => a.number - b.number);
@@ -189,44 +190,47 @@ function WikiChapterSection({
   const emoji = getChapterEmoji(ch.slug);
   const chNum = String(ch.number).padStart(2, "0");
 
+  // First incomplete mission = start CTA target
+  const firstIncomplete = chSlugs.find((s) => !completed[s]);
+  const startHref = firstIncomplete ? `/learn/${firstIncomplete}` : `/world/${worldSlug}`;
+
   return (
     <div
       id={`wiki-chapter-${ch.slug}`}
-      className={`brutal-border overflow-hidden ${isDark ? "border-bone/20" : ""}`}
+      className={`brutal-border overflow-hidden ${isDark ? "border-bone/15" : ""}`}
     >
-      {/* Chapter header — always visible, clickable to expand */}
+      {/* Accordion header */}
       <button
         onClick={() => setOpen((v) => !v)}
         className={`w-full text-left brutal-press transition-colors ${
-          isDark ? "hover:bg-white/5" : "hover:bg-ink/5"
+          isDark ? "hover:bg-bone/5" : "hover:bg-ink/4"
         }`}
       >
-        <div className={`px-5 py-4 flex items-center gap-4 relative overflow-hidden ${theme.heroBg} ${theme.heroText}`}>
-          {/* Accent bar on left */}
+        <div
+          className={`px-5 py-4 flex items-center gap-4 relative overflow-hidden ${theme.heroBg} ${theme.heroText}`}
+        >
+          {/* Accent left bar */}
           <div className={`absolute left-0 top-0 bottom-0 w-1 ${theme.barFill}`} />
 
-          {/* Chapter number + emoji */}
           <div className="shrink-0 pl-2">
-            <div className={`font-mono text-[8px] uppercase opacity-50 mb-1`}>CH {chNum}</div>
+            <div className="font-mono text-[8px] uppercase opacity-45 mb-1">CH {chNum}</div>
             <span className="text-3xl leading-none">{complete ? "✓" : emoji}</span>
           </div>
 
-          {/* Title + tagline */}
           <div className="flex-1 min-w-0">
             <div className="font-display text-xl leading-tight">{ch.title}</div>
-            <div className={`font-mono text-[10px] opacity-60 mt-0.5 leading-snug`}>{ch.tagline}</div>
-            <div className={`font-mono text-[9px] opacity-40 mt-1 uppercase`}>
+            <div className="font-mono text-[10px] opacity-55 mt-0.5 leading-snug">{ch.tagline}</div>
+            <div className="font-mono text-[8px] opacity-40 mt-1 uppercase">
               {chPaths.length} paths · {total} missions
             </div>
           </div>
 
-          {/* Right: pct + expand */}
-          <div className="shrink-0 flex flex-col items-end gap-2">
-            <div className={`font-display text-2xl tabular-nums leading-none`}>
+          <div className="shrink-0 flex flex-col items-end gap-1.5">
+            <div className="font-display text-2xl tabular-nums leading-none">
               {complete ? "🏆" : `${pct}%`}
             </div>
-            <div className={`font-mono text-[10px] opacity-40`}>{done}/{total}</div>
-            <div className={`font-mono text-[9px] opacity-40`}>{open ? "▲" : "▼"}</div>
+            <div className="font-mono text-[9px] opacity-40">{done}/{total}</div>
+            <div className="font-mono text-[9px] opacity-35">{open ? "▲" : "▼"}</div>
           </div>
         </div>
 
@@ -239,28 +243,53 @@ function WikiChapterSection({
         </div>
       </button>
 
-      {/* Expanded content */}
+      {/* Expanded body */}
       {open && (
-        <div className={`${isDark ? "bg-[#0a1228]" : "bg-bone"}`}>
-          {/* Chapter description */}
-          <div className={`px-5 py-4 border-b ${isDark ? "border-bone/10" : "border-ink/10"} flex items-start gap-3`}>
-            <div className={`font-mono text-xs leading-relaxed ${isDark ? "text-bone/60" : "text-ink/60"}`}>
+        <div className={isDark ? "bg-[#0a1228]" : "bg-bone"}>
+          {/* Description + Start CTA */}
+          <div
+            className={`px-5 py-4 border-b flex items-start justify-between gap-4 ${
+              isDark ? "border-bone/10" : "border-ink/10"
+            }`}
+          >
+            <p
+              className={`font-mono text-xs leading-relaxed flex-1 ${
+                isDark ? "text-bone/60" : "text-ink/60"
+              }`}
+            >
               {ch.description}
-            </div>
+            </p>
+            {!complete && (
+              <Link
+                href={startHref}
+                className={`shrink-0 brutal-border px-3 py-2 font-display text-xs brutal-press transition-colors ${theme.flowBtn}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {done > 0 ? "Continue →" : "Start →"}
+              </Link>
+            )}
           </div>
 
           {/* Paths */}
           <div className="p-4 space-y-3">
-            <div className={`font-mono text-[9px] uppercase mb-3 ${isDark ? "text-bone/40" : "text-ink/40"}`}>
-              {chPaths.length} PATHS IN THIS CHAPTER
+            <div
+              className={`font-mono text-[8px] uppercase mb-2 ${
+                isDark ? "text-bone/40" : "text-ink/40"
+              }`}
+            >
+              {chPaths.length} paths in this chapter
             </div>
             {chPaths.map((path) => (
               <WikiPathCard
                 key={path.slug}
                 path={path}
                 completed={completed}
-                theme={theme}
                 isDark={isDark}
+                pillDone={theme.pillDone}
+                pillPartial={theme.pillPartial}
+                pillEmpty={theme.pillEmpty}
+                barBg={theme.barBg}
+                barFill={theme.barFill}
               />
             ))}
           </div>
@@ -271,7 +300,7 @@ function WikiChapterSection({
               <span className="text-2xl shrink-0">🏆</span>
               <div>
                 <div className="font-display text-base">{ch.trophy.name}</div>
-                <div className="font-mono text-[9px] opacity-70 mt-0.5">{ch.trophy.description}</div>
+                <div className="font-mono text-[9px] opacity-65 mt-0.5">{ch.trophy.description}</div>
               </div>
             </div>
           )}
@@ -289,30 +318,36 @@ export function WorldWiki({ worldSlug }: { worldSlug: WorldSlug }) {
   const chapters = chaptersByWorld(worldSlug);
   const paths = pathsByWorld(worldSlug);
   const trophy = WORLD_TROPHIES[worldSlug];
-
   const isDark = worldSlug === "dj";
 
   const worldDone = paths.flatMap((p) => p.missionSlugs).filter((s) => !!completed[s]).length;
   const worldTotal = paths.flatMap((p) => p.missionSlugs).length;
   const worldPct = worldTotal > 0 ? Math.round((worldDone / worldTotal) * 100) : 0;
 
-  // Find the first incomplete chapter to auto-open it
+  // Auto-open first incomplete chapter
   const firstIncompleteIdx = chapters.findIndex((ch) => {
     const chPaths = paths.filter((p) => p.chapter === ch.slug);
     const chSlugs = chPaths.flatMap((p) => p.missionSlugs);
-    const done = chSlugs.filter((s) => !!completed[s]).length;
-    return done < chSlugs.length;
+    return chSlugs.filter((s) => !!completed[s]).length < chSlugs.length;
   });
 
   return (
     <div className={`${isDark ? "bg-[#0a0f2e] text-bone" : "bg-bone text-ink"} min-h-full`}>
 
       {/* Wiki header */}
-      <div className={`px-5 pt-5 pb-4 border-b ${isDark ? "border-bone/15" : "border-ink/10"}`}>
+      <div
+        className={`px-5 pt-5 pb-4 border-b-4 ${
+          isDark ? "border-bone/12" : "border-ink/10"
+        }`}
+      >
         <div className="flex items-center justify-between gap-3">
           <div>
-            <div className={`font-mono text-[9px] uppercase mb-1 ${isDark ? "text-bone/40" : "text-ink/40"}`}>
-              WORLD WIKI
+            <div
+              className={`font-mono text-[8px] uppercase mb-1 ${
+                isDark ? "text-bone/40" : "text-ink/40"
+              }`}
+            >
+              World Wiki
             </div>
             <h2 className="font-display text-2xl leading-tight">
               {theme.emoji} {theme.title}
@@ -322,53 +357,84 @@ export function WorldWiki({ worldSlug }: { worldSlug: WorldSlug }) {
             </p>
           </div>
 
-          <div className={`brutal-border px-3 py-2 text-center ${
-            worldPct === 100 ? "bg-volt text-ink" : isDark ? "bg-white/5 text-bone" : "bg-ink/5 text-ink"
-          }`}>
+          <div
+            className={`brutal-border px-3 py-2 text-center ${
+              worldPct === 100
+                ? "bg-volt text-ink"
+                : isDark
+                ? "bg-bone/8 text-bone"
+                : "bg-ink/6 text-ink"
+            }`}
+          >
             <div className="font-display text-2xl tabular-nums">{worldPct}%</div>
-            <div className={`font-mono text-[8px] uppercase opacity-50 mt-0.5`}>{worldDone}/{worldTotal}</div>
+            <div
+              className={`font-mono text-[7px] uppercase opacity-50 mt-0.5`}
+            >
+              {worldDone}/{worldTotal}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Chapter list */}
-      <div className="p-4 space-y-3 pb-10">
-        <div className={`font-mono text-[9px] uppercase mb-4 ${isDark ? "text-bone/40" : "text-ink/40"}`}>
-          // {chapters.length} CHAPTERS — CLICK TO EXPAND
+      {/* Chapters */}
+      <div className="p-4 space-y-3 pb-12">
+        <div
+          className={`font-mono text-[8px] uppercase mb-3 ${
+            isDark ? "text-bone/35" : "text-ink/35"
+          }`}
+        >
+          // {chapters.length} chapters — click to expand
         </div>
 
         {chapters.map((ch, i) => (
-          <WikiChapterSection
+          <WikiChapter
             key={ch.slug}
             ch={ch}
             paths={paths}
             completed={completed}
-            theme={theme}
             isDark={isDark}
-            defaultOpen={i === firstIncompleteIdx || (firstIncompleteIdx === -1 && i === 0)}
+            theme={theme}
+            defaultOpen={
+              i === firstIncompleteIdx || (firstIncompleteIdx === -1 && i === 0)
+            }
+            worldSlug={worldSlug}
           />
         ))}
 
         {/* World trophy */}
-        <div className={`brutal-border p-5 mt-4 ${
-          worldPct === 100
-            ? "bg-volt text-ink"
-            : isDark
-            ? "bg-white/5 text-bone/40 border-bone/15"
-            : "bg-ink/5 text-ink/40"
-        }`}>
-          <div className={`font-mono text-[9px] uppercase mb-2 ${worldPct === 100 ? "opacity-60" : "opacity-40"}`}>
-            WORLD TROPHY
+        <div
+          className={`brutal-border p-5 mt-4 ${
+            worldPct === 100
+              ? "bg-volt text-ink"
+              : isDark
+              ? "bg-bone/5 text-bone/40 border-bone/12"
+              : "bg-ink/4 text-ink/40"
+          }`}
+        >
+          <div
+            className={`font-mono text-[8px] uppercase mb-2 ${
+              worldPct === 100 ? "opacity-55" : "opacity-40"
+            }`}
+          >
+            World Trophy
           </div>
           <div className="flex items-center gap-3">
             <span className="text-3xl">{worldPct === 100 ? "🏆" : "🔒"}</span>
             <div>
               <div className="font-display text-xl">{trophy?.name ?? "World Master"}</div>
-              <div className={`font-mono text-[10px] mt-0.5 ${worldPct === 100 ? "opacity-70" : "opacity-40"}`}>
+              <div
+                className={`font-mono text-[10px] mt-0.5 ${
+                  worldPct === 100 ? "opacity-65" : "opacity-40"
+                }`}
+              >
                 {trophy?.description ?? `Complete all ${chapters.length} chapters to unlock`}
               </div>
               {worldPct < 100 && (
-                <div className={`font-mono text-[9px] uppercase mt-1.5 ${isDark ? "text-bone/30" : "text-ink/30"}`}>
+                <div
+                  className={`font-mono text-[8px] uppercase mt-1.5 ${
+                    isDark ? "text-bone/30" : "text-ink/30"
+                  }`}
+                >
                   {worldTotal - worldDone} missions remaining
                 </div>
               )}
