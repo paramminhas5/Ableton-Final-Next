@@ -612,6 +612,105 @@ h1, h2, h3, h4,
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* ── Slide in from left — rail chapter buttons entrance ─────────────── */
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-slide-in-left {
+  animation: slide-in-left 0.28s var(--ease-glide) both;
+}
+
+/* ── Chapter fade-up — content section entrance on scroll ───────────── */
+@keyframes fade-up-chapter {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up-chapter {
+  animation: fade-up-chapter 0.45s var(--ease-glide) both;
+}
+
+/* ── Progress fill — animate bar width from 0 on reveal ─────────────── */
+@keyframes progress-fill {
+  from { width: 0%; }
+}
+.animate-progress-fill {
+  animation: progress-fill 0.9s var(--ease-glide) both;
+}
+
+/* ── Cat peek — cat slides up from bottom edge ───────────────────────── */
+@keyframes cat-peek {
+  0%   { transform: translateY(100%) rotate(0deg); opacity: 0; }
+  60%  { transform: translateY(-8px) rotate(-4deg); opacity: 1; }
+  80%  { transform: translateY(2px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+}
+.animate-cat-peek {
+  animation: cat-peek 0.55s var(--ease-pop) both;
+}
+
+/* ── Cat tail wag — active chapter indicator ─────────────────────────── */
+@keyframes tail-wag {
+  0%, 100% { transform: rotate(-6deg) translateX(0); }
+  25%       { transform: rotate(4deg) translateX(1px); }
+  75%       { transform: rotate(-4deg) translateX(-1px); }
+}
+.animate-tail-wag {
+  animation: tail-wag 0.9s ease-in-out infinite;
+}
+
+/* ── Slide down — chapter body open ─────────────────────────────────── */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-down {
+  animation: slide-down 0.22s var(--ease-glide) both;
+}
+
+/* ── World shell layout — both panes fill viewport height ────────────── */
+.world-shell-body {
+  display: flex;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+.world-shell-rail {
+  width: 280px;
+  min-width: 280px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+.world-shell-content {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+/* Custom thin scrollbar on rail */
+.world-shell-rail::-webkit-scrollbar { width: 3px; }
+.world-shell-rail::-webkit-scrollbar-track { background: transparent; }
+.world-shell-rail::-webkit-scrollbar-thumb { background: currentColor; opacity: 0.2; border-radius: 0; }
+
+/* Mobile override — no fixed height */
+@media (max-width: 767px) {
+  .world-shell-body {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  .world-shell-content {
+    height: auto;
+    overflow: visible;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════════
    SCROLLBAR
    ═══════════════════════════════════════════════════════════════════════ */

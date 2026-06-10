@@ -2,103 +2,77 @@
 /**
  * WorldPageClient — Free Mode chapter/path browser.
  *
- * Overhaul:
- * ✓ NO chapter accordion — everything visible, grouped by chapter
- * ✓ Chapter sections use big color-accent headers with cats
- * ✓ Path cards are big, tactile, fun
- * ✓ Solid color hero — no images
- * ✓ Inline mode indicator linked to header toggle
- * ✓ No "Browse" button — header ModeTogglePill is the source of truth
- * ✓ Mission list hidden behind lightweight toggle inside each path card
+ * Changes in this version:
+ * ✓ No own hero — WorldShell provides the rail + layout
+ * ✓ Chapter sections animate in on scroll (fade-up-chapter, staggered)
+ * ✓ Progress bars animate on reveal (width 0 → N%)
+ * ✓ Contextual cat speech bubble in each chapter header
+ * ✓ Completed paths show celebrating cat in card header
+ * ✓ Path cards are compact — description behind ℹ toggle
+ * ✓ Mission rows are dense docs-style links
+ * ✓ Chapter anchor IDs use `chapter-{slug}` for WorldShell IntersectionObserver
  */
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import { chaptersByWorld, WORLD_TROPHIES } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
+import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
+import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
+import { MISSIONS } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
-import { useState } from "react";
 
 type WorldSlug = "fundamentals" | "dj" | "producer";
 
-const WORLD_CONFIG: Record<WorldSlug, {
-  title: string; emoji: string; tagline: string; description: string;
-  heroBg: string; heroText: string;
-  bar: string; barBg: string;
-  chapterAccentBg: string; chapterAccentText: string;
-  chapterBorder: string;
-  pillDone: string; pillActive: string;
-  pathCtaBg: string; pathCtaText: string; pathCtaDone: string; pathCtaDoneText: string;
-  catMain: string; catDeco1: string; catDeco2: string;
-  deco1: string; deco2: string;
-  worldBg: string;
-  trophyBg: string; trophyText: string;
-  flowLinkClass: string;
-}> = {
+// ─── Config ───────────────────────────────────────────────────────────────────
+const WORLD_CONFIG = {
   fundamentals: {
     title: "Fundamentals", emoji: "🎵",
     tagline: "The vocabulary of music — before you produce or DJ",
-    description: "5 chapters · 10 paths · 40 missions",
     heroBg: "bg-acid", heroText: "text-ink",
     bar: "bg-ink", barBg: "bg-ink/15",
-    chapterAccentBg: "bg-acid/30", chapterAccentText: "text-ink",
-    chapterBorder: "border-l-4 border-acid",
-    pillDone: "bg-ink text-bone",
-    pillActive: "bg-acid text-ink",
-    pathCtaBg: "bg-acid text-ink", pathCtaText: "text-ink",
-    pathCtaDone: "bg-ink text-bone", pathCtaDoneText: "text-bone",
-    catMain: "/cats/cat-handstand.png",
-    catDeco1: "/cats/cat-headphones.png",
-    catDeco2: "/cats/cat-dancer.png",
-    deco1: "/cats/music-note.png",
-    deco2: "/cats/star.png",
-    worldBg: "bg-bone",
-    trophyBg: "bg-acid text-ink", trophyText: "text-ink",
+    chapterAccentBg: "bg-acid/25", chapterAccentText: "text-ink",
+    chapterBorderLeft: "border-l-4 border-acid",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-ink/25 text-ink",
+    pathCtaBg: "bg-acid text-ink hover:bg-sun", pathCtaDone: "bg-ink text-bone opacity-70",
+    catMain: "/cats/cat-handstand.png", catDeco1: "/cats/cat-headphones.png",
+    deco1: "/cats/music-note.png", deco2: "/cats/star.png",
+    worldBg: "bg-bone", trophyBg: "bg-acid text-ink",
     flowLinkClass: "bg-ink/10 text-ink hover:bg-ink/20",
+    dark: false,
   },
   dj: {
     title: "DJ World", emoji: "🎧",
     tagline: "The art of playing recorded music for people",
-    description: "5 chapters · 10 paths · 40 missions",
     heroBg: "bg-[#0a0f2e]", heroText: "text-bone",
     bar: "bg-volt", barBg: "bg-volt/15",
-    chapterAccentBg: "bg-volt/15", chapterAccentText: "text-bone",
-    chapterBorder: "border-l-4 border-volt",
-    pillDone: "bg-volt text-ink",
-    pillActive: "bg-volt/50 text-bone",
-    pathCtaBg: "bg-volt text-ink", pathCtaText: "text-ink",
-    pathCtaDone: "bg-volt/30 text-bone", pathCtaDoneText: "text-bone",
-    catMain: "/cats/cat-dj.png",
-    catDeco1: "/cats/cat-dj-new.png",
-    catDeco2: "/cats/cat-cap.png",
-    deco1: "/cats/disco-ball.png",
-    deco2: "/cats/headphones.png",
-    worldBg: "bg-[#0a0f2e]",
-    trophyBg: "bg-volt text-ink", trophyText: "text-ink",
+    chapterAccentBg: "bg-volt/12", chapterAccentText: "text-bone",
+    chapterBorderLeft: "border-l-4 border-volt",
+    pillDone: "bg-volt text-ink", pillPartial: "bg-volt/30 text-bone",
+    pathCtaBg: "bg-volt text-ink hover:bg-acid", pathCtaDone: "bg-volt/30 text-bone opacity-70",
+    catMain: "/cats/cat-dj.png", catDeco1: "/cats/cat-dj-new.png",
+    deco1: "/cats/disco-ball.png", deco2: "/cats/headphones.png",
+    worldBg: "bg-[#0a0f2e]", trophyBg: "bg-volt text-ink",
     flowLinkClass: "bg-bone/10 text-bone hover:bg-bone/20",
+    dark: true,
   },
   producer: {
     title: "Producer", emoji: "🎛",
     tagline: "Build music in Ableton Live 12",
-    description: "6 chapters · 15 paths · 91 missions",
     heroBg: "bg-sun", heroText: "text-ink",
     bar: "bg-ink", barBg: "bg-ink/15",
-    chapterAccentBg: "bg-sun/30", chapterAccentText: "text-ink",
-    chapterBorder: "border-l-4 border-sun",
-    pillDone: "bg-ink text-bone",
-    pillActive: "bg-sun text-ink",
-    pathCtaBg: "bg-sun text-ink", pathCtaText: "text-ink",
-    pathCtaDone: "bg-ink text-bone", pathCtaDoneText: "text-bone",
-    catMain: "/cats/cat-dj-hero.png",
-    catDeco1: "/cats/cat-raver.png",
-    catDeco2: "/cats/cat-source.png",
-    deco1: "/cats/boombox.png",
-    deco2: "/cats/vinyl-music.png",
-    worldBg: "bg-bone",
-    trophyBg: "bg-sun text-ink", trophyText: "text-ink",
+    chapterAccentBg: "bg-sun/25", chapterAccentText: "text-ink",
+    chapterBorderLeft: "border-l-4 border-sun",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-sun text-ink",
+    pathCtaBg: "bg-sun text-ink hover:bg-acid", pathCtaDone: "bg-ink text-bone opacity-70",
+    catMain: "/cats/cat-dj-hero.png", catDeco1: "/cats/cat-raver.png",
+    deco1: "/cats/boombox.png", deco2: "/cats/vinyl-music.png",
+    worldBg: "bg-bone", trophyBg: "bg-sun text-ink",
     flowLinkClass: "bg-ink/10 text-ink hover:bg-ink/20",
+    dark: false,
   },
-};
+} as const;
 
 const CHAPTER_EMOJIS: Record<string, string> = {
   "sound-science": "🔊", "rhythm-and-time": "🥁", "melody-and-pitch": "🎵",
@@ -109,113 +83,190 @@ const CHAPTER_EMOJIS: Record<string, string> = {
   "performance-and-flow": "🚀", "advanced-producer": "⚡", "synthesis": "🌀",
 };
 
-// ─── Path card ────────────────────────────────────────────────────────────────
+const CHAPTER_QUIPS: Record<string, string> = {
+  "sound-science": "Physics first. Everything else follows 🔬",
+  "rhythm-and-time": "The beat is the heartbeat of music 🥁",
+  "melody-and-pitch": "7 notes. Infinite hooks 🎵",
+  "harmony-and-chords": "Chords are emotions made audible 🎹",
+  "music-technology": "The DAW is your studio. Let's get comfortable 💻",
+  "setup-and-culture": "Know your gear, know your roots 🎧",
+  "the-library": "Your collection is your identity 📚",
+  "the-mix-dj": "This is where DJing actually happens 🎚",
+  "dj-performance": "Reading a room is a learnable skill 🎤",
+  "dj-mastery": "Final boss. You've got this 🏆",
+  "first-contact": "Live is a very smart instrument 🖥",
+  "sound-and-midi": "Sound design is cooking with electricity 🎼",
+  "the-mix-producer": "A great mix is invisible 🎚",
+  "performance-and-flow": "Now take it off the screen 🚀",
+  "advanced-producer": "Deep water. Excellent things live here ⚡",
+  "synthesis": "Literally building sound from math 🌀",
+};
+
+const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
+const getMissionTitle = (slug: string) =>
+  ALL_MISSIONS.find((m) => m.slug === slug)?.title ?? slug.replace(/-/g, " ");
+
+// ─── Scroll reveal hook ───────────────────────────────────────────────────────
+function useReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold: 0.04, rootMargin: "0px 0px -60px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, visible };
+}
+
+// ─── Animated progress bar ────────────────────────────────────────────────────
+function AnimBar({ pct, bar, barBg, visible }: {
+  pct: number; bar: string; barBg: string; visible: boolean;
+}) {
+  return (
+    <div className={`h-1.5 brutal-border overflow-hidden ${barBg}`}>
+      <div
+        className={`h-full ${bar} transition-all duration-900`}
+        style={{ width: visible ? `${pct}%` : "0%" }}
+      />
+    </div>
+  );
+}
+
+// ─── Compact Path card ────────────────────────────────────────────────────────
 function PathCard({
-  path,
-  completed,
-  world,
-  cfg,
+  path, completed, cfg, visible, staggerIdx,
 }: {
   path: ReturnType<typeof pathsByWorld>[number];
   completed: Record<string, unknown>;
-  world: WorldSlug;
   cfg: typeof WORLD_CONFIG[WorldSlug];
+  visible: boolean;
+  staggerIdx: number;
 }) {
   const [showMissions, setShowMissions] = useState(false);
-  const done = path.missionSlugs.filter(s => !!completed[s]).length;
+  const [showDesc, setShowDesc] = useState(false);
+
+  const done = path.missionSlugs.filter((s) => !!completed[s]).length;
   const total = path.missionSlugs.length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const complete = done === total && total > 0;
-  const started = done > 0;
+  const started = done > 0 && !complete;
+
+  const borderCol = cfg.dark ? "border-bone/12" : "border-ink/10";
 
   return (
-    <div className={`brutal-border overflow-hidden bg-bone ${world === "dj" ? "border-volt/40" : ""}`}>
+    <div
+      className={`brutal-border overflow-hidden ${cfg.dark ? "border-volt/25" : ""} transition-all duration-500`}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
+        transitionDelay: `${staggerIdx * 70}ms`,
+      }}
+    >
+      {/* Compact header row */}
+      <div className={`px-3 py-2.5 flex items-center gap-2.5 ${cfg.dark ? "bg-[#0a1228]" : "bg-bone"}`}>
+        {/* Complete cat OR status */}
+        {complete ? (
+          <div className="shrink-0 w-8 h-8">
+            <Image
+              src={cfg.catMain}
+              alt="Complete"
+              width={32}
+              height={32}
+              className="w-full h-full object-contain animate-cat-celebrate"
+            />
+          </div>
+        ) : (
+          <div className={`shrink-0 brutal-border px-1.5 py-1 text-center min-w-[38px] ${
+            started ? cfg.pillPartial : `${cfg.dark ? "bg-bone/8 text-bone/50" : "bg-ink/6 text-ink/45"} border-current/15`
+          }`}>
+            <div className="font-display text-xs tabular-nums">{pct}%</div>
+          </div>
+        )}
 
-      {/* Path header */}
-      <div className="p-4 md:p-5 flex items-start justify-between gap-4">
+        {/* Title */}
         <div className="flex-1 min-w-0">
-          {/* Path number */}
-          <div className={`font-mono text-[9px] uppercase opacity-40 mb-1`}>
-            PATH {path.number} · {total} MISSIONS
-          </div>
-
-          {/* Title */}
-          <div className={`font-display text-xl md:text-2xl leading-tight ${world === "dj" ? "text-[#0a0f2e]" : "text-ink"}`}>
-            {path.title}
-          </div>
-          <div className="font-mono text-xs opacity-55 mt-0.5 leading-snug">{path.tagline}</div>
-
-          {/* Progress bar */}
-          <div className="mt-3 flex items-center gap-2">
-            <div className={`flex-1 h-2 brutal-border overflow-hidden ${cfg.barBg}`}>
-              <div
-                className={`h-full ${cfg.bar} transition-all duration-500`}
-                style={{ width: `${pct}%` }}
-              />
-            </div>
-            <span className="font-mono text-[10px] opacity-50 shrink-0 tabular-nums">{done}/{total}</span>
-          </div>
+          <div className={`font-display text-sm leading-tight ${cfg.dark ? "text-bone" : "text-ink"}`}>{path.title}</div>
+          <div className={`font-mono text-[9px] truncate ${cfg.dark ? "text-bone/50" : "text-ink/50"}`}>{path.tagline}</div>
         </div>
 
-        {/* CTA */}
-        <div className="shrink-0">
-          <Link
-            href={`/path/${path.slug}`}
-            className={`brutal-border px-4 py-2.5 font-display text-sm brutal-press block text-center transition-colors ${
-              complete
-                ? `${cfg.pathCtaDone} ${cfg.pathCtaDoneText}`
-                : `${cfg.pathCtaBg} ${cfg.pathCtaText} hover:opacity-90`
+        {/* Buttons */}
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={() => setShowDesc((v) => !v)}
+            className={`w-6 h-6 flex items-center justify-center font-mono text-[9px] opacity-35 hover:opacity-70 brutal-press`}
+          >ℹ</button>
+          <button
+            onClick={() => setShowMissions((v) => !v)}
+            className={`brutal-border px-2 py-1 font-mono text-[8px] uppercase brutal-press ${
+              cfg.dark ? "bg-bone/8 text-bone hover:bg-bone/15" : "bg-ink/6 text-ink hover:bg-ink/12"
             }`}
           >
-            {complete ? "DONE ✓" : started ? "CONTINUE →" : "START →"}
+            {showMissions ? "▲" : `▼ ${total}`}
+          </button>
+          <Link
+            href={`/path/${path.slug}`}
+            className={`brutal-border px-3 py-1.5 font-display text-xs brutal-press transition-colors ${
+              complete ? cfg.pathCtaDone : cfg.pathCtaBg
+            }`}
+          >
+            {complete ? "✓" : started ? "→" : "START"}
           </Link>
         </div>
       </div>
 
-      {/* Mission toggle */}
-      <div className="border-t border-ink/10">
-        <button
-          onClick={() => setShowMissions(v => !v)}
-          className="w-full px-4 py-2.5 flex items-center justify-between font-mono text-[9px] uppercase opacity-45 hover:opacity-80 transition-opacity brutal-press"
-        >
-          <span>{showMissions ? "▲ Hide lessons" : `▼ Show ${total} lessons`}</span>
-          {complete && <span className="text-[10px] text-acid">✓ Complete</span>}
-        </button>
+      {/* Progress bar */}
+      <AnimBar pct={pct} bar={cfg.bar} barBg={cfg.barBg} visible={visible} />
 
-        {showMissions && (
-          <div className="px-4 pb-4 pt-2 flex flex-wrap gap-1.5 border-t border-ink/10">
-            {path.missionSlugs.map((s, idx) => {
-              const isDone = !!completed[s];
+      {/* Description */}
+      {showDesc && (
+        <div className={`px-3 py-2 border-t ${borderCol} animate-slide-down`}>
+          <p className={`font-mono text-[10px] leading-relaxed ${cfg.dark ? "text-bone/55" : "text-ink/55"}`}>
+            {path.description ?? path.tagline}
+          </p>
+        </div>
+      )}
+
+      {/* Missions — dense doc rows */}
+      {showMissions && (
+        <div className={`border-t ${borderCol} animate-slide-down`}>
+          <div className={`px-3 py-1 ${cfg.dark ? "bg-[#060b1e]" : "bg-ink/2"}`}>
+            {path.missionSlugs.map((slug, idx) => {
+              const isDone = !!completed[slug];
               return (
                 <Link
-                  key={s}
-                  href={`/learn/${s}`}
-                  className={`brutal-border px-2.5 py-1.5 font-mono text-[9px] uppercase brutal-press transition-colors ${
+                  key={slug}
+                  href={`/learn/${slug}`}
+                  className={`flex items-center gap-2 py-1.5 border-b last:border-b-0 ${borderCol} group transition-colors ${
                     isDone
-                      ? cfg.pillDone
-                      : "bg-bone hover:bg-acid text-ink"
+                      ? `${cfg.pillDone} px-2 -mx-2`
+                      : cfg.dark
+                      ? "text-bone hover:bg-bone/8"
+                      : "text-ink hover:bg-acid/10"
                   }`}
                 >
-                  {isDone ? "✓ " : `${idx + 1}. `}
-                  {s.replace(/-/g, " ")}
+                  <span className={`font-mono text-[8px] w-5 shrink-0 tabular-nums ${isDone ? "opacity-65" : "opacity-30"}`}>
+                    {isDone ? "✓" : `${idx + 1}.`}
+                  </span>
+                  <span className="font-sans text-xs flex-1 min-w-0 truncate">{getMissionTitle(slug)}</span>
+                  <span className="font-mono text-[8px] opacity-0 group-hover:opacity-40 transition-opacity shrink-0">→</span>
                 </Link>
               );
             })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // ─── Chapter section ──────────────────────────────────────────────────────────
 function ChapterSection({
-  ch,
-  paths,
-  completed,
-  world,
-  cfg,
-  chapterIndex,
+  ch, paths, completed, world, cfg, chapterIndex,
 }: {
   ch: ReturnType<typeof chaptersByWorld>[number];
   paths: ReturnType<typeof pathsByWorld>;
@@ -224,92 +275,93 @@ function ChapterSection({
   cfg: typeof WORLD_CONFIG[WorldSlug];
   chapterIndex: number;
 }) {
-  const chPaths = paths.filter(p => p.chapter === ch.slug).sort((a, b) => a.number - b.number);
-  const chSlugs = chPaths.flatMap(p => p.missionSlugs);
-  const done = chSlugs.filter(s => !!completed[s]).length;
+  const { ref, visible } = useReveal();
+  const chPaths = paths.filter((p) => p.chapter === ch.slug).sort((a, b) => a.number - b.number);
+  const chSlugs = chPaths.flatMap((p) => p.missionSlugs);
+  const done = chSlugs.filter((s) => !!completed[s]).length;
   const total = chSlugs.length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const complete = done === total && total > 0;
   const chEmoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
   const chNum = String(ch.number).padStart(2, "0");
-
-  // Alternate deco cats per chapter
-  const decoSrc = chapterIndex % 2 === 0 ? cfg.deco1 : cfg.deco2;
+  const quip = CHAPTER_QUIPS[ch.slug] ?? "Let's go!";
 
   return (
-    <div className="mb-8">
+    <div
+      id={`chapter-${ch.slug}`}
+      ref={ref}
+      className={`mb-6 transition-all duration-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
+      style={{ animationDelay: `${chapterIndex * 80}ms` }}
+    >
       {/* Chapter header */}
-      <div className={`brutal-border overflow-hidden mb-3 ${cfg.chapterBorder}`}>
-        <div className={`${cfg.chapterAccentBg} ${cfg.chapterAccentText} px-4 md:px-6 py-4 flex items-center gap-4 relative overflow-hidden`}>
-
-          {/* Decorative deco element */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 opacity-15 pointer-events-none" aria-hidden>
-            <Image src={decoSrc} alt="" fill className="object-contain" />
-          </div>
-
+      <div className={`brutal-border overflow-hidden mb-2 ${cfg.chapterBorderLeft}`}>
+        <div className={`${cfg.chapterAccentBg} ${cfg.chapterAccentText} px-4 py-3.5 flex items-center gap-3 relative overflow-hidden`}>
           {/* Chapter number + emoji */}
-          <div className="shrink-0 flex flex-col items-center w-12 gap-0.5">
-            <span className="font-mono text-[9px] opacity-50">CH {chNum}</span>
-            <span className="text-3xl leading-none">{complete ? "✓" : chEmoji}</span>
+          <div className="shrink-0 flex flex-col items-center w-10">
+            <span className="font-mono text-[8px] opacity-45">CH {chNum}</span>
+            <span className="text-2xl leading-none mt-0.5">{complete ? "✓" : chEmoji}</span>
           </div>
 
-          {/* Title block */}
+          {/* Title */}
           <div className="flex-1 min-w-0">
-            <div className="font-display text-xl md:text-2xl leading-tight">{ch.title}</div>
-            <div className="font-mono text-xs opacity-60 mt-0.5 leading-snug">{ch.tagline}</div>
-            <div className="font-mono text-[9px] opacity-40 mt-1 uppercase">
-              {chPaths.length} PATHS · {total} MISSIONS
+            <div className="font-display text-xl leading-tight">{ch.title}</div>
+            <div className="font-mono text-[9px] opacity-55 mt-0.5 leading-snug">{ch.tagline}</div>
+            <div className="font-mono text-[8px] opacity-35 mt-1 uppercase">
+              {chPaths.length} paths · {total} missions
             </div>
           </div>
 
-          {/* Right: progress */}
+          {/* Progress */}
           <div className="shrink-0 text-right">
-            <div className="font-display text-3xl tabular-nums leading-none">
+            <div className="font-display text-2xl tabular-nums leading-none">
               {complete ? "🏆" : `${pct}%`}
             </div>
-            <div className="font-mono text-[9px] opacity-50 mt-0.5">{done}/{total}</div>
+            <div className="font-mono text-[8px] opacity-45 mt-0.5">{done}/{total}</div>
           </div>
         </div>
 
-        {/* Chapter description */}
-        <div className={`px-4 md:px-6 py-3 flex items-start gap-3 ${world === "dj" ? "bg-[#0a1228]" : "bg-bone"}`}>
-          <div className="shrink-0 w-8 h-8 opacity-70" aria-hidden style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))" }}>
-            <Image src={cfg.catMain} alt="" width={32} height={32} className="w-full h-full object-contain" />
+        {/* Cat quip row */}
+        <div className={`px-4 py-2.5 flex items-center gap-3 border-t ${cfg.dark ? "border-bone/10 bg-[#0a1228]" : "border-ink/8 bg-bone"}`}>
+          <div className="shrink-0 w-8 h-8 animate-bounce-bob" aria-hidden>
+            <Image
+              src={cfg.catMain}
+              alt=""
+              width={32}
+              height={32}
+              className="w-full h-full object-contain"
+              style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.2))" }}
+            />
           </div>
-          <p className={`font-mono text-xs leading-relaxed opacity-60 ${world === "dj" ? "text-bone" : "text-ink"}`}>
-            {ch.description}
-          </p>
+          <div className={`brutal-border px-3 py-1.5 flex-1 ${cfg.dark ? "bg-bone/8 text-bone" : "bg-ink/5 text-ink"}`}>
+            <span className="font-mono text-[9px] italic opacity-70">&ldquo;{quip}&rdquo;</span>
+          </div>
         </div>
 
-        {/* Thin progress bar */}
-        <div className={`h-1.5 ${cfg.barBg}`}>
-          <div
-            className={`h-full ${cfg.bar} transition-all duration-700`}
-            style={{ width: `${pct}%` }}
-          />
-        </div>
+        {/* Chapter progress bar */}
+        <AnimBar pct={pct} bar={cfg.bar} barBg={cfg.barBg} visible={visible} />
       </div>
 
-      {/* Path cards — always visible, no accordion */}
-      <div className="pl-3 md:pl-5 space-y-3">
-        {chPaths.map(path => (
+      {/* Path cards — 2-col on desktop */}
+      <div className="pl-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+        {chPaths.map((path, i) => (
           <PathCard
             key={path.slug}
             path={path}
             completed={completed}
-            world={world}
             cfg={cfg}
+            visible={visible}
+            staggerIdx={i}
           />
         ))}
       </div>
 
-      {/* Chapter trophy if complete */}
+      {/* Chapter trophy */}
       {complete && (
-        <div className={`mt-3 brutal-border px-4 py-3 flex items-center gap-3 ${cfg.trophyBg}`}>
-          <span className="text-2xl">🏆</span>
+        <div className={`mt-2 brutal-border px-4 py-3 flex items-center gap-3 ${cfg.trophyBg}`}>
+          <span className="text-xl">🏆</span>
           <div>
-            <div className="font-display text-base">{ch.trophy.name}</div>
-            <div className="font-mono text-[9px] opacity-70">{ch.trophy.description}</div>
+            <div className="font-display text-sm">{ch.trophy.name}</div>
+            <div className="font-mono text-[8px] opacity-65">{ch.trophy.description}</div>
           </div>
         </div>
       )}
@@ -317,7 +369,7 @@ function ChapterSection({
   );
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 export function WorldPageClient({ slug }: { slug: string }) {
   const world = slug as WorldSlug;
   const cfg = WORLD_CONFIG[world];
@@ -329,94 +381,75 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
   if (!cfg) return <div className="p-8 font-mono">World not found</div>;
 
-  const worldDone = allPaths.flatMap(p => p.missionSlugs).filter(s => !!completed[s]).length;
-  const worldTotal = allPaths.flatMap(p => p.missionSlugs).length;
+  const worldDone = allPaths.flatMap((p) => p.missionSlugs).filter((s) => !!completed[s]).length;
+  const worldTotal = allPaths.flatMap((p) => p.missionSlugs).length;
   const worldPct = worldTotal > 0 ? Math.round((worldDone / worldTotal) * 100) : 0;
   const trophy = WORLD_TROPHIES[world];
 
   return (
-    <main className={`min-h-screen ${cfg.worldBg}`}>
+    <div className={`min-h-screen ${cfg.worldBg}`}>
 
-      {/* ── Solid color hero ─────────────────────────────────────────────── */}
-      <header className={`${cfg.heroBg} ${cfg.heroText} border-b-4 ${world === "dj" ? "border-volt" : "border-ink"} relative overflow-hidden`}>
-
-        {/* Decorative floating elements */}
-        <div className="absolute top-4 right-48 w-10 h-10 opacity-15 float pointer-events-none" aria-hidden style={{ animationDelay: "0.5s" }}>
-          <Image src={cfg.deco1} alt="" fill className="object-contain" />
-        </div>
-        <div className="absolute bottom-6 right-8 w-14 h-14 opacity-10 spin-slow pointer-events-none" aria-hidden>
+      {/* Slim world header (WorldShell already shows rail identity, so keep this minimal) */}
+      <div className={`${cfg.heroBg} ${cfg.heroText} border-b-4 ${cfg.dark ? "border-volt" : "border-ink"} relative overflow-hidden`}>
+        <div className="absolute top-3 right-6 w-10 h-10 opacity-10 spin-slow pointer-events-none" aria-hidden>
           <Image src={cfg.deco2} alt="" fill className="object-contain" />
         </div>
 
-        <div className="max-w-4xl mx-auto px-4 py-6 md:py-8 relative z-10">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <Link href="/worlds" className={`font-mono text-[10px] uppercase opacity-50 hover:opacity-100 transition-opacity block mb-3 ${cfg.heroText}`}>
-                ← ALL WORLDS
-              </Link>
-              <h1 className="font-display text-5xl md:text-7xl leading-none mb-2">
+        <div className="px-5 py-5 relative z-10">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <div className={`font-mono text-[8px] uppercase opacity-45 mb-1`}>
+                {chapters.length} chapters · {allPaths.length} paths · {worldTotal} missions
+              </div>
+              <h1 className="font-display text-4xl md:text-5xl leading-none mb-1">
                 {cfg.emoji} {cfg.title.toUpperCase()}
               </h1>
-              <p className={`font-mono text-xs opacity-60 mb-1`}>{cfg.tagline}</p>
-              <p className={`font-mono text-[10px] opacity-40`}>{cfg.description}</p>
+              <p className={`font-mono text-xs opacity-55 mb-3`}>{cfg.tagline}</p>
 
-              {/* World progress bar */}
-              <div className="mt-4 flex items-center gap-3 max-w-md">
-                <div className={`flex-1 h-2.5 brutal-border overflow-hidden ${cfg.barBg}`}>
-                  <div
-                    className={`h-full ${cfg.bar} transition-all duration-700`}
-                    style={{ width: `${worldPct}%` }}
-                  />
+              {/* Progress bar */}
+              <div className="flex items-center gap-3 max-w-sm">
+                <div className={`flex-1 h-2 brutal-border overflow-hidden ${cfg.barBg}`}>
+                  <div className={`h-full ${cfg.bar} transition-all duration-700`} style={{ width: `${worldPct}%` }} />
                 </div>
-                <div className={`font-mono text-xs opacity-60 shrink-0 tabular-nums`}>
-                  {worldDone}/{worldTotal} · {worldPct}%
+                <span className={`font-mono text-[9px] opacity-55 tabular-nums`}>{worldDone}/{worldTotal} · {worldPct}%</span>
+              </div>
+
+              {/* Mode row */}
+              <div className="mt-3 flex items-center gap-2.5">
+                <div className={`inline-flex items-center gap-1.5 brutal-border px-2.5 py-1.5 font-mono text-[9px] ${cfg.dark ? "bg-bone/8 text-bone border-bone/20" : "bg-ink/8 text-ink"}`}>
+                  <span>📖</span>
+                  <span className="font-display text-xs">Free Mode</span>
+                  <span className="opacity-40">— all lessons open</span>
                 </div>
+                <Link
+                  href={`/world/${world}`}
+                  onClick={() => setLearnMode("flow")}
+                  className={`brutal-border px-2.5 py-1.5 font-display text-xs brutal-press transition-colors ${cfg.flowLinkClass}`}
+                >
+                  Switch to Flow →
+                </Link>
               </div>
             </div>
 
-            {/* Cat mascot + deco cats */}
-            <div className="shrink-0 flex flex-col items-center gap-2">
-              <div
-                className="w-20 h-20 md:w-28 md:h-28 wiggle"
-                style={{ filter: "drop-shadow(4px 4px 0 rgba(0,0,0,0.2))" }}
-                aria-hidden
-              >
-                <Image src={cfg.catMain} alt="" width={112} height={112} className="w-full h-full object-contain" />
+            {/* Cat */}
+            <div className="shrink-0 flex flex-col items-center gap-1.5">
+              <div className="w-16 h-16 md:w-20 md:h-20 wiggle" style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.2))" }} aria-hidden>
+                <Image src={cfg.catMain} alt="" width={80} height={80} className="w-full h-full object-contain" />
               </div>
-              <div className="flex gap-2">
-                <div className="w-8 h-8 float opacity-70" aria-hidden style={{ animationDelay: "0.3s" }}>
-                  <Image src={cfg.catDeco1} alt="" width={32} height={32} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
-                </div>
-                <div className="w-7 h-7 float opacity-60" aria-hidden style={{ animationDelay: "1.1s" }}>
-                  <Image src={cfg.catDeco2} alt="" width={28} height={28} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
+              <div className="flex gap-1.5">
+                <div className="w-7 h-7 float opacity-60" style={{ animationDelay: "0.3s" }} aria-hidden>
+                  <Image src={cfg.catDeco1} alt="" width={28} height={28} className="w-full h-full object-contain" style={{ filter: "drop-shadow(2px 2px 0 rgba(0,0,0,0.15))" }} />
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Inline mode indicator — linked to header toggle */}
-          <div className="mt-5 flex items-center gap-3">
-            <div className={`inline-flex items-center gap-2 brutal-border px-3 py-2 font-mono text-xs ${world === "dj" ? "bg-bone/10 text-bone border-bone/30" : "bg-ink/10 text-ink"}`}>
-              <span>🔓</span>
-              <span className="font-display text-xs">Free Mode</span>
-              <span className="opacity-40">— all lessons open</span>
-            </div>
-            <Link
-              href={`/world/${world}`}
-              onClick={() => setLearnMode("flow")}
-              className={`brutal-border px-3 py-2 font-display text-xs brutal-press transition-colors ${cfg.flowLinkClass}`}
-            >
-              Switch to Flow →
-            </Link>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* ── Chapter sections — all visible, no accordion ─────────────────── */}
-      <div className="max-w-4xl mx-auto px-4 pt-8 pb-24">
-
-        <div className={`font-mono text-[10px] uppercase mb-6 ${world === "dj" ? "text-bone/40" : "text-ink/40"}`}>
-          // {chapters.length} CHAPTERS — ALL LESSONS OPEN
+      {/* Chapter sections */}
+      <div className="px-4 pt-6 pb-24">
+        <div className={`font-mono text-[9px] uppercase mb-4 ${cfg.dark ? "text-bone/35" : "text-ink/35"}`}>
+          // {chapters.length} chapters — all lessons open · 2-col grid on desktop
         </div>
 
         {chapters.map((ch, chIdx) => (
@@ -432,24 +465,19 @@ export function WorldPageClient({ slug }: { slug: string }) {
         ))}
 
         {/* World trophy */}
-        <div className={`brutal-border p-5 mt-4 transition-all ${
-          worldPct === 100
-            ? cfg.trophyBg
-            : world === "dj" ? "bg-[#0a1228] text-bone/40" : "bg-bone/50 text-ink/40"
+        <div className={`brutal-border p-4 mt-4 ${
+          worldPct === 100 ? cfg.trophyBg : cfg.dark ? "bg-[#0a1228] text-bone/40" : "bg-ink/4 text-ink/40"
         }`}>
-          <div className="font-mono text-[9px] uppercase mb-1">WORLD TROPHY</div>
-          <div className="font-display text-2xl flex items-center gap-2">
-            <span>🏆</span>
-            <span>{trophy.name}</span>
-          </div>
-          <div className="font-mono text-xs mt-1 opacity-70">{trophy.description}</div>
-          {worldPct < 100 && (
-            <div className="font-mono text-[9px] uppercase mt-2 opacity-50">
-              Complete all {chapters.length} chapters to unlock · {worldPct}% done
+          <div className="font-mono text-[8px] uppercase mb-1 opacity-50">World Trophy</div>
+          <div className="flex items-center gap-2.5">
+            <span className="text-2xl">{worldPct === 100 ? "🏆" : "🔒"}</span>
+            <div>
+              <div className="font-display text-lg">{trophy.name}</div>
+              <div className="font-mono text-[9px] mt-0.5 opacity-65">{trophy.description}</div>
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
