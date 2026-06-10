@@ -1,101 +1,91 @@
 "use client";
-
+/**
+ * ModeSwitch — URL-driven Flow / Free segmented control.
+ * Ported from ui/worlds-overhaul reference branch.
+ *
+ * Two modes:
+ *  1. URL-driven (worldSlug + activeView): navigates to /world/[slug] or
+ *     /world/[slug]?view=free. URL is the single source of truth.
+ *  2. Context-driven (no worldSlug): reflects learnMode context, toggles it.
+ *
+ * Same visual everywhere — rail, mobile sheet, header.
+ */
+import { useRouter } from "next/navigation";
 import { useLearnMode } from "@/lib/mode";
 
 interface ModeSwitchProps {
+  /** When provided the switch is URL-driven for this world. */
+  worldSlug?: string;
+  /** Current view from the URL — required when worldSlug is set. */
+  activeView?: "flow" | "free";
+  /** Fill the container width (rail / sheet) vs inline (header). */
+  full?: boolean;
+  /** Touch-target size. */
+  size?: "sm" | "md";
   className?: string;
-  variant?: "compact" | "full";
 }
 
-export function ModeSwitch({ className = "", variant = "full" }: ModeSwitchProps) {
+export function ModeSwitch({
+  worldSlug,
+  activeView,
+  full = false,
+  size = "sm",
+  className = "",
+}: ModeSwitchProps) {
   const { learnMode, setLearnMode } = useLearnMode();
-  const isFlow = learnMode === "flow";
+  const router = useRouter();
 
-  const handleToggle = () => {
-    setLearnMode(isFlow ? "classic" : "flow");
+  const urlDriven = !!worldSlug && !!activeView;
+  const isFlow = urlDriven ? activeView === "flow" : learnMode === "flow";
+
+  const select = (toFlow: boolean) => {
+    if (toFlow === isFlow) return;
+    setLearnMode(toFlow ? "flow" : "classic");
+    if (worldSlug) {
+      router.push(toFlow ? `/world/${worldSlug}` : `/world/${worldSlug}?view=free`);
+    }
   };
 
-  if (variant === "compact") {
-    return (
-      <button
-        onClick={handleToggle}
-        className={`brutal-border px-3 py-1.5 font-display text-xs brutal-press transition-colors flex items-center gap-2 ${className} ${
-          isFlow
-            ? "bg-acid text-ink hover:bg-sun"
-            : "bg-ink/10 text-ink hover:bg-ink/20"
-        }`}
-        aria-label={`Switch to ${isFlow ? "Free" : "Flow"} Mode`}
-      >
-        <span>{isFlow ? "🌊" : "🔓"}</span>
-        <span>{isFlow ? "Flow" : "Free"}</span>
-      </button>
-    );
-  }
+  const pad = size === "md" ? "py-2.5 px-4 text-sm" : "py-1.5 px-3 text-xs";
 
   return (
-    <div className={`brutal-border overflow-hidden inline-flex ${className}`}>
+    <div
+      role="tablist"
+      aria-label="Learning mode"
+      className={`brutal-border bg-bone inline-flex p-1 gap-1 ${full ? "w-full" : ""} ${className}`}
+    >
       <button
-        onClick={() => setLearnMode("flow")}
-        className={`px-4 py-2 font-display text-sm transition-colors flex items-center gap-2 ${
+        role="tab"
+        aria-selected={isFlow}
+        onClick={() => select(true)}
+        title="Flow Mode — focused, one lesson at a time"
+        className={`flex-1 flex items-center justify-center gap-1.5 font-display brutal-press transition-all ${pad} ${
           isFlow
-            ? "bg-acid text-ink"
-            : "bg-ink/10 text-ink hover:bg-ink/20"
+            ? "bg-acid text-ink chunk-shadow-sm"
+            : "text-ink/45 hover:text-ink hover:bg-ink/5"
         }`}
-        aria-label="Switch to Flow Mode"
       >
-        <span>🌊</span>
+        <span className="text-sm leading-none">🌊</span>
         <span>Flow</span>
       </button>
+
       <button
-        onClick={() => setLearnMode("classic")}
-        className={`px-4 py-2 font-display text-sm transition-colors flex items-center gap-2 ${
+        role="tab"
+        aria-selected={!isFlow}
+        onClick={() => select(false)}
+        title="Free Mode — open wiki, browse anything"
+        className={`flex-1 flex items-center justify-center gap-1.5 font-display brutal-press transition-all ${pad} ${
           !isFlow
-            ? "bg-acid text-ink"
-            : "bg-ink/10 text-ink hover:bg-ink/20"
+            ? "bg-electric-blue text-bone chunk-shadow-sm"
+            : "text-ink/45 hover:text-ink hover:bg-ink/5"
         }`}
-        aria-label="Switch to Free Mode"
       >
-        <span>🔓</span>
+        <span className="text-sm leading-none">📖</span>
         <span>Free</span>
       </button>
     </div>
   );
 }
 
-// Hero-level mode picker for /worlds page
-export function WorldModePicker() {
-  const { learnMode } = useLearnMode();
-  const isFlow = learnMode === "flow";
-
-  return (
-    <div className="brutal-border bg-ink text-bone p-4">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
-              LEARNING MODE
-            </div>
-            <div className="font-display text-xl mb-1">
-              {isFlow ? "🌊 Flow Mode" : "🔓 Free Mode"}
-            </div>
-            <p className="font-mono text-xs opacity-70 max-w-md">
-              {isFlow
-                ? "Guided path · lessons unlock in order · hearts on wrong answers"
-                : "All lessons open · jump anywhere · browse by chapter and path"}
-            </p>
-          </div>
-          
-          <div className="shrink-0">
-            <ModeSwitch variant="compact" />
-          </div>
-        </div>
-        
-        <div className="mt-3 pt-3 border-t border-bone/20">
-          <div className="font-mono text-[8px] uppercase opacity-50">
-            This selection applies to all worlds below
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+/** Backwards-compat default export */
+export default ModeSwitch;

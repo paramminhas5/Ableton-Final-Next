@@ -30,6 +30,7 @@ const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS
 
 const PRIMARY_NAV = [
   { to: "/worlds",    label: "Worlds"   },
+  { to: "/wiki",      label: "Wiki"     },
   { to: "/learn",     label: "Paths"    },
   { to: "/missions",  label: "Missions" },
   { to: "/dashboard", label: "Progress" },
@@ -530,6 +531,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               { to: "/world/fundamentals", label: "🎵 Fundamentals" },
               { to: "/world/dj",           label: "🎧 DJ World"     },
               { to: "/world/producer",     label: "🎛 Producer"     },
+              { to: "/wiki",               label: "📖 Full Wiki"    },
             ]},
             { heading: "Learn", links: [
               { to: "/learn",    label: "📚 All Paths"    },
