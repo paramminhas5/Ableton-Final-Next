@@ -22,6 +22,7 @@ import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
+import { SlimHeroBar } from "@/components/SlimHeroBar";
 
 type WorldSlug = "fundamentals" | "dj" | "producer";
 
@@ -388,6 +389,9 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
   return (
     <div className={`min-h-screen ${cfg.worldBg}`}>
+
+      {/* SlimHeroBar — Free Mode sticky header */}
+      <SlimHeroBar worldSlug={slug} showFree={true} />
 
       {/* Slim world header (WorldShell already shows rail identity, so keep this minimal) */}
       <div className={`${cfg.heroBg} ${cfg.heroText} border-b-4 ${cfg.dark ? "border-volt" : "border-ink"} relative overflow-hidden`}>

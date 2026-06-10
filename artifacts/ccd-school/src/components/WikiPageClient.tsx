@@ -200,23 +200,7 @@ export function WikiPageClient() {
             Your complete reference for the CCD.SCHOOL curriculum.
           </p>
 
-          {/* Overall stats pills */}
-          <div className="flex flex-wrap gap-2">
-            {allStats.map(({ world, pct, total }) => {
-              const t = WORLD_THEMES[world];
-              return (
-                <button
-                  key={world}
-                  onClick={() => scrollTo(world)}
-                  className={`brutal-border px-3 py-2 flex items-center gap-2 brutal-press transition-colors ${t.accentBg} ${t.accentText}`}
-                >
-                  <span className="text-lg">{t.emoji}</span>
-                  <span className="font-display text-sm">{t.title}</span>
-                  <span className="font-mono text-[9px] opacity-60">{pct}% · {total}m</span>
-                </button>
-              );
-            })}
-          </div>
+
         </div>
       </header>
 
