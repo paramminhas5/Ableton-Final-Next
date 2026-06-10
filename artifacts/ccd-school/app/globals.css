@@ -858,3 +858,38 @@ button, a, [role="button"] {
 .install-banner-offset {
   bottom: calc(72px + env(safe-area-inset-bottom, 0px));
 }
+
+/* ─── CCD Jitter — horizontal shake on hover ───────────────────────── */
+@keyframes ccd-jitter {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-3px); }
+  40%  { transform: translateX(3px); }
+  60%  { transform: translateX(-2px); }
+  80%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+.ccd-jitter:hover {
+  animation: ccd-jitter 180ms ease-in-out;
+}
+
+/* ─── CCD Glow Pulse — electric-blue ring on click ─────────────────── */
+@keyframes ccd-glow-pulse {
+  0%   { box-shadow: 0 0 0 0   hsl(221 83% 53% / 0.7); }
+  50%  { box-shadow: 0 0 0 6px hsl(221 83% 53% / 0.3); }
+  100% { box-shadow: 0 0 0 0   hsl(221 83% 53% / 0.0); }
+}
+
+.ccd-glow-pulse:active {
+  animation: ccd-glow-pulse 320ms ease-out forwards;
+}
+
+/* ─── Biome Glow Pulse — ambient biome glow animation ──────────────── */
+@keyframes biome-glow-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1.0;  }
+}
+
+.animate-biome-glow {
+  animation: biome-glow-pulse 3s ease-in-out infinite;
+}

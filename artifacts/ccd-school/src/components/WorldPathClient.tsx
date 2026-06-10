@@ -26,6 +26,7 @@ import { rankFor } from "@/lib/ranks";
 import { PLACEMENT_QUESTIONS, scorePlacement } from "@/content/placement-questions";
 import type { Mission } from "@/content/types";
 import type { Chapter } from "@/content/chapters";
+import { SlimHeroBar } from "@/components/SlimHeroBar";
 
 type WorldId = "fundamentals" | "dj" | "producer";
 type NodeState = "locked" | "available" | "complete" | "review";
@@ -137,6 +138,57 @@ const WORLD_META: Record<string, {
   },
 };
 
+// ─── Biome system ─────────────────────────────────────────────────────────────
+interface Biome {
+  name: string;
+  accentColor: string;        // Tailwind bg-* class or arbitrary bg-[#hex]
+  accentTextColor: string;    // Tailwind text-* class
+  glowColor: string;          // rgba(...) string for box-shadow
+  glowAnimationClass: string; // Tailwind animation class
+  emojis: string[];           // decorative emojis per biome
+}
+
+const BIOME_CONFIG: Record<WorldId, Biome[]> = {
+  fundamentals: [
+    // CH0 — Sound Science
+    { name: "The Frequency Fields",  accentColor: "bg-acid/20",          accentTextColor: "text-ink",  glowColor: "rgba(198,255,0,0.30)",   glowAnimationClass: "animate-biome-glow", emojis: ["🔊","🌊","〰️"] },
+    // CH1 — Rhythm & Time
+    { name: "Rhythm Jungle",         accentColor: "bg-sun/25",           accentTextColor: "text-ink",  glowColor: "rgba(255,184,0,0.30)",   glowAnimationClass: "animate-biome-glow", emojis: ["🥁","🌿","🎶"] },
+    // CH2 — Melody & Pitch
+    { name: "Melody Heights",        accentColor: "bg-lime/20",          accentTextColor: "text-ink",  glowColor: "rgba(100,220,130,0.28)", glowAnimationClass: "animate-biome-glow", emojis: ["🎵","🏔️","✨"] },
+    // CH3 — Harmony & Chords
+    { name: "Chord Canyon",          accentColor: "bg-hot/15",           accentTextColor: "text-bone", glowColor: "rgba(200,50,50,0.22)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎹","🏜️","🌅"] },
+    // CH4 — Music Technology
+    { name: "Circuit City",          accentColor: "bg-electric-blue/20", accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.30)",  glowAnimationClass: "animate-biome-glow", emojis: ["💻","⚡","🔌"] },
+  ],
+  dj: [
+    // CH0 — Setup & Culture
+    { name: "Neon City",             accentColor: "bg-[#1a0b3e]",        accentTextColor: "text-volt", glowColor: "rgba(198,255,0,0.40)",   glowAnimationClass: "animate-biome-glow", emojis: ["🌃","🎧","⚡"] },
+    // CH1 — The Library
+    { name: "The Library Vault",     accentColor: "bg-[#0d1a2e]",        accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.35)",  glowAnimationClass: "animate-biome-glow", emojis: ["📚","🗂️","🔍"] },
+    // CH2 — The Mix
+    { name: "The Mix Arena",         accentColor: "bg-[#1e0a2a]",        accentTextColor: "text-volt", glowColor: "rgba(160,50,220,0.35)",  glowAnimationClass: "animate-biome-glow", emojis: ["🎛","🌀","💥"] },
+    // CH3 — DJ Performance
+    { name: "Festival Stage",        accentColor: "bg-[#2a0b0b]",        accentTextColor: "text-hot",  glowColor: "rgba(220,50,50,0.35)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎤","🎪","🔥"] },
+    // CH4 — DJ Mastery
+    { name: "The Underground",       accentColor: "bg-[#060b1e]",        accentTextColor: "text-bone", glowColor: "rgba(40,60,120,0.55)",   glowAnimationClass: "animate-biome-glow", emojis: ["🏆","🌑","🔮"] },
+  ],
+  producer: [
+    // CH0 — First Contact
+    { name: "The Control Room",      accentColor: "bg-sun/15",           accentTextColor: "text-ink",  glowColor: "rgba(255,184,0,0.28)",   glowAnimationClass: "animate-biome-glow", emojis: ["🖥","🎛","💡"] },
+    // CH1 — Sound & MIDI
+    { name: "Sound Design Lab",      accentColor: "bg-acid/20",          accentTextColor: "text-ink",  glowColor: "rgba(198,255,0,0.30)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎼","🧬","🔬"] },
+    // CH2 — The Mix
+    { name: "The Mix Reactor",       accentColor: "bg-hot/12",           accentTextColor: "text-bone", glowColor: "rgba(200,80,50,0.25)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎚","⚗️","🌋"] },
+    // CH3 — Performance & Flow
+    { name: "Launch Pad",            accentColor: "bg-electric-blue/15", accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.32)",  glowAnimationClass: "animate-biome-glow", emojis: ["🚀","🎯","✨"] },
+    // CH4 — Advanced Producer
+    { name: "The Stratosphere",      accentColor: "bg-volt/15",          accentTextColor: "text-ink",  glowColor: "rgba(198,255,0,0.22)",   glowAnimationClass: "animate-biome-glow", emojis: ["⚡","🌌","🏔️"] },
+    // CH5 — Synthesis (producer only)
+    { name: "Synthesis Void",        accentColor: "bg-[#12001e]",        accentTextColor: "text-volt", glowColor: "rgba(130,50,200,0.40)",  glowAnimationClass: "animate-biome-glow", emojis: ["🌀","🔮","🎹"] },
+  ],
+};
+
 const CHAPTER_EMOJIS: Record<string, string> = {
   "sound-science": "🔊", "rhythm-and-time": "🥁", "melody-and-pitch": "🎵",
   "harmony-and-chords": "🎹", "music-technology": "💻",
@@ -166,6 +218,36 @@ function getMissions(world: WorldId): Mission[] {
 }
 
 const SIDE_PATTERN: ("left" | "center" | "right")[] = ["left", "center", "right", "center"];
+
+// ─── Biome zone wrapper ───────────────────────────────────────────────────────
+interface WorldPathBiomeProps {
+  biome: Biome | null;
+  worldMeta: typeof WORLD_META[string];
+  children: ReactNode;
+}
+
+function WorldPathBiome({ biome, worldMeta, children }: WorldPathBiomeProps) {
+  const bg   = biome?.accentColor ?? "";
+  const glow = biome?.glowColor  ?? worldMeta.glowColor;
+  return (
+    <div
+      className={`relative transition-colors duration-500 ${bg}`}
+      style={{ boxShadow: `inset 0 0 80px ${glow}` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function BiomeLabel({ biome }: { biome: Biome }) {
+  return (
+    <div className={`flex justify-center pt-4`}>
+      <div className={`inline-flex items-center gap-1.5 px-3 py-1 brutal-border font-display text-xs uppercase mb-2 ${biome.accentColor} ${biome.accentTextColor}`}>
+        {biome.emojis[0]} {biome.name}
+      </div>
+    </div>
+  );
+}
 
 // ─── Mini placement test modal ────────────────────────────────────────────────
 interface MiniTestProps {
@@ -771,22 +853,11 @@ export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: st
   return (
     <div className={`min-h-screen ${meta.bg}`}>
 
-      {/* Hero — hidden when embedded in /learn (has its own header) */}
+      {/* Slim hero bar — replaces WorldHero + ChapterTrack + WorldViewToggle */}
       {!embedded && (
-        <WorldHero
-          world={world} meta={meta}
-          done={done} total={total} pct={pct} rank={rank.name}
-          streakDays={progress.streakDays} xp={progress.xp} gems={progress.gems}
-        />
-      )}
-
-      {/* Linear chapter track — hidden when embedded */}
-      {!embedded && (
-        <ChapterTrack
-          chapters={chapters} nodes={nodes}
-          world={world} meta={meta}
+        <SlimHeroBar
           worldSlug={worldSlug}
-          onChapterClick={scrollToChapter}
+          showFree={false}
         />
       )}
 
@@ -797,51 +868,56 @@ export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: st
           <AnimatedCatIntro meta={meta} world={world} firstSlug={firstAvailableSlug} />
         )}
 
-        {nodes.map((node, idx) => {
-          const chapter = chapters.find(c => c.slug === node.chapterSlug);
-          const quip = (CHAPTER_CAT_QUIPS[world] ?? [])[node.chapterIndex] ?? "Let's go!";
-          // Chapter is "unlocked" if unlockedChapter > chapterIndex+1 or chapterIndex === 0
-          const isChapterUnlocked = (node.chapterIndex + 1) < unlockedChapter || node.chapterIndex === 0;
+        {chapters.map((ch, chIdx) => {
+          const biome = BIOME_CONFIG[world]?.[chIdx] ?? null;
+          const chapterNodes = nodes.filter(n => n.chapterSlug === ch.slug);
+          const isChapterUnlocked = (chIdx + 1) < unlockedChapter || chIdx === 0;
+          const quip = (CHAPTER_CAT_QUIPS[world] ?? [])[chIdx] ?? "Let's go!";
 
           return (
-            <div key={node.slug}>
-              {/* Chapter banner with skip button */}
-              {node.isFirstInChapter && chapter && (
-                <ChapterBanner
-                  chapter={chapter}
-                  chapterIndex={node.chapterIndex}
-                  world={world}
-                  meta={meta}
-                  quip={quip}
-                  isUnlocked={isChapterUnlocked}
-                  onSkipClick={() => setJumpModalChapter(node.chapterIndex + 1)}
-                />
-              )}
-
-              {/* Node */}
-              <div className={`relative flex mb-12 ${
-                node.side === "left"  ? "justify-start pl-8"  :
-                node.side === "right" ? "justify-end pr-8"    :
-                "justify-center"
-              }`}>
-                {idx === firstAvailableIdx ? (
-                  <div className="flex flex-col items-center gap-1.5">
-                    {!isNewUser && (
-                      <div className={`brutal-border px-3 py-1 font-display text-[10px] uppercase mb-2 animate-pulse ${
-                        world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink"
-                      }`}>
-                        🐾 YOU ARE HERE
+            <WorldPathBiome key={ch.slug} biome={biome} worldMeta={meta}>
+              {biome && <BiomeLabel biome={biome} />}
+              <ChapterBanner
+                chapter={ch}
+                chapterIndex={chIdx}
+                world={world}
+                meta={meta}
+                quip={quip}
+                isUnlocked={isChapterUnlocked}
+                onSkipClick={() => setJumpModalChapter(chIdx + 1)}
+              />
+              {chapterNodes.map((node) => {
+                const nodeIdx = nodes.indexOf(node);
+                return (
+                  <div key={node.slug} className={`relative flex mb-12 ${
+                    node.side === "left"  ? "justify-start pl-8"  :
+                    node.side === "right" ? "justify-end pr-8"    :
+                    "justify-center"
+                  }`}>
+                    {nodeIdx === firstAvailableIdx ? (
+                      <div className="flex flex-col items-center gap-1.5">
+                        {!isNewUser && (
+                          <div className={`brutal-border px-3 py-1 font-display text-[10px] uppercase mb-2 animate-pulse ${
+                            biome
+                              ? `${biome.accentColor} ${biome.accentTextColor}`
+                              : world === "dj"
+                              ? "bg-volt text-ink"
+                              : "bg-acid text-ink"
+                          }`}>
+                            🐾 YOU ARE HERE
+                          </div>
+                        )}
+                        <div ref={youAreHereRef}>
+                          <LessonNode node={node} meta={meta} biome={biome} />
+                        </div>
                       </div>
+                    ) : (
+                      <LessonNode node={node} meta={meta} biome={biome} />
                     )}
-                    <div ref={youAreHereRef}>
-                      <LessonNode node={node} meta={meta} />
-                    </div>
                   </div>
-                ) : (
-                  <LessonNode node={node} meta={meta} />
-                )}
-              </div>
-            </div>
+                );
+              })}
+            </WorldPathBiome>
           );
         })}
 
@@ -886,7 +962,7 @@ export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: st
 }
 
 // ─── Lesson Node ──────────────────────────────────────────────────────────────
-function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[string] }) {
+function LessonNode({ node, meta, biome }: { node: PathNode; meta: typeof WORLD_META[string]; biome?: Biome | null }) {
   const Wrap = ({ children, href, className, title }: {
     children: ReactNode; href?: string; className?: string; title?: string;
   }) => {
@@ -937,12 +1013,16 @@ function LessonNode({ node, meta }: { node: PathNode; meta: typeof WORLD_META[st
     );
   }
 
-  // Available
+  // Available — use biome accent when defined, fall back to WORLD_META
+  const availBg   = biome?.accentColor    ?? meta.accentBg;
+  const availText = biome?.accentTextColor ?? meta.accentText;
+  const glowColor = biome?.glowColor      ?? meta.glowColor;
+
   return (
     <Wrap href={`/learn/${node.slug}`} title={node.title}>
       <div
-        className={`w-28 h-28 rounded-full flex flex-col items-center justify-center gap-1.5 ${meta.nodeAvail} transition-all group-hover:scale-110`}
-        style={{ boxShadow: `0 0 0 8px ${meta.glowColor}, 0 0 32px ${meta.glowColor}` }}
+        className={`w-28 h-28 rounded-full flex flex-col items-center justify-center gap-1.5 ${availBg} ${availText} transition-all group-hover:scale-110`}
+        style={{ boxShadow: `0 0 0 8px ${glowColor}, 0 0 32px ${glowColor}` }}
       >
         <span className="font-display text-sm font-bold leading-tight text-center px-3 line-clamp-2">
           {node.title}

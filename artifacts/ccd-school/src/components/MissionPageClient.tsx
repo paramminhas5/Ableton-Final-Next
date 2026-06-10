@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { missionBySlug, nextMission, prevMission } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
 import { Simulator } from "@/components/sims/Simulator";
@@ -15,6 +16,7 @@ import { Glossarized, GlossaryScope } from "@/components/Term";
 import { useAuth } from "@/lib/auth";
 import { useGatingMode } from "@/components/ClientProviders";
 import { isLocked } from "@/lib/gating";
+import { FlowFreePill } from "@/components/FlowFreePill";
 
 /** Tab toggle shown at top of classic mission page */
 function ClassicModeBar({ slug }: { slug: string }) {
@@ -43,6 +45,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
   const locked = isLocked(m, plan, gatingMode);
+  const router = useRouter();
 
   // Default hard mode from stored difficulty preference (free mode only)
   const defaultHard = learnMode !== "flow" && progress.difficulty === "hard";
@@ -118,12 +121,53 @@ export function MissionPageClient({ slug }: { slug: string }) {
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
       {showModal && <CompletionModal mission={m} xpEarned={earnedXp} score={earnedScore} badgeName={earnedBadge} nextSlug={next?.slug} onClose={() => setShowModal(false)} />}
 
-      <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-60 flex-wrap">
-        <Link href="/worlds" className="hover:opacity-100">Worlds</Link>
-        {ctx.world && <><span>›</span><Link href={ctx.worldRoute} className="hover:opacity-100">{ctx.worldLabel}</Link></>}
-        {ctx.chapter && <><span>›</span><span className="opacity-70">{ctx.chapter.title}</span></>}
-        {ctx.path && <><span>›</span><Link href={`/path/${ctx.path.slug}`} className="hover:opacity-100">{ctx.path.title}</Link></>}
-        <span>›</span><span className="text-ink">{m.title}</span>
+      <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase flex-wrap">
+        {/* Back arrow */}
+        <button
+          onClick={() => router.back()}
+          className="brutal-border bg-bone px-2 py-0.5 font-mono text-xs brutal-press hover:bg-acid"
+          aria-label="Go back"
+        >
+          ←
+        </button>
+
+        {/* Worlds ancestor */}
+        <span className="opacity-30">›</span>
+        <Link href="/worlds" className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+          Worlds
+        </Link>
+
+        {/* World ancestor */}
+        {ctx.world && (
+          <>
+            <span className="opacity-30">›</span>
+            <Link href={ctx.worldRoute} className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+              {ctx.worldLabel}
+            </Link>
+          </>
+        )}
+
+        {/* Chapter ancestor */}
+        {ctx.chapter && (
+          <>
+            <span className="opacity-30">›</span>
+            <span className="brutal-border bg-bone text-ink/60 px-2 py-0.5">{ctx.chapter.title}</span>
+          </>
+        )}
+
+        {/* Path ancestor */}
+        {ctx.path && (
+          <>
+            <span className="opacity-30">›</span>
+            <Link href={`/path/${ctx.path.slug}`} className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+              {ctx.path.title}
+            </Link>
+          </>
+        )}
+
+        {/* Current mission — accent pill */}
+        <span className="opacity-30">›</span>
+        <span className="brutal-border bg-acid text-ink px-2 py-0.5 font-bold">{m.title}</span>
       </div>
 
       {!locked && (
@@ -133,6 +177,9 @@ export function MissionPageClient({ slug }: { slug: string }) {
           <a href="#how" className="brutal-border px-2 py-1 bg-volt text-bone">How</a>
           <a href="#quiz" className="brutal-border px-2 py-1 bg-hot text-bone">Quiz</a>
           <span className="ml-auto flex items-center gap-1">
+            {/* Flow/Free pill toggle */}
+            <FlowFreePill compact />
+            <span className="opacity-20 mx-1">|</span>
             <button onClick={() => setHardMode(false)}
               className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!hardMode ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
               Normal

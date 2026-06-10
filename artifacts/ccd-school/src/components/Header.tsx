@@ -206,10 +206,11 @@ interface XpStreakPopoverProps {
   progress: ReturnType<typeof useProgress>["progress"];
   dailyGoalPct: number;
   dailyGoalDone: boolean;
+  heartRefillSeconds: number;
   onClose: () => void;
 }
 
-function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpStreakPopoverProps) {
+function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds, onClose }: XpStreakPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { current: rank, next, progress: rankPct } = rankFor(progress.xp);
 
@@ -255,6 +256,14 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, onClose }: XpS
         <div className="text-right">
           <p className="font-mono text-xs uppercase opacity-45 mb-1">Gems</p>
           <p className="font-display text-lg">💎 {progress.gems}</p>
+        </div>
+      </div>
+      {/* Hearts row — moved from header desktop strip */}
+      <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
+        <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
+        <div>
+          <p className="font-mono text-xs uppercase opacity-45">Hearts</p>
+          <p className="font-sans text-sm">{progress.hearts}/{MAX_HEARTS} remaining</p>
         </div>
       </div>
       <div className="px-4 py-3 flex items-center gap-3">
@@ -303,7 +312,7 @@ function useAnimatedNumber(value: number) {
 }
 
 function XpStreakBadge() {
-  const { progress, dailyGoalPct, dailyGoalDone } = useProgress();
+  const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
   const [open, setOpen] = useState(false);
   const { display: xpDisplay, flash: xpFlash } = useAnimatedNumber(progress.xp);
   const { display: streakDisplay, flash: streakFlash } = useAnimatedNumber(progress.streakDays);
@@ -315,7 +324,7 @@ function XpStreakBadge() {
         aria-expanded={open}
         aria-haspopup="dialog"
         title="View XP, streak and daily goal"
-        className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-sm brutal-press flex items-center gap-2.5 hover:bg-electric-blue transition-colors ccd-btn-hover"
+        className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-sm brutal-press flex items-center gap-2.5 hover:bg-electric-blue transition-colors ccd-btn-hover ccd-jitter ccd-glow-pulse"
       >
         <span className={`flex items-center gap-1 transition-all duration-200 ${streakFlash ? "scale-125 text-acid" : ""}`}>
           <span>🔥</span>
@@ -333,6 +342,7 @@ function XpStreakBadge() {
           progress={progress}
           dailyGoalPct={dailyGoalPct}
           dailyGoalDone={dailyGoalDone}
+          heartRefillSeconds={heartRefillSeconds}
           onClose={() => setOpen(false)}
         />
       )}
@@ -379,7 +389,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
         onClick={toggle}
         title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
         aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
-        className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover
+        className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover ccd-jitter ccd-glow-pulse
           ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}
       >
         <span>{isFlow ? "🌊" : "🔓"}</span>
@@ -472,8 +482,6 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         {/* Drawer header — electric-blue CCD style */}
         <div className="flex items-center justify-between p-3.5 border-b-4 border-ink bg-electric-blue">
           <div className="flex items-center gap-2">
-            <Image src="/cats/cat-dj-hero.png" alt="" width={36} height={36}
-              className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)]" />
             <span className="font-display text-lg text-bone">CCD<span className="text-acid">.</span><span className="text-bone">SCHOOL</span></span>
           </div>
           <button onClick={onClose} aria-label="Close menu"
@@ -679,14 +687,6 @@ export function Header() {
           className="border-r-4 border-ink px-3 md:px-5 flex items-center gap-2 font-display text-base md:text-lg bg-electric-blue text-bone hover:bg-ink transition-colors shrink-0"
           aria-label="CCD.SCHOOL home"
         >
-          <Image
-            src="/cats/cat-dj-hero.png"
-            alt=""
-            width={28}
-            height={28}
-            onClick={trackCatClick}
-            className="object-contain drop-shadow-[2px_2px_0_hsl(222_47%_4%)] hidden sm:block cursor-pointer hover:scale-110 transition-transform"
-          />
           <span className="text-bone">CCD</span><span className="text-acid">.</span><span className="text-bone">SCHOOL</span>
         </Link>
 
@@ -715,12 +715,11 @@ export function Header() {
         {/* Right strip — desktop */}
         <div className="hidden md:flex items-center gap-2 px-3">
           <button onClick={openSearch} title="Search (⌘K)" aria-label="Open search"
-            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-acid flex items-center gap-1.5 font-display text-sm transition-colors brutal-press ccd-btn-hover">
+            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-acid flex items-center gap-1.5 font-display text-sm transition-colors brutal-press ccd-btn-hover ccd-jitter ccd-glow-pulse">
             <SearchIcon />
             <span className="hidden lg:inline font-mono text-xs opacity-55">⌘K</span>
           </button>
 
-          <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           <XpStreakBadge />
 
           {user ? (
@@ -730,7 +729,7 @@ export function Header() {
             </Link>
           ) : (
             <Link href="/login"
-              className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-sm brutal-press chunk-shadow hover:bg-ink transition-colors ccd-btn-hover">
+              className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-sm brutal-press chunk-shadow hover:bg-ink transition-colors ccd-btn-hover ccd-jitter ccd-glow-pulse">
               Sign in
             </Link>
           )}

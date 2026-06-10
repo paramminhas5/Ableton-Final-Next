@@ -1,5 +1,8 @@
 "use client";
 /**
+ * @deprecated Replaced by SlimHeroBar in ui-redesign-polish.
+ * Remove once SlimHeroBar is verified in production.
+ *
  * WorldViewToggle — sticky tab bar on every /world/[slug] page.
  *
  * 🌊 Flow Mode  → /world/[slug]            (WorldPathClient — Duolingo snake)
