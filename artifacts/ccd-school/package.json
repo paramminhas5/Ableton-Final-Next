@@ -10,7 +10,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "journeys": "node scripts/journeys.mjs"
+    "journeys": "node scripts/journeys.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "crawl:dump": "DUMP_MISSIONS=1 vitest run tests/dump-missions.test.ts",
+    "crawl": "node scripts/lessons-crawl.mjs"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",

@@ -417,6 +417,29 @@ console.log("\nJ8 Come-back loop: review, daily, ear gym, phone menu");
   await ctx.close();
 }
 
+// ───────────────────────── J9: lessons, Atlas, plug-in guide and Build a Set point at each other
+console.log("\nJ9 The pieces link together");
+{
+  const { ctx, p, errs } = await fresh(seedProgress());
+  await ctx.addInitScript(() => { try { localStorage.setItem("ccd.learnMode", "classic"); } catch {} });
+  await ctx.route("**/api/gating", (r) => r.fulfill({ json: { mode: "free" } }));
+  await p.goto(BASE + "/learn/compressor"); await p.waitForTimeout(1500);
+  const panel = p.locator("[data-testid=lesson-links]");
+  ok(await panel.count() > 0, "the compressor lesson has a Use it in Live panel");
+  const hrefs = await panel.locator("a").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
+  ok(hrefs.includes("/atlas#compressor"), "it links to the Compressor in the Atlas");
+  ok(hrefs.includes("/plugins#comp"), "it links to the compression plug-in advice");
+  ok(hrefs.includes("/build"), "it links to the matching Build a Set stage");
+  await panel.locator("a[href='/atlas#compressor']").click();
+  await p.waitForURL(/\/atlas#compressor/); await p.waitForTimeout(800);
+  ok(await p.locator("#compressor").count() > 0, "the Atlas opens on that device");
+  ok(await p.locator("#compressor a[href='/learn/compressor']").count() > 0, "and links back to the lesson");
+  await p.goto(BASE + "/plugins#comp"); await p.waitForTimeout(800);
+  ok(await p.locator("#comp a[href='/atlas#compressor']").count() > 0, "the plug-in guide links to the stock Compressor");
+  ok(errs.length === 0, "no page errors: " + JSON.stringify(errs));
+  await ctx.close();
+}
+
 await browser.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

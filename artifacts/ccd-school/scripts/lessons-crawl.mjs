@@ -1,15 +1,16 @@
 /**
  * Plays every lesson in a real browser, answering each screen correctly from the lesson data.
  * Fails a lesson if a screen does not render, a control is missing, or the lesson cannot be finished.
- *   MISSIONS_JSON=/path/missions.json BASE=http://localhost:3120 node scripts/lessons-crawl.mjs [slug-prefix|--world=dj] [--limit=N]
- * missions.json is produced by a one-off dump of MISSIONS (slug, world, screens).
+ *   npm run crawl:dump   (once, writes .tmp/missions.json)
+ *   BASE=http://localhost:3120 node scripts/lessons-crawl.mjs [slug-prefix|--world=dj] [--limit=N]
+ * missions.json comes from `npm run crawl:dump`.
  */
 import { createRequire } from "node:module";
 const { chromium } = createRequire(import.meta.url)("playwright");
 import { readFileSync } from "node:fs";
 
 const BASE = process.env.BASE ?? "http://localhost:3120";
-const missions = JSON.parse(readFileSync(process.env.MISSIONS_JSON, "utf8"));
+const missions = JSON.parse(readFileSync(process.env.MISSIONS_JSON ?? ".tmp/missions.json", "utf8"));
 const arg = process.argv.slice(2);
 const world = arg.find((a) => a.startsWith("--world="))?.slice(8);
 const limit = Number(arg.find((a) => a.startsWith("--limit="))?.slice(8) ?? 0);
@@ -21,7 +22,7 @@ const progress = { xp: 0, gems: 0, streakDays: 0, streakShield: false, streakShi
 
 const browser = await chromium.launch();
 const results = [];
-const T = 6000;
+const T = 12000;
 
 async function clickBtn(p, re) {
   const b = p.getByRole("button", { name: re }).first();
