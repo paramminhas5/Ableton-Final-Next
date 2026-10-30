@@ -26,7 +26,7 @@ export function movesFor(stage: Stage): Move[] {
     ];
   if (stage === "growing")
     return [
-      { href: "/build", title: "Build your first track", why: "Nine stages, checked against your real Set." },
+      { href: "/build", title: "Build your first track", why: "Fourteen stages, checked against your real Set." },
       { href: "/gym", title: "Five-minute Ear Gym", why: "Train your ears for EQ, compression and groove." },
       { href: "/plugins", title: "Which plug-in for what", why: "Stock first, then the best free and paid options." },
     ];

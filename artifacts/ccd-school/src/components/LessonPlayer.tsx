@@ -12,6 +12,8 @@
  *   #EB — Error boundary wraps entire lesson to catch bad content data gracefully
  */
 
+import { LessonLinksPanel } from "./LessonLinksPanel";
+import { HeartsWall } from "./HeartsWall";
 import { useState, useRef, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
 import { Simulator } from "@/components/sims/Simulator";
@@ -674,6 +676,8 @@ function SummaryScreen({
         </ul>
       </div>
 
+      <LessonLinksPanel slug={mission.slug} />
+
       {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}
       <LessonSourceBar source={source} />
 
@@ -791,6 +795,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
   const [screenIdx, setScreenIdx] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [done, setDone] = useState(false);
+  const [outOfHearts, setOutOfHearts] = useState(false);
   const [showHeartsExplainer, setShowHeartsExplainer] = useState(false);
 
   const { progress, completeMission, reviewMission, loseHeart } = useProgress();
@@ -875,7 +880,58 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
     } catch {}
   }, [screenIdx, correctCount, done, SESSION_KEY]);
 
+  // Record the completion exactly once (XP, streak, FSRS card, server event).
+  const completedRef = useRef(false);
+  const recordCompletion = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    const score = correctCount / Math.max(1, quizScreens.length);
+    // Fire perfect score easter egg
+    if (score === 1) triggerPerfectScore();
+    if (isReview) {
+      reviewMission(mission.slug, score);
+    } else {
+      completeMission(mission.slug, mission.xp, score, mission.badge?.slug);
+      // Fire server-authoritative event (patches XP spoofing)
+      window.dispatchEvent(new CustomEvent("progress:server_event", {
+        detail: {
+          type: "mission_complete",
+          missionSlug: mission.slug,
+          xp: mission.xp,
+          score,
+          badge: mission.badge?.slug,
+        },
+      }));
+    }
+    track("lesson_completed", {
+      missionSlug: mission.slug,
+      world: mission.world,
+      xpEarned: alreadyDone ? 0 : mission.xp,
+      score,
+      quizTotal: quizScreens.length,
+      correctCount,
+      isReview: !!isReview,
+      learnMode,
+    });
+  }, [correctCount, quizScreens.length, isReview, reviewMission, completeMission, mission, alreadyDone, learnMode]);
+
+  // Arriving at a lesson with no hearts left shows the wall straight away.
+  useEffect(() => {
+    if (isFlowMode && progress.hearts <= 0 && !done && screenIdx === 0 && !alreadyDone) setOutOfHearts(true);
+  }, [isFlowMode, progress.hearts, done, screenIdx, alreadyDone]);
+
+  // Covers a lesson restored straight onto its summary screen after a refresh.
+  useEffect(() => {
+    if (currentScreen?.kind === "summary") recordCompletion();
+  }, [currentScreen?.kind, recordCompletion]);
+
   const advance = useCallback(() => {
+    // Flow Mode: the last heart is gone. Let the learner read the feedback, then stop here
+    // until a heart comes back (or they switch to Free Mode).
+    if (isFlowMode && !alreadyDone && progress.hearts <= 0 && screens[screenIdx + 1]?.kind !== "summary") {
+      setOutOfHearts(true);
+      return;
+    }
     if (screenIdx < total - 1) {
       // Track per-screen progress for drop-off analysis
       const screen = screens[screenIdx];
@@ -886,42 +942,17 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         screenKind: screen?.kind ?? "unknown",
         totalScreens: total,
       });
+      // The summary is itself a screen. Reaching it is finishing the lesson, so
+      // save XP and progress now; the summary's button only closes the lesson.
+      if (screens[screenIdx + 1]?.kind === "summary") recordCompletion();
       setScreenIdx(idx => idx + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      const score = correctCount / Math.max(1, quizScreens.length);
-      // Fire perfect score easter egg
-      if (score === 1) triggerPerfectScore();
-      if (isReview) {
-        reviewMission(mission.slug, score);
-      } else {
-        completeMission(mission.slug, mission.xp, score, mission.badge?.slug);
-        // Fire server-authoritative event (patches XP spoofing)
-        window.dispatchEvent(new CustomEvent("progress:server_event", {
-          detail: {
-            type: "mission_complete",
-            missionSlug: mission.slug,
-            xp: mission.xp,
-            score,
-            badge: mission.badge?.slug,
-          },
-        }));
-      }
-      // Track completion
-      track("lesson_completed", {
-        missionSlug: mission.slug,
-        world: mission.world,
-        xpEarned: alreadyDone ? 0 : mission.xp,
-        score,
-        quizTotal: quizScreens.length,
-        correctCount,
-        isReview: !!isReview,
-        learnMode,
-      });
+      recordCompletion();
       setDone(true);
       onComplete();
     }
-  }, [screenIdx, total, correctCount, quizScreens.length, mission, isReview, completeMission, reviewMission, onComplete, alreadyDone, learnMode, screens]);
+  }, [screenIdx, total, mission, screens, recordCompletion, onComplete, isFlowMode, alreadyDone, progress.hearts]);
 
   const handleCorrect = () => { setCorrectCount(c => c + 1); onCorrect?.(); };
   const handleWrong = () => {
@@ -995,7 +1026,9 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
             key={screenIdx} ensures React remounts each screen,
             resetting internal state (quiz phase, interacted flag, etc.)
             animate-fade-up added to individual screen components for P2 #24 */}
-        {done && summaryScreen ? (
+        {outOfHearts && progress.hearts <= 0 && !done ? (
+          <HeartsWall />
+        ) : done && summaryScreen ? (
           <SummaryScreen
             key="summary-done"
             screen={summaryScreen}

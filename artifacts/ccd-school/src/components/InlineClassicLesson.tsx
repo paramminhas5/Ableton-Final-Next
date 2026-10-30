@@ -26,6 +26,7 @@ import { Glossarized, GlossaryScope } from "@/components/Term";
 import { getMissionContext } from "@/lib/missionContext";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { LessonSourceBar } from "@/components/LessonSourceBar";
+import { LessonLinksPanel } from "@/components/LessonLinksPanel";
 
 const WORLD_BANNERS: Record<string, string> = {
   foundations: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
@@ -634,6 +635,7 @@ export function InlineClassicLesson({
         </Section>
 
         {/* ── SOURCE CITATION ────────────────────────────────────────────────── */}
+        <LessonLinksPanel slug={m.slug} />
         <LessonSourceBar source={ctx?.path?.source} />
 
         {/* ── NEXT LESSON CTA ────────────────────────────────────────────────── */}

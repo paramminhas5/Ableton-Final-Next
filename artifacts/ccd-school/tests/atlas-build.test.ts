@@ -73,6 +73,33 @@ describe("build stages", () => {
     expect(run({ ...base, tracks: [trk({ clips: [clip(0, 32)] })] }).arrange).toBe(false);
     expect(run({ ...base, tracks: [trk({ clips: [clip(0, 32), clip(40, 32)] })] }).arrange).toBe(true);
   });
+  it("group stage needs a group holding two tracks and a Glue Compressor on the group", () => {
+    const g = trk({ id: "g", kind: "group" as never });
+    const kids = [trk({ id: "a", groupId: "g" }), trk({ id: "b", groupId: "g" })];
+    expect(run({ ...base, tracks: [g, ...kids] }).group).toBe(false);
+    expect(run({ ...base, tracks: [trk({ id: "g", kind: "group" as never, devices: [dev("GlueCompressor")] }), ...kids] }).group).toBe(true);
+    expect(run({ ...base, tracks: [trk({ id: "g", kind: "group" as never, devices: [dev("GlueCompressor")] }), kids[0]] }).group).toBe(false);
+  });
+  it("eq stage wants EQ Eight on two tracks, not one", () => {
+    expect(run({ ...base, tracks: [trk({ devices: [dev("Eq8")] })] }).eq).toBe(false);
+    expect(run({ ...base, tracks: [trk({ devices: [dev("Eq8")] }), trk({ id: "2", devices: [dev("Eq8")] })] }).eq).toBe(true);
+  });
+  it("colour stage wants a Saturator", () => {
+    expect(run({ ...base, tracks: [trk({ devices: [dev("Eq8")] })] }).colour).toBe(false);
+    expect(run({ ...base, tracks: [trk({ devices: [dev("Saturator")] })] }).colour).toBe(true);
+  });
+  it("32 bar stage is stricter than the 16 bar stage", () => {
+    const clip = (len: number) => ({ name: "a", view: "arrangement" as const, kind: "audio" as const, startBeat: 0, lengthBeats: len });
+    const s = { ...base, tracks: [trk({ clips: [clip(64)] })] };
+    expect(run(s).arrange).toBe(true);
+    expect(run(s).longer).toBe(false);
+    expect(run({ ...base, tracks: [trk({ clips: [clip(128)] })] }).longer).toBe(true);
+  });
+  it("motion stage needs real automation, not an empty envelope", () => {
+    expect(run({ ...base, tracks: [trk({ automation: [{ param: "Cutoff", points: 2 }] })] }).motion).toBe(false);
+    expect(run({ ...base, tracks: [trk({ automation: [{ param: "Cutoff", points: 5 }] })] }).motion).toBe(true);
+    expect(run({ ...base, master: trk({ kind: "master", automation: [{ param: "Volume", points: 3 }] }) }).motion).toBe(true);
+  });
   it("master stage looks at the main track only", () => {
     expect(run({ ...base, tracks: [trk({ devices: [dev("Limiter")] })] }).master).toBe(false);
     expect(run({ ...base, master: trk({ kind: "master", devices: [dev("Limiter")] }) }).master).toBe(true);

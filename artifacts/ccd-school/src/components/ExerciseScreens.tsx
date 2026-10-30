@@ -78,11 +78,11 @@ export function AudioIdScreen({
   onWrong: () => void;
   onNext: () => void;
 }) {
-  const [phase, setPhase] = useState<"context" | "listening" | "picking" | "correct" | "wrong">("context");
+  const context = AUDIO_CONTEXT[screen.audioType];
+  // No intro card for this sound: go straight to listening, or the screen renders empty.
+  const [phase, setPhase] = useState<"context" | "listening" | "picking" | "correct" | "wrong">(context ? "context" : "listening");
   const [picked, setPicked] = useState<number | null>(null);
   const [hasListened, setHasListened] = useState(false);
-
-  const context = AUDIO_CONTEXT[screen.audioType];
 
   const pick = (idx: number) => {
     if (phase !== "picking") return;
@@ -176,11 +176,21 @@ export function AudioIdScreen({
                   );
                 })}
               </div>
-              {phase === "wrong" && (
+              {(phase === "correct" || phase === "wrong") && (
                 <>
-                  <div className="font-mono text-xs opacity-80 mb-1">
-                    Correct: <strong>{screen.options[screen.answer]}</strong>
-                    {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                  <div
+                    className={`brutal-border p-4 ${phase === "correct" ? "bg-volt text-bone" : "bg-hot text-bone"}`}
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    <div className="font-display text-2xl mb-1">{phase === "correct" ? "✓ CORRECT!" : "✗ NOT QUITE"}</div>
+                    {phase === "wrong" && (
+                      <div className="font-mono text-xs opacity-80 mb-1">
+                        Correct: <strong>{screen.options[screen.answer]}</strong>
+                        {isFlowMode && <span className="ml-2 opacity-70">−1 heart</span>}
+                      </div>
+                    )}
+                    <div className="font-mono text-sm leading-relaxed border-t border-current/20 pt-2 mt-1">{screen.explain}</div>
                   </div>
                   <button
                     onClick={onNext}

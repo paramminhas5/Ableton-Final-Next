@@ -175,6 +175,7 @@ type ProgressContextValue = ReturnType<typeof buildProgressValue>;
 let latest: Progress | null = null;
 
 function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
+  const pRender = p;
   latest = p;
   // Centralised write: update React state AND persist in one call
   const commit = (next: Progress) => {
@@ -185,7 +186,7 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
 
   const completeMission = (slug: string, xp: number, score: number, badge?: string) => {
     // Read current p (closure) — safe because commit() updates it atomically
-    const cur = p;
+    const cur = latest ?? p;
     const today = todayKey();
     let streak = cur.streakDays;
     let shield = cur.streakShield;
@@ -231,6 +232,7 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
   };
 
   const reviewMission = (slug: string, score: number) => {
+    const p = latest ?? pRender;
     const existingCard = (p.fsrsCards?.[slug] ?? p.lessonStrengths?.[slug]
       ? legacyStrengthToFSRS(p.lessonStrengths[slug])
       : null) as FSRSCard | null;
@@ -246,35 +248,39 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
   };
 
   const loseHeart = () => {
+    const p = latest ?? pRender;
     if (p.hearts <= 0) return;
     commit({ ...p, hearts: p.hearts - 1, heartRefillAt: p.heartRefillAt === 0 ? Date.now() : p.heartRefillAt });
   };
 
   const refillHeart = () => {
+    const p = latest ?? pRender;
     if (p.hearts >= MAX_HEARTS) return;
     const next = Math.min(MAX_HEARTS, p.hearts + 1);
     commit({ ...p, hearts: next, heartRefillAt: next >= MAX_HEARTS ? 0 : p.heartRefillAt });
   };
 
   const spendGems = (amount: number): boolean => {
+    const p = latest ?? pRender;
     if (p.gems < amount) return false;
     commit({ ...p, gems: p.gems - amount });
     return true;
   };
 
   const addXp = (amount: number) => {
+    const p = latest ?? pRender;
     const today = todayKey();
     const newDailyXp = p.dailyXpDate === today ? p.dailyXp + amount : amount;
     commit({ ...p, xp: p.xp + amount, dailyXp: newDailyXp, dailyXpDate: today, weeklyXp: p.weeklyXp + amount });
   };
 
   const setOnboarding = (world: Progress["selectedWorld"], difficulty?: Progress["difficulty"]) => {
-    const b = latest ?? p;
+    const b = latest ?? pRender;
     commit({ ...b, onboardingDone: true, selectedWorld: world, difficulty: difficulty ?? b.difficulty });
   };
 
-  const setDifficulty = (difficulty: Progress["difficulty"]) => commit({ ...(latest ?? p), difficulty });
-  const setPlacement = (chapter: number) => commit({ ...(latest ?? p), placementDone: true, unlockedChapter: chapter });
+  const setDifficulty = (difficulty: Progress["difficulty"]) => commit({ ...(latest ?? pRender), difficulty });
+  const setPlacement = (chapter: number) => commit({ ...(latest ?? pRender), placementDone: true, unlockedChapter: chapter });
   const reset = () => commit(empty());
 
   // FSRS-powered review queue (uses retrievability < 0.9 threshold)

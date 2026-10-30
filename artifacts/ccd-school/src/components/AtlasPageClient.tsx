@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
 
-export function AtlasPageClient() {
+export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { slug: string; title: string }[]> }) {
   const [q, setQ] = useState("");
   const [group, setGroup] = useState<AtlasGroup | "all">("all");
   const [hash, setHash] = useState("");
@@ -92,6 +92,17 @@ export function AtlasPageClient() {
               <p className="font-mono text-sm mt-2">{d.does}</p>
               <p className="font-mono text-xs mt-2"><b>Reach for it:</b> {d.reach}</p>
               <p className="font-mono text-xs mt-1 opacity-70"><b>Tip:</b> {d.tip}</p>
+              {lessons[d.id]?.length ? (
+                <p className="font-mono text-xs mt-2">
+                  <b>Learn it:</b>{" "}
+                  {lessons[d.id].map((l, i) => (
+                    <span key={l.slug}>
+                      {i > 0 && ", "}
+                      <a className="underline" href={`/learn/${l.slug}`}>{l.title}</a>
+                    </span>
+                  ))}
+                </p>
+              ) : null}
             </li>
           ))}
         </ul>

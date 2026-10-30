@@ -1,7 +1,7 @@
 import type { CheckSpec } from "@/lib/setstate/checker";
 
 /**
- * "Build a Set": nine stages, in the order a first track usually comes together.
+ * "Build a Set": fourteen stages, in the order a first track usually comes together.
  * Learners upload their saved Set after each stage; every stage is checked against the
  * Set as it stands, so earlier stages must still hold.
  */
@@ -70,10 +70,43 @@ export const BUILD_STAGES: BuildStage[] = [
     ],
   },
   {
+    id: "group", title: "Group the drums and glue them", xp: 35, learn: ["glue-compressor", "audio-effect-rack"],
+    task: "Select your drum tracks, group them (Ctrl or Cmd + G), then put a Glue Compressor on the group with a slow attack and a low ratio.",
+    why: "Drums that share one gentle compressor sound like one kit instead of separate loops.",
+    checks: [
+      { id: "group", label: "A group track with at least two tracks inside", hint: "Select two or more tracks, press Ctrl/Cmd + G.", check: { type: "groupWithChildren", minChildren: 2 } },
+      { id: "glue", label: "A Glue Compressor on the group", hint: "Drag Glue Compressor onto the group track's name.", check: { type: "device", classNames: ["GlueCompressor"], on: "group" } },
+    ],
+  },
+  {
+    id: "eq", title: "Clean up with EQ", xp: 30, learn: ["eq-eight"],
+    task: "Put an EQ Eight on at least two tracks. Cut the low end you do not need (a high-pass filter around 100 Hz on anything that is not kick or bass) and sweep for anything harsh.",
+    why: "Most muddy mixes come from low frequencies stacking up in parts that do not need them.",
+    checks: [{ id: "eq8", label: "EQ Eight on at least two tracks", hint: "Drag EQ Eight onto a track, turn on band 1 and set it to a high-pass filter.", check: { type: "device", classNames: ["Eq8"], min: 2 } }],
+  },
+  {
+    id: "colour", title: "Add warmth with saturation", xp: 25, learn: ["saturator"],
+    task: "Put a Saturator on a drum, bass or synth track and turn Drive up until it adds edge without sounding broken.",
+    why: "Saturation adds harmonics, so a part cuts through a mix at a lower volume.",
+    checks: [{ id: "sat", label: "A Saturator on a track", hint: "Drag Saturator onto a track and raise Drive.", check: { type: "device", classNames: ["Saturator"] } }],
+  },
+  {
     id: "arrange", title: "Arrange 16 bars", xp: 40, learn: [],
     task: "Switch to Arrangement view and place clips so the track runs for at least 16 bars. Add and remove parts to build a start, a middle and a drop.",
     why: "A loop is not a song. Arrangement is where the track moves.",
     checks: [{ id: "arr", label: "Arrangement runs at least 16 bars", hint: "Press Tab for Arrangement view, then drag clips from Session onto the timeline.", check: { type: "arrangementBeats", min: 64 } }],
+  },
+  {
+    id: "longer", title: "Take it to 32 bars", xp: 40, learn: [],
+    task: "Extend the arrangement to at least 32 bars with a clear intro, a build, a drop and an outro. Mute or remove parts to make each section different.",
+    why: "Contrast between sections is what makes the drop feel like a drop.",
+    checks: [{ id: "arr32", label: "Arrangement runs at least 32 bars", hint: "Copy clips along the timeline and remove parts so the sections differ.", check: { type: "arrangementBeats", min: 128 } }],
+  },
+  {
+    id: "motion", title: "Automate a sweep", xp: 40, learn: ["auto-filter", "utility"],
+    task: "In Arrangement view, draw automation for one parameter: a filter cutoff opening over the build, or a send level rising into the drop. Use at least three points.",
+    why: "A part that never changes gets boring. Automation is how a producer makes a loop evolve.",
+    checks: [{ id: "auto", label: "Drawn automation with at least three points", hint: "Press A to show automation, pick a parameter from the dropdown, then click the line to add points.", check: { type: "automation", minPoints: 3 } }],
   },
   {
     id: "master", title: "Protect the main output", xp: 25, learn: ["limiter"],

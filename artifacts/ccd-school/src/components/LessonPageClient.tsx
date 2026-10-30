@@ -21,6 +21,10 @@ import { missionBySlug, nextMission } from "@/content/missions";
 import { FloatingCoachButton } from "@/components/BeatCoach";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
+import { useAuth } from "@/lib/auth";
+import { isLocked } from "@/lib/gating";
+import { useGatingMode } from "@/components/ClientProviders";
+import Link from "next/link";
 
 // ── Cat speech-bubble quips per world ─────────────────────────────────────────
 const NEXT_QUIPS: Record<string, string[]> = {
@@ -177,12 +181,33 @@ function Inner({ slug }: { slug: string }) {
   const isReview = params.get("review") === "1";
   const { learnMode } = useLearnMode();
   const [showInterstitial, setShowInterstitial] = useState(false);
+  const { plan } = useAuth();
+  const gatingMode = useGatingMode();
 
   const mission = missionBySlug(slug);
   if (!mission) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-12 font-mono text-xl">
         Mission not found: {slug}
+      </div>
+    );
+  }
+
+  // The same rule as the mission list and mission page: later lessons are Pro while gating is on.
+  if (isLocked(mission, plan, gatingMode)) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-12" data-testid="lesson-locked">
+        <div className="brutal-border bg-ink text-bone p-8 text-center brutal-shadow">
+          <div className="font-display text-5xl mb-2">🔒</div>
+          <div className="font-display text-3xl mb-3">PRO LESSON</div>
+          <p className="font-mono text-sm opacity-80 mb-6 leading-relaxed">
+            {mission.title} is part of CCD.SCHOOL Pro. The first 3 lessons in every path are free forever.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/upgrade" className="brutal-border bg-acid text-ink px-6 py-3 font-mono text-xs uppercase brutal-press">UPGRADE TO PRO →</Link>
+            <Link href="/missions" className="brutal-border bg-bone text-ink px-6 py-3 font-mono text-xs uppercase brutal-press">FREE LESSONS ←</Link>
+          </div>
+        </div>
       </div>
     );
   }

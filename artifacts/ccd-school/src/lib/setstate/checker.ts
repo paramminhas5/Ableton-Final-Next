@@ -14,7 +14,9 @@ export type Check =
   /** this many MIDI tracks that have notes in them */
   | { type: "midiTracksWithNotes"; min: number }
   /** arrangement view length: end of the last arrangement clip, in beats */
-  | { type: "arrangementBeats"; min: number };
+  | { type: "arrangementBeats"; min: number }
+  /** drawn arrangement automation: at least `min` envelopes that each have `minPoints` breakpoints */
+  | { type: "automation"; minPoints: number; min?: number };
 
 export interface CheckSpec {
   id: string;
@@ -105,6 +107,10 @@ function runCheck(c: Check, s: SetState): { pass: boolean; found: string } {
       );
       const bars = Math.floor(end / s.timeSignature[0]);
       return { pass: end >= c.min, found: end ? `arrangement runs ${bars} bars` : "nothing in the arrangement yet" };
+    }
+    case "automation": {
+      const n = [...allTracks(s), s.master].reduce((a, t) => a + t.automation.filter((e) => e.points >= c.minPoints).length, 0);
+      return { pass: n >= (c.min ?? 1), found: n ? `${n} automated parameter${n > 1 ? "s" : ""}` : "no arrangement automation" };
     }
     case "midiNotes": {
       const n = s.tracks.reduce((a, t) => a + t.clips.reduce((b, cl) => b + (cl.notes?.length ?? 0), 0), 0);

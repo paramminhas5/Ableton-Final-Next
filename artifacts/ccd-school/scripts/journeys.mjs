@@ -196,18 +196,18 @@ console.log("\nJ2 Some experience: build a Set stage by stage");
   ok(await p.locator("text=Build your first track").count() > 0, "dashboard now offers Build your first track");
   await p.goto(BASE + "/build");
   await p.setInputFiles("input[type=file]", alsFile("full.als"));
-  await p.waitForSelector("text=/\\d of 9 stages/");
+  await p.waitForSelector("text=/\\d of 14 stages/");
   await p.waitForTimeout(500);
   await dismiss(p);
   const t = await p.locator("main header").innerText();
-  ok(/6 of 9 stages/.test(t), "uploaded Set passes tempo, drums, bass, harmony, names, shared space (6 of 9)");
+  ok(/6 of 14 stages/.test(t), "uploaded Set passes tempo, drums, bass, harmony, names, shared space (6 of 14)");
   ok((await progressOf(p)).xp === 200 + 10 + 30 + 30 + 30 + 15 + 30, "XP for those six stages added once");
   await p.setInputFiles("input[type=file]", alsFile("again.als"));
   await p.waitForTimeout(900);
   ok((await progressOf(p)).xp === 345, "uploading again gives no extra XP");
   await p.setInputFiles("input[type=file]", alsFile("renamed.als", { tempo: 120 }));
   await p.waitForTimeout(900);
-  ok(/6 of 9 stages/.test(await p.locator("main header").innerText()), "earlier stages stay done even if a later upload fails them");
+  ok(/6 of 14 stages/.test(await p.locator("main header").innerText()), "earlier stages stay done even if a later upload fails them");
   await p.setInputFiles("input[type=file]", join(tmp, "notaset.als")).catch(() => {});
   writeFileSync(join(tmp, "notaset.als"), "hello");
   await p.setInputFiles("input[type=file]", join(tmp, "notaset.als"));
@@ -216,6 +216,63 @@ console.log("\nJ2 Some experience: build a Set stage by stage");
   await p.goto(BASE + "/gym");
   ok(await p.locator("text=FIVE MINUTES").count() > 0, "ear gym opens");
   ok(errs.length === 0, "no page errors or 5xx: " + JSON.stringify(errs));
+  await ctx.close();
+}
+
+
+// ───────────────────────── J5: gating and hearts (Flow Mode, signed out)
+console.log("\nJ5 Free limits and hearts");
+{
+  const hearts = (n, gems = 0) => seedProgress({ hearts: n, gems });
+  const noExplainer = async (ctx) => ctx.addInitScript(() => { try { sessionStorage.setItem("ccd.hearts_explained", "1"); } catch {} });
+  // first three lessons of a path are free, the fourth is Pro
+  let { ctx, p, errs } = await fresh(hearts(5));
+  await noExplainer(ctx);
+  await p.goto(BASE + "/learn/amplitude-volume"); await p.waitForTimeout(1500);
+  ok(await p.getByRole("button", { name: "Tap to continue" }).count() > 0, "lesson 3 of a path opens for free");
+  await p.goto(BASE + "/learn/timbre-tone"); await p.waitForTimeout(1500);
+  ok(await p.locator("[data-testid=lesson-locked]").count() > 0, "lesson 4 of a path is locked behind Pro");
+  ok(await p.locator("a[href='/upgrade']").count() > 0, "the locked lesson offers an upgrade link");
+  await ctx.close();
+
+  // the last heart goes on a wrong answer; after the feedback the wall appears and the lesson does not continue
+  ({ ctx, p, errs } = await fresh(hearts(1)));
+  await noExplainer(ctx);
+  await p.goto(BASE + "/learn/what-is-sound");
+  await p.getByRole("button", { name: "Tap to continue" }).click();
+  await p.getByRole("button", { name: /GOT IT/ }).click();
+  await p.getByRole("button", { name: /GOT IT/ }).click();
+  await p.locator("text=TRY IT").locator("xpath=../following-sibling::div[1]").click({ position: { x: 5, y: 5 }, force: true });
+  await p.getByRole("button", { name: /NEXT/ }).click();
+  await p.getByRole("button", { name: /^Option A:/ }).click(); // the right answer is B
+  ok((await progressOf(p)).hearts === 0, "a wrong answer in Flow Mode costs the last heart");
+  ok(await p.locator("text=/NOT QUITE/").count() > 0 && await p.locator("button:has-text('✓')").count() > 0, "the learner is told it was wrong and sees the right answer marked");
+  await p.getByRole("button", { name: /NEXT/ }).click();
+  ok(await p.locator("text=OUT OF HEARTS").count() > 0, "with no hearts left the lesson stops at the out-of-hearts screen");
+  ok(await p.locator("text=/Next heart in/").count() > 0, "it says when the next heart arrives");
+  await p.getByRole("button", { name: /Switch to Free Mode/ }).click();
+  await p.waitForTimeout(800);
+  ok(await p.locator("text=OUT OF HEARTS").count() === 0, "Free Mode lets them carry on without hearts");
+  ok(errs.length === 0, "no page errors: " + JSON.stringify(errs));
+  await ctx.close();
+
+  // arriving with no hearts, but with gems: spend 20 to carry on
+  ({ ctx, p, errs } = await fresh(hearts(0, 25)));
+  await noExplainer(ctx);
+  await p.goto(BASE + "/learn/what-is-sound"); await p.waitForTimeout(1200);
+  ok(await p.locator("text=OUT OF HEARTS").count() > 0, "opening a lesson with no hearts shows the wall straight away");
+  await p.getByRole("button", { name: /Spend 20 gems/ }).click();
+  await p.waitForTimeout(500);
+  const pr = await progressOf(p);
+  ok(pr.hearts === 1 && pr.gems === 5, "20 gems buy one heart");
+  ok(await p.locator("text=OUT OF HEARTS").count() === 0, "the wall lifts once a heart is back");
+  await ctx.close();
+
+  // a lesson already completed can be replayed with no hearts (practice, no XP)
+  ({ ctx, p, errs } = await fresh({ "ccd.progress.v2": { ...seedProgress({ hearts: 0 })["ccd.progress.v2"], completedMissions: { "what-is-sound": { score: 1, at: 1 } }, xp: 40 } }));
+  await noExplainer(ctx);
+  await p.goto(BASE + "/learn/what-is-sound"); await p.waitForTimeout(1200);
+  ok(await p.locator("text=OUT OF HEARTS").count() === 0, "finished lessons stay open for practice with no hearts");
   await ctx.close();
 }
 
@@ -289,6 +346,75 @@ console.log("\nJ4 Experienced: placement test skips ahead only when earned");
     await ctx.close();
   }
   ok(nextByLabel.strong && nextByLabel.weak && nextByLabel.strong !== nextByLabel.weak, `a strong score starts further on than a weak one (${nextByLabel.strong} vs ${nextByLabel.weak})`);
+}
+
+
+// ───────────────────────── J7: a DJ and a Fundamentals learner each get their own path
+console.log("\nJ7 Other worlds: DJ and Fundamentals");
+{
+  for (const [world, chip, expectWorld] of [["DJ", "DJ", "dj"], ["Fundamentals", "Fundamentals", "fundamentals"]]) {
+    const { ctx, p, errs } = await fresh();
+    await p.goto(BASE + "/");
+    await p.locator('button:visible:has-text("START LEARNING FREE")').first().click();
+    await p.locator('button:has-text("Total Beginner")').first().click();
+    await p.locator(`button:has-text("${chip}")`).first().click();
+    await p.locator('button:has-text("FLOW MODE")').first().click();
+    await p.locator('button:visible:has-text("START FIRST LESSON")').first().click();
+    await p.waitForURL(/dashboard|learn/, { timeout: 8000 });
+    await p.waitForTimeout(1500);
+    const pr = await progressOf(p);
+    ok(pr.selectedWorld === expectWorld, `${world}: onboarding saves the ${expectWorld} world`);
+    await p.goto(BASE + "/dashboard"); await p.waitForTimeout(1200);
+    const cont = p.locator("a[href^='/learn/']").first();
+    const href = await cont.getAttribute("href").catch(() => null);
+    ok(!!href, `${world}: the dashboard has a lesson to continue (${href})`);
+    const r = await p.goto(BASE + href);
+    ok(r.status() === 200, `${world}: that lesson opens`);
+    await p.waitForTimeout(800);
+    ok(await p.locator("[data-testid=lesson-locked]").count() === 0, `${world}: and it is not locked`);
+    await p.goto(BASE + `/world/${expectWorld}`); await p.waitForTimeout(800);
+    ok((await p.locator("a[href^='/learn/'], a[href^='/path/']").count()) > 0, `${world}: the world map lists lessons`);
+    ok(errs.length === 0, `${world}: no page errors: ` + JSON.stringify(errs));
+    await ctx.close();
+  }
+}
+
+// ───────────────────────── J8: daily practice, review, ear gym, and the mobile menu
+console.log("\nJ8 Come-back loop: review, daily, ear gym, phone menu");
+{
+  // two finished lessons whose memory has faded
+  const old = Date.now() - 60 * 864e5;
+  const cards = { "what-is-sound": { stability: 1, difficulty: 6, lastReview: old, reps: 1 }, "frequency-pitch": { stability: 1, difficulty: 6, lastReview: old, reps: 1 } };
+  const { ctx, p, errs } = await fresh(seedProgress({
+    completedMissions: { "what-is-sound": { score: 1, at: old }, "frequency-pitch": { score: 1, at: old } },
+    lessonStrengths: { "what-is-sound": { strength: 0.2, lastReviewed: old }, "frequency-pitch": { strength: 0.2, lastReview: old, lastReviewed: old } },
+    fsrsCards: cards, xp: 80,
+  }));
+  await p.goto(BASE + "/review"); await p.waitForTimeout(1200);
+  ok(await p.locator("text=Nothing to review yet").count() === 0, "review lists lessons that need a refresh");
+  ok((await p.locator("a[href*='review=1'], a[href^='/learn/']").count()) > 0, "each review item links to its lesson");
+  await p.goto(BASE + "/daily"); await p.waitForTimeout(1000);
+  ok(await p.locator("text=PRACTICE").count() > 0, "daily practice opens");
+  ok(await p.locator("a[href^='/learn/'], a[href^='/review'], a[href^='/challenge']").count() > 0, "daily practice points at something to do");
+  await p.goto(BASE + "/gym"); await p.waitForTimeout(800);
+  await p.getByRole("button", { name: /START 5 MIN SESSION/ }).click();
+  await p.waitForTimeout(3500);
+  const gymErr = await p.locator("div.bg-hot.text-bone.px-3.py-2").first().innerText({ timeout: 500 }).catch(() => "");
+  ok(!gymErr, "ear gym starts a drill without an error" + (gymErr ? ": " + gymErr : ""));
+  ok((await p.locator("button:visible").count()) >= 4, "the drill shows answer buttons");
+  await p.getByRole("button", { name: /^End$/ }).click();
+  await p.waitForTimeout(600);
+  ok(await p.getByRole("button", { name: /GO AGAIN/ }).count() > 0, "ending a session returns to the gym home");
+  // phone menu
+  await p.goto(BASE + "/dashboard"); await p.waitForTimeout(800);
+  const navLinks = await p.locator("nav a:visible").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
+  ok(navLinks.length >= 3, "the phone bottom bar shows links: " + navLinks.join(" "));
+  for (const href of navLinks.filter((h) => h && h.startsWith("/")).slice(0, 5)) {
+    const r = await p.goto(BASE + href);
+    ok(r.status() === 200, `phone link ${href} opens`);
+  }
+  ok(errs.length === 0, "no page errors: " + JSON.stringify(errs));
+  await ctx.close();
 }
 
 await browser.close();
