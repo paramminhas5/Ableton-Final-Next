@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-md px-4 py-16 space-y-4">
-        <div className="font-mono text-[10px] uppercase opacity-40">// 404</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">// 404</div>
         <h1 className="font-display text-4xl leading-none">THAT PAGE ISN&apos;T HERE.</h1>
         <p className="font-mono text-sm">Try one of these instead.</p>
         <ul className="font-mono text-sm space-y-2">

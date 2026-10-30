@@ -54,12 +54,12 @@ function WorldTabs({
               key={world}
               onClick={() => onSelect(world)}
               className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 brutal-press transition-colors border-r-4 last:border-r-0 border-ink ${
-                active ? `${t.accentBg} ${t.accentText}` : "bg-bone text-ink/55 hover:bg-ink/5"
+                active ? `${t.accentBg} ${t.accentText}` : "bg-bone text-ink/75 hover:bg-ink/5"
               }`}
             >
               <span className="text-xl md:text-2xl leading-none">{t.emoji}</span>
               <span className="font-display text-xs md:text-sm leading-none">{t.title}</span>
-              <span className={`font-mono text-[8px] uppercase tabular-nums ${active ? "opacity-65" : "opacity-40"}`}>
+              <span className={`font-mono text-[8px] uppercase tabular-nums ${active ? "opacity-65" : "opacity-70"}`}>
                 {pct}%
               </span>
             </button>
@@ -93,14 +93,14 @@ function WorldSectionHeader({ world, stats }: {
 
       <div className="px-5 py-6 md:px-8 relative z-10 flex items-start justify-between gap-4">
         <div>
-          <div className={`font-mono text-[8px] uppercase mb-2 opacity-50`}>
+          <div className={`font-mono text-[8px] uppercase mb-2 opacity-70`}>
             {stats.chapters} chapters · {stats.paths} paths · {stats.total} missions
           </div>
           <div className="flex items-center gap-3 mb-2">
             <span className="text-5xl leading-none">{t.emoji}</span>
             <h2 className="font-display text-4xl md:text-5xl leading-none">{t.title.toUpperCase()}</h2>
           </div>
-          <p className={`font-mono text-xs opacity-60 max-w-md leading-relaxed`}>{t.description}</p>
+          <p className={`font-mono text-xs opacity-70 max-w-md leading-relaxed`}>{t.description}</p>
 
           <div className="flex flex-wrap gap-2 mt-3">
             <Link
@@ -120,7 +120,7 @@ function WorldSectionHeader({ world, stats }: {
 
         <div className="shrink-0 flex flex-col items-end gap-2">
           <div className="font-display text-5xl tabular-nums leading-none">{stats.pct}%</div>
-          <div className={`font-mono text-[8px] uppercase opacity-50`}>{stats.done}/{stats.total}</div>
+          <div className={`font-mono text-[8px] uppercase opacity-70`}>{stats.done}/{stats.total}</div>
           <div
             className="w-16 h-16 md:w-20 md:h-20 wiggle"
             style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.22))" }}
@@ -191,11 +191,11 @@ export function WikiPageClient() {
           <Image src="/cats/cat-dancer.png" alt="" fill className="object-contain" />
         </div>
         <div className="max-w-4xl mx-auto px-4 py-7 md:py-10 relative z-10">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-2">
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">
             // 3 WORLDS · 153 MISSIONS · 16 CHAPTERS
           </div>
           <h1 className="font-display text-6xl md:text-8xl leading-none mb-3">WIKI</h1>
-          <p className="font-mono text-sm opacity-55 max-w-lg leading-relaxed mb-4">
+          <p className="font-mono text-sm opacity-70 max-w-lg leading-relaxed mb-4">
             Every world. Every chapter. Every path. Every lesson — all in one place.
             Your complete reference for the CCD.SCHOOL curriculum.
           </p>

@@ -9,7 +9,7 @@ export function PlaygroundPageClient() {
     <main className="min-h-screen bg-bone">
       <header className="brutal-border border-x-0 border-t-0 bg-volt text-bone">
         <div className="max-w-5xl mx-auto px-4 py-6">
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-1">// WORKBENCH</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// WORKBENCH</div>
           <h1 className="font-display text-4xl md:text-6xl leading-none">FREE PLAY</h1>
           <p className="font-mono text-sm mt-2 opacity-70">Explore all {SIM_LIST.length} simulators. No quiz. No pressure. Just learn by doing.</p>
         </div>

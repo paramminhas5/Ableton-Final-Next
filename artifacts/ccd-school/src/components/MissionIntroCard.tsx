@@ -72,7 +72,7 @@ export function MissionIntroCard({ mission: m, missionIndex = 1, missionTotal = 
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-4 animate-fade-in">
 
       {/* Breadcrumb */}
-      <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-50 flex-wrap">
+      <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-70 flex-wrap">
         <Link href={ctx.worldRoute} className="hover:opacity-100 transition-opacity">{ctx.worldLabel}</Link>
         {ctx.chapter && <><span>›</span><span>{ctx.chapter.title}</span></>}
         {ctx.path && <><span>›</span><span>{ctx.path.title}</span></>}
@@ -100,7 +100,7 @@ export function MissionIntroCard({ mission: m, missionIndex = 1, missionTotal = 
 
       {/* Mission header */}
       <header className={`brutal-border ${accent} p-5 md:p-7 chunk-shadow`}>
-        <div className="font-mono text-[9px] uppercase opacity-60 mb-2">
+        <div className="font-mono text-[9px] uppercase opacity-70 mb-2">
           {isReview ? "🔄 REVIEW SESSION" : `MISSION ${String(m.number).padStart(3, "0")}`}
         </div>
         <h1 className="font-display text-4xl md:text-5xl leading-none">{m.title}</h1>
@@ -135,7 +135,7 @@ export function MissionIntroCard({ mission: m, missionIndex = 1, missionTotal = 
           ))}
         </div>
         {quizCount > 0 && (
-          <div className="mt-3 font-mono text-[10px] uppercase opacity-50">
+          <div className="mt-3 font-mono text-[10px] uppercase opacity-70">
             {quizCount} question{quizCount > 1 ? "s" : ""} · immediate feedback after each
           </div>
         )}
@@ -144,8 +144,8 @@ export function MissionIntroCard({ mission: m, missionIndex = 1, missionTotal = 
       {/* Source citation */}
       {ctx.path?.source && (
         <div className="brutal-border bg-bone px-4 py-3 flex items-start gap-2">
-          <span className="font-mono text-[9px] uppercase opacity-40 shrink-0 mt-px">SOURCE</span>
-          <span className="font-sans text-xs opacity-60 leading-relaxed">{ctx.path.source}</span>
+          <span className="font-mono text-[9px] uppercase opacity-70 shrink-0 mt-px">SOURCE</span>
+          <span className="font-sans text-xs opacity-70 leading-relaxed">{ctx.path.source}</span>
         </div>
       )}
 
@@ -155,7 +155,7 @@ export function MissionIntroCard({ mission: m, missionIndex = 1, missionTotal = 
         {isReview ? "START REVIEW →" : "START LESSON →"}
       </button>
 
-      <div className="text-center font-mono text-[9px] uppercase opacity-30">
+      <div className="text-center font-mono text-[9px] uppercase opacity-70">
         {isReview ? "Review strengthens your memory — no XP cost" : "Read · Interact · Quiz · Earn XP"}
       </div>
     </div>

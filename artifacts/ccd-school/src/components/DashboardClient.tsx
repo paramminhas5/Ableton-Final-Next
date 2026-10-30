@@ -276,7 +276,7 @@ export function DashboardClient() {
           <Image src="/cats/cat-dj-hero.png" alt="" width={144} height={144} className="w-full h-full object-contain" />
         </div>
         <div className="max-w-4xl mx-auto px-4 py-8 md:py-10 relative z-10">
-          <div className="font-mono text-xs uppercase opacity-60 mb-2">// YOUR PROGRESS</div>
+          <div className="font-mono text-xs uppercase opacity-70 mb-2">// YOUR PROGRESS</div>
           <h1 className="font-display text-5xl md:text-7xl leading-none mb-4" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
             PROGRESS
           </h1>
@@ -285,13 +285,13 @@ export function DashboardClient() {
             <span className="text-2xl">{rank.emoji}</span>
             <div>
               <div className="font-display text-xl">{rank.name}</div>
-              <div className="font-mono text-[10px] uppercase opacity-50">{rank.tagline}</div>
+              <div className="font-mono text-[10px] uppercase opacity-70">{rank.tagline}</div>
             </div>
             <div className="font-mono text-[9px] brutal-border bg-bone/10 px-2 py-0.5 ml-2 uppercase opacity-70">{modeLabel}</div>
           </div>
           {user && (
             <div className="flex items-center gap-3 mt-1">
-              <div className="font-mono text-sm opacity-60">{user.email}</div>
+              <div className="font-mono text-sm opacity-70">{user.email}</div>
               <a href={`/u/${user.name ?? user.email?.split("@")[0] ?? "me"}`}
                 className="brutal-border bg-acid text-ink px-3 py-1 font-display text-xs hover:bg-sun transition-colors">
                 Public Profile →
@@ -306,7 +306,7 @@ export function DashboardClient() {
         {/* ══ NEXT LESSON ════════════════════════════════════════════════ */}
         <SectionReveal>
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// NEXT LESSON</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// NEXT LESSON</div>
           {!hydrated ? (
             <div className="brutal-border animate-pulse p-5 space-y-3">
               <div className="h-3 w-32 bg-ink/10 rounded" /><div className="h-8 w-2/3 bg-ink/10 rounded" /><div className="h-5 w-24 bg-ink/10 rounded" />
@@ -314,14 +314,14 @@ export function DashboardClient() {
           ) : continueSlug ? (
             <div className="brutal-border flex flex-col md:flex-row items-stretch overflow-hidden border-l-4 border-l-acid chunk-shadow">
               <div className="flex-1 p-5">
-                <div className="font-mono text-[9px] uppercase opacity-50 mb-1">
+                <div className="font-mono text-[9px] uppercase opacity-70 mb-1">
                   {lastCtx?.worldLabel ?? "Fundamentals"}{lastCtx?.chapter ? ` › ${lastCtx.chapter.title}` : ""}{lastCtx?.path ? ` › ${lastCtx.path.title}` : ""}
                 </div>
                 <div className="font-display text-3xl md:text-4xl leading-tight mb-1">{continueTitle}</div>
-                {continueTagline && <div className="font-sans text-sm opacity-60 mb-3 leading-snug">{continueTagline}</div>}
+                {continueTagline && <div className="font-sans text-sm opacity-70 mb-3 leading-snug">{continueTagline}</div>}
                 <div className="flex items-center gap-3 flex-wrap">
                   {continueXp > 0 && <span className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">+{continueXp} XP</span>}
-                  <span className="font-mono text-[9px] opacity-50">{totalDone}/{totalMissions} complete</span>
+                  <span className="font-mono text-[9px] opacity-70">{totalDone}/{totalMissions} complete</span>
                 </div>
               </div>
               <Link href={`/learn/${continueSlug}`}
@@ -342,7 +342,7 @@ export function DashboardClient() {
         {/* ══ NEXT MOVES (hands-on, by stage) ═══════════════════════════ */}
         {hydrated && (
           <section aria-label="Your next moves">
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR NEXT MOVES</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// YOUR NEXT MOVES</div>
             <ul className="grid gap-3 sm:grid-cols-3">
               {movesFor(stageFor({ completed: totalDone, placementDone: progress.placementDone })).map((m) => (
                 <li key={m.href}>
@@ -360,7 +360,7 @@ export function DashboardClient() {
         {hydrated && (
           <SectionReveal delay={0.03}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S PRACTICE</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// TODAY&apos;S PRACTICE</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
               {/* Daily Goal card */}
@@ -372,18 +372,18 @@ export function DashboardClient() {
                   <div className="font-display text-xl leading-tight mb-1">
                     {dailyGoalDone ? "Goal Done! 🎉" : "Daily Goal"}
                   </div>
-                  <div className="font-mono text-xs opacity-60 mb-2">
+                  <div className="font-mono text-xs opacity-70 mb-2">
                     {progress.dailyXp} / {DAILY_GOAL_XP} XP today
                   </div>
                   {dailyGoalDone ? (
                     <div className="font-mono text-[10px] uppercase text-acid">✓ Streak protected</div>
                   ) : (
-                    <div className="font-mono text-[10px] uppercase opacity-50">
+                    <div className="font-mono text-[10px] uppercase opacity-70">
                       {DAILY_GOAL_XP - progress.dailyXp} XP to go
                     </div>
                   )}
                   {progress.streakDays > 0 && (
-                    <div className="font-mono text-[10px] uppercase opacity-60 mt-1">
+                    <div className="font-mono text-[10px] uppercase opacity-70 mt-1">
                       🔥 {progress.streakDays}-day streak{progress.streakShield ? " 🛡" : ""}
                     </div>
                   )}
@@ -391,7 +391,7 @@ export function DashboardClient() {
               </Link>
 
               {/* Daily Challenge card */}
-              <Link href="/challenge" className="brutal-border bg-volt text-ink p-5 flex items-center gap-4 brutal-press hover:bg-acid transition-colors chunk-shadow border-l-4 border-l-[#7B2FFF]">
+              <Link href="/challenge" className="brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-acid transition-colors chunk-shadow border-l-4 border-l-[#7B2FFF]">
                 <div className="text-5xl shrink-0">⚡</div>
                 <div className="flex-1 min-w-0">
                   <div className="font-display text-xl leading-tight mb-1">Daily Challenge</div>
@@ -412,7 +412,7 @@ export function DashboardClient() {
         {/* ══ STATS 2×2 GRID ═════════════════════════════════════════════ */}
         <SectionReveal delay={0.04}>
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// TODAY</div>
           {!hydrated ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[...Array(4)].map((_, i) => <div key={i} className="brutal-border p-5 space-y-2 animate-pulse"><div className="h-10 bg-ink/10 rounded" /><div className="h-3 w-16 bg-ink/10 rounded" /></div>)}
@@ -424,28 +424,28 @@ export function DashboardClient() {
                 <motion.div className="font-display text-4xl md:text-5xl tabular-nums leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                   {progress.xp.toLocaleString()}
                 </motion.div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Total XP</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Total XP</div>
               </div>
               {/* Streak */}
               <div className="brutal-border bg-hot text-bone p-5 chunk-shadow">
                 <motion.div className="font-display text-4xl md:text-5xl leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.05 }}>
                   🔥{progress.streakDays}{progress.streakShield && <span className="text-2xl ml-1">🛡</span>}
                 </motion.div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Day Streak</div>
+                <div className="font-mono text-[10px] uppercase opacity-100 mt-2">Day Streak</div>
               </div>
               {/* Missions */}
               <div className="brutal-border bg-bone p-5 chunk-shadow">
                 <motion.div className="font-display text-4xl md:text-5xl tabular-nums leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.10 }}>
                   {totalDone}
                 </motion.div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Missions Done</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Missions Done</div>
               </div>
               {/* Gems */}
               <div className="brutal-border bg-electric-blue text-bone p-5 chunk-shadow">
                 <motion.div className="font-display text-4xl md:text-5xl leading-none" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
                   💎{progress.gems}
                 </motion.div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Gems</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Gems</div>
               </div>
             </div>
           )}
@@ -456,7 +456,7 @@ export function DashboardClient() {
         {hydrated && nextRank && (
           <SectionReveal delay={0.06}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// RANK PROGRESS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// RANK PROGRESS</div>
             <div className="brutal-border p-4 chunk-shadow">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -476,8 +476,8 @@ export function DashboardClient() {
                 />
               </div>
               <div className="flex items-center justify-between mt-1.5">
-                <div className="font-mono text-[10px] uppercase opacity-50">{progress.xp} XP</div>
-                <div className="font-mono text-[10px] uppercase opacity-50">{nextRank.minXp - progress.xp} XP to go</div>
+                <div className="font-mono text-[10px] uppercase opacity-70">{progress.xp} XP</div>
+                <div className="font-mono text-[10px] uppercase opacity-70">{nextRank.minXp - progress.xp} XP to go</div>
               </div>
             </div>
           </section>
@@ -488,8 +488,8 @@ export function DashboardClient() {
         <SectionReveal delay={0.08}>
         <section>
           <div className="flex items-center justify-between mb-3">
-            <div className="font-mono text-[10px] uppercase opacity-40">// WORLD PROGRESS</div>
-            <Link href="/worlds" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL WORLDS →</Link>
+            <div className="font-mono text-[10px] uppercase opacity-70">// WORLD PROGRESS</div>
+            <Link href="/worlds" className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 brutal-press">ALL WORLDS →</Link>
           </div>
           <div className="space-y-3">
             {(["fundamentals", "dj", "producer"] as WorldKey[]).map((world, i) => {
@@ -516,7 +516,7 @@ export function DashboardClient() {
                         transition={{ duration: 1.2, ease: "easeOut", delay: i * 0.15 }}
                       />
                     </div>
-                    <div className="font-mono text-[9px] uppercase opacity-60 mt-1">
+                    <div className="font-mono text-[9px] uppercase opacity-70 mt-1">
                       {ws.done}/{ws.total} missions · {ws.done === 0 ? "Start →" : ws.pct === 100 ? "Completed ✓" : "Continue →"}
                     </div>
                   </div>
@@ -532,17 +532,17 @@ export function DashboardClient() {
         <div className="grid md:grid-cols-2 gap-4">
           {/* Skill radar */}
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// SKILL COVERAGE</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// SKILL COVERAGE</div>
             <div className="brutal-border p-5 flex flex-col items-center gap-4">
               <SkillRadar skills={radarSkills} />
               <div className="w-full space-y-1.5">
                 {radarSkills.map(s => (
                   <div key={s.label} className="flex items-center gap-2">
-                    <div className="font-mono text-[9px] uppercase w-12 shrink-0 opacity-60">{s.label}</div>
+                    <div className="font-mono text-[9px] uppercase w-12 shrink-0 opacity-70">{s.label}</div>
                     <div className="flex-1 h-1.5 brutal-border bg-ink/10 overflow-hidden">
                       <div className="h-full bg-acid transition-all duration-700" style={{ width: `${s.pct}%` }} />
                     </div>
-                    <div className="font-mono text-[9px] w-7 text-right opacity-50">{s.pct}%</div>
+                    <div className="font-mono text-[9px] w-7 text-right opacity-70">{s.pct}%</div>
                   </div>
                 ))}
               </div>
@@ -552,13 +552,13 @@ export function DashboardClient() {
           {/* Recent badges */}
           <section>
             <div className="flex items-center justify-between mb-3">
-              <div className="font-mono text-[10px] uppercase opacity-40">// RECENT BADGES</div>
-              <Link href="/profile" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">ALL →</Link>
+              <div className="font-mono text-[10px] uppercase opacity-70">// RECENT BADGES</div>
+              <Link href="/profile" className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 brutal-press">ALL →</Link>
             </div>
             {recentBadges.length === 0 ? (
               <div className="brutal-border p-6 text-center h-full flex flex-col items-center justify-center gap-3">
                 <div className="text-5xl">🏅</div>
-                <div className="font-mono text-[10px] uppercase opacity-40">Complete your first lesson to earn a badge</div>
+                <div className="font-mono text-[10px] uppercase opacity-70">Complete your first lesson to earn a badge</div>
               </div>
             ) : (
               <div className="space-y-3">
@@ -570,7 +570,7 @@ export function DashboardClient() {
                       <div className="text-4xl shrink-0">{badge.emoji}</div>
                       <div>
                         <div className="font-display text-lg leading-tight">{badge.name}</div>
-                        <div className="font-mono text-[9px] opacity-60 leading-snug">{badge.description}</div>
+                        <div className="font-mono text-[9px] opacity-70 leading-snug">{badge.description}</div>
                       </div>
                     </div>
                   );
@@ -585,12 +585,12 @@ export function DashboardClient() {
         {reviewData.length > 0 && (
           <SectionReveal delay={0.12}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// REVIEW QUEUE — {missionsNeedingReview.length} FADING</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// REVIEW QUEUE — {missionsNeedingReview.length} FADING</div>
             <div className="brutal-border overflow-hidden chunk-shadow">
               <div className="flex items-center justify-between p-4 border-b-2 border-ink/10">
                 <div>
                   <div className="font-display text-lg">Review Session</div>
-                  <div className="font-mono text-[9px] uppercase opacity-40">{missionsNeedingReview.length} lesson{missionsNeedingReview.length !== 1 ? "s" : ""} need a refresh</div>
+                  <div className="font-mono text-[9px] uppercase opacity-70">{missionsNeedingReview.length} lesson{missionsNeedingReview.length !== 1 ? "s" : ""} need a refresh</div>
                 </div>
                 <Link href={`/learn/${missionsNeedingReview[0]}?review=1`}
                   className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm brutal-press shrink-0">
@@ -616,15 +616,15 @@ export function DashboardClient() {
         <div className="grid md:grid-cols-2 gap-4">
 
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// AI TUTOR</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// AI TUTOR</div>
             <button onClick={() => setCoachOpen(true)}
               className="w-full brutal-border bg-volt text-bone p-5 flex items-center gap-4 brutal-press hover:bg-volt/90 transition-colors text-left border-l-4 border-l-[#7B2FFF] chunk-shadow">
               <div className="text-4xl shrink-0">🎧</div>
               <div className="flex-1 min-w-0">
                 <div className="font-display text-lg">Ask Beat Coach</div>
-                <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">AI music tutor · Powered by Kimi AI</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mt-0.5">AI music tutor · Powered by Kimi AI</div>
               </div>
-              <div className="font-display text-2xl shrink-0 opacity-50">→</div>
+              <div className="font-display text-2xl shrink-0 opacity-70">→</div>
             </button>
             {coachOpen && (
               <CoachPanel
@@ -636,8 +636,8 @@ export function DashboardClient() {
 
           <section>
             <div className="flex items-center justify-between mb-3">
-              <div className="font-mono text-[10px] uppercase opacity-40">// LEADERBOARD</div>
-              <Link href="/leaderboard" className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 brutal-press">FULL →</Link>
+              <div className="font-mono text-[10px] uppercase opacity-70">// LEADERBOARD</div>
+              <Link href="/leaderboard" className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 brutal-press">FULL →</Link>
             </div>
             <div className="brutal-border overflow-hidden chunk-shadow">
               {loadingLeaders ? (
@@ -645,7 +645,7 @@ export function DashboardClient() {
                   {[1, 2, 3].map(i => <div key={i} className="flex items-center gap-3"><Skeleton className="w-6 h-6" /><Skeleton className="flex-1 h-4" /><Skeleton className="w-16 h-4" /></div>)}
                 </div>
               ) : leaders.length === 0 ? (
-                <div className="p-5 font-mono text-[10px] opacity-40 text-center uppercase">No data yet</div>
+                <div className="p-5 font-mono text-[10px] opacity-70 text-center uppercase">No data yet</div>
               ) : (
                 <>
                   {leaders.map((entry, i) => {
@@ -680,7 +680,7 @@ export function DashboardClient() {
           <div className="brutal-border bg-ink text-bone p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="font-display text-lg">Save your progress</div>
-              <div className="font-mono text-[10px] opacity-50 mt-0.5">Sync across devices · appear on the leaderboard</div>
+              <div className="font-mono text-[10px] opacity-70 mt-0.5">Sync across devices · appear on the leaderboard</div>
             </div>
             <Link href="/login" className="brutal-border bg-acid text-ink px-5 py-2.5 font-display text-base brutal-press brutal-shadow shrink-0">
               SIGN UP FREE →

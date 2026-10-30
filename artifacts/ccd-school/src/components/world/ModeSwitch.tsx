@@ -62,7 +62,7 @@ export function ModeSwitch({
         className={`flex-1 flex items-center justify-center gap-1.5 font-display brutal-press transition-all ${pad} ${
           isFlow
             ? "bg-acid text-ink chunk-shadow-sm"
-            : "text-ink/45 hover:text-ink hover:bg-ink/5"
+            : "text-ink/75 hover:text-ink hover:bg-ink/5"
         }`}
       >
         <span className="text-sm leading-none">🌊</span>
@@ -77,7 +77,7 @@ export function ModeSwitch({
         className={`flex-1 flex items-center justify-center gap-1.5 font-display brutal-press transition-all ${pad} ${
           !isFlow
             ? "bg-electric-blue text-bone chunk-shadow-sm"
-            : "text-ink/45 hover:text-ink hover:bg-ink/5"
+            : "text-ink/75 hover:text-ink hover:bg-ink/5"
         }`}
       >
         <span className="text-sm leading-none">📖</span>

@@ -116,8 +116,8 @@ export function LeagueBoard() {
         <div className="flex justify-between items-center mb-2">
           {LEAGUE_TIERS.map(t => (
             <div key={t.id} className="flex flex-col items-center gap-1">
-              <span className={`text-lg ${t.id === tier ? "opacity-100" : "opacity-30"}`}>{t.emoji}</span>
-              <span className={`font-mono text-[8px] uppercase ${t.id === tier ? "font-bold" : "opacity-40"}`}>
+              <span className={`text-lg ${t.id === tier ? "opacity-100" : "opacity-70"}`}>{t.emoji}</span>
+              <span className={`font-mono text-[8px] uppercase ${t.id === tier ? "font-bold" : "opacity-70"}`}>
                 {t.label}
               </span>
             </div>
@@ -141,7 +141,7 @@ export function LeagueBoard() {
       ) : (
         <div className="brutal-border overflow-hidden">
           {/* Column headers */}
-          <div className="grid grid-cols-[40px_1fr_80px] px-3 py-1.5 bg-ink text-bone font-mono text-[9px] uppercase opacity-70">
+          <div className="grid grid-cols-[40px_1fr_80px] px-3 py-1.5 bg-ink text-bone font-mono text-[9px] uppercase opacity-90">
             <span>#</span><span>Player</span><span className="text-right">Weekly XP</span>
           </div>
           {entries.map(entry => {
@@ -160,7 +160,7 @@ export function LeagueBoard() {
                 <span className="font-mono text-xs flex items-center gap-1 truncate">
                   {indicator && <span className="text-[10px]">{indicator}</span>}
                   {entry.name}
-                  {entry.isCurrentUser && <span className="opacity-50 text-[9px]">(you)</span>}
+                  {entry.isCurrentUser && <span className="opacity-70 text-[9px]">(you)</span>}
                 </span>
                 <span className="font-mono text-xs text-right tabular-nums">{entry.weeklyXp}</span>
               </div>
@@ -170,7 +170,7 @@ export function LeagueBoard() {
       )}
 
       {/* Legend */}
-      <div className="flex flex-wrap gap-2 font-mono text-[9px] uppercase opacity-60">
+      <div className="flex flex-wrap gap-2 font-mono text-[9px] uppercase opacity-70">
         <span className="flex items-center gap-1"><span className="w-2 h-2 bg-acid inline-block" /> Promotion zone (top 10)</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 bg-hot inline-block" /> Demotion zone (bottom 5)</span>
         <span className="opacity-40">Resets Sunday midnight UTC</span>

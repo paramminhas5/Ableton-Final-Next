@@ -138,7 +138,7 @@ export function InstallPromptBanner() {
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-display text-base leading-tight">CCD.SCHOOL</div>
-            <div className="font-mono text-[10px] opacity-50 truncate">ccd.school</div>
+            <div className="font-mono text-[10px] opacity-70 truncate">ccd.school</div>
           </div>
           <button
             onClick={() => dismiss("android")}
@@ -202,7 +202,7 @@ export function InstallPromptBanner() {
           <div className="px-6 pb-8 space-y-5 max-w-sm mx-auto">
             <div>
               <div className="font-display text-2xl leading-tight">Add to your<br />Home Screen</div>
-              <p className="font-mono text-xs opacity-60 mt-1">
+              <p className="font-mono text-xs opacity-70 mt-1">
                 Works like a real app — no App Store needed.
               </p>
             </div>
@@ -214,7 +214,7 @@ export function InstallPromptBanner() {
               </div>
               <div>
                 <div className="font-mono text-sm font-bold">Tap the Share button</div>
-                <div className="font-mono text-xs opacity-60 mt-0.5 leading-relaxed">
+                <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">
                   The <span className="font-bold opacity-100">⬆</span> icon at the bottom of Safari (or top-right on iPad).
                 </div>
               </div>
@@ -227,7 +227,7 @@ export function InstallPromptBanner() {
               </div>
               <div>
                 <div className="font-mono text-sm font-bold">Tap "Add to Home Screen"</div>
-                <div className="font-mono text-xs opacity-60 mt-0.5 leading-relaxed">
+                <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">
                   Scroll down in the share sheet until you see it.
                 </div>
               </div>
@@ -240,7 +240,7 @@ export function InstallPromptBanner() {
               </div>
               <div>
                 <div className="font-mono text-sm font-bold">Tap "Add" — done!</div>
-                <div className="font-mono text-xs opacity-60 mt-0.5 leading-relaxed">
+                <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">
                   CCD.SCHOOL will appear on your Home Screen like any app.
                 </div>
               </div>

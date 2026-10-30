@@ -35,7 +35,7 @@ function AnimatedWaveform({ color = "#C6FF00" }: { color?: string }) {
       <svg viewBox="0 0 200 60" className="w-full h-20" fill="none">
         <polyline points={pts} stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" />
       </svg>
-      <div className="flex justify-between px-3 pb-2 font-mono text-[9px] text-bone/40 uppercase">
+      <div className="flex justify-between px-3 pb-2 font-mono text-[9px] text-bone/80 uppercase">
         <span>compression →</span><span>rarefaction</span>
       </div>
     </div>
@@ -92,7 +92,7 @@ function FrequencyBars() {
         {zones.map(z => (
           <div key={z.label} className="flex-1 text-center">
             <div className="font-mono text-[8px] uppercase" style={{ color: z.color }}>{z.label}</div>
-            <div className="font-mono text-[7px] text-bone/30">{z.hz}</div>
+            <div className="font-mono text-[7px] text-bone/80">{z.hz}</div>
           </div>
         ))}
       </div>
@@ -120,13 +120,13 @@ function PianoKeys({ octaves = 2 }: { octaves?: number }) {
         {whites.map((n, i) => (
           <div key={n} className="absolute bottom-0 brutal-border border-ink bg-bone flex items-end justify-center pb-1"
             style={{ left: `${i * W}%`, width: `${W}%`, height: "100%" }}>
-            <span className="font-mono text-[7px] text-ink/50">{n}</span>
+            <span className="font-mono text-[7px] text-ink/70">{n}</span>
           </div>
         ))}
         {blacks.map(b => (
           <div key={b.label} className="absolute top-0 bg-ink z-10 flex items-end justify-center pb-0.5"
             style={{ left: `${(b.afterIdx + 1) * W - W * 0.3}%`, width: `${W * 0.6}%`, height: "60%" }}>
-            <span className="font-mono text-[6px] text-bone/30">{b.label.replace(/\d/, "")}</span>
+            <span className="font-mono text-[6px] text-bone/80">{b.label.replace(/\d/, "")}</span>
           </div>
         ))}
       </div>
@@ -159,7 +159,7 @@ function PianoOctave() {
           <div key={k.note} className="absolute bottom-0 brutal-border border-ink bg-bone flex flex-col items-center justify-end pb-1 gap-0"
             style={{ left: `${i * W}%`, width: `${W}%`, height: "100%" }}>
             <span className="font-mono text-[7px] text-ink font-bold">{k.note.replace(/\d/, "")}</span>
-            <span className="font-mono text-[6px] text-ink/40">{k.hz}</span>
+            <span className="font-mono text-[6px] text-ink/70">{k.hz}</span>
           </div>
         ))}
         {keys.filter(k => k.black).map((k) => {
@@ -175,7 +175,7 @@ function PianoOctave() {
           );
         })}
       </div>
-      <div className="font-mono text-[8px] text-bone/30 text-center mt-1 uppercase">A4 = 440 Hz · double = octave up</div>
+      <div className="font-mono text-[8px] text-bone/80 text-center mt-1 uppercase">A4 = 440 Hz · double = octave up</div>
     </div>
   );
 }
@@ -225,7 +225,7 @@ function AmplitudeDial() {
             <div className="flex-1 h-3 bg-bone/10 brutal-border overflow-hidden">
               <div className="h-full transition-all" style={{ width: `${l.pct * 100}%`, background: l.color }} />
             </div>
-            <span className="font-mono text-[8px] w-10 text-bone/50">{l.label}</span>
+            <span className="font-mono text-[8px] w-10 text-bone/80">{l.label}</span>
           </div>
         ))}
       </div>
@@ -240,7 +240,7 @@ function BpmGrid({ bpm = 120, label }: { bpm?: number; label?: string }) {
   const secPerBeat = (60 / bpm).toFixed(2);
   return (
     <div className="brutal-border bg-ink p-3">
-      <div className="font-mono text-[9px] text-bone/40 uppercase mb-2">{label ?? `1 bar @ ${bpm} BPM`}</div>
+      <div className="font-mono text-[9px] text-bone/80 uppercase mb-2">{label ?? `1 bar @ ${bpm} BPM`}</div>
       <div className="flex gap-1">
         {beats.map(b => (
           <div key={b} className="flex-1 space-y-1">
@@ -250,11 +250,11 @@ function BpmGrid({ bpm = 120, label }: { bpm?: number; label?: string }) {
                 <div key={s} className={`h-3 brutal-border ${s === 1 ? "bg-acid/50" : "bg-bone/10"}`} />
               ))}
             </div>
-            <div className="font-mono text-[7px] text-bone/30 text-center">{secPerBeat}s</div>
+            <div className="font-mono text-[7px] text-bone/80 text-center">{secPerBeat}s</div>
           </div>
         ))}
       </div>
-      <div className="font-mono text-[8px] text-bone/30 mt-2 text-center uppercase">Beat · · · Sub-division · · ·</div>
+      <div className="font-mono text-[8px] text-bone/80 mt-2 text-center uppercase">Beat · · · Sub-division · · ·</div>
     </div>
   );
 }
@@ -298,7 +298,7 @@ function StereoField() {
         <text x="118" y="54" fill="#7B2FFF" fontSize="7" fontFamily="monospace">Synth</text>
         <text x="88" y="33" fill="#C6FF00" fontSize="7" fontFamily="monospace">Bass</text>
       </svg>
-      <div className="font-mono text-[8px] text-bone/30 text-center uppercase">Pan positions in the stereo field</div>
+      <div className="font-mono text-[8px] text-bone/80 text-center uppercase">Pan positions in the stereo field</div>
     </div>
   );
 }
@@ -321,7 +321,7 @@ function NoteLengths() {
           <div className="flex-1 h-4 bg-bone/5 brutal-border overflow-hidden">
             <div className="h-full" style={{ width: `${(n.beats / MAX) * 100}%`, background: n.color, opacity: 0.85 }} />
           </div>
-          <span className="font-mono text-[9px] w-8 tabular-nums text-bone/50">{n.beats}b</span>
+          <span className="font-mono text-[9px] w-8 tabular-nums text-bone/80">{n.beats}b</span>
         </div>
       ))}
     </div>
@@ -347,7 +347,7 @@ function ScaleSteps({ minor = false, root = "C", label }: { minor?: boolean; roo
 
   return (
     <div className="brutal-border bg-ink p-3">
-      <div className="font-mono text-[8px] text-bone/40 uppercase mb-2">{modeName} · W = whole step · H = half step</div>
+      <div className="font-mono text-[8px] text-bone/80 uppercase mb-2">{modeName} · W = whole step · H = half step</div>
       <div className="flex items-end gap-px">
         {notes.map((note, i) => (
           <div key={i} className="flex-1 text-center">
@@ -396,16 +396,16 @@ function RhythmDots() {
   const pattern = [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1];
   return (
     <div className="brutal-border bg-ink p-3">
-      <div className="font-mono text-[8px] text-bone/40 uppercase mb-2">Basic 4/4 rhythm pattern</div>
+      <div className="font-mono text-[8px] text-bone/80 uppercase mb-2">Basic 4/4 rhythm pattern</div>
       <div className="grid grid-cols-16 gap-1" style={{ gridTemplateColumns: `repeat(16, 1fr)` }}>
         {pattern.map((hit, i) => (
           <div key={i} className={`h-8 brutal-border flex items-center justify-center font-mono text-[8px]
-            ${hit ? "bg-acid text-ink font-bold" : "bg-bone/5 text-bone/20"}`}>
+            ${hit ? "bg-acid text-ink font-bold" : "bg-bone/5 text-bone/80"}`}>
             {hit ? "●" : "·"}
           </div>
         ))}
       </div>
-      <div className="flex justify-between font-mono text-[7px] text-bone/30 mt-1">
+      <div className="flex justify-between font-mono text-[7px] text-bone/80 mt-1">
         <span>1</span><span>2</span><span>3</span><span>4</span>
       </div>
     </div>
@@ -443,7 +443,7 @@ function VinylPlatter() {
         <line x1="95" y1="20" x2="72" y2="48" stroke="#FFB800" strokeWidth="2.5" strokeLinecap="round" />
         <circle cx="96" cy="19" r="3" fill="#FFB800" />
       </svg>
-      <div className="font-mono text-[8px] text-bone/40 uppercase text-center">Vinyl spinning at 33.3 RPM · needle reads grooves</div>
+      <div className="font-mono text-[8px] text-bone/80 uppercase text-center">Vinyl spinning at 33.3 RPM · needle reads grooves</div>
     </div>
   );
 }
@@ -462,7 +462,7 @@ function MixerChannel() {
             const val = ch.eq[band.toLowerCase() as keyof typeof ch.eq];
             return (
               <div key={band} className="flex items-center gap-1">
-                <span className="font-mono text-[6px] text-bone/40 w-6">{band}</span>
+                <span className="font-mono text-[6px] text-bone/80 w-6">{band}</span>
                 <div className="flex-1 h-2 bg-bone/10 brutal-border overflow-hidden">
                   <div className="h-full" style={{ width: `${val}%`, background: ch.color, opacity: 0.7 }} />
                 </div>
@@ -472,7 +472,7 @@ function MixerChannel() {
           <div className="h-20 bg-bone/5 brutal-border flex items-end p-1 mt-1">
             <div className="w-full brutal-border" style={{ height: `${ch.fader}%`, background: ch.color, opacity: 0.8 }} />
           </div>
-          <div className="font-mono text-[7px] text-center text-bone/40">FADER</div>
+          <div className="font-mono text-[7px] text-center text-bone/80">FADER</div>
         </div>
       ))}
     </div>
@@ -513,7 +513,7 @@ function CamelotWheel() {
         <circle cx={cx} cy={cy} r="20" fill="#C6FF00" />
         <text x={cx} y={cy + 4} textAnchor="middle" fill="#111" fontSize="9" fontFamily="monospace" fontWeight="bold">KEY</text>
       </svg>
-      <div className="font-mono text-[7px] text-bone/30 uppercase text-center">Camelot Wheel — adjacent keys mix harmonically</div>
+      <div className="font-mono text-[7px] text-bone/80 uppercase text-center">Camelot Wheel — adjacent keys mix harmonically</div>
     </div>
   );
 }
@@ -534,10 +534,10 @@ function WaveformZoom() {
         ))}
         <div className="absolute top-0 bottom-0 left-[25%] w-[8%] bg-acid/10 border border-acid/40" />
       </div>
-      <div className="flex justify-between font-mono text-[7px] text-bone/30 mt-1 px-1">
+      <div className="flex justify-between font-mono text-[7px] text-bone/80 mt-1 px-1">
         <span>1</span><span>2</span><span>3</span><span>4</span>
       </div>
-      <div className="font-mono text-[7px] text-bone/30 text-center uppercase mt-0.5">Waveform · yellow lines = beat grid · box = loop region</div>
+      <div className="font-mono text-[7px] text-bone/80 text-center uppercase mt-0.5">Waveform · yellow lines = beat grid · box = loop region</div>
     </div>
   );
 }
@@ -567,7 +567,7 @@ function HeadroomMeter() {
         {segments.map(s => (
           <div key={s.label} className="h-6 flex items-center gap-2">
             <span className="font-mono text-[8px] tabular-nums w-8 text-right" style={{ color: s.color }}>{s.label}</span>
-            <span className="font-mono text-[7px] text-bone/40 uppercase">{s.note}</span>
+            <span className="font-mono text-[7px] text-bone/80 uppercase">{s.note}</span>
           </div>
         ))}
       </div>
@@ -585,7 +585,7 @@ function FalImage({ url, alt }: { url?: string; alt?: string }) {
         <div className="absolute inset-0 bg-ink/10 animate-pulse" aria-hidden />
       )}
       {status === "error" && (
-        <div className="absolute inset-0 flex items-center justify-center font-mono text-xs opacity-40">
+        <div className="absolute inset-0 flex items-center justify-center font-mono text-xs opacity-70">
           [image unavailable]
         </div>
       )}
@@ -688,7 +688,7 @@ export function DiagramVisual({ screen }: { screen: DiagramScreen }) {
         ))}
       </svg>
       {screen.caption && (
-        <div className="font-mono text-[8px] text-bone/40 uppercase px-1">{screen.caption}</div>
+        <div className="font-mono text-[8px] text-bone/80 uppercase px-1">{screen.caption}</div>
       )}
     </div>
   );

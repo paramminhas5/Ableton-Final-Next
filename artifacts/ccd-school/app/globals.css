@@ -74,13 +74,13 @@
   --bone:           hsl(20 6% 90%);
   --ink:            hsl(222 47% 4%);
   --acid:           hsl(84 81% 56%);
-  --hot:            hsl(0 72% 51%);
-  --volt:           hsl(221 83% 53%);
+  --hot:            hsl(0 72% 45%);
+  --volt:           hsl(224 76% 46%);
   --sun:            hsl(44 100% 60%);
-  --electric-blue:  hsl(221 83% 53%);
-  --magenta:        hsl(0 72% 51%);
+  --electric-blue:  hsl(224 76% 46%);
+  --magenta:        hsl(0 72% 45%);
   --acid-yellow:    hsl(84 81% 56%);
-  --hot-pink:       hsl(0 72% 51%);
+  --hot-pink:       hsl(0 72% 45%);
   --lime:           hsl(142 76% 73%);
 
   /* Semantic */
@@ -146,10 +146,10 @@
   --hot:            hsl(21 90% 53%);
   --volt:           hsl(10 80% 55%);
   --sun:            hsl(44 100% 60%);
-  --electric-blue:  hsl(221 83% 53%);
-  --magenta:        hsl(0 72% 51%);
+  --electric-blue:  hsl(224 76% 46%);
+  --magenta:        hsl(0 72% 45%);
   --acid-yellow:    hsl(84 81% 56%);
-  --hot-pink:       hsl(0 72% 51%);
+  --hot-pink:       hsl(0 72% 45%);
   --lime:           hsl(142 76% 73%);
 
   --background:     var(--bone);
@@ -789,8 +789,8 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
 }
 
 /* Opacity floor for contrast */
-.opacity-20:not([aria-hidden="true"]):not(.decorative) { opacity: 0.45 !important; }
-.opacity-30:not([aria-hidden="true"]):not(.decorative) { opacity: 0.45 !important; }
+.opacity-20:not([aria-hidden="true"]):not(.decorative):empty,
+.opacity-30:not([aria-hidden="true"]):not(.decorative):empty { opacity: 0.45 !important; }
 
 [aria-live] {
   clip: auto !important; height: auto !important;
@@ -892,4 +892,16 @@ button, a, [role="button"] {
 
 .animate-biome-glow {
   animation: biome-glow-pulse 3s ease-in-out infinite;
+}
+
+
+/* Contrast floor for faded text (WCAG AA). Decorative, empty and hidden elements are left alone. */
+:is(.opacity-20, .opacity-25, .opacity-30, .opacity-35, .opacity-40, .opacity-45, .opacity-50, .opacity-55, .opacity-60):not(:empty, [aria-hidden="true"], .absolute, :has(img, svg, canvas, video)) {
+  opacity: 0.72;
+}
+:is(.text-bone, .bg-electric-blue, .bg-hot, .bg-ink, .bg-volt, .bg-magenta) :is(.opacity-30, .opacity-35, .opacity-40, .opacity-45, .opacity-50, .opacity-55, .opacity-60, .opacity-70):not(:empty, [aria-hidden="true"], .absolute, :has(img, svg, canvas, video)) {
+  opacity: 0.95;
+}
+:is(.bg-acid, .bg-sun) :is(.opacity-30, .opacity-35, .opacity-40, .opacity-45, .opacity-50, .opacity-55, .opacity-60):not(:empty, [aria-hidden="true"], .absolute, :has(img, svg, canvas, video)) {
+  opacity: 0.8;
 }

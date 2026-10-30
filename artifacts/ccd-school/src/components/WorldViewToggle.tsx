@@ -42,7 +42,7 @@ export function WorldViewToggle({ slug, showFree }: Props) {
           className={`flex-1 flex flex-col items-center justify-center py-2.5 px-3 border-r-4 border-ink brutal-press transition-colors
             ${!showFree
               ? "bg-acid text-ink"
-              : "bg-bone text-ink/50 hover:bg-acid/20"
+              : "bg-bone text-ink/75 hover:bg-acid/20"
             }`}
         >
           <div className="flex items-center gap-1.5">
@@ -52,7 +52,7 @@ export function WorldViewToggle({ slug, showFree }: Props) {
               <span className="font-mono text-[8px] bg-ink text-bone px-1.5 py-0.5 uppercase ml-1">Active</span>
             )}
           </div>
-          <span className="font-mono text-[9px] opacity-60 mt-0.5 hidden sm:block">
+          <span className="font-mono text-[9px] opacity-70 mt-0.5 hidden sm:block">
             Sequential · locked nodes · hearts on
           </span>
         </Link>
@@ -64,7 +64,7 @@ export function WorldViewToggle({ slug, showFree }: Props) {
           className={`flex-1 flex flex-col items-center justify-center py-2.5 px-3 brutal-press transition-colors
             ${showFree
               ? "bg-bone text-ink border-l-4 border-l-ink"
-              : "bg-bone text-ink/50 hover:bg-ink/5"
+              : "bg-bone text-ink/75 hover:bg-ink/5"
             }`}
         >
           <div className="flex items-center gap-1.5">
@@ -74,7 +74,7 @@ export function WorldViewToggle({ slug, showFree }: Props) {
               <span className="font-mono text-[8px] bg-ink text-bone px-1.5 py-0.5 uppercase ml-1">Active</span>
             )}
           </div>
-          <span className="font-mono text-[9px] opacity-60 mt-0.5 hidden sm:block">
+          <span className="font-mono text-[9px] opacity-70 mt-0.5 hidden sm:block">
             All lessons open · jump anywhere · no hearts
           </span>
         </Link>

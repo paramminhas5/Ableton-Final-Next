@@ -4,6 +4,15 @@ import { track } from "@/lib/analytics";
 import { useProgress } from "@/lib/progress";
 import { atlasById } from "@/content/atlas";
 import { BUILD_STAGES } from "@/content/build";
+import { LESSON_LINKS } from "@/content/lessonLinks";
+import { MISSIONS } from "@/content/missions";
+
+const lessonsForStage = (stage: string) =>
+  Object.entries(LESSON_LINKS)
+    .filter(([, l]) => l.stage === stage)
+    .map(([slug]) => MISSIONS.find((m) => m.slug === slug))
+    .filter((m): m is NonNullable<typeof m> => !!m);
+
 
 const KEY = "ccd.build.v1";
 
@@ -84,9 +93,9 @@ export function BuildPageClient() {
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// BUILD A SET</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// BUILD A SET</div>
           <h1 className="font-display text-4xl leading-none">YOUR FIRST TRACK, IN {BUILD_STAGES.length} STAGES.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             Do each stage in Live, save, and upload the .als here. We check your real Set. Nothing is stored and your file
             is never changed. New to Live? Start with <a className="underline" href="/setup">Setup</a>.
           </p>
@@ -164,6 +173,17 @@ export function BuildPageClient() {
                           <span key={id}>
                             {k > 0 && ", "}
                             <a className="underline" href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>
+                          </span>
+                        ))}
+                      </p>
+                    )}
+                    {isCurrent && !ok && lessonsForStage(st.id).length > 0 && (
+                      <p className="font-mono text-xs mt-2" data-testid="stage-lessons">
+                        Stuck? Lessons for this stage:{" "}
+                        {lessonsForStage(st.id).map((m, k) => (
+                          <span key={m.slug}>
+                            {k > 0 && ", "}
+                            <a className="underline" href={`/learn/${m.slug}`}>{m.title}</a>
                           </span>
                         ))}
                       </p>

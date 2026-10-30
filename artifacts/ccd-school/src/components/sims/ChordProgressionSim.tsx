@@ -102,7 +102,7 @@ export function ChordProgressionSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">Chord Progression Explorer</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Chord Progression Explorer</div>
         <div className="font-display text-2xl mt-1">HEAR TENSION & RESOLUTION</div>
       </div>
 
@@ -119,7 +119,7 @@ export function ChordProgressionSim() {
         ))}
       </div>
 
-      <div className="font-mono text-[10px] uppercase opacity-50">Key: {prog.key}</div>
+      <div className="font-mono text-[10px] uppercase opacity-70">Key: {prog.key}</div>
 
       {/* Chord buttons */}
       <div className="grid grid-cols-4 gap-2">

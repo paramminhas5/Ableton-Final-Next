@@ -118,9 +118,9 @@ export function BeatPageClient() {
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// FIRST BEAT</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// FIRST BEAT</div>
           <h1 className="font-display text-4xl leading-none">MAKE A BEAT. TAKE IT TO LIVE.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             Tap the squares to place drum hits, press play, then save it as a MIDI file and drag it into Ableton Live.
           </p>
         </header>
@@ -143,7 +143,7 @@ export function BeatPageClient() {
         <section className="brutal-border bg-white p-3 space-y-4" aria-label="Pattern grid">
           {LANES.map((l) => (
             <div key={l.id}>
-              <div className="font-mono text-[10px] uppercase opacity-50 mb-1">{l.label}</div>
+              <div className="font-mono text-[10px] uppercase opacity-70 mb-1">{l.label}</div>
               {[0, 8].map((from) => (
                 <div key={from} className="grid grid-cols-8 gap-1 mb-1">
                   {Array.from({ length: 8 }, (_, k) => from + k).map((i) => {

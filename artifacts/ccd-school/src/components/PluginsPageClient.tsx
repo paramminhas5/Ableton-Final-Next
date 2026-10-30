@@ -9,9 +9,9 @@ export function PluginsPageClient() {
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// PLUGIN GUIDE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// PLUGIN GUIDE</div>
           <h1 className="font-display text-4xl leading-none">WHICH PLUG-IN, FOR WHAT.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             Start with what is already in Live. Add a third-party plug-in only when it does something your stock device
             cannot. Prices and licences change, so check the maker&apos;s page before you buy.
           </p>

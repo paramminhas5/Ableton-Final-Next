@@ -61,7 +61,7 @@ function Section({
       {/* Section header */}
       <div className="flex items-center gap-2 mb-3">
         {icon && <span className="text-base leading-none">{icon}</span>}
-        <span className="font-mono text-xs font-bold uppercase tracking-widest opacity-50">
+        <span className="font-mono text-xs font-bold uppercase tracking-widest opacity-70">
           {label}
         </span>
         <div className="flex-1 h-px bg-ink/10" />
@@ -98,7 +98,7 @@ function DifficultyToggle({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="font-mono text-xs uppercase opacity-50 tracking-wide">
+      <span className="font-mono text-xs uppercase opacity-70 tracking-wide">
         Difficulty
       </span>
       <div className="flex brutal-border rounded-md overflow-hidden">
@@ -288,7 +288,7 @@ export function InlineClassicLesson({
             </div>
           )}
           <div className="relative z-10 p-6">
-            <p className="font-mono text-xs opacity-60 mb-1.5 uppercase tracking-wide">
+            <p className="font-mono text-xs opacity-70 mb-1.5 uppercase tracking-wide">
               {ctx.chapter?.title} › {ctx.path?.title}
             </p>
             <h1 className="font-display text-4xl md:text-5xl leading-none mb-3">
@@ -387,7 +387,7 @@ export function InlineClassicLesson({
                 <span className="font-display text-5xl opacity-15 absolute left-3 top-0 leading-none select-none pointer-events-none">
                   &ldquo;
                 </span>
-                <p className="font-mono text-xs uppercase font-bold mb-2 opacity-60 relative z-10">
+                <p className="font-mono text-xs uppercase font-bold mb-2 opacity-70 relative z-10">
                   Think of it like →
                 </p>
                 <p className="font-sans text-base leading-relaxed relative z-10">
@@ -399,7 +399,7 @@ export function InlineClassicLesson({
             {/* Why you care — Normal mode */}
             {!internalHardMode && deep?.beginner?.why && (
               <Card className="bg-volt/10 border-volt/40">
-                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-60">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-70">
                   ▸ Why this matters
                 </p>
                 <ul className="space-y-2">
@@ -416,7 +416,7 @@ export function InlineClassicLesson({
             {/* Hard mode: edge cases */}
             {internalHardMode && deep?.advanced?.edgeCases && (
               <Card className="bg-hot/10 border-hot/40">
-                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-60">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-70">
                   ⚠ Edge cases
                 </p>
                 <ul className="space-y-2">
@@ -433,7 +433,7 @@ export function InlineClassicLesson({
             {/* Hard mode: engineer notes */}
             {internalHardMode && deep?.advanced?.engineerNotes && (
               <Card className="bg-ink text-bone">
-                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-50">
+                <p className="font-mono text-xs uppercase font-bold mb-3 opacity-70">
                   🔧 Engineer notes
                 </p>
                 <ul className="space-y-2">
@@ -463,7 +463,7 @@ export function InlineClassicLesson({
               {deep?.flow && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-xs uppercase opacity-50 tracking-wide">
+                    <p className="font-mono text-xs uppercase opacity-70 tracking-wide">
                       Signal flow — watch the dot
                     </p>
                     <button
@@ -607,7 +607,7 @@ export function InlineClassicLesson({
             <div className="flex items-start gap-3">
               <span className="text-xl shrink-0">🧠</span>
               <div>
-                <p className="font-mono text-xs uppercase opacity-60 mb-1">
+                <p className="font-mono text-xs uppercase opacity-70 mb-1">
                   Test your knowledge
                 </p>
                 <p className="font-sans text-sm leading-relaxed opacity-90">

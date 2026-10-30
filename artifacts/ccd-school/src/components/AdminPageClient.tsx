@@ -54,7 +54,7 @@ export function AdminPageClient() {
     <main className="min-h-screen bg-bone">
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// ADMIN</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// ADMIN</div>
           <h1 className="font-display text-5xl leading-none">ADMIN</h1>
         </div>
       </header>
@@ -63,7 +63,7 @@ export function AdminPageClient() {
           <form onSubmit={handleAuth} className="brutal-border bg-bone p-6 space-y-4">
             <div className="font-display text-2xl mb-4">Admin Access</div>
             <div>
-              <label className="font-mono text-[9px] uppercase opacity-60 block mb-1">Admin Password</label>
+              <label className="font-mono text-[9px] uppercase opacity-70 block mb-1">Admin Password</label>
               <input
                 type="password"
                 value={password}
@@ -83,11 +83,11 @@ export function AdminPageClient() {
         ) : (
           <div className="space-y-6">
             <div className="brutal-border bg-bone p-6">
-              <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// SITE MODE</div>
+              <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// SITE MODE</div>
               <div className="font-display text-lg mb-2">
                 Current mode: <span className={mode === "free" ? "text-acid" : ""}>{mode?.toUpperCase()}</span>
               </div>
-              <p className="font-mono text-xs opacity-60 mb-6 leading-relaxed">
+              <p className="font-mono text-xs opacity-70 mb-6 leading-relaxed">
                 <strong>FREE:</strong> All missions open to everyone — no account or payment required.<br />
                 <strong>PAID:</strong> First 3 missions per path free; advanced + later missions require PRO.
               </p>
@@ -113,8 +113,8 @@ export function AdminPageClient() {
             </div>
 
             <div className="brutal-border bg-bone p-6">
-              <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// ENV VARS NEEDED</div>
-              <div className="font-mono text-xs opacity-60 space-y-1">
+              <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// ENV VARS NEEDED</div>
+              <div className="font-mono text-xs opacity-70 space-y-1">
                 <div><code className="bg-ink/10 px-1">AUTH_SECRET</code> — random string for JWT signing</div>
                 <div><code className="bg-ink/10 px-1">AUTH_GOOGLE_ID</code> + <code className="bg-ink/10 px-1">AUTH_GOOGLE_SECRET</code> — Google OAuth credentials</div>
                 <div><code className="bg-ink/10 px-1">ADMIN_PASSWORD</code> — this admin page password</div>

@@ -451,7 +451,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
       <div className="space-y-3">
         <div className="brutal-border bg-ink text-bone p-4">
           <div className="font-display text-3xl">EAR TRAINING</div>
-          <div className="font-mono text-xs opacity-60 mt-1">
+          <div className="font-mono text-xs opacity-70 mt-1">
             SoundGym-style musical drills. Train the ear producers actually need.
           </div>
         </div>
@@ -489,7 +489,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
           ← Back
         </button>
         <div className="flex-1">
-          <div className="font-mono text-[10px] uppercase opacity-60">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             {drill.emoji} {drill.label}
           </div>
         </div>
@@ -542,7 +542,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
       </div>
 
       {!round?.played && !revealed && (
-        <div className="font-mono text-[10px] uppercase opacity-40 text-center">
+        <div className="font-mono text-[10px] uppercase opacity-70 text-center">
           Play the audio first, then pick an answer
         </div>
       )}

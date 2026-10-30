@@ -51,7 +51,7 @@ function MarqueeStrip() {
         {doubled.map((item, i) => (
           <span key={i} className="font-display text-sm uppercase shrink-0">
             {item}
-            <span className="text-acid mx-3 opacity-50">·</span>
+            <span className="text-acid mx-3 opacity-70">·</span>
           </span>
         ))}
       </div>
@@ -77,7 +77,7 @@ function ChapterRail({
         {chapterStats.length} chapters
       </div>
       {/* Horizontal scroll — bigger cards */}
-      <div className="overflow-x-auto pb-2 -mx-1 px-1">
+      <div className="overflow-x-auto pb-2 -mx-1 px-1" tabIndex={0} role="region" aria-label="Scrollable list">
         <div className="flex items-stretch gap-2 min-w-max">
           {chapterStats.map((ch, i) => {
             const emoji = CHAPTER_EMOJIS[ch.slug] ?? "📖";
@@ -102,7 +102,7 @@ function ChapterRail({
               >
                 {/* Top: number + emoji */}
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <span className={`font-mono text-[8px] opacity-50 tabular-nums`}>
+                  <span className={`font-mono text-[10px] opacity-100 tabular-nums`}>
                     {String(ch.number).padStart(2, "0")}
                   </span>
                   <span className="text-base leading-none">{isDone ? "✓" : emoji}</span>
@@ -123,7 +123,7 @@ function ChapterRail({
 
                 {/* Pct label */}
                 {isStarted && (
-                  <div className={`font-mono text-[7px] mt-1 opacity-55 tabular-nums`}>{ch.pct}%</div>
+                  <div className={`font-mono text-[7px] mt-1 opacity-70 tabular-nums`}>{ch.pct}%</div>
                 )}
               </div>
             );
@@ -296,7 +296,7 @@ function WorldCard({ world, index }: { world: WorldSlug; index: number }) {
           <span className="flex items-center gap-2.5">
             <span className="text-lg">{isFree ? "📖" : "🌊"}</span>
             <span className="font-display text-base">ENTER {t.title.toUpperCase()}</span>
-            <span className={`font-mono text-[8px] uppercase opacity-55`}>
+            <span className={`font-mono text-[8px] uppercase opacity-70`}>
               {isFree ? "free · open wiki" : "flow · guided path"}
             </span>
           </span>
@@ -328,11 +328,11 @@ function Hero() {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-7 md:py-10 relative z-10">
-        <div className="font-mono text-[10px] uppercase opacity-40 mb-2">
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">
           // 3 WORLDS · 153 MISSIONS · 16 CHAPTERS
         </div>
         <h1 className="font-display text-6xl md:text-8xl leading-none mb-3">WORLDS</h1>
-        <p className="font-mono text-sm opacity-55 max-w-lg leading-relaxed mb-4">
+        <p className="font-mono text-sm opacity-70 max-w-lg leading-relaxed mb-4">
           Start with Fundamentals — it unlocks everything. Then specialise as a DJ, Producer, or both.
         </p>
 
@@ -344,7 +344,7 @@ function Hero() {
           >
             <span className="text-base">{isFlow ? "🌊" : "📖"}</span>
             <span className="font-display text-sm">{isFlow ? "Flow Mode" : "Free Mode"}</span>
-            <span className="font-mono text-[8px] opacity-45 ml-1">
+            <span className="font-mono text-[8px] opacity-70 ml-1">
               {isFlow ? "sequential · hearts on" : "all lessons open"}
             </span>
           </div>

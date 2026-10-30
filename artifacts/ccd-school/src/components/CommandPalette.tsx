@@ -22,7 +22,7 @@ export const PALETTE_OPEN_EVENT = "command-palette:open";
 const TAG_STYLES: Record<Item["tag"], string> = {
   MISSION: "bg-acid text-ink",
   PATH:    "bg-electric-blue text-bone",
-  DEVICE:  "bg-volt text-ink",
+  DEVICE:  "bg-volt text-bone",
   PAGE:    "bg-bone text-ink border border-ink/20",
 };
 
@@ -237,7 +237,7 @@ export function CommandPalette() {
           {q && (
             <button
               onClick={() => { setQ(""); inputRef.current?.focus(); }}
-              className="px-3 py-2 font-mono text-xs opacity-50 hover:opacity-100 transition-opacity"
+              className="px-3 py-2 font-mono text-xs opacity-70 hover:opacity-100 transition-opacity"
               aria-label="Clear search"
             >
               ✕
@@ -245,7 +245,7 @@ export function CommandPalette() {
           )}
           <button
             onClick={close}
-            className="px-4 py-4 font-mono text-xs uppercase opacity-40 hover:opacity-80 transition-opacity border-l-4 border-ink"
+            className="px-4 py-4 font-mono text-xs uppercase opacity-70 hover:opacity-80 transition-opacity border-l-4 border-ink"
             aria-label="Close search"
           >
             ESC
@@ -258,14 +258,14 @@ export function CommandPalette() {
             <div className="p-8 text-center">
               <div className="text-4xl mb-3">🐱</div>
               <div className="font-display text-lg mb-1">No results for &ldquo;{q}&rdquo;</div>
-              <div className="font-mono text-xs opacity-50">Try a lesson title, path name or device</div>
+              <div className="font-mono text-xs opacity-70">Try a lesson title, path name or device</div>
             </div>
           )}
 
           {grouped.map(({ tag, items }) => (
             <div key={tag}>
               {/* Group header */}
-              <div className="px-4 py-1.5 font-mono text-[10px] uppercase opacity-40 bg-ink/5 border-b border-ink/10 sticky top-0">
+              <div className="px-4 py-1.5 font-mono text-[10px] uppercase opacity-70 bg-ink/5 border-b border-ink/10 sticky top-0">
                 {tag === "MISSION" ? "Lessons" : tag === "PATH" ? "Paths" : tag === "DEVICE" ? "Devices" : "Pages"}
               </div>
 
@@ -289,7 +289,7 @@ export function CommandPalette() {
                     <div className="flex-1 min-w-0">
                       <div className="font-display text-sm leading-tight truncate">{item.label}</div>
                       {item.sub && (
-                        <div className="font-mono text-[10px] opacity-60 truncate mt-0.5">{item.sub}</div>
+                        <div className="font-mono text-[10px] opacity-70 truncate mt-0.5">{item.sub}</div>
                       )}
                     </div>
 
@@ -306,12 +306,12 @@ export function CommandPalette() {
 
         {/* ── Footer hints ─────────────────────────────────────────────── */}
         <div className="px-4 py-2.5 border-t-4 border-ink flex items-center justify-between">
-          <div className="font-mono text-[10px] uppercase opacity-40 flex items-center gap-3">
+          <div className="font-mono text-[10px] uppercase opacity-70 flex items-center gap-3">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>
           </div>
-          <div className="font-mono text-[10px] uppercase opacity-30">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             {filtered.length} result{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>

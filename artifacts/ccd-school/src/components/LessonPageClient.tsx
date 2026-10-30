@@ -114,13 +114,13 @@ function NextLessonInterstitial({
 
       {nextSlug && nextTitle ? (
         <>
-          <div className="font-mono text-[10px] uppercase opacity-60 mb-2">UP NEXT</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">UP NEXT</div>
           <div className="brutal-border bg-bone text-ink p-5 max-w-sm w-full text-center brutal-shadow mb-6">
             <div className="font-display text-2xl leading-tight mb-1">{nextTitle}</div>
             {nextTagline && (
-              <div className="font-mono text-xs opacity-60 leading-snug mb-3">{nextTagline}</div>
+              <div className="font-mono text-xs opacity-70 leading-snug mb-3">{nextTagline}</div>
             )}
-            <div className="font-mono text-[10px] uppercase opacity-50">+{nextXp} XP</div>
+            <div className="font-mono text-[10px] uppercase opacity-70">+{nextXp} XP</div>
           </div>
           <button
             onClick={onContinue}
@@ -128,7 +128,7 @@ function NextLessonInterstitial({
           >
             START NEXT LESSON →
           </button>
-          <div className="font-mono text-[10px] uppercase opacity-50">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             Auto-continuing in {countdown}s…
           </div>
         </>
@@ -159,7 +159,7 @@ function FlowFallbackBanner({ missionTitle }: { missionTitle: string }) {
           <span className="text-xl shrink-0">🌊</span>
           <div>
             <div className="font-display text-base">FLOW MODE</div>
-            <div className="font-mono text-xs opacity-60 mt-0.5">{missionTitle}</div>
+            <div className="font-mono text-xs opacity-70 mt-0.5">{missionTitle}</div>
           </div>
         </div>
         <div className="font-mono text-xs opacity-80 leading-relaxed">

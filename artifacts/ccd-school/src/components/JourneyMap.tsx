@@ -71,7 +71,7 @@ export function JourneyMap({ currentSlug }: { currentSlug?: string }) {
         })}
       </div>
 
-      <div className="mt-3 font-mono text-[9px] md:text-[10px] uppercase opacity-60">
+      <div className="mt-3 font-mono text-[9px] md:text-[10px] uppercase opacity-70">
         ▸ Each lane is a WORLD. Each square is a mission stop. Tap to jump on.
       </div>
     </div>

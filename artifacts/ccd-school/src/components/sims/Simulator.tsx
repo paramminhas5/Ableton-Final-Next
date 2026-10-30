@@ -84,7 +84,7 @@ class SimErrorBoundary extends Component<
             <span className="text-3xl shrink-0">🐱</span>
             <div>
               <div className="font-display text-xl mb-1">Sim took a nap 😴</div>
-              <div className="font-mono text-xs opacity-60 leading-relaxed">
+              <div className="font-mono text-xs opacity-70 leading-relaxed">
                 This interactive exercise couldn&apos;t load. You can retry or skip it — the quiz still works fine.
               </div>
             </div>

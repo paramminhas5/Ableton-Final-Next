@@ -37,7 +37,7 @@ export function AnimatedSignalFlow({ flow, legend, replayKey = 0 }: { flow: stri
   const ROLES = ["INPUT", "PROCESS", "GAIN", "SEND", "BUS", "OUT"];
 
   return (
-    <div className="brutal-border bg-bone p-3 overflow-x-auto">
+    <div className="brutal-border bg-bone p-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Signal flow diagram">
       <div className="font-mono text-[10px] uppercase mb-2 opacity-70">▸ SIGNAL FLOW</div>
       <svg key={replayKey} width={totalW} height={h} viewBox={`0 0 ${totalW} ${h}`} className="block" role="img" aria-label={flow}>
         {/* path used by the moving packet */}
@@ -77,7 +77,7 @@ export function AnimatedSignalFlow({ flow, legend, replayKey = 0 }: { flow: stri
           </circle>
         )}
       </svg>
-      {legend && <div className="font-mono text-[10px] opacity-60 mt-1">{legend}</div>}
+      {legend && <div className="font-mono text-[10px] opacity-70 mt-1">{legend}</div>}
     </div>
   );
 }

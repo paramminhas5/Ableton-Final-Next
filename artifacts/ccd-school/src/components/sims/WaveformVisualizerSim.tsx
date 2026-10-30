@@ -100,7 +100,7 @@ export function WaveformVisualizerSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">Waveform Explorer</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Waveform Explorer</div>
         <div className="font-display text-2xl mt-1">TAP A WAVE — SEE IT & HEAR IT</div>
       </div>
 

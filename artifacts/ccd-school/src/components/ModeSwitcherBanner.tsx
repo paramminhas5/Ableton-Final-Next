@@ -50,7 +50,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
       <div className={`brutal-border rounded-xl bg-bone brutal-shadow ${className}`}>
         {/* Header */}
         <div className="border-b-2 border-border bg-ink text-bone px-5 py-4 rounded-t-xl">
-          <p className="font-mono text-xs uppercase opacity-45 mb-0.5">Learning Mode</p>
+          <p className="font-mono text-xs uppercase opacity-70 mb-0.5">Learning Mode</p>
           <p className="font-display text-2xl">
             {isFlow ? "🌊 Flow Mode" : "🔓 Free Mode"}
           </p>
@@ -82,7 +82,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
               ))}
             </ul>
             {isFlow && (
-              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-60">● Active</p>
+              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-70">● Active</p>
             )}
           </button>
 
@@ -110,14 +110,14 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
               ))}
             </ul>
             {!isFlow && (
-              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-60">● Active</p>
+              <p className="mt-3.5 font-mono text-xs uppercase font-bold opacity-70">● Active</p>
             )}
           </button>
         </div>
 
         {/* Switch CTA */}
         <div className="px-5 py-3.5 border-t-2 border-border flex items-center justify-between gap-3">
-          <p className="font-sans text-sm opacity-50">
+          <p className="font-sans text-sm opacity-70">
             Switch anytime — progress carries over
           </p>
           <button
@@ -145,7 +145,7 @@ export function ModeSwitcherBanner({ variant = "bar", className = "" }: Props) {
           <p className="font-display text-base leading-tight">
             {isFlow ? "Flow Mode" : "Free Mode"}
           </p>
-          <p className="font-sans text-xs opacity-55 truncate mt-0.5">
+          <p className="font-sans text-xs opacity-70 truncate mt-0.5">
             {isFlow
               ? "Sequential · hearts on · XP gated"
               : "All lessons open · no hearts · jump anywhere"}

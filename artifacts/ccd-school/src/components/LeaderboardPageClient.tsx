@@ -44,7 +44,7 @@ export function LeaderboardPageClient() {
     <main className="min-h-screen bg-bone">
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// GLOBAL RANKINGS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// GLOBAL RANKINGS</div>
           <h1 className="font-display text-5xl md:text-7xl leading-none">LEADERBOARD</h1>
         </div>
       </header>
@@ -65,9 +65,9 @@ export function LeaderboardPageClient() {
 
         {/* Your position pill */}
         <div className="brutal-border bg-sun p-5 mb-6">
-          <div className="font-mono text-[10px] uppercase opacity-60 mb-1">YOUR POSITION</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">YOUR POSITION</div>
           <div className="font-display text-2xl">{rank.name} · {progress.xp} XP · 🔥 {progress.streakDays}</div>
-          <div className="font-mono text-xs opacity-60 mt-1">
+          <div className="font-mono text-xs opacity-70 mt-1">
             {Object.keys(progress.completedMissions).length} missions · 💎 {progress.gems} gems · {progress.weeklyXp} XP this week
             {currentUserRank && <span> · #{currentUserRank} globally</span>}
           </div>
@@ -89,11 +89,11 @@ export function LeaderboardPageClient() {
         {tab === "alltime" && (
           <>
         {loading ? (
-          <div className="brutal-border bg-bone p-6 text-center font-mono text-xs uppercase opacity-40">Loading...</div>
+          <div className="brutal-border bg-bone p-6 text-center font-mono text-xs uppercase opacity-70">Loading...</div>
         ) : entries.length === 0 ? (
           <div className="brutal-border bg-bone p-6 text-center">
             <div className="font-display text-2xl mb-2">Be the First</div>
-            <div className="font-mono text-sm opacity-60">Create an account and complete missions to appear on the leaderboard.</div>
+            <div className="font-mono text-sm opacity-70">Create an account and complete missions to appear on the leaderboard.</div>
           </div>
         ) : (
           <div className="brutal-border divide-y divide-ink/5">
@@ -102,7 +102,7 @@ export function LeaderboardPageClient() {
                 key={entry.id}
                 className={`flex items-center gap-3 px-4 py-3 ${entry.isCurrentUser ? "bg-acid" : entry.rank <= 3 ? "bg-sun/30" : ""}`}
               >
-                <span className={`w-8 font-display text-xl shrink-0 ${entry.rank <= 3 ? "text-ink" : "opacity-40"}`}>
+                <span className={`w-8 font-display text-xl shrink-0 ${entry.rank <= 3 ? "text-ink" : "opacity-70"}`}>
                   {entry.rank === 1 ? "🥇" : entry.rank === 2 ? "🥈" : entry.rank === 3 ? "🥉" : `#${entry.rank}`}
                 </span>
                 {entry.image ? (
@@ -115,12 +115,12 @@ export function LeaderboardPageClient() {
                 <div className="flex-1 min-w-0">
                   <div className="font-display text-base leading-none truncate">
                     {entry.name}
-                    {entry.plan === "pro" && <span className="ml-1 font-mono text-[8px] bg-volt text-ink px-1 py-0.5 align-middle">PRO</span>}
-                    {entry.isCurrentUser && <span className="ml-1 font-mono text-[8px] opacity-60">YOU</span>}
+                    {entry.plan === "pro" && <span className="ml-1 font-mono text-[8px] bg-volt text-bone px-1 py-0.5 align-middle">PRO</span>}
+                    {entry.isCurrentUser && <span className="ml-1 font-mono text-[8px] opacity-70">YOU</span>}
                   </div>
-                  <div className="font-mono text-[9px] opacity-50 mt-0.5">{entry.missionsCount} missions · 🔥 {entry.streakDays}</div>
+                  <div className="font-mono text-[9px] opacity-70 mt-0.5">{entry.missionsCount} missions · 🔥 {entry.streakDays}</div>
                 </div>
-                <div className="font-display text-xl shrink-0">{entry.xp.toLocaleString()} <span className="font-mono text-[9px] opacity-50">XP</span></div>
+                <div className="font-display text-xl shrink-0">{entry.xp.toLocaleString()} <span className="font-mono text-[9px] opacity-70">XP</span></div>
               </div>
             ))}
           </div>

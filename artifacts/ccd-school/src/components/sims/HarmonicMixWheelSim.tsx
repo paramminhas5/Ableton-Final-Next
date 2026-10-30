@@ -35,7 +35,7 @@ export function HarmonicMixWheelSim() {
             const cur = n === num;
             return (
               <button key={c} onClick={() => setNum(n)}
-                className={`brutal-border aspect-square font-mono text-xs brutal-press ${cur ? "bg-ink text-bone" : ok ? "bg-acid" : "bg-bone opacity-50"}`}>
+                className={`brutal-border aspect-square font-mono text-xs brutal-press ${cur ? "bg-ink text-bone" : ok ? "bg-acid" : "bg-bone opacity-90"}`}>
                 {c}
               </button>
             );

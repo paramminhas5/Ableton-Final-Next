@@ -140,7 +140,7 @@ function WorldSwitcher({ current, view, dark }: { current: WorldSlug; view: "flo
             <div className="flex-1 min-w-0">
               <div className="leading-tight truncate">{t.title}</div>
               {active && (
-                <div className="font-mono text-[8px] uppercase mt-0.5 opacity-60">current world</div>
+                <div className="font-mono text-[8px] uppercase mt-0.5 opacity-70">current world</div>
               )}
             </div>
             {active && <span className="shrink-0 text-xs opacity-70">●</span>}
@@ -173,7 +173,7 @@ function ChapterNavList({
         // State-based styling
         const btnClass = isDone
           ? dark
-            ? "bg-volt text-ink border-volt/80 hover:bg-volt/90"
+            ? "bg-volt text-bone border-volt/80 hover:bg-volt/90"
             : "bg-ink text-bone border-ink hover:bg-ink/85"
           : isActive
           ? dark
@@ -184,8 +184,8 @@ function ChapterNavList({
             ? "bg-bone/8 text-bone border-bone/20 hover:bg-bone/14"
             : "bg-ink/8 text-ink border-ink/20 hover:bg-ink/14"
           : dark
-          ? "bg-transparent text-bone/60 border-bone/10 hover:bg-bone/8 hover:text-bone/85"
-          : "bg-transparent text-ink/55 border-ink/10 hover:bg-ink/6 hover:text-ink/85";
+          ? "bg-transparent text-bone/80 border-bone/10 hover:bg-bone/8 hover:text-bone/85"
+          : "bg-transparent text-ink/75 border-ink/10 hover:bg-ink/6 hover:text-ink/85";
 
         return (
           <button
@@ -197,7 +197,7 @@ function ChapterNavList({
             <div className="flex items-start gap-2.5">
               {/* Number + active indicator */}
               <div className="shrink-0 flex flex-col items-center gap-0.5 pt-0.5">
-                <span className={`font-mono text-[8px] tabular-nums leading-none ${dark ? "opacity-45" : "opacity-35"}`}>
+                <span className={`font-mono text-[8px] tabular-nums leading-none ${dark ? "opacity-70" : "opacity-70"}`}>
                   {String(ch.number).padStart(2, "0")}
                 </span>
                 {isActive && (
@@ -227,7 +227,7 @@ function ChapterNavList({
                 </div>
 
                 {/* Stats line */}
-                <div className={`flex items-center justify-between mt-1 font-mono text-[8px] ${dark ? "opacity-45" : "opacity-40"}`}>
+                <div className={`flex items-center justify-between mt-1 font-mono text-[8px] ${dark ? "opacity-70" : "opacity-70"}`}>
                   <span>{ch.done}/{ch.total} lessons</span>
                   {ch.pct > 0 && <span>{ch.pct}%</span>}
                 </div>
@@ -271,7 +271,7 @@ function ScrollToTopCat({
       onClick={scrollTop}
       aria-label="Scroll to top"
       className={`fixed bottom-6 right-6 z-40 w-14 h-14 brutal-border brutal-press transition-all animate-cat-peek ${
-        dark ? "bg-volt text-ink hover:bg-acid" : "bg-acid text-ink hover:bg-sun"
+        dark ? "bg-volt text-bone hover:bg-acid" : "bg-acid text-ink hover:bg-sun"
       } chunk-shadow`}
       style={{ filter: "drop-shadow(3px 3px 0 rgba(0,0,0,0.25))" }}
     >
@@ -437,7 +437,7 @@ function MobileBar({
                   className={`brutal-border w-9 h-9 flex items-center justify-center text-base brutal-press transition-all ${
                     active
                       ? `${wt.accentBg} ${wt.accentText}`
-                      : t.dark ? "bg-bone/8 text-bone/60" : "bg-ink/6 text-ink/55"
+                      : t.dark ? "bg-bone/8 text-bone/80" : "bg-ink/6 text-ink/75"
                   }`}
                   aria-label={wt.title}
                 >

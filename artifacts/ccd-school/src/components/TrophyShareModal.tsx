@@ -129,7 +129,7 @@ export function TrophyShareModal({ trophyName, trophyEmoji, trophyKind, worldNam
         {/* Header */}
         <div className="brutal-border border-x-0 border-t-0 bg-acid text-ink px-5 py-4 flex items-center justify-between">
           <div>
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-0.5">{kindLabel}</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-0.5">{kindLabel}</div>
             <div className="font-display text-2xl">{trophyEmoji} {trophyName}</div>
           </div>
           <button onClick={onClose} aria-label="Close" className="brutal-border bg-ink/20 px-3 py-1 font-mono text-xs brutal-press">✕</button>
@@ -146,7 +146,7 @@ export function TrophyShareModal({ trophyName, trophyEmoji, trophyKind, worldNam
 
         {/* Share actions */}
         <div className="px-4 pb-5 space-y-3">
-          <div className="font-mono text-[9px] uppercase opacity-50 mb-2">SHARE YOUR ACHIEVEMENT</div>
+          <div className="font-mono text-[9px] uppercase opacity-70 mb-2">SHARE YOUR ACHIEVEMENT</div>
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={handleShareTwitter}
@@ -161,7 +161,7 @@ export function TrophyShareModal({ trophyName, trophyEmoji, trophyKind, worldNam
               ↓ Download PNG
             </button>
           </div>
-          <div className="font-mono text-[9px] opacity-40">
+          <div className="font-mono text-[9px] opacity-70">
             1200×630px · Perfect for stories and posts
           </div>
         </div>

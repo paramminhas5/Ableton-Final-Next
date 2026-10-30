@@ -169,14 +169,14 @@ export function PublicProfileClient({ username }: { username: string }) {
 
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link href="/profile" className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 mb-3 block">← Profile</Link>
+          <Link href="/profile" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Profile</Link>
           <div className="flex items-center gap-4">
             <div className="brutal-border bg-acid text-ink w-16 h-16 flex items-center justify-center font-display text-3xl">
               {profileData.username.slice(0, 2).toUpperCase()}
             </div>
             <div>
               <h1 className="font-display text-4xl leading-none">{profileData.username}</h1>
-              <div className="font-mono text-sm opacity-60 mt-1">
+              <div className="font-mono text-sm opacity-70 mt-1">
                 {profileData.rankEmoji} {profileData.rank}
               </div>
             </div>
@@ -196,14 +196,14 @@ export function PublicProfileClient({ username }: { username: string }) {
           ].map(s => (
             <div key={s.label} className={`brutal-border ${s.color} p-4 text-center`}>
               <div className="font-display text-3xl">{s.value}</div>
-              <div className="font-mono text-[9px] uppercase opacity-60 mt-1">{s.label}</div>
+              <div className="font-mono text-[9px] uppercase opacity-70 mt-1">{s.label}</div>
             </div>
           ))}
         </div>
 
         {/* World progress */}
         <div className="brutal-border bg-bone p-5 space-y-3">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">WORLD PROGRESS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">WORLD PROGRESS</div>
           {[
             { label: "🎵 Fundamentals", pct: profileData.fundamentalsPct, color: "bg-acid" },
             { label: "🎧 DJ World",     pct: profileData.djPct,            color: "bg-volt" },
@@ -224,7 +224,7 @@ export function PublicProfileClient({ username }: { username: string }) {
         {/* Badges */}
         {profileData.badges.length > 0 && (
           <div className="brutal-border bg-bone p-5">
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">BADGES ({profileData.badges.length})</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">BADGES ({profileData.badges.length})</div>
             <div className="flex flex-wrap gap-2">
               {profileData.badges.map(b => (
                 <span key={b} className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">🏅 {b}</span>
@@ -236,7 +236,7 @@ export function PublicProfileClient({ username }: { username: string }) {
         {/* Share card */}
         {isOwn && (
           <div className="brutal-border bg-ink text-bone p-5 space-y-4">
-            <div className="font-mono text-[10px] uppercase opacity-50">SHARE YOUR PROGRESS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70">SHARE YOUR PROGRESS</div>
             {shareUrl && (
               <img src={shareUrl} alt="Share card preview"
                 className="w-full brutal-border" style={{ aspectRatio: "1200/630", objectFit: "cover" }} />
@@ -259,7 +259,7 @@ export function PublicProfileClient({ username }: { username: string }) {
                 </button>
               )}
             </div>
-            <div className="font-mono text-[9px] opacity-40">
+            <div className="font-mono text-[9px] opacity-70">
               Public URL: ccd.school/u/{username}
             </div>
           </div>

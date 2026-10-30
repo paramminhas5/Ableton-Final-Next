@@ -29,7 +29,7 @@ interface PathNode {
 
 const WORLD_COLORS: Record<WorldId, { accent: string; node: string; locked: string; complete: string }> = {
   fundamentals: { accent: "bg-acid",  node: "border-acid", locked: "border-ink/20",  complete: "bg-ink text-bone" },
-  dj:           { accent: "bg-volt",  node: "border-volt", locked: "border-bone/20", complete: "bg-volt text-ink" },
+  dj:           { accent: "bg-volt",  node: "border-volt", locked: "border-bone/20", complete: "bg-volt text-bone" },
   producer:     { accent: "bg-sun",   node: "border-sun",  locked: "border-ink/20",  complete: "bg-sun text-ink"  },
 };
 
@@ -113,8 +113,8 @@ export function DuoPathMap({ world }: { world: WorldId }) {
       {/* Summary bar */}
       <div className="brutal-border bg-bone p-4 mb-6 space-y-2">
         <div className="flex justify-between items-center">
-          <div className="font-mono text-[9px] uppercase opacity-50">{totalDone}/{totalNodes} lessons complete</div>
-          <div className="font-mono text-[9px] uppercase opacity-50">{pct}%</div>
+          <div className="font-mono text-[9px] uppercase opacity-70">{totalDone}/{totalNodes} lessons complete</div>
+          <div className="font-mono text-[9px] uppercase opacity-70">{pct}%</div>
         </div>
         <div className="h-2.5 brutal-border bg-ink/10 overflow-hidden">
           <div
@@ -123,7 +123,7 @@ export function DuoPathMap({ world }: { world: WorldId }) {
           />
         </div>
         {nextAvailable && (
-          <div className="font-mono text-[9px] uppercase opacity-60 truncate">
+          <div className="font-mono text-[9px] uppercase opacity-70 truncate">
             Next: {nextAvailable.title} · +{nextAvailable.xp} XP
           </div>
         )}

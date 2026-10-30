@@ -120,7 +120,7 @@ function WikiPathCard({
   const complete = done === total && total > 0;
 
   const textBase = isDark ? "text-bone" : "text-ink";
-  const textMuted = isDark ? "text-bone/55" : "text-ink/55";
+  const textMuted = isDark ? "text-bone/80" : "text-ink/75";
   const borderCol = isDark ? "border-bone/12" : "border-ink/10";
   const rowBase = isDark
     ? "bg-bone/5 text-bone border-bone/10 hover:bg-bone/10"
@@ -167,7 +167,7 @@ function WikiPathCard({
           <button
             onClick={() => setShowDesc((v) => !v)}
             title="Show description"
-            className={`w-6 h-6 flex items-center justify-center font-mono text-[9px] brutal-press opacity-40 hover:opacity-80 transition-opacity`}
+            className={`w-6 h-6 flex items-center justify-center font-mono text-[9px] brutal-press opacity-70 hover:opacity-80 transition-opacity`}
           >ℹ</button>
           <button
             onClick={() => setExpanded((v) => !v)}
@@ -206,13 +206,13 @@ function WikiPathCard({
                     isDone ? `${pillDone} px-2 -mx-2` : `${textBase} hover:${isDark ? "bg-bone/8" : "bg-acid/10"}`
                   }`}
                 >
-                  <span className={`font-mono text-[8px] w-5 shrink-0 tabular-nums ${isDone ? "opacity-70" : "opacity-30"}`}>
+                  <span className={`font-mono text-[8px] w-5 shrink-0 tabular-nums ${isDone ? "opacity-70" : "opacity-70"}`}>
                     {isDone ? "✓" : `${idx + 1}.`}
                   </span>
                   <div className="flex-1 min-w-0">
                     <span className="font-sans text-xs leading-tight">{title}</span>
                     {tagline && (
-                      <span className={`font-mono text-[8px] ml-1.5 ${isDone ? "opacity-55" : textMuted}`}>
+                      <span className={`font-mono text-[8px] ml-1.5 ${isDone ? "opacity-70" : textMuted}`}>
                         — {tagline}
                       </span>
                     )}
@@ -284,14 +284,14 @@ function WikiChapter({
 
           {/* Number badge */}
           <div className="shrink-0 pl-2">
-            <div className="font-mono text-[8px] uppercase opacity-40 mb-0.5">CH {chNum}</div>
+            <div className="font-mono text-[8px] uppercase opacity-70 mb-0.5">CH {chNum}</div>
             <span className="text-2xl leading-none">{complete ? "✓" : emoji}</span>
           </div>
 
           {/* Title */}
           <div className="flex-1 min-w-0">
             <div className="font-display text-lg leading-tight">{ch.title}</div>
-            <div className="font-mono text-[9px] opacity-55 mt-0.5 leading-snug">{ch.tagline}</div>
+            <div className="font-mono text-[9px] opacity-70 mt-0.5 leading-snug">{ch.tagline}</div>
           </div>
 
           {/* Right: pct + toggle */}
@@ -299,8 +299,8 @@ function WikiChapter({
             <div className="font-display text-xl tabular-nums leading-none">
               {complete ? "🏆" : `${pct}%`}
             </div>
-            <div className="font-mono text-[8px] opacity-35">{done}/{total}</div>
-            <div className="font-mono text-[8px] opacity-30 mt-0.5">{open ? "▲" : "▼"}</div>
+            <div className="font-mono text-[8px] opacity-70">{done}/{total}</div>
+            <div className="font-mono text-[8px] opacity-70 mt-0.5">{open ? "▲" : "▼"}</div>
           </div>
         </div>
 
@@ -335,7 +335,7 @@ function WikiChapter({
                   &ldquo;{quip}&rdquo;
                 </div>
               </div>
-              <p className={`font-mono text-[10px] leading-relaxed ${isDark ? "text-bone/55" : "text-ink/55"}`}>
+              <p className={`font-mono text-[10px] leading-relaxed ${isDark ? "text-bone/80" : "text-ink/70"}`}>
                 {ch.description}
               </p>
             </div>
@@ -353,7 +353,7 @@ function WikiChapter({
 
           {/* Paths — 2-col grid on md+ */}
           <div className="p-3">
-            <div className={`font-mono text-[8px] uppercase mb-2 ${isDark ? "text-bone/35" : "text-ink/35"}`}>
+            <div className={`font-mono text-[8px] uppercase mb-2 ${isDark ? "text-bone/80" : "text-ink/75"}`}>
               {chPaths.length} paths · {total} missions
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -382,7 +382,7 @@ function WikiChapter({
               <span className="text-2xl shrink-0">🏆</span>
               <div>
                 <div className="font-display text-sm">{ch.trophy.name}</div>
-                <div className="font-mono text-[8px] opacity-60 mt-0.5">{ch.trophy.description}</div>
+                <div className="font-mono text-[8px] opacity-70 mt-0.5">{ch.trophy.description}</div>
               </div>
             </div>
           )}
@@ -418,27 +418,27 @@ export function WorldWiki({ worldSlug }: { worldSlug: WorldSlug }) {
       {/* Compact wiki header */}
       <div className={`px-5 pt-4 pb-3 border-b-4 ${isDark ? "border-bone/12" : "border-ink/10"} flex items-center justify-between gap-3`}>
         <div>
-          <div className={`font-mono text-[8px] uppercase mb-0.5 ${isDark ? "text-bone/40" : "text-ink/40"}`}>
+          <div className={`font-mono text-[8px] uppercase mb-0.5 ${isDark ? "text-bone/80" : "text-ink/70"}`}>
             World Wiki
           </div>
           <h2 className="font-display text-xl leading-tight">
             {theme.emoji} {theme.title}
           </h2>
-          <p className={`font-mono text-[9px] mt-0.5 ${isDark ? "text-bone/45" : "text-ink/45"}`}>
+          <p className={`font-mono text-[9px] mt-0.5 ${isDark ? "text-bone/80" : "text-ink/75"}`}>
             {chapters.length} chapters · {paths.length} paths · {worldTotal} missions
           </p>
         </div>
 
         <div className={`brutal-border px-3 py-2 text-center ${
-          worldPct === 100 ? "bg-volt text-ink" : isDark ? "bg-bone/8 text-bone" : "bg-ink/6 text-ink"
+          worldPct === 100 ? "bg-volt text-bone" : isDark ? "bg-bone/8 text-bone" : "bg-ink/6 text-ink"
         }`}>
           <div className="font-display text-2xl tabular-nums">{worldPct}%</div>
-          <div className="font-mono text-[7px] uppercase opacity-50 mt-0.5">{worldDone}/{worldTotal}</div>
+          <div className="font-mono text-[7px] uppercase opacity-70 mt-0.5">{worldDone}/{worldTotal}</div>
         </div>
       </div>
 
       {/* Chapter instruction */}
-      <div className={`px-5 py-2 font-mono text-[8px] uppercase ${isDark ? "text-bone/30" : "text-ink/30"}`}>
+      <div className={`px-5 py-2 font-mono text-[8px] uppercase ${isDark ? "text-bone/80" : "text-ink/70"}`}>
         // {chapters.length} chapters — click to expand · 2-col path grid on desktop
       </div>
 
@@ -460,21 +460,21 @@ export function WorldWiki({ worldSlug }: { worldSlug: WorldSlug }) {
         {/* World trophy */}
         <div className={`brutal-border p-4 mt-2 ${
           worldPct === 100
-            ? "bg-volt text-ink"
-            : isDark ? "bg-bone/5 text-bone/40 border-bone/12" : "bg-ink/4 text-ink/40"
+            ? "bg-volt text-bone"
+            : isDark ? "bg-bone/5 text-bone/80 border-bone/12" : "bg-ink/4 text-ink/75"
         }`}>
-          <div className={`font-mono text-[8px] uppercase mb-1.5 ${worldPct === 100 ? "opacity-55" : "opacity-35"}`}>
+          <div className={`font-mono text-[8px] uppercase mb-1.5 ${worldPct === 100 ? "opacity-70" : "opacity-70"}`}>
             World Trophy
           </div>
           <div className="flex items-center gap-3">
             <span className="text-2xl">{worldPct === 100 ? "🏆" : "🔒"}</span>
             <div>
               <div className="font-display text-lg">{trophy?.name ?? "World Master"}</div>
-              <div className={`font-mono text-[9px] mt-0.5 ${worldPct === 100 ? "opacity-60" : "opacity-35"}`}>
+              <div className={`font-mono text-[9px] mt-0.5 ${worldPct === 100 ? "opacity-70" : "opacity-70"}`}>
                 {trophy?.description ?? `Complete all ${chapters.length} chapters to unlock`}
               </div>
               {worldPct < 100 && (
-                <div className={`font-mono text-[8px] uppercase mt-1 ${isDark ? "text-bone/25" : "text-ink/25"}`}>
+                <div className={`font-mono text-[8px] uppercase mt-1 ${isDark ? "text-bone/80" : "text-ink/75"}`}>
                   {worldTotal - worldDone} missions remaining
                 </div>
               )}

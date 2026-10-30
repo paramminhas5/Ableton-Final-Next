@@ -75,7 +75,7 @@ export function StemSplitterSim() {
             <button
               key={s.id}
               onClick={() => setEnabled((e) => ({ ...e, [s.id]: !e[s.id] }))}
-              className={`brutal-border p-3 brutal-press text-left ${enabled[s.id] ? s.color : "bg-bone opacity-50"}`}
+              className={`brutal-border p-3 brutal-press text-left ${enabled[s.id] ? s.color : "bg-bone opacity-70"}`}
             >
               <div className="font-display text-lg">{s.label}</div>
               <div className="font-mono text-[10px] uppercase">{enabled[s.id] ? "● ON" : "○ MUTED"}</div>

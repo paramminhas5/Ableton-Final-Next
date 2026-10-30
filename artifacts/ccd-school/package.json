@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "journeys": "node scripts/journeys.mjs",
+    "a11y": "node scripts/a11y.mjs",
     "smoke": "node scripts/smoke.mjs",
     "crawl:dump": "DUMP_MISSIONS=1 vitest run tests/dump-missions.test.ts",
     "crawl": "node scripts/lessons-crawl.mjs"
@@ -61,6 +62,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/web-push": "^3.6.4",
     "@vitest/coverage-v8": "^2.1.0",
+    "axe-core": "^4.14.0",
     "fast-check": "^3.22.0",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.6.3",

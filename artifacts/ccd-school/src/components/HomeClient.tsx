@@ -215,7 +215,7 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
         {[{ v:"153",l:"Missions"},{v:"3",l:"Worlds"},{v:"47",l:"Live Sims"},{v:"0",l:"Ads. Ever."}].map(({v,l}) => (
           <div key={l} className="py-3 px-2 text-center border-r-4 border-ink/50 last:border-r-0">
             <div className="font-display text-xl md:text-2xl text-acid">{v}</div>
-            <div className="font-mono text-[9px] uppercase opacity-50 mt-0.5">{l}</div>
+            <div className="font-mono text-[9px] uppercase text-bone opacity-90 mt-0.5">{l}</div>
           </div>
         ))}
       </div>
@@ -251,7 +251,7 @@ function Dashboard() {
             <Image src="/cats/cat-dj-hero.png" alt="" fill className="object-contain" sizes="64px" />
           </div>
           <div>
-            <div className="font-mono text-xs uppercase opacity-60 mb-1">// KEEP GOING</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-1">// KEEP GOING</div>
             <h1 className="font-display text-5xl md:text-7xl leading-none">KEEP<br /><span className="text-acid">GOING.</span></h1>
           </div>
         </div>
@@ -260,7 +260,7 @@ function Dashboard() {
         {continueSlug && (
           <Link href={`/learn/${continueSlug}`}
             className="brutal-border bg-acid text-ink p-5 flex items-center justify-between gap-4 block hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none chunk-shadow transition-transform mb-4 border-4 border-ink">
-            <div><div className="font-mono text-[9px] uppercase opacity-60 mb-1">CONTINUE</div><div className="font-display text-2xl">{continueSlug.replace(/-/g," ")}</div></div>
+            <div><div className="font-mono text-[9px] uppercase opacity-70 mb-1">CONTINUE</div><div className="font-display text-2xl">{continueSlug.replace(/-/g," ")}</div></div>
             <Image src="/cats/cat-headphones.png" alt="" width={48} height={48} className="drop-shadow-[2px_2px_0_hsl(222_47%_4%)] animate-bounce-bob" />
           </Link>
         )}
@@ -268,7 +268,7 @@ function Dashboard() {
           {[{v:progress.xp,l:"XP",bg:"bg-acid text-ink"},{v:`🔥${progress.streakDays}`,l:"Streak",bg:"bg-magenta text-bone"},{v:totalDone,l:"Lessons",bg:"bg-bone text-ink"},{v:rank.emoji,l:rank.name,bg:"bg-bone text-ink"}].map(({v,l,bg})=>(
             <div key={l} className={`brutal-border ${bg} p-3 chunk-shadow-sm`}>
               <div className="font-display text-2xl">{v}</div>
-              <div className="font-mono text-[9px] uppercase mt-1 opacity-60">{l}</div>
+              <div className="font-mono text-[9px] uppercase mt-1 opacity-70">{l}</div>
             </div>
           ))}
         </div>
@@ -307,9 +307,9 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-bone border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// THE SYSTEM</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// THE SYSTEM</div>
             <h2 className="font-display text-5xl md:text-7xl mb-3" style={{textShadow:"3px 3px 0 hsl(84 81% 56%)"}}>Built Different.</h2>
-            <p className="font-sans text-sm opacity-60 max-w-xl leading-relaxed mb-12">Not another YouTube playlist. A structured curriculum built from primary sources, with interactive sims and quizzes on every mission.</p>
+            <p className="font-sans text-sm opacity-70 max-w-xl leading-relaxed mb-12">Not another YouTube playlist. A structured curriculum built from primary sources, with interactive sims and quizzes on every mission.</p>
             <div className="grid md:grid-cols-3 gap-0 brutal-border chunk-shadow">
               {[
                 { num:"01", title:"Pick a World",    emoji:"🎵", accent:"bg-acid",                   body:"Start with Fundamentals (sound, rhythm, melody, harmony, tech) or jump directly into DJ World or Producer." },
@@ -318,7 +318,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
               ].map((s,i) => (
                 <div key={i} className={`p-6 md:p-8 ${i<2?"brutal-border border-y-0 border-l-0":""}`}>
                   <div className={`brutal-border ${s.accent} w-12 h-12 flex items-center justify-center font-display text-2xl mb-4 chunk-shadow-sm`}>{s.emoji}</div>
-                  <div className="font-mono text-[9px] uppercase opacity-40 mb-1">{s.num}</div>
+                  <div className="font-mono text-[9px] uppercase opacity-70 mb-1">{s.num}</div>
                   <div className="font-display text-2xl mb-3">{s.title}</div>
                   <div className="font-sans text-sm opacity-70 leading-relaxed">{s.body}</div>
                 </div>
@@ -326,7 +326,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
             </div>
             <div className="mt-10 grid md:grid-cols-2 gap-3">
               <div className="brutal-border bg-hot/10 p-5">
-                <div className="font-display text-sm uppercase opacity-50 mb-3">❌ Everywhere else</div>
+                <div className="font-display text-sm uppercase opacity-70 mb-3">❌ Everywhere else</div>
                 <ul className="space-y-2 font-sans text-sm opacity-70">
                   {["Random YouTube videos, no structure","Ads every 2 minutes","No quizzes, no accountability","Content not from official docs","Progress tracked nowhere"].map(t=>(
                     <li key={t} className="flex gap-2"><span className="text-hot shrink-0">✗</span>{t}</li>
@@ -334,7 +334,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 </ul>
               </div>
               <div className="brutal-border bg-acid p-5 chunk-shadow">
-                <div className="font-display text-sm uppercase opacity-60 mb-3 text-ink">✓ CCD.SCHOOL</div>
+                <div className="font-display text-sm uppercase opacity-70 mb-3 text-ink">✓ CCD.SCHOOL</div>
                 <ul className="space-y-2 font-sans text-sm text-ink">
                   {["153 missions in a structured curriculum","Zero ads, ever","Interactive quiz on every single mission","Built from official Ableton + Pioneer manuals","XP, streaks, spaced repetition, leaderboard"].map(t=>(
                     <li key={t} className="flex gap-2"><span className="font-bold shrink-0">✓</span>{t}</li>
@@ -353,9 +353,9 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-bone border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// TWO WAYS TO LEARN</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// TWO WAYS TO LEARN</div>
             <h2 className="font-display text-5xl md:text-7xl mb-4">Pick Your Mode.</h2>
-            <p className="font-sans text-sm opacity-60 max-w-xl leading-relaxed mb-10">
+            <p className="font-sans text-sm opacity-70 max-w-xl leading-relaxed mb-10">
               You choose how structured your experience is. Switch anytime — your progress always carries over.
             </p>
 
@@ -366,7 +366,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 <div className="p-7 md:p-10 bg-acid text-ink border-b-4 md:border-b-0 md:border-r-4 border-ink">
                   <div className="text-5xl mb-4">🌊</div>
                   <div className="font-display text-3xl md:text-4xl mb-2">Flow Mode</div>
-                  <div className="font-mono text-xs uppercase opacity-60 mb-5">Recommended · Default</div>
+                  <div className="font-mono text-xs uppercase opacity-70 mb-5">Recommended · Default</div>
                   <ul className="space-y-3 mb-8">
                     {[
                       { icon: "🗺", text: "Duolingo-style path — missions unlock one by one" },
@@ -389,7 +389,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 <div className="p-7 md:p-10 bg-bone text-ink">
                   <div className="text-5xl mb-4">🔓</div>
                   <div className="font-display text-3xl md:text-4xl mb-2">Free Mode</div>
-                  <div className="font-mono text-xs uppercase opacity-40 mb-5">For explorers & returners</div>
+                  <div className="font-mono text-xs uppercase opacity-70 mb-5">For explorers & returners</div>
                   <ul className="space-y-3 mb-8">
                     {[
                       { icon: "📋", text: "Full chapter browser — jump to any mission instantly" },
@@ -403,7 +403,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                       </li>
                     ))}
                   </ul>
-                  <div className="brutal-border bg-bone text-ink px-4 py-2 font-display text-sm inline-block opacity-60">
+                  <div className="brutal-border bg-bone text-ink px-4 py-2 font-display text-sm inline-block opacity-70">
                     SWITCH ANYTIME IN SETTINGS
                   </div>
                 </div>
@@ -412,7 +412,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
 
               {/* Footer strip */}
               <div className="border-t-4 border-ink px-7 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-ink text-bone">
-                <p className="font-mono text-xs uppercase opacity-60">
+                <p className="font-mono text-xs uppercase opacity-70">
                   You can switch mode on any world page — progress always carries over
                 </p>
                 <button
@@ -434,9 +434,9 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-ink text-bone border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// MORE THAN JUST LESSONS</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// MORE THAN JUST LESSONS</div>
             <h2 className="font-display text-5xl md:text-7xl mb-4">Everything You Need.</h2>
-            <p className="font-sans text-sm opacity-60 max-w-xl leading-relaxed mb-12">
+            <p className="font-sans text-sm opacity-70 max-w-xl leading-relaxed mb-12">
               CCD.SCHOOL is a full toolkit — not just a quiz app. Every feature is built to help you actually understand and use what you learn.
             </p>
 
@@ -493,9 +493,9 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                   <span className="text-3xl">{icon}</span>
                   <div>
                     <div className="font-display text-lg mb-1">{title}</div>
-                    <div className="font-sans text-sm opacity-60 leading-relaxed">{body}</div>
+                    <div className="font-sans text-sm opacity-70 leading-relaxed">{body}</div>
                   </div>
-                  <div className="font-mono text-[9px] uppercase opacity-40 mt-auto">EXPLORE →</div>
+                  <div className="font-mono text-[9px] uppercase opacity-70 mt-auto">EXPLORE →</div>
                 </Link>
               ))}
             </div>
@@ -514,7 +514,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-electric-blue text-bone border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-60 mb-2 tracking-widest">// THREE WORLDS</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// THREE WORLDS</div>
             <h2 className="font-display text-5xl md:text-7xl mb-10" style={{textShadow:"4px 4px 0 hsl(222 47% 4%)"}}>Choose Your Path.</h2>
             <div className="space-y-3">
               {(["fundamentals","dj","producer"] as WorldTab[]).map(world => {
@@ -525,10 +525,10 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                     className={`brutal-border ${meta.color} p-5 md:p-7 flex items-start justify-between gap-4 block chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform`}>
                     <div>
                       <div className="mb-3 opacity-70">{meta.icon}</div>
-                      <div className="font-mono text-[9px] uppercase opacity-60 mb-1">{paths.length} PATHS · {paths.flatMap(p=>p.missionSlugs).length} MISSIONS</div>
+                      <div className="font-mono text-[9px] uppercase opacity-70 mb-1">{paths.length} PATHS · {paths.flatMap(p=>p.missionSlugs).length} MISSIONS</div>
                       <div className="font-display text-4xl md:text-6xl">{meta.label}</div>
                       <div className="font-sans text-sm opacity-70 mt-1">{meta.tagline}</div>
-                      <div className="font-sans text-xs opacity-50 mt-2 max-w-lg leading-relaxed">{meta.detail}</div>
+                      <div className="font-sans text-xs opacity-70 mt-2 max-w-lg leading-relaxed">{meta.detail}</div>
                     </div>
                   </Link>
                 );
@@ -548,7 +548,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section id="curriculum" className="bg-bone border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// CURRICULUM</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// CURRICULUM</div>
             <h2 className="font-display text-5xl md:text-7xl mb-8">What You&apos;ll Learn.</h2>
             <div className="brutal-border flex mb-8 chunk-shadow">
               {(["fundamentals","dj","producer"] as WorldTab[]).map(w => {
@@ -567,9 +567,9 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 const paths=pathsByWorld(worldTab).filter(p=>p.chapter===ch.slug);
                 return (
                   <div key={ch.slug} className="brutal-border p-3 hover:bg-acid/20 transition-colors">
-                    <div className="font-mono text-[9px] uppercase opacity-40 mb-1">CH {i+1}</div>
+                    <div className="font-mono text-[9px] uppercase opacity-70 mb-1">CH {i+1}</div>
                     <div className="font-display text-sm leading-tight mb-2">{ch.title}</div>
-                    {paths.map(p=><div key={p.slug} className="font-mono text-[8px] opacity-50 flex items-start gap-1"><span className="opacity-40">›</span><span>{p.title}</span></div>)}
+                    {paths.map(p=><div key={p.slug} className="font-mono text-[8px] opacity-70 flex items-start gap-1"><span className="opacity-40">›</span><span>{p.title}</span></div>)}
                   </div>
                 );
               })}
@@ -578,7 +578,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
               {[{v:"153",l:"Missions",a:true},{v:"32",l:"Paths"},{v:"15",l:"Chapters"},{v:"47",l:"Sims"}].map(({v,l,a})=>(
                 <div key={l} className={`brutal-border p-4 md:p-5 chunk-shadow ${a?"bg-acid text-ink":"bg-bone text-ink"}`}>
                   <div className="font-display text-3xl md:text-4xl tabular-nums leading-none">{v}</div>
-                  <div className="font-mono text-[10px] uppercase opacity-60 mt-1">{l}</div>
+                  <div className="font-mono text-[10px] uppercase opacity-70 mt-1">{l}</div>
                 </div>
               ))}
             </div>
@@ -592,7 +592,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-24">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// GAMIFICATION</div>
+                <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// GAMIFICATION</div>
                 <h2 className="font-display text-5xl md:text-7xl mb-10">Built to Keep You Going.</h2>
               </div>
               <Image src="/cats/cat-raver.png" alt="" width={100} height={100} className="hidden md:block drop-shadow-[4px_4px_0_hsl(84_81%_56%)] wiggle shrink-0" />
@@ -602,7 +602,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 <div key={t} className="brutal-border bg-bone/5 p-4 hover:bg-acid/10 transition-colors">
                   <div className="text-2xl mb-2">{i}</div>
                   <div className="font-display text-base mb-1">{t}</div>
-                  <div className="font-sans text-xs opacity-60 leading-relaxed">{b}</div>
+                  <div className="font-sans text-xs opacity-70 leading-relaxed">{b}</div>
                 </div>
               ))}
             </div>
@@ -614,7 +614,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-bone border-b-4 border-ink">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-            <div className="font-mono text-xs uppercase opacity-40 mb-2 tracking-widest">// FAQ</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-2 tracking-widest">// FAQ</div>
             <h2 className="font-display text-5xl md:text-7xl mb-8">Questions.</h2>
             <div className="brutal-border chunk-shadow">
               {FAQ.map((item,i)=>(
@@ -635,7 +635,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
       <SectionReveal>
         <section className="bg-acid text-ink border-b-4 border-ink">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-28 text-center">
-            <div className="font-mono text-xs uppercase opacity-50 mb-4 tracking-widest">// NO EXCUSES</div>
+            <div className="font-mono text-xs uppercase opacity-70 mb-4 tracking-widest">// NO EXCUSES</div>
             <div className="flex justify-center mb-6">
               <Image src="/cats/cat-dj-hero.png" alt="DJ Pawsworth" width={140} height={140} className="drop-shadow-[6px_6px_0_hsl(222_47%_4%)] animate-cat-celebrate" />
             </div>
@@ -651,7 +651,7 @@ function Landing({ onGetStarted }: { onGetStarted: () => void }) {
                 BROWSE ALL MISSIONS
               </Link>
             </div>
-            <div className="mt-8 font-mono text-[10px] uppercase opacity-40">No credit card · No download · Works on any device</div>
+            <div className="mt-8 font-mono text-[10px] uppercase opacity-70">No credit card · No download · Works on any device</div>
           </div>
         </section>
       </SectionReveal>

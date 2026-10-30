@@ -71,7 +71,7 @@ export function ReviewPageClient() {
       {/* P1 #14: REVIEW MODE distinctive header — hot/red tones */}
       <header className="brutal-border border-x-0 border-t-0 bg-hot text-bone">
         <div className="max-w-3xl mx-auto px-4 py-8">
-          <Link href="/dashboard" className="font-mono text-[10px] uppercase opacity-60 hover:opacity-100 mb-3 block">← Dashboard</Link>
+          <Link href="/dashboard" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Dashboard</Link>
           {/* P1 #14: REVIEW MODE pill */}
           <div className="brutal-border bg-bone text-hot px-3 py-1 font-mono text-[10px] uppercase font-bold inline-flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-hot animate-pulse inline-block" />
@@ -110,7 +110,7 @@ export function ReviewPageClient() {
         {/* Needs review */}
         {needsReview.length > 0 && (
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">
               // NEEDS REVIEW — {needsReview.length} lesson{needsReview.length > 1 ? "s" : ""}
             </div>
             <div className="space-y-2">
@@ -122,7 +122,7 @@ export function ReviewPageClient() {
                   <div key={item.slug} className="brutal-border bg-bone p-4 border-l-4 border-l-hot">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="font-mono text-[9px] uppercase opacity-50 mb-0.5">
+                        <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">
                           {mission?.world?.toUpperCase()} · Last reviewed {daysSince(progress.lessonStrengths[item.slug]?.lastReviewed ?? 0)}
                           {/* P1 #14: FSRS stability info */}
                           {fsrs && <span className="ml-2 text-volt">· FSRS {fsrs.reps} rep{fsrs.reps !== 1 ? "s" : ""} · {fsrs.stability}d stability</span>}
@@ -130,10 +130,10 @@ export function ReviewPageClient() {
                         <div className="font-display text-lg leading-tight">
                           {mission?.title ?? item.slug.replace(/-/g, " ")}
                         </div>
-                        <div className="font-sans text-xs opacity-60 mt-0.5">{mission?.tagline}</div>
+                        <div className="font-sans text-xs opacity-70 mt-0.5">{mission?.tagline}</div>
                         <div className="mt-2 flex items-center gap-2">
                           <StrengthBar strength={item.strength} />
-                          <span className="font-mono text-[9px] uppercase opacity-60 shrink-0">{pct}%</span>
+                          <span className="font-mono text-[9px] uppercase opacity-70 shrink-0">{pct}%</span>
                         </div>
                       </div>
                       <Link
@@ -158,7 +158,7 @@ export function ReviewPageClient() {
         {/* Healthy lessons */}
         {healthy.length > 0 && (
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">
               // HEALTHY — {healthy.length} lesson{healthy.length > 1 ? "s" : ""}
             </div>
             <div className="space-y-1">
@@ -169,15 +169,15 @@ export function ReviewPageClient() {
                 return (
                   <div key={item.slug} className="brutal-border bg-bone/50 p-3 flex items-center gap-3">
                     <StrengthBar strength={item.strength} />
-                    <span className="font-mono text-[9px] uppercase opacity-50 shrink-0 w-8 text-right">{pct}%</span>
+                    <span className="font-mono text-[9px] uppercase opacity-70 shrink-0 w-8 text-right">{pct}%</span>
                     <span className="font-sans text-xs flex-1 truncate opacity-70">
                       {mission?.title ?? item.slug.replace(/-/g, " ")}
                     </span>
                     {fsrs && (
-                      <span className="font-mono text-[8px] opacity-40 shrink-0 hidden sm:block">{fsrs.stability}d</span>
+                      <span className="font-mono text-[8px] opacity-70 shrink-0 hidden sm:block">{fsrs.stability}d</span>
                     )}
                     <Link href={`/learn/${item.slug}?review=1`}
-                      className="font-mono text-[9px] uppercase opacity-40 hover:opacity-80 shrink-0">
+                      className="font-mono text-[9px] uppercase opacity-70 hover:opacity-80 shrink-0">
                       review
                     </Link>
                   </div>
@@ -189,7 +189,7 @@ export function ReviewPageClient() {
 
         {/* How it works — P1 #14: updated to mention FSRS */}
         <section className="brutal-border bg-ink text-bone p-5">
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-3">// HOW FSRS SPACED REPETITION WORKS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// HOW FSRS SPACED REPETITION WORKS</div>
           <div className="space-y-2 font-sans text-xs opacity-70 leading-relaxed">
             <p>CCD.SCHOOL uses FSRS v4 — the same algorithm that powers Anki, optimised for long-term memory.</p>
             <p>After each review, the scheduler calculates a new interval based on your score, stability, and difficulty. Easy lessons get longer gaps; hard lessons come back sooner.</p>

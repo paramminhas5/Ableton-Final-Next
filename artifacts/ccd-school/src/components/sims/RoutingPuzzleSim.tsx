@@ -309,7 +309,7 @@ export function RoutingPuzzleSim() {
 
       {/* Goal */}
       <div className="brutal-border bg-ink text-bone p-4 space-y-2">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Scenario {scen.id}/5 — {scen.concept}
         </div>
         <div className="font-display text-2xl">{scen.title}</div>
@@ -321,14 +321,14 @@ export function RoutingPuzzleSim() {
 
       {/* Target diagram */}
       <div className="brutal-border bg-sun/20 p-3">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-2">
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">
           Target routing (approximate)
         </div>
         <div
           className="grid gap-1"
           style={{ gridTemplateColumns: `120px repeat(${scen.returns.length}, 1fr)` }}
         >
-          <div className="font-mono text-[9px] uppercase opacity-40">Track</div>
+          <div className="font-mono text-[9px] uppercase opacity-70">Track</div>
           {scen.returns.map((r) => (
             <div
               key={r.name}
@@ -349,7 +349,7 @@ export function RoutingPuzzleSim() {
                     <div className="h-2 brutal-border bg-bone flex-1 overflow-hidden">
                       <div className="h-full bg-ink" style={{ width: `${v}%` }} />
                     </div>
-                    <span className="font-mono text-[9px] opacity-50 w-7 text-right">{v}</span>
+                    <span className="font-mono text-[9px] opacity-70 w-7 text-right">{v}</span>
                   </div>
                 );
               })}
@@ -360,7 +360,7 @@ export function RoutingPuzzleSim() {
 
       {/* Send sliders */}
       <div className="space-y-2">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Your sends — adjust to match target
         </div>
         {scen.tracks.map((t) => (
@@ -372,7 +372,7 @@ export function RoutingPuzzleSim() {
             <div className="font-mono text-[10px] uppercase self-center">{t}</div>
             {scen.returns.map((r) => (
               <div key={r.name} className="space-y-1">
-                <div className="flex justify-between font-mono text-[9px] opacity-60">
+                <div className="flex justify-between font-mono text-[9px] opacity-70">
                   <span>{r.name}</span>
                   <span>{sends[t]?.[r.name] ?? 0}</span>
                 </div>

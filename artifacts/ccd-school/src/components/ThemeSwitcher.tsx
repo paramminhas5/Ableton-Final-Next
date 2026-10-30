@@ -61,7 +61,7 @@ export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
           <>
             <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
             <div className="absolute right-0 top-full mt-1 brutal-border bg-bone z-50 min-w-[220px] max-h-[60vh] overflow-y-auto brutal-shadow-sm">
-              <div className="font-mono text-[9px] uppercase opacity-50 px-3 pt-2 pb-1">Theme</div>
+              <div className="font-mono text-[9px] uppercase opacity-70 px-3 pt-2 pb-1">Theme</div>
               {THEMES.map((t) => (
                 <button
                   key={t.id}

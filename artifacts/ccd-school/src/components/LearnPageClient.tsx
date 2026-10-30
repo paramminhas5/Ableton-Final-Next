@@ -82,7 +82,7 @@ export function LearnPageClient() {
           <Image src={wm.catSrc} alt="" width={112} height={112} className="w-full h-full object-contain" />
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 relative z-10">
-          <p className="font-mono text-xs uppercase opacity-60 tracking-widest mb-1">Your learning path</p>
+          <p className="font-mono text-xs uppercase opacity-70 tracking-widest mb-1">Your learning path</p>
           <h1 className="font-display text-5xl md:text-6xl leading-none" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
             LEARN
           </h1>
@@ -109,7 +109,7 @@ export function LearnPageClient() {
                   isActive ? `${meta.activeBg} ${meta.activeText}` : "bg-bone hover:bg-acid/20 opacity-70 hover:opacity-100"
                 }`}>
                 <div>{meta.emoji} {meta.label}</div>
-                <div className="font-mono text-[10px] opacity-60 mt-0.5">{done}/{total} · {pct}%</div>
+                <div className="font-mono text-[10px] opacity-70 mt-0.5">{done}/{total} · {pct}%</div>
               </button>
             );
           })}
@@ -166,15 +166,15 @@ export function LearnPageClient() {
                         <Image src={catSrc} alt="" width={44} height={44} className="w-full h-full object-contain" />
                       </div>
                       <div>
-                        <p className="font-mono text-xs uppercase opacity-40 tracking-widest mb-0.5">
+                        <p className="font-mono text-xs uppercase opacity-70 tracking-widest mb-0.5">
                           Chapter {chapter.number} · {chPaths.length} paths · {cStats.total} missions
                         </p>
                         <h2 className="font-display text-2xl md:text-3xl leading-tight">{chapter.title}</h2>
-                        <p className="font-sans text-sm opacity-55 mt-0.5 leading-snug">{chapter.tagline}</p>
+                        <p className="font-sans text-sm opacity-70 mt-0.5 leading-snug">{chapter.tagline}</p>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="font-mono text-xs uppercase opacity-50">{cStats.done}/{cStats.total}</p>
+                      <p className="font-mono text-xs uppercase opacity-70">{cStats.done}/{cStats.total}</p>
                       {cStats.complete && <p className="font-mono text-xs mt-0.5">🏆 {chapter.trophy.name}</p>}
                     </div>
                   </div>
@@ -197,17 +197,17 @@ export function LearnPageClient() {
                         <div key={path.slug} className="brutal-border flex flex-col overflow-hidden chunk-shadow hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">
                           <div className="p-5 flex-1 space-y-3">
                             <div>
-                              <p className="font-mono text-xs uppercase opacity-40 tracking-wide mb-1">
+                              <p className="font-mono text-xs uppercase opacity-70 tracking-wide mb-1">
                                 Path {path.number} · {pStats.total} missions
                               </p>
                               <h3 className="font-display text-xl leading-tight">{path.title}</h3>
-                              <p className="font-sans text-sm opacity-55 mt-1.5 leading-snug">{path.tagline}</p>
+                              <p className="font-sans text-sm opacity-70 mt-1.5 leading-snug">{path.tagline}</p>
                             </div>
                             <div>
                               <div className="h-2 brutal-border bg-ink/8 overflow-hidden mb-1.5">
                                 <div className={`h-full ${wm.bar} transition-all`} style={{ width: `${pStats.pct}%` }} />
                               </div>
-                              <p className="font-mono text-xs opacity-40">{pStats.done}/{pStats.total} · {pStats.pct}%</p>
+                              <p className="font-mono text-xs opacity-70">{pStats.done}/{pStats.total} · {pStats.pct}%</p>
                             </div>
                           </div>
                           <Link href={`/path/${path.slug}`}

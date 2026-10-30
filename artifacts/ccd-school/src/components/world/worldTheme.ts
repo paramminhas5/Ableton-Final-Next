@@ -80,7 +80,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     bg: "bg-bone",
     surface: "bg-bone",
     textPrimary: "text-ink",
-    textMuted: "text-ink/55",
+    textMuted: "text-ink/75",
 
     heroBg: "bg-acid",
     heroBorder: "border-b-4 border-ink",
@@ -93,7 +93,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     railBg: "bg-[#f0ece4]",
     railBorder: "border-r-4 border-ink",
     railText: "text-ink",
-    railMuted: "text-ink/50",
+    railMuted: "text-ink/75",
     dark: false,
 
     barBg: "bg-ink/15",
@@ -101,7 +101,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
 
     pillDone: "bg-ink text-bone",
     pillPartial: "bg-ink/30 text-ink",
-    pillEmpty: "bg-ink/8 text-ink/45",
+    pillEmpty: "bg-ink/8 text-ink/75",
     pillConnector: "bg-ink/20",
 
     flowBtn: "bg-ink text-bone hover:bg-electric-blue",
@@ -129,7 +129,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     bg: "bg-[#0a0f2e]",
     surface: "bg-[#0a0f2e]",
     textPrimary: "text-bone",
-    textMuted: "text-bone/55",
+    textMuted: "text-bone/80",
 
     heroBg: "bg-[#0a0f2e]",
     heroBorder: "border-b-4 border-volt",
@@ -142,23 +142,23 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     railBg: "bg-[#0d1535]",
     railBorder: "border-r-4 border-volt/60",
     railText: "text-bone",
-    railMuted: "text-bone/50",
+    railMuted: "text-bone/80",
     dark: true,
 
     barBg: "bg-volt/20",
     barFill: "bg-volt",
 
-    pillDone: "bg-volt text-ink",
+    pillDone: "bg-volt text-bone",
     pillPartial: "bg-volt/30 text-bone",
-    pillEmpty: "bg-bone/8 text-bone/40",
+    pillEmpty: "bg-bone/8 text-bone/80",
     pillConnector: "bg-volt/25",
 
-    flowBtn: "bg-volt text-ink hover:bg-acid",
+    flowBtn: "bg-volt text-bone hover:bg-acid",
     freeBtn: "bg-bone/10 text-bone hover:bg-bone/18 border border-bone/20",
 
     viewToggleBg: "bg-bone/8",
     viewToggleText: "text-bone",
-    viewToggleActive: "bg-volt text-ink",
+    viewToggleActive: "bg-volt text-bone",
 
     catMain: "/cats/cat-dj.png",
     catDeco1: "/cats/cat-dj-new.png",
@@ -178,7 +178,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     bg: "bg-bone",
     surface: "bg-bone",
     textPrimary: "text-ink",
-    textMuted: "text-ink/55",
+    textMuted: "text-ink/75",
 
     heroBg: "bg-sun",
     heroBorder: "border-b-4 border-ink",
@@ -191,7 +191,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     railBg: "bg-[#f5f0e8]",
     railBorder: "border-r-4 border-ink",
     railText: "text-ink",
-    railMuted: "text-ink/50",
+    railMuted: "text-ink/75",
     dark: false,
 
     barBg: "bg-ink/15",
@@ -199,7 +199,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
 
     pillDone: "bg-ink text-bone",
     pillPartial: "bg-sun text-ink",
-    pillEmpty: "bg-ink/8 text-ink/45",
+    pillEmpty: "bg-ink/8 text-ink/75",
     pillConnector: "bg-ink/20",
 
     flowBtn: "bg-ink text-bone hover:bg-hot",

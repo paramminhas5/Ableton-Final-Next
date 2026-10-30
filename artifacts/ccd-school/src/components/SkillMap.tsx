@@ -100,7 +100,7 @@ export function SkillMap() {
                 <div className="font-display text-lg" style={{ color }}>
                   {world.title}
                 </div>
-                <div className="font-mono text-[10px] uppercase opacity-60">
+                <div className="font-mono text-[10px] uppercase opacity-70">
                   {done}/{total} · {pct}%
                 </div>
               </div>
@@ -190,15 +190,15 @@ export function SkillMap() {
           <div className="font-display text-3xl">
             {worldStats.filter((w) => w.pct === 100).length}
           </div>
-          <div className="font-mono text-[10px] uppercase opacity-60">Worlds Mastered</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Worlds Mastered</div>
         </div>
         <div>
           <div className="font-display text-3xl">{totalDone}</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">Missions Done</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Missions Done</div>
         </div>
         <div>
           <div className="font-display text-3xl">{progress.badges.length}</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">Badges Earned</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Badges Earned</div>
         </div>
       </div>
     </div>

@@ -249,9 +249,9 @@ export function GymPageClient() {
       <main className="min-h-screen bg-bone">
         <div className="mx-auto w-full max-w-md px-4 py-8 space-y-6">
           <header>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// EAR GYM</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// EAR GYM</div>
             <h1 className="font-display text-4xl leading-none">FIVE MINUTES. ONE THUMB.</h1>
-            <p className="font-mono text-xs opacity-60 mt-3">
+            <p className="font-mono text-xs opacity-70 mt-3">
               EQ, compression, tempo and groove on real loops. It gets harder when you get it right.
             </p>
           </header>
@@ -273,7 +273,7 @@ export function GymPageClient() {
           )}
 
           <section className="brutal-border bg-bone p-4" aria-label="This week">
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-2">THIS WEEK</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-2">THIS WEEK</div>
             <div className="flex items-center gap-2 mb-2" role="img" aria-label={`${week.filled} of ${week.target} sessions`}>
               {Array.from({ length: week.target }).map((_, i) => (
                 <span
@@ -288,7 +288,7 @@ export function GymPageClient() {
                 : `${week.remaining} more session${week.remaining === 1 ? "" : "s"} to hit your week.`}
               {week.passUsed && " Free pass used."}
             </div>
-            <div className="font-mono text-[10px] opacity-50 mt-1">
+            <div className="font-mono text-[10px] opacity-70 mt-1">
               Missing a day never resets anything.
             </div>
             {ready && canUsePass(saved.week, now) && (
@@ -305,14 +305,14 @@ export function GymPageClient() {
 
           <button
             onClick={startSession}
-            className="w-full min-h-14 brutal-border bg-ink text-bone px-4 font-display text-xl uppercase brutal-press chunk-shadow hover:bg-volt hover:text-ink transition-colors"
+            className="w-full min-h-14 brutal-border bg-ink text-bone px-4 font-display text-xl uppercase brutal-press chunk-shadow hover:bg-volt hover:text-bone transition-colors"
           >
             {phase === "done" ? "GO AGAIN" : "START 5 MIN SESSION"}
           </button>
-          <p className="font-mono text-[10px] opacity-50 text-center">Headphones help. Plays through your speakers if you have none.</p>
+          <p className="font-mono text-[10px] opacity-70 text-center">Headphones help. Plays through your speakers if you have none.</p>
 
           <section className="brutal-border bg-bone p-4">
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-2">YOUR LEVELS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-2">YOUR LEVELS</div>
             <ul className="space-y-1 font-mono text-xs">
               {GYM_DRILLS.map((d) => (
                 <li key={d} className="flex justify-between">
@@ -323,7 +323,7 @@ export function GymPageClient() {
             </ul>
           </section>
 
-          <Link href="/train" className="block text-center font-mono text-[10px] uppercase underline opacity-60">
+          <Link href="/train" className="block text-center font-mono text-[10px] uppercase underline opacity-70">
             More ear training
           </Link>
         </div>
@@ -364,7 +364,7 @@ export function GymPageClient() {
                 </button>
               ))}
             </div>
-            <p className="font-mono text-[10px] opacity-50 text-center">
+            <p className="font-mono text-[10px] opacity-70 text-center">
               Levels are matched, so loudness will not give it away. Switch as often as you like.
             </p>
 
@@ -417,7 +417,7 @@ export function GymPageClient() {
                   {g.kind === "tempo" ? "Which clip is faster?" : "Which clip is swung?"}
                 </legend>
                 {locked && (
-                  <div className="font-mono text-[10px] opacity-60" role="status">
+                  <div className="font-mono text-[10px] opacity-70" role="status">
                     Keep listening: bar {Math.min(bars, BARS_BEFORE_ANSWER)} of {BARS_BEFORE_ANSWER}
                   </div>
                 )}
@@ -435,7 +435,7 @@ export function GymPageClient() {
 
         {phase === "feedback" && feedback && (
           <div
-            className={`brutal-border p-4 ${feedback.correct ? "bg-volt text-ink" : "bg-hot text-bone"}`}
+            className={`brutal-border p-4 ${feedback.correct ? "bg-volt text-bone" : "bg-hot text-bone"}`}
             role="status"
             aria-live="polite"
           >

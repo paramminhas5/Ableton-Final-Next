@@ -101,12 +101,12 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
     return (
       <div className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
         <div>
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-2">PLACEMENT TEST</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">PLACEMENT TEST</div>
           <h1 className="font-display text-5xl leading-none">
             LET&apos;S SEE<br />
             <span className="text-acid">WHAT YOU KNOW</span>
           </h1>
-          <p className="font-mono text-sm opacity-60 mt-4 leading-relaxed">
+          <p className="font-mono text-sm opacity-70 mt-4 leading-relaxed">
             {total} quick questions about {WORLD_LABELS[world]}. Based on your answers,
             we&apos;ll skip you ahead to the right starting point.
           </p>
@@ -150,7 +150,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
       <div className="min-h-screen bg-ink text-bone flex flex-col max-w-lg mx-auto">
         {/* Top bar */}
         <div className="p-4 space-y-2">
-          <div className="flex items-center justify-between font-mono text-[10px] uppercase opacity-60">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase opacity-70">
             <span>{WORLD_LABELS[world]} Placement</span>
             <span>{qIdx + 1} / {total}</span>
           </div>
@@ -243,7 +243,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
     return (
       <div className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
         <div>
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-2">PLACEMENT RESULT</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">PLACEMENT RESULT</div>
           <h1 className="font-display text-5xl leading-none">
             {pct >= 75 ? "IMPRESSIVE!" : pct >= 50 ? "SOLID BASE." : "LET'S BUILD IT."}<br />
             <span className="text-acid">{correctCount}/{total} CORRECT</span>
@@ -252,7 +252,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
 
         {/* P3 #37: Skill gap analysis by difficulty tier */}
         <div className="space-y-2">
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-1">// YOUR SKILL MAP</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// YOUR SKILL MAP</div>
           {Object.entries(byDifficulty).sort(([a], [b]) => Number(a) - Number(b)).map(([diff, data]) => {
             const diffNum = Number(diff);
             const diffPct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
@@ -287,7 +287,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
 
         {/* Recommendation */}
         <div className="brutal-border bg-acid text-ink p-5 space-y-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">YOUR STARTING POINT</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">YOUR STARTING POINT</div>
           <div className="font-display text-2xl">{chapterLabels[chapter]}</div>
           <div className="font-sans text-xs opacity-70 leading-relaxed">
             {chapter === 1

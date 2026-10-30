@@ -19,7 +19,7 @@ export function LessonSourceBar({ source }: Props) {
       className="brutal-border bg-bone px-4 py-2 mt-4"
       aria-label="Content source citation"
     >
-      <span className="font-mono text-[10px] uppercase opacity-60">
+      <span className="font-mono text-[10px] uppercase opacity-70">
         📄 SOURCE: {source}
       </span>
     </div>

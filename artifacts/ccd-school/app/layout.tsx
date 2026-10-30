@@ -224,7 +224,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <footer className="hidden md:flex border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest items-center justify-between gap-4">
               <span>CCD<span className="text-acid">.</span>SCHOOL</span>
               <CcdFooterLinks />
-              <span className="font-mono text-[10px] opacity-50">
+              <span className="font-mono text-[10px] opacity-70">
                 A <a href={CCD_URL} className="underline hover:text-acid hover:opacity-100">CATS CAN DANCE</a> PROJECT · 2026
               </span>
               <span className="text-acid">★</span>

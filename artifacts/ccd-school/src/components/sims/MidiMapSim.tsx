@@ -229,7 +229,7 @@ export function MidiMapSim() {
 
       {/* Parameters */}
       <div className="space-y-2">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Parameters {isMapMode ? "— click one to map" : "— controlled by CC slider below"}
         </div>
         {PARAMS.map((p) => {
@@ -298,7 +298,7 @@ export function MidiMapSim() {
           onChange={(e) => setKnob(+e.target.value)}
           className="w-full accent-ink"
         />
-        <div className="font-mono text-[9px] opacity-50">
+        <div className="font-mono text-[9px] opacity-70">
           {assignments.length === 0
             ? "Assign parameters first, then use this to control them"
             : `Controlling: ${assignments.map((a) => PARAMS.find((p) => p.id === a.paramId)?.label).join(", ")}`}
@@ -308,7 +308,7 @@ export function MidiMapSim() {
       {/* Assignments list */}
       {assignments.length > 0 && (
         <div className="brutal-border bg-ink text-bone p-3 space-y-1">
-          <div className="font-mono text-[10px] uppercase opacity-60">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             Active MIDI Map assignments
           </div>
           {assignments.map((a) => (

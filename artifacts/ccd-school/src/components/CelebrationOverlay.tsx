@@ -79,7 +79,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
           >
             🛡
           </div>
-          <div className="font-mono text-[10px] uppercase opacity-60">STREAK SHIELD EARNED</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">STREAK SHIELD EARNED</div>
           <div className="font-display text-4xl md:text-5xl leading-none text-acid">
             {event.streakDays}-DAY STREAK
           </div>
@@ -95,7 +95,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div style={{ fontSize: 80 }}>{event.rankEmoji}</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">RANK UP!</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">RANK UP!</div>
           <div className="font-display text-5xl md:text-7xl leading-none">{event.rankName}</div>
           <div className="font-mono text-sm opacity-70">You&apos;ve unlocked a new rank. Keep going.</div>
         </div>
@@ -104,7 +104,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div className="text-8xl">🔥</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">STREAK MILESTONE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">STREAK MILESTONE</div>
           <div className="font-display text-8xl leading-none text-acid">{days}</div>
           <div className="font-display text-3xl">DAY STREAK</div>
           <div className="font-mono text-sm opacity-70">
@@ -121,7 +121,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div className="text-7xl">🏅</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">PATH COMPLETE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">PATH COMPLETE</div>
           <div className="font-display text-4xl md:text-5xl leading-tight">{event.pathTitle}</div>
           <div className="brutal-border bg-acid text-ink px-4 py-2 font-display text-xl inline-block">
             {event.trophyName}
@@ -132,7 +132,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div className="text-7xl">🏆</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">CHAPTER COMPLETE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">CHAPTER COMPLETE</div>
           <div className="font-display text-4xl leading-tight">{event.chapterTitle}</div>
           <div className="brutal-border bg-volt text-bone px-4 py-2 font-display text-xl inline-block">
             {event.trophyName}
@@ -143,7 +143,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div className="text-7xl">🌟</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">WORLD COMPLETE!</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">WORLD COMPLETE!</div>
           <div className="font-display text-5xl md:text-7xl leading-none text-acid">{event.worldName}</div>
           <div className="font-mono text-sm opacity-70">You finished an entire world. Incredible.</div>
         </div>
@@ -152,7 +152,7 @@ function EventContent({ event }: { event: CelebrationEvent }) {
       return (
         <div className="text-center space-y-4">
           <div className="text-7xl">👑</div>
-          <div className="font-mono text-[10px] uppercase opacity-60">ALL WORLDS COMPLETE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">ALL WORLDS COMPLETE</div>
           <div className="font-display text-5xl md:text-7xl leading-none text-acid">CCD MASTER</div>
           <div className="font-mono text-sm opacity-70">You completed the full curriculum. Legendary.</div>
         </div>
@@ -195,14 +195,14 @@ export function CelebrationOverlay({ event, onDone }: Props) {
           </span>
           <div className="flex-1 min-w-0">
             <div className="font-display text-lg leading-tight">Streak Shield Earned!</div>
-            <div className="font-mono text-[10px] uppercase opacity-60 mt-0.5">
+            <div className="font-mono text-[10px] uppercase opacity-70 mt-0.5">
               {event.streakDays}-day streak · 1 missed day protected
             </div>
           </div>
           <button
             onClick={onDone}
             aria-label="Dismiss"
-            className="shrink-0 opacity-40 hover:opacity-100 transition-opacity font-mono text-sm"
+            className="shrink-0 opacity-70 hover:opacity-100 transition-opacity font-mono text-sm"
           >
             ✕
           </button>
@@ -269,7 +269,7 @@ export function CelebrationOverlay({ event, onDone }: Props) {
            "NICE! KEEP GOING →"}
         </button>
 
-        <div className="text-center font-mono text-[10px] uppercase opacity-40">
+        <div className="text-center font-mono text-[10px] uppercase opacity-70">
           Tap anywhere to continue
         </div>
       </div>

@@ -90,7 +90,7 @@ export function GranularSim() {
     onChange: (v: number) => void;
   }) => (
     <div className="space-y-1">
-      <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
+      <div className="flex justify-between font-mono text-[10px] uppercase opacity-70">
         <span>{label}</span>
         <span>{format(value)}</span>
       </div>
@@ -109,7 +109,7 @@ export function GranularSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-3">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Granulator III — Core Parameters
         </div>
         <div className="font-display text-2xl mt-1">GRANULAR ENGINE</div>
@@ -159,7 +159,7 @@ export function GranularSim() {
         />
       </div>
 
-      <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-60 leading-relaxed">
+      <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-70 leading-relaxed">
         TIP: Set Position to 0% and automate it slowly to 100% — the texture evolves without
         repeating. High Spray + small Size = clouds. Low Spray + large Size = transparent
         time-stretch.

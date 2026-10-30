@@ -8,7 +8,7 @@ export function CcdSceneCards() {
       className="border-t-4 border-ink bg-bone px-4 py-10 md:py-14"
     >
       <div className="mx-auto max-w-5xl">
-        <p className="font-mono text-xs uppercase tracking-widest opacity-50">
+        <p className="font-mono text-xs uppercase tracking-widest opacity-70">
           Part of Cats Can Dance
         </p>
         <h2
@@ -28,7 +28,7 @@ export function CcdSceneCards() {
                 <span className="mt-2 block font-sans text-sm opacity-80">
                   {l.blurb}
                 </span>
-                <span className="mt-3 block font-mono text-[10px] uppercase tracking-widest opacity-50">
+                <span className="mt-3 block font-mono text-[10px] uppercase tracking-widest opacity-70">
                   {CCD_URL.replace(/^https?:\/\//, "")} &rarr;
                 </span>
               </a>
@@ -48,7 +48,7 @@ export function CcdFooterLinks() {
         <a
           key={l.key}
           href={l.href}
-          className="font-mono text-[10px] uppercase tracking-widest opacity-60 hover:text-acid hover:opacity-100"
+          className="font-mono text-[10px] uppercase tracking-widest opacity-70 hover:text-acid hover:opacity-100"
         >
           {l.label}
         </a>

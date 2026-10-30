@@ -100,7 +100,7 @@ export function MissionsPageClient() {
           <Image src={wStyle.cat} alt="" width={80} height={80} className="w-full h-full object-contain" />
         </div>
         <div className="max-w-5xl mx-auto px-4 py-6 relative z-10">
-          <div className="font-mono text-xs uppercase opacity-60 mb-1">// 153 MISSIONS TOTAL</div>
+          <div className="font-mono text-xs uppercase opacity-70 mb-1">// 153 MISSIONS TOTAL</div>
           <h1 className="font-display text-5xl md:text-6xl leading-none" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>MISSIONS</h1>
           <div className="flex items-center gap-3 mt-2">
             <span className="font-mono text-xs uppercase opacity-70">{ws.done}/{ws.total} done · {ws.pct}%</span>
@@ -122,7 +122,7 @@ export function MissionsPageClient() {
                 className={`flex-1 px-2 py-3 font-display text-xs sm:text-sm border-r-4 border-ink last:border-r-0 transition-colors
                   ${isActive ? `${wst.activeBg} ${wst.activeText}` : "bg-bone hover:bg-acid/20 opacity-70 hover:opacity-100"}`}>
                 <div className="truncate">{wst.label}</div>
-                <div className="font-mono text-[9px] opacity-60 mt-0.5">{done2}/{ws2.length}</div>
+                <div className="font-mono text-[9px] opacity-70 mt-0.5">{done2}/{ws2.length}</div>
               </button>
             );
           })}
@@ -165,12 +165,12 @@ export function MissionsPageClient() {
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 font-mono text-xs opacity-50 hover:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 font-mono text-xs opacity-70 hover:opacity-100"
               >✕</button>
             )}
           </div>
           {search && (
-            <div className="font-mono text-[10px] uppercase opacity-50 shrink-0">
+            <div className="font-mono text-[10px] uppercase opacity-70 shrink-0">
               {filteredMissions.length} result{filteredMissions.length !== 1 ? "s" : ""}
             </div>
           )}
@@ -179,7 +179,7 @@ export function MissionsPageClient() {
 
       {/* ── Mission list ── */}
       <div className="max-w-5xl mx-auto px-4 py-6 pb-24 space-y-10">
-        {search && <div className="font-mono text-xs uppercase opacity-50">{filteredMissions.length} results for &quot;{search}&quot;</div>}
+        {search && <div className="font-mono text-xs uppercase opacity-70">{filteredMissions.length} results for &quot;{search}&quot;</div>}
         {grouped.map(({ chapter, paths }, chIdx) => {
           const chDone  = allPaths.filter(p => p.chapter === chapter.slug).flatMap(p => p.missionSlugs).filter(s => !!completed[s]).length;
           const chTotal = allPaths.filter(p => p.chapter === chapter.slug).flatMap(p => p.missionSlugs).length;
@@ -195,10 +195,10 @@ export function MissionsPageClient() {
                   </div>
                   <div className="flex-1 flex items-end justify-between gap-4">
                     <div>
-                      <div className="font-mono text-[9px] uppercase opacity-40">CHAPTER {chapter.number}</div>
+                      <div className="font-mono text-[9px] uppercase opacity-70">CHAPTER {chapter.number}</div>
                       <h2 className="font-display text-2xl md:text-3xl">{chapter.title}</h2>
                     </div>
-                    <div className="font-mono text-xs uppercase opacity-60 text-right shrink-0">
+                    <div className="font-mono text-xs uppercase opacity-70 text-right shrink-0">
                       {chDone}/{chTotal}
                       {chDone === chTotal && chTotal > 0 && <div className="text-acid">🏆 {chapter.trophy.name}</div>}
                     </div>
@@ -219,8 +219,8 @@ export function MissionsPageClient() {
                       return (
                         <div key={path.slug}>
                           <div className="mb-3">
-                            <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
-                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
+                            <div className="font-display text-sm uppercase opacity-70">PATH {path.number}: {path.title}</div>
+                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 hover:text-acid transition-colors">
                               VIEW PATH →
                             </Link>
                           </div>
@@ -241,7 +241,7 @@ export function MissionsPageClient() {
                                     isDone
                                       ? "bg-ink text-bone"
                                       : flowLocked
-                                      ? "bg-ink/5 text-ink/40 cursor-not-allowed"
+                                      ? "bg-ink/5 text-ink/75 cursor-not-allowed"
                                       : "bg-bone hover:bg-acid hover:text-ink hover:scale-105"
                                   }`}
                                 >
@@ -253,7 +253,7 @@ export function MissionsPageClient() {
                                   <span className="text-2xl leading-none mb-0.5">
                                     {isDone ? "✓" : idx + 1}
                                   </span>
-                                  <span className="font-mono text-[6px] uppercase opacity-60 text-center px-0.5 leading-tight">
+                                  <span className="font-mono text-[6px] uppercase opacity-70 text-center px-0.5 leading-tight">
                                     {mission.title.split(" ")[0]}
                                   </span>
                                 </Link>
@@ -272,8 +272,8 @@ export function MissionsPageClient() {
                       return (
                         <div key={path.slug}>
                           <div className="mb-2">
-                            <div className="font-display text-sm uppercase opacity-50">PATH {path.number}: {path.title}</div>
-                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors">
+                            <div className="font-display text-sm uppercase opacity-70">PATH {path.number}: {path.title}</div>
+                            <Link href={`/path/${path.slug}`} className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 hover:text-acid transition-colors">
                               VIEW PATH →
                             </Link>
                           </div>
@@ -295,9 +295,9 @@ export function MissionsPageClient() {
                                   </span>
                                   {/* Title — 2 lines, not truncated */}
                                   <div className="flex-1 min-w-0">
-                                    <div className={`font-display text-sm leading-tight line-clamp-2 ${isDone ? "opacity-60" : ""}`}>{mission.title}</div>
+                                    <div className={`font-display text-sm leading-tight line-clamp-2 ${isDone ? "opacity-70" : ""}`}>{mission.title}</div>
                                     {mission.tagline && (
-                                      <div className="font-mono text-[10px] opacity-40 mt-0.5 truncate">{mission.tagline}</div>
+                                      <div className="font-mono text-[10px] opacity-70 mt-0.5 truncate">{mission.tagline}</div>
                                     )}
                                   </div>
                                   {/* Right side — lock or XP */}
@@ -307,7 +307,7 @@ export function MissionsPageClient() {
                                         PRO
                                       </span>
                                     )}
-                                    <span className="font-mono text-[10px] opacity-50 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
+                                    <span className="font-mono text-[10px] opacity-70 tabular-nums">{(mission as { xp?: number }).xp ?? 40} XP</span>
                                   </div>
                                 </Link>
                               );

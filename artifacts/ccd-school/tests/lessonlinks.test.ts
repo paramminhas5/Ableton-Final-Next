@@ -41,3 +41,13 @@ describe("live tasks", () => {
     }
   });
 });
+
+describe("weak-spot lessons", () => {
+  it("every lesson named on the Link page exists", () => {
+    const src = readFileSync("src/components/LinkPageClient.tsx", "utf8");
+    const block = src.split("MISSION_LESSONS")[1].split("};")[0];
+    const found = [...block.matchAll(/"([a-z0-9-]+)"/g)].map((m) => m[1]).filter((x) => slugs.has(x));
+    expect(found.length).toBeGreaterThanOrEqual(7);
+    for (const m of src.matchAll(/\["([a-z0-9-]+)"(?:, "([a-z0-9-]+)")?\]/g)) for (const x of m.slice(1)) if (x) expect(slugs.has(x), x).toBe(true);
+  });
+});

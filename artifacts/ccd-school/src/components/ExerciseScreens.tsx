@@ -122,7 +122,7 @@ export function AudioIdScreen({
         <>
           {/* Prompt */}
           <div className="brutal-border bg-ink text-bone p-5">
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-2">🎧 LISTEN &amp; IDENTIFY</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-2">🎧 LISTEN &amp; IDENTIFY</div>
             <div className="font-display text-xl md:text-2xl leading-snug">{screen.prompt}</div>
           </div>
 
@@ -143,7 +143,7 @@ export function AudioIdScreen({
             {phase === "listening" && (
               <button
                 onClick={() => { setHasListened(true); setPhase("picking"); }}
-                className="font-mono text-[9px] uppercase opacity-40 hover:opacity-70 underline"
+                className="font-mono text-[9px] uppercase opacity-70 hover:opacity-70 underline"
               >
                 skip → answer anyway
               </button>
@@ -276,11 +276,11 @@ export function MatchScreen({
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-1">MATCH THE PAIRS</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">MATCH THE PAIRS</div>
         <div className="font-display text-xl">{screen.prompt}</div>
       </div>
 
-      <div className="font-mono text-[9px] uppercase opacity-50 text-center">
+      <div className="font-mono text-[9px] uppercase opacity-70 text-center">
         {allMatched
           ? `✓ All matched! ${mistakes > 0 ? `(${mistakes} mistake${mistakes > 1 ? "s" : ""})` : "Perfect!"}`
           : "Tap a left item, then its matching right item"}
@@ -425,7 +425,7 @@ export function TypeAnswerScreen({
         {!isAnswered && screen.hint && !showHint && (
           <button
             onClick={() => setShowHint(true)}
-            className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 underline"
+            className="font-mono text-[10px] uppercase opacity-70 hover:opacity-70 underline"
           >
             Stuck? See a hint
           </button>
@@ -539,11 +539,11 @@ export function SequenceScreen({
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-1">PUT IN ORDER</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">PUT IN ORDER</div>
         <div className="font-display text-xl">{screen.prompt}</div>
       </div>
 
-      <div className="font-mono text-[9px] uppercase opacity-50 text-center">
+      <div className="font-mono text-[9px] uppercase opacity-70 text-center">
         Use ↑ ↓ to arrange · then tap CHECK ORDER
       </div>
 
@@ -556,7 +556,7 @@ export function SequenceScreen({
               ${phase === "wrong" && origIdx !== pos ? "border-hot" : ""}`}
             role="listitem"
           >
-            <span className="font-mono text-[10px] opacity-40 w-4 shrink-0">{pos + 1}.</span>
+            <span className="font-mono text-[10px] opacity-70 w-4 shrink-0">{pos + 1}.</span>
             <span className="flex-1 font-mono text-sm">{screen.items[origIdx]}</span>
             {phase === "arranging" && (
               <div className="flex gap-1 shrink-0">

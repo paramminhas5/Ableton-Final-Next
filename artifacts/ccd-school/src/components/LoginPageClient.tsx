@@ -147,7 +147,7 @@ export function LoginPageClient() {
 
         {/* Header card */}
         <div className="brutal-border bg-acid p-5 md:p-6 brutal-shadow mb-6">
-          <div className="font-mono text-[10px] uppercase opacity-60 mb-1">// CCD.SCHOOL</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// CCD.SCHOOL</div>
           <h1 className="font-display text-4xl md:text-5xl leading-none">
             {mode === "signup" ? "CREATE ACCOUNT" : "SIGN IN"}
           </h1>
@@ -162,12 +162,12 @@ export function LoginPageClient() {
         {/* Local progress card — shown when user has XP to sync */}
         {progress.xp > 0 && !dbMissing && (
           <div className="brutal-border bg-sun p-4 mb-6">
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-1">YOUR LOCAL PROGRESS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">YOUR LOCAL PROGRESS</div>
             <div className="font-display text-2xl">{progress.xp} XP · {rank.name}</div>
-            <div className="font-mono text-xs opacity-60 mt-1">
+            <div className="font-mono text-xs opacity-70 mt-1">
               {Object.keys(progress.completedMissions).length} missions · 🔥 {progress.streakDays} day streak
             </div>
-            <div className="font-mono text-[9px] opacity-50 mt-2">
+            <div className="font-mono text-[9px] opacity-70 mt-2">
               Signing in will merge this progress with your cloud account.
             </div>
           </div>
@@ -198,7 +198,7 @@ export function LoginPageClient() {
 
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-px bg-ink/10" />
-                  <span className="font-mono text-[9px] uppercase opacity-40">or</span>
+                  <span className="font-mono text-[9px] uppercase opacity-70">or</span>
                   <div className="flex-1 h-px bg-ink/10" />
                 </div>
               </>
@@ -208,7 +208,7 @@ export function LoginPageClient() {
             <form onSubmit={handleSubmit} className="space-y-3">
               {mode === "signup" && (
                 <div>
-                  <label className="font-mono text-[10px] uppercase opacity-60 block mb-1">
+                  <label className="font-mono text-[10px] uppercase opacity-70 block mb-1">
                     Name
                   </label>
                   <input
@@ -223,7 +223,7 @@ export function LoginPageClient() {
               )}
 
               <div>
-                <label className="font-mono text-[10px] uppercase opacity-60 block mb-1">
+                <label className="font-mono text-[10px] uppercase opacity-70 block mb-1">
                   Email
                 </label>
                 <input
@@ -238,7 +238,7 @@ export function LoginPageClient() {
               </div>
 
               <div>
-                <label className="font-mono text-[10px] uppercase opacity-60 block mb-1">
+                <label className="font-mono text-[10px] uppercase opacity-70 block mb-1">
                   Password
                 </label>
                 <input
@@ -276,7 +276,7 @@ export function LoginPageClient() {
             {/* Toggle sign-in / sign-up */}
             <button
               onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); setDbMissing(false); }}
-              className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 w-full text-center brutal-press transition-opacity"
+              className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 w-full text-center brutal-press transition-opacity"
             >
               {mode === "signin" ? "New here? Create account →" : "← Back to sign in"}
             </button>
@@ -299,7 +299,7 @@ export function LoginPageClient() {
           </Link>
         </div>
 
-        <p className="font-mono text-[9px] uppercase opacity-30 mt-4 text-center">
+        <p className="font-mono text-[9px] uppercase opacity-70 mt-4 text-center">
           No account needed · Progress stored locally in your browser
         </p>
       </div>

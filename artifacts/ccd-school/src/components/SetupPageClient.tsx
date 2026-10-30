@@ -30,9 +30,9 @@ export function SetupPageClient() {
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// SETUP</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// SETUP</div>
           <h1 className="font-display text-4xl leading-none">GET LIVE READY.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             Everything you need installed and switched on before your first track. Menu names can differ a little between
             Live versions, so each step says what to look for. Ticks are saved on this device.
           </p>

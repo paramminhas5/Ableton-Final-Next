@@ -65,7 +65,7 @@ export function BufferSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">Audio Setup Simulator</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Audio Setup Simulator</div>
         <div className="font-display text-2xl mt-1">BUFFER SIZE & LATENCY</div>
       </div>
 
@@ -88,7 +88,7 @@ export function BufferSim() {
 
       {/* Buffer picker */}
       <div className="space-y-2">
-        <div className="font-mono text-[10px] uppercase opacity-60">Buffer Size</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Buffer Size</div>
         <div className="grid grid-cols-6 gap-1">
           {BUFFER_SIZES.map((b) => (
             <button
@@ -100,14 +100,14 @@ export function BufferSim() {
             </button>
           ))}
         </div>
-        <div className="font-mono text-[9px] opacity-50">
+        <div className="font-mono text-[9px] opacity-70">
           Samples · outlined = recommended for this scenario
         </div>
       </div>
 
       {/* Sample rate */}
       <div className="flex gap-2 items-center">
-        <span className="font-mono text-[10px] uppercase opacity-60">Sample Rate</span>
+        <span className="font-mono text-[10px] uppercase opacity-70">Sample Rate</span>
         {SAMPLE_RATES.map((s) => (
           <button
             key={s}
@@ -122,9 +122,9 @@ export function BufferSim() {
       {/* Results */}
       <div className="grid grid-cols-2 gap-2">
         <div className="brutal-border p-4 text-center">
-          <div className="font-mono text-[10px] uppercase opacity-60">Round-trip latency</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Round-trip latency</div>
           <div className="font-display text-4xl mt-1">{latency}ms</div>
-          <div className="font-mono text-[9px] opacity-50 mt-1">
+          <div className="font-mono text-[9px] opacity-70 mt-1">
             {latency < 8
               ? "Excellent — play live"
               : latency < 15
@@ -135,9 +135,9 @@ export function BufferSim() {
           </div>
         </div>
         <div className="brutal-border p-4 text-center">
-          <div className="font-mono text-[10px] uppercase opacity-60">CPU interrupt load</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">CPU interrupt load</div>
           <div className="font-display text-4xl mt-1">{cpuLoad}%</div>
-          <div className="font-mono text-[9px] opacity-50 mt-1">
+          <div className="font-mono text-[9px] opacity-70 mt-1">
             {cpuLoad > 75 ? "Risk of dropouts" : cpuLoad > 50 ? "Moderate" : "Comfortable"}
           </div>
         </div>
@@ -149,7 +149,7 @@ export function BufferSim() {
         {statusLabel}
       </div>
 
-      <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-60 leading-relaxed">
+      <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-70 leading-relaxed">
         Formula: Latency = Buffer ÷ Sample Rate × 1000ms.
         {sr > 48000
           ? ` At ${sr / 1000}kHz your CPU works twice as hard for the same buffer.`

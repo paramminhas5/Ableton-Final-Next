@@ -50,11 +50,11 @@ const WORLD_CONFIG = {
     bar: "bg-volt", barBg: "bg-volt/15",
     chapterAccentBg: "bg-volt/12", chapterAccentText: "text-bone",
     chapterBorderLeft: "border-l-4 border-volt",
-    pillDone: "bg-volt text-ink", pillPartial: "bg-volt/30 text-bone",
-    pathCtaBg: "bg-volt text-ink hover:bg-acid", pathCtaDone: "bg-volt/30 text-bone opacity-70",
+    pillDone: "bg-volt text-bone", pillPartial: "bg-volt/30 text-bone",
+    pathCtaBg: "bg-volt text-bone hover:bg-acid", pathCtaDone: "bg-volt/30 text-bone opacity-70",
     catMain: "/cats/cat-dj.png", catDeco1: "/cats/cat-dj-new.png",
     deco1: "/cats/disco-ball.png", deco2: "/cats/headphones.png",
-    worldBg: "bg-[#0a0f2e]", trophyBg: "bg-volt text-ink",
+    worldBg: "bg-[#0a0f2e]", trophyBg: "bg-volt text-bone",
     flowLinkClass: "bg-bone/10 text-bone hover:bg-bone/20",
     dark: true,
   },
@@ -183,7 +183,7 @@ function PathCard({
           </div>
         ) : (
           <div className={`shrink-0 brutal-border px-1.5 py-1 text-center min-w-[38px] ${
-            started ? cfg.pillPartial : `${cfg.dark ? "bg-bone/8 text-bone/50" : "bg-ink/6 text-ink/45"} border-current/15`
+            started ? cfg.pillPartial : `${cfg.dark ? "bg-bone/8 text-bone/80" : "bg-ink/6 text-ink/75"} border-current/15`
           }`}>
             <div className="font-display text-xs tabular-nums">{pct}%</div>
           </div>
@@ -192,14 +192,14 @@ function PathCard({
         {/* Title */}
         <div className="flex-1 min-w-0">
           <div className={`font-display text-sm leading-tight ${cfg.dark ? "text-bone" : "text-ink"}`}>{path.title}</div>
-          <div className={`font-mono text-[9px] truncate ${cfg.dark ? "text-bone/50" : "text-ink/50"}`}>{path.tagline}</div>
+          <div className={`font-mono text-[9px] truncate ${cfg.dark ? "text-bone/80" : "text-ink/70"}`}>{path.tagline}</div>
         </div>
 
         {/* Buttons */}
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={() => setShowDesc((v) => !v)}
-            className={`w-6 h-6 flex items-center justify-center font-mono text-[9px] opacity-35 hover:opacity-70 brutal-press`}
+            className={`w-6 h-6 flex items-center justify-center font-mono text-[9px] opacity-70 hover:opacity-70 brutal-press`}
           >ℹ</button>
           <button
             onClick={() => setShowMissions((v) => !v)}
@@ -226,7 +226,7 @@ function PathCard({
       {/* Description */}
       {showDesc && (
         <div className={`px-3 py-2 border-t ${borderCol} animate-slide-down`}>
-          <p className={`font-mono text-[10px] leading-relaxed ${cfg.dark ? "text-bone/55" : "text-ink/55"}`}>
+          <p className={`font-mono text-[10px] leading-relaxed ${cfg.dark ? "text-bone/80" : "text-ink/70"}`}>
             {path.description ?? path.tagline}
           </p>
         </div>
@@ -250,7 +250,7 @@ function PathCard({
                       : "text-ink hover:bg-acid/10"
                   }`}
                 >
-                  <span className={`font-mono text-[8px] w-5 shrink-0 tabular-nums ${isDone ? "opacity-65" : "opacity-30"}`}>
+                  <span className={`font-mono text-[8px] w-5 shrink-0 tabular-nums ${isDone ? "opacity-65" : "opacity-70"}`}>
                     {isDone ? "✓" : `${idx + 1}.`}
                   </span>
                   <span className="font-sans text-xs flex-1 min-w-0 truncate">{getMissionTitle(slug)}</span>
@@ -299,15 +299,15 @@ function ChapterSection({
         <div className={`${cfg.chapterAccentBg} ${cfg.chapterAccentText} px-4 py-3.5 flex items-center gap-3 relative overflow-hidden`}>
           {/* Chapter number + emoji */}
           <div className="shrink-0 flex flex-col items-center w-10">
-            <span className="font-mono text-[8px] opacity-45">CH {chNum}</span>
+            <span className="font-mono text-[8px] opacity-70">CH {chNum}</span>
             <span className="text-2xl leading-none mt-0.5">{complete ? "✓" : chEmoji}</span>
           </div>
 
           {/* Title */}
           <div className="flex-1 min-w-0">
             <div className="font-display text-xl leading-tight">{ch.title}</div>
-            <div className="font-mono text-[9px] opacity-55 mt-0.5 leading-snug">{ch.tagline}</div>
-            <div className="font-mono text-[8px] opacity-35 mt-1 uppercase">
+            <div className="font-mono text-[9px] opacity-70 mt-0.5 leading-snug">{ch.tagline}</div>
+            <div className="font-mono text-[8px] opacity-70 mt-1 uppercase">
               {chPaths.length} paths · {total} missions
             </div>
           </div>
@@ -317,7 +317,7 @@ function ChapterSection({
             <div className="font-display text-2xl tabular-nums leading-none">
               {complete ? "🏆" : `${pct}%`}
             </div>
-            <div className="font-mono text-[8px] opacity-45 mt-0.5">{done}/{total}</div>
+            <div className="font-mono text-[8px] opacity-70 mt-0.5">{done}/{total}</div>
           </div>
         </div>
 
@@ -402,20 +402,20 @@ export function WorldPageClient({ slug }: { slug: string }) {
         <div className="px-5 py-5 relative z-10">
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1">
-              <div className={`font-mono text-[8px] uppercase opacity-45 mb-1`}>
+              <div className={`font-mono text-[8px] uppercase opacity-70 mb-1`}>
                 {chapters.length} chapters · {allPaths.length} paths · {worldTotal} missions
               </div>
               <h1 className="font-display text-4xl md:text-5xl leading-none mb-1">
                 {cfg.emoji} {cfg.title.toUpperCase()}
               </h1>
-              <p className={`font-mono text-xs opacity-55 mb-3`}>{cfg.tagline}</p>
+              <p className={`font-mono text-xs opacity-70 mb-3`}>{cfg.tagline}</p>
 
               {/* Progress bar */}
               <div className="flex items-center gap-3 max-w-sm">
                 <div className={`flex-1 h-2 brutal-border overflow-hidden ${cfg.barBg}`}>
                   <div className={`h-full ${cfg.bar} transition-all duration-700`} style={{ width: `${worldPct}%` }} />
                 </div>
-                <span className={`font-mono text-[9px] opacity-55 tabular-nums`}>{worldDone}/{worldTotal} · {worldPct}%</span>
+                <span className={`font-mono text-[9px] opacity-70 tabular-nums`}>{worldDone}/{worldTotal} · {worldPct}%</span>
               </div>
 
               {/* Mode row */}
@@ -452,7 +452,7 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
       {/* Chapter sections */}
       <div className="px-4 pt-6 pb-24">
-        <div className={`font-mono text-[9px] uppercase mb-4 ${cfg.dark ? "text-bone/35" : "text-ink/35"}`}>
+        <div className={`font-mono text-[9px] uppercase mb-4 ${cfg.dark ? "text-bone/80" : "text-ink/75"}`}>
           // {chapters.length} chapters — all lessons open · 2-col grid on desktop
         </div>
 
@@ -470,9 +470,9 @@ export function WorldPageClient({ slug }: { slug: string }) {
 
         {/* World trophy */}
         <div className={`brutal-border p-4 mt-4 ${
-          worldPct === 100 ? cfg.trophyBg : cfg.dark ? "bg-[#0a1228] text-bone/40" : "bg-ink/4 text-ink/40"
+          worldPct === 100 ? cfg.trophyBg : cfg.dark ? "bg-[#0a1228] text-bone/80" : "bg-ink/4 text-ink/75"
         }`}>
-          <div className="font-mono text-[8px] uppercase mb-1 opacity-50">World Trophy</div>
+          <div className="font-mono text-[8px] uppercase mb-1 opacity-70">World Trophy</div>
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">{worldPct === 100 ? "🏆" : "🔒"}</span>
             <div>

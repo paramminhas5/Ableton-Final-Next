@@ -147,25 +147,25 @@ export function SlimHeroBar({ worldSlug, showFree }: SlimHeroBarProps) {
             <div className="px-4 py-3 border-b-4 border-ink flex items-center justify-between gap-4">
               <div>
                 <div className="font-display text-lg leading-none">{meta.emoji} {meta.title.toUpperCase()}</div>
-                <div className="font-mono text-[9px] uppercase opacity-55 mt-1">{meta.tagline}</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mt-1">{meta.tagline}</div>
               </div>
               <div className="font-display text-2xl tabular-nums">{pct}%</div>
             </div>
             <div className="px-4 py-3 flex items-center gap-6 flex-wrap">
               <div>
-                <div className="font-mono text-[9px] uppercase opacity-45 mb-0.5">XP</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">XP</div>
                 <div className="font-display text-base">{progress.xp}</div>
               </div>
               <div>
-                <div className="font-mono text-[9px] uppercase opacity-45 mb-0.5">Streak</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">Streak</div>
                 <div className="font-display text-base">🔥 {progress.streakDays}</div>
               </div>
               <div>
-                <div className="font-mono text-[9px] uppercase opacity-45 mb-0.5">Gems</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">Gems</div>
                 <div className="font-display text-base">💎 {progress.gems}</div>
               </div>
               <div>
-                <div className="font-mono text-[9px] uppercase opacity-45 mb-0.5">Progress</div>
+                <div className="font-mono text-[9px] uppercase opacity-70 mb-0.5">Progress</div>
                 <div className="font-display text-base">{done}/{total}</div>
               </div>
             </div>

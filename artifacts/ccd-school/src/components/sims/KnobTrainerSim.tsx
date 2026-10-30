@@ -228,7 +228,7 @@ export function KnobTrainerSim({ preset }: { preset?: Record<string, unknown> })
 
       {/* Header */}
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Round {round} · {score.hits}/{score.tries} correct · {accuracy}%
         </div>
         <div className="font-display text-2xl mt-1">{meta.label}</div>
@@ -253,7 +253,7 @@ export function KnobTrainerSim({ preset }: { preset?: Record<string, unknown> })
 
       {/* Knob */}
       <div className="brutal-border bg-card p-4 space-y-3">
-        <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
+        <div className="flex justify-between font-mono text-[10px] uppercase opacity-70">
           <span>Your value</span>
           <span
             className={`font-bold text-sm ${locked ? (hit ? "text-green-600" : "text-red-600") : ""}`}
@@ -273,7 +273,7 @@ export function KnobTrainerSim({ preset }: { preset?: Record<string, unknown> })
           disabled={locked}
           className="w-full accent-ink"
         />
-        <div className="flex justify-between font-mono text-[9px] opacity-40">
+        <div className="flex justify-between font-mono text-[9px] opacity-70">
           <span>{meta.format(meta.min)}</span>
           <span>{meta.format(meta.max)}</span>
         </div>

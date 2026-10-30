@@ -61,7 +61,7 @@ export function LiveTaskPanel({ slug }: { slug: string }) {
 
   return (
     <div className={`brutal-border p-5 space-y-3 ${done ? "bg-acid" : "bg-white"}`} data-testid="live-task">
-      <div className="font-mono text-[10px] uppercase opacity-60">DO IT IN LIVE{done ? " · DONE" : ` · ${task.xp} XP`}</div>
+      <div className="font-mono text-[10px] uppercase opacity-70">DO IT IN LIVE{done ? " · DONE" : ` · ${task.xp} XP`}</div>
       <h3 className="font-display text-2xl leading-none">{task.title}</h3>
       <p className="font-mono text-sm">{task.task}</p>
       <input
@@ -98,7 +98,7 @@ export function LiveTaskPanel({ slug }: { slug: string }) {
           ))}
         </ul>
       )}
-      <p className="font-mono text-[10px] opacity-50">Your file is read in memory and never stored.</p>
+      <p className="font-mono text-[10px] opacity-70">Your file is read in memory and never stored.</p>
     </div>
   );
 }

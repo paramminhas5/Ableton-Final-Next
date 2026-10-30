@@ -16,7 +16,7 @@ const WORLD_BANNERS: Record<string, string> = {
 
 const WORLD_COLORS = {
   fundamentals: { hero: "bg-acid text-ink", accent: "bg-acid", node: "bg-ink text-bone", bar: "bg-ink", cta: "bg-acid text-ink" },
-  dj: { hero: "bg-ink text-bone", accent: "bg-volt", node: "bg-volt text-ink", bar: "bg-volt", cta: "bg-volt text-ink" },
+  dj: { hero: "bg-ink text-bone", accent: "bg-volt", node: "bg-volt text-bone", bar: "bg-volt", cta: "bg-volt text-bone" },
   producer: { hero: "bg-sun text-ink", accent: "bg-sun", node: "bg-ink text-bone", bar: "bg-ink", cta: "bg-sun text-ink" },
 };
 
@@ -78,7 +78,7 @@ export function PathPageClient({ slug }: { slug: string }) {
           </div>
         )}
         <div className="max-w-3xl mx-auto px-4 py-8 md:py-12 relative z-10">
-          <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-60 mb-3 flex-wrap">
+          <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-70 mb-3 flex-wrap">
             <Link href="/worlds" className="hover:opacity-100">Worlds</Link>
             <span className="text-acid font-bold">›</span>
             <Link href={`/world/${path.world}`} className="hover:opacity-100 capitalize">{path.world === "dj" ? "DJ World" : path.world}</Link>
@@ -87,10 +87,10 @@ export function PathPageClient({ slug }: { slug: string }) {
             <span className="text-acid font-bold">›</span>
             <span className="opacity-100">{path.title}</span>
           </div>
-          <div className="font-mono text-[9px] uppercase opacity-50 mb-1">PATH {path.number} of {chapter?.pathSlugs.length ?? "?"} in {chapter?.title ?? ""}</div>
+          <div className="font-mono text-[9px] uppercase opacity-70 mb-1">PATH {path.number} of {chapter?.pathSlugs.length ?? "?"} in {chapter?.title ?? ""}</div>
           <h1 className="font-display text-4xl md:text-6xl leading-none">{path.title.toUpperCase()}</h1>
           <p className="font-mono text-sm mt-2 opacity-70 leading-relaxed max-w-xl">{path.tagline}</p>
-          {path.source && <div className="font-mono text-[9px] opacity-40 mt-2">Source: {path.source}</div>}
+          {path.source && <div className="font-mono text-[9px] opacity-70 mt-2">Source: {path.source}</div>}
           <div className="flex items-center gap-3 mt-5">
             <div className={`flex-1 h-2.5 brutal-border overflow-hidden ${path.world === "dj" ? "bg-bone/20" : "bg-ink/10"}`}>
               <div className={`h-full ${colors.bar} transition-all duration-700`} style={{ width: `${pct}%` }} />
@@ -101,7 +101,7 @@ export function PathPageClient({ slug }: { slug: string }) {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 py-10 pb-24">
-        <div className="font-mono text-[9px] uppercase opacity-40 mb-6 bg-ink text-acid px-4 py-2.5 brutal-border">// MISSION SNAKE — {totalCount} MISSIONS</div>
+        <div className="font-mono text-[9px] uppercase opacity-70 mb-6 bg-ink text-acid px-4 py-2.5 brutal-border">// MISSION SNAKE — {totalCount} MISSIONS</div>
         <div className="relative space-y-3">
           {missions.map(({ slug: mSlug, mission, isDone, locked, index }) => {
             const indent = getIndent(index);
@@ -122,7 +122,7 @@ export function PathPageClient({ slug }: { slug: string }) {
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="font-display text-sm leading-tight truncate">{title}</div>
-                  <div className="font-mono text-[9px] uppercase opacity-60 mt-0.5">{isDone ? `✓ ${xp} XP earned` : locked ? "finish previous first" : `${xp} XP`}</div>
+                  <div className="font-mono text-[9px] uppercase opacity-70 mt-0.5">{isDone ? `✓ ${xp} XP earned` : locked ? "finish previous first" : `${xp} XP`}</div>
                 </div>
               </div>
             );
@@ -133,7 +133,7 @@ export function PathPageClient({ slug }: { slug: string }) {
             );
           })}
           <div className="mt-8 ml-0">
-            <div className={`brutal-border p-8 max-w-xs brutal-shadow ${pathComplete ? (path.world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink") : "bg-bone opacity-40"}`}>
+            <div className={`brutal-border p-8 max-w-xs brutal-shadow ${pathComplete ? (path.world === "dj" ? "bg-volt text-bone" : "bg-acid text-ink") : "bg-bone opacity-70"}`}>
               <div className="font-display text-5xl mb-2">🏆</div>
               <div className="font-display text-2xl">PATH COMPLETE</div>
               <div className="font-mono text-xs mt-1 opacity-70">{pathComplete ? `You've finished ${path.title}. ${pct}% of this path done.` : `Finish all ${totalCount} missions to earn the path trophy`}</div>

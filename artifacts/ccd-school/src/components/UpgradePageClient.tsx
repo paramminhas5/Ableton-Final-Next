@@ -88,7 +88,7 @@ export function UpgradePageClient() {
     return (
       <main className="min-h-screen bg-bone flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
-          <div className="brutal-border bg-volt text-ink p-8 brutal-shadow">
+          <div className="brutal-border bg-volt text-bone p-8 brutal-shadow">
             <div className="font-display text-5xl mb-4">✓ PRO</div>
             <div className="font-display text-2xl mb-2">You&apos;re already on PRO</div>
             <div className="font-mono text-sm opacity-70 mb-6">All missions unlocked. Keep learning.</div>
@@ -103,9 +103,9 @@ export function UpgradePageClient() {
     <main className="min-h-screen bg-bone">
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-2">// CCD.SCHOOL PRO</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">// CCD.SCHOOL PRO</div>
           <h1 className="font-display text-5xl md:text-7xl leading-none">UNLOCK EVERYTHING</h1>
-          <p className="font-mono text-sm mt-4 opacity-60 max-w-lg mx-auto">
+          <p className="font-mono text-sm mt-4 opacity-70 max-w-lg mx-auto">
             Advanced missions, later courses in every path, cloud sync across devices, and a place on the global leaderboard.
           </p>
         </div>
@@ -137,9 +137,9 @@ export function UpgradePageClient() {
 
         <div className="grid md:grid-cols-2 gap-4">
           <div className="brutal-border bg-bone p-6">
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">FREE</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">FREE</div>
             <div className="font-display text-4xl mb-1">£0</div>
-            <div className="font-mono text-xs opacity-60 mb-6">forever</div>
+            <div className="font-mono text-xs opacity-70 mb-6">forever</div>
             <ul className="space-y-2 font-mono text-xs">
               {FEATURES.map((f, i) => (
                 <li key={i} className="flex items-start gap-2">
@@ -151,22 +151,22 @@ export function UpgradePageClient() {
           </div>
 
           <div className="brutal-border bg-acid p-6 brutal-shadow">
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-3">CCD PRO</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">CCD PRO</div>
             {region === "india" ? (
               <div>
                 <div className="font-display text-4xl mb-1">{INR_PRICE[billing] || "INR"}</div>
-                <div className="font-mono text-xs opacity-60 mb-6">per {billing === "monthly" ? "month" : "year"} · billed in rupees</div>
+                <div className="font-mono text-xs opacity-70 mb-6">per {billing === "monthly" ? "month" : "year"} · billed in rupees</div>
               </div>
             ) : billing === "monthly" ? (
               <div>
                 <div className="font-display text-4xl mb-1">£9</div>
-                <div className="font-mono text-xs opacity-60 mb-6">per month</div>
+                <div className="font-mono text-xs opacity-70 mb-6">per month</div>
               </div>
             ) : (
               <div>
                 <div className="font-display text-4xl mb-1">£79</div>
-                <div className="font-mono text-xs opacity-60 mb-1">per year <span className="line-through opacity-40">£108</span></div>
-                <div className="font-mono text-[9px] bg-volt text-ink px-2 py-0.5 inline-block mb-4">SAVE £29</div>
+                <div className="font-mono text-xs opacity-70 mb-1">per year <span className="line-through opacity-40">£108</span></div>
+                <div className="font-mono text-[9px] bg-volt text-bone px-2 py-0.5 inline-block mb-4">SAVE £29</div>
               </div>
             )}
             <ul className="space-y-2 font-mono text-xs mb-8">
@@ -181,17 +181,17 @@ export function UpgradePageClient() {
               <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs mb-4">{error}</div>
             )}
             <button onClick={handleUpgrade} disabled={loading}
-              className="brutal-border bg-ink text-bone px-6 py-3 font-mono text-xs uppercase brutal-press w-full disabled:opacity-50 hover:bg-volt hover:text-ink transition-colors">
+              className="brutal-border bg-ink text-bone px-6 py-3 font-mono text-xs uppercase brutal-press w-full disabled:opacity-50 hover:bg-volt hover:text-bone transition-colors">
               {loading ? "Redirecting..." : user ? `GET PRO${region === "india" ? (INR_PRICE[billing] ? ` — ${INR_PRICE[billing]}` : "") : ` — ${billing === "monthly" ? "£9/mo" : "£79/yr"}`} →` : "SIGN IN TO UPGRADE →"}
             </button>
             {!user && (
-              <p className="font-mono text-[9px] opacity-50 mt-2 text-center">You&apos;ll be prompted to sign in first</p>
+              <p className="font-mono text-[9px] opacity-70 mt-2 text-center">You&apos;ll be prompted to sign in first</p>
             )}
           </div>
         </div>
 
         <div className="brutal-border bg-bone p-6">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// WHAT&apos;S FREE, ALWAYS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// WHAT&apos;S FREE, ALWAYS</div>
           <p className="font-mono text-sm opacity-70 leading-relaxed">
             The first 3 missions in every path are free — forever. No credit card, no account. 
             That&apos;s 30+ free missions across Fundamentals, DJ World, and Producer. 
@@ -199,7 +199,7 @@ export function UpgradePageClient() {
           </p>
         </div>
 
-        <div className="font-mono text-[9px] uppercase opacity-30 text-center">
+        <div className="font-mono text-[9px] uppercase opacity-70 text-center">
           Cancel anytime · No hidden fees · Secure payment via {region === "india" ? "Razorpay" : "Stripe"}
         </div>
       </div>

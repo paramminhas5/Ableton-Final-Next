@@ -90,7 +90,7 @@ export function GlossaryPageClient() {
               {missionSlug && (
                 <div className="mt-2">
                   <Link href={`/learn/${missionSlug}`}
-                    className="font-mono text-[9px] uppercase opacity-50 hover:opacity-100 hover:text-acid transition-colors flex items-center gap-1">
+                    className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 hover:text-acid transition-colors flex items-center gap-1">
                     <span>→</span>
                     <span>Learn this in a lesson</span>
                   </Link>

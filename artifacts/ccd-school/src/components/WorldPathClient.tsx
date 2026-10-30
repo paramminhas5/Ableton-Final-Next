@@ -75,20 +75,20 @@ const WORLD_META: Record<string, {
     glowColor: "rgba(198,255,0,0.45)",
     trackDone: "bg-ink text-bone border-ink",
     trackPartial: "bg-acid/60 text-ink border-ink",
-    trackEmpty: "bg-ink/10 text-ink/40 border-ink/20",
+    trackEmpty: "bg-ink/10 text-ink/75 border-ink/20",
     trackLine: "bg-ink/20",
     chapterBannerBg: "bg-acid/20",
     chapterBannerBorder: "border-t-4 border-t-acid border-b-0",
     freeModeLinkClass: "bg-ink/10 text-ink hover:bg-ink/25 border-ink/30",
     skipBtnClass: "bg-ink/10 text-ink hover:bg-ink/20 border-ink/20",
     modalBg: "bg-bone", modalText: "text-ink",
-    pillDone: "bg-ink text-bone", pillPartial: "bg-acid text-ink", pillEmpty: "bg-ink/10 text-ink/50",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-acid text-ink", pillEmpty: "bg-ink/10 text-ink/75",
   },
   dj: {
     bg: "bg-[#0a0f2e]", heroBg: "bg-[#0a0f2e]", heroBorder: "border-b-4 border-volt",
     textColor: "text-bone",
     accentBg: "bg-volt", accentText: "text-ink",
-    nodeAvail: "bg-volt text-ink border-4 border-volt",
+    nodeAvail: "bg-volt text-bone border-4 border-volt",
     nodeDone: "bg-volt/20 text-bone border-4 border-volt/50",
     nodeReview: "bg-hot text-bone border-4 border-hot",
     emoji: "🎧", title: "DJ World",
@@ -99,16 +99,16 @@ const WORLD_META: Record<string, {
     deco1: "/cats/disco-ball.png",
     deco2: "/cats/headphones.png",
     glowColor: "rgba(198,255,0,0.45)",
-    trackDone: "bg-volt text-ink border-volt",
+    trackDone: "bg-volt text-bone border-volt",
     trackPartial: "bg-volt/40 text-bone border-volt/50",
-    trackEmpty: "bg-bone/10 text-bone/30 border-bone/15",
+    trackEmpty: "bg-bone/10 text-bone/80 border-bone/15",
     trackLine: "bg-volt/20",
     chapterBannerBg: "bg-volt/10",
     chapterBannerBorder: "border-t-4 border-t-volt border-b-0",
     freeModeLinkClass: "bg-bone/10 text-bone hover:bg-bone/20 border-bone/20",
     skipBtnClass: "bg-bone/10 text-bone hover:bg-bone/20 border-bone/15",
     modalBg: "bg-[#0a1228]", modalText: "text-bone",
-    pillDone: "bg-volt text-ink", pillPartial: "bg-volt/40 text-bone", pillEmpty: "bg-bone/10 text-bone/40",
+    pillDone: "bg-volt text-bone", pillPartial: "bg-volt/40 text-bone", pillEmpty: "bg-bone/10 text-bone/80",
   },
   producer: {
     bg: "bg-bone", heroBg: "bg-sun", heroBorder: "border-b-4 border-ink",
@@ -127,14 +127,14 @@ const WORLD_META: Record<string, {
     glowColor: "rgba(255,184,0,0.45)",
     trackDone: "bg-ink text-bone border-ink",
     trackPartial: "bg-sun/70 text-ink border-ink/50",
-    trackEmpty: "bg-ink/10 text-ink/40 border-ink/20",
+    trackEmpty: "bg-ink/10 text-ink/75 border-ink/20",
     trackLine: "bg-ink/20",
     chapterBannerBg: "bg-sun/20",
     chapterBannerBorder: "border-t-4 border-t-sun border-b-0",
     freeModeLinkClass: "bg-ink/10 text-ink hover:bg-ink/25 border-ink/30",
     skipBtnClass: "bg-ink/10 text-ink hover:bg-ink/20 border-ink/20",
     modalBg: "bg-bone", modalText: "text-ink",
-    pillDone: "bg-ink text-bone", pillPartial: "bg-sun text-ink", pillEmpty: "bg-ink/10 text-ink/50",
+    pillDone: "bg-ink text-bone", pillPartial: "bg-sun text-ink", pillEmpty: "bg-ink/10 text-ink/75",
   },
 };
 
@@ -157,17 +157,17 @@ const BIOME_CONFIG: Record<WorldId, Biome[]> = {
     // CH2 — Melody & Pitch
     { name: "Melody Heights",        accentColor: "bg-lime/20",          accentTextColor: "text-ink",  glowColor: "rgba(100,220,130,0.28)", glowAnimationClass: "animate-biome-glow", emojis: ["🎵","🏔️","✨"] },
     // CH3 — Harmony & Chords
-    { name: "Chord Canyon",          accentColor: "bg-hot/15",           accentTextColor: "text-bone", glowColor: "rgba(200,50,50,0.22)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎹","🏜️","🌅"] },
+    { name: "Chord Canyon",          accentColor: "bg-hot/15",           accentTextColor: "text-ink", glowColor: "rgba(200,50,50,0.22)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎹","🏜️","🌅"] },
     // CH4 — Music Technology
-    { name: "Circuit City",          accentColor: "bg-electric-blue/20", accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.30)",  glowAnimationClass: "animate-biome-glow", emojis: ["💻","⚡","🔌"] },
+    { name: "Circuit City",          accentColor: "bg-electric-blue/20", accentTextColor: "text-ink", glowColor: "rgba(66,135,245,0.30)",  glowAnimationClass: "animate-biome-glow", emojis: ["💻","⚡","🔌"] },
   ],
   dj: [
     // CH0 — Setup & Culture
-    { name: "Neon City",             accentColor: "bg-[#1a0b3e]",        accentTextColor: "text-volt", glowColor: "rgba(198,255,0,0.40)",   glowAnimationClass: "animate-biome-glow", emojis: ["🌃","🎧","⚡"] },
+    { name: "Neon City",             accentColor: "bg-[#1a0b3e]",        accentTextColor: "text-bone", glowColor: "rgba(198,255,0,0.40)",   glowAnimationClass: "animate-biome-glow", emojis: ["🌃","🎧","⚡"] },
     // CH1 — The Library
     { name: "The Library Vault",     accentColor: "bg-[#0d1a2e]",        accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.35)",  glowAnimationClass: "animate-biome-glow", emojis: ["📚","🗂️","🔍"] },
     // CH2 — The Mix
-    { name: "The Mix Arena",         accentColor: "bg-[#1e0a2a]",        accentTextColor: "text-volt", glowColor: "rgba(160,50,220,0.35)",  glowAnimationClass: "animate-biome-glow", emojis: ["🎛","🌀","💥"] },
+    { name: "The Mix Arena",         accentColor: "bg-[#1e0a2a]",        accentTextColor: "text-bone", glowColor: "rgba(160,50,220,0.35)",  glowAnimationClass: "animate-biome-glow", emojis: ["🎛","🌀","💥"] },
     // CH3 — DJ Performance
     { name: "Festival Stage",        accentColor: "bg-[#2a0b0b]",        accentTextColor: "text-hot",  glowColor: "rgba(220,50,50,0.35)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎤","🎪","🔥"] },
     // CH4 — DJ Mastery
@@ -179,13 +179,13 @@ const BIOME_CONFIG: Record<WorldId, Biome[]> = {
     // CH1 — Sound & MIDI
     { name: "Sound Design Lab",      accentColor: "bg-acid/20",          accentTextColor: "text-ink",  glowColor: "rgba(198,255,0,0.30)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎼","🧬","🔬"] },
     // CH2 — The Mix
-    { name: "The Mix Reactor",       accentColor: "bg-hot/12",           accentTextColor: "text-bone", glowColor: "rgba(200,80,50,0.25)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎚","⚗️","🌋"] },
+    { name: "The Mix Reactor",       accentColor: "bg-hot/12",           accentTextColor: "text-ink", glowColor: "rgba(200,80,50,0.25)",   glowAnimationClass: "animate-biome-glow", emojis: ["🎚","⚗️","🌋"] },
     // CH3 — Performance & Flow
-    { name: "Launch Pad",            accentColor: "bg-electric-blue/15", accentTextColor: "text-bone", glowColor: "rgba(66,135,245,0.32)",  glowAnimationClass: "animate-biome-glow", emojis: ["🚀","🎯","✨"] },
+    { name: "Launch Pad",            accentColor: "bg-electric-blue/15", accentTextColor: "text-ink", glowColor: "rgba(66,135,245,0.32)",  glowAnimationClass: "animate-biome-glow", emojis: ["🚀","🎯","✨"] },
     // CH4 — Advanced Producer
     { name: "The Stratosphere",      accentColor: "bg-volt/15",          accentTextColor: "text-ink",  glowColor: "rgba(198,255,0,0.22)",   glowAnimationClass: "animate-biome-glow", emojis: ["⚡","🌌","🏔️"] },
     // CH5 — Synthesis (producer only)
-    { name: "Synthesis Void",        accentColor: "bg-[#12001e]",        accentTextColor: "text-volt", glowColor: "rgba(130,50,200,0.40)",  glowAnimationClass: "animate-biome-glow", emojis: ["🌀","🔮","🎹"] },
+    { name: "Synthesis Void",        accentColor: "bg-[#12001e]",        accentTextColor: "text-bone", glowColor: "rgba(130,50,200,0.40)",  glowAnimationClass: "animate-biome-glow", emojis: ["🌀","🔮","🎹"] },
   ],
 };
 
@@ -308,7 +308,7 @@ function MiniPlacementTest({ world, chapterNumber, meta, onUnlock, onClose }: Mi
         {/* Header */}
         <div className={`px-5 py-4 border-b-4 border-ink flex items-center justify-between ${meta.accentBg} ${meta.accentText}`}>
           <div>
-            <div className="font-mono text-[9px] uppercase opacity-60">Chapter {chapterNumber} — Skip Test</div>
+            <div className="font-mono text-[9px] uppercase opacity-70">Chapter {chapterNumber} — Skip Test</div>
             <div className="font-display text-xl leading-tight">Can you skip ahead?</div>
           </div>
           <button
@@ -331,7 +331,7 @@ function MiniPlacementTest({ world, chapterNumber, meta, onUnlock, onClose }: Mi
                 <div className="font-display text-3xl mb-1">
                   {correctCount}/{total} correct
                 </div>
-                <div className="font-mono text-xs opacity-55">
+                <div className="font-mono text-xs opacity-70">
                   {pct >= 75
                     ? "Great score — you can skip this chapter!"
                     : pct >= 50
@@ -377,7 +377,7 @@ function MiniPlacementTest({ world, chapterNumber, meta, onUnlock, onClose }: Mi
                     style={{ width: `${(qIdx / total) * 100}%` }}
                   />
                 </div>
-                <span className="font-mono text-[9px] opacity-50">{qIdx + 1}/{total}</span>
+                <span className="font-mono text-[9px] opacity-70">{qIdx + 1}/{total}</span>
               </div>
 
               {/* Question */}
@@ -430,10 +430,10 @@ function MiniPlacementTest({ world, chapterNumber, meta, onUnlock, onClose }: Mi
 
         {/* Skip-without-testing link */}
         <div className="px-5 py-3 border-t-4 border-ink flex items-center justify-between">
-          <span className="font-mono text-[9px] opacity-40">No hearts lost · just for placement</span>
+          <span className="font-mono text-[9px] opacity-70">No hearts lost · just for placement</span>
           <button
             onClick={() => { onUnlock(chapterNumber); }}
-            className="font-mono text-[9px] uppercase opacity-40 hover:opacity-80 transition-opacity"
+            className="font-mono text-[9px] uppercase opacity-70 hover:opacity-80 transition-opacity"
           >
             Skip test &amp; unlock anyway →
           </button>
@@ -480,12 +480,12 @@ function ChapterTrack({
 
       {/* Track row */}
       <div className="px-4 pt-3 pb-2">
-        <div className="font-mono text-[9px] uppercase opacity-40 mb-2.5">
+        <div className="font-mono text-[9px] uppercase opacity-70 mb-2.5">
           CHAPTERS — tap to scroll
         </div>
 
         {/* Horizontal scrollable track */}
-        <div className="overflow-x-auto pb-2 -mx-1 px-1">
+        <div className="overflow-x-auto pb-2 -mx-1 px-1" tabIndex={0} role="region" aria-label="Scrollable list">
           <div className="flex items-center min-w-max gap-0 relative">
 
             {/* Connecting line behind nodes */}
@@ -522,7 +522,7 @@ function ChapterTrack({
                     className={`brutal-border w-11 h-11 flex flex-col items-center justify-center shrink-0 brutal-press transition-all hover:scale-110 relative z-10 ${nodeClass}`}
                   >
                     <span className="text-base leading-none">{complete ? "✓" : emoji}</span>
-                    <span className="font-mono text-[7px] opacity-60 mt-0.5 leading-none">
+                    <span className="font-mono text-[7px] opacity-70 mt-0.5 leading-none">
                       {String(ch.number).padStart(2, "0")}
                     </span>
                   </button>
@@ -540,7 +540,7 @@ function ChapterTrack({
                 {i > 0 && <div className="w-5 shrink-0" />}
                 <button
                   onClick={() => onChapterClick(ch.slug)}
-                  className={`w-11 text-center font-mono text-[7px] leading-tight opacity-45 hover:opacity-80 transition-opacity ${world === "dj" ? "text-bone" : "text-ink"}`}
+                  className={`w-11 text-center font-mono text-[7px] leading-tight opacity-90 hover:opacity-80 transition-opacity ${world === "dj" ? "text-bone" : "text-ink"}`}
                 >
                   {ch.title.split(" ").slice(0, 2).join(" ")}
                 </button>
@@ -557,7 +557,7 @@ function ChapterTrack({
           <span className={`font-display text-xs ${world === "dj" ? "text-bone/70" : "text-ink/70"}`}>
             Flow Mode
           </span>
-          <span className={`font-mono text-[8px] uppercase ${world === "dj" ? "text-bone/35" : "text-ink/35"}`}>
+          <span className={`font-mono text-[8px] uppercase ${world === "dj" ? "text-bone/80" : "text-ink/75"}`}>
             · sequential · hearts on
           </span>
         </div>
@@ -587,7 +587,7 @@ function WorldHero({
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 pt-5 pb-7 md:pt-7 md:pb-9">
-        <Link href="/worlds" className={`font-mono text-[10px] uppercase opacity-55 hover:opacity-90 block mb-4 transition-opacity`}>
+        <Link href="/worlds" className={`font-mono text-[10px] uppercase opacity-70 hover:opacity-90 block mb-4 transition-opacity`}>
           ← ALL WORLDS
         </Link>
 
@@ -608,7 +608,7 @@ function WorldHero({
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <div className="flex items-center gap-3 font-mono text-[9px] uppercase opacity-60 mb-4">
+            <div className="flex items-center gap-3 font-mono text-[9px] uppercase opacity-70 mb-4">
               <span>{done}/{total}</span>
               <span>{pct}%</span>
               <span>{rank}</span>
@@ -678,14 +678,14 @@ function AnimatedCatIntro({ meta, world, firstSlug }: {
             </div>
             <div className={`transition-all duration-[400ms] ease-out ${bubbleVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3"}`}>
               <div className="font-display text-xl leading-tight">{w.headline}</div>
-              <div className="font-mono text-[10px] uppercase opacity-55 mt-0.5">Your guide for this world</div>
+              <div className="font-mono text-[10px] uppercase opacity-70 mt-0.5">Your guide for this world</div>
             </div>
           </div>
           <p className={`font-mono text-xs leading-relaxed mb-5 transition-all duration-500 delay-100 ${bubbleVisible ? "opacity-80 translate-y-0" : "opacity-0 translate-y-2"}`}>
             {w.body}
           </p>
           <Link href={`/learn/${firstSlug}`} className={`block w-full text-center font-display text-base py-4 brutal-border brutal-press transition-colors ${
-            world === "dj" ? "bg-volt text-ink hover:bg-acid" : "bg-ink text-bone hover:bg-electric-blue"
+            world === "dj" ? "bg-volt text-bone hover:bg-acid" : "bg-ink text-bone hover:bg-electric-blue"
           }`}>
             START FIRST LESSON →
           </Link>
@@ -712,10 +712,10 @@ function ChapterBanner({
       <div className={`brutal-border max-w-[320px] w-full brutal-shadow overflow-hidden ${meta.chapterBannerBg} ${meta.chapterBannerBorder} ${meta.textColor}`}>
         {/* Main content */}
         <div className="px-5 pt-4 pb-3">
-          <div className="font-mono text-[9px] uppercase opacity-55 mb-1">CH {chNum}</div>
+          <div className="font-mono text-[9px] uppercase opacity-70 mb-1">CH {chNum}</div>
           <div className="text-5xl mb-2">{chEmoji}</div>
           <div className="font-display text-xl leading-tight">{chapter.title}</div>
-          <div className="font-mono text-[10px] opacity-55 mt-1 leading-snug uppercase">{chapter.tagline}</div>
+          <div className="font-mono text-[10px] opacity-70 mt-1 leading-snug uppercase">{chapter.tagline}</div>
         </div>
 
         {/* Cat quip */}
@@ -729,7 +729,7 @@ function ChapterBanner({
         {/* Skip / test button — only on locked chapters */}
         {!isUnlocked && (
           <div className="px-4 py-3 border-t-2 border-current/15 flex items-center justify-between gap-3">
-            <span className={`font-mono text-[8px] uppercase opacity-45`}>
+            <span className={`font-mono text-[8px] uppercase opacity-70`}>
               Know this already?
             </span>
             <button
@@ -742,7 +742,7 @@ function ChapterBanner({
         )}
         {isUnlocked && chapterIndex > 0 && (
           <div className="px-4 py-2.5 border-t-2 border-current/15">
-            <span className={`font-mono text-[8px] uppercase opacity-40`}>🔓 Chapter unlocked via test</span>
+            <span className={`font-mono text-[8px] uppercase opacity-70`}>🔓 Chapter unlocked via test</span>
           </div>
         )}
       </div>
@@ -895,7 +895,7 @@ export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: st
                             biome
                               ? `${biome.accentColor} ${biome.accentTextColor}`
                               : world === "dj"
-                              ? "bg-volt text-ink"
+                              ? "bg-volt text-bone"
                               : "bg-acid text-ink"
                           }`}>
                             🐾 YOU ARE HERE
@@ -918,7 +918,7 @@ export function WorldPathClient({ worldSlug, embedded = false }: { worldSlug: st
         {/* World complete */}
         {pct === 100 && (
           <div className={`brutal-border p-8 text-center brutal-shadow mt-8 ${
-            world === "dj" ? "bg-volt text-ink" : "bg-acid text-ink"
+            world === "dj" ? "bg-volt text-bone" : "bg-acid text-ink"
           }`}>
             <div className="flex justify-center mb-4">
               <Image src={meta.catMain} alt="" width={100} height={100} className="drop-shadow-[4px_4px_0_rgba(0,0,0,0.3)] animate-bounce-bob" />
@@ -966,7 +966,7 @@ function LessonNode({ node, meta, biome }: { node: PathNode; meta: typeof WORLD_
   };
 
   const Label = ({ text, dim }: { text: string; dim?: boolean }) => (
-    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[88px] line-clamp-2 ${dim ? "opacity-20" : "opacity-55"}`}>
+    <span className={`font-mono text-[10px] uppercase leading-tight text-center max-w-[88px] line-clamp-2 ${biome?.accentTextColor ?? ""} ${dim ? "opacity-20" : "opacity-70"}`}>
       {text}
     </span>
   );

@@ -38,9 +38,9 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// DEVICE ATLAS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// DEVICE ATLAS</div>
           <h1 className="font-display text-4xl leading-none">WHAT EVERY DEVICE DOES.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             {ATLAS.length} of Live&apos;s own devices: what it is, the job it is best at, and one tip. Want to hear them? The{" "}
             <a className="underline" href="/devices">Device Lab</a> lets you turn the knobs.
           </p>
@@ -71,11 +71,11 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
             ))}
           </div>
           {group !== "all" && (
-            <p className="font-mono text-xs opacity-60">{ATLAS_GROUPS.find((g) => g.id === group)?.blurb}</p>
+            <p className="font-mono text-xs opacity-70">{ATLAS_GROUPS.find((g) => g.id === group)?.blurb}</p>
           )}
         </div>
 
-        <p className="font-mono text-xs opacity-50" aria-live="polite">{list.length} devices</p>
+        <p className="font-mono text-xs opacity-70" aria-live="polite">{list.length} devices</p>
         <ul className="space-y-3">
           {list.map((d) => (
             <li
@@ -85,7 +85,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
             >
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="font-display text-2xl leading-none">{d.name}</h2>
-                <span className="font-mono text-[10px] uppercase opacity-50">
+                <span className="font-mono text-[10px] uppercase opacity-70">
                   {ATLAS_GROUPS.find((g) => g.id === d.group)?.label}
                 </span>
               </div>

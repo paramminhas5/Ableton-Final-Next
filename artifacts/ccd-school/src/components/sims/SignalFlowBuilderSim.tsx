@@ -89,14 +89,14 @@ export function SignalFlowBuilderSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">Signal Flow Builder</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Signal Flow Builder</div>
         <div className="font-display text-xl mt-1">{scene.title}</div>
         <div className="font-mono text-xs mt-1 opacity-70">{scene.prompt}</div>
       </div>
 
       {/* Available blocks */}
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">Drag blocks into the chain ↓</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">Drag blocks into the chain ↓</div>
         <div className="flex flex-wrap gap-2">
           {availableBlocks.map(block => (
             <div
@@ -123,14 +123,14 @@ export function SignalFlowBuilderSim() {
             </div>
           ))}
           {availableBlocks.length === 0 && (
-            <div className="font-mono text-[10px] opacity-40 uppercase">All blocks placed ↓</div>
+            <div className="font-mono text-[10px] opacity-70 uppercase">All blocks placed ↓</div>
           )}
         </div>
       </div>
 
       {/* Chain slots */}
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">Your chain (left = first in signal path)</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">Your chain (left = first in signal path)</div>
         <div className="flex items-center gap-1 overflow-x-auto pb-1">
           {Array.from({ length: solutionLength }).map((_, idx) => {
             const block = chain[idx];
@@ -157,17 +157,17 @@ export function SignalFlowBuilderSim() {
                       {slotWrong && <div className="text-[10px]">✗</div>}
                     </>
                   ) : (
-                    <div className="font-mono text-[10px] uppercase opacity-30">{idx + 1}</div>
+                    <div className="font-mono text-[10px] uppercase opacity-70">{idx + 1}</div>
                   )}
                 </div>
                 {idx < solutionLength - 1 && (
-                  <div className="font-display text-xl opacity-40 shrink-0">→</div>
+                  <div className="font-display text-xl opacity-70 shrink-0">→</div>
                 )}
               </div>
             );
           })}
         </div>
-        <div className="font-mono text-[9px] opacity-40 mt-1">Tap a placed block to remove it</div>
+        <div className="font-mono text-[9px] opacity-70 mt-1">Tap a placed block to remove it</div>
       </div>
 
       {/* Check / result */}

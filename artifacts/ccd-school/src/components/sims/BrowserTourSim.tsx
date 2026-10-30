@@ -28,10 +28,10 @@ export function BrowserTourSim() {
         <ul className="space-y-1">
           {list.map((i) => (
             <li key={i} className="brutal-border bg-bone px-3 py-2 font-mono text-sm flex items-center justify-between hover:bg-acid cursor-grab">
-              <span>{i}</span><span className="text-xs opacity-60">drag →</span>
+              <span>{i}</span><span className="text-xs opacity-70">drag →</span>
             </li>
           ))}
-          {list.length === 0 && <li className="font-mono text-xs opacity-60">No matches.</li>}
+          {list.length === 0 && <li className="font-mono text-xs opacity-70">No matches.</li>}
         </ul>
       </div>
     </div>

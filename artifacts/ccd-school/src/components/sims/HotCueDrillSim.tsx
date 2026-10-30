@@ -51,7 +51,7 @@ export function HotCueDrillSim() {
           <div key={n} className="brutal-border bg-card p-2 space-y-1">
             <div className="font-mono text-[10px] uppercase">{n}</div>
             <button onClick={() => setCue(n)} className="w-full brutal-border bg-bone px-2 py-1 font-mono text-[9px] uppercase brutal-press">SET</button>
-            <button onClick={() => jump(n)} disabled={cues[n] === null} className={`w-full brutal-border px-2 py-1 font-mono text-[9px] uppercase brutal-press ${cues[n] === null ? "bg-bone opacity-40" : "bg-acid"}`}>JUMP</button>
+            <button onClick={() => jump(n)} disabled={cues[n] === null} className={`w-full brutal-border px-2 py-1 font-mono text-[9px] uppercase brutal-press ${cues[n] === null ? "bg-bone opacity-70" : "bg-acid"}`}>JUMP</button>
             {target && (
               <button onClick={() => recall(n)} className="w-full brutal-border bg-volt text-bone px-2 py-1 font-mono text-[9px] uppercase brutal-press">PICK</button>
             )}

@@ -62,7 +62,7 @@ export function ABCompare({ onBypass, label }: Props) {
     <div className="space-y-3">
       {/* Blind label */}
       {!revealed && (
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Blind A/B — you don't know which is processed until you reveal.
           {label && <span className="ml-1 opacity-80">Testing: {label}</span>}
         </div>
@@ -93,7 +93,7 @@ export function ABCompare({ onBypass, label }: Props) {
       {/* Prefer / Reveal row — only shown once user has auditioned both */}
       {side !== null && !revealed && (
         <div className="flex flex-wrap gap-2 items-center">
-          <span className="font-mono text-[10px] uppercase opacity-60">I prefer:</span>
+          <span className="font-mono text-[10px] uppercase opacity-70">I prefer:</span>
           <button
             onClick={() => pickPreference("A")}
             className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase brutal-press"
@@ -118,7 +118,7 @@ export function ABCompare({ onBypass, label }: Props) {
       {/* Reveal — show which was wet/dry and whether they picked the processed one */}
       {revealed && (
         <div className="brutal-border bg-ink text-bone p-4 space-y-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">Results</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Results</div>
           <div className="grid grid-cols-2 gap-2 font-mono text-xs">
             <div
               className={`brutal-border p-2 ${aIsProcessed ? "bg-volt text-bone" : "bg-bone text-ink"}`}
@@ -151,7 +151,7 @@ export function ABCompare({ onBypass, label }: Props) {
                   : " → You prefer the dry signal."}
             </div>
           )}
-          <div className="font-mono text-[10px] opacity-60 leading-relaxed">
+          <div className="font-mono text-[10px] opacity-70 leading-relaxed">
             Tip: Professionals A/B in 3–5 second bursts, always at matched loudness. Louder almost
             always sounds "better" — so match gain before comparing.
           </div>

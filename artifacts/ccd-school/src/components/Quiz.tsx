@@ -374,7 +374,7 @@ export function Quiz({
     <div ref={topRef} className="space-y-4">
       {/* Progress bar */}
       <div className="space-y-1">
-        <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
+        <div className="flex justify-between font-mono text-[10px] uppercase opacity-70">
           <span>
             Question {qIdx + 1} / {qs.length}
           </span>

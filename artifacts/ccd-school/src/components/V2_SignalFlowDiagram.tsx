@@ -43,7 +43,7 @@ export function SignalFlowDiagram({ diagram }: { diagram: SignalFlowDiagram }) {
   return (
     <div className="space-y-4">
       {/* SVG Diagram */}
-      <div className="brutal-border bg-bone p-4 overflow-x-auto">
+      <div className="brutal-border bg-bone p-4 overflow-x-auto" tabIndex={0} role="region" aria-label="Signal flow diagram">
         <svg width={width} height={height} className="mx-auto">
           {/* Draw connections first (so they appear behind nodes) */}
           {diagram.connections.map((conn, idx) => {

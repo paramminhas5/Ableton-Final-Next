@@ -55,7 +55,7 @@ class LessonErrorBoundary extends Component<
             <div className="font-mono text-sm opacity-80 mb-4 leading-relaxed">
               This lesson has malformed content data. The error has been logged.
             </div>
-            <div className="font-mono text-xs opacity-60 brutal-border bg-bone/10 p-3 leading-relaxed break-all">
+            <div className="font-mono text-xs opacity-70 brutal-border bg-bone/10 p-3 leading-relaxed break-all">
               {(this.state.error as Error).message}
             </div>
           </div>
@@ -218,7 +218,7 @@ function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
         <div className="p-5 space-y-3 font-sans text-sm leading-relaxed">
           <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
           <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> to keep going.</p>
-          <p className="opacity-60 text-xs">Switch modes anytime using the toggle in the header.</p>
+          <p className="opacity-70 text-xs">Switch modes anytime using the toggle in the header.</p>
         </div>
         <div className="p-4">
           <button onClick={onDismiss} className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press chunk-shadow ccd-btn-hover">
@@ -237,7 +237,6 @@ function HookScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: 
     <button
       onClick={onNext}
       className="w-full min-h-[75vh] flex flex-col items-center justify-center text-center p-8 bg-electric-blue text-bone brutal-border brutal-press relative overflow-hidden"
-      aria-label="Tap to continue"
     >
       {/* DJ Cat decorating the hook screen */}
       <div className="absolute bottom-4 right-4 w-20 h-20 pointer-events-none wiggle relative" aria-hidden
@@ -261,7 +260,7 @@ function HookScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kind: 
         <div className="text-8xl mb-6 select-none">{screen.emoji}</div>
         <h2 className="font-display text-5xl md:text-7xl leading-none mb-4">{screen.headline}</h2>
         <p className="font-mono text-base opacity-70 max-w-xs leading-relaxed">{screen.subtext}</p>
-        <div className="mt-8 font-mono text-[10px] uppercase opacity-40 animate-bounce">TAP TO CONTINUE</div>
+        <div className="mt-8 font-mono text-[10px] uppercase opacity-70 animate-bounce">TAP TO CONTINUE</div>
       </div>
     </button>
   );
@@ -297,7 +296,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
         <div className="brutal-border bg-acid text-ink px-5 py-4 flex items-start gap-3">
           <span className="text-xl shrink-0 mt-0.5">⚡</span>
           <div>
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-1">KEY FACT</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">KEY FACT</div>
             <div className="font-display text-xl leading-tight">{screen.keyFact}</div>
           </div>
         </div>
@@ -306,7 +305,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
       {/* Audio-first: always show a "hear it" button */}
       <div className="flex items-center gap-3">
         <ConceptAudioButton visual={screen.visual} />
-        <span className="font-mono text-[9px] uppercase opacity-40">tap to hear an example</span>
+        <span className="font-mono text-[9px] uppercase opacity-70">tap to hear an example</span>
       </div>
 
       <button
@@ -453,11 +452,11 @@ function QuizScreen({
       <div className="brutal-border bg-bone p-5">
         {/* Question counter + hearts warning */}
         <div className="flex items-center justify-between mb-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             QUESTION {quizNumber} OF {quizTotal}
           </div>
           {isFlowMode && phase === "picking" && (
-            <div className="font-mono text-[9px] uppercase opacity-50 text-hot">
+            <div className="font-mono text-[9px] uppercase opacity-70 text-hot">
               ❤️ wrong = −1 heart
             </div>
           )}
@@ -630,7 +629,7 @@ function SummaryScreen({
         </div>
         <div>
           <div className="font-display text-lg">XP EARNED</div>
-          <div className="font-mono text-xs opacity-60">First completion only</div>
+          <div className="font-mono text-xs opacity-70">First completion only</div>
         </div>
       </div>
 
@@ -666,7 +665,7 @@ function SummaryScreen({
       )}
 
       <div className="brutal-border bg-bone p-5">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-3">YOU LEARNED</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-3">YOU LEARNED</div>
         <ul className="space-y-2">
           {screen.learned.map((item, i) => (
             <li key={i} className="flex items-start gap-2 font-mono text-sm">
@@ -733,10 +732,10 @@ function LessonBreadcrumb({
   const pathTitle = ctx.path?.title || null;
 
   return (
-    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[8px] uppercase opacity-60 tracking-wide justify-center">
+    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[10px] uppercase opacity-90 tracking-wide justify-center">
       <Link 
         href={ctx.worldRoute} 
-        className="hover:opacity-100 hover:text-acid transition-colors shrink-0 truncate max-w-[60px] px-1 py-0.5 rounded"
+        className="hover:opacity-100 hover:underline transition-colors shrink-0 truncate max-w-[60px] px-1 py-0.5 rounded"
         title={`Back to ${ctx.worldLabel}`}
       >
         {ctx.worldLabel}
@@ -754,7 +753,7 @@ function LessonBreadcrumb({
           <span className="shrink-0 opacity-30">/</span>
           <Link
             href={ctx.path ? `/path/${ctx.path.slug}` : "#"}
-            className="hover:opacity-100 hover:text-acid transition-colors truncate max-w-[70px] shrink-0 px-1 py-0.5 rounded"
+            className="hover:opacity-100 hover:underline transition-colors truncate max-w-[70px] shrink-0 px-1 py-0.5 rounded"
             title={pathTitle}
           >
             {pathTitle}
@@ -762,7 +761,7 @@ function LessonBreadcrumb({
         </>
       )}
       <span className="shrink-0 opacity-30">/</span>
-      <span className="text-acid font-bold opacity-100 truncate px-1 py-0.5">
+      <span className="text-ink font-bold opacity-100 truncate px-1 py-0.5">
         {missionIndex} of {missionTotal}
       </span>
     </div>
@@ -1001,7 +1000,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
               <div className="font-display text-sm text-center truncate px-2">
                 {mission.title}
               </div>
-              <div className="font-mono text-[9px] uppercase opacity-50 text-center">
+              <div className="font-mono text-[9px] uppercase opacity-70 text-center">
                 Mission {missionIndex} of {missionTotal}
               </div>
             </div>
@@ -1116,7 +1115,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
 
         {/* ── Screen counter ── */}
         {!done && (
-          <div className="text-center font-mono text-[9px] uppercase opacity-30">
+          <div className="text-center font-mono text-[9px] uppercase opacity-70">
             {screenIdx + 1} / {total}
           </div>
         )}

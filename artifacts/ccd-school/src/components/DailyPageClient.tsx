@@ -69,8 +69,8 @@ export function DailyPageClient() {
     <main className="min-h-screen bg-bone pb-24">
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link href="/" className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 mb-3 block">← Dashboard</Link>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// TODAY&apos;S LESSON</div>
+          <Link href="/" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Dashboard</Link>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// TODAY&apos;S LESSON</div>
           <h1 className="font-display text-5xl leading-none">DAILY<br /><span className="text-acid">PRACTICE</span></h1>
         </div>
       </header>
@@ -81,18 +81,18 @@ export function DailyPageClient() {
         <section className="brutal-border bg-ink text-bone p-6 flex items-center gap-6">
           <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
           <div>
-            <div className="font-mono text-[10px] uppercase opacity-50 mb-1">DAILY GOAL</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">DAILY GOAL</div>
             <div className="font-display text-3xl">
               {progress.dailyXp} / {DAILY_GOAL_XP} XP
             </div>
             {dailyGoalDone ? (
               <div className="font-mono text-xs text-acid mt-1">✓ Goal complete! Streak protected.</div>
             ) : (
-              <div className="font-mono text-xs opacity-60 mt-1">
+              <div className="font-mono text-xs opacity-70 mt-1">
                 {DAILY_GOAL_XP - progress.dailyXp} XP to go — keep at it
               </div>
             )}
-            <div className="font-mono text-[10px] uppercase opacity-50 mt-2">
+            <div className="font-mono text-[10px] uppercase opacity-70 mt-2">
               🔥 {progress.streakDays}-day streak{progress.streakShield ? " 🛡 shield active" : ""}
             </div>
           </div>
@@ -100,7 +100,7 @@ export function DailyPageClient() {
 
         {/* Today's lesson */}
         <section>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// TODAY&apos;S LESSON</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// TODAY&apos;S LESSON</div>
           {todayMission ? (
             <Link href={`/learn/${todayMission.slug}`}
               className="brutal-border bg-acid text-ink p-5 flex items-start justify-between gap-4 brutal-press brutal-shadow block">
@@ -127,7 +127,7 @@ export function DailyPageClient() {
         {/* Review session */}
         {reviewSlugs.length > 0 && (
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">
               // REVIEW ({reviewSlugs.length} fading)
             </div>
             <div className="space-y-2 mb-3">
@@ -144,7 +144,7 @@ export function DailyPageClient() {
                         <div className="h-full bg-hot" style={{ width: `${Math.round(strength * 100)}%` }} />
                       </div>
                     </div>
-                    <span className="font-mono text-[9px] uppercase opacity-60 shrink-0">Review ↺</span>
+                    <span className="font-mono text-[9px] uppercase opacity-70 shrink-0">Review ↺</span>
                   </Link>
                 );
               })}
@@ -158,20 +158,20 @@ export function DailyPageClient() {
 
         {/* Stats */}
         <section className="brutal-border bg-bone p-5">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR PROGRESS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// YOUR PROGRESS</div>
           <div className="grid grid-cols-3 gap-3">
             <div className="text-center">
               <div className="font-display text-3xl">{progress.xp}</div>
-              <div className="font-mono text-[9px] uppercase opacity-60">Total XP</div>
+              <div className="font-mono text-[9px] uppercase opacity-70">Total XP</div>
             </div>
             <div className="text-center">
               <div className="font-display text-xl">{rank.emoji}</div>
               <div className="font-display text-sm leading-tight">{rank.name}</div>
-              <div className="font-mono text-[9px] uppercase opacity-60">Rank</div>
+              <div className="font-mono text-[9px] uppercase opacity-70">Rank</div>
             </div>
             <div className="text-center">
               <div className="font-display text-3xl">💎{progress.gems}</div>
-              <div className="font-mono text-[9px] uppercase opacity-60">Gems</div>
+              <div className="font-mono text-[9px] uppercase opacity-70">Gems</div>
             </div>
           </div>
         </section>

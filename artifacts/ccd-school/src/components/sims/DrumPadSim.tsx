@@ -224,7 +224,7 @@ export function DrumPadSim() {
 
       {/* Presets */}
       <div className="flex flex-wrap gap-2 items-center">
-        <span className="font-mono text-[10px] uppercase opacity-60 mr-1">Presets:</span>
+        <span className="font-mono text-[10px] uppercase opacity-70 mr-1">Presets:</span>
         {PRESETS.map((p) => (
           <button
             key={p.name}
@@ -269,7 +269,7 @@ export function DrumPadSim() {
           {Array.from({ length: 16 }, (_, c) => (
             <div
               key={c}
-              className={`flex-1 text-center font-mono text-[8px] opacity-40 ${c % 4 === 0 ? "opacity-70" : ""}`}
+              className={`flex-1 text-center font-mono text-[8px] opacity-70 ${c % 4 === 0 ? "opacity-70" : ""}`}
             >
               {c % 4 === 0 ? c / 4 + 1 : "·"}
             </div>

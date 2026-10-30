@@ -1,6 +1,15 @@
 "use client";
 import { useRef, useState } from "react";
 import { track } from "@/lib/analytics";
+import { missionBySlug } from "@/content/missions";
+
+/** which lessons teach what each Set mission looks for */
+const MISSION_LESSONS: Record<string, string[]> = {
+  "name-your-tracks": ["tracks", "the-mixer"],
+  "pump-the-bass": ["compressor", "sidechain"],
+  "drum-bus": ["groups-routing", "glue-compressor"],
+  "space-with-a-return": ["sends-returns", "reverb-delay"],
+};
 
 interface TrackRow { name: string; kind: string; devices: { name: string; atlasId: string | null }[]; clips: number; notes: number; sidechain: string[] }
 interface Result {
@@ -46,9 +55,9 @@ export function LinkPageClient() {
     <main className="min-h-screen bg-bone">
       <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-6">
         <header>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// CONNECT LIVE</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// CONNECT LIVE</div>
           <h1 className="font-display text-4xl leading-none">CHECK YOUR OWN SET.</h1>
-          <p className="font-mono text-xs opacity-60 mt-3">
+          <p className="font-mono text-xs opacity-70 mt-3">
             Upload a Live Set (.als). We read it in memory, check it against four real mixing habits, and throw it away.
             Nothing is stored. Save a copy of your Set first if you want to be careful. We never change it.
           </p>
@@ -83,20 +92,20 @@ export function LinkPageClient() {
           >
             {busy ? "READING..." : "CHOOSE A .ALS FILE"}
           </button>
-          <p className="font-mono text-xs opacity-50 mt-3">or drop it here. Up to 30 MB.</p>
+          <p className="font-mono text-xs opacity-70 mt-3">or drop it here. Up to 30 MB.</p>
           <p role="alert" className="font-mono text-xs text-red-700 mt-3 min-h-4">{error}</p>
         </section>
 
         {res && (
           <>
             <section className="brutal-border bg-bone p-4" aria-label="Your Set">
-              <div className="font-mono text-[10px] uppercase opacity-40 mb-2">YOUR SET</div>
+              <div className="font-mono text-[10px] uppercase opacity-70 mb-2">YOUR SET</div>
               <p className="font-mono text-sm">
                 {res.set.tempo} BPM · {res.set.timeSignature.join("/")}
                 {res.set.scale ? ` · ${res.set.scale.root} ${res.set.scale.name}` : ""}
                 {res.set.liveVersion ? ` · Live ${res.set.liveVersion}` : ""}
               </p>
-              <p className="font-mono text-xs opacity-60 mt-1">
+              <p className="font-mono text-xs opacity-70 mt-1">
                 {res.set.tracks.length} tracks, {res.set.returns.length} returns
               </p>
               <ul className="mt-3 divide-y divide-black/10">
@@ -128,6 +137,17 @@ export function LinkPageClient() {
                     {m.passed ? "DONE · " : ""}
                     {m.title}
                   </h2>
+                  {!m.passed && MISSION_LESSONS[m.id] && (
+                    <p className="font-mono text-xs mt-2" data-testid="weak-spot-lessons">
+                      Learn it:{" "}
+                      {MISSION_LESSONS[m.id].map((slug, k) => (
+                        <span key={slug}>
+                          {k > 0 && ", "}
+                          <a className="underline" href={`/learn/${slug}`}>{missionBySlug(slug)?.title ?? slug}</a>
+                        </span>
+                      ))}
+                    </p>
+                  )}
                   <ul className="mt-3 space-y-2">
                     {m.checks.map((c) => (
                       <li key={c.id} className="font-mono text-xs">
@@ -140,7 +160,7 @@ export function LinkPageClient() {
                   </ul>
                 </article>
               ))}
-              <p className="font-mono text-xs opacity-60">Fix something in Live, save, and upload again.</p>
+              <p className="font-mono text-xs opacity-70">Fix something in Live, save, and upload again.</p>
             </section>
           </>
         )}

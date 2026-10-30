@@ -125,11 +125,11 @@ function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") =>
     <div className="space-y-6 animate-fade-in">
       <StepCat step={0} />
       <div>
-        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 1 OF 4</div>
+        <div className="font-mono text-xs uppercase opacity-70 mb-2">STEP 1 OF 4</div>
         <h1 className="font-display text-5xl md:text-6xl leading-none">
           HOW MUCH DO<br /><span className="text-acid">YOU KNOW?</span>
         </h1>
-        <p className="font-sans text-sm opacity-60 mt-3 leading-relaxed">This helps me put you in the right place.</p>
+        <p className="font-sans text-sm opacity-70 mt-3 leading-relaxed">This helps me put you in the right place.</p>
       </div>
       <div className="space-y-3">
         {[
@@ -160,11 +160,11 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
     <div className="space-y-6 animate-fade-in">
       <StepCat step={1} />
       <div>
-        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 2 OF 4</div>
+        <div className="font-mono text-xs uppercase opacity-70 mb-2">STEP 2 OF 4</div>
         <h1 className="font-display text-5xl md:text-6xl leading-none">
           WHAT DO YOU<br /><span className="text-acid">WANT TO LEARN?</span>
         </h1>
-        <p className="font-sans text-sm opacity-60 mt-3 leading-relaxed">
+        <p className="font-sans text-sm opacity-70 mt-3 leading-relaxed">
           {isPlacementNext ? "Pick a world — I'll run a quick placement test." : "Pick a world. Switch anytime from your profile."}
         </p>
       </div>
@@ -178,14 +178,14 @@ function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experie
                 <div className="font-display text-2xl">{w.title}</div>
                 <div className="font-sans text-xs opacity-70 mt-0.5 leading-relaxed">{w.tagline}</div>
               </div>
-              <span className="font-display text-2xl opacity-60 shrink-0">{isPlacementNext ? "→ test" : "→"}</span>
+              <span className="font-display text-2xl opacity-70 shrink-0">{isPlacementNext ? "→ test" : "→"}</span>
             </div>
           </button>
         ))}
       </div>
       <div className="text-center">
         <button onClick={() => onPick("fundamentals")}
-          className="font-mono text-xs uppercase opacity-40 hover:opacity-70 underline underline-offset-2">
+          className="font-mono text-xs uppercase opacity-70 hover:opacity-70 underline underline-offset-2">
           Not sure? Start with Fundamentals
         </button>
       </div>
@@ -200,8 +200,8 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
     <div className="space-y-6 animate-fade-in">
       <StepCat step={2} />
       <div>
-        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
-        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 3 OF 4</div>
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-70 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-70 mb-2">STEP 3 OF 4</div>
         <h1 className="font-display text-5xl md:text-6xl leading-none">
           PICK YOUR<br /><span className="text-acid">LEARNING STYLE</span>
         </h1>
@@ -233,7 +233,7 @@ function StepMode({ world, onPick, onBack }: { world: World; onPick: (m: LearnMo
         </button>
         <div className="flex items-center gap-3">
           <div className="flex-1 h-px bg-ink/20" />
-          <span className="font-mono text-[9px] uppercase opacity-40">or</span>
+          <span className="font-mono text-[9px] uppercase opacity-70">or</span>
           <div className="flex-1 h-px bg-ink/20" />
         </div>
         <button onClick={() => onPick("classic")}
@@ -260,8 +260,8 @@ function StepDifficulty({ world, onPick, onBack }: { world: World; onPick: (d: D
     <div className="space-y-6 animate-fade-in">
       <StepCat step={3} />
       <div>
-        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
-        <div className="font-mono text-xs uppercase opacity-50 mb-2">STEP 4 OF 5</div>
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-70 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-70 mb-2">STEP 4 OF 5</div>
         <h1 className="font-display text-5xl md:text-6xl leading-none">
           ADJUST THE<br /><span className="text-acid">DIFFICULTY</span>
         </h1>
@@ -306,8 +306,8 @@ function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: 
     <div className="space-y-6 animate-fade-in">
       <StepCat step={4} />
       <div>
-        <button onClick={onBack} className="font-mono text-xs uppercase opacity-40 hover:opacity-70 mb-4 block">← back</button>
-        <div className="font-mono text-xs uppercase opacity-50 mb-2">
+        <button onClick={onBack} className="font-mono text-xs uppercase opacity-70 hover:opacity-70 mb-4 block">← back</button>
+        <div className="font-mono text-xs uppercase opacity-70 mb-2">
           {mode === "flow" ? "STEP 4 OF 4" : "STEP 5 OF 5"}
         </div>
         <h1 className="font-display text-5xl md:text-6xl leading-none">
@@ -334,7 +334,7 @@ function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: 
 
       {/* Chapter breakdown */}
       <div>
-        <div className="font-mono text-xs uppercase opacity-50 mb-3">// CHAPTERS</div>
+        <div className="font-mono text-xs uppercase opacity-70 mb-3">// CHAPTERS</div>
         <div className="space-y-2">
           {chapters.map((ch, i) => {
             const paths = allPaths.filter(p => p.chapter === ch.slug);
@@ -347,9 +347,9 @@ function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
                       <div className="font-display text-base leading-tight">{ch.title}</div>
-                      <div className="font-mono text-[9px] uppercase opacity-50 shrink-0">{missionCount} missions</div>
+                      <div className="font-mono text-[9px] uppercase opacity-70 shrink-0">{missionCount} missions</div>
                     </div>
-                    <div className="font-sans text-xs opacity-60 mt-0.5 leading-snug">{ch.tagline}</div>
+                    <div className="font-sans text-xs opacity-70 mt-0.5 leading-snug">{ch.tagline}</div>
                   </div>
                 </div>
               </div>
@@ -360,7 +360,7 @@ function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: 
 
       {/* Setup summary */}
       <div className="brutal-border bg-bone/10 p-4 space-y-2">
-        <div className="font-mono text-xs uppercase opacity-50 mb-1">YOUR SETUP</div>
+        <div className="font-mono text-xs uppercase opacity-70 mb-1">YOUR SETUP</div>
         {[
           ["World", w.title],
           ["Mode", mode === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode"],
@@ -378,7 +378,7 @@ function StepOverview({ world, mode, difficulty, experience, onStart, onBack }: 
         className="w-full brutal-border bg-acid text-ink py-6 font-display text-4xl brutal-press chunk-shadow ccd-btn-hover animate-pulse-glow">
         START FIRST LESSON →
       </button>
-      <div className="font-mono text-[10px] uppercase opacity-40 text-center">Free to start · No sign-up required</div>
+      <div className="font-mono text-[10px] uppercase opacity-70 text-center">Free to start · No sign-up required</div>
 
       {/* Mobile sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-ink/95 border-t-4 border-acid md:hidden"

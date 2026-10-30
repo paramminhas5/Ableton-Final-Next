@@ -15,7 +15,7 @@ export function LessonLinksPanel({ slug }: { slug: string }) {
   if (!devices.length && !jobs.length && !stage) return null;
   return (
     <div className="brutal-border bg-bone p-5 space-y-3" data-testid="lesson-links">
-      <div className="font-mono text-[10px] uppercase opacity-60">USE IT IN LIVE</div>
+      <div className="font-mono text-[10px] uppercase opacity-70">USE IT IN LIVE</div>
       {devices.length > 0 && (
         <div>
           <div className="font-mono text-xs mb-1">Devices in this lesson</div>

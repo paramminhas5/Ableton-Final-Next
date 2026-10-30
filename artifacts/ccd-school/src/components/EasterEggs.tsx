@@ -88,7 +88,7 @@ function DiscoOverlay({ onDismiss }: { onDismiss: () => void }) {
           className="brutal-border bg-acid text-ink px-8 py-4 font-display text-xl chunk-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-transform">
           BACK TO NORMAL →
         </button>
-        <div className="font-mono text-xs text-bone opacity-60 mt-3 uppercase tracking-widest">
+        <div className="font-mono text-xs text-bone opacity-90 mt-3 uppercase tracking-widest">
           ↑↑↓↓←→←→BA was the password
         </div>
       </div>
@@ -148,7 +148,7 @@ function MorningGreeting({ onDismiss }: { onDismiss: () => void }) {
         <div className="font-sans text-xs opacity-80 mb-2">
           {progress_streak > 0 ? `${progress_streak}-day streak! Keep it going 🔥` : "Start your first lesson today!"}
         </div>
-        <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100">
+        <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100">
           dismiss ✕
         </button>
       </div>
@@ -171,7 +171,7 @@ function PerfectScoreOverlay({ onDismiss }: { onDismiss: () => void }) {
           className="mx-auto drop-shadow-[3px_3px_0_hsl(222_47%_4%)] animate-cat-celebrate" />
         <div className="font-display text-3xl mt-2">PERFECT! 🏆</div>
         <div className="font-sans text-sm opacity-70 mt-1">100% score!</div>
-        <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 mt-2 block mx-auto">
+        <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mt-2 block mx-auto">
           ✕
         </button>
       </div>
@@ -193,7 +193,7 @@ function IdleCat({ onDismiss }: { onDismiss: () => void }) {
         className="drop-shadow-[2px_2px_0_hsl(222_47%_4%)] wiggle shrink-0" />
       <div className="text-left">
         <div className="font-display text-sm">Still there? 👀</div>
-        <div className="font-mono text-[10px] uppercase opacity-60">Tap to continue</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Tap to continue</div>
       </div>
     </motion.button>
   );

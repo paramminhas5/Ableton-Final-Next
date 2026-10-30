@@ -42,7 +42,7 @@ export function FlowFreePill({ worldSlug, showFree, compact = false }: FlowFreeP
         title="Flow Mode — sequential, hearts on"
         aria-label="Switch to Flow Mode"
         className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase brutal-press transition-colors ${
-          !isFree ? "bg-acid text-ink" : "bg-bone text-ink/50 hover:bg-acid/30"
+          !isFree ? "bg-acid text-ink" : "bg-bone text-ink/75 hover:bg-acid/30"
         }`}
       >
         {compact ? "🌊" : "🌊 Flow"}
@@ -54,7 +54,7 @@ export function FlowFreePill({ worldSlug, showFree, compact = false }: FlowFreeP
         title="Free Mode — all lessons open, no hearts"
         aria-label="Switch to Free Mode"
         className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase brutal-press transition-colors ${
-          isFree ? "bg-ink text-bone" : "bg-bone text-ink/50 hover:bg-ink/20"
+          isFree ? "bg-ink text-bone" : "bg-bone text-ink/75 hover:bg-ink/20"
         }`}
       >
         {compact ? "🔓" : "🔓 Free"}

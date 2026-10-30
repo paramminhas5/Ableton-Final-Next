@@ -125,12 +125,12 @@ export function ShopPageClient() {
 
       <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link href="/" className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 mb-3 block">← Dashboard</Link>
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// GEM SHOP</div>
+          <Link href="/" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Dashboard</Link>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// GEM SHOP</div>
           <h1 className="font-display text-5xl leading-none">
             SPEND YOUR<br /><span className="text-acid">GEMS</span>
           </h1>
-          <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
+          <p className="font-mono text-sm opacity-70 mt-3 leading-relaxed">
             Earn gems by completing lessons (10 💎) or scoring perfect (25 💎). Spend them on power-ups.
           </p>
         </div>
@@ -141,7 +141,7 @@ export function ShopPageClient() {
         {/* Gem balance */}
         <div className="brutal-border bg-acid text-ink p-5 flex items-center justify-between">
           <div>
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-1">YOUR BALANCE</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">YOUR BALANCE</div>
             <div className="font-display text-4xl">💎 {progress.gems}</div>
           </div>
           <div className="text-right font-mono text-xs opacity-70 max-w-[160px] leading-relaxed">
@@ -151,7 +151,7 @@ export function ShopPageClient() {
 
         {/* How to earn */}
         <div className="brutal-border bg-bone p-4">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-2">HOW TO EARN GEMS</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">HOW TO EARN GEMS</div>
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
               { label: "Complete lesson", gems: 10 },
@@ -160,14 +160,14 @@ export function ShopPageClient() {
             ].map(item => (
               <div key={item.label} className="brutal-border bg-bone p-3">
                 <div className="font-display text-2xl">+{item.gems}</div>
-                <div className="font-mono text-[8px] uppercase opacity-60 mt-1">{item.label}</div>
+                <div className="font-mono text-[8px] uppercase opacity-70 mt-1">{item.label}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Shop items */}
-        <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// ITEMS</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// ITEMS</div>
         <div className="space-y-3">
           {ITEMS.map(item => (
             <div key={item.id} className="brutal-border bg-bone p-5">
@@ -177,7 +177,7 @@ export function ShopPageClient() {
                     <span className="text-2xl">{item.emoji}</span>
                     <div className="font-display text-xl">{item.title}</div>
                     {item.disabled && (
-                      <span className="brutal-border bg-bone px-2 py-0.5 font-mono text-[9px] uppercase opacity-60 ml-1">
+                      <span className="brutal-border bg-bone px-2 py-0.5 font-mono text-[9px] uppercase opacity-70 ml-1">
                         {item.disabledReason}
                       </span>
                     )}
@@ -202,7 +202,7 @@ export function ShopPageClient() {
         {/* Current power-ups active */}
         {(progress.streakShield || progress.hearts < MAX_HEARTS) && (
           <div className="brutal-border bg-ink text-bone p-4 space-y-2">
-            <div className="font-mono text-[10px] uppercase opacity-50 mb-2">// ACTIVE POWER-UPS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-2">// ACTIVE POWER-UPS</div>
             {progress.streakShield && (
               <div className="flex items-center gap-2 font-mono text-sm">
                 <span className="text-volt">🛡</span> Streak Freeze active — protects your next missed day

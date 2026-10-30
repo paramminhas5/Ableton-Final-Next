@@ -50,7 +50,7 @@ export function MobileBottomNav() {
               className={`
                 flex-1 flex flex-col items-center justify-center gap-1
                 py-3 min-h-[56px] relative transition-colors
-                ${active ? "bg-acid text-ink" : "text-ink/40 hover:text-ink/70 hover:bg-acid/10"}
+                ${active ? "bg-acid text-ink" : "text-ink/75 hover:text-ink/70 hover:bg-acid/10"}
               `}
             >
               {/* Active top bar */}
@@ -72,7 +72,7 @@ export function MobileBottomNav() {
               </span>
 
               {/* Label — font-display for CCD style */}
-              <span className={`font-display text-[9px] uppercase leading-none tracking-wide ${active ? "opacity-100" : "opacity-60"}`}>
+              <span className="font-display text-[9px] uppercase leading-none tracking-wide">
                 {tab.label}
               </span>
             </Link>

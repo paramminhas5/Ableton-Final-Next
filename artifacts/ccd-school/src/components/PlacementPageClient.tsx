@@ -31,16 +31,16 @@ export function PlacementPageClient() {
       <div>
         <button
           onClick={() => router.back()}
-          className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 mb-4 block"
+          className="font-mono text-[10px] uppercase opacity-70 hover:opacity-70 mb-4 block"
         >
           ← back
         </button>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">PLACEMENT TEST</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">PLACEMENT TEST</div>
         <h1 className="font-display text-5xl leading-none">
           ALREADY KNOW<br />
           <span className="text-acid">SOME STUFF?</span>
         </h1>
-        <p className="font-mono text-sm opacity-60 mt-3 leading-relaxed">
+        <p className="font-mono text-sm opacity-70 mt-3 leading-relaxed">
           Pick a world and answer 4 quick questions. We&apos;ll place you in the right chapter automatically.
         </p>
       </div>
@@ -58,7 +58,7 @@ export function PlacementPageClient() {
         ))}
       </div>
 
-      <div className="font-mono text-[9px] uppercase opacity-30 text-center">
+      <div className="font-mono text-[9px] uppercase opacity-70 text-center">
         Current level: {progress.unlockedChapter > 1 ? `Chapter ${progress.unlockedChapter} unlocked` : "Starting from Chapter 1"}
       </div>
     </div>

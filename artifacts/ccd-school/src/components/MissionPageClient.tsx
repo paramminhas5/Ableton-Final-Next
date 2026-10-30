@@ -133,7 +133,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
 
         {/* Worlds ancestor */}
         <span className="opacity-30">›</span>
-        <Link href="/worlds" className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+        <Link href="/worlds" className="brutal-border bg-bone text-ink/70 px-2 py-0.5 hover:text-ink transition-colors">
           Worlds
         </Link>
 
@@ -141,7 +141,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
         {ctx.world && (
           <>
             <span className="opacity-30">›</span>
-            <Link href={ctx.worldRoute} className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+            <Link href={ctx.worldRoute} className="brutal-border bg-bone text-ink/70 px-2 py-0.5 hover:text-ink transition-colors">
               {ctx.worldLabel}
             </Link>
           </>
@@ -151,7 +151,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
         {ctx.chapter && (
           <>
             <span className="opacity-30">›</span>
-            <span className="brutal-border bg-bone text-ink/60 px-2 py-0.5">{ctx.chapter.title}</span>
+            <span className="brutal-border bg-bone text-ink/70 px-2 py-0.5">{ctx.chapter.title}</span>
           </>
         )}
 
@@ -159,7 +159,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
         {ctx.path && (
           <>
             <span className="opacity-30">›</span>
-            <Link href={`/path/${ctx.path.slug}`} className="brutal-border bg-bone text-ink/60 px-2 py-0.5 hover:text-ink transition-colors">
+            <Link href={`/path/${ctx.path.slug}`} className="brutal-border bg-bone text-ink/70 px-2 py-0.5 hover:text-ink transition-colors">
               {ctx.path.title}
             </Link>
           </>
@@ -188,7 +188,7 @@ export function MissionPageClient({ slug }: { slug: string }) {
               className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${hardMode ? "bg-hot text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}>
               {hardMode ? "🔥 Hard" : "Hard"}
             </button>
-            <span className="opacity-50 font-mono text-[9px] ml-1">M{m.number}</span>
+            <span className="opacity-70 font-mono text-[9px] ml-1">M{m.number}</span>
           </span>
         </nav>
       )}

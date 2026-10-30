@@ -146,8 +146,8 @@ export function ChallengePageClient() {
     return (
       <main className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
         <div>
-          <div className="font-mono text-[10px] uppercase opacity-50 mb-2">DAILY CHALLENGE</div>
-          <div className="font-mono text-xs opacity-40 mb-3">{getWeeklyTheme()}</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">DAILY CHALLENGE</div>
+          <div className="font-mono text-xs opacity-70 mb-3">{getWeeklyTheme()}</div>
           <h1 className="font-display text-5xl leading-none">
             5 QUESTIONS.<br /><span className="text-acid">30 SECONDS EACH.</span>
           </h1>
@@ -175,9 +175,9 @@ export function ChallengePageClient() {
             {alreadyPlayed ? "PLAY AGAIN →" : "START CHALLENGE →"}
           </button>
           {progress.hearts === 0 && (
-            <p className="font-mono text-xs text-center opacity-60">No hearts left — visit the Gem Shop to refill</p>
+            <p className="font-mono text-xs text-center opacity-70">No hearts left — visit the Gem Shop to refill</p>
           )}
-          <Link href="/" className="block text-center font-mono text-[10px] uppercase opacity-40 hover:opacity-70">← Back to dashboard</Link>
+          <Link href="/" className="block text-center font-mono text-[10px] uppercase opacity-70 hover:opacity-70">← Back to dashboard</Link>
         </div>
       </main>
     );
@@ -189,7 +189,7 @@ export function ChallengePageClient() {
       <main className="min-h-screen bg-ink text-bone max-w-lg mx-auto flex flex-col">
         {/* Top bar */}
         <div className="p-4 space-y-2">
-          <div className="flex items-center justify-between font-mono text-[10px] uppercase opacity-60">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase opacity-70">
             <span>Question {qIdx + 1} / {QUESTION_COUNT}</span>
             <span className={timeLeft <= 7 ? "text-hot font-bold animate-pulse" : ""}>{timeLeft}s</span>
           </div>
@@ -207,7 +207,7 @@ export function ChallengePageClient() {
 
         <div className="flex-1 px-4 pb-8 space-y-4">
           <div className="brutal-border bg-bone/10 p-5">
-            <div className="font-mono text-[9px] uppercase opacity-50 mb-2">{currentQ.world.toUpperCase()}</div>
+            <div className="font-mono text-[9px] uppercase opacity-70 mb-2">{currentQ.world.toUpperCase()}</div>
             <div className="font-display text-xl md:text-2xl leading-snug">{currentQ.q}</div>
           </div>
 
@@ -248,14 +248,14 @@ export function ChallengePageClient() {
   return (
     <main className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
       <div>
-        <div className="font-mono text-[10px] uppercase opacity-50 mb-2">CHALLENGE COMPLETE</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">CHALLENGE COMPLETE</div>
         <h1 className="font-display text-6xl leading-none">
           {pct === 100 ? "PERFECT!" : pct >= 60 ? "SOLID!" : "KEEP AT IT."}<br />
           <span className="text-acid">{correctCount}/{QUESTION_COUNT}</span>
         </h1>
       </div>
       <div className="brutal-border bg-acid text-ink p-5">
-        <div className="font-mono text-[10px] uppercase opacity-60 mb-1">CHALLENGE SCORE</div>
+        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">CHALLENGE SCORE</div>
         <div className="font-display text-5xl">{score}</div>
         <div className="font-mono text-xs opacity-70 mt-1">Speed × accuracy = final score</div>
       </div>

@@ -67,7 +67,7 @@ export function CoachPanel({ context, onClose }: { context: string; onClose: () 
       </div>
 
       {/* Context pill */}
-      <div className="px-3 py-2 brutal-border border-x-0 border-t-0 font-mono text-[9px] opacity-50 bg-bone/50 shrink-0 truncate">
+      <div className="px-3 py-2 brutal-border border-x-0 border-t-0 font-mono text-[9px] opacity-70 bg-bone/50 shrink-0 truncate">
         📍 {context}
       </div>
 
@@ -230,7 +230,7 @@ export function BeatCoach({ context, question, wrongAnswers, autoOpen, onClose }
           <CoachAvatar />
           <div>
             <div className="font-display text-xl">Beat Coach</div>
-            <div className="font-mono text-[9px] uppercase opacity-50">Kimi AI · Music Tutor</div>
+            <div className="font-mono text-[9px] uppercase opacity-70">Kimi AI · Music Tutor</div>
           </div>
         </div>
         <button
@@ -300,7 +300,7 @@ export function BeatCoach({ context, question, wrongAnswers, autoOpen, onClose }
         </div>
       )}
 
-      <div className="font-mono text-[9px] uppercase opacity-30">
+      <div className="font-mono text-[9px] uppercase opacity-70">
         Powered by Kimi AI · Beat Coach won&apos;t give away answers
       </div>
     </div>

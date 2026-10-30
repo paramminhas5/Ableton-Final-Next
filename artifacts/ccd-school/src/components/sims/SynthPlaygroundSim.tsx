@@ -114,7 +114,7 @@ export function SynthPlaygroundSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-3">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[10px] uppercase opacity-70">
           Subtractive Synth Playground
         </div>
         <div className="font-display text-2xl mt-1">DUAL OSC · FILTER · ENV</div>
@@ -123,7 +123,7 @@ export function SynthPlaygroundSim() {
       {/* Oscillators */}
       <div className="grid grid-cols-2 gap-2">
         <div className="brutal-border p-3 space-y-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">Osc 1</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Osc 1</div>
           <Sel
             val={osc1}
             options={["sawtooth", "square", "triangle", "sine"]}
@@ -131,7 +131,7 @@ export function SynthPlaygroundSim() {
           />
         </div>
         <div className="brutal-border p-3 space-y-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">Osc 2 (+ detune)</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Osc 2 (+ detune)</div>
           <Sel
             val={osc2}
             options={["sawtooth", "square", "triangle", "sine"]}
@@ -146,7 +146,7 @@ export function SynthPlaygroundSim() {
             onChange={(e) => setDetune(+e.target.value)}
             className="w-full accent-ink"
           />
-          <div className="font-mono text-[9px] opacity-50">
+          <div className="font-mono text-[9px] opacity-70">
             {detune > 0 ? `+${detune} semitones` : "unison"}
           </div>
         </div>
@@ -208,7 +208,7 @@ export function SynthPlaygroundSim() {
           },
         ].map(({ label, val, min, max, step = 0.01, fmt, set }) => (
           <div key={label} className="space-y-0.5">
-            <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
+            <div className="flex justify-between font-mono text-[10px] uppercase opacity-70">
               <span>{label}</span>
               <span>{fmt(val)}</span>
             </div>
@@ -240,7 +240,7 @@ export function SynthPlaygroundSim() {
                 onPointerLeave={() => noteOff(midi)}
               >
                 <div className="absolute inset-0 brutal-border bg-bone hover:bg-acid/30 active:bg-acid cursor-pointer select-none touch-none flex items-end justify-center pb-1">
-                  <span className="font-mono text-[8px] opacity-40">{noteName}</span>
+                  <span className="font-mono text-[8px] opacity-70">{noteName}</span>
                 </div>
               </div>
             );

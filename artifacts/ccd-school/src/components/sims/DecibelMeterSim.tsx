@@ -87,14 +87,14 @@ export function DecibelMeterSim() {
   return (
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-60">Decibel Meter</div>
+        <div className="font-mono text-[10px] uppercase opacity-70">Decibel Meter</div>
         <div className="font-display text-2xl mt-1">HEAR THE VOLUME — SEE THE dB</div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         {/* Fader column */}
         <div className="brutal-border p-4 flex flex-col items-center gap-3">
-          <div className="font-mono text-[10px] uppercase opacity-60">Fader</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Fader</div>
           <input
             type="range" min={0} max={100} value={fader}
             onChange={e => setFader(+e.target.value)}
@@ -104,12 +104,12 @@ export function DecibelMeterSim() {
           <div className={`font-display text-3xl ${isClipping ? "text-hot" : ""}`}>
             {db >= 0 ? "0.0" : db.toFixed(1)} dB
           </div>
-          <div className="font-mono text-[9px] uppercase opacity-60">{label}</div>
+          <div className="font-mono text-[9px] uppercase opacity-70">{label}</div>
         </div>
 
         {/* Meter column */}
         <div className="brutal-border p-4 flex flex-col gap-2">
-          <div className="font-mono text-[10px] uppercase opacity-60">Level Meter</div>
+          <div className="font-mono text-[10px] uppercase opacity-70">Level Meter</div>
           <div className="relative flex-1 brutal-border bg-ink overflow-hidden" style={{ minHeight: 160 }}>
             <div
               className="absolute bottom-0 left-0 right-0 transition-all duration-75"
@@ -119,7 +119,7 @@ export function DecibelMeterSim() {
             {[-60,-40,-20,-12,-6,0].map(d => (
               <div
                 key={d}
-                className="absolute right-0 font-mono text-[8px] opacity-50 pr-1"
+                className="absolute right-0 font-mono text-[8px] opacity-70 pr-1"
                 style={{ bottom: `${(d + 60) / 60 * 100}%`, transform: "translateY(50%)" }}
               >
                 {d === 0 ? "0 dBFS" : `${d}`}
@@ -152,7 +152,7 @@ export function DecibelMeterSim() {
             <div className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
             <div>
               <div className="font-display text-sm">{s.db} dB</div>
-              <div className="font-mono text-[9px] opacity-60">{s.label}</div>
+              <div className="font-mono text-[9px] opacity-70">{s.label}</div>
             </div>
           </div>
         ))}

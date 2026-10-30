@@ -50,7 +50,7 @@ export function ShortcutsPageClient() {
     <main className="min-h-screen bg-bone">
       <header className="brutal-border border-x-0 border-t-0 bg-bone">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// ABLETON LIVE 12</div>
+          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// ABLETON LIVE 12</div>
           <h1 className="font-display text-4xl md:text-6xl leading-none">SHORTCUTS</h1>
           <p className="font-mono text-sm mt-2 opacity-70">Every keyboard shortcut in Ableton Live. Searchable and categorised.</p>
         </div>
@@ -62,7 +62,7 @@ export function ShortcutsPageClient() {
           {CATS.map((c) => (
             <button key={c} onClick={() => setCat(c)} className={`brutal-border px-3 py-1.5 font-mono text-[10px] uppercase brutal-press ${cat === c ? "bg-acid" : "bg-bone"}`}>{c}</button>
           ))}
-          <span className="font-mono text-[9px] uppercase opacity-50 ml-auto">{filtered.length}</span>
+          <span className="font-mono text-[9px] uppercase opacity-70 ml-auto">{filtered.length}</span>
         </div>
         <div className="brutal-border divide-y divide-ink/10">
           {filtered.map((s, i) => (
@@ -70,16 +70,16 @@ export function ShortcutsPageClient() {
               <div className="flex gap-1 shrink-0">
                 {s.keys.map((k, ki) => (
                   <span key={ki}>
-                    {ki > 0 && <span className="font-mono text-[9px] opacity-30 mx-0.5">+</span>}
+                    {ki > 0 && <span className="font-mono text-[9px] opacity-70 mx-0.5">+</span>}
                     <kbd className="brutal-border bg-ink text-bone px-2 py-0.5 font-mono text-[10px] uppercase">{k}</kbd>
                   </span>
                 ))}
               </div>
               <div className="flex-1 font-mono text-sm">{s.desc}</div>
-              <div className="shrink-0 brutal-border bg-bone px-2 py-0.5 font-mono text-[9px] uppercase opacity-60">{s.cat}</div>
+              <div className="shrink-0 brutal-border bg-bone px-2 py-0.5 font-mono text-[9px] uppercase opacity-70">{s.cat}</div>
             </div>
           ))}
-          {filtered.length === 0 && <div className="p-6 font-mono text-sm opacity-50">No shortcuts match your search.</div>}
+          {filtered.length === 0 && <div className="p-6 font-mono text-sm opacity-70">No shortcuts match your search.</div>}
         </div>
       </div>
     </main>

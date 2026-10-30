@@ -70,7 +70,7 @@ export function ProfilePageClient() {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 md:py-10 relative z-10">
-          <div className="font-mono text-xs uppercase opacity-60 mb-1">// YOUR PROFILE</div>
+          <div className="font-mono text-xs uppercase opacity-70 mb-1">// YOUR PROFILE</div>
           <div className="flex items-end gap-3 mb-3">
             <h1 className="font-display text-5xl md:text-7xl leading-none" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
               PROFILE
@@ -85,7 +85,7 @@ export function ProfilePageClient() {
             <span className="text-2xl">{rank.emoji}</span>
             <div>
               <div className="font-display text-xl">{rank.name}</div>
-              <div className="font-mono text-[10px] uppercase opacity-50">{rank.tagline}</div>
+              <div className="font-mono text-[10px] uppercase opacity-70">{rank.tagline}</div>
             </div>
           </div>
 
@@ -106,12 +106,12 @@ export function ProfilePageClient() {
         {/* ── STAT CARDS ── */}
         <SectionReveal>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// STATS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// STATS</div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {/* XP */}
               <div className="brutal-border bg-acid text-ink p-5 chunk-shadow">
                 <div className="font-display text-4xl md:text-5xl tabular-nums leading-none">{progress.xp.toLocaleString()}</div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Total XP</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Total XP</div>
               </div>
               {/* Streak */}
               <div className="brutal-border bg-magenta text-bone p-5 chunk-shadow">
@@ -119,17 +119,17 @@ export function ProfilePageClient() {
                   🔥{progress.streakDays}
                   {progress.streakShield && <span className="text-2xl ml-1">🛡</span>}
                 </div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Day Streak</div>
+                <div className="font-mono text-[10px] uppercase opacity-100 mt-2">Day Streak</div>
               </div>
               {/* Missions */}
               <div className="brutal-border bg-bone p-5 chunk-shadow">
                 <div className="font-display text-4xl md:text-5xl tabular-nums leading-none">{totalDone}</div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Missions Done</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Missions Done</div>
               </div>
               {/* Gems */}
               <div className="brutal-border bg-electric-blue text-bone p-5 chunk-shadow">
                 <div className="font-display text-4xl md:text-5xl leading-none">💎{progress.gems}</div>
-                <div className="font-mono text-[10px] uppercase opacity-60 mt-2">Gems</div>
+                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Gems</div>
               </div>
             </div>
 
@@ -149,8 +149,8 @@ export function ProfilePageClient() {
                   />
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <div className="font-mono text-[10px] uppercase opacity-50">{progress.xp} XP</div>
-                  <div className="font-mono text-[10px] uppercase opacity-50">{nextRank.minXp - progress.xp} XP to go</div>
+                  <div className="font-mono text-[10px] uppercase opacity-70">{progress.xp} XP</div>
+                  <div className="font-mono text-[10px] uppercase opacity-70">{nextRank.minXp - progress.xp} XP to go</div>
                 </div>
               </div>
             )}
@@ -160,7 +160,7 @@ export function ProfilePageClient() {
         {/* ── RANK LADDER ── */}
         <SectionReveal delay={0.05}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// RANK LADDER</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// RANK LADDER</div>
             <div className="brutal-border chunk-shadow overflow-hidden">
               {RANKS.map((r, i) => {
                 const isCurrentRank = r.name === rank.name;
@@ -172,13 +172,13 @@ export function ProfilePageClient() {
                     <span className="text-xl w-8 text-center">{r.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <div className={`font-display text-base ${isCurrentRank ? "" : "opacity-70"}`}>{r.name}</div>
-                      <div className="font-mono text-[9px] uppercase opacity-50">{r.minXp.toLocaleString()} XP required</div>
+                      <div className="font-mono text-[9px] uppercase opacity-70">{r.minXp.toLocaleString()} XP required</div>
                     </div>
                     {isCurrentRank && (
                       <span className="brutal-border bg-ink text-bone px-2 py-0.5 font-display text-[10px] uppercase">YOU ARE HERE</span>
                     )}
                     {isPast && !isCurrentRank && (
-                      <span className="font-mono text-[9px] uppercase opacity-40">✓ achieved</span>
+                      <span className="font-mono text-[9px] uppercase opacity-70">✓ achieved</span>
                     )}
                   </div>
                 );
@@ -190,7 +190,7 @@ export function ProfilePageClient() {
         {/* ── WORLD PROGRESS ── */}
         <SectionReveal delay={0.08}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// WORLD PROGRESS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// WORLD PROGRESS</div>
             <div className="space-y-4">
               {(["fundamentals","dj","producer"] as WorldId[]).map(world => {
                 const ws   = worldStats(world);
@@ -210,7 +210,7 @@ export function ProfilePageClient() {
                         </div>
                         <div className="text-right">
                           <div className="font-display text-4xl md:text-5xl tabular-nums">{ws.pct}%</div>
-                          <div className="font-mono text-[9px] uppercase opacity-60">{ws.done}/{ws.total}</div>
+                          <div className="font-mono text-[9px] uppercase opacity-70">{ws.done}/{ws.total}</div>
                         </div>
                       </div>
                       <div className="h-3 brutal-border bg-bone/20 overflow-hidden">
@@ -243,7 +243,7 @@ export function ProfilePageClient() {
         {progress.badges.length > 0 && (
           <SectionReveal delay={0.1}>
             <section>
-              <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// BADGES ({progress.badges.length})</div>
+              <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// BADGES ({progress.badges.length})</div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {progress.badges.map((b, i) => (
                   <div key={b} className={`brutal-border ${BADGE_BG[i % BADGE_BG.length]} p-3 chunk-shadow-sm text-center`}>
@@ -286,15 +286,15 @@ export function ProfilePageClient() {
         {/* ── SETTINGS ── */}
         <SectionReveal delay={0.14}>
           <section>
-            <div className="font-mono text-[10px] uppercase opacity-40 mb-4">// SETTINGS</div>
+            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// SETTINGS</div>
             <div className="space-y-3">
               <div className="brutal-border p-4 flex items-center justify-between gap-4 chunk-shadow-sm">
-                <div><div className="font-display text-lg">Theme</div><div className="font-mono text-xs opacity-60">Choose your colour theme</div></div>
+                <div><div className="font-display text-lg">Theme</div><div className="font-mono text-xs opacity-70">Choose your colour theme</div></div>
                 <ThemeSwitcher />
               </div>
               {user && isPro && (
                 <div className="brutal-border p-4 flex items-center justify-between gap-4 chunk-shadow-sm">
-                  <div><div className="font-display text-lg">CCD PRO</div><div className="font-mono text-xs opacity-60">Manage subscription and billing</div></div>
+                  <div><div className="font-display text-lg">CCD PRO</div><div className="font-mono text-xs opacity-70">Manage subscription and billing</div></div>
                   <button onClick={handleManageBilling} disabled={portalLoading}
                     className="brutal-border bg-electric-blue text-bone px-4 py-2 font-display text-sm hover:bg-ink transition-colors disabled:opacity-50 chunk-shadow-sm">
                     {portalLoading ? "..." : "MANAGE →"}
@@ -303,11 +303,11 @@ export function ProfilePageClient() {
               )}
               <div className="brutal-border p-4 chunk-shadow-sm">
                 <div className="font-display text-lg mb-1">Placement Test</div>
-                <div className="font-sans text-sm opacity-60 mb-3">Already know the basics? Skip ahead to the right chapter.</div>
+                <div className="font-sans text-sm opacity-70 mb-3">Already know the basics? Skip ahead to the right chapter.</div>
                 <a href="/placement" className="brutal-border bg-acid text-ink px-4 py-2 font-display text-sm inline-block chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">TAKE TEST →</a>
               </div>
               <div className="brutal-border p-4 chunk-shadow-sm">
-                <div className="font-sans text-xs opacity-60 mb-3">
+                <div className="font-sans text-xs opacity-70 mb-3">
                   {user ? "Progress synced to cloud. Local copy kept as backup." : "Progress stored locally in your browser."}
                 </div>
                 {!confirmReset ? (

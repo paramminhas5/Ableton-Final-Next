@@ -124,7 +124,7 @@ export function TempoCompareSim() {
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4 flex items-center justify-between">
         <div>
-          <div className="font-mono text-[10px] uppercase opacity-60">
+          <div className="font-mono text-[10px] uppercase opacity-70">
             Tempo Perception · Round {round + 1}
           </div>
           <div className="font-display text-2xl mt-1">WHICH IS FASTER?</div>
@@ -157,7 +157,7 @@ export function TempoCompareSim() {
                 {isPlaying ? "▶ PLAYING..." : `▶ LOOP ${side}`}
                 {reveal && isFaster && <div className="font-mono text-[10px] mt-1">FASTER</div>}
                 {reveal && !reveal && (
-                  <div className="font-mono text-[10px] mt-1 opacity-60">
+                  <div className="font-mono text-[10px] mt-1 opacity-70">
                     {side === "A" ? `${realA} BPM` : `${realB} BPM`}
                   </div>
                 )}

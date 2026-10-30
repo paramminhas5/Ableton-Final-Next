@@ -169,7 +169,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
           </span>
         ))}
         {!full && secs > 0 && (
-          <span className="font-mono text-xs opacity-45 ml-1 tabular-nums">{hh}h{mm}</span>
+          <span className="font-mono text-xs opacity-70 ml-1 tabular-nums">{hh}h{mm}</span>
         )}
         {!hasSeenTooltip && (
           <span className="ml-1 w-1.5 h-1.5 rounded-full bg-acid animate-ping absolute -top-0.5 -right-0.5" aria-hidden />
@@ -187,7 +187,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
                 answer in <strong>Flow Mode</strong> costs 1 heart.
               </p>
               {!full && (
-                <p className="font-sans text-xs mt-2 opacity-55">
+                <p className="font-sans text-xs mt-2 opacity-70">
                   Next refill in {hh}h{mm}m · 1 heart per 4 hours
                 </p>
               )}
@@ -197,7 +197,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
             </div>
             <div className="border-t-4 border-ink px-4 py-2.5">
               <button onClick={dismissTooltip}
-                className="font-mono text-xs uppercase opacity-45 hover:opacity-100 transition-opacity">
+                className="font-mono text-xs uppercase opacity-70 hover:opacity-100 transition-opacity">
                 Got it ✕
               </button>
             </div>
@@ -240,29 +240,29 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
         <span className="text-2xl leading-none">{rank.emoji}</span>
         <div className="flex-1">
           <p className="font-display text-base">{rank.name}</p>
-          <p className="font-mono text-xs opacity-45 uppercase">{rank.tagline}</p>
+          <p className="font-mono text-xs opacity-70 uppercase">{rank.tagline}</p>
         </div>
       </div>
       <div className="px-4 py-3 border-b-4 border-ink">
         <div className="flex justify-between items-baseline mb-2">
-          <span className="font-mono text-xs uppercase opacity-50">XP to next rank</span>
+          <span className="font-mono text-xs uppercase opacity-70">XP to next rank</span>
           <span className="font-mono text-xs tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
         </div>
         <div className="w-full bg-ink/10 h-2 overflow-hidden border-2 border-ink">
           <div className="bg-acid h-full transition-all" style={{ width: `${rankPct * 100}%` }} />
         </div>
-        <p className="font-mono text-xs opacity-45 mt-1.5 tabular-nums">{progress.xp} XP total</p>
+        <p className="font-mono text-xs opacity-70 mt-1.5 tabular-nums">{progress.xp} XP total</p>
       </div>
       <div className="px-4 py-3 border-b-4 border-ink flex items-center justify-between">
         <div>
-          <p className="font-mono text-xs uppercase opacity-45 mb-1">Streak</p>
+          <p className="font-mono text-xs uppercase opacity-70 mb-1">Streak</p>
           <p className="font-display text-lg">
             🔥 {progress.streakDays}
             {progress.streakShield && <span className="ml-1 text-base">🛡</span>}
           </p>
         </div>
         <div className="text-right">
-          <p className="font-mono text-xs uppercase opacity-45 mb-1">Gems</p>
+          <p className="font-mono text-xs uppercase opacity-70 mb-1">Gems</p>
           <p className="font-display text-lg">💎 {progress.gems}</p>
         </div>
       </div>
@@ -270,14 +270,14 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
       <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
         <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
         <div>
-          <p className="font-mono text-xs uppercase opacity-45">Hearts</p>
+          <p className="font-mono text-xs uppercase opacity-70">Hearts</p>
           <p className="font-sans text-sm">{progress.hearts}/{MAX_HEARTS} remaining</p>
         </div>
       </div>
       <div className="px-4 py-3 flex items-center gap-3">
         <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
         <div>
-          <p className="font-mono text-xs uppercase opacity-45">Daily goal</p>
+          <p className="font-mono text-xs uppercase opacity-70">Daily goal</p>
           <p className="font-sans text-sm tabular-nums">
             {progress.dailyXp} / {DAILY_GOAL_XP} XP
             {dailyGoalDone && <span className="ml-1 text-xs">✓</span>}
@@ -340,7 +340,7 @@ function XpStreakBadge() {
         </span>
         <span className="opacity-20 text-xs">|</span>
         <span className={`flex items-center gap-1 transition-all duration-200 ${xpFlash ? "scale-110 text-acid" : ""}`}>
-          <span className="opacity-50 text-xs font-mono">XP</span>
+          <span className="opacity-70 text-xs font-mono">XP</span>
           <span className="font-display text-base leading-none tabular-nums">{xpDisplay}</span>
         </span>
         <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
@@ -402,7 +402,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
       >
         <span>{isFlow ? "🌊" : "🔓"}</span>
         {!compact && <span>{isFlow ? "Flow" : "Free"}</span>}
-        {!compact && <span className="opacity-30 text-xs">▼</span>}
+        {!compact && <span className="opacity-70 text-xs">▼</span>}
       </button>
       {toast && (
         <div className="absolute top-full right-0 mt-2 z-[999] brutal-border bg-ink text-bone px-4 py-2.5 font-display text-xs whitespace-nowrap chunk-shadow animate-fade-in">
@@ -426,7 +426,7 @@ function MoreDropdown({ open, onClose }: { open: boolean; onClose: () => void })
       >
         {MORE_SECTIONS.map((section) => (
           <div key={section.heading}>
-            <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-40 tracking-widest border-b-2 border-ink/10">
+            <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-70 tracking-widest border-b-2 border-ink/10">
               {section.heading}
             </div>
             {section.links.map((l) => (
@@ -437,7 +437,7 @@ function MoreDropdown({ open, onClose }: { open: boolean; onClose: () => void })
             ))}
             {"includeTheme" in section && section.includeTheme && (
               <div className="px-3 py-2.5 border-t-2 border-ink/20">
-                <div className="font-mono text-xs uppercase opacity-40 mb-2">Theme</div>
+                <div className="font-mono text-xs uppercase opacity-70 mb-2">Theme</div>
                 <ThemeSwitcher compact />
               </div>
             )}
@@ -504,7 +504,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             className="block px-4 py-3.5 border-b-4 border-ink bg-acid text-ink font-display text-base brutal-press hover:bg-sun transition-colors flex items-center gap-3">
             <span className="text-2xl shrink-0">▶</span>
             <div>
-              <p className="font-mono text-xs uppercase opacity-55">
+              <p className="font-mono text-xs uppercase opacity-70">
                 {hasMissions ? "Continue where you left off" : "Start your first lesson"}
               </p>
               <p className="font-display text-base leading-tight mt-0.5">
@@ -523,7 +523,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
           ].map(({ value, label }, i) => (
             <div key={label} className={`p-3.5 text-center${i < 2 ? " border-r-4 border-ink" : ""}`}>
               <div className="font-display text-xl tabular-nums">{value}</div>
-              <div className="font-mono text-xs uppercase opacity-45 mt-0.5">{label}</div>
+              <div className="font-mono text-xs uppercase opacity-70 mt-0.5">{label}</div>
             </div>
           ))}
         </div>
@@ -531,7 +531,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         {/* Hearts */}
         <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
           <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-          <span className="font-sans text-sm opacity-55">{progress.hearts}/{MAX_HEARTS} hearts</span>
+          <span className="font-sans text-sm opacity-70">{progress.hearts}/{MAX_HEARTS} hearts</span>
         </div>
 
         {/* Search */}
@@ -582,7 +582,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             { heading: "Cats Can Dance", links: CCD_LINKS.map((l) => ({ to: l.href, label: l.label })) },
           ].map(({ heading, links }) => (
             <div key={heading}>
-              <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-40 tracking-widest border-t-4 border-ink">
+              <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-70 tracking-widest border-t-4 border-ink">
                 {heading}
               </div>
               {links.map((l) => (
@@ -597,7 +597,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
 
         {/* Theme */}
         <div className="px-4 py-3.5 border-t-4 border-ink">
-          <div className="font-mono text-xs uppercase opacity-40 mb-2.5">Theme</div>
+          <div className="font-mono text-xs uppercase opacity-70 mb-2.5">Theme</div>
           <ThemeSwitcher compact />
         </div>
 
@@ -660,7 +660,7 @@ function StreakWarningBanner() {
           Learn now →
         </a>
         <button onClick={() => setDismissed(true)} aria-label="Dismiss"
-          className="font-mono text-xs opacity-55 hover:opacity-100">✕</button>
+          className="font-mono text-xs opacity-70 hover:opacity-100">✕</button>
       </div>
     </div>
   );
@@ -733,7 +733,7 @@ export function Header() {
           <button onClick={openSearch} title="Search (⌘K)" aria-label="Open search"
             className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-acid flex items-center gap-1.5 font-display text-sm transition-colors brutal-press ccd-btn-hover ccd-jitter ccd-glow-pulse">
             <SearchIcon />
-            <span className="hidden lg:inline font-mono text-xs opacity-55">⌘K</span>
+            <span className="hidden lg:inline font-mono text-xs opacity-70">⌘K</span>
           </button>
 
           <XpStreakBadge />
