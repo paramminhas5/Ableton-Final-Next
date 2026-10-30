@@ -41,6 +41,7 @@ const MORE_SECTIONS = [
   {
     heading: "PRACTICE",
     links: [
+      { to: "/gym",       label: "Ear Gym (5 min)"   },
       { to: "/train",     label: "Ear Training"      },
       { to: "/challenge", label: "Daily Challenge ⚡" },
       { to: "/match",     label: "Flashcard Match"    },
@@ -548,6 +549,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               { to: "/daily",    label: "⚡ Daily Challenge" },
             ]},
             { heading: "Practice", links: [
+              { to: "/gym",       label: "Ear Gym (5 min)" },
               { to: "/train",     label: "Ear Training"    },
               { to: "/challenge", label: "Daily Challenge" },
               { to: "/review",    label: "Review Session"  },

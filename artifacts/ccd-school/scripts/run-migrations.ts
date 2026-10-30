@@ -10,6 +10,7 @@ async function migrate() {
   console.log("Running DB migrations…");
   await pool.query(sql);
   await pool.query(readFileSync(join(__dirname, "migrate-razorpay.sql"), "utf8"));
+  await pool.query(readFileSync(join(__dirname, "migrate-gym.sql"), "utf8"));
   console.log("Migrations complete.");
   await pool.end();
 }
