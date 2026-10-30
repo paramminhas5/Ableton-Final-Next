@@ -3,7 +3,8 @@
  *   BASE=http://localhost:3120 node scripts/smoke.mjs
  */
 import { createRequire } from "node:module";
-const { chromium } = createRequire(import.meta.url)("playwright");
+const pw = createRequire(import.meta.url)("playwright");
+const chromium = pw[process.env.BROWSER ?? "chromium"]; // BROWSER=firefox or webkit to cross-check
 const BASE = process.env.BASE ?? "http://localhost:3120";
 const routes = ["/", "/dashboard", "/worlds", "/world/fundamentals", "/world/dj", "/world/producer", "/missions", "/learn", "/path/acoustics",
   "/daily", "/review", "/challenge", "/gym", "/train", "/match", "/leaderboard", "/profile", "/shop", "/upgrade", "/glossary", "/wiki", "/shortcuts", "/signal-flow",
@@ -17,7 +18,7 @@ for (const [label, viewport] of sizes) {
   for (const r of routes) {
     const p = await ctx.newPage();
     const errs = [];
-    p.on("pageerror", (e) => errs.push(String(e).slice(0, 110)));
+    p.on("pageerror", (e) => { if (!/access control checks/.test(String(e))) errs.push(String(e).slice(0, 110)); });
     const res = await p.goto(BASE + r, { waitUntil: "load" }).catch((e) => ({ status: () => 0, err: e }));
     await p.waitForTimeout(700);
     const status = res.status();

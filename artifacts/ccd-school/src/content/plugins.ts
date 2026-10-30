@@ -1,6 +1,7 @@
 /**
- * Which plug-in for which job. Stock Live devices come first because they are free
- * with Live, fully saved inside a Set, and work on any computer. Third-party names are
+ * Which plug-in for which job. Stock Live devices come first because they come with Live,
+ * are fully saved inside a Set, and work on any computer. Some need Standard or Suite,
+ * and the pages say which. Third-party names are
  * well-known picks, not the only picks. Prices and licences change, so every card says
  * to check the maker's page before buying.
  */
@@ -115,11 +116,11 @@ export const PLUGIN_JOBS: PluginJob[] = [
   },
   {
     id: "tune", job: "Vocal tuning", plain: "Correcting or reshaping the pitch of a vocal.",
-    stock: [],
-    beyond: "Live has no pitch-correction device, so this job always needs another plug-in.",
+    stock: ["auto-shift"],
+    beyond: "Live 12.1 and later has Auto Shift for real-time pitch correction on single-note vocals. For note-by-note editing of pitch and timing, or for chords, use a plug-in.",
     picks: [
       { name: "Melodyne", maker: "Celemony", price: "paid", why: "Edit each note's pitch and timing by hand." },
-      { name: "Auto-Tune", maker: "Antares", price: "paid", why: "Real-time pitch correction and the classic tuned-vocal effect." },
+      { name: "Auto-Tune", maker: "Antares", price: "paid", why: "The classic hard-tuned vocal effect, with finer control than Auto Shift." },
     ],
   },
   {
@@ -132,6 +133,6 @@ export const PLUGIN_JOBS: PluginJob[] = [
 
 export const FORMATS = [
   { name: "VST3", where: "Windows and macOS", note: "The current format. Prefer it when a plug-in offers a choice." },
-  { name: "VST2", where: "Windows and macOS", note: "Older. Live reads it from a folder you choose in Preferences." },
-  { name: "AU (Audio Units)", where: "macOS only", note: "Apple's format. Live scans it automatically." },
+  { name: "VST2", where: "Windows and macOS", note: "Older format. Turn on your VST plug-in folder under Settings > Plug-Ins > Plug-In Sources. On Windows you point Live at a custom folder." },
+  { name: "AU (Audio Units)", where: "macOS only", note: "Apple's format. Turn on Use Audio Units in Live's Plug-Ins settings and Live will list them." },
 ];

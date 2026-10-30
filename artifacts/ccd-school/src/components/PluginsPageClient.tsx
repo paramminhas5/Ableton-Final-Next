@@ -1,5 +1,5 @@
 "use client";
-import { atlasById } from "@/content/atlas";
+import { atlasById, editionNeeded } from "@/content/atlas";
 import { FORMATS, PLUGIN_JOBS, type Price } from "@/content/plugins";
 
 const PRICE: Record<Price, string> = { free: "Free", "free tier": "Free version", paid: "Paid" };
@@ -42,7 +42,7 @@ export function PluginsPageClient() {
                 {j.stock.map((id, i) => (
                   <span key={id}>
                     {i > 0 && ", "}
-                    <a className="underline" href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>
+                    <a className="underline" href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>{editionNeeded(id) && <span className="opacity-70"> ({editionNeeded(id) === "Suite" ? "Suite" : "Standard+"})</span>}
                   </span>
                 ))}
               </p>

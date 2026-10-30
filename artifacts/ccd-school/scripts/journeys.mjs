@@ -7,7 +7,8 @@
  */
 import { createRequire } from "node:module";
 // require() so a globally installed Playwright is found through NODE_PATH as well
-const { chromium } = createRequire(import.meta.url)("playwright");
+const pw = createRequire(import.meta.url)("playwright");
+const chromium = pw[process.env.BROWSER ?? "chromium"]; // BROWSER=firefox or webkit to cross-check
 import { gzipSync } from "node:zlib";
 import { writeFileSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -120,7 +121,8 @@ async function fresh(seed) {
   if (seed) await ctx.addInitScript((s) => { try { if (!localStorage.getItem("__seeded")) { for (const [k, v] of Object.entries(s)) localStorage.setItem(k, JSON.stringify(v)); localStorage.setItem("__seeded", "1"); } } catch {} }, seed);
   const p = await ctx.newPage();
   const errs = [];
-  p.on("pageerror", (e) => errs.push(e.message.slice(0, 120)));
+  // WebKit reports a fetch that was cancelled by navigating away as a page error; that is not a bug
+  p.on("pageerror", (e) => { if (!/access control checks/.test(e.message)) errs.push(e.message.slice(0, 120)); });
   p.on("response", (r) => { if (r.status() >= 500 && !/_vercel|posthog/.test(r.url())) errs.push(r.status() + " " + r.url()); });
   return { ctx, p, errs };
 }
@@ -172,11 +174,16 @@ console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
   await step.click();
   ok((await step.getAttribute("aria-pressed")) === "true", "tapping a grid square places a hit");
   await p.locator("button:has-text('PLAY')").first().click();
-  await p.waitForTimeout(900);
-  ok(await p.locator("button:has-text('STOP')").count() === 1, "play starts the sequencer");
-  const activeSeen = await p.locator("button.outline").count();
-  ok(activeSeen >= 1, "the playhead highlights a step while playing");
-  await p.locator("button:has-text('STOP')").click();
+  await p.waitForTimeout(2000);
+  if (process.env.BROWSER === "firefox" && await p.locator("button:has-text('STOP')").count() === 0) {
+    // headless Firefox in a container has no sound device, so the audio clock never starts
+    ok(await p.getByText("Sound is blocked").count() > 0, "no audio device: the page says sound is blocked instead of hanging");
+  } else {
+    ok(await p.locator("button:has-text('STOP')").count() === 1, "play starts the sequencer");
+    const activeSeen = await p.locator("button.outline").count();
+    ok(activeSeen >= 1, "the playhead highlights a step while playing");
+    await p.locator("button:has-text('STOP')").click();
+  }
   const [dl] = await Promise.all([p.waitForEvent("download"), p.locator("button:has-text('SAVE FOR LIVE')").click()]);
   const file = join(tmp, dl.suggestedFilename()); await dl.saveAs(file);
   const bytes = readFileSync(file);
@@ -400,7 +407,7 @@ console.log("\nJ8 Come-back loop: review, daily, ear gym, phone menu");
   await p.getByRole("button", { name: /START 5 MIN SESSION/ }).click();
   await p.waitForTimeout(3500);
   const gymErr = await p.locator("div.bg-hot.text-bone.px-3.py-2").first().innerText({ timeout: 500 }).catch(() => "");
-  ok(!gymErr, "ear gym starts a drill without an error" + (gymErr ? ": " + gymErr : ""));
+  ok(!gymErr || (process.env.BROWSER === "firefox" && /allow sound/.test(gymErr)), "ear gym starts a drill without an error" + (gymErr ? ": " + gymErr : ""));
   ok((await p.locator("button:visible").count()) >= 4, "the drill shows answer buttons");
   await p.getByRole("button", { name: /^End$/ }).click();
   await p.waitForTimeout(600);

@@ -62,7 +62,8 @@ export const ensureAudio = async (): Promise<boolean> => {
   const c = getCtx();
   if (!c) return false;
   if (c.state !== "running") {
-    try { await c.resume(); } catch {}
+    // resume() can wait forever when the browser has no audio device; do not hang the page on it
+    try { await Promise.race([c.resume(), new Promise((r) => setTimeout(r, 1500))]); } catch {}
   }
   if (c.state === "running") {
     primeIOS(c);

@@ -1,0 +1,50 @@
+name: CCD School browser tests
+
+on:
+  push:
+    paths: ["artifacts/ccd-school/**", ".github/workflows/school-e2e.yml"]
+  pull_request:
+    paths: ["artifacts/ccd-school/**"]
+  schedule:
+    - cron: "30 21 * * *" # nightly, 03:00 India time: plays every lesson through
+
+concurrency:
+  group: school-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Journeys and smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: artifacts/ccd-school
+    env:
+      AUTH_SECRET: ci-test-secret-not-a-real-one
+      AUTH_URL: http://localhost:3120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: artifacts/ccd-school/package-lock.json
+      - run: npm ci --legacy-peer-deps
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Start the app
+        run: |
+          nohup npx next start -p 3120 > /tmp/next.log 2>&1 &
+          npx --yes wait-on http://localhost:3120/ -t 60000
+      - run: BASE=http://localhost:3120 npm run journeys
+      - run: BASE=http://localhost:3120 npm run smoke
+      - name: Play every lesson (nightly only)
+        if: github.event_name == 'schedule'
+        run: |
+          DUMP_MISSIONS=1 npm run crawl:dump
+          BASE=http://localhost:3120 WORKERS=3 npm run crawl
+      - if: failure()
+        run: tail -50 /tmp/next.log

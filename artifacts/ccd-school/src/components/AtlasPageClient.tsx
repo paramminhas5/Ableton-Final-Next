@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
+import { editionNeeded, ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
 
 export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { slug: string; title: string }[]> }) {
   const [q, setQ] = useState("");
@@ -85,6 +85,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
             >
               <div className="flex items-baseline justify-between gap-3">
                 <h2 className="font-display text-2xl leading-none">{d.name}</h2>
+                {editionNeeded(d.id) && <span className="font-mono text-[10px] brutal-border bg-sun px-1">{editionNeeded(d.id) === "Suite" ? "Suite only" : "Standard or Suite"}</span>}
                 <span className="font-mono text-[10px] uppercase opacity-70">
                   {ATLAS_GROUPS.find((g) => g.id === d.group)?.label}
                 </span>
