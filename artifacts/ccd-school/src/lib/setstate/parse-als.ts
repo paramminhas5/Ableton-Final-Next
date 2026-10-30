@@ -191,6 +191,14 @@ class Builder implements XmlHandler {
 
     // ---- devices ----
     const parts = rel.split("/");
+    // devices inside racks: .../Devices/<Rack>/Branches/<X>Branch/DeviceChain/<Chain>/Devices/<Device>
+    // They count as devices on the same track, so "EQ Eight on a track" holds when it sits in a rack.
+    const last = parts.length - 1;
+    if (parts[0] === "DeviceChain" && parts[1] === "DeviceChain" && parts[2] === "Devices" && parts.includes("Branches")
+      && last >= 8 && parts[last - 1] === "Devices" && /^[A-Za-z0-9]+$/.test(tag)) {
+      t.devices.push({ name: tag, className: tag, params: {} });
+      return;
+    }
     if (parts[0] === "DeviceChain" && parts[1] === "DeviceChain" && parts[2] === "Devices") {
       if (parts.length === 4) {
         this.dev = { name: tag, className: tag, params: {} };

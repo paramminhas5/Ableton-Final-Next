@@ -62,7 +62,7 @@ export const DEFAULT_LIMITS: ParseLimits = {
   maxXmlBytes: 800 * 1024 * 1024,
   maxTracks: 256,
   maxNotesPerClip: 100_000,
-  maxDepth: 64,
+  maxDepth: 128,
 };
 
 export class AlsError extends Error {

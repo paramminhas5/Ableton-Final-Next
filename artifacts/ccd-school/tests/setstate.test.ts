@@ -113,7 +113,25 @@ describe("parseAls", () => {
     await expect(parseAls(big, { maxXmlBytes: 1000, maxTracks: 10, maxNotesPerClip: 10, maxDepth: 64 })).rejects.toMatchObject({ code: "too_large" });
   });
   it("enforces nesting depth", () => {
-    const deep = "<Ableton>\n<LiveSet>\n" + "<X>\n".repeat(80) + "</X>\n".repeat(80);
+    const deep = "<Ableton>\n<LiveSet>\n" + "<X>\n".repeat(200) + "</X>\n".repeat(200);
     expect(() => parseSetXml(deep)).toThrow(/nesting/);
+  });
+});
+
+describe("devices inside racks", () => {
+  const rack = `<?xml version="1.0" encoding="UTF-8"?>
+<Ableton><LiveSet><Tracks><AudioTrack Id="1"><Name><EffectiveName Value="Bus" /></Name>
+<DeviceChain><DeviceChain><Devices>
+<AudioEffectGroupDevice Id="0"><Branches><AudioEffectBranch Id="0"><DeviceChain><DeviceChain><Devices>
+<Eq8 Id="1"></Eq8><InstrumentGroupDevice Id="2"><Branches><InstrumentBranch Id="0"><DeviceChain><AudioToAudioDeviceChain><Devices><Saturator Id="3"></Saturator></Devices></AudioToAudioDeviceChain></DeviceChain></InstrumentBranch></Branches></InstrumentGroupDevice>
+</Devices></DeviceChain></DeviceChain></AudioEffectBranch></Branches></AudioEffectGroupDevice>
+<Limiter Id="9"></Limiter>
+</Devices></DeviceChain></DeviceChain></AudioTrack></Tracks></LiveSet></Ableton>`;
+  it("finds devices nested in racks, at any depth", () => {
+    const names = parseSetXml(rack.replace(/>/g, ">\n")).tracks[0].devices.map((d) => d.className);
+    expect(names).toContain("AudioEffectGroupDevice");
+    expect(names).toContain("Eq8");
+    expect(names).toContain("Saturator");
+    expect(names).toContain("Limiter");
   });
 });

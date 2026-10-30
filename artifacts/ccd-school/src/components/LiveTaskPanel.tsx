@@ -64,6 +64,10 @@ export function LiveTaskPanel({ slug }: { slug: string }) {
       <div className="font-mono text-[10px] uppercase opacity-70">DO IT IN LIVE{done ? " · DONE" : ` · ${task.xp} XP`}</div>
       <h3 className="font-display text-2xl leading-none">{task.title}</h3>
       <p className="font-mono text-sm">{task.task}</p>
+      <ol className="list-decimal pl-5 space-y-1 font-mono text-xs">
+        {task.steps.map((st) => <li key={st}>{st}</li>)}
+      </ol>
+      <p className="font-mono text-xs brutal-border bg-bone p-2"><b>Common mistake.</b> {task.mistake}</p>
       <input
         ref={input}
         type="file"
