@@ -119,3 +119,12 @@ export const ATLAS: AtlasDevice[] = [
 const XML_INDEX = new Map(ATLAS.flatMap((d) => d.xml.map((x) => [x, d.id] as const)));
 export const atlasIdForXml = (className: string) => XML_INDEX.get(className);
 export const atlasById = (id: string) => ATLAS.find((d) => d.id === id);
+
+/** Device Lab uses its own names; map them to Atlas entries. */
+const LAB_ALIASES: Record<string, string> = {
+  chorus: "chorus", phaser: "phaser-flanger", flanger: "phaser-flanger", "auto pan": "auto-pan",
+};
+export function atlasIdForLabName(name: string): string | undefined {
+  const k = name.trim().toLowerCase();
+  return LAB_ALIASES[k] ?? ATLAS.find((d) => d.name.toLowerCase() === k)?.id;
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ATLAS, ATLAS_GROUPS, atlasById, atlasIdForXml } from "../src/content/atlas";
+import { ATLAS, ATLAS_GROUPS, atlasById, atlasIdForXml, atlasIdForLabName as atlasIdForXmlName } from "../src/content/atlas";
 import { PLUGIN_JOBS } from "../src/content/plugins";
 import { SETUP } from "../src/content/setup";
 import { BUILD_STAGES } from "../src/content/build";
@@ -76,5 +76,13 @@ describe("build stages", () => {
   it("master stage looks at the main track only", () => {
     expect(run({ ...base, tracks: [trk({ devices: [dev("Limiter")] })] }).master).toBe(false);
     expect(run({ ...base, master: trk({ kind: "master", devices: [dev("Limiter")] }) }).master).toBe(true);
+  });
+});
+
+describe("Device Lab links to the Atlas", () => {
+  // names used in src/content/devices.ts (that file imports browser audio, so it is not loaded here)
+  const LAB = ["EQ Three","Compressor","Saturator","Reverb","Delay","Auto Filter","Chorus","Phaser","Glue Compressor","Limiter","EQ Eight","Gate","Overdrive","Erosion","Redux","Flanger","Vibrato","Echo","Grain Delay","Filter Delay","Drum Buss","Auto Pan","Frequency Shifter"];
+  it("every lab device with an Atlas equivalent resolves, and only Vibrato is left out", () => {
+    expect(LAB.filter((n) => !atlasIdForXmlName(n))).toEqual(["Vibrato"]);
   });
 });

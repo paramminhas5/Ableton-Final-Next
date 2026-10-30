@@ -42,6 +42,7 @@ const MORE_SECTIONS = [
     heading: "PRACTICE",
     links: [
       { to: "/gym",       label: "Ear Gym (5 min)"   },
+      { to: "/beat",      label: "First Beat" },
       { to: "/build",     label: "Build a Set" },
       { to: "/link",      label: "Check my Live Set" },
       { to: "/train",     label: "Ear Training"      },
@@ -555,6 +556,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             ]},
             { heading: "Practice", links: [
               { to: "/gym",       label: "Ear Gym (5 min)" },
+              { to: "/beat",      label: "First Beat" },
               { to: "/build",     label: "Build a Set" },
               { to: "/link",      label: "Check my Live Set" },
               { to: "/train",     label: "Ear Training"    },

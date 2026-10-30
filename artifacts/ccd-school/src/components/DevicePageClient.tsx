@@ -5,6 +5,7 @@ import { DeviceLab } from "@/components/DeviceLab";
 import { DeviceExplainers } from "@/components/DeviceExplainers";
 import { getDeviceExplainer } from "@/content/device-explainers";
 import { ClientOnly } from "@/components/ClientOnly";
+import { atlasById, atlasIdForLabName } from "@/content/atlas";
 
 export function DevicePageClient({ slug }: { slug: string }) {
   const d = deviceBySlug(slug);
@@ -23,6 +24,15 @@ export function DevicePageClient({ slug }: { slug: string }) {
         </div>
         <h1 className="text-5xl md:text-7xl mt-2">{d.name}</h1>
         <p className="font-mono mt-2 text-lg">{d.tagline}</p>
+        {(() => {
+          const id = atlasIdForLabName(d.name);
+          const a = id ? atlasById(id) : undefined;
+          return a ? (
+            <p className="font-mono text-sm mt-3">
+              In Live: {a.does} <Link href={`/atlas#${a.id}`} className="underline">Read the device guide</Link>.
+            </p>
+          ) : null;
+        })()}
       </header>
       <section className="grid md:grid-cols-2 gap-4">
         <div className="brutal-border bg-card p-4 brutal-shadow-sm">

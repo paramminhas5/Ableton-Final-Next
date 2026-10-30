@@ -16,6 +16,7 @@ import { useProgress } from "@/lib/progress";
 import { playCorrect, playWrong } from "@/lib/audio";
 import { PLACEMENT_QUESTIONS, scorePlacement, type PlacementQ } from "@/content/placement-questions";
 import { track } from "@/lib/analytics";
+import { startSlug } from "@/lib/startPoint";
 
 type Phase = "intro" | "quiz" | "results";
 type PickPhase = "picking" | "answered";
@@ -36,11 +37,6 @@ const WORLD_LABELS: Record<string, string> = {
   producer: "Producer",
 };
 
-const CHAPTER_FIRST_MISSION: Record<string, Record<number, string>> = {
-  fundamentals: { 1: "what-is-sound", 2: "syncopation", 3: "chords-and-keys" },
-  dj:           { 1: "what-is-djing", 2: "bpm-analysis-dj", 3: "beatmatching-manual" },
-  producer:     { 1: "what-is-live",  2: "midi-piano-roll", 3: "the-mixer" },
-};
 
 export function PlacementTest({ world, onSkip, onComplete }: Props) {
   const [phase, setPhase] = useState<Phase>("intro");
@@ -87,7 +83,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
       score: correctCount / Math.max(1, total),
     });
 
-    const firstMission = CHAPTER_FIRST_MISSION[world]?.[chapter] ?? "what-is-sound";
+    const firstMission = startSlug(world, chapter);
 
     if (onComplete) {
       // Embedded in OnboardingFlow — let the parent handle routing + setOnboarding

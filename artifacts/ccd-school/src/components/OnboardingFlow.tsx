@@ -155,7 +155,7 @@ function StepExperience({ onPick }: { onPick: (exp: "none" | "some" | "lots") =>
 
 // ─── Step 1 — World ───────────────────────────────────────────────────────────
 function StepWorld({ onPick, experience }: { onPick: (w: World) => void; experience: "none" | "some" | "lots" | null }) {
-  const isPlacementNext = experience === "some";
+  const isPlacementNext = experience === "some" || experience === "lots";
   return (
     <div className="space-y-6 animate-fade-in">
       <StepCat step={1} />
@@ -411,7 +411,7 @@ export function OnboardingFlow({ onDone }: { onDone?: () => void }) {
   const handleExperiencePick = (exp: "none" | "some" | "lots") => { setExperience(exp); setStep(1); };
   const handleWorldPick = (w: World) => {
     setSelectedWorld(w);
-    if (experience === "some") { setShowPlacement(true); } else { setStep(2); }
+    if (experience === "some" || experience === "lots") { setShowPlacement(true); } else { setStep(2); }
   };
   const handleModePick = (m: LearnMode) => {
     setSelectedMode(m);

@@ -31,6 +31,8 @@ import { CoachPanel } from "@/components/BeatCoach";
 import { formatDashboardContext } from "@/types/coach";
 import { useEffect, useState, useMemo, useRef } from "react";
 import SectionReveal from "@/components/SectionReveal";
+import { movesFor, stageFor } from "@/lib/nextMoves";
+import { startSlug } from "@/lib/startPoint";
 
 // ─── Daily Goal Ring ──────────────────────────────────────────────────────────
 function GoalRing({ pct, done }: { pct: number; done: boolean }) {
@@ -190,8 +192,8 @@ export function DashboardClient() {
       const ns = ctx.path.missionSlugs[idx + 1];
       return ns && !completed[ns] ? ns : null;
     })() : null;
-    return { continueSlug: nextSlug ?? (totalDone === 0 ? "what-is-sound" : null), lastCtx: ctx };
-  }, [completed, totalDone]);
+    return { continueSlug: nextSlug ?? (totalDone === 0 ? startSlug(progress.selectedWorld, progress.unlockedChapter) : null), lastCtx: ctx };
+  }, [completed, totalDone, progress.selectedWorld, progress.unlockedChapter]);
 
   const continueTitle = useMemo(() => {
     if (!continueSlug) return null;
@@ -336,6 +338,23 @@ export function DashboardClient() {
           )}
         </section>
         </SectionReveal>
+
+        {/* ══ NEXT MOVES (hands-on, by stage) ═══════════════════════════ */}
+        {hydrated && (
+          <section aria-label="Your next moves">
+            <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// YOUR NEXT MOVES</div>
+            <ul className="grid gap-3 sm:grid-cols-3">
+              {movesFor(stageFor({ completed: totalDone, placementDone: progress.placementDone })).map((m) => (
+                <li key={m.href}>
+                  <Link href={m.href} className="block h-full brutal-border bg-white p-4 chunk-shadow hover:translate-x-0.5 hover:translate-y-0.5 transition-transform">
+                    <div className="font-display text-xl leading-none">{m.title}</div>
+                    <p className="font-mono text-xs opacity-70 mt-2">{m.why}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* ══ DAILY GOAL + CHALLENGE ══════════════════════════════════ */}
         {hydrated && (

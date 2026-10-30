@@ -204,12 +204,6 @@ const CHAPTER_CAT_QUIPS: Record<string, string[]> = {
   producer: ["Welcome to Live! 🖥", "Sound design time!", "Mix it down 🎛", "Take it live! 🚀", "Expert territory!", "Synths unlocked 🌀"],
 };
 
-// Chapter first missions — for jumping to when test passed
-const CHAPTER_FIRST_MISSION: Record<WorldId, Record<number, string>> = {
-  fundamentals: { 1: "what-is-sound", 2: "syncopation", 3: "chords-and-keys", 4: "the-digital-studio", 5: "the-digital-studio" },
-  dj:           { 1: "what-is-djing", 2: "bpm-analysis-dj", 3: "beatmatching-manual", 4: "crowd-reading", 5: "advanced-effects-dj" },
-  producer:     { 1: "what-is-live",  2: "midi-piano-roll", 3: "the-mixer", 4: "push-3-intro", 5: "sampler-deep", 6: "synth-oscillators" },
-};
 
 function getMissions(world: WorldId): Mission[] {
   if (world === "fundamentals") return FOUNDATIONS_MISSIONS;

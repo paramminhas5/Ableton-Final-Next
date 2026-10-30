@@ -169,9 +169,16 @@ function mergeProgress(local: Progress, cloud: Partial<Progress>): Progress {
 type ProgressContextValue = ReturnType<typeof buildProgressValue>;
 
 // Build the value object from a state + setter pair
+// Latest committed state. Several mutators can fire in the same tick (e.g. the
+// placement test sets the chapter, then onboarding completes); each must build
+// on the newest state, not the render-time closure, or the first write is lost.
+let latest: Progress | null = null;
+
 function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
+  latest = p;
   // Centralised write: update React state AND persist in one call
   const commit = (next: Progress) => {
+    latest = next;
     setP(next);
     writeLocal(next);
   };
@@ -262,11 +269,12 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
   };
 
   const setOnboarding = (world: Progress["selectedWorld"], difficulty?: Progress["difficulty"]) => {
-    commit({ ...p, onboardingDone: true, selectedWorld: world, difficulty: difficulty ?? p.difficulty });
+    const b = latest ?? p;
+    commit({ ...b, onboardingDone: true, selectedWorld: world, difficulty: difficulty ?? b.difficulty });
   };
 
-  const setDifficulty = (difficulty: Progress["difficulty"]) => commit({ ...p, difficulty });
-  const setPlacement = (chapter: number) => commit({ ...p, placementDone: true, unlockedChapter: chapter });
+  const setDifficulty = (difficulty: Progress["difficulty"]) => commit({ ...(latest ?? p), difficulty });
+  const setPlacement = (chapter: number) => commit({ ...(latest ?? p), placementDone: true, unlockedChapter: chapter });
   const reset = () => commit(empty());
 
   // FSRS-powered review queue (uses retrievability < 0.9 threshold)

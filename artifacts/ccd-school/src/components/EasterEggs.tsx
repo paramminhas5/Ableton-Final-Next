@@ -18,6 +18,7 @@
  */
 import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ─── Konami Code ─────────────────────────────────────────────────────────────
@@ -207,6 +208,9 @@ export function EasterEggs() {
   const [discoActive,    setDiscoActive]    = useState(false);
   const [secretCat,      setSecretCat]      = useState(false);
   const [morningGreet,   setMorningGreet]   = useState(false);
+  const pathname = usePathname();
+  // A greeting must never sit on top of a quiz, lesson, drill or editor. Only calm pages get it.
+  const calmPage = pathname === "/dashboard"; // "/" hosts onboarding and the placement test, so it is excluded
   const [perfectScore,   setPerfectScore]   = useState(false);
   const [idleCat,        setIdleCat]        = useState(false);
   const [catClickCount,  setCatClickCount]  = useState(0);
@@ -285,7 +289,7 @@ export function EasterEggs() {
     <AnimatePresence>
       {discoActive && <DiscoOverlay key="disco" onDismiss={deactivateDisco} />}
       {secretCat   && <SecretCatOverlay key="secret" onDismiss={() => setSecretCat(false)} />}
-      {morningGreet && <MorningGreeting key="morning" onDismiss={() => setMorningGreet(false)} />}
+      {morningGreet && calmPage && <MorningGreeting key="morning" onDismiss={() => setMorningGreet(false)} />}
       {perfectScore && <PerfectScoreOverlay key="perfect" onDismiss={() => setPerfectScore(false)} />}
       {idleCat     && <IdleCat key="idle" onDismiss={() => setIdleCat(false)} />}
     </AnimatePresence>
