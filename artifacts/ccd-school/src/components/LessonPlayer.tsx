@@ -13,6 +13,7 @@
  */
 
 import { LessonLinksPanel } from "./LessonLinksPanel";
+import { LiveTaskPanel } from "./LiveTaskPanel";
 import { HeartsWall } from "./HeartsWall";
 import { useState, useRef, useCallback, useEffect, Component, type ReactNode, type ErrorInfo } from "react";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -676,6 +677,7 @@ function SummaryScreen({
         </ul>
       </div>
 
+      <LiveTaskPanel slug={mission.slug} />
       <LessonLinksPanel slug={mission.slug} />
 
       {/* ── SOURCE CITATION ─────────────────────────────────────────────── */}

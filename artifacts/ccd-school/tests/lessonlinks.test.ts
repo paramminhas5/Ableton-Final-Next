@@ -30,3 +30,14 @@ describe("lesson links", () => {
     expect(bad).toEqual([]);
   });
 });
+
+import { LIVE_TASKS } from "../src/content/liveTasks";
+describe("live tasks", () => {
+  it("point at real lessons and have checks", () => {
+    for (const [slug, t] of Object.entries(LIVE_TASKS)) {
+      expect(MISSIONS.some((m) => m.slug === slug), slug).toBe(true);
+      expect(t.checks.length, slug).toBeGreaterThan(0);
+      expect(t.xp).toBeGreaterThan(0);
+    }
+  });
+});

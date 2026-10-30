@@ -85,7 +85,7 @@ export function BuildPageClient() {
       <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-6">
         <header>
           <div className="font-mono text-[10px] uppercase opacity-40 mb-1">// BUILD A SET</div>
-          <h1 className="font-display text-4xl leading-none">YOUR FIRST TRACK, IN NINE STAGES.</h1>
+          <h1 className="font-display text-4xl leading-none">YOUR FIRST TRACK, IN {BUILD_STAGES.length} STAGES.</h1>
           <p className="font-mono text-xs opacity-60 mt-3">
             Do each stage in Live, save, and upload the .als here. We check your real Set. Nothing is stored and your file
             is never changed. New to Live? Start with <a className="underline" href="/setup">Setup</a>.

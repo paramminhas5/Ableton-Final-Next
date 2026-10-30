@@ -27,6 +27,7 @@ import { getMissionContext } from "@/lib/missionContext";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { LessonSourceBar } from "@/components/LessonSourceBar";
 import { LessonLinksPanel } from "@/components/LessonLinksPanel";
+import { LiveTaskPanel } from "@/components/LiveTaskPanel";
 
 const WORLD_BANNERS: Record<string, string> = {
   foundations: "https://v3b.fal.media/files/b/0a9d8573/T1yPDNCVhxrVLWBs3vPLK.jpg",
@@ -635,6 +636,7 @@ export function InlineClassicLesson({
         </Section>
 
         {/* ── SOURCE CITATION ────────────────────────────────────────────────── */}
+        <LiveTaskPanel slug={m.slug} />
         <LessonLinksPanel slug={m.slug} />
         <LessonSourceBar source={ctx?.path?.source} />
 

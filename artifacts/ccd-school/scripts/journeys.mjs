@@ -440,6 +440,31 @@ console.log("\nJ9 The pieces link together");
   await ctx.close();
 }
 
+// ───────────────────────── J10: "Do it in Live" lesson task checks the learner's own Set
+console.log("\nJ10 Do it in Live");
+{
+  const { ctx, p, errs } = await fresh(seedProgress());
+  await ctx.addInitScript(() => { try { localStorage.setItem("ccd.learnMode", "classic"); } catch {} });
+  await ctx.route("**/api/gating", (r) => r.fulfill({ json: { mode: "free" } }));
+  await p.goto(BASE + "/learn/tracks"); await p.waitForTimeout(1500);
+  const panel = p.locator("[data-testid=live-task]");
+  ok(await panel.count() > 0, "the Tracks lesson has a Do it in Live task");
+  await panel.locator("input[type=file]").setInputFiles(alsFile("defaults.als", { names: ["MIDI", "Audio", "MIDI 2"] }));
+  await p.waitForTimeout(1500);
+  ok((await panel.innerText()).includes("○"), "default track names do not pass");
+  ok(!(await panel.innerText()).includes("+20 XP"), "and earn no XP");
+  await panel.locator("input[type=file]").setInputFiles(alsFile("named.als"));
+  await p.waitForTimeout(1500);
+  ok((await panel.innerText()).includes("+20 XP"), "named tracks pass and earn XP");
+  await panel.locator("input[type=file]").setInputFiles(alsFile("named2.als"));
+  await p.waitForTimeout(1500);
+  ok(!(await panel.innerText()).includes("+20 XP"), "checking again does not pay twice");
+  const saved = await p.evaluate(() => localStorage.getItem("ccd.livetasks.v1"));
+  ok(saved && saved.includes("tracks"), "the task is remembered");
+  ok(errs.length === 0, "no page errors: " + JSON.stringify(errs));
+  await ctx.close();
+}
+
 await browser.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
