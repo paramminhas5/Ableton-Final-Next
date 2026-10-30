@@ -1,11 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const MONTHLY_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? "";
 const ANNUAL_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL ?? "";
+
+const INR_PRICE = {
+  monthly: process.env.NEXT_PUBLIC_INR_PRICE_MONTHLY ?? "",
+  annual: process.env.NEXT_PUBLIC_INR_PRICE_ANNUAL ?? "",
+};
+
+type Region = "global" | "india";
 
 const FEATURES = [
   { free: "First 3 missions per path", pro: "Every mission in every path" },
@@ -22,6 +29,26 @@ export function UpgradePageClient() {
   const [billing, setBilling] = useState<"monthly" | "annual">("annual");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [region, setRegion] = useState<Region>("global");
+  const [indiaOn, setIndiaOn] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/payments/options")
+      .then((r) => r.json())
+      .then((o: { razorpay?: boolean }) => {
+        if (!alive || !o.razorpay) return;
+        setIndiaOn(true);
+        try {
+          if (Intl.DateTimeFormat().resolvedOptions().timeZone === "Asia/Calcutta" ||
+              Intl.DateTimeFormat().resolvedOptions().timeZone === "Asia/Kolkata") {
+            setRegion("india");
+          }
+        } catch { /* default stays global */ }
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   const handleUpgrade = async () => {
     if (!user) {
@@ -29,18 +56,21 @@ export function UpgradePageClient() {
       return;
     }
     const priceId = billing === "monthly" ? MONTHLY_PRICE_ID : ANNUAL_PRICE_ID;
-    if (!priceId) {
+    if (region === "global" && !priceId) {
       setError("Payments are not yet configured. Please check back soon.");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
-      });
+      const res = await fetch(
+        region === "india" ? "/api/razorpay/checkout" : "/api/stripe/checkout",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(region === "india" ? { billing } : { priceId }),
+        },
+      );
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
@@ -82,6 +112,18 @@ export function UpgradePageClient() {
       </header>
 
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-10 pb-24">
+        {indiaOn && (
+          <div className="flex justify-center gap-0" role="group" aria-label="Payment region">
+            <button onClick={() => setRegion("global")}
+              className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${region === "global" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
+              Global · Card
+            </button>
+            <button onClick={() => setRegion("india")}
+              className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${region === "india" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
+              India · UPI / Card
+            </button>
+          </div>
+        )}
         <div className="flex justify-center gap-0">
           <button onClick={() => setBilling("monthly")}
             className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${billing === "monthly" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
@@ -110,7 +152,12 @@ export function UpgradePageClient() {
 
           <div className="brutal-border bg-acid p-6 brutal-shadow">
             <div className="font-mono text-[10px] uppercase opacity-60 mb-3">CCD PRO</div>
-            {billing === "monthly" ? (
+            {region === "india" ? (
+              <div>
+                <div className="font-display text-4xl mb-1">{INR_PRICE[billing] || "INR"}</div>
+                <div className="font-mono text-xs opacity-60 mb-6">per {billing === "monthly" ? "month" : "year"} · billed in rupees</div>
+              </div>
+            ) : billing === "monthly" ? (
               <div>
                 <div className="font-display text-4xl mb-1">£9</div>
                 <div className="font-mono text-xs opacity-60 mb-6">per month</div>
@@ -135,7 +182,7 @@ export function UpgradePageClient() {
             )}
             <button onClick={handleUpgrade} disabled={loading}
               className="brutal-border bg-ink text-bone px-6 py-3 font-mono text-xs uppercase brutal-press w-full disabled:opacity-50 hover:bg-volt hover:text-ink transition-colors">
-              {loading ? "Redirecting..." : user ? `GET PRO — ${billing === "monthly" ? "£9/mo" : "£79/yr"} →` : "SIGN IN TO UPGRADE →"}
+              {loading ? "Redirecting..." : user ? `GET PRO${region === "india" ? (INR_PRICE[billing] ? ` — ${INR_PRICE[billing]}` : "") : ` — ${billing === "monthly" ? "£9/mo" : "£79/yr"}`} →` : "SIGN IN TO UPGRADE →"}
             </button>
             {!user && (
               <p className="font-mono text-[9px] opacity-50 mt-2 text-center">You&apos;ll be prompted to sign in first</p>
@@ -153,7 +200,7 @@ export function UpgradePageClient() {
         </div>
 
         <div className="font-mono text-[9px] uppercase opacity-30 text-center">
-          Cancel anytime · No hidden fees · Secure payment via Stripe
+          Cancel anytime · No hidden fees · Secure payment via {region === "india" ? "Razorpay" : "Stripe"}
         </div>
       </div>
     </main>

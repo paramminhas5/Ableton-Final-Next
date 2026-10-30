@@ -24,8 +24,7 @@ export async function POST(request: Request) {
       );
     }
     const origin =
-      request.headers.get("origin") ??
-      `https://${process.env.REPLIT_DOMAINS?.split(",")[0]}`;
+      request.headers.get("origin") ?? process.env.NEXT_PUBLIC_SITE_URL ?? "";
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${origin}/profile`,

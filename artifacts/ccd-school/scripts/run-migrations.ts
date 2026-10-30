@@ -9,6 +9,7 @@ async function migrate() {
   const sql = readFileSync(join(__dirname, "init-db.sql"), "utf8");
   console.log("Running DB migrations…");
   await pool.query(sql);
+  await pool.query(readFileSync(join(__dirname, "migrate-razorpay.sql"), "utf8"));
   console.log("Migrations complete.");
   await pool.end();
 }

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT,
   plan          TEXT NOT NULL DEFAULT 'free',
   stripe_customer_id TEXT,
+  razorpay_subscription_id TEXT,
   total_xp      INTEGER NOT NULL DEFAULT 0,
   streak        INTEGER NOT NULL DEFAULT 0,
   hearts        INTEGER NOT NULL DEFAULT 3,
