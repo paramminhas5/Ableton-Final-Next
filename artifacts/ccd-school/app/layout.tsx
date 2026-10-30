@@ -228,7 +228,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* Footer hidden on mobile — bottom nav takes its place */}
             <footer className="hidden md:block border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest flex items-center justify-between gap-4">
               <span>CCD<span className="text-acid">.</span>SCHOOL</span>
-              <span className="font-mono text-[10px] opacity-50">CATSCANDANCE · LEARN.CATSCANDANCE.COM · 2026</span>
+              <span className="font-mono text-[10px] opacity-50">
+                A <a href="https://catscandance.com" className="underline hover:text-acid hover:opacity-100">CATS CAN DANCE</a> PROJECT · 2026
+              </span>
               <span className="text-acid">★</span>
             </footer>
           </div>
