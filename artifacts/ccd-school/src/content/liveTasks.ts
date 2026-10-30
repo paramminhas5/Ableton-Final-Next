@@ -143,4 +143,114 @@ export const LIVE_TASKS: Record<string, LiveTask> = {
     mistake: "A limiter is a safety net, not a volume knob. If you need more than 3 or 4 dB of gain reduction, fix the mix first.",
     checks: [{ id: "lim", label: "A Limiter on the Master", hint: "Drop Limiter at the end of the Master track's chain.", check: { type: "device", classNames: ["Limiter"], on: "master" } }],
   },
+  "midi-effects": {
+    title: "Play one note, hear a chord",
+    task: "Put Arpeggiator or Chord on a MIDI track, before the instrument. Save the Set.",
+    xp: 20,
+    steps: ["Pick a MIDI track that has an instrument.", "Drag Chord or Arpeggiator from MIDI Effects onto the track, to the left of the instrument.", "Play or draw a single note and listen to what comes out.", "Change the Shift values in Chord, or Rate in Arpeggiator, and listen again."],
+    mistake: "MIDI effects change the notes before the instrument hears them. After the instrument they do nothing.",
+    checks: [
+      { id: "fx", label: "A Chord or Arpeggiator on a MIDI track", hint: "Search for Chord or Arpeggiator in the browser and drop it before the instrument.", check: {"type": "device", "classNames": ["MidiChord", "MidiArpeggiator"], "on": "midi"} },
+    ],
+  },
+  "midi-effects-tour": {
+    title: "Add some life with MIDI effects",
+    task: "Put Random or Velocity on a MIDI track. Save the Set.",
+    xp: 20,
+    steps: ["Pick a MIDI track, ideally a hi-hat or arp.", "Drag Velocity or Random from MIDI Effects onto it, before the instrument.", "Set a low Chance on Random, or Randomize on Velocity.", "Play it back. Every loop should differ a little."],
+    mistake: "A little goes a long way. Full randomness sounds broken, not human.",
+    checks: [
+      { id: "fx", label: "A Random or Velocity device on a MIDI track", hint: "Search for Random or Velocity in the MIDI Effects folder.", check: {"type": "device", "classNames": ["MidiRandom", "MidiVelocity"], "on": "midi"} },
+    ],
+  },
+  "racks-macros": {
+    title: "Build a rack",
+    task: "Group a device into an Audio Effect Rack. Save the Set.",
+    xp: 25,
+    steps: ["Drop two or three effects on a track, for example EQ Eight and Saturator.", "Select them all and press Cmd/Ctrl + G. They go into an Audio Effect Rack.", "Click Show/Hide Macros at the rack's left edge.", "Right-click a knob inside and choose Map to Macro 1."],
+    mistake: "Grouping with Cmd/Ctrl + G inside a device chain makes a rack. Grouping tracks uses the same shortcut but makes a group track.",
+    checks: [
+      { id: "rack", label: "An Audio Effect Rack on a track", hint: "Select devices in the chain and press Cmd/Ctrl + G.", check: {"type": "device", "classNames": ["AudioEffectGroupDevice"]} },
+    ],
+  },
+  "instrument-rack": {
+    title: "Layer two sounds",
+    task: "Build an Instrument Rack on a MIDI track. Save the Set.",
+    xp: 25,
+    steps: ["Drop an instrument on a MIDI track.", "Press Cmd/Ctrl + G to wrap it in an Instrument Rack.", "Drag a second instrument into the rack's chain list so you have two chains.", "Play a note: both chains sound."],
+    mistake: "Layers fight for the same frequencies. Pull one chain down or high-pass it so they do not turn to mud.",
+    checks: [
+      { id: "rack", label: "An Instrument Rack on a track", hint: "Select the instrument and press Cmd/Ctrl + G.", check: {"type": "device", "classNames": ["InstrumentGroupDevice"]} },
+    ],
+  },
+  "sampler-simpler": {
+    title: "Play a sample",
+    task: "Load Simpler on a MIDI track and write at least 4 notes. Save the Set.",
+    xp: 25,
+    steps: ["Drag Simpler from Instruments onto a MIDI track, or drag a sample straight onto the track.", "Drop a sample onto Simpler's waveform area.", "Insert a clip with Cmd/Ctrl + Shift + M and draw 4 or more notes.", "Try Classic, One-Shot and Slice modes at the top and listen."],
+    mistake: "A sample plays higher or lower depending on the note. If it sounds wrong, check the Transpose setting.",
+    checks: [
+      { id: "simpler", label: "Simpler or Sampler on a track with at least 4 notes", hint: "Load Simpler, drop in a sample, then draw notes in a clip.", check: {"type": "trackWith", "classNames": ["OriginalSimpler", "MultiSampler"], "minNotes": 4} },
+    ],
+  },
+  "wavetable": {
+    title: "Make a Wavetable patch",
+    task: "Put Wavetable on a MIDI track and write at least 4 notes. Save the Set.",
+    xp: 25,
+    steps: ["Drag Wavetable from Instruments onto a MIDI track.", "Pick a wavetable from Oscillator 1's chooser.", "Draw 4 or more notes in a clip.", "Play and move the Wave Position slider while a note rings."],
+    mistake: "Wavetable is Suite only. On Standard or Intro, use Drift or Analog instead.",
+    checks: [
+      { id: "wt", label: "Wavetable on a track with at least 4 notes", hint: "Drop Wavetable on a MIDI track and draw notes.", check: {"type": "trackWith", "classNames": ["InstrumentVector"], "minNotes": 4} },
+    ],
+  },
+  "operator": {
+    title: "Make an FM sound",
+    task: "Put Operator on a MIDI track and write at least 4 notes. Save the Set.",
+    xp: 25,
+    steps: ["Drag Operator from Instruments onto a MIDI track.", "Turn on Oscillator B and raise its level a little to hear it modulate A.", "Draw 4 or more notes.", "Change B's Coarse value in whole steps and listen to the tone change."],
+    mistake: "FM is sensitive. Small moves in level change the tone a lot. Go slowly.",
+    checks: [
+      { id: "op", label: "Operator on a track with at least 4 notes", hint: "Drop Operator on a MIDI track and draw notes.", check: {"type": "trackWith", "classNames": ["Operator"], "minNotes": 4} },
+    ],
+  },
+  "drift": {
+    title: "Make a Drift patch",
+    task: "Put Drift on a MIDI track and write at least 4 notes. Save the Set.",
+    xp: 20,
+    steps: ["Drag Drift from Instruments onto a MIDI track.", "Draw 4 or more notes in a clip.", "Turn Drift up a little for analog-style wobble.", "Shape the sound with the filter and the envelopes."],
+    mistake: "Drift's wobble is part of its character. If the pitch feels loose, turn Drift down.",
+    checks: [
+      { id: "drift", label: "Drift on a track with at least 4 notes", hint: "Drop Drift on a MIDI track and draw notes.", check: {"type": "trackWith", "classNames": ["Drift"], "minNotes": 4} },
+    ],
+  },
+  "glue-compressor": {
+    title: "Glue your drums",
+    task: "Put Glue Compressor on a group track. Save the Set.",
+    xp: 25,
+    steps: ["Group your drum tracks with Cmd/Ctrl + G.", "Drag Glue Compressor onto the group track.", "Set Attack to 10 to 30 ms and Release to Auto or 0.2 s.", "Lower the Threshold until you see 1 to 3 dB of gain reduction."],
+    mistake: "Glue works by being gentle. If you hear it pumping, back off the threshold.",
+    checks: [
+      { id: "glue", label: "Glue Compressor on a group track", hint: "Group some tracks first, then drop Glue Compressor on the group.", check: {"type": "device", "classNames": ["GlueCompressor"], "on": "group"} },
+    ],
+  },
+  "reverb-delay": {
+    title: "Send a vocal to space",
+    task: "Put a reverb or delay on a return track. Save the Set.",
+    xp: 25,
+    steps: ["Press Cmd/Ctrl + Alt + T to make a return track.", "Drop Reverb, Echo or Delay on it.", "On the return, set Dry/Wet to 100%.", "Turn up the Send on a track and listen to the space."],
+    mistake: "If everything is soaked in reverb, nothing is close. Send only some tracks.",
+    checks: [
+      { id: "ret", label: "A reverb or delay on a return track", hint: "Make a return with Cmd/Ctrl + Alt + T and drop a reverb or delay on it.", check: {"type": "device", "classNames": ["Reverb", "Hybrid", "Echo", "Delay", "FilterDelay"], "on": "return"} },
+    ],
+  },
+  "roar": {
+    title: "Shape with Roar",
+    task: "Put Roar on any track. Save the Set.",
+    xp: 20,
+    steps: ["Drag Roar from Audio Effects onto a drum or bass track.", "Pick a Shaper type in the Roar display and raise Drive.", "Use Dry/Wet to blend it back.", "Click the device on and off to compare, with levels matched."],
+    mistake: "Roar is Suite only. On other editions, Saturator and Overdrive do much of the same job.",
+    checks: [
+      { id: "roar", label: "A Roar on a track", hint: "Search for Roar in Audio Effects and drop it on a track.", check: {"type": "device", "classNames": ["Roar"]} },
+    ],
+  },
 };
