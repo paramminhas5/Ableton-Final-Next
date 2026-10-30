@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 
-interface TrackRow { name: string; kind: string; devices: string[]; clips: number; notes: number; sidechain: string[] }
+interface TrackRow { name: string; kind: string; devices: { name: string; atlasId: string | null }[]; clips: number; notes: number; sidechain: string[] }
 interface Result {
   set: {
     liveVersion: string; tempo: number; timeSignature: [number, number];
@@ -104,7 +104,16 @@ export function LinkPageClient() {
                   <li key={i} className="py-2 font-mono text-xs flex flex-wrap gap-x-3">
                     <span className="font-bold">{t.name || "(unnamed)"}</span>
                     <span className="opacity-50">{t.kind}</span>
-                    {t.devices.length > 0 && <span>{t.devices.join(", ")}</span>}
+                    {t.devices.length > 0 && (
+                      <span>
+                        {t.devices.map((d, k) => (
+                          <span key={k}>
+                            {k > 0 && ", "}
+                            {d.atlasId ? <a className="underline" href={`/atlas#${d.atlasId}`}>{d.name}</a> : d.name}
+                          </span>
+                        ))}
+                      </span>
+                    )}
                     {t.notes > 0 && <span className="opacity-50">{t.notes} notes</span>}
                     {t.sidechain.length > 0 && <span>sidechain: {t.sidechain.join(", ")}</span>}
                   </li>

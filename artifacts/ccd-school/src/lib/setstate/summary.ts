@@ -1,11 +1,12 @@
 import type { SetState } from "./types";
+import { atlasIdForXml } from "@/content/atlas";
 
 /** What the browser needs to show. No notes, no file paths, nothing from the Set that is not displayed. */
 export function summarizeSet(s: SetState) {
   const row = (t: SetState["tracks"][number]) => ({
     name: t.name,
     kind: t.kind,
-    devices: t.devices.map((d) => d.name),
+    devices: t.devices.map((d) => ({ name: d.name, atlasId: atlasIdForXml(d.className) ?? null })),
     clips: t.clips.length,
     notes: t.clips.reduce((a, c) => a + (c.notes?.length ?? 0), 0),
     sidechain: t.routing.sidechainSources,

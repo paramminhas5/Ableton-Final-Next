@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { AlsError, SET_MISSIONS, checkMissions, parseAls } from "@/lib/setstate";
 import { summarizeSet } from "@/lib/setstate/summary";
+import { BUILD_STAGES } from "@/content/build";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -28,7 +29,9 @@ export async function POST(request: Request) {
   if (file.size > MAX_BYTES) return NextResponse.json({ error: "That file is over 30 MB." }, { status: 413 });
   try {
     const state = await parseAls(new Uint8Array(await file.arrayBuffer()));
-    return NextResponse.json({ set: summarizeSet(state), missions: checkMissions(SET_MISSIONS, state) });
+    return NextResponse.json({ set: summarizeSet(state), missions: checkMissions(SET_MISSIONS, state),
+      build: checkMissions(BUILD_STAGES.map((b) => ({ id: b.id, title: b.title, why: b.why, checks: b.checks })), state),
+    });
   } catch (e) {
     if (e instanceof AlsError) return NextResponse.json({ error: MESSAGES[e.code] }, { status: 422 });
     return NextResponse.json({ error: "Could not read that file." }, { status: 500 });

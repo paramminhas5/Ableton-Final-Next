@@ -42,6 +42,7 @@ const MORE_SECTIONS = [
     heading: "PRACTICE",
     links: [
       { to: "/gym",       label: "Ear Gym (5 min)"   },
+      { to: "/build",     label: "Build a Set" },
       { to: "/link",      label: "Check my Live Set" },
       { to: "/train",     label: "Ear Training"      },
       { to: "/challenge", label: "Daily Challenge ⚡" },
@@ -55,6 +56,9 @@ const MORE_SECTIONS = [
       { to: "/glossary",    label: "Glossary"     },
       { to: "/shortcuts",   label: "Shortcuts"    },
       { to: "/devices",     label: "Devices"      },
+      { to: "/atlas",       label: "Device Atlas" },
+      { to: "/plugins",     label: "Plugin Guide" },
+      { to: "/setup",       label: "Setup Guide"  },
       { to: "/signal-flow", label: "Signal Flow"  },
     ],
   },
@@ -551,6 +555,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
             ]},
             { heading: "Practice", links: [
               { to: "/gym",       label: "Ear Gym (5 min)" },
+              { to: "/build",     label: "Build a Set" },
               { to: "/link",      label: "Check my Live Set" },
               { to: "/train",     label: "Ear Training"    },
               { to: "/challenge", label: "Daily Challenge" },
@@ -561,6 +566,9 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               { to: "/glossary",    label: "Glossary"    },
               { to: "/shortcuts",   label: "Shortcuts"   },
               { to: "/devices",     label: "Devices"     },
+              { to: "/atlas",       label: "Device Atlas" },
+              { to: "/plugins",     label: "Plugin Guide" },
+              { to: "/setup",       label: "Setup Guide" },
               { to: "/signal-flow", label: "Signal Flow" },
             ]},
             { heading: "Account", links: [

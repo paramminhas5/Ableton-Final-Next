@@ -3,12 +3,18 @@ import type { SetState, Track } from "./types";
 /** A single thing a mission looks for in a Set. Pure data so specs can live in a database later. */
 export type Check =
   | { type: "namedTracks"; min?: number } // tracks renamed from Live's defaults
-  | { type: "device"; classNames: string[]; on?: "any" | "return" | "group" | "midi" | "audio"; min?: number }
+  | { type: "device"; classNames: string[]; on?: "any" | "return" | "group" | "midi" | "audio" | "master"; min?: number }
   | { type: "sidechain"; min?: number }
   | { type: "groupWithChildren"; minChildren: number }
   | { type: "sendUsed"; min?: number }
-  | { type: "tempo"; min: number; max: number }
-  | { type: "midiNotes"; min: number };
+  | { type: "tempo"; min: number; max: number; not?: number }
+  | { type: "midiNotes"; min: number }
+  /** a track holding one of these devices that also has at least minNotes MIDI notes */
+  | { type: "trackWith"; classNames: string[]; minNotes: number }
+  /** this many MIDI tracks that have notes in them */
+  | { type: "midiTracksWithNotes"; min: number }
+  /** arrangement view length: end of the last arrangement clip, in beats */
+  | { type: "arrangementBeats"; min: number };
 
 export interface CheckSpec {
   id: string;
@@ -43,6 +49,7 @@ export interface MissionResult {
 
 const DEFAULT_NAME = /^(\d+[-\s])?(midi|audio)(\s*\d+)?$/i;
 
+const noteCount = (t: Track) => t.clips.reduce((a, cl) => a + (cl.notes?.length ?? 0), 0);
 const allTracks = (s: SetState) => [...s.tracks, ...s.returns];
 
 function runCheck(c: Check, s: SetState): { pass: boolean; found: string } {
@@ -58,6 +65,7 @@ function runCheck(c: Check, s: SetState): { pass: boolean; found: string } {
         : c.on === "group" ? s.tracks.filter((t) => t.kind === "group")
         : c.on === "midi" ? s.tracks.filter((t) => t.kind === "midi")
         : c.on === "audio" ? s.tracks.filter((t) => t.kind === "audio")
+        : c.on === "master" ? [s.master]
         : allTracks(s);
       const n = pool.reduce((a, t) => a + t.devices.filter((d) => c.classNames.includes(d.className)).length, 0);
       return { pass: n >= (c.min ?? 1), found: n ? `${n} found` : "none found" };
@@ -76,8 +84,28 @@ function runCheck(c: Check, s: SetState): { pass: boolean; found: string } {
       const n = s.tracks.filter((t) => t.mixer.sendsDb.some((d) => d > -60)).length;
       return { pass: n >= (c.min ?? 1), found: n ? `${n} track${n > 1 ? "s" : ""} sending to a return` : "all sends are off" };
     }
-    case "tempo":
-      return { pass: s.tempo >= c.min && s.tempo <= c.max, found: `${Math.round(s.tempo * 10) / 10} BPM` };
+    case "tempo": {
+      const bpm = Math.round(s.tempo * 10) / 10;
+      return { pass: s.tempo >= c.min && s.tempo <= c.max && (c.not === undefined || Math.round(s.tempo) !== c.not), found: `${bpm} BPM` };
+    }
+    case "trackWith": {
+      const n = s.tracks.filter(
+        (t) => t.devices.some((d) => c.classNames.includes(d.className)) && noteCount(t) >= c.minNotes,
+      ).length;
+      return { pass: n > 0, found: n ? "found" : "no track with that device and enough notes" };
+    }
+    case "midiTracksWithNotes": {
+      const n = s.tracks.filter((t) => t.kind === "midi" && noteCount(t) > 0).length;
+      return { pass: n >= c.min, found: `${n} MIDI track${n === 1 ? "" : "s"} with notes` };
+    }
+    case "arrangementBeats": {
+      const end = s.tracks.reduce(
+        (m, t) => t.clips.reduce((b, cl) => (cl.view === "arrangement" ? Math.max(b, (cl.startBeat ?? 0) + cl.lengthBeats) : b), m),
+        0,
+      );
+      const bars = Math.floor(end / s.timeSignature[0]);
+      return { pass: end >= c.min, found: end ? `arrangement runs ${bars} bars` : "nothing in the arrangement yet" };
+    }
     case "midiNotes": {
       const n = s.tracks.reduce((a, t) => a + t.clips.reduce((b, cl) => b + (cl.notes?.length ?? 0), 0), 0);
       return { pass: n >= c.min, found: `${n} notes` };
