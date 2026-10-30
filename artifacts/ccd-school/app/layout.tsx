@@ -3,8 +3,9 @@ import "./globals.css";
 import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
 import { Analytics } from "@vercel/analytics/next";
+import { CcdFooterLinks } from "@/components/CcdSuite";
+import { CCD_URL, SITE_URL } from "@/lib/ccd";
 
-const SITE_URL = "https://ccd.school";
 // FAL AI generated OG image — brutalist three-zone music poster (v2)
 const OG_IMAGE =
   "https://v3b.fal.media/files/b/0a9d8573/kIC5zvi9T5FiU2uyp8GEM.jpg";
@@ -226,10 +227,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main id="main-content" className="flex-1">{children}</main>
             {/* Footer hidden on mobile — bottom nav takes its place */}
-            <footer className="hidden md:block border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest flex items-center justify-between gap-4">
+            <footer className="hidden md:flex border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest items-center justify-between gap-4">
               <span>CCD<span className="text-acid">.</span>SCHOOL</span>
+              <CcdFooterLinks />
               <span className="font-mono text-[10px] opacity-50">
-                A <a href="https://catscandance.com" className="underline hover:text-acid hover:opacity-100">CATS CAN DANCE</a> PROJECT · 2026
+                A <a href={CCD_URL} className="underline hover:text-acid hover:opacity-100">CATS CAN DANCE</a> PROJECT · 2026
               </span>
               <span className="text-acid">★</span>
             </footer>

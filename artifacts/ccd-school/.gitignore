@@ -9,3 +9,6 @@ node_modules/
 # Misc
 .env*.local
 *.log
+
+# Test coverage
+coverage/

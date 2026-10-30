@@ -1,0 +1,25 @@
+# CCD.SCHOOL
+
+> Learn music production and DJing with structured, gamified missions. A Cats Can Dance project, built in Bengaluru.
+
+CCD.SCHOOL teaches through short missions with interactive sound simulators (all audio is synthesised in the browser) and quizzes. Progress is tracked with XP, streaks and spaced-repetition review.
+
+## Worlds
+- Fundamentals: 40 missions on sound, rhythm, melody, harmony and music technology.
+- DJ World: 40 missions on setup, library, mixing, performance and mastery, based on the rekordbox manual.
+- Producer: 73 missions on Ableton Live 12, sound design, MIDI, mixing, performance and synthesis.
+
+## Pages
+- /worlds: choose a world
+- /missions: all 153 missions
+- /glossary: music production and DJ terms
+- /devices: Ableton device explainers
+- /signal-flow: how audio moves through a mixer and a DAW
+- /placement: placement test to find your starting point
+- /leaderboard: weekly XP leaderboard
+
+## Access
+The first three missions of every path are free. The rest need a Pro plan.
+
+## Part of Cats Can Dance
+Cats Can Dance is a Bengaluru music and pet-culture brand: https://catscandance.com

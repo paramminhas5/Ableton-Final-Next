@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { WorldsPageClient } from "@/components/WorldsPageClient";
+import { CcdSceneCards } from "@/components/CcdSuite";
 
 export const metadata: Metadata = {
   title: "Worlds — CCD.SCHOOL",
@@ -12,5 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function WorldsPage() {
-  return <WorldsPageClient />;
+  return (
+    <>
+      <WorldsPageClient />
+      <CcdSceneCards />
+    </>
+  );
 }

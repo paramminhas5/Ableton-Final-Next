@@ -11,6 +11,7 @@
  */
 
 import Link from "next/link";
+import { CCD_LINKS } from "@/lib/ccd";
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -564,6 +565,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
               { to: "/shop",        label: "Gem Shop 💎"    },
               { to: "/placement",   label: "Placement Test" },
             ]},
+            { heading: "Cats Can Dance", links: CCD_LINKS.map((l) => ({ to: l.href, label: l.label })) },
           ].map(({ heading, links }) => (
             <div key={heading}>
               <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-40 tracking-widest border-t-4 border-ink">
