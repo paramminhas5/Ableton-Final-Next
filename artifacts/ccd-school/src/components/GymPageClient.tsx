@@ -21,7 +21,7 @@ import {
   type GymQuestion,
   type SessionResult,
 } from "@/lib/gym/engine";
-import { ABPlayer, renderMatchedPair } from "@/lib/gym/render";
+import { ABPlayer, REAL_BPM, loadRealKit, renderMatchedPair } from "@/lib/gym/render";
 import { freshSaved, loadGym, saveGym, type GymSaved } from "@/lib/gym/store";
 import { canUsePass, recordSession, takeFreePass, weekStatus } from "@/lib/gym/week";
 
@@ -107,17 +107,18 @@ export function GymPageClient() {
       if (drill === "eq") {
         const e = makeEqQuestion(level, rng);
         question = e;
-        pair = await renderMatchedPair(
-          { bpm: 112 },
-          { bpm: 112, eq: { hz: e.answerHz, db: e.boostDb, q: e.q } },
-        );
+        const kit = await loadRealKit();
+        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
+        pair = await renderMatchedPair(base, { ...base, eq: { hz: e.answerHz, db: e.boostDb, q: e.q } });
       } else if (drill === "compression") {
         const k = makeCompressionQuestion(level, rng);
         question = k;
+        const kit = await loadRealKit();
+        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
         pair = await renderMatchedPair(
-          { bpm: 112 },
+          base,
           {
-            bpm: 112,
+            ...base,
             comp: k.compressed
               ? { thresholdDb: k.thresholdDb, ratio: k.ratio, attack: k.attack }
               : undefined,

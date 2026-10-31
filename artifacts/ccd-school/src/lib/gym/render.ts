@@ -6,7 +6,7 @@
 import { getCtx, getMaster } from "@/lib/audio";
 import { mulberry32 } from "./engine";
 import type { AttackSetting } from "./engine";
-import { applyGain, matchGain } from "./loudness";
+import { applyGain, matchGain, peak } from "./loudness";
 
 export interface RenderOpts {
   bpm: number;
@@ -15,6 +15,54 @@ export interface RenderOpts {
   bars?: number;
   eq?: { hz: number; db: number; q: number };
   comp?: { thresholdDb: number; ratio: number; attack: AttackSetting };
+  /** real recorded sounds; when set, bpm must be REAL_BPM */
+  kit?: RealKit;
+  /** which two-bar slice (0..3) of the piano loop to play */
+  segment?: number;
+}
+
+/** Real recorded one-shots and a piano loop, used for the EQ and compression drills. */
+export interface RealKit {
+  kick: AudioBuffer;
+  clap: AudioBuffer;
+  snare: AudioBuffer;
+  hat: AudioBuffer;
+  piano: AudioBuffer;
+}
+/** The piano loop is 8 bars at 140 BPM, so drills that use it run at 140. */
+export const REAL_BPM = 140;
+
+let kitPromise: Promise<RealKit | null> | null = null;
+/** Loads the real sounds once. Returns null when they cannot be fetched or decoded, and the drill falls back to synth sounds. */
+export function loadRealKit(): Promise<RealKit | null> {
+  if (typeof window === "undefined" || typeof OfflineAudioContext === "undefined") return Promise.resolve(null);
+  kitPromise ??= (async () => {
+    try {
+      const dec = new OfflineAudioContext(1, 1, 44100);
+      const get = async (file: string) => {
+        const r = await fetch(`/audio/real/${file}`);
+        if (!r.ok) throw new Error(file);
+        return dec.decodeAudioData(await r.arrayBuffer());
+      };
+      const [kick, clap, snare, hat, piano] = await Promise.all([
+        get("kick.wav"), get("clap.wav"), get("snare.wav"), get("hat.wav"), get("piano-140.mp3"),
+      ]);
+      return { kick, clap, snare, hat, piano };
+    } catch {
+      kitPromise = null;
+      return null;
+    }
+  })();
+  return kitPromise;
+}
+
+function shot(c: OfflineCtx, out: AudioNode, buf: AudioBuffer, t: number, gain: number) {
+  const s = c.createBufferSource();
+  s.buffer = buf;
+  const g = c.createGain();
+  g.gain.value = gain;
+  s.connect(g).connect(out);
+  s.start(t);
 }
 
 const SR = 44100;
@@ -148,6 +196,30 @@ export async function renderLoop(opts: RenderOpts): Promise<AudioBuffer> {
 
   const eighth = beat / 2;
   const shift = (opts.swing ?? 0) * (2 / 3) * eighth;
+
+  if (opts.kit) {
+    const k = opts.kit;
+    const seg = (opts.segment ?? 0) % 4;
+    const loopBar = 4 * beat;
+    const p = c.createBufferSource();
+    p.buffer = k.piano;
+    const pg = c.createGain();
+    pg.gain.value = 0.6;
+    p.connect(pg).connect(bus);
+    p.start(0, seg * 2 * loopBar, seconds);
+    for (let bar = 0; bar < bars; bar++) {
+      const t0 = bar * loopBar;
+      shot(c, bus, k.kick, t0, 0.9);
+      shot(c, bus, k.kick, t0 + 2 * beat, 0.9);
+      shot(c, bus, k.kick, t0 + 2.5 * beat, 0.8);
+      shot(c, bus, k.clap, t0 + beat, 0.5);
+      shot(c, bus, k.clap, t0 + 3 * beat, 0.5);
+      shot(c, bus, k.snare, t0 + beat, 0.25);
+      shot(c, bus, k.snare, t0 + 3 * beat, 0.25);
+      for (let s8 = 0; s8 < 8; s8++) shot(c, bus, k.hat, t0 + s8 * eighth, s8 % 2 === 1 ? 0.35 : 0.2);
+    }
+    return c.startRendering();
+  }
   const bassHz = [55, 55, 65.41, 49];
   for (let bar = 0; bar < bars; bar++) {
     const t0 = bar * 4 * beat;
@@ -175,6 +247,13 @@ export async function renderMatchedPair(ref: RenderOpts, test: RenderOpts) {
   const g = matchGain(a.getChannelData(0), b.getChannelData(0));
   const data = b.getChannelData(0);
   applyGain(data, g);
+  // real recordings can sum past full scale: pull both clips down together so neither clips
+  const top = Math.max(peak(a.getChannelData(0)), peak(data));
+  if (top > 0.95) {
+    const k = 0.95 / top;
+    applyGain(a.getChannelData(0), k);
+    applyGain(data, k);
+  }
   return { a, b, matchGain: g };
 }
 
