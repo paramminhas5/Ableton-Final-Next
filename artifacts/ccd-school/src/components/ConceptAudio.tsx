@@ -28,6 +28,9 @@
 import { useState } from "react";
 import { ensureAudio, getCtx, getMaster, playKick, playSnare, playHat, playTone, midiToFreq, startLoop } from "@/lib/audio";
 import type { LessonScreen } from "@/content/types";
+import { loadRealKit } from "@/lib/gym/render";
+import { isRealDemo, isAiDemo, scheduleRealDemo, scheduleAiDemo, loadAiClips, REAL_DEMO_LABELS } from "@/lib/realDemos";
+import type { RealDemoKey } from "@/lib/realDemos";
 
 type VisualType = NonNullable<Extract<LessonScreen, { kind: "concept" }>["visual"]>;
 
@@ -384,8 +387,43 @@ interface Props {
   label?: string;
 }
 
+function RealDemoButton({ demo, label }: { demo: RealDemoKey; label?: string }) {
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const play = async () => {
+    const ok = await ensureAudio();
+    const c = getCtx();
+    if (!ok || !c) return;
+    setPlaying(true);
+    let secs: number;
+    if (isAiDemo(demo)) {
+      const clips = await loadAiClips();
+      if (!clips) { setPlaying(false); setFailed(true); return; }
+      secs = scheduleAiDemo(demo as "ai-claps" | "ai-house", c, getMaster(), clips, c.currentTime + 0.05);
+    } else {
+      const kit = await loadRealKit();
+      if (!kit) { setPlaying(false); setFailed(true); return; }
+      secs = scheduleRealDemo(demo, c, getMaster(), kit, c.currentTime + 0.05);
+    }
+    setTimeout(() => setPlaying(false), secs * 1000 + 200);
+  };
+  return (
+    <button
+      onClick={play}
+      disabled={playing}
+      className={`brutal-border px-3 py-2 font-mono text-[10px] uppercase brutal-press flex items-center gap-2 transition-colors ${playing ? "bg-volt text-bone cursor-not-allowed" : "bg-ink text-bone hover:bg-volt"}`}
+      aria-label={`Play audio example: ${label ?? REAL_DEMO_LABELS[demo]}`}
+    >
+      <span aria-hidden className="text-base leading-none">{playing ? "◼" : "▶"}</span>
+      <span>{failed ? "SOUND FAILED TO LOAD, TAP TO RETRY" : playing ? "PLAYING…" : label ?? REAL_DEMO_LABELS[demo]}</span>
+    </button>
+  );
+}
+
 export function ConceptAudioButton({ visual, label }: Props) {
   const [playing, setPlaying] = useState(false);
+
+  if (isRealDemo(visual as string | undefined)) return <RealDemoButton demo={visual as unknown as RealDemoKey} label={label} />;
 
   if (!visual || visual === "none") {
     // Generic "hear an example" fallback

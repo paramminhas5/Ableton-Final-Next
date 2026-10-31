@@ -31,10 +31,10 @@ export function MasterTransportBar() {
   return (
     <>
     {/* keeps the last buttons on a page scrollable above the banner */}
-    <div aria-hidden className="h-28 md:h-20" />
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-hot text-bone brutal-border border-x-0 border-b-0 p-3 flex items-center justify-between gap-3">
-      <div className="font-mono text-[11px] uppercase">🎧 Headphones recommended — click to enable audio (each device & sim has its own ▶ play button)</div>
-      <button onClick={enable} className="brutal-border bg-acid text-ink px-4 py-2 font-display brutal-press">▶ ENABLE AUDIO</button>
+    <div aria-hidden className="h-16" />
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-ink text-bone border-t-2 border-bone/20 px-4 py-2.5 flex items-center justify-between gap-3">
+      <div className="font-mono text-[11px] uppercase opacity-80">🎧 Best with headphones</div>
+      <button onClick={enable} className="bg-acid text-ink px-4 py-2 font-display text-sm brutal-press">▶ SOUND ON</button>
     </div>
     </>
   );

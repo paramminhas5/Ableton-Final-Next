@@ -105,12 +105,12 @@ export function WaveformVisualizerSim() {
       </div>
 
       {/* Wave picker */}
-      <div className="grid grid-cols-4 gap-1">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {WAVES.map(w => (
           <button
             key={w.type}
             onClick={() => handlePick(w.type)}
-            className={`brutal-border py-3 font-display text-lg brutal-press transition-all ${
+            className={`brutal-border py-3 px-2 font-display text-base sm:text-lg brutal-press transition-all ${
               active === w.type ? "bg-acid text-ink" : "bg-bone hover:bg-sun"
             }`}
           >

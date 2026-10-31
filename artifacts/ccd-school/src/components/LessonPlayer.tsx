@@ -465,8 +465,8 @@ function QuizScreen({
         <div className="font-sans text-xl md:text-2xl leading-snug font-semibold">{screen.q}</div>
       </div>
 
-      {/* P2 #19: grid-cols-2 always (not just sm:) so mobile gets side-by-side */}
-      <div className="grid grid-cols-2 gap-2" role="group" aria-label="Answer options">
+      {/* One column on phones so answers stay readable; two from sm up */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" role="group" aria-label="Answer options">
         {screen.options.map((opt, i) => {
           let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
           let leftBorder = "";
@@ -735,25 +735,25 @@ function LessonBreadcrumb({
     <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[10px] uppercase opacity-90 tracking-wide justify-center">
       <Link 
         href={ctx.worldRoute} 
-        className="hover:opacity-100 hover:underline transition-colors shrink-0 truncate max-w-[60px] px-1 py-0.5 rounded"
+        className="hover:opacity-100 hover:underline transition-colors shrink-0 truncate max-w-[110px] px-1 py-0.5 rounded"
         title={`Back to ${ctx.worldLabel}`}
       >
         {ctx.worldLabel}
       </Link>
       {chapterTitle && (
-        <>
+        <span className="hidden sm:contents">
           <span className="shrink-0 opacity-30">/</span>
-          <span className="truncate max-w-[70px] shrink-0 px-1 py-0.5" title={chapterTitle}>
+          <span className="truncate max-w-[120px] shrink-0 px-1 py-0.5" title={chapterTitle}>
             {chapterTitle}
           </span>
-        </>
+        </span>
       )}
       {pathTitle && (
         <>
           <span className="shrink-0 opacity-30">/</span>
           <Link
             href={ctx.path ? `/path/${ctx.path.slug}` : "#"}
-            className="hover:opacity-100 hover:underline transition-colors truncate max-w-[70px] shrink-0 px-1 py-0.5 rounded"
+            className="hover:opacity-100 hover:underline transition-colors truncate max-w-[120px] shrink-0 px-1 py-0.5 rounded"
             title={pathTitle}
           >
             {pathTitle}
