@@ -246,12 +246,16 @@ console.log("\nJ5 Free limits and hearts");
   ({ ctx, p, errs } = await fresh(hearts(1)));
   await noExplainer(ctx);
   await p.goto(BASE + "/learn/what-is-sound");
+  // what-is-sound is a deep lesson: hook, concept, interactive, concept, then the first question.
+  // Quiz options are shuffled per lesson, so read the right answer from the lesson data (run `npm run crawl:dump` first).
+  const firstQuiz = JSON.parse(readFileSync(".tmp/missions.json", "utf8")).find((m) => m.slug === "what-is-sound").screens.find((x) => x.kind === "quiz");
+  const wrongLetter = "ABCD"[firstQuiz.answer === 0 ? 1 : 0];
   await p.getByRole("button", { name: "Tap to continue" }).click();
-  await p.getByRole("button", { name: /GOT IT/ }).click();
   await p.getByRole("button", { name: /GOT IT/ }).click();
   await p.locator("text=TRY IT").locator("xpath=../following-sibling::div[1]").click({ position: { x: 5, y: 5 }, force: true });
   await p.getByRole("button", { name: /NEXT/ }).click();
-  await p.getByRole("button", { name: /^Option A:/ }).click(); // the right answer is B
+  await p.getByRole("button", { name: /GOT IT/ }).click();
+  await p.getByRole("button", { name: new RegExp(`^Option ${wrongLetter}:`) }).click(); // a wrong answer
   ok((await progressOf(p)).hearts === 0, "a wrong answer in Flow Mode costs the last heart");
   ok(await p.locator("text=/NOT QUITE/").count() > 0 && await p.locator("button:has-text('✓')").count() > 0, "the learner is told it was wrong and sees the right answer marked");
   await p.getByRole("button", { name: /NEXT/ }).click();
