@@ -3,6 +3,7 @@ import { FOUNDATIONS_MISSIONS } from "./missions-foundations";
 import { DJ_WORLD_MISSIONS } from "./missions-dj";
 import { SYNTHS_MISSIONS } from "./missions-synths";
 import { PRODUCER_SCREENS } from "./missions-producer-screens";
+import { FLAGSHIP_SCREENS } from "./flagship-screens";
 
 function withProducerScreens(m: Mission): Mission {
   const screens = PRODUCER_SCREENS[m.slug];
@@ -3947,7 +3948,7 @@ export const MISSIONS: Mission[] = [
   ...DJ_WORLD_MISSIONS,
   ...allSynthMissions,
   ...allProducerMissions,
-];
+].map((m) => (Object.hasOwn(FLAGSHIP_SCREENS, m.slug) ? { ...m, screens: FLAGSHIP_SCREENS[m.slug] } : m));
 
 export const missionsByWorld = (world: string) =>
   MISSIONS.filter((m) => m.world === world).sort((a, b) => a.number - b.number);
