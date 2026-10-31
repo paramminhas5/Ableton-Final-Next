@@ -1,4 +1,6 @@
 import type { LessonScreen } from "./types";
+import { FLAGSHIP_BATCH_2A } from "./flagship-batch-2a";
+import { FLAGSHIP_BATCH_2B } from "./flagship-batch-2b";
 
 /**
  * Deep versions of the flagship lessons. They replace the short flow for these slugs.
@@ -6,7 +8,7 @@ import type { LessonScreen } from "./types";
  * with a reason behind each wrong answer, the exact settings, a mistake check, one question
  * recycled from an earlier lesson, a summary. The Do it in Live task follows the summary.
  */
-export const FLAGSHIP_SCREENS: Record<string, LessonScreen[]> = {
+const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   sidechain: [
     { kind: "hook", emoji: "🥁", headline: "Your kick keeps vanishing", subtext: "Kick and bass fight for the same low end. Sidechain settles it." },
     { kind: "concept", title: "Why the kick disappears", body: "Kick and bass both live under about 150 Hz. When they hit together, the louder wave swallows the other and the kick loses its punch, even if both faders look fine.", keyFact: "Two loud sounds in the same low notes cancel each other's punch.", visual: "frequency-bar" },
@@ -265,3 +267,39 @@ export const FLAGSHIP_SCREENS: Record<string, LessonScreen[]> = {
     { kind: "summary", learned: ["A scale is a set of notes that fit", "Scale remaps notes to the nearest in key", "Put Scale before the instrument"] },
   ],
 };
+
+/** Small seeded generator so the shuffle is the same on every build and every render. */
+function seeded(seed: string) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    h ^= h >>> 16;
+    return (h >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Authors tend to write the right answer first. Quiz options are not shuffled by the screen
+ * component, so the right answer would always be the first button. This puts the options of every
+ * quiz and audio-id screen in a fixed random order per lesson and remaps `answer` to match.
+ */
+function shuffleAnswers(slug: string, screens: LessonScreen[]): LessonScreen[] {
+  return screens.map((s, i) => {
+    if ((s.kind !== "quiz" && s.kind !== "audio-id") || s.options.length < 2) return s;
+    const rand = seeded(`${slug}:${i}`);
+    const order = s.options.map((_, k) => k);
+    for (let k = order.length - 1; k > 0; k--) {
+      const j = Math.floor(rand() * (k + 1));
+      [order[k], order[j]] = [order[j], order[k]];
+    }
+    return { ...s, options: order.map((k) => s.options[k]), answer: order.indexOf(s.answer) };
+  });
+}
+
+const ALL_FLAGSHIP: Record<string, LessonScreen[]> = { ...FLAGSHIP_BATCH_1, ...FLAGSHIP_BATCH_2A, ...FLAGSHIP_BATCH_2B };
+
+export const FLAGSHIP_SCREENS: Record<string, LessonScreen[]> = Object.fromEntries(
+  Object.entries(ALL_FLAGSHIP).map(([slug, screens]) => [slug, shuffleAnswers(slug, screens)]),
+);
