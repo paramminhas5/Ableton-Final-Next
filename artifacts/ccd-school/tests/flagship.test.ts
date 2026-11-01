@@ -6,7 +6,7 @@ describe("deep lessons", () => {
   const entries = Object.entries(FLAGSHIP_SCREENS);
 
   it("has 40 deep lessons and every one matches a real lesson", () => {
-    expect(entries.length).toBe(58);
+    expect(entries.length).toBe(78);
     for (const [slug] of entries) expect(MISSIONS.some((m) => m.slug === slug), slug).toBe(true);
   });
 
