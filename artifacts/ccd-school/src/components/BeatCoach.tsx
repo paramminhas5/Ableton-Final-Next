@@ -124,11 +124,11 @@ export function FloatingCoachButton({ context }: { context: string }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 brutal-border bg-volt text-bone w-14 h-14 flex items-center justify-center text-2xl brutal-press brutal-shadow hover:bg-volt/90 transition-colors"
-        aria-label="Open Beat Coach"
+        className="fixed bottom-4 right-4 z-40 brutal-border bg-volt text-bone w-11 h-11 flex items-center justify-center font-display text-xl brutal-press brutal-shadow-sm hover:bg-volt/90 transition-colors"
+        aria-label="Ask Beat Coach"
         title="Ask Beat Coach"
       >
-        🎧
+        ?
       </button>
       {open && <CoachPanel context={context} onClose={() => setOpen(false)} />}
     </>

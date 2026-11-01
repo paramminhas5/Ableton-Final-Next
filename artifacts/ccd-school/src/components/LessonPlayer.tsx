@@ -216,9 +216,8 @@ function HeartsExplainerModal({ onDismiss }: { onDismiss: () => void }) {
           <div className="font-display text-2xl">🌊 FLOW MODE HEARTS</div>
         </div>
         <div className="p-5 space-y-3 font-sans text-sm leading-relaxed">
-          <p>You have <strong>5 hearts</strong>. Each wrong answer costs <strong>1 heart</strong>.</p>
-          <p>Hearts refill at <strong>1 per 4 hours</strong>. Run out and you&apos;ll need to wait — or switch to <strong>Free Mode</strong> to keep going.</p>
-          <p className="opacity-70 text-xs">Switch modes anytime using the toggle in the header.</p>
+          <p>You have <strong>5 hearts</strong>. A wrong answer costs one, and they refill at one every 4 hours.</p>
+          <p className="opacity-70 text-xs">Out of hearts? Switch to Free Mode in the header to keep going.</p>
         </div>
         <div className="p-4">
           <button onClick={onDismiss} className="w-full brutal-border bg-acid text-ink py-3 font-display text-xl brutal-press chunk-shadow ccd-btn-hover">
@@ -271,9 +270,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
     // P2 #24: animate-fade-up on mount via key remount in parent
     <div className="space-y-4 animate-fade-up">
       {/* P2 #18: visual hierarchy — title block */}
-      <div className="brutal-border bg-ink text-bone p-5">
-        <h2 className="font-display text-3xl md:text-4xl leading-tight">{screen.title}</h2>
-      </div>
+      <h2 className="font-display text-3xl md:text-4xl leading-tight px-1">{screen.title}</h2>
 
       {screen.visual && screen.visual !== "none" && (
         <InlineVisual
@@ -287,7 +284,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
       )}
 
       {/* P2 #16 + P2 #15: larger body text with font-sans for readability */}
-      <div className="brutal-border bg-bone p-5 border-l-4 border-l-acid/60">
+      <div className="brutal-border bg-bone p-5">
         <p className="font-sans text-base md:text-lg leading-relaxed text-ink">{screen.body}</p>
       </div>
 
@@ -297,7 +294,7 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
           <span className="text-xl shrink-0 mt-0.5">⚡</span>
           <div>
             <div className="font-mono text-[10px] uppercase opacity-70 mb-1">KEY FACT</div>
-            <div className="font-display text-xl leading-tight">{screen.keyFact}</div>
+            <div className="font-display text-xl leading-snug">{screen.keyFact}</div>
           </div>
         </div>
       )}
@@ -305,7 +302,6 @@ function ConceptScreen({ screen, onNext }: { screen: Extract<LessonScreen, { kin
       {/* Audio-first: always show a "hear it" button */}
       <div className="flex items-center gap-3">
         <ConceptAudioButton visual={screen.visual} />
-        <span className="font-mono text-[9px] uppercase opacity-70">tap to hear an example</span>
       </div>
 
       <button
@@ -329,9 +325,9 @@ function InteractScreen({
 
   return (
     <div className="space-y-4">
-      <div className="brutal-border bg-volt text-bone p-4">
-        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">TRY IT</div>
-        <div className="font-display text-xl">{screen.prompt}</div>
+      <div className="px-1">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-volt mb-1">Try it</div>
+        <div className="font-sans text-lg md:text-xl font-semibold leading-snug">{screen.prompt}</div>
       </div>
 
       {/* Wrap simulator — first click counts as "interacted" */}
@@ -732,7 +728,7 @@ function LessonBreadcrumb({
   const pathTitle = ctx.path?.title || null;
 
   return (
-    <div className="flex items-center gap-1 flex-nowrap overflow-hidden font-mono text-[10px] uppercase opacity-90 tracking-wide justify-center">
+    <div className="flex items-baseline gap-1 flex-nowrap overflow-hidden font-mono text-[10px] uppercase opacity-90 tracking-wide justify-center">
       <Link 
         href={ctx.worldRoute} 
         className="hover:opacity-100 hover:underline transition-colors shrink-0 truncate max-w-[110px] px-1 py-0.5 rounded"
@@ -981,7 +977,7 @@ function LessonPlayerInner({ mission, nextSlug, isReview, missionIndex = 1, miss
         <HeartsExplainerModal onDismiss={dismissHeartsExplainer} />
       )}
 
-      <div className="max-w-2xl mx-auto px-4 py-3 pb-8">
+      <div className="max-w-2xl mx-auto px-4 py-3 pb-24">
 
         {/* ── Clean top navigation ── */}
         <div className="mb-4 space-y-2">

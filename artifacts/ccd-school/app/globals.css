@@ -275,22 +275,22 @@ h1, h2, h3, h4,
 
 /* ── Core border — 4px solid, sharp corners ────────────────────────── */
 .brutal-border {
-  border: 4px solid var(--border);
+  border: 3px solid var(--border);
   border-radius: 0;
 }
 
 /* ── Chunk shadow — CCD's signature offset drop shadow ─────────────── */
 .brutal-shadow,
 .chunk-shadow {
-  box-shadow: 8px 8px 0 0 var(--ink);
+  box-shadow: 6px 6px 0 0 var(--ink);
 }
 .brutal-shadow-lg,
 .chunk-shadow-lg {
-  box-shadow: 14px 14px 0 0 var(--ink);
+  box-shadow: 10px 10px 0 0 var(--ink);
 }
 .brutal-shadow-sm,
 .chunk-shadow-sm {
-  box-shadow: 4px 4px 0 0 var(--ink);
+  box-shadow: 3px 3px 0 0 var(--ink);
 }
 .brutal-shadow-acid {
   box-shadow: 8px 8px 0 0 var(--acid);
@@ -302,8 +302,8 @@ h1, h2, h3, h4,
               box-shadow var(--duration-fast) var(--ease-snap);
 }
 .brutal-press:active {
-  transform: translate(4px, 4px);
-  box-shadow: 2px 2px 0 0 var(--ink) !important;
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 0 var(--ink) !important;
 }
 
 /* CCD-style: hover shifts shadow in, giving press feel */
@@ -904,4 +904,16 @@ button, a, [role="button"] {
 }
 :is(.bg-acid, .bg-sun) :is(.opacity-30, .opacity-35, .opacity-40, .opacity-45, .opacity-50, .opacity-55, .opacity-60):not(:empty, [aria-hidden="true"], .absolute, :has(img, svg, canvas, video)) {
   opacity: 0.8;
+}
+
+
+/* ── Refinement pass (1 Nov 2026): calmer type and spacing, same CCD look ── */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+.font-display { letter-spacing: -0.01em; }
+::selection { background: var(--acid); color: var(--ink); }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--electric-blue); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce, .wiggle { animation: none !important; }
 }
