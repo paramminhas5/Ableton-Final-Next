@@ -4,6 +4,7 @@ import { FLAGSHIP_BATCH_3A } from "./flagship-batch-3a";
 import { FLAGSHIP_BATCH_3B } from "./flagship-batch-3b";
 import { FLAGSHIP_BATCH_4A } from "./flagship-batch-4a";
 import { FLAGSHIP_BATCH_4B } from "./flagship-batch-4b";
+import { FLAGSHIP_BATCH_5 } from "./flagship-batch-5";
 import { FLAGSHIP_BATCH_2B } from "./flagship-batch-2b";
 
 /**
@@ -302,7 +303,7 @@ function shuffleAnswers(slug: string, screens: LessonScreen[]): LessonScreen[] {
   });
 }
 
-const ALL_FLAGSHIP: Record<string, LessonScreen[]> = { ...FLAGSHIP_BATCH_1, ...FLAGSHIP_BATCH_2A, ...FLAGSHIP_BATCH_2B, ...FLAGSHIP_BATCH_3A, ...FLAGSHIP_BATCH_3B, ...FLAGSHIP_BATCH_4A, ...FLAGSHIP_BATCH_4B };
+const ALL_FLAGSHIP: Record<string, LessonScreen[]> = { ...FLAGSHIP_BATCH_1, ...FLAGSHIP_BATCH_2A, ...FLAGSHIP_BATCH_2B, ...FLAGSHIP_BATCH_3A, ...FLAGSHIP_BATCH_3B, ...FLAGSHIP_BATCH_4A, ...FLAGSHIP_BATCH_4B, ...FLAGSHIP_BATCH_5 };
 
 export const FLAGSHIP_SCREENS: Record<string, LessonScreen[]> = Object.fromEntries(
   Object.entries(ALL_FLAGSHIP).map(([slug, screens]) => [slug, shuffleAnswers(slug, screens)]),
