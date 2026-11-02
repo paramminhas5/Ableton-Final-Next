@@ -8,7 +8,7 @@ export async function GET() {
     const result = await db.query(
       "SELECT value FROM app_settings WHERE key = 'gating_mode'",
     );
-    const mode = result.rows[0]?.value ?? "paid";
+    const mode = result.rows[0]?.value ?? "free";
     return NextResponse.json(
       { mode },
       {
@@ -16,6 +16,6 @@ export async function GET() {
       },
     );
   } catch {
-    return NextResponse.json({ mode: "paid" });
+    return NextResponse.json({ mode: "free" });
   }
 }

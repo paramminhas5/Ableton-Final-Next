@@ -19,7 +19,7 @@ import { EasterEggs } from "@/components/EasterEggs";
 const queryClient = new QueryClient();
 
 export const GatingContext = createContext<{ gatingMode: GatingMode }>({
-  gatingMode: "paid",
+  gatingMode: "free",
 });
 
 export function useGatingMode(): GatingMode {
@@ -37,11 +37,11 @@ function ThemeInit() {
 }
 
 function GatingLoader({ children }: { children: React.ReactNode }) {
-  const [gatingMode, setGatingMode] = useState<GatingMode>("paid");
+  const [gatingMode, setGatingMode] = useState<GatingMode>("free");
   useEffect(() => {
     fetch("/api/gating")
       .then((r) => r.json())
-      .then((d) => setGatingMode(d.mode ?? "paid"))
+      .then((d) => setGatingMode(d.mode ?? "free"))
       .catch(() => {});
   }, []);
   return (

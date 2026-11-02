@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS app_settings (
 );
 
 INSERT INTO app_settings (key, value)
-  VALUES ('gating_mode', 'paid')
+  VALUES ('gating_mode', 'free')
   ON CONFLICT (key) DO NOTHING;
 
 CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress (user_id);
