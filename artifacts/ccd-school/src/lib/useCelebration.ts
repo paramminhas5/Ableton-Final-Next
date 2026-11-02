@@ -34,8 +34,18 @@ export function useCelebration() {
   const prevStreak = useRef(progress.streakDays);
   const prevShield = useRef(progress.streakShield);
   const prevMissions = useRef<Record<string, unknown>>({});
+  const mountedAt = useRef(Date.now());
 
   useEffect(() => {
+    // Progress loads from storage right after mount. That jump is not a new achievement,
+    // so the first moments only record where the learner already is.
+    if (Date.now() - mountedAt.current < 2000) {
+      prevXp.current = progress.xp;
+      prevStreak.current = progress.streakDays;
+      prevShield.current = progress.streakShield;
+      prevMissions.current = { ...progress.completedMissions };
+      return;
+    }
     const seen = getSeenSet();
 
     // ── Rank-up ──────────────────────────────────────────────────────────────

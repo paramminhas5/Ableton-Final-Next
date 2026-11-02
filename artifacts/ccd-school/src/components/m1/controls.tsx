@@ -1,0 +1,312 @@
+"use client";
+/**
+ * Model 1 controls. Every control looks and behaves like the hardware it teaches:
+ * keys travel when pressed, knobs and faders follow your finger (drag up/down, scroll,
+ * arrow keys, double-tap to reset), pads light up. Knobs and faders never print numbers;
+ * they report what you touched through `onTouch` so the screen can show it.
+ */
+import Link from "next/link";
+import { useCallback, useRef, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
+
+export const LED = {
+  mint: "var(--led-mint)",
+  cobalt: "var(--led-cobalt)",
+  go: "var(--led-go)",
+  lilac: "var(--led-lilac)",
+  red: "var(--led-red)",
+  white: "var(--led-white)",
+} as const;
+
+export const CAP = {
+  mint: "#36C9A0",
+  cobalt: "#5B76F2",
+  go: "#E8418A",
+  lilac: "#9A7BF0",
+  grey: "#9C9EA4",
+  navy: "#2B355E",
+} as const;
+
+export const WORLD_LED: Record<"fundamentals" | "dj" | "producer", string> = {
+  fundamentals: LED.mint,
+  dj: LED.cobalt,
+  producer: LED.go,
+};
+
+// ── icons: one set, 24 grid, 1.6 stroke, round ends ─────────────────────
+const P: Record<string, ReactNode> = {
+  learn: <path d="M4 7h10M4 12h16M4 17h7" />,
+  practice: <><path d="M9 3.5h6l3.5 17h-13z" /><path d="m12 15 4.5-8" /></>,
+  studio: <><path d="M6 4v16M12 4v16M18 4v16" /><path d="M4.5 14h3M10.5 8h3M16.5 11h3" /></>,
+  library: <path d="M5 4v16M10 4v16M14.5 5l4.5 15" />,
+  dj: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.5" /></>,
+  hear: <><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5z" /><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" /></>,
+  plus: <path d="M12 5v14M5 12h14" />,
+  back: <path d="m14.5 6-6 6 6 6" />,
+  close: <path d="M6 6l12 12M18 6 6 18" />,
+  out: <><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 14v6h14v-6" /></>,
+  check: <path d="m5 12.5 4.5 4.5L19 7" />,
+  lock: <><rect x="6" y="11" width="12" height="9" rx="2" /><path d="M9 11V8.5a3 3 0 0 1 6 0V11" /></>,
+  knob: <><circle cx="12" cy="12" r="7.5" /><path d="M12 12l3.5-4.5" /></>,
+  keys: <><rect x="3.5" y="6" width="17" height="12" rx="2" /><path d="M8 6v12M12 6v12M16 6v12" /></>,
+  pads: <><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><rect x="13" y="13" width="7" height="7" rx="1.5" /></>,
+  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2" /></>,
+  moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />,
+  search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></>,
+  user: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20a7 7 0 0 1 14 0" /></>,
+  menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+};
+
+export function Icon({ name, small, className }: { name: keyof typeof P | string; small?: boolean; className?: string }) {
+  if (name === "play") return <svg viewBox="0 0 24 24" width={small ? 15 : 20} height={small ? 15 : 20} fill="currentColor" aria-hidden><path d="M8 5.5v13l11-6.5z" /></svg>;
+  if (name === "stop") return <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor" aria-hidden><rect x="6" y="6" width="12" height="12" rx="2" /></svg>;
+  if (name === "rec") return <svg viewBox="0 0 24 24" width={16} height={16} aria-hidden><circle cx="12" cy="12" r="6" fill="#FF4A5A" /></svg>;
+  return <svg viewBox="0 0 24 24" className={`${small ? "m1-ico-s" : "m1-ico"} ${className ?? ""}`} aria-hidden>{P[name]}</svg>;
+}
+
+// ── panel lettering ─────────────────────────────────────────────────────
+export function Silk({ label, right, style }: { label: string; right?: string; style?: CSSProperties }) {
+  return right ? (
+    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i /><span>{right}</span><i className="rs" /></div>
+  ) : (
+    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i className="r" /></div>
+  );
+}
+
+export function Screen({ children, height, style, className }: { children: ReactNode; height?: number | string; style?: CSSProperties; className?: string }) {
+  return (
+    <div className={`m1-scr ${className ?? ""}`} style={style}>
+      <div className="m1-glass" style={{ height, padding: "16px" }}>{children}</div>
+    </div>
+  );
+}
+
+// ── keys ────────────────────────────────────────────────────────────────
+type KeyProps = {
+  children?: ReactNode;
+  label?: string;
+  cap?: "" | "blk" | "go";
+  led?: string | null;
+  href?: string;
+  onClick?: () => void;
+  ariaLabel?: string;
+  ariaPressed?: boolean;
+  ariaCurrent?: boolean;
+  disabled?: boolean;
+  wide?: boolean;
+  capStyle?: CSSProperties;
+  style?: CSSProperties;
+  className?: string;
+};
+
+export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, ariaPressed, ariaCurrent, disabled, wide, capStyle, style, className }: KeyProps) {
+  const inner = (
+    <>
+      {led ? <span className="m1-dot is-on" style={{ ["--c" as string]: led }} /> : null}
+      <span className={`m1-cap ${cap ? "is-" + cap : ""}`} style={{ marginTop: label ? -10 : 0, ...capStyle }}>{children}</span>
+      {label ? <span className={`m1-ml ${ariaCurrent || ariaPressed ? "is-on" : ""}`}>{label}</span> : null}
+    </>
+  );
+  const cls = `m1-m ${wide ? "is-wide" : ""} ${disabled ? "is-dim" : ""} ${className ?? ""}`;
+  const aria = ariaLabel ?? label;
+  if (href && !disabled) {
+    return <Link href={href} className={cls} style={style} aria-label={aria} aria-current={ariaCurrent ? "page" : undefined}>{inner}</Link>;
+  }
+  return (
+    <button type="button" className={cls} style={style} aria-label={aria} aria-pressed={ariaPressed} disabled={disabled} onClick={onClick}>
+      {inner}
+    </button>
+  );
+}
+
+/** Wide key with a pill cap, for the one main action on a screen. */
+export function GoPill({ children, href, onClick, ariaLabel, style, disabled }: { children: ReactNode; href?: string; onClick?: () => void; ariaLabel?: string; style?: CSSProperties; disabled?: boolean }) {
+  const cap = <span className="m1-cap is-go is-pill" style={{ width: "90%", height: "60%", gap: 8, fontSize: 16, fontWeight: 500 }}>{children}</span>;
+  if (href && !disabled) return <Link href={href} className="m1-m is-wide" style={style} aria-label={ariaLabel}>{cap}</Link>;
+  return <button type="button" className={`m1-m is-wide ${disabled ? "is-dim" : ""}`} style={style} onClick={onClick} disabled={disabled} aria-label={ariaLabel}>{cap}</button>;
+}
+
+export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, height = 48, style }: { children: ReactNode; lit?: string | null; onClick?: () => void; href?: string; ariaLabel?: string; ariaPressed?: boolean; height?: number; style?: CSSProperties }) {
+  const st = { height, ...(lit ? { ["--c" as string]: lit } : {}), ...style } as CSSProperties;
+  if (href) return <Link href={href} className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} aria-label={ariaLabel}>{children}</Link>;
+  return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
+}
+
+export function Dash({ color, on = true, style }: { color?: string; on?: boolean; style?: CSSProperties }) {
+  return <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: color, ...style } as CSSProperties} />;
+}
+
+// ── shared drag behaviour for knobs and faders ──────────────────────────
+function useDrag(value: number, onChange: ((v: number) => void) | undefined, range = 180, defaultValue?: number) {
+  const start = useRef<{ y: number; v: number } | null>(null);
+  const lastTap = useRef(0);
+  const clamp = (v: number) => Math.max(0, Math.min(1, v));
+  const onPointerDown = useCallback((e: PointerEvent<HTMLElement>) => {
+    if (!onChange) return;
+    const now = Date.now();
+    if (defaultValue !== undefined && now - lastTap.current < 300) { onChange(defaultValue); lastTap.current = 0; return; }
+    lastTap.current = now;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    start.current = { y: e.clientY, v: value };
+  }, [onChange, value, defaultValue]);
+  const onPointerMove = useCallback((e: PointerEvent<HTMLElement>) => {
+    if (!start.current || !onChange) return;
+    onChange(clamp(start.current.v + (start.current.y - e.clientY) / range));
+  }, [onChange, range]);
+  const onPointerUp = useCallback(() => { start.current = null; }, []);
+  const onKeyDown = useCallback((e: KeyboardEvent<HTMLElement>) => {
+    if (!onChange) return;
+    const step = e.shiftKey ? 0.1 : 0.02;
+    if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); onChange(clamp(value + step)); }
+    if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); onChange(clamp(value - step)); }
+    if (e.key === "Home") onChange(0);
+    if (e.key === "End") onChange(1);
+  }, [onChange, value]);
+  const onWheel = useCallback((e: React.WheelEvent<HTMLElement>) => {
+    if (!onChange) return;
+    onChange(clamp(value - e.deltaY / 800));
+  }, [onChange, value]);
+  return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onKeyDown, onWheel };
+}
+
+function Scale({ size }: { size: number }) {
+  const c = size / 2, r0 = size / 2 - 7, r1 = size / 2 - 2;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }} aria-hidden>
+      {Array.from({ length: 11 }, (_, i) => {
+        const a = ((135 + i * 27) * Math.PI) / 180;
+        const major = i === 0 || i === 5 || i === 10;
+        return <path key={i} d={`M${c + r0 * Math.cos(a)} ${c + r0 * Math.sin(a)}L${c + r1 * Math.cos(a)} ${c + r1 * Math.sin(a)}`} strokeWidth={major ? 1.4 : 1} opacity={major ? 0.9 : 0.6} strokeLinecap="round" style={{ stroke: "var(--print)" }} />;
+      })}
+    </svg>
+  );
+}
+
+type KnobProps = {
+  value: number;
+  onChange?: (v: number) => void;
+  onTouch?: (label: string, v: number) => void;
+  label: string;
+  color?: string;
+  led?: string | null;
+  size?: number;
+  defaultValue?: number;
+  bare?: boolean;
+  height?: number;
+  style?: CSSProperties;
+};
+
+/** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style }: KnobProps) {
+  const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
+  const drag = useDrag(value, onChange ? set : undefined, 180, defaultValue);
+  const well = size + 18;
+  const rot = -135 + 270 * value;
+  const knob = (
+    <div
+      className="m1-knob"
+      role="slider"
+      tabIndex={onChange ? 0 : -1}
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(value * 100)}
+      {...drag}
+      style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      {size >= 46 && <Scale size={well + 14} />}
+      <div className="m1-well" style={{ width: well, height: well }}>
+        <div className="m1-kb" style={{ width: size, height: size, marginTop: -4 }}>
+          <div className="m1-kc" style={{ ["--c" as string]: color, width: size * 0.68, height: size * 0.68 } as CSSProperties}>
+            <b style={{ transform: `rotate(${rot}deg)` }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  if (bare) return knob;
+  return (
+    <div className="m1-m is-wide" style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
+      {led ? <Dash color={led} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
+      <div style={{ marginTop: -12 }}>{knob}</div>
+      <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>
+    </div>
+  );
+}
+
+type FaderProps = {
+  value: number;
+  onChange?: (v: number) => void;
+  onTouch?: (label: string, v: number) => void;
+  label: string;
+  led?: string;
+  height?: number;
+  width?: number;
+  horizontal?: boolean;
+  defaultValue?: number;
+};
+
+/** Fader with printed ticks. Drag, scroll, or arrow keys. Double-tap snaps to 0 dB (75%). */
+export function Fader({ value, onChange, onTouch, label, led, height = 140, width = 44, horizontal, defaultValue = 0.75 }: FaderProps) {
+  const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
+  const drag = useDrag(value, onChange ? set : undefined, horizontal ? -160 : height - 40, defaultValue);
+  if (horizontal) {
+    const w = width;
+    return (
+      <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)}
+        {...drag}
+        onPointerMove={(e) => {
+          if (!onChange || !(e.buttons & 1)) return;
+          const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
+          set(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)));
+        }}
+        style={{ position: "relative", width: w, height: 30 }}>
+        {Array.from({ length: 9 }, (_, i) => <i key={i} style={{ position: "absolute", top: -4, left: (i * w) / 8, width: 1, height: i % 4 === 0 ? 6 : 4, background: "var(--tick)" }} />)}
+        <div className="m1-fslot" style={{ top: 12, left: 0, right: 0, width: "auto", height: 6, marginLeft: 0 }} />
+        <div className="m1-fcap" style={{ top: 2, left: `${value * 100}%`, width: 26, height: 26, marginLeft: -13, background: "repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 3px,rgba(0,0,0,.10) 3px 4px),linear-gradient(180deg,var(--c1),var(--c0))" }}>
+          <i style={{ left: 12, right: "auto", width: 2, top: 4, height: 18 }} />
+        </div>
+      </div>
+    );
+  }
+  const th = height - 30;
+  const top = 6 + (1 - value) * th - 11;
+  return (
+    <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} {...drag}
+      style={{ position: "relative", width, height }}>
+      {led ? <Dash color={led} style={{ position: "absolute", top: -14, left: "50%", marginLeft: -9 }} /> : null}
+      {Array.from({ length: 9 }, (_, j) => {
+        const w = j === 0 || j === 2 || j === 8 ? 8 : 5;
+        const y = 6 + (j * th) / 8;
+        return <span key={j}><i style={{ position: "absolute", left: 0, top: y, width: w, height: 1, background: "var(--tick)" }} /><i style={{ position: "absolute", right: 0, top: y, width: w, height: 1, background: "var(--tick)" }} /></span>;
+      })}
+      <div className="m1-fslot" style={{ top: 2, bottom: 2 }} />
+      <div className="m1-fcap" style={{ top, width: width - 6, marginLeft: -(width - 6) / 2, height: 22 }}><i /></div>
+    </div>
+  );
+}
+
+export function Switch({ options, value, onChange, label }: { options: { id: string; label: string }[]; value: string; onChange: (id: string) => void; label: string }) {
+  return (
+    <div className="m1-sw" role="radiogroup" aria-label={label}>
+      {options.map(o => (
+        <button key={o.id} type="button" role="radio" aria-checked={o.id === value} onClick={() => onChange(o.id)}>{o.label}</button>
+      ))}
+    </div>
+  );
+}
+
+export function Meter({ segments = 9, lit = 0, size = 8 }: { segments?: number; lit?: number; size?: number }) {
+  const col = (i: number) => (i < segments * 0.6 ? LED.mint : i < segments * 0.85 ? LED.lilac : LED.go);
+  return (
+    <div role="img" aria-label={`${lit} of ${segments}`} style={{ display: "flex", flexDirection: "column-reverse", gap: 4, padding: 10, borderRadius: 10, background: "#050506", boxShadow: "0 0 0 3px #000, inset 0 0 0 1px rgba(255,255,255,.05)" }}>
+      {Array.from({ length: segments }, (_, i) => (
+        <span key={i} style={{ display: "block", width: 22, height: size, borderRadius: 2, background: i < lit ? col(i) : "#232326", boxShadow: i < lit ? `0 0 6px ${col(i)}` : undefined }} />
+      ))}
+    </div>
+  );
+}
+
+/** Small knurled knob without a module, for dense mixer sections. */
+export function MiniKnob(props: Omit<KnobProps, "bare" | "size">) {
+  return <Knob {...props} size={30} bare />;
+}

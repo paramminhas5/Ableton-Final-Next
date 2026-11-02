@@ -12,9 +12,9 @@ import type { GatingMode } from "@/lib/gating";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
 import { useCelebration } from "@/lib/useCelebration";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
-import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { ModeBar } from "@/components/m1/shell";
 import { InstallPromptBanner } from "@/components/InstallPromptBanner";
-import { EasterEggs } from "@/components/EasterEggs";
+
 
 const queryClient = new QueryClient();
 
@@ -29,9 +29,7 @@ export function useGatingMode(): GatingMode {
 function ThemeInit() {
   useEffect(() => {
     if (typeof document === "undefined") return;
-    const DEFAULT_THEME = "ccd-classic";
-    const saved = localStorage.getItem("ccd.theme") || DEFAULT_THEME;
-    document.documentElement.setAttribute("data-theme", saved);
+    document.documentElement.setAttribute("data-theme", "field");
   }, []);
   return null;
 }
@@ -149,13 +147,13 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   <CelebrationLayer />
                   {children}
                   {/* Mobile phone UI — hidden on desktop via CSS */}
-                  <MobileBottomNav />
+                  <ModeBar />
                   <InstallPromptBanner />
                   {/* Desktop UI */}
                   <MasterTransportBar />
                   <CommandPalette />
                   {/* Easter eggs — Konami code, idle cat, secret clicks */}
-                  <EasterEggs />
+                  {/* Easter eggs retired: nothing appears unless you touch something */}
                 </AnalyticsProvider>
               </GatingLoader>
             </ProgressProvider>

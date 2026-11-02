@@ -16,6 +16,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { Icon } from "@/components/m1/controls";
+import { CatMark, WeekDots } from "@/components/m1/shell";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { rankFor } from "@/lib/ranks";
@@ -669,6 +671,7 @@ function StreakWarningBanner() {
 // ─── Main Header ──────────────────────────────────────────────────────────────
 
 export function Header() {
+  const pathname = usePathname() ?? "/";
   const { progress, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
   const [moreOpen,   setMoreOpen]   = useState(false);
@@ -691,84 +694,36 @@ export function Header() {
     ? user.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
     : null;
 
+  if (pathname === "/dashboard" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
+    return (
+      <>
+        <StreakWarningBanner />
+        <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSearch={openSearch} />
+      </>
+    );
+  }
+
   return (
-    <header className="border-b-4 border-ink bg-bone sticky top-0 z-40" role="banner">
-
-      {/* ── Main bar ── */}
-      <div className="flex items-stretch h-14 md:h-16">
-
-        {/* Logo — electric-blue CCD style */}
-        <Link
-          href="/"
-          className="border-r-4 border-ink px-3 md:px-5 flex items-center gap-2 font-display text-base md:text-lg bg-electric-blue text-bone hover:bg-ink transition-colors shrink-0"
-          aria-label="CCD.SCHOOL home"
-        >
-          <span className="text-bone">CCD</span><span className="text-acid">.</span><span className="text-bone">SCHOOL</span>
+    <header role="banner" className="m1-page" style={{ paddingBottom: 0, maxWidth: 1180 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 44, gap: 10 }}>
+        <Link href="/dashboard" aria-label="ccd school home" style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--ink)", textDecoration: "none", minHeight: 0 }}>
+          <CatMark />
+          <span className="m1-t15" style={{ fontWeight: 600, whiteSpace: "nowrap" }}>ccd school</span>
+          <span className="hidden sm:inline"><span className="m1-tag">model 1</span></span>
         </Link>
-
-        {/* Primary nav — desktop */}
-        <nav className="hidden md:flex items-stretch font-display text-sm" aria-label="Main navigation">
-          {PRIMARY_NAV.map((l) => (
-            <Link key={`${l.to}-${l.label}`} href={l.to}
-              className="px-4 flex items-center border-r-4 border-ink hover:bg-acid transition-colors whitespace-nowrap">
-              {l.label}
-            </Link>
-          ))}
-          <div className="relative flex items-stretch">
-            <button
-              onClick={() => setMoreOpen((o) => !o)}
-              aria-expanded={moreOpen}
-              aria-haspopup="menu"
-              className="px-4 flex items-center border-r-4 border-ink hover:bg-acid transition-colors font-display text-sm whitespace-nowrap">
-              More ▾
-            </button>
-            <MoreDropdown open={moreOpen} onClose={() => setMoreOpen(false)} />
-          </div>
-        </nav>
-
-        <div className="flex-1" />
-
-        {/* Right strip — desktop */}
-        <div className="hidden md:flex items-center gap-2 px-3">
-          <button onClick={openSearch} title="Search (⌘K)" aria-label="Open search"
-            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-acid flex items-center gap-1.5 font-display text-sm transition-colors brutal-press ccd-btn-hover ccd-jitter ccd-glow-pulse">
-            <SearchIcon />
-            <span className="hidden lg:inline font-mono text-xs opacity-70">⌘K</span>
-          </button>
-
-          <XpStreakBadge />
-
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span className="hidden sm:flex"><WeekDots days={progress.streakDays} /></span>
+          <span style={{ fontSize: 15, fontWeight: 300, fontVariantNumeric: "tabular-nums", marginRight: 4 }}>{progress.xp}<span className="m1-t11" style={{ marginLeft: 3 }}>xp</span></span>
+          <button type="button" onClick={openSearch} aria-label="Search" className="m1-m" style={{ width: 40, height: 40, borderRadius: 10 }}><Icon name="search" small /></button>
+          <span className="hidden sm:inline-flex"><ThemeSwitcher compact /></span>
           {user ? (
-            <Link href="/profile" aria-label="View profile" title={user.name ?? "Profile"}
-              className="brutal-border bg-bone w-10 h-10 flex items-center justify-center font-display text-xs hover:bg-acid transition-colors brutal-press ccd-btn-hover">
-              {initials ?? <UserIcon />}
-            </Link>
+            <Link href="/profile" aria-label="Profile" className="m1-m" style={{ width: 40, height: 40, borderRadius: 10, fontSize: 12, fontWeight: 600 }}>{initials ?? <Icon name="user" small />}</Link>
           ) : (
-            <Link href="/login"
-              className="brutal-border bg-electric-blue text-bone px-3 py-1.5 font-display text-sm brutal-press chunk-shadow hover:bg-ink transition-colors ccd-btn-hover ccd-jitter ccd-glow-pulse">
-              Sign in
-            </Link>
+            <span className="hidden sm:inline"><Link href="/login" className="m1-m is-wide" style={{ height: 40, padding: "0 12px", borderRadius: 10, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap" }}>sign in</Link></span>
           )}
-        </div>
-
-        {/* Mobile strip — decluttered: just streak pill + search + menu */}
-        <div className="md:hidden flex items-center gap-1.5 px-3">
-          <span className="brutal-border bg-ink text-bone px-2.5 py-1.5 font-display text-xs tabular-nums leading-none">
-            🔥{progress.streakDays}
-          </span>
-          <button onClick={openSearch} aria-label="Search"
-            className="brutal-border bg-bone px-3 py-2 flex items-center brutal-press hover:bg-acid transition-colors">
-            <SearchIcon />
-          </button>
-          <button
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu" aria-expanded={drawerOpen}
-            className="brutal-border bg-electric-blue text-bone px-3 py-2 font-display text-xl leading-none">
-            ≡
-          </button>
+          <button type="button" onClick={() => setDrawerOpen(true)} aria-label="Open menu" aria-expanded={drawerOpen} className="m1-m" style={{ width: 40, height: 40, borderRadius: 10 }}><Icon name="menu" small /></button>
         </div>
       </div>
-
       <StreakWarningBanner />
       <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSearch={openSearch} />
     </header>

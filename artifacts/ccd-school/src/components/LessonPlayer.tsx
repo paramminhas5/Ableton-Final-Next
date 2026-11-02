@@ -31,6 +31,7 @@ import { LessonSourceBar } from "@/components/LessonSourceBar";
 import Link from "next/link";
 import Image from "next/image";
 import { triggerPerfectScore } from "@/components/EasterEggs";
+import { AddToTrack } from "@/components/m1/AddToTrack";
 
 const HOOK_BG = "https://v3b.fal.media/files/b/0a9d85ab/DsI5ZMF4jHgvpcE6JERhJ.jpg";
 const COMPLETION_BG = "https://v3b.fal.media/files/b/0a9d85ab/gJ3EpG-ChAh0FOsmJgoNq.jpg";
@@ -602,32 +603,7 @@ function SummaryScreen({
 
   return (
     <div className="relative space-y-4">
-      <Confetti />
-
-      <div className="brutal-border bg-electric-blue text-bone p-6 text-center chunk-shadow-lg relative overflow-hidden">
-        {/* DJ Cat celebrating */}
-        <div className="flex justify-center mb-3">
-          <div className="w-28 h-28 animate-cat-celebrate"
-            style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}>
-            <Image src="/cats/cat-headphones-dance.png" alt="DJ Pawsworth celebrating!" width={112} height={112}
-              className="w-full h-full object-contain" priority />
-          </div>
-        </div>
-        <div className="relative z-10">
-          <div className="font-display text-6xl leading-none drop-shadow-[3px_3px_0_hsl(222_47%_4%)]">LESSON COMPLETE</div>
-          <div className="font-sans text-sm opacity-70 mt-1">{mission.title}</div>
-        </div>
-      </div>
-
-      <div className="brutal-border bg-ink text-bone p-5 flex items-center gap-4">
-        <div className="brutal-border bg-acid text-ink px-5 py-3 font-display text-4xl shrink-0">
-          +{xpEarned}
-        </div>
-        <div>
-          <div className="font-display text-lg">XP EARNED</div>
-          <div className="font-mono text-xs opacity-70">First completion only</div>
-        </div>
-      </div>
+      <AddToTrack mission={mission} xp={xpEarned} />
 
       {screen.badge && (
         <div className="brutal-border bg-volt text-bone p-4 flex items-center gap-3">

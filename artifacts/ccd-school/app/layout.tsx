@@ -12,10 +12,9 @@ const OG_IMAGE =
 
 // ─── Viewport — controls status bar colour on mobile ─────────────────────────
 export const viewport: Viewport = {
-  // Orange matches the app icon background
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FF3C00" },
-    { media: "(prefers-color-scheme: dark)",  color: "#FF3C00" },
+    { media: "(prefers-color-scheme: light)", color: "#DEDDD8" },
+    { media: "(prefers-color-scheme: dark)",  color: "#0F0F11" },
   ],
   // Respect device width on phones; allow user to scale
   width: "device-width",
@@ -138,43 +137,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* ── Fonts: preload prevents render-blocking, display=swap eliminates FOUT ── */}
+        {/* Outfit: one geometric family for the whole instrument */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Bowlby One — CCD display font (all headlines) — BLOCKING load for zero FOUT */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=block"
-        />
-        {/* Space Mono — monospaced labels */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
-        />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
-        />
-        {/* Space Grotesk — sans body text */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
-        />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
-        />
-        {/* Fallback noscript */}
-        <noscript>
-          {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
-        </noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&display=swap" />
 
         {/* Structured data */}
         <script
@@ -182,13 +149,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* Inline theme init — runs before first paint, no flash */}
+        {/* Light or dark before first paint. Follows the phone unless the user picks one. */}
         <script dangerouslySetInnerHTML={{ __html: `
           try {
-            var t = localStorage.getItem('ccd.theme') || 'ccd-classic';
-            document.documentElement.setAttribute('data-theme', t);
-            var m = localStorage.getItem('ccd.learnMode') || 'flow';
-            document.documentElement.setAttribute('data-learn-mode', m);
+            var m = localStorage.getItem('ccd.mode') || 'system';
+            var d = m === 'dark' || (m === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            var r = document.documentElement;
+            r.classList.add(d ? 'dark' : 'light');
+            r.setAttribute('data-theme', 'field');
+            r.setAttribute('data-learn-mode', localStorage.getItem('ccd.learnMode') || 'flow');
           } catch(e) {}
         ` }} />
 
@@ -217,17 +186,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main-content" className="skip-link">Skip to content</a>
 
         <ClientProviders>
-          <div className="min-h-screen flex flex-col bg-bone text-ink">
+          <div className="min-h-screen flex flex-col text-ink">
             <Header />
             <main id="main-content" className="flex-1">{children}</main>
             {/* Footer hidden on mobile — bottom nav takes its place */}
-            <footer className="hidden md:flex border-t-4 border-ink bg-ink text-bone px-4 py-3 font-display text-sm uppercase tracking-widest items-center justify-between gap-4">
-              <span>CCD<span className="text-acid">.</span>SCHOOL</span>
+            <footer className="hidden md:flex px-6 py-5 items-center justify-between gap-4 f-lbl">
+              <span className="flex items-center gap-2"><span className="text-ink text-[15px] font-medium">ccd</span><span className="f-tag">school</span></span>
               <CcdFooterLinks />
-              <span className="font-mono text-[10px] opacity-70">
-                A <a href={CCD_URL} className="underline hover:text-acid hover:opacity-100">CATS CAN DANCE</a> PROJECT · 2026
-              </span>
-              <span className="text-acid">★</span>
+              <span>a <a href={CCD_URL} className="underline underline-offset-2 hover:text-ink">cats can dance</a> project</span>
             </footer>
           </div>
         </ClientProviders>

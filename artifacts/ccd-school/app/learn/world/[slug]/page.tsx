@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { WorldPathClient } from "@/components/WorldPathClient";
+import { World } from "@/components/m1/World";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -19,5 +20,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WorldPathPage({ params }: Props) {
   const { slug } = await params;
+  if (slug === "fundamentals" || slug === "dj" || slug === "producer") return <World world={slug} />;
   return <WorldPathClient worldSlug={slug} />;
 }

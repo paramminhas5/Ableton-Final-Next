@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WorldShell } from "@/components/world/WorldShell";
-import { WorldPathClient } from "@/components/WorldPathClient";
+import { World } from "@/components/m1/World";
 import { WorldPageClient } from "@/components/WorldPageClient";
 
 type Props = {
@@ -33,11 +33,11 @@ export default async function WorldPage({ params, searchParams }: Props) {
   const isFree = view === "free";
   const activeView = isFree ? "free" : "flow";
 
+  // Model 1: a world is a 16-step sequencer. The old browse view stays at ?view=free.
+  if (!isFree) return <World world={slug as "fundamentals" | "dj" | "producer"} />;
   return (
     <WorldShell worldSlug={slug as any} view={activeView}>
-      {isFree
-        ? <WorldPageClient slug={slug} />
-        : <WorldPathClient worldSlug={slug} />}
+      <WorldPageClient slug={slug} />
     </WorldShell>
   );
 }

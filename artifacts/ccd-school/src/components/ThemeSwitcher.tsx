@@ -1,106 +1,102 @@
 "use client";
-import { useState, useEffect } from "react";
-import { THEMES, DEFAULT_THEME, type ThemeId } from "@/content/themes";
+/**
+ * Light / dark / auto. Light is the OP-1 field look, dark is the OP-XY look.
+ * Stored in localStorage "ccd.mode"; the inline script in layout.tsx applies it before paint.
+ */
+import { useEffect, useState } from "react";
 
-const KEY = "ccd.theme";
+export type Mode = "light" | "dark" | "system";
+const KEY = "ccd.mode";
 
-function applyTheme(id: ThemeId) {
-  if (typeof document === "undefined") return;
-  document.documentElement.setAttribute("data-theme", id);
-  if (typeof localStorage !== "undefined") localStorage.setItem(KEY, id);
-  window.dispatchEvent(new CustomEvent("theme:change", { detail: id }));
+function resolve(m: Mode): "light" | "dark" {
+  if (m !== "system") return m;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-function useTheme() {
-  const [current, setCurrent] = useState<ThemeId>(DEFAULT_THEME);
+export function applyMode(m: Mode) {
+  const r = document.documentElement;
+  const v = resolve(m);
+  r.classList.remove("light", "dark");
+  r.classList.add(v);
+  try { localStorage.setItem(KEY, m); } catch {}
+  window.dispatchEvent(new CustomEvent("mode:change", { detail: m }));
+}
+
+export function useMode() {
+  const [mode, setMode] = useState<Mode>("system");
   useEffect(() => {
-    const saved = (typeof localStorage !== "undefined" && (localStorage.getItem(KEY) as ThemeId)) || DEFAULT_THEME;
-    setCurrent(saved);
-    document.documentElement.setAttribute("data-theme", saved);
-    const h = (e: Event) => setCurrent((e as CustomEvent<ThemeId>).detail);
-    window.addEventListener("theme:change", h);
-    return () => window.removeEventListener("theme:change", h);
+    let saved: Mode = "system";
+    try { saved = (localStorage.getItem(KEY) as Mode) || "system"; } catch {}
+    setMode(saved);
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onSys = () => { if ((localStorage.getItem(KEY) || "system") === "system") applyMode("system"); };
+    const onChange = (e: Event) => setMode((e as CustomEvent<Mode>).detail);
+    mq.addEventListener("change", onSys);
+    window.addEventListener("mode:change", onChange);
+    return () => { mq.removeEventListener("change", onSys); window.removeEventListener("mode:change", onChange); };
   }, []);
-  return { current, set: (id: ThemeId) => { applyTheme(id); setCurrent(id); } };
+  return { mode, set: (m: Mode) => { applyMode(m); setMode(m); } };
 }
 
-function Swatch({ colors, size = 3 }: { colors: string[]; size?: number }) {
-  return (
-    <span className="flex gap-0.5">
-      {colors.map((c, i) => (
-        <span
-          key={i}
-          className="brutal-border"
-          style={{ background: c, borderWidth: 1, width: `${size * 4}px`, height: `${size * 4}px` }}
-        />
-      ))}
-    </span>
-  );
-}
+const OPTS: { id: Mode; label: string }[] = [
+  { id: "light", label: "light" },
+  { id: "dark", label: "dark" },
+  { id: "system", label: "auto" },
+];
 
+/** Three small keys with an LED over the active one. `compact` is a single toggle key. */
 export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
-  const { current, set } = useTheme();
-  const [open, setOpen] = useState(false);
-  const currentTheme = THEMES.find((t) => t.id === current) ?? THEMES[0];
+  const { mode, set } = useMode();
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => { setIsDark(document.documentElement.classList.contains("dark")); }, [mode]);
 
   if (compact) {
+    const next: Mode = isDark ? "light" : "dark";
     return (
-      <div className="relative">
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="brutal-border bg-bone px-2 py-1.5 hover:bg-sun flex items-center gap-1.5 font-mono text-[10px] uppercase brutal-press"
-          title={`Theme: ${currentTheme.name}`}
-          aria-label="Switch theme"
-          aria-expanded={open}
-        >
-          <Swatch colors={currentTheme.swatch} size={2} />
-          <span className="hidden lg:inline">{currentTheme.name}</span>
-          <span className="opacity-60">▾</span>
-        </button>
-        {open && (
-          <>
-            <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-            <div className="absolute right-0 top-full mt-1 brutal-border bg-bone z-50 min-w-[220px] max-h-[60vh] overflow-y-auto brutal-shadow-sm">
-              <div className="font-mono text-[9px] uppercase opacity-70 px-3 pt-2 pb-1">Theme</div>
-              {THEMES.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => { set(t.id); setOpen(false); }}
-                  className={`w-full px-3 py-2 flex items-center gap-2 font-mono text-[10px] uppercase brutal-border border-x-0 border-t-0 hover:bg-sun text-left ${t.id === current ? "bg-acid" : ""}`}
-                >
-                  <Swatch colors={t.swatch} size={3} />
-                  <span className="flex-1">{t.name}</span>
-                  {t.id === current && <span>✓</span>}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+      <button
+        type="button"
+        onClick={() => set(next)}
+        aria-label={`Switch to ${next} mode`}
+        title={`${next} mode`}
+        className="f-m"
+        style={{ width: 40, height: 40, borderRadius: 10 }}
+      >
+        <span className="f-cap" style={{ width: 28 }}>
+          <svg viewBox="0 0 24 24" className="f-ico" style={{ width: 16, height: 16 }} aria-hidden>
+            {isDark
+              ? <><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" /></>
+              : <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />}
+          </svg>
+        </span>
+      </button>
     );
   }
 
-  // Full grid (Profile page)
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-      {THEMES.map((t) => (
-        <button
-          key={t.id}
-          onClick={() => set(t.id)}
-          className={`brutal-border p-3 text-left brutal-press transition-all ${t.id === current ? "bg-acid" : "bg-bone hover:bg-sun/30"}`}
-        >
-          <div
-            className="w-full h-10 brutal-border mb-2 flex"
-            style={{ borderWidth: 2 }}
+    <div role="radiogroup" aria-label="Appearance" className="f-grid" style={{ gridTemplateColumns: "repeat(3, 72px)" }}>
+      {OPTS.map(o => {
+        const on = mode === o.id;
+        return (
+          <button
+            key={o.id}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            onClick={() => set(o.id)}
+            className="f-m f-sq"
           >
-            {t.swatch.map((c, i) => (
-              <div key={i} className="flex-1 h-full" style={{ background: c }} />
-            ))}
-          </div>
-          <div className="font-display text-sm">{t.name}</div>
-          {t.id === current && <div className="font-mono text-[9px] mt-1">● ACTIVE</div>}
-        </button>
-      ))}
+            <span className={`f-dot${on ? " is-on" : ""}`} style={{ ["--c" as string]: "var(--go-led)" }} />
+            <span className="f-cap" style={{ width: "52%", marginTop: -6 }}>
+              <svg viewBox="0 0 24 24" className="f-ico" style={{ width: 18, height: 18 }} aria-hidden>
+                {o.id === "light" && <><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2" /></>}
+                {o.id === "dark" && <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />}
+                {o.id === "system" && <><rect x="7" y="3" width="10" height="18" rx="2" /><path d="M11 18h2" /></>}
+              </svg>
+            </span>
+            <span className="f-ml" style={on ? { color: "var(--ink)" } : undefined}>{o.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

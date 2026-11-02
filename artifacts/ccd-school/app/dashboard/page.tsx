@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { DashboardClient } from "@/components/DashboardClient";
+import { Today } from "@/components/m1/Today";
 
 export const metadata: Metadata = {
-  title: "Dashboard | CCD.SCHOOL",
-  description: "Your learning progress across all three worlds.",
+  title: "Today",
+  description: "Your track, your next lesson and today's practice.",
 };
 
 export default function DashboardPage() {
-  return <DashboardClient />;
+  return <Today />;
 }
