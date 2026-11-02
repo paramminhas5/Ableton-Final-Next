@@ -10,6 +10,7 @@ declare module "next-auth" {
     user: {
       id: string;
       plan: "free" | "pro";
+      role: "member" | "staff" | "owner";
     } & DefaultSession["user"];
   }
 }
@@ -136,11 +137,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const last = (token.planCheckedAt as number) ?? 0;
         if (now - last > 5 * 60 * 1000) {
           try {
-            const r = await db.query("SELECT plan FROM users WHERE id = $1", [
+            const r = await db.query("SELECT plan, role FROM users WHERE id = $1", [
               token.userId,
             ]);
             if (r.rows[0]) {
               token.plan = r.rows[0].plan;
+              token.role = r.rows[0].role;
               token.planCheckedAt = now;
             }
           } catch (err) {
@@ -154,6 +156,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.id = token.userId as string;
       (session.user as { plan?: string }).plan =
         (token.plan as string) ?? "free";
+      (session.user as { role?: string }).role =
+        (token.role as string) ?? "member";
       return session;
     },
   },
