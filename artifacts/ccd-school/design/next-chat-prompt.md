@@ -10,7 +10,7 @@ Read these first:
   - Studio is src/components/m1/Studio.tsx with studio.css; the track is src/lib/track2.ts; the engine bridge is src/engine/.
   - Web app: npm install --legacy-peer-deps. Engine: npm run engine (types and wasm).
 
-The rule that matters most: the web app is the one source of every screen. The phones open it and only sound is native. Build and check everything on the web; the phones follow.
+The rule that matters most: the web app is the one source of every screen. The phones open it and only sound is native. Build and check everything on the web; the phones follow. Phone work is paused until the web app is at 100% (the list is in "Web first" at the end of ccd/school-instrument-plan.md). This chat is item 1 on that list.
 
 How mix works (settled):
 - Studio has two modes, play and mix. Mix is the switch in the header (disabled today).
@@ -28,13 +28,11 @@ This chat, step 2:
 2. UI: mix mode in Studio, exactly as on the canvas: the stage and the faders, clash rings and fix pads, hold to compare, master strip.
 3. Tests: render tests that the limiter never passes 0 dBTP, that duck still dips after the master, that clash detection fires on two basses at the same pan and not on bass and hats. Keep npx tsc --noEmit, npx vitest run, cargo test and next build passing.
 
-Waiting on me (ask if I haven't sent them):
-- Latency results from my iPhone and Android phone (the mic test in /lab/engine) and whether Link held tempo with Live.
-- Ableton's reply about the Android Link licence (emailed 3 Nov). Until then Android is an unofficial APK and the stores wait. iOS uses LinkKit. Link on iPhone needs Apple's multicast entitlement, which only a paid Apple Developer Program account holder can request (my Apple ID is not enrolled yet, checked 3 Nov). Until then the iPhone runs with a free personal team and no Link.
+Parked, don't work on these unless I bring them up: Xcode and iPhone builds, Apple enrolment and the multicast request, Link on devices, store builds. Ableton's reply about the Android Link licence (emailed 3 Nov) may arrive; just note it in the plan.
 
 Working rules:
 - Commit to school/field as you go, push when a step works.
-- Render every screen you touch at 390x844, light and dark, and look at it before calling it done.
+- Render every screen you touch at 390x844, light and dark, in Chromium and WebKit (Playwright), and look at it before calling it done.
 - If something can only be checked on my Mac or phones, tell me exactly what to run.
 - After the step, add a short changelog entry to ccd/school-redesign.md in the project.
 - Plain copy, lowercase UI text, no em dashes.

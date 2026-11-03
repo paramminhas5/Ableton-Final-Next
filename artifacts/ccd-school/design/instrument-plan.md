@@ -219,3 +219,19 @@ The aim is that it sounds and plays like top-tier commercial instruments, so peo
 - iOS: LinkKit, Ableton's iOS SDK, is free and royalty-free under the Ableton Link SDK licence. Conditions: follow Ableton's UI guidelines, use their logo and materials as supplied, don't sell Link as an in-app purchase. Plus Apple's multicast entitlement.
 - Android (and desktop): proprietary terms are not published. Request them from link-devs@ableton.com.
 - Decided 3 Nov 2026: iOS uses LinkKit 4.1.3 (switched in the build chat; the link button opens Ableton's settings pane). Android ships as an unofficial APK with open-source Link for now; no Play Store until the proprietary licence is in place. The App Store waits too. Licence request emailed to link-devs@ableton.com on 3 Nov 2026 (terms, fee, branding, Link Audio, GPL for test builds). Apple multicast entitlement: the request form needs a paid Apple Developer Program account holder; Param's Apple ID is not enrolled (checked 3 Nov), so enrolment comes first, then the request.
+
+## Web first (decided 3 Nov 2026)
+
+The web app goes to 100% before any more phone work. Every screen lives in the web app and the phones only add native sound, so a finished web app is a finished phone app minus the native audio, which already works.
+
+**Paused until the web app is done:** Xcode build and iPhone tests, Apple Developer Program enrolment and the multicast request, LinkKit on device, Android Link testing, store builds. The Android APK gets rebuilt only when the engine changes, as a sanity check. Ableton's licence reply is handled when it arrives.
+
+**What 100% means for the web app.** Every item below is built to the "Model 1 · final" canvas, plays through the engine, and is checked at 390x844 in light and dark in Chromium and WebKit (the phones run WebKit on iOS), with typecheck, unit tests, render tests and the production build passing.
+1. Studio mix: engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare; stage and faders. (step 2)
+2. Studio play for all 6 layer types (drums, hats, bass, chords, lead, fx) with their own instruments and all 4 surfaces each (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). (step 3)
+3. Getting music out from the browser: MIDI, stems and .als export. Link and controller mode wait for the phones. (step 4, web part)
+4. Lessons on the engine: lesson player with every step type, hook, try-it recording, add to track v2, unlocks, the sims moved onto the engine in the order in section 5. (step 5)
+5. The rest of the app: Today, World, practice and drills, library and device pages, you, onboarding, sign in, menu, moments, DJ on the engine, light studio, tablet and desktop layouts, PWA. (step 6)
+6. Final pass: copy, accessibility, performance (8 layers on a mid-range phone browser), journeys and smoke tests across every screen.
+
+Then the phones: enrol, multicast request, Xcode build, device latency and Link tests, TestFlight and an Android build.

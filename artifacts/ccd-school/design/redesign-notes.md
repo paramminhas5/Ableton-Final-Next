@@ -165,3 +165,8 @@ Branch `school/field`, pushed. Stack changes from the plan, after research: the 
 - Android stays on open-source Link 4.1.1 as an unofficial APK, installed by hand. No Play Store or App Store release for now.
 - Emailed link-devs@ableton.com for the Android proprietary licence (terms, fee, branding, Link Audio, GPL for test builds).
 - Apple multicast entitlement (needed for Link on iPhone): Apple's request form is only open to a paid Apple Developer Program account holder. Param's Apple ID is signed in but not enrolled, so the request waits on enrolment. The iPhone build can still run with a free personal team, without Link.
+
+## Web first (3 Nov 2026)
+- Decided: the web app goes to 100% before more phone work. Phones open the web app, so they follow for free; only native sound is phone-specific and it already works.
+- Paused: Xcode build, Apple enrolment and the multicast request, Link on devices, store builds.
+- The definition of 100% (six items, mix through final pass) is in "Web first" at the end of ccd/school-instrument-plan.md. Screens are now also checked in WebKit, since iOS runs the app in WebKit.
