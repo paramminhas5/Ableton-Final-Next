@@ -102,7 +102,7 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
   const inner = (
     <>
       {led ? <span className="m1-dot is-on" style={{ ["--c" as string]: led }} /> : null}
-      <span className={`m1-cap ${cap ? "is-" + cap : ""}`} style={{ marginTop: label ? -10 : 0, ...capStyle }}>{children}</span>
+      <span className={`m1-cap ${cap ? "is-" + cap : ""}`} style={{ marginTop: label ? -22 : 0, ...capStyle }}>{children}</span>
       {label ? <span className={`m1-ml ${ariaCurrent || ariaPressed ? "is-on" : ""}`}>{label}</span> : null}
     </>
   );
