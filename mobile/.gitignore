@@ -11,3 +11,4 @@ src-tauri/gen/android/app/src/main/jniLibs/
 src-tauri/gen/apple/build/
 *.keystore
 src-tauri/gen/android/keystore.properties
+src-tauri/gen/android/.kotlin/
