@@ -1,0 +1,87 @@
+/* Studio, Model 1 final (canvas boards ZDrums, ZBass, V5 steps/pads).
+   Ported from the canvas classes with an st- prefix. Tokens come from globals.css. */
+
+.st-root{position:relative;height:100dvh;max-width:440px;margin:0 auto;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;color:var(--ink)}
+.st-body{position:absolute;left:16px;right:16px;top:calc(10px + env(safe-area-inset-top,0px));bottom:calc(128px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
+.st-head{display:flex;align-items:center;gap:12px;height:38px;flex:none}
+.st-tag{display:inline-flex;align-items:center;border:1px solid var(--tag);border-radius:5px;padding:0 6px;height:18px;font-size:11px;font-weight:500;color:var(--sub);background:none;font-family:inherit;min-height:0;min-width:0;cursor:pointer}
+.st-mode{display:flex;height:34px;width:150px;border-radius:17px;background:var(--well);box-shadow:inset 0 3px 6px var(--shA),0 1px 0 var(--hi);padding:3px;box-sizing:border-box}
+.st-mode button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:13px;font-weight:500;color:var(--sub);border-radius:14px;border:0;background:none;padding:0;min-height:0;min-width:0;cursor:pointer}
+.st-mode button[aria-checked="true"]{color:var(--ink);font-weight:600;background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
+.st-mode button:disabled{opacity:.5;cursor:default}
+
+/* layer slots */
+.st-slots{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;flex:none;margin-top:8px}
+.st-slot{height:50px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
+.st-slot.is-on{color:var(--ink);font-weight:600}
+.st-slot .m1-dash{width:16px}
+.st-slot.is-empty{color:var(--print);opacity:.75}
+.st-slot.is-muted{opacity:.45}
+.st-slot .st-solo{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:3px;background:#7D96FF;box-shadow:0 0 6px #7D96FF}
+
+/* screen */
+.st-scr{margin-top:10px;flex:none}
+.st-scr .m1-glass{padding:14px 18px!important}
+.st-big{font-weight:300;letter-spacing:-.035em;line-height:1;text-shadow:0 0 14px rgba(255,255,255,.16)}
+.st-ss{color:#9A9AA0;font-size:11px;font-weight:500}
+.st-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;border:1px solid currentColor;font-size:11px;font-weight:500}
+
+/* surface picker */
+.st-pick{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;flex:none}
+.st-vk{height:36px!important;aspect-ratio:auto!important;border-radius:11px;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--sub);cursor:pointer}
+.st-vk.is-on{color:var(--ink);font-weight:600}
+.st-vk .m1-dot{position:static;margin:0}
+
+/* pad tray and silicone pads */
+.st-tray{display:grid;gap:5px;padding:6px;border-radius:16px;background:var(--tray,#070708);box-shadow:inset 0 3px 7px var(--shA),inset 0 1px 2px rgba(0,0,0,.35),inset 0 -1px 0 rgba(255,255,255,.06),0 1px 0 var(--hi);flex:1;min-height:0}
+.light .st-tray,:root:not(.dark) .st-tray{--tray:#B9B7B0}
+.dark .st-tray{--tray:#070708}
+.st-sp{position:relative;border-radius:10px;overflow:hidden;color:var(--spt);border:0;padding:0;font:inherit;min-height:0;min-width:0;cursor:pointer;touch-action:none;
+ background:linear-gradient(180deg,var(--spa),var(--spb));
+ box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(0,0,0,.09),inset 0 0 0 1px rgba(0,0,0,.07),0 1px 1px rgba(0,0,0,.28)}
+:root,.light{--spa:#F1F0EB;--spb:#DAD8D2;--spt:#2A2A2C;--bez:#A8A69F}
+.dark{--spa:#3A3B40;--spb:#25262A;--spt:#E9E9E6;--bez:#060607}
+.dark .st-sp{box-shadow:inset 0 1.5px 0 rgba(255,255,255,.13),inset 0 -3px 0 rgba(0,0,0,.28),inset 0 0 0 1px rgba(0,0,0,.4),0 1px 1px rgba(0,0,0,.5)}
+.st-sp:before{content:"";position:absolute;inset:0;background-image:var(--grain);opacity:.9;pointer-events:none}
+.st-sp:active{transform:scale(.97)}
+/* selected or sounding: backlight shines through */
+.st-sp.is-lit{color:#141416;z-index:1;
+ background:radial-gradient(78% 72% at 50% 50%,color-mix(in srgb,var(--c) 34%,#fff) 0,var(--c) 56%,color-mix(in srgb,var(--c) 80%,#000) 100%);
+ box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.14),0 0 0 1px color-mix(in srgb,var(--c) 70%,transparent),0 0 14px color-mix(in srgb,var(--c) 55%,transparent),0 0 30px color-mix(in srgb,var(--c) 25%,transparent)}
+/* a step that is on */
+.st-sp.is-on{color:#141416;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 80%,#fff),var(--c) 55%,color-mix(in srgb,var(--c) 88%,#000));
+ box-shadow:inset 0 2px 0 rgba(255,255,255,.38),inset 0 -3px 0 rgba(0,0,0,.14),inset 0 0 0 1px rgba(0,0,0,.12),0 1px 0 rgba(0,0,0,.25)}
+/* dim glow: only to point at something (root notes, the playing step) */
+.st-sp.is-dim{background:radial-gradient(55% 52% at 50% 55%,color-mix(in srgb,var(--c) 40%,transparent),color-mix(in srgb,var(--c) 8%,transparent) 72%,transparent 100%),linear-gradient(180deg,var(--spa),var(--spb))}
+/* drum rack at rest */
+.st-sp.is-rest{background:radial-gradient(70% 65% at 50% 55%,color-mix(in srgb,var(--c) 22%,transparent),color-mix(in srgb,var(--c) 6%,transparent) 80%),linear-gradient(180deg,var(--spa),var(--spb))}
+.st-sp.is-rip1{background:radial-gradient(75% 70% at 50% 52%,color-mix(in srgb,var(--c) 62%,transparent),color-mix(in srgb,var(--c) 22%,transparent) 85%),linear-gradient(180deg,var(--spa),var(--spb));box-shadow:inset 0 1.5px 0 rgba(255,255,255,.14),0 0 10px color-mix(in srgb,var(--c) 30%,transparent)}
+.st-sp.is-rip2{background:radial-gradient(75% 70% at 50% 52%,color-mix(in srgb,var(--c) 38%,transparent),color-mix(in srgb,var(--c) 12%,transparent) 85%),linear-gradient(180deg,var(--spa),var(--spb))}
+.st-sp .st-lb{position:absolute;left:10px;bottom:9px;right:8px;font-size:11px;font-weight:500;line-height:1.2;text-align:left;pointer-events:none}
+.st-sp .st-lv{position:absolute;right:10px;top:9px;font-size:10px;font-weight:600;opacity:.5;pointer-events:none}
+.st-lane{display:flex;align-items:center;font-size:11px;font-weight:500;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo);padding-left:2px}
+.st-pages{display:flex;gap:6px;justify-content:center;margin-top:8px;flex:none}
+.st-pages .st-tag.is-on{color:var(--ink);border-color:var(--ink)}
+
+/* keys */
+.st-keys{position:relative;flex:1;min-height:0;margin-top:16px}
+.st-keys-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;height:100%}
+.st-key{height:100%!important;aspect-ratio:auto!important;flex-direction:column;justify-content:flex-start!important;padding:12px 0 0!important;border-radius:10px!important;touch-action:none;cursor:pointer}
+.st-key .m1-cap{width:66%!important;height:calc(100% - 44px)!important;aspect-ratio:auto!important;border-radius:999px!important;pointer-events:none}
+.st-key .m1-ml{bottom:12px!important}
+.st-key.is-hit .m1-cap{background:linear-gradient(180deg,#FF84B8,#E8418A)!important;box-shadow:inset 0 2px 1px rgba(255,255,255,.45),0 1px 0 #B42766,0 2px 0 #B42766,0 3px 0 #921C51,0 4px 0 #921C51,0 8px 10px -2px var(--shA)!important}
+.st-keys.is-drum .st-key.is-hit .m1-cap{background:linear-gradient(180deg,#8FF0D2,#36C9A0)!important;box-shadow:inset 0 2px 1px rgba(255,255,255,.45),0 1px 0 #1E8F70,0 2px 0 #1E8F70,0 3px 0 #156B54,0 4px 0 #156B54,0 8px 10px -2px var(--shA)!important}
+.st-key.is-hit .m1-ml{color:var(--ink)!important;font-weight:600}
+.st-sharp{position:absolute;top:-15px;width:30px;height:30px;z-index:2;border:0;padding:0;min-height:0;min-width:0;cursor:pointer;touch-action:none}
+.st-sharp.is-hit{background:radial-gradient(circle at 50% 58%,#DC3A82 0 40%,#FF7DB4 84%,#E44A8E 100%)!important}
+
+/* shape */
+.st-shape{display:flex;gap:6px;align-items:center;flex:none}
+.st-bank{display:flex;height:30px;border-radius:15px;background:var(--well);box-shadow:inset 0 3px 6px var(--shA),0 1px 0 var(--hi);padding:3px;box-sizing:border-box;flex:1}
+.st-bank button{flex:1;display:flex;align-items:center;justify-content:center;font:inherit;font-size:12px;font-weight:500;color:var(--sub);border-radius:12px;border:0;background:none;padding:0;min-height:0;min-width:0;cursor:pointer}
+.st-bank button[aria-checked="true"]{color:var(--ink);background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
+.st-ms{width:34px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.st-knobs{margin-top:8px;flex:none}
+
+/* transport */
+.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:2fr 1fr 1fr 1fr}

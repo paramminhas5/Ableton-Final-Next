@@ -42,6 +42,8 @@ pub mod cmd {
     pub const ALL_OFF: u32 = 16;
     pub const LOCATE: u32 = 17;
     pub const SWING: u32 = 18;
+    /// Stop following Link (sent from the UI thread; applied on the audio thread).
+    pub const LINK_OFF: u32 = 19;
 }
 
 pub mod out {
@@ -491,6 +493,7 @@ impl Core {
                 l.duck_note = if c.x < 0.0 { -1 } else { c.x as i32 };
             }
             cmd::METRONOME => self.tr.metronome = c.a != 0,
+            cmd::LINK_OFF => self.tr.link = false,
             cmd::ALL_OFF => self.layers[li].all_off(),
             cmd::LOCATE => {
                 if !self.tr.link {

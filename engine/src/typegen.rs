@@ -83,9 +83,9 @@ pub fn typescript() -> String {
 
     writeln!(
         o,
-        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {} }} as const;",
+        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {} }} as const;",
         cmd::NOTE_ON, cmd::NOTE_OFF, cmd::PARAM, cmd::INSTRUMENT, cmd::TEMPO, cmd::LOOP, cmd::PLAY, cmd::STOP, cmd::RECORD, cmd::RECORD_OFF,
-        cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING
+        cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF
     )
     .unwrap();
     writeln!(o, "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {} }} as const;", out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON).unwrap();

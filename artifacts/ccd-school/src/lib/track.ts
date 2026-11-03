@@ -10,6 +10,7 @@
  */
 "use client";
 import { useEffect, useState, useCallback } from "react";
+import { hasTrackV2, mergeV1, readTrackV2, toV1View, writeTrackV2 } from "./track2";
 
 export type LayerKind = "kick" | "hats" | "clap" | "bass" | "chords" | "lead" | "pad" | "perc";
 export type WorldKey = "fundamentals" | "dj" | "producer";
@@ -138,12 +139,15 @@ export function previewLayer(track: Track, offer: Offer): Layer {
 }
 
 // ── Store ────────────────────────────────────────────────────────────────────
+// Once Studio has opened, the track lives in v2 (src/lib/track2.ts). This API then
+// reads a v1-shaped view of it and writes lesson changes back into v2, so lessons,
+// Today, World and DJ work unchanged.
 
 const KEY = "ccd.track.v1";
 const EVT = "track:change";
+const V2_EVT = "track2:change";
 
-export function readTrack(): Track {
-  if (typeof window === "undefined") return emptyTrack();
+function readV1(): Track {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return emptyTrack();
@@ -152,9 +156,20 @@ export function readTrack(): Track {
   } catch { return emptyTrack(); }
 }
 
+export function readTrack(): Track {
+  if (typeof window === "undefined") return emptyTrack();
+  if (hasTrackV2()) return toV1View(readTrackV2());
+  return readV1();
+}
+
 export function writeTrack(t: Track) {
-  try { localStorage.setItem(KEY, JSON.stringify(t)); } catch {}
-  window.dispatchEvent(new CustomEvent(EVT, { detail: t }));
+  if (hasTrackV2()) {
+    const before = toV1View(readTrackV2());
+    writeTrackV2(mergeV1(readTrackV2(), before, t));
+  } else {
+    try { localStorage.setItem(KEY, JSON.stringify(t)); } catch {}
+  }
+  window.dispatchEvent(new CustomEvent(EVT, { detail: readTrack() }));
 }
 
 export function useTrack() {
@@ -162,15 +177,17 @@ export function useTrack() {
   useEffect(() => {
     setTrack(readTrack());
     const on = (e: Event) => setTrack((e as CustomEvent<Track>).detail);
-    const onStore = (e: StorageEvent) => { if (e.key === KEY) setTrack(readTrack()); };
+    const onV2 = () => setTrack(readTrack());
+    const onStore = (e: StorageEvent) => { if (e.key === KEY || e.key === "ccd.track.v2") setTrack(readTrack()); };
     window.addEventListener(EVT, on);
+    window.addEventListener(V2_EVT, onV2);
     window.addEventListener("storage", onStore);
-    return () => { window.removeEventListener(EVT, on); window.removeEventListener("storage", onStore); };
+    return () => { window.removeEventListener(EVT, on); window.removeEventListener(V2_EVT, onV2); window.removeEventListener("storage", onStore); };
   }, []);
   const update = useCallback((fn: (t: Track) => Track) => {
     const next = { ...fn(readTrack()), updatedAt: Date.now() };
     writeTrack(next);
-    setTrack(next);
+    setTrack(readTrack());
   }, []);
   return { track, update };
 }

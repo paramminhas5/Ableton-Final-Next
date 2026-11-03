@@ -1,188 +1,613 @@
 "use client";
 /**
- * Studio. One screen, laid out like a Launch Control:
- * the screen shows the selected layer, its values and its 16-step pattern (tap to edit);
- * knobs shape the selected layer; channel strips set levels and select layers;
- * pads toggle sidechain, mute, solo; transport plays, adds a layer, exports to Live.
+ * Studio, play mode (canvas "Model 1 · final": studio · drums, pads and studio · bass, keys).
+ *
+ * Pick a layer, pick how to play it (steps, keys, pads, or the layer's own surface),
+ * play, then shape it with one knob bank (sound, eq, fx, mix) plus mute and solo.
+ * Rec counts in one bar, play loops what you played, rec again adds on top.
+ * Everything runs on the CCD engine (WebAssembly in the browser, native in the app).
  */
+import "./studio.css";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useTrack, KIND, newLayer, MAX_LAYERS, type Layer, type LayerKind, type Track } from "@/lib/track";
-import { playTrack, stopTrack, audition } from "@/lib/track-engine";
-import { downloadTrackMidi } from "@/lib/track-midi";
-import { CAP, Fader, GoPill, Icon, Key, Knob, Pad, Screen, Silk } from "./controls";
-import { CAT_SRC } from "./shell";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import {
+  BASS_PARAMS,
+  display,
+  DRUM_PAD_NAMES,
+  DRUM_PAD_NOTES,
+  DRUM_PAD_PARAMS,
+  FLAG,
+  INSTRUMENT_BASE,
+  LAYER_PARAMS,
+  OUT,
+  type EngineEvent,
+  type ParamSpec,
+} from "@/engine";
+import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
+import { keyRow, noteName, padGrid, pitchClass, stepOf, type Snap } from "@/lib/theory";
+import {
+  DRUM_LANES,
+  LAYER_ORDER,
+  MAX_LAYERS,
+  newLayerV2,
+  paramOf,
+  STEP_BEATS,
+  TYPE,
+  useTrackV2,
+  type Bank,
+  type LayerV2,
+  type Surface,
+  type TrackV2,
+} from "@/lib/track2";
+import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { useEngineTrack } from "./useEngineTrack";
 
-const KNOB_CAPS = [CAP.go, CAP.grey, CAP.navy];
-const ALL_KINDS: LayerKind[] = ["kick", "hats", "clap", "perc", "bass", "lead", "chords", "pad"];
+const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
+const KNOB_CAPS = [null, CAP.grey, CAP.navy, CAP.grey] as const;
+const SNAPS: Snap[] = ["1/16", "1/32", "off"];
+const DRUM_KEY_LABELS = ["kick", "snare", "clap", "rim", "hat", "open", "shaker", "ride"];
+const MUTE_C = "#F3C14F";
+const SOLO_C = "#7D96FF";
+const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
+
+type Touched = { label: string; text: string } | null;
+
+/** Velocity from how you hit: force where the device reports it, else contact size. */
+function velocity(e: PointerEvent<HTMLElement>): number {
+  if (e.pointerType === "pen" || (e.pressure > 0 && e.pressure !== 0.5 && e.pointerType !== "mouse")) {
+    return Math.min(1, Math.max(0.2, 0.25 + e.pressure * 0.75));
+  }
+  const size = Math.max(e.width || 0, e.height || 0);
+  if (e.pointerType === "touch" && size > 2) return Math.min(1, Math.max(0.45, 0.4 + (size - 8) / 40));
+  return 0.85;
+}
+
+/** The knobs for this bank: four specs and their wire indices. */
+function bankKnobs(l: LayerV2, bank: Bank): { spec: ParamSpec; index: number }[] {
+  if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
+  if (TYPE[l.type].engine === "drums") {
+    return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + l.pad * DRUM_PAD_PARAMS.length + k }));
+  }
+  return BASS_PARAMS.filter(p => p.bank === "sound").map(spec => ({ spec, index: spec.index }));
+}
 
 export function Studio() {
-  const { track, update } = useTrack();
+  const { track, update, undo, canUndo } = useTrackV2();
+  const { engine, start } = useEngineTrack(track);
   const [selId, setSelId] = useState<string | null>(null);
-  const [solo, setSolo] = useState<string | null>(null);
-  const [touched, setTouched] = useState<{ label: string; v: number } | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [step, setStep] = useState(-1);
-  const [bank, setBank] = useState(0);
+  const [bank, setBank] = useState<Bank>("sound");
+  const [touched, setTouched] = useState<Touched>(null);
   const [adding, setAdding] = useState(false);
-  const live = useRef<{ track: Track; solo: string | null }>({ track, solo });
-  live.current = { track, solo };
+  const [page, setPage] = useState(0);
+  const [snap, setSnap] = useState<Snap>("1/16");
+  const [pos, setPos] = useState<{ beat: number; flags: number }>({ beat: 0, flags: 0 });
+  const [hits, setHits] = useState<Record<string, number>>({});
+  const [held, setHeldUi] = useState<Set<number>>(new Set());
+  const lastNote = useRef(33);
+  const recHeld = useRef<Held>(new Map());
+  const takeOpen = useRef(false);
+  const lastParamEdit = useRef(0);
+  const trackRef = useRef(track);
+  trackRef.current = track;
 
-  useEffect(() => { if (!selId && track.layers[0]) setSelId(track.layers[Math.min(2, track.layers.length - 1)].id); }, [track.layers, selId]);
-  useEffect(() => () => stopTrack(), []);
+  useEffect(() => {
+    if (!selId && track.layers.length) setSelId((track.layers.find(l => l.type === "drums") ?? track.layers[0]).id);
+  }, [track.layers, selId]);
 
   const sel = track.layers.find(l => l.id === selId) ?? null;
-  const kind = sel ? KIND[sel.kind] : null;
+  const selIndex = sel ? track.layers.indexOf(sel) : -1;
+  const type = sel ? TYPE[sel.type] : null;
+  const drumLike = sel ? TYPE[sel.type].engine === "drums" : false;
+  const playing = !!(pos.flags & FLAG.playing);
+  const countIn = !!(pos.flags & FLAG.countIn);
+  const recording = !!(pos.flags & FLAG.recording);
 
-  const patch = useCallback((id: string, fn: (l: Layer) => Layer) => {
-    update(t => ({ ...t, layers: t.layers.map(l => (l.id === id ? fn(l) : l)) }));
-  }, [update]);
+  const patchSel = useCallback(
+    (fn: (l: LayerV2) => LayerV2, undoable = true) => {
+      if (!selId) return;
+      update(t => ({ ...t, layers: t.layers.map(l => (l.id === selId ? fn(l) : l)) }), undoable);
+    },
+    [selId, update],
+  );
 
-  const play = async () => {
-    if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }
-    if (!track.layers.length) return;
-    setPlaying(true);
-    await playTrack(() => {
-      const { track: t, solo: s } = live.current;
-      return s ? { ...t, layers: t.layers.map(l => ({ ...l, mute: l.mute || l.id !== s })) } : t;
-    }, setStep);
+  // ── engine events: recording, the playhead, lights ───────────────────────
+  const flash = useCallback((key: string) => {
+    setHits(h => ({ ...h, [key]: Date.now() }));
+    setTimeout(() => setHits(h => {
+      const n = { ...h };
+      if (Date.now() - (n[key] ?? 0) >= 200) delete n[key];
+      return n;
+    }), 220);
+  }, []);
+
+  useEffect(() => {
+    return engine.on((evs: EngineEvent[]) => {
+      const t = trackRef.current;
+      for (const e of evs) {
+        if (e.kind === OUT.pos) {
+          setPos(p => (p.beat === e.beat && p.flags === e.flags ? p : { beat: e.beat, flags: e.flags }));
+          continue;
+        }
+        const layer = t.layers[e.layer];
+        if (!layer) continue;
+        if (e.kind === OUT.seqOn) {
+          flash(`${layer.id}:${e.note}`);
+          continue;
+        }
+        const rec = !!(e.flags & FLAG.recording);
+        if (e.kind === OUT.playedOn && rec) {
+          pressNote(recHeld.current, layer.id, e.note, e.vel, e.beat, !!(e.flags & FLAG.countIn));
+        } else if (e.kind === OUT.playedOff) {
+          const ev = releaseNote(recHeld.current, layer.id, e.note, e.beat, { loop: t.loop, snap, strength: 1, swing: t.swing });
+          if (!ev) continue;
+          // One take is one undo step.
+          const first = !takeOpen.current;
+          takeOpen.current = true;
+          update(tr => ({ ...tr, layers: tr.layers.map(l => (l.id === layer.id ? { ...l, events: overdub(l.events, ev, { loop: tr.loop, snap, strength: 1, swing: tr.swing }) } : l)) }), first);
+        }
+      }
+    });
+  }, [engine, flash, snap, update]);
+
+  useEffect(() => {
+    if (!recording && !countIn) takeOpen.current = false;
+  }, [recording, countIn]);
+
+  // ── playing ───────────────────────────────────────────────────────────────
+  const down = (note: number, e: PointerEvent<HTMLElement>) => {
+    if (selIndex < 0 || !sel) return;
+    e.preventDefault();
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    start();
+    const vel = velocity(e);
+    engine.noteOn(selIndex, note, vel, e.timeStamp);
+    if (!drumLike) lastNote.current = note;
+    setHeldUi(h => new Set(h).add(note));
+    flash(`${sel.id}:${note}`);
+    if (drumLike) {
+      const pad = DRUM_PAD_NOTES.indexOf(note as (typeof DRUM_PAD_NOTES)[number]);
+      if (pad >= 0 && pad !== sel.pad) patchSel(l => ({ ...l, pad }), false);
+    }
+  };
+  const up = (note: number, e: PointerEvent<HTMLElement>) => {
+    if (selIndex < 0) return;
+    engine.noteOff(selIndex, note, e.timeStamp);
+    setHeldUi(h => {
+      const n = new Set(h);
+      n.delete(note);
+      return n;
+    });
+  };
+  const noteHandlers = (note: number) => ({
+    onPointerDown: (e: PointerEvent<HTMLElement>) => down(note, e),
+    onPointerUp: (e: PointerEvent<HTMLElement>) => up(note, e),
+    onPointerCancel: (e: PointerEvent<HTMLElement>) => up(note, e),
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+  });
+
+  const transportPlay = () => {
+    start();
+    if (recording || countIn) engine.play(); // stop recording, keep looping
+    else if (playing) engine.stop();
+    else engine.play();
+  };
+  const transportRec = () => {
+    start();
+    if (recording || countIn) engine.recordOff();
+    else {
+      takeOpen.current = false;
+      engine.record(4);
+    }
   };
 
-  const strips = track.layers.slice(bank * 4, bank * 4 + 4);
-  const banks = Math.max(1, Math.ceil(track.layers.length / 4));
-  const missing = ALL_KINDS.filter(k => !track.layers.some(l => l.kind === k));
+  // ── shaping ───────────────────────────────────────────────────────────────
+  const knobs = sel ? bankKnobs(sel, bank) : [];
+  const setParam = (index: number, spec: ParamSpec, v: number) => {
+    const now = Date.now();
+    const undoable = now - lastParamEdit.current > 800; // one drag is one undo step
+    lastParamEdit.current = now;
+    patchSel(l => {
+      const next = { ...l, params: { ...l.params, [index]: v } };
+      // Turning duck up with nowhere to duck from: duck under the drums' kick.
+      if (index === DUCK_IDX && v > 0 && !l.duck.src) {
+        const drums = trackRef.current.layers.find(x => x.type === "drums" && x.id !== l.id);
+        if (drums) next.duck = { src: drums.id, note: 36 };
+      }
+      return next;
+    }, undoable);
+    setTouched({ label: spec.label, text: display(spec, v) });
+  };
+
+  const addLayer = (t: LayerV2["type"]) => {
+    if (track.layers.length >= MAX_LAYERS) return;
+    const l = newLayerV2(t, "studio");
+    update(tr => ({ ...tr, layers: [...tr.layers, l] }));
+    setSelId(l.id);
+    setAdding(false);
+  };
+  const removeSel = () => {
+    if (!sel) return;
+    update(tr => ({ ...tr, layers: tr.layers.filter(l => l.id !== sel.id).map(l => (l.duck.src === sel.id ? { ...l, duck: { src: null, note: null } } : l)) }));
+    setSelId(null);
+    setAdding(false);
+  };
+
+  // ── screen text ───────────────────────────────────────────────────────────
+  const playStep = playing ? stepOf(pos.beat, 16, track.loop) : -1;
+  const status = countIn
+    ? `count in ${Math.max(1, Math.ceil(-pos.beat))}`
+    : recording
+      ? `rec · ${(Math.floor(pos.beat) + 1)}.${Math.floor((pos.beat % 1) * 4) + 1}`
+      : playing
+        ? `${Math.floor(pos.beat) + 1}.${Math.floor((pos.beat % 1) * 4) + 1}`
+        : `${track.bpm} bpm`;
+  const hint = useMemo(() => {
+    if (!sel) return "";
+    const s = sel.surface;
+    if (drumLike) {
+      if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[sel.pad]} selected`;
+      if (s === "keys") return "one sound per key";
+      if (s === "steps") return `a lane per sound · steps ${page * 8 + 1} to ${page * 8 + 8}`;
+    } else {
+      if (s === "pads") return `only notes in a minor · lit pads are a`;
+      if (s === "keys") return "hold one key, play another to glide";
+      if (s === "steps") return `${sel.events.length} steps on · tap to switch a step`;
+    }
+    return "";
+  }, [sel, drumLike, page]);
+  const duckSrc = sel?.duck.src ? track.layers.find(l => l.id === sel.duck.src) : null;
+  const ducking = !!sel && !!duckSrc && paramOf(sel, DUCK_IDX) > 0;
+  // With nothing touched, the screen shows the knob that matters most in this bank.
+  const shown = useMemo(() => {
+    if (touched) return touched;
+    if (!sel) return null;
+    const ks = bankKnobs(sel, bank);
+    const pick = bank === "sound" ? ks[drumLike ? 1 : 0] : bank === "mix" ? ks[ducking ? 3 : 0] : ks[0];
+    return pick ? { label: pick.spec.label, text: display(pick.spec, paramOf(sel, pick.index)) } : null;
+  }, [touched, sel, bank, drumLike, ducking]);
+  const live = countIn || recording || playing;
+
+  const unlock = () => start();
 
   return (
-    <div className="m1-page">
-      <header style={{ display: "flex", alignItems: "center", gap: 10, height: 40 }}>
-        <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}><Icon name="back" /></Link>
-        <span className="m1-t22" style={{ flex: 1 }}>studio</span>
-        <span className="m1-tag">my track · {track.layers.length}/{MAX_LAYERS}</span>
-      </header>
+    <div className="st-root" onPointerDownCapture={unlock}>
+      <div className="st-body">
+        <div className="st-head">
+          <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}>
+            <Icon name="back" />
+          </Link>
+          <div className="st-mode" role="radiogroup" aria-label="Studio mode">
+            <button type="button" role="radio" aria-checked="true">play</button>
+            <button type="button" role="radio" aria-checked="false" disabled title="mix arrives in the next step">mix</button>
+          </div>
+          <span style={{ flex: 1 }} />
+          <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
+          <button type="button" className="st-tag" onClick={() => setSnap(SNAPS[(SNAPS.indexOf(snap) + 1) % SNAPS.length])} aria-label={`Snap ${snap}, tap to change`}>snap {snap}</button>
+        </div>
 
-      <Screen height={210} style={{ marginTop: 6 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        {!sel && <img src={CAT_SRC} alt="" style={{ position: "absolute", right: 16, top: 16, width: 84 }} />}
-        {sel && kind ? (
-          <>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <div>
-                <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.035em", lineHeight: 1, color: kind.color }}>{kind.label}</div>
-                <div className="m1-ss" style={{ marginTop: 4 }}>layer {track.layers.indexOf(sel) + 1}{sel.from && sel.from !== "studio" ? " · from a lesson" : " · made here"}</div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <div className="m1-ss">{touched?.label ?? kind.knobs[0]}</div>
-                <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.035em", lineHeight: 1, marginTop: 2 }}>{Math.round((touched?.v ?? sel.params[0]) * 100)}%</div>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
-              {kind.knobs.map((n, i) => (
-                <div key={n} style={{ flex: 1 }}>
-                  <div className="m1-ss" style={{ display: "flex", justifyContent: "space-between" }}><span>{n}</span><span style={{ color: "var(--disp-ink)" }}>{Math.round(sel.params[i] * 100)}</span></div>
-                  <div style={{ height: 4, borderRadius: 2, background: "#1E1E21", marginTop: 5 }}>
-                    <div style={{ width: `${sel.params[i] * 100}%`, height: "100%", borderRadius: 2, background: touched?.label === n ? kind.color : "#8E8E93" }} />
+        <div className="st-slots">
+          {Array.from({ length: MAX_LAYERS }, (_, i) => {
+            const l = track.layers[i];
+            if (!l) {
+              return (
+                <button key={`add${i}`} type="button" className="m1-m is-wide st-slot is-empty" aria-label="Add a layer" onClick={() => setAdding(a => !a)}>
+                  <Icon name="plus" small />
+                  <span>add</span>
+                </button>
+              );
+            }
+            const on = l.id === selId;
+            const c = TYPE[l.type].color;
+            return (
+              <button key={l.id} type="button" className={`m1-m is-wide st-slot ${on ? "is-on" : ""} ${l.mute ? "is-muted" : ""}`} aria-pressed={on}
+                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); }}>
+                <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: c } as CSSProperties} />
+                {TYPE[l.type].label}
+                {l.solo ? <i className="st-solo" /> : null}
+              </button>
+            );
+          })}
+        </div>
+
+        <Screen className="st-scr" height={96}>
+          {sel && type ? (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>
+                    <span className="st-big" style={{ fontSize: 28, color: type.color }}>{type.label}</span>
+                    {ducking && duckSrc ? (
+                      <><span className="st-ss">ducks under</span><span className="st-chip" style={{ color: TYPE[duckSrc.type].color }}>{TYPE[duckSrc.type].label}{sel.duck.note === 36 ? " · kick" : ""}</span></>
+                    ) : null}
                   </div>
+                  {bank === "mix" && ducking && duckSrc && !live ? null : (
+                    <div className="st-ss" style={{ marginTop: 6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-            <div role="group" aria-label={`${kind.label} pattern`} style={{ display: "grid", gridTemplateColumns: "repeat(16,1fr)", gap: 3, marginTop: 16 }}>
-              {sel.steps.map((on, i) => (
-                <button key={i} type="button" aria-label={`Step ${i + 1} ${on ? "on" : "off"}`} aria-pressed={on}
-                  onClick={() => { patch(sel.id, l => ({ ...l, steps: l.steps.map((x, k) => (k === i ? !x : x)) })); if (!on) audition(sel, i); }}
-                  style={{ height: 22, borderRadius: 3, border: 0, padding: 0, minHeight: 0, minWidth: 0, background: on ? kind.color : i % 4 === 0 ? "#222225" : "#17171A", outline: step === i ? "1.5px solid #F3F2EF" : undefined, outlineOffset: 1, cursor: "pointer" }} />
-              ))}
-            </div>
-            <div className="m1-ss" style={{ marginTop: 7, display: "flex", justifyContent: "space-between" }}>
-              <span>pattern · tap to edit</span>
-              <span>{solo ? "solo on" : sel.mute ? "muted" : sel.sidechain ? "sidechain on" : `${track.bpm} bpm`}</span>
-            </div>
-          </>
-        ) : (
+                <div style={{ textAlign: "right", flex: "none" }}>
+                  <div className="st-ss">{shown?.label ?? ""}</div>
+                  <div className="st-big" style={{ fontSize: 28, marginTop: 2 }}>{shown?.text ?? ""}</div>
+                </div>
+              </div>
+              {bank === "mix" && ducking && duckSrc && !live ? <DuckGraph track={track} layer={sel} src={duckSrc} /> : null}
+            </>
+          ) : (
+            <>
+              <div className="st-ss">studio</div>
+              <div className="st-big" style={{ fontSize: 24, marginTop: 8 }}>no layers yet</div>
+              <div className="st-ss" style={{ marginTop: 6 }}>finish a lesson to add one, or press add</div>
+            </>
+          )}
+        </Screen>
+
+        {adding ? (
+          <AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} />
+        ) : sel ? (
           <>
-            <div className="m1-ss">studio</div>
-            <div className="m1-t22" style={{ marginTop: 8, maxWidth: 200 }}>no layers yet</div>
-            <div className="m1-ss" style={{ marginTop: 8, maxWidth: 210 }}>finish a lesson to add one, or press layer to start from scratch</div>
-          </>
-        )}
-      </Screen>
-
-      <Silk label={kind ? kind.label : "layer"} right="turn to shape" />
-      <div className="m1-g">
-        {[0, 1, 2].map(i => (
-          <Knob key={i} label={kind ? kind.knobs[i] : "—"} color={KNOB_CAPS[i]} size={40}
-            value={sel ? sel.params[i] : 0}
-            defaultValue={sel ? KIND[sel.kind].defaults[i] : 0.5}
-            onChange={sel ? v => patch(sel.id, l => ({ ...l, params: l.params.map((p, k) => (k === i ? v : p)) as Layer["params"] })) : undefined}
-            onTouch={(label, v) => setTouched({ label, v })} />
-        ))}
-        <Key label={banks > 1 ? `bank ${bank + 1}` : "hear it"} onClick={() => (banks > 1 ? setBank((bank + 1) % banks) : sel && audition(sel))} ariaLabel={banks > 1 ? "Next bank of layers" : "Hear this layer"}>
-          {banks > 1 ? <span className="m1-leg" style={{ fontSize: 20 }}>{bank + 1}</span> : <Icon name="hear" />}
-        </Key>
-      </div>
-
-      <Silk label="layers" right="level · select" />
-      <div className="m1-g">
-        {strips.map((l, i) => {
-          const on = l.id === selId;
-          const k = KIND[l.kind];
-          return (
-            <div key={l.id} className="m1-m is-wide" style={{ height: 236, flexDirection: "column", justifyContent: "flex-start", paddingTop: 22, gap: 10, opacity: l.mute ? 0.6 : 1 }}>
-              <Fader label={`${k.label} level`} led={k.color} value={l.params[3]} height={136} width={42}
-                onChange={v => patch(l.id, x => ({ ...x, params: [x.params[0], x.params[1], x.params[2], v] }))}
-                onTouch={() => setTouched({ label: "level", v: l.params[3] })} />
-              <span className="m1-eng" style={{ fontSize: 11, fontWeight: on ? 600 : 500, color: on ? "var(--ink)" : undefined }}>{k.label}</span>
-              <button type="button" onClick={() => { setSelId(l.id); setTouched(null); }} aria-label={`Select ${k.label}`} aria-pressed={on}
-                className={`m1-cap ${on ? "is-blk" : ""}`} style={{ width: 44, border: 0, padding: 0, cursor: "pointer", minHeight: 0, minWidth: 0, font: "inherit" }}>
-                <span className="m1-leg" style={{ fontSize: 17 }}>{bank * 4 + i + 1}</span>
+            <Silk label={`1 · play ${TYPE[sel.type].label} on`} right="pick how" />
+            <div className="st-pick">
+              {(["steps", "keys", "pads"] as Surface[]).map(s => (
+                <button key={s} type="button" className={`m1-m is-wide st-vk ${sel.surface === s ? "is-on" : ""}`} aria-pressed={sel.surface === s}
+                  onClick={() => patchSel(l => ({ ...l, surface: s }), false)}>
+                  <span className={`m1-dot ${sel.surface === s ? "is-on" : ""}`} style={{ ["--c" as string]: "#F4F3F0" } as CSSProperties} />{s}
+                </button>
+              ))}
+              <button type="button" className="m1-m is-wide st-vk is-dim" aria-disabled="true"
+                onClick={() => setTouched({ label: TYPE[sel.type].own, text: "soon" })}>
+                <span className="m1-dot" style={{ ["--c" as string]: TYPE[sel.type].color } as CSSProperties} />{TYPE[sel.type].own}
               </button>
             </div>
-          );
-        })}
-        {Array.from({ length: 4 - strips.length }, (_, i) => (
-          <button key={`e${i}`} type="button" className="m1-m is-wide is-dim" style={{ height: 236, opacity: 0.5 }} onClick={() => setAdding(true)} aria-label="Add a layer">
-            <span className="m1-eng" style={{ fontSize: 11 }}>empty</span>
+            <div style={{ height: 8, flex: "none" }} />
+            {sel.surface === "pads" && drumLike && (
+              <DrumPads layer={sel} hits={hits} noteHandlers={noteHandlers} />
+            )}
+            {sel.surface === "pads" && !drumLike && (
+              <ScalePads layer={sel} root={33} held={held} hits={hits} noteHandlers={noteHandlers} />
+            )}
+            {sel.surface === "keys" && (
+              <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
+            )}
+            {sel.surface === "steps" && drumLike && (
+              <DrumSteps layer={sel} page={page} setPage={setPage} playStep={playStep}
+                onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, STEP_BEATS, 0.2) }))} />
+            )}
+            {sel.surface === "steps" && !drumLike && (
+              <MelodicSteps layer={sel} playStep={playStep}
+                onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * STEP_BEATS) < STEP_BEATS / 2) ? null : lastNote.current, step, STEP_BEATS, STEP_BEATS) }))} />
+            )}
+
+            <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" />
+            <div className="st-shape">
+              <div className="st-bank" role="radiogroup" aria-label="Knob bank">
+                {BANKS.map(b => (
+                  <button key={b} type="button" role="radio" aria-checked={bank === b} onClick={() => { setBank(b); setTouched(null); }}>{b}</button>
+                ))}
+              </div>
+              <button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
+                aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>m</button>
+              <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}
+                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>s</button>
+            </div>
+            <div className="m1-g st-knobs">
+              {knobs.map(({ spec, index }, i) => (
+                <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
+                  value={paramOf(sel, index)} defaultValue={spec.default}
+                  onChange={v => setParam(index, spec, v)} />
+              ))}
+            </div>
+          </>
+        ) : null}
+      </div>
+
+      <div className="m1-g st-transport">
+        <button type="button" className="m1-m is-wide" aria-label={playing && !recording && !countIn ? "Stop" : "Play"} onClick={transportPlay}>
+          <span className="m1-cap is-go is-pill" style={{ width: "88%", height: "56%", gap: 8, fontSize: 15, fontWeight: 500, marginTop: -12 }}>
+            <Icon name={playing && !recording && !countIn ? "stop" : "play"} />{playing && !recording && !countIn ? "stop" : "play"}
+          </span>
+        </button>
+        <Key label="rec" led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={transportRec}
+          ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
+          <Icon name="rec" />
+        </Key>
+        <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
+          <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
+        </Key>
+        <Key label="to live" onClick={() => downloadTrackV2Midi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+          <Icon name="out" />
+        </Key>
+      </div>
+    </div>
+  );
+}
+
+/** The kick's hits and how far this layer dips under each one (canvas: bass · duck). */
+function DuckGraph({ track, layer, src }: { track: TrackV2; layer: LayerV2; src: LayerV2 }) {
+  const amt = paramOf(layer, DUCK_IDX);
+  const hits = src.events.filter(e => layer.duck.note === null || e.note === layer.duck.note).map(e => e.start / track.loop);
+  const W = 322;
+  const rel = (0.06 + amt * 0.22) / 3; // seconds, matches the engine's duck release
+  const relBeats = (rel * track.bpm) / 60 / track.loop;
+  const pts: string[] = [];
+  for (let x = 0; x <= W; x += 2) {
+    const t = x / W;
+    let since = Infinity;
+    for (const h of hits) {
+      const d = (t - h + 1) % 1;
+      since = Math.min(since, d);
+    }
+    const dip = since === Infinity ? 0 : amt * 0.92 * Math.exp(-since / Math.max(relBeats, 1e-4));
+    pts.push(`${x} ${(4 + dip * 34).toFixed(1)}`);
+  }
+  const c = TYPE[layer.type].color;
+  return (
+    <div style={{ marginTop: 6 }}>
+      <svg width="100%" height="40" viewBox={`0 0 ${W} 40`} preserveAspectRatio="none" aria-hidden style={{ display: "block" }}>
+        <path d={`M0 4H${W}`} stroke="#2A2A2E" strokeDasharray="3 4" />
+        <path d={`M${pts.join(" L")}`} fill="none" stroke={c} strokeWidth="2" />
+        {hits.map((h, i) => <rect key={i} x={h * W} y={34} width={12} height={5} rx={1.5} fill={TYPE[src.type].color} />)}
+      </svg>
+    </div>
+  );
+}
+
+// ── surfaces ────────────────────────────────────────────────────────────────
+
+type NoteHandlers = (note: number) => Record<string, (e: never) => void>;
+
+/** 16-pad drum rack, kick bottom left. Resting pads glow faintly; a hit ripples out. */
+function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+  const c = TYPE[layer.type].color;
+  // Screen order: top row first. Pad index p sits at row 3 - floor(p/4).
+  const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
+  const hitPads = DRUM_PAD_NOTES.map((n, p) => (hits[`${layer.id}:${n}`] ? p : -1)).filter(p => p >= 0);
+  const rc = (p: number) => [3 - Math.floor(p / 4), p % 4];
+  const ripple = (p: number) => {
+    let best = 9;
+    const [r, col] = rc(p);
+    for (const h of hitPads) {
+      const [hr, hc] = rc(h);
+      best = Math.min(best, Math.max(Math.abs(hr - r), Math.abs(hc - col)));
+    }
+    return best;
+  };
+  return (
+    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      {order.map(p => {
+        const note = DRUM_PAD_NOTES[p];
+        const d = ripple(p);
+        const cls = d === 0 || (p === layer.pad && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
+        return (
+          <button key={p} type="button" className={`st-sp ${cls}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={DRUM_PAD_NAMES[p]} {...noteHandlers(note)}>
+            <span className="st-lb">{DRUM_PAD_NAMES[p]}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Scale grid: only notes in key, rows a fourth apart, roots glow. */
+function ScalePads({ layer, root, held, hits, noteHandlers }: { layer: LayerV2; root: number; held: Set<number>; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+  const c = TYPE[layer.type].color;
+  const notes = padGrid(root, "minor");
+  return (
+    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      {notes.map((n, i) => {
+        const on = held.has(n) || !!hits[`${layer.id}:${n}`];
+        const isRoot = pitchClass(n) === pitchClass(root);
+        const name = noteName(n);
+        return (
+          <button key={i} type="button" className={`st-sp ${on ? "is-lit" : isRoot ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
+            aria-label={`Note ${name}${isRoot ? ", root" : ""}`} {...noteHandlers(n)}>
+            <span className="st-lb" style={{ fontSize: 15 }}>{name.replace(/-?\d+$/, "")}<span style={{ fontSize: 10, opacity: 0.6 }}>{name.match(/-?\d+$/)?.[0]}</span></span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Eight white keys with black keys set between them. Drums: one sound per key. */
+function Keys({ drum, held, hits, layerId, noteHandlers }: { drum: boolean; held: Set<number>; hits: Record<string, number>; layerId: string; noteHandlers: NoteHandlers }) {
+  const row = keyRow(36);
+  const whites = drum ? DRUM_PAD_NOTES.slice(0, 8) : row.white;
+  const lit = (n: number) => held.has(n) || !!hits[`${layerId}:${n}`];
+  return (
+    <div className={`st-keys ${drum ? "is-drum" : ""}`}>
+      <div className="st-keys-row">
+        {whites.map((n, i) => (
+          <button key={i} type="button" className={`m1-m is-wide st-key ${lit(n) ? "is-hit" : ""}`} aria-label={drum ? DRUM_KEY_LABELS[i] : `Note ${noteName(n)}`} {...noteHandlers(n)}>
+            <span className="m1-cap" />
+            <span className="m1-ml">{drum ? DRUM_KEY_LABELS[i] : noteName(n).replace(/\d+$/, "")}</span>
           </button>
         ))}
       </div>
-
-      <div className="m1-g" style={{ marginTop: 8 }}>
-        <Pad lit={sel?.sidechain ? "var(--led-go)" : null} ariaPressed={!!sel?.sidechain} onClick={() => sel && patch(sel.id, l => ({ ...l, sidechain: !l.sidechain }))}>sidechain</Pad>
-        <Pad lit={sel?.mute ? "var(--led-white)" : null} ariaPressed={!!sel?.mute} onClick={() => sel && patch(sel.id, l => ({ ...l, mute: !l.mute }))}>mute</Pad>
-        <Pad lit={solo && solo === sel?.id ? "var(--led-white)" : null} ariaPressed={!!solo && solo === sel?.id} onClick={() => sel && setSolo(solo === sel.id ? null : sel.id)}>solo</Pad>
-        <Pad lit={adding ? "var(--led-lilac)" : null} ariaPressed={adding} onClick={() => setAdding(a => !a)}>layer +</Pad>
-      </div>
-
-      {adding && (
-        <div className="m1-m is-wide" style={{ marginTop: 10, padding: 14, flexDirection: "column", alignItems: "stretch", gap: 10 }}>
-          <div className="m1-eng" style={{ fontSize: 11 }}>add a layer {track.layers.length >= MAX_LAYERS ? "· track is full" : ""}</div>
-          <div className="m1-g" style={{ gap: 6 }}>
-            {missing.map(k => (
-              <Pad key={k} height={42} onClick={() => {
-                if (track.layers.length >= MAX_LAYERS) return;
-                const l = newLayer(k, "studio");
-                update(t => ({ ...t, layers: [...t.layers, l] }));
-                setSelId(l.id); setAdding(false);
-                setBank(Math.floor(track.layers.length / 4));
-              }}>{k}</Pad>
-            ))}
-          </div>
-          {sel && (
-            <Pad height={40} onClick={() => { update(t => ({ ...t, layers: t.layers.filter(l => l.id !== sel.id) })); setSelId(null); setAdding(false); }}>
-              remove {KIND[sel.kind].label}
-            </Pad>
-          )}
-        </div>
-      )}
-
-      <div className="m1-g" style={{ marginTop: 12, gridTemplateColumns: "2fr 1fr 1fr" }}>
-        <GoPill onClick={play} ariaLabel={playing ? "Stop" : "Play"} disabled={!track.layers.length} style={{ height: 76 }}>
-          <Icon name={playing ? "stop" : "play"} />{playing ? "stop" : "play"}
-        </GoPill>
-        <Key label="tempo" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} ariaLabel={`Tempo ${track.bpm}, tap to change`}>
-          <span className="m1-leg" style={{ fontSize: 17 }}>{track.bpm}</span>
-        </Key>
-        <Key label="to live" onClick={() => downloadTrackMidi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI"><Icon name="out" /></Key>
-      </div>
+      {!drum &&
+        row.black.map(b => (
+          <button key={b.note} type="button" aria-label={`Note ${noteName(b.note)}`} className={`m1-cap is-blk st-sharp ${lit(b.note) ? "is-hit" : ""}`}
+            style={{ left: `calc((100% - 35px) / 8 * ${b.after + 1} + ${5 * (b.after + 1)}px - 2.5px - 15px)` }} {...noteHandlers(b.note)} />
+        ))}
     </div>
+  );
+}
+
+/** A lane per sound, 8 steps a page. The playing step glows. */
+function DrumSteps({ layer, page, setPage, playStep, onToggle }: { layer: LayerV2; page: number; setPage: (p: number) => void; playStep: number; onToggle: (note: number, step: number) => void }) {
+  const c = TYPE[layer.type].color;
+  const lanes = (layer.type === "hats" ? DRUM_LANES.hats : DRUM_LANES.drums).slice(0, 4);
+  const names = lanes.map(n => DRUM_PAD_NAMES[DRUM_PAD_NOTES.indexOf(n as (typeof DRUM_PAD_NOTES)[number])].replace("closed hat", "hat"));
+  return (
+    <>
+      <div className="st-tray" style={{ gridTemplateColumns: "44px repeat(8,1fr)", gridTemplateRows: `repeat(${lanes.length},1fr)` }}>
+        {lanes.map((note, li) => (
+          <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} onToggle={onToggle} />
+        ))}
+      </div>
+      <div className="st-pages">
+        {[0, 1].map(p => (
+          <button key={p} type="button" className={`st-tag ${page === p ? "is-on" : ""}`} onClick={() => setPage(p)}>{p ? "9-16" : "1-8"}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function LaneRow({ name, note, layer, page, playStep, color, onToggle }: { name: string; note: number; layer: LayerV2; page: number; playStep: number; color: string; onToggle: (note: number, step: number) => void }) {
+  return (
+    <>
+      <div className="st-lane">{name}</div>
+      {Array.from({ length: 8 }, (_, k) => {
+        const step = page * 8 + k;
+        const on = layer.events.some(e => e.note === note && Math.abs(e.start - step * STEP_BEATS) < STEP_BEATS / 2);
+        const here = step === playStep;
+        return (
+          <button key={k} type="button" className={`st-sp ${on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
+            aria-label={`${name} step ${step + 1} ${on ? "on" : "off"}`} aria-pressed={on} onClick={() => onToggle(note, step)} />
+        );
+      })}
+    </>
+  );
+}
+
+function MelodicSteps({ layer, playStep, onToggle }: { layer: LayerV2; playStep: number; onToggle: (step: number) => void }) {
+  const c = TYPE[layer.type].color;
+  return (
+    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      {Array.from({ length: 16 }, (_, s) => {
+        const ev = layer.events.find(e => Math.abs(e.start - s * STEP_BEATS) < STEP_BEATS / 2);
+        const here = s === playStep;
+        return (
+          <button key={s} type="button" className={`st-sp ${ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
+            aria-label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} aria-pressed={!!ev} onClick={() => onToggle(s)}>
+            <span className="st-lv">{s + 1}</span>
+            {ev ? <span className="st-lb">{noteName(ev.note)}</span> : null}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function AddPanel({ track, sel, onAdd, onRemove }: { track: TrackV2; sel: LayerV2 | null; onAdd: (t: LayerV2["type"]) => void; onRemove: () => void }) {
+  const full = track.layers.length >= MAX_LAYERS;
+  return (
+    <>
+      <Silk label="add a layer" right={full ? "track is full" : `${MAX_LAYERS - track.layers.length} free`} />
+      <div className="st-tray" style={{ gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "repeat(3,1fr)" }}>
+        {LAYER_ORDER.map(t => (
+          <button key={t} type="button" className="st-sp is-rest" style={{ ["--c" as string]: TYPE[t].color } as CSSProperties} disabled={full} onClick={() => onAdd(t)}>
+            <span className="st-lb" style={{ fontSize: 15 }}>{TYPE[t].label}</span>
+          </button>
+        ))}
+        {sel ? (
+          <button type="button" className="st-sp" style={{ gridColumn: "span 3" }} onClick={onRemove}>
+            <span className="st-lb" style={{ fontSize: 15 }}>remove {TYPE[sel.type].label}</span>
+          </button>
+        ) : null}
+      </div>
+    </>
   );
 }

@@ -40,7 +40,8 @@ export function Today() {
   const offer = useMemo(() => (mission ? offerFor(track, mission) : null), [track, mission]);
   const todayXp = progress.dailyXp ?? 0;
   const lit = Math.min(9, Math.round((todayXp / DAILY_GOAL_XP) * 9));
-  const layers = track.layers.length;
+  // Drum lanes show as separate rows but are one layer (one drum rack) in the track.
+  const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
 
   const hear = async () => {
     if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }

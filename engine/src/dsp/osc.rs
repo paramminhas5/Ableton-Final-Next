@@ -1,8 +1,6 @@
 //! Band-limited oscillators (PolyBLEP). Run inside a 2x oversampled voice, so what
 //! aliasing PolyBLEP leaves lands above the audible band and the decimator removes it.
 
-use super::TAU;
-
 /// Two-sample polynomial band-limited step residual.
 #[inline]
 fn poly_blep(t: f32, dt: f32) -> f32 {
@@ -88,6 +86,7 @@ impl Sine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::dsp::TAU;
 
     /// Energy above `cut` Hz relative to total, via a naive DFT over a window.
     fn high_band_ratio(sig: &[f32], sr: f32, cut: f32) -> f32 {

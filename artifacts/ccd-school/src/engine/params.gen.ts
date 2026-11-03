@@ -57,7 +57,7 @@ export type BassParamId = `${(typeof BASS_PARAMS)[number]["id"]}`;
 export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId;
 
-export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18 } as const;
+export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4 } as const;
 export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8 } as const;
 export const OUT_EVENT_BYTES = 32;
