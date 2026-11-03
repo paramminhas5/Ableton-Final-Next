@@ -143,3 +143,19 @@ Design canvas pages: "Model 1 · lessons", "the rest", "real hardware", "before 
 - Mix: stage is pan across, pitch up and down, size is loudness, reverb is haze; clashes get a red ring and fix pads that glow; hold the screen to hear before your changes. Faders: names on top, engraved 0 dB line, master "out", a tapped strip opens wide.
 - Scope: apps on iOS, Android and the web, connected to Ableton Live (Link, MIDI/stems/.als export, controller mode). One Rust engine, native on phones, WASM on the web; one React UI. Sound and playing at the level of top commercial instruments. Full plan: `ccd/school-instrument-plan.md`; next chat starts from `ccd/school-next-chat-prompt.md`.
 - Repo: design sources live in `artifacts/ccd-school/design/` (generators, board HTML, screenshots of every final screen, the plan and the prompt).
+
+## Build · step 0, the engine spike (3 Nov 2026)
+Branch `school/field`, pushed. Stack changes from the plan, after research: the phone shell is **Tauri 2** (Rust core, so the engine runs in-process, no Swift/Kotlin bridge) instead of Capacitor; Android audio is AAudio through the `ndk` crate (low-latency, exclusive), iOS is RemoteIO through objc2 bindings (64-frame buffer); Ableton Link is **4.1.1**, whose open SDK includes Link Audio.
+- `engine/` (Rust): sample-accurate clock and loop sequencer, 16-pad synth drum rack with hat choke, mono bass (PolyBLEP at 2x, ZDF ladder, glide, drift), strip per layer (eq, drive, crush, tone, duck, pan, fader law with 0 dB at 75%), echo and FDN reverb, parameter registry, C ABI, offline renderer. The 2x stages add a fixed 1 ms that the sequencer cancels, like DAW delay compensation. 35 Rust tests, including timing at any buffer size.
+- Web: the engine as a 112 KB wasm in an AudioWorklet; test page `/lab/engine` with touch-to-sound measurement by microphone (tap the glass by the mic: the gap between the knock and the sound).
+- Types: `npm run engine:types` writes `src/engine/params.gen.ts` from Rust; a Rust test fails if it is stale.
+- Phones (`mobile/`): open the web app (one source for every screen); only sound is native. Android APK builds in the cloud; iOS code type-checks, the Xcode build and device tests run on Param's Mac (steps in `mobile/README.md`).
+- Latency so far, headless Chrome in the cloud only: touch to engine about 2 ms, estimate touch to sound about 14 ms (128-frame buffer, 8 ms reported output). Real numbers need the phones: iPhone, Android and Link against Live are waiting on Param.
+- Sound plan and how top plugins are made: `ccd/engine-sound.md`.
+
+## Build · step 1, track v2 and Studio play (3 Nov 2026)
+- Track v2 (`ccd.track.v2`, `src/lib/track2.ts`): up to 8 layers of note events with params by engine index, per-layer mix and duck. Migrates v1 on first read (kick, clap, perc fold into one drum rack; sidechain becomes duck under the kick); v1 stays as a backup. Lessons, Today, World and DJ keep the v1 API, now a view onto v2.
+- Studio play rebuilt to the canvas (`studio · drums, pads`, `studio · bass, keys`, round 5 steps and pads): layer slots, steps (a lane per sound, 8 a page), keys (black keys between), pads (drum rack with ripple, a minor scale grid with roots lit), knob banks sound/eq/fx/mix with mute and solo, duck graph. Light and dark checked at 390x844.
+- Recording: rec counts in one bar, play loops the take, rec again adds on top, snap 1/16, 1/32 or off, one take is one undo step, notes placed at the touch time.
+- Not yet: mix mode (step 2), each layer's own surface (glide, circle, chord pads, xy, rolls, riser: step 3), chords and lead play on the mono synth until their instruments land, sampled kits wait on the sound-sources decision.
+- Checks: typecheck clean, 199 web tests, production build passes.

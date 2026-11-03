@@ -204,3 +204,11 @@ The aim is that it sounds and plays like top-tier commercial instruments, so peo
 - **Sound sources:** commission or record CCD multisample kits, license a library, or both.
 - **App shell:** Capacitor, unless the spike shows the webview adds too much latency.
 - **Price model:** what is free and what is Pro.
+
+## Revised in the build chat (3 Nov 2026)
+
+- **App shell: Tauri 2, not Capacitor.** The app core is Rust, so the engine runs in the same process with no Swift or Kotlin bridge. Android audio is AAudio through the `ndk` crate (low latency, exclusive stream); iOS is RemoteIO through objc2 bindings.
+- **One source for every screen.** The phone apps have no pages of their own: they open the web app (`artifacts/ccd-school`, address in `mobile/app-url.json`). Only sound is native. Build and check every screen on the web first; the phones follow.
+- **Ableton Link 4.1.1**, built from Ableton's repo. Its open SDK and C API include Link Audio, so streaming the track into Live is possible in step 4.
+- **`packages/ui-bridge/`** is not needed: the bridge and generated types live in the web app at `src/engine/`, which every platform loads.
+- Sound plan: `engine/SOUND.md` (also `ccd/engine-sound.md` in the project).
