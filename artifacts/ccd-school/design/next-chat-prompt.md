@@ -1,6 +1,7 @@
 We're building CCD School into a real instrument: one Rust sound engine and one React UI, on iOS, Android and the web, connected to Ableton Live. Steps 0 and 1 of the plan are done and pushed. This chat does step 2: the mix.
 
 Read these first:
+- Project doc ccd/00_README.md: the index of every project doc, with what is current and what is history.
 - Project doc ccd/school-redesign.md, the last two sections ("Build · step 0" and "Build · step 1"): what exists and what is not done.
 - Project doc ccd/school-instrument-plan.md: the plan, including "Revised in the build chat" at the end (Tauri, one source).
 - Project doc ccd/engine-sound.md: how the engine makes sound and the sound roadmap.
@@ -34,5 +35,5 @@ Working rules:
 - Commit to school/field as you go, push when a step works.
 - Render every screen you touch at 390x844, light and dark, in Chromium and WebKit (Playwright), and look at it before calling it done.
 - If something can only be checked on my Mac or phones, tell me exactly what to run.
-- After the step, add a short changelog entry to ccd/school-redesign.md in the project.
+- After the step, add a short changelog entry to ccd/school-redesign.md and one dated line to ccd/history.md in the project.
 - Plain copy, lowercase UI text, no em dashes.
