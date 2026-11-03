@@ -244,12 +244,13 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
    - (improvement) **Low-end phone mode** (bigger buffer option, battery saver) and **Hindi copy**.
    - (improvement) **Clean house:** retire duplicate older pages (`/train` versus `/gym`, the old lesson screens once the new player lands), one README, merge to `main`, move `learn.catscandance.com` to the `ccd-school-app` project.
 
-**Needs Param (ask early, they block items above):**
-- Sound sources: (improvement) record a **CCD kit with the residents**, license a library, or both. Item 2 builds the sampler either way.
-- (improvement) **Listening panel:** five producers for blind A/B tests of our drums, bass and mix against Live's instruments on the same MIDI, after items 1 and 2, then a short sound report. No quality claim goes out before it.
-- Price: what is free, what is Pro, whether the pilot is free (the PRD says yes).
-- Keys: `ADMIN_PASSWORD`, Google sign-in, Razorpay and Stripe, `VAPID_EMAIL`. Then the merge and the domain move.
-- Check Magnific's commercial terms for the AI clips used in lessons.
+**Needs Param (asked 3 Nov; answers the same night, 21:21 IST):**
+- Sound sources: **open sources or our own synthesis, the way Vital does it.** Synthesised kits and wavetables in the engine; CC0 or public-domain recordings only where a real recording is needed, each listed in a credits file. A CCD kit with the residents can come later.
+- Listening panel: **not now.** Keep saying "measured, not listened" until it happens.
+- Price: **everything free for now** (gating defaults to free since 3 Nov). Design Pro for retention and sharing and bring it to Param before anything is locked: `ccd/school-pro.md`.
+- Keys: Param adds `ADMIN_PASSWORD` later. Still needed: Google sign-in, Razorpay and Stripe, `VAPID_EMAIL`. Then the merge and the domain move.
+- Magnific: Param is on a paid plan. **Replace the three AI clips with open or our own audio** (engine renders): the dry and hall clap, and the house sketch with the low end dropping out for a bar.
+- Ableton's reply about the Android Link licence (emailed 3 Nov): none yet.
 
 **Link and the web app.** A browser page cannot join a Link session itself: Link finds peers with UDP multicast on the local network and browsers have no raw UDP. Three ways to sync with Live anyway:
 - **Mac app:** the Tauri shell also builds for Mac (`npm run dev` in `mobile/`) with Link 4.1.1 already in it. Same web screens, native sound, real Link. The best answer on a laptop.

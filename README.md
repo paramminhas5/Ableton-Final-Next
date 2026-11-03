@@ -2,7 +2,7 @@
 
 Learn music by making it. CCD School is a music instrument and a school in one app: you learn an idea, play it on a real instrument with real sound, it becomes part of your own track, and that track opens in Ableton Live. One Rust sound engine and one React app run on the web, iPhone and Android. Part of Cats Can Dance (catscandance.com), Bengaluru.
 
-Last updated 3 Nov 2026 (evening). Branch `school/field`. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
+Last updated 3 Nov 2026 (late). Branch `school/field`. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
 
 ---
 
@@ -26,15 +26,15 @@ Last updated 3 Nov 2026 (evening). Branch `school/field`. This file describes th
 
 | Area | State |
 |---|---|
-| Lessons | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). Tested end to end in a phone-size browser. |
-| Practice | Ear Gym (EQ, compression, groove) with adaptive difficulty and real recorded sounds. Spaced review, daily practice, placement test. |
+| Lessons | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). New Model 1 lesson player (3 Nov, late): every step type redrawn, concept pictures drawn for the glass, a try-it step that records your line on the engine over your own track, and add to my track writes that line into track v2. Flow (five hearts, practise three answers to earn one back) and free (no hearts) use the same player. |
+| Practice | Ear Gym (EQ, compression, groove) with adaptive difficulty and real recorded sounds, now in Model 1: skill levels on the glass, drill pads, a focused drill screen with a/b keys. Spaced review, daily practice, placement test. The drills still render on Web Audio until they move onto the engine (item 4). |
 | Ableton bridge | Reads your own Live Set (`.als`): Build a Set (14 checked stages), Do it in Live (27 lesson tasks), Check my Set, Device Atlas (67 devices), Plugin Guide, Setup guide. |
 | Sound engine | Built. Rust, sample-accurate, under 0.5 ms fixed latency, drum rack, bass, polyphonic chords, lead, fx and a 16-slot sampler, channel strips, glue compressor and true-peak limiter, analysis and clash detection, reverb and echo. Runs as WebAssembly in the browser and natively on phones. Measured, not yet listened to. |
 | Studio (the instrument) | Play mode built for all six layer types plus a sampler layer (step 3): steps at 1/8, 1/16 or 1/32 in one to four bar loops, keys, pads and each type's own surface (glide, circle, chord pads, xy, rolls, riser, sample load), sound presets, several saved songs, recording with count-in, overdub and undo. Mix mode (step 2) is built: stage, clash and fix, compare, faders. First visits land on a loop already playing. |
 | Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
 | Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
-| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer; every other page now renders its old blocks as the same black screen and panels. Still old: the lesson player and its steps, quiz and completion screens. |
-| Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. |
+| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer, the lesson player and every step, practice and drills, you, library. Every other page renders its old blocks as the same black screen and panels. Still old: sign in, menu, moments (rank up, streak, world done), device pages, the tablet and desktop layouts, and the older reference pages. 40 unused old components were removed. |
+| Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. Everything is free by default (decided 3 Nov); the admin switch can still turn paid lessons on. |
 | Production | `learn.catscandance.com` still serves an older build. The new work is on branches, not merged. |
 
 ---
@@ -206,7 +206,7 @@ flowchart LR
 - Export is MIDI only. Stems and a Live Set (`.als`) export are not built.
 
 **Lessons and app**
-- The lessons, sims, Today, practice, library, profile, onboarding and DJ still use the older look and the browser's Web Audio, not the engine.
+- The lesson player, practice, library and profile are in the new look. The 47 sims and the Ear Gym still play through the browser's Web Audio, not the engine (item 4). Sign in, menu, moments, device pages and the tablet and desktop layouts are still old.
 - 55 of 171 lessons are still in the short format.
 - Teaching quality has not been play-tested with beginners. A few rekordbox details and some Live shortcut claims are still unverified.
 - Accessibility: about 11 contrast issues remain on world pages. Audio drills need full keyboard and screen-reader paths.
