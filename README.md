@@ -33,7 +33,7 @@ Last updated 3 Nov 2026 (late). Branch `school/field`. This file describes the w
 | Studio (the instrument) | Play mode built for all six layer types plus a sampler layer (step 3): steps at 1/8, 1/16 or 1/32 in one to four bar loops, keys, pads and each type's own surface (glide, circle, chord pads, xy, rolls, riser, sample load), sound presets, several saved songs, recording with count-in, overdub and undo. Mix mode (step 2) is built: stage, clash and fix, compare, faders. First visits land on a loop already playing. |
 | Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
 | Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
-| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer, the lesson player and every step, practice and drills, you, library. Every other page renders its old blocks as the same black screen and panels. Still old: sign in, menu, moments (rank up, streak, world done), device pages, the tablet and desktop layouts, and the older reference pages. 40 unused old components were removed. |
+| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer, the lesson player and every step, practice and drills, you, library. Every other page renders its old blocks as the same black screen and panels. Also built: sign in, menu, rank up and world done moments, device pages. Still old: daily, placement, leaderboard, shop, review list, the device lab and sims inside their frames, the older reference pages, tablet and desktop layouts. 40 unused old components were removed. |
 | Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. Everything is free by default (decided 3 Nov); the admin switch can still turn paid lessons on. |
 | Production | `learn.catscandance.com` still serves an older build. The new work is on branches, not merged. |
 
@@ -89,7 +89,7 @@ Tools that teach do not make music, and tools that make music do not teach.
 
 ### Practice
 - **Ear Gym** (`/gym`): EQ band, compression (on or off, then attack), tempo and groove. Difficulty goes up after 4 right in a row and down after 2 misses. A/B clips are loudness-matched and switch with no gap. Real recorded kick, clap, snare, hat and piano loop. 5-minute sessions, 3 a week with one free pass, no daily streak pressure.
-- **Older ear training** (`/train`) and listening demos built from real and measured AI clips.
+- **Older ear training** (`/train`) and listening demos built from real recordings and clips rendered on the CCD engine.
 
 ### Make: Studio, the instrument
 - **8 layers per track:** drums, hats, bass, chords, lead, fx. Drums and bass play on the CCD engine today; chords and lead play on the bass synth until their instruments land (step 3).
@@ -206,7 +206,7 @@ flowchart LR
 - Export is MIDI only. Stems and a Live Set (`.als`) export are not built.
 
 **Lessons and app**
-- The lesson player, practice, library and profile are in the new look. The 47 sims and the Ear Gym still play through the browser's Web Audio, not the engine (item 4). Sign in, menu, moments, device pages and the tablet and desktop layouts are still old.
+- The lesson player, practice, library and profile are in the new look. The 47 sims and the Ear Gym still play through the browser's Web Audio, not the engine (item 4). Daily, placement, leaderboard, shop, the review list, the reference pages and the tablet and desktop layouts are still old.
 - 55 of 171 lessons are still in the short format.
 - Teaching quality has not been play-tested with beginners. A few rekordbox details and some Live shortcut claims are still unverified.
 - Accessibility: about 11 contrast issues remain on world pages. Audio drills need full keyboard and screen-reader paths.
@@ -223,7 +223,7 @@ flowchart LR
 - Missing keys: admin password, Google sign-in, payment keys, push email.
 - PRD features not built: track uploads with versions and comments, crews, listening room, peer reviews, mentors, showcase submissions.
 - Privacy items from the PRD (India DPDP: itemised consent, export and deletion, grievance contact) are not built.
-- The commercial-use terms of the AI clips (Magnific) need checking before lessons that use them are sold.
+- The three AI clips are gone: the listening clips are now rendered on our own engine (measured, not yet listened to critically).
 
 ---
 
@@ -256,7 +256,7 @@ Web first. Each step ends with tests passing and every touched screen checked at
 5. **Every other screen:** Today, World, practice, library, profile, onboarding, sign in, menu, moments, DJ, light studio, tablet and desktop, PWA; the CCD showcase loop; privacy (DPDP).
 6. **Final pass:** copy, accessibility, performance (8 layers on a mid-range phone browser), low-end phone mode, Hindi, full test runs, clean house, merge and domain move.
 
-Needs Param along the way: the sound sources decision (a CCD kit with the residents is recommended), five producers for the listening panel, the price, the missing keys, and Magnific's terms.
+Param's answers (3 Nov): sounds from our own synthesis and open recordings, the way Vital does it; no listening panel yet; everything free for now with a Pro proposal in `ccd/school-pro.md`; keys later; the AI clips are replaced.
 
 7. **Then the phones:** Apple enrolment and the multicast request, device latency and Link tests, TestFlight and an Android release.
 

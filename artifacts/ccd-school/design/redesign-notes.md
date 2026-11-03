@@ -221,3 +221,12 @@ Branch `school/field`, pushed (ee5288f, 8425b11). Param's answers the same eveni
 - **Gating:** free by default (`/api/gating` and the client fall back to free). **Clean house so far:** the old lesson player, classic lesson, mission page, world shell, path client and 30 more components nothing linked to were removed; links go straight to `/learn/<slug>`; `?view=free` worlds open the Model 1 world.
 - **Checks:** typecheck, 224 web tests (13 new for takes and steps), production build; every lesson step shot at 390x844 in light and dark in Chromium and WebKit (`scripts/shots/lesson.mjs`, `scripts/shots/pages.mjs`).
 - **Still old:** sign in, menu, moments, device pages, tablet and desktop layouts, daily, placement, leaderboard, shop, review list, the older reference pages. Journeys after J1, placement and J7 still need rewriting.
+
+## Build · whole-app look pass, part 3, and the teaching clips (3 Nov 2026, night)
+Branch `school/field`, pushed (8d4fac9, e1fa431, dbe465d).
+- **Sign in (ZSignIn):** what you keep on the glass (your track, xp, layers, lessons), sign in or new here, email and password or Google; local progress is merged on sign in. Header and footer hidden. Magic link waits for an email sender.
+- **Moments (ZRankUp, ZWorldDone):** worked out when a lesson completes and shown once on its last screen: a rank-up gauge with the controls you used, or world done with your track's lanes, send to live and mix it in dj. Share and keep going.
+- **Menu (ZMenu):** search on the glass, eight go-to keys (review lights when lessons are due), worlds with progress, help and sign in or out. An old rule from the bottom-nav era hid the menu key on phones; removed.
+- **Device pages (ZDevice):** title bar, the device on the glass, try it in the frame (the device lab itself is still the old look until it moves onto the engine), reach for it, learn it in with a light when done.
+- **Teaching clips:** `engine/src/bin/teach_clips.rs` renders the dry and hall clap and the house sketch on our own engine; the Magnific clips are gone (`public/audio/engine/CREDITS.md` has the measurements). Two lines of lesson copy now match what was measured.
+- **Still old:** daily, placement, leaderboard, shop, review list, public profile, the device lab and the 47 sims inside their frames, the older reference pages (setup, build, link, plugins, glossary, wiki, signal flow, shortcuts), tablet and desktop layouts. Journeys after J1, placement and J7 still need rewriting.

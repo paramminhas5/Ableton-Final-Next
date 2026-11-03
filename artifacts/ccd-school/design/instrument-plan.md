@@ -249,7 +249,7 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
 - Listening panel: **not now.** Keep saying "measured, not listened" until it happens.
 - Price: **everything free for now** (gating defaults to free since 3 Nov). Design Pro for retention and sharing and bring it to Param before anything is locked: `ccd/school-pro.md`.
 - Keys: Param adds `ADMIN_PASSWORD` later. Still needed: Google sign-in, Razorpay and Stripe, `VAPID_EMAIL`. Then the merge and the domain move.
-- Magnific: Param is on a paid plan. **Replace the three AI clips with open or our own audio** (engine renders): the dry and hall clap, and the house sketch with the low end dropping out for a bar.
+- Magnific: Param is on a paid plan. **Done 3 Nov:** the three AI clips are replaced with clips rendered on our own engine (`engine/src/bin/teach_clips.rs`).
 - Ableton's reply about the Android Link licence (emailed 3 Nov): none yet.
 
 **Link and the web app.** A browser page cannot join a Link session itself: Link finds peers with UDP multicast on the local network and browsers have no raw UDP. Three ways to sync with Live anyway:
