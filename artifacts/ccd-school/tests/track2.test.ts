@@ -100,3 +100,45 @@ describe("v1 view of a v2 track, for lessons", () => {
     expect(DRUM_LANES.hats).toContain(42);
   });
 });
+
+describe("layer types play their own instruments", () => {
+  it("maps chords, lead and fx to their engine instruments and reads their defaults", async () => {
+    const { TYPE, newLayerV2, paramOf, instrumentParamCount, gridOf, barsOf, emptyTrackV2 } = await import("../src/lib/track2");
+    const { CHORD_PARAMS, LEAD_PARAMS, FX_PARAMS } = await import("../src/engine/params.gen");
+    expect([TYPE.chords.engine, TYPE.lead.engine, TYPE.fx.engine]).toEqual(["chords", "lead", "fx"]);
+    expect(paramOf(newLayerV2("chords"), CHORD_PARAMS[0].index)).toBe(CHORD_PARAMS[0].default);
+    expect(paramOf(newLayerV2("lead"), LEAD_PARAMS[4].index)).toBe(LEAD_PARAMS[4].default);
+    expect(paramOf(newLayerV2("fx"), FX_PARAMS[5].index)).toBe(FX_PARAMS[5].default);
+    expect(instrumentParamCount("chords")).toBe(8);
+    expect(instrumentParamCount("fx")).toBe(6);
+    expect(instrumentParamCount("drums")).toBe(65);
+    const t = emptyTrackV2();
+    expect(gridOf(t)).toBe(0.25);
+    expect(gridOf({ ...t, grid: 0.125 })).toBe(0.125);
+    expect(gridOf({ ...t, grid: 0.3 })).toBe(0.25);
+    expect(barsOf({ ...t, loop: 16 })).toBe(4);
+  });
+
+  it("presets only touch the instrument knobs", async () => {
+    const { applyPreset, PRESETS } = await import("../src/lib/presets");
+    const { newLayerV2, paramOf } = await import("../src/lib/track2");
+    const { LAYER_PARAMS, BASS_PARAMS } = await import("../src/engine/params.gen");
+    const level = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
+    const l = { ...newLayerV2("bass"), params: { [level]: 0.4 } };
+    const sub = applyPreset(l, 1);
+    expect(paramOf(sub, level)).toBe(0.4);
+    expect(paramOf(sub, BASS_PARAMS.find(p => p.key === "sub")!.index)).toBeGreaterThan(0.8);
+    expect(sub.preset).toBe(1);
+    expect(applyPreset(l, -1).preset).toBe(PRESETS.bass.length - 1);
+  });
+});
+
+describe("first visit starter", () => {
+  it("is a beat and a bass line, playable on the pads", async () => {
+    const { starterTrack } = await import("../src/lib/starter");
+    const t = starterTrack();
+    expect(t.layers.map(l => l.type)).toEqual(["drums", "bass"]);
+    expect(t.layers[0].surface).toBe("pads");
+    expect(t.layers.every(l => l.events.length > 3 && l.events.every(e => e.start >= 0 && e.start < t.loop))).toBe(true);
+  });
+});

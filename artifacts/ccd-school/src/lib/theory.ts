@@ -80,8 +80,8 @@ export function keyRow(low: number, whiteCount = 8): { white: number[]; black: {
 
 // ── timing ─────────────────────────────────────────────────────────────────
 
-export type Snap = "off" | "1/16" | "1/32";
-export const SNAP_BEATS: Record<Snap, number> = { off: 0, "1/16": 0.25, "1/32": 0.125 };
+export type Snap = "off" | "1/8" | "1/16" | "1/32";
+export const SNAP_BEATS: Record<Snap, number> = { off: 0, "1/8": 0.5, "1/16": 0.25, "1/32": 0.125 };
 
 /**
  * Move a beat toward the grid. `strength` 1 lands exactly on it, 0.5 halfway.

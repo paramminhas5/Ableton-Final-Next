@@ -11,6 +11,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { Layer as V1Layer, LayerKind, Track as V1Track, WorldKey } from "./track";
 import {
   BASS_PARAMS,
+  CHORD_PARAMS,
+  DRUM_RACK_BASE,
+  DRUM_RACK_PARAMS,
+  FX_PARAMS,
+  LEAD_PARAMS,
   DRUM_PAD_NOTES,
   DRUM_PAD_PARAMS,
   INSTRUMENT_BASE,
@@ -45,6 +50,10 @@ export type LayerV2 = {
   from?: string;
   world?: WorldKey;
   variant: number;
+  /** Index into this type's presets, for the picker's name. */
+  preset?: number;
+  /** The circle surface's settings per drum note: hits out of 16 and rotation. */
+  euclid?: Record<number, { hits: number; rot: number }>;
 };
 
 export type TrackV2 = {
@@ -53,7 +62,10 @@ export type TrackV2 = {
   root: number;
   scale: "minor" | "major";
   swing: number;
+  /** Loop length in beats: 4 per bar, one to four bars. */
   loop: number;
+  /** Beats per step in the steps view: 0.5 (1/8), 0.25 (1/16) or 0.125 (1/32). Missing = 0.25. */
+  grid?: number;
   layers: LayerV2[];
   /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
   master?: Record<number, number>;
@@ -65,10 +77,9 @@ export const TYPE: Record<LayerType, { label: string; color: string; engine: Ins
   drums: { label: "drums", color: "#4FE3B6", engine: "drums", own: "circle", surfaces: ["steps", "keys", "pads"] },
   hats: { label: "hats", color: "#F3C14F", engine: "drums", own: "rolls", surfaces: ["steps", "keys", "pads"] },
   bass: { label: "bass", color: "#FF4F9A", engine: "bass", own: "glide", surfaces: ["steps", "keys", "pads"] },
-  // Until their instruments land (step 3) chords and lead play on the mono synth.
-  chords: { label: "chords", color: "#B89CFF", engine: "bass", own: "chord pads", surfaces: ["steps", "keys", "pads"] },
-  lead: { label: "lead", color: "#7D96FF", engine: "bass", own: "xy", surfaces: ["steps", "keys", "pads"] },
-  fx: { label: "fx", color: "#E9E9E6", engine: "drums", own: "riser", surfaces: ["steps", "pads"] },
+  chords: { label: "chords", color: "#B89CFF", engine: "chords", own: "chord pads", surfaces: ["steps", "keys", "pads"] },
+  lead: { label: "lead", color: "#7D96FF", engine: "lead", own: "xy", surfaces: ["steps", "keys", "pads"] },
+  fx: { label: "fx", color: "#E9E9E6", engine: "fx", own: "riser", surfaces: ["steps", "pads"] },
 };
 
 export const LAYER_ORDER: LayerType[] = ["drums", "hats", "bass", "chords", "lead", "fx"];
@@ -94,10 +105,33 @@ export function paramOf(l: LayerV2, index: number): number {
   if (l.params[index] !== undefined) return l.params[index];
   if (index < INSTRUMENT_BASE) return LAYER_PARAMS.find(p => p.index === index)?.default ?? 0;
   const engine = TYPE[l.type].engine;
-  if (engine === "bass") return BASS_PARAMS.find(p => p.index === index)?.default ?? 0;
-  const k = (index - INSTRUMENT_BASE) % DRUM_PAD_PARAMS.length;
-  return DRUM_PAD_PARAMS[k]?.default ?? 0;
+  if (engine === "drums") {
+    const i = index - INSTRUMENT_BASE;
+    if (i >= DRUM_RACK_BASE) return DRUM_RACK_PARAMS[i - DRUM_RACK_BASE]?.default ?? 0;
+    return DRUM_PAD_PARAMS[i % DRUM_PAD_PARAMS.length]?.default ?? 0;
+  }
+  return INSTRUMENT_TABLES[engine]?.find(p => p.index === index)?.default ?? 0;
 }
+
+/** The knob tables of the single-voice instruments, by engine name. */
+export const INSTRUMENT_TABLES: Partial<Record<InstrumentName, readonly { index: number; default: number; bank: string }[]>> = {
+  bass: BASS_PARAMS,
+  chords: CHORD_PARAMS,
+  lead: LEAD_PARAMS,
+  fx: FX_PARAMS,
+};
+
+/** How many wire params the engine takes for an instrument (layer params excluded). */
+export function instrumentParamCount(engine: InstrumentName): number {
+  if (engine === "drums") return DRUM_RACK_BASE + DRUM_RACK_PARAMS.length;
+  return INSTRUMENT_TABLES[engine]?.length ?? 0;
+}
+
+/** Beats per step for this track, and how many steps one bar page holds on a 16 step screen. */
+export function gridOf(t: TrackV2): number {
+  return t.grid && [0.5, 0.25, 0.125].includes(t.grid) ? t.grid : STEP_BEATS;
+}
+export const barsOf = (t: TrackV2) => Math.max(1, Math.min(4, Math.round(t.loop / 4)));
 
 /** Normalised value of a master param, falling back to the registry default. */
 export function masterOf(t: TrackV2, index: number): number {
@@ -342,6 +376,12 @@ export function hasTrackV2(): boolean {
 const past: TrackV2[] = [];
 const future: TrackV2[] = [];
 const HISTORY = 100;
+
+/** Forget undo steps, eg after switching songs, so undo never pulls in another song. */
+export function clearHistory() {
+  past.length = 0;
+  future.length = 0;
+}
 
 export function useTrackV2() {
   const [track, setTrack] = useState<TrackV2>(emptyTrackV2);

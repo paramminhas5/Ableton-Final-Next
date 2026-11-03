@@ -199,7 +199,7 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
           SEE CURRICULUM ↓
         </a>
       </div>
-      <div className="md:hidden absolute inset-x-0 bottom-6 z-50 flex flex-col gap-2 justify-center px-6">
+      <div className="md:hidden absolute inset-x-0 z-50 flex flex-col gap-2 justify-center px-6" style={{ bottom: "calc(112px + env(safe-area-inset-bottom, 0px))" }}>
         <button onClick={onGetStarted}
           className="bg-acid text-ink font-display text-xl px-6 py-4 border-4 border-ink chunk-shadow text-center">
           START LEARNING FREE →
@@ -211,7 +211,7 @@ function HeroSection({ onGetStarted }: { onGetStarted: () => void }) {
       </div>
 
       {/* Stats strip */}
-      <div className="absolute bottom-0 left-0 right-0 z-50 border-t-4 border-ink grid grid-cols-4 bg-ink/70 backdrop-blur-sm">
+      <div className="hidden md:grid absolute bottom-0 left-0 right-0 z-50 border-t-4 border-ink grid-cols-4 bg-ink/70 backdrop-blur-sm">
         {[{ v:"153",l:"Missions"},{v:"3",l:"Worlds"},{v:"47",l:"Live Sims"},{v:"0",l:"Ads. Ever."}].map(({v,l}) => (
           <div key={l} className="py-3 px-2 text-center border-r-4 border-ink/50 last:border-r-0">
             <div className="font-display text-xl md:text-2xl text-acid">{v}</div>

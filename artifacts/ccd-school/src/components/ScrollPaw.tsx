@@ -30,7 +30,7 @@ const ScrollPaw = () => {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="fixed bottom-5 right-5 z-50 w-16 h-16 md:w-20 md:h-20 group"
+      className="hidden md:block fixed bottom-5 right-5 z-50 w-20 h-20 group"
       aria-label="Scroll progress — click to return to top"
     >
       {/* Tooltip */}

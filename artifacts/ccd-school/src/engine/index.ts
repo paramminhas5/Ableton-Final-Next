@@ -54,6 +54,13 @@ export class Engine {
   noteOff(layer: number, note: number, at?: number) {
     this.host.note(false, layer, note, 0, at);
   }
+  /** Hold a pad to roll: hits land on the grid, `beats` apart (0.25 = 1/16, 0.125 = 1/32). */
+  repeat(layer: number, note: number, vel: number, beats: number) {
+    this.s(CMD.repeat, layer, note, vel, beats);
+  }
+  repeatOff(layer: number, note: number) {
+    this.s(CMD.repeat, layer, note, 0, 0);
+  }
   play() {
     this.s(CMD.play);
   }

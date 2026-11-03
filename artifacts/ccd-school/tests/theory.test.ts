@@ -67,3 +67,16 @@ describe("timing", () => {
     expect(stepOf(3.99)).toBe(15);
   });
 });
+
+import { euclid } from "../src/lib/euclid";
+describe("euclid", () => {
+  it("spreads hits evenly and rotates", () => {
+    const idx = (p: boolean[]) => p.map((v, i) => (v ? i : -1)).filter(i => i >= 0);
+    expect(idx(euclid(4, 16))).toEqual([0, 4, 8, 12]);
+    expect(idx(euclid(4, 16, 2))).toEqual([2, 6, 10, 14]);
+    expect(idx(euclid(3, 16)).length).toBe(3);
+    expect(euclid(0, 16).some(Boolean)).toBe(false);
+    expect(euclid(16, 16).every(Boolean)).toBe(true);
+    expect(idx(euclid(1, 16, -1))).toEqual([15]);
+  });
+});

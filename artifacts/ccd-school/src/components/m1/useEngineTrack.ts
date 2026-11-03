@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef } from "react";
 import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } from "@/engine";
-import { masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
+import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
 const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
@@ -44,7 +44,7 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
     }
     if (!l) continue;
     // Every param the layer might have, so a reset to default reaches the engine too.
-    const count = INSTRUMENT_BASE + (inst === "drums" ? 64 : 8);
+    const count = INSTRUMENT_BASE + instrumentParamCount(TYPE[l.type].engine);
     const silent = anySolo ? !l.solo : l.mute;
     for (let p = 0; p < count; p++) {
       if (p >= LAYER_PARAMS.length && p < INSTRUMENT_BASE) continue;
