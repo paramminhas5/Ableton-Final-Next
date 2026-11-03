@@ -65,6 +65,9 @@ pub mod cmd {
     pub const COMPARE: u32 = 22;
     /// a = 1: measure every layer and report it (METER, BANDS, CLASH, MASTER_METER).
     pub const ANALYSE: u32 = 23;
+    /// Note repeat. note `a`, velocity `x` (0 lets go), division `y` in beats (0.25 = 1/16,
+    /// 0.125 = 1/32). Hits land on the grid of the transport, or a free clock when stopped.
+    pub const REPEAT: u32 = 24;
 }
 
 pub mod out {
@@ -92,6 +95,8 @@ pub mod out {
     pub const F_COUNT_IN: u32 = 2;
     pub const F_RECORDING: u32 = 4;
     pub const F_LINK: u32 = 8;
+    /// Set on a PLAYED_ON that note repeat made, so the recorder keeps it as a hit.
+    pub const F_REPEAT: u32 = 16;
 }
 
 /// A command from the UI. Field meaning depends on `kind` (see `cmd`).
@@ -185,6 +190,8 @@ impl Transport {
 
 // ── layers ───────────────────────────────────────────────────────────────────
 
+pub const MAX_REPEATS: usize = 4;
+
 pub struct Layer {
     pub inst: Instrument,
     pub drums: Box<DrumRack>,
@@ -204,6 +211,8 @@ pub struct Layer {
     pub duck_note: i32,
     /// While comparing: the snapshot's duck routing.
     cmp_duck: Option<(i32, i32)>,
+    /// Held note-repeat pads: (note, velocity, beats per hit, last grid index fired).
+    pub rep: [(i32, f32, f64, i64); MAX_REPEATS],
 }
 
 impl Layer {
@@ -229,6 +238,7 @@ impl Layer {
             duck_src: -1,
             duck_note: -1,
             cmp_duck: None,
+            rep: [(-1, 0.0, 0.25, i64::MIN); MAX_REPEATS],
         }
     }
 
@@ -349,6 +359,8 @@ pub struct Core {
     pos_every: u64,
     last_pos: u64,
     fired: Vec<(u8, f32, f64, f64)>,
+    /// Free-running beat clock for note repeat while the transport is stopped.
+    rep_clock: f64,
     pub master: Master,
     pub analyse: bool,
     pub meters: Vec<LayerMeter>,
@@ -457,6 +469,7 @@ impl Core {
             pos_every: (sr / 60.0) as u64,
             last_pos: 0,
             fired: Vec::with_capacity(256),
+            rep_clock: 0.0,
             master: Master::new(sr),
             analyse: false,
             meters: (0..MAX_LAYERS).map(|_| LayerMeter::new(sr)).collect(),
@@ -579,6 +592,23 @@ impl Core {
                     }
                 } else {
                     self.master.set_param(i, c.x, false);
+                }
+            }
+            cmd::REPEAT => {
+                let note = c.a as i32;
+                let l = &mut self.layers[li];
+                if c.x <= 0.0 || c.y <= 0.0 {
+                    for r in l.rep.iter_mut() {
+                        if r.0 == note {
+                            r.0 = -1;
+                        }
+                    }
+                } else {
+                    let div = c.y.clamp(1.0 / 64.0, 2.0);
+                    let slot = l.rep.iter().position(|r| r.0 == note).or_else(|| l.rep.iter().position(|r| r.0 < 0));
+                    if let Some(k) = slot {
+                        l.rep[k] = (note, c.x.clamp(0.0, 1.0), div, i64::MIN);
+                    }
                 }
             }
             cmd::SNAPSHOT => self.snapshot(),
@@ -790,6 +820,31 @@ impl Core {
                 }
             }
 
+            // Note repeat: a held pad fires on the grid, aligned to the song when it runs.
+            {
+                let clock = if self.tr.state == State::Playing { self.tr.lpos } else { self.rep_clock };
+                let song = self.tr.beat + ahead;
+                let flags = self.tr.flags() | out::F_REPEAT;
+                for li in 0..MAX_LAYERS {
+                    for k in 0..MAX_REPEATS {
+                        let (note, vel, div, last) = self.layers[li].rep[k];
+                        if note < 0 {
+                            continue;
+                        }
+                        let idx = (clock / div).floor() as i64;
+                        // The first hit lands right away; after that, once per grid line.
+                        if last == i64::MIN || idx != last {
+                            self.layers[li].rep[k].3 = idx;
+                            let l = &mut self.layers[li];
+                            l.note_on(note as u8, vel);
+                            l.schedule_off(note as u8, song + div * 0.8);
+                            self.duck_from(li, note as u8);
+                            let _ = events.push(OutEv { kind: out::PLAYED_ON, layer: li as u32, note: note as u32, flags, vel, aux: -1.0, beat: clock });
+                        }
+                    }
+                }
+            }
+
             // Sequencer.
             if self.tr.state == State::Playing {
                 let from = self.tr.lpos;
@@ -876,6 +931,7 @@ impl Core {
                 }
             }
 
+            self.rep_clock += bps;
             if running {
                 self.tr.beat += bps;
                 if self.tr.state == State::Playing {

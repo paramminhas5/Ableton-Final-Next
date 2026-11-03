@@ -231,3 +231,45 @@ fn six_layers_together_stay_under_the_ceiling() {
     let (l, r) = render(&e, 96_000);
     assert!(peak(&l).max(peak(&r)) <= 1.0, "peak {}", peak(&l).max(peak(&r)));
 }
+
+#[test]
+fn note_repeat_rolls_on_the_grid_and_stops_on_release() {
+    let e = live(1, 0);
+    // 120 bpm: a 1/16 is 0.125 s, 1/32 is 0.0625 s.
+    let count = |div: f64, secs: f32| {
+        let e = live(1, 0);
+        send(&e, cmd::REPEAT, 0, 42, 0.8, div, 0.0);
+        let mut hits = 0;
+        let mut done = 0;
+        let frames = (SR * secs) as usize;
+        while done < frames {
+            unsafe { e.process(256) };
+            while let Some(ev) = e.poll() {
+                if ev.kind == ccd_engine::engine::out::PLAYED_ON {
+                    assert!(ev.flags & ccd_engine::engine::out::F_REPEAT != 0);
+                    hits += 1;
+                }
+            }
+            done += 256;
+        }
+        hits
+    };
+    let sixteenths = count(0.25, 1.0);
+    let thirty_seconds = count(0.125, 1.0);
+    assert!((8..=9).contains(&sixteenths), "1/16 gave {sixteenths}");
+    assert!((16..=17).contains(&thirty_seconds), "1/32 gave {thirty_seconds}");
+    send(&e, cmd::REPEAT, 0, 42, 0.8, 0.25, 0.0);
+    render(&e, 4_800);
+    send(&e, cmd::REPEAT, 0, 42, 0.0, 0.0, 0.0);
+    render(&e, 9_600);
+    let mut more = 0;
+    for _ in 0..40 {
+        unsafe { e.process(256) };
+        while let Some(ev) = e.poll() {
+            if ev.kind == ccd_engine::engine::out::PLAYED_ON {
+                more += 1;
+            }
+        }
+    }
+    assert_eq!(more, 0);
+}

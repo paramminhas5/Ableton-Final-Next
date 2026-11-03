@@ -108,7 +108,7 @@ export type LeadParamId = `${(typeof LEAD_PARAMS)[number]["id"]}`;
 export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId;
 
-export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23 } as const;
+export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;
 /** Clash fixes, as packed in a CLASH event's flags. */
 export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;
@@ -118,7 +118,7 @@ export const MASTER_LAYER = 8;
 export const LATENCY_SAMPLES = 23;
 export const CEILING_DB = -1;
 export const MIX_PARAMS = 12;
-export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8 } as const;
+export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8, repeat: 16 } as const;
 export const OUT_EVENT_BYTES = 32;
 
 /** Rust's own mapping at a few points, for the TypeScript tests. */

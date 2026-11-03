@@ -117,10 +117,10 @@ pub fn typescript() -> String {
 
     writeln!(
         o,
-        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {} }} as const;",
+        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {}, repeat: {} }} as const;",
         cmd::NOTE_ON, cmd::NOTE_OFF, cmd::PARAM, cmd::INSTRUMENT, cmd::TEMPO, cmd::LOOP, cmd::PLAY, cmd::STOP, cmd::RECORD, cmd::RECORD_OFF,
         cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF,
-        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE
+        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE, cmd::REPEAT
     )
     .unwrap();
     writeln!(
@@ -137,7 +137,7 @@ pub fn typescript() -> String {
     writeln!(o, "export const LATENCY_SAMPLES = {};", crate::engine::LATENCY).unwrap();
     writeln!(o, "export const CEILING_DB = {};", fmt(crate::master::CEILING_DB)).unwrap();
     writeln!(o, "export const MIX_PARAMS = {};", crate::engine::MIX_PARAMS).unwrap();
-    writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK).unwrap();
+    writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {}, repeat: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK, out::F_REPEAT).unwrap();
     writeln!(o, "export const OUT_EVENT_BYTES = {};\n", std::mem::size_of::<crate::engine::OutEv>()).unwrap();
 
     // Values from Rust for the TS curve tests, so both sides stay identical.
