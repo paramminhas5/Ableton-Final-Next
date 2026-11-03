@@ -229,7 +229,13 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
 **What 100% means for the web app.** Every item below is built to the "Model 1 · final" canvas, plays through the engine, and is checked at 390x844 in light and dark in Chromium and WebKit (the phones run WebKit on iOS), with typecheck, unit tests, render tests and the production build passing.
 1. Studio mix: engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare; stage and faders. (step 2)
 2. Studio play for all 6 layer types (drums, hats, bass, chords, lead, fx) with their own instruments and all 4 surfaces each (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). (step 3)
-3. Getting music out from the browser: MIDI, stems and .als export. Link and controller mode wait for the phones. (step 4, web part)
+3. Getting music out from the browser: MIDI, stems and .als export, plus tempo sync with Live from the browser. (step 4, web part)
+
+**Link and the web app.** A browser page cannot join a Link session itself: Link finds peers with UDP multicast on the local network and browsers have no raw UDP. Three ways to sync with Live anyway:
+- **Mac app:** the Tauri shell also builds for Mac (`npm run dev` in `mobile/`) with Link 4.1.1 already in it. Same web screens, native sound, real Link. The best answer on a laptop.
+- **MIDI clock:** Live sends MIDI clock and the web app follows it through Web MIDI. Works in Chrome and Edge, not Safari or iOS. Tempo and bar position only, no tempo changes back to Live.
+- **Bridge:** a small helper (for example Deep Symmetry's Carabiner, which exposes Link on a local TCP port) that the page talks to over a WebSocket. Needs the helper installed.
+Web plan: MIDI clock in the browser, real Link in the Mac app and on the phones.
 4. Lessons on the engine: lesson player with every step type, hook, try-it recording, add to track v2, unlocks, the sims moved onto the engine in the order in section 5. (step 5)
 5. The rest of the app: Today, World, practice and drills, library and device pages, you, onboarding, sign in, menu, moments, DJ on the engine, light studio, tablet and desktop layouts, PWA. (step 6)
 6. Final pass: copy, accessibility, performance (8 layers on a mid-range phone browser), journeys and smoke tests across every screen.
