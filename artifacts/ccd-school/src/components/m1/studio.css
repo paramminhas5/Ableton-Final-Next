@@ -15,7 +15,8 @@
 .st-slot{height:50px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
 .st-slot.is-on{color:var(--ink);font-weight:600}
 .st-slot .m1-dash{width:16px}
-.st-slot.is-empty{color:var(--print);opacity:.75}
+.st-plus{color:var(--sub)}
+.st-plus.is-on{color:var(--ink)}
 .st-slot.is-muted{opacity:.45}
 .st-slot .st-solo{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:3px;background:#7D96FF;box-shadow:0 0 6px #7D96FF}
 

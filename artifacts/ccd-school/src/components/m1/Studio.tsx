@@ -296,17 +296,9 @@ export function Studio() {
           )}
         </div>
 
-        <div className="st-slots">
-          {Array.from({ length: MAX_LAYERS }, (_, i) => {
-            const l = track.layers[i];
-            if (!l) {
-              return (
-                <button key={`add${i}`} type="button" className="m1-m is-wide st-slot is-empty" aria-label="Add a layer" onClick={() => { setMode("play"); setAdding(a => (mode === "mix" ? true : !a)); }}>
-                  <Icon name="plus" small />
-                  <span>add</span>
-                </button>
-              );
-            }
+        {/* Only the layers that exist, then one plus. No empty slots, so the row stays big. */}
+        <div className="st-slots" style={{ gridTemplateColumns: `${track.layers.length ? `repeat(${track.layers.length}, minmax(0,1fr))` : ""}${track.layers.length < MAX_LAYERS ? " 50px" : ""}` }}>
+          {track.layers.map(l => {
             const on = l.id === selId;
             const c = TYPE[l.type].color;
             return (
@@ -318,6 +310,12 @@ export function Studio() {
               </button>
             );
           })}
+          {track.layers.length < MAX_LAYERS ? (
+            <button type="button" className={`m1-m is-wide st-slot st-plus ${adding ? "is-on" : ""}`} aria-label="Add a layer" aria-pressed={adding}
+              onClick={() => { setMode("play"); setAdding(a => (mode === "mix" ? true : !a)); }}>
+              <Icon name="plus" />
+            </button>
+          ) : null}
         </div>
 
         {mode === "mix" ? (
@@ -352,7 +350,7 @@ export function Studio() {
             <>
               <div className="st-ss">studio</div>
               <div className="st-big" style={{ fontSize: 24, marginTop: 8 }}>no layers yet</div>
-              <div className="st-ss" style={{ marginTop: 6 }}>finish a lesson to add one, or press add</div>
+              <div className="st-ss" style={{ marginTop: 6 }}>finish a lesson to add one, or press +</div>
             </>
           )}
         </Screen>

@@ -415,7 +415,7 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
       <>
         <div className="st-ss">mix</div>
         <div className="st-big" style={{ fontSize: 24, marginTop: 8 }}>no layers yet</div>
-        <div className="st-ss" style={{ marginTop: 6 }}>finish a lesson to add one, or press add</div>
+        <div className="st-ss" style={{ marginTop: 6 }}>finish a lesson to add one, or press +</div>
       </>
     );
   }
