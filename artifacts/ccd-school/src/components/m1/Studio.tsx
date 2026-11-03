@@ -28,6 +28,7 @@ import {
   type ParamSpec,
 } from "@/engine";
 import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
+import { velocity } from "@/lib/touch";
 import { keyRow, noteName, padGrid, pitchClass, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
 import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
@@ -68,15 +69,6 @@ type Touched = { label: string; text: string } | null;
 type Mode = "play" | "mix";
 const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 
-/** Velocity from how you hit: force where the device reports it, else contact size. */
-function velocity(e: PointerEvent<HTMLElement>): number {
-  if (e.pointerType === "pen" || (e.pressure > 0 && e.pressure !== 0.5 && e.pointerType !== "mouse")) {
-    return Math.min(1, Math.max(0.2, 0.25 + e.pressure * 0.75));
-  }
-  const size = Math.max(e.width || 0, e.height || 0);
-  if (e.pointerType === "touch" && size > 2) return Math.min(1, Math.max(0.45, 0.4 + (size - 8) / 40));
-  return 0.85;
-}
 
 /** The knobs for this bank: four specs and their wire indices. `shift` is the second page of the sound bank. */
 function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; index: number }[] {

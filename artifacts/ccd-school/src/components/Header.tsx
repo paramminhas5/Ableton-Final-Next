@@ -694,6 +694,9 @@ export function Header() {
     ? user.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
     : null;
 
+  // A lesson is one instrument screen: it carries its own close key, progress and hearts.
+  if (/^\/learn\/(?!world\/)[^/]+$/.test(pathname)) return null;
+
   if (pathname === "/dashboard" || pathname === "/worlds" || pathname === "/learn" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
     return (
       <>

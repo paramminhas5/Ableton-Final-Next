@@ -519,3 +519,37 @@ const DEMO_DURATIONS: Partial<Record<VisualType, number>> = {
   "waveform-zoom":   2200,
   "headroom-meter":  2500,
 };
+
+/**
+ * Play a concept's sound without the old button. Returns how long it plays in ms,
+ * or 0 when this visual has no sound. Real and measured demos load their clips first.
+ */
+export async function playConcept(visual: string | undefined): Promise<number> {
+  const ok = await ensureAudio();
+  const c = getCtx();
+  if (!ok || !c) return 0;
+  if (isRealDemo(visual)) {
+    const demo = visual as unknown as RealDemoKey;
+    if (isAiDemo(demo)) {
+      const clips = await loadAiClips();
+      if (!clips) return 0;
+      return scheduleAiDemo(demo as "ai-claps" | "ai-house", c, getMaster(), clips, c.currentTime + 0.05) * 1000;
+    }
+    const kit = await loadRealKit();
+    if (!kit) return 0;
+    return scheduleRealDemo(demo, c, getMaster(), kit, c.currentTime + 0.05) * 1000;
+  }
+  if (!visual || visual === "none") {
+    playTone(440, 0, 0.8, "triangle", 0.2);
+    return 900;
+  }
+  const demo = DEMOS[visual as VisualType];
+  if (!demo) return 0;
+  try { demo(); } catch { return 0; }
+  return DEMO_DURATIONS[visual as VisualType] ?? 1500;
+}
+
+/** Whether a visual (or audio-id key) has a sound to play. */
+export function hasConceptSound(visual: string | undefined): boolean {
+  return !visual || visual === "none" || isRealDemo(visual) || !!DEMOS[visual as VisualType];
+}

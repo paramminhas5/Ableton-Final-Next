@@ -54,6 +54,7 @@ const P: Record<string, ReactNode> = {
   search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></>,
   user: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20a7 7 0 0 1 14 0" /></>,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  loop: <><path d="M5 11V9a3 3 0 0 1 3-3h10" /><path d="m15 3 3 3-3 3" /><path d="M19 13v2a3 3 0 0 1-3 3H6" /><path d="m9 21-3-3 3-3" /></>,
 };
 
 export function Icon({ name, small, className }: { name: keyof typeof P | string; small?: boolean; className?: string }) {
