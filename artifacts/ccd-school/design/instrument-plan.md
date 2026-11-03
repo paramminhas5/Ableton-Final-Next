@@ -226,18 +226,35 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
 
 **Paused until the web app is done:** Xcode build and iPhone tests, Apple Developer Program enrolment and the multicast request, LinkKit on device, Android Link testing, store builds. The Android APK gets rebuilt only when the engine changes, as a sanity check. Ableton's licence reply is handled when it arrives.
 
-**What 100% means for the web app.** Every item below is built to the "Model 1 · final" canvas, plays through the engine, and is checked at 390x844 in light and dark in Chromium and WebKit (the phones run WebKit on iOS), with typecheck, unit tests, render tests and the production build passing.
-1. Studio mix: engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare; stage and faders. (step 2)
-2. Studio play for all 6 layer types (drums, hats, bass, chords, lead, fx) with their own instruments and all 4 surfaces each (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). (step 3)
-3. Getting music out from the browser: MIDI, stems and .als export, plus tempo sync with Live from the browser. (step 4, web part)
+**What 100% means for the web app.** Every item below is built to the "Model 1 · final" canvas, plays through the engine, and is checked at 390x844 in light and dark in Chromium and WebKit (the phones run WebKit on iOS), with typecheck, unit tests, render tests and the production build passing. Items marked (improvement) were added on 3 Nov after the full review in `school-readme.md`.
+
+1. **Studio mix** (step 2): engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare, lower-latency oversampling; the stage and the faders. The meters and clash data are built so the mix coach in item 4 can use them.
+2. **All 6 layer types** (step 3): drums, hats, bass, chords (polyphonic), lead, fx, each with its own instrument and all 4 surfaces (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). A sampler voice is part of this, ready for real kits.
+   - (improvement) **Sound in ten seconds:** first-time visitors land on the pads with a loop already playing, and teaching starts from there. Build it with the Studio work; it is the best demo the app has.
+3. **Getting music out and syncing with Live** (step 4, web part): MIDI, stems and Live Set (`.als`) export.
+   - (improvement) **Web MIDI in and MIDI clock in** (Chrome, Edge): controllers play the instruments, and the app follows Live's tempo and bars.
+4. **Lessons on the engine** (step 5): the lesson player with every step type, hook, try-it recording, add to track v2, unlocks, the sims and the Ear Gym moved onto the engine (order in section 5), so "boosted" and "compressed" sound the same everywhere.
+   - (improvement) **Your track is the spine:** every lesson's "use this line" adds a layer, and every world ends with a finished, exportable track. Progress shows your tracks, not only XP.
+   - (improvement) **Mix coach:** reads the engine's meters and clash data and says exactly what is wrong and which control fixes it ("bass and kick fight at 60 Hz, try the duck"). Measured, not guessed by a language model.
+   - Deepen the 55 short lessons.
+5. **The rest of the app** (step 6): Today, World, practice and drills, library and device pages, you, onboarding, sign in, menu, moments, DJ on the engine, light studio, tablet and desktop layouts, PWA.
+   - (improvement) **The CCD stage:** the showcase loop from the PRD (submit a track, crew review, picks played at CCD Episodes, picked learners get a CCD artist page). Needs track uploads with versions and comments.
+   - Privacy from the PRD (India DPDP): itemised consent, data export and deletion, grievance contact.
+6. **Final pass:** copy, accessibility (contrast, keyboard and screen-reader paths for every audio drill), performance (8 layers on a mid-range phone browser), journeys, smoke and crawl across every screen.
+   - (improvement) **Low-end phone mode** (bigger buffer option, battery saver) and **Hindi copy**.
+   - (improvement) **Clean house:** retire duplicate older pages (`/train` versus `/gym`, the old lesson screens once the new player lands), one README, merge to `main`, move `learn.catscandance.com` to the `ccd-school-app` project.
+
+**Needs Param (ask early, they block items above):**
+- Sound sources: (improvement) record a **CCD kit with the residents**, license a library, or both. Item 2 builds the sampler either way.
+- (improvement) **Listening panel:** five producers for blind A/B tests of our drums, bass and mix against Live's instruments on the same MIDI, after items 1 and 2, then a short sound report. No quality claim goes out before it.
+- Price: what is free, what is Pro, whether the pilot is free (the PRD says yes).
+- Keys: `ADMIN_PASSWORD`, Google sign-in, Razorpay and Stripe, `VAPID_EMAIL`. Then the merge and the domain move.
+- Check Magnific's commercial terms for the AI clips used in lessons.
 
 **Link and the web app.** A browser page cannot join a Link session itself: Link finds peers with UDP multicast on the local network and browsers have no raw UDP. Three ways to sync with Live anyway:
 - **Mac app:** the Tauri shell also builds for Mac (`npm run dev` in `mobile/`) with Link 4.1.1 already in it. Same web screens, native sound, real Link. The best answer on a laptop.
 - **MIDI clock:** Live sends MIDI clock and the web app follows it through Web MIDI. Works in Chrome and Edge, not Safari or iOS. Tempo and bar position only, no tempo changes back to Live.
 - **Bridge:** a small helper (for example Deep Symmetry's Carabiner, which exposes Link on a local TCP port) that the page talks to over a WebSocket. Needs the helper installed.
 Web plan: MIDI clock in the browser, real Link in the Mac app and on the phones.
-4. Lessons on the engine: lesson player with every step type, hook, try-it recording, add to track v2, unlocks, the sims moved onto the engine in the order in section 5. (step 5)
-5. The rest of the app: Today, World, practice and drills, library and device pages, you, onboarding, sign in, menu, moments, DJ on the engine, light studio, tablet and desktop layouts, PWA. (step 6)
-6. Final pass: copy, accessibility, performance (8 layers on a mid-range phone browser), journeys and smoke tests across every screen.
 
 Then the phones: enrol, multicast request, Xcode build, device latency and Link tests, TestFlight and an Android build.

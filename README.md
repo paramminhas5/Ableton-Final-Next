@@ -230,7 +230,7 @@ flowchart LR
 
 ## 9. Improvements we recommend
 
-Ordered by impact for the effort, beyond what the plan already covers.
+Ordered by impact for the effort. All of these were adopted into the plan on 3 Nov 2026 (`artifacts/ccd-school/design/instrument-plan.md`, "Web first"); the roadmap below shows where each one lands.
 
 1. **Sound in ten seconds.** Open first-time visitors straight onto the pads with a loop already playing, then teach. The PRD goal is sound in under a minute; we can beat it by a lot, and it is the best demo we have.
 2. **Make the track the spine of the course.** Every lesson's "use this line" adds a layer; every world ends with a finished, exportable track. Progress becomes "your tracks", not only XP.
@@ -251,11 +251,14 @@ Ordered by impact for the effort, beyond what the plan already covers.
 Web first. Each step ends with tests passing and every touched screen checked at 390x844 in light and dark, in Chromium and WebKit.
 
 1. **Mix (next):** master glue compressor and true-peak limiter, metering and analysis, clash detection, compare, lower-latency oversampling; mix mode in Studio.
-2. **All 6 layer types:** polyphonic chords, lead, hats and fx instruments; every fourth surface.
-3. **Getting music out:** MIDI, stems and Live Set export; MIDI clock sync in the browser.
-4. **Lessons on the engine:** the new lesson player, try-it recording, add to track, unlocks; sims move onto the engine.
-5. **Every other screen:** Today, World, practice, library, profile, onboarding, sign in, menu, moments, DJ, light studio, tablet and desktop, PWA.
-6. **Final pass:** copy, accessibility, performance (8 layers on a mid-range phone browser), full test runs.
+2. **All 6 layer types:** polyphonic chords, lead, hats and fx instruments, a sampler voice, every fourth surface; sound in ten seconds for first-time visitors.
+3. **Getting music out:** MIDI, stems and Live Set export; Web MIDI controllers and MIDI clock sync in the browser.
+4. **Lessons on the engine:** the new lesson player, try-it recording, add to track, unlocks; sims and Ear Gym move onto the engine; your track as the spine of every world; the mix coach; the 55 short lessons deepened.
+5. **Every other screen:** Today, World, practice, library, profile, onboarding, sign in, menu, moments, DJ, light studio, tablet and desktop, PWA; the CCD showcase loop; privacy (DPDP).
+6. **Final pass:** copy, accessibility, performance (8 layers on a mid-range phone browser), low-end phone mode, Hindi, full test runs, clean house, merge and domain move.
+
+Needs Param along the way: the sound sources decision (a CCD kit with the residents is recommended), five producers for the listening panel, the price, the missing keys, and Magnific's terms.
+
 7. **Then the phones:** Apple enrolment and the multicast request, device latency and Link tests, TestFlight and an Android release.
 
 ---
