@@ -1,0 +1,22 @@
+{
+  "name": "ccd-school-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CCD School on iOS and Android: Tauri 2 shell, native Rust engine, Ableton Link.",
+  "scripts": {
+    "www": "node build-www.mjs",
+    "link:fetch": "bash scripts/fetch-link.sh",
+    "dev": "npm run www && tauri dev",
+    "android:init": "tauri android init",
+    "android:dev": "npm run www && tauri android dev",
+    "android:build": "npm run www && tauri android build --apk --target aarch64",
+    "ios:init": "tauri ios init",
+    "ios:dev": "npm run www && tauri ios dev",
+    "ios:build": "npm run www && tauri ios build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4",
+    "esbuild": "^0.28.2"
+  }
+}

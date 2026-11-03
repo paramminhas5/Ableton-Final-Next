@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "default",
+  "description": "The web app may call the native engine, whether it is served locally in development or from the deployed site.",
+  "windows": [
+    "main"
+  ],
+  "remote": {
+    "urls": [
+      "https://ccd.school/*",
+      "https://*.ccd.school/*",
+      "https://*.vercel.app/*",
+      "http://localhost:3000/*",
+      "http://*:3000/*"
+    ]
+  },
+  "permissions": [
+    "core:default"
+  ]
+}

@@ -1,0 +1,53 @@
+[package]
+name = "ccd-school"
+version = "0.1.0"
+description = "CCD School: the app on iOS and Android, with the native CCD engine and Ableton Link."
+edition = "2021"
+publish = false
+
+[lib]
+name = "ccd_school_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+cc = "1"
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+ccd-engine = { path = "../../engine" }
+
+[target.'cfg(target_os = "android")'.dependencies]
+ndk = { version = "0.9", features = ["audio", "api-level-26"] }
+libc = "0.2"
+
+[target.'cfg(target_os = "ios")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSString", "NSError"] }
+objc2-avf-audio = { version = "0.3", features = ["AVAudioSession", "AVAudioSessionTypes"] }
+objc2-audio-toolbox = { version = "0.3", features = ["AUComponent", "AudioComponent", "AudioUnitProperties", "AudioOutputUnit", "objc2-core-audio-types"] }
+objc2-core-audio-types = { version = "0.3", features = ["CoreAudioBaseTypes"] }
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+cpal = "0.18"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+# Debug builds still run the engine fully optimised, so latency and CPU numbers from a
+# debug APK are real.
+[profile.dev]
+opt-level = 1
+debug = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+debug = false
+
+[profile.dev.package.ccd-engine]
+opt-level = 3

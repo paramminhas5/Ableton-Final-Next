@@ -1,0 +1,5 @@
+{
+  "comment": "The web app the phones open. The one source of every screen. Point it at the Vercel preview of the branch you are testing.",
+  "url": "https://ccd.school",
+  "start": "/lab/engine"
+}
