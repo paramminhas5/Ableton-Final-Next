@@ -62,18 +62,47 @@ export function missionImage(slug: string, world: WorldId): string {
   return shot?.imageUrl ?? `/ai-images/world-${world}.webp`;
 }
 
-/** Which hardware the lesson has you touch, from its screens. */
-export function missionTools(slug: string): ("knob" | "keys" | "pads")[] {
+/** The real control each kind of try-it step puts in your hands. */
+const SIM_TOOL: Record<string, string> = {
+  "drum-pad": "drum pads", "beat-builder": "step sequencer", "groove-extractor": "swing knob", "bpm-tap": "tap tempo",
+  "piano-roll": "piano roll", "note-explorer": "keys", "chord-stacker": "keys", "chord-progression": "keys", "melody-shaper": "keys",
+  "bassline-lab": "keys", "scale-aware": "keys", "mixer": "faders", "decibel-meter": "level meter", "comp-lake": "compressor",
+  "sidechain": "sidechain", "send-return": "send knob", "device-chain": "device rack", "device-lab": "device knobs",
+  "subtractive-synth": "filter knob", "filter-envelope": "filter envelope", "osc-mixer": "oscillator mix", "lfo-lab": "lfo",
+  "waveform-visualizer": "oscillator", "signal-flow-builder": "patch cables", "routing-puzzle": "routing",
+  "session-grid": "clip grid", "arrangement": "arrangement", "warp-lab": "warp markers", "midi-map": "midi map",
+  "midi-vs-audio": "clips", "beatmatch-trainer": "pitch fader", "hot-cue-drill": "hot cues", "loop-roll": "loop roll",
+  "harmonic-mix-wheel": "key wheel", "ear-training": "your ears", "song-structure": "arrangement", "granular": "grain knobs",
+  "stem-splitter": "stems", "midi-transform": "midi tools", "push3": "push pads", "interface-tour": "live's interface", "browser-tour": "browser",
+};
+
+export type Use = { tool: string; why: string };
+
+/** What you will touch in this lesson, named for the thing being learnt, with what it is for. */
+export function missionUses(slug: string): Use[] {
   const m = BY_SLUG.get(slug);
-  const t = new Set<"knob" | "keys" | "pads">();
+  const out: Use[] = [];
   for (const s of m?.screens ?? []) {
-    const k = s.kind as string;
-    if (k === "interact") t.add("knob");
-    if (k === "quiz" || k === "audio-id" || k === "match") t.add("pads");
-    if (k === "sequence") t.add("keys");
+    if (s.kind === "interact") {
+      const tool = SIM_TOOL[s.sim] ?? s.sim.replace(/-/g, " ");
+      if (!out.some(u => u.tool === tool)) out.push({ tool, why: s.prompt.toLowerCase().replace(/\.$/, "") });
+    }
   }
-  if (!t.size) t.add("pads");
-  return [...t].slice(0, 2);
+  const q = (m?.screens ?? []).filter(s => s.kind === "quiz" || s.kind === "audio-id" || s.kind === "match" || s.kind === "type-answer" || s.kind === "sequence").length;
+  if (q) out.push({ tool: "answer pads", why: `${q} quick ${q === 1 ? "question" : "questions"}` });
+  return out.slice(0, 3);
+}
+
+/** What the lesson teaches, from its summary. */
+export function missionLearns(slug: string): string[] {
+  const m = BY_SLUG.get(slug);
+  const sum = m?.screens?.find(s => s.kind === "summary") as { learned?: string[] } | undefined;
+  return (sum?.learned ?? []).slice(0, 3);
+}
+
+/** Short form for one line: the first tool by name. */
+export function missionTools(slug: string): string[] {
+  return missionUses(slug).map(u => u.tool).slice(0, 2);
 }
 
 export function minutesFor(slug: string): number {

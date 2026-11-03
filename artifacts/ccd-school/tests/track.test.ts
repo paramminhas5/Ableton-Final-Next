@@ -67,3 +67,24 @@ describe("worlds as sequencers", () => {
     expect(nextStep("fundamentals", done)?.slug).toBe(steps[2].slug);
   });
 });
+
+import { missionUses, missionLearns } from "../src/lib/worldOrder";
+describe("lesson tools in context", () => {
+  it("names tools after what the lesson teaches, never a bare 'knob'", () => {
+    let named = 0;
+    for (const w of ["fundamentals", "dj", "producer"] as const) {
+      for (const s of worldSteps(w)) {
+        for (const u of missionUses(s.slug)) {
+          expect(u.tool).not.toBe("knob");
+          expect(u.why.length).toBeGreaterThan(2);
+          named++;
+        }
+      }
+    }
+    expect(named).toBeGreaterThan(50);
+  });
+  it("reads what you will learn from the lesson summary", () => {
+    const withLearns = worldSteps("fundamentals").filter(s => missionLearns(s.slug).length > 0).length;
+    expect(withLearns).toBeGreaterThan(10);
+  });
+});
