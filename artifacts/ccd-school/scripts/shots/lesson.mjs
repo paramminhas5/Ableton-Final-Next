@@ -30,6 +30,7 @@ const SHOTS = [
   ["done", "bass-poli", "summary", null, "flow"],
   ["hearts-out", "frequency-pitch", "quiz", "noHearts", "flow"],
   ["practice", "frequency-pitch", "quiz", "practice", "flow"],
+  ["rankup", "bass-poli", "summary", "rankup", "flow"],
   ["free", "frequency-pitch", "quiz", null, "classic"],
 ];
 
@@ -45,6 +46,10 @@ for (const scheme of ["light", "dark"]) {
       localStorage.setItem("ccd.studio.seeded", "1");
       localStorage.setItem("ccd.learnMode", mode);
       if (action !== "intro") localStorage.setItem("ccd.hearts.explained", "1");
+      if (action === "rankup") {
+        const raw = JSON.parse(localStorage.getItem("ccd.progress.v2") || "null");
+        localStorage.setItem("ccd.progress.v2", JSON.stringify({ ...(raw || {}), xp: 140 }));
+      }
       if (action === "noHearts" || action === "practice") {
         const raw = JSON.parse(localStorage.getItem("ccd.progress.v2") || "null");
         localStorage.setItem("ccd.progress.v2", JSON.stringify({ ...(raw || {}), hearts: 0, heartRefillAt: Date.now() - 600000 }));

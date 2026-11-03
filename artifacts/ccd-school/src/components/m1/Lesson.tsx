@@ -23,7 +23,8 @@ import { getMissionContext } from "@/lib/missionContext";
 import { track } from "@/lib/analytics";
 import { offerFor, useTrack } from "@/lib/track";
 import { lessonSteps, readTake, saveTake, takeType, type Take } from "@/lib/lessonTake";
-import { minutesFor, missionImage, missionLearns, missionUses, worldOf, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { minutesFor, missionImage, missionLearns, missionUses, worldDone, worldOf, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { RANKS, rankFor } from "@/lib/ranks";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
 import { GlassDiagram, GlassVisual, VISUAL_TAG, Chain } from "./GlassVisual";
@@ -546,11 +547,82 @@ function MatchStep({ screen, seed, ...p }: AskProps & { screen: Extract<LessonSc
   );
 }
 
+
+// ── moments: rank up and world done, shown once at the end of the lesson that earns them ──
+function Gauge({ at, total }: { at: number; total: number }) {
+  const W = 300, cx = 150, cy = 150, r = 110;
+  const a0 = -Math.PI * 0.85, a1 = -Math.PI * 0.15;
+  const ang = (i: number) => a0 + ((a1 - a0) * i) / (total - 1);
+  const na = ang(at);
+  return (
+    <svg viewBox={`0 0 ${W} 170`} width="100%" aria-hidden style={{ display: "block", marginTop: 6 }}>
+      {Array.from({ length: total }, (_, i) => {
+        const q = ang(i), on = i === at;
+        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#FF4F9A" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #FF4F9A)" } : undefined} />;
+      })}
+      <path d={`M${cx} ${cy}L${cx + (r - 22) * Math.cos(na)} ${cy + (r - 22) * Math.sin(na)}`} stroke="#F3F2EF" strokeWidth={2.2} strokeLinecap="round" />
+      <circle cx={cx} cy={cy} r={6} fill="#F3F2EF" />
+    </svg>
+  );
+}
+
+function Moment({ kind, title, line, uses, onDone, extra }: { kind: "rank" | "world"; title: string; line: string; uses: { tool: string; why: string; href?: string }[]; onDone: () => void; extra?: ReactNode }) {
+  const [shared, setShared] = useState(false);
+  const share = async () => {
+    const text = kind === "rank" ? `${title} on cats can dance school` : `finished the ${title} world on cats can dance school`;
+    try {
+      if (navigator.share) await navigator.share({ title: "cats can dance school", text, url: location.origin });
+      else { await navigator.clipboard.writeText(`${text} ${location.origin}`); setShared(true); }
+    } catch { /* cancelled */ }
+  };
+  return (
+    <div className="ls-col">
+      <Screen>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
+        <span className="m1-ss">{kind === "rank" ? "rank up" : "world done"}</span>
+        {extra}
+        <div className="ls-title is-big" style={{ textAlign: kind === "rank" ? "center" : "left", marginTop: kind === "rank" ? 0 : 10 }}>{title}</div>
+        <div className="m1-ss" style={{ textAlign: kind === "rank" ? "center" : "left", color: "var(--disp-ink)", marginTop: 8 }}>{line}</div>
+        {shared && <div className="m1-ss" style={{ textAlign: "center", marginTop: 8, color: "var(--led-mint)" }}>copied</div>}
+      </Screen>
+      {uses.length > 0 && (
+        <>
+          <Silk label={kind === "rank" ? "unlocked" : "take it further"} right={kind === "rank" ? "controls you used today" : undefined} />
+          <div className="ls-uses" style={{ ["--n" as string]: Math.min(2, uses.length) } as CSSProperties}>
+            {uses.slice(0, 2).map(u => {
+              const inner = <><span className="ls-use-ico"><Icon name={u.href ? (u.href === "/dj" ? "dj" : "out") : TOOL_ICON(u.tool)} /></span><b>{u.tool}</b><small>{u.why}</small></>;
+              return u.href
+                ? <Link key={u.tool} href={u.href} className="ls-use" style={{ color: "inherit", textDecoration: "none" }}>{inner}</Link>
+                : <div key={u.tool} className="ls-use">{inner}</div>;
+            })}
+          </div>
+        </>
+      )}
+      <Bottom left={{ label: shared ? "copied" : "share", icon: "out", onClick: share }} go={{ label: <><Icon name="play" small />keep going</>, onClick: onDone }} />
+    </div>
+  );
+}
+
 // ── the end ─────────────────────────────────────────────────────────────────
-function DoneStep({ mission, screen, xp, take, accent, nextHref, backHref, isLoggedIn, source, score, onLeave }: { mission: Mission; screen: Summary; xp: number; take: Take | null; accent: string; nextHref: string; backHref: string; isLoggedIn: boolean; source: string | null; score: number; onLeave: () => void }) {
+function DoneStep({ mission, screen, xp, take, accent, nextHref, backHref, isLoggedIn, source, score, onLeave, moment, setMoment }: { mission: Mission; screen: Summary; xp: number; take: Take | null; accent: string; nextHref: string; backHref: string; isLoggedIn: boolean; source: string | null; score: number; onLeave: () => void; moment: null | "rank" | "world"; setMoment: (m: null | "rank" | "world") => void }) {
   useEffect(() => { playFanfare(); }, []);
   const router = useRouter();
-  useEnter(() => { onLeave(); router.push(nextHref); });
+  const { progress } = useProgress();
+  const { track: v1 } = useTrack();
+  const world = worldOf(mission.slug);
+  useEnter(() => { if (moment) setMoment(null); else { onLeave(); router.push(nextHref); } });
+  if (moment === "rank") {
+    const r = rankFor(progress.xp);
+    return <Moment kind="rank" title={r.current.name.toLowerCase()} line={`rank ${r.idx + 1} of ${RANKS.length} · ${progress.xp} xp`} uses={missionUses(mission.slug).filter(u => u.tool !== "answer pads")} onDone={() => setMoment(null)}
+      extra={<Gauge at={r.idx} total={RANKS.length} />} />;
+  }
+  if (moment === "world" && world) {
+    const wd = worldDone(world, progress.completedMissions);
+    return <Moment kind="world" title={WORLD_LABEL[world]} line={`${wd.total} lessons · ${v1.layers.length} layers`} onDone={() => setMoment(null)}
+      uses={[{ tool: "send to live", why: "a midi file, one track per layer", href: "/studio" }, { tool: "mix it in dj", why: "your track on deck a", href: "/dj" }]}
+      extra={<div style={{ marginTop: 14 }}><Lanes track={v1} /></div>} />;
+  }
   return (
     <div className="ls-col">
       <AddToTrack mission={mission} xp={xp} take={take} accent={accent} keys={k => (
@@ -689,6 +761,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   const [out, setOut] = useState(false);
   const [intro, setIntro] = useState(false);
   const finished = useRef(false);
+  const [moment, setMoment] = useState<null | "rank" | "world">(null);
   // Practice for a heart: three right answers from this lesson's questions, nothing to lose.
   const [practice, setPractice] = useState<{ at: number; right: number } | null>(null);
   const { track: v1 } = useTrack();
@@ -730,6 +803,13 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     finished.current = true;
     const score = correct / Math.max(1, asks.length);
     if (score === 1) triggerPerfectScore();
+    // Did this lesson cross a rank, or finish a world? The last screen shows it once.
+    if (!isReview && !alreadyDone) {
+      const w = worldOf(mission.slug);
+      const wd = w ? worldDone(w, { ...progress.completedMissions, [mission.slug]: true }) : null;
+      const m = wd && wd.done === wd.total ? "world" : rankFor(progress.xp + mission.xp).idx > rankFor(progress.xp).idx ? "rank" : null;
+      if (m) setMoment(m);
+    }
     if (isReview) reviewMission(mission.slug, score);
     else {
       completeMission(mission.slug, mission.xp, score, mission.badge?.slug);
@@ -738,7 +818,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     track("lesson_completed", { missionSlug: mission.slug, world: mission.world, xpEarned: alreadyDone ? 0 : mission.xp, score, quizTotal: asks.length, correctCount: correct, isReview: !!isReview, learnMode });
     try { sessionStorage.setItem(SESSION, JSON.stringify({ idx, correct, at: Date.now(), done: true })); } catch { /* ignore */ }
     onComplete();
-  }, [correct, asks.length, isReview, reviewMission, completeMission, mission, alreadyDone, learnMode, onComplete, SESSION, idx]);
+  }, [correct, asks.length, isReview, reviewMission, completeMission, mission, alreadyDone, learnMode, onComplete, SESSION, idx, progress.xp, progress.completedMissions]);
 
   const cur = steps[idx];
   useEffect(() => {
@@ -818,6 +898,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
       break;
     case "summary":
       body = <DoneStep mission={mission} screen={cur} xp={alreadyDone ? 0 : mission.xp} take={take} accent={accent} nextHref={nextHref} backHref={back} isLoggedIn={!!user} source={ctx.path?.source ?? null} score={correct / Math.max(1, asks.length)}
+        moment={moment} setMoment={setMoment}
         onLeave={() => { try { sessionStorage.removeItem(SESSION); } catch { /* ignore */ } saveTake(mission.slug, null); }} />;
       break;
   }

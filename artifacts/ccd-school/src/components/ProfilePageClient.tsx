@@ -20,7 +20,6 @@ import { worldDone, WORLD_IDS, WORLD_LABEL } from "@/lib/worldOrder";
 import { GoPill, Icon, Key, Screen, Silk, Switch, WORLD_LED } from "@/components/m1/controls";
 import { CAT_SRC } from "@/components/m1/shell";
 import { SevenSeg } from "@/components/m1/SevenSeg";
-import { Footer } from "@/components/m1/Footer";
 import "@/components/m1/lesson.css";
 
 const ALL = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
@@ -198,7 +197,6 @@ export function ProfilePageClient() {
           <GoPill onClick={() => signOut()} style={{ gridColumn: "1 / -1" }}>sign out</GoPill>
         </div>
       )}
-      <Footer />
     </main>
   );
 }

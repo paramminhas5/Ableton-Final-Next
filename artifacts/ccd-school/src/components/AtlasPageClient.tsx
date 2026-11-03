@@ -10,7 +10,6 @@ import { editionNeeded, ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/a
 import { TERMS } from "@/content/glossary";
 import { useProgress } from "@/lib/progress";
 import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
-import { Footer } from "@/components/m1/Footer";
 import "@/components/m1/lesson.css";
 
 const GROUP_COLOR: Record<AtlasGroup, string> = {
@@ -180,7 +179,6 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
           </div>
         </>
       )}
-      <Footer />
     </main>
   );
 }
