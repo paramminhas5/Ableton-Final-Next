@@ -240,6 +240,80 @@ pub const DRUM_PAD_PARAMS: &[ParamSpec] = &[
 
 pub const DRUM_PADS: usize = 16;
 
+/// Rack-wide drum params, after the 16 pads' own: how open the closed hat is.
+pub const DRUM_RACK_PARAMS: &[ParamSpec] = &[
+    p("open", "open", Bank::Sound, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+];
+pub const D_OPEN: usize = 0;
+/// Wire offset (from INSTRUMENT_BASE) of the first rack-wide drum param.
+pub const DRUM_RACK_BASE: usize = DRUM_PADS * 4;
+
+// ── Chords: polyphonic synth ─────────────────────────────────────────────────
+
+pub const CHORD_PARAMS: &[ParamSpec] = &[
+    p("voicing", "voicing", Bank::Sound, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("spread", "spread", Bank::Sound, 0.0, 1.0, 0.4, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("attack", "attack", Bank::Sound, 2.0, 1500.0, 0.3, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("release", "release", Bank::Sound, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("cutoff", "cutoff", Bank::Shift, 150.0, 16000.0, 0.62, Unit::Hz, Curve::Exp, 8.0, NONE),
+    p("res", "res", Bank::Shift, 0.0, 1.0, 0.15, Unit::Pct, Curve::Lin, 8.0, NONE),
+    p("env", "env", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 8.0, NONE),
+    p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+];
+pub const C_VOICING: usize = 0;
+pub const C_SPREAD: usize = 1;
+pub const C_ATTACK: usize = 2;
+pub const C_RELEASE: usize = 3;
+pub const C_CUTOFF: usize = 4;
+pub const C_RES: usize = 5;
+pub const C_ENV: usize = 6;
+pub const C_DRIFT: usize = 7;
+
+// ── Lead: mono synth with glide ──────────────────────────────────────────────
+
+pub const LEAD_PARAMS: &[ParamSpec] = &[
+    p("cutoff", "cutoff", Bank::Sound, 120.0, 16000.0, 0.6, Unit::Hz, Curve::Exp, 8.0, NONE),
+    p("res", "res", Bank::Sound, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
+    p("attack", "attack", Bank::Sound, 1.0, 800.0, 0.1, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("release", "release", Bank::Sound, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("glide", "glide", Bank::Shift, 0.0, 400.0, 0.2, Unit::Ms, Curve::Lin, 0.0, NONE),
+    p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
+    p("detune", "detune", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("env", "env", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
+];
+pub const LD_CUTOFF: usize = 0;
+pub const LD_RES: usize = 1;
+pub const LD_ATTACK: usize = 2;
+pub const LD_RELEASE: usize = 3;
+pub const LD_GLIDE: usize = 4;
+pub const LD_WAVE: usize = 5;
+pub const LD_DETUNE: usize = 6;
+pub const LD_ENV: usize = 7;
+
+// ── FX: noise, sweeps, impacts, riser ────────────────────────────────────────
+
+pub const FX_PARAMS: &[ParamSpec] = &[
+    p("length", "length", Bank::Sound, 1.0, 8.0, 0.43, Unit::None, Curve::Lin, 0.0, NONE),
+    p("noise", "noise", Bank::Sound, 0.0, 1.0, 0.6, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("filter", "filter", Bank::Sound, 200.0, 14000.0, 0.7, Unit::Hz, Curve::Exp, 15.0, NONE),
+    p("reverb", "reverb", Bank::Sound, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
+    // The riser fader. 0 is calm, 1 is the peak. Driven by hand or by a riser hit.
+    p("build", "build", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("tune", "tune", Bank::Shift, -12.0, 12.0, 0.5, Unit::Semis, Curve::Lin, 0.0, CENTRE),
+];
+pub const F_LENGTH: usize = 0;
+pub const F_NOISE: usize = 1;
+pub const F_FILTER: usize = 2;
+pub const F_REVERB: usize = 3;
+pub const F_BUILD: usize = 4;
+pub const F_TUNE: usize = 5;
+
+/// fx pads, bottom-left first. The note each one answers to is `FX_NOTE_BASE + index`.
+pub const FX_NAMES: [&str; 8] = ["impact", "sub drop", "noise hit", "sweep up", "sweep down", "riser", "zap", "whoosh"];
+pub const FX_NOTE_BASE: u8 = 36;
+pub const FX_RISER_NOTE: u8 = 41;
+pub const FX_IMPACT_NOTE: u8 = 36;
+
 /// Pad names, bottom-left first (pad 0 is the kick, like an MPC/Push drum rack).
 pub const DRUM_PAD_NAMES: [&str; DRUM_PADS] = [
     "kick", "snare", "clap", "rim",
@@ -257,6 +331,9 @@ pub enum Instrument {
     None = 0,
     Drums = 1,
     Bass = 2,
+    Chords = 3,
+    Lead = 4,
+    Fx = 5,
 }
 
 impl Instrument {
@@ -264,6 +341,9 @@ impl Instrument {
         match v {
             1 => Instrument::Drums,
             2 => Instrument::Bass,
+            3 => Instrument::Chords,
+            4 => Instrument::Lead,
+            5 => Instrument::Fx,
             _ => Instrument::None,
         }
     }
@@ -272,14 +352,20 @@ impl Instrument {
             Instrument::None => "none",
             Instrument::Drums => "drums",
             Instrument::Bass => "bass",
+            Instrument::Chords => "chords",
+            Instrument::Lead => "lead",
+            Instrument::Fx => "fx",
         }
     }
     /// Number of instrument params on the wire.
     pub fn param_count(self) -> usize {
         match self {
             Instrument::None => 0,
-            Instrument::Drums => DRUM_PADS * DRUM_PAD_PARAMS.len(),
+            Instrument::Drums => DRUM_RACK_BASE + DRUM_RACK_PARAMS.len(),
             Instrument::Bass => BASS_PARAMS.len(),
+            Instrument::Chords => CHORD_PARAMS.len(),
+            Instrument::Lead => LEAD_PARAMS.len(),
+            Instrument::Fx => FX_PARAMS.len(),
         }
     }
     /// The spec for wire index `i` (counted from INSTRUMENT_BASE).
@@ -287,13 +373,22 @@ impl Instrument {
         match self {
             Instrument::None => None,
             Instrument::Bass => BASS_PARAMS.get(i),
-            Instrument::Drums => DRUM_PAD_PARAMS.get(i % DRUM_PAD_PARAMS.len()).filter(|_| i < DRUM_PADS * DRUM_PAD_PARAMS.len()),
+            Instrument::Chords => CHORD_PARAMS.get(i),
+            Instrument::Lead => LEAD_PARAMS.get(i),
+            Instrument::Fx => FX_PARAMS.get(i),
+            Instrument::Drums => {
+                if i < DRUM_RACK_BASE {
+                    DRUM_PAD_PARAMS.get(i % DRUM_PAD_PARAMS.len())
+                } else {
+                    DRUM_RACK_PARAMS.get(i - DRUM_RACK_BASE)
+                }
+            }
         }
     }
 }
 
 /// Total param slots per layer.
-pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_PADS * 4;
+pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_RACK_BASE + 16;
 
 /// Look up any wire index for a layer of this instrument.
 pub fn spec_for(inst: Instrument, index: usize) -> Option<&'static ParamSpec> {
@@ -332,12 +427,14 @@ mod tests {
     fn layer_params_fit_before_instrument_block() {
         assert!(LAYER_PARAMS.len() <= INSTRUMENT_BASE);
         assert!(INSTRUMENT_BASE + Instrument::Drums.param_count() <= MAX_PARAMS);
-        assert!(INSTRUMENT_BASE + Instrument::Bass.param_count() <= MAX_PARAMS);
+        for i in [Instrument::Bass, Instrument::Chords, Instrument::Lead, Instrument::Fx] {
+            assert!(INSTRUMENT_BASE + i.param_count() <= MAX_PARAMS);
+        }
     }
 
     #[test]
     fn defaults_are_normalised() {
-        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(MASTER_PARAMS) {
+        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(MASTER_PARAMS) {
             assert!((0.0..=1.0).contains(&s.default), "{}", s.id);
             for d in s.detents {
                 assert!((0.0..=1.0).contains(d));

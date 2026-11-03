@@ -8,7 +8,7 @@ use crate::dsp::env::Decay;
 use crate::dsp::osc::Sine;
 use crate::fx::{Echo, Reverb};
 use crate::master::{Master, TruePeak, MASTER_DELAY};
-use crate::inst::{Bass, DrumRack};
+use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly};
 use crate::params::*;
 use crate::ring::Ring;
 use crate::seq::{fire_range, NoteEv, Pattern, MAX_OFFS};
@@ -189,6 +189,9 @@ pub struct Layer {
     pub inst: Instrument,
     pub drums: Box<DrumRack>,
     pub bass: Box<Bass>,
+    pub chords: Box<Poly>,
+    pub lead: Box<Lead>,
+    pub fx: Box<FxSynth>,
     pub strip: Strip,
     pub params: [f32; MAX_PARAMS],
     pub live: Pattern,
@@ -213,6 +216,9 @@ impl Layer {
             inst: Instrument::None,
             drums: Box::new(DrumRack::new(sr)),
             bass: Box::new(Bass::new(sr)),
+            chords: Box::new(Poly::new(sr)),
+            lead: Box::new(Lead::new(sr)),
+            fx: Box::new(FxSynth::new(sr)),
             strip: Strip::new(sr),
             params,
             live: Pattern::new(),
@@ -235,19 +241,29 @@ impl Layer {
         match self.inst {
             Instrument::Drums => self.drums.note_on(note, vel),
             Instrument::Bass => self.bass.note_on(note, vel),
+            Instrument::Chords => self.chords.note_on(note, vel),
+            Instrument::Lead => self.lead.note_on(note, vel),
+            Instrument::Fx => self.fx.note_on(note, vel),
             Instrument::None => {}
         }
     }
 
     fn note_off(&mut self, note: u8) {
-        if self.inst == Instrument::Bass {
-            self.bass.note_off(note);
+        match self.inst {
+            Instrument::Bass => self.bass.note_off(note),
+            Instrument::Chords => self.chords.note_off(note),
+            Instrument::Lead => self.lead.note_off(note),
+            Instrument::Fx => self.fx.note_off(note),
+            _ => {}
         }
     }
 
     fn all_off(&mut self) {
         self.n_offs = 0;
         self.bass.all_off();
+        self.chords.all_off();
+        self.lead.all_off();
+        self.fx.all_off();
     }
 
     fn set_param(&mut self, index: usize, norm: f32, jump: bool) {
@@ -267,6 +283,9 @@ impl Layer {
             match self.inst {
                 Instrument::Bass => self.bass.set_param(i, v),
                 Instrument::Drums => self.drums.set_param(i, v),
+                Instrument::Chords => self.chords.set_param(i, v),
+                Instrument::Lead => self.lead.set_param(i, v),
+                Instrument::Fx => self.fx.set_param(i, v),
                 Instrument::None => {}
             }
         }
@@ -291,6 +310,9 @@ impl Layer {
         match self.inst {
             Instrument::Drums => self.drums.tick(),
             Instrument::Bass => self.bass.tick(),
+            Instrument::Chords => self.chords.tick(),
+            Instrument::Lead => self.lead.tick(),
+            Instrument::Fx => self.fx.tick(),
             Instrument::None => 0.0,
         }
     }
@@ -488,6 +510,9 @@ impl Core {
         if (self.tr.tempo - tempo).abs() > 1e-6 {
             self.tr.tempo = tempo;
             self.echo.set_tempo(tempo as f32);
+            for l in self.layers.iter_mut() {
+                l.fx.set_tempo(tempo as f32);
+            }
         }
         self.tr.beat = beat;
         if self.tr.state == State::Playing {
@@ -588,6 +613,10 @@ impl Core {
                 if !self.tr.link {
                     self.tr.tempo = c.y.clamp(20.0, 300.0);
                     self.echo.set_tempo(self.tr.tempo as f32);
+                    let bpm = self.tr.tempo as f32;
+                    for l in self.layers.iter_mut() {
+                        l.fx.set_tempo(bpm);
+                    }
                 }
             }
             cmd::LOOP => self.tr.loop_len = c.y.max(0.25),

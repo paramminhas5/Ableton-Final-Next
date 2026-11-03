@@ -71,6 +71,8 @@ pub struct Pad {
     pub decay: f32,
     pub drive_amt: f32,
     pub level: f32,
+    /// Stretches the length, so the closed hat can be opened with the rack's open knob.
+    pub len_mul: f32,
 }
 
 impl Pad {
@@ -96,6 +98,7 @@ impl Pad {
             decay: 0.5,
             drive_amt: 0.0,
             level: 1.0,
+            len_mul: 1.0,
         };
         p.setup_filters();
         p
@@ -174,7 +177,7 @@ impl Pad {
     }
 
     fn length(&self) -> f32 {
-        self.base_len() * (4.0f32).powf((self.decay - 0.5) * 2.0)
+        self.base_len() * (4.0f32).powf((self.decay - 0.5) * 2.0) * self.len_mul
     }
 
     pub fn trigger(&mut self, vel: f32) {
@@ -362,6 +365,13 @@ impl DrumRack {
 
     /// `i` counts from the instrument block: pad * 4 + knob.
     pub fn set_param(&mut self, i: usize, v: f32) {
+        if i >= DRUM_RACK_BASE {
+            // Rack-wide knobs. open: the closed hat rings out up to 10x longer.
+            if i - DRUM_RACK_BASE == D_OPEN {
+                self.pads[4].len_mul = 1.0 + v * 9.0;
+            }
+            return;
+        }
         let pad = i / DRUM_PAD_PARAMS.len();
         let k = i % DRUM_PAD_PARAMS.len();
         if let Some(p) = self.pads.get_mut(pad) {

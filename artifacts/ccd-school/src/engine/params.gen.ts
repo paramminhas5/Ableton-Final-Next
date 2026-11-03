@@ -7,7 +7,7 @@ export type Curve = "lin" | "exp" | "fader";
 export type ParamSpec = { id: string; key: string; label: string; bank: Bank; index: number; min: number; max: number; default: number; unit: Unit; curve: Curve; smoothMs: number; detents: number[] };
 
 export const INSTRUMENT_BASE = 16;
-export const MAX_PARAMS = 80;
+export const MAX_PARAMS = 96;
 export const FADER_UNITY = 0.75;
 export const FADER_MIN_DB = -60;
 export const FADER_MAX_DB = 6;
@@ -46,6 +46,43 @@ export const DRUM_PAD_PARAMS = [
   { id: "drums.pad.level", key: "level", label: "level", bank: "sound", index: 3, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 0, detents: [0.75] },
 ] as const satisfies readonly ParamSpec[];
 
+/** Rack-wide drum knobs. Wire index = INSTRUMENT_BASE + DRUM_RACK_BASE + index. */
+export const DRUM_RACK_PARAMS = [
+  { id: "drums.open", key: "open", label: "open", bank: "sound", index: 80, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+export const DRUM_RACK_BASE = 64;
+
+export const CHORD_PARAMS = [
+  { id: "chords.voicing", key: "voicing", label: "voicing", bank: "sound", index: 16, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.spread", key: "spread", label: "spread", bank: "sound", index: 17, min: 0, max: 1, default: 0.4, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.attack", key: "attack", label: "attack", bank: "sound", index: 18, min: 2, max: 1500, default: 0.3, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.release", key: "release", label: "release", bank: "sound", index: 19, min: 20, max: 4000, default: 0.45, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.cutoff", key: "cutoff", label: "cutoff", bank: "shift", index: 20, min: 150, max: 16000, default: 0.62, unit: "hz", curve: "exp", smoothMs: 8, detents: [] },
+  { id: "chords.res", key: "res", label: "res", bank: "shift", index: 21, min: 0, max: 1, default: 0.15, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+  { id: "chords.env", key: "env", label: "env", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+  { id: "chords.drift", key: "drift", label: "drift", bank: "shift", index: 23, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+
+export const LEAD_PARAMS = [
+  { id: "lead.cutoff", key: "cutoff", label: "cutoff", bank: "sound", index: 16, min: 120, max: 16000, default: 0.6, unit: "hz", curve: "exp", smoothMs: 8, detents: [] },
+  { id: "lead.res", key: "res", label: "res", bank: "sound", index: 17, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+  { id: "lead.attack", key: "attack", label: "attack", bank: "sound", index: 18, min: 1, max: 800, default: 0.1, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.release", key: "release", label: "release", bank: "sound", index: 19, min: 20, max: 3000, default: 0.4, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.glide", key: "glide", label: "glide", bank: "shift", index: 20, min: 0, max: 400, default: 0.2, unit: "ms", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.wave", key: "wave", label: "wave", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.detune", key: "detune", label: "detune", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.env", key: "env", label: "env", bank: "shift", index: 23, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+] as const satisfies readonly ParamSpec[];
+
+export const FX_PARAMS = [
+  { id: "fx.length", key: "length", label: "length", bank: "sound", index: 16, min: 1, max: 8, default: 0.43, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "fx.noise", key: "noise", label: "noise", bank: "sound", index: 17, min: 0, max: 1, default: 0.6, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.filter", key: "filter", label: "filter", bank: "sound", index: 18, min: 200, max: 14000, default: 0.7, unit: "hz", curve: "exp", smoothMs: 15, detents: [] },
+  { id: "fx.reverb", key: "reverb", label: "reverb", bank: "sound", index: 19, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.build", key: "build", label: "build", bank: "shift", index: 20, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "fx.tune", key: "tune", label: "tune", bank: "shift", index: 21, min: -12, max: 12, default: 0.5, unit: "st", curve: "lin", smoothMs: 0, detents: [0.5] },
+] as const satisfies readonly ParamSpec[];
+
 /** Master bus. Wire index for the MASTER command = position here. */
 export const MASTER_PARAMS = [
   { id: "master.out", key: "out", label: "out", bank: "mix", index: 0, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 15, detents: [0.75] },
@@ -54,14 +91,22 @@ export const MASTER_PARAMS = [
 
 export const DRUM_PAD_NAMES = ["kick", "snare", "clap", "rim", "closed hat", "open hat", "shaker", "ride", "low tom", "mid tom", "high tom", "crash", "perc 1", "perc 2", "fx", "reverse"] as const;
 export const DRUM_PAD_NOTES = [36, 38, 39, 37, 42, 46, 70, 51, 41, 45, 48, 49, 60, 61, 54, 55] as const;
+export const FX_NAMES = ["impact", "sub drop", "noise hit", "sweep up", "sweep down", "riser", "zap", "whoosh"] as const;
+export const FX_NOTE_BASE = 36;
+export const FX_RISER_NOTE = 41;
+export const FX_IMPACT_NOTE = 36;
 
-export const INSTRUMENT = { none: 0, drums: 1, bass: 2 } as const;
+export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5 } as const;
 export type InstrumentName = keyof typeof INSTRUMENT;
 
 export type LayerParamId = `${(typeof LAYER_PARAMS)[number]["id"]}`;
 export type BassParamId = `${(typeof BASS_PARAMS)[number]["id"]}`;
 export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number]["id"]}`;
-export type ParamId = LayerParamId | BassParamId | DrumPadParamId;
+export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number]["id"]}`;
+export type ChordParamId = `${(typeof CHORD_PARAMS)[number]["id"]}`;
+export type LeadParamId = `${(typeof LEAD_PARAMS)[number]["id"]}`;
+export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
+export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId;
 
 export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;

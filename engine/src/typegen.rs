@@ -68,6 +68,22 @@ pub fn typescript() -> String {
     }
     o.push_str("] as const satisfies readonly ParamSpec[];\n\n");
 
+    o.push_str("/** Rack-wide drum knobs. Wire index = INSTRUMENT_BASE + DRUM_RACK_BASE + index. */\n");
+    o.push_str("export const DRUM_RACK_PARAMS = [\n");
+    for (i, s) in DRUM_RACK_PARAMS.iter().enumerate() {
+        writeln!(o, "  {},", spec_ts("drums", s, INSTRUMENT_BASE + DRUM_RACK_BASE + i)).unwrap();
+    }
+    o.push_str("] as const satisfies readonly ParamSpec[];\n");
+    writeln!(o, "export const DRUM_RACK_BASE = {DRUM_RACK_BASE};\n").unwrap();
+
+    for (name, group, table) in [("CHORD_PARAMS", "chords", CHORD_PARAMS), ("LEAD_PARAMS", "lead", LEAD_PARAMS), ("FX_PARAMS", "fx", FX_PARAMS)] {
+        writeln!(o, "export const {name} = [").unwrap();
+        for (i, s) in table.iter().enumerate() {
+            writeln!(o, "  {},", spec_ts(group, s, INSTRUMENT_BASE + i)).unwrap();
+        }
+        o.push_str("] as const satisfies readonly ParamSpec[];\n\n");
+    }
+
     o.push_str("/** Master bus. Wire index for the MASTER command = position here. */\n");
     o.push_str("export const MASTER_PARAMS = [\n");
     for (i, s) in MASTER_PARAMS.iter().enumerate() {
@@ -80,15 +96,24 @@ pub fn typescript() -> String {
     let names: Vec<String> = DRUM_PAD_NAMES.iter().map(|n| format!("\"{n}\"")).collect();
     let notes: Vec<String> = DRUM_PAD_NOTES.iter().map(|n| n.to_string()).collect();
     writeln!(o, "export const DRUM_PAD_NAMES = [{}] as const;", names.join(", ")).unwrap();
-    writeln!(o, "export const DRUM_PAD_NOTES = [{}] as const;\n", notes.join(", ")).unwrap();
+    writeln!(o, "export const DRUM_PAD_NOTES = [{}] as const;", notes.join(", ")).unwrap();
+    let fxn: Vec<String> = FX_NAMES.iter().map(|n| format!("\"{n}\"")).collect();
+    writeln!(o, "export const FX_NAMES = [{}] as const;", fxn.join(", ")).unwrap();
+    writeln!(o, "export const FX_NOTE_BASE = {FX_NOTE_BASE};").unwrap();
+    writeln!(o, "export const FX_RISER_NOTE = {FX_RISER_NOTE};").unwrap();
+    writeln!(o, "export const FX_IMPACT_NOTE = {FX_IMPACT_NOTE};\n").unwrap();
 
-    o.push_str("export const INSTRUMENT = { none: 0, drums: 1, bass: 2 } as const;\n");
+    o.push_str("export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5 } as const;\n");
     o.push_str("export type InstrumentName = keyof typeof INSTRUMENT;\n\n");
 
     o.push_str("export type LayerParamId = `${(typeof LAYER_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type BassParamId = `${(typeof BASS_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number][\"id\"]}`;\n");
-    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId;\n\n");
+    o.push_str("export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type ChordParamId = `${(typeof CHORD_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type LeadParamId = `${(typeof LEAD_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type FxParamId = `${(typeof FX_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId;\n\n");
 
     writeln!(
         o,
