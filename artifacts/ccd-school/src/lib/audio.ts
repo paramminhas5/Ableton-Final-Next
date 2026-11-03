@@ -36,6 +36,15 @@ function primeIOS(c: AudioContext) {
   } catch {}
 }
 
+/** Interface sounds (right, wrong, lesson done) can be switched off in You. Music is never muted by this. */
+const UI_SOUND_KEY = "ccd.uisound";
+export function uiSoundsOn(): boolean {
+  try { return localStorage.getItem(UI_SOUND_KEY) !== "off"; } catch { return true; }
+}
+export function setUiSounds(on: boolean) {
+  try { localStorage.setItem(UI_SOUND_KEY, on ? "on" : "off"); } catch { /* ignore */ }
+}
+
 export const getCtx = () => {
   if (typeof window === "undefined") return null;
   if (!ctx) {
@@ -410,6 +419,7 @@ export const startLoop = (name: SampleName, bpm = 100, dest?: AudioNode): LoopHa
 // --- UI feedback sounds -----------------------------------------------------
 // Correct answer: clean bell ding
 export const playCorrect = () => {
+  if (!uiSoundsOn()) return;
   const c = getCtx();
   if (!c) return;
   const t = c.currentTime + 0.02;
@@ -429,6 +439,7 @@ export const playCorrect = () => {
 
 // Wrong answer: low buzz
 export const playWrong = () => {
+  if (!uiSoundsOn()) return;
   const c = getCtx();
   if (!c) return;
   const t = c.currentTime + 0.02;
@@ -451,6 +462,7 @@ export const playWrong = () => {
 
 // Completion fanfare
 export const playFanfare = () => {
+  if (!uiSoundsOn()) return;
   const c = getCtx();
   if (!c) return;
   const t = c.currentTime + 0.05;

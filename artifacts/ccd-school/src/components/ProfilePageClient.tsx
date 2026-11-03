@@ -1,341 +1,204 @@
 "use client";
 /**
- * ProfilePageClient — CCD.SCHOOL profile.
- * Fully visual: graphic stat cards, rank ladder, world progress strips,
- * cat decorations, SectionReveal on every section, badges grid.
+ * You, Model 1 (canvas board ZYou). The screen shows who you are and how far to the next
+ * rank; four readouts for streak, xp, lessons and layers; settings on switches; then the
+ * rank ladder, your worlds and your account.
  */
 import Link from "next/link";
-import Image from "next/image";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useProgress } from "@/lib/progress";
 import { RANKS, rankFor } from "@/lib/ranks";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { useAuth, signOut } from "@/lib/auth";
-import { WORLD_TROPHIES, MASTER_TROPHY } from "@/content/chapters";
-import { pathsByWorld } from "@/content/paths";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import SectionReveal from "@/components/SectionReveal";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useLearnMode } from "@/lib/mode";
+import { useMode, type Mode } from "@/components/ThemeSwitcher";
+import { setUiSounds, uiSoundsOn } from "@/lib/audio";
+import { useTrackV2 } from "@/lib/track2";
+import { worldDone, WORLD_IDS, WORLD_LABEL } from "@/lib/worldOrder";
+import { GoPill, Icon, Key, Screen, Silk, Switch, WORLD_LED } from "@/components/m1/controls";
+import { CAT_SRC } from "@/components/m1/shell";
+import { SevenSeg } from "@/components/m1/SevenSeg";
+import { Footer } from "@/components/m1/Footer";
+import "@/components/m1/lesson.css";
 
-type WorldId = "fundamentals" | "dj" | "producer";
-const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
+const ALL = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
-const WORLD_META: Record<WorldId, { title: string; emoji: string; hero: string; bar: string; cat: string; trophy: string }> = {
-  fundamentals: { title: "Fundamentals", emoji: "🎵", hero: "bg-acid text-ink",          bar: "bg-ink",          cat: "/cats/cat-handstand.png", trophy: "🏆" },
-  dj:           { title: "DJ World",     emoji: "🎧", hero: "bg-ink text-bone",            bar: "bg-electric-blue",cat: "/cats/cat-dj.png",        trophy: "🥇" },
-  producer:     { title: "Producer",     emoji: "🎛", hero: "bg-electric-blue text-bone",  bar: "bg-acid",         cat: "/cats/cat-dj-hero.png",   trophy: "🏅" },
-};
+function Readout({ value, label, color }: { value: number; label: string; color: string }) {
+  const text = value > 9999 ? `${Math.round(value / 1000)}k` : String(value);
+  return (
+    <div className="ls-use" style={{ gap: 8, padding: "12px 6px 10px" }}>
+      <span className="ls-lcd" style={{ marginTop: 0, padding: "7px 9px", minWidth: 54, justifyContent: "center" }}>
+        <SevenSeg text={text} color={color} digits={Math.max(1, Math.min(4, text.length))} height={26} />
+      </span>
+      <small style={{ fontSize: 11 }}>{label}</small>
+    </div>
+  );
+}
 
-// Badge colours cycling
-const BADGE_BG = ["bg-acid text-ink","bg-electric-blue text-bone","bg-magenta text-bone","bg-ink text-bone","bg-sun text-ink"];
+function Row({ led, label, children }: { led: string; label: string; children: React.ReactNode }) {
+  return (
+    <div className="ls-panel" style={{ alignItems: "center", padding: "10px 12px 10px 16px", marginTop: 8 }}>
+      <span className="ls-led" style={{ ["--c" as string]: led, marginTop: 0 } as CSSProperties} />
+      <span style={{ flex: 1, color: "var(--sub)" }}>{label}</span>
+      <div style={{ width: 196 }}>{children}</div>
+    </div>
+  );
+}
 
 export function ProfilePageClient() {
   const { progress, reset } = useProgress();
-  const { user, isPro }     = useAuth();
-  const completed           = progress.completedMissions;
-  const [portalLoading, setPortalLoading] = useState(false);
-  const [confirmReset, setConfirmReset]   = useState(false);
+  const { user, isPro } = useAuth();
+  const { learnMode, setLearnMode } = useLearnMode();
+  const { mode, set: setMode } = useMode();
+  const { track } = useTrackV2();
+  const [sound, setSound] = useState(true);
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [portal, setPortal] = useState(false);
+  const [shared, setShared] = useState(false);
+  useEffect(() => setSound(uiSoundsOn()), []);
 
-  const worldStats = (world: WorldId) => {
-    const slugs = pathsByWorld(world).flatMap(p => p.missionSlugs);
-    const done  = slugs.filter(s => !!completed[s]).length;
-    return { done, total: slugs.length, pct: slugs.length > 0 ? Math.round((done / slugs.length) * 100) : 0, complete: done === slugs.length && slugs.length > 0 };
-  };
+  const { current: rank, next, progress: pct, idx } = rankFor(progress.xp);
+  const lessons = ALL.filter(m => !!progress.completedMissions[m.slug]).length;
+  const handle = user?.name ?? user?.email?.split("@")[0] ?? null;
+  const lit = Math.round(pct * 16);
 
-  const totalDone        = ALL_MISSIONS.filter(m => !!completed[m.slug]).length;
-  const allWorldsComplete = (["fundamentals","dj","producer"] as WorldId[]).every(w => worldStats(w).complete);
-  const { current: rank, next: nextRank, progress: rankPct } = rankFor(progress.xp);
-
-  const handleManageBilling = async () => {
-    setPortalLoading(true);
+  const share = async () => {
+    const url = handle ? `${location.origin}/u/${encodeURIComponent(handle)}` : location.origin;
+    const text = `${rank.name.toLowerCase()} on cats can dance school`;
     try {
-      const res  = await fetch("/api/stripe/portal", { method: "POST" });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch { alert("Could not open billing portal."); }
-    finally { setPortalLoading(false); }
+      if (navigator.share) await navigator.share({ title: "cats can dance school", text, url });
+      else { await navigator.clipboard.writeText(url); setShared(true); window.setTimeout(() => setShared(false), 1600); }
+    } catch { /* cancelled */ }
+  };
+  const billing = async () => {
+    setPortal(true);
+    try {
+      const r = await fetch("/api/stripe/portal", { method: "POST" });
+      const d = await r.json();
+      if (d.url) window.location.href = d.url;
+    } finally { setPortal(false); }
   };
 
   return (
-    <main className="min-h-screen bg-bone pb-24">
-
-      {/* ── HERO HEADER ── */}
-      <header className="border-b-4 border-ink bg-electric-blue text-bone relative overflow-hidden">
-        {/* Dancing cat */}
-        <div className="absolute right-4 bottom-0 w-28 h-28 md:w-36 md:h-36 pointer-events-none animate-bounce-bob" aria-hidden
-          style={{ filter: "drop-shadow(4px 4px 0 hsl(222 47% 4%))" }}>
-          <Image src="/cats/cat-dj-hero.png" alt="" width={144} height={144} className="w-full h-full object-contain" />
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 py-8 md:py-10 relative z-10">
-          <div className="font-mono text-xs uppercase opacity-70 mb-1">// YOUR PROFILE</div>
-          <div className="flex items-end gap-3 mb-3">
-            <h1 className="font-display text-5xl md:text-7xl leading-none" style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
-              PROFILE
-            </h1>
-            {isPro && (
-              <span className="brutal-border bg-acid text-ink px-3 py-1 font-display text-sm mb-2 chunk-shadow-sm">PRO ⚡</span>
-            )}
-          </div>
-
-          {/* Rank badge */}
-          <div className="inline-flex items-center gap-3 brutal-border bg-ink text-bone px-4 py-2 chunk-shadow">
-            <span className="text-2xl">{rank.emoji}</span>
-            <div>
-              <div className="font-display text-xl">{rank.name}</div>
-              <div className="font-mono text-[10px] uppercase opacity-70">{rank.tagline}</div>
-            </div>
-          </div>
-
-          {user && (
-            <div className="flex items-center gap-3 mt-3">
-              <div className="font-mono text-sm opacity-70">{user.email}</div>
-              <a href={`/u/${user.name ?? user.email?.split("@")[0] ?? "me"}`}
-                className="brutal-border bg-acid text-ink px-3 py-1 font-display text-xs hover:bg-sun transition-colors">
-                Public Profile →
-              </a>
-            </div>
-          )}
-        </div>
-      </header>
-
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-12">
-
-        {/* ── STAT CARDS ── */}
-        <SectionReveal>
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// STATS</div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {/* XP */}
-              <div className="brutal-border bg-acid text-ink p-5 chunk-shadow">
-                <div className="font-display text-4xl md:text-5xl tabular-nums leading-none">{progress.xp.toLocaleString()}</div>
-                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Total XP</div>
-              </div>
-              {/* Streak */}
-              <div className="brutal-border bg-magenta text-bone p-5 chunk-shadow">
-                <div className="font-display text-4xl md:text-5xl leading-none">
-                  🔥{progress.streakDays}
-                  {progress.streakShield && <span className="text-2xl ml-1">🛡</span>}
-                </div>
-                <div className="font-mono text-[10px] uppercase opacity-100 mt-2">Day Streak</div>
-              </div>
-              {/* Missions */}
-              <div className="brutal-border bg-bone p-5 chunk-shadow">
-                <div className="font-display text-4xl md:text-5xl tabular-nums leading-none">{totalDone}</div>
-                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Missions Done</div>
-              </div>
-              {/* Gems */}
-              <div className="brutal-border bg-electric-blue text-bone p-5 chunk-shadow">
-                <div className="font-display text-4xl md:text-5xl leading-none">💎{progress.gems}</div>
-                <div className="font-mono text-[10px] uppercase opacity-70 mt-2">Gems</div>
-              </div>
-            </div>
-
-            {/* Rank progress bar */}
-            {nextRank && (
-              <div className="mt-4 brutal-border p-4 bg-bone chunk-shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="font-display text-sm">{rank.emoji} {rank.name}</div>
-                  <div className="font-display text-sm">{nextRank.emoji} {nextRank.name}</div>
-                </div>
-                <div className="h-4 brutal-border bg-ink/10 overflow-hidden">
-                  <motion.div
-                    className="h-full bg-acid"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.round(rankPct * 100)}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                  />
-                </div>
-                <div className="flex items-center justify-between mt-1">
-                  <div className="font-mono text-[10px] uppercase opacity-70">{progress.xp} XP</div>
-                  <div className="font-mono text-[10px] uppercase opacity-70">{nextRank.minXp - progress.xp} XP to go</div>
-                </div>
-              </div>
-            )}
-          </section>
-        </SectionReveal>
-
-        {/* ── RANK LADDER ── */}
-        <SectionReveal delay={0.05}>
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// RANK LADDER</div>
-            <div className="brutal-border chunk-shadow overflow-hidden">
-              {RANKS.map((r, i) => {
-                const isCurrentRank = r.name === rank.name;
-                const isPast        = progress.xp >= r.minXp;
-                return (
-                  <div key={r.name}
-                    className={`flex items-center gap-3 px-4 py-3 border-b-2 border-ink/10 last:border-b-0 transition-colors
-                      ${isCurrentRank ? "bg-acid text-ink" : isPast ? "bg-ink/5" : "bg-bone opacity-40"}`}>
-                    <span className="text-xl w-8 text-center">{r.emoji}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-display text-base ${isCurrentRank ? "" : "opacity-70"}`}>{r.name}</div>
-                      <div className="font-mono text-[9px] uppercase opacity-70">{r.minXp.toLocaleString()} XP required</div>
-                    </div>
-                    {isCurrentRank && (
-                      <span className="brutal-border bg-ink text-bone px-2 py-0.5 font-display text-[10px] uppercase">YOU ARE HERE</span>
-                    )}
-                    {isPast && !isCurrentRank && (
-                      <span className="font-mono text-[9px] uppercase opacity-70">✓ achieved</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        </SectionReveal>
-
-        {/* ── WORLD PROGRESS ── */}
-        <SectionReveal delay={0.08}>
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// WORLD PROGRESS</div>
-            <div className="space-y-4">
-              {(["fundamentals","dj","producer"] as WorldId[]).map(world => {
-                const ws   = worldStats(world);
-                const meta = WORLD_META[world];
-                const trophy = WORLD_TROPHIES[world];
-                return (
-                  <div key={world} className={`brutal-border ${meta.hero} p-5 chunk-shadow relative overflow-hidden`}>
-                    {/* Cat decoration */}
-                    <div className="absolute right-3 bottom-0 w-20 h-20 pointer-events-none wiggle opacity-40" aria-hidden>
-                      <Image src={meta.cat} alt="" width={80} height={80} className="w-full h-full object-contain" />
-                    </div>
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <div className="font-display text-2xl md:text-3xl">{meta.emoji} {meta.title}</div>
-                          {ws.complete && <div className="font-display text-sm mt-0.5 opacity-80">{meta.trophy} {trophy.name}</div>}
-                        </div>
-                        <div className="text-right">
-                          <div className="font-display text-4xl md:text-5xl tabular-nums">{ws.pct}%</div>
-                          <div className="font-mono text-[9px] uppercase opacity-70">{ws.done}/{ws.total}</div>
-                        </div>
-                      </div>
-                      <div className="h-3 brutal-border bg-bone/20 overflow-hidden">
-                        <motion.div
-                          className={`h-full ${meta.bar}`}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${ws.pct}%` }}
-                          transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {allWorldsComplete && (
-                <div className="brutal-border bg-acid p-6 text-center chunk-shadow">
-                  <div className="font-display text-5xl mb-2">🏆 CCD MASTER</div>
-                  <div className="font-sans text-sm mt-2 opacity-70">{MASTER_TROPHY.description}</div>
-                  <div className="flex justify-center mt-4">
-                    <Image src="/cats/cat-handstand.png" alt="" width={80} height={80} className="drop-shadow-[3px_3px_0_hsl(222_47%_4%)] animate-cat-celebrate" />
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-        </SectionReveal>
-
-        {/* ── BADGES ── */}
-        {progress.badges.length > 0 && (
-          <SectionReveal delay={0.1}>
-            <section>
-              <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// BADGES ({progress.badges.length})</div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {progress.badges.map((b, i) => (
-                  <div key={b} className={`brutal-border ${BADGE_BG[i % BADGE_BG.length]} p-3 chunk-shadow-sm text-center`}>
-                    <div className="font-display text-2xl mb-1">🏅</div>
-                    <div className="font-display text-xs uppercase leading-tight">{b.replace(/-/g," ")}</div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </SectionReveal>
-        )}
-
-        {/* ── UPSELLS ── */}
-        {!user && (
-          <SectionReveal delay={0.12}>
-            <div className="brutal-border bg-electric-blue text-bone p-5 chunk-shadow flex items-center gap-4">
-              <Image src="/cats/cat-dj-new.png" alt="" width={60} height={60} className="drop-shadow-[3px_3px_0_hsl(222_47%_4%)] wiggle shrink-0" />
-              <div>
-                <div className="font-display text-xl mb-1">Save progress to cloud</div>
-                <div className="font-sans text-sm opacity-80 mb-3">Create an account to sync progress across devices and unlock the leaderboard.</div>
-                <Link href="/login" className="brutal-border bg-acid text-ink px-4 py-2 font-display text-sm inline-block chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">SIGN IN →</Link>
-              </div>
-            </div>
-          </SectionReveal>
-        )}
-
-        {user && !isPro && (
-          <SectionReveal delay={0.12}>
-            <div className="brutal-border bg-acid text-ink p-5 chunk-shadow flex items-center gap-4">
-              <Image src="/cats/cat-raver.png" alt="" width={60} height={60} className="drop-shadow-[3px_3px_0_hsl(222_47%_4%)] wiggle shrink-0" />
-              <div>
-                <div className="font-display text-xl mb-1">Unlock PRO ⚡</div>
-                <div className="font-sans text-sm opacity-70 mb-3">Advanced missions, later courses in every path, and priority support.</div>
-                <Link href="/upgrade" className="brutal-border bg-ink text-bone px-4 py-2 font-display text-sm inline-block chunk-shadow-sm hover:bg-electric-blue transition-colors">UPGRADE TO PRO →</Link>
-              </div>
-            </div>
-          </SectionReveal>
-        )}
-
-        {/* ── SETTINGS ── */}
-        <SectionReveal delay={0.14}>
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-4">// SETTINGS</div>
-            <div className="space-y-3">
-              <div className="brutal-border p-4 flex items-center justify-between gap-4 chunk-shadow-sm">
-                <div><div className="font-display text-lg">Theme</div><div className="font-mono text-xs opacity-70">Choose your colour theme</div></div>
-                <ThemeSwitcher />
-              </div>
-              {user && isPro && (
-                <div className="brutal-border p-4 flex items-center justify-between gap-4 chunk-shadow-sm">
-                  <div><div className="font-display text-lg">CCD PRO</div><div className="font-mono text-xs opacity-70">Manage subscription and billing</div></div>
-                  <button onClick={handleManageBilling} disabled={portalLoading}
-                    className="brutal-border bg-electric-blue text-bone px-4 py-2 font-display text-sm hover:bg-ink transition-colors disabled:opacity-50 chunk-shadow-sm">
-                    {portalLoading ? "..." : "MANAGE →"}
-                  </button>
-                </div>
-              )}
-              <div className="brutal-border p-4 chunk-shadow-sm">
-                <div className="font-display text-lg mb-1">Placement Test</div>
-                <div className="font-sans text-sm opacity-70 mb-3">Already know the basics? Skip ahead to the right chapter.</div>
-                <a href="/placement" className="brutal-border bg-acid text-ink px-4 py-2 font-display text-sm inline-block chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">TAKE TEST →</a>
-              </div>
-              <div className="brutal-border p-4 chunk-shadow-sm">
-                <div className="font-sans text-xs opacity-70 mb-3">
-                  {user ? "Progress synced to cloud. Local copy kept as backup." : "Progress stored locally in your browser."}
-                </div>
-                {!confirmReset ? (
-                  <button onClick={() => setConfirmReset(true)}
-                    className="brutal-border bg-hot text-bone px-4 py-2 font-display text-sm chunk-shadow-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-transform">
-                    Reset All Progress
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <span className="font-display text-sm">Are you sure?</span>
-                    <button onClick={() => { reset(); setConfirmReset(false); }}
-                      className="brutal-border bg-hot text-bone px-3 py-1.5 font-display text-sm">YES, RESET</button>
-                    <button onClick={() => setConfirmReset(false)}
-                      className="brutal-border bg-bone text-ink px-3 py-1.5 font-display text-sm">CANCEL</button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        </SectionReveal>
-
-        {user && (
-          <button onClick={() => signOut()}
-            className="brutal-border bg-bone text-ink px-4 py-2 font-display text-sm hover:bg-acid transition-colors chunk-shadow-sm">
-            Sign Out
-          </button>
-        )}
+    <main className="m1-page" style={{ paddingTop: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, height: 56 }}>
+        <Key href="/dashboard" ariaLabel="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
+        <h1 style={{ flex: 1, fontSize: 22, fontWeight: 500, letterSpacing: "-.02em", margin: 0 }}>you</h1>
+        <Key onClick={share} ariaLabel={shared ? "Link copied" : "Share your profile"} style={{ width: 44, height: 44 }}><Icon name="out" /></Key>
       </div>
+
+      <Screen>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ width: 64, height: 64, borderRadius: "50%", background: "#141416", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={CAT_SRC} alt="" style={{ width: 48 }} />
+          </span>
+          <div>
+            <div style={{ fontSize: 22, fontWeight: 400, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>{(user?.name ?? "you").toLowerCase()}</div>
+            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4 }}>{rank.name.toLowerCase()} · rank {idx + 1} of {RANKS.length}{isPro ? " · pro" : ""}</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 18 }}>
+          <span style={{ display: "flex", gap: 3, flex: 1 }} role="img" aria-label={`${Math.round(pct * 100)} percent to the next rank`}>
+            {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-go)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-go)" : undefined }} />)}
+          </span>
+          <span className="m1-ss">{next ? `${next.minXp - progress.xp} to rank ${idx + 2}` : "top rank"}</span>
+        </div>
+        {shared && <div className="m1-ss" style={{ marginTop: 8, color: "var(--led-mint)" }}>link copied</div>}
+      </Screen>
+
+      <div className="ls-uses" style={{ ["--n" as string]: 4, marginTop: 14 } as CSSProperties}>
+        <Readout value={progress.streakDays} label="day streak" color="var(--led-red)" />
+        <Readout value={progress.xp} label="xp" color="#F3F2EF" />
+        <Readout value={lessons} label="lessons" color="var(--led-mint)" />
+        <Readout value={track.layers.length} label="layers" color="var(--led-lilac)" />
+      </div>
+
+      <Silk label="settings" />
+      <Row led="var(--ledoff)" label="look">
+        <Switch label="Look" value={mode === "system" ? "auto" : mode} onChange={id => { setMode((id === "auto" ? "system" : id) as Mode); }}
+          options={[{ id: "light", label: "light" }, { id: "dark", label: "dark" }, { id: "auto", label: "auto" }]} />
+      </Row>
+      <Row led="var(--led-go)" label="learning">
+        <Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
+          options={[{ id: "flow", label: "flow" }, { id: "free", label: "free" }]} />
+      </Row>
+      <Row led="var(--led-mint)" label="sounds">
+        <Switch label="Interface sounds" value={sound ? "on" : "off"} onChange={id => { setSound(id === "on"); setUiSounds(id === "on"); }}
+          options={[{ id: "on", label: "on" }, { id: "off", label: "off" }]} />
+      </Row>
+      <p className="m1-t11" style={{ margin: "8px 4px 0" }}>flow keeps lessons in order with five hearts. free opens everything, no hearts. sounds are the little clicks and chimes; music always plays.</p>
+
+      <Silk label="your worlds" />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 12 }}>
+        {WORLD_IDS.map(w => {
+          const d = worldDone(w, progress.completedMissions);
+          const n = Math.round((d.done / Math.max(1, d.total)) * 16);
+          return (
+            <Link key={w} href={`/world/${w}`} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", color: "inherit", textDecoration: "none" }}>
+              <span style={{ width: 70 }}>{WORLD_LABEL[w]}</span>
+              <span style={{ display: "flex", gap: 3, flex: 1 }} aria-hidden>
+                {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < n ? WORLD_LED[w] : "var(--ledoff)" }} />)}
+              </span>
+              <span className="m1-t11" style={{ width: 48, textAlign: "right" }}>{d.done} of {d.total}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      <Silk label="ranks" right={`${progress.xp} xp`} />
+      <ol className="ls-learn" style={{ padding: "0 4px" }}>
+        {RANKS.map((r, i) => (
+          <li key={r.slug} style={{ alignItems: "center", opacity: i > idx ? 0.55 : 1 }}>
+            <span className="ls-led" style={{ ["--c" as string]: i <= idx ? "var(--led-go)" : "var(--ledoff)", boxShadow: i <= idx ? undefined : "none", background: i <= idx ? undefined : "var(--ledoff)" } as CSSProperties} />
+            <span style={{ flex: 1, fontWeight: i === idx ? 600 : 400 }}>{r.name.toLowerCase()}</span>
+            <span className="m1-t11">{i === idx ? "you are here" : `${r.minXp} xp`}</span>
+          </li>
+        ))}
+      </ol>
+
+      <Silk label="account" />
+      <div className="ls-pads">
+        {user ? (
+          <Link href={handle ? `/u/${encodeURIComponent(handle)}` : "/profile"} className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+            <small>public page</small><span>see your profile</span>
+          </Link>
+        ) : (
+          <Link href="/login" className="ls-pad is-lit" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+            <small>sign in</small><span>save to cloud</span>
+          </Link>
+        )}
+        <Link href="/placement" className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-cobalt)", minHeight: 96 } as CSSProperties}>
+          <small>skip ahead</small><span>placement check</span>
+        </Link>
+        <Link href="/leaderboard" className="ls-pad" style={{ minHeight: 76 }}><small>this week</small><span>leaderboard</span></Link>
+        <Link href="/shop" className="ls-pad" style={{ minHeight: 76 }}><small>{progress.gems} gems</small><span>shop</span></Link>
+      </div>
+      {isPro && (
+        <button type="button" className="ls-panel is-link" onClick={billing} disabled={portal}>
+          <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>{portal ? "opening billing" : "manage pro and billing"}</span>
+        </button>
+      )}
+      {confirmReset ? (
+        <div className="ls-panel" style={{ alignItems: "center" }}>
+          <span className="ls-led" style={{ ["--c" as string]: "var(--led-red)" } as CSSProperties} />
+          <span style={{ flex: 1 }}>reset all progress? this can&apos;t be undone.</span>
+          <button type="button" className="m1-tag" onClick={() => { reset(); setConfirmReset(false); }} style={{ cursor: "pointer", color: "var(--red)" }}>reset</button>
+          <button type="button" className="m1-tag" onClick={() => setConfirmReset(false)} style={{ cursor: "pointer", marginLeft: 6 }}>cancel</button>
+        </div>
+      ) : (
+        <button type="button" className="ls-panel is-link" onClick={() => setConfirmReset(true)}>
+          <span className="ls-led" style={{ ["--c" as string]: "var(--ledoff)", boxShadow: "none", background: "var(--ledoff)" } as CSSProperties} /><span>reset progress</span>
+        </button>
+      )}
+      {user && (
+        <div className="m1-g" style={{ marginTop: 16 }}>
+          <GoPill onClick={() => signOut()} style={{ gridColumn: "1 / -1" }}>sign out</GoPill>
+        </div>
+      )}
+      <Footer />
     </main>
   );
 }

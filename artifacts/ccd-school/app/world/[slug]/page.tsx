@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { WorldShell } from "@/components/world/WorldShell";
 import { World } from "@/components/m1/World";
-import { WorldPageClient } from "@/components/WorldPageClient";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -25,19 +23,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function WorldPage({ params, searchParams }: Props) {
+export default async function WorldPage({ params }: Props) {
   const { slug } = await params;
-  const { view } = await searchParams;
   if (!WORLD_TITLES[slug]) notFound();
-
-  const isFree = view === "free";
-  const activeView = isFree ? "free" : "flow";
-
-  // Model 1: a world is a 16-step sequencer. The old browse view stays at ?view=free.
-  if (!isFree) return <World world={slug as "fundamentals" | "dj" | "producer"} />;
-  return (
-    <WorldShell worldSlug={slug as any} view={activeView}>
-      <WorldPageClient slug={slug} />
-    </WorldShell>
-  );
+  // Model 1: a world is a 16-step sequencer. Flow and free are a switch on that screen.
+  return <World world={slug as "fundamentals" | "dj" | "producer"} />;
 }

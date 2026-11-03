@@ -85,7 +85,7 @@ export function CommandPalette() {
         sub: m.tagline ?? "",
         tag: "MISSION",
         emoji: WORLD_EMOJI[m.world] ?? "📖",
-        go: () => router.push(`/mission/${m.slug}`),
+        go: () => router.push(`/learn/${m.slug}`),
       });
     });
 

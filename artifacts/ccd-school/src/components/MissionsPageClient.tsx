@@ -233,7 +233,7 @@ export function MissionsPageClient() {
                               return (
                                 <Link
                                   key={mission.slug}
-                                  href={flowLocked ? "#" : `/mission/${mission.slug}`}
+                                  href={flowLocked ? "#" : `/learn/${mission.slug}`}
                                   onClick={flowLocked ? e => e.preventDefault() : undefined}
                                   aria-disabled={flowLocked}
                                   title={mission.title + (flowLocked ? " (Locked - complete previous lessons)" : "")}
@@ -285,7 +285,7 @@ export function MissionsPageClient() {
                               const simIcon = SIM_ICONS[(mission as { sim?: { type?: string } }).sim?.type ?? "none"] ?? "—";
                               return (
                                 <Link key={mission.slug}
-                                  href={`/mission/${mission.slug}`}
+                                  href={`/learn/${mission.slug}`}
                                   className={`flex items-start gap-3 px-4 py-3.5 transition-colors group
                                     ${isDone ? "bg-ink/5 hover:bg-acid/20" : locked ? "opacity-50 cursor-not-allowed bg-ink/5" : "hover:bg-acid/20"}`}>
                                   {/* Status indicator */}

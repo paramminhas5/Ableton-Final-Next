@@ -57,7 +57,7 @@ export function DevicesPageClient() {
           <p className="font-mono text-xs opacity-70 mb-3">Built-in synths, samplers and racks. Click through to the mission that teaches each one.</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {filteredInstruments.map((i) => (
-              <Link key={i.slug} href={`/mission/${i.slug}`}
+              <Link key={i.slug} href={`/learn/${i.slug}`}
                 className="brutal-border bg-card p-4 brutal-shadow-sm brutal-press block">
                 <div className="flex gap-1 flex-wrap">
                   <span className="inline-block brutal-border bg-hot text-bone px-2 py-0.5 font-mono text-[10px] uppercase">{i.family}</span>
