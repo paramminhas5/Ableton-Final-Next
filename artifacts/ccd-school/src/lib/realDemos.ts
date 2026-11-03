@@ -26,7 +26,7 @@ export const REAL_DEMO_SECONDS: Record<RealDemoKey, number> = {
   "real-swing": 8.5,
   "real-hits": 3.4,
   "real-piano": 3.6,
-  "ai-claps": 5.0,
+  "ai-claps": 5.4,
   "ai-house": 18,
 };
 
@@ -82,7 +82,7 @@ export function scheduleRealDemo(key: RealDemoKey, c: Ctx, out: AudioNode, kit: 
   }
 }
 
-/** AI-generated teaching clips (see public/audio/ai/CREDITS.md). */
+/** Teaching clips rendered on the CCD engine (see public/audio/engine/CREDITS.md). */
 export interface AiClips { dry: AudioBuffer; hall: AudioBuffer; house: AudioBuffer }
 
 let aiPromise: Promise<AiClips | null> | null = null;
@@ -92,7 +92,7 @@ export function loadAiClips(): Promise<AiClips | null> {
     try {
       const dec = new OfflineAudioContext(1, 1, 44100);
       const get = async (f: string) => {
-        const r = await fetch(`/audio/ai/${f}`);
+        const r = await fetch(`/audio/engine/${f}`);
         if (!r.ok) throw new Error(f);
         return dec.decodeAudioData(await r.arrayBuffer());
       };
