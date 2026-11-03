@@ -83,6 +83,15 @@ export const FX_PARAMS = [
   { id: "fx.tune", key: "tune", label: "tune", bank: "shift", index: 21, min: -12, max: 12, default: 0.5, unit: "st", curve: "lin", smoothMs: 0, detents: [0.5] },
 ] as const satisfies readonly ParamSpec[];
 
+export const SAMPLER_PARAMS = [
+  { id: "sampler.tune", key: "tune", label: "tune", bank: "sound", index: 16, min: -12, max: 12, default: 0.5, unit: "st", curve: "lin", smoothMs: 0, detents: [0.5] },
+  { id: "sampler.start", key: "start", label: "start", bank: "sound", index: 17, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "sampler.release", key: "release", label: "release", bank: "sound", index: 18, min: 10, max: 2000, default: 0.25, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "sampler.gate", key: "gate", label: "gate", bank: "shift", index: 19, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "sampler.keys", key: "keys", label: "keys", bank: "shift", index: 20, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "sampler.reverse", key: "reverse", label: "reverse", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+
 /** Master bus. Wire index for the MASTER command = position here. */
 export const MASTER_PARAMS = [
   { id: "master.out", key: "out", label: "out", bank: "mix", index: 0, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 15, detents: [0.75] },
@@ -95,8 +104,10 @@ export const FX_NAMES = ["impact", "sub drop", "noise hit", "sweep up", "sweep d
 export const FX_NOTE_BASE = 36;
 export const FX_RISER_NOTE = 41;
 export const FX_IMPACT_NOTE = 36;
+export const SAMPLER_NOTE_BASE = 36;
+export const SAMPLER_ROOT = 60;
 
-export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5 } as const;
+export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5, sampler: 6 } as const;
 export type InstrumentName = keyof typeof INSTRUMENT;
 
 export type LayerParamId = `${(typeof LAYER_PARAMS)[number]["id"]}`;
@@ -106,7 +117,8 @@ export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number]["id"]}`;
 export type ChordParamId = `${(typeof CHORD_PARAMS)[number]["id"]}`;
 export type LeadParamId = `${(typeof LEAD_PARAMS)[number]["id"]}`;
 export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
-export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId;
+export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
+export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
 export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;

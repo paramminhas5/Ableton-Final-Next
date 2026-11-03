@@ -148,3 +148,14 @@ pub extern "C" fn ccd_alloc(bytes: u32) -> *mut u8 {
 pub unsafe extern "C" fn ccd_dealloc(p: *mut u8, bytes: u32) {
     drop(Vec::from_raw_parts(p as *mut u64, 0, (bytes as usize).div_ceil(8)));
 }
+
+/// Load a mono float sample into a sampler layer's slot. Call from the audio thread between
+/// blocks (the web worklet does, in its message handler); the engine resamples it.
+///
+/// # Safety
+/// `data` must point to `frames` floats. Audio thread only.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_sample_load(e: *const Engine, layer: u32, slot: u32, data: *const f32, frames: u32, src_rate: f32) {
+    let d = std::slice::from_raw_parts(data, frames as usize);
+    (*e).load_sample(layer as usize, slot as usize, d, src_rate);
+}

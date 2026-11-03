@@ -3,7 +3,7 @@
  * A preset is a set of normalised values on the engine's wire indices. Picking one
  * replaces the layer's instrument knobs (its mix and eq stay yours).
  */
-import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_BASE, FX_PARAMS, INSTRUMENT_BASE, LEAD_PARAMS } from "../engine/params.gen";
+import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_BASE, FX_PARAMS, INSTRUMENT_BASE, LEAD_PARAMS, SAMPLER_PARAMS } from "../engine/params.gen";
 import type { LayerType, LayerV2 } from "./track2";
 
 export type Preset = { name: string; values: Record<number, number> };
@@ -15,6 +15,8 @@ const bass = (name: string, v: Record<string, number>): Preset => ({ name, value
 const chords = (name: string, v: Record<string, number>): Preset => ({ name, values: byKey(CHORD_PARAMS, v) });
 const lead = (name: string, v: Record<string, number>): Preset => ({ name, values: byKey(LEAD_PARAMS, v) });
 const fx = (name: string, v: Record<string, number>): Preset => ({ name, values: byKey(FX_PARAMS, v) });
+
+const smp = (name: string, v: Record<string, number>): Preset => ({ name, values: byKey(SAMPLER_PARAMS, v) });
 
 const BASS: Preset[] = [
   bass("round", {}),
@@ -64,7 +66,14 @@ const DRUMS: Preset[] = [
   kit("hard", pad => [0.5, 0.45, 0.8, 0.75]),
 ];
 
-export const PRESETS: Record<LayerType, Preset[]> = { drums: DRUMS, hats: DRUMS, bass: BASS, chords: CHORDS, lead: LEAD, fx: FX };
+const SAMPLE: Preset[] = [
+  smp("one shot", {}),
+  smp("gate", { gate: 1, release: 0.15 }),
+  smp("keys", { keys: 1, gate: 1, release: 0.3 }),
+  smp("reverse", { reverse: 1 }),
+];
+
+export const PRESETS: Record<LayerType, Preset[]> = { drums: DRUMS, hats: DRUMS, bass: BASS, chords: CHORDS, lead: LEAD, fx: FX, sample: SAMPLE };
 
 /** Apply preset `i` of this layer's type. Clears the old instrument knobs first. */
 export function applyPreset(l: LayerV2, i: number): LayerV2 {

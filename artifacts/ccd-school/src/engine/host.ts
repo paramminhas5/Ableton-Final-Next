@@ -38,6 +38,8 @@ export interface EngineHost {
   /** Ableton Link. Only native hosts can join (browsers cannot open the ports Link needs). */
   link?(enabled: boolean): Promise<void>;
   setTempo?(bpm: number): void;
+  /** Put a mono sample into a sampler layer's slot (web only for now; the phone shell follows). */
+  loadSample?(layer: number, slot: number, data: Float32Array, rate: number): void;
   stop(): Promise<void>;
 }
 

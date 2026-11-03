@@ -15,6 +15,7 @@ import {
   DRUM_RACK_BASE,
   DRUM_RACK_PARAMS,
   FX_PARAMS,
+  SAMPLER_PARAMS,
   LEAD_PARAMS,
   DRUM_PAD_NOTES,
   DRUM_PAD_PARAMS,
@@ -28,7 +29,7 @@ export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
 export const STEP_BEATS = 0.25;
 
-export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx";
+export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "sample";
 export type Surface = "steps" | "keys" | "pads" | "own";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
@@ -54,6 +55,8 @@ export type LayerV2 = {
   preset?: number;
   /** The circle surface's settings per drum note: hits out of 16 and rotation. */
   euclid?: Record<number, { hits: number; rot: number }>;
+  /** Sampler layers: the name of the sample in each of the 16 slots (the audio lives in this browser). */
+  samples?: Record<number, string>;
 };
 
 export type TrackV2 = {
@@ -80,9 +83,10 @@ export const TYPE: Record<LayerType, { label: string; color: string; engine: Ins
   chords: { label: "chords", color: "#B89CFF", engine: "chords", own: "chord pads", surfaces: ["steps", "keys", "pads"] },
   lead: { label: "lead", color: "#7D96FF", engine: "lead", own: "xy", surfaces: ["steps", "keys", "pads"] },
   fx: { label: "fx", color: "#E9E9E6", engine: "fx", own: "riser", surfaces: ["steps", "pads"] },
+  sample: { label: "sample", color: "#FFB35C", engine: "sampler", own: "load", surfaces: ["steps", "pads", "keys"] },
 };
 
-export const LAYER_ORDER: LayerType[] = ["drums", "hats", "bass", "chords", "lead", "fx"];
+export const LAYER_ORDER: LayerType[] = ["drums", "hats", "bass", "chords", "lead", "fx", "sample"];
 
 /** Drum sounds per lane, for the steps view (a lane per sound, 8 steps a page). */
 export const DRUM_LANES: Record<"drums" | "hats", number[]> = {
@@ -119,6 +123,7 @@ export const INSTRUMENT_TABLES: Partial<Record<InstrumentName, readonly { index:
   chords: CHORD_PARAMS,
   lead: LEAD_PARAMS,
   fx: FX_PARAMS,
+  sampler: SAMPLER_PARAMS,
 };
 
 /** How many wire params the engine takes for an instrument (layer params excluded). */

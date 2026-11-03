@@ -45,6 +45,14 @@ class CcdEngine extends AudioWorkletProcessor {
       this.port.postMessage({ t: "ready", frame0: this.frame0, sampleRate });
     } else if (d.t === "cmds") {
       this.pending.push(d.c);
+    } else if (d.t === "sample") {
+      // Between blocks, in this same thread: safe to allocate. Order with cmds is kept.
+      if (this.pending.length) this.flush();
+      const n = d.data.length;
+      const ptr = this.x.ccd_alloc(n * 4);
+      new Float32Array(this.x.memory.buffer, ptr, n).set(d.data);
+      this.x.ccd_sample_load(this.e, d.layer, d.slot, ptr, n, d.rate);
+      this.x.ccd_dealloc(ptr, n * 4);
     }
   }
 

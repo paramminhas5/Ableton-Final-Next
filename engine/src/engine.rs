@@ -8,7 +8,7 @@ use crate::dsp::env::Decay;
 use crate::dsp::osc::Sine;
 use crate::fx::{Echo, Reverb};
 use crate::master::{Master, TruePeak, MASTER_DELAY};
-use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly};
+use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly, Sampler};
 use crate::params::*;
 use crate::ring::Ring;
 use crate::seq::{fire_range, NoteEv, Pattern, MAX_OFFS};
@@ -199,6 +199,7 @@ pub struct Layer {
     pub chords: Box<Poly>,
     pub lead: Box<Lead>,
     pub fx: Box<FxSynth>,
+    pub sampler: Box<Sampler>,
     pub strip: Strip,
     pub params: [f32; MAX_PARAMS],
     pub live: Pattern,
@@ -228,6 +229,7 @@ impl Layer {
             chords: Box::new(Poly::new(sr)),
             lead: Box::new(Lead::new(sr)),
             fx: Box::new(FxSynth::new(sr)),
+            sampler: Box::new(Sampler::new(sr)),
             strip: Strip::new(sr),
             params,
             live: Pattern::new(),
@@ -254,6 +256,7 @@ impl Layer {
             Instrument::Chords => self.chords.note_on(note, vel),
             Instrument::Lead => self.lead.note_on(note, vel),
             Instrument::Fx => self.fx.note_on(note, vel),
+            Instrument::Sampler => self.sampler.note_on(note, vel),
             Instrument::None => {}
         }
     }
@@ -264,6 +267,7 @@ impl Layer {
             Instrument::Chords => self.chords.note_off(note),
             Instrument::Lead => self.lead.note_off(note),
             Instrument::Fx => self.fx.note_off(note),
+            Instrument::Sampler => self.sampler.note_off(note),
             _ => {}
         }
     }
@@ -274,6 +278,7 @@ impl Layer {
         self.chords.all_off();
         self.lead.all_off();
         self.fx.all_off();
+        self.sampler.all_off();
     }
 
     fn set_param(&mut self, index: usize, norm: f32, jump: bool) {
@@ -296,6 +301,7 @@ impl Layer {
                 Instrument::Chords => self.chords.set_param(i, v),
                 Instrument::Lead => self.lead.set_param(i, v),
                 Instrument::Fx => self.fx.set_param(i, v),
+                Instrument::Sampler => self.sampler.set_param(i, v),
                 Instrument::None => {}
             }
         }
@@ -323,6 +329,7 @@ impl Layer {
             Instrument::Chords => self.chords.tick(),
             Instrument::Lead => self.lead.tick(),
             Instrument::Fx => self.fx.tick(),
+            Instrument::Sampler => self.sampler.tick(),
             Instrument::None => 0.0,
         }
     }
@@ -418,6 +425,18 @@ impl Engine {
     pub unsafe fn link_sync(&self, beat: f64, tempo: f64) {
         let core = &mut *self.core.get();
         core.link_sync(beat, tempo);
+    }
+
+    /// Audio thread, between blocks. Put a mono sample into slot `slot` of a sampler layer.
+    /// Allocates, so never call it from inside `process`.
+    ///
+    /// # Safety
+    /// Call from the audio thread only, not while `process` runs.
+    pub unsafe fn load_sample(&self, layer: usize, slot: usize, data: &[f32], src_rate: f32) {
+        let core = &mut *self.core.get();
+        if let Some(l) = core.layers.get_mut(layer) {
+            l.sampler.load(slot, data, src_rate);
+        }
     }
 
     /// Audio thread. Turn Link following off.

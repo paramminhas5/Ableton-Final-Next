@@ -19,6 +19,7 @@ import {
   DRUM_RACK_PARAMS,
   FX_NAMES,
   FX_NOTE_BASE,
+  SAMPLER_NOTE_BASE,
   FLAG,
   INSTRUMENT_BASE,
   LAYER_PARAMS,
@@ -28,6 +29,7 @@ import {
 } from "@/engine";
 import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
 import { keyRow, noteName, padGrid, pitchClass, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
+import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
 import { deleteSong, duplicateSong, newSong, readSongs, renameSong, switchSong, type SongIndex } from "@/lib/songs";
 import {
@@ -290,7 +292,7 @@ export function Studio() {
   // ── screen text ───────────────────────────────────────────────────────────
   const totalSteps = Math.round(track.loop / grid);
   const playStep = playing ? stepOf(pos.beat, totalSteps, track.loop) : -1;
-  const laneLike = drumLike || sel?.type === "fx";
+  const laneLike = drumLike || sel?.type === "fx" || sel?.type === "sample";
   const stepPages = Math.max(1, Math.ceil(totalSteps / (laneLike ? 8 : 16)));
   const pageNow = Math.min(page, stepPages - 1);
   const status = countIn
@@ -307,6 +309,7 @@ export function Studio() {
     xy: "slide across for the note, up to open the filter",
     rolls: "hold a pad, slide the strip to change the roll",
     riser: "push up over the bars before the drop",
+    load: "tap a slot to load a sound from your phone or computer",
   };
   const hint = useMemo(() => {
     if (!sel) return "";
@@ -316,6 +319,10 @@ export function Studio() {
       if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[sel.pad]} selected`;
       if (s === "keys") return "one sound per key";
       if (s === "steps") return `a lane per sound · steps ${pageNow * 8 + 1} to ${pageNow * 8 + 8}`;
+    } else if (sel.type === "sample") {
+      if (s === "pads") return "16 slots · load sounds under load";
+      if (s === "keys") return "slot 1 played as a keyboard · pick the keys sound";
+      if (s === "steps") return "a lane per slot · load sounds under load";
     } else {
       if (s === "pads") return `only notes in a minor · lit pads are a`;
       if (s === "keys") return "hold one key, play another to glide";
@@ -507,11 +514,13 @@ export function Studio() {
             {sel.surface === "own" && ctx && sel.type === "lead" && <XYSurface ctx={ctx} />}
             {sel.surface === "own" && ctx && sel.type === "hats" && <RollsSurface ctx={ctx} rate={rate} setRate={setRate} />}
             {sel.surface === "own" && ctx && sel.type === "fx" && <RiserSurface ctx={ctx} />}
+            {sel.surface === "own" && sel.type === "sample" && <SampleLoader layer={sel} onPatch={patchSel} onPreview={slot => { start(); engine.noteOn(selIndex, SAMPLER_NOTE_BASE + slot, 0.9); window.setTimeout(() => engine.noteOff(selIndex, SAMPLER_NOTE_BASE + slot), 600); }} />}
+            {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && drumLike && (
               <DrumPads layer={sel} hits={hits} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
-            {sel.surface === "pads" && !drumLike && sel.type !== "fx" && (
+            {sel.surface === "pads" && !drumLike && sel.type !== "fx" && sel.type !== "sample" && (
               <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "keys" && sel.type !== "fx" && (
@@ -724,8 +733,11 @@ type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: nu
 function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
-  const lanes = fx ? FX_LANES : (layer.type === "hats" ? DRUM_LANES.hats : DRUM_LANES.drums).slice(0, 4);
-  const names = fx
+  const smp = layer.type === "sample";
+  const lanes = fx ? FX_LANES : smp ? [0, 1, 2, 3].map(k => SAMPLER_NOTE_BASE + k) : (layer.type === "hats" ? DRUM_LANES.hats : DRUM_LANES.drums).slice(0, 4);
+  const names = smp
+    ? lanes.map((n, k) => layer.samples?.[n - SAMPLER_NOTE_BASE]?.slice(0, 6) ?? `slot ${k + 1}`)
+    : fx
     ? lanes.map(n => FX_NAMES[n - FX_NOTE_BASE].replace(" hit", "").replace("sweep ", "sw "))
     : lanes.map(n => DRUM_PAD_NAMES[DRUM_PAD_NOTES.indexOf(n as (typeof DRUM_PAD_NOTES)[number])].replace("closed hat", "hat"));
   return (
@@ -776,6 +788,80 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
         })}
       </div>
       <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} />
+    </>
+  );
+}
+
+/** 16 slots as pads. A slot with a sound lights on a hit; an empty one is dim. */
+function SamplePads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+  const c = TYPE[layer.type].color;
+  const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
+  return (
+    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      {order.map(k => {
+        const note = SAMPLER_NOTE_BASE + k;
+        const name = layer.samples?.[k];
+        const lit = !!hits[`${layer.id}:${note}`];
+        return (
+          <button key={k} type="button" className={`st-sp ${lit ? "is-lit" : name ? "is-rest" : "is-dim"}`} style={{ ["--c" as string]: c } as CSSProperties}
+            aria-label={name ? `slot ${k + 1}, ${name}` : `slot ${k + 1}, empty`} {...noteHandlers(note)}>
+            <span className="st-lb">{name ? name.slice(0, 8) : k + 1}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Load a sound into each slot. The audio stays in this browser; nothing is uploaded. */
+function SampleLoader({ layer, onPatch, onPreview }: { layer: LayerV2; onPatch: (fn: (l: LayerV2) => LayerV2, undoable?: boolean) => void; onPreview: (slot: number) => void }) {
+  const input = useRef<HTMLInputElement>(null);
+  const target = useRef(0);
+  const [busy, setBusy] = useState<number | null>(null);
+  const [err, setErr] = useState("");
+  const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
+  const c = TYPE[layer.type].color;
+  const onFile = async (f: File | undefined) => {
+    if (!f) return;
+    const slot = target.current;
+    setBusy(slot);
+    setErr("");
+    try {
+      const rec = await decodeFile(f);
+      await putSample(layer.id, slot, rec);
+      onPatch(l => ({ ...l, samples: { ...(l.samples ?? {}), [slot]: f.name.replace(/\.[^.]+$/, "") } }));
+      window.setTimeout(() => onPreview(slot), 250);
+    } catch {
+      setErr("could not read that file. try a wav or mp3");
+    }
+    setBusy(null);
+    if (input.current) input.current.value = "";
+  };
+  return (
+    <>
+      <input ref={input} type="file" accept="audio/*" hidden onChange={e => void onFile(e.target.files?.[0])} />
+      <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+        {order.map(k => {
+          const name = layer.samples?.[k];
+          return (
+            <button key={k} type="button" className={`st-sp ${name ? "is-rest" : "is-dim"}`} style={{ ["--c" as string]: c } as CSSProperties}
+              aria-label={name ? `slot ${k + 1}, ${name}. tap to replace` : `slot ${k + 1}, empty. tap to load a sound`}
+              onClick={() => { target.current = k; input.current?.click(); }}>
+              <span className="st-lb">{busy === k ? "…" : name ? name.slice(0, 8) : "+"}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="st-ss" style={{ textAlign: "center", marginTop: 6, minHeight: 16 }}>{err || "tap a slot to load a sound"}</div>
+      {Object.keys(layer.samples ?? {}).length > 0 && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
+          <button type="button" className="st-tag" onClick={() => {
+            const ids = Object.keys(layer.samples ?? {}).map(Number);
+            ids.forEach(s => void dropSample(layer.id, s));
+            onPatch(l => ({ ...l, samples: {} }));
+          }}>clear all</button>
+        </div>
+      )}
     </>
   );
 }

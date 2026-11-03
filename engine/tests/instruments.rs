@@ -273,3 +273,20 @@ fn note_repeat_rolls_on_the_grid_and_stops_on_release() {
     }
     assert_eq!(more, 0);
 }
+
+#[test]
+fn sampler_layer_plays_loaded_sample() {
+    let e = live(Instrument::Sampler as u32, 0);
+    let tone: Vec<f32> = (0..24_000).map(|i| (i as f32 / 44_100.0 * 330.0 * std::f32::consts::TAU).sin() * 0.8).collect();
+    render(&e, 256);
+    unsafe { e.load_sample(0, 3, &tone, 44_100.0) };
+    send(&e, cmd::NOTE_ON, 0, 39, 1.0, -1.0, 0.0);
+    let (l, _) = render(&e, 24_000);
+    let p = peak(&l);
+    assert!(p > 0.1 && p < 1.0, "peak {p}");
+    assert!(max_step(&l) < 0.2, "click {}", max_step(&l));
+    // A pad with nothing loaded stays silent.
+    send(&e, cmd::NOTE_ON, 0, 36, 1.0, -1.0, 0.0);
+    let (l2, _) = render(&e, 12_000);
+    assert!(peak(&l2) < 0.5);
+}

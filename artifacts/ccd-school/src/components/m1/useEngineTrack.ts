@@ -5,6 +5,7 @@
  */
 import { useEffect, useRef } from "react";
 import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } from "@/engine";
+import { pushSamples } from "@/lib/samples";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
@@ -12,7 +13,7 @@ const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Sent = { inst: string; events: string; duck: string; params: Map<number, number> };
 
-type Last = { bpm: number; loop: number; master?: number[] };
+type Last = { bpm: number; loop: number; master?: number[]; samples?: Set<string> };
 
 export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last) {
   const m = (last.master ??= []);
@@ -31,12 +32,14 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
     engine.loop(t.loop);
     last.loop = t.loop;
   }
+  void pushSamples(engine, t.layers, (last.samples ??= new Set()));
   const anySolo = t.layers.some(l => l.solo);
   for (let i = 0; i < MAX_LAYERS; i++) {
     const l = t.layers[i];
     const s = (sent[i] ??= { inst: "", events: "", duck: "", params: new Map() });
     const inst = l ? TYPE[l.type].engine : "none";
     if (s.inst !== inst) {
+      last.samples?.clear();
       engine.instrument(i, inst);
       s.inst = inst;
       s.params.clear();

@@ -58,6 +58,12 @@ export class Engine {
   repeat(layer: number, note: number, vel: number, beats: number) {
     this.s(CMD.repeat, layer, note, vel, beats);
   }
+  /** Load a mono sample into slot 0..15 of a sampler layer. Returns false on hosts that cannot. */
+  loadSample(layer: number, slot: number, data: Float32Array, rate: number) {
+    if (!this.host.loadSample) return false;
+    this.host.loadSample(layer, slot, data, rate);
+    return true;
+  }
   repeatOff(layer: number, note: number) {
     this.s(CMD.repeat, layer, note, 0, 0);
   }

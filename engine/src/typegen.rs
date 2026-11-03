@@ -76,7 +76,7 @@ pub fn typescript() -> String {
     o.push_str("] as const satisfies readonly ParamSpec[];\n");
     writeln!(o, "export const DRUM_RACK_BASE = {DRUM_RACK_BASE};\n").unwrap();
 
-    for (name, group, table) in [("CHORD_PARAMS", "chords", CHORD_PARAMS), ("LEAD_PARAMS", "lead", LEAD_PARAMS), ("FX_PARAMS", "fx", FX_PARAMS)] {
+    for (name, group, table) in [("CHORD_PARAMS", "chords", CHORD_PARAMS), ("LEAD_PARAMS", "lead", LEAD_PARAMS), ("FX_PARAMS", "fx", FX_PARAMS), ("SAMPLER_PARAMS", "sampler", SAMPLER_PARAMS)] {
         writeln!(o, "export const {name} = [").unwrap();
         for (i, s) in table.iter().enumerate() {
             writeln!(o, "  {},", spec_ts(group, s, INSTRUMENT_BASE + i)).unwrap();
@@ -101,9 +101,11 @@ pub fn typescript() -> String {
     writeln!(o, "export const FX_NAMES = [{}] as const;", fxn.join(", ")).unwrap();
     writeln!(o, "export const FX_NOTE_BASE = {FX_NOTE_BASE};").unwrap();
     writeln!(o, "export const FX_RISER_NOTE = {FX_RISER_NOTE};").unwrap();
-    writeln!(o, "export const FX_IMPACT_NOTE = {FX_IMPACT_NOTE};\n").unwrap();
+    writeln!(o, "export const FX_IMPACT_NOTE = {FX_IMPACT_NOTE};").unwrap();
+    writeln!(o, "export const SAMPLER_NOTE_BASE = {SAMPLER_NOTE_BASE};").unwrap();
+    writeln!(o, "export const SAMPLER_ROOT = {SAMPLER_ROOT};\n").unwrap();
 
-    o.push_str("export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5 } as const;\n");
+    o.push_str("export const INSTRUMENT = { none: 0, drums: 1, bass: 2, chords: 3, lead: 4, fx: 5, sampler: 6 } as const;\n");
     o.push_str("export type InstrumentName = keyof typeof INSTRUMENT;\n\n");
 
     o.push_str("export type LayerParamId = `${(typeof LAYER_PARAMS)[number][\"id\"]}`;\n");
@@ -113,7 +115,8 @@ pub fn typescript() -> String {
     o.push_str("export type ChordParamId = `${(typeof CHORD_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type LeadParamId = `${(typeof LEAD_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type FxParamId = `${(typeof FX_PARAMS)[number][\"id\"]}`;\n");
-    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId;\n\n");
+    o.push_str("export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;\n\n");
 
     writeln!(
         o,

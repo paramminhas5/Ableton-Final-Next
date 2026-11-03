@@ -308,6 +308,26 @@ pub const F_REVERB: usize = 3;
 pub const F_BUILD: usize = 4;
 pub const F_TUNE: usize = 5;
 
+// ── Sampler: 16 slots as pads, or slot 0 as a keyboard ───────────────────────
+
+pub const SAMPLER_PARAMS: &[ParamSpec] = &[
+    p("tune", "tune", Bank::Sound, -12.0, 12.0, 0.5, Unit::Semis, Curve::Lin, 0.0, CENTRE),
+    p("start", "start", Bank::Sound, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("release", "release", Bank::Sound, 10.0, 2000.0, 0.25, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("gate", "gate", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("keys", "keys", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("reverse", "reverse", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+];
+pub const S_TUNE: usize = 0;
+pub const S_START: usize = 1;
+pub const S_RELEASE: usize = 2;
+pub const S_GATE: usize = 3;
+pub const S_PITCHED: usize = 4;
+pub const S_REVERSE: usize = 5;
+/// Pad n answers to this note plus n. In keys mode every note plays slot 0 from this root.
+pub const SAMPLER_NOTE_BASE: u8 = 36;
+pub const SAMPLER_ROOT: u8 = 60;
+
 /// fx pads, bottom-left first. The note each one answers to is `FX_NOTE_BASE + index`.
 pub const FX_NAMES: [&str; 8] = ["impact", "sub drop", "noise hit", "sweep up", "sweep down", "riser", "zap", "whoosh"];
 pub const FX_NOTE_BASE: u8 = 36;
@@ -334,6 +354,7 @@ pub enum Instrument {
     Chords = 3,
     Lead = 4,
     Fx = 5,
+    Sampler = 6,
 }
 
 impl Instrument {
@@ -344,6 +365,7 @@ impl Instrument {
             3 => Instrument::Chords,
             4 => Instrument::Lead,
             5 => Instrument::Fx,
+            6 => Instrument::Sampler,
             _ => Instrument::None,
         }
     }
@@ -355,6 +377,7 @@ impl Instrument {
             Instrument::Chords => "chords",
             Instrument::Lead => "lead",
             Instrument::Fx => "fx",
+            Instrument::Sampler => "sampler",
         }
     }
     /// Number of instrument params on the wire.
@@ -366,6 +389,7 @@ impl Instrument {
             Instrument::Chords => CHORD_PARAMS.len(),
             Instrument::Lead => LEAD_PARAMS.len(),
             Instrument::Fx => FX_PARAMS.len(),
+            Instrument::Sampler => SAMPLER_PARAMS.len(),
         }
     }
     /// The spec for wire index `i` (counted from INSTRUMENT_BASE).
@@ -376,6 +400,7 @@ impl Instrument {
             Instrument::Chords => CHORD_PARAMS.get(i),
             Instrument::Lead => LEAD_PARAMS.get(i),
             Instrument::Fx => FX_PARAMS.get(i),
+            Instrument::Sampler => SAMPLER_PARAMS.get(i),
             Instrument::Drums => {
                 if i < DRUM_RACK_BASE {
                     DRUM_PAD_PARAMS.get(i % DRUM_PAD_PARAMS.len())
@@ -427,14 +452,14 @@ mod tests {
     fn layer_params_fit_before_instrument_block() {
         assert!(LAYER_PARAMS.len() <= INSTRUMENT_BASE);
         assert!(INSTRUMENT_BASE + Instrument::Drums.param_count() <= MAX_PARAMS);
-        for i in [Instrument::Bass, Instrument::Chords, Instrument::Lead, Instrument::Fx] {
+        for i in [Instrument::Bass, Instrument::Chords, Instrument::Lead, Instrument::Fx, Instrument::Sampler] {
             assert!(INSTRUMENT_BASE + i.param_count() <= MAX_PARAMS);
         }
     }
 
     #[test]
     fn defaults_are_normalised() {
-        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(MASTER_PARAMS) {
+        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(SAMPLER_PARAMS).chain(MASTER_PARAMS) {
             assert!((0.0..=1.0).contains(&s.default), "{}", s.id);
             for d in s.detents {
                 assert!((0.0..=1.0).contains(d));

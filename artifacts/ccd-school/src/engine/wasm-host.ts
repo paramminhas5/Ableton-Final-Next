@@ -74,6 +74,14 @@ export class WasmHost implements EngineHost {
     this.node.port.postMessage({ t: "cmds", c }, [c.buffer]);
   }
 
+  loadSample(layer: number, slot: number, data: Float32Array, rate: number) {
+    this.flush();
+    const copy = new Float32Array(data);
+    const send = () => this.node?.port.postMessage({ t: "sample", layer, slot, rate, data: copy }, [copy.buffer]);
+    if (this.node) send();
+    else void this.start().then(send);
+  }
+
   note(on: boolean, layer: number, note: number, vel: number, at?: number) {
     // Wall-clock time of the touch. The worklet compares it with its own Date.now().
     const t = at === undefined ? -1 : Date.now() - (performance.now() - at);

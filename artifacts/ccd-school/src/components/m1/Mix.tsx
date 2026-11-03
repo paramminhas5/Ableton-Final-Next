@@ -81,8 +81,8 @@ type KeyHandlers = { onKeyDown: (e: React.KeyboardEvent) => void; onKeyUp: (e: R
 // ── where a layer sits ──────────────────────────────────────────────────────
 
 /** Where the knobs say a layer should sit, for when nothing is playing. */
-const TYPE_CENTRE: Record<LayerV2["type"], number> = { drums: 80, hats: 7500, bass: 110, chords: 650, lead: 1400, fx: 3500 };
-const TYPE_LOUD: Record<LayerV2["type"], number> = { drums: -12, hats: -22, bass: -14, chords: -18, lead: -19, fx: -24 };
+const TYPE_CENTRE: Record<LayerV2["type"], number> = { drums: 80, hats: 7500, bass: 110, chords: 650, lead: 1400, fx: 3500, sample: 900 };
+const TYPE_LOUD: Record<LayerV2["type"], number> = { drums: -12, hats: -22, bass: -14, chords: -18, lead: -19, fx: -24, sample: -16 };
 
 function estimate(l: LayerV2, t: TrackV2): Spot {
   const v = (k: number) => toValue(LAYER_PARAMS[k], paramOf(l, k));
