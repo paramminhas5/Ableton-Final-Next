@@ -24,6 +24,7 @@ libc = "0.2"
 
 [target.'cfg(target_os = "ios")'.dependencies]
 objc2 = "0.6"
+block2 = "0.6"
 objc2-foundation = { version = "0.3", features = ["NSString", "NSError"] }
 objc2-avf-audio = { version = "0.3", features = ["AVAudioSession", "AVAudioSessionTypes"] }
 objc2-audio-toolbox = { version = "0.3", features = ["AUComponent", "AudioComponent", "AudioUnitProperties", "AudioOutputUnit", "objc2-core-audio-types"] }

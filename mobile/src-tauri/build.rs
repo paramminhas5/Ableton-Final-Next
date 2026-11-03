@@ -1,13 +1,37 @@
-//! Builds Ableton Link (its C API, abl_link) into the app, then runs Tauri's build step.
-//! Link lives in mobile/vendor/link (run `npm run link:fetch`). Without it, or when
-//! checking an iOS build on a non-Mac machine, the app builds with Link switched off.
+//! Brings Ableton Link into the app, then runs Tauri's build step.
+//! - iOS: links LinkKit (Ableton's free iOS SDK) from mobile/vendor/LinkKit.
+//! - Android and desktop: compiles open-source Link's C API (abl_link) from mobile/vendor/link.
+//! Fetch both with `npm run link:fetch`. Without them the app builds with Link off.
 
 use std::path::{Path, PathBuf};
 
 fn main() {
     println!("cargo:rustc-check-cfg=cfg(ccd_link)");
-    build_link();
+    println!("cargo:rustc-check-cfg=cfg(ccd_linkkit)");
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("ios") {
+        link_linkkit();
+    } else {
+        build_link();
+    }
     tauri_build::build();
+}
+
+fn link_linkkit() {
+    let manifest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
+    let xcf = manifest.join("../vendor/LinkKit/LinkKit.xcframework");
+    println!("cargo:rerun-if-changed={}", xcf.display());
+    if !xcf.exists() {
+        println!("cargo:warning=LinkKit not found in mobile/vendor/LinkKit. Run `npm run link:fetch`. Building without Link.");
+        return;
+    }
+    let target = std::env::var("TARGET").unwrap_or_default();
+    let slice = if target.ends_with("-sim") || target.starts_with("x86_64") { "ios-arm64_x86_64-simulator" } else { "ios-arm64" };
+    println!("cargo:rustc-link-search=native={}", xcf.join(slice).display());
+    println!("cargo:rustc-link-lib=static=LinkKit");
+    println!("cargo:rustc-link-lib=c++");
+    println!("cargo:rustc-link-lib=framework=UIKit");
+    println!("cargo:rustc-link-lib=framework=Foundation");
+    println!("cargo:rustc-cfg=ccd_linkkit");
 }
 
 fn build_link() {
@@ -21,8 +45,8 @@ fn build_link() {
         println!("cargo:warning=Ableton Link not found in mobile/vendor/link. Run `npm run link:fetch`. Building without Link.");
         return;
     }
-    if (target_os == "ios" || target_os == "macos") && !host.contains("apple") {
-        println!("cargo:warning=Apple target checked on a non-Apple host: building without Link.");
+    if target_os == "macos" && !host.contains("apple") {
+        println!("cargo:warning=macOS target checked on a non-Apple host: building without Link.");
         return;
     }
 
@@ -43,7 +67,7 @@ fn build_link() {
         .flag_if_supported("-Wno-deprecated-declarations")
         .warnings(false);
     match target_os.as_str() {
-        "ios" | "macos" => {
+        "macos" => {
             b.define("LINK_PLATFORM_MACOSX", "1");
         }
         "android" => {

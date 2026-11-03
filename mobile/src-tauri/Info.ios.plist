@@ -6,10 +6,6 @@
   <string>to measure how quickly a tap turns into sound, and later to record your playing</string>
   <key>NSLocalNetworkUsageDescription</key>
   <string>to keep time with Ableton Live and other apps on your network using Ableton Link</string>
-  <key>NSBonjourServices</key>
-  <array>
-    <string>_apple-midi._udp</string>
-  </array>
   <key>UIBackgroundModes</key>
   <array>
     <string>audio</string>

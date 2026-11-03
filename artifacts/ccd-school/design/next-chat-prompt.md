@@ -30,7 +30,7 @@ This chat, step 2:
 
 Waiting on me (ask if I haven't sent them):
 - Latency results from my iPhone and Android phone (the mic test in /lab/engine) and whether Link held tempo with Live.
-- The Link licence route (see the notes in ccd/school-instrument-plan.md). Until it is settled, release builds ship with Link off.
+- Ableton's reply about the Android Link licence (emailed 3 Nov). Until then Android is an unofficial APK and the stores wait. iOS uses LinkKit; the multicast entitlement request to Apple is mine to send.
 
 Working rules:
 - Commit to school/field as you go, push when a step works.

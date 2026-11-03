@@ -2,7 +2,7 @@
 
 use crate::link::{AudioLink, Link};
 use ccd_engine::Engine;
-use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};
 use std::sync::OnceLock;
 use std::time::Instant;
 
@@ -10,7 +10,6 @@ pub struct Shared {
     pub engine: Engine,
     pub sr: f32,
     pub link: Link,
-    pub link_on: AtomicBool,
     /// Frames rendered and when (ns since `T0`), at the start of the last callback.
     /// Lets a command map "the touch was 12 ms ago" onto an engine frame.
     frames_at_cb: AtomicU64,
@@ -36,7 +35,6 @@ pub fn init(sr: f32) -> &'static Shared {
         engine: Engine::new(sr),
         sr,
         link: Link::new(120.0),
-        link_on: AtomicBool::new(false),
         frames_at_cb: AtomicU64::new(0),
         ns_at_cb: AtomicU64::new(now_ns()),
         buffer_frames: AtomicU32::new(0),
@@ -68,13 +66,14 @@ impl Shared {
 pub struct Renderer {
     s: &'static Shared,
     link: AudioLink,
+    following: bool,
     busy_ns: u64,
     rendered: u64,
 }
 
 impl Renderer {
     pub fn new(s: &'static Shared) -> Self {
-        Renderer { link: s.link.audio(), s, busy_ns: 0, rendered: 0 }
+        Renderer { link: s.link.audio(), following: false, s, busy_ns: 0, rendered: 0 }
     }
 
     /// Fill `out` (interleaved, `channels` wide). `out_latency` is seconds from now until
@@ -90,11 +89,15 @@ impl Renderer {
         s.buffer_frames.store(frames as u32, Ordering::Relaxed);
         s.out_latency_us.store((out_latency.max(0.0) * 1e6) as u32, Ordering::Relaxed);
 
-        if s.link_on.load(Ordering::Relaxed) {
+        if s.link.enabled() {
             // Link's beat at the moment this buffer is heard.
-            let host = s.link.micros() + (out_latency * 1e6) as i64;
-            let (beat, tempo) = s.link.beat_at(&mut self.link, host);
+            let (beat, tempo) = s.link.beat_at_output(&mut self.link, out_latency);
             unsafe { s.engine.link_sync(beat, tempo) };
+            self.following = true;
+        } else if self.following {
+            // Link turned off: back to the engine's own clock, keeping the last tempo.
+            unsafe { s.engine.link_off() };
+            self.following = false;
         }
         unsafe { ccd_engine::ffi::ccd_process_interleaved(&s.engine, out.as_mut_ptr(), frames as u32, channels as u32) };
 

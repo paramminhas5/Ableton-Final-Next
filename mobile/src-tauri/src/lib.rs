@@ -24,7 +24,7 @@ struct Info {
 }
 
 fn info(s: &shared::Shared) -> Info {
-    let on = s.link_on.load(Ordering::Relaxed);
+    let on = s.link.enabled();
     Info {
         platform: audio::platform(),
         sample_rate: s.sr,
@@ -100,26 +100,25 @@ fn engine_stop() {
 }
 
 /// Join or leave the Link session. With Link on, the engine follows the session's
-/// tempo and lands its loop on the session's bars.
+/// tempo and lands its loop on the session's bars. On iOS this opens Ableton's Link
+/// settings pane instead (LinkKit requires that users switch Link there).
 #[tauri::command]
 fn link_enable(enabled: bool) -> Result<(), String> {
     let s = shared::get().ok_or("engine not started")?;
     if !link::AVAILABLE {
         return Err("this build has no Ableton Link (run npm run link:fetch and rebuild)".into());
     }
-    s.link.enable(enabled);
-    s.link_on.store(enabled, Ordering::Relaxed);
-    if !enabled {
-        // The engine keeps the last tempo and runs on its own clock again.
-        s.engine.send(Cmd { kind: cmd::LINK_OFF, ..Default::default() });
+    if link::open_settings(&s.link) {
+        return Ok(());
     }
+    s.link.enable(enabled);
     Ok(())
 }
 
 #[tauri::command]
 fn set_tempo(bpm: f64) -> Result<(), String> {
     let s = shared::get().ok_or("engine not started")?;
-    if s.link_on.load(Ordering::Relaxed) {
+    if s.link.enabled() {
         s.link.set_tempo(bpm);
     }
     Ok(())

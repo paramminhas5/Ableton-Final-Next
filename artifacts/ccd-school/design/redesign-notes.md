@@ -159,3 +159,8 @@ Branch `school/field`, pushed. Stack changes from the plan, after research: the 
 - Recording: rec counts in one bar, play loops the take, rec again adds on top, snap 1/16, 1/32 or off, one take is one undo step, notes placed at the touch time.
 - Not yet: mix mode (step 2), each layer's own surface (glide, circle, chord pads, xy, rolls, riser: step 3), chords and lead play on the mono synth until their instruments land, sampled kits wait on the sound-sources decision.
 - Checks: typecheck clean, 199 web tests, production build passes.
+
+## Build · Link licence route (3 Nov 2026)
+- iOS switched to LinkKit 4.1.3, Ableton's free iOS SDK: the app links its xcframework, and the link button opens Ableton's Link settings pane, which LinkKit requires. Type-checked for iOS in the cloud; the Xcode build runs on Param's Mac.
+- Android stays on open-source Link 4.1.1 as an unofficial APK, installed by hand. No Play Store or App Store release for now.
+- Emailed link-devs@ableton.com for the Android proprietary licence (terms, fee, branding, Link Audio, GPL for test builds).
