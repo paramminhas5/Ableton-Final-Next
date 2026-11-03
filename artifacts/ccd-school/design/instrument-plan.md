@@ -228,8 +228,8 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
 
 **What 100% means for the web app.** Every item below is built to the "Model 1 · final" canvas, plays through the engine, and is checked at 390x844 in light and dark in Chromium and WebKit (the phones run WebKit on iOS), with typecheck, unit tests, render tests and the production build passing. Items marked (improvement) were added on 3 Nov after the full review in `school-readme.md`.
 
-1. **Studio mix** (step 2): engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare, lower-latency oversampling; the stage and the faders. The meters and clash data are built so the mix coach in item 4 can use them.
-2. **All 6 layer types** (step 3): drums, hats, bass, chords (polyphonic), lead, fx, each with its own instrument and all 4 surfaces (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). A sampler voice is part of this, ready for real kits.
+1. **Studio mix** (step 2) ✅ done 3 Nov 2026: engine master (glue compressor, true-peak limiter), metering and analysis, clash detection, compare, lower-latency oversampling; the stage and the faders. The meters and clash data are built so the mix coach in item 4 can use them.
+2. **All 6 layer types** (step 3) ✅ done 3 Nov 2026 (sampler voice and a sample layer included; the chord synth is mono, and samples reach the phone shell later): drums, hats, bass, chords (polyphonic), lead, fx, each with its own instrument and all 4 surfaces (steps, keys, pads, plus glide, circle, chord pads, xy, rolls, riser). A sampler voice is part of this, ready for real kits.
    - (improvement) **Sound in ten seconds:** first-time visitors land on the pads with a loop already playing, and teaching starts from there. Build it with the Studio work; it is the best demo the app has.
 3. **Getting music out and syncing with Live** (step 4, web part): MIDI, stems and Live Set (`.als`) export.
    - (improvement) **Web MIDI in and MIDI clock in** (Chrome, Edge): controllers play the instruments, and the app follows Live's tempo and bars.
