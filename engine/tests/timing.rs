@@ -144,3 +144,25 @@ fn heavy_load_stays_finite() {
     assert!(sig.iter().all(|x| x.is_finite() && x.abs() <= 1.0));
 }
 
+
+#[test]
+#[ignore]
+fn bench_eight_layers() {
+    let e = Engine::new(SR);
+    for l in 0..8 {
+        send(&e, cmd::INSTRUMENT, l, if l % 2 == 0 { 1 } else { 2 }, 0.0, 0.0, 0.0);
+        send(&e, cmd::PARAM, l, L_DRIVE as u32, 0.5, 0.0, 0.0);
+        send(&e, cmd::PARAM, l, L_SEND as u32, 0.3, 0.0, 0.0);
+        send(&e, cmd::EV_CLEAR, l, 0, 0.0, 0.0, 0.0);
+        for s in 0..16 {
+            let note = if l % 2 == 0 { DRUM_PAD_NOTES[s % 16] as u32 } else { 30 + s as u32 * 3 };
+            send(&e, cmd::EV_ADD, l, note, 1.0, s as f64 * 0.25, 0.2);
+        }
+        send(&e, cmd::EV_COMMIT, l, 0, 0.0, 0.0, 0.0);
+    }
+    send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
+    let t = std::time::Instant::now();
+    render(&e, 48_000 * 10, 128);
+    let ms = t.elapsed().as_secs_f64() * 1000.0;
+    println!("native: 8 layers, 10 s in {ms:.0} ms = {:.1}% of one core", ms / 100.0);
+}

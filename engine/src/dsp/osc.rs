@@ -76,7 +76,7 @@ pub struct Sine {
 impl Sine {
     #[inline]
     pub fn next(&mut self, dt: f32) -> f32 {
-        let s = (self.phase * TAU).sin();
+        let s = super::sin_cycle(self.phase);
         self.phase += dt;
         if self.phase >= 1.0 {
             self.phase -= 1.0;

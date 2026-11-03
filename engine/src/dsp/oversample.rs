@@ -100,6 +100,11 @@ impl Interpolator2x {
     #[inline]
     fn conv(&self, phase: usize) -> f32 {
         let w = &self.buf[self.pos..self.pos + TAPS];
+        let c = TAPS / 2;
+        if phase == c % 2 {
+            // Half-band: on this phase every tap but the centre is zero.
+            return w[c] * self.h[c] * 2.0;
+        }
         let mut acc = 0.0;
         let mut i = phase;
         while i < TAPS {
@@ -136,18 +141,37 @@ impl Default for Interpolator2x {
 pub struct Drive {
     up: Option<Interpolator2x>,
     down: Option<Decimator2x>,
+    /// Plain delay with the same length as the 2x path, used while drive is off.
+    /// Saves the filters' CPU without moving the timing.
+    bypass: [f32; 2 * LATENCY + 1],
+    bpos: usize,
+    on: bool,
 }
 
 impl Drive {
     pub fn new() -> Self {
-        Drive { up: Some(Interpolator2x::new()), down: Some(Decimator2x::new()) }
+        Drive { up: Some(Interpolator2x::new()), down: Some(Decimator2x::new()), bypass: [0.0; 2 * LATENCY + 1], bpos: 0, on: false }
     }
 
     /// `amount` 0..1. The signal always goes through the 2x path, so the delay is the
     /// same with the knob at zero as at full (no timing jump when you touch it).
     #[inline]
     pub fn process(&mut self, x: f32, amount: f32) -> f32 {
+        // Delay line always runs (it's cheap) so switching paths never jumps in time.
+        let n = self.bypass.len();
+        let delayed = self.bypass[(self.bpos + 1) % n];
+        self.bypass[self.bpos] = x;
+        self.bpos = (self.bpos + 1) % n;
         let (Some(up), Some(down)) = (self.up.as_mut(), self.down.as_mut()) else { return x };
+        if amount <= 0.001 {
+            if !self.on {
+                return delayed;
+            }
+            // Let the 2x path finish what is in it before switching over.
+            self.on = false;
+        } else {
+            self.on = true;
+        }
         let (a, b) = up.process(x);
         if amount <= 0.001 {
             return down.process(a, b);

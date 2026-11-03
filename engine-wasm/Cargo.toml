@@ -1,0 +1,19 @@
+[package]
+name = "ccd-engine-wasm"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "The CCD engine as a WebAssembly module for an AudioWorklet. Same C ABI as native."
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ccd-engine = { path = "../engine" }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

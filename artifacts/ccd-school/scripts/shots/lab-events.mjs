@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage({ hasTouch: true });
+p.on('pageerror', e => console.log('pageerror', e.message));
+await p.goto('http://localhost:3000/lab/engine', { waitUntil: 'networkidle' });
+await p.click('[data-a="start"]');
+await p.waitForTimeout(1500);
+await p.evaluate(() => { window.__evs = []; window.__ccdEngine.on(e => window.__evs.push(...e)); });
+await p.tap('[data-p="rim"]');
+await p.waitForTimeout(300);
+await p.evaluate(() => window.__ccdEngine.noteOn(0, 37, 1, performance.now() - 5));
+await p.waitForTimeout(300);
+console.log(JSON.stringify(await p.evaluate(() => window.__evs.filter(e => e.kind !== 3))));
+await b.close();

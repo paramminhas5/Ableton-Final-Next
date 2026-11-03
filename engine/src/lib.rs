@@ -16,5 +16,6 @@ pub mod params;
 pub mod ring;
 pub mod seq;
 pub mod strip;
+pub mod typegen;
 
 pub use engine::{cmd, out, Cmd, Engine, OutEv};

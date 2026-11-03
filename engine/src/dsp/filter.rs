@@ -6,7 +6,7 @@ use super::{flush_denormal, PI};
 
 #[inline]
 fn prewarp(fc: f32, sr: f32) -> f32 {
-    (PI * (fc / sr).clamp(1e-5, 0.49)).tan()
+    super::fast_tan(PI * (fc / sr).clamp(1e-5, 0.49))
 }
 
 /// State-variable filter. One instance gives low, band and high pass at once.

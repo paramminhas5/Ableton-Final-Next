@@ -94,7 +94,7 @@ impl Pad {
             len: 0,
             tune: 0.0,
             decay: 0.5,
-            drive_amt: 0.15,
+            drive_amt: 0.0,
             level: 1.0,
         };
         p.setup_filters();

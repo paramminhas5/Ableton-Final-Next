@@ -9,6 +9,28 @@ pub mod smooth;
 pub const TAU: f32 = std::f32::consts::TAU;
 pub const PI: f32 = std::f32::consts::PI;
 
+/// sin(2*pi*phase) for phase in [0, 1). Polynomial, about 4e-6 worst-case error, a lot
+/// cheaper than libm's sin in WebAssembly.
+#[inline]
+pub fn sin_cycle(phase: f32) -> f32 {
+    let mut t = phase - 0.5;
+    if t > 0.25 {
+        t = 0.5 - t;
+    } else if t < -0.25 {
+        t = -0.5 - t;
+    }
+    let u = t * TAU;
+    let u2 = u * u;
+    -(u * (1.0 + u2 * (-1.0 / 6.0 + u2 * (1.0 / 120.0 + u2 * (-1.0 / 5040.0 + u2 * (1.0 / 362_880.0))))))
+}
+
+/// tan(x) for 0 <= x < pi/2, Pade approximant. Good to about 0.1% up to 0.47*pi.
+#[inline]
+pub fn fast_tan(x: f32) -> f32 {
+    let x2 = x * x;
+    x * (945.0 + x2 * (-105.0 + x2)) / (945.0 + x2 * (-420.0 + 15.0 * x2))
+}
+
 /// MIDI note to Hz, with fractional notes for glide and drift.
 #[inline]
 pub fn note_hz(note: f32) -> f32 {
@@ -51,6 +73,23 @@ impl Rng {
     #[inline]
     pub fn bipolar(&mut self) -> f32 {
         (self.next_u32() as f32 * (1.0 / 2_147_483_648.0)) - 1.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn fast_math_is_close() {
+        for i in 0..1000 {
+            let p = i as f32 / 1000.0;
+            assert!((sin_cycle(p) - (p * TAU).sin()).abs() < 1e-5, "sin at {p}");
+        }
+        for i in 1..95 {
+            let x = i as f32 / 100.0 * PI * 0.5;
+            let rel = (fast_tan(x) - x.tan()).abs() / x.tan();
+            assert!(rel < 0.02, "tan at {x}: {rel}");
+        }
     }
 }
 

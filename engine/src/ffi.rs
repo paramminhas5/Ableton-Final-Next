@@ -132,17 +132,19 @@ pub extern "C" fn ccd_out_event_size() -> u32 {
 
 // ── memory for the WASM host ─────────────────────────────────────────────────
 
+/// 8-byte aligned, so the host can view it as f64 (events carry an f64 beat).
 #[no_mangle]
 pub extern "C" fn ccd_alloc(bytes: u32) -> *mut u8 {
-    let mut v: Vec<u8> = Vec::with_capacity(bytes as usize);
+    let words = (bytes as usize).div_ceil(8);
+    let mut v: Vec<u64> = Vec::with_capacity(words);
     let p = v.as_mut_ptr();
     std::mem::forget(v);
-    p
+    p as *mut u8
 }
 
 /// # Safety
 /// `p` and `bytes` must come from `ccd_alloc`.
 #[no_mangle]
 pub unsafe extern "C" fn ccd_dealloc(p: *mut u8, bytes: u32) {
-    drop(Vec::from_raw_parts(p, 0, bytes as usize));
+    drop(Vec::from_raw_parts(p as *mut u64, 0, (bytes as usize).div_ceil(8)));
 }

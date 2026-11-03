@@ -226,7 +226,7 @@ pub const B_DRIFT: usize = 7;
 pub const DRUM_PAD_PARAMS: &[ParamSpec] = &[
     p("tune", "tune", Bank::Sound, -12.0, 12.0, 0.5, Unit::Semis, Curve::Lin, 0.0, CENTRE),
     p("decay", "decay", Bank::Sound, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
-    p("drive", "drive", Bank::Sound, 0.0, 1.0, 0.15, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("drive", "drive", Bank::Sound, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
     p("level", "level", Bank::Sound, 0.0, 1.0, FADER_UNITY, Unit::Db, Curve::Fader, 0.0, UNITY),
 ];
 

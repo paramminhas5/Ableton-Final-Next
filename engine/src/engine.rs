@@ -78,7 +78,9 @@ pub struct OutEv {
     pub flags: u32,
     /// Velocity for notes; tempo for position reports.
     pub vel: f32,
-    pub _r: f32,
+    /// For played notes: ms from the touch (as the host reported it) to the engine
+    /// acting on it. The input half of touch-to-sound latency. -1 if unknown.
+    pub aux: f32,
     /// Loop beat (negative during the count-in).
     pub beat: f64,
 }
@@ -421,12 +423,13 @@ impl Core {
                 self.layers[li].note_on(note, vel);
                 self.duck_from(li, note);
                 let beat = self.beat_for_frame(c.y);
-                self.emit(events, OutEv { kind: out::PLAYED_ON, layer: li as u32, note: c.a, flags: self.tr.flags(), vel, _r: 0.0, beat });
+                let aux = if c.y >= 0.0 { ((self.frame as f64 - c.y) / self.sr as f64 * 1000.0) as f32 } else { -1.0 };
+                self.emit(events, OutEv { kind: out::PLAYED_ON, layer: li as u32, note: c.a, flags: self.tr.flags(), vel, aux, beat });
             }
             cmd::NOTE_OFF => {
                 self.layers[li].note_off(c.a as u8);
                 let beat = self.beat_for_frame(c.y);
-                self.emit(events, OutEv { kind: out::PLAYED_OFF, layer: li as u32, note: c.a, flags: self.tr.flags(), vel: 0.0, _r: 0.0, beat });
+                self.emit(events, OutEv { kind: out::PLAYED_OFF, layer: li as u32, note: c.a, flags: self.tr.flags(), vel: 0.0, aux: -1.0, beat });
             }
             cmd::PARAM => self.layers[li].set_param(c.a as usize, c.x, false),
             cmd::INSTRUMENT => {
@@ -582,7 +585,7 @@ impl Core {
                         l.note_on(note, vel);
                         l.schedule_off(note, song + off + elen);
                         self.duck_from(li, note);
-                        let _ = events.push(OutEv { kind: out::SEQ_ON, layer: li as u32, note: note as u32, flags: 0, vel, _r: 0.0, beat: from + off });
+                        let _ = events.push(OutEv { kind: out::SEQ_ON, layer: li as u32, note: note as u32, flags: 0, vel, aux: -1.0, beat: from + off });
                     }
                 }
             }
@@ -640,7 +643,7 @@ impl Core {
         if self.frame - self.last_pos >= self.pos_every {
             self.last_pos = self.frame;
             let beat = self.tr.loop_beat_at(self.tr.beat);
-            let _ = events.push(OutEv { kind: out::POS, layer: 0, note: 0, flags: self.tr.flags(), vel: self.tr.tempo as f32, _r: 0.0, beat });
+            let _ = events.push(OutEv { kind: out::POS, layer: 0, note: 0, flags: self.tr.flags(), vel: self.tr.tempo as f32, aux: -1.0, beat });
         }
     }
 }
