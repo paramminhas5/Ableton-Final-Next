@@ -102,7 +102,7 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
   const inner = (
     <>
       {led ? <span className="m1-dot is-on" style={{ ["--c" as string]: led }} /> : null}
-      <span className={`m1-cap ${cap ? "is-" + cap : ""}`} style={{ ...(label ? { width: "56%", marginTop: -16 } : {}), ...capStyle }}>{children}</span>
+      <span className={`m1-cap ${cap ? "is-" + cap : ""}`} style={{ ...(label ? { width: "56%", marginTop: -12 } : {}), ...capStyle }}>{children}</span>
       {label ? <span className={`m1-ml ${ariaCurrent || ariaPressed ? "is-on" : ""}`}>{label}</span> : null}
     </>
   );
@@ -120,7 +120,7 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
 
 /** Wide key with a pill cap, for the one main action on a screen. */
 export function GoPill({ children, href, onClick, ariaLabel, style, disabled }: { children: ReactNode; href?: string; onClick?: () => void; ariaLabel?: string; style?: CSSProperties; disabled?: boolean }) {
-  const cap = <span className="m1-cap is-go is-pill" style={{ width: "90%", height: "60%", gap: 8, fontSize: 16, fontWeight: 500 }}>{children}</span>;
+  const cap = <span className="m1-cap is-go is-pill" style={{ width: "90%", height: "58%", gap: 8, fontSize: 16, fontWeight: 500, marginTop: -12 }}>{children}</span>;
   if (href && !disabled) return <Link href={href} className="m1-m is-wide" style={style} aria-label={ariaLabel}>{cap}</Link>;
   return <button type="button" className={`m1-m is-wide ${disabled ? "is-dim" : ""}`} style={style} onClick={onClick} disabled={disabled} aria-label={ariaLabel}>{cap}</button>;
 }
