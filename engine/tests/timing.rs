@@ -165,4 +165,11 @@ fn bench_eight_layers() {
     render(&e, 48_000 * 10, 128);
     let ms = t.elapsed().as_secs_f64() * 1000.0;
     println!("native: 8 layers, 10 s in {ms:.0} ms = {:.1}% of one core", ms / 100.0);
+    // The mix screens: every layer measured, clashes checked.
+    send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
+    let t = std::time::Instant::now();
+    render(&e, 48_000 * 10, 128);
+    let ms = t.elapsed().as_secs_f64() * 1000.0;
+    while e.poll().is_some() {}
+    println!("native, analysing: 8 layers, 10 s in {ms:.0} ms = {:.1}% of one core", ms / 100.0);
 }

@@ -196,6 +196,14 @@ pub const L_PAN: usize = 9;
 pub const L_SEND: usize = 10;
 pub const L_DUCK: usize = 11;
 
+// ── Master bus ───────────────────────────────────────────────────────────────
+// Sent with the MASTER command; index order is the wire format. Append only.
+
+pub const MASTER_PARAMS: &[ParamSpec] = &[
+    p("master.out", "out", Bank::Mix, 0.0, 1.0, FADER_UNITY, Unit::Db, Curve::Fader, 15.0, UNITY),
+    p("master.glue", "glue", Bank::Mix, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+];
+
 /// Instrument params start here on the wire, after the layer block.
 pub const INSTRUMENT_BASE: usize = 16;
 
@@ -329,7 +337,7 @@ mod tests {
 
     #[test]
     fn defaults_are_normalised() {
-        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS) {
+        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(MASTER_PARAMS) {
             assert!((0.0..=1.0).contains(&s.default), "{}", s.id);
             for d in s.detents {
                 assert!((0.0..=1.0).contains(d));

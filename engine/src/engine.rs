@@ -3,10 +3,11 @@
 //! Threading: the UI side only pushes `Cmd`s and pops `OutEv`s. The audio side calls
 //! `process`. Nothing in `process` allocates or locks.
 
+use crate::analysis::{Clash, ClashDetector, LayerInfo, LayerMeter};
 use crate::dsp::env::Decay;
 use crate::dsp::osc::Sine;
-use crate::dsp::soft_clip;
 use crate::fx::{Echo, Reverb};
+use crate::master::{Master, TruePeak, MASTER_DELAY};
 use crate::inst::{Bass, DrumRack};
 use crate::params::*;
 use crate::ring::Ring;
@@ -17,9 +18,21 @@ pub const MAX_LAYERS: usize = 8;
 pub const MAX_BLOCK: usize = 4096;
 
 /// Fixed delay from a note being triggered to it leaving the engine, in samples: the 2x
-/// stages in the voice and in the strip. The sequencer fires this early so sequenced
-/// notes land exactly on the grid. 1 ms at 48 kHz.
-pub const LATENCY: usize = 4 * crate::dsp::oversample::LATENCY;
+/// stages in the voice and in the strip (IIR half-bands, 0.10 ms at 48 kHz), plus the
+/// master limiter's look-ahead. The sequencer fires this early so sequenced notes land
+/// exactly on the grid.
+pub const VOICE_LATENCY: usize = (2.0 * crate::dsp::oversample::DRIVE_DELAY) as usize;
+/// 23 samples, 0.48 ms at 48 kHz (it was 48, 1 ms, before the IIR half-bands).
+pub const LATENCY: usize = VOICE_LATENCY + MASTER_DELAY;
+/// Mix parameters a compare snapshot holds: eq, fx and mix, every layer param below
+/// the instrument block.
+pub const MIX_PARAMS: usize = 12;
+/// Analysis reports per second while analysis is on.
+pub const METER_HZ: f32 = 30.0;
+/// The master's readings come with this layer number.
+pub const MASTER_LAYER: u32 = MAX_LAYERS as u32;
+/// Most clashes reported at once.
+pub const MAX_CLASHES: usize = 6;
 
 // ── wire format ──────────────────────────────────────────────────────────────
 
@@ -44,6 +57,14 @@ pub mod cmd {
     pub const SWING: u32 = 18;
     /// Stop following Link (sent from the UI thread; applied on the audio thread).
     pub const LINK_OFF: u32 = 19;
+    /// Master param `a` to normalised `x` (see MASTER_PARAMS).
+    pub const MASTER: u32 = 20;
+    /// Remember every layer's mix and the master as "before" for compare.
+    pub const SNAPSHOT: u32 = 21;
+    /// a = 1: play the snapshot; a = 0: back to the live mix. Glides, never clicks.
+    pub const COMPARE: u32 = 22;
+    /// a = 1: measure every layer and report it (METER, BANDS, CLASH, MASTER_METER).
+    pub const ANALYSE: u32 = 23;
 }
 
 pub mod out {
@@ -51,6 +72,21 @@ pub mod out {
     pub const PLAYED_OFF: u32 = 2;
     pub const POS: u32 = 3;
     pub const SEQ_ON: u32 = 4;
+    /// A layer's reading. note = pitch centre (Hz), flags = 1 if sounding,
+    /// vel = peak (dBFS), aux = loudness (LUFS), beat = position (-1 left .. 1 right).
+    pub const METER: u32 = 5;
+    /// A layer's bands. vel = low, aux = mid, beat = high (dB).
+    pub const BANDS: u32 = 6;
+    /// layer = the layer to change, note = the layer it clashes with,
+    /// flags = group (bits 0-1: 0 low, 1 mid, 2 high) | band << 2 (3 bits) |
+    /// fix << 5 | fix2 << 7 (0 duck, 1 eq, 2 pan, 3 none), vel = severity (0..1),
+    /// aux = the fix's normalised value, beat = the second fix's value.
+    pub const CLASH: u32 = 7;
+    /// Last in each analysis frame. layer = MASTER_LAYER, note = limiter gain
+    /// reduction (hundredths of a dB), flags = clashes reported | comparing << 8,
+    /// vel = true peak since the last frame (dBTP), aux = loudness (LUFS),
+    /// beat = glue gain reduction (dB).
+    pub const MASTER_METER: u32 = 8;
 
     pub const F_PLAYING: u32 = 1;
     pub const F_COUNT_IN: u32 = 2;
@@ -163,6 +199,8 @@ pub struct Layer {
     /// Layer this one ducks under (-1 none) and which note triggers it (-1 any).
     pub duck_src: i32,
     pub duck_note: i32,
+    /// While comparing: the snapshot's duck routing.
+    cmp_duck: Option<(i32, i32)>,
 }
 
 impl Layer {
@@ -184,7 +222,13 @@ impl Layer {
             n_offs: 0,
             duck_src: -1,
             duck_note: -1,
+            cmp_duck: None,
         }
+    }
+
+    /// The duck routing in effect (the snapshot's while comparing).
+    fn duck_route(&self) -> (i32, i32) {
+        self.cmp_duck.unwrap_or((self.duck_src, self.duck_note))
     }
 
     fn note_on(&mut self, note: u8, vel: f32) {
@@ -214,7 +258,10 @@ impl Layer {
         self.params[index] = norm.clamp(0.0, 1.0);
         let v = spec.to_value(norm);
         if index < INSTRUMENT_BASE {
-            self.strip.set_param(index, v, jump);
+            // While comparing, the strip plays the snapshot; the live value waits.
+            if self.cmp_duck.is_none() {
+                self.strip.set_param(index, v, jump);
+            }
         } else {
             let i = index - INSTRUMENT_BASE;
             match self.inst {
@@ -257,6 +304,14 @@ struct Click {
     hz: f32,
 }
 
+/// The mix as it was, for hold to compare.
+struct Snapshot {
+    valid: bool,
+    layers: [[f32; MIX_PARAMS]; MAX_LAYERS],
+    duck: [(i32, i32); MAX_LAYERS],
+    master: [f32; 4],
+}
+
 // ── engine ───────────────────────────────────────────────────────────────────
 
 pub struct Core {
@@ -272,6 +327,18 @@ pub struct Core {
     pos_every: u64,
     last_pos: u64,
     fired: Vec<(u8, f32, f64, f64)>,
+    pub master: Master,
+    pub analyse: bool,
+    pub meters: Vec<LayerMeter>,
+    out_meter: LayerMeter,
+    out_tp: TruePeak,
+    out_tp_max: f32,
+    pub clash: ClashDetector,
+    clashes: [Clash; MAX_CLASHES],
+    meter_every: u64,
+    last_meter: u64,
+    snap: Snapshot,
+    pub comparing: bool,
 }
 
 pub struct Engine {
@@ -368,7 +435,52 @@ impl Core {
             pos_every: (sr / 60.0) as u64,
             last_pos: 0,
             fired: Vec::with_capacity(256),
+            master: Master::new(sr),
+            analyse: false,
+            meters: (0..MAX_LAYERS).map(|_| LayerMeter::new(sr)).collect(),
+            out_meter: LayerMeter::new(sr),
+            out_tp: TruePeak::new(),
+            out_tp_max: 0.0,
+            clash: ClashDetector::new(sr),
+            clashes: [Clash { target: 0, other: 0, group: 0, band: 0, severity: 0.0, fix: 0, value: 0.0, fix2: 0, value2: 0.0 }; MAX_CLASHES],
+            meter_every: (sr / METER_HZ) as u64,
+            last_meter: 0,
+            snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; 4] },
+            comparing: false,
         }
+    }
+
+    fn snapshot(&mut self) {
+        for (i, l) in self.layers.iter().enumerate() {
+            // While comparing, "live" is what the layer holds, not what plays.
+            self.snap.layers[i].copy_from_slice(&l.params[..MIX_PARAMS]);
+            self.snap.duck[i] = (l.duck_src, l.duck_note);
+        }
+        self.snap.master = self.master.params;
+        self.snap.valid = true;
+    }
+
+    fn compare(&mut self, on: bool) {
+        if on == self.comparing || (on && !self.snap.valid) {
+            return;
+        }
+        self.comparing = on;
+        for (i, l) in self.layers.iter_mut().enumerate() {
+            let vals = if on { self.snap.layers[i] } else { l.params[..MIX_PARAMS].try_into().unwrap() };
+            for (k, n) in vals.iter().enumerate() {
+                if let Some(spec) = spec_for(l.inst, k) {
+                    l.strip.set_param(k, spec.to_value(*n), false);
+                }
+            }
+            l.cmp_duck = if on { Some(self.snap.duck[i]) } else { None };
+        }
+        // The master keeps its live values in `params`; push the right ones through.
+        let live = self.master.params;
+        let vals = if on { self.snap.master } else { live };
+        for (k, n) in vals.iter().enumerate().take(MASTER_PARAMS.len()) {
+            self.master.set_param(k, *n, false);
+        }
+        self.master.params = live;
     }
 
     fn link_sync(&mut self, beat: f64, tempo: f64) {
@@ -434,10 +546,35 @@ impl Core {
                 self.emit(events, OutEv { kind: out::PLAYED_OFF, layer: li as u32, note: c.a, flags: self.tr.flags(), vel: 0.0, aux: -1.0, beat });
             }
             cmd::PARAM => self.layers[li].set_param(c.a as usize, c.x, false),
+            cmd::MASTER => {
+                let i = c.a as usize;
+                if self.comparing {
+                    if i < self.master.params.len() {
+                        self.master.params[i] = c.x.clamp(0.0, 1.0);
+                    }
+                } else {
+                    self.master.set_param(i, c.x, false);
+                }
+            }
+            cmd::SNAPSHOT => self.snapshot(),
+            cmd::COMPARE => self.compare(c.a != 0),
+            cmd::ANALYSE => {
+                let on = c.a != 0;
+                if on && !self.analyse {
+                    for m in self.meters.iter_mut() {
+                        m.clear();
+                    }
+                    self.out_meter.clear();
+                    self.clash.clear();
+                    self.last_meter = self.frame;
+                }
+                self.analyse = on;
+            }
             cmd::INSTRUMENT => {
                 let l = &mut self.layers[li];
                 l.all_off();
                 l.inst = Instrument::from_u8(c.a as u8);
+                self.meters[li].clear();
                 // Push this instrument's defaults through, keep the strip as it is.
                 let n = l.inst.param_count();
                 for i in 0..n {
@@ -522,10 +659,74 @@ impl Core {
 
     fn duck_from(&mut self, src: usize, note: u8) {
         for l in self.layers.iter_mut() {
-            if l.duck_src == src as i32 && (l.duck_note < 0 || l.duck_note == note as i32) {
+            let (s, n) = l.duck_route();
+            if s == src as i32 && (n < 0 || n == note as i32) {
                 l.strip.duck_hit();
             }
         }
+    }
+
+    /// What clash detection needs to know about a layer's settings (the ones playing:
+    /// the snapshot's while comparing).
+    fn layer_info(&self, i: usize, sounding: bool) -> LayerInfo {
+        let l = &self.layers[i];
+        let p = |k: usize| if self.comparing { self.snap.layers[i][k] } else { l.params[k] };
+        let v = |k: usize| LAYER_PARAMS[k].to_value(p(k));
+        LayerInfo {
+            sounding,
+            drums: l.inst == Instrument::Drums,
+            duck_src: l.duck_route().0,
+            duck_amt: p(L_DUCK),
+            pan_knob: v(L_PAN),
+            cut_hz: v(L_EQ_CUT),
+            mid_db: v(L_EQ_MID),
+            high_db: v(L_EQ_HIGH),
+        }
+    }
+
+    /// Report every layer, the clashes and the master. About 30 times a second.
+    fn report(&mut self, events: &Ring<OutEv, 4096>) {
+        let mut info = [LayerInfo::default(); MAX_LAYERS];
+        for i in 0..MAX_LAYERS {
+            let l = &self.layers[i];
+            if l.inst == Instrument::None {
+                continue;
+            }
+            let r = self.meters[i].read();
+            info[i] = self.layer_info(i, r.active);
+            let _ = events.push(OutEv { kind: out::METER, layer: i as u32, note: r.centre_hz.round() as u32, flags: r.active as u32, vel: r.peak_db, aux: r.lufs, beat: r.pan as f64 });
+            let _ = events.push(OutEv { kind: out::BANDS, layer: i as u32, note: 0, flags: 0, vel: r.bands_db[0], aux: r.bands_db[1], beat: r.bands_db[2] as f64 });
+        }
+        let n = self.clash.detect(&self.meters, &info, &mut self.clashes);
+        for c in &self.clashes[..n] {
+            let flags = c.group as u32 | (c.band as u32) << 2 | c.fix << 5 | c.fix2 << 7;
+            let _ = events.push(OutEv { kind: out::CLASH, layer: c.target as u32, note: c.other as u32, flags, vel: c.severity, aux: c.value, beat: c.value2 as f64 });
+        }
+        let r = self.out_meter.read();
+        let tp = self.out_tp_max;
+        self.out_tp_max = 0.0;
+        let _ = events.push(OutEv {
+            kind: out::MASTER_METER,
+            layer: MASTER_LAYER,
+            note: (self.master.limiter.gr_db * 100.0).round() as u32,
+            flags: n as u32 | (self.comparing as u32) << 8,
+            vel: if tp > 1e-6 { 20.0 * tp.log10() } else { -120.0 },
+            aux: r.lufs,
+            beat: self.master.glue.gr_db as f64,
+        });
+    }
+
+    /// The clashes found at the last report (for tests and tools).
+    pub fn detect_clashes(&mut self) -> Vec<Clash> {
+        let mut info = [LayerInfo::default(); MAX_LAYERS];
+        for i in 0..MAX_LAYERS {
+            if self.layers[i].inst != Instrument::None {
+                info[i] = self.layer_info(i, self.meters[i].total() > 1e-10);
+            }
+        }
+        let mut out = [self.clashes[0]; MAX_CLASHES];
+        let n = self.clash.detect(&self.meters, &info, &mut out);
+        out[..n].to_vec()
     }
 
     fn process(&mut self, frames: usize, cmds: &Ring<Cmd, 8192>, events: &Ring<OutEv, 4096>) {
@@ -611,7 +812,8 @@ impl Core {
 
             // Render.
             let (mut ml, mut mr, mut echo_in, mut verb_in) = (0.0, 0.0, 0.0, 0.0);
-            for l in self.layers.iter_mut() {
+            let mut live = 0u8;
+            for (li, l) in self.layers.iter_mut().enumerate() {
                 if l.inst == Instrument::None {
                     continue;
                 }
@@ -621,15 +823,29 @@ impl Core {
                 mr += o.r;
                 echo_in += o.echo;
                 verb_in += o.verb;
+                if self.analyse {
+                    self.meters[li].tick(o.l, o.r);
+                    live |= 1 << li;
+                }
+            }
+            if self.analyse {
+                self.clash.tick(&self.meters, live);
             }
             let (el, er) = self.echo.tick(echo_in);
             let (vl, vr) = self.verb.tick(verb_in + (el + er) * 0.15);
             let c = if self.click.env.is_active() { self.click.osc.next(self.click.hz / self.sr) * self.click.env.next() * 0.35 } else { 0.0 };
             ml += el + vl + c;
             mr += er + vr + c;
-            // Safety stage. A proper glue compressor and true-peak limiter come with the mix step.
-            self.out_l[i] = soft_clip(ml * 0.85).clamp(-1.0, 1.0);
-            self.out_r[i] = soft_clip(mr * 0.85).clamp(-1.0, 1.0);
+            let (ol, or) = self.master.tick(ml, mr);
+            self.out_l[i] = ol;
+            self.out_r[i] = or;
+            if self.analyse {
+                self.out_meter.tick(ol, or);
+                let tp = self.out_tp.push(ol, or);
+                if tp > self.out_tp_max {
+                    self.out_tp_max = tp;
+                }
+            }
 
             if running {
                 self.tr.beat += bps;
@@ -641,6 +857,15 @@ impl Core {
                 }
             }
             self.frame += 1;
+        }
+
+        if self.analyse && self.frame - self.last_meter >= self.meter_every {
+            // Step by exactly one period so the rate averages 30 Hz whatever the block size.
+            self.last_meter += self.meter_every;
+            if self.frame - self.last_meter >= self.meter_every {
+                self.last_meter = self.frame;
+            }
+            self.report(events);
         }
 
         if self.frame - self.last_pos >= self.pos_every {

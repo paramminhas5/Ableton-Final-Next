@@ -46,6 +46,12 @@ export const DRUM_PAD_PARAMS = [
   { id: "drums.pad.level", key: "level", label: "level", bank: "sound", index: 3, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 0, detents: [0.75] },
 ] as const satisfies readonly ParamSpec[];
 
+/** Master bus. Wire index for the MASTER command = position here. */
+export const MASTER_PARAMS = [
+  { id: "master.out", key: "out", label: "out", bank: "mix", index: 0, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 15, detents: [0.75] },
+  { id: "master.glue", key: "glue", label: "glue", bank: "mix", index: 1, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+
 export const DRUM_PAD_NAMES = ["kick", "snare", "clap", "rim", "closed hat", "open hat", "shaker", "ride", "low tom", "mid tom", "high tom", "crash", "perc 1", "perc 2", "fx", "reverse"] as const;
 export const DRUM_PAD_NOTES = [36, 38, 39, 37, 42, 46, 70, 51, 41, 45, 48, 49, 60, 61, 54, 55] as const;
 
@@ -57,8 +63,16 @@ export type BassParamId = `${(typeof BASS_PARAMS)[number]["id"]}`;
 export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId;
 
-export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19 } as const;
-export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4 } as const;
+export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23 } as const;
+export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;
+/** Clash fixes, as packed in a CLASH event's flags. */
+export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;
+/** Layer number the master's readings come with. */
+export const MASTER_LAYER = 8;
+/** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */
+export const LATENCY_SAMPLES = 23;
+export const CEILING_DB = -1;
+export const MIX_PARAMS = 12;
 export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8 } as const;
 export const OUT_EVENT_BYTES = 32;
 

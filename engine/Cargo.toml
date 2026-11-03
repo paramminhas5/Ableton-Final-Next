@@ -27,3 +27,7 @@ lto = true
 codegen-units = 1
 panic = "abort"
 debug = false
+
+# Render tests run whole mixes; keep them quick.
+[profile.test]
+opt-level = 2

@@ -68,6 +68,15 @@ pub fn typescript() -> String {
     }
     o.push_str("] as const satisfies readonly ParamSpec[];\n\n");
 
+    o.push_str("/** Master bus. Wire index for the MASTER command = position here. */\n");
+    o.push_str("export const MASTER_PARAMS = [\n");
+    for (i, s) in MASTER_PARAMS.iter().enumerate() {
+        let (group, short) = s.id.split_once('.').unwrap();
+        let s2 = ParamSpec { id: short, ..*s };
+        writeln!(o, "  {},", spec_ts(group, &s2, i)).unwrap();
+    }
+    o.push_str("] as const satisfies readonly ParamSpec[];\n\n");
+
     let names: Vec<String> = DRUM_PAD_NAMES.iter().map(|n| format!("\"{n}\"")).collect();
     let notes: Vec<String> = DRUM_PAD_NOTES.iter().map(|n| n.to_string()).collect();
     writeln!(o, "export const DRUM_PAD_NAMES = [{}] as const;", names.join(", ")).unwrap();
@@ -83,12 +92,26 @@ pub fn typescript() -> String {
 
     writeln!(
         o,
-        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {} }} as const;",
+        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {} }} as const;",
         cmd::NOTE_ON, cmd::NOTE_OFF, cmd::PARAM, cmd::INSTRUMENT, cmd::TEMPO, cmd::LOOP, cmd::PLAY, cmd::STOP, cmd::RECORD, cmd::RECORD_OFF,
-        cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF
+        cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF,
+        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE
     )
     .unwrap();
-    writeln!(o, "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {} }} as const;", out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON).unwrap();
+    writeln!(
+        o,
+        "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {}, meter: {}, bands: {}, clash: {}, masterMeter: {} }} as const;",
+        out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON, out::METER, out::BANDS, out::CLASH, out::MASTER_METER
+    )
+    .unwrap();
+    writeln!(o, "/** Clash fixes, as packed in a CLASH event's flags. */").unwrap();
+    writeln!(o, "export const FIX = {{ duck: {}, eq: {}, pan: {}, none: {} }} as const;", crate::analysis::fix::DUCK, crate::analysis::fix::EQ, crate::analysis::fix::PAN, crate::analysis::fix::NONE).unwrap();
+    writeln!(o, "/** Layer number the master's readings come with. */").unwrap();
+    writeln!(o, "export const MASTER_LAYER = {};", crate::engine::MASTER_LAYER).unwrap();
+    writeln!(o, "/** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */").unwrap();
+    writeln!(o, "export const LATENCY_SAMPLES = {};", crate::engine::LATENCY).unwrap();
+    writeln!(o, "export const CEILING_DB = {};", fmt(crate::master::CEILING_DB)).unwrap();
+    writeln!(o, "export const MIX_PARAMS = {};", crate::engine::MIX_PARAMS).unwrap();
     writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK).unwrap();
     writeln!(o, "export const OUT_EVENT_BYTES = {};\n", std::mem::size_of::<crate::engine::OutEv>()).unwrap();
 

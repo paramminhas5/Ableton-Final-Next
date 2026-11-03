@@ -14,7 +14,13 @@ pub struct Strip {
     low: EqBand,
     mid: EqBand,
     high: EqBand,
+    /// Eq gains and low cut glide to their targets so moving them (or switching the
+    /// whole mix for compare) never clicks.
     eq_db: [f32; 3],
+    eq_target: [f32; 3],
+    cut_target: f32,
+    glide: f32,
+    glide_count: u32,
     eq_dirty: bool,
     drive: Drive,
     drive_amt: Smooth,
@@ -29,6 +35,7 @@ pub struct Strip {
     pub send: Smooth,
     pub echo: Smooth,
     pub duck_amt: f32,
+    duck_amt_s: Smooth,
     duck_env: f32,
     duck_release: f32,
     duck_attack: f32,
@@ -54,6 +61,10 @@ impl Strip {
             mid: EqBand::bell(),
             high: EqBand::high_shelf(),
             eq_db: [0.0; 3],
+            eq_target: [0.0; 3],
+            cut_target: 20.0,
+            glide: tau_coef(0.025, sr / 16.0),
+            glide_count: 0,
             eq_dirty: true,
             drive: Drive::new(),
             drive_amt: Smooth::new(0.0),
@@ -68,6 +79,7 @@ impl Strip {
             send: Smooth::new(0.0),
             echo: Smooth::new(0.0),
             duck_amt: 0.0,
+            duck_amt_s: Smooth::new(0.0),
             duck_env: 0.0,
             duck_release: 0.0,
             duck_attack: 0.0,
@@ -77,7 +89,7 @@ impl Strip {
         s.cut.set(20.0, 0.707, sr);
         s.tone_lp.set(700.0, sr);
         s.tone_hp.set(700.0, sr);
-        for sm in [&mut s.drive_amt, &mut s.crush, &mut s.tone, &mut s.level, &mut s.pan, &mut s.send, &mut s.echo] {
+        for sm in [&mut s.drive_amt, &mut s.crush, &mut s.tone, &mut s.level, &mut s.pan, &mut s.send, &mut s.echo, &mut s.duck_amt_s] {
             sm.set_time(15.0, sr);
         }
         s.duck_attack = tau_coef(0.002, sr);
@@ -96,21 +108,20 @@ impl Strip {
     pub fn set_param(&mut self, i: usize, v: f32, jump: bool) {
         let set = |s: &mut Smooth, v: f32| if jump { s.reset(v) } else { s.set(v) };
         match i {
-            L_EQ_LOW => {
-                self.eq_db[0] = v;
-                self.eq_dirty = true;
-            }
-            L_EQ_MID => {
-                self.eq_db[1] = v;
-                self.eq_dirty = true;
-            }
-            L_EQ_HIGH => {
-                self.eq_db[2] = v;
-                self.eq_dirty = true;
+            L_EQ_LOW | L_EQ_MID | L_EQ_HIGH => {
+                let k = i - L_EQ_LOW;
+                self.eq_target[k] = v;
+                if jump {
+                    self.eq_db[k] = v;
+                    self.eq_dirty = true;
+                }
             }
             L_EQ_CUT => {
-                self.cut_hz = v;
-                self.cut.set(v, 0.707, self.sr);
+                self.cut_target = v;
+                if jump {
+                    self.cut_hz = v;
+                    self.cut.set(v, 0.707, self.sr);
+                }
             }
             L_DRIVE => set(&mut self.drive_amt, v),
             L_CRUSH => set(&mut self.crush, v),
@@ -121,6 +132,7 @@ impl Strip {
             L_SEND => set(&mut self.send, v),
             L_DUCK => {
                 self.duck_amt = v;
+                set(&mut self.duck_amt_s, v);
                 self.set_duck_release(v);
             }
             _ => {}
@@ -134,8 +146,33 @@ impl Strip {
         }
     }
 
+    /// Move the eq and low cut a step towards their targets (every 16 samples).
+    fn glide_eq(&mut self) {
+        let g = self.glide;
+        for k in 0..3 {
+            let (c, t) = (self.eq_db[k], self.eq_target[k]);
+            if c != t {
+                let n = t + (c - t) * g;
+                self.eq_db[k] = if (n - t).abs() < 0.02 { t } else { n };
+                self.eq_dirty = true;
+            }
+        }
+        if self.cut_hz != self.cut_target {
+            // Glide in octaves, so the sweep sounds even.
+            let (c, t) = (self.cut_hz.log2(), self.cut_target.log2());
+            let n = t + (c - t) * g;
+            self.cut_hz = if (n - t).abs() < 0.005 { self.cut_target } else { n.exp2() };
+            self.cut.set(self.cut_hz, 0.707, self.sr);
+        }
+    }
+
     #[inline]
     pub fn tick(&mut self, x: f32) -> StripOut {
+        self.glide_count += 1;
+        if self.glide_count >= 16 {
+            self.glide_count = 0;
+            self.glide_eq();
+        }
         if self.eq_dirty {
             self.low.set(110.0, 0.707, self.eq_db[0], self.sr);
             self.mid.set(1_000.0, 0.6, self.eq_db[1], self.sr);
@@ -189,7 +226,7 @@ impl Strip {
         } else {
             self.duck_env *= self.duck_release;
         }
-        let duck = 1.0 - self.duck_env * self.duck_amt * 0.92;
+        let duck = 1.0 - self.duck_env * self.duck_amt_s.next() * 0.92;
 
         let g = self.level.next() * duck;
         let p = self.pan.next();
@@ -205,7 +242,7 @@ impl Strip {
 
     /// Duck depth right now (0 = no dip). For tests and the duck graph.
     pub fn duck_depth(&self) -> f32 {
-        self.duck_env * self.duck_amt * 0.92
+        self.duck_env * self.duck_amt_s.value * 0.92
     }
 }
 

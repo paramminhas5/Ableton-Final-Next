@@ -7,7 +7,7 @@
 use crate::dsp::env::Adsr;
 use crate::dsp::filter::{Ladder, OnePoleHp};
 use crate::dsp::osc::{BlepOsc, Sine};
-use crate::dsp::oversample::Decimator2x;
+use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
 use crate::dsp::{note_hz, tau_coef, Rng};
 use crate::params::*;
@@ -29,7 +29,7 @@ pub struct Bass {
     sub: Sine,
     ladder: Ladder,
     dc: OnePoleHp,
-    dec: Decimator2x,
+    dec: BassDecimator,
     rng: Rng,
     drift: f32,
     drift_target: f32,
@@ -66,7 +66,7 @@ impl Bass {
             sub: Sine::default(),
             ladder: Ladder::default(),
             dc: OnePoleHp::default(),
-            dec: Decimator2x::new(),
+            dec: BassDecimator::new(),
             rng: Rng::new(0xBA55),
             drift: 0.0,
             drift_target: 0.0,
@@ -208,7 +208,9 @@ impl Bass {
     #[inline]
     pub fn tick(&mut self) -> f32 {
         let y = if self.amp.is_active() { self.voice() } else { 0.0 };
-        let n = crate::dsp::oversample::LATENCY;
+        // Pad the voice so bass and drums reach the strip with the same delay: the drum
+        // pads' drive is two 2x stages, the bass decimator one longer stage.
+        let n = (crate::engine::VOICE_LATENCY as f64 - DRIVE_DELAY - BASS_DECIM_DELAY) as usize;
         let out = self.pdc[(self.pdc_pos + 32 - n) % 32];
         self.pdc[self.pdc_pos] = y;
         self.pdc_pos = (self.pdc_pos + 1) % 32;
