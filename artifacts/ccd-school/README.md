@@ -1,3 +1,5 @@
+> The full product README (features, decisions, technical capabilities, gaps, roadmap) is the repo root `README.md`. This file covers the older web app setup and is partly out of date.
+
 # CCD.SCHOOL — Duolingo for Music Production & DJing
 
 > **153 missions · 3 worlds · 47 interactive sims · FSRS spaced repetition · Web Audio engine**  

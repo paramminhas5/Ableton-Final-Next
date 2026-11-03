@@ -1,394 +1,305 @@
-# CCD.SCHOOL
+# CCD School
 
-> The most structured music education on the internet — 153 missions across Fundamentals, DJ World and Producer. Gamified, source-verified, brutally effective.
+Learn music by making it. CCD School is a music instrument and a school in one app: you learn an idea, play it on a real instrument with real sound, it becomes part of your own track, and that track opens in Ableton Live. One Rust sound engine and one React app run on the web, iPhone and Android. Part of Cats Can Dance (catscandance.com), Bengaluru.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.3-black?logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06b6d4)](https://tailwindcss.com/)
+Last updated 3 Nov 2026. Branch `school/field`. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
 
 ---
 
-## What it is
+## Contents
+1. [Status at a glance](#1-status-at-a-glance)
+2. [Who it is for](#2-who-it-is-for)
+3. [Why this can be the best music learning and making tool](#3-why-this-can-be-the-best-music-learning-and-making-tool)
+4. [Features](#4-features)
+5. [Design](#5-design)
+6. [Decisions and why we made them](#6-decisions-and-why-we-made-them)
+7. [Technical capabilities](#7-technical-capabilities)
+8. [Gaps, honestly](#8-gaps-honestly)
+9. [Improvements we recommend](#9-improvements-we-recommend)
+10. [Roadmap](#10-roadmap)
+11. [Repo map and how to run it](#11-repo-map-and-how-to-run-it)
+12. [Where the detail lives](#12-where-the-detail-lives)
 
-CCD.SCHOOL is a gamified music-education platform covering three worlds:
+---
 
-| World | Source | Missions |
+## 1. Status at a glance
+
+| Area | State |
+|---|---|
+| Lessons | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). Tested end to end in a phone-size browser. |
+| Practice | Ear Gym (EQ, compression, groove) with adaptive difficulty and real recorded sounds. Spaced review, daily practice, placement test. |
+| Ableton bridge | Reads your own Live Set (`.als`): Build a Set (14 checked stages), Do it in Live (27 lesson tasks), Check my Set, Device Atlas (67 devices), Plugin Guide, Setup guide. |
+| Sound engine | Built (step 0). Rust, sample-accurate, 1 ms fixed latency, drum rack and bass synth, channel strip, reverb and echo. Runs as WebAssembly in the browser and natively on phones. |
+| Studio (the instrument) | Play mode built for drums and bass (step 1): 8 layers, steps, keys and pads, knob banks, recording with count-in, overdub and undo. Mix mode is next (step 2). |
+| Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
+| Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
+| New design (Model 1) | Every screen designed (44 boards). Studio rebuilt in it; the rest of the app still uses the older look. |
+| Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. |
+| Production | `learn.catscandance.com` still serves an older build. The new work is on branches, not merged. |
+
+---
+
+## 2. Who it is for
+
+- **Total beginners.** Make a sound in seconds, finish a loop in the first session, learn the words as you need them.
+- **People who have tried Ableton and stalled.** Placement skips what they know. Build a Set walks them through a whole track and checks it in their own Set.
+- **Producers who want to get better.** Mixing missions, device and plug-in reference, ear training, and later a mix coach that reads real measurements.
+- **DJs.** A full DJ world (40 lessons, rekordbox-based) and a DJ screen that will run on the same engine.
+- **The CCD path.** Learners make real tracks, and the best get played at CCD nights. The PRD pilot: 20 learners in Bengaluru, first showcase in January 2027.
+
+---
+
+## 3. Why this can be the best music learning and making tool
+
+### The gap
+Tools that teach do not make music, and tools that make music do not teach.
+- **Learning apps** (Melodics, Ableton's free Learning Music and Learning Synths, Syntorial) teach well, but you leave with drill scores or browser exercises, not a track. Melodics itself says it is not a DAW.
+- **Making apps** (Koala Sampler, BandLab, GarageBand, FL Studio Mobile, Groovepad) make music, but leave the learning to YouTube. Some export to Live (Koala on iOS), but nothing checks whether you understood what you did.
+- **DAWs** (Ableton Live and others) do everything and teach nothing. Most beginners quit in the first week.
+- **Courses** in India cost a lot per month, and free tutorials give no feedback.
+
+### What CCD School does differently
+1. **Every lesson ends in your track.** A lesson teaches one idea, you play it on the instrument, and "use this line" makes it a layer of your track. You finish with music, not a score.
+2. **A real instrument, not a toy.** The engine is built the way professional plugins are built: band-limited oscillators, oversampling, zero-delay-feedback filters, sample-accurate timing. The bar is to sound and play as well as top commercial instruments. That is a target we test against, not a claim yet (see Gaps).
+3. **Checked in your own Ableton Set.** Upload your `.als` and the app reads it: tempo, tracks, devices (even inside racks), sends, sidechain, automation. Build a Set and Do it in Live tasks are checked against what you actually built. We know of no other learning tool that does this.
+4. **Connected to Live.** MIDI export now; Link tempo sync in the apps; stems and Live Set export planned. Learn here, finish in Live.
+5. **One app everywhere, low latency.** The same engine runs natively on phones (about 1 ms of engine latency on top of the audio hardware) and in any modern browser.
+6. **Sourced, not invented.** Lesson facts are checked against the Live 12 manual, rekordbox documentation and Ableton's own learning sites. Claims we could not verify were removed or reworded.
+7. **A stage at the end.** CCD runs real nights. Learner tracks can be played at CCD Episodes. No learning app has that.
+8. **Built for India and the world.** Phone first, works on mid-range Android, payments in INR (Razorpay) and globally (Stripe).
+
+### Market sources
+- [10 best beatmaking apps in 2026 (Melodics blog)](https://melodics.com/blog/10-best-beatmaking-apps-in-2026): Melodics describes itself as a learning app and not a DAW; Koala Sampler exports Ableton Live Sets on iOS; BandLab and Soundtrap add AI mastering and collaboration.
+- [Best beat making software 2026 (Tracklib)](https://www.tracklib.com/blog/best-beat-making-software-2026).
+- This is a positioning read, not a full competitor study. Check it again before quoting it externally.
+
+---
+
+## 4. Features
+
+### Learn
+- **171 lessons in three worlds.** Fundamentals 40 (sound, rhythm, melody, harmony). DJ 40 (rekordbox: library, beatmatching, EQ mixing, harmonic mixing, effects, stems, set building, DVS, the business). Producer 91 (synthesis 18, plus Live: first contact, two views, MIDI and audio, devices, mixing, performance, MIDI instruments, Live 12 power).
+- **Deep lessons (116 of 171).** A problem you can picture, the idea, something to move, scenario questions, exact settings, a "what went wrong" check, one recycled question, a summary. Quiz answers are shuffled per lesson and guarded by tests.
+- **Two modes.** Flow (in order, with hearts) and Free (everything open, no hearts).
+- **47 interactive sims** (synth, filter, envelope, drum pad, sidechain, EQ, mixer and more). They currently run on the browser's Web Audio; they move onto the CCD engine in build step 5.
+- **Placement test**, a world-aware start point, and a dashboard ("your next moves") that changes with your level.
+- **Retention:** FSRS spaced repetition, daily practice, XP, 12 ranks, streaks, leagues, daily challenge, leaderboard, gem shop.
+- **Reference:** glossary, wiki, signal flow, device explainers, keyboard shortcuts.
+- **Lesson hook (new design):** what you will learn, what it adds to your track, and the control you will use, named for the thing being learnt.
+
+### Practice
+- **Ear Gym** (`/gym`): EQ band, compression (on or off, then attack), tempo and groove. Difficulty goes up after 4 right in a row and down after 2 misses. A/B clips are loudness-matched and switch with no gap. Real recorded kick, clap, snare, hat and piano loop. 5-minute sessions, 3 a week with one free pass, no daily streak pressure.
+- **Older ear training** (`/train`) and listening demos built from real and measured AI clips.
+
+### Make: Studio, the instrument
+- **8 layers per track:** drums, hats, bass, chords, lead, fx. Drums and bass play on the CCD engine today; chords and lead play on the bass synth until their instruments land (step 3).
+- **Ways to play:** steps (a lane per sound, 8 steps a page), keys (black keys between), pads (a 16-pad drum rack with a ripple on hit; bass on an A minor scale grid with roots lit). Each layer type gets its own fourth surface in step 3: glide strip, circle sequencer, chord pads, XY, rolls, riser.
+- **Shape:** one knob bank switch per layer (sound, eq, fx, mix) with 4 knobs, plus mute and solo. Every layer carries its own mix: level, pan, send and duck.
+- **Record:** a 1-bar count-in, play loops the take, rec again overdubs, snap to 1/16, 1/32 or off, one take is one undo step, notes land where your finger touched (touch time is compensated).
+- **Export:** the track as a MIDI file for Live.
+- **Track format v2:** up to 8 layers of note events. Older v1 tracks migrate automatically, and lessons keep working through a v1 view.
+
+### Bridge to Ableton Live
+- **Live Set reader:** reads `.als` files in memory, never stores or changes them. Tested on eight real Sets from Live 12.1 to 12.3.
+- **Build a Set** (`/build`): 14 stages in the order a track comes together, from tempo to limiter, each checked in your Set, with XP once per stage.
+- **Do it in Live:** 27 lessons end with a job in Live, checked when you upload your Set.
+- **Check my Set** (`/link`): a readable summary plus four mixing missions.
+- **Device Atlas** (`/atlas`, 67 stock devices with edition), **Plugin Guide** (`/plugins`, 13 jobs, stock first), **Setup** (`/setup`, 11 steps).
+- **First Beat** (`/beat`): a 16-step beat maker with swing and MIDI export.
+- **Ableton Link** in the phone and Mac apps: the engine follows the session's tempo and lands its loop on the session's bars.
+
+### DJ
+- 40 deep DJ lessons and a DJ screen. Both decks will run through engine strips, with your own track on deck A (step 6).
+
+### Accounts, money, app
+- Sign-in (email and password, Google optional) with NextAuth; progress saved to Postgres on Supabase (India region) behind a limited database role.
+- Free and Pro gating (first 3 lessons of each path free), switchable by admin.
+- Stripe (global) and Razorpay (India, UPI) subscriptions, signature-checked webhooks.
+- PWA with offline service worker, web push streak reminders, AI beat coach (static fallback without a key), analytics events.
+
+---
+
+## 5. Design
+
+**Model 1, approved 3 Nov 2026.** One family of hardware-style instruments with a single look across learn, studio, DJ, practice and profile.
+- Screens are deep glass with an engraved seam; pads sit in one recessed tray, matte silicone.
+- Light means something: the selected pad lights from behind; a dim glow only points at something (today's pick, the playing step, root notes). Knobs and faders stay clean, with no light rings or meters on them.
+- Labels are engraved, copy is plain and lowercase in the UI, every screen is full height, light and dark both designed.
+- 44 final boards cover learn, lesson steps, studio for all 6 layer types and their surfaces, mix (stage, clash and fix, compare, faders), light studio, DJ, practice, library, you, first run, sign in, menu, moments and tablet.
+- Design canvas: https://claude.ai/code/artifact/36c4ce2a-9660-4375-a101-a41ac0edc49a. Sources and screenshots: `artifacts/ccd-school/design/`.
+
+---
+
+## 6. Decisions and why we made them
+
+| Decision | Why | What we turned down |
 |---|---|---|
-| **Fundamentals** | learningmusic.ableton.com | 40 missions — sound, rhythm, melody, harmony, music tech |
-| **DJ World** | Pioneer DJ rekordbox 6.0.0 Manual | 40 missions — setup, library, the mix, performance, mastery |
-| **Producer** | Ableton Live 12 Reference Manual | 73 missions — first contact, sound & MIDI, the mix, performance, advanced, synthesis |
-
-Every mission has two complete learning formats:
-- **Flow Mode** (🌊): Duolingo-style — hook → concept screens with visuals → interactive sim → quiz → summary. Sequential gating, hearts on wrong answers.
-- **Free Mode** (🔓): Scrolling explainer + sim + Normal/Hard quiz. All missions open from day one.
-
----
-
-## Tech Stack
-
-```
-Framework       Next.js 15.3 (App Router, React 19)
-Styling         Tailwind CSS v4 (CSS-first, no config file)
-State           LearnModeContext + TanStack Query + localStorage + PostgreSQL (pg)
-Auth            next-auth v5 beta
-Payments        Stripe
-AI Coach        Kimi API (platform.moonshot.cn) via /api/beat-coach
-Audio           Web Audio API — no asset files
-Hosting         Vercel
-Package mgr     npm
-```
+| **One Rust sound engine for every platform** | Same sound and timing on web, iPhone and Android. Rust gives C-level speed with no garbage collector, safe real-time code (no allocation or locks in the audio callback) and compiles to both native and WebAssembly. | Separate engines per platform (they drift); Web Audio nodes only (not sample-accurate, varies by browser, no oversampling). |
+| **Build the DSP ourselves, the way pro plugins do** | Quality comes from the maths: band-limited oscillators, 2x oversampling around anything nonlinear, zero-delay-feedback filters, a resolved ladder filter. Study references: Surge XT and Vital (GPL, study only), Airwindows (MIT), chowdsp. | Shipping GPL synth code (would force the whole app open); a black-box third-party engine. |
+| **Fixed 1 ms engine latency, cancelled by the sequencer** | Oversampling filters add delay. Keeping it fixed and running the sequencer ahead by the same amount (like DAW delay compensation) means sequenced notes land exactly on the beat. Played notes are placed at the moment the finger touched. | Variable latency per path (timing jitter, which was measured and fixed). |
+| **WebAssembly in an AudioWorklet on the web** | Runs the real engine on the browser's audio thread at full speed. One 112 KB file. | Main-thread audio (glitches under load). |
+| **Tauri 2 for the phone apps, not Capacitor** | The app core is Rust, so the engine runs in the same process with no Swift or Kotlin bridge. Android uses AAudio low-latency exclusive mode; iOS uses RemoteIO with a 64-frame buffer. | Capacitor (a JavaScript bridge in the audio path); fully native apps (three codebases). |
+| **The web app is the one source of every screen** | Phones open the web app; only sound is native. Anything finished on the web is finished on phones. Content changes ship without app store reviews. | Separate phone screens that fall behind. |
+| **Web first, phones paused** | The app is not finished, and phone work also waits on outside steps (Apple enrolment, Ableton's licence reply). Finishing the one source first is the fastest path to everything. | Building phone polish on unfinished screens. |
+| **LinkKit on iOS, open-source Link on Android (unofficial APK)** | LinkKit is Ableton's free iOS SDK and allowed in the App Store. Open-source Link is GPL, fine for test builds. A Play Store release waits for Ableton's proprietary licence (requested 3 Nov). | Shipping GPL code in a store app; dropping Link. |
+| **No Link inside the browser** | Browsers cannot send the network traffic Link uses. Browser sync will use MIDI clock from Live (Chrome, Edge); real Link lives in the Mac and phone apps. | A helper app every web user must install. |
+| **Generated parameter types** | Parameter names, ranges and curves are defined once in Rust and generated into TypeScript. A test fails if they drift. | Hand-kept lists in two languages. |
+| **Track v2 with a v1 view** | Studio needed note events and 8 layers; lessons, Today and DJ use the old shape. A bridge let us change the format without breaking 171 lessons. | A big-bang rewrite of every consumer. |
+| **Synthesised drums for now, samples later** | Synthesis needs no licences and sounds clean. Real kits need recording or licensing: an open decision (commission CCD kits, license a library, or both). | Unlicensed samples. |
+| **Lessons sourced from official manuals** | Trust. Every Live and rekordbox claim was checked; unverifiable ones were removed. | Plausible but unchecked copy. |
+| **Read the learner's Live Set, never store it** | Proof of real work in real Live, with privacy: the file is read in memory and dropped. | Quiz-only progress; uploading user projects to a server. |
+| **Standalone app at learn.catscandance.com, linked to CCD** | Least work before the pilot; moving into the CCD platform stays possible after it (PRD option c). | Merging into the CCD site now. |
+| **Both payment rails** | A global product with an Indian home: Razorpay for UPI and INR, Stripe for the rest. | One provider. |
+| **No AI composing graded work** | The point is that learners make the music. AI helps where it teaches (a few measured listening clips, a coach), never instead of the learner. | Generated tracks passed off as learner work. |
+| **Measure, then listen** | Every sound claim is measured (spectra, aliasing, timing, CPU). Final quality calls need human ears and blind A/B against Live. | Calling it pro-grade before anyone has listened. |
 
 ---
 
-## Quick Start
+## 7. Technical capabilities
 
-```bash
-git clone https://github.com/paramminhas5/Ableton-Final-Next.git
-cd Ableton-Final-Next/artifacts/ccd-school
-npm install
-cp .env.example .env.local   # fill in required vars
-npm run dev                  # → http://localhost:3000
+### Architecture
+```mermaid
+flowchart LR
+  UI["React app (Next.js 15)<br/>every screen, one source"] --> Bridge["src/engine<br/>typed bridge"]
+  Bridge -->|browser| WASM["AudioWorklet<br/>engine as WebAssembly"]
+  Bridge -->|phone or Mac app| Native["Tauri 2 core<br/>engine as native Rust"]
+  Native --> AA["Android: AAudio"]
+  Native --> RIO["iOS: RemoteIO"]
+  Native --> CPAL["Mac: Core Audio (cpal)"]
+  Native --> Link["Ableton Link<br/>LinkKit on iOS"]
+  WASM --> Engine["CCD engine (Rust)"]
+  Native --> Engine
 ```
 
-### Required `.env.local`
+### The engine (`engine/`)
+- **Clock and sequencer:** sample-accurate; per-sample loop position; count-in; plays ahead by its own latency so the beat is exact; follows Link tempo and bar position when Link is on.
+- **Commands in, events out:** lock-free single-producer rings (8,192 commands, 4,096 events); no allocation in the audio callback; one C interface shared by WebAssembly and native builds.
+- **Instruments:** 16-pad synthesised drum rack (kick, snare, clap, rim, hats with choke, shaker, ride, three toms, crash, two percs, fx, reverse) with tune, decay, drive and level per pad; mono bass synth with PolyBLEP saw and pulse at 2x oversampling, sub, drift, legato glide, ADSR and a 4-pole ladder with resolved feedback and soft clipping.
+- **Channel strip per layer:** low and high shelves, mid bell, cut filter (zero-delay-feedback designs), oversampled drive with latency-matched bypass, bit crush, tone, echo send, duck (sidechain), equal-power pan, fader with 0 dB at 75%.
+- **Returns:** 8-line FDN reverb (Hadamard), ping-pong echo.
+- **Oversampling:** 49-tap Blackman-Harris half-band filters, whole-sample latency, constant across every path.
+- **Measured:** about 1.8 ms from touch to engine in the browser; a touch-to-sound estimate of about 14 ms in headless Chrome (128-frame buffer). Worst case of 8 busy layers on the cloud test machine: about 16% of one core native and about 21% as WebAssembly.
+- **Tests:** 36 Rust tests, including timing at any buffer size, a note placed at touch time, count-in, duck depth and heavy load. An offline `render` tool plays MIDI through the engine for A/B comparisons.
 
-```env
-DATABASE_URL=postgresql://...
-NEXTAUTH_SECRET=your-secret
-NEXTAUTH_URL=http://localhost:3000
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+### The web app (`artifacts/ccd-school/`)
+- Next.js 15 (App Router), React 19, TypeScript, Tailwind v4.
+- Postgres on Supabase via `pg`, NextAuth v5, Stripe, Razorpay, PostHog, Vercel.
+- 20 test files with about 199 unit tests (theory, timing, schema migration, the Live Set parser, checks, gym, payments), plus browser scripts: journeys (10 journeys, 93 checks), smoke (every page on phone and laptop), a full lesson crawl and accessibility checks. Journeys and smoke run in Chromium, WebKit and Firefox.
 
-# Optional — Beat Coach AI. Without this it degrades gracefully.
-KIMI_API_KEY=your-moonshot-key
-```
-
-Get a Kimi API key at [platform.moonshot.cn](https://platform.moonshot.cn).
+### The phone and Mac shell (`mobile/`)
+- Tauri 2. Opens the deployed web app; the native engine starts on the first touch.
+- Android: AAudio low-latency exclusive stream, two-burst buffer, multicast lock for Link, screen kept on.
+- iOS: RemoteIO with a 64-frame buffer request, playback session, LinkKit settings screen.
+- Reports platform, sample rate, buffer, output latency and CPU load to the engine lab (`/lab/engine`), which includes a microphone latency test.
 
 ---
 
-## Project Structure
+## 8. Gaps, honestly
+
+**Sound and feel**
+- Nobody has listened critically yet. Every sound check so far is a measurement. Blind A/B against Live's instruments has not been done, so "as good as the best" is a target, not a result.
+- Chords and lead play on the mono bass synth. There is no polyphonic synth, sampler, multisampled kit or wavetable oscillator yet.
+- No velocity from how hard you hit, no pressure, no MPE, no MIDI controller input yet.
+
+**Studio**
+- Mix mode (stage, faders, clash and fix, compare) is not built (next step).
+- The fourth surface for each layer type, the chord, lead, hats and fx instruments are not built (step 3).
+- Export is MIDI only. Stems and a Live Set (`.als`) export are not built.
+
+**Lessons and app**
+- The lessons, sims, Today, practice, library, profile, onboarding and DJ still use the older look and the browser's Web Audio, not the engine.
+- 55 of 171 lessons are still in the short format.
+- Teaching quality has not been play-tested with beginners. A few rekordbox details and some Live shortcut claims are still unverified.
+- Accessibility: about 11 contrast issues remain on world pages. Audio drills need full keyboard and screen-reader paths.
+- English only.
+
+**Platforms and Live**
+- Real latency on iPhone and Android is not measured, and Link has not been tested against Live on a device.
+- Link on iPhone needs Apple's multicast permission, which only a paid Apple Developer Program account can request. The account is not enrolled yet.
+- Android Link in a Play Store app needs Ableton's proprietary licence (requested).
+- Browser tempo sync (MIDI clock) is not built.
+
+**Product and launch**
+- The new work is not merged; production still serves an older build on an older hosting project.
+- Missing keys: admin password, Google sign-in, payment keys, push email.
+- PRD features not built: track uploads with versions and comments, crews, listening room, peer reviews, mentors, showcase submissions.
+- Privacy items from the PRD (India DPDP: itemised consent, export and deletion, grievance contact) are not built.
+- The commercial-use terms of the AI clips (Magnific) need checking before lessons that use them are sold.
+
+---
+
+## 9. Improvements we recommend
+
+Ordered by impact for the effort, beyond what the plan already covers.
+
+1. **Sound in ten seconds.** Open first-time visitors straight onto the pads with a loop already playing, then teach. The PRD goal is sound in under a minute; we can beat it by a lot, and it is the best demo we have.
+2. **Make the track the spine of the course.** Every lesson's "use this line" adds a layer; every world ends with a finished, exportable track. Progress becomes "your tracks", not only XP.
+3. **A listening panel before any quality claim.** Five producers, blind A/B of our drums, bass and mix against Live's instruments on the same MIDI, scored per sound. Publish a short sound report. Fix what loses.
+4. **Record a CCD kit with the residents.** It settles the sound-sources decision, gives the app a sound nobody else has, and is great content for the 150k-follower page.
+5. **A mix coach built on measurements.** The engine's meters and clash detection can say exactly what is wrong ("bass and kick fight at 60 Hz, try the duck"). It is more trustworthy than a language model guessing, and it teaches.
+6. **Web MIDI in, MIDI clock in.** Chrome and Edge support both. Controllers and Live sync on the web for little work.
+7. **One audio path for everything.** Move the 47 sims and the Ear Gym onto the engine early, so "boosted" and "compressed" sound the same everywhere.
+8. **The CCD stage as the reward.** Build the showcase loop from the PRD (submit, crew review, picks played at Episodes), and put picked learners on the CCD artist pages. This is our unfair advantage.
+9. **Hindi copy and low-end phone mode.** A smaller audio buffer option, a battery saver, and Hindi lessons widen the audience in India.
+10. **Clean house.** Retire the duplicate older pages (`/train` versus `/gym`, the old lesson screens once the new player lands), close the missing keys, merge, and move `learn.catscandance.com` to the new project.
+11. **Decide the price.** What is free, what is Pro, and whether the pilot is free (the PRD says yes).
+
+---
+
+## 10. Roadmap
+
+Web first. Each step ends with tests passing and every touched screen checked at 390x844 in light and dark, in Chromium and WebKit.
+
+1. **Mix (next):** master glue compressor and true-peak limiter, metering and analysis, clash detection, compare, lower-latency oversampling; mix mode in Studio.
+2. **All 6 layer types:** polyphonic chords, lead, hats and fx instruments; every fourth surface.
+3. **Getting music out:** MIDI, stems and Live Set export; MIDI clock sync in the browser.
+4. **Lessons on the engine:** the new lesson player, try-it recording, add to track, unlocks; sims move onto the engine.
+5. **Every other screen:** Today, World, practice, library, profile, onboarding, sign in, menu, moments, DJ, light studio, tablet and desktop, PWA.
+6. **Final pass:** copy, accessibility, performance (8 layers on a mid-range phone browser), full test runs.
+7. **Then the phones:** Apple enrolment and the multicast request, device latency and Link tests, TestFlight and an Android release.
+
+---
+
+## 11. Repo map and how to run it
 
 ```
+engine/          Rust sound engine (DSP, instruments, sequencer, C interface, tests, render and type tools)
+engine-wasm/     WebAssembly build of the engine
+mobile/          Tauri 2 shell for iOS, Android and Mac (native audio, Ableton Link)
 artifacts/ccd-school/
-  app/
-    page.tsx                      ← Home (onboarding / dashboard)
-    dashboard/page.tsx            ← Unified progress dashboard ✦ NEW
-    learn/[slug]/page.tsx         ← Mode-aware lesson (CCD or Classic)
-    mission/[slug]/page.tsx       ← Redirects → /learn/[slug] ✦ NEW
-    world/[slug]/page.tsx         ← Duolingo path map
-    worlds/page.tsx               ← World chooser
-    missions/page.tsx             ← Browse/search all 153 missions
-    ... 20+ more routes
-  src/
-    components/
-      Header.tsx                  ← 3-item nav, 5-element strip ✦ REBUILT
-      DashboardClient.tsx         ← 8-section unified dashboard ✦ NEW
-      OnboardingFlow.tsx          ← 5-step onboarding (Step 0 = experience picker) ✦ UPDATED
-      LessonPlayer.tsx            ← CCD Duolingo engine (hook/concept/interact/quiz/summary)
-      LessonVisuals.tsx           ← 19 animated inline visual types
-      InlineClassicLesson.tsx     ← Explorer mode (Normal/Hard) ✦ UPDATED
-      LessonPageClient.tsx        ← Mode-aware lesson router ✦ UPDATED
-      BeatCoach.tsx               ← FloatingCoachButton + CoachPanel chat ✦ REBUILT
-      HeartsWall.tsx              ← Out-of-hearts blocker w/ gem-spend ✦ UPDATED
-      WorldPathClient.tsx         ← Duolingo winding path map
-      sims/                       ← 47 interactive simulators
-    content/
-      missions-foundations.ts     ← 40 Fundamentals missions
-      missions-foundations-screens.ts ← 40 × 8 CCD screen sets
-      missions-dj.ts              ← 40 DJ World missions ✦ NOW WITH SCREENS
-      missions-dj-screens.ts      ← 40 × 8 DJ CCD screen sets ✦ NEW
-      missions.ts                 ← 73 Producer missions ✦ NOW WITH SCREENS
-      missions-producer-screens.ts← 91 × 8 Producer CCD screen sets ✦ NEW
-      lesson-deep.ts              ← Deep content (beginner/advanced/quizHard)
-      types.ts                    ← All TypeScript types
-    lib/
-      mode.ts                     ← LearnModeContext (zero hydration flicker) ✦ REBUILT
-      progress.ts                 ← XP, streak, hearts, gems, spaced repetition
-      audio.ts                    ← Web Audio API engine
+  app/           routes (learn, studio, gym, build, link, atlas, dj, lab/engine and more)
+  src/engine/    typed bridge: browser (WebAssembly) and app (native) hosts, generated params
+  src/lib/       track v2, recorder, theory, Live Set reader, progress, payments
+  src/content/   lessons, Atlas, Build stages, Live tasks, glossary
+  design/        Model 1 boards, screenshots, plan, build notes, next-chat prompt
+  tests/         unit tests
+  scripts/       journeys, smoke, lesson crawl, accessibility, screenshots
 ```
 
----
+**Web app**
+```bash
+cd artifacts/ccd-school
+npm install --legacy-peer-deps
+npm run dev                 # http://localhost:3000, engine lab at /lab/engine
+npx tsc --noEmit && npx vitest run && npm run build
+```
 
-## Learning Modes
+**Engine**
+```bash
+cd engine && cargo test
+cd artifacts/ccd-school && npm run engine   # regenerate TypeScript params and the wasm
+```
 
-Two axes, both always-changeable:
-
-### Axis 1: Flow Mode vs Free Mode
-
-| | 🌊 Flow Mode | 🔓 Free Mode |
-|---|---|---|
-| Access | Sequential — unlock one at a time | All 153 lessons open immediately |
-| Hearts | 5 hearts; wrong answer costs ♥ | No hearts |
-| Format | Duolingo: hook → concept → sim → quiz → summary | Scrolling: explainer → sim → quiz |
-| Difficulty | Fixed (standard) | Normal or Hard (your choice per lesson) |
-
-Toggle lives in the Header (desktop right strip) and mobile drawer. Persists in localStorage with zero hydration flicker (React Context + inline `<head>` script).
-
-### Axis 2: Normal vs Hard (Classic only)
-
-| | Normal | Hard 🔥 |
-|---|---|---|
-| Hints | Shown | Hidden |
-| Questions | Standard `quiz` array | `quizHard` if available, else hints stripped |
-| Pass threshold | 50% | 70% |
-| Content | `beginner.what` paragraphs | `advanced.what` + `edgeCases` + `engineerNotes` |
+**Phone and Mac apps:** see `mobile/README.md`.
 
 ---
 
-## Concept Screen Visuals (`LessonVisuals.tsx`)
-
-19 animated SVG/HTML visual types for CCD concept screens — **now assigned to every concept screen across all 153 missions** ✦ UPDATED:
-
-`waveform` · `waveform-compare` · `frequency-bar` · `piano` · `piano-octave` · `eq-curve` · `amplitude-dial` · `bpm-grid` · `signal-chain` · `stereo-field` · `note-lengths` · `scale-steps` · `chord-stack` · `rhythm-dots` · `vinyl-platter` · `mixer-channel` · `camelot-wheel` · `waveform-zoom` · `headroom-meter`
-
-Plus `diagram` screen kind — custom SVG node-and-arrow diagrams with labelled nodes.
-
-**Data-driven props** ✦ NEW — visuals now accept content-specific configuration:
-- `BpmGrid` — accepts `bpm` + `label` props (shows actual lesson tempo, not hardcoded 120)
-- `ScaleSteps` — accepts `root` + `minor` + `label` props (builds any scale from any root, not always C major)
-- `InlineVisual` — passes all config props through via optional `visualProps` on concept screens
-
----
-
-## Routes
-
-| Route | Description |
-|---|---|
-| `/` | Home — onboarding (new users) or dashboard redirect (returning) |
-| `/dashboard` | **Unified progress hub** ✦ NEW |
-| `/learn/[slug]` | Mode-aware lesson — CCD or Classic at one URL |
-| `/mission/[slug]` | → 301 redirect to `/learn/[slug]` ✦ NEW |
-| `/world/[slug]` | Duolingo winding path map |
-| `/worlds` | Three worlds overview |
-| `/missions` | Browse + search all 153 missions |
-| `/train` | Ear training |
-| `/challenge` | Daily challenge |
-| `/review` | Spaced-repetition review session |
-| `/match` | Flashcard match game |
-| `/leaderboard` | Weekly XP leaderboard |
-| `/shop` | Gem shop (heart refills, streak shields) |
-| `/placement` | Placement test (skip-ahead) |
-| `/playground` | Device chain workbench |
-| `/signal-flow` | Animated signal routing |
-| `/devices` + `/device/[slug]` | Ableton device explorer |
-| `/glossary` | Music production glossary |
-| `/shortcuts` | Keyboard shortcut trainer |
-| `/profile` | XP, rank, trophies, badges |
-| `/login` | Auth (next-auth) |
-| `/upgrade` | Stripe PRO upgrade |
-| `/api/beat-coach` | AI coach (Kimi API) |
-| `/api/progress/sync` | Cloud sync (GET/POST) |
-
----
-
-## Gamification
-
-| Feature | How it works |
-|---|---|
-| **XP** | Earned on first completion of each mission |
-| **Hearts** | 5 hearts in Flow Mode; wrong answer costs ♥; refill 1/4h or spend 20 💎 |
-| **Streak** | Daily XP goal (50 XP); streak shield earned every 7 days |
-| **Gems** | Earned on completion; spend in gem shop |
-| **Rank** | 10+ ranks from Novice → CCD Master based on total XP |
-| **Badges** | Per-mission and per-chapter completion badges |
-| **Trophies** | Path → Chapter → World → CCD Master |
-| **Spaced repetition** | Lesson strength decays 10%/day; review queue surfaces weakest lessons |
-| **Leaderboard** | Weekly XP ranking with league tiers |
-| **Beat Coach** | Floating 🎧 button on every lesson — multi-turn Kimi AI chat |
-
----
-
-## Dashboard (`/dashboard`)
-
-The unified progress hub has 8 sections:
-
-1. **Hero Next Step** — Smart continue card. Finds the true next lesson by sorting completed missions by `.at` timestamp. Shows breadcrumb, XP reward, mode indicator, ▶ play button.
-2. **Today's Stats** — 5 stat cards: Streak · Daily XP · Hearts · Gems · Rank
-3. **My Worlds** — 3 world cards with progress bars and per-chapter completion pills (Ch1 100%, Ch2 45%...)
-4. **Skill Radar** — 5-axis SVG radar chart (Sound / Rhythm / Melody / Harmony / Tech) computed from Fundamentals chapter completion
-5. **Recent Badges** — Last 3 earned + "View all →" to profile
-6. **Review Queue** — Conditional; lessons with decayed strength shown as chips with colour-coded strength bars
-7. **Beat Coach** — Entry card opening the CoachPanel inline with dashboard context
-8. **Leaderboard Peek** — Top 3 weekly XP + current user rank, skeleton loading
-
----
-
-## Beat Coach AI
-
-A floating 🎧 button appears at the bottom-right of every lesson page. Clicking opens `CoachPanel` — a persistent multi-turn chat panel:
-
-- Posts to `/api/beat-coach` with `{ context, question }`
-- Receives `{ reply }` from the Kimi AI model
-- Message history persists for the session
-- Gracefully shows offline message if API key is missing
-- Also accessible from the Dashboard Beat Coach card
-
-**To activate:** set `KIMI_API_KEY` in `.env.local`. Get a key at [platform.moonshot.cn](https://platform.moonshot.cn).
-
----
-
-## CCD Screens Status
-
-All 153 missions have complete CCD (`screens[]`) data with visuals, varied exercise types, and contextual audio:
-
-| World | Missions | Screens | Visuals | Exercise types |
-|---|---|---|---|---|
-| Fundamentals | 40 | ✅ Complete | ✅ All 80 concept screens | ✅ match · type-answer · sequence · audio-id · MCQ |
-| DJ World | 40 | ✅ Complete | ✅ All 80 concept screens ✦ NEW | MCQ |
-| Producer (6 chapters) | 73 | ✅ Complete | ✅ All 182 concept screens ✦ NEW | MCQ |
-| **Total** | **153** | **✅ 100%** | **✅ 342 concept screens** | |
-
-Each mission: 7–8 screens — `hook → concept → concept → interact → quiz × 3 → summary`
-
-Exercise types used across the platform:
-- `quiz` (MCQ) — all worlds
-- `match` — tap pairs to connect terms to definitions (Fundamentals)
-- `type-answer` — free-text with fuzzy matching (Fundamentals)
-- `sequence` — arrange items in correct order (Fundamentals)
-- `audio-id` — listen and identify from 4 options (Fundamentals)
-
----
-
-## What Changed — June 2026 Overhaul (PR #18) ✦ LATEST
-
-### Bug Fixes
-- **Synth missions wired**: `SYNTHS_MISSIONS` was spread into `MISSIONS` without the screen-merge — all 22 synthesis missions showed "not converted to Duolingo format yet" even though 18 fully-authored screen sets existed in `missions-producer-screens.ts`. One-line fix in `missions.ts`. Synth chapter is now fully live.
-- **Onboarding placement path fixed**: Users who selected "Some Experience" → placement test had `onboardingDone` never set and `learnMode` never written. `PlacementTest` now receives an `onComplete` prop; `OnboardingFlow.handlePlacementComplete` calls `setOnboarding + setLearnMode` before routing.
-- **12 `sim:"none"` interact screens fixed**: DJ world had 9 and Producer had 3 interact screens whose prompts promised hands-on interaction ("Adjust buffer size — observe the trade-off") but rendered a blank placeholder. Each is now wired to a real sim: `buffer-sim`, `arrangement`, `device-chain`, `mixer`, `beatmatch-trainer`, `song-structure`, `waveform-visualizer`, etc.
-- **Quiz analytics fixed**: `QuizScreen` was logging `missionSlug: "unknown"` for every quiz answer. Now receives and logs the actual mission slug.
-
-### Duolingo-style Exercise Variety (Fundamentals)
-All 40 Fundamentals missions now use the full range of built-but-unused exercise types:
-- `match` — tap pairs (e.g. waveform shape → harmonic content, interval → semitone count, genre → BPM range)
-- `type-answer` — free text with fuzzy matching (e.g. "What does MIDI stand for?", "Target peak level?", "RT60 abbreviation?")
-- `sequence` — drag/tap to order items correctly (e.g. signal chain stages, note values longest→shortest, scale steps W/H pattern)
-- `audio-id` — hear a synthesised example, identify it from 4 options (e.g. "Which waveform?", "Major or minor chord?", "Is this resolved?")
-
-### Visuals — All Three Worlds
-Every concept screen across all 153 missions now has a contextual visual (previously ~85% were plain text):
-- **Fundamentals** (40 missions, 80 concept screens): all 19 visual types used, chosen by topic — `waveform-compare` for timbre, `frequency-bar` for spectrum, `amplitude-dial` for dynamics, `piano` for melody/MIDI, `scale-steps` for scales, `chord-stack` for harmony, `bpm-grid` for rhythm, `stereo-field` for mixing, etc.
-- **DJ World** (40 missions, 80 concept screens): `vinyl-platter` for culture/history, `mixer-channel` for EQ/faders, `camelot-wheel` for harmonic mixing, `waveform-zoom` for waveform reading, `bpm-grid` for beatmatching/tempo
-- **Producer** (73 missions, 182 concept screens): `waveform-compare` for oscillators/synthesis, `eq-curve` for filters/EQ, `amplitude-dial` for compressor/ADSR, `piano` for MIDI/scales, `headroom-meter` for levels/export
-
-### Data-Driven Visuals
-- `BpmGrid` now accepts `bpm` + `label` props — shows the lesson's actual tempo instead of always "120 BPM"
-- `ScaleSteps` now accepts `root` + `minor` + `label` props — builds the correct scale from any root note instead of always C major
-- `types.ts`: concept screen type extended with optional `visualProps: { bpm?, minor?, root?, scaleLabel?, signalNodes? }`
-
-### Contextual Audio
-14 new specific audio demos added to `ConceptAudio.tsx` — "Tap to hear an example" now plays something genuinely relevant:
-- `playMinorScale` — A natural minor ascending
-- `playPentatonicScale` — C major pentatonic
-- `playMajorMinorCompare` — C major → C minor chord (one semitone difference)
-- `playDominantResolution` — G7 → C major (V7→I cadence, strongest resolution)
-- `playIVVI` — Full I–IV–V–I progression in C major
-- `playEqBright` / `playFilterSweep` — sawtooth with LP filter sweeping open/closed
-- `playADSRDemo` — slow pad vs fast pluck (ADSR comparison back-to-back)
-- `playLFOVibrato` — sine wave with LFO pitch modulation
-- `playDelayDemo` — note with four decaying echo repeats
-- `playStereoWide` — notes panning across the stereo field
-- `playFullDrumLoop` — kick + snare + hi-hat at 128 BPM
-- `playHarmonicMix` — two Camelot-adjacent chords (C major → G major, 8B → 9B)
-- `playSwingGroove` — straight 8ths vs swung 8ths played back-to-back
-
----
-
-## What Changed — May 2026 Overhaul (PR #8)
-
-### Phase 1 — Foundation Fixes
-- `LearnModeContext` (React Context): replaces scattered `useEffect` localStorage reads. Zero hydration flicker. Inline `<head>` script sets theme + mode before React renders.
-- 2-axis difficulty: CCD/Classic + Normal/Hard only. Dead `ModeToggle.tsx` (Beginner/Intermediate/Advanced) deleted.
-- `/mission/[slug]` → 301 redirect to `/learn/[slug]`. One canonical URL per lesson.
-- `InlineClassicLesson` Hard Mode: full `advanced` content, `quizHard`, mechanism, flow, walkthrough, proMoves, mistakes, related links.
-- Dashboard "continue" card: fixed to sort by `.at` timestamp.
-- Onboarding Step 0: "How much experience do you have?" — routes beginners direct, "Some Experience" to PlacementTest inline, "Experienced" to world pick with all chapters unlocked.
-
-### Phase 2 — Header Overhaul
-- **3 primary nav items** (was 4+9+marquee noise).
-- **5-element right strip**: Search · Hearts · XpStreak badge (with rank/XP/streak/gems popover) · Mode pill · Profile avatar.
-- `More ▾` dropdown: three clean sections — Practice / Reference / Account.
-- `ThemeSwitcher` moved to More → Account.
-- Marquee ticker → single 1px separator line.
-- Mobile drawer: compact stats row, sectioned nav, mode toggle.
-
-### Phase 3 — Unified Dashboard
-- New `/dashboard` route.
-- `DashboardClient.tsx`: 8-section progress hub (see Dashboard section above).
-
-### Phase 4 — Lesson Flow Polish
-- `LessonPlayer`: `sessionStorage` mid-lesson persistence (screen index + score survive refresh). Mode indicator bar. No-screens returns `null` cleanly.
-- `HeartsWall`: 💎 Spend 20 gems button wired to `spendGems` + `refillHeart`. Proper `Xh MM:SS` countdown.
-- `LessonPageClient`: `CcdFallbackBanner` redesign — informative, not broken-looking.
-
-### Phase 6 — All CCD Screens
-- `missions-dj-screens.ts`: 40 DJ missions × 8 screens. Visuals: `vinyl-platter`, `camelot-wheel`, `waveform-zoom`, `mixer-channel`, `bpm-grid`. Sims: `beatmatch-trainer`, `harmonic-mix-wheel`, `loop-roll`, `hot-cue-drill`.
-- `missions-producer-screens.ts`: 91 Producer missions × 8 screens across all 6 chapters including the full Synthesis chapter.
-
-### Phase 7 — AI Coach Rebuilt
-- `FloatingCoachButton`: always-visible 🎧 on every lesson.
-- `CoachPanel`: multi-turn chat (scrollable, Enter key, auto-scroll to latest).
-- Wired to Dashboard Beat Coach card.
-- Legacy `BeatCoach` + `useBeatCoach` kept for backward compat.
-
----
-
-## Next Steps
-
-### 🔥 P0 — Ship Before Any Marketing
-
-1. **Set `KIMI_API_KEY` in production env** — Beat Coach is wired and ready; just needs the key. Get at [platform.moonshot.cn](https://platform.moonshot.cn). Strongly differentiated feature.
-
-2. **Add `lesson-deep.ts` content for DJ + Producer** — `lesson-deep-foundations.ts` and `lesson-deep-dj.ts` exist with partial content. The `advanced.what`, `proMoves`, `walkthrough`, `mistakes` fields power Hard Mode in Classic lessons AND the "Deep Dive" section. Complete the DJ World entries first (the DJ lessons are already widely used).
-
-3. **`WorldPathClient` gating in CCD mode** — World page and Missions page currently show all missions as clickable even in CCD mode. Only `PathPageClient` enforces sequential gating. Users can bypass CCD gating by going to `/worlds` or `/missions`. Add CCD lock icons and disabled states to `WorldPageClient` and `MissionsPageClient`.
-
-4. **Test cloud sync end-to-end** — `CloudSyncEffect` in `ClientProviders.tsx` syncs to `/api/progress/sync` (PostgreSQL). Verify the GET (initial load) and POST (on change) work correctly with a real `DATABASE_URL`. The merge strategy (`mergeProgress`) is solid — just needs a live DB to test against.
-
-### ⚡ P1 — High Impact UX
-
-5. **`/dashboard` as the default home for returning users** — Currently `/` shows Landing or Dashboard based on `hasMissions`. Change so any user with `onboardingDone === true` is immediately redirected to `/dashboard`. Landing page stays at `/welcome` or `/about`.
-
-6. **Lesson completion → Dashboard redirect** — After completing a lesson, `handleComplete` in `LessonPageClient` currently redirects to `/world/[slug]` after 2.2s. Change to `/dashboard` so users see their updated stats, badge, and next lesson immediately.
-
-7. ~~**Audio examples in concept screens**~~ ✅ Done in PR #18 — 14 contextual demos added; every concept screen with a visual plays a relevant audio example.
-
-8. **PlacementTest result → chapter unlock** — `setPlacement(chapter)` writes `unlockedChapter` to progress, but `WorldPathClient` and `WorldPageClient` don't yet read `unlockedChapter` to skip locked chapters. Wire the output to actually unlock the recommended starting chapter.
-
-9. **Exercise variety for DJ + Producer worlds** — PR #18 added `match`, `type-answer`, `sequence`, `audio-id` to Fundamentals only. Apply the same treatment to DJ and Producer missions: convert some MCQs to richer exercise types for variety. The engine already supports them fully — it's a content authoring pass.
-
-### 🌟 P2 — "Best on the Web" Features
-
-10. **Offline PWA** — `public/manifest.json` exists. Add a service worker (`next-pwa` or custom) to cache lesson pages and simulator bundles. Producers should learn on a plane.
-
-11. **Web MIDI input** — Wire `navigator.requestMIDIAccess()` to `PianoRollSim`, `BeatBuilderSim`, `DrumPadSim`, and `ChordStackerSim`. Let users plug in a MIDI controller. Massive differentiator for a production-education tool.
-
-12. **Share cards after trophies** — `ShareCard.tsx` exists. Surface it after path/chapter/world trophy completion with a branded "I just completed DJ World on CCD.SCHOOL" card. Add social share buttons.
-
-13. **Source citations on lesson pages** — Every mission has `source` fields in `paths.ts` (e.g. `"rekordbox 6.0.0 Instruction Manual — p.77"`). Display them at the bottom of concept screens and Classic lesson pages.
-
-14. **Public profile at `/u/[username]`** — `PublicProfileClient.tsx` exists. Wire a "Share my profile" button on `/profile` that generates a unique public URL showing XP, rank, completed worlds, and badges.
-
-15. **Kimi AI context enrichment** — The `/api/beat-coach` route receives a `context` string. Enrich it per-lesson with: world slug, chapter name, lesson title, current mode (CCD/Classic), and hard mode status. Responses will be more targeted.
-
----
-
-## Content Sources
-
-| World | Primary Source |
-|---|---|
-| Fundamentals | [learningmusic.ableton.com](https://learningmusic.ableton.com) |
-| DJ World | Pioneer DJ rekordbox 6.0.0 Instruction Manual |
-| Producer (instruments/effects/workflow) | Ableton Live 12 Reference Manual |
-| Producer (Synthesis chapter) | [learningsynths.ableton.com](https://learningsynths.ableton.com) |
-
----
-
-## License
-
-MIT — see [LICENSE](./LICENSE).
-
----
-
-*Built for producers and DJs who learn by doing.*
+## 12. Where the detail lives
+
+In the repo (`artifacts/ccd-school/design/`):
+- `instrument-plan.md`: the full plan, platform decisions, Link licence, and the definition of done for the web app.
+- `redesign-notes.md`: the design system, every design round and the build log.
+- `next-chat-prompt.md`: what the next build session does.
+- `engine/SOUND.md`: how professional instruments are made and the engine's sound roadmap.
+
+In the CatsCanDance project, start with `ccd/00_README.md` (index of every doc) and `ccd/history.md` (timeline). The PRD summary is `ccd/school-prd.md`.
