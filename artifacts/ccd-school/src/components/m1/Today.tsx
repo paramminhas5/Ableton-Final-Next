@@ -6,10 +6,10 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
-import { useTrack, offerFor } from "@/lib/track";
-import { playTrack, stopTrack } from "@/lib/track-engine";
+import { useTrack, offerFor, previewLayer } from "@/lib/track";
+import { audition, playTrack, stopTrack } from "@/lib/track-engine";
 import { nextStep, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { Icon, Key, Meter, Screen, Silk } from "./controls";
+import { Icon, Key, Meter, Screen, Silk, Switch } from "./controls";
 import { CatMark, CAT_SRC, Lanes, WeekDots, WorldDial } from "./shell";
 
 const WORLD_KEY = "ccd.world";
@@ -18,6 +18,7 @@ export function Today() {
   const { progress } = useProgress();
   const { track } = useTrack();
   const [world, setWorld] = useState<WorldId>("fundamentals");
+  const [view, setView] = useState<"world" | "track">("world");
   const [playing, setPlaying] = useState(false);
   const [step, setStep] = useState(-1);
   const trackRef = useRef(track);
@@ -45,7 +46,7 @@ export function Today() {
 
   const hear = async () => {
     if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }
-    if (!layers) return;
+    if (!layers) { if (offer) audition(previewLayer(track, offer)); return; }
     setPlaying(true);
     await playTrack(() => trackRef.current, s => setStep(s));
   };
@@ -56,7 +57,6 @@ export function Today() {
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <CatMark />
           <span className="m1-t15" style={{ fontWeight: 600 }}>ccd school</span>
-          <span className="m1-tag">model 1</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <WeekDots days={progress.streakDays} />
@@ -64,7 +64,30 @@ export function Today() {
         </div>
       </header>
 
-      <Screen style={{ marginTop: 6 }}>
+      <div style={{ marginTop: 6 }}>
+        <Switch label="what the screen shows" value={view} onChange={id => setView(id as "world" | "track")} options={[{ id: "world", label: "world" }, { id: "track", label: "your track" }]} />
+      </div>
+
+      {view === "world" ? (
+        <Screen style={{ marginTop: 8 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={CAT_SRC} alt="" style={{ position: "absolute", right: 16, top: 14, width: 66 }} />
+          <div className="m1-ss">{WORLD_LABEL[world]} world</div>
+          <div className="m1-t36" style={{ marginTop: 8 }}>{counts.done}<span style={{ fontSize: 18, color: "var(--disp-sub)" }}> of {counts.total} lessons</span></div>
+          <div style={{ marginTop: 14, display: "flex", gap: 3 }} role="img" aria-label={`${counts.done} of ${counts.total} lessons done`}>
+            {Array.from({ length: 24 }, (_, i) => (
+              <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < Math.round((counts.done / Math.max(1, counts.total)) * 24) ? "#5EEAC1" : "#232326" }} />
+            ))}
+          </div>
+          {next && mission && (
+            <div className="m1-ss" style={{ marginTop: 12 }}>
+              up next · <span style={{ color: "var(--disp-ink)" }}>{next.pathTitle.toLowerCase()}</span>
+            </div>
+          )}
+          <div className="m1-ss" style={{ marginTop: 4 }}>{layers ? `your track has ${layers} ${layers === 1 ? "layer" : "layers"}` : "every lesson adds a layer to your track"}</div>
+        </Screen>
+      ) : (
+      <Screen style={{ marginTop: 8 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={CAT_SRC} alt="" className={playing ? "m1-dancing" : ""} style={{ position: "absolute", right: 16, top: 14, width: layers ? 66 : 92 }} />
         <div className="m1-ss">your track</div>
@@ -93,6 +116,7 @@ export function Today() {
           </div>
         )}
       </Screen>
+      )}
 
       {next && mission && (
         <Link href={`/learn/${next.slug}`} className="m1-m is-wide" style={{ marginTop: 14, height: 108, justifyContent: "flex-start", gap: 14, padding: "0 12px" }}>
@@ -117,7 +141,7 @@ export function Today() {
           <Meter segments={9} lit={lit} />
           <span className="m1-ml">today</span>
         </div>
-        <Key wide label={playing ? "stop" : "hear"} onClick={hear} disabled={!layers} ariaLabel={playing ? "Stop your track" : "Hear your track"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
+        <Key wide label={playing ? "stop" : layers ? "hear track" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your track" : layers ? "Hear your track" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
           <Icon name={playing ? "stop" : "hear"} />
         </Key>
       </div>

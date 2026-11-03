@@ -694,7 +694,7 @@ export function Header() {
     ? user.name.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()
     : null;
 
-  if (pathname === "/dashboard" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
+  if (pathname === "/dashboard" || pathname === "/worlds" || pathname === "/learn" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
     return (
       <>
         <StreakWarningBanner />
@@ -704,12 +704,11 @@ export function Header() {
   }
 
   return (
-    <header role="banner" className="m1-page" style={{ paddingBottom: 0, maxWidth: 1180 }}>
+    <header role="banner" className="m1-page" style={{ paddingBottom: 0, maxWidth: 1180, width: "100%" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 44, gap: 10 }}>
         <Link href="/dashboard" aria-label="ccd school home" style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--ink)", textDecoration: "none", minHeight: 0 }}>
           <CatMark />
           <span className="m1-t15" style={{ fontWeight: 600, whiteSpace: "nowrap" }}>ccd school</span>
-          <span className="hidden sm:inline"><span className="m1-tag">model 1</span></span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span className="hidden sm:flex"><WeekDots days={progress.streakDays} /></span>

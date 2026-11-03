@@ -3,7 +3,7 @@ import "./globals.css";
 import { ClientProviders } from "@/components/ClientProviders";
 import { Header } from "@/components/Header";
 import { Analytics } from "@vercel/analytics/next";
-import { CcdFooterLinks } from "@/components/CcdSuite";
+import { Footer } from "@/components/m1/Footer";
 import { CCD_URL, SITE_URL } from "@/lib/ccd";
 
 // FAL AI generated OG image — brutalist three-zone music poster (v2)
@@ -189,12 +189,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen flex flex-col text-ink">
             <Header />
             <main id="main-content" className="flex-1">{children}</main>
-            {/* Footer hidden on mobile — bottom nav takes its place */}
-            <footer className="hidden md:flex px-6 py-5 items-center justify-between gap-4 f-lbl">
-              <span className="flex items-center gap-2"><span className="text-ink text-[15px] font-medium">ccd</span><span className="f-tag">school</span></span>
-              <CcdFooterLinks />
-              <span>a <a href={CCD_URL} className="underline underline-offset-2 hover:text-ink">cats can dance</a> project</span>
-            </footer>
+            <Footer />
           </div>
         </ClientProviders>
         <Analytics />

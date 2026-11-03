@@ -11,12 +11,12 @@ import { useLearnMode } from "@/lib/mode";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition } from "@/lib/track-engine";
 import { worldSteps, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { Dash, GoPill, Icon, Key, Pad, Screen, Silk, WORLD_LED } from "./controls";
+import { Dash, GoPill, Icon, Key, Pad, Screen, Silk, Switch, WORLD_LED } from "./controls";
 import { DuoFilters } from "./Today";
 
 export function World({ world }: { world: WorldId }) {
   const { progress } = useProgress();
-  const { learnMode } = useLearnMode();
+  const { learnMode, setLearnMode } = useLearnMode();
   const { track } = useTrack();
   const done = progress.completedMissions;
   const steps = worldSteps(world);
@@ -44,6 +44,12 @@ export function World({ world }: { world: WorldId }) {
         </div>
         <Dash color={led} />
       </header>
+
+      <div style={{ marginTop: 6 }}>
+        <Switch label="how you learn" value={flow ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
+          options={[{ id: "flow", label: "flow" }, { id: "free", label: "free" }]} />
+        <div className="m1-t11" style={{ marginTop: 6, textAlign: "center" }}>{flow ? "in order, one step opens the next" : "every step is open, go where you like"}</div>
+      </div>
 
       {cur && mission && (
         <Screen style={{ marginTop: 10 }}>

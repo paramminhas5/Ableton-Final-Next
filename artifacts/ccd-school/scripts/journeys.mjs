@@ -139,11 +139,7 @@ console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
 {
   const { ctx, p, errs } = await fresh();
   await p.goto(BASE + "/");
-  await p.locator('button:visible:has-text("START LEARNING FREE")').first().click();
-  await p.locator('button:has-text("Total Beginner")').first().click();
-  await p.locator('button:has-text("Fundamentals")').first().click();
-  await p.locator('button:has-text("FLOW MODE")').first().click();
-  await p.locator('button:visible:has-text("START FIRST LESSON")').first().click();
+  await p.locator('button:visible:has-text("start learning")').first().click();
   await p.waitForURL(/dashboard|learn/, { timeout: 8000 });
   await p.waitForSelector("text=What Is Sound?");
   ok(true, "onboarding lands on a first lesson: What Is Sound?");
@@ -329,9 +325,8 @@ console.log("\nJ4 Experienced: placement test skips ahead only when earned");
   for (const [label, right, expect] of [["strong", true, /CHAPTER 3/], ["weak", false, /CHAPTER 1/]]) {
     const { ctx, p, errs } = await fresh();
     await p.goto(BASE + "/");
-    await p.locator('button:visible:has-text("START LEARNING FREE")').first().click();
-    await p.locator('button:has-text("Experienced")').first().click();
-    await p.locator('button:has-text("Producer")').first().click();
+    await p.locator('button:has-text("make tracks")').first().click();
+    await p.locator('button:visible:has-text("find my level")').first().click();
     await p.locator('button:visible:has-text("START TEST")').first().click();
     for (const q of qs) {
       await p.waitForSelector(`text=${q.q.slice(0, 30)}`);
@@ -363,14 +358,11 @@ console.log("\nJ4 Experienced: placement test skips ahead only when earned");
 // ───────────────────────── J7: a DJ and a Fundamentals learner each get their own path
 console.log("\nJ7 Other worlds: DJ and Fundamentals");
 {
-  for (const [world, chip, expectWorld] of [["DJ", "DJ", "dj"], ["Fundamentals", "Fundamentals", "fundamentals"]]) {
+  for (const [world, chip, expectWorld] of [["DJ", "dj:", "dj"], ["Fundamentals", "the basics:", "fundamentals"]]) {
     const { ctx, p, errs } = await fresh();
     await p.goto(BASE + "/");
-    await p.locator('button:visible:has-text("START LEARNING FREE")').first().click();
-    await p.locator('button:has-text("Total Beginner")').first().click();
-    await p.locator(`button:has-text("${chip}")`).first().click();
-    await p.locator('button:has-text("FLOW MODE")').first().click();
-    await p.locator('button:visible:has-text("START FIRST LESSON")').first().click();
+    await p.locator(`button[aria-label^="${chip}"]`).first().click();
+    await p.locator('button:visible:has-text("start learning")').first().click();
     await p.waitForURL(/dashboard|learn/, { timeout: 8000 });
     await p.waitForTimeout(1500);
     const pr = await progressOf(p);

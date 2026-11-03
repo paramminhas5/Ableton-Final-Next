@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LearnPageClient } from "@/components/LearnPageClient";
+import { Worlds } from "@/components/m1/Worlds";
 
 export const metadata: Metadata = {
   title: "Paths — CCD.SCHOOL",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function LearnPage() {
-  return <LearnPageClient />;
+  return <Worlds />;
 }

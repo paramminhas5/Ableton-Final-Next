@@ -1,0 +1,16 @@
+import { chromium, webkit } from "playwright";
+const [theme = "dark", bn = "chromium", out = "/tmp/claude-0/home"] = process.argv.slice(2);
+import { mkdirSync } from "node:fs"; mkdirSync(out, { recursive: true });
+const b = await (bn === "webkit" ? webkit : chromium).launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, colorScheme: theme });
+const p = await ctx.newPage();
+p.on("pageerror", e => console.log("pageerror", e.message.slice(0, 200)));
+await p.addInitScript(th => localStorage.setItem("ccd.theme", th), theme);
+await p.goto("http://localhost:3000/", { waitUntil: "networkidle", timeout: 120000 });
+await p.waitForTimeout(800);
+await p.screenshot({ path: `${out}/${bn}-${theme}-welcome.png` });
+await p.getByRole("button", { name: /^dj:/ }).click();
+await p.getByRole("button", { name: /Start learning/ }).click();
+await p.waitForURL(/\/learn\//, { timeout: 30000 });
+console.log("went to", p.url());
+await b.close();
