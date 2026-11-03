@@ -4,15 +4,25 @@
  * pattern, duck routing, mute and solo, tempo and loop length. Sends only what changed.
  */
 import { useEffect, useRef } from "react";
-import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, type Engine } from "@/engine";
-import { MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
+import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } from "@/engine";
+import { masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
 const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Sent = { inst: string; events: string; duck: string; params: Map<number, number> };
 
-export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: { bpm: number; loop: number }) {
+type Last = { bpm: number; loop: number; master?: number[] };
+
+export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last) {
+  const m = (last.master ??= []);
+  for (let i = 0; i < MASTER_PARAMS.length; i++) {
+    const v = masterOf(t, i);
+    if (m[i] !== v) {
+      engine.master(i, v);
+      m[i] = v;
+    }
+  }
   if (last.bpm !== t.bpm) {
     engine.tempo(t.bpm);
     last.bpm = t.bpm;
@@ -63,7 +73,7 @@ export function useEngineTrack(track: TrackV2) {
   const engine = getEngine();
   const started = useRef(false);
   const sent = useRef<Sent[]>([]);
-  const last = useRef({ bpm: 0, loop: 0 });
+  const last = useRef<Last>({ bpm: 0, loop: 0 });
   const latest = useRef(track);
   latest.current = track;
 

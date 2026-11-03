@@ -303,6 +303,8 @@ a.m1-m:active, button.m1-m:active { transform: translateY(3px); box-shadow: var(
 .m1-fcap { position: absolute; left: 50%; border-radius: 5px; background: repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 3px, rgba(0,0,0,.10) 3px 4px), linear-gradient(180deg, var(--c1), var(--c0)); box-shadow: inset 0 1.5px 0 var(--hi), 0 1px 0 var(--cs1), 0 2px 0 var(--cs1), 0 3px 0 var(--cs2), 0 4px 0 var(--cs2), 0 9px 10px -2px var(--shA); }
 .m1-fcap > i { position: absolute; left: 5px; right: 5px; top: calc(50% - 1px); height: 2px; background: var(--ink); border-radius: 1px; }
 .m1-fader { touch-action: none; cursor: ns-resize; outline: none; }
+/* 0 dB, engraved across the slot */
+.m1-unity { position: absolute; left: -3px; right: -3px; height: 2px; border-radius: 1px; background: var(--ink); opacity: .55; box-shadow: 0 1px 0 var(--ehi); pointer-events: none; }
 .m1-fader:focus-visible .m1-fcap { outline: 2px solid var(--go); outline-offset: 2px; }
 
 .m1-jog { border-radius: 50%; background: repeating-conic-gradient(var(--k1) 0 2.5deg, var(--k2) 2.5deg 5deg); box-shadow: 0 1px 0 var(--cs1), 0 3px 0 var(--cs2), 0 6px 0 var(--cs2), 0 16px 20px -4px var(--shA); display: flex; align-items: center; justify-content: center; position: relative; touch-action: none; }

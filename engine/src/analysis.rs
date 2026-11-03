@@ -294,8 +294,8 @@ const SAME_PLACE: f32 = 0.35;
 /// A band must hold at least this share of a layer's energy to count for it.
 const SHARE: f32 = 0.15;
 /// Correlation of the two envelopes: on above, off below (hysteresis).
-const ON: f32 = 0.3;
-const OFF: f32 = 0.22;
+const ON: f32 = 0.22;
+const OFF: f32 = 0.16;
 /// Both layers must be at least this loud in the band (power, about -50 dBFS).
 const FLOOR: f32 = 1e-5;
 /// And within this power ratio of each other (20 dB): beyond it one simply covers the other.

@@ -1,0 +1,70 @@
+/* Studio, mix mode. Canvas boards ZStage, ZStageFixed, ZCompare, ZFaders.
+   Ported from the canvas classes with an mx- prefix. The stage is glass, like the
+   screen, so it stays dark in light mode too. */
+
+.mx-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mx-t20{font-size:20px;font-weight:400;letter-spacing:-.02em;line-height:1.1;text-shadow:0 0 14px rgba(255,255,255,.16);white-space:nowrap}
+.mx-led{width:8px;height:8px;border-radius:4px;background:var(--c);box-shadow:0 0 6px var(--c);flex:none}
+.mx-clip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* hold the screen to compare */
+.mx-scr-hold{flex:none;outline:none;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer;-webkit-touch-callout:none}
+.mx-scr-hold:focus-visible .m1-scr{outline:2px solid var(--go);outline-offset:2px}
+
+/* fix pads: they glow because they point at the fix */
+.mx-fixes{height:48px;display:flex;flex:none;margin-top:10px}
+.mx-fixes .st-tray{padding:6px}
+.mx-fix-lb{font-size:13px!important;bottom:auto!important;top:50%;transform:translateY(-50%)}
+
+.mx-views{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:none}
+.mx-views .st-vk{height:36px!important}
+
+/* the stage */
+.mx-stage{position:relative;flex:1;min-height:0;border-radius:16px;overflow:hidden;outline:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:pointer;
+ background:radial-gradient(90% 70% at 50% 100%,#17171A,#09090A 75%);
+ box-shadow:inset 0 4px 12px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.04),0 1px 0 var(--hi)}
+.mx-stage:focus-visible{outline:2px solid var(--go);outline-offset:2px}
+.mx-hl{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.05);pointer-events:none}
+.mx-vl{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,255,255,.08);pointer-events:none}
+.mx-tick{position:absolute;width:2px;height:8px;margin-left:-1px;background:rgba(255,255,255,.35);pointer-events:none}
+.mx-lbl{position:absolute;pointer-events:none}
+.mx-dot{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:0;font:inherit;min-width:0;min-height:0;cursor:grab;touch-action:none;z-index:2;
+ transition:left .12s linear,top .12s linear,opacity .2s}
+.mx-dot.is-drag{transition:none;cursor:grabbing;z-index:3}
+.mx-dot b{display:block;border-radius:50%;transition:width .12s linear,height .12s linear}
+.mx-dot span{font-size:10px;font-weight:600;line-height:1;pointer-events:none}
+.mx-dot:focus-visible{outline:none}
+.mx-dot:focus-visible b{outline:2px solid var(--led-go)!important;outline-offset:3px}
+.mx-now{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:1.5px dashed;opacity:.6;pointer-events:none;z-index:1}
+.mx-ring{position:absolute;width:96px;height:72px;margin:-36px 0 0 -48px;border-radius:50%;border:2px solid #FF4A5A;box-shadow:0 0 14px #FF4A5A88;pointer-events:none;z-index:1}
+.mx-ring-l{position:absolute;margin:30px 0 0 34px;font-size:10px;font-weight:600;color:#FF4A5A;pointer-events:none;z-index:1}
+
+/* the faders */
+.mx-strips{flex:1;min-height:0;display:grid;gap:5px}
+.mx-strip{height:100%;flex-direction:column;justify-content:space-between;padding:10px 0;border-radius:10px}
+.mx-top{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:0;font:inherit;color:inherit;min-width:0;min-height:0;cursor:pointer;max-width:100%}
+.mx-sname{font-size:10px;font-weight:600;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo);text-align:center;letter-spacing:.02em;line-height:1.1}
+.mx-ms{display:flex;flex-direction:column;gap:3px;width:26px}
+.mx-mini{height:20px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600}
+.mx-mini.mx-wide{width:40px;height:24px;font-size:10px}
+.mx-open{height:100%;flex-direction:column;justify-content:flex-start;align-items:stretch;padding:10px;border-radius:12px;gap:10px}
+.mx-ohead{display:flex;align-items:center;gap:6px}
+.mx-oname{font-size:12px;color:var(--ink);flex:1;text-align:left}
+.mx-x{background:none;border:0;padding:0;color:var(--sub);display:flex;min-width:0;min-height:0;cursor:pointer}
+.mx-obody{display:flex;gap:10px;flex:1;min-height:0}
+.mx-ofader{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.mx-oknobs{flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:6px 0}
+.mx-knob{display:flex;flex-direction:column;align-items:center;gap:0}
+.mx-knob .m1-knob{margin:-6px 0 -4px}
+.mx-klabel{font-size:9px;font-weight:500}
+.mx-oms{display:flex;gap:5px;justify-content:center}
+.mx-outdb{font-size:9px}
+.mx-master .mx-sname{white-space:nowrap}
+
+/* the master's numbers on the screen */
+.mx-mread{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.mx-mread b{display:block;font-weight:300;font-size:15px;margin-top:4px;color:#F3F2EF;font-variant-numeric:tabular-nums}
+
+@media (prefers-reduced-motion:reduce){
+ .mx-dot,.mx-dot b{transition:none}
+}

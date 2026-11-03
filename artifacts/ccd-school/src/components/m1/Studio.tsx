@@ -1,7 +1,8 @@
 "use client";
 /**
- * Studio, play mode (canvas "Model 1 · final": studio · drums, pads and studio · bass, keys).
+ * Studio (canvas "Model 1 · final"). Two modes: play and mix. Mix lives in Mix.tsx.
  *
+ * Play mode (studio · drums, pads and studio · bass, keys):
  * Pick a layer, pick how to play it (steps, keys, pads, or the layer's own surface),
  * play, then shape it with one knob bank (sound, eq, fx, mix) plus mute and solo.
  * Rec counts in one bar, play loops what you played, rec again adds on top.
@@ -41,6 +42,7 @@ import {
 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { Mix } from "./Mix";
 import { useEngineTrack } from "./useEngineTrack";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
@@ -52,6 +54,8 @@ const SOLO_C = "#7D96FF";
 const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Touched = { label: string; text: string } | null;
+type Mode = "play" | "mix";
+const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 
 /** Velocity from how you hit: force where the device reports it, else contact size. */
 function velocity(e: PointerEvent<HTMLElement>): number {
@@ -76,6 +80,7 @@ export function Studio() {
   const { track, update, undo, canUndo } = useTrackV2();
   const { engine, start } = useEngineTrack(track);
   const [selId, setSelId] = useState<string | null>(null);
+  const [mode, setMode] = useState<Mode>("play");
   const [bank, setBank] = useState<Bank>("sound");
   const [touched, setTouched] = useState<Touched>(null);
   const [adding, setAdding] = useState(false);
@@ -278,12 +283,17 @@ export function Studio() {
             <Icon name="back" />
           </Link>
           <div className="st-mode" role="radiogroup" aria-label="Studio mode">
-            <button type="button" role="radio" aria-checked="true">play</button>
-            <button type="button" role="radio" aria-checked="false" disabled title="mix arrives in the next step">mix</button>
+            {(["play", "mix"] as Mode[]).map(m => (
+              <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m}</button>
+            ))}
           </div>
           <span style={{ flex: 1 }} />
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
-          <button type="button" className="st-tag" onClick={() => setSnap(SNAPS[(SNAPS.indexOf(snap) + 1) % SNAPS.length])} aria-label={`Snap ${snap}, tap to change`}>snap {snap}</button>
+          {mode === "mix" ? (
+            <span className="st-tag" style={{ cursor: "default" }}>{NOTE_NAMES[track.root % 12]} {track.scale}</span>
+          ) : (
+            <button type="button" className="st-tag" onClick={() => setSnap(SNAPS[(SNAPS.indexOf(snap) + 1) % SNAPS.length])} aria-label={`Snap ${snap}, tap to change`}>snap {snap}</button>
+          )}
         </div>
 
         <div className="st-slots">
@@ -291,7 +301,7 @@ export function Studio() {
             const l = track.layers[i];
             if (!l) {
               return (
-                <button key={`add${i}`} type="button" className="m1-m is-wide st-slot is-empty" aria-label="Add a layer" onClick={() => setAdding(a => !a)}>
+                <button key={`add${i}`} type="button" className="m1-m is-wide st-slot is-empty" aria-label="Add a layer" onClick={() => { setMode("play"); setAdding(a => (mode === "mix" ? true : !a)); }}>
                   <Icon name="plus" small />
                   <span>add</span>
                 </button>
@@ -310,6 +320,10 @@ export function Studio() {
           })}
         </div>
 
+        {mode === "mix" ? (
+          <Mix track={track} engine={engine} selId={selId} onSelect={setSelId} update={update} playing={playing} />
+        ) : (
+        <>
         <Screen className="st-scr" height={96}>
           {sel && type ? (
             <>
@@ -400,6 +414,8 @@ export function Studio() {
             </div>
           </>
         ) : null}
+        </>
+        )}
       </div>
 
       <div className="m1-g st-transport">

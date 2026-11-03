@@ -243,10 +243,16 @@ type FaderProps = {
   width?: number;
   horizontal?: boolean;
   defaultValue?: number;
+  /** Engrave the 0 dB line across the slot, at `defaultValue`. */
+  unity?: boolean;
+  /** Width of the cap (defaults to the fader's width less 6). */
+  capWidth?: number;
+  /** What a screen reader hears, eg "-3 db". */
+  valueText?: string;
 };
 
 /** Fader with printed ticks. Drag, scroll, or arrow keys. Double-tap snaps to 0 dB (75%). */
-export function Fader({ value, onChange, onTouch, label, led, height = 140, width = 44, horizontal, defaultValue = 0.75 }: FaderProps) {
+export function Fader({ value, onChange, onTouch, label, led, height = 140, width = 44, horizontal, defaultValue = 0.75, unity, capWidth, valueText }: FaderProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag = useDrag(value, onChange ? set : undefined, horizontal ? -160 : height - 40, defaultValue);
   if (horizontal) {
@@ -270,8 +276,9 @@ export function Fader({ value, onChange, onTouch, label, led, height = 140, widt
   }
   const th = height - 30;
   const top = 6 + (1 - value) * th - 11;
+  const cw = capWidth ?? width - 6;
   return (
-    <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} {...drag}
+    <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-valuetext={valueText} {...drag}
       style={{ position: "relative", width, height }}>
       {led ? <Dash color={led} style={{ position: "absolute", top: -14, left: "50%", marginLeft: -9 }} /> : null}
       {Array.from({ length: 9 }, (_, j) => {
@@ -280,7 +287,8 @@ export function Fader({ value, onChange, onTouch, label, led, height = 140, widt
         return <span key={j}><i style={{ position: "absolute", left: 0, top: y, width: w, height: 1, background: "var(--tick)" }} /><i style={{ position: "absolute", right: 0, top: y, width: w, height: 1, background: "var(--tick)" }} /></span>;
       })}
       <div className="m1-fslot" style={{ top: 2, bottom: 2 }} />
-      <div className="m1-fcap" style={{ top, width: width - 6, marginLeft: -(width - 6) / 2, height: 22 }}><i /></div>
+      {unity ? <i className="m1-unity" style={{ top: 6 + (1 - defaultValue) * th }} /> : null}
+      <div className="m1-fcap" style={{ top, width: cw, marginLeft: -cw / 2, height: 22 }}><i /></div>
     </div>
   );
 }

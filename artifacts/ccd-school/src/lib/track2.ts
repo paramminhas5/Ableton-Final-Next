@@ -15,6 +15,7 @@ import {
   DRUM_PAD_PARAMS,
   INSTRUMENT_BASE,
   LAYER_PARAMS,
+  MASTER_PARAMS,
   type InstrumentName,
 } from "../engine/params.gen";
 
@@ -54,6 +55,8 @@ export type TrackV2 = {
   swing: number;
   loop: number;
   layers: LayerV2[];
+  /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
+  master?: Record<number, number>;
   added: string[];
   updatedAt: number;
 };
@@ -94,6 +97,11 @@ export function paramOf(l: LayerV2, index: number): number {
   if (engine === "bass") return BASS_PARAMS.find(p => p.index === index)?.default ?? 0;
   const k = (index - INSTRUMENT_BASE) % DRUM_PAD_PARAMS.length;
   return DRUM_PAD_PARAMS[k]?.default ?? 0;
+}
+
+/** Normalised value of a master param, falling back to the registry default. */
+export function masterOf(t: TrackV2, index: number): number {
+  return t.master?.[index] ?? MASTER_PARAMS[index]?.default ?? 0;
 }
 
 // ── migration from v1 ────────────────────────────────────────────────────────

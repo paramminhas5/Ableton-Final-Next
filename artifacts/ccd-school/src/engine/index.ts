@@ -9,6 +9,7 @@ import { WasmHost } from "./wasm-host";
 
 export * from "./params.gen";
 export * from "./format";
+export * from "./mix";
 export type { EngineEvent, EngineHost, HostInfo } from "./host";
 
 export type NoteEvent = { note: number; vel: number; start: number; len: number };
@@ -82,6 +83,22 @@ export class Engine {
   }
   allOff(layer: number) {
     this.s(CMD.allOff, layer);
+  }
+  /** Master param by MASTER_PARAMS index, `n` normalised 0..1. */
+  master(index: number, n: number) {
+    this.s(CMD.master, 0, index, n);
+  }
+  /** Remember every layer's mix and the master as "before", for compare. */
+  snapshot() {
+    this.s(CMD.snapshot);
+  }
+  /** Hold to compare: true plays the snapshot, false the mix as it is now. */
+  compare(on: boolean) {
+    this.s(CMD.compare, 0, on ? 1 : 0);
+  }
+  /** Meters, loudness and clash detection, reported about 30 times a second. */
+  analyse(on: boolean) {
+    this.s(CMD.analyse, 0, on ? 1 : 0);
   }
   on(fn: (e: EngineEvent[]) => void) {
     return this.host.subscribe(fn);
