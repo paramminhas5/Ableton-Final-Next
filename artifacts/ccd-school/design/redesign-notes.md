@@ -184,6 +184,17 @@ Branch `school/field`, pushed (engine 98d47e1, ac612e5; UI 1bc079e; sampler 498d
 - **Tests:** `engine/tests/instruments.rs` (8 render tests: chord level, no clicks, polyphony by FFT, lead aliasing, note-change clicks, fx per pad and riser, six layers under the ceiling, note repeat counts, sampler), 57 engine unit tests, 211 web tests. Typecheck, vitest, cargo test and next build pass. Every layer surface rendered at 390x844 in light and dark in Chromium and WebKit.
 - **Gaps:** the chord synth is mono (no stereo width yet); lead filter motion and the riser fader are live only (not recorded); the step grid affects display and new steps only; samples reach the engine on the web only (the phone shell needs the same message, parked); the Android APK was not rebuilt (no Android SDK in the cloud container: run the APK build in `mobile/README.md` when you next build). Measured, not listened.
 
+## Build · whole-app look pass, part 1 (3 Nov 2026, evening)
+Branch `school/field`, pushed (3f72a16). Param asked for the engine and the whole look at 100%, with onboarding, zones, flow and the home screen to match the new app.
+- **Welcome (`m1/Welcome.tsx`, replaces the old landing and five-step onboarding):** "make music while you learn it", one question (the basics, dj, make tracks), start goes straight to the first lesson in flow mode, three lines on how it works, "find my level" for the placement test. Anyone who has started goes to Today.
+- **Today:** a world / your track switch on the screen (world progress and what is next, or the track lanes). The hear key plays your track, or auditions what the next lesson adds when you have no layers yet.
+- **All lessons (`m1/Worlds.tsx`, serves `/worlds` and `/learn`):** a flow / free switch with one plain line of what each means, three world cards with progress and what is next, the level check. The world screen has the same switch.
+- **Footer (`m1/Footer.tsx`):** cat, "a cats can dance project, made in bengaluru", the CCD links. On every screen except Studio, DJ and lessons.
+- **Legacy blocks:** the old flat blue, pink and red hero blocks and cards now render as the black glass screen and recessed panels with a coloured edge (CSS in `globals.css`, "LEGACY BLOCKS"). Profile, sign in, pricing, review, daily, build, atlas and gym were checked at 390x844 in dark and light; light WebKit checked for the welcome.
+- **Header:** no longer shrinks to the middle on pages that use it; the "model 1" tag is gone; hidden on Today, All lessons, Studio and DJ, which carry their own.
+- **Checks:** smoke test (68 page loads, phone and laptop) clean; journeys J1, the placement journey and J7 updated for the welcome screen (the later journeys still describe the old Today and need rewriting in the final pass).
+- **Still old (next):** the lesson player and its step screens, quiz, lesson complete, hearts popup, practice screens inside drills, DJ lessons, device pages, emoji used as icons (stats, ranks), the profile layout, Hindi. These belong to item 4 (lesson player on the engine) and the final pass.
+
 ## Build · Link licence route (3 Nov 2026)
 - iOS switched to LinkKit 4.1.3, Ableton's free iOS SDK: the app links its xcframework, and the link button opens Ableton's Link settings pane, which LinkKit requires. Type-checked for iOS in the cloud; the Xcode build runs on Param's Mac.
 - Android stays on open-source Link 4.1.1 as an unofficial APK, installed by hand. No Play Store or App Store release for now.

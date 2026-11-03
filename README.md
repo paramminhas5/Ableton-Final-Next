@@ -33,7 +33,7 @@ Last updated 3 Nov 2026 (evening). Branch `school/field`. This file describes th
 | Studio (the instrument) | Play mode built for all six layer types plus a sampler layer (step 3): steps at 1/8, 1/16 or 1/32 in one to four bar loops, keys, pads and each type's own surface (glide, circle, chord pads, xy, rolls, riser, sample load), sound presets, several saved songs, recording with count-in, overdub and undo. Mix mode (step 2) is built: stage, clash and fix, compare, faders. First visits land on a loop already playing. |
 | Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
 | Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
-| New design (Model 1) | Every screen designed (44 boards). Studio rebuilt in it; the rest of the app still uses the older look. |
+| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer; every other page now renders its old blocks as the same black screen and panels. Still old: the lesson player and its steps, quiz and completion screens. |
 | Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. |
 | Production | `learn.catscandance.com` still serves an older build. The new work is on branches, not merged. |
 
