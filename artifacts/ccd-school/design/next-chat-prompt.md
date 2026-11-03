@@ -1,54 +1,40 @@
-# CCD School · prompt for the build chat
+We're building CCD School into a real instrument: one Rust sound engine and one React UI, on iOS, Android and the web, connected to Ableton Live. Steps 0 and 1 of the plan are done and pushed. This chat does step 2: the mix.
 
-Paste everything below the line into a new chat attached to the CatsCanDance project.
+Read these first:
+- Project doc ccd/school-redesign.md, the last two sections ("Build · step 0" and "Build · step 1"): what exists and what is not done.
+- Project doc ccd/school-instrument-plan.md: the plan, including "Revised in the build chat" at the end (Tauri, one source).
+- Project doc ccd/engine-sound.md: how the engine makes sound and the sound roadmap.
+- Design canvas: https://claude.ai/code/artifact/36c4ce2a-9660-4375-a101-a41ac0edc49a. For this chat the boards are, on page "Model 1 · final": ZStage, ZStageFixed, ZCompare, ZFaders; and page "Model 1 · round 9 · mix" for how mix behaves. Read them with the Artifact tool for exact layouts.
+- Repo paramminhas5/Ableton-Final-Next, branch school/field:
+  - engine/ (Rust engine), engine-wasm/ (web build), mobile/ (Tauri shell), artifacts/ccd-school (the web app).
+  - Studio is src/components/m1/Studio.tsx with studio.css; the track is src/lib/track2.ts; the engine bridge is src/engine/.
+  - Web app: npm install --legacy-peer-deps. Engine: npm run engine (types and wasm).
 
----
+The rule that matters most: the web app is the one source of every screen. The phones open it and only sound is native. Build and check everything on the web; the phones follow.
 
-We're building CCD School into a real instrument: one Rust sound engine and one React UI, shipped as apps on iOS, Android and the web, connected to Ableton Live (Link, MIDI/stems/.als export, controller mode). Sound and playing have to hold up against top-tier commercial instruments, good enough to make real music: band-limited synths, oversampling, zero-delay-feedback filters, multisampled kits, studio-grade reverb, expressive velocity and pressure, low latency. The quality bar is in the plan.
+How mix works (settled):
+- Studio has two modes, play and mix. Mix is the switch in the header (disabled today).
+- Stage: pan across, pitch up and down, dot size is loudness, reverb shows as haze. Two layers fighting for the same band in the same place get a red ring and fix pads that glow. Hold the screen to hear the mix as it was before your changes.
+- Faders: names on top, an engraved 0 dB line, a master strip called out. Tap a strip to open it wide.
+- Finish rules: the selected pad lights from behind, a dim glow only points at something, knobs and faders stay clean (no light rings, no meters on them), labels engraved, screens deep glass, every screen full height.
 
-**Read these first:**
-- Project doc `ccd/school-instrument-plan.md`: the full plan, platforms, repo layout and build order. Follow it.
-- Project doc `ccd/school-redesign.md`: every design decision so far.
-- Design canvas: https://claude.ai/code/artifact/36c4ce2a-9660-4375-a101-a41ac0edc49a. Page "Model 1 · final" has every screen (phone and tablet). Ignore the plugin window board, since the plugin isn't in scope now. Read the boards with the Artifact tool when you need exact layouts. Pages "round 5" to "round 9 · mix" explain how studio and mix work.
-- Repo `paramminhas5/Ableton-Final-Next`, branch `school/field`, app in `artifacts/ccd-school` (Next.js 15, React 19, Tailwind v4, `npm install --legacy-peer-deps`).
-  - The Model 1 controls are in `src/components/m1/`.
-  - The current audio is in `src/lib/audio.ts`, `audio-bus.ts`, `device-engine.ts`, `track-engine.ts` and `track.ts`.
-  - The lesson sims are in `src/components/sims/`.
+This chat, step 2:
+1. Engine:
+   - Master: a program-dependent glue compressor and a true-peak limiter at 4x oversampling, replacing the safety clip.
+   - Metering and analysis per layer, sent to the UI about 30 times a second: peak, loudness, low/mid/high energy, pitch centre, and stereo position.
+   - Clash detection: two layers with energy in the same band at the same pan, with a suggested fix (eq cut, pan, or duck).
+   - Compare: a snapshot of every layer's mix params that "hold to compare" can switch to and back, click-free.
+   - Low-latency IIR half-band filters for the 2x stages, to bring the engine's fixed 1 ms down to about 0.1 ms. Keep the delay compensation exact and the timing tests passing.
+2. UI: mix mode in Studio, exactly as on the canvas: the stage and the faders, clash rings and fix pads, hold to compare, master strip.
+3. Tests: render tests that the limiter never passes 0 dBTP, that duck still dips after the master, that clash detection fires on two basses at the same pan and not on bass and hats. Keep npx tsc --noEmit, npx vitest run, cargo test and next build passing.
 
-**How studio works (settled):**
-- **Two modes:** play and mix.
-- **Play:**
-  - Pick a layer (up to 8: drums, hats, bass, chords, lead, fx, plus empty "add" slots).
-  - Pick how to play it: steps, keys, pads, or that layer's own surface (bass glide strip, drums circle, chords chord pads, lead XY, hats roll strip, fx riser).
-  - Play, then shape it. One knob bank switch (sound, eq, fx, mix) drives four knobs, with mute and solo next to it.
-  - Every layer carries its own mix: level, pan, send, and duck under a chosen layer.
-- **Mix:**
-  - The stage: pan across, pitch up and down, dot size is loudness, reverb shows as haze. Clashes get a red ring and fix pads.
-  - Or the faders: tap a strip to open it wide; there's a 0 dB line and a master. Hold the screen to compare with before.
-- **Finish rules:**
-  - The selected pad lights from behind. A dim glow only points at something.
-  - Knobs and faders stay clean: no light rings or meters on them.
-  - Labels are engraved, screens are deep glass, and every screen uses the full height.
+Waiting on me (ask if I haven't sent them):
+- Latency results from my iPhone and Android phone (the mic test in /lab/engine) and whether Link held tempo with Live.
+- The Link licence route (see the notes in ccd/school-instrument-plan.md). Until it is settled, release builds ship with Link off.
 
-**This chat:**
-1. **Do step 0 of the plan, the spike.**
-   - Create `engine/`: a Rust crate with a sample-accurate clock, a kick and a mono bass synth (band-limited oscillator, zero-delay-feedback filter, envelope, glide), and a parameter registry.
-   - Run it three ways:
-     - WASM in an AudioWorklet inside the Next app, behind one test page.
-     - Native on iOS (Core Audio) inside a Capacitor shell.
-     - Native on Android (Oboe) inside the same shell.
-   - Measure touch-to-sound latency on each and write the numbers down.
-   - Add Ableton Link on the phones, so tempo follows Live. I'll test it against Live on my machine.
-   - Generate TypeScript types for the parameters from Rust.
-2. **Then step 1.**
-   - Track v2: up to 8 layers, note events, parameter banks; migrate from `ccd.track.v1`.
-   - Rebuild Studio play for drums and bass (pads, keys, steps) on the new engine, exactly as on the canvas.
-   - Recording: rec with a one-bar count-in, play loops it, rec again adds on top, plus undo and snap.
-
-**Working rules:**
-- Commit to `school/field` as you go, and push when a step works.
-- Keep `npx tsc --noEmit` and `npx vitest run` passing. Add tests for timing, theory and the schema migration.
-- Render the screens you touch at 390×844 and look at them before calling a step done.
-- If a tool is missing in the cloud (Rust, wasm-pack, the Android SDK and NDK), install it. iOS builds and device tests need my Mac and phones, so when something can only be checked there (Xcode build, latency on device, Link with Live), tell me exactly what to run.
-- After each step, add a short changelog entry to `ccd/school-redesign.md` in the project.
+Working rules:
+- Commit to school/field as you go, push when a step works.
+- Render every screen you touch at 390x844, light and dark, and look at it before calling it done.
+- If something can only be checked on my Mac or phones, tell me exactly what to run.
+- After the step, add a short changelog entry to ccd/school-redesign.md in the project.
 - Plain copy, lowercase UI text, no em dashes.

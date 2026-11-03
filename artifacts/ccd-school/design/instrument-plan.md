@@ -212,3 +212,10 @@ The aim is that it sounds and plays like top-tier commercial instruments, so peo
 - **Ableton Link 4.1.1**, built from Ableton's repo. Its open SDK and C API include Link Audio, so streaming the track into Live is possible in step 4.
 - **`packages/ui-bridge/`** is not needed: the bridge and generated types live in the web app at `src/engine/`, which every platform loads.
 - Sound plan: `engine/SOUND.md` (also `ccd/engine-sound.md` in the project).
+
+## Ableton Link licence (3 Nov 2026)
+
+- Link has two licences. The open-source code on GitHub is GPLv2: shipping it inside the app would mean publishing the whole app's source under the GPL, and Ableton says the GPL is not compatible with the App Store. The other route is a proprietary licence.
+- iOS: LinkKit, Ableton's iOS SDK, is free and royalty-free under the Ableton Link SDK licence. Conditions: follow Ableton's UI guidelines, use their logo and materials as supplied, don't sell Link as an in-app purchase. Plus Apple's multicast entitlement.
+- Android (and desktop): proprietary terms are not published. Request them from link-devs@ableton.com.
+- Until a licence is in place, release builds ship with Link off. Development builds can keep it.
