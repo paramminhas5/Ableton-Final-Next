@@ -30,7 +30,7 @@ This chat, step 2:
 
 Waiting on me (ask if I haven't sent them):
 - Latency results from my iPhone and Android phone (the mic test in /lab/engine) and whether Link held tempo with Live.
-- Ableton's reply about the Android Link licence (emailed 3 Nov). Until then Android is an unofficial APK and the stores wait. iOS uses LinkKit; the multicast entitlement request to Apple is mine to send.
+- Ableton's reply about the Android Link licence (emailed 3 Nov). Until then Android is an unofficial APK and the stores wait. iOS uses LinkKit. Link on iPhone needs Apple's multicast entitlement, which only a paid Apple Developer Program account holder can request (my Apple ID is not enrolled yet, checked 3 Nov). Until then the iPhone runs with a free personal team and no Link.
 
 Working rules:
 - Commit to school/field as you go, push when a step works.

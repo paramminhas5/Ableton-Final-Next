@@ -164,3 +164,4 @@ Branch `school/field`, pushed. Stack changes from the plan, after research: the 
 - iOS switched to LinkKit 4.1.3, Ableton's free iOS SDK: the app links its xcframework, and the link button opens Ableton's Link settings pane, which LinkKit requires. Type-checked for iOS in the cloud; the Xcode build runs on Param's Mac.
 - Android stays on open-source Link 4.1.1 as an unofficial APK, installed by hand. No Play Store or App Store release for now.
 - Emailed link-devs@ableton.com for the Android proprietary licence (terms, fee, branding, Link Audio, GPL for test builds).
+- Apple multicast entitlement (needed for Link on iPhone): Apple's request form is only open to a paid Apple Developer Program account holder. Param's Apple ID is signed in but not enrolled, so the request waits on enrolment. The iPhone build can still run with a free personal team, without Link.

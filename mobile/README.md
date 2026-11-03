@@ -58,6 +58,8 @@ the pane down. Two things Apple controls:
 2. Multicast. Apple requires the `com.apple.developer.networking.multicast`
    entitlement for UDP multicast, which Link uses to find Live. Request it at
    developer.apple.com/contact/request/networking-multicast (it takes a few days).
+   Only the account holder of a paid Apple Developer Program membership can open
+   that form. A free personal team can run the app on your phone, but without Link.
    Once granted, in Xcode add it under Signing & Capabilities for the
    `ccd-school_iOS` target. Until then, Link may not see Live from the iPhone.
 3. Before an App Store release, the app has to pass LinkKit's test plan
