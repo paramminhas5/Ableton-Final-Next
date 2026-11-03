@@ -525,14 +525,6 @@ button[aria-label].icon-btn { min-width: 36px; min-height: 36px; }
   html, body { overscroll-behavior: none; }
 }
 
-@media (max-width: 767px) {
-  [aria-label="Open menu"] { display: none !important; }
-  [data-page="lesson"]     [aria-label="Open menu"],
-  [data-page="placement"]  [aria-label="Open menu"],
-  [data-page="onboarding"] [aria-label="Open menu"] {
-    display: flex !important;
-  }
-}
 
 button, a, [role="button"] {
   -webkit-tap-highlight-color: transparent;

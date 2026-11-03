@@ -13,10 +13,11 @@
 import Link from "next/link";
 import { CCD_LINKS } from "@/lib/ccd";
 import Image from "next/image";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, type ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import { Icon } from "@/components/m1/controls";
+import { Icon, Icon as M1Icon, Key as M1Key, Screen as M1Screen, Silk as M1Silk, WORLD_LED } from "@/components/m1/controls";
+import { worldDone as worldDoneOf } from "@/lib/worldOrder";
 import { CatMark, WeekDots } from "@/components/m1/shell";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
@@ -459,169 +460,66 @@ interface MobileDrawerProps {
 }
 
 function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
-  const { progress, heartRefillSeconds } = useProgress();
+  const { progress, missionsNeedingReview } = useProgress();
   const { user } = useAuth();
-  const { learnMode } = useLearnMode();
+  useEffect(() => {
+    if (!open) return;
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [open, onClose]);
   if (!open) return null;
-
-  const handleSearch = () => { onClose(); onSearch(); };
-
-  const completed = progress.completedMissions;
-  const hasMissions = Object.keys(completed).length > 0;
-  const allDoneSlugs = Object.entries(completed)
-    .filter(([, v]) => v)
-    .sort(([, a], [, b]) => (b?.at ?? 0) - (a?.at ?? 0))
-    .map(([slug]) => slug);
-  const lastSlug = allDoneSlugs[0];
-  const lastCtx = lastSlug ? getMissionContext(lastSlug) : null;
-  const nextSlug = lastCtx?.path
-    ? (() => {
-        const idx = lastCtx.path.missionSlugs.indexOf(lastSlug);
-        const ns = lastCtx.path.missionSlugs[idx + 1];
-        return ns && !completed[ns] ? ns : null;
-      })()
-    : null;
-  const continueSlug = nextSlug ?? (Object.keys(completed).length === 0 ? "what-is-sound" : null);
-
+  const due = missionsNeedingReview.length;
+  const keys: { href: string; label: string; icon: ReactNode; lit?: boolean }[] = [
+    { href: "/daily", label: "daily", icon: <M1Icon name="sun" /> },
+    { href: "/review", label: "review", icon: <M1Icon name="loop" />, lit: due > 0 },
+    { href: "/leaderboard", label: "league", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M6 20V12M12 20V5M18 20v-5" /></svg> },
+    { href: "/glossary", label: "words", icon: <M1Icon name="library" /> },
+    { href: "/shortcuts", label: "shortcuts", icon: <M1Icon name="keys" /> },
+    { href: "/setup", label: "setup", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M9 3v6M15 3v6M6 9h12v3a6 6 0 0 1-12 0zM12 18v3" /></svg> },
+    { href: "/upgrade", label: "pro", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="m12 4 2.4 5 5.6.8-4 3.9.9 5.6L12 16.6 7.1 19.3l.9-5.6-4-3.9 5.6-.8z" /></svg> },
+    { href: "/profile", label: "settings", icon: <M1Icon name="user" /> },
+  ];
+  const worlds = (["fundamentals", "dj", "producer"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
   return (
-    <div className="md:hidden fixed inset-0 z-50 bg-ink/80"
-      onClick={onClose} role="dialog" aria-modal="true" aria-label="Navigation menu">
-      <div className="absolute right-0 top-0 bottom-0 w-[82%] max-w-[340px] bg-bone brutal-border border-y-0 border-r-0 overflow-y-auto"
-        onClick={e => e.stopPropagation()}>
-
-        {/* Drawer header — electric-blue CCD style */}
-        <div className="flex items-center justify-between p-3.5 border-b-4 border-ink bg-electric-blue">
-          <div className="flex items-center gap-2">
-            <span className="font-display text-lg text-bone">CCD<span className="text-acid">.</span><span className="text-bone">SCHOOL</span></span>
-          </div>
-          <button onClick={onClose} aria-label="Close menu"
-            className="brutal-border bg-bone text-ink px-3 py-1.5 font-display text-xs brutal-press">
-            ✕
+    <div role="dialog" aria-modal="true" aria-label="Menu" className="m1-face" style={{ position: "fixed", inset: 0, zIndex: 70, overflowY: "auto" }}>
+      <div className="m1-page" style={{ paddingBottom: 32 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
+          <span style={{ fontSize: 22, fontWeight: 500 }}>menu</span>
+          <M1Key onClick={onClose} ariaLabel="Close the menu" style={{ width: 46, height: 46 }}><M1Icon name="close" /></M1Key>
+        </div>
+        <M1Screen>
+          <button type="button" onClick={() => { onClose(); onSearch(); }} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", background: "none", border: 0, color: "var(--disp-sub)", font: "400 19px Outfit, system-ui", padding: 0, cursor: "pointer", textAlign: "left" }}>
+            <M1Icon name="search" />lessons, devices, words
           </button>
-        </div>
-
-        {/* Continue shortcut */}
-        {continueSlug && (
-          <Link href={`/learn/${continueSlug}`} onClick={onClose}
-            className="block px-4 py-3.5 border-b-4 border-ink bg-acid text-ink font-display text-base brutal-press hover:bg-sun transition-colors flex items-center gap-3">
-            <span className="text-2xl shrink-0">▶</span>
-            <div>
-              <p className="font-mono text-xs uppercase opacity-70">
-                {hasMissions ? "Continue where you left off" : "Start your first lesson"}
-              </p>
-              <p className="font-display text-base leading-tight mt-0.5">
-                {continueSlug.replace(/-/g, " ")}
-              </p>
-            </div>
-          </Link>
-        )}
-
-        {/* Stats row */}
-        <div className="grid grid-cols-3 border-b-4 border-ink">
-          {[
-            { value: `${progress.xp}`, label: "XP" },
-            { value: `🔥${progress.streakDays}${progress.streakShield ? "🛡" : ""}`, label: "Streak" },
-            { value: `💎${progress.gems}`, label: "Gems" },
-          ].map(({ value, label }, i) => (
-            <div key={label} className={`p-3.5 text-center${i < 2 ? " border-r-4 border-ink" : ""}`}>
-              <div className="font-display text-xl tabular-nums">{value}</div>
-              <div className="font-mono text-xs uppercase opacity-70 mt-0.5">{label}</div>
-            </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 14 }}>
+            {["sidechain", "warp", "eq", "beatmatch"].map(t => (
+              <button key={t} type="button" className="m1-tag" onClick={() => { onClose(); onSearch(); }} style={{ height: 26, padding: "0 10px", borderRadius: 13, borderColor: "#3A3A3F", color: "var(--disp-ink)", cursor: "pointer", background: "none" }}>{t}</button>
+            ))}
+          </div>
+          <div className="m1-ss" style={{ marginTop: 10 }}>try one</div>
+        </M1Screen>
+        <M1Silk label="go to" right={due ? `the lit one has ${due} due` : undefined} />
+        <div className="m1-g">
+          {keys.map(k => (
+            <M1Key key={k.href} href={k.href} label={k.label} led={k.lit ? "var(--led-go)" : null} ariaLabel={k.label}>{k.icon}</M1Key>
           ))}
         </div>
-
-        {/* Hearts */}
-        <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
-          <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
-          <span className="font-sans text-sm opacity-70">{progress.hearts}/{MAX_HEARTS} hearts</span>
-        </div>
-
-        {/* Search */}
-        <button onClick={handleSearch}
-          className="w-full text-left px-4 py-3 border-b-4 border-ink hover:bg-acid font-display text-sm flex items-center gap-2.5 transition-colors">
-          <SearchIcon /> Search ⌘K
-        </button>
-
-        {/* Nav sections */}
-        <nav aria-label="Mobile navigation">
-          {[
-            { heading: "Worlds", links: [
-              { to: "/world/fundamentals", label: "🎵 Fundamentals" },
-              { to: "/world/dj",           label: "🎧 DJ World"     },
-              { to: "/world/producer",     label: "🎛 Producer"     },
-              { to: "/wiki",               label: "📖 Full Wiki"    },
-            ]},
-            { heading: "Learn", links: [
-              { to: "/learn",    label: "📚 All Paths"    },
-              { to: "/missions", label: "🎯 All Missions" },
-              { to: "/daily",    label: "⚡ Daily Challenge" },
-            ]},
-            { heading: "Practice", links: [
-              { to: "/gym",       label: "Ear Gym (5 min)" },
-              { to: "/beat",      label: "First Beat" },
-              { to: "/build",     label: "Build a Set" },
-              { to: "/link",      label: "Check my Live Set" },
-              { to: "/train",     label: "Ear Training"    },
-              { to: "/challenge", label: "Daily Challenge" },
-              { to: "/review",    label: "Review Session"  },
-              { to: "/match",     label: "Flashcard Match" },
-            ]},
-            { heading: "Reference", links: [
-              { to: "/glossary",    label: "Glossary"    },
-              { to: "/shortcuts",   label: "Shortcuts"   },
-              { to: "/devices",     label: "Devices"     },
-              { to: "/atlas",       label: "Device Atlas" },
-              { to: "/plugins",     label: "Plugin Guide" },
-              { to: "/setup",       label: "Setup Guide" },
-              { to: "/signal-flow", label: "Signal Flow" },
-            ]},
-            { heading: "Account", links: [
-              { to: "/profile",     label: "Profile"        },
-              { to: "/leaderboard", label: "Leaderboard"    },
-              { to: "/shop",        label: "Gem Shop 💎"    },
-              { to: "/placement",   label: "Placement Test" },
-            ]},
-            { heading: "Cats Can Dance", links: CCD_LINKS.map((l) => ({ to: l.href, label: l.label })) },
-          ].map(({ heading, links }) => (
-            <div key={heading}>
-              <div className="px-4 pt-3 pb-1 font-display text-xs uppercase opacity-70 tracking-widest border-t-4 border-ink">
-                {heading}
-              </div>
-              {links.map((l) => (
-                <Link key={l.to} href={l.to} onClick={onClose}
-                  className="block px-4 py-3 border-t border-ink/25 hover:bg-acid font-display text-sm transition-colors">
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
-
-        {/* Theme */}
-        <div className="px-4 py-3.5 border-t-4 border-ink">
-          <div className="font-mono text-xs uppercase opacity-70 mb-2.5">Theme</div>
-          <ThemeSwitcher compact />
-        </div>
-
-        {/* Auth */}
-        <div className="p-4 space-y-2 border-t-4 border-ink">
-          {user ? (
-            <>
-              <Link href="/profile" onClick={onClose}
-                className="flex items-center gap-2 brutal-border bg-electric-blue text-bone px-3 py-2.5 font-display text-sm text-center brutal-press justify-center chunk-shadow ccd-btn-hover">
-                <UserIcon /> Profile
-              </Link>
-              <button onClick={() => { signOut(); onClose(); }}
-                className="w-full brutal-border bg-bone px-3 py-2.5 font-display text-sm text-left brutal-press hover:bg-acid transition-colors">
-                Sign out
-              </button>
-            </>
-          ) : (
-            <Link href="/login" onClick={onClose}
-              className="block brutal-border bg-electric-blue text-bone px-3 py-2.5 font-display text-sm font-medium text-center brutal-press chunk-shadow ccd-btn-hover">
-              Sign in
+        <M1Silk label="worlds" />
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {worlds.map(x => (
+            <Link key={x.w} href={`/world/${x.w}`} onClick={onClose} className="m1-m is-wide" style={{ height: 56, justifyContent: "flex-start", flexDirection: "row", gap: 14, padding: "0 16px", textDecoration: "none", color: "var(--ink)" }}>
+              <span style={{ width: 18, height: 4, borderRadius: 2, background: WORLD_LED[x.w], boxShadow: `0 0 5px ${WORLD_LED[x.w]}` }} />
+              <span style={{ flex: 1, fontSize: 16, fontWeight: 500 }}>{x.w === "fundamentals" ? "basics" : x.w}</span>
+              <span style={{ fontSize: 12, color: "var(--sub)" }}>{x.done} of {x.total}</span>
             </Link>
-          )}
+          ))}
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: 28, marginTop: 40, fontSize: 13 }}>
+          <Link href="/setup" onClick={onClose} className="m1-eng" style={{ minHeight: 0 }}>help</Link>
+          {user
+            ? <button type="button" className="m1-eng" onClick={() => signOut()} style={{ background: "none", border: 0, font: "inherit", cursor: "pointer", minHeight: 0 }}>sign out</button>
+            : <Link href="/login" onClick={onClose} className="m1-eng" style={{ minHeight: 0 }}>sign in</Link>}
         </div>
       </div>
     </div>
@@ -697,7 +595,7 @@ export function Header() {
   // A lesson is one instrument screen: it carries its own close key, progress and hearts.
   if (/^\/learn\/(?!world\/)[^/]+$/.test(pathname)) return null;
   // You and the library carry their own title bar (boards ZYou, ZLibrary).
-  if (pathname === "/profile" || pathname === "/atlas" || pathname === "/login") return null;
+  if (pathname === "/profile" || pathname === "/atlas" || pathname === "/login" || pathname.startsWith("/device/")) return null;
 
   if (pathname === "/dashboard" || pathname === "/worlds" || pathname === "/learn" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
     return (
