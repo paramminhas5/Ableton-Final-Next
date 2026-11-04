@@ -37,7 +37,6 @@ const PRIMARY_NAV = [
   { to: "/worlds",    label: "Worlds"   },
   { to: "/wiki",      label: "Wiki"     },
   { to: "/learn",     label: "Paths"    },
-  { to: "/missions",  label: "Missions" },
   { to: "/dashboard", label: "Progress" },
 ] as const;
 
@@ -270,7 +269,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
           <p className="font-display text-lg inline-flex items-center gap-1"><Icon name="gem" small /> {progress.gems}</p>
         </div>
       </div>
-      {/* Hearts row — moved from header desktop strip */}
+      {/* Hearts row: moved from header desktop strip */}
       <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
         <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
         <div>
@@ -399,7 +398,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
     <div className="relative">
       <button
         onClick={toggle}
-        title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
+        title={isFlow ? "FLOW MODE: click to switch to Free" : "FREE MODE: click to switch to Flow"}
         aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
         className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover ccd-jitter ccd-glow-pulse
           ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}

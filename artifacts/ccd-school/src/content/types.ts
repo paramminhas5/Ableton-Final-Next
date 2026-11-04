@@ -206,7 +206,7 @@ export type LessonScreen =
        */
       kind: "sequence";
       prompt: string;
-      items: string[];        // already in correct order — will be shuffled for display
+      items: string[];        // already in correct order: will be shuffled for display
       explain: string;
     }
   | {

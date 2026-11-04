@@ -141,7 +141,7 @@ export function KeyStep({ screen, accent, onNext, tail }: StepProps) {
           <div className="fl-bpm"><b style={{ fontSize: 44 }}>{name(root + semis)}</b><span>{semis === 0 ? "your key" : `${semis > 0 ? "up" : "down"} ${Math.abs(semis)} semitone${Math.abs(semis) > 1 ? "s" : ""} from ${name(root)}`}</span></div>
         </Screen>
         <div className="fl-tempo">
-          <Knob label="shift" color={CAP.navy} size={92} height={170} led={accent} value={(semis - SHIFT_MIN) / (SHIFT_MAX - SHIFT_MIN)} defaultValue={0.5}
+          <Knob label="shift" readout={`${semis > 0 ? "+" : ""}${semis} st`} color={CAP.navy} size={92} height={170} led={accent} value={(semis - SHIFT_MIN) / (SHIFT_MAX - SHIFT_MIN)} defaultValue={0.5}
             onChange={v => setSemis(Math.round(SHIFT_MIN + v * (SHIFT_MAX - SHIFT_MIN)))} />
           <Chips label="Shift by" accent={accent} items={[-5, -3, 0, 3, 5]} value={semis} onPick={n => setSemis(Math.max(SHIFT_MIN, Math.min(SHIFT_MAX, n)))} name={n => (n === 0 ? "home" : `${n > 0 ? "+" : ""}${n}`)} />
         </div>
@@ -189,7 +189,7 @@ export function MacroStep({ screen, accent, onNext, tail }: StepProps) {
           </div>
         </Screen>
         <div className="fl-tempo">
-          <Knob label="macro" color={CAP.navy} size={92} height={170} led={accent} value={m} defaultValue={0.2} onChange={setM} />
+          <Knob label="macro" readout={`${Math.round(m * 100)}%`} color={CAP.navy} size={92} height={170} led={accent} value={m} defaultValue={0.2} onChange={setM} />
           <div>
             <div className="fl-marks" role="group" aria-label="What the macro turns" style={{ ["--c" as string]: accent } as CSSProperties}>
               {all.map(t => <button key={t.key} type="button" aria-pressed={on.includes(t.key)} className={`ls-chip ${on.includes(t.key) ? "is-on" : ""}`} onClick={() => setOn(o => (o.includes(t.key) ? o.filter(x => x !== t.key) : [...o, t.key]))}>{t.label}</button>)}

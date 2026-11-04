@@ -5,7 +5,7 @@ export const WORLDS: World[] = [
     slug: "foundations",
     number: 0,
     title: "Music Foundations",
-    tagline: "Sound, rhythm, melody, harmony, music tech — from absolute zero.",
+    tagline: "Sound, rhythm, melody, harmony, music tech: from absolute zero.",
     color: "acid",
     description: "Everything you need to know before you touch a DAW or a DJ controller. 40 missions across 5 paths.",
   },
@@ -79,6 +79,6 @@ export const WORLDS: World[] = [
     title: "Live 12 Power Tools",
     tagline: "Stem split, MIDI transforms, scale, similarity.",
     color: "sun",
-    description: "The Live 12 marquee features — the ones that make this version a step-change.",
+    description: "The Live 12 marquee features: the ones that make this version a step-change.",
   },
 ];

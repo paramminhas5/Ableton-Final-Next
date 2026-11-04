@@ -88,7 +88,7 @@ export function DecibelMeterSim() {
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-4">
         <div className="font-mono text-[10px] uppercase opacity-70">Decibel Meter</div>
-        <div className="font-display text-2xl mt-1">HEAR THE VOLUME — SEE THE dB</div>
+        <div className="font-display text-2xl mt-1">HEAR THE VOLUME: SEE THE dB</div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
@@ -158,7 +158,7 @@ export function DecibelMeterSim() {
       </div>
 
       <div className="brutal-border bg-sun/20 p-3 font-mono text-xs leading-relaxed">
-        <strong>Rule:</strong> Never exceed 0 dBFS in a DAW — that is the digital ceiling. 
+        <strong>Rule:</strong> Never exceed 0 dBFS in a DAW: that is the digital ceiling. 
         Clipping creates harsh distortion that cannot be undone. Aim for peaks at -6 dB.
       </div>
     </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DevicesPageClient } from "@/components/DevicesPageClient";
 
 export const metadata: Metadata = {
-  title: "Device Lab",
+  title: "device lab",
   description: "Real, working device emulations + every built-in instrument explained. Every knob, audible.",
 };
 

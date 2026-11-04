@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ChallengePageClient } from "@/components/ChallengePageClient";
 
 export const metadata: Metadata = {
-  title: "Daily Challenge | CCD.SCHOOL",
+  title: "daily challenge",
   description: "5 questions, 30 seconds each. No wrong answers allowed. Compete globally.",
 };
 

@@ -48,7 +48,7 @@ export function Settings() {
       <ListRow led={prefs.sound ? "var(--led-mint)" : undefined} title="interface sounds" sub="the little clicks and chimes. music always plays."
         right={<div style={{ width: 124 }}><Switch label="Interface sounds" value={prefs.sound ? "on" : "off"} onChange={id => setPrefs({ sound: id === "on" })}
           options={[{ id: "on", label: "on" }, { id: "off", label: "off" }]} /></div>} />
-      <ListRow led="var(--led-go)" title="learning mode" sub="journey takes lessons in order. see all opens every lesson at once."
+      <ListRow led="var(--led-mint)" title="learning mode" sub="journey takes lessons in order. see all opens every lesson at once."
         right={<div style={{ width: 124 }}><Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
           options={[{ id: "flow", label: "journey" }, { id: "free", label: "see all" }]} /></div>} />
 

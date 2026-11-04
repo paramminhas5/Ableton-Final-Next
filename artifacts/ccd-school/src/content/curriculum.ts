@@ -40,7 +40,7 @@ export const PART: Record<string, string> = {
   "kick-designer": "your own kick", "real-drums": "a real kit", "lead-width": "width", "fx-riser": "riser",
   "balance": "levels", "eq-place": "eq", "space": "space", "glue": "glue",
   "sections": "sections", "fills": "fills", "the-drop": "the drop", "finish-export": "export",
-  "what-is-djing": "the backbeat", "dj-equipment": "two decks", "tempo-bpm-dj": "matched tempo", "your-first-mix": "first blend",
+  "what-is-djing": "a clap on 2 and 4", "dj-equipment": "a second deck", "tempo-bpm-dj": "matched tempo", "your-first-mix": "first blend",
   "phrasing": "phrasing", "eq-mixing-dj": "bass swap", "headphone-monitoring": "cue", "long-mix-blend": "long blend",
   "music-library-dj": "three tracks", "key-detection-dj": "keys that fit", "cue-points-dj": "cue points", "waveform-reading": "the drop, seen",
   "set-structure-dj": "the arc", "effects-performance-dj": "effects", "preparing-a-set-dj": "your crate",

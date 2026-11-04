@@ -91,7 +91,7 @@ export function KickShape({ decay = 0.5, tune = 0.5, hit = 0, label = true }: { 
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="fl-kick" key={hit} aria-hidden>
         <path d={`M0 ${mid}H${W}`} stroke="rgba(255,255,255,.08)" vectorEffect="non-scaling-stroke" />
         <polyline points={env.join(" ")} fill="none" stroke="rgba(255,255,255,.2)" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
-        <polyline points={pts.join(" ")} fill="none" stroke="var(--led-go)" strokeWidth={1.8} className="fl-kickline" vectorEffect="non-scaling-stroke" />
+        <polyline points={pts.join(" ")} fill="none" stroke="var(--led-mint)" strokeWidth={1.8} className="fl-kickline" vectorEffect="non-scaling-stroke" />
       </svg>
       {label && (
         <div className="fl-kicklabels" aria-hidden>
@@ -144,7 +144,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
           <Silk label="tap one to hear it" right={variants[v]?.label} />
           <div className="ls-pads" role="radiogroup" aria-label="Versions">
             {variants.map((x, i) => (
-              <button key={x.label} type="button" role="radio" aria-checked={v === i} className={`ls-pad ${v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => pick(i)}>
+              <button key={x.label} type="button" role="radio" aria-checked={v === i} className={`ls-pad ${v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
                 <small>{String.fromCharCode(97 + i)}</small><span>{x.label}</span>
               </button>
             ))}
@@ -387,7 +387,7 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
         {["the first", "the second"].map((label, i) => {
           const cls = picked === null ? "" : i === answer ? (picked === i ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
           return (
-            <button key={label} type="button" role="radio" aria-checked={picked === i} disabled={picked !== null} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => pick(i)}>
+            <button key={label} type="button" role="radio" aria-checked={picked === i} disabled={picked !== null} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
               <small>{String.fromCharCode(97 + i)}</small><span>{label}</span>
             </button>
           );
@@ -500,8 +500,8 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
           <div className="fl-airlabels"><span>glue squeezes the whole mix together</span><span>the limiter stops it clipping</span></div>
         </Screen>
         <div className="m1-g" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 12 }}>
-          <Knob label="glue" color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
-          <Knob label="out" color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
+          <Knob label="glue" readout={`${Math.round(glue * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
+          <Knob label="out" readout={`${Math.round(out * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
         </div>
       </div>
       <div className="fl-text">
@@ -605,7 +605,7 @@ function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
           <div className="fl-airlabels"><span>one beat, four sixteenths</span><span>the 2nd and 4th land {pct}% of the way</span></div>
         </Screen>
         <div className="fl-tempo">
-          <Knob label="swing" color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
+          <Knob label="swing" readout={`${Math.round(sw * 100)}%`} color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
           <div className="fl-marks" role="radiogroup" aria-label="Amounts to try" style={{ ["--c" as string]: accent } as CSSProperties}>
             {screen.marks.map(m => (
               <button key={m} type="button" role="radio" aria-checked={Math.abs(m - sw) < 0.01} className={`ls-chip ${Math.abs(m - sw) < 0.01 ? "is-on" : ""}`} onClick={() => setSw(m)}>{Math.round(m * 100)}%<small>{SWING_LABEL[String(m)] ?? ""}</small></button>
@@ -660,7 +660,7 @@ function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; 
           <div className="fl-airlabels"><span>one beat every {ms} ms</span><span>{(bpm / 60).toFixed(1)} beats a second</span></div>
         </Screen>
         <div className="fl-tempo">
-          <Knob label="tempo" color={CAP.navy} size={92} height={170} led={accent} value={toV(bpm)} defaultValue={toV(120)} onChange={v => setBpm(toBpm(v))} />
+          <Knob label="tempo" readout={`${bpm} bpm`} color={CAP.navy} size={92} height={170} led={accent} value={toV(bpm)} defaultValue={toV(120)} onChange={v => setBpm(toBpm(v))} />
           <div className="fl-marks" role="radiogroup" aria-label="Tempos to try" style={{ ["--c" as string]: accent } as CSSProperties}>
             {marks.map(m => (
               <button key={m} type="button" role="radio" aria-checked={m === bpm} className={`ls-chip ${m === bpm ? "is-on" : ""}`} onClick={() => setBpm(m)}>{m}{TEMPO_LABEL[m] ? <small>{TEMPO_LABEL[m]}</small> : null}</button>

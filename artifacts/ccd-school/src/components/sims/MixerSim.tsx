@@ -83,7 +83,7 @@ export function MixerSim() {
         <button onClick={() => setPlaying((p) => !p)} className="brutal-border bg-acid px-4 py-2 font-mono uppercase brutal-press">
           {playing ? "■ Stop" : "▶ Play Mix"}
         </button>
-        <span className="font-mono text-xs uppercase opacity-70">Move faders, mute, solo — listen.</span>
+        <span className="font-mono text-xs uppercase opacity-70">Move faders, mute, solo: listen.</span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         {tracks.map((t, i) => (

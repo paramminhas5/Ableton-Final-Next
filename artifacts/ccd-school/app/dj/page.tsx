@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DJ } from "@/components/m1/DJ";
 
 export const metadata: Metadata = {
-  title: "DJ",
+  title: "dj",
   description: "Two decks, a mixer and a crossfader. Mix your own track with a house loop.",
 };
 

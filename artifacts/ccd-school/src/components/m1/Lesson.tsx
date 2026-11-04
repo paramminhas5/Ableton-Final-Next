@@ -259,7 +259,7 @@ function Pads({ options, picked, answer, phase, onPick, label }: { options: stri
       {options.map((o, i) => {
         const cls = phase === "pick" ? (picked === i ? "is-lit" : "") : i === answer ? (phase === "right" ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
         return (
-          <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={phase !== "pick"} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => onPick(i)}>
+          <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={phase !== "pick"} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => onPick(i)}>
             <small>{String.fromCharCode(97 + i)}</small>
             <span>{o}</span>
           </button>
@@ -356,7 +356,7 @@ function ListenStep({ screen, ...p }: AskProps & { screen: Extract<LessonScreen,
       <Silk label="transport" />
       <div className="m1-g">
         <Key label="play" led={playing ? "var(--led-mint)" : null} onClick={play} ariaLabel="Play the sound"><Icon name="play" /></Key>
-        <Key label="loop" led={loop ? "var(--led-go)" : null} ariaPressed={loop} onClick={() => setLoop(l => !l)} ariaLabel="Loop the sound"><Icon name="loop" /></Key>
+        <Key label="loop" led={loop ? "var(--led-mint)" : null} ariaPressed={loop} onClick={() => setLoop(l => !l)} ariaLabel="Loop the sound"><Icon name="loop" /></Key>
         <span /><span />
       </div>
       <Silk label="pick one" right={heard ? "tap one, it lights up" : "listen first"} />
@@ -436,7 +436,7 @@ function TypeStep({ screen, ...p }: AskProps & { screen: Extract<LessonScreen, {
   );
 }
 
-const PAIR_COLORS = ["var(--led-mint)", "var(--led-cobalt)", "var(--led-lilac)", "#F3C14F", "var(--led-go)"];
+const PAIR_COLORS = ["var(--led-mint)", "var(--led-cobalt)", "var(--led-lilac)", "#F3C14F", "var(--led-mint)"];
 
 function OrderStep({ screen, seed, ...p }: AskProps & { screen: Extract<LessonScreen, { kind: "sequence" }>; seed: number }) {
   const items = useMemo(() => {
@@ -574,7 +574,7 @@ function Gauge({ at, total }: { at: number; total: number }) {
     <svg viewBox={`0 0 ${W} 170`} width="100%" aria-hidden style={{ display: "block", marginTop: 6 }}>
       {Array.from({ length: total }, (_, i) => {
         const q = ang(i), on = i === at;
-        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#FF4F9A" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #FF4F9A)" } : undefined} />;
+        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#4FE3B6" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #FF4F9A)" } : undefined} />;
       })}
       <path d={`M${cx} ${cy}L${cx + (r - 22) * Math.cos(na)} ${cy + (r - 22) * Math.sin(na)}`} stroke="#F3F2EF" strokeWidth={2.2} strokeLinecap="round" />
       <circle cx={cx} cy={cy} r={6} fill="#F3F2EF" />
@@ -697,14 +697,14 @@ function HeartsOut({ back, onFree, onPractice }: { back: string; onFree: () => v
       </Screen>
       <Silk label="keep going" />
       <div className="ls-pads">
-        <button type="button" className="ls-pad is-big is-glowpad" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={onPractice}>
+        <button type="button" className="ls-pad is-big is-glowpad" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={onPractice}>
           <small>2 min · earn one back</small><span>practice</span>
         </button>
         <button type="button" className="ls-pad is-big" onClick={onFree}>
           <small>no hearts, no gates</small><span>free mode</span>
         </button>
       </div>
-      <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span>your track and your progress are safe. nothing resets.</span></div>
+      <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span>your track and your progress are safe. nothing resets.</span></div>
       {progress.gems >= 20 && (
         <button type="button" className="ls-panel is-link" onClick={() => { if (spendGems(20)) refillHeart(); }}>
           <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>spend 20 gems for a heart now · you have {progress.gems}</span>

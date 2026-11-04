@@ -101,7 +101,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
           <Silk label="shape it first" right="the screen shows values" />
           <div className="m1-g" style={{ gridTemplateColumns: "1fr 1fr" }}>
             {knobs.map((k, i) => (
-              <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={170} led={accent ?? "var(--led-go)"}
+              <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={170} led={accent ?? "var(--led-mint)"}
                 value={value(k)} defaultValue={k.spec.default} readout={display(k.spec, value(k))}
                 onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
                 onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />

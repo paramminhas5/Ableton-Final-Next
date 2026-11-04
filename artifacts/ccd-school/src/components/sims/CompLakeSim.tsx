@@ -76,7 +76,7 @@ export function CompLakeSim() {
       </div>
 
       <p className="font-mono text-[11px] uppercase opacity-70">
-        ▸ This is exactly Live's Take Lanes — except your "quality scores" are your ears.
+        ▸ This is exactly Live's Take Lanes: except your "quality scores" are your ears.
         Hit AUTO-COMP to see the optimal take per bar.
       </p>
     </div>

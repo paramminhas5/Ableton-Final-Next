@@ -23,13 +23,13 @@ const SCENARIOS: { title: string; prompt: string; solution: string[]; hint: stri
     title: "Basic Vocal Chain",
     prompt: "Build: Mic → EQ → Compressor → Reverb → Speakers",
     solution: ["mic","eq","compressor","reverb","speakers"],
-    hint: "Source always comes first, output always comes last. EQ before compress — shape then control.",
+    hint: "Source always comes first, output always comes last. EQ before compress: shape then control.",
   },
   {
     title: "Guitar with Delay",
     prompt: "Build: Instrument → EQ → Delay → Speakers",
     solution: ["instrument","eq","delay","speakers"],
-    hint: "Guitar is an instrument source. Delay is a time-based effect — usually goes after EQ.",
+    hint: "Guitar is an instrument source. Delay is a time-based effect: usually goes after EQ.",
   },
   {
     title: "Full Mix Bus",
@@ -199,7 +199,7 @@ export function SignalFlowBuilderSim() {
 
       <div className="brutal-border bg-sun/20 p-3 font-mono text-xs leading-relaxed">
         <strong>Rule:</strong> Signal always flows Source → Effects → Output. 
-        The order of effects matters — EQ before compression sounds different to compression before EQ.
+        The order of effects matters: EQ before compression sounds different to compression before EQ.
       </div>
     </div>
   );

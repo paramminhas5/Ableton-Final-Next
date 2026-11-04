@@ -151,7 +151,7 @@ function Lane({ l, isNext, onExtras }: { l: JourneyLesson; isNext: boolean; onEx
         ? <Link href={`/learn/${l.slug}`} className={cls} aria-label={`${l.title}${l.done ? ", in your song" : isNext ? ", up next" : ""}`}>{body}</Link>
         : <div className={cls} aria-label={`${l.title}, coming`}>{body}</div>}
       {l.extras.length > 0
-        ? <button type="button" className="jv-more" onClick={onExtras} aria-label={`${l.extras.length} more on ${l.title}`}>+{l.extras.length}</button>
+        ? <button type="button" className="jv-more" onClick={onExtras} aria-label={`${l.extras.length} more on ${l.title}`}><b>+{l.extras.length}</b><small>deeper</small></button>
         : <span className="jv-more is-none" aria-hidden />}
     </li>
   );

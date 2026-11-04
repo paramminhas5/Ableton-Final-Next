@@ -151,7 +151,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
     <main className="m1-page wl" data-step={at}>
       <div className="wl-top">
         {step > 0 ? <button type="button" className="fl-stepback" onClick={back} aria-label="Back"><Icon name="back" small />back</button> : <span />}
-        <div className="ls-seg" aria-hidden style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties}>{TOUR.map((_, i) => <i key={i} className={i < step ? "is-done" : i === step ? "is-now" : ""} />)}</div>
+        <div className="ls-seg" aria-hidden style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties}>{TOUR.map((_, i) => <i key={i} className={i < step ? "is-done" : i === step ? "is-now" : ""} />)}</div>
         {step > 0 && step < 6 ? <button type="button" className="fl-stepback" onClick={() => setStep(6)}>skip tour</button> : <span />}
       </div>
 

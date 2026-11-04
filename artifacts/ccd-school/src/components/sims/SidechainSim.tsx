@@ -11,8 +11,8 @@ const BEAT = 60 / BPM;
 type PresetKey = "off" | "clean" | "edm" | "extreme";
 const PRESETS: Record<PresetKey, { amount: number; release: number; sc: boolean; label: string; blurb: string }> = {
   off:     { amount: 0,    release: 0.18, sc: false, label: "NO DUCK",  blurb: "Kick & pad fight for space. Muddy low end." },
-  clean:   { amount: 0.55, release: 0.18, sc: true,  label: "CLEAN PUMP",blurb: "Subtle ducking — kick is clearer, pad still steady." },
-  edm:     { amount: 0.85, release: 0.32, sc: true,  label: "EDM PUMP", blurb: "Big breathing motion — the classic dance pump." },
+  clean:   { amount: 0.55, release: 0.18, sc: true,  label: "CLEAN PUMP",blurb: "Subtle ducking: kick is clearer, pad still steady." },
+  edm:     { amount: 0.85, release: 0.32, sc: true,  label: "EDM PUMP", blurb: "Big breathing motion: the classic dance pump." },
   extreme: { amount: 1,    release: 0.55, sc: true,  label: "TOO MUCH", blurb: "Pad almost disappears. Useful to hear the upper limit." },
 };
 
@@ -134,7 +134,7 @@ export function SidechainSim() {
           <div className="h-full bg-acid transition-none" style={{ width: `${(1 - gr) * 100}%` }} />
         </div>
         <div className="font-mono text-xs mt-2">Gain reduction: -{(gr * 24).toFixed(1)} dB</div>
-        <div className="font-mono text-[10px] uppercase mt-3 opacity-70">PAD LEVEL — last 2s scrolling</div>
+        <div className="font-mono text-[10px] uppercase mt-3 opacity-70">PAD LEVEL: last 2s scrolling</div>
         <svg viewBox="0 0 240 60" className="w-full h-16 brutal-border bg-card mt-1">
           <polyline
             fill="none"

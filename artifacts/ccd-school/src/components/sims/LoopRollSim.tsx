@@ -40,7 +40,7 @@ export function LoopRollSim() {
           </button>
         ))}
       </div>
-      <p className="font-mono text-[10px] uppercase opacity-70">▸ Halve the loop, then halve again — instant build-up. Release back to 1 bar for the drop.</p>
+      <p className="font-mono text-[10px] uppercase opacity-70">▸ Halve the loop, then halve again: instant build-up. Release back to 1 bar for the drop.</p>
     </div>
   );
 }

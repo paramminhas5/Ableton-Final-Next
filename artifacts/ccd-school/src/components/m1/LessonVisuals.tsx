@@ -37,7 +37,7 @@ export function AirWave({ playing, speed = 1, strength = 1 }: { playing: boolean
           const x0 = 56 + c * 9.4;
           const x = x0 + Math.sin(w * t - c * 0.55) * amp;
           const y = 22 + r * 13.5 + (c % 2 ? 6 : 0) * 0.5;
-          return <circle key={i} cx={x} cy={y} r={2} fill="var(--led-go)" opacity={0.75} />;
+          return <circle key={i} cx={x} cy={y} r={2} fill="var(--led-mint)" opacity={0.75} />;
         })}
         <path d="M312 40c10 0 14 8 14 16s-6 12-8 18-3 10-8 10" fill="none" stroke="rgba(255,255,255,.5)" strokeWidth={2} />
       </svg>
@@ -68,7 +68,7 @@ export function WaveShape({ kind, morph, bright = 1, cycles = 3, amp = 1, playin
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" className="fl-wave" role="img" aria-label={`${soft ? "A smooth, round wave" : m > 0.5 ? "A square wave, flat tops and sudden jumps" : "A saw wave, a slope then a sudden drop"}${cycles > 4 ? ", wobbling fast" : ""}`}>
       <path d={`M0 ${mid}H${W}`} stroke="rgba(255,255,255,.08)" />
-      <polyline points={pts.join(" ")} fill="none" stroke="var(--led-go)" strokeWidth={1.8} strokeLinejoin="round" />
+      <polyline points={pts.join(" ")} fill="none" stroke="var(--led-mint)" strokeWidth={1.8} strokeLinejoin="round" />
     </svg>
   );
 }

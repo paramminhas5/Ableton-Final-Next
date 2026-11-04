@@ -4,7 +4,7 @@ import { LESSON_LINKS } from "@/content/lessonLinks";
 import { missionBySlug } from "@/content/missions";
 
 export const metadata: Metadata = {
-  title: "Every Ableton device, explained",
+  title: "every ableton device, explained",
   description: "What each of Live's own devices does, when to reach for it, and one tip. Search or filter by job.",
 };
 

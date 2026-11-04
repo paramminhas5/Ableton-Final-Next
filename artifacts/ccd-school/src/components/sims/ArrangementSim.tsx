@@ -171,7 +171,7 @@ export function ArrangementSim() {
         </div>
       </div>
 
-      <p className="font-mono text-xs uppercase opacity-70">▶ PLAY to hear it. Mute/solo tracks while playing. Click & drag the bottom lane to draw master-volume automation — it shapes the playback level live.</p>
+      <p className="font-mono text-xs uppercase opacity-70">▶ PLAY to hear it. Mute/solo tracks while playing. Click & drag the bottom lane to draw master-volume automation: it shapes the playback level live.</p>
     </div>
   );
 }

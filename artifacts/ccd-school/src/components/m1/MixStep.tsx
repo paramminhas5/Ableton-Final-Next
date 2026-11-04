@@ -155,7 +155,9 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "match" ? `deck b is ${bBpm > base ? "faster" : "slower"} by ${off.toFixed(1)} bpm. move its tempo fader until the beats line up`
     : fb <= 0.6 ? "bring deck b's fader up first" : lowA >= 0.25 ? "now turn deck a's low knob down: swap the bass" : "last: crossfade to b, or pull deck a's fader down";
   const [say, setSay] = useState<string | null>(null);
-  const go = () => { if (met) onNext(); else { setSay(why); window.setTimeout(() => setSay(null), 2600); } };
+  // After one "not yet", a way on: nobody gets stuck on a mixer step.
+  const [stuck, setStuck] = useState(false);
+  const go = () => { if (met) onNext(); else { setSay(why); setStuck(true); window.setTimeout(() => setSay(null), 2600); } };
   useEnter(go);
 
   // Only the controls this lesson is about are out; the rest wait behind "more controls".
@@ -177,7 +179,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <div><small>deck b · {bFile ? "your file" : "bank"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
           </div>
           {recState !== "off" && <div className="fl-airlabels"><span>{recState === "on" ? "recording your mix" : "mix recorded"}</span>{recUrl ? <a href={recUrl} download="my-mix.webm">download it</a> : null}</div>}
-          <div className={`mx-goal ${met ? "is-met" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: met ? "var(--led-mint)" : "var(--led-go)" } as CSSProperties} />{met ? "done. press next when you're ready" : why}</div>
+          <div className={`mx-goal ${met ? "is-met" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: met ? "var(--led-mint)" : "var(--led-mint)" } as CSSProperties} />{met ? "done. press next when you're ready" : why}</div>
           {(screen.goal === "phrase" || screen.goal === "cut") && playing ? <div className="fl-airlabels"><span>phrase bar {Math.floor((((beat % 32) + 32) % 32) / 4) + 1} of 8</span><span>beat {beatA + 1}</span></div> : null}
         </Screen>
         <div className="mx-desk">
@@ -218,6 +220,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {say ? <div className="ls-hint" role="status">{say}</div> : null}
+        {stuck && !met ? <button type="button" className="ls-skip" onClick={() => { engine.stop(); onNext(); }}>skip this step</button> : null}
         {tail}
       </div>
       <div className="ls-bottom">

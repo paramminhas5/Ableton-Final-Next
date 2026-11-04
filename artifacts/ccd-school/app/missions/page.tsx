@@ -1,18 +1,6 @@
-import type { Metadata } from "next";
-import { MissionsPageClient } from "@/components/MissionsPageClient";
+import { redirect } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
-  title: "Missions",
-  description:
-    "All 198 lessons across basics, producer and dj. Search, filter and jump to any lesson.",
-  openGraph: {
-    title: "Missions | CCD.SCHOOL",
-    description: "198 lessons. Search, filter and jump to any one.",
-  },
-};
-
+/** The old flat list of missions. Every lesson now lives in a world and its paths. */
 export default function MissionsPage() {
-  return <MissionsPageClient />;
+  redirect("/worlds");
 }

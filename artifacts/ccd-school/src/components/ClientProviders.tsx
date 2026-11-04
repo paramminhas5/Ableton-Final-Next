@@ -147,13 +147,13 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   <ServerEventQueue />
                   <CelebrationLayer />
                   {children}
-                  {/* Mobile phone UI — hidden on desktop via CSS */}
+                  {/* Mobile phone UI: hidden on desktop via CSS */}
                   <ModeBar />
                   <InstallPromptBanner />
                   {/* Desktop UI */}
                   <MasterTransportBar />
                   <CommandPalette />
-                  {/* Easter eggs — Konami code, idle cat, secret clicks */}
+                  {/* Easter eggs: Konami code, idle cat, secret clicks */}
                   {/* Easter eggs retired: nothing appears unless you touch something */}
                 </AnalyticsProvider>
               </GatingLoader>

@@ -35,6 +35,18 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
     const row = rows.indexOf(Math.min(rows[0], top + 3));
     if (roll.current && row > 0) roll.current.scrollTop = row * 13;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // One tab stop for the whole roll: arrow keys move between squares, Enter or Space taps, Delete removes the picked note.
+  const [fc, setFc] = useState<[number, number]>(() => { const e = evs[0]; return e ? [Math.max(0, rows.indexOf(e.note)), Math.round(e.start / STEP)] : [12, 0]; });
+  const onRollKey = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+    const d: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
+    if (ev.key === "Delete" || ev.key === "Backspace") { if (sel !== null) { ev.preventDefault(); edit(() => null); setSel(null); } return; }
+    const m = d[ev.key];
+    if (!m) return;
+    ev.preventDefault();
+    const r = Math.max(0, Math.min(rows.length - 1, fc[0] + m[0])), c = Math.max(0, Math.min(cols - 1, fc[1] + m[1]));
+    setFc([r, c]);
+    (roll.current?.querySelector(`[data-rc="${r}-${c}"]`) as HTMLElement | null)?.focus();
+  };
   const playCol = playing ? Math.floor((((beat % loop) + loop) % loop) / STEP) : -1;
   const at = (note: number, col: number) => evs.findIndex(e => e.note === note && e.start <= col * STEP + 1e-6 && e.start + e.len > col * STEP + 1e-6);
   const tap = (note: number, col: number) => {
@@ -74,8 +86,8 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
       inst={<>
         <Screen>
           <Meta left={`note grid · your ${type}`} right={s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
-          <div ref={roll} className="gr-roll" role="grid" aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
-            {rows.map(n => (
+          <div ref={roll} className="gr-roll" role="grid" onKeyDown={onRollKey} aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
+            {rows.map((n, ri) => (
               <div key={n} role="row" className={`gr-row ${BLACK.has(n % 12) ? "is-black" : ""}`}>
                 {/* A keyboard down the side: black keys dark, every C named. */}
                 <span className={`gr-key ${BLACK.has(n % 12) ? "is-black" : ""}`}>{n % 12 === 0 ? `${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}` : ""}</span>
@@ -87,6 +99,7 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
                   const head = e && Math.abs(e.start - c * STEP) < 1e-6;
                   return <button key={c} type="button" role="gridcell" aria-label={`${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}, step ${c + 1}${e ? ", note" : ""}`}
                     className={`gr-cell ${c % 4 === 0 ? "is-beat" : ""} ${e ? "is-note" : ""} ${head ? "is-head" : ""} ${i >= 0 && i === sel ? "is-sel" : ""} ${c === playCol ? "is-now" : ""}`}
+                    data-rc={`${ri}-${c}`} tabIndex={fc[0] === ri && fc[1] === c ? 0 : -1} onFocus={() => setFc([ri, c])}
                     onClick={() => tap(n, c)} />;
                 })}
               </div>

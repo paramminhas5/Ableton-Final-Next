@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { WikiPageClient } from "@/components/WikiPageClient";
 
 export const metadata: Metadata = {
-  title: "Wiki",
+  title: "wiki",
   description:
     "Complete reference wiki for all three worlds: Fundamentals, DJ World and Producer. Every chapter, path and mission in one place.",
   openGraph: {

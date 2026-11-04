@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const m = missionBySlug(slug);
   return {
-    title: m ? `${m.title} | CCD.SCHOOL` : "Lesson | CCD.SCHOOL",
+    title: m ? m.title.toLowerCase() : "lesson",
     description: m?.tagline ?? "Learn music production and DJing step by step.",
   };
 }

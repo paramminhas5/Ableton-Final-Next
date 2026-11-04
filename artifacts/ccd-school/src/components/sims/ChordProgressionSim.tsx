@@ -17,20 +17,20 @@ const PROGRESSIONS: { label: string; key: string; chords: ChordDef[] }[] = [
     label: "I–IV–V–I (Major)",
     key: "C Major",
     chords: [
-      { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Home — stable & settled",     color: "bg-acid text-ink" },
-      { numeral: "IV",  name: "F Major",  notes: [65,69,72,77], feel: "Lift — moving away from home", color: "bg-volt text-bone" },
-      { numeral: "V",   name: "G Major",  notes: [67,71,74,79], feel: "Tension — wants to resolve",   color: "bg-hot text-bone" },
-      { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Resolution — back to home!",   color: "bg-acid text-ink" },
+      { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Home: stable & settled",     color: "bg-acid text-ink" },
+      { numeral: "IV",  name: "F Major",  notes: [65,69,72,77], feel: "Lift: moving away from home", color: "bg-volt text-bone" },
+      { numeral: "V",   name: "G Major",  notes: [67,71,74,79], feel: "Tension: wants to resolve",   color: "bg-hot text-bone" },
+      { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Resolution: back to home!",   color: "bg-acid text-ink" },
     ],
   },
   {
     label: "i–iv–V–i (Minor)",
     key: "A Minor",
     chords: [
-      { numeral: "i",   name: "Am",       notes: [57,60,64,69], feel: "Home — dark & melancholic",    color: "bg-ink text-bone" },
+      { numeral: "i",   name: "Am",       notes: [57,60,64,69], feel: "Home: dark & melancholic",    color: "bg-ink text-bone" },
       { numeral: "iv",  name: "Dm",       notes: [62,65,69,74], feel: "Deepening sadness",            color: "bg-volt text-bone" },
-      { numeral: "V",   name: "E Major",  notes: [64,68,71,76], feel: "Tension — leading tone pull",  color: "bg-hot text-bone" },
-      { numeral: "i",   name: "Am",       notes: [57,60,64,69], feel: "Resolution — dark home",       color: "bg-ink text-bone" },
+      { numeral: "V",   name: "E Major",  notes: [64,68,71,76], feel: "Tension: leading tone pull",  color: "bg-hot text-bone" },
+      { numeral: "i",   name: "Am",       notes: [57,60,64,69], feel: "Resolution: dark home",       color: "bg-ink text-bone" },
     ],
   },
   {
@@ -157,7 +157,7 @@ export function ChordProgressionSim() {
       </button>
 
       <div className="brutal-border bg-sun/20 p-3 font-mono text-xs leading-relaxed">
-        <strong>Listen:</strong> The V chord creates tension — your ear <em>wants</em> to hear the I chord next. 
+        <strong>Listen:</strong> The V chord creates tension: your ear <em>wants</em> to hear the I chord next. 
         This tension→resolution is the engine behind almost every song ever written.
       </div>
     </div>

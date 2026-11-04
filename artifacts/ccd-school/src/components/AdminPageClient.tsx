@@ -148,7 +148,7 @@ export function AdminPageClient() {
                 Current mode: <span className={mode === "free" ? "text-acid" : ""}>{mode?.toUpperCase()}</span>
               </div>
               <p className="font-mono text-xs opacity-70 mb-6 leading-relaxed">
-                <strong>FREE (default):</strong> All missions open to everyone — no account or payment required.<br />
+                <strong>FREE (default):</strong> All missions open to everyone: no account or payment required.<br />
                 <strong>PAID:</strong> First 3 missions per path free; advanced + later missions require PRO.
               </p>
               <div className="flex gap-3">
@@ -168,7 +168,7 @@ export function AdminPageClient() {
                 </button>
               </div>
               {saved && (
-                <div className="mt-3 brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase">✓ Saved — takes effect within 60 seconds</div>
+                <div className="mt-3 brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase">✓ Saved: takes effect within 60 seconds</div>
               )}
             </div>
 
@@ -239,11 +239,11 @@ export function AdminPageClient() {
             <div className="brutal-border bg-bone p-6">
               <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// ENV VARS NEEDED</div>
               <div className="font-mono text-xs opacity-70 space-y-1">
-                <div><code className="bg-ink/10 px-1">AUTH_SECRET</code> — random string for JWT signing</div>
-                <div><code className="bg-ink/10 px-1">AUTH_GOOGLE_ID</code> + <code className="bg-ink/10 px-1">AUTH_GOOGLE_SECRET</code> — Google OAuth credentials</div>
-                <div><code className="bg-ink/10 px-1">ADMIN_PASSWORD</code> — this admin page password</div>
-                <div><code className="bg-ink/10 px-1">NEXT_PUBLIC_STRIPE_PRICE_MONTHLY</code> — Stripe monthly price ID</div>
-                <div><code className="bg-ink/10 px-1">NEXT_PUBLIC_STRIPE_PRICE_ANNUAL</code> — Stripe annual price ID</div>
+                <div><code className="bg-ink/10 px-1">AUTH_SECRET</code>: random string for JWT signing</div>
+                <div><code className="bg-ink/10 px-1">AUTH_GOOGLE_ID</code> + <code className="bg-ink/10 px-1">AUTH_GOOGLE_SECRET</code>: Google OAuth credentials</div>
+                <div><code className="bg-ink/10 px-1">ADMIN_PASSWORD</code>: this admin page password</div>
+                <div><code className="bg-ink/10 px-1">NEXT_PUBLIC_STRIPE_PRICE_MONTHLY</code>: Stripe monthly price ID</div>
+                <div><code className="bg-ink/10 px-1">NEXT_PUBLIC_STRIPE_PRICE_ANNUAL</code>: Stripe annual price ID</div>
               </div>
             </div>
           </div>

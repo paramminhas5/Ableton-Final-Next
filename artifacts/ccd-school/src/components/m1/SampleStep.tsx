@@ -128,7 +128,7 @@ export function SampleStep({ screen, accent, onNext, tail }: StepProps) {
     <Frame screen={screen} playing={playing} toggle={toggle} tail={tail} onGo={keep} go="add this sound" note={note}
       inst={<>
         <Screen>
-          <Meta left={job === "warp" ? `a loop recorded at ${LOOP_BPM} bpm, playing at ${bpm}` : job === "slice" ? "eight slices on eight pads" : "your sample"} right={busy ? "recording" : playing ? "playing" : "press play"} />
+          <Meta left={job === "warp" ? (warp === "off" ? `a loop at ${LOOP_BPM} bpm, not warped: drifts against your ${bpm}` : `a loop recorded at ${LOOP_BPM} bpm, warped to ${bpm}`) : job === "slice" ? "eight slices on eight pads" : "your sample"} right={busy ? "recording" : playing ? "playing" : "press play"} />
           <Wave rec={rec} cuts={sliced} lit={job === "slice" ? (mine.length ? mine : SLICE_ORDERS[order])[step] ?? -1 : job === "warp" && warp === "beats" ? step : -1} accent={accent} start={params[idx("start")] ?? 0} reverse={(params[idx("reverse")] ?? 0) > 0.5} />
         </Screen>
         <Chips label="Sound source" accent={accent} items={sources} value={source} name={s => (s === "mic" ? "record mic" : s === "file" ? "load a file" : s === "loop" ? "drum loop" : s)}

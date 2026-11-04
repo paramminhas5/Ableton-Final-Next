@@ -8,7 +8,7 @@ export default function MissionSlugPage({ params }: { params: { slug: string } }
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   return {
-    title: `Redirecting… | CCD.SCHOOL`,
+    title: "redirecting",
     robots: { index: false },
   };
 }

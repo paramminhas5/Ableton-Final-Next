@@ -63,7 +63,7 @@ const SCENARIOS: Scenario[] = [
     id: 4,
     title: "Cinematic Stems",
     concept: "Multi-bus routing for mixing flexibility",
-    why: "Grouping related elements to shared returns lets you process them as one — apply reverb glue to just the strings or just the drums.",
+    why: "Grouping related elements to shared returns lets you process them as one: apply reverb glue to just the strings or just the drums.",
     tracks: ["STRINGS", "BRASS", "PERC", "PIANO"],
     returns: [
       { name: "HALL", color: "bg-volt text-bone" },
@@ -79,7 +79,7 @@ const SCENARIOS: Scenario[] = [
   },
   {
     id: 5,
-    title: "Club Mix — Keep It Tight",
+    title: "Club Mix: Keep It Tight",
     concept: "Send discipline in electronic music",
     why: "Electronic music reverb should be surgical: kick and bass stay mostly dry (reverb blurs transients), hats get shimmer, leads get depth.",
     tracks: ["KICK", "BASS", "HATS", "LEAD"],
@@ -302,7 +302,7 @@ export function RoutingPuzzleSim() {
             onClick={() => setScenIdx(i)}
             className={`brutal-border px-3 py-1 font-mono text-[10px] uppercase brutal-press ${scenIdx === i ? "bg-ink text-bone" : "bg-bone"}`}
           >
-            {i + 1}. {s.title.split("—")[0]}
+            {i + 1}. {s.title.split(": ")[0]}
           </button>
         ))}
       </div>
@@ -310,7 +310,7 @@ export function RoutingPuzzleSim() {
       {/* Goal */}
       <div className="brutal-border bg-ink text-bone p-4 space-y-2">
         <div className="font-mono text-[10px] uppercase opacity-70">
-          Scenario {scen.id}/5 — {scen.concept}
+          Scenario {scen.id}/5: {scen.concept}
         </div>
         <div className="font-display text-2xl">{scen.title}</div>
         <div className="font-mono text-xs leading-relaxed opacity-80">{scen.why}</div>
@@ -361,7 +361,7 @@ export function RoutingPuzzleSim() {
       {/* Send sliders */}
       <div className="space-y-2">
         <div className="font-mono text-[10px] uppercase opacity-70">
-          Your sends — adjust to match target
+          Your sends: adjust to match target
         </div>
         {scen.tracks.map((t) => (
           <div
@@ -413,7 +413,7 @@ export function RoutingPuzzleSim() {
           <div
             className={`brutal-border px-4 py-2 font-mono text-sm uppercase ${solved ? "bg-acid text-ink" : "bg-hot text-bone"}`}
           >
-            {solved ? "✓ CORRECT ROUTING" : "✗ NOT QUITE — adjust highlighted tracks"}
+            {solved ? "✓ CORRECT ROUTING" : "✗ NOT QUITE: adjust highlighted tracks"}
           </div>
         )}
       </div>

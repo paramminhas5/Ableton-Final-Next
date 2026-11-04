@@ -125,6 +125,8 @@ export function Studio() {
       return;
     }
     update(() => starterTrack(), false);
+    // Named for what it is, so "my track" never claims a loop you didn't make.
+    try { const i = readSongs(); setSongs(renameSong(i.active, "starter loop")); window.dispatchEvent(new Event("ccd:song")); } catch { /* ignore */ }
     autoplay.current = true;
     setTouched({ label: "your loop", text: "tap a pad" });
   }, [update]);
@@ -565,9 +567,9 @@ export function Studio() {
                 ))}
               </div>
               <button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
-                aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>m</button>
+                aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>mute</button>
               <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}
-                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>s</button>
+                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>solo</button>
             </div>
             {bank === "sound" && !shift ? (
               <div className="st-preset">

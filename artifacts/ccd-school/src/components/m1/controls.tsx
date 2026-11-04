@@ -29,7 +29,7 @@ export const CAP = {
 export const WORLD_LED: Record<"fundamentals" | "dj" | "producer", string> = {
   fundamentals: LED.mint,
   dj: LED.cobalt,
-  producer: LED.go,
+  producer: LED.lilac,
 };
 
 // ── icons: one set, 24 grid, 1.6 stroke, round ends ─────────────────────
@@ -177,6 +177,8 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
     const step = detents && detents > 1 ? 1 / (detents - 1) : e.shiftKey ? 0.1 : 0.02;
     if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); onChange(clamp(value + step)); }
     if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); onChange(clamp(value - step)); }
+    if (e.key === "PageUp") { e.preventDefault(); onChange(clamp(value + Math.max(step, 0.1))); }
+    if (e.key === "PageDown") { e.preventDefault(); onChange(clamp(value - Math.max(step, 0.1))); }
     if (e.key === "Home") onChange(0);
     if (e.key === "End") onChange(1);
   }, [onChange, value, detents]);
@@ -197,7 +199,7 @@ function Scale({ size, steps, at = -1 }: { size: number; steps?: number; at?: nu
         {Array.from({ length: steps }, (_, i) => {
           const a = ((135 + (i * 270) / (steps - 1)) * Math.PI) / 180;
           const on = i === at;
-          return <path key={i} d={`M${c + (on ? r0 - 3 : r0) * Math.cos(a)} ${c + (on ? r0 - 3 : r0) * Math.sin(a)}L${c + r1 * Math.cos(a)} ${c + r1 * Math.sin(a)}`} strokeWidth={on ? 2.4 : 1.2} opacity={on ? 1 : 0.55} strokeLinecap="round" style={{ stroke: on ? "var(--led-go)" : "var(--print)" }} />;
+          return <path key={i} d={`M${c + (on ? r0 - 3 : r0) * Math.cos(a)} ${c + (on ? r0 - 3 : r0) * Math.sin(a)}L${c + r1 * Math.cos(a)} ${c + r1 * Math.sin(a)}`} strokeWidth={on ? 2.4 : 1.2} opacity={on ? 1 : 0.55} strokeLinecap="round" style={{ stroke: on ? "var(--led-mint)" : "var(--print)" }} />;
         })}
       </svg>
     );

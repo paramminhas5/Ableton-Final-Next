@@ -9,7 +9,7 @@
 
 /* hold the screen to compare */
 .mx-scr-hold{flex:none;outline:none;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer;-webkit-touch-callout:none}
-.mx-scr-hold:focus-visible .m1-scr{outline:2px solid var(--go);outline-offset:2px}
+.mx-scr-hold:focus-visible .m1-scr{outline:2px solid var(--cobalt);outline-offset:2px}
 
 /* fix pads: they glow because they point at the fix */
 .mx-fixes{height:48px;display:flex;flex:none;margin-top:10px}
@@ -23,7 +23,7 @@
 .mx-stage{position:relative;flex:1;min-height:0;border-radius:16px;overflow:hidden;outline:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:pointer;
  background:radial-gradient(90% 70% at 50% 100%,#17171A,#09090A 75%);
  box-shadow:inset 0 4px 12px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.04),0 1px 0 var(--hi)}
-.mx-stage:focus-visible{outline:2px solid var(--go);outline-offset:2px}
+.mx-stage:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
 .mx-hl{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.05);pointer-events:none}
 .mx-vl{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,255,255,.08);pointer-events:none}
 .mx-tick{position:absolute;width:2px;height:8px;margin-left:-1px;background:rgba(255,255,255,.35);pointer-events:none}
@@ -34,7 +34,7 @@
 .mx-dot b{display:block;border-radius:50%;transition:width .12s linear,height .12s linear}
 .mx-dot span{font-size:10px;font-weight:600;line-height:1;pointer-events:none}
 .mx-dot:focus-visible{outline:none}
-.mx-dot:focus-visible b{outline:2px solid var(--led-go)!important;outline-offset:3px}
+.mx-dot:focus-visible b{outline:2px solid var(--led-mint)!important;outline-offset:3px}
 .mx-now{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:1.5px dashed;opacity:.6;pointer-events:none;z-index:1}
 .mx-ring{position:absolute;width:96px;height:72px;margin:-36px 0 0 -48px;border-radius:50%;border:2px solid #FF4A5A;box-shadow:0 0 14px #FF4A5A88;pointer-events:none;z-index:1}
 .mx-ring-l{position:absolute;margin:30px 0 0 34px;font-size:10px;font-weight:600;color:#FF4A5A;pointer-events:none;z-index:1}

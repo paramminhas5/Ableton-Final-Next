@@ -8,10 +8,10 @@ import { getCtx, midiToFreq } from "@/lib/audio";
 type WaveType = "sine" | "square" | "sawtooth" | "triangle";
 
 const WAVES: { type: WaveType; label: string; color: string; harmonics: string; sound: string }[] = [
-  { type: "sine",     label: "SINE",     color: "#C6FF00", harmonics: "Pure — no harmonics",        sound: "Clean sub-bass, simple tone" },
-  { type: "square",   label: "SQUARE",   color: "#7B2FFF", harmonics: "Odd harmonics only",          sound: "Hollow, woody — organs, chiptune" },
-  { type: "sawtooth", label: "SAW",      color: "#FF3B30", harmonics: "ALL harmonics (odd + even)",  sound: "Bright, buzzy — synth bass, brass" },
-  { type: "triangle", label: "TRIANGLE", color: "#FFB800", harmonics: "Odd harmonics (weak)",        sound: "Softer than square — flutes, muted leads" },
+  { type: "sine",     label: "SINE",     color: "#C6FF00", harmonics: "Pure: no harmonics",        sound: "Clean sub-bass, simple tone" },
+  { type: "square",   label: "SQUARE",   color: "#7B2FFF", harmonics: "Odd harmonics only",          sound: "Hollow, woody: organs, chiptune" },
+  { type: "sawtooth", label: "SAW",      color: "#FF3B30", harmonics: "ALL harmonics (odd + even)",  sound: "Bright, buzzy: synth bass, brass" },
+  { type: "triangle", label: "TRIANGLE", color: "#FFB800", harmonics: "Odd harmonics (weak)",        sound: "Softer than square: flutes, muted leads" },
 ];
 
 function drawWave(canvas: HTMLCanvasElement, type: WaveType, color: string) {
@@ -79,7 +79,7 @@ export function WaveformVisualizerSim() {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
-    osc.frequency.value = midiToFreq(57); // A3 = 220Hz — clear reference pitch
+    osc.frequency.value = midiToFreq(57); // A3 = 220Hz: clear reference pitch
     gain.gain.setValueAtTime(0.0001, ctx.currentTime);
     gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.02);
     gain.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
@@ -139,7 +139,7 @@ export function WaveformVisualizerSim() {
 
       <div className="brutal-border bg-sun/20 p-3 font-mono text-xs leading-relaxed">
         <strong>Key insight:</strong> Every real instrument sound is a combination of these shapes.
-        Synthesis starts here — pick a wave, then filter and shape it.
+        Synthesis starts here: pick a wave, then filter and shape it.
       </div>
     </div>
   );

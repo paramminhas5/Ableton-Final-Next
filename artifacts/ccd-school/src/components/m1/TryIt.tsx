@@ -5,7 +5,7 @@
  * again adds on top; undo takes back the last take; "use this line" keeps it for the
  * end of the lesson, where it joins your track when you press add.
  */
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
@@ -128,6 +128,20 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     for (const n of pads[pad].notes) engine.noteOn(idx, n, vel, e.timeStamp);
     setHeld(h => new Set(h).add(pad));
   };
+  // Enter or Space plays a pad too, so a keyboard can do every play-in.
+  const keyDown = (pad: number, e: KeyboardEvent<HTMLElement>) => {
+    if ((e.key !== "Enter" && e.key !== " ") || e.repeat) return;
+    e.preventDefault();
+    start();
+    for (const n of pads[pad].notes) engine.noteOn(idx, n, 0.85, e.timeStamp);
+    setHeld(h => new Set(h).add(pad));
+  };
+  const keyUp = (pad: number, e: KeyboardEvent<HTMLElement>) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    for (const n of pads[pad].notes) engine.noteOff(idx, n, e.timeStamp);
+    setHeld(h => { const n = new Set(h); n.delete(pad); return n; });
+  };
   const up = (pad: number, e: PointerEvent<HTMLElement>) => {
     if (!held.has(pad)) return;
     for (const n of pads[pad].notes) engine.noteOff(idx, n, e.timeStamp);
@@ -225,14 +239,15 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
-    : recording ? `recording. tap the kick on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}`
+    : recording && goalMet ? `${goalHits} of ${coach.goal.notes}, that's the lot. press keep it, or keep playing`
+    : recording ? (backbeat ? "recording. tap the clap on two and four" : onBeatOnly ? `recording. tap the ${coach.goal.note ?? "kick"} on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}` : `recording. play your ${TYPE[type].label.toLowerCase()}, ${goalHits} of ${coach.goal.notes} notes so far`)
     : !events.length ? (backbeat ? "press rec. four clicks count you in, then tap the clap on two and four" : onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
     : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? "one clap" : `${offBeat} claps`} landed on one or three. the clap goes on two and four. tap undo and try again`
     : offBeat ? `${offBeat === 1 ? `one ${backbeat ? "clap" : "kick"}` : `${offBeat} ${backbeat ? "claps" : "kicks"}`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
     : !goalMet ? `${goalHits} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : " notes"}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
-  const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
+  const glow = { outline: "2px solid var(--led-mint)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   // The go key names what is still missing until the take is ready.
   const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
   const noun = goalNote !== undefined ? (backbeat ? "clap" : coach?.goal.note ?? "hit") : "note";
@@ -240,7 +255,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
       {/* Phone: one live instruction above the instrument, so rec and the pads are on the first screen. */}
-      {coach && <div className={`ls-now fl-nowtop ${nudge ? "is-nudge" : ""}`} aria-hidden><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>}
+      {coach && <div className={`ls-now fl-nowtop ${nudge ? "is-nudge" : ""}`} aria-hidden><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>}
       <div className="fl-inst">
       <Screen>
         <div className="ls-meta">
@@ -284,7 +299,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         </Key>
         <Key label="undo" onClick={undoTap} onPointerDown={holdStart} onPointerUp={holdEnd} onPointerLeave={holdEnd} disabled={!history.current.length && !events.length} ariaLabel="Undo the last hit. Hold to clear everything"><Icon name="back" /></Key>
         {coach && !coach.snap
-          ? <Key label="click" onClick={() => setClick(c => !c)} ariaPressed={click} led={click ? "var(--led-go)" : null} ariaLabel={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}><span style={{ fontSize: 13, fontWeight: 600 }}>{click ? "on" : "off"}</span></Key>
+          ? <Key label="click" onClick={() => setClick(c => !c)} ariaPressed={click} led={click ? "var(--led-mint)" : null} ariaLabel={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}><span style={{ fontSize: 13, fontWeight: 600 }}>{click ? "on" : "off"}</span></Key>
           : <Key label="snap" style={coach?.snap ? glow : undefined} onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
           <span style={{ fontSize: 13, fontWeight: 600 }}>{snap}</span>
         </Key>}
@@ -300,6 +315,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             <button key={i} type="button" className={`ls-key ${on ? "is-on" : ""} ${isRoot ? "is-root" : ""}`} style={{ ["--c" as string]: color, ...(target ? { outline: `2px solid ${color}`, outlineOffset: -2 } : null) } as CSSProperties}
               aria-label={`${p.label}${drumLike ? "" : ` (${p.notes.length > 1 ? "chord" : "note"})`}`}
               onPointerDown={e => down(i, e)} onPointerUp={e => up(i, e)} onPointerCancel={e => up(i, e)} onPointerLeave={e => { if (e.buttons) up(i, e); }}
+              onKeyDown={e => keyDown(i, e)} onKeyUp={e => keyUp(i, e)}
               onContextMenu={e => e.preventDefault()}>
               <span>{p.label}</span>
             </button>
@@ -314,7 +330,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             <div className="fl-turnhead"><span>your turn</span><span>{goalMet ? "done" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes}`}</span></div>
             <p className="fl-turnwhy"><Gloss>{coach.body.split(/\n+/)[0]}</Gloss></p>
           </div>
-          <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
+          <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>
           {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
           {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
           {pulse ? <div className="ls-hint">your song has no beat yet, so a kick plays along to help. it won&apos;t go into your song.</div> : null}

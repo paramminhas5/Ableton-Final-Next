@@ -50,7 +50,13 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   useEffect(() => { const i = readSongs(); setName(i.songs.find(s => s.id === i.active)?.name ?? "my song"); }, []);
   const keep = () => {
     if (!met) { setSay(why); window.setTimeout(() => setSay(null), 2600); return; }
-    if (song && readTrackV2().layers.some(l => l.events.length)) { writeTrackV2({ ...readTrackV2(), sections: secs, updatedAt: Date.now() }); window.dispatchEvent(new Event("ccd:song")); }
+    // Your song gets the arrangement. With nothing in your song yet, the starter loop you arranged becomes your song.
+    if (song) {
+      const now = readTrackV2();
+      const has = now.layers.some(l => l.events.length);
+      writeTrackV2(has ? { ...now, sections: secs, updatedAt: Date.now() } : { ...now, ...song, added: now.added, sections: secs, updatedAt: Date.now() });
+      window.dispatchEvent(new Event("ccd:song"));
+    }
     onNext();
   };
   useEnter(keep);

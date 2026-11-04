@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Worlds } from "@/components/m1/Worlds";
 
 export const metadata: Metadata = {
-  title: "Worlds",
+  title: "worlds",
   description:
     "Three worlds: Fundamentals, DJ World and Producer. Choose your learning path.",
   openGraph: {

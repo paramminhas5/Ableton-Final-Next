@@ -305,7 +305,12 @@ export function GymPageClient() {
           </div>
         </Screen>
 
-        <Silk label="drills" right="tap one to start" />
+        <div className="m1-g" style={{ marginTop: 14 }}>
+          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start 5 minutes"}</GoPill>
+        </div>
+        <p className="m1-t11" style={{ textAlign: "center", margin: "10px 0 6px" }}>headphones help. speakers work too.</p>
+
+        <Silk label="drills" right="or pick one" />
         <div className="ls-pads">
           {pads.map(p => {
             const inner = (
@@ -329,10 +334,6 @@ export function GymPageClient() {
             <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>busy week? use this week&apos;s free pass.</span>
           </button>
         )}
-        <div className="m1-g" style={{ marginTop: 14 }}>
-          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start 5 minutes"}</GoPill>
-        </div>
-        <p className="m1-t11" style={{ textAlign: "center", marginTop: 10 }}>headphones help. speakers work too.</p>
       </main>
     );
   }

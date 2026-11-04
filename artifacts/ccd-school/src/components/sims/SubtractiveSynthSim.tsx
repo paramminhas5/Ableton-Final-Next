@@ -142,7 +142,7 @@ export function SubtractiveSynthSim() {
           );
         })}
       </div>
-      <p className="font-mono text-[10px] uppercase opacity-70">▸ Pick a preset, hold a key — feel the envelope shape. Crank RES + F·ENV for the acid squelch.</p>
+      <p className="font-mono text-[10px] uppercase opacity-70">▸ Pick a preset, hold a key: feel the envelope shape. Crank RES + F·ENV for the acid squelch.</p>
     </div>
   );
 }

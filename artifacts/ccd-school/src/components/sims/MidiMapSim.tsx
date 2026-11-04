@@ -198,7 +198,7 @@ export function MidiMapSim() {
       {/* Map mode instruction */}
       {mapState === "map-mode" && (
         <div className="brutal-border bg-volt text-bone p-3 font-mono text-sm font-bold uppercase animate-pulse">
-          MAP MODE ACTIVE — Click a parameter below to select it
+          MAP MODE ACTIVE: Click a parameter below to select it
         </div>
       )}
       {mapState === "param-selected" && (
@@ -230,7 +230,7 @@ export function MidiMapSim() {
       {/* Parameters */}
       <div className="space-y-2">
         <div className="font-mono text-[10px] uppercase opacity-70">
-          Parameters {isMapMode ? "— click one to map" : "— controlled by CC slider below"}
+          Parameters {isMapMode ? ": click one to map" : ": controlled by CC slider below"}
         </div>
         {PARAMS.map((p) => {
           const isAssigned = assignments.some((a) => a.paramId === p.id);

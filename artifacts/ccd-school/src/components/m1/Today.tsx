@@ -175,7 +175,7 @@ export function Today() {
         {offer && mission && (
           <div className="m1-ss" style={{ marginTop: 8 }}>
             {offer.isNew ? `${offer.kind} joins after ` : `${offer.kind} changes after `}
-            <span style={{ color: "#FF6FAE" }}>{mission.title.toLowerCase()}</span>
+            <span style={{ color: "var(--led-mint)" }}>{mission.title.toLowerCase()}</span>
           </div>
         )}
       </Screen>
@@ -187,7 +187,7 @@ export function Today() {
           <img src={missionImage(cur.slug, world)} alt="" className="td-pop" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
           <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
             <div className="m1-eng" style={{ fontSize: 11, fontWeight: 500 }}>{isDone ? "go again" : cur.slug === next?.slug ? "up next" : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
-            <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{mission.title}</div>
+            <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{isDone ? "play it again" : "start this lesson"}</div>
             <div className="m1-t11" style={{ marginTop: 4 }}>{minutesFor(cur.slug)} min · {missionTools(cur.slug).join(" · ")}</div>
           </div>
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
@@ -200,7 +200,7 @@ export function Today() {
       <Silk label="turn to choose" right="or tap any lesson in the list" />
       <div className="td-knobs">
         <div><span className="m1-ss">world</span>
-          <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={72} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
+          <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={72} height={170} led="var(--led-mint)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
         </div>
         <div><span className="m1-ss">path</span>
           <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
@@ -235,7 +235,7 @@ export function Today() {
                 <button type="button" role="option" aria-selected={on} aria-current={on ? "true" : undefined} className={`m1-m is-wide td-row ${on ? "is-sel" : ""}`} onClick={() => setSel(st.slug)}>
                   <span className="m1-t11" style={{ width: 24, color: d ? "#5EEAC1" : undefined }}>{d ? "✓" : String(i + 1).padStart(2, "0")}</span>
                   <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase", fontWeight: on ? 600 : 400, textAlign: "left" }}>{st.title}</span>
-                  {on && <span className="m1-t11" style={{ color: "#FF6FAE" }}>{d ? "done" : "selected"}</span>}
+                  {on && <span className="m1-t11" style={{ color: "var(--mint)" }}>{d ? "done" : "selected"}</span>}
                 </button>
               </div>
             );

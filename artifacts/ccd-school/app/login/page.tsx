@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { LoginPageClient } from "@/components/LoginPageClient";
 
 export const metadata: Metadata = {
-  title: "Sign In",
+  title: "sign in",
   description: "Sign in to save your progress across devices.",
 };
 

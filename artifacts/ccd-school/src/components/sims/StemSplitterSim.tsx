@@ -68,7 +68,7 @@ export function StemSplitterSim() {
       </div>
 
       {!split ? (
-        <div className="brutal-border bg-bone p-6 text-center font-display text-2xl">SONG.WAV — stereo file</div>
+        <div className="brutal-border bg-bone p-6 text-center font-display text-2xl">SONG.WAV: stereo file</div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {STEMS.map((s) => (

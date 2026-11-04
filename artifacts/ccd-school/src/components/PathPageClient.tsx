@@ -101,7 +101,7 @@ export function PathPageClient({ slug }: { slug: string }) {
       </header>
 
       <div className="max-w-3xl mx-auto px-4 py-10 pb-24">
-        <div className="font-mono text-[9px] uppercase opacity-70 mb-6 bg-ink text-acid px-4 py-2.5 brutal-border">// MISSION SNAKE — {totalCount} MISSIONS</div>
+        <div className="font-mono text-[9px] uppercase opacity-70 mb-6 bg-ink text-acid px-4 py-2.5 brutal-border">// MISSION SNAKE: {totalCount} MISSIONS</div>
         <div className="relative space-y-3">
           {missions.map(({ slug: mSlug, mission, isDone, locked, index }) => {
             const indent = getIndent(index);
