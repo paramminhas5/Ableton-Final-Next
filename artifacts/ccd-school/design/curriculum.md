@@ -84,7 +84,7 @@ What the song has after basics: a kick, a clap, hats with swing, a tempo, a melo
 | D | `chord-types` | chord types | changes chords (7ths, sus) | |
 | S | `chord-progressions` | chord progressions | changes chords (a progression) | |
 | D | `keys-tonality` | keys and tonality | end your progression on home, then not; keep one | |
-| S | (new) `bass-follows` | bass follows the chords | adds bass.bass on the roots | |
+| S | `bass-follows` | bass follows the chords | adds bass.bass on the roots | |
 | D | `harmony-in-production` | harmony in production | chords as a pad or as stabs; pick for your song | chord length/attack |
 | S | `song-structure` | tension, release and structure | adds sections (intro, drop) | arrange step |
 | D | `tension-resolution` | tension and resolution | a riser into your drop; keep it | fx riser |

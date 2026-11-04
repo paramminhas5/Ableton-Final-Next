@@ -44,7 +44,7 @@ export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceTex
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
 /** Set the song's tempo on one knob, the loop playing at whatever it is turned to. `marks` are the speeds named on the dial. */
 /** `set: swing` turns the same step into the song's swing knob (marks are 0 to 0.75). */
-export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing"; hint?: VoiceText; levels?: Level[] };
+export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale"; choices?: string[]; hint?: VoiceText; levels?: Level[] };
 export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawTempo | RawAsk | RawEar | RawKeep;
 
 export type SongChange = { adds: string; changes?: undefined; why: VoiceText } | { changes: string; adds?: undefined; why: VoiceText };
@@ -74,7 +74,7 @@ export type ResolvedStep =
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
-  | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing"; hint?: string }
+  | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing" | "scale"; choices?: string[]; hint?: string }
   | { kind: "keep"; next: string };
 
 /** The lesson as stored in lessons.gen.json: raw text kept intact so the voice can change at runtime. */

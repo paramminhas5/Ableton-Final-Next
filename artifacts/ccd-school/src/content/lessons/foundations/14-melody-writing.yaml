@@ -1,0 +1,91 @@
+slug: melody-writing
+world: foundations
+number: 14
+title: writing a melody
+minutes: 7
+song:
+  changes: lead.lead
+  why: a good melody repeats enough to remember and changes enough to stay interesting
+learn: >-
+  The simplest way to write a melody that sticks: a short motif, played again, with one note changed.
+youCan:
+  - say what a motif is
+  - write a melody by repeating and changing a motif
+  - hear question and answer phrases
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Low, then high. Two notes is already the start of a tune. The trick most hooks use is simple: a short
+        idea, called a motif, then the same idea again with one small change. Your ear loves hearing
+        something come back, and loves a little surprise when it does.
+      straight: >-
+        Most hooks are a short motif, repeated, with one change. Repetition makes it stick; the change keeps
+        it interesting.
+      eli5: >-
+        Here's the secret of catchy tunes: play a little tune, then play it again but change one note. Your
+        brain loves hearing it come back, with a tiny surprise.
+
+  - kind: say
+    title: question and answer
+    say:
+      mentor: >-
+        Think of a melody as a conversation. The first half asks a question: it ends somewhere that feels
+        unfinished, maybe up high. The second half answers: same shape, but it lands back home on the first
+        key of your scale. Say it out loud: da da da daa? da da da dum.
+      straight: >-
+        Phrase one ends unfinished (a question), phrase two repeats it and lands on the home note (an answer).
+      eli5: >-
+        A tune can ask a question and then answer it. The first part ends up in the air. The second part is
+        nearly the same, but it comes home to the first key.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 3}
+    say:
+      mentor: >-
+        Write it. Press rec and play a motif of three or four notes in the first half of the bar. In the
+        second half, play it again, but change the last note so it lands on the first key. Record it as many
+        times as you like until it sounds like a tune you'd hum.
+      straight: >-
+        Record a motif in the first half of the bar, then repeat it in the second half ending on the first
+        key.
+      eli5: >-
+        Press rec. Play three or four notes. Then play the same notes again, but make the last one the very
+        first key. That's your melody!
+
+  - kind: ask
+    q: What is a motif?
+    options: ["a short musical idea that repeats", "a whole song", "a drum pattern", "a scale"]
+    answer: 0
+    why: A short idea, often three or four notes, that a melody is built from.
+    whyWrong:
+      1: A motif is much smaller than a song.
+      2: Drums can have motifs too, but here it's a few notes of melody.
+      3: A scale is the set of notes; a motif is what you play with them.
+
+  - kind: ask
+    q: What makes an answer phrase feel finished?
+    options: ["it lands on the home note, the first key", "it's louder", "it's faster", "it has more notes"]
+    answer: 0
+    why: Landing on the first note of the scale feels like coming home.
+    whyWrong:
+      1: Volume doesn't finish a phrase.
+      2: Speed doesn't either.
+      3: It's where it lands, not how many notes.
+
+  - kind: ask
+    q: Why repeat the motif with one change instead of something totally new?
+    options: ["repetition sticks, the change keeps it interesting", "it's quicker to play", "new notes are not allowed", "it makes the song longer"]
+    answer: 0
+    why: Your ear remembers what comes back and enjoys the small surprise.
+    whyWrong:
+      1: It's about how it sounds, not effort.
+      2: You can play anything you like.
+      3: Length isn't the reason.
+
+  - kind: keep
+    next: >-
+      Next: the pentatonic hook. Five notes, no wrong ones.

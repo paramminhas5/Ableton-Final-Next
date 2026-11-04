@@ -46,7 +46,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
-    case "tempo": return p.set === "swing" ? "swing it" : "set your tempo";
+    case "tempo": return p.set === "swing" ? "swing it" : p.set === "scale" ? "pick your scale" : "set your tempo";
     case "ear": return "ear round";
     case "add": return "add it to your song";
     case "check": return "earn your stripe";

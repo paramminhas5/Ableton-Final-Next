@@ -13,6 +13,7 @@ import { applyTake, readTake, shapeKnobs, takeType } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
+import { NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
@@ -402,7 +403,63 @@ const toV = (bpm: number) => (bpm - BPM_MIN) / (BPM_MAX - BPM_MIN);
 const toBpm = (v: number) => Math.round(BPM_MIN + v * (BPM_MAX - BPM_MIN));
 
 export function TempoStep(props: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
-  return props.screen.set === "swing" ? <SwingStep {...props} /> : <BpmStep {...props} />;
+  return props.screen.set === "swing" ? <SwingStep {...props} /> : props.screen.set === "scale" ? <ScaleStep {...props} /> : <BpmStep {...props} />;
+}
+
+const SCALE_LINE: Record<string, string> = { minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones" };
+
+/** Your song's melody, bass and chords moved into another scale, note by note. */
+function inScale(t: TrackV2, to: ScaleName): TrackV2 {
+  const from = (t.scale ?? "minor") as ScaleName;
+  if (from === to) return t;
+  return { ...t, scale: to as TrackV2["scale"], layers: t.layers.map(l => (l.type === "lead" || l.type === "bass" || l.type === "chords" ? { ...l, events: l.events.map(e => ({ ...e, note: remapToScale(e.note, t.root, from, to) })) } : l)) };
+}
+
+function ScaleStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+  const choices = (screen.choices?.length ? screen.choices : ["minor", "major"]) as ScaleName[];
+  const [sc, setSc] = useState<ScaleName>("minor");
+  const loop = useMemo(() => mine ?? (songHasMusic() ? readTrackV2() : clipVariants("synth-note")[0].track), [mine]);
+  useEffect(() => setSc(((loop.scale as ScaleName) ?? "minor")), [loop]);
+  const shown = useMemo(() => inScale(loop, sc), [loop, sc]);
+  const { engine, ready } = useEngineTrack(shown);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const playing = beat >= 0;
+  const keep = () => { writeTrackV2({ ...inScale(readTrackV2(), sc), updatedAt: Date.now() }); window.dispatchEvent(new Event("ccd:song")); onNext(); };
+  useEnter(keep);
+  const steps = SCALES[sc] as readonly number[];
+  const root = loop.root ?? 45;
+  return (
+    <div className="ls-col">
+      <div className="fl-inst">
+        <Screen>
+          <Meta left="your scale" right={playing ? "playing, pick a scale" : "press play"} />
+          <div className="fl-bpm"><b style={{ fontSize: 44 }}>{NOTE_NAMES[((root % 12) + 12) % 12]} {sc}</b></div>
+          <div className="fl-airlabels"><span>{SCALE_LINE[sc] ?? ""}</span><span>{steps.length} notes</span></div>
+          <div className="fl-scalekeys" aria-label={`The notes of ${NOTE_NAMES[((root % 12) + 12) % 12]} ${sc}`}>
+            {Array.from({ length: 12 }, (_, i) => <i key={i} className={`${[1, 3, 6, 8, 10].includes((i + root) % 12) ? "is-black" : ""} ${steps.includes(i) ? "is-in" : ""}`} style={{ ["--c" as string]: accent } as CSSProperties}><small>{NOTE_NAMES[(i + root) % 12]}</small></i>)}
+          </div>
+        </Screen>
+        <div className="fl-marks" role="radiogroup" aria-label="Scales" style={{ ["--c" as string]: accent, marginTop: 12 } as CSSProperties}>
+          {choices.map(c => (
+            <button key={c} type="button" role="radio" aria-checked={c === sc} className={`ls-chip ${c === sc ? "is-on" : ""}`} onClick={() => setSc(c)}>{c}<small>{SCALE_LINE[c] ?? ""}</small></button>
+          ))}
+        </div>
+      </div>
+      <div className="fl-text">
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {tail}
+      </div>
+      <div className="ls-bottom">
+        <div className="m1-g">
+          <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3" }} ariaLabel={`Use ${sc}`}>use {sc}</GoPill>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const SWING_LABEL: Record<string, string> = { "0": "straight", "0.25": "a little", "0.5": "triplet feel", "0.7": "heavy shuffle" };

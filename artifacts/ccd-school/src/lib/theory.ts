@@ -39,6 +39,18 @@ export function scaleNote(root: number, scale: ScaleName, n: number): number {
   return root + oct * 12 + s[i];
 }
 
+/**
+ * Move a note from one scale to another by its place in the scale: the 3rd note of a minor scale
+ * becomes the 3rd note of the major scale, in the same octave. Notes outside the scale snap first.
+ */
+export function remapToScale(midi: number, root: number, from: ScaleName, to: ScaleName): number {
+  const a = SCALES[from] as readonly number[];
+  const n = snapToScale(midi, root, from);
+  const oct = Math.floor((n - root) / 12);
+  const idx = a.indexOf(pitchClass(n - root));
+  return scaleNote(root, to, oct * (SCALES[to] as readonly number[]).length + Math.min(idx, SCALES[to].length - 1));
+}
+
 /** Nearest note in the scale (ties go down). */
 export function snapToScale(midi: number, root: number, scale: ScaleName): number {
   for (let d = 0; d < 12; d++) {

@@ -655,3 +655,9 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-marks .ls-chip small{font-size:11px;font-weight:400;color:var(--print)}
 .fl-marks .ls-chip.is-on{outline:2px solid var(--c,var(--led-go));outline-offset:-2px}
 .fl-nextline{margin-top:12px}
+.fl-scalekeys{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:12px;height:58px}
+.fl-scalekeys i{position:relative;border-radius:4px;background:rgba(255,255,255,.14)}
+.fl-scalekeys i.is-black{background:rgba(255,255,255,.05)}
+.fl-scalekeys i.is-in{background:color-mix(in srgb,var(--c) 75%,transparent);box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent)}
+.fl-scalekeys small{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:9px;color:var(--disp-sub)}
+.fl-scalekeys i.is-in small{color:#111}

@@ -1,0 +1,92 @@
+slug: bass-follows
+world: foundations
+number: 18
+title: bass follows the chords
+minutes: 6
+song:
+  adds: bass.bass
+  why: a bass on the root of each chord glues the harmony to the beat
+learn: >-
+  What a root note is, why the bass usually plays it, and a bass line under your chords.
+youCan:
+  - say what a root note is
+  - play a bass line that follows your chords
+  - hear how the bass holds the harmony together
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Listen to the low one. Low notes carry a lot of weight: they tell your ear which chord it's hearing.
+        That's why the simplest bass line is just the bottom note of each chord, played low.
+
+        That bottom note is called the root, the note the chord is named after.
+      straight: >-
+        Low notes define the chord. The simplest bass line plays the root, the note each chord is built on.
+      eli5: >-
+        Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of
+        each chord. That note is called the root.
+
+  - kind: play
+    layer: bass
+    surface: keys
+    goal: {notes: 2}
+    say:
+      mentor: >-
+        Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key
+        one is the root of i, key six the root of VI, key three of III, key seven of VII. Press rec and play
+        the roots in the same order as your chords, one per chord.
+      straight: >-
+        Record the roots of your chords on the bass keys, in order. Key number matches the numeral: i is one,
+        VI is six, III three, VII seven.
+      eli5: >-
+        Press rec. Play the bass key with the same number as each chord: one for i, six for VI, three for III,
+        seven for VII.
+
+  - kind: say
+    title: the glue
+    say:
+      mentor: >-
+        Hear how the song suddenly sits down? The bass locks the chords to the kick. Producers spend ages on
+        this relationship, because the bass and the kick both live down low and can fight. In the producer
+        world you'll learn to make room for both.
+      straight: >-
+        The bass ties the chords to the beat. Bass and kick share the low end, so they need room; you'll fix
+        that in the producer world.
+      eli5: >-
+        Now your song has a floor under it! The bass and the boom both live down low, so later you'll learn
+        how to make them share.
+
+  - kind: ask
+    q: What is a root note?
+    options: ["the note a chord is named after and built on", "the highest note", "a drum hit", "the first song you learn"]
+    answer: 0
+    why: The root is the bottom note the chord is built up from.
+    whyWrong:
+      1: Usually it's the lowest, not highest, in a basic chord.
+      2: Drums have no root.
+      3: It's a note, not a song.
+
+  - kind: ask
+    q: Why does the bass often play the root?
+    options: ["low notes tell the ear which chord it is", "it's easier to play", "the root is the loudest note", "the bass can't play other notes"]
+    answer: 0
+    why: Low notes carry the most weight, so the root defines the chord.
+    whyWrong:
+      1: It's about sound, not effort.
+      2: Volume is up to you.
+      3: A bass can play anything.
+
+  - kind: ask
+    q: Your chord is VI. Which bass key plays its root?
+    options: ["key six", "key one", "key three", "key seven"]
+    answer: 0
+    why: The numeral tells you the scale note it starts on.
+    whyWrong:
+      1: Key one is the root of i.
+      2: Key three is III.
+      3: Key seven is VII.
+
+  - kind: keep
+    next: >-
+      Next: tension, release and structure. Your loop becomes a song with an intro and a drop.

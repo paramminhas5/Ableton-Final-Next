@@ -1924,6 +1924,784 @@
       "file": "foundations/11-noise.yaml"
     },
     {
+      "slug": "major-scale",
+      "world": "foundations",
+      "number": 12,
+      "title": "scales, major and minor",
+      "minutes": 7,
+      "song": {
+        "changes": "lead.lead",
+        "why": "the scale is the set of notes your whole song draws from, and it sets the mood before anything else"
+      },
+      "learn": "What a scale is, how major and minor feel different, and the scale your song will use from now on.",
+      "youCan": [
+        "say what a scale is",
+        "hear the difference between major and minor",
+        "set your song's scale"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "The keys you've been playing aren't all twelve notes. They're seven of them, picked so they fit together. That set of notes is called a scale, and it's why nothing you played sounded wrong.\nYour song has been in a minor scale. Next you'll hear what happens when you switch it.",
+            "straight": "The keys you've used are a scale: seven of the twelve notes, chosen to fit together. Your song has been in minor.",
+            "eli5": "Here's a secret: the keys you've played aren't all the notes there are. They're a team of seven that always sound nice together. That team is called a scale."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "scale",
+          "choices": [
+            "minor",
+            "major"
+          ],
+          "say": {
+            "mentor": "Here's your own song. Tap major, then minor, and listen to your melody. The notes move to their place in the new scale, so the tune keeps its shape, but the mood flips.\nMinor tends to sound darker, moodier, a bit serious. Major sounds brighter and happier. Most house and techno lives in minor, but plenty of feel-good disco and pop house is major. Pick the one that feels like your song.",
+            "straight": "Switch your song between minor and major. Same shape of melody, different mood: minor is darker, major brighter. Pick one.",
+            "eli5": "Tap major, then minor. Your tune keeps its shape but changes feeling. Minor sounds a bit moody. Major sounds happy and sunny. Pick the one you like."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "steps and half steps",
+          "say": {
+            "mentor": "The difference is in the gaps. A scale climbs in steps: some are whole steps, two keys apart, some are half steps, the very next key. Major goes whole, whole, half, whole, whole, whole, half. Minor moves two of those half steps to different places, and that one change is the whole mood.\nLook at the keys in the picture: the lit ones are your scale.",
+            "straight": "Scales are patterns of whole steps (two keys) and half steps (one key). Major: whole whole half whole whole whole half. Minor puts the half steps elsewhere.",
+            "eli5": "A scale is like stairs with big steps and little steps. Major and minor put the little steps in different places, and that's what makes one happy and one moody."
+          },
+          "deeper": [
+            {
+              "title": "relative major and minor",
+              "say": "A minor and C major use exactly the same seven notes. They just start from a different home note. That's why switching a song from a minor to C major can feel subtle: the home changes, not the notes."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "What is a scale?",
+          "options": [
+            "a set of notes chosen to fit together",
+            "how loud a song is",
+            "the speed of the song",
+            "a type of drum"
+          ],
+          "answer": 0,
+          "why": "A scale is the set of notes a song draws from, usually seven of the twelve.",
+          "whyWrong": {
+            "1": "Loudness is amplitude.",
+            "2": "Speed is tempo.",
+            "3": "Drums are rhythm, not notes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How does minor usually sound compared with major?",
+          "options": [
+            "darker, moodier",
+            "faster",
+            "louder",
+            "higher"
+          ],
+          "answer": 0,
+          "why": "Minor tends to sound darker; major brighter.",
+          "whyWrong": {
+            "1": "Scale doesn't change tempo.",
+            "2": "Scale doesn't change volume.",
+            "3": "Both can be played at any height."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How many notes are in a major or minor scale?",
+          "options": [
+            "seven",
+            "twelve",
+            "five",
+            "eight"
+          ],
+          "answer": 0,
+          "why": "Seven, then it starts again an octave up.",
+          "whyWrong": {
+            "1": "Twelve is every note, the whole keyboard pattern.",
+            "2": "Five is a pentatonic scale, coming up soon.",
+            "3": "The eighth note is the first one again, an octave up."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a half step?",
+          "options": [
+            "the very next key",
+            "two keys apart",
+            "half a beat",
+            "half the volume"
+          ],
+          "answer": 0,
+          "why": "The smallest step on a keyboard, the very next key.",
+          "whyWrong": {
+            "1": "Two keys apart is a whole step.",
+            "2": "Half a beat is an eighth note, that's rhythm.",
+            "3": "That's loudness."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: intervals, the distance between two notes, and a two-note phrase in your melody."
+        }
+      ],
+      "file": "foundations/12-major-scale.yaml"
+    },
+    {
+      "slug": "intervals",
+      "world": "foundations",
+      "number": 13,
+      "title": "intervals",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "every melody is a chain of jumps between notes, and the size of the jump is what you feel"
+      },
+      "learn": "The distance between two notes, how close jumps feel smooth and wide ones dramatic, and a phrase built on a jump you choose.",
+      "youCan": [
+        "say what an interval is",
+        "hear the difference between a step, a third, a fifth and an octave",
+        "play a phrase with a jump you picked"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "octave",
+          "say": {
+            "mentor": "Two notes, a jump between them. The distance of that jump is called an interval. This one's an octave, the biggest jump that still sounds like the same note.\nSmall intervals sound like walking. Big ones sound like leaping. Every melody you love is just a string of these.",
+            "straight": "An interval is the distance between two notes. This is an octave. Small intervals feel smooth, big ones dramatic.",
+            "eli5": "When a tune goes from one note to another, the jump has a size. That's an interval. Little jumps feel like walking, big jumps feel like leaping."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the ones to know",
+          "say": {
+            "mentor": "A step: the next key in your scale. Smooth, like talking. A third: skip one key. Sweet, it's the heart of major and minor. A fifth: skip three keys. Strong and open, the sound of power chords and big leads. An octave: eight keys up, counting both. Same note, higher.\nCount by keys in your scale, starting from one: a third is the third key, a fifth the fifth, an octave the eighth.",
+            "straight": "Step (next key), third (skip one), fifth (count to five), octave (count to eight). Count keys in the scale from one.",
+            "eli5": "A step is the very next key. A third skips one. A fifth is five keys along. An octave is eight along, and sounds like the same note but higher."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 3
+          },
+          "say": {
+            "mentor": "Build a phrase on a jump. Press rec, then play the first key, jump to the third or the fifth, and come back down by steps. Try it a couple of times with different jumps and keep the one you like.",
+            "straight": "Record a phrase: first key, jump to the third or fifth, step back down. At least three different notes.",
+            "eli5": "Press rec. Play the first key. Jump up to the third or the fifth. Then walk back down one key at a time."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is an interval?",
+          "options": [
+            "the distance between two notes",
+            "the gap between two songs",
+            "a type of scale",
+            "a loud note"
+          ],
+          "answer": 0,
+          "why": "The distance between two notes, counted in steps.",
+          "whyWrong": {
+            "1": "That's a different kind of gap.",
+            "2": "Scales are made of intervals, but they're not the same thing.",
+            "3": "Loudness is amplitude."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Counting from one, which key is the fifth?",
+          "options": [
+            "the fifth key along",
+            "the second key",
+            "the eighth key",
+            "the twelfth key"
+          ],
+          "answer": 0,
+          "why": "Count the start as one; the fifth is five keys along.",
+          "whyWrong": {
+            "1": "The second key is a step.",
+            "2": "The eighth key is the octave.",
+            "3": "Twelve half steps is an octave."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How do small intervals usually feel in a melody?",
+          "options": [
+            "smooth, like walking",
+            "dramatic, like leaping",
+            "silent",
+            "faster"
+          ],
+          "answer": 0,
+          "why": "Steps feel smooth. Big jumps feel dramatic.",
+          "whyWrong": {
+            "1": "That's big intervals.",
+            "2": "Both are sounds.",
+            "3": "Interval is pitch, not speed."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: writing a melody. A motif, repeat it, change one note."
+        }
+      ],
+      "file": "foundations/13-intervals.yaml"
+    },
+    {
+      "slug": "melody-writing",
+      "world": "foundations",
+      "number": 14,
+      "title": "writing a melody",
+      "minutes": 7,
+      "song": {
+        "changes": "lead.lead",
+        "why": "a good melody repeats enough to remember and changes enough to stay interesting"
+      },
+      "learn": "The simplest way to write a melody that sticks: a short motif, played again, with one note changed.",
+      "youCan": [
+        "say what a motif is",
+        "write a melody by repeating and changing a motif",
+        "hear question and answer phrases"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "Low, then high. Two notes is already the start of a tune. The trick most hooks use is simple: a short idea, called a motif, then the same idea again with one small change. Your ear loves hearing something come back, and loves a little surprise when it does.",
+            "straight": "Most hooks are a short motif, repeated, with one change. Repetition makes it stick; the change keeps it interesting.",
+            "eli5": "Here's the secret of catchy tunes: play a little tune, then play it again but change one note. Your brain loves hearing it come back, with a tiny surprise."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "question and answer",
+          "say": {
+            "mentor": "Think of a melody as a conversation. The first half asks a question: it ends somewhere that feels unfinished, maybe up high. The second half answers: same shape, but it lands back home on the first key of your scale. Say it out loud: da da da daa? da da da dum.",
+            "straight": "Phrase one ends unfinished (a question), phrase two repeats it and lands on the home note (an answer).",
+            "eli5": "A tune can ask a question and then answer it. The first part ends up in the air. The second part is nearly the same, but it comes home to the first key."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 3
+          },
+          "say": {
+            "mentor": "Write it. Press rec and play a motif of three or four notes in the first half of the bar. In the second half, play it again, but change the last note so it lands on the first key. Record it as many times as you like until it sounds like a tune you'd hum.",
+            "straight": "Record a motif in the first half of the bar, then repeat it in the second half ending on the first key.",
+            "eli5": "Press rec. Play three or four notes. Then play the same notes again, but make the last one the very first key. That's your melody!"
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a motif?",
+          "options": [
+            "a short musical idea that repeats",
+            "a whole song",
+            "a drum pattern",
+            "a scale"
+          ],
+          "answer": 0,
+          "why": "A short idea, often three or four notes, that a melody is built from.",
+          "whyWrong": {
+            "1": "A motif is much smaller than a song.",
+            "2": "Drums can have motifs too, but here it's a few notes of melody.",
+            "3": "A scale is the set of notes; a motif is what you play with them."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What makes an answer phrase feel finished?",
+          "options": [
+            "it lands on the home note, the first key",
+            "it's louder",
+            "it's faster",
+            "it has more notes"
+          ],
+          "answer": 0,
+          "why": "Landing on the first note of the scale feels like coming home.",
+          "whyWrong": {
+            "1": "Volume doesn't finish a phrase.",
+            "2": "Speed doesn't either.",
+            "3": "It's where it lands, not how many notes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why repeat the motif with one change instead of something totally new?",
+          "options": [
+            "repetition sticks, the change keeps it interesting",
+            "it's quicker to play",
+            "new notes are not allowed",
+            "it makes the song longer"
+          ],
+          "answer": 0,
+          "why": "Your ear remembers what comes back and enjoys the small surprise.",
+          "whyWrong": {
+            "1": "It's about how it sounds, not effort.",
+            "2": "You can play anything you like.",
+            "3": "Length isn't the reason."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the pentatonic hook. Five notes, no wrong ones."
+        }
+      ],
+      "file": "foundations/14-melody-writing.yaml"
+    },
+    {
+      "slug": "pentatonic-scales",
+      "world": "foundations",
+      "number": 15,
+      "title": "the pentatonic hook",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "five notes with no clashes make it easy to play a hook that always fits"
+      },
+      "learn": "The five-note scale behind countless hooks and solos, and a hook of your own played on it.",
+      "youCan": [
+        "say what a pentatonic scale is",
+        "find the five notes on your keys",
+        "play a hook using only those five"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "Some of the catchiest melodies ever use only five notes. Take a minor scale, drop the two notes most likely to clash, and you get the minor pentatonic. It's in blues, rock solos, African and Asian folk music, and a lot of dance hooks, because nothing in it can sound wrong over the chords.",
+            "straight": "The minor pentatonic: a minor scale minus the two notes most likely to clash. Five notes, no wrong ones, used everywhere.",
+            "eli5": "Take your seven notes and leave out two. The five that are left all get along perfectly. That's called a pentatonic scale."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "finding the five",
+          "say": {
+            "mentor": "On your keys, the minor pentatonic is keys one, three, four, five and seven, counting from the first. Skip two and six. In a minor that's a, c, d, e and g. Try it: run up those five and down again, and hear how open and singable it is.",
+            "straight": "Keys 1, 3, 4, 5, 7 of your minor scale. Skip 2 and 6.",
+            "eli5": "Use keys one, three, four, five and seven. Skip key two and key six."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 3
+          },
+          "say": {
+            "mentor": "Make a hook on those five. Press rec and play a short phrase using only keys one, three, four, five and seven. Keep it simple: hooks are short, rhythmic and repeat. Record it until you'd want to hear it again.",
+            "straight": "Record a short hook using only keys 1, 3, 4, 5 and 7.",
+            "eli5": "Press rec and play a little tune using only keys one, three, four, five and seven."
+          },
+          "hint": "Short and repeated beats long and complicated."
+        },
+        {
+          "kind": "ask",
+          "q": "How many notes are in a pentatonic scale?",
+          "options": [
+            "five",
+            "seven",
+            "twelve",
+            "three"
+          ],
+          "answer": 0,
+          "why": "Penta means five.",
+          "whyWrong": {
+            "1": "Seven is a full major or minor scale.",
+            "2": "Twelve is every note.",
+            "3": "Three notes is a chord."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why is the pentatonic so easy to play hooks on?",
+          "options": [
+            "the notes that clash most are left out",
+            "it's louder",
+            "it only has high notes",
+            "it's faster"
+          ],
+          "answer": 0,
+          "why": "Dropping the two clashiest notes leaves five that always fit.",
+          "whyWrong": {
+            "1": "It's about which notes, not volume.",
+            "2": "It covers every octave.",
+            "3": "Scales don't set the tempo."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which keys of your minor scale make the minor pentatonic?",
+          "options": [
+            "one, three, four, five, seven",
+            "one to five",
+            "two, four, six",
+            "all seven"
+          ],
+          "answer": 0,
+          "why": "Leave out two and six.",
+          "whyWrong": {
+            "1": "Close, but it skips two and includes seven.",
+            "2": "Those are some of the ones you leave out.",
+            "3": "That's the full scale."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: chords. Three notes at once, and the harmony under your melody."
+        }
+      ],
+      "file": "foundations/15-pentatonic-scales.yaml"
+    },
+    {
+      "slug": "what-are-chords",
+      "world": "foundations",
+      "number": 16,
+      "title": "what are chords?",
+      "minutes": 7,
+      "song": {
+        "adds": "chords.chords",
+        "why": "chords are the harmony under your melody, the colour of the whole song"
+      },
+      "learn": "What a chord is, how three notes make one, major and minor chords by ear, and chords in your song.",
+      "youCan": [
+        "say what a chord and a triad are",
+        "hear a major chord from a minor one",
+        "play chords into your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "One note on its own is a line. Play three notes from your scale at once, skipping a key between each, and you get a chord: a little cloud of harmony that colours everything played over it.\nThat stack of three, the first, third and fifth, is called a triad. It's the building block of almost every song.",
+            "straight": "A chord is several notes at once. The basic one is a triad: a note, the third above it and the fifth.",
+            "eli5": "Play three notes at the same time and you get a chord. It's like three friends singing together. The main kind uses notes one, three and five."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "major and minor chords",
+          "say": {
+            "mentor": "Like scales, chords come in major and minor, and you can hear it straight away: major chords sound bright, minor ones darker. The only difference is the middle note, the third, moved by one key.\nThe chord pads in the next step are labelled the way musicians write them: big letters for major, small for minor. Roman numerals say which note of the scale the chord starts on.",
+            "straight": "Major chords sound bright, minor darker. The difference is the third, one key apart. Pads use roman numerals: capitals major, lower case minor.",
+            "eli5": "Some chords sound happy (major), some sound a bit sad (minor). The pads have little names on them: big letters for happy chords, small letters for sad ones."
+          },
+          "deeper": [
+            {
+              "title": "why skip a key",
+              "say": "Notes right next to each other rub and buzz. Skipping one each time gives notes that share harmonics, so they blend. That's the harmonic series from the harmonics lesson again."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "chords",
+          "surface": "pads",
+          "goal": {
+            "notes": 2
+          },
+          "say": {
+            "mentor": "Put chords in your song. Press rec, wait out the count-in, and play two chords: one at the start of the bar, one halfway. Start on i, the home chord, and try any other for the second. Hold each one down for a while so it rings.",
+            "straight": "Record two chords into your song: i at the start of the bar, any other halfway.",
+            "eli5": "Press rec, wait for four ticks. Press the first chord pad and hold it. Halfway through, press a different one."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a triad?",
+          "options": [
+            "three notes: a root, its third and its fifth",
+            "three beats in a bar",
+            "three songs in a row",
+            "three drums at once"
+          ],
+          "answer": 0,
+          "why": "Root, third and fifth, the basic chord.",
+          "whyWrong": {
+            "1": "That's time, not harmony.",
+            "2": "That's a playlist.",
+            "3": "Drums have no pitch to make chords."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What makes a chord major or minor?",
+          "options": [
+            "the middle note, the third",
+            "how loud it is",
+            "how long it's held",
+            "the tempo"
+          ],
+          "answer": 0,
+          "why": "Move the third by one key and the chord flips between major and minor.",
+          "whyWrong": {
+            "1": "Volume doesn't change the chord.",
+            "2": "Length doesn't either.",
+            "3": "Tempo is the song's speed."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "On the chord pads, what does a capital roman numeral mean?",
+          "options": [
+            "a major chord",
+            "a minor chord",
+            "a loud chord",
+            "the last chord"
+          ],
+          "answer": 0,
+          "why": "Capitals for major, lower case for minor.",
+          "whyWrong": {
+            "1": "Minor is lower case.",
+            "2": "It's about the chord's colour.",
+            "3": "Numerals say which note it starts on."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: chord progressions. Four chords in a row and how they pull you along."
+        }
+      ],
+      "file": "foundations/16-what-are-chords.yaml"
+    },
+    {
+      "slug": "chord-progressions",
+      "world": "foundations",
+      "number": 17,
+      "title": "chord progressions",
+      "minutes": 7,
+      "song": {
+        "changes": "chords.chords",
+        "why": "chords that move in a good order carry the listener through the song"
+      },
+      "learn": "How chords move from one to the next, the progressions behind countless songs, and four chords in your song.",
+      "youCan": [
+        "say what a chord progression is",
+        "play a four chord progression",
+        "hear which chord feels like home"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "A chord progression is just chords in an order. Some orders feel like a journey: away from home and back again. Four chords, round and round, is the backbone of a huge amount of pop and dance music.",
+            "straight": "A progression is a sequence of chords. Four chords looping is the backbone of most pop and dance tracks.",
+            "eli5": "Chords in a row make a progression, like a little journey. Most songs use four chords going round and round."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "home and away",
+          "say": {
+            "mentor": "Your i chord is home. Every other chord pulls a little away from it, and the progression feels satisfying when it comes back. In minor, a classic is i, VI, III, VII: home, then three steps that each feel like they're heading somewhere, then home again on the loop.\nYou've heard it in countless tracks. Once you know it, you'll hear it everywhere.",
+            "straight": "i is home. Others pull away. In minor, i VI III VII is a classic four chord loop.",
+            "eli5": "The first chord is home. The others go on an adventure. Then the loop brings you home again. Try i, VI, III, VII."
+          },
+          "deeper": [
+            {
+              "title": "four chords everywhere",
+              "say": "The same four chords, in major or minor order, sit under an enormous number of hits. Producers don't worry about that: the sound, rhythm and melody on top are what make a track yours."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "chords",
+          "surface": "pads",
+          "goal": {
+            "notes": 4
+          },
+          "say": {
+            "mentor": "Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and VII, or any order you like. Listen for which one makes you want to go back to i.",
+            "straight": "Record four chords, one per beat, starting on i. Try i VI III VII or your own order.",
+            "eli5": "Press rec. Play four chord pads, one on each tick. Start with i, then try VI, III and VII."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a chord progression?",
+          "options": [
+            "chords played in an order",
+            "a scale",
+            "a single loud chord",
+            "a drum fill"
+          ],
+          "answer": 0,
+          "why": "A sequence of chords, often looped.",
+          "whyWrong": {
+            "1": "A scale is single notes.",
+            "2": "One chord isn't a progression.",
+            "3": "Fills are drums."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "In your scale, which chord feels like home?",
+          "options": [
+            "i, the first chord",
+            "VII",
+            "the loudest one",
+            "whichever is last"
+          ],
+          "answer": 0,
+          "why": "The chord built on the first note of the scale is home.",
+          "whyWrong": {
+            "1": "VII pulls back toward i.",
+            "2": "Loudness doesn't decide home.",
+            "3": "It's about the note it's built on."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How many chords are in a lot of pop and dance loops?",
+          "options": [
+            "four",
+            "one",
+            "twelve",
+            "twenty"
+          ],
+          "answer": 0,
+          "why": "Four chords, round and round, is the most common loop.",
+          "whyWrong": {
+            "1": "One chord can work, but it's not a progression.",
+            "2": "Twelve would be very busy.",
+            "3": "That's a lot for a loop."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: bass follows the chords. Root notes under your progression."
+        }
+      ],
+      "file": "foundations/17-chord-progressions.yaml"
+    },
+    {
+      "slug": "bass-follows",
+      "world": "foundations",
+      "number": 18,
+      "title": "bass follows the chords",
+      "minutes": 6,
+      "song": {
+        "adds": "bass.bass",
+        "why": "a bass on the root of each chord glues the harmony to the beat"
+      },
+      "learn": "What a root note is, why the bass usually plays it, and a bass line under your chords.",
+      "youCan": [
+        "say what a root note is",
+        "play a bass line that follows your chords",
+        "hear how the bass holds the harmony together"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "Listen to the low one. Low notes carry a lot of weight: they tell your ear which chord it's hearing. That's why the simplest bass line is just the bottom note of each chord, played low.\nThat bottom note is called the root, the note the chord is named after.",
+            "straight": "Low notes define the chord. The simplest bass line plays the root, the note each chord is built on.",
+            "eli5": "Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of each chord. That note is called the root."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "bass",
+          "surface": "keys",
+          "goal": {
+            "notes": 2
+          },
+          "say": {
+            "mentor": "Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key one is the root of i, key six the root of VI, key three of III, key seven of VII. Press rec and play the roots in the same order as your chords, one per chord.",
+            "straight": "Record the roots of your chords on the bass keys, in order. Key number matches the numeral: i is one, VI is six, III three, VII seven.",
+            "eli5": "Press rec. Play the bass key with the same number as each chord: one for i, six for VI, three for III, seven for VII."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the glue",
+          "say": {
+            "mentor": "Hear how the song suddenly sits down? The bass locks the chords to the kick. Producers spend ages on this relationship, because the bass and the kick both live down low and can fight. In the producer world you'll learn to make room for both.",
+            "straight": "The bass ties the chords to the beat. Bass and kick share the low end, so they need room; you'll fix that in the producer world.",
+            "eli5": "Now your song has a floor under it! The bass and the boom both live down low, so later you'll learn how to make them share."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a root note?",
+          "options": [
+            "the note a chord is named after and built on",
+            "the highest note",
+            "a drum hit",
+            "the first song you learn"
+          ],
+          "answer": 0,
+          "why": "The root is the bottom note the chord is built up from.",
+          "whyWrong": {
+            "1": "Usually it's the lowest, not highest, in a basic chord.",
+            "2": "Drums have no root.",
+            "3": "It's a note, not a song."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does the bass often play the root?",
+          "options": [
+            "low notes tell the ear which chord it is",
+            "it's easier to play",
+            "the root is the loudest note",
+            "the bass can't play other notes"
+          ],
+          "answer": 0,
+          "why": "Low notes carry the most weight, so the root defines the chord.",
+          "whyWrong": {
+            "1": "It's about sound, not effort.",
+            "2": "Volume is up to you.",
+            "3": "A bass can play anything."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Your chord is VI. Which bass key plays its root?",
+          "options": [
+            "key six",
+            "key one",
+            "key three",
+            "key seven"
+          ],
+          "answer": 0,
+          "why": "The numeral tells you the scale note it starts on.",
+          "whyWrong": {
+            "1": "Key one is the root of i.",
+            "2": "Key three is III.",
+            "3": "Key seven is VII."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: tension, release and structure. Your loop becomes a song with an intro and a drop."
+        }
+      ],
+      "file": "foundations/18-bass-follows.yaml"
+    },
+    {
       "slug": "ear-higher-lower",
       "world": "foundations",
       "number": 101,

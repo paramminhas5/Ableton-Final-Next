@@ -1,0 +1,96 @@
+slug: intervals
+world: foundations
+number: 13
+title: intervals
+minutes: 6
+song:
+  changes: lead.lead
+  why: every melody is a chain of jumps between notes, and the size of the jump is what you feel
+learn: >-
+  The distance between two notes, how close jumps feel smooth and wide ones dramatic, and a phrase built on
+  a jump you choose.
+youCan:
+  - say what an interval is
+  - hear the difference between a step, a third, a fifth and an octave
+  - play a phrase with a jump you picked
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        Two notes, a jump between them. The distance of that jump is called an interval. This one's an
+        octave, the biggest jump that still sounds like the same note.
+
+        Small intervals sound like walking. Big ones sound like leaping. Every melody you love is just a
+        string of these.
+      straight: >-
+        An interval is the distance between two notes. This is an octave. Small intervals feel smooth, big
+        ones dramatic.
+      eli5: >-
+        When a tune goes from one note to another, the jump has a size. That's an interval. Little jumps feel
+        like walking, big jumps feel like leaping.
+
+  - kind: say
+    title: the ones to know
+    say:
+      mentor: >-
+        A step: the next key in your scale. Smooth, like talking. A third: skip one key. Sweet, it's the heart
+        of major and minor. A fifth: skip three keys. Strong and open, the sound of power chords and big
+        leads. An octave: eight keys up, counting both. Same note, higher.
+
+        Count by keys in your scale, starting from one: a third is the third key, a fifth the fifth, an
+        octave the eighth.
+      straight: >-
+        Step (next key), third (skip one), fifth (count to five), octave (count to eight). Count keys in the
+        scale from one.
+      eli5: >-
+        A step is the very next key. A third skips one. A fifth is five keys along. An octave is eight along,
+        and sounds like the same note but higher.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 3}
+    say:
+      mentor: >-
+        Build a phrase on a jump. Press rec, then play the first key, jump to the third or the fifth, and come
+        back down by steps. Try it a couple of times with different jumps and keep the one you like.
+      straight: >-
+        Record a phrase: first key, jump to the third or fifth, step back down. At least three different notes.
+      eli5: >-
+        Press rec. Play the first key. Jump up to the third or the fifth. Then walk back down one key at a
+        time.
+
+  - kind: ask
+    q: What is an interval?
+    options: ["the distance between two notes", "the gap between two songs", "a type of scale", "a loud note"]
+    answer: 0
+    why: The distance between two notes, counted in steps.
+    whyWrong:
+      1: That's a different kind of gap.
+      2: Scales are made of intervals, but they're not the same thing.
+      3: Loudness is amplitude.
+
+  - kind: ask
+    q: Counting from one, which key is the fifth?
+    options: ["the fifth key along", "the second key", "the eighth key", "the twelfth key"]
+    answer: 0
+    why: Count the start as one; the fifth is five keys along.
+    whyWrong:
+      1: The second key is a step.
+      2: The eighth key is the octave.
+      3: Twelve half steps is an octave.
+
+  - kind: ask
+    q: How do small intervals usually feel in a melody?
+    options: ["smooth, like walking", "dramatic, like leaping", "silent", "faster"]
+    answer: 0
+    why: Steps feel smooth. Big jumps feel dramatic.
+    whyWrong:
+      1: That's big intervals.
+      2: Both are sounds.
+      3: Interval is pitch, not speed.
+
+  - kind: keep
+    next: >-
+      Next: writing a melody. A motif, repeat it, change one note.

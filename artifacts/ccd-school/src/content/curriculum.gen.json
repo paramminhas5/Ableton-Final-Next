@@ -333,7 +333,7 @@
    {
     "slug": "bass-follows",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "bass follows the chords",
     "does": "adds bass.bass on the roots",
     "code": ""

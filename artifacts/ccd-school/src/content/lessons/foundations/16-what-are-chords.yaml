@@ -1,0 +1,99 @@
+slug: what-are-chords
+world: foundations
+number: 16
+title: what are chords?
+minutes: 7
+song:
+  adds: chords.chords
+  why: chords are the harmony under your melody, the colour of the whole song
+learn: >-
+  What a chord is, how three notes make one, major and minor chords by ear, and chords in your song.
+youCan:
+  - say what a chord and a triad are
+  - hear a major chord from a minor one
+  - play chords into your song
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One note on its own is a line. Play three notes from your scale at once, skipping a key between each,
+        and you get a chord: a little cloud of harmony that colours everything played over it.
+
+        That stack of three, the first, third and fifth, is called a triad. It's the building block of almost
+        every song.
+      straight: >-
+        A chord is several notes at once. The basic one is a triad: a note, the third above it and the fifth.
+      eli5: >-
+        Play three notes at the same time and you get a chord. It's like three friends singing together. The
+        main kind uses notes one, three and five.
+
+  - kind: say
+    title: major and minor chords
+    say:
+      mentor: >-
+        Like scales, chords come in major and minor, and you can hear it straight away: major chords sound
+        bright, minor ones darker. The only difference is the middle note, the third, moved by one key.
+
+        The chord pads in the next step are labelled the way musicians write them: big letters for major,
+        small for minor. Roman numerals say which note of the scale the chord starts on.
+      straight: >-
+        Major chords sound bright, minor darker. The difference is the third, one key apart. Pads use roman
+        numerals: capitals major, lower case minor.
+      eli5: >-
+        Some chords sound happy (major), some sound a bit sad (minor). The pads have little names on them:
+        big letters for happy chords, small letters for sad ones.
+    deeper:
+      - title: why skip a key
+        say: >-
+          Notes right next to each other rub and buzz. Skipping one each time gives notes that share
+          harmonics, so they blend. That's the harmonic series from the harmonics lesson again.
+
+  - kind: play
+    layer: chords
+    surface: pads
+    goal: {notes: 2}
+    say:
+      mentor: >-
+        Put chords in your song. Press rec, wait out the count-in, and play two chords: one at the start of the
+        bar, one halfway. Start on i, the home chord, and try any other for the second. Hold each one down for
+        a while so it rings.
+      straight: >-
+        Record two chords into your song: i at the start of the bar, any other halfway.
+      eli5: >-
+        Press rec, wait for four ticks. Press the first chord pad and hold it. Halfway through, press a
+        different one.
+
+  - kind: ask
+    q: What is a triad?
+    options: ["three notes: a root, its third and its fifth", "three beats in a bar", "three songs in a row", "three drums at once"]
+    answer: 0
+    why: Root, third and fifth, the basic chord.
+    whyWrong:
+      1: That's time, not harmony.
+      2: That's a playlist.
+      3: Drums have no pitch to make chords.
+
+  - kind: ask
+    q: What makes a chord major or minor?
+    options: ["the middle note, the third", "how loud it is", "how long it's held", "the tempo"]
+    answer: 0
+    why: Move the third by one key and the chord flips between major and minor.
+    whyWrong:
+      1: Volume doesn't change the chord.
+      2: Length doesn't either.
+      3: Tempo is the song's speed.
+
+  - kind: ask
+    q: On the chord pads, what does a capital roman numeral mean?
+    options: ["a major chord", "a minor chord", "a loud chord", "the last chord"]
+    answer: 0
+    why: Capitals for major, lower case for minor.
+    whyWrong:
+      1: Minor is lower case.
+      2: It's about the chord's colour.
+      3: Numerals say which note it starts on.
+
+  - kind: keep
+    next: >-
+      Next: chord progressions. Four chords in a row and how they pull you along.
