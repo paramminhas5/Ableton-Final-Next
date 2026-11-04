@@ -2,7 +2,8 @@
 /** Model 1 shell: header, mode bar, world dial, the track as lanes on the screen. */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { FLAG, OUT, getEngine } from "@/engine";
 import { Icon, LED } from "./controls";
 import type { Layer, Track } from "@/lib/track";
 import { KIND } from "@/lib/track";
@@ -10,12 +11,42 @@ import { KIND } from "@/lib/track";
 export const CAT_SRC = "/brand/ccd-cat.png";
 
 export function CatMark({ size = 26 }: { size?: number }) {
+  // Tap the cat and it spins (fix 15).
+  const [spin, setSpin] = useState(0);
   return (
-    <span aria-hidden style={{ width: size, height: size, borderRadius: "50%", background: "#0B0B0C", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 0 var(--hi), inset 0 1px 2px rgba(255,255,255,.15)", flex: "none" }}>
+    <span aria-hidden onPointerDown={() => setSpin(n => n + 1)} style={{ width: size, height: size, borderRadius: "50%", background: "#0B0B0C", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 0 var(--hi), inset 0 1px 2px rgba(255,255,255,.15)", flex: "none", cursor: "pointer" }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={CAT_SRC} alt="" style={{ width: size * 0.8 }} />
+      <img key={spin} src={CAT_SRC} alt="" className={spin ? "m1-spin" : ""} style={{ width: size * 0.8 }} />
     </span>
   );
+}
+
+/**
+ * The cat moves with the beat, or not at all (process.md). While the engine plays, <html> gets
+ * `ccd-playing` and `--beat-ms` (one beat at the tempo that is playing); `.m1-dancing` sways on it.
+ */
+export function BeatSync() {
+  useEffect(() => {
+    const root = document.documentElement;
+    let last: { beat: number; t: number } | null = null;
+    let ms = 500;
+    const off = getEngine().on(evs => {
+      for (const e of evs) {
+        if (e.kind !== OUT.pos) continue;
+        const playing = !!(e.flags & FLAG.playing);
+        if (!playing) { if (root.classList.contains("ccd-playing")) root.classList.remove("ccd-playing"); last = null; continue; }
+        const t = performance.now();
+        if (last && e.beat > last.beat + 0.25) {
+          const est = (t - last.t) / (e.beat - last.beat);
+          if (est > 200 && est < 2000) { ms = ms * 0.7 + est * 0.3; root.style.setProperty("--beat-ms", `${Math.round(ms)}ms`); }
+          last = { beat: e.beat, t };
+        } else if (!last || e.beat < last.beat) last = { beat: e.beat, t };
+        if (!root.classList.contains("ccd-playing")) root.classList.add("ccd-playing");
+      }
+    });
+    return () => { off(); root.classList.remove("ccd-playing"); };
+  }, []);
+  return null;
 }
 
 export function WeekDots({ days }: { days: number }) {

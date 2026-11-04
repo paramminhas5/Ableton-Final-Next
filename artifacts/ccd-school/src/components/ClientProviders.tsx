@@ -12,7 +12,7 @@ import type { GatingMode } from "@/lib/gating";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
 import { useCelebration } from "@/lib/useCelebration";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
-import { ModeBar } from "@/components/m1/shell";
+import { BeatSync, ModeBar } from "@/components/m1/shell";
 import { InstallPromptBanner } from "@/components/InstallPromptBanner";
 
 
@@ -142,6 +142,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
               <GatingLoader>
                 <AnalyticsProvider>
                   <ThemeInit />
+                  <BeatSync />
                   <CloudSyncEffect />
                   <ServerEventQueue />
                   <CelebrationLayer />

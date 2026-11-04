@@ -24,7 +24,7 @@ import "./lesson.css";
 
 type Know = "new" | "some" | "lots";
 const MAKE: { id: WorldId; name: string; line: string; first: string }[] = [
-  { id: "fundamentals", name: "start from the basics", line: "how sound and music work. the best place to begin", first: "what-is-sound" },
+  { id: "fundamentals", name: "start from the basics", line: "a beat, notes, chords and your ears. the best place to begin", first: "tempo-bpm" },
   { id: "producer", name: "make my own tracks", line: "build a song from a kick drum up, one part per lesson", first: "your-kick" },
   { id: "dj", name: "mix tracks as a dj", line: "beatmatch, blend, read a room. later, your own tracks", first: "what-is-djing" },
 ];

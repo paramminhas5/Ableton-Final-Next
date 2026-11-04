@@ -115,6 +115,9 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
       case "ear":
         out.push({ kind: "ear", drill: s.drill, rounds: roundsFor(s.rounds, o.level), ...(s.say !== undefined ? { say: voiceText(s.say, o.voice) } : {}), ...hintOf(s.hint, o) });
         break;
+      case "tempo":
+        out.push({ kind: "tempo", say: voiceText(s.say, o.voice), marks: s.marks ?? [100, 120, 128, 140], ...hintOf(s.hint, o) });
+        break;
       case "keep":
         out.push({ kind: "keep", next: voiceText(s.next, o.voice) });
         break;

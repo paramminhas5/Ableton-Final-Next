@@ -642,3 +642,16 @@ a.jv-lane:hover{transform:translateX(3px)}
 @media (max-width:899px){.jv-lane{grid-template-columns:12px minmax(0,1fr) auto}.jv-mode{width:120px}}
 @media (min-width:900px){.wv-cols[data-view="song"] .wv-left{position:sticky;top:16px}}
 @media (max-width:899px){.wv .wv-img{display:none}.wv .wv-about{font-size:14px;line-height:20px}.jv-more{width:40px}}
+/* tempo step */
+.fl-bpm{display:flex;align-items:baseline;gap:10px;margin-top:6px}
+.fl-bpm b{font-size:64px;line-height:1;font-weight:500;color:var(--disp-ink);font-variant-numeric:tabular-nums}
+.fl-bpm span{font-size:14px;color:var(--disp-sub)}
+.fl-beats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 8px}
+.fl-beats i{height:14px;border-radius:4px;background:rgba(255,255,255,.08);transition:background 60ms}
+.fl-beats i.is-on{background:var(--c);box-shadow:0 0 12px var(--c)}
+.fl-tempo{display:flex;align-items:center;gap:16px;margin-top:12px}
+.fl-marks{flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fl-marks .ls-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-size:16px;font-weight:600;padding:8px 12px;height:auto}
+.fl-marks .ls-chip small{font-size:11px;font-weight:400;color:var(--print)}
+.fl-marks .ls-chip.is-on{outline:2px solid var(--c,var(--led-go));outline-offset:-2px}
+.fl-nextline{margin-top:12px}

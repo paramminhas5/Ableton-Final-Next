@@ -260,7 +260,12 @@ p, li { text-wrap: pretty; }
 .animate-progress-fill { animation: progress-fill 300ms var(--ease-glide) both; }
 .animate-shield-earn { animation: m1-fade 200ms both; }
 @keyframes m1-dance { 0%,100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(4deg) translateY(-3px); } }
-.m1-dancing { animation: m1-dance 480ms ease-in-out infinite; }
+/* The cat sways one way per beat while sound plays, and holds still otherwise (BeatSync in m1/shell.tsx). */
+.m1-dancing { animation: none; }
+html.ccd-playing .m1-dancing { animation: m1-dance calc(var(--beat-ms, 500ms) * 2) ease-in-out infinite; }
+@keyframes m1-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+.m1-spin { animation: m1-spin 620ms var(--ease-snap, ease-out); }
+@media (prefers-reduced-motion: reduce) { html.ccd-playing .m1-dancing, .m1-spin { animation: none; } }
 
 /* ═══ MODEL 1 CONTROLS ════════════════════════════════════════════════ */
 

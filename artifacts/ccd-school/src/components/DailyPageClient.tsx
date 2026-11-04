@@ -31,7 +31,7 @@ export function DailyPageClient() {
         return ns && !completed[ns] ? ns : null;
       })()
     : null;
-  const todaySlug = nextSlug ?? (allDoneSlugs.length === 0 ? "what-is-sound" : null);
+  const todaySlug = nextSlug ?? (allDoneSlugs.length === 0 ? "tempo-bpm" : null);
   const today = todaySlug ? ALL_MISSIONS.find(m => m.slug === todaySlug) : null;
   const todayWorld = (today?.world ?? "fundamentals") as "fundamentals" | "dj" | "producer";
 

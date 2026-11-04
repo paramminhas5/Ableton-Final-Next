@@ -10,7 +10,7 @@ export const SURFACES = ["pads", "steps", "keys"] as const;
 export type LessonSurface = (typeof SURFACES)[number];
 export const DRILLS = ["pitch", "eq", "interval", "timbre", "kick"] as const;
 export type Drill = (typeof DRILLS)[number];
-export const STEP_KINDS = ["hear", "say", "play", "shape", "ask", "ear", "keep"] as const;
+export const STEP_KINDS = ["hear", "say", "play", "shape", "tempo", "ask", "ear", "keep"] as const;
 export type StepKind = (typeof STEP_KINDS)[number];
 
 /* ------------------------------ raw file shape ------------------------------ */
@@ -42,7 +42,9 @@ export type RawAsk = {
 };
 export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
-export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawAsk | RawEar | RawKeep;
+/** Set the song's tempo on one knob, the loop playing at whatever it is turned to. `marks` are the speeds named on the dial. */
+export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; hint?: VoiceText; levels?: Level[] };
+export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawTempo | RawAsk | RawEar | RawKeep;
 
 export type SongChange = { adds: string; changes?: undefined; why: VoiceText } | { changes: string; adds?: undefined; why: VoiceText };
 
@@ -71,6 +73,7 @@ export type ResolvedStep =
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
+  | { kind: "tempo"; say: string; marks: number[]; hint?: string }
   | { kind: "keep"; next: string };
 
 /** The lesson as stored in lessons.gen.json: raw text kept intact so the voice can change at runtime. */

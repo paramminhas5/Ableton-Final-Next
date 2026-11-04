@@ -24,6 +24,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
       case "shape": learned.push(`shaping it with ${s.knobs.join(" and ")}`); screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
       case "ask": screens.push({ kind: "quiz", q: s.q, options: s.options, answer: s.answer, explain: s.why, hint: s.hint, whyWrong: s.whyWrong, ...(s.more ? { more: true } : {}) }); break;
       case "ear": screens.push({ kind: "ear", drill: s.drill, rounds: s.rounds, body: s.say }); break;
+      case "tempo": learned.push("setting your song's tempo"); screens.push({ kind: "tempo", body: s.say, marks: s.marks, hint: s.hint }); break;
       case "keep": next = s.next; break;
     }
   }

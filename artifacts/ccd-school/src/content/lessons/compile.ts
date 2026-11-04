@@ -39,6 +39,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
+  tempo: ["kind", "say", "marks", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
@@ -195,6 +196,10 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "play":
         case "shape":
           playOrShape(where, raw);
+          break;
+        case "tempo":
+          voice(where, "say", raw.say);
+          if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || m < 60 || m > 180))) at(where, "marks must be a list of tempos between 60 and 180");
           break;
         case "ask": {
           voice(where, "q", raw.q);

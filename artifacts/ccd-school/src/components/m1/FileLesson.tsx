@@ -28,7 +28,7 @@ import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { TryIt } from "./TryIt";
 import { presetTake } from "./AddToTrack";
-import { EarStep, HearStep, SayStep, ShapeStep, readShape, songHasMusic, startsFresh } from "./LessonSteps";
+import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, readShape, songHasMusic, startsFresh } from "./LessonSteps";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -46,6 +46,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
+    case "tempo": return "set your tempo";
     case "ear": return "ear round";
     case "add": return "add it to your song";
     case "check": return "earn your stripe";
@@ -398,13 +399,13 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
         <div className="ls-title is-big fl-pop">{mission.title.toLowerCase()}</div>
       </Screen>
       <WithWithout slug={mission.slug} />
+      {f.next && <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
+      <GoDeeper slug={mission.slug} />
       </div>
       <div className="fl-text">
       {reward && <Rewards r={reward} />}
       <Silk label="you can now" />
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>
-      {f.next && <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
-      <GoDeeper slug={mission.slug} />
       <div className="fl-again">
         {onRetune && <button type="button" className="ls-chip" onClick={onRetune}>tune it again</button>}
         {onMore && <button type="button" className="ls-chip" onClick={onMore}>more questions</button>}
@@ -467,6 +468,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const [prefs] = usePrefs();
   const [way, setWay] = useState<Way>(prefs.voice);
   const ttype = takeType(offerFor({ ...readTrack(), added: [] }, mission).kind);
+  // What you played in this lesson, in your song: the tempo step plays it back at the speed you turn to.
+  const mineTrack = useMemo(() => (take?.events.length ? applyTake({ ...readTrackV2(), added: [] }, mission.slug, take, world, readShape(mission.slug)) : null), [take, mission.slug, world]);
 
   useEffect(() => {
     // One song runs through every world: basics, producer and dj all add to the same song.
@@ -515,6 +518,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
+    case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
     case "ear": body = <EarStep screen={cur} meta="ear round" level="standard" onNext={next} />; break;
     case "play":
       body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways }} initial={take?.type === ttype ? take.events : undefined} title="play it in"

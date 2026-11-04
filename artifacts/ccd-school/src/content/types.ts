@@ -163,6 +163,7 @@ export type LessonScreen =
   | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
   | { kind: "play"; layer: string; goal: { notes: number; note?: string }; body: string; hint?: string }
   | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
+  | { kind: "tempo"; body: string; marks: number[]; hint?: string }
   | { kind: "ear"; drill: string; rounds: number; body?: string }
   | {
       /**

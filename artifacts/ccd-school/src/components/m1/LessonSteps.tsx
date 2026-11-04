@@ -12,7 +12,7 @@ import type { LessonScreen, Mission } from "@/content/types";
 import { applyTake, readTake, shapeKnobs, takeType } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
-import { readTrackV2, type TrackV2 } from "@/lib/track2";
+import { readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
@@ -381,6 +381,71 @@ export function FreshStart() {
     <div className="ls-panel ls-fresh">
       <p>{mine.has ? `this lesson starts a new song with a click. "${mine.name}" stays saved.` : "this lesson starts your first song. a click keeps time while you play."}</p>
       {mine.has && <button type="button" className="ls-chip" onClick={toggle} aria-pressed={playing}>{playing ? "stop" : "hear my song"}</button>}
+    </div>
+  );
+}
+
+// ── tempo: one knob sets your song's speed, the loop playing at whatever it's turned to ──
+/** What each named speed on the dial is known for. */
+const TEMPO_LABEL: Record<number, string> = {
+  90: "hip hop", 100: "slow and heavy", 110: "disco", 120: "house", 124: "deep house", 128: "tech house",
+  130: "techno", 140: "garage, dubstep", 150: "fast", 170: "drum and bass",
+};
+const BPM_MIN = 80, BPM_MAX = 160;
+const toV = (bpm: number) => (bpm - BPM_MIN) / (BPM_MAX - BPM_MIN);
+const toBpm = (v: number) => Math.round(BPM_MIN + v * (BPM_MAX - BPM_MIN));
+
+export function TempoStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+  const [bpm, setBpm] = useState(120);
+  useEffect(() => setBpm(readTrackV2().bpm || 120), []);
+  // What you just played (in your song), or your song, or a kick with hats so the speed is easy to feel.
+  const loop = useMemo(() => mine ?? (songHasMusic() ? readTrackV2() : clipVariants("hats-offbeat")[0].track), [mine]);
+  const shown = useMemo(() => ({ ...loop, bpm }), [loop, bpm]);
+  const { engine, ready } = useEngineTrack(shown);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const playing = beat >= 0;
+  const keep = () => {
+    const t = readTrackV2();
+    writeTrackV2({ ...t, bpm, updatedAt: Date.now() });
+    window.dispatchEvent(new Event("ccd:song"));
+    onNext();
+  };
+  useEnter(keep);
+  const marks = screen.marks;
+  const near = marks.reduce((a, m) => (Math.abs(m - bpm) < Math.abs(a - bpm) ? m : a), marks[0]);
+  const label = Math.abs(near - bpm) <= 3 ? TEMPO_LABEL[near] : undefined;
+  const ms = Math.round(60000 / bpm);
+  return (
+    <div className="ls-col">
+      <div className="fl-inst">
+        <Screen>
+          <Meta left="set your tempo" right={playing ? "playing, turn the knob" : "press play"} />
+          <div className="fl-bpm"><b>{bpm}</b><span>bpm{label ? ` · ${label}` : ""}</span></div>
+          <div className="fl-beats" aria-hidden>{[0, 1, 2, 3].map(i => <i key={i} className={playing && Math.floor(((beat % 4) + 4) % 4) === i ? "is-on" : ""} style={{ ["--c" as string]: accent } as CSSProperties} />)}</div>
+          <div className="fl-airlabels"><span>one beat every {ms} ms</span><span>{(bpm / 60).toFixed(1)} beats a second</span></div>
+        </Screen>
+        <div className="fl-tempo">
+          <Knob label="tempo" color={CAP.navy} size={92} height={170} led={accent} value={toV(bpm)} defaultValue={toV(120)} onChange={v => setBpm(toBpm(v))} />
+          <div className="fl-marks" role="radiogroup" aria-label="Tempos to try" style={{ ["--c" as string]: accent } as CSSProperties}>
+            {marks.map(m => (
+              <button key={m} type="button" role="radio" aria-checked={m === bpm} className={`ls-chip ${m === bpm ? "is-on" : ""}`} onClick={() => setBpm(m)}>{m}{TEMPO_LABEL[m] ? <small>{TEMPO_LABEL[m]}</small> : null}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="fl-text">
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {tail}
+      </div>
+      <div className="ls-bottom">
+        <div className="m1-g">
+          <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3" }} ariaLabel={`Use ${bpm} bpm`}>use {bpm} bpm</GoPill>
+        </div>
+      </div>
     </div>
   );
 }

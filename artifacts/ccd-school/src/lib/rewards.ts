@@ -12,11 +12,11 @@ export const STRIPES_EVENT = "ccd:stripes";
 
 export const TROPHIES: (Trophy & { test: (s: Stripes, done: Record<string, unknown>) => boolean })[] = [
   { id: "first-sound", name: "first sound", line: "made your first sound", icon: "note", test: (_, d) => !!d["what-is-sound"] || !!d["synth-what-is-sound"] },
-  { id: "first-kick", name: "heartbeat", line: "put a kick in your song", icon: "flame", test: (_, d) => !!d["your-kick"] },
+  { id: "first-kick", name: "heartbeat", line: "put a kick in your song", icon: "flame", test: (_, d) => !!d["your-kick"] || !!d["tempo-bpm"] },
   { id: "first-mix", name: "first blend", line: "finished your first dj lesson", icon: "loop", test: (_, d) => !!d["what-is-djing"] },
   { id: "stripes-3", name: "three stripes", line: "earned three stripes", icon: "bolt", test: s => Object.keys(s).length >= 3 },
   { id: "gold-1", name: "clean sheet", line: "a gold stripe, every answer right first time", icon: "gem", test: s => Object.values(s).some(x => x.gold) },
-  { id: "all-worlds", name: "three worlds", line: "a lesson done in basics, producer and dj", icon: "globe", test: (_, d) => (!!d["what-is-sound"] || !!d["synth-what-is-sound"]) && !!d["your-kick"] && !!d["what-is-djing"] },
+  { id: "all-worlds", name: "three worlds", line: "a lesson done in basics, producer and dj", icon: "globe", test: (_, d) => (!!d["tempo-bpm"] || !!d["what-is-sound"] || !!d["synth-what-is-sound"]) && !!d["your-kick"] && !!d["what-is-djing"] },
 ];
 
 export function trophiesFor(s: Stripes, done: Record<string, unknown>): (Trophy & { won: boolean })[] {
