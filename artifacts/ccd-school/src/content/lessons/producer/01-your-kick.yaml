@@ -1,0 +1,159 @@
+slug: your-kick
+world: producer
+number: 1
+title: your kick
+minutes: 8
+song:
+  adds: drums.kick
+  why: the kick is the heartbeat of a dance track, everything else is placed around it
+learn:
+  mentor: >-
+    By the end of this lesson you will have made the first sound in your own song: a kick drum
+    landing on every beat, shaped so it sounds the way you want. You will know why dance music
+    starts here, what a beat and a bar are in seconds you can count, and how to make one kick
+    tight and another boomy. Your song is empty right now. Ten minutes from now it will have a pulse.
+  straight: >-
+    You will place a kick on every beat, shape its length, and learn what a beat and a bar are.
+    Your song starts empty. It ends this lesson with a pulse.
+  eli5: >-
+    Every song needs a heartbeat. You are going to make yours: a big soft thump that goes boom,
+    boom, boom, boom, again and again. You will also learn how to count along with it and how to
+    make it short and punchy or long and round. Your song is empty now. Soon it will have a heartbeat.
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        Press play and just listen for a moment. One sound, a kick drum, repeating. Notice that it
+        is hardly a note at all. It is a thump you feel in your chest before you hear it, and almost
+        every dance track you have ever moved to is standing on something like it.
+      straight: >-
+        One kick, repeating. You feel it low in the chest more than you hear it. Dance tracks start here.
+      eli5: >-
+        Listen. That big soft thump is a kick drum. It is like a heartbeat for the song, and you can
+        feel it in your tummy as much as you hear it.
+  - kind: say
+    title: counting along
+    say:
+      mentor: >-
+        Count with it: one, two, three, four, and the kick lands on every number. Each of those is a
+        beat. Four of them make a bar. We will set your song to 120 beats per minute, which is two
+        beats every second, so one bar lasts exactly two seconds. That is useful to know. It means
+        you can feel how long things are without a ruler.
+      straight: >-
+        Count one, two, three, four. Each count is a beat, four beats are a bar. At 120 beats per
+        minute that is two beats a second, so a bar is two seconds.
+      eli5: >-
+        Count out loud with the thump: one, two, three, four. Each number is a beat. A set of four
+        is called a bar. We will play at a walking pace, two beats every second, so one bar takes two seconds.
+    deeper:
+      - title: where 120 comes from
+        say:
+          mentor: >-
+            Beats per minute is just how many beats fit in sixty seconds. Sixty divided by 120 is a
+            half second per beat. House music tends to sit around 120 to 128, so you are starting where a
+            lot of dance floors live. Slower feels heavier, faster feels more urgent.
+          straight: >-
+            Beats per minute is beats in sixty seconds. 60 divided by 120 is 0.5 seconds a beat. A lot of house sits at 120 to 128.
+          eli5: >-
+            A minute has sixty seconds. If the thump happens 120 times in that minute, it happens every half
+            second. Slow thumps feel heavy and sleepy. Fast thumps feel busy and excited.
+      - title: why four
+        say:
+          mentor: >-
+            Four beats to a bar is the most common way to count dance music, because it is easy to feel
+            and easy to dance to. You will hear it called 4/4. We will come back to other counts later.
+          straight: >-
+            Four beats to a bar is called 4/4. It is the standard for dance music.
+          eli5: >-
+            Four is an easy number to dance to. Step, step, step, step. That way of counting is called 4/4.
+  - kind: play
+    layer: drums
+    surface: pads
+    goal: {notes: 4, note: kick}
+    say:
+      mentor: >-
+        Now you. The kick pad is the big one at the bottom left. Tap it on every count while the click
+        keeps time. It is fine to be a little off, your song will tidy it up. If you want it perfect, press
+        the steps view and place the four hits by hand.
+      straight: >-
+        Tap the kick pad once on every count of four. The click keeps time. Small timing slips get tidied.
+      eli5: >-
+        Tap the big pad at the bottom left every time you hear a click. Boom, boom, boom, boom. If you are a
+        bit early or late, that is okay, the song will straighten it out.
+    hint:
+      gentle: Wait for the click, then tap. Four taps and you are done.
+  - kind: say
+    title: four on the floor
+    say:
+      mentor: >-
+        What you just played has a name: four on the floor, a kick on every beat. It is the pulse behind house,
+        disco and a large share of techno. Everything we add later, hats, bass, chords, gets placed in relation
+        to these four hits. That is why we started here.
+      straight: >-
+        A kick on every beat is called four on the floor. It is the pulse under house, disco and much techno. Every later part is placed against it.
+      eli5: >-
+        A thump on every count has a funny name: four on the floor. Lots of dance music uses it. Everything we
+        add to your song later will dance around these four thumps.
+  - kind: hear
+    clip: short-vs-long-kick
+    say:
+      mentor: >-
+        Same kick twice. First tight, then long and round. Neither is right. A short kick leaves space for a
+        bass line to speak. A long one fills that space and makes the whole thing feel heavy.
+      straight: >-
+        Same kick, short then long. Short leaves room for bass. Long fills the room and feels heavy.
+      eli5: >-
+        Two thumps. The first is quick and snappy, like a tap on a table. The second rings on and on, like a big
+        drum. Both are fine. They just feel different.
+  - kind: shape
+    layer: drums
+    knobs: [decay, tune]
+    say:
+      mentor: >-
+        Turn decay down for a tight kick and up for a boomy one. Then try tune, which moves the whole thing
+        lower or higher. Play the loop while you turn so you hear it change. Stop when it feels right for the
+        track you are imagining.
+      straight: >-
+        Decay sets how long the kick rings. Tune sets how low it sits. Turn them while the loop plays and stop where it feels right.
+      eli5: >-
+        Decay is how long the thump lasts. Turn it down and it is a tap, up and it rings. Tune is how deep the
+        drum is, like a small drum or a big drum. Play with both and keep the one you like.
+    hint:
+      gentle: Start with decay only. Tune can wait until you have heard decay do its work.
+  - kind: ask
+    q: >-
+      Your kick is long and boomy and you are about to add a bass line. What is the most likely problem?
+    options:
+      - The bass and kick fight for the same low space and the low end turns muddy
+      - The bass will sound too quiet to hear
+      - The kick will drift out of time
+      - Nothing, long kicks always sit well under bass
+    answer: 0
+    why: >-
+      A long kick keeps ringing into the space the bass needs. Shorten the kick or move the bass so they are not
+      both holding low notes at once.
+    whyWrong:
+      1: Quiet is a level problem. This is about two sounds sharing one narrow band.
+      2: Timing comes from the clock, not from how long the kick rings.
+      3: It depends on the track. Long kicks and bass often need arranging so they take turns.
+  - kind: ask
+    q: At 120 beats per minute, how many seconds does one bar of four beats last?
+    options: ["1 second", "2 seconds", "4 seconds", "8 seconds"]
+    answer: 1
+    why: Two beats a second means four beats take two seconds.
+    hint:
+      gentle: Two beats every second. How long do four beats take?
+  - kind: ask
+    q: At 140 beats per minute, about how long is one bar?
+    options: ["1.5 seconds", "1.7 seconds", "2.0 seconds", "2.4 seconds"]
+    answer: 1
+    why: Sixty divided by 140 is about 0.43 seconds a beat, and four beats come to about 1.7 seconds.
+    levels: [hard]
+  - kind: ear
+    drill: pitch
+    rounds: {gentle: 3, standard: 5, hard: 8}
+  - kind: keep
+    next: >-
+      Your song has a heartbeat. Next up is hats, the small bright sounds that make it start to move, and you
+      will place them in the gaps between your kicks.
