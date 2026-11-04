@@ -146,3 +146,15 @@
 
 /* keys inside a page grid (not the fixed bottom bar) keep the full key height */
 .m1-page .m1-g>.m1-m{height:88px}
+
+/* Today at tablet and desktop width (canvas ZTablet): a little wider from 640, two columns from 900.
+   Left: the glass and the next lesson. Right: the worlds dial, today meter and hear key. */
+@media (min-width:640px){.m1-page.td-root{max-width:600px}}
+@media (min-width:900px){
+  .m1-page.td-root{max-width:1120px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:28px;align-content:start;padding-top:18px}
+  .td-head,.td-switch{grid-column:1/-1}
+  .td-left{grid-column:1;min-width:0}
+  .td-right{grid-column:2;min-width:0}
+  .td-left .m1-scr,.td-left .m1-glass{min-height:260px}
+  .td-right .m1-g>.m1-m{height:200px!important}
+}

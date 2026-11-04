@@ -25,7 +25,9 @@ for (const scheme of ["light", "dark"]) {
       await p.getByRole("button", { name: act.slice(6) }).first().click().catch(e => problems.push(`${file}: click failed ${e.message.split("\n")[0].slice(0, 80)}`));
       await p.waitForTimeout(4000);
     }
-    await p.screenshot({ path: `${out}/${file}-${scheme}.png`, fullPage: true });
+    // very long pages (the glossary) exceed WebKit's texture limit: fall back to the first 6000 css px
+    await p.screenshot({ path: `${out}/${file}-${scheme}.png`, fullPage: true }).catch(() =>
+      p.screenshot({ path: `${out}/${file}-${scheme}.png`, fullPage: true, clip: { x: 0, y: 0, width: +(process.env.VW || 390), height: 6000 } }));
     if (await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) problems.push(`${file} ${scheme}: horizontal scroll`);
     await ctx.close();
   }

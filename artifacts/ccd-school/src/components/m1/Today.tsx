@@ -3,6 +3,7 @@
  * Today. Four zones: your track on the screen, the next lesson, the world dial with
  * today's meter and a hear key, and the mode bar. The screen does the explaining.
  */
+import "@/components/m1/lesson.css";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
@@ -52,8 +53,8 @@ export function Today() {
   };
 
   return (
-    <div className="m1-page">
-      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40 }}>
+    <div className="m1-page td-root">
+      <header className="td-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <CatMark />
           <span className="m1-t15" style={{ fontWeight: 600 }}>ccd school</span>
@@ -64,10 +65,11 @@ export function Today() {
         </div>
       </header>
 
-      <div style={{ marginTop: 6 }}>
+      <div className="td-switch" style={{ marginTop: 6 }}>
         <Switch label="what the screen shows" value={view} onChange={id => setView(id as "world" | "track")} options={[{ id: "world", label: "world" }, { id: "track", label: "your track" }]} />
       </div>
 
+      <div className="td-left">
       {view === "world" ? (
         <Screen style={{ marginTop: 8 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -131,6 +133,9 @@ export function Today() {
         </Link>
       )}
 
+      </div>
+
+      <div className="td-right">
       <Silk label="worlds" right="today" />
       <div className="m1-g">
         <div className="m1-m is-wide" style={{ gridColumn: "span 2", height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 8 }}>
@@ -144,6 +149,7 @@ export function Today() {
         <Key wide label={playing ? "stop" : layers ? "hear track" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your track" : layers ? "Hear your track" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
           <Icon name={playing ? "stop" : "hear"} />
         </Key>
+      </div>
       </div>
       <DuoFilters />
     </div>
