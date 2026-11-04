@@ -109,7 +109,7 @@ describe("layer types play their own instruments", () => {
     expect(paramOf(newLayerV2("chords"), CHORD_PARAMS[0].index)).toBe(CHORD_PARAMS[0].default);
     expect(paramOf(newLayerV2("lead"), LEAD_PARAMS[4].index)).toBe(LEAD_PARAMS[4].default);
     expect(paramOf(newLayerV2("fx"), FX_PARAMS[5].index)).toBe(FX_PARAMS[5].default);
-    expect(instrumentParamCount("chords")).toBe(8);
+    expect(instrumentParamCount("chords")).toBe(15); // 8, then lfo rate, lfo, lfo to, fm, ratio, f decay, f release
     expect(instrumentParamCount("fx")).toBe(6);
     expect(instrumentParamCount("drums")).toBe(65);
     const t = emptyTrackV2();
