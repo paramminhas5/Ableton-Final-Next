@@ -16,6 +16,7 @@ import { applyTake, readTake, saveTake, takeType, type Take } from "@/lib/lesson
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { readSongs, newSong } from "@/lib/songs";
+import { usePrefs } from "@/lib/prefs";
 import { worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
@@ -94,7 +95,7 @@ export function SongStrip({ focus }: { focus?: string }) {
       <div className="fl-songbody">
         <div className="fl-songname"><b>{name.toLowerCase()}</b><span>{empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
-          ? <div className="fl-songempty">{focus ? `this lesson adds its first part: the ${focus}` : "nothing in it yet"}</div>
+          ? <div className="fl-songempty">{focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
       </div>
     </section>
@@ -266,11 +267,11 @@ function DoneStep({ mission, nextHref, nextTitle, back, firstTry, asked, onRetun
 type Way = "mentor" | "straight" | "eli5";
 const textOf = (s: LessonScreen | undefined): string => (s && "body" in s && typeof s.body === "string" ? s.body : "");
 function Ways({ way, setWay, has }: { way: Way; setWay: (w: Way) => void; has: { straight: boolean; eli5: boolean } }) {
-  if (!has.straight && !has.eli5) return null;
+  if (!has.straight && !has.eli5 && way === "mentor") return null;
   return (
     <div className="fl-ways" role="group" aria-label="Explain it differently">
-      {way !== "mentor" && <button type="button" className="ls-chip" onClick={() => setWay("mentor")}>back to the first way</button>}
-      {has.straight && way !== "straight" && <button type="button" className="ls-chip" onClick={() => setWay("straight")}>say it another way</button>}
+      {way !== "mentor" && <button type="button" className="ls-chip" onClick={() => setWay("mentor")}>explain it fully</button>}
+      {has.straight && way !== "straight" && <button type="button" className="ls-chip" onClick={() => setWay("straight")}>{way === "mentor" ? "say it another way" : "keep it short"}</button>}
       {has.eli5 && way !== "eli5" && <button type="button" className="ls-chip" onClick={() => setWay("eli5")}>simpler please</button>}
     </div>
   );
@@ -309,7 +310,9 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     if (!f) return null;
     return { straight: lessonToMission(f, { voice: "straight", level: "standard" }).screens ?? [], eli5: lessonToMission(f, { voice: "eli5", level: "standard" }).screens ?? [] };
   }, [mission.slug]);
-  const [way, setWay] = useState<Way>("mentor");
+  // You start in the way you picked when you joined; the buttons switch it for one step.
+  const [prefs] = usePrefs();
+  const [way, setWay] = useState<Way>(prefs.voice);
   const ttype = takeType(offerFor({ ...readTrack(), added: [] }, mission).kind);
 
   useEffect(() => {
@@ -331,7 +334,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const go = useCallback((n: number) => { setIdx(Math.max(0, Math.min(pages.length - 1, n))); window.scrollTo({ top: 0 }); }, [pages.length]);
   const next = useCallback(() => go(idx + 1), [go, idx]);
   const base = pages[idx];
-  useEffect(() => setWay("mentor"), [idx]);
+  useEffect(() => setWay(prefs.voice), [idx, prefs.voice]);
   const si = base ? screens.indexOf(base as LessonScreen) : -1;
   const altOf = (w: "straight" | "eli5") => (alts && si >= 0 ? alts[w][si] : undefined);
   const has = { straight: !!textOf(altOf("straight")) && textOf(altOf("straight")) !== textOf(base as LessonScreen), eli5: !!textOf(altOf("eli5")) && textOf(altOf("eli5")) !== textOf(base as LessonScreen) };

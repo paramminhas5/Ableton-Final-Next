@@ -78,7 +78,7 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
     if (s.levels && !s.levels.includes(o.level)) return;
     switch (s.kind) {
       case "hear":
-        out.push({ kind: "hear", clip: s.clip, say: voiceText(s.say, o.voice) });
+        out.push({ kind: "hear", clip: s.clip, say: voiceText(s.say, o.voice), deeper: (s.deeper ?? []).map((d) => ({ title: d.title, say: voiceText(d.say, o.voice) })) });
         break;
       case "say":
         out.push({

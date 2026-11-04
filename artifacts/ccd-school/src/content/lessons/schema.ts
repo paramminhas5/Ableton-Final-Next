@@ -26,7 +26,7 @@ export type RawShape = { kind: "shape"; layer: LayerType; knobs: string[]; say: 
 export type RawTry = RawPlay | RawShape;
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
 
-export type RawHear = { kind: "hear"; clip: string; say: VoiceText; levels?: Level[] };
+export type RawHear = { kind: "hear"; clip: string; say: VoiceText; deeper?: RawDeeper[]; levels?: Level[] };
 export type RawSay = { kind: "say"; title: string; say: VoiceText; deeper?: RawDeeper[]; hint?: VoiceText; levels?: Level[] };
 export type RawAsk = {
   kind: "ask";
@@ -65,7 +65,7 @@ export type ResolvedTry = { kind: "play"; layer: LayerType; surface: LessonSurfa
 export type ResolvedDeeper = { title: string; say: string; try?: ResolvedTry };
 
 export type ResolvedStep =
-  | { kind: "hear"; clip: string; say: string }
+  | { kind: "hear"; clip: string; say: string; deeper: ResolvedDeeper[] }
   | { kind: "say"; title: string; say: string; deeper: ResolvedDeeper[]; hint?: string }
   | ({ kind: "play" } & Omit<Extract<ResolvedTry, { kind: "play" }>, "kind">)
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)

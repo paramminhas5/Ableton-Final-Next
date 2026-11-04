@@ -20,8 +20,24 @@ import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
+import { AirWave, SynthChain, WaveShape } from "./LessonVisuals";
+import { BASS_PARAMS, CHORD_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
+
+export function Folds({ items }: { items?: { title: string; body: string }[] }) {
+  if (!items?.length) return null;
+  return (
+    <div className="fl-more">
+      {items.map(d => (
+        <details key={d.title} className="fl-fold">
+          <summary>{d.title.toLowerCase()}</summary>
+          {d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
+        </details>
+      ))}
+    </div>
+  );
+}
 
 // ── say: an explanation; the extra bits fold out below if you want them ───────
 export function SayStep({ screen, meta, onNext, tail }: { screen: Of<"say">; meta: string; onNext: () => void; tail?: ReactNode }) {
@@ -36,16 +52,7 @@ export function SayStep({ screen, meta, onNext, tail }: { screen: Of<"say">; met
       </div>
       <div className="fl-text">
       {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
-      {screen.deeper?.length ? (
-        <div className="fl-more">
-          {screen.deeper.map(d => (
-            <details key={d.title} className="fl-fold">
-              <summary>{d.title.toLowerCase()}</summary>
-              {d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
-            </details>
-          ))}
-        </div>
-      ) : null}
+      <Folds items={screen.deeper} />
       {tail}
       </div>
       <Bottom go={{ label: "next", onClick: onNext, aria: "Next" }} />
@@ -118,8 +125,10 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
       <Screen>
         <Meta left={meta} right={def ? `${def.bpm} bpm` : undefined} />
         <div className="ls-title">{(def?.title ?? "listen").toLowerCase()}</div>
-        {isKick
-          ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
+        {isKick ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
+          : screen.clip === "synth-note" ? <AirWave playing={playing} />
+          : screen.clip === "synth-pitch" ? <><WaveShape kind="soft" cycles={v === 0 ? 2 : 8} playing={playing} /><AirWave playing={playing} speed={v === 0 ? 0.6 : 2.2} /></>
+          : screen.clip === "synth-shapes" ? <><WaveShape kind={(["soft", "saw", "square"] as const)[v] ?? "soft"} playing={playing} /><SynthChain playing={playing} /></>
           : <div className="ls-hearbar" aria-hidden>{Array.from({ length: 16 }, (_, i) => <i key={i} className={playing ? "is-on" : ""} style={{ animationDelay: `${i * 60}ms` }} />)}</div>}
       </Screen>
       {variants.length > 1 && (
@@ -135,7 +144,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
         </>
       )}
       </div>
-      <div className="fl-text">{screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}{tail}</div>
+      <div className="fl-text">{screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}<Folds items={screen.deeper} />{tail}</div>
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the clip"}><Icon name={playing ? "stop" : "hear"} /></Key>
@@ -161,7 +170,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const take = useMemo(() => readTake(mission.slug), [mission.slug]);
   const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
   const knobs = useMemo(() => {
-    const all = shapeKnobs(line.type);
+    // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
+    const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
+    const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec }))];
     const wanted = screen.knobs.map(k => all.find(s => s.spec.key === k)).filter(Boolean) as typeof all;
     return wanted.length ? wanted : all;
   }, [line.type, screen.knobs]);
@@ -186,7 +197,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <div className="fl-inst">
       <Screen>
         <Meta left={meta} right={touched ?? (playing ? "playing, turn a knob" : "press play")} />
-        {isKick ? <KickShape decay={val("decay")} tune={val("tune")} /> : <div className="ls-title">shape it</div>}
+        {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
+          : line.type === "lead" ? <WaveShape morph={val("wave")} bright={val("cutoff")} cycles={3} playing={playing} />
+          : <div className="ls-title">shape it</div>}
       </Screen>
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, knobs.length)}, 1fr)` }}>
         {knobs.map((k, i) => (

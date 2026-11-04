@@ -160,7 +160,7 @@ export type LessonScreen =
     }
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; deeper?: { title: string; body: string }[] }
-  | { kind: "hear"; clip: string; body: string }
+  | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
   | { kind: "play"; layer: string; goal: { notes: number; note?: string }; body: string; hint?: string }
   | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
   | { kind: "ear"; drill: string; rounds: number; body?: string }

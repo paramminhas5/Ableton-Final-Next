@@ -15,7 +15,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
   let next = "";
   for (const s of steps) {
     switch (s.kind) {
-      case "hear": screens.push({ kind: "hear", clip: s.clip, body: s.say }); break;
+      case "hear": screens.push({ kind: "hear", clip: s.clip, body: s.say, ...(s.deeper.length ? { deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) } : {}) }); break;
       case "say":
         screens.push({ kind: "say", title: s.title, body: s.say, deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) });
         learned.push(s.title);

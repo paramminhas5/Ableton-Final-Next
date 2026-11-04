@@ -198,16 +198,20 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const goalNote = coach?.goal.note ? GOAL_NOTE[coach.goal.note] : undefined;
   // Only hits that land on a beat count. A hit between beats has to be fixed, not waved through.
   const goalEvents = coach ? events.filter(e => goalNote === undefined || e.note === goalNote) : [];
-  const offBeat = goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) > 0.13).length;
-  const goalHits = new Set(goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) <= 0.13).map(e => Math.round(e.start) % loop)).size;
+  // Drum lessons ask for hits on the beat. A tune can go anywhere on the grid, so there we count notes.
+  const onBeatOnly = goalNote !== undefined;
+  const offBeat = onBeatOnly ? goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) > 0.13).length : 0;
+  const goalHits = onBeatOnly
+    ? new Set(goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) <= 0.13).map(e => Math.round(e.start) % loop)).size
+    : new Set(goalEvents.map(e => `${e.start}:${e.note}`)).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
     : recording ? `recording. tap the kick on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}`
-    : !events.length ? "press rec. four clicks count you in, then tap the kick on the next four"
+    : !events.length ? (onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
     : offBeat ? `${offBeat === 1 ? "one kick" : `${offBeat} kicks`} landed between the clicks. press undo and play ${offBeat === 1 ? "it" : "them"} again`
-    : !goalMet ? `${goalHits} of ${coach.goal.notes} on the beat. press rec and add the rest`
+    : !goalMet ? `${goalHits} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : " notes"}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;

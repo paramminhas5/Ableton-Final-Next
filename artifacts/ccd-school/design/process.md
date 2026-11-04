@@ -45,7 +45,8 @@ to a smart friend who has never made music. Excited about the cool parts (a synt
 directly, out of numbers!). There is no voice setting to choose up front.
 
 Each step has two small buttons under the text: "say it another way" (the same idea in different
-words, for when you're bored or it didn't land) and "simpler please" (the plain, eli5 take). Every
+words, for when you're bored or it didn't land) and "simpler please" (the plain, eli5 take). The way
+you start in is the one picked in onboarding ("how should we explain things?"). Every
 explaining step in a lesson file carries all three: `mentor`, `straight`, `eli5`.
 
 - Explain new words when they first appear, in a tap-to-open box, and keep them short.

@@ -35,7 +35,7 @@ type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !Array.isArray(v);
 
 const STEP_FIELDS: Record<string, string[]> = {
-  hear: ["kind", "clip", "say", "levels"],
+  hear: ["kind", "clip", "say", "deeper", "levels"],
   say: ["kind", "title", "say", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
@@ -93,6 +93,25 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
     return true;
   };
   const posInt = (v: unknown) => typeof v === "number" && Number.isInteger(v) && v > 0;
+  const deeperOf = (where: string, deeper: unknown, playOrShape: (w: string, o: Obj) => void) => {
+      if (deeper !== undefined) {
+        if (!Array.isArray(deeper)) at(where, "deeper must be a list");
+        else
+          deeper.forEach((d, di) => {
+            const dw = `${where} (deeper ${di + 1})`;
+            if (!isObj(d)) return at(dw, "must be a mapping");
+            unknownKeys(dw, d, ["title", "say", "try"]);
+            title(dw, "title", d.title);
+            voice(dw, "say", d.say);
+            if (d.try !== undefined) {
+              if (!isObj(d.try) || (d.try.kind !== "play" && d.try.kind !== "shape")) return at(dw, "try must be a play or shape step");
+              unknownKeys(dw, d.try, STEP_FIELDS[d.try.kind]);
+              if (d.try.hint !== undefined) voice(dw, "hint", d.try.hint);
+              playOrShape(dw, d.try);
+            }
+          });
+      }
+  };
   const unknownKeys = (where: string, o: Obj, allowed: string[]) => {
     for (const k of Object.keys(o)) if (!allowed.includes(k)) at(where, `unknown field "${k}"`);
   };
@@ -165,27 +184,12 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "hear":
           if (typeof raw.clip !== "string" || !CLIP_IDS.has(raw.clip)) at(where, `clip "${String(raw.clip)}" is not in clips.ts (known: ${[...CLIP_IDS].join(", ")})`);
           voice(where, "say", raw.say);
+          deeperOf(where, raw.deeper, playOrShape);
           break;
         case "say":
           title(where, "title", raw.title);
           voice(where, "say", raw.say);
-          if (raw.deeper !== undefined) {
-            if (!Array.isArray(raw.deeper)) at(where, "deeper must be a list");
-            else
-              raw.deeper.forEach((d, di) => {
-                const dw = `${where} (deeper ${di + 1})`;
-                if (!isObj(d)) return at(dw, "must be a mapping");
-                unknownKeys(dw, d, ["title", "say", "try"]);
-                title(dw, "title", d.title);
-                voice(dw, "say", d.say);
-                if (d.try !== undefined) {
-                  if (!isObj(d.try) || (d.try.kind !== "play" && d.try.kind !== "shape")) return at(dw, "try must be a play or shape step");
-                  unknownKeys(dw, d.try, STEP_FIELDS[d.try.kind]);
-                  if (d.try.hint !== undefined) voice(dw, "hint", d.try.hint);
-                  playOrShape(dw, d.try);
-                }
-              });
-          }
+          deeperOf(where, raw.deeper, playOrShape);
           break;
         case "play":
         case "shape":

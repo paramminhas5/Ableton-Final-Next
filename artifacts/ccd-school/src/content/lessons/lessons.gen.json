@@ -250,6 +250,217 @@
         }
       ],
       "file": "producer/01-your-kick.yaml"
+    },
+    {
+      "slug": "synth-what-is-sound",
+      "world": "producer",
+      "number": 2,
+      "title": "sound, and your first synth",
+      "minutes": 9,
+      "song": {
+        "adds": "lead.lead",
+        "why": "a synth line on top of your kick turns a beat into music"
+      },
+      "learn": "What sound actually is, how a synth makes it out of nothing but numbers, and your first synth line playing over your kick.",
+      "youCan": [
+        "explain what sound is, air pushed and pulled",
+        "hear how pitch is the speed of that push and pull",
+        "tell a soft wave, a saw and a square apart",
+        "play and shape your first synth line"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "That is a synth playing one note. Before we touch the synth, here is what is actually happening when you hear it.\nLook at the picture. The speaker cone moves out and in, very fast. Moving out, it shoves the air in front of it together. Moving in, it leaves the air spread thin. Those bunched and thin patches roll through the room to your ear, and your ear turns them into sound. That is all sound is: air being pushed and pulled.",
+            "straight": "One synth note. Every sound you hear works the same way: something moves back and forth and pushes the air around it.\nIn the picture the speaker cone moves out and in. Out squeezes the air together, in lets it spread. Those squeezed and spread patches travel to your ear, which reads them as sound.",
+            "eli5": "Hear that hum? It is a synth playing one note.\nWatch the speaker on the left. It wiggles out and in really, really fast. Each wiggle pushes the air, like ripples when you drop a stone in water. The ripples travel across the room into your ear, and that is what you hear. Sound is just wiggling air."
+          }
+        },
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "Tap low, then high. Same sound, different pitch.\nOne full push and pull of the air is called a cycle. Pitch is how many cycles happen every second. The low note pushes the air slowly, about 110 times a second. The high note does it four times as fast, about 440 times a second. Look at the wave: more cycles squeezed in means a higher note. We count cycles per second in hertz, written Hz.",
+            "straight": "Low, then high. Same tone, different pitch.\nPitch is the number of push and pull cycles per second, measured in hertz (Hz). The low note here is about 110 Hz and the high one about 440 Hz. In the picture, more cycles across the same space means faster vibration and a higher note.",
+            "eli5": "Tap low, then tap high.\nA low note wiggles the air slowly. A high note wiggles it fast. Look at the picture: the high one has lots of wiggles packed close together. One wiggle, out and back, is called a cycle. More cycles every second means a higher note."
+          },
+          "deeper": [
+            {
+              "title": "how fast is fast",
+              "say": "People hear from about 20 cycles a second, a rumble you feel more than hear, up to about 20,000, a whisper of a hiss. Your kick lives around 50. The A a band tunes to is 440."
+            }
+          ]
+        },
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "Now the really cool part. A guitar makes sound with a string, a voice with vocal cords. A synth has neither. It just calculates the shape of the wave, as a long run of numbers, and sends those numbers to the speaker. The speaker moves exactly that shape, and the air carries it to you. Any shape you can draw, a synth can play.\nTap soft, saw and square. Same note, three shapes. The round, soft wave sounds pure and gentle. The saw, a slope then a sudden drop, sounds bright and buzzy. The square, flat on top then flat on the bottom, sounds hollow, a bit like an old video game.",
+            "straight": "A synth has no string or reed. It computes the wave shape as numbers and the speaker turns those numbers into movement, which turns into moving air. So the shape is entirely up to you.\nSwitch between soft, saw and square. Same pitch, different shapes, different sound: smooth and pure, bright and buzzy, hollow and retro.",
+            "eli5": "Here is the magic bit. A guitar needs a string. Your voice needs your throat. A synth needs nothing like that. It just draws the wiggle using numbers, and the speaker copies the drawing by moving. So a synth can make any wiggle it wants.\nTap soft, saw and square. The soft one is smooth like a hum. The saw is buzzy like a bee. The square sounds like an old video game."
+          },
+          "deeper": [
+            {
+              "title": "why the shape changes the sound",
+              "say": "A smooth wave is just the one pitch. Sharp corners and sudden jumps add lots of extra, higher pitches on top, quietly. Your ear hears that mix as brightness or buzz. That is why the saw and square sound richer than the soft wave."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 4
+          },
+          "say": {
+            "mentor": "Time to play your synth. Your kick is playing underneath, and anything you record goes on top of it as the first tune in your song.\nPress rec, let the four clicks go by, then play any four or more keys. Every key here fits with the others, so nothing you press can sound wrong. Try a slow pattern first: one key per beat is plenty.",
+            "straight": "Record your first synth line over the kick. Press rec, wait out the count-in, then play at least four notes. The keys are all from one scale, so any of them work together. Slow and simple is a good start.",
+            "eli5": "Your turn to play the synth! Your kick keeps going underneath.\nPress rec, wait for four clicks, then press some keys. Any keys. They all sound nice together, so you cannot get it wrong. Go slow, one key at a time."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "wave",
+            "cutoff"
+          ],
+          "say": {
+            "mentor": "Now shape your synth while your line plays. Wave slides from saw to square, the same shapes you just heard. Cutoff is brightness: turn it down and the corners of the wave get rounded off, so the sound goes soft and dark. Turn it up for bright and buzzy. Watch the picture change as you turn.",
+            "straight": "Shape your line while it loops. Wave moves between saw and square. Cutoff controls brightness by smoothing the wave's sharp edges: low is dark and soft, high is bright. The picture shows the shape you are hearing.",
+            "eli5": "Turn the knobs while your tune plays. Wave changes the drawing from buzzy saw to video game square. Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is sound?",
+          "options": [
+            "air being pushed and pulled",
+            "electricity in the speaker",
+            "light from the screen",
+            "numbers in the synth"
+          ],
+          "answer": 0,
+          "why": "Something moves back and forth and pushes the air. Those pressure changes reach your ear as sound.",
+          "whyWrong": {
+            "1": "Electricity drives the speaker, but you hear the air the speaker moves.",
+            "2": "Light is a different thing altogether. Sound travels through air.",
+            "3": "The numbers describe the wave. It only becomes sound when a speaker moves the air."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "A synth has no string. So what actually moves the air?",
+          "options": [
+            "the speaker",
+            "the synth's numbers",
+            "your screen",
+            "nothing, a synth is silent"
+          ],
+          "answer": 0,
+          "why": "The synth makes the shape as numbers, and the speaker moves to that shape and pushes the air.",
+          "whyWrong": {
+            "1": "The numbers are the plan. The speaker is what physically moves.",
+            "2": "Your screen just shows the picture.",
+            "3": "You heard it, so something moved the air. That was the speaker."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "The high note had more wiggles packed into the picture. What does that mean?",
+          "options": [
+            "the air moves back and forth faster",
+            "it is louder",
+            "the wave is a different shape",
+            "it lasts longer"
+          ],
+          "answer": 0,
+          "why": "More cycles every second means faster vibration, and faster vibration is a higher pitch.",
+          "whyWrong": {
+            "1": "Loudness is how big the push is, not how often it happens.",
+            "2": "Both notes were the same soft shape. Only the speed changed.",
+            "3": "Both notes lasted the same time."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which wave sounds the smoothest and most pure?",
+          "options": [
+            "the soft, round one",
+            "the saw",
+            "the square",
+            "they all sound the same"
+          ],
+          "answer": 0,
+          "why": "A round wave has no sharp corners, so there is nothing extra on top. It sounds pure.",
+          "whyWrong": {
+            "1": "The saw has a sudden drop, which makes it bright and buzzy.",
+            "2": "The square jumps up and down suddenly, which gives it that hollow, game-like sound.",
+            "3": "Same note, but the shapes sound clearly different. Go back and tap them again."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Your synth sounds too harsh. Which knob helps most?",
+          "options": [
+            "turn cutoff down",
+            "turn cutoff up",
+            "move wave to square",
+            "play higher notes"
+          ],
+          "answer": 0,
+          "why": "Cutoff down smooths off the sharp edges of the wave, which is what makes it harsh.",
+          "whyWrong": {
+            "1": "Cutoff up keeps more of the sharp edges, so it gets even brighter.",
+            "2": "The square is still full of sharp jumps.",
+            "3": "Higher notes tend to sound even sharper."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "You mute the speaker but the wave still moves on screen. Can you hear it?",
+          "options": [
+            "no, nothing is moving the air",
+            "yes, the synth is still playing",
+            "only the high notes",
+            "only through the screen"
+          ],
+          "answer": 0,
+          "why": "Without a speaker moving, the numbers never become moving air, so there is no sound to hear.",
+          "whyWrong": {
+            "1": "The synth still makes the numbers, but no air moves.",
+            "2": "No air moves at all, high or low.",
+            "3": "The screen shows the picture, it does not move air."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "One full push and pull of the air is called what?",
+          "options": [
+            "a cycle",
+            "a beat",
+            "a bar",
+            "a wave shape"
+          ],
+          "answer": 0,
+          "why": "One push and pull is a cycle. Pitch is how many cycles happen every second.",
+          "whyWrong": {
+            "1": "A beat is a step of the rhythm, like your kick.",
+            "2": "A bar is four beats.",
+            "3": "The shape is how each cycle looks, soft, saw or square."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: louder and higher are not the same thing. You will hear the difference between volume and pitch."
+        }
+      ],
+      "file": "producer/02-synth-what-is-sound.yaml"
     }
   ]
 }

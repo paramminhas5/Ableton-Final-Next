@@ -3944,13 +3944,13 @@ const allProducerMissions: Mission[] = [
 // so the 18 authored synth screen sets in missions-producer-screens.ts go live.
 const allSynthMissions: Mission[] = SYNTHS_MISSIONS.map(withProducerScreens);
 
+// A lesson file replaces the old mission with the same slug (same place in paths, same progress key).
+const FILE_MISSIONS = fileMissions();
+const FROM_FILE = new Set(FILE_MISSIONS.map((m) => m.slug));
 export const MISSIONS: Mission[] = [
-  ...fileMissions(),
-  ...FOUNDATIONS_MISSIONS,
-  ...DJ_WORLD_MISSIONS,
-  ...allSynthMissions,
-  ...allProducerMissions,
-].map((m) => (Object.hasOwn(FLAGSHIP_SCREENS, m.slug) ? { ...m, screens: FLAGSHIP_SCREENS[m.slug] } : m));
+  ...FILE_MISSIONS,
+  ...[...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...allSynthMissions, ...allProducerMissions].filter((m) => !FROM_FILE.has(m.slug)),
+].map((m) => (!m.fromFile && Object.hasOwn(FLAGSHIP_SCREENS, m.slug) ? { ...m, screens: FLAGSHIP_SCREENS[m.slug] } : m));
 
 export const missionsByWorld = (world: string) =>
   MISSIONS.filter((m) => m.world === world).sort((a, b) => a.number - b.number);

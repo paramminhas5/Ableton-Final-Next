@@ -10,7 +10,7 @@ Status: [ ] open, [x] done, [~] partly. R = becomes a rule in `process.md`.
 5. [ ] Desktop "my song and my journey" view: the song so far and where you are in the path.
 
 ## Onboarding and dashboard
-6. [ ] ccdschool.com goes straight to onboarding for a first visit: what you want to make, how much you know, then lesson 1.
+6. [x] ccdschool.com goes straight to onboarding for a first visit: what you want to make, how much you know, then lesson 1.
 7. [ ] Dashboard: one screen, producer lessons on top, knobs that move when clicked.
 8. [ ] Bottom bar covers the list and the redo button. Fix the overlap.
 9. [ ] "preview" button only plays a kick. Remove it or make it preview the lesson.
@@ -46,11 +46,11 @@ Status: [ ] open, [x] done, [~] partly. R = becomes a rule in `process.md`.
 37. [ ] Later: a full kick designer (click, body, pitch drop, drive, length) for the best kick you can make.
 
 ## Sound lesson (lesson 2)
-38. [ ] Header shows it is lesson 2, with breadcrumbs and back.
-39. [ ] Explain sound as moving air with a moving picture, then one cycle, then pitch.
-40. [ ] Synth: "it makes the wave directly from numbers, then the speaker turns that into air". Excited, moving diagram.
-41. [ ] Questions not right after each idea; together near the end.
-42. [ ] Play with the synth before adding the lead line; shape it, then add to song, then "you learned".
+38. [x] Header shows it is lesson 2, with breadcrumbs and back.
+39. [x] Explain sound as moving air with a moving picture, then one cycle, then pitch.
+40. [x] Synth: "it makes the wave directly from numbers, then the speaker turns that into air". Excited, moving diagram.
+41. [x] Questions not right after each idea; together near the end.
+42. [x] Play with the synth before adding the lead line; shape it, then add to song, then "you learned".
 
 ## Done in the 4 Nov rebuild (commit after 9fec2dd)
 New player for file lessons (`FileLesson.tsx`): header with back, lesson crumb, step x of y, now and
@@ -63,3 +63,16 @@ Undo takes back one hit, hold clears. The play-in only passes when all four kick
 Kick ear drill and the bass clash question removed. Grid and snap step folded into the play-in.
 Desktop: instrument left, reading and next right, on every step, all within 1440x900.
 Still open on the kick lesson: 21 (type pass on the rest of the app), 37 (full kick designer).
+
+## Done later on 4 Nov (lesson 2 and onboarding)
+Lesson 2 is now a lesson file (`producer/02-synth-what-is-sound.yaml`, same slug so paths and progress
+keep working; a lesson file now replaces any old mission with the same slug). Moving air picture (speaker
+pushing dots), low vs high with the wave and the air speeding up, soft / saw / square with numbers to
+speaker to air to ear, then play a synth line over your kick (any four notes, no on-beat rule for tunes),
+shape it with wave and cutoff while the picture changes, add to song, questions at the end. Hear steps
+can carry fold-outs now.
+Onboarding at the root for a first visit: hello (the "let's go, sound on" tap starts a kick, which also
+unlocks audio so lesson one opens playing), what do you want to make, how much have you done, how should
+we explain things (sets the starting way for every lesson: explain it properly, keep it short, keep it
+really simple), then your first lesson. "i know my way around" offers the level finder. Bottom nav hidden
+on the root.

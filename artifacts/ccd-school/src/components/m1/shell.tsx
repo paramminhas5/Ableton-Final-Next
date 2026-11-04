@@ -36,7 +36,7 @@ export const MODES = [
   { id: "library", label: "library", href: "/atlas", match: (p: string) => ["/atlas", "/devices", "/device", "/glossary", "/plugins", "/signal-flow", "/wiki", "/shortcuts"].some(x => p.startsWith(x)) },
 ] as const;
 
-const HIDE = [/^\/studio/, /^\/lab\//, /^\/learn\/[^/]+/, /^\/mission\/[^/]+/, /^\/placement/, /^\/onboarding/, /^\/login/];
+const HIDE = [/^\/$/, /^\/studio/, /^\/lab\//, /^\/learn\/[^/]+/, /^\/mission\/[^/]+/, /^\/placement/, /^\/onboarding/, /^\/login/];
 
 /** Four mode keys. The one you are in has a black cap and its light on. */
 export function ModeBar() {

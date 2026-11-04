@@ -313,3 +313,24 @@
   .fl .ls-col>.ls-bottom{grid-column:2;grid-row:2;align-self:start;position:static;padding-top:16px}
   .fl .ls-col>.ls-skip{grid-column:2}
 }
+
+/* ── first visit (Welcome.tsx) ─────────────────────────────────────────────── */
+.wl{max-width:520px;margin:0 auto}
+.wl-top{display:grid;grid-template-columns:72px 1fr 72px;align-items:center;gap:10px;min-height:40px}
+.wl-top .ls-seg{display:flex}
+.wl-top>:last-child{justify-self:end}
+.wl-q{margin-top:8px;max-width:240px}
+.wl-how{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.wl-how li{display:flex;gap:12px;align-items:flex-start}
+.wl-how b{flex:none;width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.wl-how span{font-size:13px;color:var(--print);line-height:1.4}
+.wl-how strong{display:block;font-size:15px;font-weight:600;color:var(--ink)}
+.wl-go{margin-top:18px;height:72px}
+.fl-air{position:relative;margin-top:10px}
+.fl-airlabels{display:flex;justify-content:space-between;font-size:10px;color:var(--disp-sub);margin-top:2px}
+.fl-wave{display:block;margin-top:10px;height:90px}
+.fl-chain{display:flex;justify-content:space-between;gap:6px;margin-top:10px;font-size:11px;color:var(--disp-sub)}
+.fl-chain span{flex:1;text-align:center;padding:6px 4px;border-radius:8px;border:1px solid rgba(255,255,255,.12)}
+.fl-chain.is-on span{animation:fl-flow 880ms ease-in-out infinite}
+@keyframes fl-flow{0%,100%{border-color:rgba(255,255,255,.12);color:var(--disp-sub)}25%{border-color:var(--led-go);color:var(--disp-ink)}}
+@media (prefers-reduced-motion:reduce){.fl-chain.is-on span{animation:none}}
