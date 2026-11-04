@@ -11,7 +11,7 @@ They are making a song. Every lesson adds one part to it. Learning is how they g
 a test they sit through. So:
 
 1. The song is always on screen, at the top, with a play button. Never at the bottom, never hidden.
-2. Sound starts on its own. Opening a lesson plays the thing being taught. Pressing a choice
+2. Sound starts on its own when there is one thing to hear. When the step asks you to tap a choice or press rec, nothing plays until you tap. Opening a lesson plays the thing being taught. Pressing a choice
    (short kick, long kick) plays that choice. No separate "hear" or "play loop" button to unlock sound.
 3. Any control we introduce must audibly do something the moment it moves. If a knob makes no
    difference you can hear, we don't show it.

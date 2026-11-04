@@ -114,7 +114,8 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
   useEffect(() => () => { try { engine.stop(); } catch { /* engine not started */ } }, [engine]);
   const toggle = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); heard.current = true; };
   // It is already playing when you arrive. If the browser wants a tap first, the play key is there.
-  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); heard.current = true; }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // One clip plays on arrival. When the step asks you to tap a choice, nothing plays until you tap.
+  useEffect(() => { if (variants.length > 1) return; let gone = false; void ready().then(() => { if (gone) return; engine.metronome(false); engine.play(); heard.current = true; }).catch(() => { /* needs a tap */ }); return () => { gone = true; }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [beatN, setBeatN] = useState(0);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos && e.flags & FLAG.playing) setBeatN(b => (Math.floor(e.beat) !== b ? Math.floor(e.beat) : b)); }), [engine]);
   const isKick = /kick/.test(screen.clip);
@@ -190,7 +191,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   // The loop is going when you arrive, so every turn is heard straight away.
   useEffect(() => {
     if (!shown) return;
-    void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ });
+    let gone = false;
+    void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ });
+    return () => { gone = true; };
   }, [!!shown]); // eslint-disable-line react-hooks/exhaustive-deps
   const val = (key: string) => { const k = knobs.find(x => x.spec.key === key); return k ? params[k.index] ?? k.spec.default : 0.5; };
   const isKick = line.type === "drums";

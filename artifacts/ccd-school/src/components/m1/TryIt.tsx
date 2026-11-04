@@ -106,16 +106,10 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
 
   // With nothing to play along to, the click keeps time.
   useEffect(() => {
-    engine.metronome(click && (coach ? true : !backing && (recording || countIn)));
-  }, [engine, backing, recording, countIn, click, coach]);
+    engine.metronome(click && (coach ? (recording || countIn || playing) : !backing && (recording || countIn)));
+  }, [engine, backing, recording, countIn, click, coach, playing]);
 
-  // A guided play-in opens with the click already going, so you hear the beat before you touch anything.
-  useEffect(() => {
-    if (!coach) return;
-    let gone = false;
-    void ready().then(() => { if (!gone) { engine.metronome(true); engine.play(); } }).catch(() => { /* needs a tap first */ });
-    return () => { gone = true; };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Nothing plays until you press rec or play: the step asks you to tap, so the tap starts it.
 
   useEffect(() => () => { engine.stop(); engine.metronome(false); }, [engine]);
 
@@ -256,7 +250,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           {head >= 0 && <path d={`M${head} 0V${Hd}`} stroke={recording ? "#FF4A5A" : "#F3F2EF"} strokeWidth={1.5} />}
         </svg>
         <div className="ls-meta" style={{ marginTop: 10 }}>
-          <span style={{ color }}>{notesCount ? `${notesCount} ${notesCount === 1 ? "note" : "notes"}` : "nothing yet"}</span>
+          <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : drumLike ? (notesCount === 1 ? "hit" : "hits") : notesCount === 1 ? "note" : "notes"}` : "nothing yet"}</span>
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>

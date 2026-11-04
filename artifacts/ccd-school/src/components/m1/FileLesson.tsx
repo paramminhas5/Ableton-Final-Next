@@ -127,7 +127,7 @@ function CountAlong({ clip }: { clip: string }) {
   const { engine, ready } = useEngineTrack(track);
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
-  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { let gone = false; void ready().then(() => { if (gone) return; engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); return () => { gone = true; }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const n = beat >= 0 ? (Math.floor(beat) % 4) : -1;
   const bar = beat >= 0 ? Math.floor(beat / 4) % 2 : 0;
   return (
@@ -148,7 +148,7 @@ function TakeBar({ mission, take }: { mission: Mission; take: Take }) {
   const { engine, ready } = useEngineTrack(track);
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
-  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { let gone = false; void ready().then(() => { if (gone) return; engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); return () => { gone = true; }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const loop = track.loop || 4;
   const at = beat >= 0 ? (((beat % loop) + loop) % loop) : -1;
   const W = 330, H = 70, bw = W / loop;
@@ -192,7 +192,9 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   // It plays straight away: this is your song with the new part in it.
   useEffect(() => {
     if (!preview) return;
-    void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ });
+    let gone = false;
+    void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ });
+    return () => { gone = true; };
   }, [!!preview]); // eslint-disable-line react-hooks/exhaustive-deps
   const add = () => {
     const now = readTrackV2();

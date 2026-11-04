@@ -478,3 +478,15 @@
 .tr-card p{margin:0;font-size:14px;line-height:21px;color:var(--ink)}
 .tr-n{font-size:11px;font-weight:600;color:var(--led-go)}
 .tr-keys{display:flex;gap:10px;align-items:center;margin-top:14px}
+.tr-go{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--deck2);animation:wl-in 420ms var(--ease-snap) both}
+.tr-go span{font-size:13px;font-weight:600;color:var(--led-go)}
+.tr-go b{font-size:40px;font-weight:300;letter-spacing:-.03em;color:var(--ink)}
+/* phone: the lesson list sits right under the lesson card, in its own box that fades at its edges */
+@media (max-width:899px){
+  .m1-page.td-root{height:auto;overflow:visible;padding-bottom:116px}
+  .td-left{order:1}
+  .td-all{order:2;flex:none;margin-top:12px}
+  .td-right{order:3}
+  .td-all .td-list{flex:none;height:min(46dvh,340px);overflow:auto;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(180deg,transparent 0,#000 14px,#000 calc(100% - 28px),transparent);padding-bottom:24px}
+}
+.wd-paths{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);padding-bottom:18px}
