@@ -158,6 +158,12 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const go = () => { if (met) onNext(); else { setSay(why); window.setTimeout(() => setSay(null), 2600); } };
   useEnter(go);
 
+  // Only the controls this lesson is about are out; the rest wait behind "more controls".
+  const [more, setMore] = useState(screen.goal === "free");
+  const TOOLS: Record<string, string[]> = { sync: ["sync"], cue: ["cues"], loop: ["loops"], stems: ["stems"], shift: ["key", "sync"], curve: ["curve"], record: ["record"], file: ["files"], key: ["bank", "key"], match: ["bank"] };
+  const shows = (t: string) => more || (TOOLS[screen.goal] ?? []).includes(t);
+  const hidden = ["bank", "sync", "cues", "loops", "stems", "key", "curve", "record", "files"].some(t => !shows(t));
+
   const Leds = ({ at, label }: { at: number; label: string }) => (
     <div className="mx-leds" aria-label={label}>{[0, 1, 2, 3].map(i => <i key={i} className={at === i ? "is-on" : ""} />)}</div>
   );
@@ -171,6 +177,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <div><small>deck b · {bFile ? "your file" : "bank"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
           </div>
           {recState !== "off" && <div className="fl-airlabels"><span>{recState === "on" ? "recording your mix" : "mix recorded"}</span>{recUrl ? <a href={recUrl} download="my-mix.webm">download it</a> : null}</div>}
+          <div className={`mx-goal ${met ? "is-met" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: met ? "var(--led-mint)" : "var(--led-go)" } as CSSProperties} />{met ? "done. press next when you're ready" : why}</div>
           {(screen.goal === "phrase" || screen.goal === "cut") && playing ? <div className="fl-airlabels"><span>phrase bar {Math.floor((((beat % 32) + 32) % 32) / 4) + 1} of 8</span><span>beat {beatA + 1}</span></div> : null}
         </Screen>
         <div className="mx-desk">
@@ -190,20 +197,21 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <Fader label="deck b" value={fb} onChange={setFb} height={130} width={40} />
           </div>
         </div>
-        <div className="fl-marks mx-bank" role="radiogroup" aria-label="Deck b track">
+        {shows("bank") && <div className="fl-marks mx-bank" role="radiogroup" aria-label="Deck b track">
           {DJ_BANK.map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); }}>{t.name}<small>{t.bpm} · {t.camelot}</small></button>)}
-        </div>
+        </div>}
         <div className="fl-marks mx-tools" role="group" aria-label="Deck tools">
-          <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>
-          {CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`Hot cue ${i + 1}, ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}
-          {LOOP_LENS.map(n => <button key={n} type="button" className={`ls-chip ${loopLen === n ? "is-on" : ""}`} aria-pressed={loopLen === n} onClick={() => loopNow(loopLen === n ? null : n)}>loop {n}</button>)}
-          {STEMS.map(st => <button key={st} type="button" className={`ls-chip ${stems[st] ? "is-on" : ""}`} aria-pressed={stems[st]} aria-label={`Deck b ${st} stem`} onClick={() => setStems(x => ({ ...x, [st]: !x[st] }))}>{st} b</button>)}
-          <button type="button" className="ls-chip" aria-label="Deck b key down a semitone" onClick={() => setShift(v => Math.max(-6, v - 1))}>key b -</button>
-          <button type="button" className="ls-chip" aria-label="Deck b key up a semitone" onClick={() => setShift(v => Math.min(6, v + 1))}>key b +</button>
-          <button type="button" className={`ls-chip ${law === "sharp" ? "is-on" : ""}`} aria-pressed={law === "sharp"} onClick={() => setLaw(l => (l === "sharp" ? "smooth" : "sharp"))}>curve {law === "sharp" ? "sharp" : "smooth"}</button>
-          <button type="button" className={`ls-chip ${recState === "on" ? "is-on" : ""}`} aria-pressed={recState === "on"} onClick={() => void toggleRec()}>{recState === "on" ? "stop recording" : "record mix"}</button>
-          <FileDeck deck={fileA} label="file on a" onLoad={name => { setDeckA(name ? "file" : "song"); }} />
-          <FileDeck deck={fileB} label="file on b" onLoad={name => { setBFile(name); if (name) setSynced(false); }} />
+          {shows("sync") && <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>}
+          {shows("cues") && CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`cue ${i + 1} ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}
+          {shows("loops") && LOOP_LENS.map(n => <button key={n} type="button" className={`ls-chip ${loopLen === n ? "is-on" : ""}`} aria-pressed={loopLen === n} onClick={() => loopNow(loopLen === n ? null : n)}>loop {n}</button>)}
+          {shows("stems") && STEMS.map(st => <button key={st} type="button" className={`ls-chip ${stems[st] ? "is-on" : ""}`} aria-pressed={stems[st]} aria-label={`${st} b stem`} onClick={() => setStems(x => ({ ...x, [st]: !x[st] }))}>{st} b</button>)}
+          {shows("key") && <button type="button" className="ls-chip" aria-label="key b - (down a semitone)" onClick={() => setShift(v => Math.max(-6, v - 1))}>key b -</button>}
+          {shows("key") && <button type="button" className="ls-chip" aria-label="key b + (up a semitone)" onClick={() => setShift(v => Math.min(6, v + 1))}>key b +</button>}
+          {shows("curve") && <button type="button" className={`ls-chip ${law === "sharp" ? "is-on" : ""}`} aria-pressed={law === "sharp"} onClick={() => setLaw(l => (l === "sharp" ? "smooth" : "sharp"))}>curve {law === "sharp" ? "sharp" : "smooth"}</button>}
+          {shows("record") && <button type="button" className={`ls-chip ${recState === "on" ? "is-on" : ""}`} aria-pressed={recState === "on"} onClick={() => void toggleRec()}>{recState === "on" ? "stop recording" : "record mix"}</button>}
+          {shows("files") && <FileDeck deck={fileA} label="file on a" onLoad={name => { setDeckA(name ? "file" : "song"); }} />}
+          {shows("files") && <FileDeck deck={fileB} label="file on b" onLoad={name => { setBFile(name); if (name) setSynced(false); }} />}
+          {hidden && <button type="button" className="ls-chip mx-more" aria-expanded={more} onClick={() => setMore(true)}>more controls</button>}
         </div>
       </div>
       <div className="fl-text">
@@ -215,7 +223,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play both decks"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={go} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel="Next">{met ? "next" : "not yet"}</GoPill>
+          <GoPill onClick={go} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel={met ? "Next" : `Not yet: ${why}`}>{met ? "next" : "not yet"}</GoPill>
         </div>
       </div>
     </div>

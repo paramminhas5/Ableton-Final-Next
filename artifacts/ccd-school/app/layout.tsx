@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "CCD.SCHOOL — Learn Music Production & DJing",
+    default: "CCD.SCHOOL | learn music production and djing",
     template: "%s | CCD.SCHOOL",
   },
   description:
-    "The most structured music education on the internet. 153 missions across Fundamentals, DJ World, and Producer. Gamified, source-verified, brutally effective.",
+    "Learn music by making it. 198 lessons that build one song of your own, on a real instrument in your browser: basics, producing and djing.",
   keywords: [
     "Ableton Live 12",
     "music production",
@@ -61,16 +61,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "CCD.SCHOOL",
-    title: "CCD.SCHOOL — Learn Music Production & DJing",
+    title: "CCD.SCHOOL | learn music production and djing",
     description:
-      "153 missions across Fundamentals, DJ World, and Producer. Gamified, source-verified, brutally effective.",
+      "198 lessons that build one song of your own: basics, producing and djing, on a real instrument in your browser.",
     images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "CCD.SCHOOL" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CCD.SCHOOL — Learn Music Production & DJing",
+    title: "CCD.SCHOOL | learn music production and djing",
     description:
-      "153 missions across Fundamentals, DJ World, and Producer. Gamified, source-verified, brutally effective.",
+      "198 lessons that build one song of your own: basics, producing and djing, on a real instrument in your browser.",
     images: [OG_IMAGE],
   },
 

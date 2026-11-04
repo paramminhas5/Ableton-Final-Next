@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: "Upgrade to PRO",
   description:
-    "Unlock all 153 missions, advanced content, cloud sync, and compete on the global leaderboard with CCD.SCHOOL PRO.",
+    "CCD.SCHOOL Pro: cloud sync, the leaderboard and more, on top of all 198 lessons.",
 };
 
 export default function UpgradePage() {

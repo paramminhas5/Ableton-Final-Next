@@ -197,10 +197,10 @@ export function Today() {
       </div>
 
       <div className="td-right">
-      <Silk label="turn to choose" right="or tap a lesson below" />
+      <Silk label="turn to choose" right="or tap any lesson in the list" />
       <div className="td-knobs">
         <div><span className="m1-ss">world</span>
-          <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.go} size={72} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
+          <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={72} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
         </div>
         <div><span className="m1-ss">path</span>
           <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />

@@ -11583,14 +11583,14 @@
       "title": "the piano roll",
       "minutes": 5,
       "song": {
-        "changes": "hats.hats",
-        "why": "hats sit on a grid of time, and snapping them to it is what keeps your groove tight"
+        "changes": "lead.lead",
+        "why": "your lead's notes sit on a grid of pitch and time, and editing them there is how you fix and shape a part"
       },
-      "learn": "What midi is, the piano roll grid where notes are drawn and edited, and snapping your hats to that grid.",
+      "learn": "What midi is, and the piano roll grid where notes are drawn and edited, on your own lead.",
       "youCan": [
         "say what midi stores about a note",
         "read a piano roll, pitch up the side and time along the bottom",
-        "play hats onto the grid with snap on"
+        "add, move, stretch and soften notes on the grid"
       ],
       "steps": [
         {
@@ -11624,11 +11624,11 @@
         {
           "kind": "tempo",
           "set": "grid",
-          "layer": "hats",
+          "layer": "lead",
           "say": {
-            "mentor": "This is the piano roll: every note your part plays, drawn on a grid. Rows are pitches, columns are sixteenths, and the bright line is where the song is playing. Your hats are here. Tap an empty square to add a hat, tap a hat to pick it.\nWith a note picked, the buttons under the grid move it, make it longer or shorter, louder or softer, or delete it. Add an open hat on an offbeat, make one hit quieter, nudge one later. In Live this is the midi note editor; the ideas are the same everywhere.",
-            "straight": "The grid is the piano roll. Tap to add a note, tap a note to pick it, then move, stretch, soften or delete it with the buttons. Change your hats.",
-            "eli5": "The grid shows your notes as little blocks. Tap to add one. Tap a block to change it."
+            "mentor": "This is the piano roll: every note your lead plays, drawn on a grid. Rows are pitches, with a keyboard down the side, and columns are sixteenths. The bright column is where the song is playing.\nTap an empty square to add a note. Tap a note to pick it, then use the buttons under the grid to move it, make it longer or shorter, louder or softer, or delete it. Try making one note longer, one quieter, and nudging one a step later. In Live this is the midi note editor; the moves are the same.",
+            "straight": "The grid is the piano roll. Tap to add a note, tap a note to pick it, then move it, stretch it, soften it or delete it with the buttons.",
+            "eli5": "Your notes are bars on a grid. Tap to add one. Tap a bar to change it."
           }
         },
         {

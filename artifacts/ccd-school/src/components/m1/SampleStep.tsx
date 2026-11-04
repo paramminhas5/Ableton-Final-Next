@@ -131,24 +131,27 @@ export function SampleStep({ screen, accent, onNext, tail }: StepProps) {
           <Meta left={job === "warp" ? `a loop recorded at ${LOOP_BPM} bpm, playing at ${bpm}` : job === "slice" ? "eight slices on eight pads" : "your sample"} right={busy ? "recording" : playing ? "playing" : "press play"} />
           <Wave rec={rec} cuts={sliced} lit={job === "slice" ? (mine.length ? mine : SLICE_ORDERS[order])[step] ?? -1 : job === "warp" && warp === "beats" ? step : -1} accent={accent} start={params[idx("start")] ?? 0} reverse={(params[idx("reverse")] ?? 0) > 0.5} />
         </Screen>
-        <Chips label="Sound" accent={accent} items={sources} value={source} name={s => (s === "mic" ? "record mic" : s === "file" ? "load a file" : s === "loop" ? "drum loop" : s)}
+        <Chips label="Sound source" accent={accent} items={sources} value={source} name={s => (s === "mic" ? "record mic" : s === "file" ? "load a file" : s === "loop" ? "drum loop" : s)}
           onPick={s => { if (s === "mic") void fromMic(); else if (s === "file") file.current?.click(); else setSource(s); }} />
         <input ref={file} type="file" accept="audio/*" hidden onChange={e => void fromFile(e.target.files?.[0])} />
         {job === "hit" && <Chips label="Play it" accent={accent} items={["2 and 4", "every beat", "offbeats", "keys"]} value={pattern} onPick={setPattern} name={p => (p === "keys" ? "as keys" : `on ${p}`.replace("on every", "every"))} />}
         {job === "slice" && <>
-          <Chips label="Slice order" accent={accent} items={Object.keys(SLICE_ORDERS)} value={mine.length ? "" : order} onPick={o => { setMine([]); setOrder(o); }} name={o => o} />
-          <div className="sm-pads" aria-label="Slices: tap to make your own order" style={{ ["--c" as string]: accent } as CSSProperties}>
-            {Array.from({ length: 8 }, (_, k) => <button key={k} type="button" className="ls-chip" aria-label={`Slice ${k + 1}`} onClick={() => setMine(m => (m.length >= 8 ? [k] : [...m, k]))}>{k + 1}</button>)}
-            <button type="button" className="ls-chip" aria-label="Clear your order" onClick={() => setMine([])}>{mine.length ? `yours: ${mine.map(m => m + 1).join(" ")}` : "tap slices for your own order"}</button>
+          <Chips label="Play the slices" accent={accent} items={Object.keys(SLICE_ORDERS)} value={mine.length ? "" : order} onPick={o => { setMine([]); setOrder(o); }} name={o => o} />
+          <div className="tl-group">
+            <small className="tl-label">your own order: tap the slices{mine.length ? `, ${mine.map(m => m + 1).join(" ")}` : ""}</small>
+            <div className="sm-pads" aria-label="Slices: tap to make your own order" style={{ ["--c" as string]: accent } as CSSProperties}>
+              {Array.from({ length: 8 }, (_, k) => <button key={k} type="button" className={`sm-pad ${(mine.length ? mine : SLICE_ORDERS[order])[step] === k ? "is-lit" : ""}`} aria-label={`Slice ${k + 1}`} onClick={() => setMine(m => (m.length >= 8 ? [k] : [...m, k]))}>{k + 1}</button>)}
+            </div>
+            {mine.length > 0 && <button type="button" className="ls-chip" onClick={() => setMine([])}>clear your order</button>}
           </div>
         </>}
         {job === "warp" && <>
           <Chips label="Warp mode" accent={accent} items={["off", "repitch", "beats"] as Warp[]} value={warp} onPick={setWarp} name={w => WARP_LABEL[w]} />
-          <Chips label="Tempo" accent={accent} items={[100, 120, 128, 140]} value={bpm} onPick={setBpm} name={b => `${b} bpm`} />
+          <Chips label="Tempo" accent={accent} items={[...new Set([100, 120, 128, 140, bpm])].sort((a, b) => a - b)} value={bpm} onPick={setBpm} name={b => `${b} bpm`} />
         </>}
         {knobs.length > 0 && (
           <div className="m1-g" style={{ gridTemplateColumns: `repeat(${knobs.length}, 1fr)`, marginTop: 10 }}>
-            {knobs.map((k, i) => <Knob key={k.key} label={k.key === "reverse" ? "reverse" : k.label} color={i === 0 ? CAP.go : CAP.navy} size={60} height={120} led={accent}
+            {knobs.map((k, i) => <Knob key={k.key} label={k.key === "reverse" ? "reverse" : k.label} color={CAP.navy} size={60} height={120} led={accent}
               value={params[k.index] ?? k.default} defaultValue={k.default} onChange={v => setParams(p => ({ ...p, [k.index]: k.key === "reverse" ? (v > 0.5 ? 1 : 0) : v }))}
               onTouch={(_, v) => setNote(`${k.label} ${k.key === "reverse" ? (v > 0.5 ? "on" : "off") : display(k, v)}`)} />)}
           </div>

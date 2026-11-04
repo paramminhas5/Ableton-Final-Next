@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = WORLD_TITLES[slug];
   if (!title) return { title: "World Not Found" };
   return {
-    title: `${title} — CCD.SCHOOL`,
-    description: `Learn ${title} on CCD.SCHOOL — structured music education with chapters, paths and missions.`,
+    title: title,
+    description: `Learn ${title} on CCD.SCHOOL: lessons that build one song of your own.`,
   };
 }
 

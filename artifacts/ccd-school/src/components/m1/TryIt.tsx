@@ -175,7 +175,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     setEvents(() => []);
   };
   const use = () => {
-    if (coach && !goalMet) { setNudge(true); window.setTimeout(() => setNudge(false), 1600); return; }
+    if (coach && !goalMet) {
+      // Say what's missing and bring the rec key into view, glowing, rather than doing nothing.
+      setNudge(true); window.setTimeout(() => setNudge(false), 1600);
+      document.querySelector('[aria-label="Record with a one bar count-in"]')?.scrollIntoView({ block: "center", behavior: "smooth" });
+      return;
+    }
     engine.stop();
     // Hits that were close enough to the beat are kept exactly on it.
     onUse({ type, events: coach && onBeatOnly ? events.map(e => (isOff(e) ? e : { ...e, start: ((Math.round(e.start) % loop) + loop) % loop })) : events });
@@ -228,8 +233,14 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
+  // The go key names what is still missing until the take is ready.
+  const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
+  const noun = goalNote !== undefined ? (backbeat ? "clap" : coach?.goal.note ?? "hit") : "note";
+  const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones" : `${need} more ${noun}${need === 1 ? "" : "s"}`;
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
+      {/* Phone: one live instruction above the instrument, so rec and the pads are on the first screen. */}
+      {coach && <div className={`ls-now fl-nowtop ${nudge ? "is-nudge" : ""}`} aria-hidden><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>}
       <div className="fl-inst">
       <Screen>
         <div className="ls-meta">
@@ -265,7 +276,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       </Screen>
       <Silk label="transport" right={coach ? "undo takes back a hit · hold to clear" : "rec records · play loops it"} />
       <div className="m1-g">
-        <Key label="rec" style={coach && !events.length && !recording && !countIn ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
+        <Key label="rec" style={coach && ((!events.length && !recording && !countIn) || (nudge && !goalMet)) ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
           <Icon name="rec" />
         </Key>
         <Key label={playing && !recording && !countIn ? "stop" : "play"} style={coach && goalMet && !playing ? glow : undefined} led={playing && !recording ? "var(--led-mint)" : null} onClick={play} ariaLabel={playing && !recording ? "Stop" : "Play the loop"}>
@@ -313,7 +324,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label="skip" onClick={() => { engine.stop(); onSkip(); }} ariaLabel="Skip this step"><Icon name="back" className="ls-flip" /></Key>
-          <GoPill onClick={use} disabled={coach ? false : !events.length} style={{ gridColumn: "span 3", ...(coach && !goalMet ? { opacity: 0.55 } : null) }} ariaLabel="Use this line">{coach ? "keep it" : "use this line"}</GoPill>
+          <GoPill onClick={use} disabled={coach ? false : !events.length} style={{ gridColumn: "span 3", ...(coach && !goalMet ? { opacity: 0.55 } : null) }} ariaLabel={coach && !goalMet ? `Not ready: ${goLabel}` : "Use this line"}>{goLabel}</GoPill>
         </div>
       </div>
     </div>

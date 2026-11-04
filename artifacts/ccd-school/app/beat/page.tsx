@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BeatPageClient } from "@/components/BeatPageClient";
 
 export const metadata: Metadata = {
-  title: "First Beat — CCD.SCHOOL",
+  title: "First Beat",
   description: "Make a drum beat in your browser, then save it as a MIDI file and drag it into Ableton Live.",
 };
 

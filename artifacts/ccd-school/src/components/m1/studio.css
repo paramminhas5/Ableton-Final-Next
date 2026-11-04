@@ -85,7 +85,7 @@
 .st-knobs{margin-top:8px;flex:none}
 
 /* transport */
-.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:2fr 1fr 1fr 1fr}
+.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:2fr repeat(4,1fr)}
 
 /* fourth surfaces */
 .st-lanes{position:relative;overflow:hidden}

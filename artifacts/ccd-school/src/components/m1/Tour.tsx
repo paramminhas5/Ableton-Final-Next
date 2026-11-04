@@ -10,7 +10,7 @@ import { TOUR_KEY } from "./Welcome";
 import { missionBySlug } from "@/content/missions";
 
 const STOPS: { sel: string; title: string; line: string }[] = [
-  { sel: ".td-left", title: "your next lesson", line: "always here. press play on it to start." },
+  { sel: ".td-lessoncard", title: "your next lesson", line: "always here. press play on it to start." },
   { sel: ".td-knobs", title: "turn to choose", line: "world, path and lesson. click a knob to step it, or drag it." },
   { sel: ".td-all", title: "every lesson, by path", line: "paths are the chapters of a world. tap any lesson to pick it." },
   { sel: ".td-switch", title: "lesson or your song", line: "flip to your track to hear the song your lessons are building." },
@@ -29,8 +29,16 @@ export function DashTour() {
     if (!on) return;
     const place = () => { const el = document.querySelector(stop.sel); setBox(el ? el.getBoundingClientRect() : null); };
     const el = document.querySelector(stop.sel);
-    el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    const id = window.setTimeout(place, 250);
+    // Bring the target into the part of the screen the fixed bottom bar doesn't cover, with room
+    // for the card. The bottom bar itself is always on screen, so it needs no scrolling.
+    if (el && stop.sel !== ".m1-modebar") {
+      const bar = document.querySelector(".m1-modebar")?.getBoundingClientRect().height ?? 0;
+      const r = el.getBoundingClientRect();
+      const room = window.innerHeight - bar - 24;
+      const y = window.scrollY + r.top - Math.max(16, (room - Math.min(r.height, room - 200)) / 2 - 100);
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    }
+    const id = window.setTimeout(place, 450);
     window.addEventListener("resize", place);
     return () => { window.clearTimeout(id); window.removeEventListener("resize", place); };
   }, [on, stop]);
@@ -48,7 +56,7 @@ export function DashTour() {
   const below = box ? box.bottom + 190 < window.innerHeight : true;
   return (
     <div className="tr" role="dialog" aria-label="A quick look around">
-      {box && <div className="tr-hole" style={{ top: box.top - pad, left: box.left - pad, width: box.width + pad * 2, height: box.height + pad * 2 }} />}
+      {box && <div className="tr-hole" style={{ top: Math.max(4, box.top - pad), left: box.left - pad, width: box.width + pad * 2, height: Math.min(box.height + pad * 2, window.innerHeight - Math.max(4, box.top - pad) - 4) }} />}
       <div className="tr-card" style={box ? { top: below ? box.bottom + 16 : Math.max(16, box.top - 196), left: Math.min(Math.max(16, box.left), window.innerWidth - 356) } : { top: "40%", left: "50%", transform: "translateX(-50%)" }} key={i}>
         <div className="tr-n">{i + 1} of {STOPS.length}</div>
         <h2>{stop.title}</h2>

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { LoginPageClient } from "@/components/LoginPageClient";
 
 export const metadata: Metadata = {
-  title: "Sign In — CCD.SCHOOL",
+  title: "Sign In",
   description: "Sign in to save your progress across devices.",
 };
 

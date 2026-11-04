@@ -35,6 +35,12 @@ import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
 
+/** What each song-wide or tool step is called in the progress line. */
+const STEP_LABEL: Record<string, string> = {
+  swing: "swing it", scale: "pick your scale", glue: "glue it", kit: "pick your kit", arp: "set the arp", key: "move the key",
+  grid: "edit the notes", mic: "record a sound", comp: "comp the takes", macro: "map the macro",
+};
+
 type Quiz = Extract<LessonScreen, { kind: "quiz" }>;
 type Page = LessonScreen | { kind: "add" } | { kind: "check" } | { kind: "done" };
 
@@ -50,7 +56,7 @@ const pageName = (p: Page | undefined): string => {
     case "shape": return "shape it";
     case "arrange": return p.goal === "export" ? "finish it" : p.goal === "fills" ? "fills" : p.goal === "drop" ? "the drop" : "arrange it";
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
-    case "tempo": return p.set === "swing" ? "swing it" : p.set === "scale" ? "pick your scale" : p.set === "glue" ? "glue it" : p.set === "kit" ? "pick your kit" : "set your tempo";
+    case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
     case "ear": return "ear round";
     case "add": return "add it to your song";
     case "check": return "earn your stripe";
@@ -60,7 +66,8 @@ const pageName = (p: Page | undefined): string => {
 };
 
 // ── your song, always on top ─────────────────────────────────────────────────
-export function SongStrip({ focus }: { focus?: string }) {
+/** `pending`: this lesson's part is recorded but not added yet, so the strip says so instead of "empty". */
+export function SongStrip({ focus, pending }: { focus?: string; pending?: boolean }) {
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
@@ -111,9 +118,9 @@ export function SongStrip({ focus }: { focus?: string }) {
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} is recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
-          ? <div className="fl-songempty">{focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
+          ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
       </div>
     </section>
@@ -351,7 +358,9 @@ function WithWithout({ slug }: { slug: string }) {
     try {
       const raw = sessionStorage.getItem(beforeKey(slug));
       const now = readTrackV2();
-      if (raw && now.layers.some(l => l.events.length)) setPair({ with: now, without: JSON.parse(raw) as TrackV2 });
+      const before = raw ? (JSON.parse(raw) as TrackV2) : null;
+      // Only worth comparing when there was a song before this lesson: "before" can't be silence.
+      if (before && before.layers.some(l => l.events.length) && now.layers.some(l => l.events.length)) setPair({ with: now, without: before });
     } catch { /* no snapshot */ }
   }, [slug]);
   const [which, setWhich] = useState<"with" | "without" | null>(null);
@@ -369,7 +378,7 @@ function WithWithout({ slug }: { slug: string }) {
       <div className="ls-pads fl-ab" role="radiogroup" aria-label="Your song with and without this lesson">
         {(["with", "without"] as const).map(w => (
           <button key={w} type="button" role="radio" aria-checked={which === w} className={`ls-pad ${which === w ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => play(w)}>
-            <small>{w === "with" ? "a" : "b"}</small><span>{w === "with" ? "your song now" : "before this lesson"}</span>
+            <small><Icon name={which === w ? "stop" : "play"} small /></small><span>{w === "with" ? "your song now" : "before this lesson"}</span>
           </button>
         ))}
       </div>
@@ -410,9 +419,9 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
       </Screen>
       <WithWithout slug={mission.slug} />
       {f.next && <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
-      <GoDeeper slug={mission.slug} />
       </div>
       <div className="fl-text">
+      {/* The reward first, then what you can do now, then the optional deeper lessons. */}
       {reward && <Rewards r={reward} />}
       <Silk label="you can now" />
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>
@@ -420,6 +429,7 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
         {onRetune && <button type="button" className="ls-chip" onClick={onRetune}>tune it again</button>}
         {onMore && <button type="button" className="ls-chip" onClick={onMore}>more questions</button>}
       </div>
+      <GoDeeper slug={mission.slug} />
       </div>
       <Bottom left={{ label: "lessons", icon: "back", href: back }} go={{ label: nextTitle ? `next: ${nextTitle.toLowerCase()}` : "back to lessons", href: nextHref }} />
     </div>
@@ -559,7 +569,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
-      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} />
+      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done" && !readTrackV2().added.includes(mission.slug)} />
       <div className="ls-stage fl-stage" key={idx}>{body}</div>
     </div>
   );

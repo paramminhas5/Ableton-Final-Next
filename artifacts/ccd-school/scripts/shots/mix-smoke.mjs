@@ -18,19 +18,19 @@ for (const [slug, act] of [
   ["key-detection-dj", async p => {
     for (const n of ["warm up", "smooth", "long roller", "tool", "skywalker", "space bass", "fast one"]) { await p.getByRole("radio", { name: new RegExp("^" + n) }).click(); await p.waitForTimeout(150); if (/fits/.test(await p.locator(".mx-decks").innerText())) return; }
     // No bank track fits this song's key: shift deck b's key, as the hint says.
-    for (let i = 0; i < 12 && !/fits/.test(await p.locator(".mx-decks").innerText()); i++) await p.getByRole("button", { name: "Deck b key up a semitone" }).click();
+    for (let i = 0; i < 12 && !/fits/.test(await p.locator(".mx-decks").innerText()); i++) await p.getByRole("button", { name: /^key b \+/ }).click();
   }],
   ["effects-performance-dj", async p => { await press(p, "echo a", "ArrowUp", 60); await press(p, "deck a", "ArrowDown", 60); }],
   ["sync-function", async p => { await p.getByRole("button", { name: "sync b", exact: true }).click(); }],
   ["loop-function-dj", async p => { await p.getByRole("button", { name: "loop 4", exact: true }).click(); await press(p, "deck b", "ArrowUp", 60); }],
-  ["loop-performance-dj", async p => { await p.getByRole("button", { name: /Hot cue 3/ }).click(); await p.waitForTimeout(300); await p.getByRole("button", { name: /Hot cue 4/ }).click(); }],
-  ["stem-djing", async p => { await p.getByRole("button", { name: "Deck b drums stem" }).click(); await press(p, "deck b", "ArrowUp", 60); await press(p, "deck a", "ArrowUp", 10); }],
+  ["loop-performance-dj", async p => { await p.getByRole("button", { name: /^cue 3/ }).click(); await p.waitForTimeout(300); await p.getByRole("button", { name: /^cue 4/ }).click(); }],
+  ["stem-djing", async p => { await p.getByRole("button", { name: "drums b stem" }).click(); await press(p, "deck b", "ArrowUp", 60); await press(p, "deck a", "ArrowUp", 10); }],
   ["harmonic-key-shift-dj", async p => {
-    for (let i = 0; i < 12 && !/fits/.test(await p.locator(".mx-decks").innerText()); i++) await p.getByRole("button", { name: "Deck b key up a semitone" }).click();
+    for (let i = 0; i < 12 && !/fits/.test(await p.locator(".mx-decks").innerText()); i++) await p.getByRole("button", { name: /^key b \+/ }).click();
     await p.getByRole("button", { name: "sync b", exact: true }).click();
   }],
   ["crossfader-technique", async p => { if (!/sharp/.test(await p.locator(".mx-tools").innerText())) await p.getByRole("button", { name: /^curve/ }).click(); await cutOnTheOne(p); }],
-  ["recording-your-set-dj", async p => { await p.getByRole("button", { name: "record mix" }).click(); await p.waitForTimeout(1500); await p.getByRole("button", { name: "stop recording" }).click(); await p.waitForTimeout(800); }],
+  ["recording-your-set-dj", async p => { await p.getByRole("button", { name: "record mix", exact: true }).click(); await p.waitForTimeout(1500); await p.getByRole("button", { name: "stop recording", exact: true }).click(); await p.waitForTimeout(800); }],
   ["music-library-dj", async () => {}],
   ["your-first-mix", async p => { await press(p, "deck b", "ArrowUp", 60); await press(p, "low a", "ArrowDown", 60); await press(p, "Crossfader", "ArrowRight", 60); }],
 ]) {

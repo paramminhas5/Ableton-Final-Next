@@ -4,12 +4,12 @@ import { MissionsPageClient } from "@/components/MissionsPageClient";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Missions — CCD.SCHOOL",
+  title: "Missions",
   description:
-    "All 153 missions across Fundamentals, DJ World and Producer. Search, filter and jump to any mission.",
+    "All 198 lessons across basics, producer and dj. Search, filter and jump to any lesson.",
   openGraph: {
     title: "Missions | CCD.SCHOOL",
-    description: "153 missions. Search, filter, complete. Earn XP on every one.",
+    description: "198 lessons. Search, filter and jump to any one.",
   },
 };
 

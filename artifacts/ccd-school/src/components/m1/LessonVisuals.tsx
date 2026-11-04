@@ -82,3 +82,41 @@ export function SynthChain({ playing }: { playing: boolean }) {
     </div>
   );
 }
+
+/**
+ * The lfo, drawn: its wave with a dot riding it at the real rate, and the thing it moves (the filter's
+ * opening, the pitch, or the volume) as a bar that rises and falls with the dot. Depth scales the swing.
+ */
+export function LfoView({ rate, depth, to, playing }: { rate: number; depth: number; to: "filter" | "pitch" | "volume"; playing: boolean }) {
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    if (!playing) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = () => { setT((performance.now() - start) / 1000); raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [playing]);
+  const W = 300, H = 92, mid = H / 2;
+  const phase = (t * rate) % 1;
+  // Two cycles of the wave across the screen, scaled by depth.
+  const amp = 6 + depth * (mid - 10);
+  const path = Array.from({ length: 121 }, (_, i) => { const x = (i / 120) * W; const y = mid - Math.sin((i / 120) * 2 * Math.PI * 2) * amp; return `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`; }).join("");
+  const dotX = phase * (W / 2);
+  const now = Math.sin(phase * 2 * Math.PI);
+  const dotY = mid - now * amp;
+  const level = 0.5 + 0.5 * now * depth;
+  return (
+    <div className="lfo-view">
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`lfo at ${rate.toFixed(1)} times a second, moving the ${to}`}>
+        <path d={`M0 ${mid}H${W}`} stroke="rgba(255,255,255,.12)" />
+        <path d={path} fill="none" stroke="var(--c, #7D96FF)" strokeWidth={2} opacity={depth > 0.01 ? 0.9 : 0.25} />
+        {depth > 0.01 && <circle cx={dotX} cy={dotY} r={5} fill="#fff" />}
+      </svg>
+      <div className="lfo-target" aria-hidden>
+        <span>{to}</span>
+        <i><b style={{ height: `${Math.round((depth > 0.01 ? level : 0.5) * 100)}%` }} /></i>
+      </div>
+    </div>
+  );
+}

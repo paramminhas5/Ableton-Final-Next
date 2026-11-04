@@ -11,8 +11,8 @@ for (const [name, eng] of [["chromium", chromium], ["webkit", webkit]]) {
     await p.goto(`${base}/sound`, { waitUntil: "load" }); await p.waitForTimeout(600);
     await p.getByRole("button", { name: "Play hats" }).click(); await p.waitForTimeout(1500);
     const on = await p.locator(".ab-row.is-on").count();
-    await p.getByRole("radio", { name: "before" }).click(); await p.waitForTimeout(300);
-    const now = await p.locator(".ab-now").innerText().catch(() => "");
+    await p.getByRole("radio", { name: "then" }).click(); await p.waitForTimeout(300);
+    const now = await p.locator('.ab-row.is-on [role="radio"][aria-checked="true"]').innerText().catch(() => "");
     await p.screenshot({ path: `${out}/sound-${name}-${w}-${scheme}.png` });
     console.log(`${name} ${w} ${scheme}: playing rows ${on}, badge "${now}"${errs.length ? " ERR " + errs.join("; ").slice(0, 200) : ""}`);
     await ctx.close();

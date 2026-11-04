@@ -77,7 +77,7 @@ function Choice<T extends string>({ items, value, onPick }: { items: { id: T; na
   return (
     <div className="wl-choices" role="radiogroup">
       {items.map((p, i) => (
-        <Pad key={p.id} lit={value === p.id ? "var(--led-go)" : null} ariaPressed={value === p.id} onClick={() => onPick(p.id)} height={68} ariaLabel={`${p.name}: ${p.line}`} style={{ animationDelay: `${80 * i}ms` } as CSSProperties}>
+        <Pad key={p.id} lit={value === p.id ? "var(--led-mint)" : null} ariaPressed={value === p.id} onClick={() => onPick(p.id)} height={68} ariaLabel={`${p.name}: ${p.line}`} style={{ animationDelay: `${80 * i}ms` } as CSSProperties}>
           <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 3, padding: "0 14px", width: "100%", textAlign: "left" }}>
             <span className="m1-t22" style={{ fontSize: 18, ...(value === p.id ? { color: "#06241B" } : {}) }}>{p.name}</span>
             <span className="m1-t11" style={value === p.id ? { color: "#0D2A22" } : undefined}>{p.line}</span>
@@ -124,7 +124,9 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const playing = beat >= 0;
 
   // practice: which is higher
+  // Which note is higher is random each time, so the answer can't be learned by position.
   const [ear, setEar] = useState<{ hi: 0 | 1; picked: number | null }>({ hi: 1, picked: null });
+  useEffect(() => setEar({ hi: Math.random() < 0.5 ? 0 : 1, picked: null }), []);
   const pair = () => { const a = 57, b = 64; tone(ear.hi === 0 ? b : a, 0); tone(ear.hi === 0 ? a : b, 0.7); };
 
   const pads = useRef(0);
@@ -194,13 +196,19 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
         {at === "practice" && (
           <Part n={3} name="practice" title="train your ears" line="quick ear games and reviews keep what you learned. which of the two notes is higher?">
             <Screen>
-              <div className="wl-meta"><span>ear gym</span><span>{ear.picked === null ? "listen, then pick" : ear.picked === ear.hi ? "right" : "the other one"}</span></div>
+              <div className="wl-meta"><span>ear gym</span><span>{ear.picked === null ? "listen, then pick" : ""}</span></div>
               <button type="button" className="ls-chip" style={{ marginTop: 12 }} onClick={pair}>play the two notes</button>
               <div className="wl-row" style={{ marginTop: 12 }}>
                 {["first", "second"].map((l, i) => (
                   <button key={l} type="button" className={`wl-ans ${ear.picked === null ? "" : i === ear.hi ? "is-right" : ear.picked === i ? "is-wrong" : ""}`} onClick={() => setEar(e => ({ ...e, picked: i }))}>{l}</button>
                 ))}
               </div>
+              {ear.picked !== null && (
+                <div className={`wl-verdict ${ear.picked === ear.hi ? "is-right" : ""}`} role="status">
+                  {ear.picked === ear.hi ? `right: the ${ear.hi === 0 ? "first" : "second"} note was higher.` : `not this time: the ${ear.hi === 0 ? "first" : "second"} note was higher.`}
+                  <button type="button" className="ls-chip" onClick={() => { setEar({ hi: Math.random() < 0.5 ? 0 : 1, picked: null }); }}>another one</button>
+                </div>
+              )}
             </Screen>
             <div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>next: studio</GoPill></div>
           </Part>
@@ -213,7 +221,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
               <WaveShape morph={0} bright={cut} cycles={3} playing={playing} />
             </Screen>
             <div className="wl-row">
-              <div style={{ width: 150 }}><Knob label="brightness" value={cut} onChange={v => { setCut(v); if (!playing) play(); }} color={CAP.go} size={70} height={160} led="var(--led-go)" /></div>
+              <div style={{ width: 150 }}><Knob label="brightness" value={cut} onChange={v => { setCut(v); if (!playing) play(); }} color={CAP.navy} size={70} height={160} led="var(--led-mint)" /></div>
               <button type="button" className="ls-chip" onClick={() => { if (playing) engine.stop(); else play(); }}>{playing ? "stop" : "play"}</button>
             </div>
             <div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>next: mix</GoPill></div>

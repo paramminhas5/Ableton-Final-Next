@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const d = deviceBySlug(slug);
   if (!d) return { title: "Device Not Found" };
   return {
-    title: `${d.name} — Device Lab | CCD.SCHOOL`,
+    title: `${d.name}, device lab`,
     description: d.tagline,
   };
 }

@@ -5,7 +5,7 @@
  * Same Model 1 parts as the rest of the player.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { FLAG, OUT, display } from "@/engine";
+import { FLAG, OUT, display, toValue } from "@/engine";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -23,7 +23,7 @@ import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { TOOL_STEPS } from "./tools";
-import { AirWave, SynthChain, WaveShape } from "./LessonVisuals";
+import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
@@ -218,6 +218,13 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   }, [!!shown]); // eslint-disable-line react-hooks/exhaustive-deps
   const val = (key: string) => { const k = knobs.find(x => x.spec.key === key); return k ? params[k.index] ?? k.spec.default : 0.5; };
   const isKick = line.type === "drums";
+  // The lfo gets its own picture, and where it goes is a three-way switch rather than a knob.
+  const lfoK = screen.knobs.includes("lfo") ? knobs.find(k => k.spec.key === "lforate") ?? (line.type === "lead" ? { index: LEAD_PARAMS.find(x => x.key === "lforate")!.index, spec: LEAD_PARAMS.find(x => x.key === "lforate")! as ParamSpec } : undefined) : undefined;
+  const lfoToK = knobs.find(k => k.spec.key === "lfoto");
+  const lfoToSpec = LEAD_PARAMS.find(x => x.key === "lfoto");
+  const lfoToN = lfoToK ? params[lfoToK.index] ?? lfoToK.spec.default : lfoToSpec ? params[lfoToSpec.index] ?? lfoToSpec.default : 0;
+  const lfoTo = lfoToN < 0.34 ? 0 : lfoToN < 0.67 ? 1 : 2;
+  const dialKnobs = knobs.filter(k => k.spec.key !== "lfoto");
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -225,12 +232,19 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <Screen>
         <Meta left={meta} right={touched ?? (playing ? "playing, turn a knob" : "press play")} />
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
+          : lfoK ? <LfoView rate={toValue(lfoK.spec, params[lfoK.index] ?? lfoK.spec.default)} depth={val("lfo")} to={LFO_TO[lfoTo]} playing={playing} />
           : line.type === "lead" ? <WaveShape morph={val("wave")} bright={screen.knobs.includes("cutoff") ? val("cutoff") : 0.18} amp={screen.knobs.includes("level") ? Math.min(1, val("level") / 0.75) : 1} cycles={3} playing={playing} />
           : <div className="ls-title">shape it</div>}
       </Screen>
-      <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, knobs.length)}, 1fr)` }}>
-        {knobs.map((k, i) => (
-          <Knob key={k.index} label={k.spec.label} color={i === 0 ? CAP.go : CAP.navy} size={74} height={150} led={accent}
+      {lfoToK && (
+        <div className="fl-marks tl-row lfo-to" role="radiogroup" aria-label="Where the lfo goes" style={{ ["--c" as string]: accent } as CSSProperties}>
+          {LFO_TO.map((name, i) => <button key={name} type="button" role="radio" aria-checked={lfoTo === i} className={`ls-chip ${lfoTo === i ? "is-on" : ""}`}
+            onClick={() => { setParams(p => ({ ...p, [lfoToK.index]: [0.15, 0.5, 0.85][i] })); setTouched(`lfo to the ${name}`); }}>to the {name}</button>)}
+        </div>
+      )}
+      <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
+        {dialKnobs.map(k => (
+          <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150} led={accent}
             value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default}
             onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
@@ -251,6 +265,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
     </div>
   );
 }
+
+const LFO_TO = ["filter", "pitch", "volume"] as const;
 
 // ── ear: generated pitch rounds, a different sound and note each time ─────────
 const WAVES: OscillatorType[] = ["sine", "triangle", "sawtooth", "square"];

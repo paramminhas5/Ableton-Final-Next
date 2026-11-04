@@ -110,7 +110,7 @@ export function CommandPalette() {
     [
       { to: "/worlds",      label: "Worlds",           sub: "Pick your learning world",        icon: "globe" },
       { to: "/learn",       label: "Paths",            sub: "All learning paths",              icon: "learn" },
-      { to: "/missions",    label: "All Missions",     sub: "Browse 153 missions",             icon: "pads" },
+      { to: "/missions",    label: "All Missions",     sub: "Browse all 198 lessons",             icon: "pads" },
       { to: "/glossary",    label: "Glossary",         sub: "200+ music production terms",     icon: "library" },
       { to: "/shortcuts",   label: "Shortcuts",        sub: "Ableton Live keyboard shortcuts", icon: "keys" },
       { to: "/devices",     label: "Device Dictionary",sub: "Every Ableton device explained",  icon: "knob" },

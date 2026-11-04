@@ -4,7 +4,7 @@
  * octaves around your part; columns are sixteenth steps. Tap an empty square to add a note, tap a note
  * to pick it, then make it longer or shorter, louder or softer, move it, or delete it. Plays as you edit.
  */
-import { useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { readTrackV2, writeTrackV2, type LayerType, type NoteEvent } from "@/lib/track2";
 import { NOTE_NAMES } from "@/lib/theory";
 import { Screen } from "./controls";
@@ -28,6 +28,13 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
   const rows = Array.from({ length: 25 }, (_, i) => lo + 24 - i);
   const shown = useMemo(() => ({ ...base.track, layers: base.track.layers.map(l => (l.type === type ? { ...l, events: evs } : l)) }), [base, type, evs]);
   const { beat, playing, toggle } = useLoop(shown);
+  // Open with your notes in view, not the empty top of the roll.
+  const roll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const top = evs.length ? Math.max(...evs.map(e => e.note)) : mid;
+    const row = rows.indexOf(Math.min(rows[0], top + 3));
+    if (roll.current && row > 0) roll.current.scrollTop = row * 13;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const playCol = playing ? Math.floor((((beat % loop) + loop) % loop) / STEP) : -1;
   const at = (note: number, col: number) => evs.findIndex(e => e.note === note && e.start <= col * STEP + 1e-6 && e.start + e.len > col * STEP + 1e-6);
   const tap = (note: number, col: number) => {
@@ -66,18 +73,21 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
       note={base.added ? `your song has no ${type} yet, so here are a few notes to edit. keep adds them.` : null}
       inst={<>
         <Screen>
-          <Meta left={`note grid · your ${type}`} right={s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${s.len / STEP} steps · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
-          <div className="gr-roll" role="grid" aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
+          <Meta left={`note grid · your ${type}`} right={s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
+          <div ref={roll} className="gr-roll" role="grid" aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
             {rows.map(n => (
               <div key={n} role="row" className={`gr-row ${BLACK.has(n % 12) ? "is-black" : ""}`}>
-                <span className="gr-key">{n % 12 === 0 || n === rows[0] || n === rows[rows.length - 1] ? `${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}` : ""}</span>
+                {/* A keyboard down the side: black keys dark, every C named. */}
+                <span className={`gr-key ${BLACK.has(n % 12) ? "is-black" : ""}`}>{n % 12 === 0 ? `${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}` : ""}</span>
+                {/* Each note drawn as one bar over its squares; the squares underneath take the taps. */}
+                {evs.map((e, i) => e.note === n ? <i key={`n${i}`} className={`gr-bar ${i === sel ? "is-sel" : ""}`} aria-hidden style={{ left: `calc(var(--kw) + (100% - var(--kw)) * ${e.start / loop})`, width: `calc((100% - var(--kw)) * ${e.len / loop} - 1px)`, opacity: 0.4 + e.vel * 0.6 } as CSSProperties} /> : null)}
                 {Array.from({ length: cols }, (_, c) => {
                   const i = at(n, c);
                   const e = i >= 0 ? evs[i] : null;
                   const head = e && Math.abs(e.start - c * STEP) < 1e-6;
                   return <button key={c} type="button" role="gridcell" aria-label={`${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}, step ${c + 1}${e ? ", note" : ""}`}
                     className={`gr-cell ${c % 4 === 0 ? "is-beat" : ""} ${e ? "is-note" : ""} ${head ? "is-head" : ""} ${i >= 0 && i === sel ? "is-sel" : ""} ${c === playCol ? "is-now" : ""}`}
-                    style={e ? ({ opacity: 0.35 + e.vel * 0.65 } as CSSProperties) : undefined} onClick={() => tap(n, c)} />;
+                    onClick={() => tap(n, c)} />;
                 })}
               </div>
             ))}

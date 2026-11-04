@@ -260,7 +260,7 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
     // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
-    p("lforate", "lfo rate", Bank::Shift, 0.1, 20.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 10.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
     p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
@@ -296,7 +296,7 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("detune", "detune", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
     // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
-    p("lforate", "lfo rate", Bank::Shift, 0.1, 20.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 10.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
     p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),

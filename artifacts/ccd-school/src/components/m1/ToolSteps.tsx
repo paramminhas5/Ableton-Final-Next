@@ -65,8 +65,11 @@ export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: {
 
 export function Chips<T extends string | number>({ label, items, value, onPick, name, accent }: { label: string; items: T[]; value: T; onPick: (v: T) => void; name: (v: T) => string; accent: string }) {
   return (
-    <div className="fl-marks" role="radiogroup" aria-label={label} style={{ ["--c" as string]: accent, marginTop: 10 } as CSSProperties}>
-      {items.map(v => <button key={String(v)} type="button" role="radio" aria-checked={v === value} className={`ls-chip ${v === value ? "is-on" : ""}`} onClick={() => onPick(v)}>{name(v)}</button>)}
+    <div className="tl-group">
+      <small className="tl-label" aria-hidden>{label.toLowerCase()}</small>
+      <div className="fl-marks tl-row" role="radiogroup" aria-label={label} style={{ ["--c" as string]: accent } as CSSProperties}>
+        {items.map(v => <button key={String(v)} type="button" role="radio" aria-checked={v === value} className={`ls-chip ${v === value ? "is-on" : ""}`} onClick={() => onPick(v)}>{name(v)}</button>)}
+      </div>
     </div>
   );
 }
@@ -185,7 +188,7 @@ export function MacroStep({ screen, accent, onNext, tail }: StepProps) {
           </div>
         </Screen>
         <div className="fl-tempo">
-          <Knob label="macro" color={CAP.go} size={92} height={170} led={accent} value={m} defaultValue={0.2} onChange={setM} />
+          <Knob label="macro" color={CAP.navy} size={92} height={170} led={accent} value={m} defaultValue={0.2} onChange={setM} />
           <div>
             <div className="fl-marks" role="group" aria-label="What the macro turns" style={{ ["--c" as string]: accent } as CSSProperties}>
               {all.map(t => <button key={t.key} type="button" aria-pressed={on.includes(t.key)} className={`ls-chip ${on.includes(t.key) ? "is-on" : ""}`} onClick={() => setOn(o => (o.includes(t.key) ? o.filter(x => x !== t.key) : [...o, t.key]))}>{t.label}</button>)}

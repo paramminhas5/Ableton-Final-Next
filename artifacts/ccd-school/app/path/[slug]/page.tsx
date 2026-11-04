@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = pathBySlug(slug);
   if (!path) return { title: "Path Not Found" };
   return {
-    title: `${path.title} — CCD.SCHOOL`,
+    title: path.title,
     description: path.tagline,
   };
 }
