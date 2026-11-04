@@ -455,7 +455,7 @@
    {
     "slug": "hats",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "hats",
     "does": "adds hats.hats; snap taught",
     "code": "snap toggle on the play-in, hat visual"
@@ -472,7 +472,7 @@
    {
     "slug": "clap-and-snare",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "clap and snare",
     "does": "adds drums.clap",
     "code": "clip and goal exist"
@@ -507,7 +507,7 @@
    {
     "slug": "first-bass",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "your first bass line",
     "does": "adds bass.bass",
     "code": "overlap picture"
@@ -533,7 +533,7 @@
    {
     "slug": "kick-and-bass",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "make room: kick and bass",
     "does": "changes mix: duck; shape bass decay",
     "code": "duck on a shape step, a/b"
@@ -559,7 +559,7 @@
    {
     "slug": "shape-your-synth",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "shape your synth properly",
     "does": "shape lead: res, env, attack, release",
     "code": "resonance and envelope in `WaveShape`"
@@ -630,7 +630,7 @@
    {
     "slug": "chords-on-top",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "chords on top",
     "does": "adds chords.chords",
     "code": ""
@@ -922,7 +922,7 @@
    {
     "slug": "balance",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "levels and balance",
     "does": "changes mix: levels, the stage",
     "code": "faders step"
@@ -966,7 +966,7 @@
    {
     "slug": "eq-place",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "eq: a place for everything",
     "does": "changes mix: eq per part",
     "code": "eq knobs on a shape step"
@@ -992,7 +992,7 @@
    {
     "slug": "space",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "space: reverb and echo",
     "does": "changes mix: sends",
     "code": "send knobs"

@@ -174,7 +174,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string")) at(w, "goal must look like {notes: <count>, note: <name>}");
         } else {
           const ks = o.knobs;
-          if (!Array.isArray(ks) || ks.length < 1 || ks.length > 2) return at(w, "knobs must list one or two knobs");
+          if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) return at(w, "knobs must list one to four knobs");
           const ok = knobsFor(o.layer);
           for (const k of ks) if (!ok.includes(k as string)) at(w, `knob "${String(k)}" does not exist for ${o.layer}, use one of ${ok.join(", ")}`);
         }

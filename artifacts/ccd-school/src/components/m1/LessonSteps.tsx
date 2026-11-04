@@ -9,7 +9,7 @@ import { FLAG, OUT, display } from "@/engine";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
-import { applyTake, readTake, shapeKnobs, takeType } from "@/lib/lessonTake";
+import { applyTake, readTake, shapeKnobs, takeType, withParams } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
@@ -188,7 +188,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   // Nothing played in this lesson and your song already has this part: shape your own part.
   const own = !!base && !take?.events.length && base.layers.some(l => l.type === line.type && l.events.length > 0);
   const shown = useMemo(() => (base
-    ? own ? { ...base, layers: base.layers.map(l => (l.type === line.type ? { ...l, params: { ...l.params, ...params } } : l)) } : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
+    ? own ? withParams(base, line.type, params) : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
     : null), [base, own, take, mission.slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(shown ?? readTrackV2());
   const playing = beat >= 0;

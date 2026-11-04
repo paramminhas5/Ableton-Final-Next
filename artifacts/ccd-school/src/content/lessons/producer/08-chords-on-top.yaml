@@ -1,0 +1,76 @@
+slug: chords-on-top
+world: producer
+number: 8
+title: chords on top
+minutes: 7
+song:
+  adds: chords.chords
+  why: chords fill the middle of your track and set its mood
+learn: >-
+  Pads and stabs, the two ways chords sit in dance music, and chords in your song shaped either way.
+youCan:
+  - play chords into your song
+  - turn chords into long pads or short stabs
+  - spread a chord wider
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Chords in dance music usually do one of two jobs. Pads: long, soft chords that hold under everything,
+        like a warm room. Stabs: short, punchy chords on the offbeat, like the piano hits in classic house.
+        Same notes, completely different role.
+      straight: >-
+        Chords are either pads (long, soft, underneath) or stabs (short, punchy, rhythmic).
+      eli5: >-
+        Chords can be long and dreamy, called pads. Or short and punchy, called stabs. Same notes, different
+        feel.
+
+  - kind: play
+    layer: chords
+    surface: pads
+    goal: {notes: 2}
+    say:
+      mentor: >-
+        Play chords into your song. For pads, play two long chords, one per half bar. For stabs, tap short
+        chords on the offbeats, between the kicks. Start on i, the home chord.
+      straight: >-
+        Record chords: long ones for pads, short offbeat taps for stabs. Start on i.
+      eli5: >-
+        Press rec. Hold two chords for pads, or tap short ones between the booms for stabs.
+
+  - kind: shape
+    layer: chords
+    knobs: [release, spread]
+    say:
+      mentor: >-
+        Release sets how long the chords ring: turn it up for a pad, down for a stab. Spread fans the notes of
+        each chord wider apart, so it sounds bigger and more open.
+      straight: >-
+        Release: long for pads, short for stabs. Spread: wider, bigger chords.
+      eli5: >-
+        Release makes chords ring long or stop short. Spread makes them sound bigger.
+
+  - kind: ask
+    q: What's a stab?
+    options: ["a short, punchy chord", "a long soft chord", "a drum hit", "a type of reverb"]
+    answer: 0
+    why: Short and punchy, often on the offbeat.
+    whyWrong:
+      1: That's a pad.
+      2: Stabs are chords.
+      3: Reverb is space.
+
+  - kind: ask
+    q: To turn your chords into a pad, which knob do you turn up?
+    options: ["release", "tempo", "decay on the kick", "swing"]
+    answer: 0
+    why: Longer release lets each chord ring on.
+    whyWrong:
+      1: Tempo is the whole song's speed.
+      2: That's the kick.
+      3: Swing is timing.
+
+  - kind: keep
+    next: >-
+      Next: the kick designer. Build the best kick you can, from click to body.

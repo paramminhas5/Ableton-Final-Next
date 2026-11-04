@@ -3199,6 +3199,856 @@
         }
       ],
       "file": "producer/02-synth-what-is-sound.yaml"
+    },
+    {
+      "slug": "hats",
+      "world": "producer",
+      "number": 3,
+      "title": "hats",
+      "minutes": 7,
+      "song": {
+        "adds": "hats.hats",
+        "why": "hats between the kicks lift the groove and make it move forward"
+      },
+      "learn": "Open hats on the offbeat, the sound that makes house bounce, then closed hats on the sixteenths. Snap helps you place them.",
+      "youCan": [
+        "play open hats on the offbeat with snap on",
+        "hear the lift an offbeat hat gives a groove",
+        "shape your hats with decay and tune"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "hats-offbeat",
+          "say": {
+            "mentor": "Kick on the beat, open hat exactly halfway between. Hear how it lifts? The kick pushes down, the hat pulls up, and the groove starts to bounce forward. This one pattern is the sound of a huge amount of house music.",
+            "straight": "Open hats on the offbeat, halfway between the kicks. The kick goes down, the hat goes up, and the groove bounces.",
+            "eli5": "Boom, tss, boom, tss. The tss goes right in between the booms. Hear how it makes the beat bounce?"
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "hats",
+          "surface": "pads",
+          "snap": true,
+          "goal": {
+            "notes": 1
+          },
+          "say": {
+            "mentor": "Add hats to your song. Snap is on, set to eighths, so every hit lands exactly on the grid. Press rec, wait out the count-in, and tap the open hat between each kick: on every \"and\". Want a busier feel? Tap the snap key to change it to sixteenths and add some closed hats too.",
+            "straight": "Record hats with snap on (eighths). Tap the open hat on every \"and\". Switch snap to sixteenths for closed hats if you want more.",
+            "eli5": "Press rec, wait for four ticks, then tap the open hat in between every boom. The snap helper makes every tap land perfectly."
+          },
+          "hint": "Count \"one and two and\" and tap on every \"and\"."
+        },
+        {
+          "kind": "shape",
+          "layer": "hats",
+          "knobs": [
+            "decay",
+            "tune"
+          ],
+          "say": {
+            "mentor": "Now shape them in your loop. Decay sets how long each hat rings: short and tight, or long and splashy. Tune moves them brighter or darker. A long, bright open hat feels big and open. A short, dark one sits back and lets the kick lead.",
+            "straight": "Decay: how long each hat rings. Tune: brighter or darker. Shape them in your loop.",
+            "eli5": "Decay makes the tss short or long. Tune makes it brighter or darker. Find the one you like."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does the classic house open hat land?",
+          "options": [
+            "on the offbeat, halfway between the kicks",
+            "on every kick",
+            "only on beat one",
+            "on two and four"
+          ],
+          "answer": 0,
+          "why": "Halfway between the kicks, on every \"and\".",
+          "whyWrong": {
+            "1": "On the kick it would just thicken the kick.",
+            "2": "Once a bar is too sparse for this sound.",
+            "3": "Two and four is where the clap goes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does snap do while you record?",
+          "options": [
+            "moves each hit to the nearest grid line",
+            "deletes off-beat hits",
+            "turns the volume up",
+            "changes the tempo"
+          ],
+          "answer": 0,
+          "why": "Snap pulls every hit onto the grid it's set to.",
+          "whyWrong": {
+            "1": "It moves notes, never deletes them.",
+            "2": "It's about timing only.",
+            "3": "The tempo stays the same."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "You want hats that sit back behind the kick. What do you try?",
+          "options": [
+            "shorter decay and darker tune",
+            "longer decay and brighter tune",
+            "more hats",
+            "a faster tempo"
+          ],
+          "answer": 0,
+          "why": "Short and dark hats are less in your face.",
+          "whyWrong": {
+            "1": "That makes them bigger and more forward.",
+            "2": "More hats is busier, not further back.",
+            "3": "Tempo changes everything, not just the hats."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: clap and snare. The backbeat on two and four, and the difference between the two."
+        }
+      ],
+      "file": "producer/03-hats.yaml"
+    },
+    {
+      "slug": "clap-and-snare",
+      "world": "producer",
+      "number": 4,
+      "title": "clap and snare",
+      "minutes": 6,
+      "song": {
+        "adds": "drums.clap",
+        "why": "a backbeat on two and four is what makes a beat feel like a groove"
+      },
+      "learn": "The backbeat, the difference between a clap and a snare, and a snare in your song on two and four.",
+      "youCan": [
+        "hear a clap from a snare",
+        "play a snare on two and four",
+        "say why house leans on claps and hip hop on snares"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "Kick on every beat, clap on two and four. That clap is the backbeat. Now listen closely to the clap itself: it's a few quick bursts of noise smeared together, like a handful of people clapping at once. A snare is different: a drum skin with metal wires underneath that rattle, so it has a body, a tone, and a sizzle on top.",
+            "straight": "The clap on two and four is the backbeat. A clap is a few bursts of noise; a snare is a drum with rattling wires, so it has tone as well as noise.",
+            "eli5": "Boom, clap, boom, clap. A clap is like hands clapping. A snare is a drum with tiny wires that buzz. Both go on two and four."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "drums",
+          "surface": "pads",
+          "goal": {
+            "notes": 2,
+            "note": "snare"
+          },
+          "say": {
+            "mentor": "Put a snare in your song. Your kick keeps playing underneath. Press rec, wait out the count-in, and tap the snare on two and four. If your song already has a clap, they'll layer: a clap and snare together is a classic, fat backbeat.",
+            "straight": "Record a snare on two and four over your kick. With a clap already there, they layer into a fatter backbeat.",
+            "eli5": "Press rec, wait for four ticks, then tap the snare on two and on four."
+          },
+          "hint": "Skip one, hit on two, skip three, hit on four."
+        },
+        {
+          "kind": "say",
+          "title": "clap or snare",
+          "say": {
+            "mentor": "House and techno lean on claps, a habit from the drum machines they grew up on, especially the Roland 909. Hip hop, rock and drum and bass lean on snares, often sampled from real kits. Lots of producers layer both and tune them until they sound like one hit.",
+            "straight": "House and techno: mostly claps (the 909 sound). Hip hop and rock: mostly snares. Layering both is common.",
+            "eli5": "Dance music likes claps. Hip hop and rock like snares. Lots of people use both at once."
+          },
+          "deeper": [
+            {
+              "title": "the 909",
+              "say": "Roland's TR-909 drum machine from 1983 has a clap and hats that shaped house and techno. Its clap is several noise bursts with a tail, almost exactly what's under your pad here."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "Where does the backbeat land?",
+          "options": [
+            "two and four",
+            "one and three",
+            "every beat",
+            "only on one"
+          ],
+          "answer": 0,
+          "why": "Two and four, answering the kick.",
+          "whyWrong": {
+            "1": "One and three are the kick on its own.",
+            "2": "Every beat is the kick's job.",
+            "3": "One is the start of the bar."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What gives a snare its sizzle?",
+          "options": [
+            "metal wires under the drum that rattle",
+            "the drummer's hands",
+            "a filter",
+            "the kick"
+          ],
+          "answer": 0,
+          "why": "The snare wires rattle against the bottom skin.",
+          "whyWrong": {
+            "1": "Hands are a clap.",
+            "2": "The rattle is the drum itself.",
+            "3": "It's a separate drum."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which genre leans most on claps?",
+          "options": [
+            "house",
+            "rock",
+            "drum and bass",
+            "jazz"
+          ],
+          "answer": 0,
+          "why": "House grew up on drum machine claps.",
+          "whyWrong": {
+            "1": "Rock leans on real snares.",
+            "2": "Drum and bass is mostly sampled snares.",
+            "3": "Jazz drummers use snares and brushes."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: your first bass line, and why it has to share the low end with your kick."
+        }
+      ],
+      "file": "producer/04-clap-and-snare.yaml"
+    },
+    {
+      "slug": "first-bass",
+      "world": "producer",
+      "number": 5,
+      "title": "your first bass line",
+      "minutes": 7,
+      "song": {
+        "adds": "bass.bass",
+        "why": "the bass carries the weight and the harmony at the bottom of your track"
+      },
+      "learn": "Bass notes on the keys, a bass line that grooves with your kick, and shaping it with cutoff and decay.",
+      "youCan": [
+        "play a bass line into your song",
+        "place bass notes between the kicks so they groove",
+        "shape the bass with cutoff and decay"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "Low and high, the same note. Your bass lives down at the low end, where you feel it as much as hear it. In dance music the bass usually plays short notes between the kicks rather than on top of them, so the two take turns: kick, bass, kick, bass.",
+            "straight": "The bass lives low. In dance music it often plays between the kicks so the two take turns.",
+            "eli5": "Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom and the bass take turns."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "bass",
+          "surface": "keys",
+          "goal": {
+            "notes": 2
+          },
+          "say": {
+            "mentor": "Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a few short notes in the gaps between kicks. Start on the first key, your song's home note, and try one or two others. Short and simple beats long and busy.",
+            "straight": "Record a bass line in the gaps between kicks. Start on the first key, add one or two others, keep the notes short.",
+            "eli5": "Press rec, wait for four ticks. Play short bass notes in between the booms. Start with the first key."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "bass",
+          "knobs": [
+            "cutoff",
+            "decay"
+          ],
+          "say": {
+            "mentor": "Shape it in your loop. Cutoff is the filter: low for a warm, round bass, higher for a buzzy one that cuts through on small speakers. Decay sets how long each note lasts: short and plucky, or long and rolling.",
+            "straight": "Cutoff: warm and round when low, buzzy when high. Decay: plucky when short, rolling when long.",
+            "eli5": "Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does a dance music bass often sit?",
+          "options": [
+            "between the kicks",
+            "on top of every kick",
+            "only on beat one",
+            "high up with the hats"
+          ],
+          "answer": 0,
+          "why": "Between the kicks, so they take turns and don't pile up.",
+          "whyWrong": {
+            "1": "On top of the kick they fight for the same space.",
+            "2": "Once a bar is very sparse.",
+            "3": "Bass lives low."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "You want a bass that still cuts through on phone speakers. What do you try?",
+          "options": [
+            "open the cutoff a bit",
+            "close the cutoff fully",
+            "turn decay to zero",
+            "slow the tempo"
+          ],
+          "answer": 0,
+          "why": "Phone speakers can't play deep lows; brighter harmonics let the bass come through.",
+          "whyWrong": {
+            "1": "A very dark bass disappears on small speakers.",
+            "2": "You'd barely hear it.",
+            "3": "Tempo doesn't help."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: make room. Your kick and bass both live down low, and you'll stop them fighting."
+        }
+      ],
+      "file": "producer/05-first-bass.yaml"
+    },
+    {
+      "slug": "kick-and-bass",
+      "world": "producer",
+      "number": 6,
+      "title": "make room, kick and bass",
+      "minutes": 6,
+      "song": {
+        "changes": "bass.bass",
+        "why": "a bass that ducks under the kick makes the low end punchy instead of muddy"
+      },
+      "learn": "Why kick and bass fight, and the two classic fixes: shorter notes, and ducking the bass every time the kick hits.",
+      "youCan": [
+        "hear when kick and bass are fighting",
+        "duck the bass under the kick",
+        "shorten the bass so it stays out of the kick's way"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Your kick and your bass both live down low, below about 150 hz. When they hit at the same time they add up into a muddy, boomy blur, and the kick loses its punch. Every producer fights this, and there are two simple fixes you'll try on your own song.",
+            "straight": "Kick and bass share the low end. When they overlap they turn to mud. Two fixes: shorter bass notes, and ducking.",
+            "eli5": "The boom and the bass both live in the deep low part. When they happen together they get muddy, like two people talking at once."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "bass",
+          "knobs": [
+            "duck",
+            "decay"
+          ],
+          "say": {
+            "mentor": "Here's your song. Turn up duck: every time the kick hits, the bass dips out of the way for a moment and swells back. That's sidechain ducking, the pumping sound of so much dance music. Then try decay: shorter bass notes leave space for the kick too. Use a bit of both until the kick punches and the bass still rolls.",
+            "straight": "Duck: the bass dips every time the kick hits (sidechain). Decay: shorter notes leave the kick room. Use both until the kick punches through.",
+            "eli5": "Turn up duck: the bass gets quieter every time the boom hits, so they take turns. Then turn decay down to make bass notes shorter. Keep turning until both sound clear."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why do kick and bass fight?",
+          "options": [
+            "they both live in the low end",
+            "they're the same sound",
+            "the bass is always too quiet",
+            "the kick is out of tune"
+          ],
+          "answer": 0,
+          "why": "Both sit below about 150 hz, so they pile up there.",
+          "whyWrong": {
+            "1": "Different sounds, same range.",
+            "2": "Even at the right level they overlap.",
+            "3": "Tuning doesn't cause the overlap."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does ducking the bass do?",
+          "options": [
+            "dips the bass every time the kick hits",
+            "deletes the bass",
+            "makes the bass louder",
+            "changes the bass notes"
+          ],
+          "answer": 0,
+          "why": "The bass gets out of the kick's way and swells back.",
+          "whyWrong": {
+            "1": "The bass is still there between kicks.",
+            "2": "It's quieter, briefly.",
+            "3": "The notes stay the same."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Ducking driven by another sound is called?",
+          "options": [
+            "sidechain",
+            "reverb",
+            "swing",
+            "quantise"
+          ],
+          "answer": 0,
+          "why": "Sidechain. The kick controls how much the bass dips.",
+          "whyWrong": {
+            "1": "Reverb is space.",
+            "2": "Swing is timing.",
+            "3": "Quantise is snap."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: shape your synth properly. Resonance, envelopes, and a lead that moves."
+        }
+      ],
+      "file": "producer/06-kick-and-bass.yaml"
+    },
+    {
+      "slug": "shape-your-synth",
+      "world": "producer",
+      "number": 7,
+      "title": "shape your synth properly",
+      "minutes": 8,
+      "song": {
+        "changes": "lead.lead",
+        "why": "the same notes can be a soft pad, a pluck or a squelchy lead, depending on how the sound moves"
+      },
+      "learn": "Four controls every synth has: resonance, the filter envelope, attack and release, and your lead shaped with them.",
+      "youCan": [
+        "say what resonance does to a filter",
+        "make a note brighten and close with the filter envelope",
+        "turn a lead into a pluck or a pad with attack and release"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "You've already used cutoff to make your lead darker or brighter. Now you'll make the sound move. Real synth sounds change during each note: they open up, sparkle, fade. Four knobs do most of it.",
+            "straight": "Synth sounds move within each note. Four knobs control that: resonance, envelope, attack, release.",
+            "eli5": "Good synth sounds change while the note plays. They open up and fade away. You'll learn four knobs that do it."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "res",
+            "env",
+            "attack",
+            "release"
+          ],
+          "say": {
+            "mentor": "Your lead, four knobs. Resonance makes the filter ring right at the cutoff, a whistly, squelchy peak. Envelope makes the filter open on every note and close again, so each note sparkles then darkens. Attack is how slowly a note fades in: zero for a pluck, high for a swell. Release is how long it rings after you let go.\nTry a short attack, short release and lots of envelope for a pluck. Then long attack and long release for a pad.",
+            "straight": "Res: a ringing peak at the cutoff. Env: the filter opens and closes on each note. Attack: fade in. Release: ring out. Pluck: short attack and release, lots of env. Pad: long attack and release.",
+            "eli5": "Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly. Release makes them ring out after. Try a short pluck, then a long dreamy pad."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does resonance do?",
+          "options": [
+            "adds a ringing peak at the cutoff",
+            "makes notes longer",
+            "changes the tempo",
+            "adds reverb"
+          ],
+          "answer": 0,
+          "why": "Resonance boosts the frequencies right at the cutoff, a ringing peak.",
+          "whyWrong": {
+            "1": "That's release.",
+            "2": "Synth knobs don't touch tempo.",
+            "3": "Reverb is space, a different effect."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "For a pluck, what attack do you want?",
+          "options": [
+            "zero or very short",
+            "very long",
+            "it doesn't matter",
+            "the same as release"
+          ],
+          "answer": 0,
+          "why": "A pluck starts instantly.",
+          "whyWrong": {
+            "1": "Long attack is a swell, a pad.",
+            "2": "Attack is most of what makes a pluck.",
+            "3": "Release is a separate choice."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does the filter envelope do on each note?",
+          "options": [
+            "opens the filter and lets it close again",
+            "changes the pitch",
+            "repeats the note",
+            "pans the sound"
+          ],
+          "answer": 0,
+          "why": "The filter opens then closes, so each note sparkles then darkens.",
+          "whyWrong": {
+            "1": "Pitch stays the same.",
+            "2": "That's a delay or repeat.",
+            "3": "Panning is left and right."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: chords on top, pads or stabs, and the harmony that fills out your track."
+        }
+      ],
+      "file": "producer/07-shape-your-synth.yaml"
+    },
+    {
+      "slug": "chords-on-top",
+      "world": "producer",
+      "number": 8,
+      "title": "chords on top",
+      "minutes": 7,
+      "song": {
+        "adds": "chords.chords",
+        "why": "chords fill the middle of your track and set its mood"
+      },
+      "learn": "Pads and stabs, the two ways chords sit in dance music, and chords in your song shaped either way.",
+      "youCan": [
+        "play chords into your song",
+        "turn chords into long pads or short stabs",
+        "spread a chord wider"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "Chords in dance music usually do one of two jobs. Pads: long, soft chords that hold under everything, like a warm room. Stabs: short, punchy chords on the offbeat, like the piano hits in classic house. Same notes, completely different role.",
+            "straight": "Chords are either pads (long, soft, underneath) or stabs (short, punchy, rhythmic).",
+            "eli5": "Chords can be long and dreamy, called pads. Or short and punchy, called stabs. Same notes, different feel."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "chords",
+          "surface": "pads",
+          "goal": {
+            "notes": 2
+          },
+          "say": {
+            "mentor": "Play chords into your song. For pads, play two long chords, one per half bar. For stabs, tap short chords on the offbeats, between the kicks. Start on i, the home chord.",
+            "straight": "Record chords: long ones for pads, short offbeat taps for stabs. Start on i.",
+            "eli5": "Press rec. Hold two chords for pads, or tap short ones between the booms for stabs."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "chords",
+          "knobs": [
+            "release",
+            "spread"
+          ],
+          "say": {
+            "mentor": "Release sets how long the chords ring: turn it up for a pad, down for a stab. Spread fans the notes of each chord wider apart, so it sounds bigger and more open.",
+            "straight": "Release: long for pads, short for stabs. Spread: wider, bigger chords.",
+            "eli5": "Release makes chords ring long or stop short. Spread makes them sound bigger."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's a stab?",
+          "options": [
+            "a short, punchy chord",
+            "a long soft chord",
+            "a drum hit",
+            "a type of reverb"
+          ],
+          "answer": 0,
+          "why": "Short and punchy, often on the offbeat.",
+          "whyWrong": {
+            "1": "That's a pad.",
+            "2": "Stabs are chords.",
+            "3": "Reverb is space."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "To turn your chords into a pad, which knob do you turn up?",
+          "options": [
+            "release",
+            "tempo",
+            "decay on the kick",
+            "swing"
+          ],
+          "answer": 0,
+          "why": "Longer release lets each chord ring on.",
+          "whyWrong": {
+            "1": "Tempo is the whole song's speed.",
+            "2": "That's the kick.",
+            "3": "Swing is timing."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the kick designer. Build the best kick you can, from click to body."
+        }
+      ],
+      "file": "producer/08-chords-on-top.yaml"
+    },
+    {
+      "slug": "balance",
+      "world": "producer",
+      "number": 13,
+      "title": "levels and balance",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "a mix is mostly getting the levels right, and the lead is where most people get it wrong"
+      },
+      "learn": "Balancing your parts by ear: where the lead sits against the beat, and placing it left or right.",
+      "youCan": [
+        "set a part's level by ear against the rest of the song",
+        "pan a part left or right",
+        "say why mixing starts with levels"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Most of mixing is just levels: how loud each part is against the others. Get those right and a track already sounds nearly finished. Producers usually start with the kick, set everything else around it, and come back to the lead last, because it's the easiest one to set too loud.",
+            "straight": "Mixing starts with levels. Set the kick first, build around it, and check the lead last; it's usually too loud.",
+            "eli5": "Mixing means making every sound the right loudness so they all fit. Start with the boom, then the rest."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "level",
+            "pan"
+          ],
+          "say": {
+            "mentor": "Here's your song with level and pan on your lead. Pull the level down until you can only just hear the melody, then bring it up slowly and stop the moment it feels clear. That's usually lower than you'd guess. Then try pan: a little left or right gives it its own place on the stage, away from the kick and bass in the middle.",
+            "straight": "Lead level: pull it down until barely audible, then up until clear, and stop. Pan: a little off centre frees the middle for kick and bass.",
+            "eli5": "Turn level down until you can barely hear your tune, then turn it up slowly until it's just clear. Pan moves it left or right."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where do most producers start a mix?",
+          "options": [
+            "the kick, then build around it",
+            "the lead, as loud as possible",
+            "the reverb",
+            "the hats"
+          ],
+          "answer": 0,
+          "why": "The kick is the anchor; everything else is set against it.",
+          "whyWrong": {
+            "1": "Leads set first tend to end up too loud.",
+            "2": "Reverb comes once levels are set.",
+            "3": "Hats are set against the kick too."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why keep the kick and bass in the middle?",
+          "options": [
+            "they carry the low end, which should hit both speakers equally",
+            "they're the quietest",
+            "panning only works on drums",
+            "it makes them faster"
+          ],
+          "answer": 0,
+          "why": "Low end in the middle stays solid on any speaker system.",
+          "whyWrong": {
+            "1": "They're usually the loudest.",
+            "2": "Panning works on anything.",
+            "3": "Panning has nothing to do with speed."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: eq. Give every part its own slice of the frequencies."
+        }
+      ],
+      "file": "producer/13-balance.yaml"
+    },
+    {
+      "slug": "eq-place",
+      "world": "producer",
+      "number": 14,
+      "title": "eq, a place for everything",
+      "minutes": 7,
+      "song": {
+        "changes": "lead.lead",
+        "why": "cutting the lows out of your lead leaves the low end clean for the kick and bass"
+      },
+      "learn": "What an eq does, the low cut that cleans up almost every mix, and shaping your lead's tone.",
+      "youCan": [
+        "say what an eq does",
+        "use a low cut to clear the low end",
+        "boost or cut lows, mids and highs by ear"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "An eq, short for equaliser, turns parts of the sound up or down by frequency: lows, mids, highs. It's how you give every part its own place. Your lead doesn't need the deep lows, so cutting them leaves that space for the kick and bass. Almost every part in a mix gets a low cut except those two.",
+            "straight": "An eq boosts or cuts lows, mids and highs. A low cut on everything except kick and bass keeps the low end clean.",
+            "eli5": "An eq is like a set of tone knobs for low, middle and high sounds. You take away the low rumble from your tune so the boom and bass have room."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "cut",
+            "low",
+            "mid",
+            "high"
+          ],
+          "say": {
+            "mentor": "Your lead, four eq knobs. Low cut removes everything below the frequency you set: turn it up until the lead starts to sound thin, then back off a touch. Low, mid and high boost or cut those bands. Try a small mid cut if the lead sounds boxy, a little high boost if it needs air.",
+            "straight": "Low cut: up until thin, then back a touch. Low, mid, high: boost or cut. Mid cut for boxiness, high boost for air.",
+            "eli5": "Turn low cut up until your tune sounds thin, then back a little. Then play with low, mid and high."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which parts usually keep their lows?",
+          "options": [
+            "kick and bass",
+            "the lead",
+            "the hats",
+            "the reverb"
+          ],
+          "answer": 0,
+          "why": "Kick and bass own the low end. Most other parts get a low cut.",
+          "whyWrong": {
+            "1": "The lead usually gets a low cut.",
+            "2": "Hats are all highs.",
+            "3": "Reverb lows get muddy fast."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "A sound is boxy. What might you try?",
+          "options": [
+            "a small cut in the mids",
+            "a big boost in the lows",
+            "more reverb",
+            "faster tempo"
+          ],
+          "answer": 0,
+          "why": "Boxiness usually lives in the mids.",
+          "whyWrong": {
+            "1": "That adds mud.",
+            "2": "Reverb would smear it.",
+            "3": "Tempo won't change tone."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: space. Reverb and echo, and how near or far each part sounds."
+        }
+      ],
+      "file": "producer/14-eq-place.yaml"
+    },
+    {
+      "slug": "space",
+      "world": "producer",
+      "number": 15,
+      "title": "space, reverb and echo",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "a little reverb and echo puts your lead in a room instead of right in your ear"
+      },
+      "learn": "Reverb and echo, sends, and how much space to give your lead.",
+      "youCan": [
+        "say the difference between reverb and echo",
+        "send your lead to reverb and echo",
+        "hear near and far in a mix"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "Reverb is the sound of a room: thousands of tiny reflections blurring into a tail. Echo, or delay, is a clear repeat of the sound. Dry sounds feel close, right in your ear. More reverb pushes them further back. Producers use that to give a mix depth: kick and bass up front and dry, pads and leads a little further back.",
+            "straight": "Reverb: a room's blur of reflections. Echo: clear repeats. More of either pushes a sound further back.",
+            "eli5": "Reverb makes a sound feel like it's in a big room. Echo makes it repeat, echo, echo. More of either makes it feel further away."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "send",
+            "echo"
+          ],
+          "say": {
+            "mentor": "Your lead with two sends. Send goes to the reverb, echo to the echo. A send means a copy of your lead goes to the effect while the dry lead stays as it is, so you blend in just as much space as you want. Start low. A little is usually plenty.",
+            "straight": "Send: how much lead goes to reverb. Echo: how much to the echo. The dry sound stays; you blend in space. Start low.",
+            "eli5": "Send adds a big-room sound. Echo adds repeats. A little bit is usually enough."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's the difference between reverb and echo?",
+          "options": [
+            "reverb is a blur of reflections, echo is clear repeats",
+            "they're the same",
+            "echo is louder",
+            "reverb only works on drums"
+          ],
+          "answer": 0,
+          "why": "Reverb smears, echo repeats.",
+          "whyWrong": {
+            "1": "They sound very different.",
+            "2": "Loudness isn't the difference.",
+            "3": "Reverb works on anything."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "More reverb on a part makes it sound?",
+          "options": [
+            "further away",
+            "closer",
+            "faster",
+            "higher"
+          ],
+          "answer": 0,
+          "why": "Wet sounds sit back; dry sounds sit up front.",
+          "whyWrong": {
+            "1": "Dry is close.",
+            "2": "Tempo is unchanged.",
+            "3": "Pitch is unchanged."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: glue. The mix as one sound, loud and clean."
+        }
+      ],
+      "file": "producer/15-space.yaml"
     }
   ]
 }

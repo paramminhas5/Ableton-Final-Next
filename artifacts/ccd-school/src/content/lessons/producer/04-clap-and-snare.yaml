@@ -1,0 +1,97 @@
+slug: clap-and-snare
+world: producer
+number: 4
+title: clap and snare
+minutes: 6
+song:
+  adds: drums.clap
+  why: a backbeat on two and four is what makes a beat feel like a groove
+learn: >-
+  The backbeat, the difference between a clap and a snare, and a snare in your song on two and four.
+youCan:
+  - hear a clap from a snare
+  - play a snare on two and four
+  - say why house leans on claps and hip hop on snares
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Kick on every beat, clap on two and four. That clap is the backbeat. Now listen closely to the clap
+        itself: it's a few quick bursts of noise smeared together, like a handful of people clapping at once.
+        A snare is different: a drum skin with metal wires underneath that rattle, so it has a body, a tone,
+        and a sizzle on top.
+      straight: >-
+        The clap on two and four is the backbeat. A clap is a few bursts of noise; a snare is a drum with
+        rattling wires, so it has tone as well as noise.
+      eli5: >-
+        Boom, clap, boom, clap. A clap is like hands clapping. A snare is a drum with tiny wires that buzz.
+        Both go on two and four.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    goal: {notes: 2, note: snare}
+    say:
+      mentor: >-
+        Put a snare in your song. Your kick keeps playing underneath. Press rec, wait out the count-in, and tap
+        the snare on two and four. If your song already has a clap, they'll layer: a clap and snare together is
+        a classic, fat backbeat.
+      straight: >-
+        Record a snare on two and four over your kick. With a clap already there, they layer into a fatter
+        backbeat.
+      eli5: >-
+        Press rec, wait for four ticks, then tap the snare on two and on four.
+    hint: Skip one, hit on two, skip three, hit on four.
+
+  - kind: say
+    title: clap or snare
+    say:
+      mentor: >-
+        House and techno lean on claps, a habit from the drum machines they grew up on, especially the Roland
+        909. Hip hop, rock and drum and bass lean on snares, often sampled from real kits. Lots of producers
+        layer both and tune them until they sound like one hit.
+      straight: >-
+        House and techno: mostly claps (the 909 sound). Hip hop and rock: mostly snares. Layering both is
+        common.
+      eli5: >-
+        Dance music likes claps. Hip hop and rock like snares. Lots of people use both at once.
+    deeper:
+      - title: the 909
+        say: >-
+          Roland's TR-909 drum machine from 1983 has a clap and hats that shaped house and techno. Its clap
+          is several noise bursts with a tail, almost exactly what's under your pad here.
+
+  - kind: ask
+    q: Where does the backbeat land?
+    options: ["two and four", "one and three", "every beat", "only on one"]
+    answer: 0
+    why: Two and four, answering the kick.
+    whyWrong:
+      1: One and three are the kick on its own.
+      2: Every beat is the kick's job.
+      3: One is the start of the bar.
+
+  - kind: ask
+    q: What gives a snare its sizzle?
+    options: ["metal wires under the drum that rattle", "the drummer's hands", "a filter", "the kick"]
+    answer: 0
+    why: The snare wires rattle against the bottom skin.
+    whyWrong:
+      1: Hands are a clap.
+      2: The rattle is the drum itself.
+      3: It's a separate drum.
+
+  - kind: ask
+    q: Which genre leans most on claps?
+    options: ["house", "rock", "drum and bass", "jazz"]
+    answer: 0
+    why: House grew up on drum machine claps.
+    whyWrong:
+      1: Rock leans on real snares.
+      2: Drum and bass is mostly sampled snares.
+      3: Jazz drummers use snares and brushes.
+
+  - kind: keep
+    next: >-
+      Next: your first bass line, and why it has to share the low end with your kick.

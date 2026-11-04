@@ -1,0 +1,79 @@
+slug: kick-and-bass
+world: producer
+number: 6
+title: make room, kick and bass
+minutes: 6
+song:
+  changes: bass.bass
+  why: a bass that ducks under the kick makes the low end punchy instead of muddy
+learn: >-
+  Why kick and bass fight, and the two classic fixes: shorter notes, and ducking the bass every time the
+  kick hits.
+youCan:
+  - hear when kick and bass are fighting
+  - duck the bass under the kick
+  - shorten the bass so it stays out of the kick's way
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Your kick and your bass both live down low, below about 150 hz. When they hit at the same time they
+        add up into a muddy, boomy blur, and the kick loses its punch. Every producer fights this, and there
+        are two simple fixes you'll try on your own song.
+      straight: >-
+        Kick and bass share the low end. When they overlap they turn to mud. Two fixes: shorter bass notes,
+        and ducking.
+      eli5: >-
+        The boom and the bass both live in the deep low part. When they happen together they get muddy, like
+        two people talking at once.
+
+  - kind: shape
+    layer: bass
+    knobs: [duck, decay]
+    say:
+      mentor: >-
+        Here's your song. Turn up duck: every time the kick hits, the bass dips out of the way for a moment
+        and swells back. That's sidechain ducking, the pumping sound of so much dance music. Then try decay:
+        shorter bass notes leave space for the kick too. Use a bit of both until the kick punches and the bass
+        still rolls.
+      straight: >-
+        Duck: the bass dips every time the kick hits (sidechain). Decay: shorter notes leave the kick room.
+        Use both until the kick punches through.
+      eli5: >-
+        Turn up duck: the bass gets quieter every time the boom hits, so they take turns. Then turn decay
+        down to make bass notes shorter. Keep turning until both sound clear.
+
+  - kind: ask
+    q: Why do kick and bass fight?
+    options: ["they both live in the low end", "they're the same sound", "the bass is always too quiet", "the kick is out of tune"]
+    answer: 0
+    why: Both sit below about 150 hz, so they pile up there.
+    whyWrong:
+      1: Different sounds, same range.
+      2: Even at the right level they overlap.
+      3: Tuning doesn't cause the overlap.
+
+  - kind: ask
+    q: What does ducking the bass do?
+    options: ["dips the bass every time the kick hits", "deletes the bass", "makes the bass louder", "changes the bass notes"]
+    answer: 0
+    why: The bass gets out of the kick's way and swells back.
+    whyWrong:
+      1: The bass is still there between kicks.
+      2: It's quieter, briefly.
+      3: The notes stay the same.
+
+  - kind: ask
+    q: Ducking driven by another sound is called?
+    options: ["sidechain", "reverb", "swing", "quantise"]
+    answer: 0
+    why: Sidechain. The kick controls how much the bass dips.
+    whyWrong:
+      1: Reverb is space.
+      2: Swing is timing.
+      3: Quantise is snap.
+
+  - kind: keep
+    next: >-
+      Next: shape your synth properly. Resonance, envelopes, and a lead that moves.

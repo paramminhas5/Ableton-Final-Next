@@ -1,0 +1,66 @@
+slug: eq-place
+world: producer
+number: 14
+title: eq, a place for everything
+minutes: 7
+song:
+  changes: lead.lead
+  why: cutting the lows out of your lead leaves the low end clean for the kick and bass
+learn: >-
+  What an eq does, the low cut that cleans up almost every mix, and shaping your lead's tone.
+youCan:
+  - say what an eq does
+  - use a low cut to clear the low end
+  - boost or cut lows, mids and highs by ear
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        An eq, short for equaliser, turns parts of the sound up or down by frequency: lows, mids, highs. It's
+        how you give every part its own place. Your lead doesn't need the deep lows, so cutting them leaves
+        that space for the kick and bass. Almost every part in a mix gets a low cut except those two.
+      straight: >-
+        An eq boosts or cuts lows, mids and highs. A low cut on everything except kick and bass keeps the low
+        end clean.
+      eli5: >-
+        An eq is like a set of tone knobs for low, middle and high sounds. You take away the low rumble from
+        your tune so the boom and bass have room.
+
+  - kind: shape
+    layer: lead
+    knobs: [cut, low, mid, high]
+    say:
+      mentor: >-
+        Your lead, four eq knobs. Low cut removes everything below the frequency you set: turn it up until the
+        lead starts to sound thin, then back off a touch. Low, mid and high boost or cut those bands. Try a
+        small mid cut if the lead sounds boxy, a little high boost if it needs air.
+      straight: >-
+        Low cut: up until thin, then back a touch. Low, mid, high: boost or cut. Mid cut for boxiness, high
+        boost for air.
+      eli5: >-
+        Turn low cut up until your tune sounds thin, then back a little. Then play with low, mid and high.
+
+  - kind: ask
+    q: Which parts usually keep their lows?
+    options: ["kick and bass", "the lead", "the hats", "the reverb"]
+    answer: 0
+    why: Kick and bass own the low end. Most other parts get a low cut.
+    whyWrong:
+      1: The lead usually gets a low cut.
+      2: Hats are all highs.
+      3: Reverb lows get muddy fast.
+
+  - kind: ask
+    q: A sound is boxy. What might you try?
+    options: ["a small cut in the mids", "a big boost in the lows", "more reverb", "faster tempo"]
+    answer: 0
+    why: Boxiness usually lives in the mids.
+    whyWrong:
+      1: That adds mud.
+      2: Reverb would smear it.
+      3: Tempo won't change tone.
+
+  - kind: keep
+    next: >-
+      Next: space. Reverb and echo, and how near or far each part sounds.

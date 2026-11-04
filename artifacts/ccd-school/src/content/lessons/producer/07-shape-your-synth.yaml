@@ -1,0 +1,80 @@
+slug: shape-your-synth
+world: producer
+number: 7
+title: shape your synth properly
+minutes: 8
+song:
+  changes: lead.lead
+  why: the same notes can be a soft pad, a pluck or a squelchy lead, depending on how the sound moves
+learn: >-
+  Four controls every synth has: resonance, the filter envelope, attack and release, and your lead shaped
+  with them.
+youCan:
+  - say what resonance does to a filter
+  - make a note brighten and close with the filter envelope
+  - turn a lead into a pluck or a pad with attack and release
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        You've already used cutoff to make your lead darker or brighter. Now you'll make the sound move. Real
+        synth sounds change during each note: they open up, sparkle, fade. Four knobs do most of it.
+      straight: >-
+        Synth sounds move within each note. Four knobs control that: resonance, envelope, attack, release.
+      eli5: >-
+        Good synth sounds change while the note plays. They open up and fade away. You'll learn four knobs
+        that do it.
+
+  - kind: shape
+    layer: lead
+    knobs: [res, env, attack, release]
+    say:
+      mentor: >-
+        Your lead, four knobs. Resonance makes the filter ring right at the cutoff, a whistly, squelchy peak.
+        Envelope makes the filter open on every note and close again, so each note sparkles then darkens.
+        Attack is how slowly a note fades in: zero for a pluck, high for a swell. Release is how long it rings
+        after you let go.
+
+        Try a short attack, short release and lots of envelope for a pluck. Then long attack and long release
+        for a pad.
+      straight: >-
+        Res: a ringing peak at the cutoff. Env: the filter opens and closes on each note. Attack: fade in.
+        Release: ring out. Pluck: short attack and release, lots of env. Pad: long attack and release.
+      eli5: >-
+        Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly.
+        Release makes them ring out after. Try a short pluck, then a long dreamy pad.
+
+  - kind: ask
+    q: What does resonance do?
+    options: ["adds a ringing peak at the cutoff", "makes notes longer", "changes the tempo", "adds reverb"]
+    answer: 0
+    why: Resonance boosts the frequencies right at the cutoff, a ringing peak.
+    whyWrong:
+      1: That's release.
+      2: Synth knobs don't touch tempo.
+      3: Reverb is space, a different effect.
+
+  - kind: ask
+    q: For a pluck, what attack do you want?
+    options: ["zero or very short", "very long", "it doesn't matter", "the same as release"]
+    answer: 0
+    why: A pluck starts instantly.
+    whyWrong:
+      1: Long attack is a swell, a pad.
+      2: Attack is most of what makes a pluck.
+      3: Release is a separate choice.
+
+  - kind: ask
+    q: What does the filter envelope do on each note?
+    options: ["opens the filter and lets it close again", "changes the pitch", "repeats the note", "pans the sound"]
+    answer: 0
+    why: The filter opens then closes, so each note sparkles then darkens.
+    whyWrong:
+      1: Pitch stays the same.
+      2: That's a delay or repeat.
+      3: Panning is left and right.
+
+  - kind: keep
+    next: >-
+      Next: chords on top, pads or stabs, and the harmony that fills out your track.

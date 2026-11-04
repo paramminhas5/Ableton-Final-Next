@@ -170,3 +170,22 @@ export function readTake(slug: string): Take | null {
     return null;
   }
 }
+
+/**
+ * Turn a part's knobs in your song: merge `params` into every layer of `type`. A duck amount also
+ * points the duck at the kick, so "duck" means "under your kick" without another step.
+ */
+export function withParams(t: TrackV2, type: LayerType, params: Record<number, number>): TrackV2 {
+  if (!Object.keys(params).length) return t;
+  const kickLayer = t.layers.find(l => l.type === "drums" && l.events.some(e => e.note === 36));
+  const duckIdx = 11; // mix.duck in LAYER_PARAMS
+  return {
+    ...t,
+    layers: t.layers.map(l => {
+      if (l.type !== type) return l;
+      const next = { ...l, params: { ...l.params, ...params } };
+      if ((params[duckIdx] ?? 0) > 0 && kickLayer && l.id !== kickLayer.id) next.duck = { src: kickLayer.id, note: 36 };
+      return next;
+    }),
+  };
+}

@@ -12,7 +12,7 @@ import { useProgress } from "@/lib/progress";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import { getMissionContext } from "@/lib/missionContext";
 import { track } from "@/lib/analytics";
-import { applyTake, readTake, saveTake, takeType, type Take } from "@/lib/lessonTake";
+import { applyTake, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
@@ -200,7 +200,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const [added, setAdded] = useState(false);
   const isIn = added || already;
   // Keep-only lessons still carry the knobs you turned in their shape step onto your part.
-  const tuned = (t: TrackV2): TrackV2 => ({ ...t, layers: t.layers.map(l => (l.type === line.type && Object.keys(params).length ? { ...l, params: { ...l.params, ...params } } : l)) });
+  const tuned = (t: TrackV2): TrackV2 => withParams(t, line.type, params);
   const preview = useMemo(() => (base ? (isIn ? base : keepOnly ? tuned(base) : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, keepOnly, slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(preview ?? readTrackV2());
   const [beat, setBeat] = useState(-1);

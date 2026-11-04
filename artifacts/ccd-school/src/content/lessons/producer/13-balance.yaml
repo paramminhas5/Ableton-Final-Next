@@ -1,0 +1,68 @@
+slug: balance
+world: producer
+number: 13
+title: levels and balance
+minutes: 6
+song:
+  changes: lead.lead
+  why: a mix is mostly getting the levels right, and the lead is where most people get it wrong
+learn: >-
+  Balancing your parts by ear: where the lead sits against the beat, and placing it left or right.
+youCan:
+  - set a part's level by ear against the rest of the song
+  - pan a part left or right
+  - say why mixing starts with levels
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Most of mixing is just levels: how loud each part is against the others. Get those right and a track
+        already sounds nearly finished. Producers usually start with the kick, set everything else around it,
+        and come back to the lead last, because it's the easiest one to set too loud.
+      straight: >-
+        Mixing starts with levels. Set the kick first, build around it, and check the lead last; it's usually
+        too loud.
+      eli5: >-
+        Mixing means making every sound the right loudness so they all fit. Start with the boom, then the
+        rest.
+
+  - kind: shape
+    layer: lead
+    knobs: [level, pan]
+    say:
+      mentor: >-
+        Here's your song with level and pan on your lead. Pull the level down until you can only just hear the
+        melody, then bring it up slowly and stop the moment it feels clear. That's usually lower than you'd
+        guess. Then try pan: a little left or right gives it its own place on the stage, away from the kick and
+        bass in the middle.
+      straight: >-
+        Lead level: pull it down until barely audible, then up until clear, and stop. Pan: a little off centre
+        frees the middle for kick and bass.
+      eli5: >-
+        Turn level down until you can barely hear your tune, then turn it up slowly until it's just clear.
+        Pan moves it left or right.
+
+  - kind: ask
+    q: Where do most producers start a mix?
+    options: ["the kick, then build around it", "the lead, as loud as possible", "the reverb", "the hats"]
+    answer: 0
+    why: The kick is the anchor; everything else is set against it.
+    whyWrong:
+      1: Leads set first tend to end up too loud.
+      2: Reverb comes once levels are set.
+      3: Hats are set against the kick too.
+
+  - kind: ask
+    q: Why keep the kick and bass in the middle?
+    options: ["they carry the low end, which should hit both speakers equally", "they're the quietest", "panning only works on drums", "it makes them faster"]
+    answer: 0
+    why: Low end in the middle stays solid on any speaker system.
+    whyWrong:
+      1: They're usually the loudest.
+      2: Panning works on anything.
+      3: Panning has nothing to do with speed.
+
+  - kind: keep
+    next: >-
+      Next: eq. Give every part its own slice of the frequencies.

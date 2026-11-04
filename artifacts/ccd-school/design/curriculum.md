@@ -107,22 +107,22 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `instruments-overview` | live's instruments | three voices on your lead line: synth, fm, sample; pick one | |
 | D | `synth-oscillators` | oscillators, the sound source | shape lead: wave | |
 | D | `synth-pitch-vs-amplitude` | pitch vs amplitude | detune your lead by a few cents; velocity on two notes | |
-| S | (new) `hats` | hats | adds hats.hats; snap taught | snap toggle on the play-in, hat visual |
+| S | `hats` | hats | adds hats.hats; snap taught | snap toggle on the play-in, hat visual |
 | D | `midi-piano-roll` | the piano roll | edit one hat in the grid: move, lengthen, delete | |
-| S | (new) `clap-and-snare` | clap and snare | adds drums.clap | clip and goal exist |
+| S | `clap-and-snare` | clap and snare | adds drums.clap | clip and goal exist |
 | D | `session-view` | session view | your song as clips: launch the drums alone, then everything | |
 | D | `clips` | clips: midi vs audio | your hats as midi, your sample as audio; swap one | |
 
 ### Path 2: low end and your synth
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| S | (new) `first-bass` | your first bass line | adds bass.bass | overlap picture |
+| S | `first-bass` | your first bass line | adds bass.bass | overlap picture |
 | D | `bass-poli` | bass and poli | a thicker bass voice on your bass line; keep it | |
 | D | `operator` | operator | an fm voice on your lead; the ratio knob; keep it | |
-| S | (new) `kick-and-bass` | make room: kick and bass | changes mix: duck; shape bass decay | duck on a shape step, a/b |
+| S | `kick-and-bass` | make room: kick and bass | changes mix: duck; shape bass decay | duck on a shape step, a/b |
 | D | `sidechain` | sidechain in live | duck your bass under your kick; depth and release; keep it | |
 | D | `compressor` | the compressor | squeeze your drums: threshold and ratio by ear; keep it | |
-| S | (new) `shape-your-synth` | shape your synth properly | shape lead: res, env, attack, release | resonance and envelope in `WaveShape` |
+| S | `shape-your-synth` | shape your synth properly | shape lead: res, env, attack, release | resonance and envelope in `WaveShape` |
 | D | `synth-filters` | filters, carving the sound |filter types on your lead: low, high, band| |
 | D | `synth-amp-envelope` | amp envelope |attack and release on your lead; pluck vs pad| |
 | D | `synth-filter-envelope` | filter envelope |the brightness moving on each note of your lead| |
@@ -130,7 +130,7 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `synth-timbre` | timbre |the same lead note, three timbres; pick one| |
 | D | `synth-harmonics` | harmonics and overtones |add and remove harmonics on your lead| |
 | D | `synth-mixing-oscillators` | mixing oscillators |blend two oscillators on your lead| |
-| S | (new) `chords-on-top` | chords on top | adds chords.chords | |
+| S | `chords-on-top` | chords on top | adds chords.chords | |
 | D | `midi-effects` | midi effects | an arpeggiator on your chords; keep it | |
 | D | `scale-awareness` | scale awareness in live 12 | lock your keys to your song's scale | |
 | D | `capture-midi` | capture midi | play without rec, then capture what you just played | |
@@ -169,15 +169,15 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 ### Path 4: the mix
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| S | (new) `balance` | levels and balance | changes mix: levels, the stage | faders step |
+| S | `balance` | levels and balance | changes mix: levels, the stage | faders step |
 | D | `the-mixer` | the mixer in live |your faders and pans on the stage| |
 | D | `mixing-basics` | mixing basics |balance your six parts by ear| |
 | D | `signal-chain` | the signal chain |your lead's chain: voice, filter, drive, send| |
 | D | `groups-routing` | groups and routing |group your drums and move them together| |
-| S | (new) `eq-place` | eq: a place for everything | changes mix: eq per part | eq knobs on a shape step |
+| S | `eq-place` | eq: a place for everything | changes mix: eq per part | eq knobs on a shape step |
 | D | `eq-eight` | eq eight |three bands on your bass; keep it| |
 | D | `effects-overview` | effects overview |one of each on your lead: eq, echo, drive, reverb| |
-| S | (new) `space` | space: reverb and echo | changes mix: sends | send knobs |
+| S | `space` | space: reverb and echo | changes mix: sends | send knobs |
 | D | `sends-returns` | sends and returns |one reverb for all your parts; amounts per part| |
 | D | `reverb-delay` | reverb and delay |reverb vs echo on your clap; keep one| |
 | D | `hybrid-reverb` | hybrid reverb |a bigger reverb on your chords| |

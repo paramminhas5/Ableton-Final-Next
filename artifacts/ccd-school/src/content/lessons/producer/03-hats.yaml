@@ -1,0 +1,93 @@
+slug: hats
+world: producer
+number: 3
+title: hats
+minutes: 7
+song:
+  adds: hats.hats
+  why: hats between the kicks lift the groove and make it move forward
+learn: >-
+  Open hats on the offbeat, the sound that makes house bounce, then closed hats on the sixteenths. Snap
+  helps you place them.
+youCan:
+  - play open hats on the offbeat with snap on
+  - hear the lift an offbeat hat gives a groove
+  - shape your hats with decay and tune
+steps:
+  - kind: hear
+    clip: hats-offbeat
+    say:
+      mentor: >-
+        Kick on the beat, open hat exactly halfway between. Hear how it lifts? The kick pushes down, the hat
+        pulls up, and the groove starts to bounce forward. This one pattern is the sound of a huge amount of
+        house music.
+      straight: >-
+        Open hats on the offbeat, halfway between the kicks. The kick goes down, the hat goes up, and the
+        groove bounces.
+      eli5: >-
+        Boom, tss, boom, tss. The tss goes right in between the booms. Hear how it makes the beat bounce?
+
+  - kind: play
+    layer: hats
+    surface: pads
+    snap: true
+    goal: {notes: 1}
+    say:
+      mentor: >-
+        Add hats to your song. Snap is on, set to eighths, so every hit lands exactly on the grid. Press rec,
+        wait out the count-in, and tap the open hat between each kick: on every "and". Want a busier feel?
+        Tap the snap key to change it to sixteenths and add some closed hats too.
+      straight: >-
+        Record hats with snap on (eighths). Tap the open hat on every "and". Switch snap to sixteenths for
+        closed hats if you want more.
+      eli5: >-
+        Press rec, wait for four ticks, then tap the open hat in between every boom. The snap helper makes
+        every tap land perfectly.
+    hint: Count "one and two and" and tap on every "and".
+
+  - kind: shape
+    layer: hats
+    knobs: [decay, tune]
+    say:
+      mentor: >-
+        Now shape them in your loop. Decay sets how long each hat rings: short and tight, or long and
+        splashy. Tune moves them brighter or darker. A long, bright open hat feels big and open. A short,
+        dark one sits back and lets the kick lead.
+      straight: >-
+        Decay: how long each hat rings. Tune: brighter or darker. Shape them in your loop.
+      eli5: >-
+        Decay makes the tss short or long. Tune makes it brighter or darker. Find the one you like.
+
+  - kind: ask
+    q: Where does the classic house open hat land?
+    options: ["on the offbeat, halfway between the kicks", "on every kick", "only on beat one", "on two and four"]
+    answer: 0
+    why: Halfway between the kicks, on every "and".
+    whyWrong:
+      1: On the kick it would just thicken the kick.
+      2: Once a bar is too sparse for this sound.
+      3: Two and four is where the clap goes.
+
+  - kind: ask
+    q: What does snap do while you record?
+    options: ["moves each hit to the nearest grid line", "deletes off-beat hits", "turns the volume up", "changes the tempo"]
+    answer: 0
+    why: Snap pulls every hit onto the grid it's set to.
+    whyWrong:
+      1: It moves notes, never deletes them.
+      2: It's about timing only.
+      3: The tempo stays the same.
+
+  - kind: ask
+    q: You want hats that sit back behind the kick. What do you try?
+    options: ["shorter decay and darker tune", "longer decay and brighter tune", "more hats", "a faster tempo"]
+    answer: 0
+    why: Short and dark hats are less in your face.
+    whyWrong:
+      1: That makes them bigger and more forward.
+      2: More hats is busier, not further back.
+      3: Tempo changes everything, not just the hats.
+
+  - kind: keep
+    next: >-
+      Next: clap and snare. The backbeat on two and four, and the difference between the two.
