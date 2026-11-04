@@ -1,25 +1,13 @@
 "use client";
-/**
- * TrophyShareModal — P3 #33
- * Shown after path/chapter/world trophy completion.
- * Lets users share a branded card to Twitter/X or download as PNG.
- *
- * Usage:
- *   <TrophyShareModal
- *     trophyName="Blendmaster"
- *     trophyEmoji="🎚"
- *     trophyKind="path"
- *     worldName="DJ World"
- *     xp={progress.xp}
- *     streakDays={progress.streakDays}
- *     onClose={() => setShowShare(false)}
- *   />
- */
-import { useRef, useEffect } from "react";
+/** Share a trophy: a card drawn on a canvas, in the Model 1 colours. Native share where the phone has it. */
+import { useEffect, useRef, useState } from "react";
+import { GoPill, Icon, Key } from "@/components/m1/controls";
+import "@/components/m1/lesson.css";
 
 interface Props {
   trophyName: string;
-  trophyEmoji: string;
+  /** Kept so old callers still compile. Emoji are no longer drawn. */
+  trophyEmoji?: string;
   trophyKind: "path" | "chapter" | "world" | "master";
   worldName?: string;
   xp: number;
@@ -27,144 +15,77 @@ interface Props {
   onClose: () => void;
 }
 
-function buildShareText(props: Props): string {
-  const { trophyName, trophyKind, worldName, xp, streakDays } = props;
-  const lines = [
-    `🏆 Just earned "${trophyName}" on CCD.SCHOOL`,
-    trophyKind === "world" ? `🌟 Completed ${worldName ?? "a world"}!` : "",
-    trophyKind === "master" ? "👑 CCD MASTER — all three worlds complete!" : "",
-    `⚡ ${xp} XP · 🔥 ${streakDays} day streak`,
-    "📚 Free music production + DJ education",
+const KIND_LABEL = { path: "path done", chapter: "chapter done", world: "world done", master: "ccd master" } as const;
+
+function shareText({ trophyName, trophyKind, worldName, xp, streakDays }: Props): string {
+  return [
+    `just finished "${trophyName}" on cats can dance school`,
+    trophyKind === "world" ? `${worldName ?? "a world"} is done` : "",
+    trophyKind === "master" ? "all three worlds are done" : "",
+    `${xp} xp, ${streakDays} day streak`,
+    "make music while you learn it",
     "ccd.school",
   ].filter(Boolean).join("\n");
-  return lines;
 }
 
-export function TrophyShareModal({ trophyName, trophyEmoji, trophyKind, worldName, xp, streakDays, onClose }: Props) {
+export function TrophyShareModal(props: Props) {
+  const { trophyName, trophyKind, worldName, xp, streakDays, onClose } = props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const drawCard = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const W = 1200, H = 630;
-    canvas.width = W;
-    canvas.height = H;
-
-    // Background
-    ctx.fillStyle = "#0B0B0B";
-    ctx.fillRect(0, 0, W, H);
-
-    // Acid border
-    ctx.strokeStyle = "#C6FF00";
-    ctx.lineWidth = 8;
-    ctx.strokeRect(20, 20, W - 40, H - 40);
-
-    // Top label
-    ctx.fillStyle = "#C6FF00";
-    ctx.font = "bold 28px monospace";
-    ctx.fillText("CCD.SCHOOL", 60, 80);
-
-    // Trophy emoji + name
-    ctx.font = "120px serif";
-    ctx.fillText(trophyEmoji, 60, 280);
-
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 72px sans-serif";
-    ctx.fillText(trophyName, 60, 380);
-
-    if (worldName) {
-      ctx.fillStyle = "#C6FF00";
-      ctx.font = "36px monospace";
-      ctx.fillText(worldName.toUpperCase(), 60, 430);
-    }
-
-    // Stats
-    ctx.fillStyle = "rgba(255,255,255,0.6)";
-    ctx.font = "32px monospace";
-    ctx.fillText(`⚡ ${xp} XP   🔥 ${streakDays} day streak`, 60, 520);
-
-    // Bottom
-    ctx.fillStyle = "#C6FF00";
-    ctx.font = "24px monospace";
-    ctx.fillText("ccd.school — Free music education", 60, 590);
-  };
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    // Draw on mount so canvas preview is ready
-    setTimeout(drawCard, 50);
-  }, []);
+    const c = canvasRef.current;
+    const ctx = c?.getContext("2d");
+    if (!c || !ctx) return;
+    const W = 1200, H = 630;
+    c.width = W; c.height = H;
+    ctx.fillStyle = "#0B0B0C"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#050506"; ctx.beginPath(); ctx.roundRect(40, 40, W - 80, H - 80, 28); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.08)"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = "#9A9AA0"; ctx.font = "500 28px Outfit, sans-serif";
+    ctx.fillText(KIND_LABEL[trophyKind], 90, 120);
+    ctx.fillStyle = "#F3F2EF"; ctx.font = "300 84px Outfit, sans-serif";
+    ctx.fillText(trophyName.toLowerCase().slice(0, 28), 90, 250);
+    if (worldName) { ctx.fillStyle = "#FF4F9A"; ctx.font = "500 36px Outfit, sans-serif"; ctx.fillText(worldName.toLowerCase(), 90, 312); }
+    // sixteen lit steps
+    for (let i = 0; i < 16; i++) {
+      ctx.fillStyle = i % 4 === 0 ? "#FF4F9A" : "#4FE3B6";
+      ctx.globalAlpha = i % 2 === 0 ? 1 : 0.6;
+      ctx.beginPath(); ctx.roundRect(90 + i * 62, 380, 52, 34, 6); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#F3F2EF"; ctx.font = "500 44px Outfit, sans-serif";
+    ctx.fillText(`${xp.toLocaleString()} xp`, 90, 500);
+    ctx.fillStyle = "#9A9AA0"; ctx.font = "500 30px Outfit, sans-serif";
+    ctx.fillText(`${streakDays} day streak`, 90, 548);
+    ctx.textAlign = "right"; ctx.fillText("cats can dance school", W - 90, 548);
+  }, [trophyKind, trophyName, worldName, xp, streakDays]);
 
-  const handleDownload = () => {
-    drawCard();
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const url = canvas.toDataURL("image/png");
+  const download = () => {
+    const c = canvasRef.current; if (!c) return;
     const a = document.createElement("a");
-    a.href = url;
+    a.href = c.toDataURL("image/png");
     a.download = `ccd-${trophyName.toLowerCase().replace(/\s+/g, "-")}.png`;
     a.click();
   };
-
-  const handleShareTwitter = () => {
-    const text = encodeURIComponent(buildShareText({ trophyName, trophyEmoji, trophyKind, worldName, xp, streakDays, onClose }));
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank", "width=600,height=400");
+  const share = async () => {
+    const text = shareText(props);
+    try {
+      if (navigator.share) await navigator.share({ title: trophyName, text, url: "https://ccd.school" });
+      else { await navigator.clipboard.writeText(text); setCopied(true); window.setTimeout(() => setCopied(false), 1800); }
+    } catch { /* cancelled */ }
   };
 
-  const kindLabel = trophyKind === "path" ? "Path Trophy" : trophyKind === "chapter" ? "Chapter Trophy" : trophyKind === "world" ? "World Trophy" : "CCD Master";
-
   return (
-    <div
-      className="fixed inset-0 z-[400] bg-ink/90 flex items-center justify-center p-4"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Share your trophy"
-    >
-      <div
-        className="brutal-border bg-bone max-w-xl w-full brutal-shadow animate-fade-up"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="brutal-border border-x-0 border-t-0 bg-acid text-ink px-5 py-4 flex items-center justify-between">
-          <div>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-0.5">{kindLabel}</div>
-            <div className="font-display text-2xl">{trophyEmoji} {trophyName}</div>
-          </div>
-          <button onClick={onClose} aria-label="Close" className="brutal-border bg-ink/20 px-3 py-1 font-mono text-xs brutal-press">✕</button>
-        </div>
-
-        {/* Canvas preview */}
-        <div className="p-4">
-          <canvas
-            ref={canvasRef}
-            className="w-full brutal-border bg-ink"
-            style={{ aspectRatio: "1200/630" }}
-          />
-        </div>
-
-        {/* Share actions */}
-        <div className="px-4 pb-5 space-y-3">
-          <div className="font-mono text-[9px] uppercase opacity-70 mb-2">SHARE YOUR ACHIEVEMENT</div>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={handleShareTwitter}
-              className="brutal-border bg-ink text-bone px-4 py-2.5 font-mono text-xs uppercase brutal-press brutal-hover flex items-center gap-2"
-            >
-              <span>𝕏</span> Share on X / Twitter
-            </button>
-            <button
-              onClick={handleDownload}
-              className="brutal-border bg-acid text-ink px-4 py-2.5 font-mono text-xs uppercase brutal-press brutal-hover flex items-center gap-2"
-            >
-              ↓ Download PNG
-            </button>
-          </div>
-          <div className="font-mono text-[9px] opacity-70">
-            1200×630px · Perfect for stories and posts
-          </div>
-        </div>
+    <div className="ls-sheet" role="dialog" aria-modal="true" aria-label="Share your trophy" onClick={onClose}>
+      <div className="ls-sheet-body" onClick={e => e.stopPropagation()}>
+        <div className="ls-meta" style={{ color: "var(--sub)" }}><span>{KIND_LABEL[trophyKind]}</span><span>share</span></div>
+        <canvas ref={canvasRef} style={{ width: "100%", aspectRatio: "1200/630", borderRadius: 12, marginTop: 10, boxShadow: "var(--m1-extrude)" }} aria-label="Share card preview" />
+        <div className="ls-bottom"><div className="m1-g">
+          <Key label="close" onClick={onClose} ariaLabel="Close"><Icon name="close" /></Key>
+          <Key label="save" onClick={download} ariaLabel="Download the card"><Icon name="out" /></Key>
+          <GoPill onClick={share} style={{ gridColumn: "span 2" }}>{copied ? "copied" : "share"}</GoPill>
+        </div></div>
       </div>
     </div>
   );

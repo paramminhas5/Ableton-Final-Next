@@ -11,7 +11,8 @@ import {
   LEAGUE_TIERS, tierConfig, nextTier, prevTier, rankZone,
   type LeagueTier, type LeagueEntry,
 } from "@/lib/leagues";
-import { rankFor } from "@/lib/ranks";
+import { Silk } from "@/components/m1/controls";
+import { ListRow, SegBar, TierMark } from "@/components/m1/parts";
 
 const LEAGUE_SIZE = 30;
 
@@ -76,105 +77,55 @@ export function LeagueBoard() {
 
   const myEntry = entries.find(e => e.isCurrentUser);
   const zone = myEntry ? rankZone(myEntry.rank, tier) : "safe";
+  const level = LEAGUE_TIERS.findIndex(t => t.id === tier);
 
   return (
-    <div className="space-y-4">
-      {/* League header */}
-      <div className={`brutal-border ${cfg.color} p-5`}>
-        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">YOUR LEAGUE</div>
-        <div className="flex items-center gap-3">
-          <span className="text-4xl">{cfg.emoji}</span>
-          <div>
-            <div className="font-display text-3xl">{cfg.label} League</div>
-            <div className="font-mono text-xs opacity-70 mt-0.5">
-              {LEAGUE_TIERS.find(t => t.id === tier)?.promoteTop ?? 0} promote
-              {prev ? ` · bottom 5 demote to ${tierConfig(prev as LeagueTier).label}` : ""}
-            </div>
-          </div>
-        </div>
-        {myEntry && (
-          <div className="mt-3 flex items-center gap-3 font-mono text-sm">
-            <span>Your rank: <strong>#{myEntry.rank}</strong></span>
-            <span className="opacity-60">·</span>
-            <span>{myEntry.weeklyXp} XP this week</span>
-            {zone === "promote" && next && (
-              <span className="brutal-border bg-acid text-ink px-2 py-0.5 text-[10px] uppercase ml-auto">
-                ↑ Promote zone → {tierConfig(next).label}
-              </span>
-            )}
-            {zone === "demote" && prev && (
-              <span className="brutal-border bg-hot text-bone px-2 py-0.5 text-[10px] uppercase ml-auto">
-                ↓ Demotion zone
-              </span>
-            )}
-          </div>
-        )}
+    <div>
+      <div className="ls-panel" style={{ alignItems: "center", gap: 14 }}>
+        <TierMark level={level} color={cfg.led} size={44} />
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <b style={{ display: "block", fontSize: 18, fontWeight: 500 }}>{cfg.label.toLowerCase()} league</b>
+          <span className="m1-t11" style={{ display: "block", marginTop: 2 }}>
+            {cfg.promoteTop > 0 ? `top ${cfg.promoteTop} move up` : "top league"}
+            {prev ? ` · bottom 5 drop to ${tierConfig(prev as LeagueTier).label.toLowerCase()}` : ""}
+          </span>
+        </span>
+        {myEntry && <span style={{ fontSize: 22, fontWeight: 300 }} aria-label={`you are number ${myEntry.rank}`}>#{myEntry.rank}</span>}
       </div>
-
-      {/* Tier progress bar */}
-      <div className="brutal-border bg-bone p-3">
-        <div className="flex justify-between items-center mb-2">
-          {LEAGUE_TIERS.map(t => (
-            <div key={t.id} className="flex flex-col items-center gap-1">
-              <span className={`text-lg ${t.id === tier ? "opacity-100" : "opacity-70"}`}>{t.emoji}</span>
-              <span className={`font-mono text-[8px] uppercase ${t.id === tier ? "font-bold" : "opacity-70"}`}>
-                {t.label}
-              </span>
-            </div>
-          ))}
-        </div>
-        <div className="h-1.5 bg-ink/10 brutal-border overflow-hidden">
-          <div
-            className={`h-full ${cfg.color.split(" ")[0]} transition-all duration-700`}
-            style={{ width: `${((LEAGUE_TIERS.findIndex(t => t.id === tier) + 1) / LEAGUE_TIERS.length) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Leaderboard table */}
-      {loading ? (
-        <div className="space-y-1">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="brutal-border bg-bone/50 h-10 animate-pulse" />
-          ))}
-        </div>
-      ) : (
-        <div className="brutal-border overflow-hidden">
-          {/* Column headers */}
-          <div className="grid grid-cols-[40px_1fr_80px] px-3 py-1.5 bg-ink text-bone font-mono text-[9px] uppercase opacity-90">
-            <span>#</span><span>Player</span><span className="text-right">Weekly XP</span>
-          </div>
-          {entries.map(entry => {
-            const zone = rankZone(entry.rank, tier);
-            const rowBg =
-              entry.isCurrentUser ? "bg-acid text-ink font-bold" :
-              zone === "promote"  ? "bg-acid/10" :
-              zone === "demote"   ? "bg-hot/10" : "bg-bone";
-            const indicator =
-              zone === "promote" ? "↑" :
-              zone === "demote"  ? "↓" : "";
-            return (
-              <div key={entry.userId}
-                className={`grid grid-cols-[40px_1fr_80px] px-3 py-2.5 brutal-border border-x-0 border-t-0 ${rowBg} transition-colors`}>
-                <span className="font-display text-lg leading-none">{entry.rank}</span>
-                <span className="font-mono text-xs flex items-center gap-1 truncate">
-                  {indicator && <span className="text-[10px]">{indicator}</span>}
-                  {entry.name}
-                  {entry.isCurrentUser && <span className="opacity-70 text-[9px]">(you)</span>}
-                </span>
-                <span className="font-mono text-xs text-right tabular-nums">{entry.weeklyXp}</span>
-              </div>
-            );
-          })}
-        </div>
+      {myEntry && (
+        <p className="m1-t11" style={{ margin: "8px 4px 0" }}>
+          {myEntry.weeklyXp} xp this week
+          {zone === "promote" && next ? ` · in the zone for ${tierConfig(next).label.toLowerCase()}` : ""}
+          {zone === "demote" ? " · in the drop zone, a lesson or two gets you out" : ""}
+        </p>
       )}
 
-      {/* Legend */}
-      <div className="flex flex-wrap gap-2 font-mono text-[9px] uppercase opacity-70">
-        <span className="flex items-center gap-1"><span className="w-2 h-2 bg-acid inline-block" /> Promotion zone (top 10)</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 bg-hot inline-block" /> Demotion zone (bottom 5)</span>
-        <span className="opacity-40">Resets Sunday midnight UTC</span>
+      <Silk label="leagues" />
+      <div style={{ display: "flex", justifyContent: "space-between", padding: "4px 6px 0" }}>
+        {LEAGUE_TIERS.map((t, i) => (
+          <span key={t.id} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, opacity: i === level ? 1 : 0.55 }}>
+            <TierMark level={i} color={t.led} size={28} />
+            <span className="m1-t11" style={{ fontWeight: i === level ? 600 : 500 }}>{t.label.toLowerCase()}</span>
+          </span>
+        ))}
       </div>
+      <div style={{ display: "flex", marginTop: 12 }}><SegBar value={(level + 1) / LEAGUE_TIERS.length} color={cfg.led} n={20} height={6} label={`tier ${level + 1} of ${LEAGUE_TIERS.length}`} /></div>
+
+      <Silk label="this week" right="xp" />
+      {loading ? (
+        <div className="ls-panel" aria-busy="true"><span className="m1-t11">loading</span></div>
+      ) : (
+        entries.map(e => {
+          const z = rankZone(e.rank, tier);
+          const led = e.isCurrentUser ? "var(--led-go)" : z === "promote" ? "var(--led-mint)" : z === "demote" ? "var(--led-red)" : "var(--ledoff)";
+          return (
+            <ListRow key={e.userId} led={led} style={{ padding: "9px 14px 9px 16px", marginTop: 6, ...(e.isCurrentUser ? { boxShadow: "inset 0 0 0 2px var(--led-go)" } : {}) }}
+              title={<span style={{ display: "flex", gap: 10, alignItems: "baseline" }}><b style={{ width: 24, fontWeight: 400, color: "var(--sub)", fontVariantNumeric: "tabular-nums" }}>{e.rank}</b>{e.isCurrentUser ? "you" : e.name.toLowerCase()}</span>}
+              right={<span style={{ fontVariantNumeric: "tabular-nums", fontSize: 14 }}>{e.weeklyXp}</span>} />
+          );
+        })
+      )}
+      <p className="m1-t11" style={{ margin: "10px 4px 0" }}>green is the move up zone, red is the drop zone. leagues reset sunday at midnight utc.</p>
     </div>
   );
 }

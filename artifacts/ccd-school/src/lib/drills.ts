@@ -14,27 +14,27 @@ export type DrillKey =
   | "stereo-width";
 
 export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emoji: string }> = {
-  interval: { name: "Interval ID", tagline: "Hear two notes — name the gap.", emoji: "🎼" },
-  chord: { name: "Chord Quality", tagline: "Major, minor, dim, dom7…", emoji: "🎹" },
-  "eq-cut": { name: "EQ Cut", tagline: "Which band did we notch?", emoji: "📉" },
-  compression: { name: "Compression", tagline: "Spot the squashed clip.", emoji: "🤜" },
-  reverb: { name: "Reverb Time", tagline: "Short, medium, or long tail?", emoji: "🌫️" },
-  panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "↔️" },
-  tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "⏱️" },
+  interval: { name: "Interval ID", tagline: "Hear two notes — name the gap.", emoji: "" },
+  chord: { name: "Chord Quality", tagline: "Major, minor, dim, dom7…", emoji: "" },
+  "eq-cut": { name: "EQ Cut", tagline: "Which band did we notch?", emoji: "" },
+  compression: { name: "Compression", tagline: "Spot the squashed clip.", emoji: "" },
+  reverb: { name: "Reverb Time", tagline: "Short, medium, or long tail?", emoji: "" },
+  panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "↔" },
+  tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "⏱" },
   "tempo-compare": {
     name: "A/B Faster?",
     tagline: "Two loops — which one is faster?",
-    emoji: "🏁",
+    emoji: "",
   },
   "dynamic-range": {
     name: "Dynamic Range",
     tagline: "Which version is more compressed?",
-    emoji: "📊",
+    emoji: "",
   },
   "stereo-width": {
     name: "Stereo Width",
     tagline: "Mono, narrow, wide — hear the difference.",
-    emoji: "↔️",
+    emoji: "↔",
   },
 };
 

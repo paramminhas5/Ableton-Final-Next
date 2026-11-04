@@ -8,7 +8,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   "crossfader-technique": [
-    { kind: "hook", emoji: "🎚️", headline: "One slider, two very different jobs", subtext: "Hip-hop DJs live on it. Many house DJs barely touch it." },
+    { kind: "hook", emoji: "", headline: "One slider, two very different jobs", subtext: "Hip-hop DJs live on it. Many house DJs barely touch it." },
     { kind: "concept", title: "What it does", body: "The crossfader moves the blend between the left and right channels. All the way left is only the left channel, all the way right only the right, the middle both. A slow move is a blend. A fast move on the beat is a cut.", keyFact: "Slow move blends. Fast move cuts.", visual: "mixer-channel" },
     { kind: "interact", sim: "mixer", prompt: "Blend slowly, then cut on a beat." },
     { kind: "concept", title: "Curves", body: "Most mixers let you change the crossfader curve. A sharp curve opens the sound almost at once, which suits cutting and scratching. A smooth curve brings the second channel in gradually, which suits blending. Many mixers also let you reverse the fader's direction.", keyFact: "Sharp curve for cuts. Smooth curve for blends." },
@@ -21,7 +21,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "long-mix-blend": [
-    { kind: "hook", emoji: "🌊", headline: "The crowd should not notice the swap", subtext: "A long blend moves the room from one track to the next without a seam." },
+    { kind: "hook", emoji: "", headline: "The crowd should not notice the swap", subtext: "A long blend moves the room from one track to the next without a seam." },
     { kind: "concept", title: "The shape of a long blend", body: "Start the incoming track with its bass turned down. Raise its fader slowly over 16 to 32 bars. Around the midpoint do the bass swap, then bring the outgoing track down. Both tracks share the room for a while, so they must stay in time and not fight.", keyFact: "Fade in, swap the bass, fade out." },
     { kind: "interact", sim: "mixer", prompt: "Run a long blend. Swap the bass midway." },
     { kind: "sequence", prompt: "Put the long blend in order", items: ["Start the incoming track, bass cut", "Raise the incoming fader slowly", "Swap the bass between the two", "Lower the outgoing fader", "Remove the outgoing track"], explain: "Bass is kept off the incoming track until the swap so the low end never doubles. The outgoing track leaves last." },
@@ -34,7 +34,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "transitions-cut-dj": [
-    { kind: "hook", emoji: "✂️", headline: "A cut is only a mistake if you hesitate", subtext: "Done on purpose, on the beat, it is one of the strongest moves you have." },
+    { kind: "hook", emoji: "", headline: "A cut is only a mistake if you hesitate", subtext: "Done on purpose, on the beat, it is one of the strongest moves you have." },
     { kind: "concept", title: "The cut", body: "A cut jumps from one track to the next with no overlap, ideally on the first beat of a new phrase. It works when both tracks are in time, the new one starts right on the downbeat, and the move is confident.", keyFact: "Cut on the downbeat of a phrase." },
     { kind: "interact", sim: "mixer", prompt: "Cut to the next track on the downbeat." },
     { kind: "quiz", q: "You cut to the next track but it lands a half beat late and sounds like a stumble. What went wrong?", options: ["The cue point or timing was off the downbeat", "The crossfader curve is smooth", "The headphones were muted", "The key was wrong"], answer: 0, explain: "A cut has no overlap to hide a mistake, so the start must land on the beat. Set a cue on the first beat and trigger it exactly on the bar.", hint: "Where did the new track start?" },
@@ -47,7 +47,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "loop-function-dj": [
-    { kind: "hook", emoji: "🔁", headline: "Hold a moment for as long as you need", subtext: "A loop buys you time and builds tension." },
+    { kind: "hook", emoji: "", headline: "Hold a moment for as long as you need", subtext: "A loop buys you time and builds tension." },
     { kind: "concept", title: "What a loop does", body: "A loop repeats a chosen section of a track until you release it. You set a start and end, often by length in beats or bars, and halve or double the length while it plays. A four-bar loop on a breakdown gives you time to line up the next track.", keyFact: "Loop to buy time." },
     { kind: "interact", sim: "loop-roll", prompt: "Set a loop. Halve it. Release it." },
     { kind: "concept", title: "Loop roll", body: "A loop roll repeats a very short slice while you hold the control. When you let go, the track continues from where it would have been, as if it had kept playing underneath. It is a stutter effect, not a way to hold a moment.", keyFact: "Roll stutters, then snaps back." },
@@ -60,7 +60,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "reading-the-crowd": [
-    { kind: "hook", emoji: "👀", headline: "The floor answers every question you ask", subtext: "Reading the room beats any technical trick." },
+    { kind: "hook", emoji: "", headline: "The floor answers every question you ask", subtext: "Reading the room beats any technical trick." },
     { kind: "concept", title: "What to watch", body: "Look at where people are standing and facing. Dancing, turning to the DJ and singing along are good signs. Turning to the bar, checking phones and drifting off the floor are signs the music is not landing. Watch for trends, not single people.", keyFact: "Watch the floor, not one person." },
     { kind: "interact", sim: "song-structure", prompt: "Map a night. Where does energy sit?" },
     { kind: "concept", title: "Time of night", body: "Early in the night people arrive, chat and warm up, so lower energy fits. Mid-night the floor is full and ready for the strongest music. Late in the night people may be winding down or getting a second wind. The same track can work at one hour and flop at another.", keyFact: "The same track fits one hour and not another." },
@@ -73,7 +73,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "set-structure-dj": [
-    { kind: "hook", emoji: "📈", headline: "A set has a shape", subtext: "Plan the arc and the night feels like a story." },
+    { kind: "hook", emoji: "", headline: "A set has a shape", subtext: "Plan the arc and the night feels like a story." },
     { kind: "concept", title: "The arc", body: "Most sets move through four stages. Warm-up starts low and welcomes people in. The build raises energy step by step. The peak holds the strongest music. The wind-down brings the room down gently. Peaks mean more when there are valleys before them.", keyFact: "Warm up, build, peak, wind down." },
     { kind: "interact", sim: "arrangement", prompt: "Draw an energy arc for a two-hour set." },
     { kind: "sequence", prompt: "Put the stages of a set in order", items: ["Warm-up", "Build", "Peak", "Wind-down"], explain: "Energy rises through the first stages to the peak and then eases off, so the room is brought down rather than dropped." },
@@ -86,7 +86,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "harmonic-mixing-dj": [
-    { kind: "hook", emoji: "🎶", headline: "Make blends that sound like one piece of music", subtext: "Keys that fit let the melodies share space." },
+    { kind: "hook", emoji: "", headline: "Make blends that sound like one piece of music", subtext: "Keys that fit let the melodies share space." },
     { kind: "concept", title: "Using the key", body: "Look at each track's key before you blend. Same key, the relative major or minor (same number, other letter on the Camelot wheel), or a neighbour one step along are the safest choices for long overlaps. These are guides: your ear has the last word.", keyFact: "Same, relative, or one step along.", visual: "chord-stack" },
     { kind: "interact", sim: "harmonic-mix-wheel", prompt: "Pick the next key. Keep it compatible." },
     { kind: "concept", title: "Moving up the wheel", body: "One step up the wheel (for example 8A to 9A) moves a fifth up. Many DJs use that move to lift the energy, and one step down to ease it. That is a common habit, not a law.", keyFact: "Up lifts. Down eases. Common habit." },
@@ -98,7 +98,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "effects-performance-dj": [
-    { kind: "hook", emoji: "🌀", headline: "An effect should have a reason", subtext: "One good effect at the right moment beats ten bad ones." },
+    { kind: "hook", emoji: "", headline: "An effect should have a reason", subtext: "One good effect at the right moment beats ten bad ones." },
     { kind: "concept", title: "Two kinds of effects", body: "Many Pioneer DJ mixers have beat effects, which sync to the track's tempo, such as echo and reverb. They also have a Sound Color FX knob on each channel, which is a quick effect like a filter. On many units the knob is off at the 12 o'clock position and you turn left or right to add the effect.", keyFact: "Beat FX follow tempo. Sound Color FX is a per-channel knob." },
     { kind: "interact", sim: "mixer", prompt: "Sweep a filter into the drop." },
     { kind: "concept", title: "The filter sweep", body: "A low-pass filter removes high frequencies as you close it, so the track sounds like it is moving behind a wall. Closing it before a drop builds tension, and opening it again releases it.", keyFact: "Close to build, open to release." },
@@ -111,7 +111,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "energy-management-dj": [
-    { kind: "hook", emoji: "⚡", headline: "Contrast makes peaks feel higher", subtext: "A room that never rests never peaks." },
+    { kind: "hook", emoji: "", headline: "Contrast makes peaks feel higher", subtext: "A room that never rests never peaks." },
     { kind: "concept", title: "Tools for energy", body: "You control energy with tempo, how dense or sparse the tracks are, the intensity of the style, effects and how you mix. Build by raising several of these step by step. Release by dropping to something sparser, like a breakdown or a slower track.", keyFact: "Build, hold, release, repeat." },
     { kind: "interact", sim: "arrangement", prompt: "Draw a build, a peak and a valley." },
     { kind: "quiz", q: "You have played peak-energy tracks for 45 minutes and the floor looks tired. What can help?", options: ["A short, planned release such as a sparse or slower track, then build again", "More of the same", "Louder master", "A slower and slower set"], answer: 0, explain: "A valley lets people recover so the next build lands harder. Constant peak numbs a room.", hint: "Give them a breath." },
@@ -124,7 +124,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "genre-strategy-dj": [
-    { kind: "hook", emoji: "🧭", headline: "People should know what you do", subtext: "A clear sound is easier to book and easier to remember." },
+    { kind: "hook", emoji: "", headline: "People should know what you do", subtext: "A clear sound is easier to book and easier to remember." },
     { kind: "concept", title: "Define your sound", body: "A DJ's sound is the mix of styles, tempo range, mood and the kind of room they play. When promoters know what you do, they know when to book you. A clear identity is not a cage: it is a starting point.", keyFact: "A clear sound makes you easy to book." },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap your favourite track. Find your home tempo." },
     { kind: "concept", title: "Widen one step at a time", body: "Move into styles that sit next to yours, such as deep house into tech house. Adjacent styles share tempo and feel, so the mix stays coherent and your audience can follow you.", keyFact: "Adjacent styles, one step at a time." },
@@ -137,7 +137,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "preparing-a-set-dj": [
-    { kind: "hook", emoji: "🗒️", headline: "Preparation is half the performance", subtext: "A clear plan frees you to react to the room." },
+    { kind: "hook", emoji: "", headline: "Preparation is half the performance", subtext: "A clear plan frees you to react to the room." },
     { kind: "concept", title: "Know the gig", body: "Find out who the crowd is, when you play, how long you have, what plays before and after, and what the venue wants. Then choose 60 to 100 tracks for that night rather than carrying the whole library.", keyFact: "Prepare for this gig, not every gig." },
     { kind: "interact", sim: "arrangement", prompt: "Lay out your first three tracks." },
     { kind: "concept", title: "Your first three tracks", body: "The opening tracks set the tone. Choose them on purpose, know how they mix into each other and have a backup in case the room does not fit. After that you adapt.", keyFact: "Open with a decision, then adapt." },
@@ -150,7 +150,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "live-mistakes-dj": [
-    { kind: "hook", emoji: "🚨", headline: "Everyone makes mistakes. Recovery is the skill.", subtext: "A calm fix often goes unnoticed." },
+    { kind: "hook", emoji: "", headline: "Everyone makes mistakes. Recovery is the skill.", subtext: "A calm fix often goes unnoticed." },
     { kind: "concept", title: "The train wreck", body: "A train wreck is two tracks playing out of time with each other. The usual fix is simple: take the incoming track out of the speakers, keep the main track playing, and sort the incoming one out in your headphones.", keyFact: "Take one out. Fix it in the headphones." },
     { kind: "interact", sim: "beatmatch-trainer", prompt: "Recover from an off-beat blend." },
     { kind: "sequence", prompt: "Put the recovery in order", items: ["Notice the clash", "Take the incoming track out of the speakers", "Cue it in the headphones", "Re-match the tempo and phase", "Bring it back in"], explain: "Remove the clash first, then repair in private, then bring it back in only once it locks." },
@@ -163,7 +163,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "effects-deep-dj": [
-    { kind: "hook", emoji: "🎛️", headline: "Effects can be part of the music", subtext: "Used well, they shape a transition instead of decorating it." },
+    { kind: "hook", emoji: "", headline: "Effects can be part of the music", subtext: "Used well, they shape a transition instead of decorating it." },
     { kind: "concept", title: "Echo length changes the feel", body: "A short echo, such as half a beat, sounds tight and rhythmic. A long echo, such as a bar, sounds big and spacious. The tail decays on its own, so you can leave it ringing over a quiet moment.", keyFact: "Short echo is tight. Long echo is spacious." },
     { kind: "interact", sim: "mixer", prompt: "Throw an echo on the last beat. Let it ring." },
     { kind: "concept", title: "Reverb and phaser", body: "Reverb adds space. Turned up it swells and blurs the sound, which hides a join. A phaser sweeps a moving, swirling colour through the track, which adds motion to a steady section.", keyFact: "Reverb blurs. Phaser moves." },
@@ -176,7 +176,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "loop-performance-dj": [
-    { kind: "hook", emoji: "🔄", headline: "Loops let you play with time", subtext: "Tighten a loop and the tension climbs." },
+    { kind: "hook", emoji: "", headline: "Loops let you play with time", subtext: "Tighten a loop and the tension climbs." },
     { kind: "concept", title: "Loops that build", body: "Start a loop of four bars and halve it: two bars, one bar, half a bar. Each halving repeats more often, which increases urgency. Release on a downbeat and the track continues as if nothing had happened, with the tension released.", keyFact: "Halving a loop raises tension." },
     { kind: "interact", sim: "loop-roll", prompt: "Loop four bars. Halve it. Release." },
     { kind: "quiz", q: "You loop four bars, halve to two, then one, then release on the downbeat. What does the crowd feel?", options: ["A build that releases on the downbeat", "Nothing", "A key change", "A tempo drop"], answer: 0, explain: "The faster repeats raise anticipation and the release feels like a drop.", hint: "Think about the pace of repeats." },
@@ -189,7 +189,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "harmonic-key-shift-dj": [
-    { kind: "hook", emoji: "🎼", headline: "Change the key without changing the speed", subtext: "Key lock is the tool behind modern harmonic mixing." },
+    { kind: "hook", emoji: "", headline: "Change the key without changing the speed", subtext: "Key lock is the tool behind modern harmonic mixing." },
     { kind: "concept", title: "What key lock does", body: "Normally speeding a track up also raises its pitch. Key lock, called Master Tempo on Pioneer CDJs and MT in rekordbox, keeps the pitch steady while the tempo changes. That is why you can beatmatch without everything sounding higher or lower.", keyFact: "Key lock: tempo changes, pitch stays." },
     { kind: "interact", sim: "ear-training", preset: { mode: "high-low" }, prompt: "Listen. Hear higher and lower pitch." },
     { kind: "quiz", q: "You speed a track up by 6 percent with key lock off. What happens to the pitch?", options: ["It rises with the tempo", "It stays the same", "It falls", "It disappears"], answer: 0, explain: "Without key lock, tempo and pitch move together, like a record played faster.", hint: "Think of a record." },
@@ -202,7 +202,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "stem-djing": [
-    { kind: "hook", emoji: "🧩", headline: "Take a track apart and mix the pieces", subtext: "Stems let you keep the drums and swap the rest." },
+    { kind: "hook", emoji: "", headline: "Take a track apart and mix the pieces", subtext: "Stems let you keep the drums and swap the rest." },
     { kind: "concept", title: "What stems are", body: "rekordbox can separate a track into parts so you can control them individually. In rekordbox 7 you can choose three stems (vocal, instruments and drums) or four (vocal, instruments, bass and drums). Check which mode your version uses.", keyFact: "3 or 4 stems: vocal, instruments, drums, and bass in four-stem mode." },
     { kind: "interact", sim: "mixer", prompt: "Hold the drums. Swap the rest." },
     { kind: "concept", title: "Stems in a transition", body: "Keep the drums from both tracks running so the rhythm never changes, and swap the bass and instruments between them. You can also mute the vocal of one track so it does not fight the other.", keyFact: "Keep the rhythm. Swap the rest." },
@@ -215,7 +215,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "recording-your-set-dj": [
-    { kind: "hook", emoji: "🎙️", headline: "You cannot judge a mix while you are playing it", subtext: "Record it. Listen back. Fix one thing." },
+    { kind: "hook", emoji: "", headline: "You cannot judge a mix while you are playing it", subtext: "Record it. Listen back. Fix one thing." },
     { kind: "concept", title: "Ways to record", body: "You can record the output of your DJ software, or record the mixer's output with a separate recorder. A recorder on the mixer's record output captures what the mixer actually sends, whatever the source. Either way, check that it is recording before you start.", keyFact: "Record the mix, and check it is recording." },
     { kind: "interact", sim: "mixer", prompt: "Watch the meter. Keep peaks out of the red." },
     { kind: "concept", title: "Recording level", body: "Leave headroom so the recording does not clip. Peaks around minus 6 dBFS are a common target because they leave room for editing later. Never let it hit the maximum, because digital clipping cannot be repaired.", keyFact: "Peaks near minus 6 dBFS leave headroom." },
@@ -228,7 +228,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "dvs-basics": [
-    { kind: "hook", emoji: "💿", headline: "Real vinyl feel, digital library", subtext: "A DVS lets a record control a computer." },
+    { kind: "hook", emoji: "", headline: "Real vinyl feel, digital library", subtext: "A DVS lets a record control a computer." },
     { kind: "concept", title: "How it works", body: "A DVS uses special control vinyl or CDs with an encoded signal. A turntable or CD player plays it, and the software reads the signal to work out the position and speed of the record. That movement then controls a digital file, so a scratch on the vinyl scratches the file.", keyFact: "The record carries a signal. The software reads it." },
     { kind: "interact", sim: "routing-puzzle", prompt: "Connect turntable, interface and laptop." },
     { kind: "concept", title: "What you need", body: "You need control records, turntables or CD players, a supported audio interface or mixer, and DVS software such as Serato DJ Pro or Traktor Scratch. Each software supports certain hardware, so check the compatibility list before you buy.", keyFact: "Control records, players, supported interface, software." },
@@ -241,7 +241,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "dj-business": [
-    { kind: "hook", emoji: "📇", headline: "Talent gets you noticed. Reliability gets you rebooked.", subtext: "The business side of DJing is mostly professionalism." },
+    { kind: "hook", emoji: "", headline: "Talent gets you noticed. Reliability gets you rebooked.", subtext: "The business side of DJing is mostly professionalism." },
     { kind: "concept", title: "Your promo mix", body: "A promo mix is a recording of your sound at its best, usually an hour or so, that promoters can listen to quickly. Put it where it is easy to find, with a clear name, a photo and a short bio. One strong mix beats several average ones.", keyFact: "One strong mix, easy to find." },
     { kind: "interact", sim: "none", prompt: "List what a promoter needs from you." },
     { kind: "concept", title: "Rates and rider", body: "Find out what DJs at your level are paid in your area and do not undercut wildly, because it hurts you and others. A rider lists what you need in writing, such as equipment, travel or hospitality, so there are no surprises on the night.", keyFact: "Know the going rate. Put needs in writing." },
@@ -254,7 +254,7 @@ export const FLAGSHIP_BATCH_5: Record<string, LessonScreen[]> = {
   ],
 
   "dj-advanced-complete": [
-    { kind: "hook", emoji: "🌟", headline: "Technique is the floor. Taste is the ceiling.", subtext: "What people remember is your point of view." },
+    { kind: "hook", emoji: "", headline: "Technique is the floor. Taste is the ceiling.", subtext: "What people remember is your point of view." },
     { kind: "concept", title: "From competent to distinctive", body: "Most people can learn to beatmatch and blend. What sets a DJ apart is a point of view: the tracks they find, the order they choose, and the feeling they build over a night. That comes from listening widely and making decisions.", keyFact: "Taste and point of view set you apart." },
     { kind: "interact", sim: "none", prompt: "Write the next step for your sound." },
     { kind: "concept", title: "Ways to grow", body: "Keep digging for music others do not have. Make your own edits or tracks if you can, since nobody else will have them. Build relationships with other DJs, promoters and listeners. Let your sound change over years rather than weeks.", keyFact: "Dig, make, connect, give it time." },

@@ -8,7 +8,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   "what-is-djing": [
-    { kind: "hook", emoji: "🎧", headline: "The floor empties when the music stops being a story", subtext: "A DJ's job is the order, the timing and the join between songs." },
+    { kind: "hook", emoji: "", headline: "The floor empties when the music stops being a story", subtext: "A DJ's job is the order, the timing and the join between songs." },
     { kind: "concept", title: "What a DJ actually does", body: "A DJ chooses recorded tracks, puts them in an order, and joins them so the music never drops out. The skill is not any one song. It is how the room feels as one track becomes the next.", keyFact: "You do not make the music. You make the journey." },
     { kind: "interact", sim: "mixer", prompt: "Blend two tracks. Feel the join." },
     { kind: "concept", title: "Different rooms, different jobs", body: "A club DJ reads the dance floor and adjusts in real time. A radio DJ plays a planned show. A turntablist scratches and cuts so the deck itself becomes an instrument. The tools overlap, the goals differ.", keyFact: "Same gear, different job." },
@@ -22,7 +22,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "dj-equipment": [
-    { kind: "hook", emoji: "🎛️", headline: "Two players, one mixer, one pair of headphones", subtext: "Know what each piece does and nothing in the booth is a mystery." },
+    { kind: "hook", emoji: "", headline: "Two players, one mixer, one pair of headphones", subtext: "Know what each piece does and nothing in the booth is a mystery." },
     { kind: "concept", title: "The classic setup", body: "Two playback devices feed one mixer. The mixer sends the blend to the speakers. Headphones plug into the mixer so you can hear a track the crowd cannot. CDJs are the usual players in clubs, with turntables common for vinyl. Laptop controllers combine the player and mixer in one box.", keyFact: "Players in, mixer blends, speakers out.", visual: "mixer-channel" },
     { kind: "interact", sim: "mixer", prompt: "Move the faders and EQ. Learn the layout." },
     { kind: "concept", title: "What the mixer controls", body: "Each channel has a gain knob, a three-band EQ (low, mid, high) and a volume fader. The crossfader blends between the left and right channels. The headphone section picks what you hear privately. Effects often sit on the mixer too.", keyFact: "Gain, EQ, fader, crossfader, headphones." },
@@ -35,7 +35,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "rekordbox-intro": [
-    { kind: "hook", emoji: "💽", headline: "Prepare at home. Play anywhere.", subtext: "rekordbox is where a track is analysed, tagged and put on a USB for the club." },
+    { kind: "hook", emoji: "", headline: "Prepare at home. Play anywhere.", subtext: "rekordbox is where a track is analysed, tagged and put on a USB for the club." },
     { kind: "concept", title: "Two jobs, two modes", body: "Export mode is for preparing: you set up playlists and cues, then put them on a USB or other device for Pioneer DJ players. Performance mode is for playing: rekordbox acts as the DJ software, usually with a controller or compatible hardware.", keyFact: "Export prepares. Performance plays." },
     { kind: "concept", title: "What the analysis gives you", body: "When you add a track, rekordbox analyses it to find the tempo (BPM), the musical key, the waveform and a beat grid that marks where beats fall. You can check and fix the results afterwards.", keyFact: "BPM, key, waveform and grid come from one analysis." },
     { kind: "interact", sim: "browser-tour", prompt: "Open the collection. Find BPM and key." },
@@ -47,7 +47,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "headphone-monitoring": [
-    { kind: "hook", emoji: "🎧", headline: "Hear the next track before the room does", subtext: "Cueing is how you fix problems while nobody notices." },
+    { kind: "hook", emoji: "", headline: "Hear the next track before the room does", subtext: "Cueing is how you fix problems while nobody notices." },
     { kind: "concept", title: "What cue does", body: "Pressing a channel's CUE button sends that channel to your headphones, even when its fader is down. The crowd hears nothing. You can find the start, check the tempo and set the EQ before the track enters the mix.", keyFact: "Cue is private. Master is public." },
     { kind: "interact", sim: "mixer", prompt: "Cue a channel. Keep the fader down." },
     { kind: "concept", title: "Cue and master together", body: "The headphone section usually has a cue/master mix control that blends what is in your headphones from only cue to only master. Many mixers also have a split cue mode that puts cue in one ear and the master in the other. Which ear gets which differs between mixers, so check yours.", keyFact: "Mix knob or split cue: hear both at once." },
@@ -59,7 +59,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "booth-setup": [
-    { kind: "hook", emoji: "🔌", headline: "Dead air is a setup problem", subtext: "Ten minutes of checking before the doors open saves the night." },
+    { kind: "hook", emoji: "", headline: "Dead air is a setup problem", subtext: "Ten minutes of checking before the doors open saves the night." },
     { kind: "concept", title: "Follow the signal", body: "Sound travels from a player into a mixer channel, through the mixer, out of its master output to the amplifier and speakers. If something is silent, walk that chain one link at a time. Most problems are a wrong input selection or a cable in the wrong socket.", keyFact: "Silent? Check each link in order." },
     { kind: "interact", sim: "routing-puzzle", prompt: "Connect the signal chain end to end." },
     { kind: "concept", title: "LINE and PHONO", body: "CDJs and controllers send a line level signal. Turntables send a much weaker signal that needs a phono preamp, which is what the PHONO input provides. Connecting a turntable to a line input sounds thin and quiet. Connecting a CDJ to a phono input sounds loud and distorted.", keyFact: "CDJ to LINE. Turntable to PHONO." },
@@ -72,7 +72,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "dj-culture": [
-    { kind: "hook", emoji: "🌍", headline: "This culture has an address and a history", subtext: "Knowing where it came from changes how you play it." },
+    { kind: "hook", emoji: "", headline: "This culture has an address and a history", subtext: "Knowing where it came from changes how you play it." },
     { kind: "concept", title: "Hip-hop and the break", body: "In 1973 Kool Herc, DJing in the Bronx, noticed dancers loved the short drum break in funk records. He used two copies of the same record to loop that break. That technique, later developed by Grandmaster Flash and Grand Wizzard Theodore among others, became the core of hip-hop DJing.", keyFact: "Two copies, one break, looped." },
     { kind: "concept", title: "House and techno", body: "House developed in Chicago clubs in the early 1980s, connected with DJs such as Frankie Knuckles. Techno came out of Detroit, associated with Juan Atkins, Derrick May and Kevin Saunderson, often called the Belleville Three. Both were made and spread by Black artists working in underground scenes.", keyFact: "House: Chicago. Techno: Detroit." },
     { kind: "interact", sim: "song-structure", prompt: "Map a DJ journey. Build and release." },
@@ -85,7 +85,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "genre-bpm-reference": [
-    { kind: "hook", emoji: "⏱️", headline: "Every genre has a home tempo", subtext: "Know the ranges and you know which tracks will mix without strain." },
+    { kind: "hook", emoji: "⏱", headline: "Every genre has a home tempo", subtext: "Know the ranges and you know which tracks will mix without strain." },
     { kind: "concept", title: "Rough ranges", body: "Hip-hop often sits around 70 to 100 BPM. House runs about 120 to 130. Techno is commonly 125 to 145. Drum and bass sits around 160 to 180. These are rough guides: tracks stray outside them all the time.", keyFact: "Ranges are guides, not walls." },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap the beat. Find the tempo." },
     { kind: "concept", title: "Half-time and double-time", body: "Some styles feel half as fast as their BPM. A track at 140 BPM with the snare on beat three of each bar feels like 70. Because 70 and 140 share a grid, DJs can mix half-time and full-time tracks together.", keyFact: "70 and 140 live on the same grid." },
@@ -98,7 +98,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "your-first-mix": [
-    { kind: "hook", emoji: "🎬", headline: "One clean join beats ten messy ones", subtext: "Your first mix should be boring on purpose." },
+    { kind: "hook", emoji: "", headline: "One clean join beats ten messy ones", subtext: "Your first mix should be boring on purpose." },
     { kind: "concept", title: "Make it easy for yourself", body: "Pick two tracks with similar tempos and, if possible, compatible keys. Start the incoming track on a bar line while the outgoing track is in a steady part, like the end of a groove or breakdown. Bring it in quietly, then swap over.", keyFact: "Same tempo, steady section, quiet entry." },
     { kind: "interact", sim: "mixer", prompt: "Bring in track two, then swap over." },
     { kind: "concept", title: "Length of the blend", body: "A long blend over 16 or 32 bars lets two tracks overlap while you fade one in and out slowly. A shorter blend over 8 bars is tighter. Start with long ones: more time means more chances to fix mistakes.", keyFact: "Longer blends forgive more." },
@@ -110,7 +110,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "music-library-dj": [
-    { kind: "hook", emoji: "📁", headline: "A thousand tracks you know beat ten thousand you do not", subtext: "A library is only useful if you can find the right track in a second." },
+    { kind: "hook", emoji: "", headline: "A thousand tracks you know beat ten thousand you do not", subtext: "A library is only useful if you can find the right track in a second." },
     { kind: "concept", title: "File quality", body: "WAV and AIFF are uncompressed and keep everything. 320 kbps MP3 is compressed but widely accepted by DJs. Low bitrate files lose detail that a club system makes obvious. Check your player's manual for which formats it supports.", keyFact: "WAV or AIFF if you can, 320 MP3 as a minimum." },
     { kind: "interact", sim: "browser-tour", prompt: "Browse a collection. Sort by BPM and key." },
     { kind: "concept", title: "Know what you own", body: "A library you know lets you reach for the right track under pressure. Listening through new additions, setting cue points and writing short notes turns files into tools. Size alone does not help at 2 a.m.", keyFact: "Depth over size." },
@@ -122,7 +122,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "bpm-analysis-dj": [
-    { kind: "hook", emoji: "📐", headline: "A beat grid is a map of every beat", subtext: "If the map is wrong, sync and loops land in the wrong place." },
+    { kind: "hook", emoji: "", headline: "A beat grid is a map of every beat", subtext: "If the map is wrong, sync and loops land in the wrong place." },
     { kind: "concept", title: "What the grid is", body: "The beat grid marks where beats fall along the waveform. Sync, loops, quantize and cue snapping all lean on it. rekordbox draws the grid when it analyses a track.", keyFact: "Grid wrong, everything that uses it is wrong." },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap along. Compare with the analysed BPM." },
     { kind: "concept", title: "When analysis goes wrong", body: "Tracks with tempo changes, live drumming, or very sparse drums can confuse the analysis. Fast tracks such as drum and bass are often read at half the tempo. You can check by listening and tapping, then correct the grid in the grid-edit tools.", keyFact: "Always check grids for tracks you plan to sync." },
@@ -134,7 +134,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "key-detection-dj": [
-    { kind: "hook", emoji: "🎼", headline: "Some tracks clash. Some tracks sing together.", subtext: "Key tells you which is which before you press play." },
+    { kind: "hook", emoji: "", headline: "Some tracks clash. Some tracks sing together.", subtext: "Key tells you which is which before you press play." },
     { kind: "concept", title: "What key shows", body: "Every track sits in a musical key. When two tracks overlap, their notes either fit or fight. rekordbox analyses the key and can display it in different styles, including an alphanumeric style like 8A that follows the Camelot system many DJs use.", keyFact: "Keys that fit make the overlap sound like one piece." },
     { kind: "interact", sim: "harmonic-mix-wheel", prompt: "Pick a track that fits on the wheel." },
     { kind: "concept", title: "Reading the wheel", body: "On the Camelot wheel, the number is the position and the letter is minor (A) or major (B). Same number with the other letter is the relative key, such as 8A and 8B. One number up or down is a neighbouring key that blends well. These are guides: your ear has the last say.", keyFact: "Same number, or one step away." },
@@ -147,7 +147,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "my-tags-dj": [
-    { kind: "hook", emoji: "🏷️", headline: "Find the right track in a second, not a minute", subtext: "Your own labels beat a folder tree under pressure." },
+    { kind: "hook", emoji: "", headline: "Find the right track in a second, not a minute", subtext: "Your own labels beat a folder tree under pressure." },
     { kind: "concept", title: "What My Tags are", body: "My Tags let you attach your own labels to tracks in rekordbox, such as mood, energy or when in a set it fits. A track can carry several tags and you can filter the library by them.", keyFact: "Your labels, your words, as many as you like." },
     { kind: "interact", sim: "browser-tour", prompt: "Tag a few tracks. Filter by tag." },
     { kind: "concept", title: "Use words you will remember", body: "Tag by how the track feels and where it sits in a set, such as warm-up, peak or closing, rather than only by genre. You will want those answers mid-set, not the label name.", keyFact: "Tag what you will ask yourself in the booth." },
@@ -159,7 +159,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "playlists-dj": [
-    { kind: "hook", emoji: "📜", headline: "Sixty tracks you chose beat five thousand you scroll", subtext: "Preparation turns the booth into decisions, not searching." },
+    { kind: "hook", emoji: "", headline: "Sixty tracks you chose beat five thousand you scroll", subtext: "Preparation turns the booth into decisions, not searching." },
     { kind: "concept", title: "Ways to organise", body: "Playlists can be sorted by genre, by energy stage such as warm-up, build, peak and wind-down, or by the venue and event. Mix the approaches: a gig playlist drawn from your energy playlists is a common pattern.", keyFact: "Genre, energy, gig." },
     { kind: "interact", sim: "browser-tour", prompt: "Build a gig playlist from the library." },
     { kind: "concept", title: "Narrow the choices", body: "Too many options slows you down. A set playlist of fifty to a hundred tracks for a particular gig keeps choices manageable while leaving room to react to the room.", keyFact: "Fewer options, faster choices." },

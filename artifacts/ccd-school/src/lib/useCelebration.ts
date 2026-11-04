@@ -56,7 +56,7 @@ export function useCelebration() {
         const celebId = `rank-${newRank.slug}`;
         if (!seen.has(celebId)) {
           markSeen(celebId);
-          setEvent({ kind: "rank-up", rankName: newRank.name, rankEmoji: newRank.emoji });
+          setEvent({ kind: "rank-up", rankName: newRank.name });
           prevXp.current = progress.xp;
           return;
         }

@@ -3,63 +3,37 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PlacementTest } from "@/components/PlacementTest";
 import { useProgress } from "@/lib/progress";
+import { Icon, Screen, Silk, WORLD_LED } from "@/components/m1/controls";
+import { ListRow } from "@/components/m1/parts";
+import "@/components/m1/lesson.css";
 
 type World = "fundamentals" | "dj" | "producer";
-
-const WORLDS: { id: World; emoji: string; label: string }[] = [
-  { id: "fundamentals", emoji: "🎵", label: "Fundamentals" },
-  { id: "dj",           emoji: "🎧", label: "DJ World" },
-  { id: "producer",     emoji: "🎛", label: "Producer" },
+const WORLDS: { id: World; label: string; sub: string }[] = [
+  { id: "fundamentals", label: "basics", sub: "sound, rhythm, notes, the studio" },
+  { id: "dj", label: "dj", sub: "decks, mixing, beatmatching, sets" },
+  { id: "producer", label: "producer", sub: "synths, mixing, arranging, finishing" },
 ];
 
 export function PlacementPageClient() {
   const router = useRouter();
   const { progress } = useProgress();
-  const [selectedWorld, setSelectedWorld] = useState<World | null>(null);
-
-  if (selectedWorld) {
-    return (
-      <PlacementTest
-        world={selectedWorld}
-        onSkip={() => setSelectedWorld(null)}
-      />
-    );
-  }
-
+  const [world, setWorld] = useState<World | null>(null);
+  if (world) return <PlacementTest world={world} onSkip={() => setWorld(null)} />;
   return (
-    <div className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
-      <div>
-        <button
-          onClick={() => router.back()}
-          className="font-mono text-[10px] uppercase opacity-70 hover:opacity-70 mb-4 block"
-        >
-          ← back
-        </button>
-        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">PLACEMENT TEST</div>
-        <h1 className="font-display text-5xl leading-none">
-          ALREADY KNOW<br />
-          <span className="text-acid">SOME STUFF?</span>
-        </h1>
-        <p className="font-mono text-sm opacity-70 mt-3 leading-relaxed">
-          Pick a world and answer 4 quick questions. We&apos;ll place you in the right chapter automatically.
-        </p>
+    <div className="ls">
+      <div className="ls-top">
+        <button type="button" className="ls-x" aria-label="Close" onClick={() => router.back()}><Icon name="close" /></button>
+        <span style={{ flex: 1 }} />
       </div>
-
-      <div className="space-y-3">
-        {WORLDS.map(w => (
-          <button
-            key={w.id}
-            onClick={() => setSelectedWorld(w.id)}
-            className="w-full brutal-border bg-bone/10 hover:bg-acid hover:text-ink p-4 text-left font-mono text-sm uppercase brutal-press transition-colors flex items-center gap-3"
-          >
-            <span className="text-2xl">{w.emoji}</span>
-            <span>Test {w.label} knowledge →</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="font-mono text-[9px] uppercase opacity-70 text-center">
-        Current level: {progress.unlockedChapter > 1 ? `Chapter ${progress.unlockedChapter} unlocked` : "Starting from Chapter 1"}
+      <div className="ls-col" style={{ paddingBottom: 24 }}>
+        <Screen>
+          <div className="ls-meta"><span>find my level</span><span>4 questions a world</span></div>
+          <div className="ls-title">already know some of this?</div>
+          <p className="ls-sub">pick a world and answer a few questions. we start you at the right chapter.</p>
+        </Screen>
+        <Silk label="pick a world" />
+        {WORLDS.map(w => <ListRow key={w.id} onClick={() => setWorld(w.id)} led={WORLD_LED[w.id]} title={w.label} sub={w.sub} right={<Icon name="back" className="ls-flip" />} />)}
+        <p className="m1-t11" style={{ margin: "14px 4px 0" }}>{progress.unlockedChapter > 1 ? `chapter ${progress.unlockedChapter} is open for you now` : "you are starting from chapter 1"}</p>
       </div>
     </div>
   );

@@ -107,13 +107,13 @@ function WorldSectionHeader({ world, stats }: {
               href={`/world/${world}`}
               className={`brutal-border px-3 py-2 font-display text-xs brutal-press transition-colors ${t.flowBtn}`}
             >
-              🌊 Flow Mode →
+              Flow Mode →
             </Link>
             <Link
               href={`/world/${world}?view=free`}
               className={`brutal-border px-3 py-2 font-display text-xs brutal-press transition-colors ${t.freeBtn}`}
             >
-              📖 Free Mode →
+              Free Mode →
             </Link>
           </div>
         </div>

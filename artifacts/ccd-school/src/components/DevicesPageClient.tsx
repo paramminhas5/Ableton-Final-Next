@@ -73,7 +73,7 @@ export function DevicesPageClient() {
       )}
       {filteredDevices.length > 0 && (
         <section className="mb-6">
-          <h2 className="font-display text-2xl md:text-3xl mb-2">⚙ EFFECTS — REAL LABS</h2>
+          <h2 className="font-display text-2xl md:text-3xl mb-2">EFFECTS — REAL LABS</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {filteredDevices.map((d) => (
               <Link key={d.slug} href={`/device/${d.slug}`}

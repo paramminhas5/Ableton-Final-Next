@@ -215,7 +215,7 @@ export function InstallPromptBanner() {
               <div>
                 <div className="font-mono text-sm font-bold">Tap the Share button</div>
                 <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">
-                  The <span className="font-bold opacity-100">⬆</span> icon at the bottom of Safari (or top-right on iPad).
+                  The <span className="font-bold opacity-100"></span> icon at the bottom of Safari (or top-right on iPad).
                 </div>
               </div>
             </div>

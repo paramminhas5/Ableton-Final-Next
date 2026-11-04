@@ -72,7 +72,7 @@ export interface WorldTheme {
 
 export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
   fundamentals: {
-    emoji: "🎵",
+    emoji: "",
     title: "Fundamentals",
     tagline: "The vocabulary of music",
     description: "Sound, rhythm, melody, harmony and music technology. The foundation for everything — before you produce or DJ.",
@@ -121,7 +121,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
   },
 
   dj: {
-    emoji: "🎧",
+    emoji: "",
     title: "DJ World",
     tagline: "The art of playing for people",
     description: "rekordbox, beatmatching, cue points, the mix, crowd reading and career. 40 missions built from the DJ booth up.",
@@ -170,7 +170,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
   },
 
   producer: {
-    emoji: "🎛",
+    emoji: "",
     title: "Producer",
     tagline: "Build music in Ableton Live 12",
     description: "From opening Live for the first time to deep instruments, Live 12 power features and pro output. 91 missions across 6 chapters.",
@@ -229,24 +229,24 @@ export const WORLD_THEME = WORLD_THEMES;
 
 /** Chapter emoji map — single source of truth */
 export const CHAPTER_EMOJIS: Record<string, string> = {
-  "sound-science": "🔊",
-  "rhythm-and-time": "🥁",
-  "melody-and-pitch": "🎵",
-  "harmony-and-chords": "🎹",
-  "music-technology": "💻",
-  "setup-and-culture": "🎧",
-  "the-library": "📚",
-  "the-mix-dj": "🎛",
-  "dj-performance": "🎤",
-  "dj-mastery": "🏆",
-  "first-contact": "🖥",
-  "sound-and-midi": "🎼",
-  "the-mix-producer": "🎚",
-  "performance-and-flow": "🚀",
-  "advanced-producer": "⚡",
-  "synthesis": "🌀",
+  "sound-science": "",
+  "rhythm-and-time": "",
+  "melody-and-pitch": "",
+  "harmony-and-chords": "",
+  "music-technology": "",
+  "setup-and-culture": "",
+  "the-library": "",
+  "the-mix-dj": "",
+  "dj-performance": "",
+  "dj-mastery": "",
+  "first-contact": "",
+  "sound-and-midi": "",
+  "the-mix-producer": "",
+  "performance-and-flow": "",
+  "advanced-producer": "",
+  "synthesis": "",
 };
 
 export function getChapterEmoji(slug: string): string {
-  return CHAPTER_EMOJIS[slug] ?? "📖";
+  return CHAPTER_EMOJIS[slug] ?? "";
 }

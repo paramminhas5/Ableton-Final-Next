@@ -1,11 +1,6 @@
-import type { Metadata } from "next";
-import { TrainPageClient } from "@/components/TrainPageClient";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Ear Training — CCD.SCHOOL",
-  description: "Train your ear — intervals, chords, scales. Hear the difference before you produce it.",
-};
-
+/** The old ear training page. Practice has the Ear Gym on the engine now. */
 export default function TrainPage() {
-  return <TrainPageClient />;
+  redirect("/gym");
 }

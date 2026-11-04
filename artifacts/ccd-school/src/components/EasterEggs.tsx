@@ -8,7 +8,7 @@
  *
  * 2. CLICK DJ CAT 5× — secret message + +5 XP bonus popup
  *
- * 3. IDLE 30s on any lesson → DJ Cat pops up: "Still there? 👀 Tap to continue..."
+ * 3. IDLE 30s on any lesson → DJ Cat pops up: "Still there? Tap to continue..."
  *    (dispatches custom event, LessonPlayer can listen)
  *
  * 4. MORNING GREETING — if first visit of the day before noon, DJ Cat says good morning
@@ -73,7 +73,7 @@ function DiscoOverlay({ onDismiss }: { onDismiss: () => void }) {
           style={{ textShadow: "4px 4px 0 hsl(222 47% 4%)" }}>
           DISCO MODE
         </div>
-        <div className="font-display text-2xl text-bone mb-6">ACTIVATED 🪩</div>
+        <div className="font-display text-2xl text-bone mb-6">ACTIVATED </div>
 
         {/* Disco ball */}
         <motion.div
@@ -110,14 +110,14 @@ function SecretCatOverlay({ onDismiss }: { onDismiss: () => void }) {
         <div className="flex items-center gap-3 mb-2">
           <Image src="/cats/cat-dj-hero.png" alt="" width={48} height={48}
             className="drop-shadow-[2px_2px_0_hsl(222_47%_4%)] animate-cat-celebrate shrink-0" />
-          <div className="font-display text-lg leading-tight">You found me! 🐱</div>
+          <div className="font-display text-lg leading-tight">You found me! </div>
         </div>
         <div className="font-sans text-sm opacity-80 mb-3">
           DJ Pawsworth rewards curious students. +5 bonus XP for finding the secret!
         </div>
         <button onClick={onDismiss}
           className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-xs w-full hover:bg-electric-blue transition-colors">
-          CLAIM REWARD 🎁
+          CLAIM REWARD 
         </button>
       </div>
       {/* Arrow */}
@@ -130,7 +130,7 @@ function SecretCatOverlay({ onDismiss }: { onDismiss: () => void }) {
 // ─── Morning greeting ─────────────────────────────────────────────────────────
 function MorningGreeting({ onDismiss }: { onDismiss: () => void }) {
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning! ☀️" : hour < 17 ? "Hey there! 👋" : "Evening! 🌙";
+  const greeting = hour < 12 ? "Good morning! " : hour < 17 ? "Hey there! " : "Evening! ";
   return (
     <motion.div
       initial={{ opacity: 0, x: 80 }}
@@ -146,7 +146,7 @@ function MorningGreeting({ onDismiss }: { onDismiss: () => void }) {
           <div className="font-display text-base">{greeting}</div>
         </div>
         <div className="font-sans text-xs opacity-80 mb-2">
-          {progress_streak > 0 ? `${progress_streak}-day streak! Keep it going 🔥` : "Start your first lesson today!"}
+          {progress_streak > 0 ? `${progress_streak}-day streak! Keep it going ` : "Start your first lesson today!"}
         </div>
         <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100">
           dismiss ✕
@@ -169,7 +169,7 @@ function PerfectScoreOverlay({ onDismiss }: { onDismiss: () => void }) {
       <div className="brutal-border bg-acid text-ink p-4 chunk-shadow text-center">
         <Image src="/cats/cat-handstand.png" alt="" width={80} height={80}
           className="mx-auto drop-shadow-[3px_3px_0_hsl(222_47%_4%)] animate-cat-celebrate" />
-        <div className="font-display text-3xl mt-2">PERFECT! 🏆</div>
+        <div className="font-display text-3xl mt-2">PERFECT! </div>
         <div className="font-sans text-sm opacity-70 mt-1">100% score!</div>
         <button onClick={onDismiss} className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mt-2 block mx-auto">
           ✕
@@ -192,7 +192,7 @@ function IdleCat({ onDismiss }: { onDismiss: () => void }) {
       <Image src="/cats/cat-dj-new.png" alt="" width={40} height={40}
         className="drop-shadow-[2px_2px_0_hsl(222_47%_4%)] wiggle shrink-0" />
       <div className="text-left">
-        <div className="font-display text-sm">Still there? 👀</div>
+        <div className="font-display text-sm">Still there? </div>
         <div className="font-mono text-[10px] uppercase opacity-70">Tap to continue</div>
       </div>
     </motion.button>

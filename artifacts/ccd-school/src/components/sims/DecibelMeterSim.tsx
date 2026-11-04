@@ -10,7 +10,7 @@ const DB_STOPS = [
   { db: -20, label: "Normal",          color: "#C6FF00" },
   { db: -12, label: "Good level",      color: "#C6FF00" },
   { db:  -6, label: "Hot",             color: "#FFB800" },
-  { db:   0, label: "CLIP! ⚠",         color: "#FF3B30" },
+  { db:   0, label: "CLIP! ",         color: "#FF3B30" },
 ];
 
 function dbToLinear(db: number) {
@@ -128,7 +128,7 @@ export function DecibelMeterSim() {
           </div>
           {isClipping && (
             <div className="brutal-border bg-hot text-bone px-2 py-1 font-mono text-[10px] uppercase text-center animate-pulse">
-              CLIPPING ⚠ Distortion!
+              CLIPPING Distortion!
             </div>
           )}
         </div>

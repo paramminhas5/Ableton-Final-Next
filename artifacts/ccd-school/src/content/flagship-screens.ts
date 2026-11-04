@@ -16,7 +16,7 @@ import { FLAGSHIP_BATCH_2B } from "./flagship-batch-2b";
  */
 const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   sidechain: [
-    { kind: "hook", emoji: "🥁", headline: "Your kick keeps vanishing", subtext: "Kick and bass fight for the same low end. Sidechain settles it." },
+    { kind: "hook", emoji: "", headline: "Your kick keeps vanishing", subtext: "Kick and bass fight for the same low end. Sidechain settles it." },
     { kind: "concept", title: "Why the kick disappears", body: "Kick and bass both live under about 150 Hz. When they hit together, the louder wave swallows the other and the kick loses its punch, even if both faders look fine.", keyFact: "Two loud sounds in the same low notes cancel each other's punch.", visual: "frequency-bar" },
     { kind: "interact", sim: "sidechain", prompt: "Switch the sidechain on and off. Hear the pad move." },
     { kind: "concept", title: "The trick", body: "Put a Compressor on the bass, but let the kick trigger it instead of the bass itself. Every kick turns the bass down for a moment, then the bass comes back.", keyFact: "The compressor sits on the bass. The kick is only the trigger.", visual: "signal-chain", visualProps: { signalNodes: ["Kick", "Compressor on bass", "Master"] } },
@@ -32,7 +32,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   compressor: [
-    { kind: "hook", emoji: "🎚️", headline: "Louder parts, quieter parts, one balance", subtext: "A compressor turns down what is too loud so you can hear everything." },
+    { kind: "hook", emoji: "", headline: "Louder parts, quieter parts, one balance", subtext: "A compressor turns down what is too loud so you can hear everything." },
     { kind: "concept", title: "The problem", body: "A bass line or vocal has loud notes and quiet notes. You turn it up so the quiet parts are heard and the loud parts jump out and clip or bury everything else.", keyFact: "Compression narrows the gap between loud and quiet.", visual: "amplitude-dial" },
     { kind: "interact", sim: "comp-lake", prompt: "Lower the threshold. Watch the peaks come down." },
     { kind: "concept", title: "Four controls do most of the work", body: "Threshold sets where it starts. Ratio sets how hard it pushes back. Attack and Release set how fast it grabs and lets go. Output gain brings the level back up afterwards.", keyFact: "Threshold: where. Ratio: how much. Attack and Release: when." },
@@ -47,7 +47,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "eq-eight": [
-    { kind: "hook", emoji: "🔍", headline: "Find what is muddy, then cut it", subtext: "EQ is mostly taking things away." },
+    { kind: "hook", emoji: "", headline: "Find what is muddy, then cut it", subtext: "EQ is mostly taking things away." },
     { kind: "concept", title: "What an EQ really does", body: "It turns parts of the frequency range up or down. EQ Eight gives you eight bands on one curve, so you can shape the low end, the middle and the top of a sound in one place.", keyFact: "Low is rumble, middle is body and bite, high is air.", visual: "eq-curve" },
     { kind: "interact", sim: "device-lab", prompt: "Sweep a boost across the range. Hear what each area does." },
     { kind: "concept", title: "Where problems live", body: "Mud sits around 200 to 400 Hz. Harshness sits around 2 to 5 kHz. Rumble you cannot hear but your speakers feel sits under 30 Hz. Air sits above 10 kHz.", keyFact: "Cut mud, cut harshness, high-pass what does not need the low end." },
@@ -62,7 +62,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "sends-returns": [
-    { kind: "hook", emoji: "🌌", headline: "One reverb, ten tracks", subtext: "A shared space makes a mix sound like one room." },
+    { kind: "hook", emoji: "", headline: "One reverb, ten tracks", subtext: "A shared space makes a mix sound like one room." },
     { kind: "concept", title: "The problem with reverb on every track", body: "A reverb on each track costs CPU and gives every sound its own room. The mix sounds like ten people in ten different places.", keyFact: "Shared effects make a shared space." },
     { kind: "interact", sim: "send-return", prompt: "Turn a send up. Hear that track move into the room." },
     { kind: "concept", title: "How it works", body: "A return track holds an effect. Every track has a Send knob that decides how much of its sound goes to the return. The dry sound stays on its own track.", keyFact: "Send amount is how much of the track goes to the effect.", visual: "signal-chain", visualProps: { signalNodes: ["Track", "Send knob", "Return with reverb", "Master"] } },
@@ -76,7 +76,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "drum-rack": [
-    { kind: "hook", emoji: "🥁", headline: "Sixteen sounds, one instrument", subtext: "A Drum Rack turns a folder of samples into a playable kit." },
+    { kind: "hook", emoji: "", headline: "Sixteen sounds, one instrument", subtext: "A Drum Rack turns a folder of samples into a playable kit." },
     { kind: "concept", title: "What a Drum Rack is", body: "Each pad holds a sound and plays when its MIDI note arrives. A grid of pads gives you a kit, and the clip you write above it tells each pad when to fire.", keyFact: "One pad, one note, one sound." },
     { kind: "interact", sim: "beat-builder", prompt: "Build a four-on-the-floor pattern." },
     { kind: "concept", title: "Where notes go", body: "In the piano roll, each row is one pad. The default lower-left pad is the note C1, so kicks usually sit on the lowest row and hats a few rows above.", keyFact: "Rows are pads. Empty pads are silent." },
@@ -90,7 +90,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "the-mixer": [
-    { kind: "hook", emoji: "🎛️", headline: "Balance first, effects second", subtext: "Most of a good mix is faders and pan." },
+    { kind: "hook", emoji: "", headline: "Balance first, effects second", subtext: "Most of a good mix is faders and pan." },
     { kind: "concept", title: "What each track strip gives you", body: "Every track has a volume fader, a pan knob, mute and solo buttons, send knobs and a meter. These five handle most of the balance of a track.", keyFact: "Volume, pan, mute, solo, sends.", visual: "mixer-channel" },
     { kind: "interact", sim: "mixer", prompt: "Move the faders. Balance the kick, bass and pad." },
     { kind: "concept", title: "Headroom", body: "Loud peaks that reach 0 dB on the Master clip and distort. Keep peaks lower while mixing, around minus 6 dB, so the final stage has room to work.", keyFact: "Leave headroom. Make it loud at the end.", visual: "headroom-meter" },
@@ -103,7 +103,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   tracks: [
-    { kind: "hook", emoji: "🎼", headline: "Four kinds of track, four jobs", subtext: "Know which one you need before you add it." },
+    { kind: "hook", emoji: "", headline: "Four kinds of track, four jobs", subtext: "Know which one you need before you add it." },
     { kind: "concept", title: "The kinds of track", body: "MIDI tracks hold notes that drive an instrument. Audio tracks hold recordings and samples. Return tracks hold shared effects. Group tracks bundle others so you can mix them together.", keyFact: "Notes, sound, shared effects, groups." },
     { kind: "match", prompt: "Which track for which job?", pairs: [{ left: "A synth bass line", right: "MIDI track" }, { left: "A vocal recording", right: "Audio track" }, { left: "One reverb for many tracks", right: "Return track" }, { left: "All the drums together", right: "Group track" }] },
     { kind: "interact", sim: "session-grid", prompt: "Launch clips on different tracks." },
@@ -116,7 +116,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "what-is-live": [
-    { kind: "hook", emoji: "🧭", headline: "One program, two ways to work", subtext: "Session is for ideas. Arrangement is for songs." },
+    { kind: "hook", emoji: "", headline: "One program, two ways to work", subtext: "Session is for ideas. Arrangement is for songs." },
     { kind: "concept", title: "Two views", body: "Session View is a grid of clips you can launch in any order, good for jamming and trying ideas. Arrangement View is a timeline that runs left to right, good for finishing a track.", keyFact: "Press Tab to switch between them." },
     { kind: "interact", sim: "interface-tour", prompt: "Find the Browser, the clips and the control bar." },
     { kind: "match", prompt: "Which view is best for the job?", pairs: [{ left: "Trying loops against each other", right: "Session View" }, { left: "Fixing a mistake in bar 40", right: "Arrangement View" }, { left: "Finding an instrument to add", right: "The Browser" }] },
@@ -129,7 +129,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "tempo-bpm": [
-    { kind: "hook", emoji: "⏱️", headline: "Tempo sets the feel before any sound does", subtext: "Genres have a home range. Know yours." },
+    { kind: "hook", emoji: "⏱", headline: "Tempo sets the feel before any sound does", subtext: "Genres have a home range. Know yours." },
     { kind: "concept", title: "What BPM is", body: "BPM is beats per minute. A beat is one pulse you would tap your foot to. At 120 BPM there are two beats every second.", keyFact: "120 BPM is two beats per second.", visual: "bpm-grid" },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap along and find the tempo." },
     { kind: "match", prompt: "Match the genre to its usual tempo", pairs: [{ left: "House", right: "About 120 to 128 BPM" }, { left: "Techno", right: "About 125 to 140 BPM" }, { left: "Drum and bass", right: "About 170 to 175 BPM" }, { left: "Hip hop", right: "About 80 to 100 BPM" }] },
@@ -142,7 +142,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "chord-progressions": [
-    { kind: "hook", emoji: "🎹", headline: "Four chords carry a thousand songs", subtext: "The order of the chords is the song's story." },
+    { kind: "hook", emoji: "", headline: "Four chords carry a thousand songs", subtext: "The order of the chords is the song's story." },
     { kind: "concept", title: "What a progression is", body: "A chord progression is a sequence of chords that repeats under a melody. Each chord is named by its position in the key with a Roman numeral, so the pattern works in any key.", keyFact: "I, IV, V and vi are the most used chords in pop." },
     { kind: "interact", sim: "chord-stacker", prompt: "Build C, G, Am, F and play them in order." },
     { kind: "match", prompt: "Match the Roman numeral to the chord in C major", pairs: [{ left: "I", right: "C" }, { left: "IV", right: "F" }, { left: "V", right: "G" }, { left: "vi", right: "Am" }] },
@@ -156,7 +156,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "groups-routing": [
-    { kind: "hook", emoji: "🧩", headline: "Mix eight drum tracks as one", subtext: "A group track is a bus you can process together." },
+    { kind: "hook", emoji: "", headline: "Mix eight drum tracks as one", subtext: "A group track is a bus you can process together." },
     { kind: "concept", title: "What a group does", body: "A group track bundles several tracks. Their sound is summed on the group, so one fader, one compressor and one EQ can treat the whole drum kit together.", keyFact: "Group = one fader and one effect chain for many tracks.", visual: "mixer-channel" },
     { kind: "interact", sim: "routing-puzzle", prompt: "Route the tracks to the right place." },
     { kind: "quiz", q: "You want all your drums compressed together so they sound like one kit. Where does the compressor go?", options: ["On the group track", "On the kick only", "On a return", "On the Master only"], answer: 0, explain: "A compressor on the group reacts to the sum of the drums, which glues them together. Separate compressors on each track do not." },
@@ -168,7 +168,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   automation: [
-    { kind: "hook", emoji: "📈", headline: "A static mix is a boring mix", subtext: "Automation makes things move over time." },
+    { kind: "hook", emoji: "", headline: "A static mix is a boring mix", subtext: "Automation makes things move over time." },
     { kind: "concept", title: "What automation is", body: "Automation is a line you draw that moves a control over time. A filter can open across eight bars, a volume can dip before a drop, a reverb can swell on the last beat.", keyFact: "Any control can move. You draw the line." },
     { kind: "interact", sim: "lfo-lab", prompt: "Watch a control move over time." },
     { kind: "sequence", prompt: "Draw your first automation", items: ["Switch to Arrangement View", "Press A for Automation Mode", "Choose the device and the parameter", "Click to add breakpoints on the line", "Play it back and listen"], explain: "You choose what to move before you draw. The playback check is last, because you hear what the line really does." },
@@ -180,7 +180,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "saturator-distortion": [
-    { kind: "hook", emoji: "🔥", headline: "Make it thicker without making it louder", subtext: "Saturation adds harmonics that fill out a thin sound." },
+    { kind: "hook", emoji: "", headline: "Make it thicker without making it louder", subtext: "Saturation adds harmonics that fill out a thin sound." },
     { kind: "concept", title: "What saturation does", body: "A saturator bends the waveform, which adds harmonics, new higher notes that were not there. A thin bass gets more body and a dull hat gets more bite.", keyFact: "Distortion adds harmonics. Harmonics add presence.", visual: "waveform-compare" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Compare a pure wave with a bent one." },
     { kind: "quiz", q: "A sub bass vanishes on a laptop speaker. What helps most?", options: ["Add saturation so harmonics play on small speakers", "Turn up the sub", "Cut the highs", "Add reverb"], answer: 0, explain: "Small speakers cannot play very low notes, but they can play the harmonics saturation adds. That is how a bass stays audible." },
@@ -192,7 +192,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "limiter-truepeak": [
-    { kind: "hook", emoji: "🧱", headline: "A ceiling for your loudest moment", subtext: "A limiter stops peaks from going past a set level." },
+    { kind: "hook", emoji: "", headline: "A ceiling for your loudest moment", subtext: "A limiter stops peaks from going past a set level." },
     { kind: "concept", title: "What a limiter does", body: "A limiter is a compressor with a very high ratio and a ceiling. Nothing gets past the ceiling, so you can raise the overall level without clipping.", keyFact: "Raise Gain, the Ceiling holds the peaks.", visual: "headroom-meter" },
     { kind: "interact", sim: "mixer", prompt: "Raise the master and watch the peaks." },
     { kind: "quiz", q: "Where does a limiter usually go?", options: ["At the end of the Master chain", "On the first track", "On a return", "Before the instrument"], answer: 0, explain: "It is the last safety net, so it sits at the end of the Master chain. Every sound reaches it." },
@@ -204,7 +204,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "midi-piano-roll": [
-    { kind: "hook", emoji: "🎹", headline: "Draw the notes you cannot play", subtext: "The piano roll is where MIDI becomes music." },
+    { kind: "hook", emoji: "", headline: "Draw the notes you cannot play", subtext: "The piano roll is where MIDI becomes music." },
     { kind: "concept", title: "How to read it", body: "Up and down is pitch, left to right is time. Each block is a note: its row is the pitch, its length is how long it lasts and its shading shows how hard it was played (velocity).", keyFact: "Row is pitch. Width is length. Shading is velocity." },
     { kind: "interact", sim: "piano-roll", prompt: "Draw a four-note pattern." },
     { kind: "sequence", prompt: "Draw a chord progression", items: ["Insert a MIDI clip", "Press B for draw mode", "Draw three notes stacked for the first chord", "Copy it to the next bars and move the notes", "Add the root of each chord on another track"], explain: "A clip holds the notes, so it comes first. The second track for the bass line uses the same chords, one octave lower." },
@@ -216,7 +216,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "bass-poli": [
-    { kind: "hook", emoji: "🔊", headline: "A bass line makes people move", subtext: "Simple, short and in the right place." },
+    { kind: "hook", emoji: "", headline: "A bass line makes people move", subtext: "Simple, short and in the right place." },
     { kind: "concept", title: "What a good bass line does", body: "It plays the root of each chord, locks with the kick and leaves gaps. The lowest note you hear is the foundation for everything above it.", keyFact: "Follow the chords. Lock with the kick. Leave gaps." },
     { kind: "interact", sim: "bassline-lab", prompt: "Build a bass line under the kick." },
     { kind: "quiz", q: "Your bass line plays on every beat along with the kick and the low end is muddy. What do you try?", options: ["Move some notes off the kick and shorten them", "Add more notes", "Raise the bass fader", "Add reverb"], answer: 0, explain: "A bass that plays between kicks leaves the kick room to punch. Shorter notes also stop the low end building up." },
@@ -228,7 +228,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "sampler-simpler": [
-    { kind: "hook", emoji: "🎤", headline: "Any sound can become an instrument", subtext: "Drop in a sample and play it across the keyboard." },
+    { kind: "hook", emoji: "", headline: "Any sound can become an instrument", subtext: "Drop in a sample and play it across the keyboard." },
     { kind: "concept", title: "Simpler in one idea", body: "Simpler plays one sample, higher or lower depending on the note. Drop in a vocal, a bell or a bass hit and you can play it like a keyboard.", keyFact: "One sample, many notes.", visual: "waveform-zoom" },
     { kind: "interact", sim: "warp-lab", prompt: "Play the sample at different pitches." },
     { kind: "match", prompt: "Match the mode to the job", pairs: [{ left: "Classic", right: "Play a sample across the keys, with a loop" }, { left: "One-Shot", right: "Fire a whole sound once, like a drum hit" }, { left: "Slice", right: "Chop a loop into playable pieces" }] },
@@ -240,7 +240,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "reverb-delay": [
-    { kind: "hook", emoji: "🏔️", headline: "Space turns flat into deep", subtext: "Reverb is a room. Delay is an echo." },
+    { kind: "hook", emoji: "", headline: "Space turns flat into deep", subtext: "Reverb is a room. Delay is an echo." },
     { kind: "concept", title: "Two ways to make space", body: "Reverb adds the sense of a room: sound bouncing around, melting together. Delay repeats the sound after a set time, so you hear it again and again.", keyFact: "Reverb is a place. Delay is a repeat.", visual: "stereo-field" },
     { kind: "interact", sim: "send-return", prompt: "Send a track into the reverb." },
     { kind: "match", prompt: "Which effect fits?", pairs: [{ left: "Make a vocal sound like it is in a hall", right: "Reverb with a long decay" }, { left: "Add a rhythmic echo to a lead", right: "Delay synced to the tempo" }, { left: "Keep a snare tight but alive", right: "Short room reverb" }, { left: "Widen a sound without washing it out", right: "A short delay on a send" }] },
@@ -252,7 +252,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "glue-compressor": [
-    { kind: "hook", emoji: "🧲", headline: "Make separate sounds feel like one", subtext: "Light compression on a group holds a mix together." },
+    { kind: "hook", emoji: "", headline: "Make separate sounds feel like one", subtext: "Light compression on a group holds a mix together." },
     { kind: "concept", title: "What glue means", body: "When a group of sounds is compressed together, the loudest hit turns them all down a little. They breathe together, which is why the group sounds like one thing.", keyFact: "Gentle, on the group, 1 to 3 dB." },
     { kind: "interact", sim: "comp-lake", prompt: "Compress the group and watch the peaks." },
     { kind: "match", prompt: "Match the setting to what it does", pairs: [{ left: "Slow attack", right: "Lets the hits through before it grabs" }, { left: "Auto Release", right: "Adapts the release to the sound itself" }, { left: "Low ratio, 2:1", right: "Subtle, musical squeeze" }, { left: "Dry/Wet", right: "Blends the compressed sound with the original" }] },
@@ -263,7 +263,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "scale-awareness": [
-    { kind: "hook", emoji: "🎼", headline: "Never play a wrong note again", subtext: "Scale tools keep every note in key." },
+    { kind: "hook", emoji: "", headline: "Never play a wrong note again", subtext: "Scale tools keep every note in key." },
     { kind: "concept", title: "What a scale does", body: "A scale is a set of notes that sound good together. If you only play notes from one scale, the melody and chords will not clash.", keyFact: "Stay in the scale and nothing clashes.", visual: "scale-steps" },
     { kind: "interact", sim: "scale-aware", prompt: "Play notes in and out of the scale." },
     { kind: "quiz", q: "You choose C major in the Scale MIDI effect and play a C sharp. What happens?", options: ["It is moved to the nearest note in the scale", "It plays as C sharp", "The track mutes", "It plays a chord"], answer: 0, explain: "Scale remaps notes that fall outside the chosen scale to the nearest note that is in it." },

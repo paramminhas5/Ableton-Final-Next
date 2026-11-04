@@ -17,8 +17,8 @@ export type LearnMode = "flow" | "classic";
 
 /** Human-readable label for each mode */
 export const MODE_LABELS: Record<LearnMode, { name: string; icon: string; tagline: string }> = {
-  flow:    { name: "Flow Mode", icon: "🌊", tagline: "Sequential · Hearts on · XP gated" },
-  classic: { name: "Free Mode", icon: "🔓", tagline: "All open · No hearts · Jump anywhere" },
+  flow:    { name: "Flow Mode", icon: "", tagline: "Sequential · Hearts on · XP gated" },
+  classic: { name: "Free Mode", icon: "", tagline: "All open · No hearts · Jump anywhere" },
 };
 
 const MODE_KEY = "ccd.learnMode";

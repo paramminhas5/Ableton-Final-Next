@@ -210,37 +210,37 @@ const DRILLS: DrillConfig[] = [
   {
     type: "interval",
     label: "Interval Recognition",
-    emoji: "🎵",
+    emoji: "",
     description: "Two notes — name the interval. Foundation of all harmonic hearing.",
   },
   {
     type: "chord",
     label: "Chord Quality",
-    emoji: "🎸",
+    emoji: "",
     description: "One chord — major, minor, 7th or more. The harmonic DNA of every song.",
   },
   {
     type: "scale",
     label: "Scale Recognition",
-    emoji: "🎼",
+    emoji: "",
     description: "8 notes — identify the mode. Know what scale a sample is in.",
   },
   {
     type: "note-in-scale",
     label: "Note In Scale?",
-    emoji: "🎯",
+    emoji: "",
     description: "Hear a scale, then a note. Is it diatonic (fits) or chromatic (clashes)?",
   },
   {
     type: "eq-cut",
     label: "EQ Frequency",
-    emoji: "📉",
+    emoji: "",
     description: "Identify which frequency band has a deep notch cut. Classic mixing ear test.",
   },
   {
     type: "reverb",
     label: "Reverb Decay",
-    emoji: "🏛️",
+    emoji: "",
     description: "Short room or long hall? Spot the reverb tail length.",
   },
 ];
@@ -494,7 +494,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
           </div>
         </div>
         <div className="font-mono text-[10px] uppercase">
-          {streak >= 3 && <span className="text-acid mr-2">{streak}🔥</span>}
+          {streak >= 3 && <span className="text-acid mr-2">{streak}</span>}
           {score.right}/{score.total} · {accuracy}%
         </div>
       </div>

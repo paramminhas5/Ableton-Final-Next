@@ -9,7 +9,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   "what-is-sound": [
-    { kind: "hook", emoji: "🔊", headline: "A speaker is a piston", subtext: "Everything you will ever mix is air being pushed and pulled." },
+    { kind: "hook", emoji: "", headline: "A speaker is a piston", subtext: "Everything you will ever mix is air being pushed and pulled." },
     { kind: "concept", title: "Sound is moving air", body: "A speaker cone pushes forward and air molecules bunch up. It pulls back and they spread out. That pattern of squeeze and stretch travels outward and reaches your eardrum.", keyFact: "Squeeze, stretch, repeat. That is a sound wave.", visual: "waveform" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Tap each wave. Watch the shape, hear the sound." },
     { kind: "concept", title: "Two numbers describe a wave", body: "How often the squeeze repeats is the frequency, which you hear as pitch. How hard the squeeze is is the amplitude, which you hear as loudness. Every sound you edit is these two ideas moving.", keyFact: "Frequency is pitch. Amplitude is loudness." },
@@ -22,7 +22,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "frequency-pitch": [
-    { kind: "hook", emoji: "🎵", headline: "Your bass is a number", subtext: "Pitch is just cycles per second. Learn the numbers and EQ stops being guesswork." },
+    { kind: "hook", emoji: "", headline: "Your bass is a number", subtext: "Pitch is just cycles per second. Learn the numbers and EQ stops being guesswork." },
     { kind: "concept", title: "Hertz means per second", body: "One Hertz is one full cycle of the wave every second. A concert A is 440 cycles per second, so 440 Hz. Slow cycles sound low, fast cycles sound high.", keyFact: "Hz is how many times the wave repeats each second.", visual: "frequency-bar" },
     { kind: "interact", sim: "ear-training", preset: { mode: "high-low" }, prompt: "Tap the higher sound. Trust your ear." },
     { kind: "concept", title: "Octaves double", body: "Every time you double the frequency you go up one octave. 110, 220, 440, 880 are all the note A. Our ears hear the ratio, not the difference, so low notes need less Hz to sound a step apart.", keyFact: "Double the Hz and you go up an octave." },
@@ -37,7 +37,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "amplitude-volume": [
-    { kind: "hook", emoji: "📊", headline: "Why your mix distorts at zero", subtext: "A digital ceiling cannot be crossed. Learn where it is and how much room you have." },
+    { kind: "hook", emoji: "", headline: "Why your mix distorts at zero", subtext: "A digital ceiling cannot be crossed. Learn where it is and how much room you have." },
     { kind: "concept", title: "Decibels compare levels", body: "A decibel is a ratio, not a fixed volume. Because hearing is logarithmic, decibels give an even scale: each step sounds like a similar change, however loud the sound already is.", keyFact: "Decibels measure how much louder, not how loud.", visual: "amplitude-dial" },
     { kind: "interact", sim: "decibel-meter", prompt: "Drag the fader. Watch the meter, hear the change." },
     { kind: "concept", title: "What the numbers mean", body: "Plus 6 dB doubles the signal level, and plus 3 dB doubles the power. To the ear, about 10 dB louder sounds roughly twice as loud. Minus infinity dB is silence.", keyFact: "About 10 dB up sounds twice as loud.", visual: "headroom-meter" },
@@ -51,7 +51,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "timbre-tone": [
-    { kind: "hook", emoji: "🎻", headline: "Same note, different instrument", subtext: "Why a piano and a flute playing A sound nothing alike." },
+    { kind: "hook", emoji: "", headline: "Same note, different instrument", subtext: "Why a piano and a flute playing A sound nothing alike." },
     { kind: "concept", title: "Timbre is the colour of sound", body: "Pitch and volume can be identical and two sounds still differ. That difference is timbre. It comes from which harmonics are present and how loud each is.", keyFact: "Timbre is the ingredient list of a sound.", visual: "waveform-compare" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Switch waves. Same pitch, different colour." },
     { kind: "concept", title: "Attack matters too", body: "The first fraction of a second tells your brain who is playing. A piano hits fast and fades, a bowed string swells. Remove the attack from a recording and many instruments become hard to name.", keyFact: "The start of a note is half its identity." },
@@ -64,7 +64,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   waveforms: [
-    { kind: "hook", emoji: "〰️", headline: "Four waves behind most synth sounds", subtext: "Learn these and you can predict how a patch will sound before you hear it." },
+    { kind: "hook", emoji: "〰", headline: "Four waves behind most synth sounds", subtext: "Learn these and you can predict how a patch will sound before you hear it." },
     { kind: "concept", title: "The four basic shapes", body: "Sine is a pure single tone. Triangle is soft. Square is hollow and reedy. Saw is bright and aggressive. Each shape has its own mix of harmonics, and that mix is the sound.", keyFact: "Shape in, tone out.", visual: "waveform-compare" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Tap each wave. Match the look to the sound." },
     { kind: "concept", title: "Harmonic recipes", body: "A saw has every harmonic, each quieter than the last. A square has only the odd ones. A triangle has odd ones too but much quieter. A sine has none, only the base note.", keyFact: "Saw: all. Square: odd. Triangle: odd and quiet. Sine: none." },
@@ -78,7 +78,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "sound-in-space": [
-    { kind: "hook", emoji: "🏛️", headline: "Why a clap sounds big in a hall", subtext: "A room adds a hundred copies of every sound. That is reverb." },
+    { kind: "hook", emoji: "", headline: "Why a clap sounds big in a hall", subtext: "A room adds a hundred copies of every sound. That is reverb." },
     { kind: "concept", title: "Reflections add up", body: "A sound reaches you directly, then bounces off walls, floor and ceiling and arrives again, slightly later and softer. Hundreds of these blurred together are what we call reverb.", keyFact: "Reverb is many tiny echoes too close to separate.", visual: "signal-chain" },
     { kind: "interact", sim: "routing-puzzle", prompt: "Route the signal: Instrument, then Reverb, then Output." },
     { kind: "concept", title: "Three controls to know", body: "Decay time is how long the tail lasts, often quoted as RT60, the time to fall by 60 dB. Pre-delay is the gap before the tail starts. Dry and wet sets the balance of original and effect.", keyFact: "Decay is length. Pre-delay is the gap. Dry/Wet is the mix." },
@@ -92,7 +92,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "overtones-harmonics": [
-    { kind: "hook", emoji: "🔔", headline: "A single note is secretly a chord", subtext: "Strike a string and you hear the note plus a ladder of quieter ones above it." },
+    { kind: "hook", emoji: "", headline: "A single note is secretly a chord", subtext: "Strike a string and you hear the note plus a ladder of quieter ones above it." },
     { kind: "concept", title: "The harmonic series", body: "Besides the base note, called the fundamental, a vibrating string also rings at 2, 3, 4 and 5 times that frequency. Together they are the harmonic series, and you hear the blend as one note.", keyFact: "Harmonics sit at whole number multiples of the base.", visual: "frequency-bar" },
     { kind: "interact", sim: "ear-training", preset: { mode: "timbre" }, prompt: "Listen. Which sound has more harmonics?" },
     { kind: "concept", title: "The ladder in notes", body: "Double the frequency is an octave. Triple is that octave plus a fifth. Quadruple is two octaves. Five times lands on a major third above that. This is why major chords sound natural.", keyFact: "2x octave, 3x fifth above, 4x two octaves, 5x major third." },
@@ -105,7 +105,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "how-we-hear": [
-    { kind: "hook", emoji: "👂", headline: "Your ears lie, in a predictable way", subtext: "Know how, and your mixes will survive other people's speakers." },
+    { kind: "hook", emoji: "", headline: "Your ears lie, in a predictable way", subtext: "Know how, and your mixes will survive other people's speakers." },
     { kind: "concept", title: "Ears are not flat", body: "We hear the range from about 2 to 5 kHz best, where speech sits. Lows and very high notes need more energy to sound equally loud. Equal loudness curves describe this.", keyFact: "Most sensitive near 2 to 5 kHz.", visual: "eq-curve" },
     { kind: "interact", sim: "ear-training", preset: { mode: "loudness" }, prompt: "Which tone sounds louder? Trust your ears." },
     { kind: "concept", title: "Quiet hides the bass", body: "At low volume we lose bass and treble faster than the middle. Turn a track up and it sounds fuller, even though only the level changed. This is why judging at one volume misleads you.", keyFact: "Louder always sounds fuller and brighter." },
@@ -118,7 +118,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "what-is-rhythm": [
-    { kind: "hook", emoji: "🥁", headline: "Tap your foot. That is the pulse.", subtext: "Every beat you will ever program sits on top of it." },
+    { kind: "hook", emoji: "", headline: "Tap your foot. That is the pulse.", subtext: "Every beat you will ever program sits on top of it." },
     { kind: "concept", title: "Pulse and rhythm", body: "The pulse is the steady tick you tap along to. Rhythm is the pattern of sounds placed over it, some on the ticks and some between them. The pulse stays, the rhythm varies.", keyFact: "Pulse is steady. Rhythm is the pattern on top.", visual: "bpm-grid" },
     { kind: "interact", sim: "beat-builder", prompt: "Tap the pads. Build a beat on the pulse." },
     { kind: "concept", title: "Beats and tempo", body: "Tempo is how many pulses fit in a minute, written as BPM. 120 BPM means 120 beats each minute, one every half second. Faster tempo means shorter gaps between beats.", keyFact: "120 BPM is one beat every 0.5 seconds." },
@@ -133,7 +133,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "bars-time-signatures": [
-    { kind: "hook", emoji: "📏", headline: "Count to four. Then again.", subtext: "Bars are how music keeps its place." },
+    { kind: "hook", emoji: "", headline: "Count to four. Then again.", subtext: "Bars are how music keeps its place." },
     { kind: "concept", title: "Bars group beats", body: "A bar is a fixed number of beats. The time signature has two numbers. The top says how many beats are in each bar, and the bottom says which note value counts as one beat.", keyFact: "4/4 means four beats per bar, a quarter note is one beat.", visual: "bpm-grid" },
     { kind: "interact", sim: "beat-builder", prompt: "Build a 4/4 bar. Put a kick on every beat." },
     { kind: "concept", title: "Common time signatures", body: "4/4 drives pop, house and techno. 3/4 is the waltz, counted one two three. 6/8 feels like two groups of three. 5/4 is lopsided and unsettled.", keyFact: "Most electronic music is 4/4." },
@@ -146,7 +146,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "groove-feel": [
-    { kind: "hook", emoji: "🕺", headline: "Perfect timing sounds dead", subtext: "Groove lives in the tiny gaps between exact and human." },
+    { kind: "hook", emoji: "", headline: "Perfect timing sounds dead", subtext: "Groove lives in the tiny gaps between exact and human." },
     { kind: "concept", title: "What groove is", body: "A drum machine plays every note exactly on the grid, and it can sound stiff. Human players are a little early or late, and louder or softer. Those small shifts are the groove.", keyFact: "Groove is small, consistent timing and velocity shifts.", visual: "rhythm-dots" },
     { kind: "interact", sim: "groove-extractor", prompt: "Hear straight, then swung. Feel the difference." },
     { kind: "concept", title: "Swing", body: "Swing delays every second eighth or sixteenth note. At 50 percent the notes are even and straight. Near 66 percent you get a triplet shuffle. Most dance swing sits between those, around 54 to 60 percent.", keyFact: "50 percent is straight. About 66 percent is a full shuffle." },
@@ -160,7 +160,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   syncopation: [
-    { kind: "hook", emoji: "⚡", headline: "The hit you did not expect", subtext: "Syncopation is rhythm leaning where the ear is not looking." },
+    { kind: "hook", emoji: "", headline: "The hit you did not expect", subtext: "Syncopation is rhythm leaning where the ear is not looking." },
     { kind: "concept", title: "On the beat and off it", body: "In 4/4, the numbers one, two, three, four are on the beat. The 'and' between them is the off-beat. Syncopation puts accents on the off-beats, or holds a note across a strong beat, creating forward push.", keyFact: "Accents in the gaps create tension.", visual: "rhythm-dots" },
     { kind: "interact", sim: "beat-builder", prompt: "Move the kick to the 'and' of 2. Feel the push." },
     { kind: "concept", title: "Where you hear it", body: "House hi-hats sit on the off-beat between every kick. Funk basslines accent the 'and' of beats. The more notes you place off the beat, the more the rhythm seems to lean forward.", keyFact: "House: open hat on every off-beat." },
@@ -173,7 +173,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   polyrhythm: [
-    { kind: "hook", emoji: "🌀", headline: "Two patterns that meet only sometimes", subtext: "It sounds complicated, and it is just two loops of different lengths." },
+    { kind: "hook", emoji: "", headline: "Two patterns that meet only sometimes", subtext: "It sounds complicated, and it is just two loops of different lengths." },
     { kind: "concept", title: "Three against two", body: "Play two evenly spaced notes in the time of three, or the reverse, and the patterns pull against each other. They line up at the start and again after one full cycle.", keyFact: "3 against 2 realign every 6 equal steps.", visual: "rhythm-dots" },
     { kind: "interact", sim: "beat-builder", prompt: "Kick every 4 steps, hat every 3. Hear them drift." },
     { kind: "concept", title: "Polyrhythm and polymeter", body: "Polyrhythm fits different divisions into the same span, like three against two. Polymeter runs loops of different lengths at the same pulse, like 4 steps against 3. Both realign after the lowest common multiple.", keyFact: "Realign point is the lowest common multiple." },
@@ -186,7 +186,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "note-values": [
-    { kind: "hook", emoji: "🎼", headline: "Every note has a length in beats", subtext: "The grid in your piano roll is these values, in disguise." },
+    { kind: "hook", emoji: "", headline: "Every note has a length in beats", subtext: "The grid in your piano roll is these values, in disguise." },
     { kind: "concept", title: "Halving down", body: "A whole note lasts four beats. Half is two, quarter is one, eighth is half a beat, sixteenth a quarter. Each step down halves the one before.", keyFact: "16 sixteenth notes fill one 4/4 bar.", visual: "note-lengths" },
     { kind: "interact", sim: "beat-builder", prompt: "Switch between 8th and 16th grids. Hear the density." },
     { kind: "concept", title: "Dots and triplets", body: "A dot adds half the note's length, so a dotted quarter is one and a half beats. A triplet fits three notes into the space of two, giving a rolling feel.", keyFact: "Dotted is times 1.5. Triplet is three in the time of two." },
@@ -199,7 +199,7 @@ export const FLAGSHIP_BATCH_2A: Record<string, LessonScreen[]> = {
   ],
 
   "rhythm-in-production": [
-    { kind: "hook", emoji: "🎹", headline: "Grid or feel? You choose per track", subtext: "Tight where it should be, loose where it should breathe." },
+    { kind: "hook", emoji: "", headline: "Grid or feel? You choose per track", subtext: "Tight where it should be, loose where it should breathe." },
     { kind: "concept", title: "The grid is a tool", body: "The piano roll and Arrangement are divided into bars, beats and smaller steps. Snapping notes to it gives tight, machine timing. Moving them off it gives a played, human feel.", keyFact: "On the grid is tight. Off the grid is human.", visual: "bpm-grid" },
     { kind: "interact", sim: "beat-builder", prompt: "Build a groove with kick, snare and hat." },
     { kind: "concept", title: "Length matters as much as position", body: "A short note sounds punchy and a long note sustains. A 16th-note hat sounds tight and ticking, and a quarter-note hat sounds loose and open. Shortening notes is a quick way to tighten a part.", keyFact: "Short is punchy. Long is smooth." },

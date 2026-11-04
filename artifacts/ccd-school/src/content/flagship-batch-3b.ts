@@ -6,7 +6,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   "listening-actively": [
-    { kind: "hook", emoji: "🎧", headline: "Hear what the track is doing", subtext: "Producers listen differently. You can learn to as well." },
+    { kind: "hook", emoji: "", headline: "Hear what the track is doing", subtext: "Producers listen differently. You can learn to as well." },
     { kind: "concept", title: "Listen in layers", body: "Pick one element and follow only it for a whole section: the kick, then the bass, then the hi-hats. Then the next listen, pick another. Every track becomes a set of parts you can copy.", keyFact: "Follow one part at a time." },
     { kind: "interact", sim: "ear-training", preset: { mode: "timbre" }, prompt: "Listen closely. Which sound has more harmonics?" },
     { kind: "concept", title: "Map the song", body: "Write down when things happen, such as the bar where the bass enters or the drop lands. A section map shows how long builds are, where changes come and how many bars each part lasts.", keyFact: "Note the bar number of every change." },
@@ -21,7 +21,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "daw-explained": [
-    { kind: "hook", emoji: "🖥️", headline: "The DAW is your whole studio in one window", subtext: "Know where things live and you will stop getting lost." },
+    { kind: "hook", emoji: "", headline: "The DAW is your whole studio in one window", subtext: "Know where things live and you will stop getting lost." },
     { kind: "concept", title: "What a DAW does", body: "A digital audio workstation records, edits, arranges and mixes sound. It holds your instruments, effects, recordings and the song itself, so one program replaces a room full of gear.", keyFact: "DAW: record, edit, arrange, mix." },
     { kind: "interact", sim: "interface-tour", prompt: "Click around Ableton Live's main areas." },
     { kind: "concept", title: "Two views", body: "Live has Session View for jamming with clips in a grid and Arrangement View for laying a song out along a timeline. Press Tab to switch between them.", keyFact: "Tab switches Session and Arrangement." },
@@ -35,7 +35,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "midi-explained": [
-    { kind: "hook", emoji: "🎹", headline: "MIDI is a note, not a sound", subtext: "It tells an instrument what to play, not what it sounds like." },
+    { kind: "hook", emoji: "", headline: "MIDI is a note, not a sound", subtext: "It tells an instrument what to play, not what it sounds like." },
     { kind: "concept", title: "Instructions, not audio", body: "MIDI records which note, when it starts, how long it lasts and how hard it was played. No sound is stored. A synth or sampler reads those instructions and makes the audio.", keyFact: "MIDI is data. The instrument makes the sound.", visual: "piano" },
     { kind: "interact", sim: "midi-vs-audio", prompt: "Compare MIDI data with audio. Change the instrument." },
     { kind: "concept", title: "Velocity", body: "Velocity is how hard a key is hit, from 1 to 127. It usually changes loudness and often brightness too. Varying velocity makes patterns feel played instead of robotic.", keyFact: "Velocity runs from 1 to 127." },
@@ -49,7 +49,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "digital-audio": [
-    { kind: "hook", emoji: "💾", headline: "Sound as numbers", subtext: "Your computer cannot store a wave, only measurements of it." },
+    { kind: "hook", emoji: "", headline: "Sound as numbers", subtext: "Your computer cannot store a wave, only measurements of it." },
     { kind: "concept", title: "Sampling", body: "Digital audio measures the wave thousands of times per second. Each measurement is a sample. Play the samples back in order and the wave is rebuilt as sound.", keyFact: "Digital audio is a series of measurements.", visual: "waveform" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Look at the wave. Imagine it measured many times a second." },
     { kind: "concept", title: "Sample rate", body: "Sample rate is how many measurements are taken per second. CD audio uses 44,100 per second, or 44.1 kHz. A sample rate can capture frequencies up to just under half its value, so 44.1 kHz covers up to about 22 kHz.", keyFact: "Captured range is about half the sample rate." },
@@ -63,7 +63,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "samples-loops": [
-    { kind: "hook", emoji: "🥁", headline: "A sample is a sound you can reuse", subtext: "A loop is a sample that repeats in time." },
+    { kind: "hook", emoji: "", headline: "A sample is a sound you can reuse", subtext: "A loop is a sample that repeats in time." },
     { kind: "concept", title: "Samples and loops", body: "A sample is a recorded sound, like a single drum hit or a vocal word. A loop is a short piece of audio built to repeat seamlessly, usually a whole number of bars.", keyFact: "Samples are sounds. Loops repeat in time." },
     { kind: "interact", sim: "warp-lab", prompt: "Change the tempo and watch the audio follow." },
     { kind: "concept", title: "Warping", body: "Warping stretches audio so it fits your project's tempo without changing pitch. Live adds warp markers to line up beats with the grid, and Warp is switched on per clip.", keyFact: "Warp fits audio to your tempo." },
@@ -77,7 +77,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "signal-chain": [
-    { kind: "hook", emoji: "⛓️", headline: "Sound travels in one direction", subtext: "Order decides the result." },
+    { kind: "hook", emoji: "", headline: "Sound travels in one direction", subtext: "Order decides the result." },
     { kind: "concept", title: "Left to right", body: "Audio passes through devices in a track from left to right. Each device processes what the one before it sends. Put the same two devices in a different order and the result can change.", keyFact: "Devices process left to right.", visual: "signal-chain" },
     { kind: "interact", sim: "device-chain", prompt: "Reorder the devices. Hear how order changes the sound." },
     { kind: "quiz", q: "You put a compressor before a distortion and the sound gets harsh. What happens if you swap them?", options: ["The result changes, because order matters", "Nothing, order never matters", "The track goes silent", "The tempo changes"], answer: 0, explain: "Distortion after compression adds harmonics to an already controlled level. Compression after distortion tames the loud harmonics. Different order, different sound.", hint: "Each device hears the one before it." },
@@ -91,7 +91,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "effects-overview": [
-    { kind: "hook", emoji: "🎚️", headline: "Four families of effects", subtext: "Almost every plugin is a variation on one of them." },
+    { kind: "hook", emoji: "", headline: "Four families of effects", subtext: "Almost every plugin is a variation on one of them." },
     { kind: "concept", title: "Shape, space, time, colour", body: "EQ and filters shape the tone. Reverb and delay create space and time. Compression controls dynamics. Distortion adds colour through harmonics. Most effects belong to one of these jobs.", keyFact: "Tone, dynamics, space and colour." },
     { kind: "match", prompt: "Match the effect to what it does", pairs: [{ left: "EQ", right: "Boosts or cuts frequency ranges" }, { left: "Compressor", right: "Reduces the gap between loud and quiet" }, { left: "Reverb", right: "Adds the sound of a space" }, { left: "Distortion", right: "Adds harmonics and grit" }] },
     { kind: "interact", sim: "device-chain", prompt: "Add an effect. Hear what it changes." },
@@ -104,7 +104,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "mixing-basics": [
-    { kind: "hook", emoji: "🎛️", headline: "A mix is a balance of everything", subtext: "Nothing should fight. Everything should have a place." },
+    { kind: "hook", emoji: "", headline: "A mix is a balance of everything", subtext: "Nothing should fight. Everything should have a place." },
     { kind: "concept", title: "Three ways to make room", body: "Sounds share a mix along three directions: level, which is loudness, pan, which is left to right, and frequency, which is low to high. Give each sound its own spot in at least one of them.", keyFact: "Level, pan and frequency make room.", visual: "mixer-channel" },
     { kind: "interact", sim: "mixer", prompt: "Balance the mix. Give each part its own place." },
     { kind: "quiz", q: "Your kick and bass are both strong in the low end and the mix is boomy. What can you do?", options: ["Cut a little of the overlap from one with EQ", "Boost both", "Pan them hard left and right", "Add reverb"], answer: 0, explain: "Low sounds are best kept near the centre, so panning does not help. EQ separates them by frequency so each has its own space.", hint: "Panning bass is not the answer." },
@@ -118,7 +118,7 @@ export const FLAGSHIP_BATCH_3B: Record<string, LessonScreen[]> = {
   ],
 
   "music-tech-integration": [
-    { kind: "hook", emoji: "🧩", headline: "Putting the foundations together", subtext: "Every idea so far shows up in one finished track." },
+    { kind: "hook", emoji: "", headline: "Putting the foundations together", subtext: "Every idea so far shows up in one finished track." },
     { kind: "concept", title: "The big picture", body: "A track starts as an idea, rhythm and harmony written as MIDI or recorded audio. It is arranged into sections, balanced in a mix and finished with enough headroom to master.", keyFact: "Write, arrange, mix, finish." },
     { kind: "sequence", prompt: "Put the stages of making a track in order", items: ["Pick tempo and key", "Write drums and bass", "Add chords and melody", "Arrange the sections", "Mix and leave headroom"], explain: "Tempo and key set the frame, then the groove, harmony and melody fill it. Arrangement gives the track a journey, and mixing balances it." },
     { kind: "interact", sim: "signal-flow-builder", prompt: "Build a signal chain from instrument to output." },

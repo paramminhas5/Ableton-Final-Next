@@ -8,7 +8,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   "synth-what-is-sound": [
-    { kind: "hook", emoji: "🔊", headline: "A speaker is a piston pushing air", subtext: "Everything a synth makes ends up as air moving in and out." },
+    { kind: "hook", emoji: "", headline: "A speaker is a piston pushing air", subtext: "Everything a synth makes ends up as air moving in and out." },
     { kind: "concept", title: "Sound is moving air", body: "Something vibrates, such as a speaker cone, a string or a vocal cord. It pushes and pulls the air, making areas of higher and lower pressure that travel outwards. Your ear senses those changes. In air at room temperature the speed is roughly 343 metres per second.", keyFact: "Sound is pressure changes travelling through air.", visual: "waveform" },
     { kind: "concept", title: "A synth draws the wave with numbers", body: "A synthesiser has no string or reed. It produces a changing electrical signal, or in software a stream of numbers, and a speaker turns that into air movement. The shape of the signal decides what you hear.", keyFact: "A synth makes the wave directly.", visual: "signal-chain" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Tap each wave. See the shape, hear it." },
@@ -20,7 +20,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-pitch-vs-amplitude": [
-    { kind: "hook", emoji: "📏", headline: "Two numbers describe every note", subtext: "How fast the wave repeats, and how big it is." },
+    { kind: "hook", emoji: "", headline: "Two numbers describe every note", subtext: "How fast the wave repeats, and how big it is." },
     { kind: "concept", title: "Frequency is pitch", body: "Frequency is how many times a wave repeats each second, measured in hertz (Hz). 440 Hz is the A above middle C, the common tuning reference. Doubling the frequency raises the pitch by one octave.", keyFact: "Double the frequency, up an octave.", visual: "frequency-bar" },
     { kind: "concept", title: "Amplitude is level", body: "Amplitude is how big the wave is, which we hear as loudness. In digital audio it is measured in decibels relative to full scale (dBFS), where 0 dBFS is the maximum before clipping. A change of 6 dB roughly doubles the signal level, while about 10 dB is what sounds twice as loud.", keyFact: "+6 dB doubles level. About +10 dB sounds twice as loud.", visual: "amplitude-dial" },
     { kind: "interact", sim: "ear-training", preset: { mode: "high-low" }, prompt: "Tap the higher tone. Trust your ear." },
@@ -33,7 +33,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-timbre": [
-    { kind: "hook", emoji: "🎻", headline: "Same note, different instrument", subtext: "Timbre is why a flute and a violin never sound alike." },
+    { kind: "hook", emoji: "", headline: "Same note, different instrument", subtext: "Timbre is why a flute and a violin never sound alike." },
     { kind: "concept", title: "Timbre is the colour", body: "Two instruments can play the same pitch at the same level and still sound different. The difference is timbre. It comes from which harmonics are present and how strong each one is.", keyFact: "Timbre is the mix of harmonics.", visual: "waveform-compare" },
     { kind: "concept", title: "Basic waveforms", body: "A sine wave is a single pure frequency. A sawtooth contains every harmonic and sounds bright and buzzy. A square contains only odd harmonics and sounds hollow. A triangle has odd harmonics that die away quickly, so it is soft and mellow.", keyFact: "Sine pure, saw bright, square hollow, triangle soft.", visual: "waveform" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Switch waveforms. Hear the colour change." },
@@ -46,7 +46,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-harmonics": [
-    { kind: "hook", emoji: "🌈", headline: "One note is many frequencies", subtext: "Under every pitch sits a stack of harmonics." },
+    { kind: "hook", emoji: "", headline: "One note is many frequencies", subtext: "Under every pitch sits a stack of harmonics." },
     { kind: "concept", title: "The harmonic series", body: "A pitched sound has a fundamental, the lowest frequency, plus harmonics at whole-number multiples of it: two times, three times, four times and so on. If the fundamental is 100 Hz, the harmonics are at 200, 300, 400 Hz. How loud each one is gives the timbre.", keyFact: "Harmonics are whole-number multiples.", visual: "frequency-bar" },
     { kind: "interact", sim: "ear-training", preset: { mode: "high-low" }, prompt: "Hear low and high. Think about harmonics." },
     { kind: "concept", title: "Subtracting harmonics", body: "Subtractive synthesis starts with a sound rich in harmonics and removes some with a filter. A low-pass filter cuts the upper harmonics, so the sound gets darker. Opening it lets them back in.", keyFact: "Subtractive: start rich, filter down.", visual: "frequency-bar" },
@@ -59,7 +59,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-noise": [
-    { kind: "hook", emoji: "🌫️", headline: "Noise is the sound of everything at once", subtext: "Hi-hats, snares and breath all start here." },
+    { kind: "hook", emoji: "", headline: "Noise is the sound of everything at once", subtext: "Hi-hats, snares and breath all start here." },
     { kind: "concept", title: "White and pink noise", body: "White noise has equal energy at every frequency, so it sounds bright and hissy. Pink noise has equal energy in every octave, which means less at the top, so it sounds more balanced and natural. Both are random, with no pitch.", keyFact: "White is bright. Pink is balanced.", visual: "waveform" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Hear the noise. Watch the random wave." },
     { kind: "concept", title: "Shaping noise", body: "Noise on its own is just hiss. Give it a very short envelope and you get a click or snare-like snap. Filter it with a high-pass and it becomes a hi-hat. Filter it with a slow band-pass and it becomes wind or surf.", keyFact: "Envelope and filter turn hiss into sounds." },
@@ -72,7 +72,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-oscillators": [
-    { kind: "hook", emoji: "🎤", headline: "The oscillator is the voice", subtext: "Every patch starts with a repeating wave." },
+    { kind: "hook", emoji: "", headline: "The oscillator is the voice", subtext: "Every patch starts with a repeating wave." },
     { kind: "concept", title: "What an oscillator does", body: "An oscillator produces a repeating waveform. The note you play sets its frequency, and its waveform choice sets the starting harmonics. Everything after it, such as the filter and effects, shapes what the oscillator makes.", keyFact: "Key sets pitch. Waveform sets the start colour.", visual: "waveform-compare" },
     { kind: "concept", title: "Using more than one", body: "Most synths have two or more oscillators. At the same pitch they sound thicker. Detuned a little, they add movement. Tuned an octave or a fifth apart, they add brightness or a layered texture.", keyFact: "Same pitch thickens. Detune moves. Intervals layer." },
     { kind: "interact", sim: "osc-mixer", prompt: "Add a second oscillator. Detune it slightly." },
@@ -85,7 +85,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-mixing-oscillators": [
-    { kind: "hook", emoji: "🎚️", headline: "Blend waves to find a new colour", subtext: "A mixer between the oscillators and the filter gives you a palette." },
+    { kind: "hook", emoji: "", headline: "Blend waves to find a new colour", subtext: "A mixer between the oscillators and the filter gives you a palette." },
     { kind: "concept", title: "The oscillator mix", body: "Between the oscillators and the filter, most synths let you set the level of each source. Half saw and half square gives a tone neither wave makes alone. Changing the balance moves the character between the two.", keyFact: "Level balance blends the character.", visual: "waveform-compare" },
     { kind: "interact", sim: "osc-mixer", prompt: "Blend saw and square. Find your colour." },
     { kind: "concept", title: "Sub and noise", body: "Many synths add a sub oscillator, usually a sine or square one octave below, for weight in the low end. They also add a noise source for texture and attack. Each has its own level in the mix.", keyFact: "Sub for weight. Noise for air." },
@@ -98,7 +98,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-detune-unison": [
-    { kind: "hook", emoji: "🌊", headline: "Detune makes width. Unison makes mass.", subtext: "Both come from tiny differences between copies of one sound." },
+    { kind: "hook", emoji: "", headline: "Detune makes width. Unison makes mass.", subtext: "Both come from tiny differences between copies of one sound." },
     { kind: "concept", title: "Detune and beating", body: "When two oscillators are a few cents apart, their waves drift in and out of step. The result swells and fades at a rate equal to the difference in their frequencies. A difference of 2 Hz gives about two swells per second, a slow shimmer.", keyFact: "Beating rate equals the frequency difference.", visual: "waveform-compare" },
     { kind: "interact", sim: "osc-mixer", prompt: "Detune two oscillators. Hear the shimmer." },
     { kind: "concept", title: "Unison", body: "Unison stacks several copies of a voice, each slightly detuned, and often spreads them across the stereo field. It is the heart of the thick lead or pad often called a supersaw. Wavetable in Live has a Unison section with a voice count and amount.", keyFact: "Unison: many detuned copies, spread wide." },
@@ -111,7 +111,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-filters": [
-    { kind: "hook", emoji: "🎛️", headline: "Before any theory, just listen", subtext: "Move the cutoff slowly and pay attention to what disappears." },
+    { kind: "hook", emoji: "", headline: "Before any theory, just listen", subtext: "Move the cutoff slowly and pay attention to what disappears." },
     { kind: "interact", sim: "filter-envelope", prompt: "Close the cutoff slowly. Then open it again." },
     { kind: "concept", title: "What you just heard", body: "A sawtooth is full of high harmonics, which is why it sounds so bright and buzzy. A low-pass filter turns those harmonics down, starting from the top, as you close it. The note never changed pitch. It lost its edge and kept its body. If you have ever turned the treble down on a guitar amp, you already know this sound." },
     { kind: "concept", title: "The cutoff is a slope, not a wall", body: "The cutoff is the frequency where the turning-down begins. Above it the sound does not vanish at once. It fades away over a stretch, and how steep that stretch is depends on the filter. That is why two synths with the same cutoff setting can still sound different, and why it is worth spending time with the particular filter you actually use." },
@@ -124,7 +124,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-amp-envelope": [
-    { kind: "hook", emoji: "📈", headline: "Every note has a shape in time", subtext: "ADSR describes how it starts, settles, holds and ends." },
+    { kind: "hook", emoji: "", headline: "Every note has a shape in time", subtext: "ADSR describes how it starts, settles, holds and ends." },
     { kind: "concept", title: "Four stages", body: "Attack is the time to reach full level after a key is pressed. Decay is the time to fall to the sustain level. Sustain is the level held while the key stays down. Release is the time to fade out after the key is let go.", keyFact: "Attack, decay, sustain level, release.", visual: "amplitude-dial" },
     { kind: "interact", sim: "filter-envelope", prompt: "Change attack and release. Hear the shape." },
     { kind: "concept", title: "Shapes with a job", body: "A pluck has a fast attack, a fast decay and little sustain. A pad has a slow attack and a slow release. A drum-like hit has a fast attack, a fast decay and no sustain. The envelope tells the ear what kind of sound it is.", keyFact: "The envelope signals the kind of instrument." },
@@ -137,7 +137,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-filter-envelope": [
-    { kind: "hook", emoji: "🎛️", headline: "An envelope can move the filter too", subtext: "Notes that start bright and settle dark sound played, not static." },
+    { kind: "hook", emoji: "", headline: "An envelope can move the filter too", subtext: "Notes that start bright and settle dark sound played, not static." },
     { kind: "concept", title: "Envelope to cutoff", body: "A filter envelope moves the filter cutoff over the life of each note. With a positive amount, the cutoff rises on the attack and falls during the decay, so the note starts bright and gets darker. A negative amount reverses that.", keyFact: "Amount sets how far the cutoff moves.", visual: "eq-curve" },
     { kind: "interact", sim: "filter-envelope", prompt: "Set the filter envelope amount. Hear each note." },
     { kind: "concept", title: "Independent of volume", body: "The filter envelope and the amp envelope run side by side. A note can hold steady in volume while its brightness fades, or the other way round. That independence is what makes a patch feel alive.", keyFact: "Volume and brightness move separately." },
@@ -150,7 +150,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-amp-vs-filter-env": [
-    { kind: "hook", emoji: "⚖️", headline: "Two envelopes, two jobs", subtext: "One decides how loud, the other how bright." },
+    { kind: "hook", emoji: "", headline: "Two envelopes, two jobs", subtext: "One decides how loud, the other how bright." },
     { kind: "concept", title: "Side by side", body: "The amp envelope shapes the level of each note. The filter envelope shapes its brightness. They start at the same moment but they can have different times, so the loudness and the tone can follow different paths.", keyFact: "Amp is loudness. Filter is brightness.", visual: "signal-chain" },
     { kind: "interact", sim: "filter-envelope", prompt: "Give the two envelopes different times." },
     { kind: "concept", title: "Why it matters", body: "A sound with a flat envelope and no filter movement sounds static and synthetic. Shape the amp envelope and it gains a clear start and end. Add filter movement and it gains tone that changes in time, like a played instrument.", keyFact: "Both together make a sound feel played." },
@@ -163,7 +163,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-lfo": [
-    { kind: "hook", emoji: "〰️", headline: "A slow wave that moves other things", subtext: "LFOs add movement without playing a note." },
+    { kind: "hook", emoji: "〰", headline: "A slow wave that moves other things", subtext: "LFOs add movement without playing a note." },
     { kind: "concept", title: "What an LFO is", body: "A low frequency oscillator makes a wave that is usually slower than you can hear as pitch, often fractions of a hertz up to tens of hertz. Instead of being heard, it is sent to another control to move it up and down automatically.", keyFact: "An LFO moves other controls.", visual: "waveform" },
     { kind: "interact", sim: "lfo-lab", prompt: "Send the LFO to the cutoff. Change rate and depth." },
     { kind: "concept", title: "Rate, depth, shape, sync", body: "Rate is how fast it cycles. Depth is how far it moves the target. Shape decides the movement: sine is smooth, square jumps between two values, sample-and-hold steps to random values. Sync locks the rate to the tempo so the movement fits the groove.", keyFact: "Rate, depth, shape, sync." },
@@ -176,7 +176,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-modulation-routing": [
-    { kind: "hook", emoji: "🔌", headline: "Connect any source to any target", subtext: "Modern synths let you wire the sound yourself." },
+    { kind: "hook", emoji: "", headline: "Connect any source to any target", subtext: "Modern synths let you wire the sound yourself." },
     { kind: "concept", title: "Sources and destinations", body: "Modulation sources include LFOs, envelopes, velocity, aftertouch and the mod wheel. Destinations can be almost any parameter: filter cutoff, pitch, volume, pan or an oscillator's position. A modulation matrix is a grid where you connect them and set the amount.", keyFact: "Pick a source, a target and an amount.", visual: "waveform" },
     { kind: "interact", sim: "lfo-lab", prompt: "Route velocity to the cutoff. Play soft and hard." },
     { kind: "concept", title: "Wavetable's matrix", body: "Wavetable has a modulation matrix with rows of sources and the parameters they can reach. You set how much each source moves a destination, positive or negative. Several sources can control the same destination at once.", keyFact: "Several sources can share one target." },
@@ -189,7 +189,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-fm-basics": [
-    { kind: "hook", emoji: "🔔", headline: "Two sines can make a bell", subtext: "FM makes rich sounds from very simple parts." },
+    { kind: "hook", emoji: "", headline: "Two sines can make a bell", subtext: "FM makes rich sounds from very simple parts." },
     { kind: "concept", title: "How FM works", body: "In frequency modulation, one oscillator, the modulator, changes the frequency of another, the carrier, very fast. This creates new frequencies called sidebands that neither oscillator has alone. The result is a complex spectrum from just two sine waves.", keyFact: "Modulator bends the carrier's frequency.", visual: "signal-chain" },
     { kind: "interact", sim: "device-lab", prompt: "In Operator, raise the modulator level. Hear the harmonics." },
     { kind: "concept", title: "Ratio and level", body: "The frequency ratio between modulator and carrier sets the character. Whole-number ratios such as 1:1 or 2:1 give harmonic, pitched sounds. Ratios that are not whole numbers give clangorous, inharmonic sounds like bells. The modulator's level sets how many sidebands appear, so more level is brighter and more complex.", keyFact: "Whole ratios are harmonic. Odd ratios are bell-like." },
@@ -202,7 +202,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-effects": [
-    { kind: "hook", emoji: "✨", headline: "Effects finish the sound", subtext: "A good patch often needs the last touch." },
+    { kind: "hook", emoji: "", headline: "Effects finish the sound", subtext: "A good patch often needs the last touch." },
     { kind: "concept", title: "Common effects", body: "Chorus doubles the sound with small variations, which adds width and warmth. Delay repeats it in time. Reverb places it in a space. Distortion or saturation adds harmonics and edge. EQ shapes the tone at the end.", keyFact: "Chorus widens, delay repeats, reverb spaces, distortion adds edge.", visual: "signal-chain" },
     { kind: "concept", title: "Order matters", body: "Effects process what comes before them. Distortion before reverb gives a distorted sound placed in a space. Reverb before distortion distorts the reverb itself, which is a different, grittier result. Try both orders and listen.", keyFact: "Same effects, different order, different sound." },
     { kind: "interact", sim: "device-chain", prompt: "Add chorus then reverb. Compare the orders." },
@@ -215,7 +215,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-preset-anatomy": [
-    { kind: "hook", emoji: "🔬", headline: "Open a preset and read it like a recipe", subtext: "Every setting is a choice you can learn from." },
+    { kind: "hook", emoji: "", headline: "Open a preset and read it like a recipe", subtext: "Every setting is a choice you can learn from." },
     { kind: "concept", title: "What to look for", body: "In any preset, check the oscillator waveforms, the filter type and cutoff, the amp and filter envelopes, the modulation connections and the effects. Change one thing at a time and listen to what it does. That is how presets teach you.", keyFact: "One change, one listen.", visual: "signal-chain" },
     { kind: "interact", sim: "subtractive-synth", prompt: "Match the target sound by adjusting the patch." },
     { kind: "concept", title: "Rough recipes", body: "Pads tend to have slow attack, high sustain and slow release. Basses tend to have fast attack and little release with some filter movement. Plucks have a fast attack, a short decay and low sustain. Leads often use a thicker oscillator setup. These are starting points, not rules.", keyFact: "Recipes are starting points." },
@@ -228,7 +228,7 @@ export const FLAGSHIP_BATCH_6: Record<string, LessonScreen[]> = {
   ],
 
   "synth-build-your-own": [
-    { kind: "hook", emoji: "🛠️", headline: "Start from nothing and finish a sound", subtext: "Init patch to finished patch, step by step." },
+    { kind: "hook", emoji: "", headline: "Start from nothing and finish a sound", subtext: "Init patch to finished patch, step by step." },
     { kind: "concept", title: "A workflow", body: "Start from an init patch. Choose an oscillator waveform. Set the filter cutoff and resonance. Shape the amp envelope for the role. Add a filter envelope for movement. Add modulation for expression. Finish with effects. Listen after every step.", keyFact: "Oscillator, filter, envelope, movement, effects.", visual: "signal-chain" },
     { kind: "interact", sim: "subtractive-synth", prompt: "Build a plucky lead from the init patch." },
     { kind: "sequence", prompt: "Put the patch-building steps in order", items: ["Start from an init patch", "Choose the oscillator waveform", "Set the filter cutoff and resonance", "Shape the amp envelope", "Add effects"], explain: "Each stage processes what came before, so build from the source towards the output and add effects last." },

@@ -1,66 +1,46 @@
 "use client";
+import { Silk } from "@/components/m1/controls";
+import { RefPage } from "@/components/m1/parts";
 import { atlasById, editionNeeded } from "@/content/atlas";
 import { FORMATS, PLUGIN_JOBS, type Price } from "@/content/plugins";
 
-const PRICE: Record<Price, string> = { free: "Free", "free tier": "Free version", paid: "Paid" };
+const PRICE: Record<Price, string> = { free: "free", "free tier": "free version", paid: "paid" };
 
 export function PluginsPageClient() {
   return (
-    <main className="min-h-screen bg-bone">
-      <div className="mx-auto w-full max-w-3xl px-4 py-8 space-y-6">
-        <header>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// PLUGIN GUIDE</div>
-          <h1 className="font-display text-4xl leading-none">WHICH PLUG-IN, FOR WHAT.</h1>
-          <p className="font-mono text-xs opacity-70 mt-3">
-            Start with what is already in Live. Add a third-party plug-in only when it does something your stock device
-            cannot. Prices and licences change, so check the maker&apos;s page before you buy.
-          </p>
-        </header>
-
-        <section className="brutal-border bg-white p-4" aria-label="Plug-in formats">
-          <h2 className="font-display text-2xl leading-none">PLUG-IN FORMATS</h2>
-          <ul className="mt-3 space-y-2">
-            {FORMATS.map((f) => (
-              <li key={f.name} className="font-mono text-xs">
-                <b>{f.name}</b> <span className="opacity-50">({f.where})</span>. {f.note}
-              </li>
-            ))}
-          </ul>
-          <p className="font-mono text-xs mt-3">
-            Not showing in Live? <a className="underline" href="/setup#plugins">Follow the scan steps</a>.
-          </p>
-        </section>
-
-        {PLUGIN_JOBS.map((j) => (
-          <section key={j.id} id={j.id} className="brutal-border bg-bone p-4 scroll-mt-24">
-            <h2 className="font-display text-2xl leading-none">{j.job.toUpperCase()}</h2>
-            <p className="font-mono text-xs opacity-70 mt-1">{j.plain}</p>
-
-            {j.stock.length > 0 && (
-              <p className="font-mono text-xs mt-3">
-                <b>In Live already:</b>{" "}
-                {j.stock.map((id, i) => (
-                  <span key={id}>
-                    {i > 0 && ", "}
-                    <a className="underline" href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>{editionNeeded(id) && <span className="opacity-70"> ({editionNeeded(id) === "Suite" ? "Suite" : "Standard+"})</span>}
-                  </span>
-                ))}
-              </p>
-            )}
-            <p className="font-mono text-xs mt-2">{j.beyond}</p>
-
-            <ul className="mt-3 divide-y divide-black/10">
-              {j.picks.map((p) => (
-                <li key={p.name} className="py-2 font-mono text-xs">
-                  <b>{p.name}</b> <span className="opacity-50">by {p.maker}</span>{" "}
-                  <span className={`brutal-border px-1 ${p.price === "paid" ? "bg-white" : "bg-acid"}`}>{PRICE[p.price]}</span>
-                  <p className="mt-1 opacity-70">{p.why}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
+    <RefPage title="plug-ins" meta="plug-in guide" intro="start with what is already in live. add a third-party plug-in only when it does something your stock device cannot. prices and licences change, so check the maker's page before you buy.">
+      <Silk label="formats" />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 8 }} aria-label="Plug-in formats">
+        {FORMATS.map(f => (
+          <div key={f.name} style={{ fontSize: 14, lineHeight: 1.5 }}><b style={{ fontWeight: 500 }}>{f.name}</b> <span className="m1-t11">({f.where})</span><br /><span style={{ color: "var(--sub)", fontWeight: 400 }}>{f.note}</span></div>
         ))}
+        <span className="m1-t11">not showing in live? <a href="/setup#plugins" style={{ textDecoration: "underline" }}>follow the scan steps</a>.</span>
       </div>
-    </main>
+      {PLUGIN_JOBS.map(j => (
+        <section key={j.id} id={j.id} style={{ scrollMarginTop: 80 }}>
+          <Silk label={j.job.toLowerCase()} />
+          <div className="ls-panel" style={{ flexDirection: "column", gap: 8 }}>
+            <span style={{ fontSize: 14, lineHeight: 1.5, fontWeight: 400 }}>{j.plain}</span>
+            {j.stock.length > 0 && (
+              <span style={{ fontSize: 14, lineHeight: 1.5 }}><b style={{ fontWeight: 500 }}>in live already:</b>{" "}
+                {j.stock.map((id, i) => (
+                  <span key={id}>{i > 0 && ", "}<a href={`/atlas#${id}`} style={{ textDecoration: "underline" }}>{atlasById(id)?.name ?? id}</a>{editionNeeded(id) && <span className="m1-t11"> ({editionNeeded(id) === "Suite" ? "suite" : "standard+"})</span>}</span>
+                ))}
+              </span>
+            )}
+            <span style={{ fontSize: 14, lineHeight: 1.5, color: "var(--sub)", fontWeight: 400 }}>{j.beyond}</span>
+          </div>
+          {j.picks.map(p => (
+            <div key={p.name} className="ls-panel" style={{ flexDirection: "column", gap: 4, marginTop: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 8, width: "100%", alignItems: "baseline" }}>
+                <span><b style={{ fontWeight: 500, fontSize: 16 }}>{p.name}</b> <span className="m1-t11">by {p.maker}</span></span>
+                <span className="m1-tag">{PRICE[p.price]}</span>
+              </div>
+              <span style={{ fontSize: 14, lineHeight: 1.5, color: "var(--sub)", fontWeight: 400 }}>{p.why}</span>
+            </div>
+          ))}
+        </section>
+      ))}
+    </RefPage>
   );
 }

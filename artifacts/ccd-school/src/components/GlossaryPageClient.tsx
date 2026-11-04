@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Silk, Icon } from "@/components/m1/controls";
+import { Chips, RefPage, SearchField } from "@/components/m1/parts";
 import { TERMS, slugTerm, type GlossaryTerm as Term } from "@/content/glossary";
 
 const CATS: Term["cat"][] = ["Workflow", "Devices", "Audio", "MIDI", "Performance", "Live 12", "Files"];
@@ -39,10 +41,10 @@ const TERM_MISSION_MAP: Record<string, string> = {
 
 export function GlossaryPageClient() {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<Term["cat"] | "All">("All");
+  const [cat, setCat] = useState<string>("all");
   const filtered = useMemo(() => {
     return TERMS
-      .filter((t) => cat === "All" || t.cat === cat)
+      .filter((t) => cat === "all" || t.cat.toLowerCase() === cat)
       .filter((t) => !q || t.term.toLowerCase().includes(q.toLowerCase()) || t.def.toLowerCase().includes(q.toLowerCase()))
       .sort((a, b) => a.term.localeCompare(b.term));
   }, [q, cat]);
@@ -54,54 +56,34 @@ export function GlossaryPageClient() {
     const el = document.getElementById(hash);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.classList.add("ring-4", "ring-acid");
-      setTimeout(() => el.classList.remove("ring-4", "ring-acid"), 1800);
+      el.style.boxShadow = "inset 0 0 0 2px var(--led-go)";
+      setTimeout(() => { el.style.boxShadow = ""; }, 1800);
     }
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-4">
-      <header className="brutal-border bg-sun p-6 brutal-shadow">
-        <div className="font-mono text-xs uppercase">// KNOWLEDGE BASE</div>
-        <h1 className="text-5xl md:text-7xl mt-2">GLOSSARY</h1>
-        <p className="font-sans mt-2">{TERMS.length} terms. Every concept from the Ableton Live 12 manual, defined.</p>
-      </header>
-      <div className="brutal-border bg-bone p-3 flex flex-wrap gap-2 items-center sticky top-12 md:top-14 z-30">
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="SEARCH…"
-          className="brutal-border bg-bone px-3 py-2 font-mono text-sm uppercase flex-1 min-w-[200px] focus:outline-none" />
-        <button onClick={() => setCat("All")} className={`brutal-border px-2 py-1 font-mono text-xs uppercase ${cat === "All" ? "bg-acid" : "bg-bone"}`}>ALL</button>
-        {CATS.map((c) => (
-          <button key={c} onClick={() => setCat(c)} className={`brutal-border px-2 py-1 font-mono text-xs uppercase ${cat === c ? "bg-acid" : "bg-bone"}`}>{c}</button>
-        ))}
-        <span className="font-mono text-xs uppercase ml-auto">{filtered.length} results</span>
-      </div>
-      <div className="grid md:grid-cols-2 gap-3">
-        {filtered.map((t) => {
-          const missionSlug = TERM_MISSION_MAP[t.term];
-          return (
-            <div key={t.term} id={slugTerm(t.term)} className="brutal-border bg-card p-4 brutal-shadow-sm scroll-mt-24 transition-shadow">
-              <div className="flex items-baseline justify-between gap-2">
-                <div className="font-display text-xl">{t.term}</div>
-                <span className="brutal-border bg-volt text-bone px-2 py-0.5 font-mono text-[10px] uppercase shrink-0">{t.cat}</span>
-              </div>
-              {/* P2 #15: font-sans for definitions */}
-              <div className="font-sans text-sm mt-1 leading-relaxed">{t.def}</div>
-              {/* P2 #27: link to related mission if mapped */}
-              {missionSlug && (
-                <div className="mt-2">
-                  <Link href={`/learn/${missionSlug}`}
-                    className="font-mono text-[9px] uppercase opacity-70 hover:opacity-100 hover:text-acid transition-colors flex items-center gap-1">
-                    <span>→</span>
-                    <span>Learn this in a lesson</span>
-                  </Link>
-                </div>
-              )}
+    <RefPage title="glossary" meta="library" right={`${filtered.length} of ${TERMS.length}`} intro="every term from the live 12 manual, in plain words.">
+      <SearchField value={q} onChange={setQ} label="Search the glossary" />
+      <Chips options={["all", ...CATS.map(c => c.toLowerCase())]} value={cat} onChange={setCat} label="Group" />
+      <Silk label="terms" right={`${filtered.length}`} />
+      {filtered.map((t) => {
+        const missionSlug = TERM_MISSION_MAP[t.term];
+        return (
+          <div key={t.term} id={slugTerm(t.term)} className="ls-panel" style={{ flexDirection: "column", gap: 6, scrollMarginTop: 80 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, width: "100%" }}>
+              <b style={{ fontSize: 17, fontWeight: 500 }}>{t.term}</b>
+              <span className="m1-tag">{t.cat.toLowerCase()}</span>
             </div>
-          );
-        })}
-        {filtered.length === 0 && <div className="brutal-border bg-hot text-bone p-4 font-mono">No matches. Try a different term.</div>}
-      </div>
-      <Link href="/worlds" className="brutal-border bg-acid px-4 py-2 font-mono text-xs uppercase brutal-press inline-block">← BACK TO WORLDS</Link>
-    </div>
+            <span style={{ fontSize: 14, lineHeight: 1.5, color: "var(--sub)", fontWeight: 400 }}>{t.def}</span>
+            {missionSlug && (
+              <Link href={`/learn/${missionSlug}`} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 500, color: "var(--ink)" }}>
+                learn this in a lesson <Icon name="back" small className="ls-flip" />
+              </Link>
+            )}
+          </div>
+        );
+      })}
+      {filtered.length === 0 && <div className="ls-panel"><span className="m1-t11">no matches. try a different word.</span></div>}
+    </RefPage>
   );
 }

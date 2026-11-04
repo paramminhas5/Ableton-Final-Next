@@ -11,7 +11,10 @@ import { useProgress } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { rankFor } from "@/lib/ranks";
 import { pathsByWorld } from "@/content/paths";
-import Link from "next/link";
+import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "@/components/m1/controls";
+import { Readout, ListRow, PageHead, RankMark, SegBar } from "@/components/m1/parts";
+import { RANKS } from "@/lib/ranks";
+import { type CSSProperties } from "react";
 
 interface ProfileData {
   username: string;
@@ -20,8 +23,7 @@ interface ProfileData {
   missionsCount: number;
   badges: string[];
   rank: string;
-  rankEmoji: string;
-  gems: number;
+    gems: number;
   fundamentalsPct: number;
   djPct: number;
   producerPct: number;
@@ -59,14 +61,14 @@ function buildShareCard(
   // Rank
   ctx.fillStyle = "#C6FF00";
   ctx.font = `bold 36px sans-serif`;
-  ctx.fillText(`${data.rankEmoji} ${data.rank}`, 60, 230);
+  ctx.fillText(data.rank, 60, 230);
 
   // Stats row
   const stats = [
     { label: "XP",      value: data.xp.toLocaleString() },
-    { label: "Streak",  value: `🔥${data.streakDays}d` },
+    { label: "Streak",  value: `${data.streakDays}d` },
     { label: "Lessons", value: String(data.missionsCount) },
-    { label: "Gems",    value: `💎${data.gems}` },
+    { label: "Gems",    value: String(data.gems) },
   ];
   stats.forEach((s, i) => {
     const x = 60 + i * 280;
@@ -99,7 +101,7 @@ function buildShareCard(
   if (data.badges.length > 0) {
     ctx.fillStyle = "rgba(255,255,255,0.4)";
     ctx.font = "16px monospace";
-    ctx.fillText(`🏅 ${data.badges.slice(0, 5).join("  ·  ")}${data.badges.length > 5 ? ` +${data.badges.length - 5} more` : ""}`, 60, 610);
+    ctx.fillText(`${data.badges.slice(0, 5).join("  ·  ")}${data.badges.length > 5 ? ` +${data.badges.length - 5} more` : ""}`, 60, 610);
   }
 
   // Footer
@@ -124,7 +126,7 @@ export function PublicProfileClient({ username }: { username: string }) {
     return slugs.length > 0 ? Math.round((done / slugs.length) * 100) : 0;
   };
 
-  const { current: rank } = rankFor(progress.xp);
+  const { current: rank, idx: rankIdx } = rankFor(progress.xp);
 
   const profileData: ProfileData = isOwn ? {
     username: user?.name ?? username,
@@ -133,7 +135,6 @@ export function PublicProfileClient({ username }: { username: string }) {
     missionsCount: Object.keys(progress.completedMissions).length,
     badges: progress.badges,
     rank: rank.name,
-    rankEmoji: rank.emoji,
     gems: progress.gems,
     fundamentalsPct: worldPct("fundamentals"),
     djPct: worldPct("dj"),
@@ -141,7 +142,7 @@ export function PublicProfileClient({ username }: { username: string }) {
   } : {
     username,
     xp: 0, streakDays: 0, missionsCount: 0, badges: [],
-    rank: "Bedroom Producer", rankEmoji: "🛏️", gems: 0,
+    rank: "Bedroom Producer", gems: 0,
     fundamentalsPct: 0, djPct: 0, producerPct: 0,
   };
 
@@ -163,119 +164,68 @@ export function PublicProfileClient({ username }: { username: string }) {
     if (isOwn) generateCard();
   }, [isOwn, progress.xp]);
 
+  const showIdx = isOwn ? rankIdx : 0;
   return (
-    <main className="min-h-screen bg-bone pb-24">
+    <main className="m1-page" style={{ paddingTop: 4 }}>
       <canvas ref={canvasRef} className="hidden" aria-hidden />
+      <PageHead title="profile" back="/profile" />
 
-      <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
-        <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link href="/profile" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Profile</Link>
-          <div className="flex items-center gap-4">
-            <div className="brutal-border bg-acid text-ink w-16 h-16 flex items-center justify-center font-display text-3xl">
-              {profileData.username.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <h1 className="font-display text-4xl leading-none">{profileData.username}</h1>
-              <div className="font-mono text-sm opacity-70 mt-1">
-                {profileData.rankEmoji} {profileData.rank}
-              </div>
-            </div>
+      <Screen>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ width: 64, height: 64, borderRadius: "50%", background: "#141416", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)", fontSize: 24, color: "var(--disp-ink)" }}>
+            {profileData.username.slice(0, 2).toLowerCase()}
+          </span>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 22, fontWeight: 400, color: "var(--disp-ink)", letterSpacing: "-.02em", overflowWrap: "anywhere" }}>{profileData.username.toLowerCase()}</div>
+            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}><RankMark idx={showIdx} size={26} />{profileData.rank.toLowerCase()} · rank {showIdx + 1} of {RANKS.length}</div>
           </div>
         </div>
-      </header>
+      </Screen>
 
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
-
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { label: "XP",          value: profileData.xp.toLocaleString(), color: "bg-acid text-ink" },
-            { label: "Streak",      value: `🔥 ${profileData.streakDays}d`,  color: "bg-volt text-bone" },
-            { label: "Lessons",     value: profileData.missionsCount,         color: "bg-bone text-ink" },
-            { label: "Gems",        value: `💎 ${profileData.gems}`,          color: "bg-bone text-ink" },
-          ].map(s => (
-            <div key={s.label} className={`brutal-border ${s.color} p-4 text-center`}>
-              <div className="font-display text-3xl">{s.value}</div>
-              <div className="font-mono text-[9px] uppercase opacity-70 mt-1">{s.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* World progress */}
-        <div className="brutal-border bg-bone p-5 space-y-3">
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">WORLD PROGRESS</div>
-          {[
-            { label: "🎵 Fundamentals", pct: profileData.fundamentalsPct, color: "bg-acid" },
-            { label: "🎧 DJ World",     pct: profileData.djPct,            color: "bg-volt" },
-            { label: "🎛 Producer",     pct: profileData.producerPct,      color: "bg-sun" },
-          ].map(w => (
-            <div key={w.label}>
-              <div className="flex justify-between font-mono text-xs mb-1">
-                <span>{w.label}</span>
-                <span className="opacity-60">{w.pct}%</span>
-              </div>
-              <div className="h-2 brutal-border bg-bone/30 overflow-hidden">
-                <div className={`h-full ${w.color} transition-all duration-700`} style={{ width: `${w.pct}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Badges */}
-        {profileData.badges.length > 0 && (
-          <div className="brutal-border bg-bone p-5">
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">BADGES ({profileData.badges.length})</div>
-            <div className="flex flex-wrap gap-2">
-              {profileData.badges.map(b => (
-                <span key={b} className="brutal-border bg-acid text-ink px-3 py-1 font-mono text-[10px] uppercase">🏅 {b}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Share card */}
-        {isOwn && (
-          <div className="brutal-border bg-ink text-bone p-5 space-y-4">
-            <div className="font-mono text-[10px] uppercase opacity-70">SHARE YOUR PROGRESS</div>
-            {shareUrl && (
-              <img src={shareUrl} alt="Share card preview"
-                className="w-full brutal-border" style={{ aspectRatio: "1200/630", objectFit: "cover" }} />
-            )}
-            <div className="flex gap-2 flex-wrap">
-              {shareUrl && (
-                <a href={shareUrl} download={`ccd-school-${username}.png`}
-                  className="brutal-border bg-acid text-ink px-4 py-2.5 font-mono text-xs uppercase brutal-press">
-                  ⬇ Download Card
-                </a>
-              )}
-              <button onClick={copyLink}
-                className="brutal-border bg-volt text-bone px-4 py-2.5 font-mono text-xs uppercase brutal-press">
-                {copied ? "✓ Copied!" : "🔗 Copy Link"}
-              </button>
-              {!shareUrl && (
-                <button onClick={generateCard}
-                  className="brutal-border bg-bone text-ink px-4 py-2.5 font-mono text-xs uppercase brutal-press">
-                  Generate Card
-                </button>
-              )}
-            </div>
-            <div className="font-mono text-[9px] opacity-70">
-              Public URL: ccd.school/u/{username}
-            </div>
-          </div>
-        )}
-
-        {!isOwn && (
-          <div className="brutal-border bg-sun p-4 text-center">
-            <div className="font-mono text-sm opacity-70">
-              {username} hasn&apos;t made their profile public yet, or doesn&apos;t exist.
-            </div>
-            <Link href="/profile" className="brutal-border bg-ink text-bone px-4 py-2 font-mono text-xs uppercase brutal-press inline-block mt-3">
-              View Your Profile →
-            </Link>
-          </div>
-        )}
+      <div className="ls-uses" style={{ ["--n" as string]: 4, marginTop: 14 } as CSSProperties}>
+        <Readout value={profileData.xp} label="xp" />
+        <Readout value={profileData.streakDays} label="day streak" color="var(--led-red)" />
+        <Readout value={profileData.missionsCount} label="lessons" color="var(--led-mint)" />
+        <Readout value={profileData.gems} label="gems" color="var(--led-lilac)" />
       </div>
+
+      <Silk label="worlds" />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 12 }}>
+        {([["basics", "fundamentals", profileData.fundamentalsPct], ["dj", "dj", profileData.djPct], ["producer", "producer", profileData.producerPct]] as const).map(([label, id, pct]) => (
+          <div key={id} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%" }}>
+            <span className="ls-led" style={{ ["--c" as string]: WORLD_LED[id] } as CSSProperties} />
+            <span style={{ width: 64, color: "var(--sub)" }}>{label}</span>
+            <SegBar value={pct / 100} color={WORLD_LED[id]} n={14} height={8} label={`${label} ${pct} percent`} />
+            <span className="m1-t11" style={{ width: 34, textAlign: "right" }}>{pct}%</span>
+          </div>
+        ))}
+      </div>
+
+      {profileData.badges.length > 0 && (
+        <>
+          <Silk label="badges" right={`${profileData.badges.length}`} />
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, padding: "0 2px" }}>
+            {profileData.badges.map(b => <span key={b} className="m1-tag">{b.toLowerCase()}</span>)}
+          </div>
+        </>
+      )}
+
+      {isOwn && (
+        <>
+          <Silk label="share your progress" />
+          {shareUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={shareUrl} alt="Your share card" style={{ width: "100%", borderRadius: 12, aspectRatio: "1200/630", objectFit: "cover", boxShadow: "var(--m1-extrude)" }} />
+          )}
+          <div className="m1-g" style={{ marginTop: 12 }}>
+            {shareUrl ? <Key href={shareUrl} ariaLabel="Download card" label="card" style={{}}><Icon name="out" /></Key> : <Key onClick={generateCard} ariaLabel="Make the card" label="make card"><Icon name="out" /></Key>}
+            <GoPill onClick={copyLink} style={{ gridColumn: "span 3" }} ariaLabel="Copy your public link">{copied ? "link copied" : "copy link"}</GoPill>
+          </div>
+          <p className="m1-t11" style={{ margin: "8px 4px 0" }}>ccd.school/u/{username}</p>
+        </>
+      )}
+
+      {!isOwn && <ListRow href="/profile" led="var(--ledoff)" title="this profile is private or does not exist" sub="open your own profile" right={<Icon name="back" className="ls-flip" />} />}
     </main>
   );
 }

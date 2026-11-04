@@ -49,7 +49,7 @@ export function DeviceExplainers({ blocks }: { blocks: ExplainerBlock[] }) {
       </div>
 
       <div className="brutal-border bg-volt text-bone p-3 mt-4">
-        <div className="font-mono text-xs uppercase mb-2">💡 PRO TIP</div>
+        <div className="font-mono text-xs uppercase mb-2">PRO TIP</div>
         <div className="font-mono text-sm">
           Open each section to learn deeply. Read during playback - hearing examples while learning = faster understanding.
         </div>
@@ -60,15 +60,15 @@ export function DeviceExplainers({ blocks }: { blocks: ExplainerBlock[] }) {
 
 function getBlockTypeBadge(type: string): string {
   const badges: Record<string, string> = {
-    'lead': '⭐ CONCEPT',
-    'concept': '🧠 HOW IT WORKS',
-    'parameters': '🎚️ CONTROLS',
-    'example': '📝 EXAMPLE',
-    'listening': '👂 LISTEN FOR',
-    'mistakes': '❌ AVOID',
-    'tips': '✅ PRO TIPS',
-    'formula': '📐 FORMULA',
-    'diagram': '📊 VISUALIZATION',
+    'lead': 'CONCEPT',
+    'concept': 'HOW IT WORKS',
+    'parameters': 'CONTROLS',
+    'example': 'EXAMPLE',
+    'listening': 'LISTEN FOR',
+    'mistakes': 'AVOID',
+    'tips': 'PRO TIPS',
+    'formula': 'FORMULA',
+    'diagram': 'VISUALIZATION',
   };
   return badges[type] || type.toUpperCase();
 }

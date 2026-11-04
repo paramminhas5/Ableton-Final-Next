@@ -9,7 +9,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 1: FIRST CONTACT ───────────────────────────────────────────
 
   "what-is-live": [
-    { kind: "hook", emoji: "🎛", headline: "Ableton Live thinks differently", subtext: "Two views, infinite flexibility — here's how Live works." },
+    { kind: "hook", emoji: "", headline: "Ableton Live thinks differently", subtext: "Two views, infinite flexibility — here's how Live works." },
     { kind: "concept", title: "Session vs Arrangement", body: "Live has two views: Session for non-linear jamming and launching loops, and Arrangement for timeline composition. Most producers use both.", keyFact: "Session = loop launcher. Arrangement = timeline.", visual: "signal-chain" },
     { kind: "concept", title: "Non-destructive by design", body: "Almost everything in Live is non-destructive. Warp audio, reverse samples, slice loops — the original file is never touched.", keyFact: "Undo goes back 100+ steps. Nothing is permanent.", visual: "signal-chain"},
     { kind: "interact", sim: "interface-tour", prompt: "Click each panel to learn its name" },
@@ -20,7 +20,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "interface-tour": [
-    { kind: "hook", emoji: "🗺", headline: "Every panel has a job", subtext: "Memorise Live's layout once — produce faster forever." },
+    { kind: "hook", emoji: "", headline: "Every panel has a job", subtext: "Memorise Live's layout once — produce faster forever." },
     { kind: "concept", title: "Five key areas", body: "Control Bar (top), Browser (left), Main View (centre), Detail View (bottom), Mixer (right in Session). Each area has a single clear purpose.", keyFact: "Tab = toggle Session ↔ Arrangement instantly.", visual: "signal-chain"},
     { kind: "concept", title: "Detail View power", body: "The Detail View at the bottom shows either Clip Editor or Device View depending on what's selected. Double-click a clip to open notes; click a device to see its controls.", keyFact: "Cmd/Ctrl+Alt+L = hide/show Detail View.", visual: "signal-chain"},
     { kind: "interact", sim: "interface-tour", prompt: "Click each hotspot to name the panel" },
@@ -31,7 +31,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "browser": [
-    { kind: "hook", emoji: "📂", headline: "Your library lives in the Browser", subtext: "Sounds, presets, packs — find anything in seconds." },
+    { kind: "hook", emoji: "", headline: "Your library lives in the Browser", subtext: "Sounds, presets, packs — find anything in seconds." },
     { kind: "concept", title: "Browser categories", body: "The Browser (left sidebar) organises Sounds, Drums, Instruments, Audio Effects, MIDI Effects, Plug-Ins, Clips, Samples, and Packs — each in its own section.", keyFact: "Live 12 added tag-based Categories for musical search.", visual: "signal-chain"},
     { kind: "concept", title: "Sound Similarity Search", body: "Drag any sample into the search area and click the similarity button — Live analyses audio content and finds sonically related samples in your library.", keyFact: "Searches timbre, not filename. Game-changing discovery.", visual: "signal-chain"},
     { kind: "interact", sim: "browser-tour", prompt: "Navigate to Sounds and drag a preset onto a track" },
@@ -42,7 +42,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "preferences": [
-    { kind: "hook", emoji: "⚙️", headline: "Set it up once, correctly", subtext: "Wrong buffer size = glitches. Wrong audio driver = silence." },
+    { kind: "hook", emoji: "", headline: "Set it up once, correctly", subtext: "Wrong buffer size = glitches. Wrong audio driver = silence." },
     { kind: "concept", title: "Audio preferences", body: "Preferences > Audio sets your driver (ASIO/Core Audio), sample rate (44.1/48 kHz), and buffer size. Buffer size is the key trade-off: lower = less latency, higher = more CPU headroom.", keyFact: "256 samples = safe default. 64–128 for recording, 512+ for mixing.", visual: "signal-chain"},
     { kind: "concept", title: "MIDI and plugins", body: "Preferences > Link/MIDI activates connected MIDI devices. Preferences > Plug-Ins tells Live where to scan for VST/AU plugins. Always verify plugin folder paths after installing new software.", keyFact: "Re-scan plugins after installing: Preferences > Plug-Ins > Rescan.", visual: "piano"},
     { kind: "interact", sim: "buffer-sim", prompt: "Adjust buffer size — observe the latency/CPU trade-off" },
@@ -55,7 +55,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
 
   "files-projects": [
-    { kind: "hook", emoji: "💾", headline: "A Project is more than one file", subtext: "Lose the folder, lose your samples. Save properly every time." },
+    { kind: "hook", emoji: "", headline: "A Project is more than one file", subtext: "Lose the folder, lose your samples. Save properly every time." },
     { kind: "concept", title: "Set vs Project", body: "A Live Set (.als) is the project file. The Project folder wraps it alongside recorded audio, bounces, and presets. Always keep them together.", keyFact: ".als = Live Set. Project folder = everything else.", visual: "signal-chain"},
     { kind: "concept", title: "Collect All and Save", body: "Before sharing or moving a project, use File > Collect All and Save. This copies all referenced samples into the Project folder so nothing goes missing on another machine.", keyFact: "Without this step, shared projects break on other computers.", visual: "signal-chain"},
     { kind: "interact", sim: "browser-tour", prompt: "Locate a project folder in the Browser and inspect it" },
@@ -66,7 +66,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "session-view": [
-    { kind: "hook", emoji: "🟩", headline: "Session View is a non-linear launcher", subtext: "Clips fire on demand. Scenes trigger whole rows at once." },
+    { kind: "hook", emoji: "", headline: "Session View is a non-linear launcher", subtext: "Clips fire on demand. Scenes trigger whole rows at once." },
     { kind: "concept", title: "The Session grid", body: "Session View is a matrix of tracks (columns) and scenes (rows). Each cell is a clip slot. Click a clip to launch it; click the scene button to fire all clips in that row simultaneously.", keyFact: "Tracks = columns. Scenes = rows. One clip per track at a time.", visual: "bpm-grid"},
     { kind: "concept", title: "Quantize makes it musical", body: "Global Quantize determines when clips actually start after you click. Set to 1 Bar and every clip starts precisely on the next bar line, staying in musical sync regardless of when you click.", keyFact: "1 Bar Global Quantize = tight, musical transitions every time.", visual: "bpm-grid"},
     { kind: "interact", sim: "session-grid", prompt: "Launch clips and scenes — feel the non-linear flow" },
@@ -77,7 +77,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "arrangement-view": [
-    { kind: "hook", emoji: "📅", headline: "Arrangement is your timeline", subtext: "Clips become blocks. Time flows left to right." },
+    { kind: "hook", emoji: "", headline: "Arrangement is your timeline", subtext: "Clips become blocks. Time flows left to right." },
     { kind: "concept", title: "Timeline composition", body: "Arrangement View shows tracks stacked vertically with time running left to right. Clips are blocks you can drag, resize, loop and split — like a traditional DAW timeline.", keyFact: "Tab switches between Session and Arrangement views.", visual: "signal-chain"},
     { kind: "concept", title: "Recording into Arrangement", body: "Press Record while Live plays in Arrangement to capture Session clip launches or live MIDI input onto the timeline. Use Locators (right-click scrubber) to bookmark song sections like Intro, Verse, Drop.", keyFact: "Locators + Tab = professional song arrangement workflow.", visual: "signal-chain"},
     { kind: "interact", sim: "arrangement", prompt: "Move and resize clips on the timeline" },
@@ -88,7 +88,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "clips": [
-    { kind: "hook", emoji: "🎬", headline: "Two clip types, wildly different powers", subtext: "MIDI holds instructions. Audio holds waveforms. Both loop." },
+    { kind: "hook", emoji: "", headline: "Two clip types, wildly different powers", subtext: "MIDI holds instructions. Audio holds waveforms. Both loop." },
     { kind: "concept", title: "MIDI clips", body: "A MIDI clip stores notes — pitch, velocity, duration. The instrument on the track creates the sound at playback. Swap the instrument anytime; the notes stay intact with full fidelity.", keyFact: "MIDI is never rendered until playback — edit forever.", visual: "piano"},
     { kind: "concept", title: "Audio clips", body: "An audio clip stores a recorded waveform. You can transpose, warp, reverse and loop it — but these processes re-interpret existing samples. Extreme changes cause artefacts.", keyFact: "Use MIDI for ideas you'll keep changing. Audio for captures.", visual: "waveform-zoom"},
     { kind: "interact", sim: "midi-vs-audio", prompt: "Swap the instrument on the MIDI clip — same notes, new sound" },
@@ -99,7 +99,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "tracks": [
-    { kind: "hook", emoji: "🎚", headline: "Five track types do five different jobs", subtext: "Audio, MIDI, Return, Group, Master — each has a role." },
+    { kind: "hook", emoji: "", headline: "Five track types do five different jobs", subtext: "Audio, MIDI, Return, Group, Master — each has a role." },
     { kind: "concept", title: "The five track types", body: "Audio tracks record and play audio. MIDI tracks hold notes and host instruments. Return tracks receive sends for shared effects. Group tracks bus multiple tracks together. Master outputs everything.", keyFact: "MIDI → Instrument → Audio. That's the signal flow.", visual: "mixer-channel"},
     { kind: "concept", title: "Why track types matter", body: "Putting an instrument on an audio track won't work — it needs a MIDI track. Putting reverb on every track is inefficient — use a Return. Understanding types prevents common routing mistakes.", keyFact: "Each type has rules about what it accepts as input.", visual: "mixer-channel"},
     { kind: "interact", sim: "mixer", prompt: "Identify each track type by colour and icon" },
@@ -110,7 +110,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "scenes-follow": [
-    { kind: "hook", emoji: "🤖", headline: "Make clips play themselves", subtext: "Follow Actions tell each clip what to do when it ends." },
+    { kind: "hook", emoji: "", headline: "Make clips play themselves", subtext: "Follow Actions tell each clip what to do when it ends." },
     { kind: "concept", title: "Scenes as performance tools", body: "A scene launches a whole row. Each scene can store its own tempo and time signature — change the song's feel by firing a new scene during a live set.", keyFact: "Scene tempo overrides project BPM — perfect for live sets.", visual: "signal-chain"},
     { kind: "concept", title: "Follow Actions", body: "Follow Actions decide what happens when a clip ends: play again, jump to next, jump to random, stop. Set Follow Action time shorter than the clip for generative, evolving structures.", keyFact: "Follow Action chance percentage controls probability of each action.", visual: "signal-chain"},
     { kind: "interact", sim: "session-grid", prompt: "Set a Follow Action on a clip — watch it self-sequence" },
@@ -132,7 +132,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "take-lanes": [
-    { kind: "hook", emoji: "🎙", headline: "Stack takes, pick the best bits", subtext: "Take Lanes + comping = one perfect take from many." },
+    { kind: "hook", emoji: "", headline: "Stack takes, pick the best bits", subtext: "Take Lanes + comping = one perfect take from many." },
     { kind: "concept", title: "What are Take Lanes?", body: "Take Lanes (Live 11+) show each loop pass as a separate row under the main track. Loop a section, hit Record — every pass becomes a new lane you can review and audition.", keyFact: "Right-click track header → Show Take Lanes to enable.", visual: "signal-chain"},
     { kind: "concept", title: "Comping the lanes", body: "Drag across sections of take lanes to promote the best moments to the top (comp) lane. Live automatically crossfades between comp regions for smooth transitions.", keyFact: "Comping works for both Audio and MIDI takes.", visual: "signal-chain"},
     { kind: "interact", sim: "arrangement", prompt: "Select sections from different take lanes to build a comp" },
@@ -147,7 +147,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 2: SOUND & MIDI ─────────────────────────────────────────────
 
   "midi-piano-roll": [
-    { kind: "hook", emoji: "🎹", headline: "Click, drag, compose in the piano roll", subtext: "Every MIDI note is a block you can place and reshape." },
+    { kind: "hook", emoji: "", headline: "Click, drag, compose in the piano roll", subtext: "Every MIDI note is a block you can place and reshape." },
     { kind: "concept", title: "Piano roll basics", body: "Double-click a MIDI clip to open the piano roll. The vertical axis is pitch (piano keyboard left), horizontal axis is time. Draw notes in Pencil Mode (B), select in Pointer Mode.", keyFact: "B = Pencil mode toggle. Cmd/Ctrl+A = select all notes.", visual: "piano"},
     { kind: "concept", title: "Velocity and quantise", body: "Each note has a velocity (0–127) shown as a bar below. Higher velocity = louder and often brighter. Cmd/Ctrl+U quantises all selected notes to the grid.", keyFact: "Shift+drag a note = constrain to horizontal movement only.", visual: "piano"},
     { kind: "interact", sim: "piano-roll", prompt: "Draw a 4-note melody — adjust velocities" },
@@ -158,7 +158,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "audio-clips": [
-    { kind: "hook", emoji: "🌊", headline: "Audio clips bend to your will", subtext: "Transpose, reverse, loop — original file stays safe." },
+    { kind: "hook", emoji: "", headline: "Audio clips bend to your will", subtext: "Transpose, reverse, loop — original file stays safe." },
     { kind: "concept", title: "Audio clip editor", body: "Click an audio clip to open it in the Detail View. Adjust Transpose (semitones), Detune (cents), Loop start/end, and clip gain — all non-destructively referenced to the original file.", keyFact: "Transpose range: −48 to +48 semitones.", visual: "waveform-zoom"},
     { kind: "concept", title: "Warp enables tempo lock", body: "Enable Warp on a clip and it locks to Live's project tempo regardless of its original BPM. Set warp markers at transients for precise grid alignment.", keyFact: "Warp OFF = plays at original speed. Warp ON = follows project BPM.", visual: "bpm-grid"},
     { kind: "interact", sim: "warp-lab", prompt: "Transpose a clip up 5 semitones and enable looping" },
@@ -180,7 +180,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "recording-audio": [
-    { kind: "hook", emoji: "🔴", headline: "Get sound into Live", subtext: "Set input, arm the track, check levels, hit record." },
+    { kind: "hook", emoji: "", headline: "Get sound into Live", subtext: "Set input, arm the track, check levels, hit record." },
     { kind: "concept", title: "Recording setup", body: "Set the track's Audio From to your interface input. Arm the track (red circle). Set Monitor to Auto so you hear yourself without double playback. Check the meter — aim for peaks around −12 to −6 dBFS.", keyFact: "Never record into the red (0 dBFS). Leave headroom.", visual: "signal-chain"},
     { kind: "concept", title: "Session vs Arrangement recording", body: "In Session View, record creates new clips in empty slots. In Arrangement, recording writes to the timeline at the playback position. Both honour the active loop brace.", keyFact: "Session records: clips per slot. Arrangement: continuous timeline.", visual: "signal-chain"},
     { kind: "interact", sim: "mixer", prompt: "Arm a track and observe the input level meter" },
@@ -191,7 +191,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "comping": [
-    { kind: "hook", emoji: "✂️", headline: "Stitch the perfect take from many", subtext: "Take Lanes show each pass — drag to pick the best moments." },
+    { kind: "hook", emoji: "", headline: "Stitch the perfect take from many", subtext: "Take Lanes show each pass — drag to pick the best moments." },
     { kind: "concept", title: "Multi-take recording", body: "Enable loop recording and arm a track. Each pass creates a new Take Lane below. Keep recording as many passes as you like — nothing is overwritten.", keyFact: "Loop count shows how many takes you've recorded.", visual: "signal-chain"},
     { kind: "concept", title: "Comp workflow", body: "In the top (comp) lane, drag across the sections you want from each take lane. Live automatically crossfades at edit points. Delete a lane selection to revert to the previous take.", keyFact: "Comping is non-destructive — all takes are preserved.", visual: "signal-chain"},
     { kind: "interact", sim: "comp-lake", prompt: "Comp three take lanes into one finished performance" },
@@ -202,7 +202,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "slicing": [
-    { kind: "hook", emoji: "🔪", headline: "Turn any loop into a playable kit", subtext: "Slice to MIDI chops audio onto Drum Rack pads instantly." },
+    { kind: "hook", emoji: "", headline: "Turn any loop into a playable kit", subtext: "Slice to MIDI chops audio onto Drum Rack pads instantly." },
     { kind: "concept", title: "Slice to New MIDI Track", body: "Right-click any audio clip → Slice to New MIDI Track. Live detects transients (or you set the grid), chops the audio, and maps each slice to a Drum Rack pad.", keyFact: "Slicing creates a Drum Rack with each slice on a pad.", visual: "piano"},
     { kind: "concept", title: "Remixing with slices", body: "Once sliced, re-trigger pads in any order via MIDI notes. Rearrange the MIDI clip in the piano roll to create entirely new rhythms from the original loop material.", keyFact: "Slice every 16th note for a complete phrase re-trigger toolkit.", visual: "signal-chain"},
     { kind: "interact", sim: "session-grid", prompt: "Trigger sliced pads in a new rhythmic pattern" },
@@ -213,7 +213,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "mpe-tuning": [
-    { kind: "hook", emoji: "🌈", headline: "Per-note bends, slides, and pressure", subtext: "MPE turns MIDI from a grid into an expressive instrument." },
+    { kind: "hook", emoji: "", headline: "Per-note bends, slides, and pressure", subtext: "MPE turns MIDI from a grid into an expressive instrument." },
     { kind: "concept", title: "What is MPE?", body: "MIDI Polyphonic Expression (MPE) gives each note its own pitch bend, pressure (aftertouch), and slide channel independently. Traditional MIDI applies these to all notes simultaneously.", keyFact: "MPE = per-finger expression. MIDI = all-notes expression.", visual: "signal-chain"},
     { kind: "concept", title: "Tuning Systems in Live 12", body: "Live 12 added global Tuning Systems — load a Scala (.scl) file to use just intonation, 24-EDO, or historical temperaments. Every MPE-compatible instrument in the Set follows it.", keyFact: "Set tuning once per project — all devices follow automatically.", visual: "mixer-channel"},
     { kind: "interact", sim: "piano-roll", prompt: "Inspect per-note pitch bend data in an MPE clip" },
@@ -224,7 +224,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "warp-modes-deep": [
-    { kind: "hook", emoji: "🔬", headline: "Each warp mode has a sweet spot", subtext: "Wrong mode = artefacts. Right mode = transparent stretching." },
+    { kind: "hook", emoji: "", headline: "Each warp mode has a sweet spot", subtext: "Wrong mode = artefacts. Right mode = transparent stretching." },
     { kind: "concept", title: "Percussive modes", body: "Beats mode slices audio at transients and warps each slice independently — ideal for drums and rhythmic loops. Set the Transient Loop Mode to control how slices fill gaps.", keyFact: "Beats mode: use Transient Envelope to control slice decay.", visual: "signal-chain"},
     { kind: "concept", title: "Tonal and complex modes", body: "Tones mode uses a phase vocoder optimised for mono melodic material — bass lines, leads. Texture blends grains — great for pads. Complex Pro is Tones + higher quality + formant preservation.", keyFact: "Complex Pro: Formants ON prevents chipmunk effect on vocals.", visual: "signal-chain"},
     { kind: "interact", sim: "warp-lab", prompt: "Switch modes on a drum loop — hear the difference" },
@@ -237,7 +237,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
 
   "instruments-overview": [
-    { kind: "hook", emoji: "🎸", headline: "Live's built-in synths cover everything", subtext: "FM, wavetable, sampler, physical model — all included." },
+    { kind: "hook", emoji: "", headline: "Live's built-in synths cover everything", subtext: "FM, wavetable, sampler, physical model — all included." },
     { kind: "concept", title: "The instrument roster", body: "Wavetable (modern workhorse), Operator (4-op FM), Drift (analog), Sampler/Simpler (sample-based), Drum Rack (kit container), Meld (MPE dual-engine, Live 12), Bass + Poli (preset-first, Live 12).", keyFact: "Every instrument is drag-and-drop onto a MIDI track.", visual: "signal-chain"},
     { kind: "concept", title: "Choosing the right instrument", body: "FM for metallic, electric, complex timbres (Operator). Wavetable for evolving pads and leads. Simpler for one-shot samples. Sampler for multi-sampled instruments across the keyboard.", keyFact: "Drift: warm analog bass/lead. Meld: expressive MPE sound design.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Load Wavetable and explore the preset browser" },
@@ -248,7 +248,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "drum-rack": [
-    { kind: "hook", emoji: "🥁", headline: "16 pads, infinite kits", subtext: "Each pad is its own instrument chain with effects." },
+    { kind: "hook", emoji: "", headline: "16 pads, infinite kits", subtext: "Each pad is its own instrument chain with effects." },
     { kind: "concept", title: "Drum Rack structure", body: "Drum Rack is a container holding up to 128 pads, each mapped to a MIDI note. Every pad hosts a device chain (typically a Simpler), its own mixer, and its own send amounts.", keyFact: "Drag any sample directly onto a pad to load it instantly.", visual: "fal-image", imageUrl: "/generated/drum-rack-1.webp"},
     { kind: "concept", title: "Choke groups and macros", body: "Assign pads to Choke groups to make them cut each other off — essential for hi-hats (closed hat cuts open hat). Macro knobs at the top control assigned parameters across the whole rack.", keyFact: "Choke group = open hat + closed hat in same group number.", visual: "signal-chain"},
     { kind: "interact", sim: "beat-builder", prompt: "Build a 4-on-the-floor pattern using the Drum Rack pads" },
@@ -259,7 +259,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "wavetable": [
-    { kind: "hook", emoji: "🌀", headline: "Wavetable is Live's modern workhorse synth", subtext: "Two oscillators scan through waveforms in real time." },
+    { kind: "hook", emoji: "", headline: "Wavetable is Live's modern workhorse synth", subtext: "Two oscillators scan through waveforms in real time." },
     { kind: "concept", title: "Wavetable architecture", body: "Two oscillators each scan through a wavetable (a library of single-cycle waveforms). Sweep the Position knob to morph through timbres. Each oscillator has a sub-oscillator and noise source.", keyFact: "Two oscillators. Two filters. Two envelopes. Two LFOs.", visual: "fal-image", imageUrl: "/generated/wavetable-1.webp"},
     { kind: "concept", title: "Modulation matrix", body: "The modulation matrix at the bottom lets you drag any source (LFO, envelope, MIDI expression, velocity) to any destination. Connect Env 2 to Filter Cutoff for a classic synth filter sweep.", keyFact: "Drag from source row to destination column to patch modulation.", visual: "waveform"},
     { kind: "interact", sim: "device-lab", prompt: "Sweep the oscillator Position knob — hear the wavetable scan" },
@@ -270,7 +270,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "operator": [
-    { kind: "hook", emoji: "🔔", headline: "FM synthesis demystified", subtext: "One oscillator modulates another — complex harmonics emerge." },
+    { kind: "hook", emoji: "", headline: "FM synthesis demystified", subtext: "One oscillator modulates another — complex harmonics emerge." },
     { kind: "concept", title: "Operators and algorithms", body: "Operator has 4 operators (A, B, C, D) arranged in one of 11 algorithms. Carriers make sound; modulators colour it. The algorithm determines which operators feed into which.", keyFact: "Higher modulator output level = more harmonics = brighter sound.", visual: "fal-image", imageUrl: "/generated/operator-1.webp"},
     { kind: "concept", title: "FM ratios and timbre", body: "The Coarse and Fine ratio controls set the harmonic relationship between operators. Whole-number ratios (1:1, 2:1) produce harmonic timbres. Fractional ratios (1.5, 2.35) produce inharmonic, bell-like tones.", keyFact: "Integer ratios = harmonic. Fractional = metallic/inharmonic.", visual: "waveform-compare"},
     { kind: "interact", sim: "device-lab", prompt: "Adjust operator B's output level — hear harmonics change" },
@@ -281,7 +281,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "sampler-simpler": [
-    { kind: "hook", emoji: "🎙", headline: "Play any sound as an instrument", subtext: "Drag audio onto a MIDI track — instant playable instrument." },
+    { kind: "hook", emoji: "", headline: "Play any sound as an instrument", subtext: "Drag audio onto a MIDI track — instant playable instrument." },
     { kind: "concept", title: "Simpler — one sample powerhouse", body: "Simpler loads a single sample and lets you play it across the keyboard. Three modes: Classic (looping), One-Shot (non-looping, good for drums), Slice (chops for groove work).", keyFact: "Drag audio to a MIDI track → Live auto-creates a Simpler.", visual: "signal-chain"},
     { kind: "concept", title: "Sampler — multi-sample instrument", body: "Sampler handles full multi-sampled instruments with key zones, velocity layers, and round-robin switching. Build a concert grand or a sampled brass section — each note has its own sample.", keyFact: "Simpler = 1 sample. Sampler = hundreds mapped across keyboard.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Load a sample into Simpler and play it across the keyboard" },
@@ -292,7 +292,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "eq-eight": [
-    { kind: "hook", emoji: "📊", headline: "Shape every frequency with 8 bands", subtext: "Cut what's wrong before boosting what's right." },
+    { kind: "hook", emoji: "", headline: "Shape every frequency with 8 bands", subtext: "Cut what's wrong before boosting what's right." },
     { kind: "concept", title: "EQ Eight essentials", body: "EQ Eight provides 8 independent parametric bands — each switchable between bell, shelf, high-pass, low-pass, and notch shapes. Boost or cut any frequency range with frequency, gain, and Q controls.", keyFact: "High-pass filter removes low-end rumble below your set frequency.", visual: "fal-image", imageUrl: "/generated/eq-eight-1.webp"},
     { kind: "concept", title: "Subtractive EQ philosophy", body: "Cut problem frequencies before adding any boosts. Narrow cuts remove resonances cleanly. Broad boosts enhance character. Sweep a boosted band to find the problem — then cut that instead.", keyFact: "EQ subtractive first = more headroom, more transparent mix.", visual: "eq-curve"},
     { kind: "interact", sim: "device-lab", prompt: "Apply a high-pass filter at 80 Hz to remove sub rumble" },
@@ -303,7 +303,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "compressor": [
-    { kind: "hook", emoji: "🗜", headline: "Tame dynamics, add punch", subtext: "Six parameters, one device — the most important in the chain." },
+    { kind: "hook", emoji: "", headline: "Tame dynamics, add punch", subtext: "Six parameters, one device — the most important in the chain." },
     { kind: "concept", title: "The six parameters", body: "Threshold sets when compression starts. Ratio sets how much. Attack sets how fast it clamps. Release sets how fast it lets go. Knee controls the transition smoothness. Makeup gain restores level.", keyFact: "Slow attack lets transients through. Fast attack squashes them.", visual: "fal-image", imageUrl: "/generated/compressor-1.webp"},
     { kind: "concept", title: "Compression for feel", body: "Compressor doesn't just control dynamics — it shapes feel. Fast attack + medium release = punch and pump. Slow attack + fast release = transparent levelling. Sidechain view = frequency-dependent shaping.", keyFact: "Knee: hard = abrupt. Soft = gradual. Soft knee sounds more natural.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Compress a drum loop — find the attack/release sweet spot" },
@@ -314,7 +314,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "reverb-delay": [
-    { kind: "hook", emoji: "🏛", headline: "Space and echo define depth", subtext: "Reverb = room. Delay = echo. Both create dimension." },
+    { kind: "hook", emoji: "", headline: "Space and echo define depth", subtext: "Reverb = room. Delay = echo. Both create dimension." },
     { kind: "concept", title: "Reverb types in Live", body: "Reverb is Live's algorithmic reverb (size, decay, diffusion). Hybrid Reverb (Live 11+) combines convolution IRs with algorithmic processing. Always use Returns for reverb — one instance serves all tracks.", keyFact: "Pre-delay (20–30 ms) keeps vocals clear before the reverb washes in.", visual: "signal-chain"},
     { kind: "concept", title: "Delay devices", body: "Delay is a simple tempo-synced delay. Echo (Live 11) adds vintage character — wobble, filter, modulation. Set delay time to musical divisions (1/8, 1/4) for rhythmic lock to your project tempo.", keyFact: "Tempo-sync delay: use 1/8 note for a tight slap; 1/4 for classic echo.", visual: "signal-chain"},
     { kind: "interact", sim: "send-return", prompt: "Route a track to a Return with Reverb — adjust decay" },
@@ -325,7 +325,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "saturator-distortion": [
-    { kind: "hook", emoji: "🔥", headline: "Add grit, add glue, add life", subtext: "Saturation is the secret ingredient in every great mix." },
+    { kind: "hook", emoji: "", headline: "Add grit, add glue, add life", subtext: "Saturation is the secret ingredient in every great mix." },
     { kind: "concept", title: "Saturator essentials", body: "Saturator applies waveshaping — gently clipping signal peaks to add harmonic content. The Drive knob pushes the signal into the curve. Soft clip = warmth. Hard clip = aggression. Sine fold = complex.", keyFact: "Even harmonics (2nd, 4th) = warmth. Odd harmonics = grit.", visual: "signal-chain"},
     { kind: "concept", title: "Roar — Live 12's multi-band distortion", body: "Roar (Live 12) splits the signal into up to 3 frequency bands, distorts each independently, and recombines. Feed the mid band aggressively while keeping lows clean for modern bass processing.", keyFact: "Roar's feedback path creates self-oscillating distortion textures.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Apply Saturator to a drum bus — increase Drive gradually" },
@@ -336,7 +336,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "midi-effects": [
-    { kind: "hook", emoji: "🎲", headline: "Process notes before they hit the synth", subtext: "MIDI effects transform notes — transpose, arpeggiate, force to scale." },
+    { kind: "hook", emoji: "", headline: "Process notes before they hit the synth", subtext: "MIDI effects transform notes — transpose, arpeggiate, force to scale." },
     { kind: "concept", title: "The MIDI effects chain", body: "MIDI effects sit before the instrument in a MIDI track's device chain. They transform incoming MIDI notes — adding, removing, delaying, or transposing them before the instrument receives them.", keyFact: "MIDI effects: Arpeggiator → Chord → Scale → Note Echo → Velocity.", visual: "piano"},
     { kind: "concept", title: "Essential MIDI effects", body: "Arpeggiator fans chord notes into sequences. Chord stacks intervals on every input note. Scale MIDI effect forces all notes into a chosen scale — eliminates wrong notes instantly.", keyFact: "Scale device + any melody = always in key. Great safety net.", visual: "piano"},
     { kind: "interact", sim: "piano-roll", prompt: "Add an Arpeggiator — hold a chord and hear it play out" },
@@ -347,7 +347,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "racks-macros": [
-    { kind: "hook", emoji: "🎛", headline: "Wrap chains, map controls, perform", subtext: "Racks group devices. Macros expose 16 controls on one panel." },
+    { kind: "hook", emoji: "", headline: "Wrap chains, map controls, perform", subtext: "Racks group devices. Macros expose 16 controls on one panel." },
     { kind: "concept", title: "Racks as containers", body: "Instrument Racks, Audio Effect Racks, and MIDI Effect Racks group devices into one unit. Chains inside a Rack can run in parallel (layers) or be split by key zone, velocity, or Chain Selector.", keyFact: "Cmd/Ctrl+G around selected devices = instant Rack.", visual: "signal-chain"},
     { kind: "concept", title: "Macros and Variations", body: "Right-click any parameter → Map to Macro. Up to 16 macros per Rack expose your most important controls. Macro Variations (Live 12) snapshot all 16 macro values for instant patch switching and morphing.", keyFact: "Macro Variations: save verse sound, save drop sound, morph between.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Map filter cutoff to Macro 1 and automate it" },
@@ -362,7 +362,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 3: THE MIX ─────────────────────────────────────────────────
 
   "the-mixer": [
-    { kind: "hook", emoji: "🎚", headline: "The mixer is the centre of control", subtext: "Faders, pans, meters — every track has its own strip." },
+    { kind: "hook", emoji: "", headline: "The mixer is the centre of control", subtext: "Faders, pans, meters — every track has its own strip." },
     { kind: "concept", title: "Mixer anatomy", body: "Each track has a volume fader, pan, mute (M), solo (S), arm button, and cue button. The crossfader assigns tracks to A or B for DJ blending. In Session View the mixer is fully visible on the right.", keyFact: "Don't ride hot — keep faders at unity (0 dB) and use gain staging.", visual: "mixer-channel"},
     { kind: "concept", title: "Gain staging fundamentals", body: "Gain staging means controlling level at every stage — before effects, at the group bus, and at the master. Start with track levels peaking around −6 to −12 dBFS so the mix bus has headroom.", keyFact: "Master fader at unity. Let individual tracks control balance.", visual: "headroom-meter"},
     { kind: "interact", sim: "mixer", prompt: "Balance three tracks — no channel peaks above −6 dBFS" },
@@ -373,7 +373,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "sends-returns": [
-    { kind: "hook", emoji: "📬", headline: "Share effects — save CPU — get glue", subtext: "One reverb on a Return serves every track in the mix." },
+    { kind: "hook", emoji: "", headline: "Share effects — save CPU — get glue", subtext: "One reverb on a Return serves every track in the mix." },
     { kind: "concept", title: "How sends and returns work", body: "Each track has a Send knob per Return track. Turn up the Send to route a portion of the track's signal to that Return. The Return hosts the shared effect (reverb, delay) and outputs to Master.", keyFact: "Cmd/Ctrl+Alt+T = create new Return track.", visual: "signal-chain"},
     { kind: "concept", title: "Pre vs Post fader sends", body: "Post-fader (default) sends a proportion of the post-fader signal — when you lower the track volume, the send amount reduces proportionally. Pre-fader sends are independent of the volume fader.", keyFact: "Pre-fader = for monitors. Post-fader = for effects (most common).", visual: "signal-chain"},
     { kind: "interact", sim: "send-return", prompt: "Add Send A to multiple tracks — share one reverb instance" },
@@ -384,7 +384,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "groups-routing": [
-    { kind: "hook", emoji: "📦", headline: "Groups are real audio buses", subtext: "Compress the drum bus. EQ the vocal group. Automate the stem." },
+    { kind: "hook", emoji: "", headline: "Groups are real audio buses", subtext: "Compress the drum bus. EQ the vocal group. Automate the stem." },
     { kind: "concept", title: "Creating and using Groups", body: "Select multiple tracks → Cmd/Ctrl+G to create a Group. The Group track is a real audio bus — sum all children, add a compressor for glue, automate the group level as one, or render the stem.", keyFact: "Group bus = sub-mix + shared processing for multiple tracks.", visual: "signal-chain"},
     { kind: "concept", title: "Advanced routing with Track I/O", body: "Every track's I/O section lets you route to any other track — send a synth through a bus track with extra effects, or use Resampling to capture Live's master output onto an audio track.", keyFact: "Resampling: Audio From = Resampling → captures master mix.", visual: "signal-chain"},
     { kind: "interact", sim: "routing-puzzle", prompt: "Route three tracks into a Group and add a bus compressor" },
@@ -395,7 +395,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "automation": [
-    { kind: "hook", emoji: "✏️", headline: "Make parameters move over time", subtext: "Draw automation in Arrangement — or record it live." },
+    { kind: "hook", emoji: "✏", headline: "Make parameters move over time", subtext: "Draw automation in Arrangement — or record it live." },
     { kind: "concept", title: "Automation in Arrangement", body: "Press A in Arrangement View to show all automation lanes. Click a parameter lane to see its envelope. Draw breakpoints with the pencil, drag to move — any parameter in any device can be automated.", keyFact: "A = show automation lanes. Cmd/Ctrl+Z = undo any drawn point.", visual: "signal-chain"},
     { kind: "concept", title: "Clip Envelopes and curved automation", body: "Clip Envelopes store automation inside the clip — they travel with it when moved. Live 11+ adds shaped curves: draw a line between two points, then drag the midpoint to bend it.", keyFact: "Clip envelope + loop = automation repeats with the clip.", visual: "amplitude-dial"},
     { kind: "interact", sim: "arrangement", prompt: "Automate a filter cutoff — draw a rise over 8 bars" },
@@ -406,7 +406,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "modulation-lanes": [
-    { kind: "hook", emoji: "〰️", headline: "Modulation stacks on top of automation", subtext: "Live 12's offset-based modulation adds motion without overwriting." },
+    { kind: "hook", emoji: "〰", headline: "Modulation stacks on top of automation", subtext: "Live 12's offset-based modulation adds motion without overwriting." },
     { kind: "concept", title: "What is modulation (Live 12)?", body: "Arrangement Modulation lanes add offset-based parameter changes on top of existing automation. The modulation value is added to the automation value — both coexist without conflict.", keyFact: "Automation = absolute position. Modulation = relative offset.", visual: "waveform"},
     { kind: "concept", title: "Practical uses", body: "Combine automation (a filter sweep from A to B over 32 bars) with modulation (a subtle LFO-style wave that adds texture on top). This layered approach creates evolving, non-repetitive movement.", keyFact: "Modulation + automation = macro-level + micro-level movement.", visual: "signal-chain"},
     { kind: "interact", sim: "arrangement", prompt: "Add a modulation lane to a reverb send — draw gentle variation" },
@@ -417,7 +417,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "sidechain": [
-    { kind: "hook", emoji: "🎵", headline: "The kick tells the bass to duck", subtext: "Sidechain compression creates the pulse of dance music." },
+    { kind: "hook", emoji: "", headline: "The kick tells the bass to duck", subtext: "Sidechain compression creates the pulse of dance music." },
     { kind: "concept", title: "How sidechain works", body: "A compressor can use a different track as its trigger source — the sidechain input. When the kick hits, it triggers the compressor on the bass or pad track, ducking it momentarily. That duck IS the pump.", keyFact: "Kick → Sidechain Input of Compressor on Bass = classic EDM pump.", visual: "signal-chain"},
     { kind: "concept", title: "Sculpting the pump shape", body: "Attack determines how quickly the duck happens (fast = immediate grab). Release determines how quickly the signal recovers (medium = musical breathing). The release length shapes the pump's musical feel.", keyFact: "Fast attack + 150–200ms release = the iconic dance floor pump.", visual: "signal-chain"},
     { kind: "interact", sim: "sidechain", prompt: "Set kick as sidechain source — hear the pad duck on each hit" },
@@ -428,7 +428,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "max-for-live": [
-    { kind: "hook", emoji: "🔌", headline: "Build your own devices in Live", subtext: "Max for Live is a visual programming environment inside Live Suite." },
+    { kind: "hook", emoji: "", headline: "Build your own devices in Live", subtext: "Max for Live is a visual programming environment inside Live Suite." },
     { kind: "concept", title: "What is Max for Live?", body: "Max for Live (M4L) integrates Cycling '74's Max environment directly into Live Suite. Connect objects with patch cables visually to build custom synths, sequencers, MIDI tools, and analysis devices.", keyFact: "M4L ships with Suite. Hundreds of free devices at maxforlive.com.", visual: "signal-chain"},
     { kind: "concept", title: "Essential M4L devices", body: "Live ships with polished M4L devices: LFO (modulate any parameter), Envelope Follower (audio amplitude → modulation), Convolution Reverb (custom IR reverb), Max MIDI Effect (generative sequencing).", keyFact: "LFO device: drag its output to any parameter for instant modulation.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Patch an LFO device to filter cutoff — sweep the frequency" },
@@ -439,7 +439,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "glue-compressor": [
-    { kind: "hook", emoji: "🔗", headline: "Glue Compressor binds a mix together", subtext: "Bus compression makes multiple tracks sound like one." },
+    { kind: "hook", emoji: "", headline: "Glue Compressor binds a mix together", subtext: "Bus compression makes multiple tracks sound like one." },
     { kind: "concept", title: "What makes Glue Compressor special", body: "Glue Compressor models an SSL G-Bus compressor — famous for making mixes 'stick together'. Low ratios (2:1, 4:1), slow attack, and the Makeup and Dry/Wet controls make subtle bus glue straightforward.", keyFact: "Try: Threshold −10, Ratio 4:1, Attack 30ms, Release Auto.", visual: "amplitude-dial"},
     { kind: "concept", title: "Parallel compression", body: "Glue Compressor's Dry/Wet knob enables parallel (New York) compression — mix heavily compressed signal with the dry original. You get the punch of compression without losing transient snap.", keyFact: "Dry/Wet at 30–50% = classic parallel bus compression sound.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Apply Glue Compressor to a drum group — find the sweet spot" },
@@ -450,7 +450,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "limiter-truepeak": [
-    { kind: "hook", emoji: "🚧", headline: "The limiter is the last line of defence", subtext: "Nothing gets past 0 dBFS. Protect the master." },
+    { kind: "hook", emoji: "", headline: "The limiter is the last line of defence", subtext: "Nothing gets past 0 dBFS. Protect the master." },
     { kind: "concept", title: "Limiter device", body: "Live's Limiter applies a hard ceiling — no signal above the ceiling threshold gets through. Set Ceiling to −0.3 dBFS (not 0!) to account for inter-sample peaks that can clip D/A converters.", keyFact: "Set ceiling to −0.3 to −1 dBFS, not 0 dBFS. ISP prevention.", visual: "signal-chain"},
     { kind: "concept", title: "True Peak and metering", body: "True Peak metering detects inter-sample peaks (ISP) — audio values between digital samples that can clip on playback even if peak meters read below 0. Modern streaming targets: −14 LUFS integrated.", keyFact: "Streaming standard: −14 LUFS. Leave 1 dB true peak headroom.", visual: "signal-chain"},
     { kind: "interact", sim: "mixer", prompt: "Set Limiter ceiling and observe true peak meter behaviour" },
@@ -465,7 +465,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 4: PERFORMANCE & FLOW ──────────────────────────────────────
 
   "push-controllers": [
-    { kind: "hook", emoji: "🟦", headline: "Get your hands on the music", subtext: "Push 3 is a complete instrument. Not just a controller." },
+    { kind: "hook", emoji: "", headline: "Get your hands on the music", subtext: "Push 3 is a complete instrument. Not just a controller." },
     { kind: "concept", title: "Push 3 overview", body: "Push 3 has 64 pressure-sensitive pads, 8 encoders, 8 displays, and a colour touchscreen. In controller mode it extends Live on your computer. In Standalone mode it IS Live.", keyFact: "Push 3 Standalone: no laptop needed. Live runs on-device.", visual: "signal-chain"},
     { kind: "concept", title: "The pad grid", body: "Melodic mode arranges pads in scale intervals — wrong notes don't exist. Drum mode maps 16 pads to kit pieces and uses remaining pads as a step sequencer. Any pad layout follows your session context.", keyFact: "Melodic mode: every pad is in key. Wrong notes are impossible.", visual: "signal-chain"},
     { kind: "interact", sim: "beat-builder", prompt: "Build a drum pattern using Push's pad layout" },
@@ -476,7 +476,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "midi-mapping": [
-    { kind: "hook", emoji: "🗺", headline: "Map any knob to anything in Live", subtext: "MIDI Map Mode turns controllers into custom instruments." },
+    { kind: "hook", emoji: "", headline: "Map any knob to anything in Live", subtext: "MIDI Map Mode turns controllers into custom instruments." },
     { kind: "concept", title: "MIDI Map Mode", body: "Cmd/Ctrl+M enters MIDI Map Mode — the interface highlights green showing mappable parameters. Click any green element, then wiggle your hardware control. That parameter is now mapped.", keyFact: "Cmd/Ctrl+M = toggle MIDI Map Mode on/off.", visual: "piano"},
     { kind: "concept", title: "Mapping ranges and curves", body: "After mapping, click the mapping row to adjust Min/Max range (map 0–100% hardware range to only 50–80% of parameter range). Response curves (linear, logarithmic) shape how the control feels.", keyFact: "Narrow the Min/Max range for fine-detail control on one parameter.", visual: "signal-chain"},
     { kind: "interact", sim: "midi-map", prompt: "Map a knob to filter cutoff using MIDI Map Mode" },
@@ -487,7 +487,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "tempo-following": [
-    { kind: "hook", emoji: "👂", headline: "Live listens and follows your band", subtext: "Tempo Follower (Live 11) syncs to live audio input in real time." },
+    { kind: "hook", emoji: "", headline: "Live listens and follows your band", subtext: "Tempo Follower (Live 11) syncs to live audio input in real time." },
     { kind: "concept", title: "Tempo Follower", body: "Tempo Follower analyses incoming audio — a drummer, a DJ record, a click track — and adjusts Live's project BPM to match in real time. Enable it in the Control Bar next to the metronome.", keyFact: "Works best with strong rhythmic audio: kicks, snare, click.", visual: "bpm-grid"},
     { kind: "concept", title: "Sync with live musicians", body: "Use Tempo Follower to have Live follow a live drummer instead of forcing musicians to follow a click. Combine with Ableton Link to have multiple devices track together.", keyFact: "Sensitivity knob: higher = faster response to tempo changes.", visual: "signal-chain"},
     { kind: "interact", sim: "bpm-tap", prompt: "Tap in a tempo — observe how Live's BPM adjusts to match" },
@@ -498,7 +498,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "ableton-link-sync": [
-    { kind: "hook", emoji: "🔗", headline: "Sync apps wirelessly over a network", subtext: "Ableton Link: no cables, no master, everyone in time." },
+    { kind: "hook", emoji: "", headline: "Sync apps wirelessly over a network", subtext: "Ableton Link: no cables, no master, everyone in time." },
     { kind: "concept", title: "How Link works", body: "Link synchronises tempo and beat phase across apps and hardware on the same local Wi-Fi or Ethernet network. No master or slave — every peer is equal. Any device can move the tempo.", keyFact: "Click LINK in Control Bar. All devices on the same network auto-discover.", visual: "signal-chain"},
     { kind: "concept", title: "Start/Stop sync", body: "By default Link only syncs tempo and phase. Enable Start/Stop sync to also share transport starts and stops across connected devices. Great for perfectly synchronised scene launches.", keyFact: "Start/Stop sync is optional — disable if you want independent transports.", visual: "signal-chain"},
     { kind: "interact", sim: "session-grid", prompt: "Imagine two Live instances Linked — trigger a scene on one" },
@@ -509,7 +509,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "push3-workflow": [
-    { kind: "hook", emoji: "🎹", headline: "Make a full track without the mouse", subtext: "Push 3 exposes every Live workflow from a single surface." },
+    { kind: "hook", emoji: "", headline: "Make a full track without the mouse", subtext: "Push 3 exposes every Live workflow from a single surface." },
     { kind: "concept", title: "Track creation on Push", body: "From Push 3 you can: create tracks (hold Add + tap instrument type), browse presets (Browse button), play melodies or drums on pads, record to clips, and navigate Session scenes — all without touching the keyboard.", keyFact: "Push 3: Add Track → Browse → Play → Record. Full workflow.", visual: "signal-chain"},
     { kind: "concept", title: "Note and Step sequencers", body: "Melodic mode: 64 pads in 4-octave scale layout. Note length held while pressing pads. Drum mode: bottom 4×4 = pads, top rows = 16-step sequencer per pad with velocity lanes.", keyFact: "64-pad note mode: full melodic step sequencer with length per step.", visual: "eq-curve"},
     { kind: "interact", sim: "beat-builder", prompt: "Sequence a 16-step pattern using Push's drum grid layout" },
@@ -520,7 +520,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "macro-variations": [
-    { kind: "hook", emoji: "🎭", headline: "Snapshot, recall, morph — live sound design", subtext: "Macro Variations save patch states for instant switching." },
+    { kind: "hook", emoji: "", headline: "Snapshot, recall, morph — live sound design", subtext: "Macro Variations save patch states for instant switching." },
     { kind: "concept", title: "Creating Variations", body: "Set your 16 Rack macros to the sound you want. Click 'New Variation' in the Macro section. Tweak to a different sound state, save again. Now you have two snapshots to switch between instantly.", keyFact: "Each variation stores all 16 macro values simultaneously.", visual: "signal-chain"},
     { kind: "concept", title: "Morphing between Variations", body: "Live 12 adds smooth morphing between Variations — click a variation and the macros glide to their new values over a set time. Build Intro, Verse, Drop variations and morph between them live.", keyFact: "Morph slider: drag to interpolate between two saved variation states.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Create two Macro Variations with different filter sounds" },
@@ -531,7 +531,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "cv-tools": [
-    { kind: "hook", emoji: "🔌", headline: "Bridge Live to modular synthesisers", subtext: "CV Tools sends pitch and gates over audio cables." },
+    { kind: "hook", emoji: "", headline: "Bridge Live to modular synthesisers", subtext: "CV Tools sends pitch and gates over audio cables." },
     { kind: "concept", title: "What is CV?", body: "Control Voltage (CV) is the language of modular synthesisers. Pitch is typically 1V/octave. Gate signals trigger envelopes. Live's CV Tools devices convert MIDI and automation to CV sent via audio outputs.", keyFact: "Requires a DC-coupled audio interface to pass CV correctly.", visual: "signal-chain"},
     { kind: "concept", title: "CV Tools devices", body: "CV Instrument sends pitch CV and gate from a MIDI track. CV Triggers sends gate pulses. CV In receives incoming CV and converts to MIDI. All are Max for Live devices included in Live Suite.", keyFact: "CV In = modular sequences → Live MIDI. Bi-directional bridge.", visual: "signal-chain"},
     { kind: "interact", sim: "signal-flow-builder", prompt: "Build the signal flow: MIDI clip → CV Instrument → Modular" },
@@ -542,7 +542,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "ableton-link": [
-    { kind: "hook", emoji: "🌐", headline: "Sync apps over Wi-Fi — no cables", subtext: "Link keeps hundreds of apps in perfect time on one network." },
+    { kind: "hook", emoji: "", headline: "Sync apps over Wi-Fi — no cables", subtext: "Link keeps hundreds of apps in perfect time on one network." },
     { kind: "concept", title: "Link ecosystem", body: "Link is an open protocol — hundreds of apps and hardware devices support it. Ableton Live, Push, Reason, Traktor, GarageBand iOS, countless modular apps all sync seamlessly on the same network.", keyFact: "Link is free and open — any developer can implement it.", visual: "mixer-channel"},
     { kind: "concept", title: "Phase lock guarantee", body: "Link doesn't just sync tempo — it locks beat phase. All connected devices are always on the same beat, not just the same BPM. You can join a Link session mid-play and immediately lock to the group beat.", keyFact: "Beat phase lock = everyone plays beat 1 at the same moment.", visual: "signal-chain"},
     { kind: "interact", sim: "session-grid", prompt: "Enable LINK in Control Bar — see the peer count change" },
@@ -553,7 +553,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "exporting": [
-    { kind: "hook", emoji: "📤", headline: "Render the final file", subtext: "Cmd/Ctrl+Shift+R opens Export Audio — set the loop brace first." },
+    { kind: "hook", emoji: "", headline: "Render the final file", subtext: "Cmd/Ctrl+Shift+R opens Export Audio — set the loop brace first." },
     { kind: "concept", title: "Export settings", body: "Cmd/Ctrl+Shift+R opens Export Audio/Video. Set your loop brace to define the region. Choose: WAV/AIFF/MP3/FLAC, sample rate, bit depth. 24-bit WAV at 44.1 kHz for distribution; 32-bit float for mastering handoff.", keyFact: "Normalize OFF — preserve headroom. Mastering engineer will maximise.", visual: "headroom-meter"},
     { kind: "concept", title: "Stems and render options", body: "Render Each Track exports individual stem files — every track as its own WAV. Render as Loop seamlessly loops the export for DJs or sync licensing. Always check the loop brace region before exporting.", keyFact: "Stems: Render Each Track. Full mix: Render Master.", visual: "mixer-channel"},
     { kind: "interact", sim: "arrangement", prompt: "Set loop brace to 32 bars and set up your export region" },
@@ -564,7 +564,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "live-sets-projects": [
-    { kind: "hook", emoji: "📁", headline: "Stay organised — projects, templates, backups", subtext: "A good folder structure prevents catastrophic loss." },
+    { kind: "hook", emoji: "", headline: "Stay organised — projects, templates, backups", subtext: "A good folder structure prevents catastrophic loss." },
     { kind: "concept", title: "Projects and templates", body: "A Project folder contains the .als Set file plus all recorded audio and bounces. Create a Default Template (save a Set as Default.als in the Templates folder) to start every session with your preferred routing.", keyFact: "File > Save as Default Set = open every new project pre-configured.", visual: "signal-chain"},
     { kind: "concept", title: "Freeze and Flatten", body: "Freeze a track to temporarily render it to audio — saves CPU while preserving the original devices. Flatten permanently bakes the frozen audio into a new clip, removing the device chain. Flatten is destructive — duplicate first.", keyFact: "Freeze = reversible CPU saver. Flatten = permanent — no undo on devices.", visual: "signal-chain"},
     { kind: "interact", sim: "arrangement", prompt: "Freeze a heavy synth track — observe CPU meter drop" },
@@ -575,7 +575,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "troubleshooting": [
-    { kind: "hook", emoji: "🔧", headline: "When things break — here's the checklist", subtext: "Most problems have a known fix. Panic optional." },
+    { kind: "hook", emoji: "", headline: "When things break — here's the checklist", subtext: "Most problems have a known fix. Panic optional." },
     { kind: "concept", title: "Audio problems", body: "Crackling or dropouts → raise buffer size, freeze CPU-heavy tracks. Silence → check driver in Preferences > Audio, check track mute/arm state. High latency → check Driver Error Compensation in Preferences.", keyFact: "First fix: raise buffer size to 512. Second fix: freeze heavy tracks.", visual: "signal-chain"},
     { kind: "concept", title: "Plugin and project problems", body: "Plugins not showing → Rescan in Preferences > Plug-Ins. Project opens with missing files → check the Project folder, use Collect All and Save on original machine before moving. Lost work → check Project > Backup folder.", keyFact: "Auto-backup every 15 min = enable in Preferences > File Folder.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Diagnose a crackle: check buffer, CPU meter, and frozen tracks" },
@@ -590,7 +590,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 5: ADVANCED ────────────────────────────────────────────────
 
   "sampler-deep": [
-    { kind: "hook", emoji: "🗂", headline: "Sampler is a full sample studio", subtext: "Key zones, velocity layers, round-robin — all in one device." },
+    { kind: "hook", emoji: "", headline: "Sampler is a full sample studio", subtext: "Key zones, velocity layers, round-robin — all in one device." },
     { kind: "concept", title: "Zone editor", body: "Sampler's Zone Editor maps samples across key ranges, velocity ranges, and Select zones (round-robin/random). Drop multiple samples and they play the correct one based on which note and how hard you play.", keyFact: "Key zone + velocity zone + select zone = studio-quality instruments.", visual: "signal-chain"},
     { kind: "concept", title: "Modulation matrix", body: "Sampler has three full envelopes (Amp, Filter, Pitch) and two LFOs with a full modulation matrix. Route MIDI expression — aftertouch, mod wheel, MPE slide — to any destination for expressive playing.", keyFact: "Sampler fully supports MPE — per-note pitch, pressure, and slide.", visual: "waveform"},
     { kind: "interact", sim: "device-lab", prompt: "Explore Sampler's Zone Editor — set a velocity layer" },
@@ -601,7 +601,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "drift": [
-    { kind: "hook", emoji: "🌊", headline: "Small synth, big personality", subtext: "Drift brings analog-style warmth to every Live set." },
+    { kind: "hook", emoji: "", headline: "Small synth, big personality", subtext: "Drift brings analog-style warmth to every Live set." },
     { kind: "concept", title: "Drift architecture", body: "Drift has two oscillators, a sub-oscillator, noise, and a vintage-inspired filter with two models (OB-style and ladder). The Drift parameter adds random micro-instability to pitch and timing — the analog wobble.", keyFact: "Drift param = 0: clinical digital. Drift = 100: warm analog.", visual: "signal-chain"},
     { kind: "concept", title: "Two filter models", body: "Drift's first filter model is a 12dB state-variable (SEM-style) — wide, musical resonance. The second is a 24dB ladder filter — tighter, more classic Moog-like. Switch between them per patch.", keyFact: "SEM = open and musical. Ladder = snappy and tight. Both are great.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Compare the two filter models — hear the character difference" },
@@ -612,7 +612,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "granulator-iii": [
-    { kind: "hook", emoji: "✨", headline: "Turn any sample into a texture", subtext: "Granulator splits audio into clouds of tiny grains." },
+    { kind: "hook", emoji: "", headline: "Turn any sample into a texture", subtext: "Granulator splits audio into clouds of tiny grains." },
     { kind: "concept", title: "How granular synthesis works", body: "Granulator III plays tiny overlapping fragments (grains) from a sample. The keyboard controls pitch. Position scrubs through the sample. Grain size sets how large each fragment is — small = glitchy, large = smooth.", keyFact: "Granular: sustained texture from any sound, even a single word.", visual: "signal-chain"},
     { kind: "concept", title: "Key parameters", body: "Spray randomises grain start position — creates shimmer and texture. Spread randomises stereo placement of grains for lush width. Multiple grains per voice adds density. Reverse plays grains backwards.", keyFact: "Position + LFO = endless slowly morphing evolving texture.", visual: "signal-chain"},
     { kind: "interact", sim: "granular", prompt: "Drag Position across the sample — hear the timbre morph" },
@@ -623,7 +623,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "collision-tension-electric": [
-    { kind: "hook", emoji: "🔔", headline: "Physical models — synthesis from physics", subtext: "Sound emerges from virtual strings, mallets, and piano tines." },
+    { kind: "hook", emoji: "", headline: "Physical models — synthesis from physics", subtext: "Sound emerges from virtual strings, mallets, and piano tines." },
     { kind: "concept", title: "Physical modelling synthesis", body: "Instead of oscillators and filters, physical modelling simulates real acoustic mechanisms. Collision excites a resonator (mallet hitting a bar). Tension models vibrating strings. Electric models electric piano tines and hammers.", keyFact: "Physical models respond to velocity and pressure like real instruments.", visual: "signal-chain"},
     { kind: "concept", title: "Live's modelling suite", body: "Collision: marimbas, bells, kalimbas, metallics. Tension: bowed strings, plucked strings, piano. Electric: Rhodes and Wurlitzer-style electro-mechanical pianos. Analog: classic 2-oscillator virtual analog. All fully MPE-expressive.", keyFact: "Collision + Tension + Electric + Analog = physical model quartet.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Compare Electric at different velocities — hear the tine character" },
@@ -634,7 +634,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "bass-poli": [
-    { kind: "hook", emoji: "🎸", headline: "Great sounds in seconds, not hours", subtext: "Bass and Poli are preset-first instruments for fast sketching." },
+    { kind: "hook", emoji: "", headline: "Great sounds in seconds, not hours", subtext: "Bass and Poli are preset-first instruments for fast sketching." },
     { kind: "concept", title: "Preset-first design", body: "Bass and Poli (Live 12) hide complex synthesis behind bespoke macro layouts. Each preset has 8 macros tuned to the most musical controls for that specific sound — no menu-diving required.", keyFact: "Bass: sub-bass, mid-bass, growl. Poli: pads, plucks, keys, leads.", visual: "signal-chain"},
     { kind: "concept", title: "When to use them", body: "Use Bass or Poli for fast sketch ideas where sound design depth doesn't matter yet. Once the musical idea is locked, swap for Wavetable or Operator if you need deeper customisation.", keyFact: "Sketch with Bass/Poli. Deepen with Wavetable/Operator later.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Browse Bass presets — find a sub-bass sound in under 30 seconds" },
@@ -645,7 +645,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "instrument-rack": [
-    { kind: "hook", emoji: "🎛", headline: "Stack, layer, split, morph instruments", subtext: "Instrument Rack: multiple synths, one device, infinite possibilities." },
+    { kind: "hook", emoji: "", headline: "Stack, layer, split, morph instruments", subtext: "Instrument Rack: multiple synths, one device, infinite possibilities." },
     { kind: "concept", title: "Layering and splitting", body: "Drop multiple instruments into an Instrument Rack to layer them (all play at once). Set Key Zones to split the keyboard: low keys = bass, high keys = lead. Velocity zones trigger different chains dynamically.", keyFact: "Layer = all chains play. Split = key zone determines which chain.", visual: "signal-chain"},
     { kind: "concept", title: "Chain Selector morphing", body: "Map the Chain Selector to a macro knob. As you sweep the knob, different chains cross-fade in and out — morph between two completely different sounds across 0–100% of one knob.", keyFact: "Chain Selector + Macro = smooth morph between any two sounds.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Create a key split: bass chain on C1-B2, lead chain on C3 up" },
@@ -656,7 +656,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "midi-effects-tour": [
-    { kind: "hook", emoji: "🎲", headline: "Deep dive into every MIDI effect", subtext: "Arpeggiator to Velocity — transform notes before they hit the synth." },
+    { kind: "hook", emoji: "", headline: "Deep dive into every MIDI effect", subtext: "Arpeggiator to Velocity — transform notes before they hit the synth." },
     { kind: "concept", title: "Generative MIDI effects", body: "Note Echo creates rhythmic MIDI echo patterns. Random adds pitch randomisation for generative melodies. Velocity generates dynamic variation — either random or following patterns. Stack them for complex generative results.", keyFact: "Random + Scale + Note Echo = self-generating melodic loops.", visual: "piano"},
     { kind: "concept", title: "Performance MIDI effects", body: "Chord stacks up to 6 intervals on every input note (instant power chords). Pitch transposes with lag/portamento for smooth slides. Expression Control maps MIDI CC to any device parameter.", keyFact: "Expression Control: 1 knob → any parameter anywhere in the rack.", visual: "piano"},
     { kind: "interact", sim: "piano-roll", prompt: "Chain Chord → Scale → Arpeggiator and hear the transformation" },
@@ -667,7 +667,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "external-instrument": [
-    { kind: "hook", emoji: "🎛", headline: "Control hardware synths from Live", subtext: "External Instrument sends MIDI out and audio back in on one track." },
+    { kind: "hook", emoji: "", headline: "Control hardware synths from Live", subtext: "External Instrument sends MIDI out and audio back in on one track." },
     { kind: "concept", title: "What External Instrument does", body: "External Instrument (M4L) lets you treat a hardware synth as if it were a software instrument in Live. It sends MIDI to the synth's input and returns audio from the synth's output — all on one MIDI track.", keyFact: "One track: MIDI out → hardware → audio in. Latency compensated.", visual: "signal-chain"},
     { kind: "concept", title: "Automatic delay compensation", body: "External Instrument handles latency compensation automatically — the round-trip from MIDI out to audio in is measured and compensated so the hardware synth stays in time with the rest of your session.", keyFact: "Enable Hardware Latency in Preferences to calibrate your interface.", visual: "signal-chain"},
     { kind: "interact", sim: "signal-flow-builder", prompt: "Build: MIDI Clip → External Instrument → Hardware → Return audio" },
@@ -680,7 +680,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
 
   "meld": [
-    { kind: "hook", emoji: "🌀", headline: "Live 12's MPE-first dual-engine synth", subtext: "Two engines blend, morph, and respond to touch per note." },
+    { kind: "hook", emoji: "", headline: "Live 12's MPE-first dual-engine synth", subtext: "Two engines blend, morph, and respond to touch per note." },
     { kind: "concept", title: "Dual-engine architecture", body: "Meld has two independent synthesis engines — Engine A and Engine B — each with its own oscillator type (classic, noise, FM, formant, additive). They can layer, split, or morph based on MPE expression.", keyFact: "Five oscillator types per engine: Classic, Noise, FM, Formant, Additive.", visual: "signal-chain"},
     { kind: "concept", title: "MPE expressivity", body: "Meld's entire architecture is designed around per-note MPE data. Pressure can morph between engines. Slide can sweep a filter. Pitch bend per note creates violin-like expression even on polyphonic chords.", keyFact: "Meld without MPE = still great. Meld with MPE = transformative.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Load Meld and morph between engines using the blend control" },
@@ -691,7 +691,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "drum-sampler": [
-    { kind: "hook", emoji: "🥁", headline: "Modern multi-sample drum hits", subtext: "Drum Sampler brings velocity layers and round-robin to every pad." },
+    { kind: "hook", emoji: "", headline: "Modern multi-sample drum hits", subtext: "Drum Sampler brings velocity layers and round-robin to every pad." },
     { kind: "concept", title: "Drum Sampler vs Simpler", body: "Drum Sampler is a dedicated per-pad instrument in Drum Rack (Live 12). Unlike Simpler on a pad, Drum Sampler supports multiple velocity layers and round-robin switching for realistic acoustic drum behaviour.", keyFact: "Same note, different velocity = different sample. That's realism.", visual: "signal-chain"},
     { kind: "concept", title: "One-shot and loop modes", body: "Drum Sampler has dedicated One-Shot mode for percussive hits, tuning per velocity layer, choke group support, and direct integration with Drum Rack routing. It replaces Simpler on pads for acoustic-style kits.", keyFact: "Drum Sampler: designed from scratch for drum sounds specifically.", visual: "signal-chain"},
     { kind: "interact", sim: "beat-builder", prompt: "Play a snare across multiple velocities — hear different layers" },
@@ -702,7 +702,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "hybrid-reverb": [
-    { kind: "hook", emoji: "🏛", headline: "Convolution meets algorithmic — best of both", subtext: "Hybrid Reverb blends real-room IRs with synthetic space." },
+    { kind: "hook", emoji: "", headline: "Convolution meets algorithmic — best of both", subtext: "Hybrid Reverb blends real-room IRs with synthetic space." },
     { kind: "concept", title: "Convolution vs Algorithmic", body: "Convolution reverb uses Impulse Responses (IRs) — actual recordings of real rooms. Algorithmic reverb creates synthetic space with mathematical models. Hybrid Reverb (Live 11) combines both in one device with a blend knob.", keyFact: "IR = photographic realism. Algorithmic = sculpted, unrealistic spaces.", visual: "signal-chain"},
     { kind: "concept", title: "Practical usage", body: "Use the convolution side for realistic room or hall placement. Blend in the algorithmic side for pre-delay, modulation, and size control. The combination lets you put vocals in an impossible room that still feels natural.", keyFact: "Blend to 50%: IR root + algorithmic tail = hybrid space design.", visual: "signal-chain"},
     { kind: "interact", sim: "send-return", prompt: "Load Hybrid Reverb on a Return — blend IR and algorithmic" },
@@ -713,7 +713,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "roar": [
-    { kind: "hook", emoji: "🦁", headline: "Multi-band saturation with feedback paths", subtext: "Roar sculpts distortion across three frequency bands independently." },
+    { kind: "hook", emoji: "", headline: "Multi-band saturation with feedback paths", subtext: "Roar sculpts distortion across three frequency bands independently." },
     { kind: "concept", title: "Roar architecture", body: "Roar (Live 12) splits the signal into low, mid, and high bands. Each band has its own saturation circuit type, Drive amount, and Tone control. Independent band processing means you can saturate mids aggressively while keeping the lows clean.", keyFact: "Roar: distort each frequency band independently — surgical saturation.", visual: "signal-chain"},
     { kind: "concept", title: "Feedback paths", body: "Roar's Feedback control routes the output back into the input, creating self-oscillating resonance and complex harmonic buildup. Low feedback = subtle warmth. High feedback = aggressive feedback distortion textures.", keyFact: "Roar feedback at high values = self-oscillating chaos territory.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Apply Roar to a bass — saturate mid band, keep low clean" },
@@ -724,7 +724,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "stem-separation": [
-    { kind: "hook", emoji: "✂️", headline: "AI separates stems from any audio", subtext: "Extract vocals, drums, bass, and melody from a single file." },
+    { kind: "hook", emoji: "", headline: "AI separates stems from any audio", subtext: "Extract vocals, drums, bass, and melody from a single file." },
     { kind: "concept", title: "Live 12 Stem Separation", body: "Right-click any audio clip → Separate to Stems. Live's built-in AI engine separates the clip into Vocals, Drums, Bass, and Melody tracks. Runs locally on your computer — no cloud, no subscription.", keyFact: "Separate to Stems: right-click audio clip → instant 4-stem output.", visual: "mixer-channel"},
     { kind: "concept", title: "Practical applications", body: "Use Stem Separation to sample-flip (isolate a vocal from a record), remove elements from reference tracks, extend the breakdown of a song, or extract the drum groove for resampling.", keyFact: "Resampling extracted drums through Groove Pool = instant vibe.", visual: "signal-chain"},
     { kind: "interact", sim: "stem-splitter", prompt: "Separate a full mix — isolate the vocal stem" },
@@ -735,7 +735,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "midi-transforms": [
-    { kind: "hook", emoji: "🔁", headline: "Transform notes with one click", subtext: "Strum, arpeggiate, ornament — MIDI Transformations rethink your clips." },
+    { kind: "hook", emoji: "", headline: "Transform notes with one click", subtext: "Strum, arpeggiate, ornament — MIDI Transformations rethink your clips." },
     { kind: "concept", title: "What are MIDI Transformations?", body: "Note Transformations (Live 12) are one-shot MIDI tools in the Piano Roll toolbar. Select notes, pick a transformation, preview the result, and commit. Each tool operates on the clip's note data destructively on commit.", keyFact: "Always duplicate the clip before committing a transformation.", visual: "piano"},
     { kind: "concept", title: "Key transformations", body: "Connect: fills note gaps with connecting notes. Arpeggiate: fans chord across time. Strum: slightly offsets chord notes (guitar-like). Recombine: randomises pitch-rhythm combinations. Ornament: adds grace notes.", keyFact: "Strum + slight timing = instant guitar-like chord strumming.", visual: "signal-chain"},
     { kind: "interact", sim: "midi-transform", prompt: "Apply Strum to a held chord — adjust offset amount" },
@@ -746,7 +746,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "scale-awareness": [
-    { kind: "hook", emoji: "🎵", headline: "The whole project speaks one scale", subtext: "Set scale once — every MIDI clip and Push grid follows." },
+    { kind: "hook", emoji: "", headline: "The whole project speaks one scale", subtext: "Set scale once — every MIDI clip and Push grid follows." },
     { kind: "concept", title: "Global Scale in Live 12", body: "Live 12 introduced a project-wide scale setting shown in the Control Bar. Set the root note and scale type once — every MIDI clip, MIDI effect, and Push 3 grid automatically knows the key.", keyFact: "Control Bar scale selector: root note + scale type (Major, Minor, etc.).", visual: "piano"},
     { kind: "concept", title: "Per-clip overrides", body: "Individual MIDI clips can override the global scale. Right-click notes to fold to scale or transpose within the scale. Push 3 with scale mode dims out-of-scale pads — only musical notes are active.", keyFact: "Scale mode + right-click notes → Transpose in Scale (guaranteed in-key).", visual: "signal-chain"},
     { kind: "interact", sim: "scale-aware", prompt: "Set project scale to D Minor — observe Piano Roll fold" },
@@ -757,7 +757,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "sound-similarity": [
-    { kind: "hook", emoji: "🔍", headline: "Find sounds that sound like this one", subtext: "Live 12's Similarity Search finds by audio content, not names." },
+    { kind: "hook", emoji: "", headline: "Find sounds that sound like this one", subtext: "Live 12's Similarity Search finds by audio content, not names." },
     { kind: "concept", title: "How Similarity Search works", body: "Select a sample in the Browser and click the Similarity Search button. Live analyses the audio characteristics — timbre, spectral content, rhythmic feel — and finds perceptually similar samples in your library.", keyFact: "Similarity Search: right-click any sample → Find Similar.", visual: "signal-chain"},
     { kind: "concept", title: "Combining with filters", body: "Stack Similarity Search with category filters (Kicks, Pads, etc.) and BPM range filters. Start from one sample you love and surf outward — escape preset paralysis by finding sounds you'd never browse to.", keyFact: "Similarity + Tags + BPM filter = highly targeted sound discovery.", visual: "eq-curve"},
     { kind: "interact", sim: "browser-tour", prompt: "Find Similar on a kick sample — explore the results" },
@@ -768,7 +768,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "comping-flow": [
-    { kind: "hook", emoji: "🎙", headline: "Multiple takes, one perfect performance", subtext: "Comp lanes + crossfades = professional vocal and instrument takes." },
+    { kind: "hook", emoji: "", headline: "Multiple takes, one perfect performance", subtext: "Comp lanes + crossfades = professional vocal and instrument takes." },
     { kind: "concept", title: "Recording for comping", body: "Loop a section and record multiple passes. Enable Loop Overdub to have each pass land on a new take lane automatically. Record as many takes as you need — quality beats quantity on each pass.", keyFact: "Record 4–8 takes. Even one great moment per take = a perfect comp.", visual: "signal-chain"},
     { kind: "concept", title: "The comping workflow", body: "In the take lanes area, click and drag horizontally across sections of each lane. Selected regions turn to the comp colour and appear on the top comp lane. Automatic crossfades handle the boundaries.", keyFact: "Drag edge handles on comp regions to adjust crossfade length.", visual: "signal-chain"},
     { kind: "interact", sim: "comp-lake", prompt: "Comp three vocal takes into a finished performance" },
@@ -779,7 +779,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "groove-pool": [
-    { kind: "hook", emoji: "🕺", headline: "Borrow the swing of any loop", subtext: "Extract a groove from a sample, apply it to anything." },
+    { kind: "hook", emoji: "", headline: "Borrow the swing of any loop", subtext: "Extract a groove from a sample, apply it to anything." },
     { kind: "concept", title: "The Groove Pool", body: "Open Show/Hide Groove Pool in the bottom-left. Drag any audio clip there to extract its timing feel. The groove captures both timing offset and velocity patterns — the full rhythmic personality of the loop.", keyFact: "Right-click audio clip → Extract Groove → Pool. Then drag to any clip.", visual: "bpm-grid"},
     { kind: "concept", title: "Groove controls", body: "Each groove in the Pool has four controls: Timing (how much timing deviation to apply), Random (adds variation), Velocity (how much dynamic feel to apply), Base grid (the reference grid). Commit to bake permanently.", keyFact: "Timing 50% + Velocity 30% = subtle human feel without over-cooking.", visual: "bpm-grid"},
     { kind: "interact", sim: "groove-extractor", prompt: "Extract groove from a drumloop — apply it to a MIDI drum clip" },
@@ -790,7 +790,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "linked-track-editing": [
-    { kind: "hook", emoji: "🔗", headline: "Edit multiple tracks as one", subtext: "Split, move, and trim stems in perfect lockstep." },
+    { kind: "hook", emoji: "", headline: "Edit multiple tracks as one", subtext: "Split, move, and trim stems in perfect lockstep." },
     { kind: "concept", title: "Linked track editing in Arrangement", body: "Select multiple tracks in Arrangement and link them. Now splits, moves, fades, and razor cuts apply identically to all linked tracks simultaneously. Essential for drum stems, multi-mic recordings, and any multi-track edit.", keyFact: "Shift+click tracks → Link Tracks. All edits now apply in lockstep.", visual: "signal-chain"},
     { kind: "concept", title: "Why it matters", body: "When you have kick, snare, and overhead mics as separate tracks, you want them perfectly aligned. Linked editing ensures a split at bar 17 on the kick also splits at bar 17 on every other linked track.", keyFact: "Multi-mic drums in phase: always use linked editing.", visual: "signal-chain"},
     { kind: "interact", sim: "arrangement", prompt: "Link three drum stem tracks — make a split cut on all at once" },
@@ -801,7 +801,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "push3-standalone": [
-    { kind: "hook", emoji: "🎒", headline: "Live's engine in a portable box", subtext: "No laptop, full Live, anywhere." },
+    { kind: "hook", emoji: "", headline: "Live's engine in a portable box", subtext: "No laptop, full Live, anywhere." },
     { kind: "concept", title: "Standalone operation", body: "Push 3 Standalone runs Live's complete audio engine on the hardware — including all instruments, effects, and Max for Live devices. USB-C for audio I/O. Battery option available. A complete studio in a travel case.", keyFact: "Push 3: 64 pads, touch display, encoders, I/O — self-contained Live.", visual: "signal-chain"},
     { kind: "concept", title: "File transfer and compatibility", body: "Transfer projects via USB drive or Wi-Fi — plug Push 3 into a computer and it appears as a network drive. Push 3 Standalone projects open directly in Live on your computer. No conversion, same .als format.", keyFact: "Same .als file: open on Push 3 or computer Live interchangeably.", visual: "signal-chain"},
     { kind: "interact", sim: "push3", prompt: "Navigate the Push 3 touchscreen — browse presets and load a sound" },
@@ -812,7 +812,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "cpu-audio-setup": [
-    { kind: "hook", emoji: "💻", headline: "When CPU maxes — here's what to do", subtext: "Four levers: buffer, freeze, flatten, and routing efficiency." },
+    { kind: "hook", emoji: "", headline: "When CPU maxes — here's what to do", subtext: "Four levers: buffer, freeze, flatten, and routing efficiency." },
     { kind: "concept", title: "Buffer size and CPU", body: "Larger buffer size gives the CPU more time per audio chunk — the primary lever for reducing dropouts. Trade-off is higher latency. Use 512–1024 samples for mixing-heavy sessions where real-time input isn't critical.", keyFact: "Recording: 128 samples. Mixing/mastering: 512–1024 samples.", visual: "signal-chain"},
     { kind: "concept", title: "Freeze and Flatten workflow", body: "Freeze renders a track to a temporary audio file — saves CPU while preserving device chain for future edits. Flatten permanently bakes the freeze and removes devices. Duplicate before flattening if you might need the original.", keyFact: "Freeze + Flatten = maximum CPU relief. Duplicate first = safety net.", visual: "signal-chain"},
     { kind: "interact", sim: "buffer-sim", prompt: "Observe CPU meter — freeze a heavy synth and watch it drop" },
@@ -823,7 +823,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "accessibility-features": [
-    { kind: "hook", emoji: "♿", headline: "Live 12 makes music accessible to everyone", subtext: "Screen reader, high contrast, keyboard navigation throughout." },
+    { kind: "hook", emoji: "", headline: "Live 12 makes music accessible to everyone", subtext: "Screen reader, high contrast, keyboard navigation throughout." },
     { kind: "concept", title: "Accessibility in Live 12", body: "Live 12 added formal accessibility support: full screen reader integration, Speak Help (tooltips read aloud), high-contrast UI mode, and comprehensive keyboard navigation across Session, Arrangement, Browser, and Devices.", keyFact: "Preferences > Look/Feel > Accessibility to enable all features.", visual: "signal-chain"},
     { kind: "concept", title: "Speak Help for everyone", body: "Speak Help reads any tooltip text out loud using the system screen reader. Even sighted producers use it as a quick 'what does this do?' shortcut — hover any unfamiliar knob and hear the explanation instantly.", keyFact: "Speak Help = universal discovery tool, not just for screen reader users.", visual: "signal-chain"},
     { kind: "interact", sim: "interface-tour", prompt: "Navigate to a device using keyboard only — no mouse" },
@@ -837,7 +837,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   // ─── CHAPTER 6: SYNTHESIS ────────────────────────────────────────────────
 
   "synth-what-is-sound": [
-    { kind: "hook", emoji: "🔊", headline: "Sound is a wave of pressure", subtext: "Everything you hear starts as vibration moving through air." },
+    { kind: "hook", emoji: "", headline: "Sound is a wave of pressure", subtext: "Everything you hear starts as vibration moving through air." },
     { kind: "concept", title: "Sound as pressure waves", body: "Sound is created when something vibrates — speaker cone, string, vocal cord. The vibration pushes and pulls air molecules, creating pressure waves that travel to your ear at 340 m/s.", keyFact: "No air = no sound. Sound doesn't exist in a vacuum.", visual: "waveform" },
     { kind: "concept", title: "Synthesisers make sound electrically", body: "A synthesiser generates electrical voltage oscillations, shapes them into a desired waveform, then converts to audio via a speaker. No physical vibration needed — mathematics creates the wave.", keyFact: "Synth = electrical signal shaped into a waveform, converted to air movement.", visual: "signal-chain"},
     { kind: "interact", sim: "waveform-visualizer", prompt: "Tap a waveform — see the shape and hear the character" },
@@ -848,7 +848,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-pitch-vs-amplitude": [
-    { kind: "hook", emoji: "📊", headline: "Frequency is pitch. Amplitude is volume.", subtext: "Two measurements define every sound you hear." },
+    { kind: "hook", emoji: "", headline: "Frequency is pitch. Amplitude is volume.", subtext: "Two measurements define every sound you hear." },
     { kind: "concept", title: "Frequency = pitch", body: "Frequency is how many times a wave cycles per second, measured in Hertz (Hz). 440 Hz = 440 cycles per second = A4 concert pitch. Double the frequency = one octave higher.", keyFact: "440 Hz = A4. 880 Hz = A5 (one octave up). 220 Hz = A3.", visual: "frequency-bar" },
     { kind: "concept", title: "Amplitude = volume", body: "Amplitude is the height of the wave — how much the air pressure moves. In digital audio, measured in dBFS. 0 dBFS = maximum before clipping. Every 6 dB doubles perceived loudness.", keyFact: "0 dBFS = ceiling. Aim for −6 dBFS peak during mixing.", visual: "amplitude-dial" },
     { kind: "interact", sim: "ear-training", prompt: "Identify the higher-pitched tone — trust your ears" },
@@ -859,7 +859,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-timbre": [
-    { kind: "hook", emoji: "🎸", headline: "Same note, totally different sound", subtext: "Piano and guitar play C4 — but sound nothing alike. That's timbre." },
+    { kind: "hook", emoji: "", headline: "Same note, totally different sound", subtext: "Piano and guitar play C4 — but sound nothing alike. That's timbre." },
     { kind: "concept", title: "What is timbre?", body: "Timbre (TAM-ber) is tonal colour — what makes a violin different from a flute at the same pitch and volume. Timbre is defined by which harmonics are present and how loud each one is.", keyFact: "Timbre = harmonic recipe. Different ingredients = different character.", visual: "waveform-compare"},
     { kind: "concept", title: "Harmonics shape timbre", body: "A sine wave has zero harmonics — pure tone. A sawtooth has all harmonics — bright and buzzy. A square has only odd harmonics — hollow and woody. A triangle has weak odd harmonics — soft.", keyFact: "More harmonics = brighter. Fewer harmonics = purer and softer.", visual: "waveform" },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Switch waveforms — hear how timbre changes with each shape" },
@@ -870,7 +870,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-harmonics": [
-    { kind: "hook", emoji: "🎻", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and hear hidden frequencies above it." },
+    { kind: "hook", emoji: "", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and hear hidden frequencies above it." },
     { kind: "concept", title: "The harmonic series", body: "Every pitched sound contains a fundamental frequency plus harmonics at 2×, 3×, 4× the fundamental. These are always whole-number multiples. Their relative loudness defines the timbre.", keyFact: "Harmonic 2 = octave. Harmonic 3 = octave+fifth. Harmonic 4 = 2 octaves.", visual: "frequency-bar" },
     { kind: "concept", title: "Harmonics in synthesis", body: "Synthesisers can add or remove harmonics precisely. A low-pass filter cuts high harmonics, making the sound darker. Adding upper partials (overtones) makes it brighter. This is the core of subtractive synthesis.", keyFact: "Low-pass filter = removes high harmonics = darker sound.", visual: "frequency-bar"},
     { kind: "interact", sim: "ear-training", prompt: "Identify the instrument by its harmonic content" },
@@ -881,7 +881,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-noise": [
-    { kind: "hook", emoji: "📻", headline: "Noise is all frequencies at once", subtext: "White noise contains every frequency equally — the ultimate source." },
+    { kind: "hook", emoji: "", headline: "Noise is all frequencies at once", subtext: "White noise contains every frequency equally — the ultimate source." },
     { kind: "concept", title: "Noise as a synthesis source", body: "White noise contains all audible frequencies at equal energy. Pink noise has equal energy per octave (sounds more natural). Noise is essential for snares, hi-hats, breath sounds, and adding air to synth pads.", keyFact: "White = all frequencies equally. Pink = equal energy per octave.", visual: "waveform"},
     { kind: "concept", title: "Noise in subtractive synthesis", body: "Start with white noise. Apply a short envelope (fast attack, fast decay) and you get a snare transient. Apply a long band-pass filter and you get ocean waves. Noise shaped by envelope and filter = almost anything.", keyFact: "Noise + filter + envelope = snares, waves, wind, breath, explosions.", visual: "waveform"},
     { kind: "interact", sim: "waveform-visualizer", prompt: "Listen to white noise — observe the random waveform" },
@@ -894,7 +894,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
 
   "synth-oscillators": [
-    { kind: "hook", emoji: "📡", headline: "Oscillators are the voice of a synth", subtext: "They generate the raw waveform — everything starts here." },
+    { kind: "hook", emoji: "", headline: "Oscillators are the voice of a synth", subtext: "They generate the raw waveform — everything starts here." },
     { kind: "concept", title: "What oscillators do", body: "An oscillator generates a repeating waveform at a set frequency. The keyboard sets the frequency. The waveform choice (sine, saw, square, triangle, noise) determines the harmonic content and initial timbre.", keyFact: "Oscillator = pitch + waveform. The synth's raw voice.", visual: "waveform-compare"},
     { kind: "concept", title: "Multiple oscillators", body: "Most synths have 2–3 oscillators. Running them at the same pitch creates a fatter sound. Detune them slightly for a chorus effect. Tune one an octave up for brightness, or a fifth for a classic 2-oscillator texture.", keyFact: "2 oscillators slightly detuned = instant super-saw pad width.", visual: "waveform" },
     { kind: "interact", sim: "osc-mixer", prompt: "Add a second oscillator — detune slightly and hear the width" },
@@ -905,7 +905,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-mixing-oscillators": [
-    { kind: "hook", emoji: "🎛", headline: "Mix oscillators to blend timbres", subtext: "Two waveforms at different levels creates a new timbre." },
+    { kind: "hook", emoji: "", headline: "Mix oscillators to blend timbres", subtext: "Two waveforms at different levels creates a new timbre." },
     { kind: "concept", title: "The oscillator mixer", body: "Between the oscillator(s) and the filter is an oscillator mixer. Blend two or more oscillators at different levels to combine their timbres. 50% saw + 50% square creates a blend you can't get from one wave alone.", keyFact: "Osc mix = timbre blend. 100% Osc1 + 0% Osc2 = pure Osc1 character.", visual: "waveform-compare"},
     { kind: "concept", title: "Sub-oscillator and noise", body: "Many synths include a sub-oscillator (one octave below Osc1) for added bass weight, and a noise generator for air and transient texture. The mixer lets you blend all these sources at independent levels.", keyFact: "Sub osc at 20% + saw at 80% = thick bass that sits low in the mix.", visual: "waveform-compare"},
     { kind: "interact", sim: "osc-mixer", prompt: "Blend sawtooth and square oscillators — find a character between them" },
@@ -916,7 +916,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-detune-unison": [
-    { kind: "hook", emoji: "🎻", headline: "Detune creates width. Unison creates mass.", subtext: "These two techniques separate amateur patches from pro ones." },
+    { kind: "hook", emoji: "", headline: "Detune creates width. Unison creates mass.", subtext: "These two techniques separate amateur patches from pro ones." },
     { kind: "concept", title: "Detune and beating", body: "When two oscillators are slightly detuned (a few cents apart), they beat against each other at a rate equal to their frequency difference. 5 Hz apart = five beats per second — heard as slow chorus shimmer.", keyFact: "0 cents = clean. 5–10 cents = chorus. 20+ cents = out of tune.", visual: "waveform-compare"},
     { kind: "concept", title: "Unison voicing", body: "Unison stacks multiple copies of the voice (2, 4, 8, 16) simultaneously, each slightly detuned. The result is a 'supersaw' or thick pad sound. Unison voices are spread stereo for massive width.", keyFact: "Unison 8 voices + detune 10 cents = the classic trance supersawpad.", visual: "waveform-compare"},
     { kind: "interact", sim: "osc-mixer", prompt: "Enable Unison on Wavetable — increase voice count and hear it thicken" },
@@ -927,7 +927,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-filters": [
-    { kind: "hook", emoji: "🎛", headline: "Filters sculpt the harmonic content", subtext: "The filter is where subtractive synthesis gets its name." },
+    { kind: "hook", emoji: "", headline: "Filters sculpt the harmonic content", subtext: "The filter is where subtractive synthesis gets its name." },
     { kind: "concept", title: "The low-pass filter", body: "A low-pass filter (LPF) passes frequencies below the cutoff and removes those above. Sweep the cutoff down and the sound gets darker. Sweep up and brightness returns. The most important control in a synth.", keyFact: "LPF: low frequencies pass. High frequencies cut at the cutoff point.", visual: "signal-chain"},
     { kind: "concept", title: "Resonance (Q)", body: "Resonance boosts frequencies near the cutoff point — adding a sharp, ringing peak. Low resonance = smooth filtering. High resonance = squelchy, whistling character. At maximum resonance, a filter self-oscillates.", keyFact: "High resonance + cutoff sweep = classic synth 'wah' or 'acid' sound.", visual: "eq-curve" },
     { kind: "interact", sim: "filter-envelope", prompt: "Sweep filter cutoff — listen as harmonics appear and disappear" },
@@ -938,7 +938,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-amp-envelope": [
-    { kind: "hook", emoji: "📈", headline: "ADSR shapes how a note evolves over time", subtext: "Attack, Decay, Sustain, Release — four knobs, infinite expression." },
+    { kind: "hook", emoji: "", headline: "ADSR shapes how a note evolves over time", subtext: "Attack, Decay, Sustain, Release — four knobs, infinite expression." },
     { kind: "concept", title: "The four stages of ADSR", body: "Attack: time to reach full volume after key press. Decay: time to fall from peak to Sustain level. Sustain: volume level held while key is pressed. Release: time to fade to silence after key release.", keyFact: "Attack 0 = immediate. Release 0 = instant cut. Long both = pad shape.", visual: "amplitude-dial"},
     { kind: "concept", title: "Envelope shapes define feel", body: "Plucky sound: fast attack, fast decay, zero sustain, medium release. Pad sound: slow attack, no decay, full sustain, slow release. Percussion: fast attack, fast decay, zero sustain, fast release.", keyFact: "Piano: fast attack, medium decay, zero sustain, medium release.", visual: "waveform" },
     { kind: "interact", sim: "filter-envelope", prompt: "Adjust attack and release — hear how the note shape changes" },
@@ -949,7 +949,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-filter-envelope": [
-    { kind: "hook", emoji: "🌊", headline: "Envelopes control more than just volume", subtext: "Route an envelope to the filter for dynamic timbre changes." },
+    { kind: "hook", emoji: "", headline: "Envelopes control more than just volume", subtext: "Route an envelope to the filter for dynamic timbre changes." },
     { kind: "concept", title: "Filter envelope", body: "A filter envelope modulates the filter cutoff frequency over time. Set the Amount to positive: filter opens on attack, closes on decay. Negative Amount: filter closes on attack, opens on decay (rare, but used for reverse sweeps).", keyFact: "Envelope Amount = how far the filter sweeps from its initial cutoff.", visual: "eq-curve"},
     { kind: "concept", title: "Combining amp and filter envelopes", body: "Amp envelope shapes volume over time. Filter envelope shapes brightness over time — independently. A note can start bright and get darker (filter decays down) while its volume holds steady (amp sustaining).", keyFact: "Amp env + filter env = complex, evolving, expressive sound design.", visual: "eq-curve"},
     { kind: "interact", sim: "filter-envelope", prompt: "Set filter envelope amount to 80% — hear cutoff move on each note" },
@@ -960,7 +960,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-amp-vs-filter-env": [
-    { kind: "hook", emoji: "⚖️", headline: "Amp and filter envelopes work together", subtext: "One shapes volume, one shapes brightness — both shape feel." },
+    { kind: "hook", emoji: "", headline: "Amp and filter envelopes work together", subtext: "One shapes volume, one shapes brightness — both shape feel." },
     { kind: "concept", title: "Side by side", body: "Amp envelope controls the overall loudness envelope of the note (ADSR applied to volume). Filter envelope controls the tonal brightness over time (ADSR applied to filter cutoff). They run simultaneously and independently.", keyFact: "Fast filter decay + slow amp decay = starts bright, sustains dark.", visual: "signal-chain"},
     { kind: "concept", title: "Making sounds dynamic", body: "A static synth (no modulation, envelopes flat) sounds like a lifeless tone. Adding amp envelope gives it a shape. Adding filter envelope gives it tonal movement. Together they make a sound feel alive and played, not generated.", keyFact: "Velocity → envelope depth = dynamics that respond to touch.", visual: "signal-chain"},
     { kind: "interact", sim: "filter-envelope", prompt: "Set different amp and filter envelope times — observe the independence" },
@@ -971,7 +971,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-lfo": [
-    { kind: "hook", emoji: "〰️", headline: "LFO creates automatic cyclic movement", subtext: "Below 20 Hz — too slow to hear as pitch, but felt as modulation." },
+    { kind: "hook", emoji: "〰", headline: "LFO creates automatic cyclic movement", subtext: "Below 20 Hz — too slow to hear as pitch, but felt as modulation." },
     { kind: "concept", title: "What is an LFO?", body: "A Low Frequency Oscillator (LFO) generates a waveform below the audible range (typically 0.1–20 Hz). Route its output to a parameter — pitch (vibrato), filter (wah), volume (tremolo) — for automatic cyclic movement.", keyFact: "LFO to pitch = vibrato. LFO to filter = wah. LFO to amp = tremolo.", visual: "waveform"},
     { kind: "concept", title: "LFO controls", body: "Rate controls how fast the LFO cycles. Depth controls how much it moves the target. Waveform shapes the movement: sine = smooth, square = binary stepping, S&H = random steps. Sync to tempo for rhythmically locked movement.", keyFact: "LFO synced to 1/4 note rate = filter modulation that pulses on the beat.", visual: "waveform"},
     { kind: "interact", sim: "lfo-lab", prompt: "Route an LFO to filter cutoff — adjust rate and depth" },
@@ -982,7 +982,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-modulation-routing": [
-    { kind: "hook", emoji: "🗺", headline: "Connect any source to any destination", subtext: "Modulation routing is the superpower of modern synthesis." },
+    { kind: "hook", emoji: "", headline: "Connect any source to any destination", subtext: "Modulation routing is the superpower of modern synthesis." },
     { kind: "concept", title: "Modulation sources and destinations", body: "Sources: LFO, envelope, velocity, aftertouch, mod wheel, MIDI CC. Destinations: any parameter — filter cutoff, pitch, volume, pan, oscillator position. Route any source to any destination via the modulation matrix.", keyFact: "Velocity → filter cutoff amount = brighter when you play harder.", visual: "waveform"},
     { kind: "concept", title: "Modulation matrix in Wavetable", body: "Wavetable's modulation matrix is at the bottom of the device. Drag from a source row to a destination column. Set the amount (positive or negative). Stack multiple sources modulating the same destination.", keyFact: "Envelope 2 → Filter Cutoff + LFO 1 → Filter Cutoff = complex filter movement.", visual: "waveform"},
     { kind: "interact", sim: "lfo-lab", prompt: "Route velocity to filter cutoff amount — play hard vs soft" },
@@ -993,7 +993,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-fm-basics": [
-    { kind: "hook", emoji: "📡", headline: "FM synthesis creates complex harmonics from simple oscillators", subtext: "One oscillator modulates another's frequency — mathematics makes music." },
+    { kind: "hook", emoji: "", headline: "FM synthesis creates complex harmonics from simple oscillators", subtext: "One oscillator modulates another's frequency — mathematics makes music." },
     { kind: "concept", title: "How FM works", body: "In FM synthesis, a Modulator oscillator modulates the frequency of a Carrier oscillator. This creates new frequencies (sidebands) that don't exist in either oscillator alone — complex harmonic spectra from just two sines.", keyFact: "Higher modulator output = more sidebands = brighter, more complex sound.", visual: "signal-chain"},
     { kind: "concept", title: "Carrier to modulator ratio", body: "The ratio between carrier and modulator frequency determines the character. Integer ratios (1:1, 2:1) produce harmonic timbres — musical and pitched. Non-integer ratios (1:1.41) produce inharmonic timbres — bells, metallic.", keyFact: "Integer ratio = harmonic. Non-integer ratio = inharmonic (metallic, bell).", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "In Operator: adjust modulator level — hear harmonics emerge" },
@@ -1004,7 +1004,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-effects": [
-    { kind: "hook", emoji: "🌀", headline: "Effects bring the synth to life", subtext: "Chorus, reverb, delay, distortion — the final 20% that makes a patch." },
+    { kind: "hook", emoji: "", headline: "Effects bring the synth to life", subtext: "Chorus, reverb, delay, distortion — the final 20% that makes a patch." },
     { kind: "concept", title: "Essential synth effects", body: "Chorus doubles the signal with subtle pitch/time variation — creates width and warmth. Reverb adds space and dimension. Delay adds rhythmic echoes. Distortion/saturation adds harmonics and edge. Each transforms the raw synth sound.", keyFact: "Every great synth pad uses chorus + reverb. Every synth bass uses saturation.", visual: "signal-chain"},
     { kind: "concept", title: "Effects signal flow", body: "Effects in a synth follow this order: Oscillator → Filter → Amp Envelope → Chorus → EQ → Reverb → Output. Each stage processes the previous. Order matters — distortion before reverb vs reverb before distortion sound completely different.", keyFact: "Distortion before reverb = clean distorted synth in a space. Reversed = muddy.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Add chorus and reverb to a synth — hear the transformation" },
@@ -1015,7 +1015,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-preset-anatomy": [
-    { kind: "hook", emoji: "🔬", headline: "Dissect a preset to learn synthesis", subtext: "Every professional preset uses the same building blocks." },
+    { kind: "hook", emoji: "", headline: "Dissect a preset to learn synthesis", subtext: "Every professional preset uses the same building blocks." },
     { kind: "concept", title: "Reading a preset", body: "Open any preset in Wavetable or Operator. Identify the oscillator waveform, filter cutoff and resonance, amp envelope shape, filter envelope, modulation matrix connections, and effects. Each choice is intentional.", keyFact: "Reverse-engineer 10 great presets and you understand synthesis deeply.", visual: "signal-chain"},
     { kind: "concept", title: "Common preset categories", body: "Pads: slow attack, full sustain, slow release, chorus, reverb. Bass: fast attack, no release, filter envelope for movement. Lead: medium attack, no sustain (plucky), distortion/unison. Pluck: fast attack, fast decay, zero sustain, reverb.", keyFact: "Attack time alone sets a preset's feel: slow = pad, fast = stab or pluck.", visual: "signal-chain"},
     { kind: "interact", sim: "subtractive-synth", prompt: "Match the given target sound by adjusting your patch" },
@@ -1026,7 +1026,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "synth-build-your-own": [
-    { kind: "hook", emoji: "🏗", headline: "Build a patch from scratch", subtext: "Start with Init — every great sound is zero to finished." },
+    { kind: "hook", emoji: "", headline: "Build a patch from scratch", subtext: "Start with Init — every great sound is zero to finished." },
     { kind: "concept", title: "Patch building workflow", body: "1. Start from Init preset. 2. Choose oscillator waveform for the right harmonic base. 3. Set filter cutoff and resonance for the target brightness. 4. Shape the amp envelope for the musical role. 5. Add filter envelope for movement. 6. Modulation for expression. 7. Effects for space.", keyFact: "Init → Osc → Filter → AmpEnv → FilterEnv → Mod → Effects. That's the path.", visual: "signal-chain"},
     { kind: "concept", title: "Iteration and ear", body: "Sound design is iterative — set a parameter, listen, adjust. Your ear is the final judge, not the numbers. Compare your patch to reference tracks in the same genre. The gap between yours and theirs shows you what to develop.", keyFact: "Reference tracks are your target. What specifically sounds different? Fix that.", visual: "signal-chain"},
     { kind: "interact", sim: "subtractive-synth", prompt: "Build a plucky lead from Init — match the brief" },

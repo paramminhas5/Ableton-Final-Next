@@ -54,7 +54,7 @@ function saveResult(score: number, correct: number) {
 }
 
 function getWeeklyTheme() {
-  const themes = ["🎵 Music Theory Week", "🎧 DJ Techniques Week", "🎛 Production Week", "🔊 Sound Science Week"];
+  const themes = ["Music Theory Week", "DJ Techniques Week", "Production Week", "Sound Science Week"];
   const week = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
   return themes[week % themes.length];
 }
@@ -164,7 +164,7 @@ export function ChallengePageClient() {
           ))}
         </div>
         <div className="flex items-center gap-2 font-mono text-sm">
-          <span className="text-hot">♥</span>
+          <span className="text-hot"></span>
           <span className="opacity-60">{progress.hearts}/{5} hearts remaining</span>
         </div>
         <div className="space-y-2">
@@ -269,7 +269,7 @@ export function ChallengePageClient() {
       </div>
       <div className="space-y-2">
         <Link href="/leaderboard" className="w-full brutal-border bg-volt text-bone py-3 font-mono text-xs uppercase brutal-press block text-center">
-          🏆 View Challenge Leaderboard →
+          View Challenge Leaderboard →
         </Link>
         <Link href="/" className="w-full brutal-border bg-bone/10 py-3 font-mono text-xs uppercase brutal-press block text-center">
           ← Back to Dashboard

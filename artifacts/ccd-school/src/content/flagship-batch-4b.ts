@@ -7,7 +7,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   "crate-digging": [
-    { kind: "hook", emoji: "📦", headline: "The track nobody else has is the one they remember", subtext: "Digging is how you build a sound that is yours." },
+    { kind: "hook", emoji: "", headline: "The track nobody else has is the one they remember", subtext: "Digging is how you build a sound that is yours." },
     { kind: "concept", title: "Where to look", body: "Crate digging used to mean flipping through record bins. Now it includes online stores such as Beatport, Bandcamp, Juno and Traxsource, artist and label pages, mixes and radio shows, and other DJs' charts. The skill is the same: listen widely, keep what moves you.", keyFact: "Listen widely, keep what moves you." },
     { kind: "interact", sim: "browser-tour", prompt: "Browse a library. Find tracks by label." },
     { kind: "concept", title: "Follow labels and artists", body: "Labels tend to have a sound. If you love four of their releases, the fifth is worth a listen. Mixes and radio shows reveal tracks before you would find them in a store.", keyFact: "Trust labels you already love." },
@@ -19,7 +19,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "export-mode-dj": [
-    { kind: "hook", emoji: "💾", headline: "Your laptop stays home. Your USB walks into the club.", subtext: "Preparation in Export mode decides how the night goes." },
+    { kind: "hook", emoji: "", headline: "Your laptop stays home. Your USB walks into the club.", subtext: "Preparation in Export mode decides how the night goes." },
     { kind: "concept", title: "The order that works", body: "Import tracks, let rekordbox analyse them, check the beat grids, set your cue points, build playlists, then export them to your USB. Doing it in that order means the USB carries the grids and cues you checked.", keyFact: "Analyse, check grids, set cues, then export." },
     { kind: "interact", sim: "browser-tour", prompt: "Pick a playlist. Export it to a USB." },
     { kind: "concept", title: "Export again after changes", body: "The USB holds a copy from when you exported. If you change a grid, a cue or a playlist afterwards, export again so the USB matches. A mismatch is a classic reason a cue is missing at the club.", keyFact: "Changed something? Export again." },
@@ -32,7 +32,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "waveform-reading": [
-    { kind: "hook", emoji: "🌊", headline: "See the track before you hear it", subtext: "The waveform shows you where the drop is coming." },
+    { kind: "hook", emoji: "", headline: "See the track before you hear it", subtext: "The waveform shows you where the drop is coming." },
     { kind: "concept", title: "Shape tells structure", body: "A tall, dense stretch of waveform is a loud, full part of the track: a drop or main section. A thin, low stretch is quieter: an intro, breakdown or outro. Reading these shapes lets you plan a mix without listening to the whole track.", keyFact: "Tall and dense is full. Thin and low is quiet." },
     { kind: "interact", sim: "waveform-visualizer", prompt: "Find the breakdown. Find the drop." },
     { kind: "concept", title: "Colour shows frequency", body: "In a colour waveform, the colour shifts with which frequencies are present, so a bass-heavy part looks different from a bright hi-hat part. The exact colours differ by software and player, so open your waveform settings or legend to see which colour means what on yours.", keyFact: "Colour shows frequency. Check your legend." },
@@ -44,7 +44,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "beatmatching-manual": [
-    { kind: "hook", emoji: "🥁", headline: "Two kicks that become one", subtext: "Beatmatching is the oldest DJ skill and still the one that saves you." },
+    { kind: "hook", emoji: "", headline: "Two kicks that become one", subtext: "Beatmatching is the oldest DJ skill and still the one that saves you." },
     { kind: "concept", title: "Two things to match", body: "You match the tempo (how fast) and the phase (where the beats fall). Tempo is set with the pitch control. Phase is fixed by nudging the track forward or back with the jog wheel. You need both: a matched tempo can still be off by half a beat.", keyFact: "Tempo with the pitch fader. Phase with the jog.", visual: "waveform-zoom" },
     { kind: "interact", sim: "beatmatch-trainer", prompt: "Match the tempo, then nudge the phase." },
     { kind: "concept", title: "Listen for drift", body: "Start the incoming track on beat, listen in your headphones against the master. If the incoming kick moves ahead of the master, it is too fast. If it falls behind, it is too slow. Adjust the pitch control and listen again. Which direction on the pitch fader speeds a track up depends on the unit, so check the percentage or BPM on the display.", keyFact: "Ahead means too fast. Behind means too slow." },
@@ -57,7 +57,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "sync-function": [
-    { kind: "hook", emoji: "🔗", headline: "A tool, not a shortcut", subtext: "Sync saves your hands for the parts that need them." },
+    { kind: "hook", emoji: "", headline: "A tool, not a shortcut", subtext: "Sync saves your hands for the parts that need them." },
     { kind: "concept", title: "What sync does", body: "Sync matches the tempo of one deck to another, and in many setups also lines up the beats using the beat grid. One deck acts as the master that the others follow. You can usually see which deck is the master on the display.", keyFact: "Sync follows the grid. One deck leads." },
     { kind: "interact", sim: "beatmatch-trainer", prompt: "Try sync. Then try it by hand." },
     { kind: "concept", title: "Where sync helps", body: "With sync handling the tempo, your hands are free for EQ, effects and loops. For tracks with a good grid and steady tempo it is fast and reliable, and many working DJs use it.", keyFact: "Sync frees your hands." },
@@ -69,7 +69,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "cue-points-dj": [
-    { kind: "hook", emoji: "📍", headline: "Jump to the drop without scrubbing", subtext: "Cue points are bookmarks inside a track." },
+    { kind: "hook", emoji: "", headline: "Jump to the drop without scrubbing", subtext: "Cue points are bookmarks inside a track." },
     { kind: "concept", title: "Two kinds, two jobs", body: "In rekordbox, memory cues mark points you want to remember and step between, such as the first beat, a breakdown or the outro. Hot cues are for instant jumps during a performance, and you can give them colours. Both are stored with the track in your collection.", keyFact: "Memory cues bookmark. Hot cues trigger." },
     { kind: "interact", sim: "hot-cue-drill", prompt: "Set hot cues. Trigger them." },
     { kind: "concept", title: "Where to put them", body: "Mark the places you will actually use: the first beat of the intro, the first drop, the main breakdown, and where the outro begins. With those four you can navigate any track without scrubbing.", keyFact: "Intro, drop, breakdown, outro." },
@@ -81,7 +81,7 @@ export const FLAGSHIP_BATCH_4B: Record<string, LessonScreen[]> = {
   ],
 
   "eq-mixing-dj": [
-    { kind: "hook", emoji: "🎚️", headline: "Never two bass lines at full volume", subtext: "The bass swap is how you keep a blend clean." },
+    { kind: "hook", emoji: "", headline: "Never two bass lines at full volume", subtext: "The bass swap is how you keep a blend clean." },
     { kind: "concept", title: "Three bands, three jobs", body: "Low holds the kick and bass. Mid holds the body of most instruments and vocals. High holds the hats and brightness. Turning a band down removes that part of the sound from the track.", keyFact: "Low, mid, high: three parts of every track.", visual: "mixer-channel" },
     { kind: "interact", sim: "mixer", prompt: "Cut the incoming bass. Then swap." },
     { kind: "concept", title: "The bass swap", body: "Bring the incoming track in with its low EQ turned down. When the moment is right, bring its low up as you take the outgoing track's low down at the same time. For a short stretch you hear both tracks without a pile-up of bass.", keyFact: "One bass line at a time." },

@@ -10,7 +10,7 @@ import type { LessonScreen } from "./types";
 export const SCREENS_WHAT_IS_SOUND: LessonScreen[] = [
   {
     kind: "hook",
-    emoji: "🔊",
+    emoji: "",
     headline: "Everything you hear is a wave",
     subtext: "Sound is pressure moving through air — nothing more.",
   },
@@ -65,7 +65,7 @@ export const SCREENS_WHAT_IS_SOUND: LessonScreen[] = [
 
 
 export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
-  { kind: "hook", emoji: "🎵", headline: "Frequency is the number behind every pitch", subtext: "440 Hz is the A above middle C — that's 440 vibrations per second." },
+  { kind: "hook", emoji: "", headline: "Frequency is the number behind every pitch", subtext: "440 Hz is the A above middle C — that's 440 vibrations per second." },
   {
     kind: "concept",
     title: "Frequency = pitch",
@@ -110,7 +110,7 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
 
 
 export const SCREENS_AMPLITUDE_VOLUME: LessonScreen[] = [
-  { kind: "hook", emoji: "📊", headline: "Volume is measured in decibels", subtext: "0 dBFS is the digital ceiling — cross it and you get distortion." },
+  { kind: "hook", emoji: "", headline: "Volume is measured in decibels", subtext: "0 dBFS is the digital ceiling — cross it and you get distortion." },
   {
     kind: "concept",
     title: "Amplitude & dBFS",
@@ -147,7 +147,7 @@ export const SCREENS_AMPLITUDE_VOLUME: LessonScreen[] = [
 ];
 
 export const SCREENS_TIMBRE_TONE: LessonScreen[] = [
-  { kind: "hook", emoji: "🎸", headline: "Same note, totally different sound", subtext: "A piano and guitar both play C4 — but sound nothing alike. That's timbre." },
+  { kind: "hook", emoji: "", headline: "Same note, totally different sound", subtext: "A piano and guitar both play C4 — but sound nothing alike. That's timbre." },
   {
     kind: "concept",
     title: "What is timbre?",
@@ -187,7 +187,7 @@ export const SCREENS_TIMBRE_TONE: LessonScreen[] = [
 
 // Path 2 — Perception
 export const SCREENS_WAVEFORMS: LessonScreen[] = [
-  { kind: "hook", emoji: "〰️", headline: "4 shapes make every synth sound", subtext: "Sine, square, sawtooth, triangle — these are the building blocks." },
+  { kind: "hook", emoji: "〰", headline: "4 shapes make every synth sound", subtext: "Sine, square, sawtooth, triangle — these are the building blocks." },
   {
     kind: "concept",
     title: "The 4 fundamental waves",
@@ -220,7 +220,7 @@ export const SCREENS_WAVEFORMS: LessonScreen[] = [
 ];
 
 export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
-  { kind: "hook", emoji: "🏛", headline: "Every room shapes what you hear", subtext: "The same sound in a church vs a cupboard sounds completely different." },
+  { kind: "hook", emoji: "", headline: "Every room shapes what you hear", subtext: "The same sound in a church vs a cupboard sounds completely different." },
   {
     kind: "concept",
     title: "Reverb & reflection",
@@ -257,7 +257,7 @@ export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
 
 
 export const SCREENS_OVERTONES_HARMONICS: LessonScreen[] = [
-  { kind: "hook", emoji: "🎻", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and you hear C — plus hidden frequencies above it." },
+  { kind: "hook", emoji: "", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and you hear C — plus hidden frequencies above it." },
   {
     kind: "concept",
     title: "The harmonic series",
@@ -286,7 +286,7 @@ export const SCREENS_OVERTONES_HARMONICS: LessonScreen[] = [
 ];
 
 export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
-  { kind: "hook", emoji: "👂", headline: "Your ears are not flat — they have opinions", subtext: "Loud low frequencies need much more power than loud high frequencies." },
+  { kind: "hook", emoji: "", headline: "Your ears are not flat — they have opinions", subtext: "Loud low frequencies need much more power than loud high frequencies." },
   {
     kind: "concept",
     title: "Equal-loudness contours",
@@ -331,7 +331,7 @@ export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_WHAT_IS_RHYTHM: LessonScreen[] = [
-  { kind: "hook", emoji: "🥁", headline: "Rhythm is the skeleton of music", subtext: "Without it, notes are just noise. With it, music has direction." },
+  { kind: "hook", emoji: "", headline: "Rhythm is the skeleton of music", subtext: "Without it, notes are just noise. With it, music has direction." },
   {
     kind: "concept",
     title: "Pulse & rhythm",
@@ -400,7 +400,7 @@ export const SCREENS_TEMPO_BPM: LessonScreen[] = [
 
 
 export const SCREENS_BARS_TIME_SIGNATURES: LessonScreen[] = [
-  { kind: "hook", emoji: "📏", headline: "Music is measured in bars", subtext: "A bar is a unit of time. In 4/4, every bar has exactly 4 beats." },
+  { kind: "hook", emoji: "", headline: "Music is measured in bars", subtext: "A bar is a unit of time. In 4/4, every bar has exactly 4 beats." },
   {
     kind: "concept",
     title: "Bars & time signatures",
@@ -435,7 +435,7 @@ export const SCREENS_BARS_TIME_SIGNATURES: LessonScreen[] = [
 ];
 
 export const SCREENS_GROOVE_FEEL: LessonScreen[] = [
-  { kind: "hook", emoji: "🕺", headline: "Groove is the human element in rhythm", subtext: "Perfectly quantised drums feel robotic. Groove puts the life back in." },
+  { kind: "hook", emoji: "", headline: "Groove is the human element in rhythm", subtext: "Perfectly quantised drums feel robotic. Groove puts the life back in." },
   {
     kind: "concept",
     title: "What is groove?",
@@ -479,7 +479,7 @@ export const SCREENS_GROOVE_FEEL: LessonScreen[] = [
 
 // Path 2 — Groove & Subdivision
 export const SCREENS_SYNCOPATION: LessonScreen[] = [
-  { kind: "hook", emoji: "🔀", headline: "Syncopation hits when you don't expect it", subtext: "The off-beat accent is what makes funk, reggae, and house feel so good." },
+  { kind: "hook", emoji: "", headline: "Syncopation hits when you don't expect it", subtext: "The off-beat accent is what makes funk, reggae, and house feel so good." },
   {
     kind: "concept",
     title: "On-beat vs off-beat",
@@ -509,7 +509,7 @@ export const SCREENS_SYNCOPATION: LessonScreen[] = [
 ];
 
 export const SCREENS_POLYRHYTHM: LessonScreen[] = [
-  { kind: "hook", emoji: "🌀", headline: "Two rhythms at once — and they cycle back", subtext: "Polyrhythm is when different subdivisions play simultaneously." },
+  { kind: "hook", emoji: "", headline: "Two rhythms at once — and they cycle back", subtext: "Polyrhythm is when different subdivisions play simultaneously." },
   {
     kind: "concept",
     title: "What is polyrhythm?",
@@ -548,7 +548,7 @@ export const SCREENS_POLYRHYTHM: LessonScreen[] = [
 
 
 export const SCREENS_NOTE_VALUES: LessonScreen[] = [
-  { kind: "hook", emoji: "🎼", headline: "Notes have time values, not just pitches", subtext: "A whole note lasts 4 beats. A 16th note lasts a quarter of one beat." },
+  { kind: "hook", emoji: "", headline: "Notes have time values, not just pitches", subtext: "A whole note lasts 4 beats. A 16th note lasts a quarter of one beat." },
   {
     kind: "concept",
     title: "Note values",
@@ -577,7 +577,7 @@ export const SCREENS_NOTE_VALUES: LessonScreen[] = [
 ];
 
 export const SCREENS_RHYTHM_IN_PRODUCTION: LessonScreen[] = [
-  { kind: "hook", emoji: "🎛", headline: "The DAW grid is your rhythm map", subtext: "Every note you place sits on a grid position. The grid is the bar, subdivided." },
+  { kind: "hook", emoji: "", headline: "The DAW grid is your rhythm map", subtext: "Every note you place sits on a grid position. The grid is the bar, subdivided." },
   {
     kind: "concept",
     title: "The DAW grid",
@@ -628,7 +628,7 @@ export const SCREENS_RHYTHM_IN_PRODUCTION: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_NOTES_AND_OCTAVES: LessonScreen[] = [
-  { kind: "hook", emoji: "🎹", headline: "12 notes repeat across octaves forever", subtext: "C-D-E-F-G-A-B, then back to C — just one octave higher." },
+  { kind: "hook", emoji: "", headline: "12 notes repeat across octaves forever", subtext: "C-D-E-F-G-A-B, then back to C — just one octave higher." },
   {
     kind: "concept",
     title: "The 12 notes",
@@ -664,7 +664,7 @@ export const SCREENS_NOTES_AND_OCTAVES: LessonScreen[] = [
 ];
 
 export const SCREENS_MAJOR_SCALE: LessonScreen[] = [
-  { kind: "hook", emoji: "☀️", headline: "The major scale sounds happy and bright", subtext: "7 notes, a specific pattern of steps — the foundation of Western music." },
+  { kind: "hook", emoji: "", headline: "The major scale sounds happy and bright", subtext: "7 notes, a specific pattern of steps — the foundation of Western music." },
   {
     kind: "concept",
     title: "The major scale pattern",
@@ -694,7 +694,7 @@ export const SCREENS_MAJOR_SCALE: LessonScreen[] = [
 
 
 export const SCREENS_MINOR_SCALE: LessonScreen[] = [
-  { kind: "hook", emoji: "🌙", headline: "The minor scale sounds dark and emotional", subtext: "Same 12 notes as major — just a different starting point and pattern." },
+  { kind: "hook", emoji: "", headline: "The minor scale sounds dark and emotional", subtext: "Same 12 notes as major — just a different starting point and pattern." },
   {
     kind: "concept",
     title: "Natural minor scale",
@@ -737,7 +737,7 @@ export const SCREENS_MINOR_SCALE: LessonScreen[] = [
 ];
 
 export const SCREENS_INTERVALS: LessonScreen[] = [
-  { kind: "hook", emoji: "📐", headline: "An interval is the distance between two notes", subtext: "Minor 2nd = 1 semitone. Octave = 12 semitones. Every interval has a feeling." },
+  { kind: "hook", emoji: "", headline: "An interval is the distance between two notes", subtext: "Minor 2nd = 1 semitone. Octave = 12 semitones. Every interval has a feeling." },
   {
     kind: "concept",
     title: "What is an interval?",
@@ -778,7 +778,7 @@ export const SCREENS_INTERVALS: LessonScreen[] = [
 
 // Path 2 — Ear & Expression
 export const SCREENS_PENTATONIC_SCALES: LessonScreen[] = [
-  { kind: "hook", emoji: "🌍", headline: "5 notes that work everywhere on Earth", subtext: "Every culture independently discovered the pentatonic scale." },
+  { kind: "hook", emoji: "", headline: "5 notes that work everywhere on Earth", subtext: "Every culture independently discovered the pentatonic scale." },
   {
     kind: "concept",
     title: "The pentatonic scale",
@@ -815,7 +815,7 @@ export const SCREENS_PENTATONIC_SCALES: LessonScreen[] = [
 ];
 
 export const SCREENS_MELODY_WRITING: LessonScreen[] = [
-  { kind: "hook", emoji: "✍️", headline: "A great melody has a shape", subtext: "It rises, peaks, then falls — just like a sentence." },
+  { kind: "hook", emoji: "✍", headline: "A great melody has a shape", subtext: "It rises, peaks, then falls — just like a sentence." },
   {
     kind: "concept",
     title: "Melodic contour",
@@ -850,7 +850,7 @@ export const SCREENS_MELODY_WRITING: LessonScreen[] = [
 ];
 
 export const SCREENS_EAR_TRAINING: LessonScreen[] = [
-  { kind: "hook", emoji: "👂", headline: "Train your ear — hear what you couldn't before", subtext: "Recognising intervals and chords by ear is a learnable skill." },
+  { kind: "hook", emoji: "", headline: "Train your ear — hear what you couldn't before", subtext: "Recognising intervals and chords by ear is a learnable skill." },
   {
     kind: "concept",
     title: "Interval recognition",
@@ -888,7 +888,7 @@ export const SCREENS_EAR_TRAINING: LessonScreen[] = [
 ];
 
 export const SCREENS_TRANSPOSITION_MODES: LessonScreen[] = [
-  { kind: "hook", emoji: "🔄", headline: "Same pattern, different starting note", subtext: "Transposing a melody changes its key but keeps its shape identical." },
+  { kind: "hook", emoji: "", headline: "Same pattern, different starting note", subtext: "Transposing a melody changes its key but keeps its shape identical." },
   {
     kind: "concept",
     title: "Transposition",
@@ -939,7 +939,7 @@ export const SCREENS_TRANSPOSITION_MODES: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_WHAT_ARE_CHORDS: LessonScreen[] = [
-  { kind: "hook", emoji: "🎵", headline: "3 notes played together = a chord", subtext: "Chords are the emotional engine of music." },
+  { kind: "hook", emoji: "", headline: "3 notes played together = a chord", subtext: "Chords are the emotional engine of music." },
   {
     kind: "concept",
     title: "What is a chord?",
@@ -975,7 +975,7 @@ export const SCREENS_WHAT_ARE_CHORDS: LessonScreen[] = [
 ];
 
 export const SCREENS_CHORD_TYPES: LessonScreen[] = [
-  { kind: "hook", emoji: "🎸", headline: "Major, minor, diminished, augmented — 4 essential chord colours", subtext: "Each has a different emotional fingerprint." },
+  { kind: "hook", emoji: "", headline: "Major, minor, diminished, augmented — 4 essential chord colours", subtext: "Each has a different emotional fingerprint." },
   {
     kind: "concept",
     title: "The 4 triads",
@@ -1015,7 +1015,7 @@ export const SCREENS_CHORD_TYPES: LessonScreen[] = [
 
 
 export const SCREENS_CHORD_PROGRESSIONS: LessonScreen[] = [
-  { kind: "hook", emoji: "🔁", headline: "4 chords. Infinite songs.", subtext: "I-V-vi-IV is behind thousands of pop songs. The same progression, different tempos and sounds." },
+  { kind: "hook", emoji: "", headline: "4 chords. Infinite songs.", subtext: "I-V-vi-IV is behind thousands of pop songs. The same progression, different tempos and sounds." },
   {
     kind: "concept",
     title: "Roman numeral notation",
@@ -1045,7 +1045,7 @@ export const SCREENS_CHORD_PROGRESSIONS: LessonScreen[] = [
 ];
 
 export const SCREENS_KEYS_TONALITY: LessonScreen[] = [
-  { kind: "hook", emoji: "🏠", headline: "A key is a home base for your music", subtext: "Everything in the key orbits around the tonic — the home chord." },
+  { kind: "hook", emoji: "", headline: "A key is a home base for your music", subtext: "Everything in the key orbits around the tonic — the home chord." },
   {
     kind: "concept",
     title: "What is a key?",
@@ -1089,7 +1089,7 @@ export const SCREENS_KEYS_TONALITY: LessonScreen[] = [
 ];
 
 export const SCREENS_TENSION_RESOLUTION: LessonScreen[] = [
-  { kind: "hook", emoji: "💥", headline: "Tension without resolution feels unfinished", subtext: "Music is a cycle of pulling away from home and returning." },
+  { kind: "hook", emoji: "", headline: "Tension without resolution feels unfinished", subtext: "Music is a cycle of pulling away from home and returning." },
   {
     kind: "concept",
     title: "The tension-resolution engine",
@@ -1126,7 +1126,7 @@ export const SCREENS_TENSION_RESOLUTION: LessonScreen[] = [
 
 
 export const SCREENS_HARMONY_IN_PRODUCTION: LessonScreen[] = [
-  { kind: "hook", emoji: "🎛", headline: "Chords in production sound different to chords on piano", subtext: "Voicing, inversion and register all change the feel." },
+  { kind: "hook", emoji: "", headline: "Chords in production sound different to chords on piano", subtext: "Voicing, inversion and register all change the feel." },
   {
     kind: "concept",
     title: "Voicing & register",
@@ -1169,7 +1169,7 @@ export const SCREENS_HARMONY_IN_PRODUCTION: LessonScreen[] = [
 ];
 
 export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
-  { kind: "hook", emoji: "🏗", headline: "Songs have architecture", subtext: "Verse, chorus, bridge — each section has a job." },
+  { kind: "hook", emoji: "", headline: "Songs have architecture", subtext: "Verse, chorus, bridge — each section has a job." },
   {
     kind: "concept",
     title: "Common song structures",
@@ -1209,7 +1209,7 @@ export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
 ];
 
 export const SCREENS_LISTENING_ACTIVELY: LessonScreen[] = [
-  { kind: "hook", emoji: "🧠", headline: "Producers listen differently to everyone else", subtext: "They hear layers, processes and decisions — not just songs." },
+  { kind: "hook", emoji: "", headline: "Producers listen differently to everyone else", subtext: "They hear layers, processes and decisions — not just songs." },
   {
     kind: "concept",
     title: "Analytical listening",
@@ -1256,7 +1256,7 @@ export const SCREENS_LISTENING_ACTIVELY: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
-  { kind: "hook", emoji: "💻", headline: "A DAW is a recording studio on a laptop", subtext: "It replaces mixing desks, tape machines, racks of gear — all in software." },
+  { kind: "hook", emoji: "", headline: "A DAW is a recording studio on a laptop", subtext: "It replaces mixing desks, tape machines, racks of gear — all in software." },
   {
     kind: "concept",
     title: "What is a DAW?",
@@ -1296,7 +1296,7 @@ export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
 ];
 
 export const SCREENS_MIDI_EXPLAINED: LessonScreen[] = [
-  { kind: "hook", emoji: "🎹", headline: "MIDI is instructions, not audio", subtext: "It tells an instrument WHAT to play — the instrument makes the sound." },
+  { kind: "hook", emoji: "", headline: "MIDI is instructions, not audio", subtext: "It tells an instrument WHAT to play — the instrument makes the sound." },
   {
     kind: "concept",
     title: "What is MIDI?",
@@ -1339,7 +1339,7 @@ export const SCREENS_MIDI_EXPLAINED: LessonScreen[] = [
 
 
 export const SCREENS_DIGITAL_AUDIO: LessonScreen[] = [
-  { kind: "hook", emoji: "📱", headline: "Digital audio is millions of snapshots per second", subtext: "Sample rate and bit depth determine audio quality." },
+  { kind: "hook", emoji: "", headline: "Digital audio is millions of snapshots per second", subtext: "Sample rate and bit depth determine audio quality." },
   {
     kind: "concept",
     title: "Sample rate",
@@ -1383,7 +1383,7 @@ export const SCREENS_DIGITAL_AUDIO: LessonScreen[] = [
 ];
 
 export const SCREENS_SAMPLES_LOOPS: LessonScreen[] = [
-  { kind: "hook", emoji: "🔁", headline: "Samples are pieces of recorded audio you can reuse", subtext: "Most electronic music is built on samples — drum breaks, one-shots, loops." },
+  { kind: "hook", emoji: "", headline: "Samples are pieces of recorded audio you can reuse", subtext: "Most electronic music is built on samples — drum breaks, one-shots, loops." },
   {
     kind: "concept",
     title: "Samples vs loops",
@@ -1426,7 +1426,7 @@ export const SCREENS_SAMPLES_LOOPS: LessonScreen[] = [
 ];
 
 export const SCREENS_SIGNAL_CHAIN: LessonScreen[] = [
-  { kind: "hook", emoji: "⚡", headline: "Signal flows from source to speaker", subtext: "Understanding the signal chain means knowing exactly where a problem is." },
+  { kind: "hook", emoji: "", headline: "Signal flows from source to speaker", subtext: "Understanding the signal chain means knowing exactly where a problem is." },
   {
     kind: "concept",
     title: "The signal chain",
@@ -1460,7 +1460,7 @@ export const SCREENS_SIGNAL_CHAIN: LessonScreen[] = [
 ];
 
 export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
-  { kind: "hook", emoji: "🎚", headline: "4 effects you'll use on every track", subtext: "EQ, Compressor, Reverb, Delay — the essential mixing toolkit." },
+  { kind: "hook", emoji: "", headline: "4 effects you'll use on every track", subtext: "EQ, Compressor, Reverb, Delay — the essential mixing toolkit." },
   {
     kind: "concept",
     title: "EQ & Compression",
@@ -1500,7 +1500,7 @@ export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
 ];
 
 export const SCREENS_MIXING_BASICS: LessonScreen[] = [
-  { kind: "hook", emoji: "🎛", headline: "Mixing is balancing — everything has a place", subtext: "Volume, pan, EQ, effects — these four tools are mixing." },
+  { kind: "hook", emoji: "", headline: "Mixing is balancing — everything has a place", subtext: "Volume, pan, EQ, effects — these four tools are mixing." },
   {
     kind: "concept",
     title: "Volume & panning",
@@ -1541,7 +1541,7 @@ export const SCREENS_MIXING_BASICS: LessonScreen[] = [
 ];
 
 export const SCREENS_MUSIC_TECH_INTEGRATION: LessonScreen[] = [
-  { kind: "hook", emoji: "🏁", headline: "Everything connects — you're now a producer", subtext: "Sound physics + rhythm + harmony + technology = making music." },
+  { kind: "hook", emoji: "", headline: "Everything connects — you're now a producer", subtext: "Sound physics + rhythm + harmony + technology = making music." },
   {
     kind: "concept",
     title: "The complete picture",

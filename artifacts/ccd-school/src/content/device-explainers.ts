@@ -56,7 +56,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Common EQ Mistakes',
-      content: '❌ Boosting everything - "If some is good, more is better" leads to harsh, hyped mixes. Cut more than boost.\n\n❌ Too much resonance (high Q on boosts) - Makes the EQ obvious and artificial.\n\n❌ Forgetting A/B - You\'ll convince yourself the extreme is right because you got used to it.\n\n❌ Confusing presence with loudness - EQ doesn\'t increase level. Use makeup gain for that.\n\n❌ Using the same EQ settings for every source - What works for vocals doesn\'t work for kick drums.'
+      content: 'Boosting everything - "If some is good, more is better" leads to harsh, hyped mixes. Cut more than boost.\n\nToo much resonance (high Q on boosts) - Makes the EQ obvious and artificial.\n\nForgetting A/B - You\'ll convince yourself the extreme is right because you got used to it.\n\nConfusing presence with loudness - EQ doesn\'t increase level. Use makeup gain for that.\n\nUsing the same EQ settings for every source - What works for vocals doesn\'t work for kick drums.'
     },
     {
       type: 'tips',
@@ -134,7 +134,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Compression Mistakes',
-      content: '❌ Too much ratio too fast: Sounds squashed and unnatural\n❌ Not A/B matching loudness: Makeup gain fooled you - it\'s just louder, not better\n❌ Attacking too fast on drums: Kills the punch you wanted\n❌ Release too fast: Creates pumping effect that\'s obvious and bad\n❌ Threshold too high: Only ultra-loud peaks compress, most signal unaffected\n❌ Over-compressing a whole mix: Kills dynamics, sounds dead\n❌ Forgetting that compression changes with loudness: A mix at -3 dB will compress differently'
+      content: 'Too much ratio too fast: Sounds squashed and unnatural\nNot A/B matching loudness: Makeup gain fooled you - it\'s just louder, not better\nAttacking too fast on drums: Kills the punch you wanted\nRelease too fast: Creates pumping effect that\'s obvious and bad\nThreshold too high: Only ultra-loud peaks compress, most signal unaffected\nOver-compressing a whole mix: Kills dynamics, sounds dead\nForgetting that compression changes with loudness: A mix at -3 dB will compress differently'
     },
     {
       type: 'tips',
@@ -197,7 +197,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Saturation Mistakes',
-      content: '❌ Too much drive = sounds distorted and cheap\n❌ Using hard saturation on vocals = sounds brittle\n❌ Forgetting A/B = you convince yourself the extreme is right\n❌ Using same saturation everywhere = loses subtlety and character\n❌ Not considering mix context = saturation that sounds good solo sounds bad in mix\n❌ Saturating already compressed signal = compounds coloration issues'
+      content: 'Too much drive = sounds distorted and cheap\nUsing hard saturation on vocals = sounds brittle\nForgetting A/B = you convince yourself the extreme is right\nUsing same saturation everywhere = loses subtlety and character\nNot considering mix context = saturation that sounds good solo sounds bad in mix\nSaturating already compressed signal = compounds coloration issues'
     },
     {
       type: 'tips',
@@ -260,7 +260,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Reverb Mistakes',
-      content: '❌ Too much wet level: Sounds like source is in a bathroom\n❌ Pre-delay too long: Obvious echo effect, not ambience\n❌ Decay too long: Tail becomes mud that clouds the mix\n❌ Same reverb on everything: Kills separation and definition\n❌ Using reverb to fix level: Should use volume, not effects\n❌ Not A/B matching: Reverb fool you - it sounds different but maybe worse\n❌ Forgetting that reverb hides: Too much reverb hides detail and issues'
+      content: 'Too much wet level: Sounds like source is in a bathroom\nPre-delay too long: Obvious echo effect, not ambience\nDecay too long: Tail becomes mud that clouds the mix\nSame reverb on everything: Kills separation and definition\nUsing reverb to fix level: Should use volume, not effects\nNot A/B matching: Reverb fool you - it sounds different but maybe worse\nForgetting that reverb hides: Too much reverb hides detail and issues'
     },
     {
       type: 'tips',
@@ -318,7 +318,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Delay Mistakes',
-      content: '❌ Time not synced to BPM: Sounds sloppy and amateurish\n❌ Too much feedback: Repeats become mud\n❌ Too much wet level: Original gets buried in echoes\n❌ Using same delay for everything: Loses separation\n❌ Long delays on fast elements: Can cloud the mix\n❌ Forgetting about phase: Some delays can cause comb filtering\n❌ Not A/B matching: Delay can fool your ear about clarity'
+      content: 'Time not synced to BPM: Sounds sloppy and amateurish\nToo much feedback: Repeats become mud\nToo much wet level: Original gets buried in echoes\nUsing same delay for everything: Loses separation\nLong delays on fast elements: Can cloud the mix\nForgetting about phase: Some delays can cause comb filtering\nNot A/B matching: Delay can fool your ear about clarity'
     },
     {
       type: 'tips',
@@ -371,7 +371,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Filter Mistakes',
-      content: '❌ Resonance too high: Sounds screechy and annoying\n❌ LFO rate too fast: Can sound like glitching\n❌ LFO depth too big: Sound becomes unrecognizable\n❌ Wrong filter type: High-pass might not sound good on bass\n❌ Forgetting modulation is subtle: Most filters work best at depth 10-30%, not 100%\n❌ Using on wrong source: Drums might sound weird, pads need it'
+      content: 'Resonance too high: Sounds screechy and annoying\nLFO rate too fast: Can sound like glitching\nLFO depth too big: Sound becomes unrecognizable\nWrong filter type: High-pass might not sound good on bass\nForgetting modulation is subtle: Most filters work best at depth 10-30%, not 100%\nUsing on wrong source: Drums might sound weird, pads need it'
     },
     {
       type: 'tips',
@@ -414,7 +414,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Chorus Mistakes',
-      content: '❌ Depth too high: Sounds out of tune, not in a good way\n❌ Rate too fast: Can sound like vibrato/pitch wobble\n❌ Mix too high: Original gets buried\n❌ Feedback too high: Creates weird repeating effect\n❌ Using on things that should be mono: Bass might get weird\n❌ Forgetting that width = less punch: Chorus reduces transient impact'
+      content: 'Depth too high: Sounds out of tune, not in a good way\nRate too fast: Can sound like vibrato/pitch wobble\nMix too high: Original gets buried\nFeedback too high: Creates weird repeating effect\nUsing on things that should be mono: Bass might get weird\nForgetting that width = less punch: Chorus reduces transient impact'
     },
     {
       type: 'tips',
@@ -457,7 +457,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Phaser Mistakes',
-      content: '❌ Depth too high: Can sound weird and modulated\n❌ Feedback too high: Creates ringing effect\n❌ Rate wrong for song: Can sound sloppy if not matching tempo\n❌ Mix too high: Original gets buried\n❌ Stages too high: Can become ear-fatiguing\n❌ Using on mono sources: Works best on stereo'
+      content: 'Depth too high: Can sound weird and modulated\nFeedback too high: Creates ringing effect\nRate wrong for song: Can sound sloppy if not matching tempo\nMix too high: Original gets buried\nStages too high: Can become ear-fatiguing\nUsing on mono sources: Works best on stereo'
     },
     {
       type: 'tips',
@@ -495,7 +495,7 @@ export const DEVICE_EXPLAINERS: Record<string, ExplainerBlock[]> = {
     {
       type: 'mistakes',
       title: 'Glue Compression Mistakes',
-      content: '❌ Ratio too high: Sounds squashed, not glued\n❌ Attack too fast: Kills transients, loses punch\n❌ Threshold too low: Compresses everything, not just peaks\n❌ Too much makeup gain: Fooled you - it\'s just louder\n❌ Release too fast: Creates obvious pumping\n❌ Using it alone: Glue is subtle, might need gentle EQ too\n❌ Setting it too loud: Glue is meant for -18 dBFS reference level'
+      content: 'Ratio too high: Sounds squashed, not glued\nAttack too fast: Kills transients, loses punch\nThreshold too low: Compresses everything, not just peaks\nToo much makeup gain: Fooled you - it\'s just louder\nRelease too fast: Creates obvious pumping\nUsing it alone: Glue is subtle, might need gentle EQ too\nSetting it too loud: Glue is meant for -18 dBFS reference level'
     },
     {
       type: 'tips',

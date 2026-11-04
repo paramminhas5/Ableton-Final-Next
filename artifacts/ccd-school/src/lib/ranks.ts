@@ -8,7 +8,6 @@ export type Rank = {
   color: string; // Tailwind bg class
   textColor: string; // Tailwind text class
   tagline: string;
-  emoji: string;
 };
 
 export const RANKS: Rank[] = [
@@ -18,7 +17,6 @@ export const RANKS: Rank[] = [
     minXp: 0,
     color: "bg-bone",
     textColor: "text-ink",
-    emoji: "🛏️",
     tagline: "Day one. Headphones on.",
   },
   {
@@ -27,7 +25,6 @@ export const RANKS: Rank[] = [
     minXp: 150,
     color: "bg-acid",
     textColor: "text-ink",
-    emoji: "🔁",
     tagline: "First loops won't stop.",
   },
   {
@@ -36,7 +33,6 @@ export const RANKS: Rank[] = [
     minXp: 400,
     color: "bg-sun",
     textColor: "text-ink",
-    emoji: "📼",
     tagline: "Ideas leaving the hard drive.",
   },
   {
@@ -45,7 +41,6 @@ export const RANKS: Rank[] = [
     minXp: 800,
     color: "bg-volt",
     textColor: "text-bone",
-    emoji: "🐀",
     tagline: "Lives in the DAW.",
   },
   {
@@ -54,7 +49,6 @@ export const RANKS: Rank[] = [
     minXp: 1400,
     color: "bg-hot",
     textColor: "text-bone",
-    emoji: "🥁",
     tagline: "The drums hit right.",
   },
   {
@@ -63,7 +57,6 @@ export const RANKS: Rank[] = [
     minXp: 2200,
     color: "bg-acid",
     textColor: "text-ink",
-    emoji: "🎚️",
     tagline: "EQ and compress everything.",
   },
   {
@@ -72,7 +65,6 @@ export const RANKS: Rank[] = [
     minXp: 3200,
     color: "bg-volt",
     textColor: "text-bone",
-    emoji: "🎛️",
     tagline: "Sidechain, sends, surgery.",
   },
   {
@@ -81,7 +73,6 @@ export const RANKS: Rank[] = [
     minXp: 4500,
     color: "bg-sun",
     textColor: "text-ink",
-    emoji: "🌀",
     tagline: "Synthesis is a second language.",
   },
   {
@@ -90,7 +81,6 @@ export const RANKS: Rank[] = [
     minXp: 6200,
     color: "bg-hot",
     textColor: "text-bone",
-    emoji: "🎹",
     tagline: "Tracks that finish themselves.",
   },
   {
@@ -99,7 +89,6 @@ export const RANKS: Rank[] = [
     minXp: 8000,
     color: "bg-ink",
     textColor: "text-bone",
-    emoji: "🎤",
     tagline: "Push, Link, no laptop drop.",
   },
   {
@@ -108,7 +97,6 @@ export const RANKS: Rank[] = [
     minXp: 10000,
     color: "bg-volt",
     textColor: "text-bone",
-    emoji: "🔊",
     tagline: "True-peak, LUFS, last word.",
   },
   {
@@ -117,7 +105,6 @@ export const RANKS: Rank[] = [
     minXp: 11000,
     color: "bg-acid",
     textColor: "text-ink",
-    emoji: "👑",
     tagline: "The manual is a formality.",
   },
 ];

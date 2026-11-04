@@ -6,7 +6,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_2B: Record<string, LessonScreen[]> = {
   "notes-and-octaves": [
-    { kind: "hook", emoji: "🎹", headline: "Twelve notes, forever", subtext: "Every melody you will ever write is built from the same twelve." },
+    { kind: "hook", emoji: "", headline: "Twelve notes, forever", subtext: "Every melody you will ever write is built from the same twelve." },
     { kind: "concept", title: "The twelve notes", body: "Western music uses twelve notes: C, C sharp, D, D sharp, E, F, F sharp, G, G sharp, A, A sharp, B. After B the pattern starts over at C, one octave higher. Each step is a semitone.", keyFact: "12 semitones make one octave.", visual: "piano" },
     { kind: "interact", sim: "note-explorer", prompt: "Tap the keys. Hear each semitone step up." },
     { kind: "concept", title: "Black keys have two names", body: "C sharp and D flat are the same key, called by two names. There is no black key between E and F or between B and C, because those pairs are already one semitone apart.", keyFact: "E to F and B to C are single semitones." },
@@ -20,7 +20,7 @@ export const FLAGSHIP_BATCH_2B: Record<string, LessonScreen[]> = {
   ],
 
   "major-scale": [
-    { kind: "hook", emoji: "🌞", headline: "A recipe, not a list of notes", subtext: "Learn one pattern and you can build the major scale from any note." },
+    { kind: "hook", emoji: "", headline: "A recipe, not a list of notes", subtext: "Learn one pattern and you can build the major scale from any note." },
     { kind: "concept", title: "Whole and half steps", body: "A whole step is two semitones and a half step is one. The major scale is whole, whole, half, whole, whole, whole, half. Starting from any note and following the pattern gives that key's major scale.", keyFact: "W W H W W W H.", visual: "scale-steps" },
     { kind: "interact", sim: "note-explorer", prompt: "Play C D E F G A B C. Hear the major sound." },
     { kind: "concept", title: "C major is the white keys", body: "Start on C and the pattern lands entirely on white keys: C D E F G A B. The half steps fall between E and F, and between B and C, exactly where the pattern puts them.", keyFact: "Half steps sit at degrees 3 to 4 and 7 to 8." },
@@ -34,7 +34,7 @@ export const FLAGSHIP_BATCH_2B: Record<string, LessonScreen[]> = {
   ],
 
   "minor-scale": [
-    { kind: "hook", emoji: "🌙", headline: "Three notes lowered, a whole mood changed", subtext: "The same twelve notes can sound hopeful or heavy. Here is the switch." },
+    { kind: "hook", emoji: "", headline: "Three notes lowered, a whole mood changed", subtext: "The same twelve notes can sound hopeful or heavy. Here is the switch." },
     { kind: "concept", title: "Natural minor", body: "The natural minor scale is whole, half, whole, whole, half, whole, whole. Compared with major, the third, sixth and seventh notes are each a semitone lower, which gives it a darker sound.", keyFact: "W H W W H W W.", visual: "scale-steps" },
     { kind: "interact", sim: "note-explorer", prompt: "Play A B C D E F G A. Hear the minor sound." },
     { kind: "concept", title: "Relative major and minor", body: "Every major key shares its notes with a minor key that starts on the sixth note. C major and A minor use the same white keys, but A feels like home in the minor version.", keyFact: "Relative minor starts on the 6th note of the major." },
@@ -48,7 +48,7 @@ export const FLAGSHIP_BATCH_2B: Record<string, LessonScreen[]> = {
   ],
 
   intervals: [
-    { kind: "hook", emoji: "📐", headline: "Distance between notes has a sound", subtext: "Once you hear intervals, chords and melodies stop being mysterious." },
+    { kind: "hook", emoji: "", headline: "Distance between notes has a sound", subtext: "Once you hear intervals, chords and melodies stop being mysterious." },
     { kind: "concept", title: "Counting in semitones", body: "An interval is the distance between two notes. A minor second is 1 semitone, a major third 4, a perfect fifth 7 and an octave 12. Each size has its own recognisable character.", keyFact: "Perfect fifth is 7 semitones. Octave is 12.", visual: "piano" },
     { kind: "interact", sim: "ear-training", preset: { mode: "intervals" }, prompt: "Listen. Name the interval you hear." },
     { kind: "match", prompt: "Match each interval to its size", pairs: [{ left: "Minor 3rd", right: "3 semitones" }, { left: "Major 3rd", right: "4 semitones" }, { left: "Perfect 4th", right: "5 semitones" }, { left: "Perfect 5th", right: "7 semitones" }] },
@@ -62,7 +62,7 @@ export const FLAGSHIP_BATCH_2B: Record<string, LessonScreen[]> = {
   ],
 
   "pentatonic-scales": [
-    { kind: "hook", emoji: "🎸", headline: "Five notes and almost nothing sounds wrong", subtext: "No wonder it runs through blues, folk, rock and club music." },
+    { kind: "hook", emoji: "", headline: "Five notes and almost nothing sounds wrong", subtext: "No wonder it runs through blues, folk, rock and club music." },
     { kind: "concept", title: "The major pentatonic", body: "Take the major scale and remove the fourth and seventh notes, the two that rub hardest against chords. What remains is 1, 2, 3, 5, 6. In C that is C, D, E, G, A.", keyFact: "Major pentatonic: 1 2 3 5 6.", visual: "piano" },
     { kind: "interact", sim: "melody-shaper", prompt: "Play a melody using only pentatonic notes." },
     { kind: "concept", title: "Why it is so safe", body: "The five notes are spaced by whole steps and two gaps of a step and a half, so none sit a semitone apart. With no semitone clashes, any order of them sounds acceptable.", keyFact: "No semitones means no sour notes." },

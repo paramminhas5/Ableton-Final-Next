@@ -118,7 +118,7 @@ export function PathPageClient({ slug }: { slug: string }) {
             const nodeContent = (
               <div className={`brutal-border flex items-center gap-3 px-4 w-full max-w-xs transition-all min-h-[72px] ${leftBorderColor} ${isDone ? colors.node : locked ? "bg-bone opacity-35 cursor-not-allowed" : isNext ? `${colors.cta} brutal-press` : "bg-bone hover:bg-sun brutal-press"}`}>
                 <span className={`brutal-border w-8 h-8 shrink-0 flex items-center justify-center font-display text-sm ${isDone ? (path.world === "dj" ? "bg-ink text-bone" : "bg-bone text-ink") : locked ? "bg-bone/50" : "bg-ink text-bone"}`}>
-                  {isDone ? "✓" : locked ? "🔒" : index + 1}
+                  {isDone ? "✓" : locked ? "" : index + 1}
                 </span>
                 <div className="flex-1 min-w-0">
                   <div className="font-display text-sm leading-tight truncate">{title}</div>
@@ -134,7 +134,7 @@ export function PathPageClient({ slug }: { slug: string }) {
           })}
           <div className="mt-8 ml-0">
             <div className={`brutal-border p-8 max-w-xs brutal-shadow ${pathComplete ? (path.world === "dj" ? "bg-volt text-bone" : "bg-acid text-ink") : "bg-bone opacity-70"}`}>
-              <div className="font-display text-5xl mb-2">🏆</div>
+              <div className="font-display text-5xl mb-2"></div>
               <div className="font-display text-2xl">PATH COMPLETE</div>
               <div className="font-mono text-xs mt-1 opacity-70">{pathComplete ? `You've finished ${path.title}. ${pct}% of this path done.` : `Finish all ${totalCount} missions to earn the path trophy`}</div>
             </div>

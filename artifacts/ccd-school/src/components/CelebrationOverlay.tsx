@@ -1,163 +1,126 @@
 "use client";
 /**
- * CelebrationOverlay — full-screen moment for major achievements.
- * P3 #33: Now offers a share card after path/chapter/world trophy completion.
+ * Moments, Model 1: rank up, streak (board ZStreak), shield, and the trophies.
+ * A full screen on the glass with one pink key. The shield is a small toast.
  */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { playFanfare } from "@/lib/audio";
 import { useProgress } from "@/lib/progress";
+import { RANKS } from "@/lib/ranks";
 import { TrophyShareModal } from "@/components/TrophyShareModal";
+import { GoPill, Icon, Key } from "@/components/m1/controls";
+import { SevenSeg } from "@/components/m1/SevenSeg";
+import { RankMark, SegBar } from "@/components/m1/parts";
+import "@/components/m1/lesson.css";
 
 export type CelebrationEvent =
-  | { kind: "rank-up";     rankName: string; rankEmoji: string }
-  | { kind: "streak";      days: number }
+  | { kind: "rank-up"; rankName: string; rankEmoji?: string }
+  | { kind: "streak"; days: number }
   | { kind: "shield-earned"; streakDays: number }
   | { kind: "path-trophy"; trophyName: string; pathTitle: string }
   | { kind: "chapter-trophy"; trophyName: string; chapterTitle: string }
-  | { kind: "world-trophy";   worldName: string; }
+  | { kind: "world-trophy"; worldName: string }
   | { kind: "ccd-master" };
 
-interface Props {
-  event: CelebrationEvent | null;
-  onDone: () => void;
-}
+interface Props { event: CelebrationEvent | null; onDone: () => void }
 
-function BigConfetti() {
-  const pieces = Array.from({ length: 50 }, (_, i) => ({
-    left: `${(i / 50) * 100}%`,
-    delay: `${(i * 0.03).toFixed(2)}s`,
-    dur:   `${(0.9 + (i % 6) * 0.12).toFixed(2)}s`,
-    color: ["#C6FF00","#FF2D2D","#7B2FFF","#FFB800","#00FFFF","#FF69B4"][i % 6],
-    size:  `${8 + (i % 6)}px`,
-    rotate: `${i * 37}deg`,
-  }));
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-      <style>{`@keyframes bigfall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}`}</style>
-      {pieces.map((p, i) => (
-        <div key={i} style={{
-          position: "absolute", left: p.left, top: 0,
-          width: p.size, height: p.size, background: p.color,
-          animation: `bigfall ${p.dur} ${p.delay} ease-in forwards`,
-          transform: `rotate(${p.rotate})`,
-        }} />
-      ))}
-    </div>
-  );
-}
+const MILESTONES = [7, 14, 21, 30, 60, 100, 365];
+const DAYS = ["m", "t", "w", "t", "f", "s", "s"];
 
-function useCountUp(target: number, active: boolean) {
+function useCountUp(target: number) {
   const [val, setVal] = useState(0);
   useEffect(() => {
-    if (!active) return;
-    const dur = 1000;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) { setVal(target); return; }
     const start = performance.now();
-    let raf: number;
+    let raf = 0;
     const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / dur);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setVal(Math.round(eased * target));
+      const t = Math.min(1, (now - start) / 900);
+      setVal(Math.round((1 - Math.pow(1 - t, 3)) * target));
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, active]);
+  }, [target]);
   return val;
 }
 
-function EventContent({ event }: { event: CelebrationEvent }) {
-  const days = useCountUp(event.kind === "streak" ? event.days : 0, true);
+function Lcd({ n, color, digits, height = 64 }: { n: number; color: string; digits: number; height?: number }) {
+  return <span className="ls-lcd" style={{ marginTop: 0, padding: "14px 18px" }}><SevenSeg text={String(n)} color={color} digits={digits} height={height} /></span>;
+}
 
-  switch (event.kind) {
-    case "shield-earned":
-      return (
-        <div className="text-center space-y-4">
-          {/* Shield materialises with the keyframe defined in globals.css */}
-          <div
-            className="text-8xl animate-shield-earn inline-block animate-shield-pulse"
-            style={{ transformOrigin: "center" }}
-          >
-            🛡
-          </div>
-          <div className="font-mono text-[10px] uppercase opacity-70">STREAK SHIELD EARNED</div>
-          <div className="font-display text-4xl md:text-5xl leading-none text-acid">
-            {event.streakDays}-DAY STREAK
-          </div>
-          <div className="brutal-border bg-acid text-ink px-6 py-3 font-display text-xl inline-block">
-            +1 STREAK FREEZE
-          </div>
-          <div className="font-mono text-sm opacity-70 max-w-xs mx-auto leading-relaxed">
-            Your streak is protected for one missed day. Keep the chain going!
+function StreakBody({ days, shield }: { days: number; shield: boolean }) {
+  const n = useCountUp(days);
+  const today = (new Date().getDay() + 6) % 7; // monday is 0
+  const next = MILESTONES.find(m => m > days);
+  return (
+    <>
+      <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 300, display: "flex", flexDirection: "column" }}>
+        <div className="ls-meta"><span>streak</span><span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: shield ? "var(--led-mint)" : undefined }}>{shield ? <><Icon name="shield" small />shield ready</> : null}</span></div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, padding: "10px 0" }}>
+          <Lcd n={n} color="var(--led-go)" digits={Math.max(2, String(days).length)} />
+          <div style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 24, fontWeight: 300, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>days in a row</div>
+            <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6, maxWidth: 260 }}>{shield ? "miss a day and the shield keeps it going." : "a lesson a day keeps it lit."}</div>
           </div>
         </div>
-      );
-    case "rank-up":
-      return (
-        <div className="text-center space-y-4">
-          <div style={{ fontSize: 80 }}>{event.rankEmoji}</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">RANK UP!</div>
-          <div className="font-display text-5xl md:text-7xl leading-none">{event.rankName}</div>
-          <div className="font-mono text-sm opacity-70">You&apos;ve unlocked a new rank. Keep going.</div>
+      </div></div>
+      <div className="m1-silk" style={{ marginTop: 14 }}><i className="l" /><span>this week</span><i className="r" /></div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7,minmax(0,1fr))", gap: 6, marginTop: 8 }} role="img" aria-label={`${Math.min(days, today + 1)} of this week's days done`}>
+        {DAYS.map((d, i) => {
+          const lit = i <= today && today - i < days;
+          const now = i === today;
+          return (
+            <span key={i} className="m1-m" style={{ height: 56, pointerEvents: "none" }}>
+              <span className="m1-dot is-on" style={{ ["--c" as string]: lit ? "var(--led-go)" : "var(--ledoff)", opacity: lit ? 1 : 0.5 } as React.CSSProperties} />
+              <span className={`m1-cap ${now ? "is-blk" : ""}`} style={{ width: "62%", marginTop: -6, fontSize: 13 }}>{d}</span>
+            </span>
+          );
+        })}
+      </div>
+      {next && (
+        <div className="ls-panel" style={{ alignItems: "center", marginTop: 12 }}>
+          <span style={{ flex: 1 }}>
+            <span className="m1-t11" style={{ display: "block" }}>next milestone</span>
+            <b style={{ fontSize: 16, fontWeight: 500 }}>{next} days{next % 7 === 0 ? ", a shield" : ""}</b>
+          </span>
+          <span className="ls-lcd" style={{ marginTop: 0, padding: "6px 10px" }}><SevenSeg text={String(next - days)} color="#F3F2EF" digits={2} height={26} /></span>
         </div>
-      );
-    case "streak":
-      return (
-        <div className="text-center space-y-4">
-          <div className="text-8xl">🔥</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">STREAK MILESTONE</div>
-          <div className="font-display text-8xl leading-none text-acid">{days}</div>
-          <div className="font-display text-3xl">DAY STREAK</div>
-          <div className="font-mono text-sm opacity-70">
-            {event.days >= 30 ? "Legendary dedication." : event.days >= 14 ? "Two weeks strong." : "One week down!"}
-          </div>
-          {event.days % 7 === 0 && (
-            <div className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-sm">
-              🛡 Streak Freeze earned!
-            </div>
-          )}
+      )}
+    </>
+  );
+}
+
+function RankBody({ name }: { name: string }) {
+  const idx = Math.max(0, RANKS.findIndex(r => r.name === name));
+  const r = RANKS[idx];
+  return (
+    <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 360, display: "flex", flexDirection: "column" }}>
+      <div className="ls-meta"><span>rank up</span><span>{idx + 1} of {RANKS.length}</span></div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, color: "var(--disp-ink)" }}>
+        <RankMark idx={idx} size={120} />
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.02em" }}>{name.toLowerCase()}</div>
+          <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.tagline.toLowerCase()}</div>
         </div>
-      );
-    case "path-trophy":
-      return (
-        <div className="text-center space-y-4">
-          <div className="text-7xl">🏅</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">PATH COMPLETE</div>
-          <div className="font-display text-4xl md:text-5xl leading-tight">{event.pathTitle}</div>
-          <div className="brutal-border bg-acid text-ink px-4 py-2 font-display text-xl inline-block">
-            {event.trophyName}
-          </div>
+        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / RANKS.length} color="var(--led-go)" n={24} height={6} label={`rank ${idx + 1} of ${RANKS.length}`} /></div>
+      </div>
+    </div></div>
+  );
+}
+
+function TrophyBody({ label, title, sub }: { label: string; title: string; sub?: string }) {
+  return (
+    <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 360, display: "flex", flexDirection: "column" }}>
+      <div className="ls-meta"><span>{label}</span><span /></div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
+        <div style={{ display: "flex", gap: 4 }} aria-hidden>
+          {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 14, borderRadius: 3, background: i % 4 === 0 ? "var(--led-go)" : "var(--led-mint)", opacity: i % 2 ? 0.6 : 1, boxShadow: "0 0 6px currentColor" }} />)}
         </div>
-      );
-    case "chapter-trophy":
-      return (
-        <div className="text-center space-y-4">
-          <div className="text-7xl">🏆</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">CHAPTER COMPLETE</div>
-          <div className="font-display text-4xl leading-tight">{event.chapterTitle}</div>
-          <div className="brutal-border bg-volt text-bone px-4 py-2 font-display text-xl inline-block">
-            {event.trophyName}
-          </div>
-        </div>
-      );
-    case "world-trophy":
-      return (
-        <div className="text-center space-y-4">
-          <div className="text-7xl">🌟</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">WORLD COMPLETE!</div>
-          <div className="font-display text-5xl md:text-7xl leading-none text-acid">{event.worldName}</div>
-          <div className="font-mono text-sm opacity-70">You finished an entire world. Incredible.</div>
-        </div>
-      );
-    case "ccd-master":
-      return (
-        <div className="text-center space-y-4">
-          <div className="text-7xl">👑</div>
-          <div className="font-mono text-[10px] uppercase opacity-70">ALL WORLDS COMPLETE</div>
-          <div className="font-display text-5xl md:text-7xl leading-none text-acid">CCD MASTER</div>
-          <div className="font-mono text-sm opacity-70">You completed the full curriculum. Legendary.</div>
-        </div>
-      );
-  }
+        <div style={{ fontSize: 34, fontWeight: 300, letterSpacing: "-.03em", lineHeight: 1.05, color: "var(--disp-ink)", textWrap: "balance" as never }}>{title.toLowerCase()}</div>
+        {sub && <div style={{ fontSize: 14, color: "var(--disp-sub)" }}>{sub}</div>}
+      </div>
+    </div></div>
+  );
 }
 
 export function CelebrationOverlay({ event, onDone }: Props) {
@@ -167,137 +130,63 @@ export function CelebrationOverlay({ event, onDone }: Props) {
 
   useEffect(() => {
     if (!event) return;
-    const t = setTimeout(() => { setVisible(true); playFanfare(); }, 50);
-    return () => clearTimeout(t);
+    setShowShare(false);
+    const t = window.setTimeout(() => { setVisible(true); playFanfare(); }, 50);
+    return () => { window.clearTimeout(t); setVisible(false); };
   }, [event]);
+
+  // The shield toast closes on its own.
+  useEffect(() => {
+    if (event?.kind !== "shield-earned") return;
+    const t = window.setTimeout(onDone, 3600);
+    return () => window.clearTimeout(t);
+  }, [event, onDone]);
 
   if (!event) return null;
 
-  // ── Fix #10: Shield-earned uses a lightweight toast-style overlay ──────────
-  // It doesn't need the full-screen takeover — just a slick banner that
-  // auto-dismisses after 3.5s or on tap.
   if (event.kind === "shield-earned") {
     return (
-      <div
-        className={`fixed bottom-[80px] md:bottom-6 left-3 right-3 md:left-auto md:right-6 md:w-80 z-[300]
-          brutal-border bg-ink text-bone brutal-shadow transition-all duration-400
-          ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
-        style={{ transition: "opacity 0.35s ease, transform 0.35s ease" }}
-        role="status"
-        aria-live="polite"
-      >
-        <div className="flex items-center gap-4 p-4">
-          <span
-            className="text-4xl shrink-0 animate-shield-earn inline-block"
-            style={{ transformOrigin: "center" }}
-          >
-            🛡
+      <div role="status" aria-live="polite" onClick={onDone} className="m1-scr"
+        style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(110px + env(safe-area-inset-bottom, 0px))", zIndex: 300, maxWidth: 408, margin: "0 auto", opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(10px)", transition: "opacity .3s, transform .3s" }}>
+        <div className="m1-glass" style={{ padding: 14, display: "flex", alignItems: "center", gap: 12, color: "var(--disp-ink)" }}>
+          <span style={{ color: "var(--led-mint)" }}><Icon name="shield" /></span>
+          <span style={{ flex: 1 }}>
+            <b style={{ display: "block", fontSize: 16, fontWeight: 500 }}>shield earned</b>
+            <span className="m1-ss">{event.streakDays} day streak · covers one missed day</span>
           </span>
-          <div className="flex-1 min-w-0">
-            <div className="font-display text-lg leading-tight">Streak Shield Earned!</div>
-            <div className="font-mono text-[10px] uppercase opacity-70 mt-0.5">
-              {event.streakDays}-day streak · 1 missed day protected
-            </div>
-          </div>
-          <button
-            onClick={onDone}
-            aria-label="Dismiss"
-            className="shrink-0 opacity-70 hover:opacity-100 transition-opacity font-mono text-sm"
-          >
-            ✕
-          </button>
         </div>
-        {/* Auto-dismiss progress bar */}
-        <div className="h-0.5 bg-acid/40 overflow-hidden">
-          <div
-            className="h-full bg-acid"
-            style={{
-              width: visible ? "0%" : "100%",
-              transition: visible ? "width 3.5s linear" : "none",
-            }}
-          />
-        </div>
-        {/* Auto-dismiss */}
-        {visible && (() => {
-          setTimeout(onDone, 3500);
-          return null;
-        })()}
       </div>
     );
   }
 
-  // ── All other events: full-screen overlay ─────────────────────────────────
-  const isEpic = event.kind === "world-trophy" || event.kind === "ccd-master";
-  const bgColor = isEpic ? "bg-ink" : "bg-bone";
-  const textColor = isEpic ? "text-bone" : "text-ink";
+  const trophy = event.kind === "path-trophy" || event.kind === "chapter-trophy" || event.kind === "world-trophy" || event.kind === "ccd-master";
+  const shareable = event.kind === "path-trophy" ? { name: event.trophyName, kind: "path" as const }
+    : event.kind === "chapter-trophy" ? { name: event.trophyName, kind: "chapter" as const }
+    : event.kind === "world-trophy" ? { name: `${event.worldName} complete`, kind: "world" as const }
+    : event.kind === "ccd-master" ? { name: "ccd master", kind: "master" as const } : null;
 
   return (
-    <div
-      className={`fixed inset-0 z-[300] flex items-center justify-center p-6 ${bgColor} ${textColor}`}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "scale(1)" : "scale(0.95)",
-        transition: "opacity 0.4s ease, transform 0.4s ease",
-      }}
-      onClick={onDone}
-      role="dialog"
-      aria-modal="true"
-      aria-live="assertive"
-    >
-      <BigConfetti />
-
-      <div className="relative z-10 max-w-lg w-full space-y-8">
-        <EventContent event={event} />
-
-        {/* P3 #33: Share button for trophy events */}
-        {(event.kind === "path-trophy" || event.kind === "chapter-trophy" || event.kind === "world-trophy" || event.kind === "ccd-master") && (
-          <button
-            onClick={() => setShowShare(true)}
-            className="w-full brutal-border bg-bone text-ink py-3 font-mono text-xs uppercase brutal-press brutal-hover flex items-center justify-center gap-2"
-          >
-            <span>📤</span> Share this achievement
-          </button>
-        )}
-
-        <button
-          onClick={onDone}
-          className="brutal-border bg-acid text-ink w-full py-4 font-display text-2xl brutal-press brutal-shadow brutal-hover"
-          aria-label="Continue"
-        >
-          {event.kind === "ccd-master" ? "👑 CLAIM THE CROWN" :
-           event.kind === "world-trophy" ? "🌟 CONTINUE →" :
-           "NICE! KEEP GOING →"}
-        </button>
-
-        <div className="text-center font-mono text-[10px] uppercase opacity-70">
-          Tap anywhere to continue
-        </div>
+    <div role="dialog" aria-modal="true" aria-label="Moment" className="ls"
+      style={{ position: "fixed", inset: 0, zIndex: 300, overflowY: "auto", background: "linear-gradient(180deg,var(--deck),var(--deck2))", opacity: visible ? 1 : 0, transition: "opacity .3s" }}>
+      <div className="ls-top"><button type="button" className="ls-x" aria-label="Close" onClick={onDone}><Icon name="close" /></button><span style={{ flex: 1 }} /></div>
+      <div className="ls-col">
+        {event.kind === "streak" && <StreakBody days={event.days} shield={progress.streakShield} />}
+        {event.kind === "rank-up" && <RankBody name={event.rankName} />}
+        {event.kind === "path-trophy" && <TrophyBody label="path done" title={event.pathTitle} sub="every lesson on this path is done" />}
+        {event.kind === "chapter-trophy" && <TrophyBody label="chapter done" title={event.chapterTitle} sub="on to the next chapter" />}
+        {event.kind === "world-trophy" && <TrophyBody label="world done" title={event.worldName} sub="your track from this world is ready to send to live" />}
+        {event.kind === "ccd-master" && <TrophyBody label="all three worlds" title="ccd master" sub="basics, dj and producer are done" />}
       </div>
-
-      {/* P3 #33: Trophy share modal */}
-      {showShare && (event.kind === "path-trophy" || event.kind === "chapter-trophy" || event.kind === "world-trophy" || event.kind === "ccd-master") && (
-        <TrophyShareModal
-          trophyName={
-            event.kind === "path-trophy" ? event.trophyName :
-            event.kind === "chapter-trophy" ? event.trophyName :
-            event.kind === "world-trophy" ? `${event.worldName} Complete` :
-            "CCD Master"
-          }
-          trophyEmoji={
-            event.kind === "path-trophy" ? "🏅" :
-            event.kind === "chapter-trophy" ? "🏆" :
-            event.kind === "world-trophy" ? "🌟" : "👑"
-          }
-          trophyKind={
-            event.kind === "path-trophy" ? "path" :
-            event.kind === "chapter-trophy" ? "chapter" :
-            event.kind === "world-trophy" ? "world" : "master"
-          }
+      <div className="ls-bottom"><div className="m1-g">
+        {trophy && shareable
+          ? <Key label="share" onClick={() => setShowShare(true)} ariaLabel="Share this achievement"><Icon name="out" /></Key>
+          : <Key label="close" onClick={onDone} ariaLabel="Close"><Icon name="close" /></Key>}
+        <GoPill onClick={onDone} style={{ gridColumn: "span 3" }}>{event.kind === "streak" ? "continue" : "keep going"}</GoPill>
+      </div></div>
+      {showShare && shareable && (
+        <TrophyShareModal trophyName={shareable.name} trophyKind={shareable.kind}
           worldName={event.kind === "world-trophy" ? event.worldName : undefined}
-          xp={progress.xp}
-          streakDays={progress.streakDays}
-          onClose={() => setShowShare(false)}
-        />
+          xp={progress.xp} streakDays={progress.streakDays} onClose={() => setShowShare(false)} />
       )}
     </div>
   );

@@ -1,181 +1,114 @@
 "use client";
 /**
- * DailyPageClient — Today's curated lesson + review session.
- *
- * Shows:
- *   • Daily goal ring (XP progress toward 50 XP)
- *   • Today's lesson — next unlocked mission in selected world
- *   • Review section — weakest 3 missions
- *   • Streak status
+ * Daily, Model 1: the day's goal on the glass, the one lesson to do next, what is fading.
+ * Same data as before: daily xp against the goal, next lesson in the last world, weakest three lessons.
  */
-import Link from "next/link";
-import { useProgress, DAILY_GOAL_XP, getLessonStrength, REVIEW_THRESHOLD } from "@/lib/progress";
+import { type CSSProperties } from "react";
+import { useProgress, DAILY_GOAL_XP, getLessonStrength } from "@/lib/progress";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
 import { rankFor } from "@/lib/ranks";
+import { GoPill, Icon, Screen, Silk, WORLD_LED } from "@/components/m1/controls";
+import { SevenSeg } from "@/components/m1/SevenSeg";
+import { ListRow, PageHead, RankMark, Readout, SegBar } from "@/components/m1/parts";
 
 const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-
-function GoalRing({ pct, done }: { pct: number; done: boolean }) {
-  const r = 36;
-  const circ = 2 * Math.PI * r;
-  return (
-    <svg width="96" height="96" viewBox="0 0 96 96" aria-label={`Daily goal ${Math.round(pct * 100)}%`}>
-      <circle cx="48" cy="48" r={r} fill="none" stroke="currentColor" strokeWidth="6" opacity="0.15" />
-      <circle cx="48" cy="48" r={r} fill="none"
-        stroke={done ? "#7B2FFF" : "#C6FF00"}
-        strokeWidth="6"
-        strokeDasharray={`${circ * pct} ${circ}`}
-        strokeLinecap="round"
-        transform="rotate(-90 48 48)"
-        style={{ transition: "stroke-dasharray 0.6s ease" }}
-      />
-      <text x="48" y="52" textAnchor="middle" dominantBaseline="middle"
-        className="font-display" fontSize="20" fill="currentColor">
-        {Math.round(pct * 100)}%
-      </text>
-    </svg>
-  );
-}
 
 export function DailyPageClient() {
   const { progress, missionsNeedingReview } = useProgress();
   const completed = progress.completedMissions;
-  const { current: rank } = rankFor(progress.xp);
+  const { current: rank, idx } = rankFor(progress.xp);
 
-  // Find next lesson
   const allDoneSlugs = Object.keys(completed).filter(s => completed[s]);
   const lastSlug = allDoneSlugs[allDoneSlugs.length - 1];
   const lastCtx = lastSlug ? getMissionContext(lastSlug) : null;
   const nextSlug = lastCtx?.path
     ? (() => {
-        const idx = lastCtx.path.missionSlugs.indexOf(lastSlug);
-        const ns = lastCtx.path.missionSlugs[idx + 1];
+        const i = lastCtx.path.missionSlugs.indexOf(lastSlug);
+        const ns = lastCtx.path.missionSlugs[i + 1];
         return ns && !completed[ns] ? ns : null;
       })()
     : null;
   const todaySlug = nextSlug ?? (allDoneSlugs.length === 0 ? "what-is-sound" : null);
-  const todayMission = todaySlug ? ALL_MISSIONS.find(m => m.slug === todaySlug) : null;
+  const today = todaySlug ? ALL_MISSIONS.find(m => m.slug === todaySlug) : null;
+  const todayWorld = (today?.world ?? "fundamentals") as "fundamentals" | "dj" | "producer";
 
-  const dailyGoalPct = Math.min(1, progress.dailyXp / DAILY_GOAL_XP);
-  const dailyGoalDone = progress.dailyXp >= DAILY_GOAL_XP;
-
-  // Top 3 review candidates
+  const pct = Math.min(1, progress.dailyXp / DAILY_GOAL_XP);
+  const done = progress.dailyXp >= DAILY_GOAL_XP;
   const reviewSlugs = missionsNeedingReview.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-bone pb-24">
-      <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
-        <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link href="/" className="font-mono text-[10px] uppercase opacity-70 hover:opacity-100 mb-3 block">← Dashboard</Link>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// TODAY&apos;S LESSON</div>
-          <h1 className="font-display text-5xl leading-none">DAILY<br /><span className="text-acid">PRACTICE</span></h1>
+    <main className="m1-page" style={{ paddingTop: 4 }}>
+      <PageHead title="today" />
+
+      <Screen>
+        <div className="ls-meta"><span>daily goal</span><span>{done ? "done" : `${DAILY_GOAL_XP - progress.dailyXp} xp to go`}</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 14 }}>
+          <span className="ls-lcd" style={{ marginTop: 0 }}>
+            <SevenSeg text={String(Math.min(progress.dailyXp, 999))} color={done ? "var(--led-mint)" : "var(--led-go)"} digits={3} height={40} />
+          </span>
+          <span style={{ color: "var(--disp-sub)", fontSize: 14 }}>of {DAILY_GOAL_XP} xp</span>
         </div>
-      </header>
+        <div style={{ marginTop: 16, display: "flex" }}>
+          <SegBar value={pct} color={done ? "var(--led-mint)" : "var(--led-go)"} label={`daily goal ${Math.round(pct * 100)} percent`} />
+        </div>
+        <div className="ls-meta" style={{ marginTop: 14, justifyContent: "flex-start", gap: 16, alignItems: "center" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="flame" small />{progress.streakDays} day streak</span>
+          {progress.streakShield ? <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--led-mint)" }}><Icon name="shield" small />shield ready</span> : null}
+        </div>
+      </Screen>
 
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+      <Silk label="next lesson" />
+      {today ? (
+        <ListRow
+          href={`/learn/${today.slug}`}
+          led={WORLD_LED[todayWorld]}
+          title={today.title}
+          sub={`${lastCtx?.chapter?.title ?? "start here"} · +${today.xp} xp`}
+          right={<Icon name="back" className="ls-flip" />}
+        />
+      ) : (
+        <div className="ls-panel" style={{ flexDirection: "column", gap: 4 }}>
+          <b style={{ fontSize: 16, fontWeight: 500 }}>all caught up</b>
+          <span className="m1-t11">no new lessons right now. a review keeps what you know.</span>
+        </div>
+      )}
 
-        {/* Daily goal */}
-        <section className="brutal-border bg-ink text-bone p-6 flex items-center gap-6">
-          <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
-          <div>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">DAILY GOAL</div>
-            <div className="font-display text-3xl">
-              {progress.dailyXp} / {DAILY_GOAL_XP} XP
-            </div>
-            {dailyGoalDone ? (
-              <div className="font-mono text-xs text-acid mt-1">✓ Goal complete! Streak protected.</div>
-            ) : (
-              <div className="font-mono text-xs opacity-70 mt-1">
-                {DAILY_GOAL_XP - progress.dailyXp} XP to go — keep at it
-              </div>
-            )}
-            <div className="font-mono text-[10px] uppercase opacity-70 mt-2">
-              🔥 {progress.streakDays}-day streak{progress.streakShield ? " 🛡 shield active" : ""}
-            </div>
-          </div>
-        </section>
+      {reviewSlugs.length > 0 && (
+        <>
+          <Silk label="fading" right={`${missionsNeedingReview.length} due`} />
+          {reviewSlugs.map(slug => {
+            const m = ALL_MISSIONS.find(x => x.slug === slug);
+            const ls = progress.lessonStrengths[slug];
+            const strength = ls ? getLessonStrength(ls) : 0;
+            return (
+              <ListRow key={slug} href={`/learn/${slug}?review=1`} led="var(--led-red)"
+                title={m?.title ?? slug.replace(/-/g, " ")}
+                sub={<span style={{ display: "flex", marginTop: 4, width: 120 }}><SegBar value={strength} color="var(--led-red)" n={8} height={6} label={`${Math.round(strength * 100)} percent strength`} /></span>}
+                right={<span className="m1-tag">review</span>} />
+            );
+          })}
+          <ListRow href="/review" title="all reviews" right={<Icon name="back" className="ls-flip" />} />
+        </>
+      )}
 
-        {/* Today's lesson */}
-        <section>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// TODAY&apos;S LESSON</div>
-          {todayMission ? (
-            <Link href={`/learn/${todayMission.slug}`}
-              className="brutal-border bg-acid text-ink p-5 flex items-start justify-between gap-4 brutal-press brutal-shadow block">
-              <div>
-                <div className="font-mono text-[9px] uppercase opacity-70 mb-1">
-                  {lastCtx?.world?.toUpperCase()} › {lastCtx?.chapter?.title ?? "Start here"}
-                </div>
-                <div className="font-display text-2xl">{todayMission.title}</div>
-                <div className="font-mono text-xs opacity-70 mt-1">{todayMission.tagline}</div>
-                <div className="brutal-border bg-ink/20 px-2 py-1 font-mono text-[9px] uppercase inline-block mt-2">
-                  +{todayMission.xp} XP
-                </div>
-              </div>
-              <div className="font-display text-4xl shrink-0">▶</div>
-            </Link>
-          ) : (
-            <div className="brutal-border bg-volt text-bone p-5">
-              <div className="font-display text-2xl">🎉 ALL CAUGHT UP!</div>
-              <p className="font-mono text-sm opacity-70 mt-1">No new lessons — try a review session below.</p>
-            </div>
-          )}
-        </section>
-
-        {/* Review session */}
-        {reviewSlugs.length > 0 && (
-          <section>
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">
-              // REVIEW ({reviewSlugs.length} fading)
-            </div>
-            <div className="space-y-2 mb-3">
-              {reviewSlugs.map(slug => {
-                const m = ALL_MISSIONS.find(m => m.slug === slug);
-                const ls = progress.lessonStrengths[slug];
-                const strength = ls ? getLessonStrength(ls) : 0;
-                return (
-                  <Link key={slug} href={`/learn/${slug}?review=1`}
-                    className="brutal-border bg-bone p-3 flex items-center justify-between gap-3 brutal-press block">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-mono text-xs truncate">{m?.title ?? slug.replace(/-/g, " ")}</div>
-                      <div className="h-1 brutal-border bg-bone/30 mt-1 overflow-hidden w-32">
-                        <div className="h-full bg-hot" style={{ width: `${Math.round(strength * 100)}%` }} />
-                      </div>
-                    </div>
-                    <span className="font-mono text-[9px] uppercase opacity-70 shrink-0">Review ↺</span>
-                  </Link>
-                );
-              })}
-            </div>
-            <Link href="/review"
-              className="brutal-border bg-hot text-bone px-5 py-3 font-mono text-xs uppercase brutal-press block text-center">
-              View All Review Sessions →
-            </Link>
-          </section>
-        )}
-
-        {/* Stats */}
-        <section className="brutal-border bg-bone p-5">
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// YOUR PROGRESS</div>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center">
-              <div className="font-display text-3xl">{progress.xp}</div>
-              <div className="font-mono text-[9px] uppercase opacity-70">Total XP</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-xl">{rank.emoji}</div>
-              <div className="font-display text-sm leading-tight">{rank.name}</div>
-              <div className="font-mono text-[9px] uppercase opacity-70">Rank</div>
-            </div>
-            <div className="text-center">
-              <div className="font-display text-3xl">💎{progress.gems}</div>
-              <div className="font-mono text-[9px] uppercase opacity-70">Gems</div>
-            </div>
-          </div>
-        </section>
+      <Silk label="your progress" />
+      <div className="ls-uses" style={{ ["--n" as string]: 3 } as CSSProperties}>
+        <Readout value={progress.xp} label="xp" />
+        <div className="ls-use" style={{ gap: 8, padding: "12px 6px 10px" }}>
+          <RankMark idx={idx} size={44} />
+          <small style={{ fontSize: 11 }}>{rank.name.toLowerCase()}</small>
+        </div>
+        <Readout value={progress.gems} label="gems" color="var(--led-lilac)" />
       </div>
+
+      {today && (
+        <div className="m1-g" style={{ marginTop: 16 }}>
+          <GoPill href={`/learn/${today.slug}`} style={{ gridColumn: "1 / -1" }}>start lesson</GoPill>
+        </div>
+      )}
     </main>
   );
 }

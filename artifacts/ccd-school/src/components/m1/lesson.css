@@ -143,3 +143,6 @@
 .ls-slots b{font-weight:500;color:var(--disp-sub);width:14px;flex:none;font-variant-numeric:tabular-nums}
 
 .ls-skip{display:block;margin:14px auto 0;padding:8px 12px;border:0;background:none;font:inherit;font-size:13px;font-weight:500;color:var(--print);text-shadow:0 1px 0 var(--ehi);cursor:pointer;min-height:0}
+
+/* keys inside a page grid (not the fixed bottom bar) keep the full key height */
+.m1-page .m1-g>.m1-m{height:88px}

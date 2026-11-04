@@ -6,7 +6,7 @@ import type { LessonScreen } from "./types";
  */
 export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   "melody-writing": [
-    { kind: "hook", emoji: "🎤", headline: "A melody is a shape you can hum", subtext: "If you cannot sing it back, the notes are not doing their job." },
+    { kind: "hook", emoji: "", headline: "A melody is a shape you can hum", subtext: "If you cannot sing it back, the notes are not doing their job." },
     { kind: "concept", title: "Contour is the outline", body: "A melody rises and falls like a line on a graph. Most memorable ones climb toward one high point, the apex, then settle back down. The outline matters more than the exact notes.", keyFact: "Rise, peak once, fall.", visual: "scale-steps" },
     { kind: "interact", sim: "melody-shaper", prompt: "Draw a melody. Make it rise, peak once, then fall." },
     { kind: "concept", title: "Steps and leaps", body: "Most of a singable melody moves by step, to the next note in the scale. A leap makes a moment of drama. After a big leap, stepping back the other way usually feels natural.", keyFact: "Mostly steps, a few leaps." },
@@ -21,7 +21,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "ear-training": [
-    { kind: "hook", emoji: "👂", headline: "Hear it, then name it", subtext: "Producers who can name what they hear fix problems faster." },
+    { kind: "hook", emoji: "", headline: "Hear it, then name it", subtext: "Producers who can name what they hear fix problems faster." },
     { kind: "concept", title: "Intervals have a sound", body: "Every interval has its own character. A minor second is tight and tense, a perfect fifth is open and stable, a major third is bright. Learning those characters lets you name notes by ear.", keyFact: "Learn the sound, not just the number.", visual: "piano" },
     { kind: "interact", sim: "ear-training", preset: { mode: "intervals" }, prompt: "Listen. Name the interval." },
     { kind: "concept", title: "Song anchors", body: "Link each interval to a tune you know that begins with it going up. A minor second is the Jaws theme. A perfect fifth is the opening of the Star Wars theme. A major sixth is My Bonnie. An octave is Somewhere Over the Rainbow.", keyFact: "Anchor each interval to a tune you know well." },
@@ -36,7 +36,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "transposition-modes": [
-    { kind: "hook", emoji: "🔀", headline: "Move a whole song without rewriting it", subtext: "Same shape, new key. And the same notes can feel brand new from a different starting point." },
+    { kind: "hook", emoji: "", headline: "Move a whole song without rewriting it", subtext: "Same shape, new key. And the same notes can feel brand new from a different starting point." },
     { kind: "concept", title: "Transposing keeps the shape", body: "Transposing shifts every note by the same interval. The distances between the notes stay identical, so the melody sounds the same, only higher or lower. A song that is too high for the singer is simply moved down.", keyFact: "All notes move by the same amount.", visual: "piano" },
     { kind: "quiz", q: "You transpose the notes C, E, G up a perfect fifth. What do you get?", options: ["D, F sharp, A", "G, B, D", "E, G sharp, B", "F, A, C"], answer: 1, explain: "A perfect fifth is 7 semitones. C up 7 is G, E up 7 is B, and G up 7 is D. The shape, a major chord, is unchanged.", hint: "Add 7 semitones to each note." },
     { kind: "concept", title: "In Live", body: "In the piano roll, select notes and press the Up or Down arrow to move them a semitone, or Shift with the arrow for an octave. Audio clips have a Transpose control in the Clip View.", keyFact: "Arrow keys move selected notes by semitone." },
@@ -50,7 +50,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "what-are-chords": [
-    { kind: "hook", emoji: "🎹", headline: "Three notes, one colour", subtext: "A chord is a mood you can play in one go." },
+    { kind: "hook", emoji: "", headline: "Three notes, one colour", subtext: "A chord is a mood you can play in one go." },
     { kind: "concept", title: "The triad", body: "A chord is three or more notes sounding together. The simplest is a triad: a root, a note a third above it, and a note a fifth above. Stack those and you have the building block of most music.", keyFact: "Triad: root, third, fifth.", visual: "chord-stack" },
     { kind: "interact", sim: "chord-stacker", prompt: "Stack the root, third and fifth. Hear the chord." },
     { kind: "concept", title: "Major or minor is the third", body: "A major triad stacks a major third, 4 semitones, then a minor third, 3 semitones. A minor triad flips that: 3 then 4. Changing one note by a semitone changes the whole mood.", keyFact: "Major: 4 then 3. Minor: 3 then 4." },
@@ -65,7 +65,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "chord-types": [
-    { kind: "hook", emoji: "🎨", headline: "Four triads, three sevenths, a whole palette", subtext: "Learn these and you can name almost any chord you hear." },
+    { kind: "hook", emoji: "", headline: "Four triads, three sevenths, a whole palette", subtext: "Learn these and you can name almost any chord you hear." },
     { kind: "concept", title: "The four triads", body: "Major stacks 4 then 3 semitones, bright. Minor stacks 3 then 4, dark. Diminished stacks 3 then 3, tense. Augmented stacks 4 then 4, floating and unresolved.", keyFact: "Maj 4+3. Min 3+4. Dim 3+3. Aug 4+4.", visual: "chord-stack" },
     { kind: "interact", sim: "chord-stacker", prompt: "Build each chord type. Compare how they feel." },
     { kind: "match", prompt: "Match the triad to its recipe", pairs: [{ left: "Major", right: "4 then 3 semitones" }, { left: "Minor", right: "3 then 4 semitones" }, { left: "Diminished", right: "3 then 3 semitones" }, { left: "Augmented", right: "4 then 4 semitones" }] },
@@ -79,7 +79,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "keys-tonality": [
-    { kind: "hook", emoji: "🏠", headline: "Every key has a home note", subtext: "That pull toward home is what makes a tune feel like it is going somewhere." },
+    { kind: "hook", emoji: "", headline: "Every key has a home note", subtext: "That pull toward home is what makes a tune feel like it is going somewhere." },
     { kind: "concept", title: "A key is a set and a home", body: "A key is a group of seven notes plus one that feels like home, the tonic. In C major the notes are C D E F G A B and C is home. Notes and chords pull toward it with different strengths.", keyFact: "Key equals seven notes plus a tonic.", visual: "chord-stack" },
     { kind: "interact", sim: "note-explorer", prompt: "Stay in C major. Hear how everything leans to C." },
     { kind: "concept", title: "Chords in a key", body: "Build a triad on each note of the scale and you get seven chords. In C major: C, D minor, E minor, F, G, A minor and B diminished. Roman numerals name them: I, ii, iii, IV, V, vi, vii.", keyFact: "Major keys: I ii iii IV V vi vii." },
@@ -93,7 +93,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "tension-resolution": [
-    { kind: "hook", emoji: "🎢", headline: "Tension is the reason resolution feels good", subtext: "Every great drop, chorus and chord change is a release." },
+    { kind: "hook", emoji: "", headline: "Tension is the reason resolution feels good", subtext: "Every great drop, chorus and chord change is a release." },
     { kind: "concept", title: "Pull toward home", body: "Some chords feel settled and some feel like a question. The V chord asks for the I chord. When you hear V then I, tension is released and the phrase feels finished.", keyFact: "V asks, I answers." },
     { kind: "interact", sim: "chord-progression", prompt: "Play I to V, then V to I. Feel tension, then release." },
     { kind: "concept", title: "Why V7 pulls so hard", body: "In G7, the notes B and F sit a tritone apart. That unstable interval wants to resolve: B up to C and F down to E. Those two moves land inside C major, the home chord.", keyFact: "The tritone inside V7 wants to resolve." },
@@ -107,7 +107,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "harmony-in-production": [
-    { kind: "hook", emoji: "🎛️", headline: "Chords on a piano and chords in a mix are different jobs", subtext: "In a track, where you put each note matters as much as which notes you play." },
+    { kind: "hook", emoji: "", headline: "Chords on a piano and chords in a mix are different jobs", subtext: "In a track, where you put each note matters as much as which notes you play." },
     { kind: "concept", title: "Voicing", body: "Voicing is how a chord's notes are spread across octaves. Close voicing keeps them tight and thick. Open voicing spreads them wide and airy. The same chord can feel intimate or huge depending on voicing.", keyFact: "Close is thick. Open is spacious.", visual: "mixer-channel" },
     { kind: "interact", sim: "chord-stacker", prompt: "Play a chord as a pad, then spread it as an arpeggio." },
     { kind: "concept", title: "Keep the low end clean", body: "Intervals sound muddy when played low. Two notes a third apart in the bass range rumble together. Let the bass carry one low note and keep the chord body in the middle register.", keyFact: "Bass: one low note. Chords: the middle." },
@@ -121,7 +121,7 @@ export const FLAGSHIP_BATCH_3A: Record<string, LessonScreen[]> = {
   ],
 
   "song-structure": [
-    { kind: "hook", emoji: "🏗️", headline: "Songs have an architecture", subtext: "A great loop is not a song until it goes somewhere." },
+    { kind: "hook", emoji: "", headline: "Songs have an architecture", subtext: "A great loop is not a song until it goes somewhere." },
     { kind: "concept", title: "Sections", body: "Most tracks are built from sections. Pop uses verse, chorus and bridge. Dance music uses intro, build, drop and breakdown. Each section has a job: set up, raise tension, release, or give the listener a rest.", keyFact: "Every section has a job.", visual: "signal-chain" },
     { kind: "interact", sim: "song-structure", prompt: "Arrange the sections into a full song." },
     { kind: "concept", title: "The eight-bar phrase", body: "Most music is built in blocks of 8 bars, grouped into 16 or 32. That regularity lets listeners feel when a change is coming. Change something every 8 or 16 bars to keep the track moving.", keyFact: "Change something every 8 to 16 bars." },

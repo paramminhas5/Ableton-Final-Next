@@ -9,7 +9,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "what-is-djing": [
     {
       kind: "hook",
-      emoji: "🎧",
+      emoji: "",
       headline: "You control the energy of the room",
       subtext: "DJing is the art of selecting and playing music for a crowd.",
     },
@@ -68,7 +68,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "dj-equipment": [
     {
       kind: "hook",
-      emoji: "🎛️",
+      emoji: "",
       headline: "Three pieces, infinite possibility",
       subtext: "Decks, mixer, headphones — the DJ's complete toolkit.",
     },
@@ -127,7 +127,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "rekordbox-intro": [
     {
       kind: "hook",
-      emoji: "💿",
+      emoji: "",
       headline: "Your music hub before you hit the booth",
       subtext: "rekordbox analyses, organises, and exports your music to CDJs.",
     },
@@ -183,7 +183,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "headphone-monitoring": [
     {
       kind: "hook",
-      emoji: "🎧",
+      emoji: "",
       headline: "Preview privately — play perfectly",
       subtext: "Cueing lets you hear the next track before the crowd does.",
     },
@@ -238,7 +238,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "booth-setup": [
     {
       kind: "hook",
-      emoji: "🔌",
+      emoji: "",
       headline: "Arrive early — check everything",
       subtext: "A correct booth setup prevents dead air when it matters most.",
     },
@@ -293,7 +293,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "dj-culture": [
     {
       kind: "hook",
-      emoji: "🏙️",
+      emoji: "",
       headline: "From the Bronx to the whole world",
       subtext: "DJ culture was born in Black and underground communities.",
     },
@@ -348,7 +348,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "genre-bpm-reference": [
     {
       kind: "hook",
-      emoji: "⚡",
+      emoji: "",
       headline: "Every genre has its own tempo signature",
       subtext: "Knowing BPM ranges lets you mix without extreme pitch shifts.",
     },
@@ -403,7 +403,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "your-first-mix": [
     {
       kind: "hook",
-      emoji: "🚀",
+      emoji: "",
       headline: "Every DJ started with one mix",
       subtext: "Start simple — one clean transition beats ten messy ones.",
     },
@@ -459,7 +459,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "music-library-dj": [
     {
       kind: "hook",
-      emoji: "🗂️",
+      emoji: "",
       headline: "Your collection is your instrument",
       subtext: "A DJ is only as good as the music they carry.",
     },
@@ -514,7 +514,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "bpm-analysis-dj": [
     {
       kind: "hook",
-      emoji: "🥁",
+      emoji: "",
       headline: "Every track has a tempo — find it",
       subtext: "Beat grids power SYNC, cue points, and loop accuracy.",
     },
@@ -569,7 +569,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "key-detection-dj": [
     {
       kind: "hook",
-      emoji: "🔑",
+      emoji: "",
       headline: "Mixing in key makes transitions musical",
       subtext: "Wrong keys clash. Right keys flow. rekordbox shows you both.",
     },
@@ -624,7 +624,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "my-tags-dj": [
     {
       kind: "hook",
-      emoji: "🏷️",
+      emoji: "",
       headline: "Label your music — find it instantly at 2am",
       subtext: "My Tags are your custom colour-coded track labels in rekordbox.",
     },
@@ -679,7 +679,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "playlists-dj": [
     {
       kind: "hook",
-      emoji: "📋",
+      emoji: "",
       headline: "Prepare 60 perfect tracks, not 5000 random ones",
       subtext: "Focused playlists let you concentrate on energy, not searching.",
     },
@@ -734,7 +734,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "crate-digging": [
     {
       kind: "hook",
-      emoji: "🪣",
+      emoji: "",
       headline: "Have music no one else has",
       subtext: "Crate digging is the soul of DJing — and your competitive edge.",
     },
@@ -790,7 +790,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "export-mode-dj": [
     {
       kind: "hook",
-      emoji: "💾",
+      emoji: "",
       headline: "Prepare your USB — own any CDJ booth",
       subtext: "EXPORT mode is your bridge from laptop to club hardware.",
     },
@@ -845,7 +845,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "waveform-reading": [
     {
       kind: "hook",
-      emoji: "📡",
+      emoji: "",
       headline: "See the music before you hear it",
       subtext: "Waveforms show structure, energy, and frequency at a glance.",
     },
@@ -901,7 +901,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "beatmatching-manual": [
     {
       kind: "hook",
-      emoji: "🥁",
+      emoji: "",
       headline: "Lock two tracks — with your ears",
       subtext: "Manual beatmatching is the foundational technique of DJing.",
     },
@@ -958,7 +958,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "sync-function": [
     {
       kind: "hook",
-      emoji: "🔗",
+      emoji: "",
       headline: "SYNC locks beats so you focus elsewhere",
       subtext: "Automatic beatmatching — a tool, not a shortcut.",
     },
@@ -1014,7 +1014,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "cue-points-dj": [
     {
       kind: "hook",
-      emoji: "📌",
+      emoji: "",
       headline: "Bookmark your tracks — jump to any moment",
       subtext: "Cue points are your navigation system inside every track.",
     },
@@ -1070,7 +1070,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "eq-mixing-dj": [
     {
       kind: "hook",
-      emoji: "🎚️",
+      emoji: "",
       headline: "Never two bass lines at full volume",
       subtext: "The three-band EQ swap is the core technique of professional DJ mixing.",
     },
@@ -1125,7 +1125,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "crossfader-technique": [
     {
       kind: "hook",
-      emoji: "⚖️",
+      emoji: "",
       headline: "Blend or cut — one fader rules them all",
       subtext: "The crossfader moves sound from one channel to the other.",
     },
@@ -1180,7 +1180,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "long-mix-blend": [
     {
       kind: "hook",
-      emoji: "🌊",
+      emoji: "",
       headline: "The crowd never notices the track changed",
       subtext: "Long blends flow from one track to the next over 16–32 bars.",
     },
@@ -1235,7 +1235,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "transitions-cut-dj": [
     {
       kind: "hook",
-      emoji: "✂️",
+      emoji: "",
       headline: "Confidence makes a cut a power move",
       subtext: "Intentional cuts land harder than hesitant blends.",
     },
@@ -1290,7 +1290,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "loop-function-dj": [
     {
       kind: "hook",
-      emoji: "🔁",
+      emoji: "",
       headline: "Capture a moment — hold it forever",
       subtext: "Loops extend breakdowns and buy you unlimited preparation time.",
     },
@@ -1346,7 +1346,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "reading-the-crowd": [
     {
       kind: "hook",
-      emoji: "👁️",
+      emoji: "",
       headline: "The dance floor tells you what to play",
       subtext: "Track selection beats technical skill — every time.",
     },
@@ -1402,7 +1402,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "set-structure-dj": [
     {
       kind: "hook",
-      emoji: "📈",
+      emoji: "",
       headline: "A set is a journey, not a playlist",
       subtext: "Structure turns random tracks into a narrative with an arc.",
     },
@@ -1457,7 +1457,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "harmonic-mixing-dj": [
     {
       kind: "hook",
-      emoji: "🎵",
+      emoji: "",
       headline: "Build sets that sound musically beautiful",
       subtext: "Harmonic mixing makes transitions feel inevitable, not jarring.",
     },
@@ -1512,7 +1512,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "effects-performance-dj": [
     {
       kind: "hook",
-      emoji: "🌀",
+      emoji: "",
       headline: "FX should serve the music, not announce themselves",
       subtext: "Restraint is the golden rule of performance effects.",
     },
@@ -1567,7 +1567,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "energy-management-dj": [
     {
       kind: "hook",
-      emoji: "⚡",
+      emoji: "",
       headline: "Build tension. Hold. Release. Repeat.",
       subtext: "Energy management is the true art of DJing.",
     },
@@ -1622,7 +1622,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "genre-strategy-dj": [
     {
       kind: "hook",
-      emoji: "🎯",
+      emoji: "",
       headline: "Know your sound — own your niche",
       subtext: "Musical identity makes you recognisable and bookable.",
     },
@@ -1677,7 +1677,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "preparing-a-set-dj": [
     {
       kind: "hook",
-      emoji: "📦",
+      emoji: "",
       headline: "Preparation separates pros from amateurs",
       subtext: "The professional checklist — from library to stage.",
     },
@@ -1732,7 +1732,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "live-mistakes-dj": [
     {
       kind: "hook",
-      emoji: "🧯",
+      emoji: "",
       headline: "Every DJ makes mistakes — pros recover fast",
       subtext: "Composure and speed of recovery are the real skills.",
     },
@@ -1788,7 +1788,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "effects-deep-dj": [
     {
       kind: "hook",
-      emoji: "🎭",
+      emoji: "",
       headline: "Use effects as instruments, not accessories",
       subtext: "Advanced effects transform transitions into memorable moments.",
     },
@@ -1844,7 +1844,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "loop-performance-dj": [
     {
       kind: "hook",
-      emoji: "🌀",
+      emoji: "",
       headline: "Loops are your live remixing power",
       subtext: "Use loops to sculpt time and build tension mid-set.",
     },
@@ -1899,7 +1899,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "harmonic-key-shift-dj": [
     {
       kind: "hook",
-      emoji: "🎹",
+      emoji: "",
       headline: "Shift pitch without shifting tempo",
       subtext: "Master Tempo unlocks real-time key modulation on any CDJ.",
     },
@@ -1954,7 +1954,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "stem-djing": [
     {
       kind: "hook",
-      emoji: "🧬",
+      emoji: "",
       headline: "Mix individual elements, not whole tracks",
       subtext: "Stems let you combine bass from here, drums from there.",
     },
@@ -2010,7 +2010,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "recording-your-set-dj": [
     {
       kind: "hook",
-      emoji: "⏺️",
+      emoji: "⏺",
       headline: "Record every set — then listen critically",
       subtext: "You cannot evaluate your mixing while you are doing it.",
     },
@@ -2065,7 +2065,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "dvs-basics": [
     {
       kind: "hook",
-      emoji: "📀",
+      emoji: "",
       headline: "Vinyl feel, digital library",
       subtext: "DVS gives turntablists the best of both worlds.",
     },
@@ -2120,7 +2120,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "dj-business": [
     {
       kind: "hook",
-      emoji: "💼",
+      emoji: "",
       headline: "Reliability gets more bookings than talent alone",
       subtext: "The business of DJing — bookings, rates, and professionalism.",
     },
@@ -2175,7 +2175,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
   "dj-advanced-complete": [
     {
       kind: "hook",
-      emoji: "🌟",
+      emoji: "",
       headline: "Take your audience somewhere new",
       subtext: "Technical mastery is the baseline. Artistic identity is the goal.",
     },

@@ -6,14 +6,14 @@ import { useState } from "react";
 type Block = { id: string; label: string; icon: string; category: "source" | "effect" | "output" };
 
 const ALL_BLOCKS: Block[] = [
-  { id: "mic",        label: "Microphone",  icon: "🎤", category: "source" },
-  { id: "instrument", label: "Instrument",  icon: "🎸", category: "source" },
-  { id: "eq",         label: "EQ",          icon: "🎛", category: "effect" },
-  { id: "compressor", label: "Compressor",  icon: "📊", category: "effect" },
-  { id: "reverb",     label: "Reverb",      icon: "🌊", category: "effect" },
-  { id: "delay",      label: "Delay",       icon: "🔁", category: "effect" },
-  { id: "speakers",   label: "Speakers",    icon: "🔊", category: "output" },
-  { id: "headphones", label: "Headphones",  icon: "🎧", category: "output" },
+  { id: "mic",        label: "Microphone",  icon: "", category: "source" },
+  { id: "instrument", label: "Instrument",  icon: "", category: "source" },
+  { id: "eq",         label: "EQ",          icon: "", category: "effect" },
+  { id: "compressor", label: "Compressor",  icon: "", category: "effect" },
+  { id: "reverb",     label: "Reverb",      icon: "", category: "effect" },
+  { id: "delay",      label: "Delay",       icon: "", category: "effect" },
+  { id: "speakers",   label: "Speakers",    icon: "", category: "output" },
+  { id: "headphones", label: "Headphones",  icon: "", category: "output" },
 ];
 
 type Chain = (Block | null)[];

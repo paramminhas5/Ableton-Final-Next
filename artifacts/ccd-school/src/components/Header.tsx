@@ -10,6 +10,7 @@
  *   - DJ Cat avatar in mobile drawer
  */
 
+import { RankMark } from "@/components/m1/parts";
 import Link from "next/link";
 import { CCD_LINKS } from "@/lib/ccd";
 import Image from "next/image";
@@ -49,7 +50,7 @@ const MORE_SECTIONS = [
       { to: "/build",     label: "Build a Set" },
       { to: "/link",      label: "Check my Live Set" },
       { to: "/train",     label: "Ear Training"      },
-      { to: "/challenge", label: "Daily Challenge ⚡" },
+      { to: "/challenge", label: "Daily Challenge" },
       { to: "/match",     label: "Flashcard Match"    },
       { to: "/review",    label: "Review Session"     },
     ],
@@ -71,7 +72,7 @@ const MORE_SECTIONS = [
     links: [
       { to: "/profile",     label: "Profile & Trophies" },
       { to: "/leaderboard", label: "Leaderboard"        },
-      { to: "/shop",        label: "Gem Shop 💎"         },
+      { to: "/shop",        label: "Gem Shop"         },
       { to: "/placement",   label: "Placement Test"     },
     ],
     includeTheme: true,
@@ -167,8 +168,8 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
       >
         {Array.from({ length: MAX_HEARTS }).map((_, i) => (
           <span key={i} aria-hidden="true"
-            className={`text-base leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
-            ♥
+            className={`inline-flex leading-none transition-all ${i < count ? "text-hot" : "opacity-20"}`}>
+            <Icon name="heart" small />
           </span>
         ))}
         {!full && secs > 0 && (
@@ -184,7 +185,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
           <div className="fixed inset-0 z-40" onClick={dismissTooltip} aria-hidden />
           <div className="absolute right-0 top-full mt-2 z-50 brutal-border bg-bone chunk-shadow w-60 animate-fade-in">
             <div className="px-4 pt-3.5 pb-3">
-              <p className="font-display text-lg mb-2">♥ Hearts</p>
+              <p className="font-display text-lg mb-2">Hearts</p>
               <p className="font-sans text-sm leading-relaxed opacity-70">
                 You have <strong>{count}/{MAX_HEARTS}</strong> hearts. Each wrong
                 answer in <strong>Flow Mode</strong> costs 1 heart.
@@ -195,13 +196,13 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
                 </p>
               )}
               {full && (
-                <p className="font-sans text-xs mt-2 text-acid font-bold">♥ Full — you&apos;re good to go</p>
+                <p className="font-sans text-xs mt-2 text-acid font-bold">Full. You&apos;re good to go</p>
               )}
             </div>
             <div className="border-t-4 border-ink px-4 py-2.5">
               <button onClick={dismissTooltip}
                 className="font-mono text-xs uppercase opacity-70 hover:opacity-100 transition-opacity">
-                Got it ✕
+                Got it
               </button>
             </div>
           </div>
@@ -223,7 +224,7 @@ interface XpStreakPopoverProps {
 
 function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds, onClose }: XpStreakPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { current: rank, next, progress: rankPct } = rankFor(progress.xp);
+  const { current: rank, next, progress: rankPct, idx: rankIdx } = rankFor(progress.xp);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -240,7 +241,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
       className="absolute right-0 top-full mt-2 z-[60] brutal-border bg-bone chunk-shadow min-w-[230px] animate-fade-in"
       role="dialog" aria-label="XP and streak details">
       <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
-        <span className="text-2xl leading-none">{rank.emoji}</span>
+        <RankMark idx={rankIdx} size={34} />
         <div className="flex-1">
           <p className="font-display text-base">{rank.name}</p>
           <p className="font-mono text-xs opacity-70 uppercase">{rank.tagline}</p>
@@ -260,13 +261,13 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
         <div>
           <p className="font-mono text-xs uppercase opacity-70 mb-1">Streak</p>
           <p className="font-display text-lg">
-            🔥 {progress.streakDays}
-            {progress.streakShield && <span className="ml-1 text-base">🛡</span>}
+            <Icon name="flame" small /> {progress.streakDays}
+            {progress.streakShield && <span className="ml-1 inline-flex"><Icon name="shield" small /></span>}
           </p>
         </div>
         <div className="text-right">
           <p className="font-mono text-xs uppercase opacity-70 mb-1">Gems</p>
-          <p className="font-display text-lg">💎 {progress.gems}</p>
+          <p className="font-display text-lg inline-flex items-center gap-1"><Icon name="gem" small /> {progress.gems}</p>
         </div>
       </div>
       {/* Hearts row — moved from header desktop strip */}
@@ -283,7 +284,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
           <p className="font-mono text-xs uppercase opacity-70">Daily goal</p>
           <p className="font-sans text-sm tabular-nums">
             {progress.dailyXp} / {DAILY_GOAL_XP} XP
-            {dailyGoalDone && <span className="ml-1 text-xs">✓</span>}
+            {dailyGoalDone && <span className="ml-1 inline-flex"><Icon name="check" small /></span>}
           </p>
         </div>
       </div>
@@ -338,7 +339,7 @@ function XpStreakBadge() {
         className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-sm brutal-press flex items-center gap-2.5 hover:bg-electric-blue transition-colors ccd-btn-hover ccd-jitter ccd-glow-pulse"
       >
         <span className={`flex items-center gap-1 transition-all duration-200 ${streakFlash ? "scale-125 text-acid" : ""}`}>
-          <span>🔥</span>
+          <span className="inline-flex"><Icon name="flame" small /></span>
           <span className="font-display text-base leading-none tabular-nums">{streakDisplay}</span>
         </span>
         <span className="opacity-20 text-xs">|</span>
@@ -379,7 +380,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
   const toggle = useCallback(() => {
     const next = learnMode === "flow" ? "classic" : "flow";
     setLearnMode(next);
-    setToast(next === "flow" ? "🌊 Flow Mode" : "🔓 Free Mode");
+    setToast(next === "flow" ? "Flow mode" : "Free mode");
     setTimeout(() => setToast(null), 2000);
 
     // On a world page: navigate to/from ?view=free so the page actually switches
@@ -403,7 +404,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
         className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover ccd-jitter ccd-glow-pulse
           ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}
       >
-        <span>{isFlow ? "🌊" : "🔓"}</span>
+        <span className="inline-flex"><Icon name={isFlow ? "loop" : "lock"} small /></span>
         {!compact && <span>{isFlow ? "Flow" : "Free"}</span>}
         {!compact && <span className="opacity-70 text-xs">▼</span>}
       </button>
@@ -548,7 +549,7 @@ function StreakWarningBanner() {
   return (
     <div className="bg-hot text-bone px-4 py-2.5 flex items-center justify-between gap-3 border-b-4 border-ink">
       <div className="flex items-center gap-2.5 font-sans text-sm">
-        <span className="text-base">🔥</span>
+        <span className="text-base inline-flex"><Icon name="flame" small /></span>
         <span>
           Your <strong>{progress.streakDays}-day streak</strong> is at risk!{" "}
           {progress.streakShield ? "Your shield will protect it tonight." : "Do at least one lesson before midnight."}
@@ -560,7 +561,7 @@ function StreakWarningBanner() {
           Learn now →
         </a>
         <button onClick={() => setDismissed(true)} aria-label="Dismiss"
-          className="font-mono text-xs opacity-70 hover:opacity-100">✕</button>
+          className="font-mono text-xs opacity-70 hover:opacity-100"><Icon name="close" small /></button>
       </div>
     </div>
   );

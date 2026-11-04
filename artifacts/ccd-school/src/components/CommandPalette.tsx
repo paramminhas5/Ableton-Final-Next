@@ -1,4 +1,5 @@
 "use client";
+import { Icon } from "@/components/m1/controls";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { MISSIONS } from "@/content/missions";
@@ -12,7 +13,7 @@ type Item = {
   label: string;
   sub: string;
   tag: "MISSION" | "PATH" | "DEVICE" | "PAGE";
-  emoji: string;
+  icon: string;
   go: () => void;
 };
 
@@ -73,18 +74,14 @@ export function CommandPalette() {
 
     // All missions — foundations + DJ + producer
     const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-    const WORLD_EMOJI: Record<string, string> = {
-      foundations: "🎵", "first-contact": "🎛", "two-views": "🎛",
-      "midi-audio": "🎛", devices: "🎛", mixing: "🎛", performance: "🎛",
-      "midi-instruments": "🎛", "live12-power": "🎛", dj: "🎧",
-    };
+    const WORLD_ICON: Record<string, string> = { dj: "dj" };
     ALL_MISSIONS.forEach(m => {
       out.push({
         id: `m-${m.slug}`,
         label: m.title,
         sub: m.tagline ?? "",
         tag: "MISSION",
-        emoji: WORLD_EMOJI[m.world] ?? "📖",
+        icon: WORLD_ICON[m.world] ?? "learn",
         go: () => router.push(`/learn/${m.slug}`),
       });
     });
@@ -95,7 +92,7 @@ export function CommandPalette() {
       label: p.title,
       sub: p.tagline,
       tag: "PATH",
-      emoji: "📚",
+      icon: "learn",
       go: () => router.push(`/path/${p.slug}`),
     }));
 
@@ -105,30 +102,30 @@ export function CommandPalette() {
       label: d.name ?? d.title ?? d.slug,
       sub: d.tagline ?? d.category ?? "",
       tag: "DEVICE",
-      emoji: "🔌",
+      icon: "knob",
       go: () => router.push(`/device/${d.slug}`),
     }));
 
     // Pages
     [
-      { to: "/worlds",      label: "Worlds",           sub: "Pick your learning world",        emoji: "🌍" },
-      { to: "/learn",       label: "Paths",            sub: "All learning paths",              emoji: "📚" },
-      { to: "/missions",    label: "All Missions",     sub: "Browse 153 missions",             emoji: "🎯" },
-      { to: "/glossary",    label: "Glossary",         sub: "200+ music production terms",     emoji: "📖" },
-      { to: "/shortcuts",   label: "Shortcuts",        sub: "Ableton Live keyboard shortcuts", emoji: "⌨️" },
-      { to: "/devices",     label: "Device Dictionary",sub: "Every Ableton device explained",  emoji: "🔌" },
-      { to: "/signal-flow", label: "Signal Flow",      sub: "Animated routing diagram",        emoji: "🔊" },
-      { to: "/review",      label: "Review Session",   sub: "Spaced repetition queue",         emoji: "🔁" },
-      { to: "/train",       label: "Ear Training",     sub: "Interval & chord drills",         emoji: "👂" },
-      { to: "/challenge",   label: "Daily Challenge",  sub: "Today's timed quiz",              emoji: "⚡" },
-      { to: "/leaderboard", label: "Leaderboard",      sub: "Weekly XP rankings",              emoji: "🏆" },
-      { to: "/profile",     label: "Profile",          sub: "XP, badges and rank",             emoji: "👤" },
+      { to: "/worlds",      label: "Worlds",           sub: "Pick your learning world",        icon: "globe" },
+      { to: "/learn",       label: "Paths",            sub: "All learning paths",              icon: "learn" },
+      { to: "/missions",    label: "All Missions",     sub: "Browse 153 missions",             icon: "pads" },
+      { to: "/glossary",    label: "Glossary",         sub: "200+ music production terms",     icon: "library" },
+      { to: "/shortcuts",   label: "Shortcuts",        sub: "Ableton Live keyboard shortcuts", icon: "keys" },
+      { to: "/devices",     label: "Device Dictionary",sub: "Every Ableton device explained",  icon: "knob" },
+      { to: "/signal-flow", label: "Signal Flow",      sub: "Animated routing diagram",        icon: "hear" },
+      { to: "/review",      label: "Review Session",   sub: "Spaced repetition queue",         icon: "loop" },
+      { to: "/train",       label: "Ear Training",     sub: "Interval & chord drills",         icon: "hear" },
+      { to: "/challenge",   label: "Daily Challenge",  sub: "Today's timed quiz",              icon: "bolt" },
+      { to: "/leaderboard", label: "Leaderboard",      sub: "Weekly XP rankings",              icon: "trophy" },
+      { to: "/profile",     label: "Profile",          sub: "XP, badges and rank",             icon: "user" },
     ].forEach(p => out.push({
       id: `r-${p.to}`,
       label: p.label,
       sub: p.sub,
       tag: "PAGE",
-      emoji: p.emoji,
+      icon: p.icon,
       go: () => router.push(p.to),
     }));
 
@@ -240,7 +237,7 @@ export function CommandPalette() {
               className="px-3 py-2 font-mono text-xs opacity-70 hover:opacity-100 transition-opacity"
               aria-label="Clear search"
             >
-              ✕
+              <Icon name="close" small />
             </button>
           )}
           <button
@@ -256,7 +253,8 @@ export function CommandPalette() {
         <div ref={listRef} className="overflow-y-auto flex-1">
           {filtered.length === 0 && (
             <div className="p-8 text-center">
-              <div className="text-4xl mb-3">🐱</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/brand/ccd-cat.png" alt="" style={{ width: 56, margin: "0 auto 12px", opacity: 0.9 }} />
               <div className="font-display text-lg mb-1">No results for &ldquo;{q}&rdquo;</div>
               <div className="font-mono text-xs opacity-70">Try a lesson title, path name or device</div>
             </div>
@@ -282,8 +280,8 @@ export function CommandPalette() {
                       isActive ? "bg-acid text-ink" : "hover:bg-acid/20"
                     }`}
                   >
-                    {/* Emoji */}
-                    <span className="text-xl shrink-0 w-7 text-center">{item.emoji}</span>
+                    {/* Icon */}
+                    <span className="shrink-0 w-7 flex justify-center"><Icon name={item.icon} /></span>
 
                     {/* Label + sub */}
                     <div className="flex-1 min-w-0">

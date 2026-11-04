@@ -36,22 +36,22 @@ const getMissionTagline = (slug: string): string | null =>
 
 // ─── Chapter-specific cat quips ───────────────────────────────────────────────
 const CHAPTER_QUIPS: Record<string, string> = {
-  "sound-science":        "Physics is the foundation of everything you'll ever produce 🔬",
-  "rhythm-and-time":      "Your internal clock is the most powerful instrument you own 🥁",
-  "melody-and-pitch":     "Every great hook starts with understanding these 7 notes 🎵",
-  "harmony-and-chords":   "Chords are the emotional language of music 🎹",
-  "music-technology":     "The DAW is just a very fast tape recorder — you've got this 💻",
-  "setup-and-culture":    "Every DJ legend started exactly here: gear and curiosity 🎧",
-  "the-library":          "A great DJ's weapon is their collection. Build it wisely 📚",
-  "the-mix-dj":           "This is where DJing actually happens — in the blend 🎚",
-  "dj-performance":       "Reading a room is a superpower. Let's train it 🎤",
-  "dj-mastery":           "This is the final boss. You're ready for it 🏆",
-  "first-contact":        "Ableton Live is just a really smart instrument. Let's meet it 🖥",
-  "sound-and-midi":       "Sound design is cooking — same ingredients, infinite dishes 🎼",
-  "the-mix-producer":     "A great mix is invisible. A bad mix is all you can hear 🎚",
-  "performance-and-flow": "Take it off the screen and play it for people 🚀",
-  "advanced-producer":    "Deep water. Excellent things live here ⚡",
-  "synthesis":            "You are literally building sound from vibrating air 🌀",
+  "sound-science":        "Physics is the foundation of everything you'll ever produce ",
+  "rhythm-and-time":      "Your internal clock is the most powerful instrument you own ",
+  "melody-and-pitch":     "Every great hook starts with understanding these 7 notes ",
+  "harmony-and-chords":   "Chords are the emotional language of music ",
+  "music-technology":     "The DAW is just a very fast tape recorder — you've got this ",
+  "setup-and-culture":    "Every DJ legend started exactly here: gear and curiosity ",
+  "the-library":          "A great DJ's weapon is their collection. Build it wisely ",
+  "the-mix-dj":           "This is where DJing actually happens — in the blend ",
+  "dj-performance":       "Reading a room is a superpower. Let's train it ",
+  "dj-mastery":           "This is the final boss. You're ready for it ",
+  "first-contact":        "Ableton Live is just a really smart instrument. Let's meet it ",
+  "sound-and-midi":       "Sound design is cooking — same ingredients, infinite dishes ",
+  "the-mix-producer":     "A great mix is invisible. A bad mix is all you can hear ",
+  "performance-and-flow": "Take it off the screen and play it for people ",
+  "advanced-producer":    "Deep water. Excellent things live here ",
+  "synthesis":            "You are literally building sound from vibrating air ",
 };
 
 // ─── Scroll reveal hook ───────────────────────────────────────────────────────
@@ -297,7 +297,7 @@ function WikiChapter({
           {/* Right: pct + toggle */}
           <div className="shrink-0 flex flex-col items-end gap-1">
             <div className="font-display text-xl tabular-nums leading-none">
-              {complete ? "🏆" : `${pct}%`}
+              {complete ? "" : `${pct}%`}
             </div>
             <div className="font-mono text-[8px] opacity-70">{done}/{total}</div>
             <div className="font-mono text-[8px] opacity-70 mt-0.5">{open ? "▲" : "▼"}</div>
@@ -379,7 +379,7 @@ function WikiChapter({
           {/* Chapter trophy */}
           {complete && (
             <div className={`mx-3 mb-3 brutal-border px-4 py-3 flex items-center gap-3 ${theme.pillDone}`}>
-              <span className="text-2xl shrink-0">🏆</span>
+              <span className="text-2xl shrink-0"></span>
               <div>
                 <div className="font-display text-sm">{ch.trophy.name}</div>
                 <div className="font-mono text-[8px] opacity-70 mt-0.5">{ch.trophy.description}</div>
@@ -467,7 +467,7 @@ export function WorldWiki({ worldSlug }: { worldSlug: WorldSlug }) {
             World Trophy
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{worldPct === 100 ? "🏆" : "🔒"}</span>
+            <span className="text-2xl">{worldPct === 100 ? "" : ""}</span>
             <div>
               <div className="font-display text-lg">{trophy?.name ?? "World Master"}</div>
               <div className={`font-mono text-[9px] mt-0.5 ${worldPct === 100 ? "opacity-70" : "opacity-70"}`}>

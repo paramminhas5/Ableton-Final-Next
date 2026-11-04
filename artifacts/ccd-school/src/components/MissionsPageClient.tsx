@@ -29,12 +29,12 @@ const WORLD_MISSIONS: Record<WorldTab, typeof MISSIONS> = {
   producer:     MISSIONS,
 };
 const WORLD_STYLE: Record<WorldTab, { label: string; activeBg: string; activeText: string; bar: string; cat: string }> = {
-  fundamentals: { label: "🎵 Fundamentals", activeBg: "bg-acid",         activeText: "text-ink",  bar: "bg-acid",          cat: "/cats/cat-handstand.png" },
-  dj:           { label: "🎧 DJ World",     activeBg: "bg-ink",           activeText: "text-bone", bar: "bg-electric-blue", cat: "/cats/cat-dj.png" },
-  producer:     { label: "🎛 Producer",     activeBg: "bg-electric-blue", activeText: "text-bone", bar: "bg-electric-blue", cat: "/cats/cat-dj-hero.png" },
+  fundamentals: { label: "Fundamentals", activeBg: "bg-acid",         activeText: "text-ink",  bar: "bg-acid",          cat: "/cats/cat-handstand.png" },
+  dj:           { label: "DJ World",     activeBg: "bg-ink",           activeText: "text-bone", bar: "bg-electric-blue", cat: "/cats/cat-dj.png" },
+  producer:     { label: "Producer",     activeBg: "bg-electric-blue", activeText: "text-bone", bar: "bg-electric-blue", cat: "/cats/cat-dj-hero.png" },
 };
 const SIM_ICONS: Record<string, string> = {
-  "ear-training":"👂","piano-roll":"🎹","drum-pad":"🥁","synth-playground":"🎛","bpm-tap":"⏱","mixer":"🎚","browser-tour":"📂","routing-puzzle":"🔌","arrangement":"📐","knob-trainer":"🎛","buffer-sim":"💾","warp-lab":"⚡","device-lab":"🔧","midi-vs-audio":"🔄","scale-aware":"🎵","tempo-compare":"⚡","groove-extractor":"🎶","none":"—",
+  "ear-training":"","piano-roll":"","drum-pad":"","synth-playground":"","bpm-tap":"⏱","mixer":"","browser-tour":"","routing-puzzle":"","arrangement":"","knob-trainer":"","buffer-sim":"","warp-lab":"","device-lab":"","midi-vs-audio":"","scale-aware":"","tempo-compare":"","groove-extractor":"","none":"—",
 };
 const CHAPTER_CATS = ["/cats/cat-cap.png","/cats/cat-headphones.png","/cats/cat-raver.png","/cats/cat-handstand.png","/cats/cat-dancer.png","/cats/cat-dj-new.png"];
 
@@ -136,7 +136,7 @@ export function MissionsPageClient() {
                 isFlowMode ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              🌊 Flow
+              Flow
             </button>
             <button
               onClick={() => setLearnMode("classic")}
@@ -145,7 +145,7 @@ export function MissionsPageClient() {
                 !isFlowMode ? "bg-ink text-bone" : "bg-bone hover:bg-acid"
               }`}
             >
-              🔓 Free
+              Free
             </button>
           </div>
         </div>
@@ -200,7 +200,7 @@ export function MissionsPageClient() {
                     </div>
                     <div className="font-mono text-xs uppercase opacity-70 text-right shrink-0">
                       {chDone}/{chTotal}
-                      {chDone === chTotal && chTotal > 0 && <div className="text-acid">🏆 {chapter.trophy.name}</div>}
+                      {chDone === chTotal && chTotal > 0 && <div className="text-acid">{chapter.trophy.name}</div>}
                     </div>
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export function MissionsPageClient() {
                                 >
                                   {flowLocked && (
                                     <div className="absolute -top-1 -right-1 w-4 h-4 bg-ink text-bone text-[8px] flex items-center justify-center rounded-full">
-                                      🔒
+                                      
                                     </div>
                                   )}
                                   <span className="text-2xl leading-none mb-0.5">
@@ -291,7 +291,7 @@ export function MissionsPageClient() {
                                   {/* Status indicator */}
                                   <span className={`w-7 h-7 brutal-border flex items-center justify-center font-mono text-[10px] shrink-0 mt-0.5 transition-colors
                                     ${isDone ? "bg-ink text-bone" : locked ? "bg-bone" : "bg-bone group-hover:bg-acid"}`}>
-                                    {isDone ? "✓" : locked ? "🔒" : idx + 1}
+                                    {isDone ? "✓" : locked ? "" : idx + 1}
                                   </span>
                                   {/* Title — 2 lines, not truncated */}
                                   <div className="flex-1 min-w-0">

@@ -14,16 +14,16 @@ export type LeagueTier = "bronze" | "silver" | "gold" | "platinum" | "diamond";
 export const LEAGUE_TIERS: {
   id: LeagueTier;
   label: string;
-  emoji: string;
   color: string;
+  led: string;
   promoteTop: number;
   demoteBottom: number;
 }[] = [
-  { id: "bronze",   label: "Bronze",   emoji: "🥉", color: "bg-[#CD7F32] text-bone", promoteTop: 10, demoteBottom: 0  },
-  { id: "silver",   label: "Silver",   emoji: "🥈", color: "bg-bone text-ink",        promoteTop: 10, demoteBottom: 5  },
-  { id: "gold",     label: "Gold",     emoji: "🥇", color: "bg-sun text-ink",          promoteTop: 10, demoteBottom: 5  },
-  { id: "platinum", label: "Platinum", emoji: "💠", color: "bg-volt text-bone",        promoteTop: 10, demoteBottom: 5  },
-  { id: "diamond",  label: "Diamond",  emoji: "💎", color: "bg-acid text-ink",         promoteTop: 0,  demoteBottom: 5  },
+  { id: "bronze",   label: "Bronze",   color: "bg-[#CD7F32] text-bone", led: "#E0975A", promoteTop: 10, demoteBottom: 0  },
+  { id: "silver",   label: "Silver",   color: "bg-bone text-ink", led: "#C9CBD3", promoteTop: 10, demoteBottom: 5  },
+  { id: "gold",     label: "Gold",     color: "bg-sun text-ink", led: "#F2C14E", promoteTop: 10, demoteBottom: 5  },
+  { id: "platinum", label: "Platinum", color: "bg-volt text-bone", led: "var(--led-lilac)", promoteTop: 10, demoteBottom: 5  },
+  { id: "diamond",  label: "Diamond",  color: "bg-acid text-ink", led: "var(--led-mint)", promoteTop: 0,  demoteBottom: 5  },
 ];
 
 export function tierConfig(tier: LeagueTier) {
