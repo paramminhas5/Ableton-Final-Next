@@ -1,0 +1,14 @@
+[
+  {"id": "kick", "what": "the kick, four to the bar", "peak_before_norm": 0.5152},
+  {"id": "snare", "what": "the snare on 2 and 4", "peak_before_norm": 0.7105},
+  {"id": "clap", "what": "the clap on 2 and 4", "peak_before_norm": 0.4396},
+  {"id": "hats", "what": "closed hats, sixteenths, open on the offbeat", "peak_before_norm": 0.2523},
+  {"id": "kit", "what": "the whole kit with some drive on the kick", "peak_before_norm": 0.6523},
+  {"id": "bass", "what": "a rolling bass with the filter envelope working", "peak_before_norm": 0.5792},
+  {"id": "lead", "what": "a detuned lead, held then played", "peak_before_norm": 0.2511},
+  {"id": "pad", "what": "a chord pad, slow attack, octave voicing", "peak_before_norm": 0.3921},
+  {"id": "reverb", "what": "one clap into the reverb", "peak_before_norm": 0.4311},
+  {"id": "echo", "what": "one lead note into the echo", "peak_before_norm": 0.1593},
+  {"id": "drive", "what": "the bass with the drive up", "peak_before_norm": 0.2823},
+  {"id": "sketch", "what": "the whole song, four bars", "peak_before_norm": 0.7716}
+]
