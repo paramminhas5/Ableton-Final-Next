@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GoPill, Silk, Switch } from "@/components/m1/controls";
+import { ListRow, RefPage } from "@/components/m1/parts";
 
 const MONTHLY_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY ?? "";
 const ANNUAL_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL ?? "";
@@ -23,6 +24,10 @@ const FEATURES = [
   { free: "Leaderboard view only", pro: "Compete on the global leaderboard" },
 ];
 
+/**
+ * /upgrade on Model 1 parts. Layout only: the copy, the pound prices and the free-tier claims are
+ * unchanged until Param answers on ccd/school-pro.md (everything is free by default today).
+ */
 export function UpgradePageClient() {
   const { user, isPro } = useAuth();
   const router = useRouter();
@@ -86,123 +91,63 @@ export function UpgradePageClient() {
 
   if (isPro) {
     return (
-      <main className="min-h-screen bg-bone flex items-center justify-center">
-        <div className="max-w-md mx-auto px-4 text-center">
-          <div className="brutal-border bg-volt text-bone p-8 brutal-shadow">
-            <div className="font-display text-5xl mb-4">✓ PRO</div>
-            <div className="font-display text-2xl mb-2">You&apos;re already on PRO</div>
-            <div className="font-mono text-sm opacity-70 mb-6">All missions unlocked. Keep learning.</div>
-            <Link href="/missions" className="brutal-border bg-ink text-bone px-6 py-3 font-mono text-xs uppercase brutal-press inline-block">START LEARNING →</Link>
-          </div>
-        </div>
-      </main>
+      <RefPage title="pro" back="/dashboard" meta="ccd.school pro" intro="you are already on pro. every lesson is open.">
+        <div style={{ marginTop: 16 }}><GoPill href="/missions">start learning</GoPill></div>
+      </RefPage>
     );
   }
 
+  const priceLine = region === "india"
+    ? (INR_PRICE[billing] || "inr")
+    : billing === "monthly" ? "£9" : "£79";
+  const per = region === "india"
+    ? `per ${billing === "monthly" ? "month" : "year"}, billed in rupees`
+    : billing === "monthly" ? "per month" : "per year, save £29 (was £108)";
+
   return (
-    <main className="min-h-screen bg-bone">
-      <header className="brutal-border border-x-0 border-t-0 bg-ink text-bone">
-        <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">// CCD.SCHOOL PRO</div>
-          <h1 className="font-display text-5xl md:text-7xl leading-none">UNLOCK EVERYTHING</h1>
-          <p className="font-mono text-sm mt-4 opacity-70 max-w-lg mx-auto">
-            Advanced missions, later courses in every path, cloud sync across devices, and a place on the global leaderboard.
-          </p>
+    <RefPage title="unlock everything" back="/dashboard" meta="ccd.school pro"
+      intro="advanced missions, later courses in every path, cloud sync across devices, and a place on the global leaderboard.">
+      {indiaOn && (
+        <div style={{ marginTop: 14 }}>
+          <Switch label="Payment region" value={region} onChange={id => setRegion(id as Region)}
+            options={[{ id: "global", label: "global, card" }, { id: "india", label: "india, upi or card" }]} />
         </div>
-      </header>
-
-      <div className="max-w-4xl mx-auto px-4 py-12 space-y-10 pb-24">
-        {indiaOn && (
-          <div className="flex justify-center gap-0" role="group" aria-label="Payment region">
-            <button onClick={() => setRegion("global")}
-              className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${region === "global" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-              Global · Card
-            </button>
-            <button onClick={() => setRegion("india")}
-              className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${region === "india" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-              India · UPI / Card
-            </button>
-          </div>
-        )}
-        <div className="flex justify-center gap-0">
-          <button onClick={() => setBilling("monthly")}
-            className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${billing === "monthly" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-            Monthly
-          </button>
-          <button onClick={() => setBilling("annual")}
-            className={`brutal-border px-6 py-3 font-mono text-xs uppercase brutal-press ${billing === "annual" ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}>
-            Annual <span className="opacity-60">Save 27%</span>
-          </button>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="brutal-border bg-bone p-6">
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">FREE</div>
-            <div className="font-display text-4xl mb-1">£0</div>
-            <div className="font-mono text-xs opacity-70 mb-6">forever</div>
-            <ul className="space-y-2 font-mono text-xs">
-              {FEATURES.map((f, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="opacity-40 shrink-0">—</span>
-                  <span className="opacity-70">{f.free}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="brutal-border bg-acid p-6 brutal-shadow">
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-3">CCD PRO</div>
-            {region === "india" ? (
-              <div>
-                <div className="font-display text-4xl mb-1">{INR_PRICE[billing] || "INR"}</div>
-                <div className="font-mono text-xs opacity-70 mb-6">per {billing === "monthly" ? "month" : "year"} · billed in rupees</div>
-              </div>
-            ) : billing === "monthly" ? (
-              <div>
-                <div className="font-display text-4xl mb-1">£9</div>
-                <div className="font-mono text-xs opacity-70 mb-6">per month</div>
-              </div>
-            ) : (
-              <div>
-                <div className="font-display text-4xl mb-1">£79</div>
-                <div className="font-mono text-xs opacity-70 mb-1">per year <span className="line-through opacity-40">£108</span></div>
-                <div className="font-mono text-[9px] bg-volt text-bone px-2 py-0.5 inline-block mb-4">SAVE £29</div>
-              </div>
-            )}
-            <ul className="space-y-2 font-mono text-xs mb-8">
-              {FEATURES.map((f, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-ink font-bold shrink-0">✓</span>
-                  <span>{f.pro}</span>
-                </li>
-              ))}
-            </ul>
-            {error && (
-              <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs mb-4">{error}</div>
-            )}
-            <button onClick={handleUpgrade} disabled={loading}
-              className="brutal-border bg-ink text-bone px-6 py-3 font-mono text-xs uppercase brutal-press w-full disabled:opacity-50 hover:bg-volt hover:text-bone transition-colors">
-              {loading ? "Redirecting..." : user ? `GET PRO${region === "india" ? (INR_PRICE[billing] ? ` — ${INR_PRICE[billing]}` : "") : ` — ${billing === "monthly" ? "£9/mo" : "£79/yr"}`} →` : "SIGN IN TO UPGRADE →"}
-            </button>
-            {!user && (
-              <p className="font-mono text-[9px] opacity-70 mt-2 text-center">You&apos;ll be prompted to sign in first</p>
-            )}
-          </div>
-        </div>
-
-        <div className="brutal-border bg-bone p-6">
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-3">// WHAT&apos;S FREE, ALWAYS</div>
-          <p className="font-mono text-sm opacity-70 leading-relaxed">
-            The first 3 missions in every path are free — forever. No credit card, no account. 
-            That&apos;s 30+ free missions across Fundamentals, DJ World, and Producer. 
-            CCD.SCHOOL PRO is for people who want to go the distance.
-          </p>
-        </div>
-
-        <div className="font-mono text-[9px] uppercase opacity-70 text-center">
-          Cancel anytime · No hidden fees · Secure payment via {region === "india" ? "Razorpay" : "Stripe"}
-        </div>
+      )}
+      <div style={{ marginTop: 12 }}>
+        <Switch label="Billing" value={billing} onChange={id => setBilling(id as "monthly" | "annual")}
+          options={[{ id: "monthly", label: "monthly" }, { id: "annual", label: "annual, save 27%" }]} />
       </div>
-    </main>
+
+      <Silk label="free" right="forever" />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 4, marginTop: 8 }}>
+        <b style={{ fontSize: 22, fontWeight: 500 }}>£0</b>
+        {FEATURES.map((f, i) => (
+          <span key={i} style={{ fontSize: 13, color: "var(--sub)" }}>{f.free}</span>
+        ))}
+      </div>
+
+      <Silk label="ccd pro" right={per} />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 4, marginTop: 8 }}>
+        <b style={{ fontSize: 22, fontWeight: 500 }}>{priceLine}</b>
+        {FEATURES.map((f, i) => (
+          <span key={i} style={{ fontSize: 13 }}>{f.pro}</span>
+        ))}
+      </div>
+      {error && <p role="alert" style={{ color: "var(--led-red)", fontSize: 13, marginTop: 10 }}>{error}</p>}
+      <div style={{ marginTop: 14 }}>
+        <GoPill onClick={handleUpgrade} disabled={loading}>
+          {loading ? "redirecting" : user ? `get pro${region === "india" ? (INR_PRICE[billing] ? `, ${INR_PRICE[billing]}` : "") : `, ${billing === "monthly" ? "£9 a month" : "£79 a year"}`}` : "sign in to upgrade"}
+        </GoPill>
+      </div>
+      {!user && <p className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>you will be asked to sign in first</p>}
+
+      <Silk label="what is free, always" />
+      <div className="ls-panel" style={{ marginTop: 8 }}>
+        <span style={{ fontSize: 14, lineHeight: 1.5, color: "var(--sub)" }}>
+          the first 3 missions in every path are free, forever. no credit card, no account. that is 30 or more free missions across fundamentals, dj and producer. ccd.school pro is for people who want to go the distance.
+        </span>
+      </div>
+      <ListRow title="cancel anytime. no hidden fees." sub={`secure payment via ${region === "india" ? "razorpay" : "stripe"}`} style={{ marginTop: 12 }} />
+    </RefPage>
   );
 }

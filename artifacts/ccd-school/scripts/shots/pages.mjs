@@ -8,7 +8,7 @@ const [base = "http://localhost:3000", name = "chromium", out = "shots/pages", .
 mkdirSync(out, { recursive: true });
 const b = await (name === "webkit" ? webkit : chromium).launch(name === "chromium" ? { args: ["--autoplay-policy=no-user-gesture-required"] } : {});
 const problems = [];
-const noise = /auth|favicon|posthog|_vercel|500 \(Internal|access control|ClientFetchError/i;
+const noise = /Failed to load resource|auth|favicon|posthog|_vercel|500 \(Internal|access control|ClientFetchError/i;
 for (const scheme of ["light", "dark"]) {
   for (const raw of paths) {
     const [path, act] = raw.split("!");
@@ -16,6 +16,7 @@ for (const scheme of ["light", "dark"]) {
     const p = await ctx.newPage();
     const file = (path.replace(/\W+/g, "-").replace(/^-|-$/g, "") || "home") + (act ? "-" + act.split("=")[1].replace(/\W+/g, "-") : "");
     p.on("pageerror", e => problems.push(`${file} ${scheme}: ${e.message.slice(0, 160)}`));
+    p.on("response", r => { if (r.status() === 404 && !/_vercel/.test(r.url())) problems.push(`${file} ${scheme}: 404 ${r.url()}`); });
     p.on("console", m => { if (m.type() === "error" && !noise.test(m.text())) problems.push(`${file} ${scheme}: ${m.text().slice(0, 160)}`); });
     await p.addInitScript(() => { localStorage.setItem("ccd.studio.seeded", "1"); localStorage.setItem("ccd.hearts.explained", "1"); });
     await p.goto(base + path, { waitUntil: "networkidle", timeout: 120000 }).catch(e => problems.push(`${file}: ${e.message.slice(0, 80)}`));

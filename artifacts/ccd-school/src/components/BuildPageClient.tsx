@@ -6,6 +6,8 @@ import { atlasById } from "@/content/atlas";
 import { BUILD_STAGES } from "@/content/build";
 import { LESSON_LINKS } from "@/content/lessonLinks";
 import { MISSIONS } from "@/content/missions";
+import { GoPill, Silk } from "@/components/m1/controls";
+import { RefPage, SegBar } from "@/components/m1/parts";
 
 const lessonsForStage = (stage: string) =>
   Object.entries(LESSON_LINKS)
@@ -90,135 +92,102 @@ export function BuildPageClient() {
   const pct = Math.round((done.length / BUILD_STAGES.length) * 100);
 
   return (
-    <main className="min-h-screen bg-bone">
-      <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-6">
-        <header>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// BUILD A SET</div>
-          <h1 className="font-display text-4xl leading-none">YOUR FIRST TRACK, IN {BUILD_STAGES.length} STAGES.</h1>
-          <p className="font-mono text-xs opacity-70 mt-3">
-            Do each stage in Live, save, and upload the .als here. We check your real Set. Nothing is stored and your file
-            is never changed. New to Live? Start with <a className="underline" href="/setup">Setup</a>.
-          </p>
-          <div
-            className="brutal-border bg-white h-4 mt-4"
-            role="progressbar"
-            aria-valuenow={pct}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Build progress"
-          >
-            <div className="h-full bg-acid" style={{ width: `${pct}%` }} />
-          </div>
-          <p className="font-mono text-xs mt-1">{done.length} of {BUILD_STAGES.length} stages</p>
-        </header>
+    <RefPage title="build a set" back="/atlas" meta="live" right={`${done.length} of ${BUILD_STAGES.length} stages`}
+      intro={<>do each stage in live, save, and upload the .als here. your real set is checked. nothing is stored and your file is never changed. new to live? start with <a style={{ textDecoration: "underline" }} href="/setup">setup</a>.</>}>
+      <div role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Build progress" style={{ marginTop: 14 }}>
+        <SegBar value={done.length / BUILD_STAGES.length} color="var(--led-go)" />
+      </div>
 
-        <section
-          className="brutal-border bg-white p-5 text-center"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const f = e.dataTransfer.files[0];
+      <div className="ls-panel" style={{ flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", marginTop: 14, padding: 20 }}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const f = e.dataTransfer.files[0];
+          if (f) void send(f);
+        }}>
+        <input ref={input} type="file" accept=".als" className="sr-only" aria-label="Choose a Live Set file"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
             if (f) void send(f);
-          }}
-        >
-          <input
-            ref={input}
-            type="file"
-            accept=".als"
-            className="sr-only"
-            aria-label="Choose a Live Set file"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void send(f);
-              e.target.value = "";
-            }}
-          />
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => input.current?.click()}
-            className="brutal-border bg-acid px-5 py-3 font-display text-xl chunk-shadow disabled:opacity-50"
-          >
-            {busy ? "CHECKING..." : "UPLOAD MY SET (.ALS)"}
-          </button>
-          <p role="alert" className="font-mono text-xs text-red-700 mt-3 min-h-4">{error}</p>
-          {gained > 0 && <p className="font-display text-2xl" aria-live="polite">+{gained} XP</p>}
-        </section>
+            e.target.value = "";
+          }} />
+        <GoPill onClick={() => input.current?.click()} disabled={busy}>{busy ? "checking" : "upload my set (.als)"}</GoPill>
+        <p role="alert" style={{ color: "var(--led-red)", fontSize: 13, minHeight: 18, margin: 0 }}>{error}</p>
+        {gained > 0 && <b aria-live="polite" style={{ fontSize: 18, fontWeight: 500 }}>+{gained} xp</b>}
+      </div>
 
-        <ol className="space-y-3">
-          {BUILD_STAGES.map((st, i) => {
-            const ok = done.includes(st.id);
-            const isCurrent = i === current;
-            const r = results[st.id];
-            const locked = !ok && !isCurrent;
-            return (
-              <li
-                key={st.id}
-                className={`brutal-border p-4 ${ok ? "bg-acid" : isCurrent ? "bg-white chunk-shadow" : "bg-bone"} ${locked ? "opacity-60" : ""}`}
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <h2 className="font-display text-2xl leading-none">
-                    {i + 1}. {st.title}
-                  </h2>
-                  <span className="font-mono text-xs">{ok ? "Done" : `${st.xp} XP`}</span>
-                </div>
-                {!locked && (
-                  <>
-                    <p className="font-mono text-sm mt-2">{st.task}</p>
-                    <p className="font-mono text-xs opacity-70 mt-1">{st.why}</p>
-                    {st.learn.length > 0 && (
-                      <p className="font-mono text-xs mt-2">
-                        Read first:{" "}
-                        {st.learn.map((id, k) => (
-                          <span key={id}>
-                            {k > 0 && ", "}
-                            <a className="underline" href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>
-                          </span>
-                        ))}
-                      </p>
-                    )}
-                    {isCurrent && !ok && lessonsForStage(st.id).length > 0 && (
-                      <p className="font-mono text-xs mt-2" data-testid="stage-lessons">
-                        Stuck? Lessons for this stage:{" "}
-                        {lessonsForStage(st.id).map((m, k) => (
-                          <span key={m.slug}>
-                            {k > 0 && ", "}
-                            <a className="underline" href={`/learn/${m.slug}`}>{m.title}</a>
-                          </span>
-                        ))}
-                      </p>
-                    )}
-                    {(isCurrent || ok) && (
-                      <ul className="mt-3 space-y-2">
-                        {st.checks.map((c) => {
-                          const rc = r?.checks.find((x) => x.id === c.id);
-                          const pass = ok || rc?.pass;
-                          return (
-                            <li key={c.id} className="font-mono text-xs">
-                              <span aria-hidden>{pass ? "✓" : "○"}</span>{" "}
+      <Silk label="stages" right={`${done.length} done`} />
+      <ol style={{ listStyle: "none", margin: 0, padding: 0 }}>
+        {BUILD_STAGES.map((st, i) => {
+          const ok = done.includes(st.id);
+          const isCurrent = i === current;
+          const r = results[st.id];
+          const locked = !ok && !isCurrent;
+          return (
+            <li key={st.id} className="ls-panel" style={{ flexDirection: "column", gap: 8, marginTop: 8, opacity: locked ? 0.55 : 1, ...(isCurrent ? { boxShadow: "inset 0 0 0 1.5px var(--led-go)" } : {}) }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
+                <span className="ls-led" style={{ ["--c" as string]: ok ? "var(--led-mint)" : isCurrent ? "var(--led-go)" : "var(--ledoff)", marginTop: 0 }} />
+                <h2 style={{ flex: 1, fontSize: 16, fontWeight: 500, margin: 0 }}>{i + 1}. {st.title.toLowerCase()}</h2>
+                <span className="m1-t11">{ok ? "done" : `${st.xp} xp`}</span>
+              </div>
+              {!locked && (
+                <>
+                  <p style={{ fontSize: 14, lineHeight: 1.5, margin: 0 }}>{st.task}</p>
+                  <p style={{ fontSize: 13, lineHeight: 1.5, color: "var(--sub)", margin: 0 }}>{st.why}</p>
+                  {st.learn.length > 0 && (
+                    <p className="m1-t11" style={{ margin: 0 }}>
+                      read first:{" "}
+                      {st.learn.map((id, k) => (
+                        <span key={id}>
+                          {k > 0 && ", "}
+                          <a style={{ textDecoration: "underline" }} href={`/atlas#${id}`}>{atlasById(id)?.name ?? id}</a>
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  {isCurrent && !ok && lessonsForStage(st.id).length > 0 && (
+                    <p className="m1-t11" style={{ margin: 0 }} data-testid="stage-lessons">
+                      stuck? lessons for this stage:{" "}
+                      {lessonsForStage(st.id).map((m, k) => (
+                        <span key={m.slug}>
+                          {k > 0 && ", "}
+                          <a style={{ textDecoration: "underline" }} href={`/learn/${m.slug}`}>{m.title}</a>
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                  {(isCurrent || ok) && (
+                    <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
+                      {st.checks.map((c) => {
+                        const rc = r?.checks.find((x) => x.id === c.id);
+                        const pass = ok || rc?.pass;
+                        return (
+                          <li key={c.id} style={{ fontSize: 13, lineHeight: 1.45, display: "flex", gap: 8 }}>
+                            <span className="ls-led" style={{ ["--c" as string]: pass ? "var(--led-mint)" : "var(--ledoff)", marginTop: 5 }} />
+                            <span>
                               <span className="sr-only">{pass ? "Passed: " : "Not yet: "}</span>
                               {c.label}
-                              {rc && <span className="opacity-50"> ({rc.found})</span>}
-                              {!pass && rc && <p className="mt-1 opacity-70">{rc.hint}</p>}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </>
-                )}
-              </li>
-            );
-          })}
-        </ol>
+                              {rc && <span className="m1-t11"> ({rc.found})</span>}
+                              {!pass && rc && <span style={{ display: "block", color: "var(--sub)", marginTop: 2 }}>{rc.hint}</span>}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </>
+              )}
+            </li>
+          );
+        })}
+      </ol>
 
-        {done.length === BUILD_STAGES.length && (
-          <p className="brutal-border bg-acid p-4 font-display text-2xl">
-            YOU BUILT A TRACK. Next: <a className="underline" href="/gym">train your ears</a> or{" "}
-            <a className="underline" href="/link">run the mixing checks</a>.
-          </p>
-        )}
-      </div>
-    </main>
+      {done.length === BUILD_STAGES.length && (
+        <div className="ls-panel" style={{ marginTop: 12, flexDirection: "column", gap: 4 }}>
+          <b style={{ fontSize: 17, fontWeight: 500 }}>you built a track.</b>
+          <span style={{ fontSize: 14 }}>next: <a style={{ textDecoration: "underline" }} href="/gym">train your ears</a> or <a style={{ textDecoration: "underline" }} href="/link">run the mixing checks</a>.</span>
+        </div>
+      )}
+    </RefPage>
   );
 }

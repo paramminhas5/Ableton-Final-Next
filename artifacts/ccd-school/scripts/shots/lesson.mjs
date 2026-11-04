@@ -41,7 +41,8 @@ for (const scheme of ["light", "dark"]) {
     const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, deviceScaleFactor: 2 });
     const p = await ctx.newPage();
     p.on("pageerror", e => problems.push(`${file} ${scheme}: ${e.message.slice(0, 160)}`));
-    p.on("console", m => { if (m.type() === "error" && !/auth|500|favicon|posthog/i.test(m.text())) problems.push(`${file} ${scheme}: ${m.text().slice(0, 160)}`); });
+    p.on("response", r => { if (r.status() === 404 && !/_vercel/.test(r.url())) problems.push(`${file} ${scheme}: 404 ${r.url()}`); });
+    p.on("console", m => { if (m.type() === "error" && !/Failed to load resource|auth|500|favicon|posthog/i.test(m.text())) problems.push(`${file} ${scheme}: ${m.text().slice(0, 160)}`); });
     await p.addInitScript(([mode, action]) => {
       localStorage.setItem("ccd.studio.seeded", "1");
       localStorage.setItem("ccd.learnMode", mode);

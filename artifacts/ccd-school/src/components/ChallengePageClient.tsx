@@ -10,13 +10,15 @@
  *   • Global challenge leaderboard score saved to /api/challenge/submit
  *   • Resets daily (date-keyed in localStorage)
  *   • Weekly theme: pulls questions tagged with the week's theme
+ * Model 1 look: glass intro, one go key, option pads, a segment bar for the clock.
  */
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useProgress } from "@/lib/progress";
 import { useAuth } from "@/lib/auth";
 import { playCorrect, playWrong } from "@/lib/audio";
 import { PLACEMENT_QUESTIONS } from "@/content/placement-questions";
-import Link from "next/link";
+import { GoPill, Pad, Silk } from "@/components/m1/controls";
+import { ListRow, PageHead, RefPage, SegBar } from "@/components/m1/parts";
 
 const QUESTION_TIME = 30; // seconds
 const QUESTION_COUNT = 5;
@@ -138,143 +140,85 @@ export function ChallengePageClient() {
     advance(isCorrect, timeUsed);
   };
 
-  const timerPct = timeLeft / QUESTION_TIME;
-  const timerColor = timeLeft > 15 ? "bg-acid" : timeLeft > 7 ? "bg-sun" : "bg-hot";
+  const timerColor = timeLeft > 15 ? "var(--led-mint)" : timeLeft > 7 ? "var(--led-go)" : "var(--led-red)";
 
-  // ── INTRO ──
+  // intro
   if (phase === "intro") {
     return (
-      <main className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
-        <div>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-2">DAILY CHALLENGE</div>
-          <div className="font-mono text-xs opacity-70 mb-3">{getWeeklyTheme()}</div>
-          <h1 className="font-display text-5xl leading-none">
-            5 QUESTIONS.<br /><span className="text-acid">30 SECONDS EACH.</span>
-          </h1>
-        </div>
+      <RefPage title="daily challenge" back="/dashboard" meta={getWeeklyTheme().toLowerCase()} right={`${progress.hearts} of 5 hearts`}
+        intro="5 questions from all three worlds. 30 seconds each, or it counts as wrong.">
         {alreadyPlayed && (
-          <div className="brutal-border bg-volt text-bone p-4">
-            <div className="font-display text-xl">✓ Already played today</div>
-            <div className="font-mono text-xs opacity-80 mt-1">Come back tomorrow for a new challenge!</div>
+          <div className="ls-panel" style={{ flexDirection: "column", gap: 2 }}>
+            <b style={{ fontSize: 15, fontWeight: 500 }}>already played today</b>
+            <span className="m1-t11">come back tomorrow for a new challenge.</span>
           </div>
         )}
-        <div className="space-y-2 font-mono text-sm opacity-70">
-          {["5 questions from all 3 worlds", "30 seconds per question or it's wrong", "Speed + accuracy = your score", "Wrong answers cost a heart in Flow Mode", "Resets every day at midnight UTC"].map((rule, i) => (
-            <div key={i} className="flex items-center gap-2"><span className="text-acid">→</span>{rule}</div>
-          ))}
+        <Silk label="the rules" />
+        {["speed and accuracy make your score", "a wrong answer costs a heart in flow mode", "resets every day at midnight utc"].map(rule => (
+          <ListRow key={rule} led="var(--led-cobalt)" title={rule} />
+        ))}
+        <div style={{ marginTop: 18 }}>
+          <GoPill onClick={() => { setPhase("playing"); setQPhase("picking"); setTimeLeft(QUESTION_TIME); }} disabled={progress.hearts === 0}>
+            {alreadyPlayed ? "play again" : "start the challenge"}
+          </GoPill>
         </div>
-        <div className="flex items-center gap-2 font-mono text-sm">
-          <span className="text-hot"></span>
-          <span className="opacity-60">{progress.hearts}/{5} hearts remaining</span>
-        </div>
-        <div className="space-y-2">
-          <button
-            onClick={() => { setPhase("playing"); setQPhase("picking"); setTimeLeft(QUESTION_TIME); }}
-            disabled={progress.hearts === 0}
-            className="w-full brutal-border bg-acid text-ink py-4 font-display text-2xl brutal-press brutal-shadow disabled:opacity-40">
-            {alreadyPlayed ? "PLAY AGAIN →" : "START CHALLENGE →"}
-          </button>
-          {progress.hearts === 0 && (
-            <p className="font-mono text-xs text-center opacity-70">No hearts left — visit the Gem Shop to refill</p>
-          )}
-          <Link href="/" className="block text-center font-mono text-[10px] uppercase opacity-70 hover:opacity-70">← Back to dashboard</Link>
-        </div>
-      </main>
+        {progress.hearts === 0 && <p className="m1-t11" style={{ textAlign: "center", marginTop: 10 }}>no hearts left. visit the shop to refill.</p>}
+      </RefPage>
     );
   }
 
-  // ── PLAYING ──
+  // playing
   if (phase === "playing" && currentQ) {
     return (
-      <main className="min-h-screen bg-ink text-bone max-w-lg mx-auto flex flex-col">
-        {/* Top bar */}
-        <div className="p-4 space-y-2">
-          <div className="flex items-center justify-between font-mono text-[10px] uppercase opacity-70">
-            <span>Question {qIdx + 1} / {QUESTION_COUNT}</span>
-            <span className={timeLeft <= 7 ? "text-hot font-bold animate-pulse" : ""}>{timeLeft}s</span>
-          </div>
-          {/* Timer bar */}
-          <div className="h-3 brutal-border bg-bone/10 overflow-hidden">
-            <div className={`h-full ${timerColor} transition-all duration-1000`} style={{ width: `${timerPct * 100}%` }} />
-          </div>
-          {/* Progress dots */}
-          <div className="flex gap-1.5">
-            {Array.from({ length: QUESTION_COUNT }).map((_, i) => (
-              <div key={i} className={`w-2 h-2 brutal-border ${i < results.length ? (results[i].correct ? "bg-acid" : "bg-hot") : i === qIdx ? "bg-volt" : "bg-bone/20"}`} />
-            ))}
-          </div>
+      <main className="m1-page" style={{ paddingTop: 4 }}>
+        <PageHead title={`question ${qIdx + 1} of ${QUESTION_COUNT}`} back="/dashboard" right={<span className="m1-t11" aria-live="off">{timeLeft}s</span>} />
+        <div style={{ marginTop: 4 }} role="timer" aria-label={`${timeLeft} seconds left`}>
+          <SegBar value={timeLeft / QUESTION_TIME} color={timerColor} />
         </div>
-
-        <div className="flex-1 px-4 pb-8 space-y-4">
-          <div className="brutal-border bg-bone/10 p-5">
-            <div className="font-mono text-[9px] uppercase opacity-70 mb-2">{currentQ.world.toUpperCase()}</div>
-            <div className="font-display text-xl md:text-2xl leading-snug">{currentQ.q}</div>
-          </div>
-
-          <div className="grid gap-2">
-            {currentQ.options.map((opt, i) => {
-              let cls = "bg-bone/10 hover:bg-bone/20 brutal-press cursor-pointer";
-              if (qPhase !== "picking") {
-                if (i === currentQ.answer) cls = "bg-acid text-ink font-bold";
-                else cls = "bg-bone/10 opacity-30 cursor-default";
-              }
-              return (
-                <button key={i} onClick={() => pick(i)} disabled={qPhase !== "picking"}
-                  className={`brutal-border px-4 py-4 text-left font-mono text-sm transition-colors ${cls}`}>
-                  <span className="opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>{opt}
-                  {qPhase !== "picking" && i === currentQ.answer && <span className="ml-2">✓</span>}
-                </button>
-              );
-            })}
-          </div>
-
-          {qPhase === "timeout" && (
-            <div className="brutal-border bg-hot text-bone p-3 font-mono text-sm">⏱ Time&apos;s up! The answer was: <strong>{currentQ.options[currentQ.answer]}</strong></div>
-          )}
-          {qPhase === "correct" && (
-            <div className="brutal-border bg-volt text-bone p-3 font-display text-xl">✓ CORRECT! +{QUESTION_TIME - (QUESTION_TIME - timeLeft)} speed bonus</div>
-          )}
-          {qPhase === "wrong" && (
-            <div className="brutal-border bg-hot text-bone p-3 font-mono text-sm">✗ Wrong. Correct: <strong>{currentQ.options[currentQ.answer]}</strong></div>
-          )}
+        <div style={{ display: "flex", gap: 6, marginTop: 10 }} aria-hidden>
+          {Array.from({ length: QUESTION_COUNT }).map((_, i) => (
+            <span key={i} className="ls-led" style={{ ["--c" as string]: i < results.length ? (results[i].correct ? "var(--led-mint)" : "var(--led-red)") : i === qIdx ? "var(--led-go)" : "var(--ledoff)", marginTop: 0 }} />
+          ))}
+        </div>
+        <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, marginTop: 12 }}>
+          <div className="ls-meta"><span>{currentQ.world}</span></div>
+          <p className="ls-sub" style={{ marginTop: 10, fontSize: 17 }}>{currentQ.q}</p>
+        </div></div>
+        <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
+          {currentQ.options.map((opt, i) => {
+            const over = qPhase !== "picking";
+            const lit = over && i === currentQ.answer ? "var(--led-mint)" : null;
+            return (
+              <Pad key={i} height={56} lit={lit} onClick={() => pick(i)} ariaLabel={`${String.fromCharCode(65 + i)}. ${opt}`}
+                style={{ justifyContent: "flex-start", padding: "0 16px", textAlign: "left", fontSize: 14, opacity: over && i !== currentQ.answer ? 0.45 : 1, pointerEvents: over ? "none" : undefined }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", textAlign: "left" }}>
+                  <span className="m1-t11">{String.fromCharCode(65 + i)}</span><span>{opt}</span>
+                </span>
+              </Pad>
+            );
+          })}
+        </div>
+        <div aria-live="polite" style={{ marginTop: 12, minHeight: 40 }}>
+          {qPhase === "timeout" && <div className="ls-panel" style={{ marginTop: 0 }}>time is up. the answer was {currentQ.options[currentQ.answer]}.</div>}
+          {qPhase === "correct" && <div className="ls-panel" style={{ marginTop: 0 }}>correct.</div>}
+          {qPhase === "wrong" && <div className="ls-panel" style={{ marginTop: 0 }}>not quite. the answer was {currentQ.options[currentQ.answer]}.</div>}
         </div>
       </main>
     );
   }
 
-  // ── DONE ──
+  // done
   const correctCount = results.filter(r => r.correct).length;
   const pct = Math.round((correctCount / QUESTION_COUNT) * 100);
   return (
-    <main className="min-h-screen bg-ink text-bone flex flex-col justify-center px-6 py-12 max-w-lg mx-auto space-y-8">
-      <div>
-        <div className="font-mono text-[10px] uppercase opacity-70 mb-2">CHALLENGE COMPLETE</div>
-        <h1 className="font-display text-6xl leading-none">
-          {pct === 100 ? "PERFECT!" : pct >= 60 ? "SOLID!" : "KEEP AT IT."}<br />
-          <span className="text-acid">{correctCount}/{QUESTION_COUNT}</span>
-        </h1>
-      </div>
-      <div className="brutal-border bg-acid text-ink p-5">
-        <div className="font-mono text-[10px] uppercase opacity-70 mb-1">CHALLENGE SCORE</div>
-        <div className="font-display text-5xl">{score}</div>
-        <div className="font-mono text-xs opacity-70 mt-1">Speed × accuracy = final score</div>
-      </div>
-      <div className="space-y-1">
-        {questions.current.map((q, i) => (
-          <div key={q.id} className={`brutal-border px-3 py-2 flex items-center gap-2 font-mono text-xs ${results[i]?.correct ? "bg-acid/20" : "bg-hot/20"}`}>
-            <span>{results[i]?.correct ? "✓" : "✗"}</span>
-            <span className="opacity-70 truncate">{q.q}</span>
-          </div>
-        ))}
-      </div>
-      <div className="space-y-2">
-        <Link href="/leaderboard" className="w-full brutal-border bg-volt text-bone py-3 font-mono text-xs uppercase brutal-press block text-center">
-          View Challenge Leaderboard →
-        </Link>
-        <Link href="/" className="w-full brutal-border bg-bone/10 py-3 font-mono text-xs uppercase brutal-press block text-center">
-          ← Back to Dashboard
-        </Link>
-      </div>
-    </main>
+    <RefPage title="challenge done" back="/dashboard" meta={pct === 100 ? "perfect" : pct >= 60 ? "solid" : "keep at it"} right={`${correctCount} of ${QUESTION_COUNT}`}
+      intro={`score ${score}. speed and accuracy count.`}>
+      <Silk label="your answers" />
+      {questions.current.map((q, i) => (
+        <ListRow key={q.id} led={results[i]?.correct ? "var(--led-mint)" : "var(--led-red)"} title={q.q} sub={results[i]?.correct ? "right" : `answer: ${q.options[q.answer]}`} />
+      ))}
+      <div style={{ marginTop: 18 }}><GoPill href="/leaderboard">challenge leaderboard</GoPill></div>
+      <ListRow href="/dashboard" title="back to today" style={{ marginTop: 14 }} />
+    </RefPage>
   );
 }

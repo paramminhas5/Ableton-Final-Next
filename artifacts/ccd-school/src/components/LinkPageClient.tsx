@@ -2,6 +2,8 @@
 import { useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { missionBySlug } from "@/content/missions";
+import { GoPill, Silk } from "@/components/m1/controls";
+import { RefPage } from "@/components/m1/parts";
 
 /** which lessons teach what each Set mission looks for */
 const MISSION_LESSONS: Record<string, string[]> = {
@@ -52,119 +54,98 @@ export function LinkPageClient() {
 
   const all = res ? [...res.set.tracks, ...res.set.returns] : [];
   return (
-    <main className="min-h-screen bg-bone">
-      <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-6">
-        <header>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// CONNECT LIVE</div>
-          <h1 className="font-display text-4xl leading-none">CHECK YOUR OWN SET.</h1>
-          <p className="font-mono text-xs opacity-70 mt-3">
-            Upload a Live Set (.als). We read it in memory, check it against four real mixing habits, and throw it away.
-            Nothing is stored. Save a copy of your Set first if you want to be careful. We never change it.
-          </p>
-        </header>
-
-        <section
-          className="brutal-border bg-white p-6 text-center"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const f = e.dataTransfer.files[0];
+    <RefPage title="check my set" back="/atlas" meta="live"
+      intro="upload a live set (.als). it is read in memory, checked against four real mixing habits, and thrown away. nothing is stored and your set is never changed.">
+      <div className="ls-panel" style={{ flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", marginTop: 12, padding: 20 }}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const f = e.dataTransfer.files[0];
+          if (f) void send(f);
+        }}>
+        <input ref={input} type="file" accept=".als" className="sr-only" aria-label="Choose a Live Set file"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
             if (f) void send(f);
-          }}
-        >
-          <input
-            ref={input}
-            type="file"
-            accept=".als"
-            className="sr-only"
-            aria-label="Choose a Live Set file"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void send(f);
-              e.target.value = "";
-            }}
-          />
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => input.current?.click()}
-            className="brutal-border bg-acid px-5 py-3 font-display text-xl chunk-shadow disabled:opacity-50"
-          >
-            {busy ? "READING..." : "CHOOSE A .ALS FILE"}
-          </button>
-          <p className="font-mono text-xs opacity-70 mt-3">or drop it here. Up to 30 MB.</p>
-          <p role="alert" className="font-mono text-xs text-red-700 mt-3 min-h-4">{error}</p>
-        </section>
-
-        {res && (
-          <>
-            <section className="brutal-border bg-bone p-4" aria-label="Your Set">
-              <div className="font-mono text-[10px] uppercase opacity-70 mb-2">YOUR SET</div>
-              <p className="font-mono text-sm">
-                {res.set.tempo} BPM · {res.set.timeSignature.join("/")}
-                {res.set.scale ? ` · ${res.set.scale.root} ${res.set.scale.name}` : ""}
-                {res.set.liveVersion ? ` · Live ${res.set.liveVersion}` : ""}
-              </p>
-              <p className="font-mono text-xs opacity-70 mt-1">
-                {res.set.tracks.length} tracks, {res.set.returns.length} returns
-              </p>
-              <ul className="mt-3 divide-y divide-black/10">
-                {all.map((t, i) => (
-                  <li key={i} className="py-2 font-mono text-xs flex flex-wrap gap-x-3">
-                    <span className="font-bold">{t.name || "(unnamed)"}</span>
-                    <span className="opacity-50">{t.kind}</span>
-                    {t.devices.length > 0 && (
-                      <span>
-                        {t.devices.map((d, k) => (
-                          <span key={k}>
-                            {k > 0 && ", "}
-                            {d.atlasId ? <a className="underline" href={`/atlas#${d.atlasId}`}>{d.name}</a> : d.name}
-                          </span>
-                        ))}
-                      </span>
-                    )}
-                    {t.notes > 0 && <span className="opacity-50">{t.notes} notes</span>}
-                    {t.sidechain.length > 0 && <span>sidechain: {t.sidechain.join(", ")}</span>}
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section aria-label="Missions" className="space-y-3">
-              {res.missions.map((m) => (
-                <article key={m.id} className={`brutal-border p-4 ${m.passed ? "bg-acid" : "bg-white"}`}>
-                  <h2 className="font-display text-2xl leading-none">
-                    {m.passed ? "DONE · " : ""}
-                    {m.title}
-                  </h2>
-                  {!m.passed && MISSION_LESSONS[m.id] && (
-                    <p className="font-mono text-xs mt-2" data-testid="weak-spot-lessons">
-                      Learn it:{" "}
-                      {MISSION_LESSONS[m.id].map((slug, k) => (
-                        <span key={slug}>
-                          {k > 0 && ", "}
-                          <a className="underline" href={`/learn/${slug}`}>{missionBySlug(slug)?.title ?? slug}</a>
-                        </span>
-                      ))}
-                    </p>
-                  )}
-                  <ul className="mt-3 space-y-2">
-                    {m.checks.map((c) => (
-                      <li key={c.id} className="font-mono text-xs">
-                        <span aria-hidden>{c.pass ? "✓" : "○"}</span>{" "}
-                        <span className="sr-only">{c.pass ? "Passed: " : "Not yet: "}</span>
-                        {c.label} <span className="opacity-50">({c.found})</span>
-                        {!c.pass && <p className="mt-1 opacity-70">{c.hint}</p>}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-              <p className="font-mono text-xs opacity-70">Fix something in Live, save, and upload again.</p>
-            </section>
-          </>
-        )}
+            e.target.value = "";
+          }} />
+        <GoPill onClick={() => input.current?.click()} disabled={busy}>{busy ? "reading" : "choose a .als file"}</GoPill>
+        <span className="m1-t11">or drop it here. up to 30 mb.</span>
+        <p role="alert" style={{ color: "var(--led-red)", fontSize: 13, minHeight: 18, margin: 0 }}>{error}</p>
       </div>
-    </main>
+
+      {res && (
+        <>
+          <section aria-label="Your Set">
+            <Silk label="your set" right={`${res.set.tracks.length} tracks, ${res.set.returns.length} returns`} />
+            <div className="ls-panel" style={{ flexDirection: "column", gap: 4, marginTop: 8 }}>
+              <b style={{ fontSize: 16, fontWeight: 500 }}>
+                {res.set.tempo} bpm, {res.set.timeSignature.join("/")}
+                {res.set.scale ? `, ${res.set.scale.root} ${res.set.scale.name}` : ""}
+              </b>
+              {res.set.liveVersion ? <span className="m1-t11">live {res.set.liveVersion}</span> : null}
+            </div>
+            {all.map((t, i) => (
+              <div key={i} className="ls-panel" style={{ flexDirection: "column", gap: 4, marginTop: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, width: "100%" }}>
+                  <b style={{ fontSize: 15, fontWeight: 500 }}>{t.name || "(unnamed)"}</b>
+                  <span className="m1-tag">{t.kind.toLowerCase()}</span>
+                </div>
+                {t.devices.length > 0 && (
+                  <span style={{ fontSize: 13, color: "var(--sub)" }}>
+                    {t.devices.map((d, k) => (
+                      <span key={k}>
+                        {k > 0 && ", "}
+                        {d.atlasId ? <a style={{ textDecoration: "underline" }} href={`/atlas#${d.atlasId}`}>{d.name}</a> : d.name}
+                      </span>
+                    ))}
+                  </span>
+                )}
+                {(t.notes > 0 || t.sidechain.length > 0) && (
+                  <span className="m1-t11">
+                    {t.notes > 0 ? `${t.notes} notes` : ""}{t.notes > 0 && t.sidechain.length > 0 ? ", " : ""}{t.sidechain.length > 0 ? `sidechain: ${t.sidechain.join(", ")}` : ""}
+                  </span>
+                )}
+              </div>
+            ))}
+          </section>
+
+          <section aria-label="Missions">
+            <Silk label="missions" right={`${res.missions.filter((m) => m.passed).length} of ${res.missions.length} done`} />
+            {res.missions.map((m) => (
+              <article key={m.id} className="ls-panel" style={{ flexDirection: "column", gap: 8, marginTop: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
+                  <span className="ls-led" style={{ ["--c" as string]: m.passed ? "var(--led-mint)" : "var(--ledoff)", marginTop: 0 }} />
+                  <b style={{ fontSize: 16, fontWeight: 500, flex: 1 }}>{m.title.toLowerCase()}</b>
+                  {m.passed ? <span className="m1-tag">done</span> : null}
+                </div>
+                {!m.passed && MISSION_LESSONS[m.id] && (
+                  <p className="m1-t11" style={{ margin: 0 }} data-testid="weak-spot-lessons">
+                    learn it:{" "}
+                    {MISSION_LESSONS[m.id].map((slug, k) => (
+                      <span key={slug}>
+                        {k > 0 && ", "}
+                        <a style={{ textDecoration: "underline" }} href={`/learn/${slug}`}>{missionBySlug(slug)?.title ?? slug}</a>
+                      </span>
+                    ))}
+                  </p>
+                )}
+                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
+                  {m.checks.map((c) => (
+                    <li key={c.id} style={{ fontSize: 13, lineHeight: 1.45 }}>
+                      <span className="sr-only">{c.pass ? "Passed: " : "Not yet: "}</span>
+                      <span style={{ color: c.pass ? "var(--ink)" : "var(--sub)" }}>{c.label}</span>{" "}
+                      <span className="m1-t11">({c.found})</span>
+                      {!c.pass && <span style={{ display: "block", color: "var(--sub)", marginTop: 2 }}>{c.hint}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+            <p className="m1-t11" style={{ marginTop: 10 }}>fix something in live, save, and upload again.</p>
+          </section>
+        </>
+      )}
+    </RefPage>
   );
 }
