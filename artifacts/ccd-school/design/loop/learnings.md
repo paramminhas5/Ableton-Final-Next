@@ -2,6 +2,25 @@
 
 Each round adds what it found, built and learned, newest first. Read this before starting a round.
 
+## Improvement check pass 1 (5 Nov, de9e5bd), before the loop
+Fixed: studio overlap, piano roll, tool step names, mixer focus, play-in go key, song strip, lfo picture, /sound, pink and lowercase rules, sampler grouping, onboarding ear, dashboard and tour, done screen, foundations url. See ccd/school-fixes.md 76 to 90.
+Learned:
+- The global 44px tap-target rule silently breaks dense grids. Any new grid of small cells needs `min-width:0;min-height:0`.
+- A reviewer that hasn't seen the work finds layout bugs no script catches (overlaps, things under fixed bars). Keep doing it every round, at 390 and 1440.
+- A go key should always say what's missing, never do nothing.
+Open, for the rounds (ranked):
+1. The piano roll lesson is placed under the hats song lesson ("go deeper on hats") but now teaches on the lead; move it in design/curriculum.md under a lead lesson.
+2. Copy says "your song is playing" when the song is empty (deep links). Write the empty-song case in tool and shape steps.
+3. The song strip could show the take as a ghost lane, not just words.
+4. Desktop onboarding uses a 530px column; a two-column hero would fill the screen. The cat on pink bars loses contrast.
+5. Knobs don't show their value until touched; consider a small value under each.
+Bigger product ideas from the reviewer (for Param to rank, not to build unasked):
+- Coaching on your own takes: a timing map per hit (early or late in ms) and the next drill built from what you got wrong.
+- Your song as the product: a timeline that grows lesson by lesson, a shareable 15-second then-and-now clip, and a full Live set export at the end of each path.
+- Reference challenges from CCD nights: match a CCD artist's kick or bass by ear, with a spectrum overlay and a closeness score.
+- DJ mode with real scrolling waveforms, phrase markers, and a replay that shows where a blend went wrong; submit a recorded mix for an opening slot at a CCD night.
+- An ear gym built from the learner's own song, with spaced repetition and unlocks.
+
 ## Before the loop (5 Nov 2026, the session that set it up)
 - Test against a production build (`next build` then `next start -p 3100`), not the dev server: the dev server hot-reloads mid-run and fails lessons that are fine.
 - Never rebuild `.next` while a walk is running against it; restart the server after every build.
