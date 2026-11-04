@@ -17,6 +17,8 @@ import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
 const SNAPS: Snap[] = ["1/16", "1/32", "off"];
+/** How far from a beat a guided hit can land and still count, in beats (75 ms at 120 bpm). */
+const TOL = 0.15;
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
 export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string }; tail?: ReactNode };
@@ -39,7 +41,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const { engine, start, ready, started } = useEngineTrack(session);
   const [click, setClick] = useState(true);
   const [pos, setPos] = useState({ beat: 0, flags: 0 });
-  const [snap, setSnap] = useState<Snap>("1/16");
+  // A guided play-in records exactly what you played: no snap until a lesson teaches it.
+  const [snap, setSnap] = useState<Snap>(coach ? "off" : "1/16");
+  const [nudge, setNudge] = useState(false);
   const [held, setHeld] = useState<Set<number>>(new Set());
   const [lit, setLit] = useState<Record<number, number>>({});
   const history = useRef<NoteEvent[][]>([]);
@@ -170,8 +174,10 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     setEvents(() => []);
   };
   const use = () => {
+    if (coach && !goalMet) { setNudge(true); window.setTimeout(() => setNudge(false), 1600); return; }
     engine.stop();
-    onUse({ type, events });
+    // Hits that were close enough to the beat are kept exactly on it.
+    onUse({ type, events: coach && onBeatOnly ? events.map(e => (isOff(e) ? e : { ...e, start: ((Math.round(e.start) % loop) + loop) % loop })) : events });
   };
 
   // ── the screen: a piano roll of the take ────────────────────────────────
@@ -200,9 +206,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const goalEvents = coach ? events.filter(e => goalNote === undefined || e.note === goalNote) : [];
   // Drum lessons ask for hits on the beat. A tune can go anywhere on the grid, so there we count notes.
   const onBeatOnly = goalNote !== undefined;
-  const offBeat = onBeatOnly ? goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) > 0.13).length : 0;
+  const offOf = (e: NoteEvent) => e.start - Math.round(e.start);
+  const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && Math.abs(offOf(e)) > TOL;
+  const offs = goalEvents.filter(isOff);
+  const offBeat = onBeatOnly ? offs.length : 0;
   const goalHits = onBeatOnly
-    ? new Set(goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) <= 0.13).map(e => Math.round(e.start) % loop)).size
+    ? new Set(goalEvents.filter(e => !isOff(e)).map(e => Math.round(e.start) % loop)).size
     : new Set(goalEvents.map(e => `${e.start}:${e.note}`)).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
@@ -210,7 +219,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
     : recording ? `recording. tap the kick on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}`
     : !events.length ? (onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
-    : offBeat ? `${offBeat === 1 ? "one kick" : `${offBeat} kicks`} landed between the clicks. press undo and play ${offBeat === 1 ? "it" : "them"} again`
+    : offBeat ? `${offBeat === 1 ? "one kick" : `${offBeat} kicks`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
     : !goalMet ? `${goalHits} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : " notes"}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
@@ -238,7 +247,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             if (r < 0) return null;
             const x = (e.start / loop) * Wd;
             const w = drumLike ? Math.max(6, beatW * 0.45) : Math.max(6, (e.len / loop) * Wd - 2);
-            return <rect key={i} x={x + 1} y={r * rh + 1.5} width={Math.min(w, Wd - x - 1)} height={Math.max(4, rh - 3)} rx={2} fill={color} style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
+            const c = isOff(e) ? "#FF4A5A" : color;
+            return <rect key={i} x={x + 1} y={r * rh + 1.5} width={Math.min(w, Wd - x - 1)} height={Math.max(4, rh - 3)} rx={2} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />;
           })}
           {head >= 0 && <path d={`M${head} 0V${Hd}`} stroke={recording ? "#FF4A5A" : "#F3F2EF"} strokeWidth={1.5} />}
         </svg>
@@ -284,7 +294,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       {coach && <div className="fl-text">
         <>
           <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
-          <div className="ls-now" role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
+          <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
           {coach.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
           {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
           {coach.tail}
@@ -293,7 +303,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label="skip" onClick={() => { engine.stop(); onSkip(); }} ariaLabel="Skip this step"><Icon name="back" className="ls-flip" /></Key>
-          <GoPill onClick={use} disabled={!events.length || !goalMet} style={{ gridColumn: "span 3" }} ariaLabel="Use this line">{coach ? "keep it" : "use this line"}</GoPill>
+          <GoPill onClick={use} disabled={coach ? false : !events.length} style={{ gridColumn: "span 3", ...(coach && !goalMet ? { opacity: 0.55 } : null) }} ariaLabel="Use this line">{coach ? "keep it" : "use this line"}</GoPill>
         </div>
       </div>
     </div>

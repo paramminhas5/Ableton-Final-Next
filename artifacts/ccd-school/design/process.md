@@ -72,7 +72,9 @@ in questions from earlier lessons, and what they get right becomes their XP for 
 - Looks like hardware: consistent type scale (one display face for labels, one body face for
   reading), aligned boxes, no stray coloured bars.
 - The cat moves with the beat, or not at all.
-- Undo removes the last thing. Long press clears all.
+- Undo removes the last thing. Long press clears all. A go button is never dead: if it can't go yet, pressing it says why.
+- Never mention a tool (snap, quantise) before the lesson that teaches it. Show timing as it really was.
+- Once you've made something, it stays in view: explanations after a play-in show your own loop in a big frame.
 
 ## How a change gets made
 

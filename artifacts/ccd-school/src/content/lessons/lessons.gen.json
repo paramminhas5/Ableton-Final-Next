@@ -55,9 +55,9 @@
             "note": "kick"
           },
           "say": {
-            "mentor": "Now you play the kick yourself. What you record here becomes the first loop of your song, the one everything else sits on.\nThe click you hear is a metronome: a steady tick on every beat so you have something to play along to. Press rec. You get four clicks to count you in, so just listen. Then tap the kick pad once on each of the next four clicks. Snap is on, so a tap that is a little early or late lands right on the click.\nMissed one? Tap undo to take back the last hit, or hold it to start over.",
-            "straight": "Time to record your own kick. This one bar will loop under your whole song.\nThe ticking is a metronome, there to keep you in time. Press rec and wait out the first four ticks, that is the count-in. On the next four ticks, tap the kick pad once each. Snap tidies small timing slips for you.\nUndo removes your last tap. Hold undo to clear the bar and go again.",
-            "eli5": "Your turn to play! Whatever you tap now goes into your song.\nHear the tick, tick, tick? That is there to help you keep time, like someone clapping along. Press the red rec button. Let four ticks go by without tapping. Then tap the kick pad once on every tick, four times. If you are a tiny bit off, the app fixes it for you.\nMade a mistake? Press undo to take back your last tap."
+            "mentor": "Now you play the kick yourself. What you record here becomes the first loop of your song, the one everything else sits on.\nThe click you hear is a metronome: a steady tick on every beat so you have something to play along to. Press rec. You get four clicks to count you in, so just listen. Then tap the kick pad once on each of the next four clicks. Try to land right on the click. Any kick that comes in early or late shows up red, so you can see it and play it again.\nMissed one? Tap undo to take back the last hit, or hold it to start over.",
+            "straight": "Time to record your own kick. This one bar will loop under your whole song.\nThe ticking is a metronome, there to keep you in time. Press rec and wait out the first four ticks, that is the count-in. On the next four ticks, tap the kick pad once each. Hits that miss the beat show red.\nUndo removes your last tap. Hold undo to clear the bar and go again.",
+            "eli5": "Your turn to play! Whatever you tap now goes into your song.\nHear the tick, tick, tick? That is there to help you keep time, like someone clapping along. Press the red rec button. Let four ticks go by without tapping. Then tap the kick pad once on every tick, four times. If a tap is too early or too late, it turns red so you know to try that one again.\nMade a mistake? Press undo to take back your last tap."
           }
         },
         {
@@ -198,14 +198,14 @@
             "tune down",
             "decay down",
             "tune up",
-            "the snap button"
+            "the click button"
           ],
           "answer": 0,
           "why": "Tune sets how low the body sits. Turning it down makes the kick deeper and fuller.",
           "whyWrong": {
             "1": "Decay changes the length. The kick would still sound thin, just shorter.",
             "2": "Tune up makes it even higher.",
-            "3": "Snap only moves your hits onto the beat. It does not change the sound."
+            "3": "The click button turns the metronome on and off. It does not change your kick."
           }
         },
         {
@@ -224,24 +224,6 @@
             "1": "The click is a separate sound and does not touch your kick.",
             "2": "The click is only a guide while you play. Your song does not include it.",
             "3": "It just ticks on every beat, so you have something to play along to."
-          }
-        },
-        {
-          "kind": "ask",
-          "more": true,
-          "q": "Snap is on and you tap a little early. What happens?",
-          "options": [
-            "your hit moves onto the nearest beat",
-            "the hit is deleted",
-            "it plays twice",
-            "nothing, it stays early"
-          ],
-          "answer": 0,
-          "why": "Snap nudges each hit onto the nearest slot of the beat, so slightly early or late taps still land on time.",
-          "whyWrong": {
-            "1": "Snap never deletes anything. It just lines your hit up.",
-            "2": "It still plays once, only in the right place.",
-            "3": "That is what happens with snap off. With it on, the hit moves."
           }
         },
         {

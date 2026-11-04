@@ -40,7 +40,7 @@ export function Folds({ items }: { items?: { title: string; body: string }[] }) 
 }
 
 // ── say: an explanation; the extra bits fold out below if you want them ───────
-export function SayStep({ screen, meta, onNext, tail }: { screen: Of<"say">; meta: string; onNext: () => void; tail?: ReactNode }) {
+export function SayStep({ screen, meta, onNext, tail, visual }: { screen: Of<"say">; meta: string; onNext: () => void; tail?: ReactNode; visual?: ReactNode }) {
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -49,6 +49,7 @@ export function SayStep({ screen, meta, onNext, tail }: { screen: Of<"say">; met
         <Meta left={meta} />
         <div className="ls-title">{screen.title.toLowerCase()}</div>
       </Screen>
+      {visual}
       </div>
       <div className="fl-text">
       {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}

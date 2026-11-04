@@ -187,22 +187,6 @@ export function Today() {
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
         </Link>
       )}
-      <Silk label="your progress" right={`${progress.streakDays} day streak`} />
-      <Screen>
-        <div className="m1-ss">today</div>
-        <div style={{ display: "flex", gap: 3, marginTop: 8 }} role="img" aria-label={`Today's goal, ${lit} of 9`}>
-          {Array.from({ length: 9 }, (_, i) => <span key={i} style={{ flex: 1, height: 14, borderRadius: 2, background: i < lit ? "#5EEAC1" : "#232326" }} />)}
-        </div>
-        <div className="m1-ss" style={{ marginTop: 6 }}>{lit >= 9 ? "today's goal is done" : `${todayXp} of ${DAILY_GOAL_XP} xp today. finish a lesson to light it up`}</div>
-        <div style={{ display: "grid", gap: 8, marginTop: 14 }}>
-          {WORLDS.map(w => { const c = worldDone(w, done); return (
-            <div key={w} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span className="m1-ss" style={{ width: 62, color: w === world ? "var(--disp-ink)" : undefined }}>{WORLD_LABEL[w]}</span>
-              <span style={{ flex: 1, height: 6, borderRadius: 3, background: "#232326", overflow: "hidden" }}><i style={{ display: "block", height: "100%", width: `${(c.done / Math.max(1, c.total)) * 100}%`, background: w === "producer" ? "#FF5CA3" : w === "dj" ? "#8CA3FF" : "#5EEAC1" }} /></span>
-              <span className="m1-ss" style={{ width: 44, textAlign: "right" }}>{c.done}/{c.total}</span>
-            </div>); })}
-        </div>
-      </Screen>
       </div>
 
       <div className="td-right">

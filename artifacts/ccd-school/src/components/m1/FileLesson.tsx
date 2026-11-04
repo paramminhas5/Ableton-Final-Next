@@ -120,6 +120,38 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
   );
 }
 
+// ── your bar: what you played, shown and looping while you read ───────────────
+function TakeBar({ mission, take }: { mission: Mission; take: Take }) {
+  const slug = mission.slug;
+  const track = useMemo(() => applyTake({ ...readTrackV2(), added: [] }, slug, take, worldOf(slug) ?? undefined, readShape(slug)), [slug, take]);
+  const { engine, ready } = useEngineTrack(track);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const loop = track.loop || 4;
+  const at = beat >= 0 ? (((beat % loop) + loop) % loop) : -1;
+  const W = 330, H = 70, bw = W / loop;
+  return (
+    <Screen>
+      <Meta left="your bar" right={beat >= 0 ? `beat ${Math.floor(at) + 1}` : "press play"} />
+      <svg viewBox={`0 0 ${W} ${H + 14}`} width="100%" className="fl-bar" role="img" aria-label={`Your bar: ${take.events.length} hits over ${loop} beats`}>
+        {Array.from({ length: loop }, (_, i) => (
+          <g key={i}>
+            <rect x={i * bw + 2} y={0} width={bw - 4} height={H} rx={8} fill={at >= i && at < i + 1 ? "rgba(255,255,255,.10)" : "rgba(255,255,255,.04)"} />
+            <text x={i * bw + bw / 2} y={H + 12} textAnchor="middle" fontSize={10} fill="var(--disp-sub)">{i + 1}</text>
+          </g>
+        ))}
+        {take.events.map((e, i) => {
+          const x = (((e.start % loop) + loop) % loop) * bw + 6;
+          const lit = at >= 0 && at - (e.start % loop) >= 0 && at - (e.start % loop) < 0.25;
+          return <circle key={i} cx={x + 8} cy={H / 2} r={lit ? 14 : 10} fill="var(--led-go)" opacity={lit ? 1 : 0.7} />;
+        })}
+      </svg>
+      <div className="fl-barkeys"><button type="button" className="ls-chip" onClick={() => { if (beat >= 0) engine.stop(); else void ready().then(() => engine.play()); }}>{beat >= 0 ? "stop" : "play your bar"}</button></div>
+    </Screen>
+  );
+}
+
 // ── add to your song: the moment the part goes in ───────────────────────────
 function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mission: Mission; take: Take | null; hasQuestions: boolean; onNext: () => void; onSkipQuestions: () => void }) {
   const slug = mission.slug;
@@ -354,7 +386,12 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
 
   let body = null;
   if (cur) switch (cur.kind) {
-    case "say": body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} />; break;
+    case "say": {
+      // Once you've played something, the explanations after it show your own bar, looping.
+      const after = at("play") >= 0 && idx > at("play") && take?.events.length;
+      body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} visual={after && take ? <TakeBar mission={mission} take={take} /> : undefined} />;
+      break;
+    }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
     case "ear": body = <EarStep screen={cur} meta="ear round" level="standard" onNext={next} />; break;

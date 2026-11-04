@@ -11,11 +11,11 @@ Status: [ ] open, [x] done, [~] partly. R = becomes a rule in `process.md`.
 
 ## Onboarding and dashboard
 6. [x] ccdschool.com goes straight to onboarding for a first visit: what you want to make, how much you know, then lesson 1.
-7. [ ] Dashboard: one screen, producer lessons on top, knobs that move when clicked.
-8. [ ] Bottom bar covers the list and the redo button. Fix the overlap.
+7. [~] Dashboard: one screen, producer lessons on top, knobs that move when clicked.
+8. [x] Bottom bar covers the list and the redo button. Fix the overlap.
 9. [ ] "preview" button only plays a kick. Remove it or make it preview the lesson.
-10. [ ] Gap between the last item and the footer.
-11. [ ] Footer links point to the main catscandance.com site, and are the right ones.
+10. [x] Gap between the last item and the footer.
+11. [x] Footer links point to the main catscandance.com site, and are the right ones.
 12. [ ] "flow / free" is unclear for a first-time user. Rename (journey / see all).
 13. [ ] Top button turns the screen black on black. Remove that behaviour.
 14. [ ] Clicking an option already applies it, so the done button is pointless and looks odd.
@@ -76,3 +76,10 @@ unlocks audio so lesson one opens playing), what do you want to make, how much h
 we explain things (sets the starting way for every lesson: explain it properly, keep it short, keep it
 really simple), then your first lesson. "i know my way around" offers the level finder. Bottom nav hidden
 on the root.
+
+## Param's second pass on the kick lesson (4 Nov, 20:56)
+43. [x] Snap was mentioned but you couldn't see or turn it off, and off-beat taps still went through. Lesson 1 now records exactly what you play, no snap. Kicks more than 75 ms off the beat show red, the line says early or late, and you redo that one. Snap comes back when a lesson teaches it. R
+44. [x] After an undo the keep button went dim and you were stuck. Keep is always pressable now; if the bar isn't ready it says why (and skip stays). R
+45. [x] Four on the floor and any explanation after you've played: a small frame with the title and a big frame with your own bar, looping, so the beat you made stays in view. R
+46. [x] Dashboard fits one screen on desktop: lesson and up next, knobs and hear, lesson list scrolling inside its own column. Progress block removed, footer hidden there, bottom bar no longer covers anything. On phones the list scrolls inside a box above the bar.
+47. [x] Footer links: Cats Can Dance home, events, artists, book an artist, shop, playlists (paths in `src/lib/ccd.ts`; check they match the live site).
