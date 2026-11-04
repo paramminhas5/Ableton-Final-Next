@@ -10,13 +10,13 @@ Param's answers (3 Nov, 21:21 IST), already in the plan:
 - Magnific: done, clips replaced.
 
 Read these first:
-- Project doc ccd/00_README.md: index of every project doc (add `school-pro.md` to it; it isn't listed yet).
+- Project doc ccd/00_README.md: index of every project doc.
 - Project doc ccd/school-readme.md: the whole product, decisions, gaps. This is the brief.
 - Project doc ccd/school-instrument-plan.md, section "Web first": the six items that define 100% (items 1 and 2 are ticked) and Param's answers.
-- Project doc ccd/school-redesign.md, the "Build · whole-app look pass" parts 1 to 3: what exists and what is not done.
+- Project doc ccd/school-redesign.md, the "Build · whole-app look pass" parts 1 to 5: what exists and what is not done.
 - Project doc ccd/engine-sound.md: how the engine makes sound.
 - Design canvas: https://claude.ai/code/artifact/36c4ce2a-9660-4375-a101-a41ac0edc49a, page "Model 1 · final". The repo has a screenshot of every board in `artifacts/ccd-school/design/model1/screens/` (ZToday, ZTablet, ZPlugin, ZStreak and the rest); read those with the Read tool, it's faster than the canvas.
-- Repo paramminhas5/Ableton-Final-Next, branch school/field. engine/ (Rust), engine-wasm/, artifacts/ccd-school (the web app). New tonight: `src/components/m1/Lesson.tsx` (the player), `TryIt.tsx`, `AddToTrack.tsx`, `GlassVisual.tsx`, `SevenSeg.tsx`, `lesson.css` (the `ls-` classes the newer screens share), `src/lib/lessonTake.ts`, `engine/src/bin/teach_clips.rs`. Web app: npm install --legacy-peer-deps. Engine: npm run engine (types and wasm).
+- Repo paramminhas5/Ableton-Final-Next, branch school/field. engine/ (Rust), engine-wasm/, artifacts/ccd-school (the web app). Key files: `src/components/m1/Lesson.tsx` (the player), `TryIt.tsx`, `AddToTrack.tsx`, `GlassVisual.tsx`, `SevenSeg.tsx`, `lesson.css` (the `ls-` classes the newer screens share), `src/lib/lessonTake.ts`, `engine/src/bin/teach_clips.rs`. Web app: npm install --legacy-peer-deps. Engine: npm run engine (types and wasm).
 - Screenshots: `node scripts/shots/lesson.mjs <url> <chromium|webkit> <dir>` shoots every lesson step type light and dark (ONLY=name,name to pick); `node scripts/shots/pages.mjs <url> <browser> <dir> /path "/path!click=Button name"` shoots any page. Shoot against a production build (`npm run build`, then `PORT=3200 npm run start` in the background): the dev server drops chunks under WebKit and gives false failures. Browsers: `npx playwright install --with-deps chromium webkit`.
 - Stopping servers: never `pkill -f "next dev"` or a loop that matches "next start" on the command line; both match your own shell and kill it. Find the `next-server` process by its exact cmdline and kill that PID.
 - Preview: https://ccd-school-app-git-school-field-washedupdegen-8712s-projects.vercel.app (rebuilds on every push to school/field).
