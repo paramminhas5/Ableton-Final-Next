@@ -9,11 +9,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
-import { nextStep, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { Icon, Key, Meter, Screen, Silk, Switch } from "./controls";
+import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { CatMark, CAT_SRC, Lanes, WeekDots, WorldDial } from "./shell";
 
 const WORLD_KEY = "ccd.world";
+const WORLDS: WorldId[] = ["fundamentals", "dj", "producer"];
+const IC = { width: 40, height: 40, borderRadius: 10 } as const;
 
 export function Today() {
   const { progress } = useProgress();
@@ -32,6 +35,15 @@ export function Today() {
     if (w) setWorld(w);
   }, [progress.selectedWorld]);
   useEffect(() => () => stopTrack(), []);
+
+  const [q, setQ] = useState("");
+  const all = useMemo(() => WORLDS.flatMap(w => worldSteps(w).map(st => ({ ...st, world: w }))), []);
+  const hits = useMemo(() => {
+    const t = q.trim().toLowerCase();
+    if (!t) return [];
+    return all.filter(st => st.title.toLowerCase().includes(t) || st.pathTitle.toLowerCase().includes(t) || (missionAny(st.slug)?.tagline ?? "").toLowerCase().includes(t)).slice(0, 8);
+  }, [q, all]);
+  const list = worldSteps(world);
 
   const pick = (w: WorldId) => { setWorld(w); try { localStorage.setItem(WORLD_KEY, w); } catch {} };
 
@@ -62,11 +74,30 @@ export function Today() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <WeekDots days={progress.streakDays} />
           <span style={{ fontSize: 15, fontWeight: 300, fontVariantNumeric: "tabular-nums" }}>{progress.xp}<span className="m1-t11" style={{ marginLeft: 3 }}>xp</span></span>
+          <button type="button" className="m1-m" style={IC} aria-label="Search lessons" onClick={() => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT))}><Icon name="search" small /></button>
+          <Link href="/settings" className="m1-m" style={IC} aria-label="Settings"><Icon name="settings" small /></Link>
+          <Link href="/profile" className="m1-m" style={IC} aria-label="Profile"><Icon name="user" small /></Link>
         </div>
       </header>
 
       <div className="td-switch" style={{ marginTop: 6 }}>
         <Switch label="what the screen shows" value={view} onChange={id => setView(id as "world" | "track")} options={[{ id: "world", label: "world" }, { id: "track", label: "your track" }]} />
+      </div>
+
+      <div className="td-search" style={{ marginTop: 12 }}>
+        <label className="m1-ss" htmlFor="td-q" style={{ display: "block", marginBottom: 6 }}>find a lesson</label>
+        <input id="td-q" type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="kick, hats, eq, mixing..." autoComplete="off"
+          style={{ width: "100%", height: 46, borderRadius: 12, border: "1px solid var(--print)", background: "var(--deck2)", color: "var(--ink)", padding: "0 14px", font: "400 16px Outfit, system-ui" }} />
+        {q.trim() && (
+          <div role="list" style={{ marginTop: 8, display: "grid", gap: 6 }}>
+            {hits.length ? hits.map(h => (
+              <Link key={h.slug} role="listitem" href={`/learn/${h.slug}`} className="m1-m is-wide" style={{ height: 52, justifyContent: "space-between", padding: "0 14px", textAlign: "left" }}>
+                <span style={{ textTransform: "lowercase", fontWeight: 500 }}>{h.title}</span>
+                <span className="m1-t11">{WORLD_LABEL[h.world]} · {h.pathTitle.toLowerCase()}</span>
+              </Link>
+            )) : <div className="m1-ss">no lesson called that. try a shorter word.</div>}
+          </div>
+        )}
       </div>
 
       <div className="td-left">
@@ -142,15 +173,40 @@ export function Today() {
           <WorldDial value={world} onChange={pick} />
           <span className="m1-ml">{counts.done} of {counts.total}</span>
         </div>
-        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute practice`} style={{ height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 16 }}>
+        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute quick practice`} style={{ height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 16 }}>
           <Meter segments={9} lit={lit} />
-          <span className="m1-ml">{lit >= 9 ? "goal done" : "2 min practice"}</span>
+          <span className="m1-ml">{lit >= 9 ? "goal done" : "quick practice"}</span>
         </Link>
-        <Key wide label={playing ? "stop" : layers ? "hear track" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your track" : layers ? "Hear your track" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
+        <Key wide label={playing ? "stop" : layers ? "play my song" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
           <Icon name={playing ? "stop" : "hear"} />
         </Key>
       </div>
+      <div className="td-jump">
+        <Silk label="jump to" />
+        <div className="m1-g">
+          <Key label="studio" href="/studio" ariaLabel="Open the studio"><Icon name="studio" /></Key>
+          <Key label="ear gym" href="/gym" ariaLabel="Open the ear gym"><Icon name="hear" /></Key>
+          <Key label="review" href="/review" ariaLabel="Review what you learned"><Icon name="reset" /></Key>
+          <Key label="all worlds" href="/worlds" ariaLabel="See all worlds"><Icon name="menu" /></Key>
+        </div>
       </div>
+      </div>
+      <section className="td-all" aria-label={`All ${WORLD_LABEL[world]} lessons`}>
+        <Silk label={`all ${WORLD_LABEL[world]} lessons`} right={`${counts.done} of ${counts.total} done`} />
+        <div className="td-list">
+          {list.map(st => {
+            const d = !!done[st.slug];
+            const isNext = next?.slug === st.slug && !d;
+            return (
+              <Link key={st.slug} href={`/learn/${st.slug}`} className="m1-m is-wide" aria-label={`${st.title}${d ? ", done" : ""}`} style={{ height: 56, justifyContent: "flex-start", gap: 12, padding: "0 14px", textAlign: "left" }}>
+                <span className="m1-t11" style={{ width: 22, color: d ? "var(--led-mint, #5EEAC1)" : undefined }}>{d ? "✓" : String(st.index + 1).padStart(2, "0")}</span>
+                <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase", fontWeight: isNext ? 600 : 400 }}>{st.title}</span>
+                <span className="m1-t11">{isNext ? "up next" : st.pathTitle.toLowerCase()}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
       <DuoFilters />
     </div>
   );

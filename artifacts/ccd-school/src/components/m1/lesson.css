@@ -153,11 +153,17 @@
 /* Today at tablet and desktop width (canvas ZTablet): a little wider from 640, two columns from 900.
    Left: the glass and the next lesson. Right: the worlds dial, today meter and hear key. */
 @media (min-width:640px){.m1-page.td-root{max-width:600px}}
+.td-list{display:grid;gap:8px}
+.td-all{margin-top:20px;padding-bottom:110px}
 @media (min-width:900px){
   .m1-page.td-root{max-width:1120px;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);column-gap:28px;align-content:start;padding-top:18px}
-  .td-head,.td-switch{grid-column:1/-1}
+  .td-head,.td-switch,.td-search,.td-all{grid-column:1/-1}
+  .td-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .td-all .m1-g{max-width:520px}
   .td-left{grid-column:1;min-width:0}
   .td-right{grid-column:2;min-width:0}
   .td-left .m1-scr,.td-left .m1-glass{min-height:260px}
   .td-right .m1-g>.m1-m{height:200px!important}
+  .td-right .td-jump .m1-g>.m1-m{height:96px!important}
+  .td-right .td-jump{margin-top:14px}
 }

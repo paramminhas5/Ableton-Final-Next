@@ -55,6 +55,7 @@ const P: Record<string, ReactNode> = {
   search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></>,
   user: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20a7 7 0 0 1 14 0" /></>,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  settings: <><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></>,
   loop: <><path d="M5 11V9a3 3 0 0 1 3-3h10" /><path d="m15 3 3 3-3 3" /><path d="M19 13v2a3 3 0 0 1-3 3H6" /><path d="m9 21-3-3 3-3" /></>,
   flame: <path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.3 1.2 1 1.9 1.7 2.2C10.5 8 11 5.5 12 3z" />,
   shield: <path d="M12 3.5 5.5 6v5.5c0 4 2.7 7 6.5 9 3.8-2 6.5-5 6.5-9V6z" />,
