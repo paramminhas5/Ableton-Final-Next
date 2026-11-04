@@ -20,6 +20,32 @@ learn:
     boom, boom, boom, again and again. You will also learn how to count along with it and how to
     make it short and punchy or long and round. Your song is empty now. Soon it will have a heartbeat.
 steps:
+  - kind: say
+    title: what we are building
+    say:
+      mentor: >-
+        Here is the plan, so none of this feels random. You are going to build one real song, a
+        little at a time. Each lesson teaches you one idea and then adds one part to your song, so
+        you always hear what you just learned sitting inside music you made. Today the part is the
+        kick drum. Next come hats, then bass, then chords. By the end the song is yours.
+      straight: >-
+        You build one song across the producer lessons. Each lesson teaches one idea and adds one
+        part. Today that is the kick. Then hats, bass and chords.
+      eli5: >-
+        We are going to build a whole song, one piece at a time, like stacking blocks. Every lesson
+        gives you one new block and teaches you what it does. Today your first block is the kick drum.
+    deeper:
+      - title: why one part at a time
+        say:
+          mentor: >-
+            Most beginners open a music program, see a hundred buttons and freeze. Adding one part per
+            lesson means you only ever have to understand one new thing. You also learn the order
+            producers use: rhythm first, then bass, then harmony, then the top line.
+          straight: >-
+            One new part per lesson keeps each idea small. It also follows the usual producer order: rhythm, bass, harmony, melody.
+          eli5: >-
+            If someone hands you a hundred toys at once you do not know where to start. One toy at a
+            time is easier, and you get to know each one properly.
   - kind: hear
     clip: kick-alone
     say:
@@ -67,21 +93,82 @@ steps:
             Four beats to a bar is called 4/4. It is the standard for dance music.
           eli5: >-
             Four is an easy number to dance to. Step, step, step, step. That way of counting is called 4/4.
+  - kind: say
+    title: the click
+    say:
+      mentor: >-
+        Before you play anything, meet the metronome, which people usually just call the click. It is
+        a steady tick, one for every beat, that never speeds up or slows down. It is not music. It is
+        a ruler for time. When you tap in your kick, the click tells you exactly where each beat is,
+        so your drum lands in the right place. Every producer uses one, so you are in good company.
+        You can switch it off any time with the click key.
+      straight: >-
+        The metronome, or click, is a steady tick on every beat. It is a ruler for time so your
+        notes land on the beat. Switch it with the click key.
+      eli5: >-
+        The click is a tiny tick-tick-tick that never gets tired and never speeds up. It tells you
+        where each beat is, so you know exactly when to tap. It is not a song, it is a helper.
+    deeper:
+      - title: what the click does while you record
+        say:
+          mentor: >-
+            When you press rec, you get one bar of clicks first, called a count-in, so you can feel
+            the speed before you start. Then you record while the click keeps going. If you are a little
+            early or late, do not worry. Your song can snap hits to the grid afterwards, and you can place
+            them by hand in the steps view.
+          straight: >-
+            Rec gives a one bar count-in, then records with the click running. Timing can be snapped afterwards.
+          eli5: >-
+            When you press rec you hear one bar of ticks first, so you can get ready, like counting
+            down before a race. Then you tap along with the ticks.
+  - kind: say
+    title: the grid and snapping
+    say:
+      mentor: >-
+        On the next screen you will see a grid. That is the beat grid. Picture a ruler for one bar:
+        four big divisions, one for each beat, and each beat is cut into four smaller slots, sixteen
+        slots in all. Every note you play lives in one of those slots. Next to the transport you will
+        also see a key called snap. Snap is the thing that tidies you up. When you tap a little early or
+        a little late, snap nudges your hit to the nearest slot, so it lands exactly on the grid. The
+        word for that is quantising. It sounds technical, but it only means pulling notes onto the grid.
+      straight: >-
+        The grid is a ruler for one bar: four beats, each split into four slots, sixteen in all. Snap pulls
+        each note you play to the nearest slot. That is called quantising. It fixes small timing slips.
+      eli5: >-
+        Think of a bar as a row of sixteen little boxes, four boxes for each beat. Every drum hit has to sit
+        in a box. Snap is a helper that picks up any hit that landed between two boxes and puts it in the
+        nearest one, so everything lines up neatly. Grown-ups call that quantising.
+    deeper:
+      - title: when to use snap, and when to turn it off
+        say:
+          mentor: >-
+            Snap at sixteenths is perfect for a steady dance beat, which is why it is on by default. The
+            other settings go finer, so more of your natural feel is kept. Turning snap off keeps every
+            wobble exactly as you played it. Lots of great grooves come from a little looseness, but for
+            a four on the floor kick, tidy is the right call.
+          straight: >-
+            Sixteenth snap suits a steady dance beat. Finer settings keep more of your feel. Off keeps your timing exactly.
+          eli5: >-
+            Snap makes you perfectly neat, like colouring inside the lines. Sometimes a wobbly line looks
+            cool too, so you can turn snap off. For a steady thump, neat is best.
   - kind: play
     layer: drums
     surface: pads
     goal: {notes: 4, note: kick}
     say:
       mentor: >-
-        Now you. The kick pad is the big one at the bottom left. Tap it on every count while the click
-        keeps time. It is fine to be a little off, your song will tidy it up. If you want it perfect, press
-        the steps view and place the four hits by hand.
+        Now you. Three steps. One, press rec. It starts by itself: you will hear one bar of clicks, a
+        count-in, and then it is recording, so you do not need to press anything else. Two, tap the
+        kick pad once on every click, four taps. Three, press play. That stops recording and loops what
+        you played so you can hear it. Do not worry about being a little early or late, snap tidies it up.
       straight: >-
-        Tap the kick pad once on every count of four. The click keeps time. Small timing slips get tidied.
+        One, press rec: it counts in one bar and starts recording on its own. Two, tap the kick on each
+        of four clicks. Three, press play to stop and hear the loop. Snap fixes small slips.
       eli5: >-
-        Tap the big pad at the bottom left every time you hear a click. Boom, boom, boom, boom. If you are a
-        bit early or late, that is okay, the song will straighten it out.
-    hint: Wait for the click, then tap. Four taps and you are done.
+        First press the red rec button. It counts you in with clicks and starts by itself. Then tap the
+        big kick pad every time you hear a click, four times. Then press play to hear what you made. If you
+        were a bit early or late, snap straightens it out.
+    hint: Press rec and wait for the clicks. Tap the glowing kick pad on each one.
   - kind: say
     title: four on the floor
     say:

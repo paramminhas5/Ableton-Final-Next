@@ -69,7 +69,7 @@ function Top({ back, total, now, accent, hearts, tune }: { back: string; total: 
           {Array.from({ length: MAX_HEARTS }, (_, i) => <i key={i} className={i < hearts ? "is-on" : ""} />)}
         </span>
       ) : tune ? null : <span className="m1-tag">free</span>}
-      {tune && <button type="button" className="ls-chip" onClick={() => setOpen(true)} aria-label="Change voice and level">{prefs.voice} · {prefs.level}</button>}
+      {tune && <button type="button" className="ls-chip" onClick={() => setOpen(true)} aria-label="Change voice and level"><Icon name="settings" small />{prefs.voice} · {prefs.level}</button>}
       {open && (
         <div className="ls-sheet" onClick={() => setOpen(false)}>
           <div role="dialog" aria-label="Voice and level" onClick={e => e.stopPropagation()}>

@@ -16,7 +16,6 @@ import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 
 const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "dj", "producer"];
-const IC = { width: 40, height: 40, borderRadius: 10 } as const;
 
 export function Today() {
   const { progress } = useProgress();
@@ -101,9 +100,11 @@ export function Today() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <WeekDots days={progress.streakDays} />
           <span style={{ fontSize: 15, fontWeight: 300, fontVariantNumeric: "tabular-nums" }}>{progress.xp}<span className="m1-t11" style={{ marginLeft: 3 }}>xp</span></span>
-          <button type="button" className="m1-m" style={IC} aria-label="Search lessons" onClick={() => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT))}><Icon name="search" small /></button>
-          <Link href="/settings" className="m1-m" style={IC} aria-label="Settings"><Icon name="settings" small /></Link>
-          <Link href="/profile" className="m1-m" style={IC} aria-label="Profile"><Icon name="user" small /></Link>
+          <div className="td-tools">
+            <button type="button" aria-label="Search lessons" onClick={() => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT))}><Icon name="search" small /></button>
+            <Link href="/settings" aria-label="Settings"><Icon name="settings" small /><span className="td-tl">settings</span></Link>
+            <Link href="/profile" aria-label="Profile"><Icon name="user" small /></Link>
+          </div>
         </div>
       </header>
 

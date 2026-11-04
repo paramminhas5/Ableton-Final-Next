@@ -19,13 +19,13 @@ import { readSongs } from "@/lib/songs";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
+import { Gloss } from "./Gloss";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
 // ── say: an explanation, with a deeper track you open when you want it ─────────
 export function SayStep({ screen, meta, voice = "mentor", onNext }: { screen: Of<"say">; meta: string; voice?: "mentor" | "straight" | "eli5"; onNext: () => void }) {
   const [deep, setDeep] = useState(false);
-  const [open, setOpen] = useState<number | null>(null);
   const has = !!screen.deeper?.length;
   // Mentor and eli5 walk you through the deeper cards right here; straight keeps them behind a key.
   const inline = has && voice !== "straight";
@@ -36,33 +36,33 @@ export function SayStep({ screen, meta, voice = "mentor", onNext }: { screen: Of
         <Meta left={meta} right={has ? (inline ? "with the deeper bits" : `${screen.deeper!.length} deeper`) : undefined} />
         <div className="ls-title">{screen.title.toLowerCase()}</div>
       </Screen>
-      <Silk label={deep ? "going deeper" : "read"} right={deep ? "tap one to open it" : undefined} />
+      <Silk label={deep ? "going deeper" : "read"} right={deep ? "all of it, open" : undefined} />
       {!deep ? (
         <>
-          <p className="ls-read">{screen.body}</p>
+          <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
           {inline && (
             <div className="ls-inline">
               {screen.deeper!.map(d => (
                 <div key={d.title} className="ls-panel">
                   <h4>{d.title.toLowerCase()}</h4>
-                  <p>{d.body}</p>
+                  <p><Gloss>{d.body}</Gloss></p>
                 </div>
               ))}
             </div>
           )}
         </>
       ) : (
-        <div className="ls-deeper">
-          {screen.deeper!.map((d, i) => (
-            <button key={d.title} type="button" className={`ls-panel ls-dp ${open === i ? "is-open" : ""}`} aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
-              <span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />
-              <span>
-                <b>{d.title.toLowerCase()}</b>
-                {open === i ? <span className="ls-dp-body">{d.body}</span> : null}
-              </span>
-            </button>
-          ))}
-        </div>
+        <>
+          <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
+          <div className="ls-inline">
+            {screen.deeper!.map(d => (
+              <div key={d.title} className="ls-panel">
+                <h4>{d.title.toLowerCase()}</h4>
+                <p><Gloss>{d.body}</Gloss></p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
       <Bottom
         left={has && !inline ? { label: deep ? "back" : "go deeper", icon: deep ? "back" : "plus", onClick: () => setDeep(d => !d), aria: deep ? "Back to the lesson" : "Go deeper into this" } : undefined}
@@ -106,7 +106,7 @@ export function HearStep({ screen, meta, onNext }: { screen: Of<"hear">; meta: s
         </>
       )}
       <Silk label="listen" />
-      <p className="ls-read">{screen.body}</p>
+      <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "hear it"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the clip"}><Icon name={playing ? "stop" : "hear"} /></Key>
@@ -146,12 +146,16 @@ export function ShapeStep({ mission, screen, meta, accent, onNext }: { mission: 
   const hear = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); };
   useEnter(onNext);
   return (
-    <div className="ls-col">
+    <div className="ls-col ls-split">
+      <div className="ls-left">
       <Screen>
         <Meta left={meta} right={touched ?? "turn one while it plays"} />
         <div className="ls-title">shape it</div>
-        <p className="ls-sub">{screen.body}</p>
+        <p className="ls-sub"><Gloss>{screen.body}</Gloss></p>
       </Screen>
+      {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+      </div>
+      <div className="ls-right">
       <Silk label="knobs" right="double tap to reset" />
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, knobs.length)}, 1fr)` }}>
         {knobs.map((k, i) => (
@@ -161,7 +165,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext }: { mission: 
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
-      {screen.hint ? <div className="ls-hint">{screen.hint}</div> : null}
+      </div>
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "hear"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Hear your loop"}><Icon name={playing ? "stop" : "hear"} /></Key>

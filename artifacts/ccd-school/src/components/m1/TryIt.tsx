@@ -14,6 +14,7 @@ import { NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocity } from "@/lib/touch";
 import { GoPill, Icon, Key, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
+import { Gloss } from "./Gloss";
 
 const SNAPS: Snap[] = ["1/16", "1/32", "off"];
 
@@ -35,7 +36,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     return { ...base.track, layers: base.track.layers.map((l, i) => (i === base.index ? { ...l, events: initial } : l)) };
   });
   const idx = base.index;
-  const { engine, start } = useEngineTrack(session);
+  const { engine, start, ready, started } = useEngineTrack(session);
+  const [click, setClick] = useState(true);
   const [pos, setPos] = useState({ beat: 0, flags: 0 });
   const [snap, setSnap] = useState<Snap>("1/16");
   const [held, setHeld] = useState<Set<number>>(new Set());
@@ -125,16 +127,19 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     });
   };
 
-  const rec = () => {
-    start();
+  useEffect(() => { if (started.current) engine.metronome(click); }, [click, engine, started]);
+  const rec = async () => {
+    await ready();
+    engine.metronome(click);
     if (recording || countIn) engine.recordOff();
     else {
       takeOpen.current = false;
       engine.record(4);
     }
   };
-  const play = () => {
-    start();
+  const play = async () => {
+    await ready();
+    engine.metronome(click);
     if (recording || countIn) engine.play();
     else if (playing) engine.stop();
     else engine.play();
@@ -179,8 +184,16 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const goalMet = !coach || goalHits >= coach.goal.notes;
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
+  const nowLine = !coach ? "" : countIn ? "get ready. one bar of clicks, then it records"
+    : recording ? "recording. tap the kick on every click"
+    : !events.length ? "press rec. it starts on its own, with one bar of clicks first"
+    : !goalMet ? `keep going, ${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} so far. press rec to add more`
+    : !playing ? "nice. now press play to hear your loop"
+    : "that is your loop. press keep it when you like it";
+  const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   return (
-    <div className="ls-col">
+    <div className={`ls-col ${coach ? "ls-split" : ""}`}>
+      <div className="ls-left">
       <Screen>
         <div className="ls-meta">
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -191,6 +204,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         </div>
         <div className="ls-title">{title}</div>
         <svg viewBox={`0 0 ${Wd} ${Hd}`} width="100%" style={{ display: "block", marginTop: 12 }} role="img" aria-label={`${notesCount} notes recorded`}>
+          {coach && Array.from({ length: loop }, (_, i) => <text key={`b${i}`} x={i * beatW + 4} y={10} fontSize={9} fill="rgba(255,255,255,.55)">{i + 1}</text>)}
           {Array.from({ length: loop * 4 + 1 }, (_, i) => (
             <path key={i} d={`M${(i * Wd) / (loop * 4)} 0V${Hd}`} stroke={i % 4 === 0 ? "rgba(255,255,255,.14)" : "rgba(255,255,255,.05)"} />
           ))}
@@ -199,7 +213,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             const r = rowOf(e.note);
             if (r < 0) return null;
             const x = (e.start / loop) * Wd;
-            const w = Math.max(6, (e.len / loop) * Wd - 2);
+            const w = drumLike ? Math.max(6, beatW * 0.45) : Math.max(6, (e.len / loop) * Wd - 2);
             return <rect key={i} x={x + 1} y={r * rh + 1.5} width={Math.min(w, Wd - x - 1)} height={Math.max(4, rh - 3)} rx={2} fill={color} style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
           })}
           {head >= 0 && <path d={`M${head} 0V${Hd}`} stroke={recording ? "#FF4A5A" : "#F3F2EF"} strokeWidth={1.5} />}
@@ -208,21 +222,25 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <span style={{ color }}>{notesCount ? `${notesCount} ${notesCount === 1 ? "note" : "notes"}` : "nothing yet"}</span>
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
+        {coach && <div className="m1-ss" style={{ marginTop: 6 }}>the beat grid: 4 beats, each cut into 4 slots. snap pulls your taps onto the nearest slot.</div>}
       </Screen>
       {coach && (
         <>
           <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
-          <p className="ls-read">{coach.body}</p>
-          {coach.hint && !goalMet ? <div className="ls-hint">{coach.hint}</div> : null}
+          <div className="ls-now" role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
+          <p className="ls-read"><Gloss>{coach.body}</Gloss></p>
+          <div><button type="button" className="ls-chip" aria-pressed={click} onClick={() => setClick(c => !c)} aria-label={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}>click: {click ? "on" : "off"}</button></div>
+          {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
         </>
       )}
-
-      <Silk label="transport" right="rec records · play loops it" />
+      </div>
+      <div className="ls-right">
+      <Silk label="transport" right={coach ? "rec starts by itself · snap tidies timing" : "rec records · play loops it"} />
       <div className="m1-g">
-        <Key label="rec" led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
+        <Key label="rec" style={coach && !events.length && !recording && !countIn ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
           <Icon name="rec" />
         </Key>
-        <Key label={playing && !recording && !countIn ? "stop" : "play"} led={playing && !recording ? "var(--led-mint)" : null} onClick={play} ariaLabel={playing && !recording ? "Stop" : "Play the loop"}>
+        <Key label={playing && !recording && !countIn ? "stop" : "play"} style={coach && goalMet && !playing ? glow : undefined} led={playing && !recording ? "var(--led-mint)" : null} onClick={play} ariaLabel={playing && !recording ? "Stop" : "Play the loop"}>
           <Icon name={playing && !recording && !countIn ? "stop" : "play"} />
         </Key>
         <Key label="undo" onClick={undo} disabled={!history.current.length} ariaLabel="Undo the last take"><Icon name="back" /></Key>
@@ -248,6 +266,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         })}
       </div>
 
+      </div>
       <div className="ls-bottom">
         <div className="m1-g">
           {events.length

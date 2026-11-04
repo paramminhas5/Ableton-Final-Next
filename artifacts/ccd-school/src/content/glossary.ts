@@ -8,11 +8,25 @@ export type GlossaryCat =
   | "MIDI"
   | "Performance"
   | "Files"
-  | "Live 12";
+  | "Live 12"
+  | "Rhythm";
 
 export type GlossaryTerm = { term: string; def: string; cat: GlossaryCat };
 
 export const TERMS: GlossaryTerm[] = [
+  // Rhythm basics, used by the lesson files
+  { cat: "Rhythm", term: "Beat", def: "One pulse of the music, the thing you tap your foot to. Counted one, two, three, four." },
+  { cat: "Rhythm", term: "Bar", def: "A group of beats, usually four. At 120 beats per minute one bar of four lasts two seconds." },
+  { cat: "Rhythm", term: "BPM / Tempo", def: "Beats per minute: how many beats fit in sixty seconds. Higher is faster." },
+  { cat: "Rhythm", term: "Metronome / Click", def: "A steady tick on every beat that never speeds up or slows down. A ruler for time while you play or record." },
+  { cat: "Rhythm", term: "Count-in", def: "The bar of clicks before recording starts, so you can feel the speed before you play." },
+  { cat: "Rhythm", term: "Beat Grid / Grid", def: "The ruler a bar is drawn on: four beats, each split into four sixteenth slots. Notes sit in the slots." },
+  { cat: "Rhythm", term: "Snap", def: "Pulls each note you play to the nearest slot on the grid, so small timing slips are tidied. This is quantising." },
+  { cat: "Rhythm", term: "Quantising / Quantizing", def: "Moving notes onto the nearest slot of the beat grid so they land exactly on time." },
+  { cat: "Rhythm", term: "Kick Drum / Kick", def: "The low, soft thump of a drum kit. In dance music it lands on every beat and is the heartbeat of the track." },
+  { cat: "Rhythm", term: "Four on the Floor", def: "A kick drum on every beat of the bar. The pulse behind house, disco and a lot of techno." },
+  { cat: "Rhythm", term: "Decay", def: "How long a sound takes to fade out after it starts. A short decay is tight, a long decay is boomy." },
+  { cat: "Rhythm", term: "Tune (drum)", def: "Moves the whole drum sound lower or higher in pitch." },
   // Workflow
   { cat: "Workflow", term: "Arrangement View", def: "Live's linear timeline view for composing full songs end-to-end. Tracks stack vertically, time runs left-to-right." },
   { cat: "Workflow", term: "Session View", def: "Live's clip grid for non-linear performance and ideation. Tracks vertical, scenes horizontal." },
@@ -33,7 +47,7 @@ export const TERMS: GlossaryTerm[] = [
   { cat: "Workflow", term: "Send / Pre / Post", def: "Pre-fader send is independent of track volume; post-fader follows it." },
   { cat: "Workflow", term: "Macro", def: "One of 16 knobs on a Rack. Map any inner parameter (or many) to one knob." },
   { cat: "Workflow", term: "Macro Variation", def: "A snapshot of all 16 macro values, recallable instantly. Great for live morphing." },
-  { cat: "Workflow", term: "Quantize", def: "Snap notes, clips or recordings to a rhythmic grid (1 bar, 1/4, 1/16…)." },
+  { cat: "Workflow", term: "Quantize / Quantise", def: "Snap notes, clips or recordings to a rhythmic grid (1 bar, 1/4, 1/16…)." },
   { cat: "Workflow", term: "Global Quantize", def: "Default launch quantize for all clips — usually 1 Bar so launches stay in time." },
   { cat: "Workflow", term: "Follow Action", def: "Rule for what a clip does after it ends: Stop, Play Again, Next, Previous, Other, Random, etc." },
   { cat: "Workflow", term: "Freeze", def: "Render a track temporarily to audio to save CPU; can be unfrozen anytime." },
