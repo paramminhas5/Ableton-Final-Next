@@ -43,6 +43,24 @@ export function clipVariants(id: string): ClipVariant[] {
       };
       return [{ label: "short", track: mk(0.12) }, { label: "long", track: mk(0.9) }];
     }
+    case "subdivisions": {
+      const mk = (step: number): TrackV2 => {
+        const t = base(120, 2);
+        const d = newLayerV2("drums"); d.events = hits(NOTE("kick"), every(0, 8, 1));
+        const h = newLayerV2("hats"); h.pad = PAD("closed"); h.events = hits(NOTE("closed"), every(0, 8, step), 0.6, 0.08);
+        return { ...t, layers: [d, h] };
+      };
+      return [{ label: "quarters, 4 a bar", track: mk(1) }, { label: "eighths, 8 a bar", track: mk(0.5) }, { label: "sixteenths, 16 a bar", track: mk(0.25) }];
+    }
+    case "straight-vs-swung": {
+      const mk = (swing: number): TrackV2 => {
+        const t = base(120, 2);
+        const d = newLayerV2("drums"); d.events = [...hits(NOTE("kick"), every(0, 8, 1)), ...hits(NOTE("clap"), every(0, 8, 2, 1), 0.8)];
+        const h = newLayerV2("hats"); h.pad = PAD("closed"); h.events = every(0, 8, 0.25).map((s, i) => ({ note: NOTE("closed"), vel: i % 2 ? 0.45 : 0.7, start: s, len: 0.08 }));
+        return { ...t, swing, layers: [d, h] };
+      };
+      return [{ label: "straight", track: mk(0) }, { label: "swung", track: mk(0.5) }];
+    }
     case "hats-offbeat": {
       const t = base(124, 2);
       const d = newLayerV2("drums"); d.events = hits(NOTE("kick"), every(0, 8, 1));

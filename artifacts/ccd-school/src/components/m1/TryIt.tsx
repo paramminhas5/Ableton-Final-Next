@@ -9,19 +9,19 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, 
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
-import { readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
+import { newLayerV2, readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocity } from "@/lib/touch";
 import { GoPill, Icon, Key, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
-const SNAPS: Snap[] = ["1/16", "1/32", "off"];
+const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 /** How far from a beat a guided hit can land and still count, in beats (75 ms at 120 bpm). */
 const TOL = 0.15;
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string }; tail?: ReactNode };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string }; tail?: ReactNode; snap?: boolean };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -32,7 +32,14 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   onUse: (take: Take) => void;
   onSkip: () => void;
 }) {
-  const base = useMemo(() => practiceTrack(readTrackV2(), type), [type]);
+  // A part that needs a beat under it gets one, if your song has nothing in it yet.
+  const pulse = useMemo(() => !!coach && !/kick/.test(coach.goal?.note ?? "") && !readTrackV2().layers.some(l => l.events.length), [coach]);
+  const base = useMemo(() => {
+    const p = practiceTrack(readTrackV2(), type);
+    if (!pulse) return p;
+    const kick = { ...newLayerV2("drums", "__backing"), events: Array.from({ length: p.track.loop }, (_, b) => ({ note: 36, vel: 0.85, start: b, len: 0.25 })) };
+    return { track: { ...p.track, layers: [kick, ...p.track.layers] }, index: p.index + 1 };
+  }, [type, pulse]);
   const [session, setSession] = useState<TrackV2>(() => {
     if (!initial?.length) return base.track;
     return { ...base.track, layers: base.track.layers.map((l, i) => (i === base.index ? { ...l, events: initial } : l)) };
@@ -42,7 +49,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const [click, setClick] = useState(true);
   const [pos, setPos] = useState({ beat: 0, flags: 0 });
   // A guided play-in records exactly what you played: no snap until a lesson teaches it.
-  const [snap, setSnap] = useState<Snap>(coach ? "off" : "1/16");
+  const [snap, setSnap] = useState<Snap>(coach ? (coach.snap ? "1/8" : "off") : "1/16");
   const [nudge, setNudge] = useState(false);
   const [held, setHeld] = useState<Set<number>>(new Set());
   const [lit, setLit] = useState<Record<number, number>>({});
@@ -265,9 +272,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <Icon name={playing && !recording && !countIn ? "stop" : "play"} />
         </Key>
         <Key label="undo" onClick={undoTap} onPointerDown={holdStart} onPointerUp={holdEnd} onPointerLeave={holdEnd} disabled={!history.current.length && !events.length} ariaLabel="Undo the last hit. Hold to clear everything"><Icon name="back" /></Key>
-        {coach
+        {coach && !coach.snap
           ? <Key label="click" onClick={() => setClick(c => !c)} ariaPressed={click} led={click ? "var(--led-go)" : null} ariaLabel={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}><span style={{ fontSize: 13, fontWeight: 600 }}>{click ? "on" : "off"}</span></Key>
-          : <Key label="snap" onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
+          : <Key label="snap" style={coach?.snap ? glow : undefined} onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
           <span style={{ fontSize: 13, fontWeight: 600 }}>{snap}</span>
         </Key>}
       </div>
@@ -299,6 +306,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
           {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
           {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
+          {pulse ? <div className="ls-hint">your song has no beat yet, so a kick plays along to help. it won&apos;t go into your song.</div> : null}
           {coach.tail}
         </>
       </div>}

@@ -28,8 +28,8 @@
     "kind": "song",
     "isNew": false,
     "title": "bars and counting",
-    "does": "adds drums.clap on 2 and 4; the loop becomes 4 bars",
-    "code": "loop length step"
+    "does": "adds drums.clap on 2 and 4 (the backbeat)",
+    "code": ""
    },
    {
     "slug": "note-values",

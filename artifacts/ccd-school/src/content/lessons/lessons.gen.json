@@ -397,6 +397,482 @@
       "file": "foundations/01-tempo-bpm.yaml"
     },
     {
+      "slug": "bars-time-signatures",
+      "world": "foundations",
+      "number": 2,
+      "title": "bars and counting",
+      "minutes": 6,
+      "song": {
+        "adds": "drums.clap",
+        "why": "a clap on two and four turns a pulse into a groove you can dance to"
+      },
+      "learn": "How musicians count, what a bar is, and the clap on two and four that turns your kick into a groove.",
+      "youCan": [
+        "count bars of four along with a track",
+        "hear the backbeat, the clap on two and four",
+        "play a clap in on two and four over your kick",
+        "read 4/4 and know what it means"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "Same steady kick as before, with one thing added: a clap on every other beat. Listen to how much that changes. The kick on its own just marches. With the clap it starts to swing back and forth, and your head wants to nod.\nThat clap is called the backbeat, and it's in almost every song you know.",
+            "straight": "A kick on every beat, plus a clap on every other beat. That clap is the backbeat. It's what turns a pulse into a groove.",
+            "eli5": "Boom, clap, boom, clap. Hear how the clap makes it bouncier? The boom is the kick you already know. The clap comes in between, on every other beat. It makes you want to nod your head."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "count it in bars",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "Count along again: one, two, three, four. Notice where the clap lands: on two and on four, never on one or three. One and three are the kick on its own. Two and four get the clap.\nThose four beats together are called a bar. Musicians count music in bars, the way you'd count a walk in steps: \"the bass comes in after eight bars\". Dance music is almost always four beats to a bar, written 4/4 and said \"four four\".",
+            "straight": "Four beats make a bar. The clap lands on beats two and four of every bar. Dance music is nearly always in 4/4: four beats per bar.",
+            "eli5": "Count with it: one, two, three, four. The clap comes on two and on four. One and three are just the boom.\nFour beats in a row make a bar, like four steps make a little walk. Most dance music counts to four and starts again."
+          },
+          "deeper": [
+            {
+              "title": "what 4/4 means",
+              "say": "The top four is how many beats are in a bar. The bottom four says each beat is a quarter note, the usual size of a beat. You'll see it at the start of sheet music and in your Live set's tempo box."
+            },
+            {
+              "title": "other counts",
+              "say": "A waltz counts in three, 3/4: one two three, one two three. Some music counts in five or seven. You'll find them in jazz, prog and film scores. Clubs stick to four because four is easiest to dance to for a long time."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "drums",
+          "surface": "pads",
+          "goal": {
+            "notes": 2,
+            "note": "clap"
+          },
+          "say": {
+            "mentor": "Now add the clap to your song, over the kick you played last time.\nPress rec, let the four clicks count you in, then tap the clap pad on two and on four: skip one, clap on two, skip three, clap on four. A clap on the wrong beat turns red so you can play it again. Undo takes one back, hold it to start over.",
+            "straight": "Record the backbeat over your kick. Rec, wait out the count-in, then clap on two and four. Red means off the beat.",
+            "eli5": "Your turn! Press rec and wait for four ticks. Then count one, two, three, four, and tap the clap pad only on two and four. Skip one, clap, skip three, clap."
+          },
+          "hint": "One and three are the kick on its own. Clap in between them."
+        },
+        {
+          "kind": "say",
+          "title": "the backbeat",
+          "say": {
+            "mentor": "That's your first groove: kick on every beat, clap on two and four. The clap on two and four is the backbeat, and it's one of the oldest tricks in pop music.\nIt works because it pulls against the kick. The kick says \"down\", the clap says \"up\", and your body sits in between, nodding. Next time you hear a song, find two and four. You'll hear a clap or a snare there almost every time.",
+            "straight": "Kick on every beat, clap on two and four: that's the backbeat. The kick gives the down, the clap the up, and that back and forth is the groove.",
+            "eli5": "Now your song goes boom, clap, boom, clap. That clap on two and four has a name: the backbeat. Almost every song has one. See if you can spot it in the next song you hear."
+          },
+          "deeper": [
+            {
+              "title": "where the backbeat comes from",
+              "say": "Rhythm and blues and early rock and roll drummers hit the snare hard on two and four in the 1940s and 50s, and pop never let it go. Disco kept it, house swapped the snare for a drum machine clap, and here we are."
+            },
+            {
+              "title": "clap or snare",
+              "say": "House and techno often use a clap, hip hop and rock a snare, and plenty of tracks use both at once. You'll compare them properly in the producer world."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "How many beats are in one bar of dance music?",
+          "options": [
+            "four",
+            "two",
+            "eight",
+            "three"
+          ],
+          "answer": 0,
+          "why": "Dance music is almost always 4/4, four beats to a bar.",
+          "whyWrong": {
+            "1": "Two beats is half a bar. Count along again and listen for the clap on two and four.",
+            "2": "Eight beats is two bars.",
+            "3": "Three to a bar is a waltz, not a club track."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which beats does the backbeat clap land on?",
+          "options": [
+            "two and four",
+            "one and three",
+            "every beat",
+            "only on one"
+          ],
+          "answer": 0,
+          "why": "Two and four. One and three are the kick on its own.",
+          "whyWrong": {
+            "1": "One and three are where the kick sits alone. The clap answers it on two and four.",
+            "2": "Every beat is the kick's job. The clap is on every other one.",
+            "3": "One is the start of the bar, where the kick lands."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does 4/4 mean?",
+          "options": [
+            "four beats in every bar",
+            "four bars in a song",
+            "four sounds at once",
+            "the tempo is 44 bpm"
+          ],
+          "answer": 0,
+          "why": "The top four is the number of beats in a bar.",
+          "whyWrong": {
+            "1": "Songs have far more than four bars. It's about the beats inside one bar.",
+            "2": "It's about counting time, not how many sounds play.",
+            "3": "Tempo is written in bpm. 4/4 is how the beats are grouped."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "A producer says \"the bass comes in after eight bars\". At 120 bpm, roughly how long is that?",
+          "options": [
+            "sixteen seconds",
+            "eight seconds",
+            "four seconds",
+            "a minute"
+          ],
+          "answer": 0,
+          "why": "At 120 bpm a bar of four beats lasts two seconds, so eight bars is sixteen seconds.",
+          "whyWrong": {
+            "1": "That would be one second a bar, too fast at 120.",
+            "2": "Four seconds is two bars.",
+            "3": "A minute at 120 is thirty bars."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Why does adding a clap on two and four make the beat feel groovier?",
+          "options": [
+            "it pulls against the kick, so the beat goes down and up",
+            "it makes the song faster",
+            "it makes the kick louder",
+            "it adds a melody"
+          ],
+          "answer": 0,
+          "why": "The kick says down, the clap says up. That back and forth is what makes you nod.",
+          "whyWrong": {
+            "1": "The tempo stays the same. Only the pattern changes.",
+            "2": "The kick is untouched.",
+            "3": "A clap has no tune to it."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "A waltz counts one two three, one two three. How is that written?",
+          "options": [
+            "3/4",
+            "4/4",
+            "3/3",
+            "1/3"
+          ],
+          "answer": 0,
+          "why": "Three beats to a bar, each one a quarter note.",
+          "whyWrong": {
+            "1": "4/4 is four beats to a bar, like dance music.",
+            "2": "The bottom number is the size of a beat, usually four.",
+            "3": "That would mean one beat to a bar."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: subdivision. Hats on the eighths and sixteenths fill the space between your kicks, and snap shows up to help you place them."
+        }
+      ],
+      "file": "foundations/02-bars-time-signatures.yaml"
+    },
+    {
+      "slug": "note-values",
+      "world": "foundations",
+      "number": 3,
+      "title": "subdivision",
+      "minutes": 7,
+      "song": {
+        "adds": "hats.hats",
+        "why": "hats fill the space between your kicks, and how finely you split the beat sets how busy the groove feels"
+      },
+      "learn": "Splitting the beat into halves and quarters, eighths and sixteenths, and a hat pattern in your song that uses them. This is also where snap comes in.",
+      "youCan": [
+        "hear the difference between quarters, eighths and sixteenths",
+        "play hats on the eighths or sixteenths with snap on",
+        "say what snap does and when to turn it off"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "subdivisions",
+          "say": {
+            "mentor": "Tap through the three. Same kick each time, but the hats split each beat differently.\nQuarters: one hat per beat, right on the kick. Eighths: two per beat, one on the kick and one exactly halfway to the next. Sixteenths: four per beat, a fast tick-tick-tick-tick. Listen to how the groove gets busier and faster-feeling while the tempo stays exactly the same.",
+            "straight": "Three ways to split the beat with a hi hat: quarters (one per beat), eighths (two), sixteenths (four). The tempo never changes, only how finely the beat is cut.",
+            "eli5": "Tap a, b and c. The boom stays the same. The tiny tss sound changes. One tss per boom, then two, then four really quick ones. More tss makes it feel busier, but the song isn't going any faster."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "halves and quarters of a beat",
+          "say": {
+            "mentor": "Musicians call these note values. A quarter note is one beat. An eighth note is half a beat. A sixteenth is a quarter of a beat. The names come from how many fit in a bar: four quarters, eight eighths, sixteen sixteenths.\nPeople count eighths as \"one and two and three and four and\", and sixteenths as \"one e and a, two e and a\". Say it out loud over the sixteenths and you'll hear it lock in.",
+            "straight": "Quarter note: one beat. Eighth: half a beat. Sixteenth: a quarter of a beat. Count eighths as \"one and two and\", sixteenths as \"one e and a\".",
+            "eli5": "Grown-up musicians give these names. One tss per boom is a quarter note. Two per boom is an eighth note. Four per boom is a sixteenth note. You can count the fast ones as \"one e and a, two e and a\"."
+          },
+          "deeper": [
+            {
+              "title": "why the names are fractions",
+              "say": "A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, in eight and you get eighths, in sixteen and you get sixteenths. Sheet music draws each one differently, but in a producer's grid they're just the lines getting closer together."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "hats",
+          "surface": "pads",
+          "snap": true,
+          "goal": {
+            "notes": 1
+          },
+          "say": {
+            "mentor": "Now put hats in your song. Hats on the eighths between your kicks are the classic house sound.\nThis time you get help: snap. Snap moves every hit to the nearest line on the grid, so a hat that's a hair early still lands exactly on the eighth. It's set to eighths. Tap the snap key to change it to sixteenths or turn it off and hear the difference.\nPress rec, wait out the count-in, and tap the hat between the kicks: on every \"and\".",
+            "straight": "Record hats over your beat. Snap is on, set to eighths, so every hit lands on the nearest eighth. Tap the snap key to try sixteenths or off. Rec, count-in, then tap the hat on every \"and\".",
+            "eli5": "Your turn to add the tss. A helper called snap is switched on: it nudges every tap onto the nearest line, so it always sounds neat. Press rec, wait for four ticks, then tap the hat in between the booms."
+          },
+          "hint": "Say \"one and two and\" and tap on every \"and\"."
+        },
+        {
+          "kind": "say",
+          "title": "snap",
+          "say": {
+            "mentor": "That's snap, also called quantise. Almost every music program has it. It's brilliant for drums that need to be tight, like hats and kicks in a club track.\nBut it's not always what you want. A little looseness is what makes a groove feel human. Producers often play something in, snap it, then nudge a few hits back off the grid on purpose. You'll do that in the swing lesson next.",
+            "straight": "Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; turn it off or loosen it when you want a human feel.",
+            "eli5": "Snap is like a magnet that pulls your taps onto the lines. Great for neat drums. Sometimes you want a bit of wobble so it feels more alive, and then you switch the magnet off."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How many sixteenth notes fit in one beat?",
+          "options": [
+            "four",
+            "two",
+            "sixteen",
+            "eight"
+          ],
+          "answer": 0,
+          "why": "A sixteenth is a quarter of a beat, so four fit in one beat and sixteen in a bar.",
+          "whyWrong": {
+            "1": "Two per beat is eighths.",
+            "2": "Sixteen fit in a whole bar of four beats.",
+            "3": "Eight per beat would be thirty-second notes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "You switch your hats from eighths to sixteenths. What happens to the tempo?",
+          "options": [
+            "it stays the same",
+            "it doubles",
+            "it halves",
+            "it goes up a little"
+          ],
+          "answer": 0,
+          "why": "The pulse doesn't change. The beat is just cut into smaller pieces, so it feels busier.",
+          "whyWrong": {
+            "1": "The kick keeps the same speed. Only the hats get busier.",
+            "2": "Nothing slows down. There are just more hats in each beat.",
+            "3": "Tempo only changes when you turn the tempo knob."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does snap do to a hit that's slightly early?",
+          "options": [
+            "moves it to the nearest grid line",
+            "deletes it",
+            "makes it louder",
+            "moves it to the start of the bar"
+          ],
+          "answer": 0,
+          "why": "Snap pulls each hit onto the nearest line of the grid it's set to.",
+          "whyWrong": {
+            "1": "Snap never removes notes.",
+            "2": "It moves notes in time, it doesn't touch their volume.",
+            "3": "Only to the nearest line, not all the way back to one."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How do musicians count eighth notes?",
+          "options": [
+            "one and two and three and four and",
+            "one e and a",
+            "one two three four",
+            "one two, one two"
+          ],
+          "answer": 0,
+          "why": "Each beat plus an \"and\" halfway through.",
+          "whyWrong": {
+            "1": "One e and a is sixteenths, four per beat.",
+            "2": "That's quarters, one per beat.",
+            "3": "That's counting in twos, not eighths."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Why might a producer turn snap off?",
+          "options": [
+            "to keep a looser, more human feel",
+            "to make the song faster",
+            "because snap only works on kicks",
+            "to make the hats louder"
+          ],
+          "answer": 0,
+          "why": "Perfectly gridded drums can sound stiff. A few hits off the grid feel played by a person.",
+          "whyWrong": {
+            "1": "Snap has nothing to do with tempo.",
+            "2": "Snap works on any notes.",
+            "3": "Snap moves timing, not volume."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: groove and swing. Push every other sixteenth a little late and your hats start to bounce."
+        }
+      ],
+      "file": "foundations/03-note-values.yaml"
+    },
+    {
+      "slug": "groove-feel",
+      "world": "foundations",
+      "number": 4,
+      "title": "groove and swing",
+      "minutes": 6,
+      "song": {
+        "changes": "hats.hats",
+        "why": "swing pushes every other sixteenth a little late, and your beat starts to bounce instead of march"
+      },
+      "learn": "What swing is, why it makes people move, and a swing setting for your whole song.",
+      "youCan": [
+        "hear the difference between straight and swung",
+        "say which notes swing moves and which it leaves alone",
+        "set the swing on your song by ear"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "straight-vs-swung",
+          "say": {
+            "mentor": "Tap straight, then swung. Same kick, same clap, same hats. In the swung one, every other hat is pushed a little late, and suddenly it bounces. That's swing, and it's the difference between a beat that marches and a beat that grooves.",
+            "straight": "Straight vs swung. The swung version delays every other sixteenth a little. That small delay is what gives it a bounce.",
+            "eli5": "Tap a, then b. In b, every second tss is a tiny bit late, like a skip in your step. Hear how it bounces now? That's called swing."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "swing",
+          "say": {
+            "mentor": "Here's your own song with a swing knob on it. Turn it up and listen to your hats.\nSwing only moves the off sixteenths: the \"e\" and the \"a\" in \"one e and a\". The beats and the \"ands\" stay exactly where they are, so your kick and clap don't move. At about 50 percent the off notes land a third of the way along, a triplet feel. House producers often sit somewhere between 10 and 30 percent. Push it to the top for a heavy shuffle.\nPick the amount that makes you want to move.",
+            "straight": "Swing delays only the off sixteenths. Kick, clap and eighths stay put. Around 50 percent is a triplet feel, house usually sits lower. Set the amount for your song.",
+            "eli5": "Turn the swing knob and listen to your song. More swing makes the in-between tss sounds later and bouncier. Your boom and clap stay right where they are. Stop when it makes you want to dance."
+          },
+          "hint": "If your hats are only on the eighths, swing won't move them. It needs sixteenths to bite."
+        },
+        {
+          "kind": "say",
+          "title": "why swing works",
+          "say": {
+            "mentor": "People don't play exactly on a grid. A drummer leans on some notes and lags others, and our ears hear that as feel. Swing is a simple way to get some of that back into programmed music.\nSwing in drum machines goes back to Roger Linn's machines and the Akai MPC, the tool behind a lot of hip hop and house. Producers still talk about \"MPC swing\" as a sound of its own.",
+            "straight": "Real players never sit exactly on the grid. Swing puts a little of that feel back. The MPC made it famous in hip hop and house.",
+            "eli5": "When people play drums, they're never perfectly exact, and that wobble feels good. Swing adds a little wobble on purpose."
+          },
+          "deeper": [
+            {
+              "title": "swing in tracks you know",
+              "say": "Listen to almost any J Dilla beat for heavy, loose swing, or to UK garage, where swung hats and shuffled snares are the whole sound. A lot of deep house has gentle swing you only notice when it's gone."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "Which notes does swing move?",
+          "options": [
+            "the off sixteenths, the e and the a",
+            "every note",
+            "only the kick",
+            "the first beat of every bar"
+          ],
+          "answer": 0,
+          "why": "Swing pushes the off sixteenths late. The beats and the ands stay put.",
+          "whyWrong": {
+            "1": "If every note moved the same amount, nothing would sound different.",
+            "2": "The kick on the beat doesn't move.",
+            "3": "Beat one stays exactly where it is."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Your hats are only on the eighths. You turn swing up. What happens?",
+          "options": [
+            "nothing changes, swing needs sixteenths",
+            "the hats get louder",
+            "the hats move early",
+            "the tempo speeds up"
+          ],
+          "answer": 0,
+          "why": "Eighths are on the beat or the and, which swing leaves alone. Add sixteenths to hear it.",
+          "whyWrong": {
+            "1": "Swing changes timing, not volume.",
+            "2": "Swing only ever pushes notes late.",
+            "3": "Tempo stays the same."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "About how much swing gives a triplet feel?",
+          "options": [
+            "50 percent",
+            "0 percent",
+            "5 percent",
+            "100 percent"
+          ],
+          "answer": 0,
+          "why": "At around 50 percent the off notes land a third of the way along, like a triplet.",
+          "whyWrong": {
+            "1": "Zero is straight, no swing at all.",
+            "2": "5 percent is a hint you can barely hear.",
+            "3": "The knob tops out before that."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does swing make a beat feel more human?",
+          "options": [
+            "real players don't sit exactly on the grid",
+            "it makes the beat louder",
+            "it adds a new instrument",
+            "it slows the song down"
+          ],
+          "answer": 0,
+          "why": "People lean on and lag notes. Swing puts back some of that feel.",
+          "whyWrong": {
+            "1": "Swing changes timing only.",
+            "2": "Nothing new is added, only moved.",
+            "3": "The tempo is the same."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: what sound actually is, and the first notes of your melody, played over your beat."
+        }
+      ],
+      "file": "foundations/04-groove-feel.yaml"
+    },
+    {
       "slug": "what-is-sound",
       "world": "foundations",
       "number": 5,

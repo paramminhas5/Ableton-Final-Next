@@ -1,0 +1,175 @@
+slug: bars-time-signatures
+world: foundations
+number: 2
+title: bars and counting
+minutes: 6
+song:
+  adds: drums.clap
+  why: a clap on two and four turns a pulse into a groove you can dance to
+learn: >-
+  How musicians count, what a bar is, and the clap on two and four that turns your kick into a groove.
+youCan:
+  - count bars of four along with a track
+  - hear the backbeat, the clap on two and four
+  - play a clap in on two and four over your kick
+  - read 4/4 and know what it means
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Same steady kick as before, with one thing added: a clap on every other beat. Listen to how much
+        that changes. The kick on its own just marches. With the clap it starts to swing back and forth,
+        and your head wants to nod.
+
+        That clap is called the backbeat, and it's in almost every song you know.
+      straight: >-
+        A kick on every beat, plus a clap on every other beat. That clap is the backbeat. It's what turns a
+        pulse into a groove.
+      eli5: >-
+        Boom, clap, boom, clap. Hear how the clap makes it bouncier? The boom is the kick you already know.
+        The clap comes in between, on every other beat. It makes you want to nod your head.
+
+  - kind: say
+    title: count it in bars
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Count along again: one, two, three, four. Notice where the clap lands: on two and on four, never on
+        one or three. One and three are the kick on its own. Two and four get the clap.
+
+        Those four beats together are called a bar. Musicians count music in bars, the way you'd count a
+        walk in steps: "the bass comes in after eight bars". Dance music is almost always four beats to a
+        bar, written 4/4 and said "four four".
+      straight: >-
+        Four beats make a bar. The clap lands on beats two and four of every bar. Dance music is nearly
+        always in 4/4: four beats per bar.
+      eli5: >-
+        Count with it: one, two, three, four. The clap comes on two and on four. One and three are just the
+        boom.
+
+        Four beats in a row make a bar, like four steps make a little walk. Most dance music counts to four
+        and starts again.
+    deeper:
+      - title: what 4/4 means
+        say: >-
+          The top four is how many beats are in a bar. The bottom four says each beat is a quarter note, the
+          usual size of a beat. You'll see it at the start of sheet music and in your Live set's tempo box.
+      - title: other counts
+        say: >-
+          A waltz counts in three, 3/4: one two three, one two three. Some music counts in five or seven.
+          You'll find them in jazz, prog and film scores. Clubs stick to four because four is easiest to
+          dance to for a long time.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    goal: {notes: 2, note: clap}
+    say:
+      mentor: >-
+        Now add the clap to your song, over the kick you played last time.
+
+        Press rec, let the four clicks count you in, then tap the clap pad on two and on four: skip one, clap
+        on two, skip three, clap on four. A clap on the wrong beat turns red so you can play it again. Undo
+        takes one back, hold it to start over.
+      straight: >-
+        Record the backbeat over your kick. Rec, wait out the count-in, then clap on two and four. Red means
+        off the beat.
+      eli5: >-
+        Your turn! Press rec and wait for four ticks. Then count one, two, three, four, and tap the clap pad
+        only on two and four. Skip one, clap, skip three, clap.
+    hint: One and three are the kick on its own. Clap in between them.
+
+  - kind: say
+    title: the backbeat
+    say:
+      mentor: >-
+        That's your first groove: kick on every beat, clap on two and four. The clap on two and four is the
+        backbeat, and it's one of the oldest tricks in pop music.
+
+        It works because it pulls against the kick. The kick says "down", the clap says "up", and your body
+        sits in between, nodding. Next time you hear a song, find two and four. You'll hear a clap or a snare
+        there almost every time.
+      straight: >-
+        Kick on every beat, clap on two and four: that's the backbeat. The kick gives the down, the clap the
+        up, and that back and forth is the groove.
+      eli5: >-
+        Now your song goes boom, clap, boom, clap. That clap on two and four has a name: the backbeat. Almost
+        every song has one. See if you can spot it in the next song you hear.
+    deeper:
+      - title: where the backbeat comes from
+        say: >-
+          Rhythm and blues and early rock and roll drummers hit the snare hard on two and four in the 1940s
+          and 50s, and pop never let it go. Disco kept it, house swapped the snare for a drum machine clap,
+          and here we are.
+      - title: clap or snare
+        say: >-
+          House and techno often use a clap, hip hop and rock a snare, and plenty of tracks use both at once.
+          You'll compare them properly in the producer world.
+
+  - kind: ask
+    q: How many beats are in one bar of dance music?
+    options: ["four", "two", "eight", "three"]
+    answer: 0
+    why: Dance music is almost always 4/4, four beats to a bar.
+    whyWrong:
+      1: Two beats is half a bar. Count along again and listen for the clap on two and four.
+      2: Eight beats is two bars.
+      3: Three to a bar is a waltz, not a club track.
+
+  - kind: ask
+    q: Which beats does the backbeat clap land on?
+    options: ["two and four", "one and three", "every beat", "only on one"]
+    answer: 0
+    why: Two and four. One and three are the kick on its own.
+    whyWrong:
+      1: One and three are where the kick sits alone. The clap answers it on two and four.
+      2: Every beat is the kick's job. The clap is on every other one.
+      3: One is the start of the bar, where the kick lands.
+
+  - kind: ask
+    q: What does 4/4 mean?
+    options: ["four beats in every bar", "four bars in a song", "four sounds at once", "the tempo is 44 bpm"]
+    answer: 0
+    why: The top four is the number of beats in a bar.
+    whyWrong:
+      1: Songs have far more than four bars. It's about the beats inside one bar.
+      2: It's about counting time, not how many sounds play.
+      3: Tempo is written in bpm. 4/4 is how the beats are grouped.
+
+  - kind: ask
+    q: A producer says "the bass comes in after eight bars". At 120 bpm, roughly how long is that?
+    options: ["sixteen seconds", "eight seconds", "four seconds", "a minute"]
+    answer: 0
+    why: At 120 bpm a bar of four beats lasts two seconds, so eight bars is sixteen seconds.
+    whyWrong:
+      1: That would be one second a bar, too fast at 120.
+      2: Four seconds is two bars.
+      3: A minute at 120 is thirty bars.
+
+  - kind: ask
+    more: true
+    q: Why does adding a clap on two and four make the beat feel groovier?
+    options: ["it pulls against the kick, so the beat goes down and up", "it makes the song faster", "it makes the kick louder", "it adds a melody"]
+    answer: 0
+    why: The kick says down, the clap says up. That back and forth is what makes you nod.
+    whyWrong:
+      1: The tempo stays the same. Only the pattern changes.
+      2: The kick is untouched.
+      3: A clap has no tune to it.
+
+  - kind: ask
+    more: true
+    q: A waltz counts one two three, one two three. How is that written?
+    options: ["3/4", "4/4", "3/3", "1/3"]
+    answer: 0
+    why: Three beats to a bar, each one a quarter note.
+    whyWrong:
+      1: 4/4 is four beats to a bar, like dance music.
+      2: The bottom number is the size of a beat, usually four.
+      3: That would mean one beat to a bar.
+
+  - kind: keep
+    next: >-
+      Next: subdivision. Hats on the eighths and sixteenths fill the space between your kicks, and snap
+      shows up to help you place them.

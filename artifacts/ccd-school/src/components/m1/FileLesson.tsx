@@ -46,7 +46,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
-    case "tempo": return "set your tempo";
+    case "tempo": return p.set === "swing" ? "swing it" : "set your tempo";
     case "ear": return "ear round";
     case "add": return "add it to your song";
     case "check": return "earn your stripe";
@@ -193,11 +193,13 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   useEffect(() => setBase(readTrackV2()), []);
   const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
   const params = useMemo(() => readShape(slug), [slug]);
+  // A lesson with nothing to play in (swing, tempo) changes the song in its own step; adding just keeps it.
+  const keepOnly = useMemo(() => !(mission.screens ?? []).some(s => s.kind === "play") && songHasMusic(), [mission.screens]);
   const world = worldOf(slug) ?? undefined;
   const already = !!base?.added.includes(slug);
   const [added, setAdded] = useState(false);
   const isIn = added || already;
-  const preview = useMemo(() => (base ? (isIn ? base : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, slug, line, world, params]);
+  const preview = useMemo(() => (base ? (isIn || keepOnly ? base : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, keepOnly, slug, line, world, params]);
   const { engine, ready } = useEngineTrack(preview ?? readTrackV2());
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
@@ -213,7 +215,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
     try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
-    const next = now.added.includes(slug) ? now : applyTake(now, slug, line, world, params);
+    const next = now.added.includes(slug) ? now : keepOnly ? { ...now, added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params);
     writeTrackV2(next);
     nameSongIfNew();
     setBase(next);
@@ -521,7 +523,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
     case "ear": body = <EarStep screen={cur} meta="ear round" level="standard" onNext={next} />; break;
     case "play":
-      body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways }} initial={take?.type === ttype ? take.events : undefined} title="play it in"
+      body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways, snap: cur.snap }} initial={take?.type === ttype ? take.events : undefined} title="play it in"
         onUse={t => { setTake(t); saveTake(mission.slug, t); next(); }}
         onSkip={() => { setTake(null); saveTake(mission.slug, null); next(); }} />;
       break;

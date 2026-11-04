@@ -58,7 +58,7 @@ function roundsFor(r: Rounds, level: Level): number {
 
 function resolveTry(t: RawTry, o: ResolveOpts): ResolvedTry {
   const hint = t.hint !== undefined && o.level !== "hard" ? voiceText(t.hint, o.voice) : undefined;
-  const base = t.kind === "play" ? { kind: "play" as const, layer: t.layer, surface: t.surface, goal: t.goal } : { kind: "shape" as const, layer: t.layer, knobs: t.knobs };
+  const base = t.kind === "play" ? { kind: "play" as const, layer: t.layer, surface: t.surface, goal: t.goal, ...(t.snap ? { snap: true } : {}) } : { kind: "shape" as const, layer: t.layer, knobs: t.knobs };
   return { ...base, say: voiceText(t.say, o.voice), ...(hint !== undefined ? { hint } : {}) } as ResolvedTry;
 }
 
@@ -116,7 +116,7 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
         out.push({ kind: "ear", drill: s.drill, rounds: roundsFor(s.rounds, o.level), ...(s.say !== undefined ? { say: voiceText(s.say, o.voice) } : {}), ...hintOf(s.hint, o) });
         break;
       case "tempo":
-        out.push({ kind: "tempo", say: voiceText(s.say, o.voice), marks: s.marks ?? [100, 120, 128, 140], ...hintOf(s.hint, o) });
+        out.push({ kind: "tempo", say: voiceText(s.say, o.voice), set: s.set ?? "tempo", marks: s.marks ?? (s.set === "swing" ? [0, 0.25, 0.5, 0.7] : [100, 120, 128, 140]), ...hintOf(s.hint, o) });
         break;
       case "keep":
         out.push({ kind: "keep", next: voiceText(s.next, o.voice) });

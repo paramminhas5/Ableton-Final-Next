@@ -395,7 +395,64 @@ const BPM_MIN = 80, BPM_MAX = 160;
 const toV = (bpm: number) => (bpm - BPM_MIN) / (BPM_MAX - BPM_MIN);
 const toBpm = (v: number) => Math.round(BPM_MIN + v * (BPM_MAX - BPM_MIN));
 
-export function TempoStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+export function TempoStep(props: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+  return props.screen.set === "swing" ? <SwingStep {...props} /> : <BpmStep {...props} />;
+}
+
+const SWING_LABEL: Record<string, string> = { "0": "straight", "0.25": "a little", "0.5": "triplet feel", "0.7": "heavy shuffle" };
+
+function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+  const [sw, setSw] = useState(0);
+  useEffect(() => setSw(readTrackV2().swing ?? 0), []);
+  const loop = useMemo(() => mine ?? (songHasMusic() ? readTrackV2() : clipVariants("hats-offbeat")[0].track), [mine]);
+  const shown = useMemo(() => ({ ...loop, swing: sw }), [loop, sw]);
+  const { engine, ready } = useEngineTrack(shown);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const playing = beat >= 0;
+  const keep = () => { const t = readTrackV2(); writeTrackV2({ ...t, swing: sw, updatedAt: Date.now() }); window.dispatchEvent(new Event("ccd:song")); onNext(); };
+  useEnter(keep);
+  const pct = Math.round(50 + sw * (100 / 6) * 2);
+  const push = sw / 6;
+  // Where the sixteenths land in one beat: straight ones evenly, the off ones pushed late.
+  return (
+    <div className="ls-col">
+      <div className="fl-inst">
+        <Screen>
+          <Meta left="swing" right={playing ? "playing, turn the knob" : "press play"} />
+          <div className="fl-bpm"><b>{Math.round(sw * 100)}</b><span>% swing · {SWING_LABEL[String(screen.marks.reduce((a, m) => (Math.abs(m - sw) < Math.abs(a - sw) ? m : a), screen.marks[0]))] ?? ""}</span></div>
+          <svg viewBox="0 0 330 56" width="100%" className="fl-swing" role="img" aria-label="Where the sixteenths land in one beat">
+            {[0, 1, 2, 3].map(i => <line key={`g${i}`} x1={20 + i * 72} x2={20 + i * 72} y1={8} y2={48} stroke="rgba(255,255,255,.12)" strokeDasharray="3 3" />)}
+            {[0, 1, 2, 3].map(i => { const x = 20 + (i + (i % 2 ? push * 4 : 0)) * 72; return <circle key={i} cx={x} cy={28} r={i % 2 ? 8 : 11} fill={accent} opacity={i % 2 ? 0.75 : 1} />; })}
+          </svg>
+          <div className="fl-airlabels"><span>one beat, four sixteenths</span><span>the 2nd and 4th land {pct}% of the way</span></div>
+        </Screen>
+        <div className="fl-tempo">
+          <Knob label="swing" color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
+          <div className="fl-marks" role="radiogroup" aria-label="Amounts to try" style={{ ["--c" as string]: accent } as CSSProperties}>
+            {screen.marks.map(m => (
+              <button key={m} type="button" role="radio" aria-checked={Math.abs(m - sw) < 0.01} className={`ls-chip ${Math.abs(m - sw) < 0.01 ? "is-on" : ""}`} onClick={() => setSw(m)}>{Math.round(m * 100)}%<small>{SWING_LABEL[String(m)] ?? ""}</small></button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="fl-text">
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {tail}
+      </div>
+      <div className="ls-bottom">
+        <div className="m1-g">
+          <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3" }} ariaLabel={`Use ${Math.round(sw * 100)} percent swing`}>use this swing</GoPill>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
   const [bpm, setBpm] = useState(120);
   useEffect(() => setBpm(readTrackV2().bpm || 120), []);
   // What you just played (in your song), or your song, or a kick with hats so the speed is easy to feel.

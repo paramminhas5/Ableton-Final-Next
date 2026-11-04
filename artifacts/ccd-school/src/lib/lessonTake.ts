@@ -129,6 +129,12 @@ export function applyTake(t: TrackV2, slug: string, take: Take, world?: WorldKey
 /** The track you play along to in try it: your track with the lesson's layer emptied (or added empty). */
 export function practiceTrack(t: TrackV2, type: LayerType): { track: TrackV2; index: number } {
   const idx = t.layers.findIndex(l => l.type === type);
+  // Drums: what's already in your drums keeps playing underneath, and you record into a layer of
+  // your own, so the clap goes in over your kick. applyTake merges it back in.
+  if (idx >= 0 && type === "drums" && t.layers.length < MAX_LAYERS) {
+    const layers = [...t.layers, { ...newLayerV2(type, "__take"), events: [] }];
+    return { track: { ...t, layers }, index: layers.length - 1 };
+  }
   if (idx >= 0) {
     const layers = t.layers.map((l, i) => (i === idx ? { ...l, events: [], mute: false, solo: false } : l));
     return { track: { ...t, layers }, index: idx };

@@ -36,7 +36,7 @@ What the song has after basics: a kick, a clap, hats with swing, a tempo, a melo
 |---|---|---|---|---|
 | S | `tempo-bpm` | pulse and tempo | adds drums.kick on the beat; sets the tempo (100, 120, 128, 140 by ear) | tempo step (one knob with detents) |
 | D | `what-is-rhythm` | what is rhythm? | move one kick off the beat and back; feel what breaks | |
-| S | `bars-time-signatures` | bars and counting | adds drums.clap on 2 and 4; the loop becomes 4 bars | loop length step |
+| S | `bars-time-signatures` | bars and counting | adds drums.clap on 2 and 4 (the backbeat) | |
 | S | `note-values` | subdivision | adds hats.hats on 8ths, then 16ths; snap taught | grid with snap on and off |
 | D | `syncopation` | syncopation | move a hat to an offbeat accent; keep it | |
 | D | `polyrhythm` | polyrhythm | a 3-against-4 shaker over your beat; keep it or not | perc lane |

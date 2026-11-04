@@ -15,6 +15,8 @@ export const CLIPS: readonly ClipDef[] = [
   { id: "synth-loud", title: "quiet and loud", bars: 2, bpm: 120, description: "The same soft note, quiet then loud." },
   { id: "octave", title: "a, then a an octave up", bars: 2, bpm: 120, description: "The note a at 220 hz, then the a above it at 440 hz, twice the speed." },
   { id: "synth-shapes", title: "three wave shapes", bars: 2, bpm: 120, description: "The same note as a soft wave, a saw and a square." },
+  { id: "subdivisions", title: "quarters, eighths, sixteenths", bars: 2, bpm: 120, description: "A kick on every beat with closed hats on the beats, then the eighths, then the sixteenths." },
+  { id: "straight-vs-swung", title: "straight and swung", bars: 2, bpm: 120, description: "Kick, clap and sixteenth hats, played straight, then swung." },
   { id: "hats-offbeat", title: "hats on the offbeat", bars: 2, bpm: 124, description: "Open hats between the kicks, the lift that makes a groove bounce." },
 ];
 

@@ -61,9 +61,10 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
         s.params.set(p, v);
       }
     }
-    const ev = JSON.stringify(l.events);
+    const sw = t.swing ?? 0;
+    const ev = JSON.stringify(l.events) + "|" + sw;
     if (s.events !== ev) {
-      engine.pattern(i, l.events);
+      engine.pattern(i, swung(l.events, sw));
       s.events = ev;
     }
     const srcIndex = l.duck.src ? t.layers.findIndex(x => x.id === l.duck.src) : -1;
@@ -77,6 +78,21 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
 
 // The engine is shared. When another screen has synced it since we last did, what we think we sent
 // is stale, so we forget it and send everything again.
+/**
+ * Swing: every note on an off sixteenth (the "e" and "a" of one e and a) is pushed late. At 0.5 it
+ * lands a third of the way to the next sixteenth, a triplet feel; at 0.75 it is heavy shuffle.
+ * Done here, on the notes we send, so it reaches the engine and changes the moment the knob moves.
+ */
+export function swung<T extends { start: number }>(events: T[], amount: number): T[] {
+  if (!amount) return events;
+  const push = Math.min(0.75, Math.max(0, amount)) * (1 / 6);
+  return events.map(e => {
+    const q = e.start * 4;
+    const near = Math.round(q);
+    return Math.abs(q - near) < 0.08 && ((near % 2) + 2) % 2 === 1 ? { ...e, start: e.start + push } : e;
+  });
+}
+
 let owner = 0;
 let nextId = 1;
 /** Which screen last synced the shared engine. */

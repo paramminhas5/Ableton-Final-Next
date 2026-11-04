@@ -37,9 +37,9 @@ const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !
 const STEP_FIELDS: Record<string, string[]> = {
   hear: ["kind", "clip", "say", "deeper", "levels"],
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
-  play: ["kind", "layer", "surface", "goal", "say", "hint", "levels"],
+  play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
-  tempo: ["kind", "say", "marks", "hint", "levels"],
+  tempo: ["kind", "say", "marks", "set", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
@@ -199,7 +199,8 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           break;
         case "tempo":
           voice(where, "say", raw.say);
-          if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || m < 60 || m > 180))) at(where, "marks must be a list of tempos between 60 and 180");
+          if (raw.set !== undefined && raw.set !== "tempo" && raw.set !== "swing") at(where, `set must be tempo or swing`);
+          if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" ? m < 0 || m > 0.75 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
           break;
         case "ask": {
           voice(where, "q", raw.q);

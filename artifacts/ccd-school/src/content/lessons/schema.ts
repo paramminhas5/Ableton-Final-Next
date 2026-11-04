@@ -21,7 +21,7 @@ export type VoiceText = string | { mentor: string; straight?: string; eli5?: str
 export type PlayGoal = { notes: number; note?: string };
 export type Rounds = number | { gentle: number; standard: number; hard: number };
 
-export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[] };
+export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean };
 export type RawShape = { kind: "shape"; layer: LayerType; knobs: string[]; say: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawTry = RawPlay | RawShape;
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
@@ -43,7 +43,8 @@ export type RawAsk = {
 export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
 /** Set the song's tempo on one knob, the loop playing at whatever it is turned to. `marks` are the speeds named on the dial. */
-export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; hint?: VoiceText; levels?: Level[] };
+/** `set: swing` turns the same step into the song's swing knob (marks are 0 to 0.75). */
+export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing"; hint?: VoiceText; levels?: Level[] };
 export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawTempo | RawAsk | RawEar | RawKeep;
 
 export type SongChange = { adds: string; changes?: undefined; why: VoiceText } | { changes: string; adds?: undefined; why: VoiceText };
@@ -63,7 +64,7 @@ export type RawLesson = {
 
 /* ------------------------------ resolved shape ------------------------------ */
 
-export type ResolvedTry = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: string; hint?: string } | { kind: "shape"; layer: LayerType; knobs: string[]; say: string; hint?: string };
+export type ResolvedTry = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: string; hint?: string; snap?: boolean } | { kind: "shape"; layer: LayerType; knobs: string[]; say: string; hint?: string };
 export type ResolvedDeeper = { title: string; say: string; try?: ResolvedTry };
 
 export type ResolvedStep =
@@ -73,7 +74,7 @@ export type ResolvedStep =
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
-  | { kind: "tempo"; say: string; marks: number[]; hint?: string }
+  | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing"; hint?: string }
   | { kind: "keep"; next: string };
 
 /** The lesson as stored in lessons.gen.json: raw text kept intact so the voice can change at runtime. */
