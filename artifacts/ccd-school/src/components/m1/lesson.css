@@ -726,3 +726,7 @@ a.jv-lane:hover{transform:translateX(3px)}
 .mc-t.is-off{opacity:.35}
 .mx-tools{margin-top:8px}
 .mx-tools .ls-chip small{display:block}
+/* Desktop: long reading scrolls inside its column, so the go key never leaves the screen. */
+@media (min-width:900px) and (min-height:700px){
+  .fl .ls-col>.fl-text{max-height:calc(100vh - 330px);min-height:220px;overflow-y:auto;overscroll-behavior:contain;padding-right:4px}
+}

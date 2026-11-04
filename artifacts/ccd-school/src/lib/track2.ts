@@ -280,7 +280,8 @@ export function toV1View(t: TrackV2): V1Track {
       }
       continue;
     }
-    const kind: LayerKind = l.type === "fx" ? "perc" : (l.type as LayerKind);
+    // The song strip has no lane of its own for fx or samples: they show as percussion.
+    const kind: LayerKind = l.type === "fx" || l.type === "sample" ? "perc" : (l.type as LayerKind);
     layers.push({
       id: l.id,
       kind,

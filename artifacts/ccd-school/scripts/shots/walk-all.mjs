@@ -7,7 +7,7 @@ const base = process.argv[2] ?? "http://localhost:3000";
 const eng = process.argv[3] === "webkit" ? webkit : chromium;
 const W = Number(process.argv[4] ?? 1440), H = Number(process.argv[5] ?? 900);
 // The dj mixer lessons need their goals done first: scripts/shots/mix-smoke.mjs covers those.
-const slugs = JSON.parse(readFileSync(new URL("../../src/content/lessons/lessons.gen.json", import.meta.url), "utf8")).lessons.filter(l => !l.steps.some(s => s.kind === "mix") && (process.env.ALL || l.number < 200)).map(l => l.slug);
+const slugs = JSON.parse(readFileSync(new URL("../../src/content/lessons/lessons.gen.json", import.meta.url), "utf8")).lessons.filter(l => !l.steps.some(s => s.kind === "mix") && (process.env.ALL || l.number < 200)).map(l => l.slug).filter(s => !process.env.ONLY || process.env.ONLY.split(",").includes(s));
 const b = await eng.launch({ args: eng === chromium ? ["--autoplay-policy=no-user-gesture-required"] : [] });
 const out = [];
 for (const slug of slugs) {
@@ -27,7 +27,8 @@ for (const slug of slugs) {
     const box = await go.boundingBox().catch(() => null);
     if (box && box.y + box.height > H + 1) errs.push(`go key below the fold on ${kind}`);
     const before = await p.locator(".fl").getAttribute("data-step");
-    if (kind === "play") await p.getByRole("button", { name: "Skip this step" }).click();
+    const skip = p.getByRole("button", { name: "Skip this step" });
+    if (kind === "play" || (await skip.count())) await skip.first().click();
     else if (kind === "check") await p.getByText("skip the challenge").click();
     else if (kind === "ear") { for (let k = 0; k < 20 && (await p.locator(".fl").getAttribute("data-page-kind")) === "ear"; k++) { await p.locator('[role="radio"]:not([disabled]), .ls-pad:not([disabled])').first().click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); await go.click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); } }
     else if (kind === "arrange" && /not yet/.test(await go.innerText())) { await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Fill"]').nth(1).click().catch(() => {}); await go.click(); }
