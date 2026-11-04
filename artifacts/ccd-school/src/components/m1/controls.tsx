@@ -216,7 +216,7 @@ type KnobProps = {
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
 export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
-  const drag = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.max(70, 56 * (detents - 1)) : 180, defaultValue, detents);
+  const drag = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const well = size + 18;
   const rot = -135 + 270 * value;
   const knob = (

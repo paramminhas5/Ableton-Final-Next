@@ -10,7 +10,7 @@ import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
 import { nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { CAP, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
+import { CAP, GoPill, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 
@@ -49,6 +49,14 @@ export function Today() {
   const zi = Math.max(0, zones.findIndex(z => z.path === cur?.path));
   const inZone = steps.filter(st => st.path === zones[zi]?.path);
   const li = Math.max(0, inZone.findIndex(st => st.slug === cur?.slug));
+  const ci = Math.max(0, steps.findIndex(st => st.slug === cur?.slug));
+  const listRef = useRef<HTMLDivElement>(null);
+  // Turning a knob scrolls the list (only the list, not the page) to the lesson you are on.
+  useEffect(() => {
+    const box = listRef.current;
+    const row = box?.querySelector<HTMLElement>('[aria-current="true"]');
+    if (box && row) box.scrollTo({ top: row.offsetTop - box.clientHeight / 2 + row.clientHeight / 2, behavior: "smooth" });
+  }, [cur?.slug, world]);
   const offer = useMemo(() => (mission ? offerFor(track, mission) : null), [track, mission]);
   const todayXp = progress.dailyXp ?? 0;
   const lit = Math.min(9, Math.round((todayXp / DAILY_GOAL_XP) * 9));
@@ -69,7 +77,7 @@ export function Today() {
     const inz = steps.filter(st => st.path === z.path);
     setSel((inz.find(st => !done[st.slug]) ?? inz[0]).slug);
   };
-  const pickLesson = (i: number) => { const st = inZone[i]; if (st && st.slug !== cur?.slug) setSel(st.slug); };
+  const pickLesson = (i: number) => { const st = steps[i]; if (st && st.slug !== cur?.slug) setSel(st.slug); };
   const idxOf = (v: number, n: number) => Math.max(0, Math.min(n - 1, Math.round(v * (n - 1))));
   const val = (i: number, n: number) => (n > 1 ? i / (n - 1) : 0);
   const wi = WORLDS.indexOf(world);
@@ -178,10 +186,26 @@ export function Today() {
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
         </Link>
       )}
+      <Silk label="your progress" right={`${progress.streakDays} day streak`} />
+      <Screen>
+        <div className="m1-ss">today</div>
+        <div style={{ display: "flex", gap: 3, marginTop: 8 }} role="img" aria-label={`Today's goal, ${lit} of 9`}>
+          {Array.from({ length: 9 }, (_, i) => <span key={i} style={{ flex: 1, height: 14, borderRadius: 2, background: i < lit ? "#5EEAC1" : "#232326" }} />)}
+        </div>
+        <div className="m1-ss" style={{ marginTop: 6 }}>{lit >= 9 ? "today's goal is done" : `${todayXp} of ${DAILY_GOAL_XP} xp today. finish a lesson to light it up`}</div>
+        <div style={{ display: "grid", gap: 8, marginTop: 14 }}>
+          {WORLDS.map(w => { const c = worldDone(w, done); return (
+            <div key={w} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span className="m1-ss" style={{ width: 62, color: w === world ? "var(--disp-ink)" : undefined }}>{WORLD_LABEL[w]}</span>
+              <span style={{ flex: 1, height: 6, borderRadius: 3, background: "#232326", overflow: "hidden" }}><i style={{ display: "block", height: "100%", width: `${(c.done / Math.max(1, c.total)) * 100}%`, background: w === "producer" ? "#FF5CA3" : w === "dj" ? "#8CA3FF" : "#5EEAC1" }} /></span>
+              <span className="m1-ss" style={{ width: 44, textAlign: "right" }}>{c.done}/{c.total}</span>
+            </div>); })}
+        </div>
+      </Screen>
       </div>
 
       <div className="td-right">
-      <Silk label="turn to choose" right="world · zone · lesson" />
+      <Silk label="turn to choose" right="or tap a lesson below" />
       <div className="td-knobs">
         <div><span className="m1-ss">world</span>
           <Knob label={WORLD_LABEL[world]} color={CAP.go} size={64} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
@@ -189,18 +213,12 @@ export function Today() {
         <div><span className="m1-ss">zone</span>
           <Knob label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
         </div>
-        <div><span className="m1-ss">lesson</span>
-          <Knob label={`${li + 1} of ${inZone.length}`} color={CAP.grey} size={64} height={170} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(idxOf(v, inZone.length))} />
+        <div><span className="m1-ss">lesson {ci + 1} of {steps.length}</span>
+          <Knob label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={64} height={170} led="var(--led-cobalt, #8CA3FF)" detents={steps.length} value={val(ci, steps.length)} defaultValue={val(ci, steps.length)} onChange={v => pickLesson(idxOf(v, steps.length))} />
         </div>
       </div>
       <div className="m1-g" style={{ marginTop: 12 }}>
-        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute quick practice`} style={{ gridColumn: "span 2", height: 96, flexDirection: "row", gap: 14, justifyContent: "center" }}>
-          <span style={{ display: "flex", gap: 3 }} aria-hidden>{Array.from({ length: 9 }, (_, i) => <i key={i} style={{ width: 8, height: 22, borderRadius: 2, background: i < lit ? "#5EEAC1" : "#2a2a2e" }} />)}</span>
-          <span className="m1-ml" style={{ position: "static" }}>{lit >= 9 ? "goal done" : "quick practice"}</span>
-        </Link>
-        <Key wide label={playing ? "stop" : layers ? "play my song" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ gridColumn: "span 2", height: 96 }} capStyle={{ width: "40%" }}>
-          <Icon name={playing ? "stop" : "hear"} />
-        </Key>
+        <GoPill onClick={hear} disabled={!layers && !offer} style={{ gridColumn: "1 / -1" }} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"}><Icon name={playing ? "stop" : "hear"} small />{playing ? "stop" : layers ? "play my song" : "hear what's next"}</GoPill>
       </div>
       <div className="td-jump">
         <Silk label="jump to" />
@@ -212,6 +230,25 @@ export function Today() {
         </div>
       </div>
       </div>
+      <section className="td-all" aria-label={`${WORLD_LABEL[world]} lessons`}>
+        <Silk label={`${WORLD_LABEL[world]} lessons`} right={`${counts.done} of ${counts.total} done`} />
+        <div className="td-list" ref={listRef} role="listbox" aria-label="Lessons">
+          {steps.map((st, i) => {
+            const d = !!done[st.slug];
+            const on = st.slug === cur?.slug;
+            return (
+              <div key={st.slug}>
+                {(i === 0 || steps[i - 1].path !== st.path) && <div className="m1-ss td-zone">{st.pathTitle.toLowerCase()}</div>}
+                <button type="button" role="option" aria-selected={on} aria-current={on ? "true" : undefined} className={`m1-m is-wide td-row ${on ? "is-sel" : ""}`} onClick={() => setSel(st.slug)}>
+                  <span className="m1-t11" style={{ width: 24, color: d ? "#5EEAC1" : undefined }}>{d ? "✓" : String(i + 1).padStart(2, "0")}</span>
+                  <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase", fontWeight: on ? 600 : 400, textAlign: "left" }}>{st.title}</span>
+                  {on && <span className="m1-t11" style={{ color: "#FF6FAE" }}>{d ? "done" : "selected"}</span>}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </section>
       <DuoFilters />
     </div>
   );
