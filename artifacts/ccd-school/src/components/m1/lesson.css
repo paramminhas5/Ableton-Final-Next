@@ -253,6 +253,8 @@
 .fl-songname b{color:var(--ink);font-weight:600}
 .fl-songempty{font-size:13px;color:var(--print);padding:6px 0}
 .fl-song svg{max-height:56px}
+.fl-secs{display:flex;gap:2px;margin-top:3px;height:14px}
+.fl-secs i{flex-basis:0;min-width:0;border-radius:3px;background:color-mix(in srgb,var(--led-mint) 30%,var(--deck2));font-style:normal;font-size:9px;line-height:14px;padding-left:4px;color:var(--ink);overflow:hidden;white-space:nowrap}
 .fl-ghost{display:flex;align-items:center;gap:8px;margin-top:3px}
 .fl-ghost svg{flex:1;min-width:0;height:10px;border:1px dashed color-mix(in srgb,var(--led-mint) 55%,transparent);border-radius:3px}
 .fl-ghost rect{fill:color-mix(in srgb,var(--led-mint) 55%,transparent)}

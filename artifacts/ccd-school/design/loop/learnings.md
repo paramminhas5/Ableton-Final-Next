@@ -2,6 +2,15 @@
 
 Each round adds what it found, built and learned, newest first. Read this before starting a round.
 
+## Improvement check pass 2 (5 Nov, 59dcbf5), before the loop
+Fixed: see ccd/school-fixes.md 96 to 108.
+Learned:
+- A reviewer that walks a lesson end to end finds content-logic bugs no screenshot shows (the drop threw away your arrangement and added a kick). Every round, walk at least three lessons of different kinds to the done screen and read the song afterwards.
+- Global copy sweeps hit code: replacing em dashes also rewrote the compiler's em dash check. After any sweep, grep the diff for regexes, split/includes/replace and tests.
+- Fixed bottom bars and sticky strips eat phone height. Check every primary control's bottom against the bar's top by script (`scripts/shots/pass2-check.mjs` does it for the play-in).
+- `--led-go` had spread to 97 places because the producer world's accent was pink. Pink lives on the go key only; a world accent can never be the go colour.
+Open (ranked): /upgrade copy and prices wait on Param's pro decision. Done after the pass: keep lessons name their step "keep it in your song"; the song strip draws your arrangement as section blocks under the loop.
+
 ## Improvement check pass 1 (5 Nov, de9e5bd), before the loop
 Fixed: studio overlap, piano roll, tool step names, mixer focus, play-in go key, song strip, lfo picture, /sound, pink and lowercase rules, sampler grouping, onboarding ear, dashboard and tour, done screen, foundations url. See ccd/school-fixes.md 76 to 90.
 Learned:

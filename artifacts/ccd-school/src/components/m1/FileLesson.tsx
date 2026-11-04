@@ -124,6 +124,12 @@ export function SongStrip({ focus, pending: wait, ghost, slug }: { focus?: strin
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
+        {!empty && t?.sections?.length ? (
+          // Your arrangement under the loop: one block per section, as long as it lasts, fainter where parts drop out.
+          <div className="fl-secs" role="img" aria-label={`Arranged: ${t.sections.map(x => x.name).join(", ")}`}>
+            {t.sections.map((x, i) => <i key={i} style={{ flexGrow: x.bars, opacity: 1 - Math.min(0.6, x.off.length * 0.2) }}>{x.bars >= 8 ? x.name : ""}</i>)}
+          </div>
+        ) : null}
         {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
       </div>
     </section>
