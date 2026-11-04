@@ -51,22 +51,17 @@ steps:
           purpose.
 
   - kind: mix
-    goal: free
+    goal: sync
+    bank: operator
     say:
       mentor: >-
-        Deck b starts already matched to your song, as if sync were on. Press play and listen: one clean kick
-        per beat.
-
-        Now switch sync off in your head and nudge deck b's tempo fader, just a little. Hear the kicks start
-        to slide apart? That's drift, and with sync off it's yours to fix. Bring the fader back until they
-        lock again.
+        Deck b is a different tempo from your song, and you can hear them drift. Press sync b. One press and deck b's tempo matches deck a, and the beat lights flash together.
+        
+        Now nudge deck b's tempo fader a little and hear the drift come back, then press sync again to pull it home. That's all sync does: it matches the tempo for you. It doesn't choose the track, find the phrase or ride the eq. Those are still yours.
       straight: >-
-        Deck b starts matched, like sync is on. Nudge its tempo fader and hear the drift. Then bring it back
-        until the kicks lock.
+        Press sync b and deck b matches your tempo. Nudge the fader to hear drift, press sync again to fix it.
       eli5: >-
-        The two songs start lined up. Move deck b's speed slider a tiny bit and hear the booms come apart.
-        Then move it back.
-    hint: Watch the two rows of lights. When they flash together, you're locked again.
+        One button makes both songs go the same speed.
 
   - kind: ask
     q: What does sync match?

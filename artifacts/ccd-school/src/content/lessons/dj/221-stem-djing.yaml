@@ -45,21 +45,17 @@ steps:
         sneak into the wrong part.
 
   - kind: mix
-    goal: swap
+    goal: stems
+    bank: space-bass
     say:
       mentor: >-
-        We don't have stems here, but the eq gives you a rough version. It splits by frequency instead of by
-        instrument.
-
-        Bring deck b's fader up. Turn your song's low down and keep deck b's low up. Now deck b carries the
-        kick and bass, and your song carries everything above them. Two tracks, split down the middle, one
-        groove.
+        Stems split a track into its parts. Deck b's parts are drums, hats and bass, each with its own button. Take deck b's drums out and bring its fader up.
+        
+        Now you've got deck b's bass line playing under your song's drums: two tracks combined part by part, which no eq can do as cleanly. Try taking the hats out too, or the bass instead.
       straight: >-
-        The eq splits by frequency, a rough stem. Fader b up, low a down, low b up. Deck b's low end under
-        your song's top.
+        Deck b's drums, hats and bass are separate. Take its drums out and bring it up: its bass under your drums.
       eli5: >-
-        Push deck b up. Turn your song's low knob down. Now deck b plays the deep sounds and your song plays
-        the rest.
+        Each part of the song has its own button. Turn the drums off on one song.
 
   - kind: ask
     q: What is a stem?

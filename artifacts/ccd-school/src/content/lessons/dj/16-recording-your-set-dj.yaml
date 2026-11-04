@@ -25,15 +25,17 @@ steps:
         Record your mixes and listen back. You'll hear what to fix.
 
   - kind: mix
-    goal: blend
+    goal: record
+    bank: operator
     say:
       mentor: >-
-        Do your cleanest blend now, as if it's being recorded: match, bring b in on the phrase, swap the
-        bass, crossfade.
+        Recording your set is how you learn from it. Press record mix, then do a short blend: bring deck b up, swap the bass, crossfade. Press stop recording.
+        
+        A download link appears: that's your mix, exactly as it sounded. Listen back later and you'll hear things you missed while you were playing: a transition that came in early, a level that jumped.
       straight: >-
-        Do your cleanest blend.
+        Press record mix, do a blend, press stop. Download your mix and listen back.
       eli5: >-
-        Do your best mix.
+        Press record, mix, press stop. Now you can listen to what you did.
 
   - kind: ask
     q: Why record practice sets?

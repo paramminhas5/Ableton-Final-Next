@@ -45,7 +45,35 @@ struct Ctl {
     ratio: f32,
 }
 
+/// A voice card: the small fixed differences between the voices of a real polysynth, where each
+/// voice is its own circuit board with its own component tolerances. Voice 3 is always a touch sharp,
+/// voice 5 a touch darker, so a chord beats gently and a saved song recalls exactly. Deterministic.
+#[derive(Clone, Copy, Default)]
+pub struct Card {
+    /// Tuning offset in semitones (a few cents).
+    pub semis: f32,
+    /// Filter cutoff offset in octaves.
+    pub cut_oct: f32,
+    /// Envelope time scale.
+    pub env: f32,
+}
+
+impl Card {
+    pub fn of(slot: usize) -> Card {
+        // A small hash per slot, three numbers in -1..1.
+        let h = |k: u32| {
+            let mut x = (slot as u32 + 1).wrapping_mul(0x9E37_79B9) ^ k.wrapping_mul(0x85EB_CA6B);
+            x ^= x >> 15;
+            x = x.wrapping_mul(0x2C1B_3C6D);
+            x ^= x >> 12;
+            (x as f32 / u32::MAX as f32) * 2.0 - 1.0
+        };
+        let c = Card { semis: h(1) * 0.035, cut_oct: h(2) * 0.08, env: 1.0 + h(3) * 0.06 }; c
+    }
+}
+
 struct Voice {
+    card: Card,
     note: u8,
     age: u32,
     pitch: f32,
@@ -64,8 +92,9 @@ struct Voice {
 }
 
 impl Voice {
-    fn new(os: f32) -> Self {
+    fn new(os: f32, slot: usize) -> Self {
         Voice {
+            card: Card::of(slot),
             note: 0,
             age: 0,
             pitch: 60.0,
@@ -92,7 +121,9 @@ impl Voice {
         self.amp.is_active() && self.amp.stage != Stage::Release
     }
 
-    fn start(&mut self, note: u8, vel: f32, age: u32) {
+    /// `phase` is where the free-running oscillators happen to be (0..1): real oscillators never stop,
+    /// so a new note starts wherever they are, and no two notes start identically.
+    fn start(&mut self, note: u8, vel: f32, age: u32, phase: f32) {
         self.note = note;
         self.vel = vel;
         self.age = age;
@@ -102,7 +133,8 @@ impl Voice {
         // Spread the starting phases so the saws do not add up into a spike.
         if !self.amp.is_active() {
             for (i, o) in self.osc.iter_mut().enumerate() {
-                o.reset([0.0, 0.31, 0.67, 0.12, 0.49][i]);
+                // Spread so the saws don't add up into a spike, then turned by where the oscillators are.
+                o.reset(([0.0, 0.31, 0.67, 0.12, 0.49][i] + phase).fract());
             }
             self.ladder.reset();
             self.car = 0.0;
@@ -121,7 +153,7 @@ impl Voice {
     #[inline]
     fn tick(&mut self, c: &Ctl, os: f32) -> f32 {
         self.pitch = self.target + (self.pitch - self.target) * self.glide_coef;
-        let f = note_hz(self.pitch + self.drift + c.lfo_semi);
+        let f = note_hz(self.pitch + self.drift + c.lfo_semi + self.card.semis);
         let dt = f / os;
         let w = c.wave;
         let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
@@ -155,7 +187,7 @@ impl Voice {
         }
         let env_oct = c.env_amt * 5.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (self.pitch - 60.0) / 12.0 * 0.4;
-        let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct).exp2()).clamp(30.0, os * 0.45);
+        let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct + self.card.cut_oct).exp2()).clamp(30.0, os * 0.45);
         self.ladder.set(fc, c.res, os);
         let y = self.ladder.tick(s * 0.5);
         y * self.amp.next() * (0.4 + 0.6 * self.vel) * c.lfo_gain
@@ -293,7 +325,7 @@ impl Poly {
         let mut p = Poly {
             sr,
             os,
-            voices: core::array::from_fn(|_| Voice::new(os)),
+            voices: core::array::from_fn(|i| Voice::new(os, i)),
             ctl: Controls::new(os),
             out: Out::new(sr),
             clock: 0,
@@ -350,8 +382,9 @@ impl Poly {
         let (a, r) = (self.attack_s, self.release_s);
         let _ = r;
         for v in self.voices.iter_mut() {
-            v.amp.set(a, 0.4, 0.85, r);
-            v.fenv.set(0.002 + a * 0.5, self.fdecay_s, 0.35, self.frel_s);
+            let k = v.card.env;
+            v.amp.set(a * k, 0.4 * k, 0.85, r * k);
+            v.fenv.set((0.002 + a * 0.5) * k, self.fdecay_s * k, 0.35, self.frel_s * k);
         }
     }
 
@@ -379,7 +412,8 @@ impl Poly {
         }
         if let Some(i) = pick {
             let age = self.clock;
-            self.voices[i].start(note, vel, age);
+            let ph = (self.rng.bipolar() + 1.0) * 0.5;
+            self.voices[i].start(note, vel, age, ph);
         }
     }
 
@@ -457,6 +491,7 @@ pub struct Lead {
     attack_s: f32,
     fdecay_s: f32,
     frel_s: f32,
+    rng: Rng,
 }
 
 impl Lead {
@@ -465,7 +500,9 @@ impl Lead {
         let mut l = Lead {
             sr,
             os,
-            voice: Voice::new(os),
+            // One voice: it keeps its card's filter and envelope character but stays exactly in tune,
+            // since there is no other voice for it to beat against.
+            voice: { let mut v = Voice::new(os, 0); v.card.semis = 0.0; v },
             stack: [0; STACK],
             held: 0,
             ctl: Controls::new(os),
@@ -475,6 +512,7 @@ impl Lead {
             attack_s: 0.005,
             fdecay_s: 0.35,
             frel_s: 0.3,
+            rng: Rng::new(0x1EAD),
         };
         l.ctl.voicing.set(0.15);
         for (i, s) in LEAD_PARAMS.iter().enumerate() {
@@ -548,7 +586,8 @@ impl Lead {
                 self.voice.pitch = self.voice.target;
             }
         } else {
-            self.voice.start(note, vel, 0);
+            let ph = (self.rng.bipolar() + 1.0) * 0.5;
+            self.voice.start(note, vel, 0, ph);
         }
     }
 

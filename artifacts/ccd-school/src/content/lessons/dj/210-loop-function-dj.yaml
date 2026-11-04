@@ -46,20 +46,17 @@ steps:
           end yourself with loop in and loop out, and halve or double a loop while it plays.
 
   - kind: mix
-    goal: blend
+    goal: loop
+    bank: operator
     say:
       mentor: >-
-        Your song on deck a is a loop already: its bars repeat for as long as you like, just like a looped
-        track on a deck. So take your time.
-
-        Bring deck b's fader up slowly. Then turn your song's low down to swap the bass. Then crossfade to b,
-        or pull deck a down. Stretch it out over as many bars as you like. Your song isn't going anywhere.
+        A loop holds part of a track and repeats it, so you can stretch an intro while you set up the next one. Deck b is playing. Tap loop 4 and deck b repeats the bar it's in, again and again, perfectly in time.
+        
+        Bring deck b's fader up and ride the loop under your song. Try loop 1 for a tight stutter, loop 8 for a whole phrase. Tap the lit loop again to let the track play on.
       straight: >-
-        Your song is looping, so there's no rush. Fader b up slowly, low a down, then crossfade to b or pull
-        deck a down.
+        Tap a loop length and deck b repeats that stretch in time. Bring it up under your song, tap again to release.
       eli5: >-
-        Your song keeps going round, so go slow. Push deck b up, turn your song's low knob down, then slide
-        over to b.
+        The loop button makes a bit of the song play over and over.
 
   - kind: ask
     q: What does a loop on a deck do?

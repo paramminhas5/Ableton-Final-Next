@@ -51,18 +51,17 @@ steps:
           and many turntablists and hip-hop djs prefer it for certain cuts and scratches.
 
   - kind: mix
-    goal: crossfade
+    goal: curve
+    bank: operator
     say:
       mentor: >-
-        Your song is on deck a and the crossfader starts on it. First a blend: move the crossfader slowly all
-        the way to b, taking several bars to get there. Listen to your song melt into the next track.
-
-        Then the opposite: snap it back to a in one quick move. Same two tracks, two completely different
-        feelings.
+        The crossfader's curve decides how it fades. Smooth is for blends: both tracks overlap through the middle. Sharp is for cuts and scratching: a tiny move gets the full track.
+        
+        Switch the curve to sharp, then slam the crossfader from a to b right on the one. Hear how the cut is instant. Switch back to smooth and slide slowly to hear the difference.
       straight: >-
-        Slowly crossfade to b over several bars. Then snap back to a in one quick move. Hear the difference.
+        Smooth curve for blends, sharp for cuts. Switch to sharp and cut from a to b on the one.
       eli5: >-
-        Slide the big slider slowly to b. Then whip it back to a fast. Listen to how different that feels.
+        The sharp setting makes the slider switch songs super fast.
 
   - kind: ask
     q: Where is the crossfader for an equal blend of both decks?

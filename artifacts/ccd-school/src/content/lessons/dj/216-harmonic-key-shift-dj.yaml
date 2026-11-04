@@ -52,18 +52,17 @@ steps:
           while beatmatching.
 
   - kind: mix
-    goal: match
-    bank: warm-up
+    goal: shift
+    bank: sandman
     say:
       mentor: >-
-        Deck b is at its own speed. Match it to your song with the tempo fader. As you move it, listen to
-        deck b's bass: it stays on the same notes. Our decks work as if master tempo is always on, so the
-        speed changes and the key doesn't. Watch deck b's key code too. It doesn't move.
+        Deck b's key clashes with your song. Instead of choosing another track, shift deck b's key. Each press of key b moves it a semitone, and the badge shows its new Camelot code.
+        
+        Find a shift where it fits, then match the tempo. Small shifts, one or two semitones, keep the track sounding natural; big ones start to sound odd. That's key shift.
       straight: >-
-        Match deck b to your song with the tempo fader. Its key code and bass notes stay put: our decks work
-        like master tempo is always on.
+        Shift deck b's key a semitone at a time until it fits your song, then match the tempo. Small shifts sound most natural.
       eli5: >-
-        Move deck b's speed slider until the booms match. Listen: the bass notes don't go higher or lower.
+        Make deck b's song a little higher or lower until it fits yours.
 
   - kind: ask
     q: What does master tempo do?

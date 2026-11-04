@@ -114,7 +114,9 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   };
   const off = Math.abs(bBpm - base);
   const mineKey = camelotOf(mine.root ?? 45, (mine.scale ?? "minor") === "minor");
-  const fits = camelotFits(mineKey, b.camelot);
+  // Deck b's key as it plays now, after any key shift.
+  const bKey = camelotOf(b.root + shift, b.minor);
+  const fits = camelotFits(mineKey, bKey);
   // Phrasing: bring deck b in within the first beat of an eight bar phrase (32 beats).
   const prevFb = useRef(fb);
   useEffect(() => { if (prevFb.current <= 0.5 && fb > 0.5 && beat >= 0) setPhraseOk(((beat % 32) + 32) % 32 < 1.5 || ((beat % 32) + 32) % 32 > 31); prevFb.current = fb; }, [fb]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -133,12 +135,12 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "stems" ? !stems.drums && stems.bass && fb > 0.5 && fa > 0.5
     : screen.goal === "shift" ? fits && off <= 0.3
     : screen.goal === "curve" ? law === "sharp" && cutDone
-    : screen.goal === "file" ? !!bFile || deckA === "file"
+    : screen.goal === "file" ? true // never blocks: not everyone has a file to hand
     : screen.goal === "record" ? recState === "done"
     : fb > 0.6 && lowA < 0.25 && (xf > 0.85 || fa < 0.15);
   const why = screen.goal === "crossfade" ? (!seen.right ? "slide the crossfader all the way to b" : "now all the way back to a")
     : screen.goal === "swap" ? (fb <= 0.6 ? "bring deck b's fader up" : lowA >= 0.25 ? "turn deck a's low down" : "keep deck b's low up")
-    : screen.goal === "key" ? `your song is ${mineKey}. pick a deck b track whose key fits: the same number, or one either side with the same letter`
+    : screen.goal === "key" ? `your song is ${mineKey}. pick a deck b track whose key fits (the same number, or one either side with the same letter), or shift deck b's key until it does`
     : screen.goal === "cut" ? (cutMiss ? "quick enough, but it landed mid bar. go back to a and slam it across right on the one" : "slam the crossfader from a to b in one quick move, on the one")
     : screen.goal === "phrase" ? (phraseOk === false ? "that came in mid phrase. pull deck b down and bring it up right as the phrase lights reset to one" : "watch the phrase counter and bring deck b's fader up right on bar one")
     : screen.goal === "echo" ? (echoA <= 0.5 ? "turn deck a's echo up" : "now pull deck a's fader down and let the echo ring out")

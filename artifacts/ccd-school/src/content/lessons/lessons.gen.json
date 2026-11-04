@@ -726,12 +726,12 @@
         },
         {
           "kind": "mix",
-          "goal": "key",
+          "goal": "file",
           "bank": "skywalker",
           "say": {
-            "mentor": "Your song's key is on deck a. Go through the bank on deck b and find a track whose key fits yours: the same Camelot number, or one step either side with the same letter. The screen tells you when it fits. Listen to how the melodies sit together.",
-            "straight": "Pick a bank track whose key fits yours: same number, or one either side with the same letter.",
-            "eli5": "Find a song for deck b that the screen says fits. Listen to how nice they sound together."
+            "mentor": "Your library is your music, not just the bank. Load one of your own tracks on deck b with file on b. It stays in your browser; nothing is uploaded. The app guesses its tempo.\nMatch it to your song with the tempo fader and blend it in. If you don't have a file handy, the bank is here, and you can come back to this any time.",
+            "straight": "Load your own track on deck b. It stays on your device. Match its tempo and blend it in.",
+            "eli5": "Put one of your own songs on deck b and mix it in."
           }
         },
         {
@@ -1143,11 +1143,12 @@
         },
         {
           "kind": "mix",
-          "goal": "blend",
+          "goal": "record",
+          "bank": "operator",
           "say": {
-            "mentor": "Do your cleanest blend now, as if it's being recorded: match, bring b in on the phrase, swap the bass, crossfade.",
-            "straight": "Do your cleanest blend.",
-            "eli5": "Do your best mix."
+            "mentor": "Recording your set is how you learn from it. Press record mix, then do a short blend: bring deck b up, swap the bass, crossfade. Press stop recording.\nA download link appears: that's your mix, exactly as it sounded. Listen back later and you'll hear things you missed while you were playing: a transition that came in early, a level that jumped.",
+            "straight": "Press record mix, do a blend, press stop. Download your mix and listen back.",
+            "eli5": "Press record, mix, press stop. Now you can listen to what you did."
           }
         },
         {
@@ -1837,13 +1838,13 @@
         },
         {
           "kind": "mix",
-          "goal": "free",
+          "goal": "sync",
+          "bank": "operator",
           "say": {
-            "mentor": "Deck b starts already matched to your song, as if sync were on. Press play and listen: one clean kick per beat.\nNow switch sync off in your head and nudge deck b's tempo fader, just a little. Hear the kicks start to slide apart? That's drift, and with sync off it's yours to fix. Bring the fader back until they lock again.",
-            "straight": "Deck b starts matched, like sync is on. Nudge its tempo fader and hear the drift. Then bring it back until the kicks lock.",
-            "eli5": "The two songs start lined up. Move deck b's speed slider a tiny bit and hear the booms come apart. Then move it back."
-          },
-          "hint": "Watch the two rows of lights. When they flash together, you're locked again."
+            "mentor": "Deck b is a different tempo from your song, and you can hear them drift. Press sync b. One press and deck b's tempo matches deck a, and the beat lights flash together.\nNow nudge deck b's tempo fader a little and hear the drift come back, then press sync again to pull it home. That's all sync does: it matches the tempo for you. It doesn't choose the track, find the phrase or ride the eq. Those are still yours.",
+            "straight": "Press sync b and deck b matches your tempo. Nudge the fader to hear drift, press sync again to fix it.",
+            "eli5": "One button makes both songs go the same speed."
+          }
         },
         {
           "kind": "ask",
@@ -2059,11 +2060,12 @@
         },
         {
           "kind": "mix",
-          "goal": "crossfade",
+          "goal": "curve",
+          "bank": "operator",
           "say": {
-            "mentor": "Your song is on deck a and the crossfader starts on it. First a blend: move the crossfader slowly all the way to b, taking several bars to get there. Listen to your song melt into the next track.\nThen the opposite: snap it back to a in one quick move. Same two tracks, two completely different feelings.",
-            "straight": "Slowly crossfade to b over several bars. Then snap back to a in one quick move. Hear the difference.",
-            "eli5": "Slide the big slider slowly to b. Then whip it back to a fast. Listen to how different that feels."
+            "mentor": "The crossfader's curve decides how it fades. Smooth is for blends: both tracks overlap through the middle. Sharp is for cuts and scratching: a tiny move gets the full track.\nSwitch the curve to sharp, then slam the crossfader from a to b right on the one. Hear how the cut is instant. Switch back to smooth and slide slowly to hear the difference.",
+            "straight": "Smooth curve for blends, sharp for cuts. Switch to sharp and cut from a to b on the one.",
+            "eli5": "The sharp setting makes the slider switch songs super fast."
           }
         },
         {
@@ -2378,11 +2380,12 @@
         },
         {
           "kind": "mix",
-          "goal": "blend",
+          "goal": "loop",
+          "bank": "operator",
           "say": {
-            "mentor": "Your song on deck a is a loop already: its bars repeat for as long as you like, just like a looped track on a deck. So take your time.\nBring deck b's fader up slowly. Then turn your song's low down to swap the bass. Then crossfade to b, or pull deck a down. Stretch it out over as many bars as you like. Your song isn't going anywhere.",
-            "straight": "Your song is looping, so there's no rush. Fader b up slowly, low a down, then crossfade to b or pull deck a down.",
-            "eli5": "Your song keeps going round, so go slow. Push deck b up, turn your song's low knob down, then slide over to b."
+            "mentor": "A loop holds part of a track and repeats it, so you can stretch an intro while you set up the next one. Deck b is playing. Tap loop 4 and deck b repeats the bar it's in, again and again, perfectly in time.\nBring deck b's fader up and ride the loop under your song. Try loop 1 for a tight stutter, loop 8 for a whole phrase. Tap the lit loop again to let the track play on.",
+            "straight": "Tap a loop length and deck b repeats that stretch in time. Bring it up under your song, tap again to release.",
+            "eli5": "The loop button makes a bit of the song play over and over."
           }
         },
         {
@@ -3025,12 +3028,12 @@
         },
         {
           "kind": "mix",
-          "goal": "match",
-          "bank": "warm-up",
+          "goal": "shift",
+          "bank": "sandman",
           "say": {
-            "mentor": "Deck b is at its own speed. Match it to your song with the tempo fader. As you move it, listen to deck b's bass: it stays on the same notes. Our decks work as if master tempo is always on, so the speed changes and the key doesn't. Watch deck b's key code too. It doesn't move.",
-            "straight": "Match deck b to your song with the tempo fader. Its key code and bass notes stay put: our decks work like master tempo is always on.",
-            "eli5": "Move deck b's speed slider until the booms match. Listen: the bass notes don't go higher or lower."
+            "mentor": "Deck b's key clashes with your song. Instead of choosing another track, shift deck b's key. Each press of key b moves it a semitone, and the badge shows its new Camelot code.\nFind a shift where it fits, then match the tempo. Small shifts, one or two semitones, keep the track sounding natural; big ones start to sound odd. That's key shift.",
+            "straight": "Shift deck b's key a semitone at a time until it fits your song, then match the tempo. Small shifts sound most natural.",
+            "eli5": "Make deck b's song a little higher or lower until it fits yours."
           }
         },
         {
@@ -3134,13 +3137,13 @@
         },
         {
           "kind": "mix",
-          "goal": "phrase",
+          "goal": "cue",
+          "bank": "morals",
           "say": {
-            "mentor": "The move behind every hot cue is timing. The crossfader sits in the middle and deck b is waiting with its fader down.\nWatch the phrase counter. As it comes round to bar 1, push deck b's fader up, like hitting a hot cue right on the one. Miss it and try again on the next phrase.",
-            "straight": "Deck b waits with its fader down. On bar 1 of the phrase counter, push deck b up.",
-            "eli5": "Deck b's slider starts at the bottom. When the counter says bar 1, push deck b up."
-          },
-          "hint": "Count down the last bar. Four, three, two, one, go."
+            "mentor": "Hot cues are bookmarks in a track. Deck b has four: the intro, where the hats come in, the break and the drop. Tap one and deck b jumps there instantly, in time.\nPlay with them: jump to the break, then to the drop right on the one. That's how djs remix live, jumping between parts of a track. Tap at least two.",
+            "straight": "Four hot cues on deck b: intro, hats in, break, drop. Tap them to jump, in time. Try two.",
+            "eli5": "Each button jumps to a different part of the song."
+          }
         },
         {
           "kind": "ask",
@@ -3549,11 +3552,12 @@
         },
         {
           "kind": "mix",
-          "goal": "swap",
+          "goal": "stems",
+          "bank": "space-bass",
           "say": {
-            "mentor": "We don't have stems here, but the eq gives you a rough version. It splits by frequency instead of by instrument.\nBring deck b's fader up. Turn your song's low down and keep deck b's low up. Now deck b carries the kick and bass, and your song carries everything above them. Two tracks, split down the middle, one groove.",
-            "straight": "The eq splits by frequency, a rough stem. Fader b up, low a down, low b up. Deck b's low end under your song's top.",
-            "eli5": "Push deck b up. Turn your song's low knob down. Now deck b plays the deep sounds and your song plays the rest."
+            "mentor": "Stems split a track into its parts. Deck b's parts are drums, hats and bass, each with its own button. Take deck b's drums out and bring its fader up.\nNow you've got deck b's bass line playing under your song's drums: two tracks combined part by part, which no eq can do as cleanly. Try taking the hats out too, or the bass instead.",
+            "straight": "Deck b's drums, hats and bass are separate. Take its drums out and bring it up: its bass under your drums.",
+            "eli5": "Each part of the song has its own button. Turn the drums off on one song."
           }
         },
         {

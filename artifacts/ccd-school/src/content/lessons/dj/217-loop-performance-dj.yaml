@@ -47,20 +47,17 @@ steps:
           for you to rearrange.
 
   - kind: mix
-    goal: phrase
+    goal: cue
+    bank: morals
     say:
       mentor: >-
-        The move behind every hot cue is timing. The crossfader sits in the middle and deck b is waiting with
-        its fader down.
-
-        Watch the phrase counter. As it comes round to bar 1, push deck b's fader up, like hitting a hot cue
-        right on the one. Miss it and try again on the next phrase.
+        Hot cues are bookmarks in a track. Deck b has four: the intro, where the hats come in, the break and the drop. Tap one and deck b jumps there instantly, in time.
+        
+        Play with them: jump to the break, then to the drop right on the one. That's how djs remix live, jumping between parts of a track. Tap at least two.
       straight: >-
-        Deck b waits with its fader down. On bar 1 of the phrase counter, push deck b up.
+        Four hot cues on deck b: intro, hats in, break, drop. Tap them to jump, in time. Try two.
       eli5: >-
-        Deck b's slider starts at the bottom. When the counter says bar 1, push
-        deck b up.
-    hint: Count down the last bar. Four, three, two, one, go.
+        Each button jumps to a different part of the song.
 
   - kind: ask
     q: What is a hot cue?
