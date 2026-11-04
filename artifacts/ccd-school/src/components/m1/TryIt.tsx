@@ -180,12 +180,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           ? "your line"
           : "ready";
   const goalNote = coach?.goal.note ? GOAL_NOTE[coach.goal.note] : undefined;
-  const goalHits = coach ? events.filter(e => goalNote === undefined || e.note === goalNote).length : 0;
+  const goalHits = coach ? new Set(events.filter(e => goalNote === undefined || e.note === goalNote).map(e => Math.round(e.start))).size : 0;
   const goalMet = !coach || goalHits >= coach.goal.notes;
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
-  const nowLine = !coach ? "" : countIn ? "get ready. one bar of clicks, then it records"
-    : recording ? "recording. tap the kick on every click"
+  const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. wait, do not tap yet`
+    : recording ? `recording, beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1} of ${loop}. tap on each beat`
     : !events.length ? "press rec. it starts on its own, with one bar of clicks first"
     : !goalMet ? `keep going, ${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} so far. press rec to add more`
     : !playing ? "nice. now press play to hear your loop"

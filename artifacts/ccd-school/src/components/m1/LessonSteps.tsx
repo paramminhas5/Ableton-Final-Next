@@ -189,6 +189,30 @@ export function makeEarRound(n: number, level: "gentle" | "standard" | "hard", r
   return { low: 48 + Math.floor(rnd() * 20), gap, wave, firstHigher: rnd() < 0.5 };
 }
 
+/** Kick drill: two synthesized kicks that differ in length or in pitch. Pure so it can be tested. */
+export type KickRound = { ask: "longer" | "lower"; firstIsAnswer: boolean; base: number; ratio: number; semis: number };
+export function makeKickRound(level: "gentle" | "standard" | "hard", rnd: () => number = Math.random): KickRound {
+  return {
+    ask: rnd() < 0.5 ? "longer" : "lower",
+    firstIsAnswer: rnd() < 0.5,
+    base: 48 + Math.floor(rnd() * 12),
+    ratio: { gentle: 3, standard: 2, hard: 1.5 }[level],
+    semis: { gentle: 7, standard: 4, hard: 2 }[level],
+  };
+}
+function kickHit(ctx: AudioContext, at: number, f0: number, decay: number) {
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = "sine";
+  o.frequency.setValueAtTime(f0 * 3.5, at);
+  o.frequency.exponentialRampToValueAtTime(f0, at + 0.05);
+  g.gain.setValueAtTime(0.9, at);
+  g.gain.exponentialRampToValueAtTime(0.0001, at + decay);
+  o.connect(g).connect(ctx.destination);
+  o.start(at);
+  o.stop(at + decay + 0.05);
+}
+
 const hz = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
 function tone(ctx: AudioContext, at: number, midi: number, wave: OscillatorType) {
   const o = ctx.createOscillator();
@@ -205,7 +229,9 @@ function tone(ctx: AudioContext, at: number, midi: number, wave: OscillatorType)
 
 export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; meta: string; level: "gentle" | "standard" | "hard"; onNext: () => void }) {
   const [n, setN] = useState(0);
+  const isKick = screen.drill === "kick";
   const [round, setRound] = useState<Round>(() => makeEarRound(0, level));
+  const [kr, setKr] = useState<KickRound>(() => makeKickRound(level));
   const [picked, setPicked] = useState<number | null>(null);
   const [right, setRight] = useState(0);
   const total = Math.max(1, screen.rounds);
@@ -215,12 +241,23 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
     if (!ctx) return;
     void ctx.resume();
     const t = ctx.currentTime + 0.05;
+    if (isKick) {
+      const f = (m: number) => hz(m);
+      const win = kr.firstIsAnswer;
+      const mk = (answer: boolean) => kr.ask === "longer"
+        ? { f0: f(kr.base), d: answer ? 0.7 : 0.7 / kr.ratio }
+        : { f0: f(answer ? kr.base - kr.semis : kr.base), d: 0.4 };
+      const a = mk(win), b = mk(!win);
+      kickHit(ctx, t, a.f0, a.d);
+      kickHit(ctx, t + 1.1, b.f0, b.d);
+      return;
+    }
     const hi = round.low + round.gap;
     tone(ctx, t, round.firstHigher ? hi : round.low, round.wave);
     tone(ctx, t + 0.9, round.firstHigher ? round.low : hi, round.wave);
   };
   useEffect(() => { if (!done) { const id = window.setTimeout(play, 350); return () => window.clearTimeout(id); } }, [n]); // eslint-disable-line react-hooks/exhaustive-deps
-  const answer = round.firstHigher ? 0 : 1;
+  const answer = isKick ? (kr.firstIsAnswer ? 0 : 1) : round.firstHigher ? 0 : 1;
   const pick = (i: number) => {
     if (picked !== null) return;
     setPicked(i);
@@ -229,6 +266,7 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
   const advance = () => {
     if (n + 1 >= total) { setN(total); return; }
     setRound(r => makeEarRound(n + 1, level, Math.random, r));
+    setKr(makeKickRound(level));
     setPicked(null);
     setN(n + 1);
   };
@@ -249,11 +287,11 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
     <div className="ls-col">
       <Screen>
         <Meta left={meta} right={`${n + 1} of ${total}`} />
-        <div className="ls-title">which was higher?</div>
+        <div className="ls-title">{isKick ? `which kick was ${kr.ask}?` : "which was higher?"}</div>
         <p className="ls-sub">{screen.body ?? "two notes. a new sound every round. answer when you know, replay as often as you like."}</p>
       </Screen>
       <Silk label="answer" right={picked === null ? "tap one" : picked === answer ? "right" : "the outlined one was right"} />
-      <div className="ls-pads" role="radiogroup" aria-label="Which note was higher">
+      <div className="ls-pads" role="radiogroup" aria-label={isKick ? `Which kick was ${kr.ask}` : "Which note was higher"}>
         {["the first", "the second"].map((label, i) => {
           const cls = picked === null ? "" : i === answer ? (picked === i ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
           return (
@@ -263,8 +301,9 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
           );
         })}
       </div>
+      {isKick && <button type="button" className="ls-chip" onClick={onNext} style={{ justifySelf: "center" }}>can't hear this? skip</button>}
       <Bottom
-        left={{ label: "again", icon: "hear", onClick: play, aria: "Play the two notes again" }}
+        left={{ label: "again", icon: "hear", onClick: play, aria: "Play the two sounds again" }}
         go={picked === null ? { label: "pick one", disabled: true } : { label: n + 1 >= total ? "finish" : "next", onClick: advance }} />
     </div>
   );

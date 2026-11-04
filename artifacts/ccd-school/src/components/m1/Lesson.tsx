@@ -654,7 +654,7 @@ function DoneStep({ mission, screen, xp, take, accent, nextHref, backHref, isLog
                 : <Key label={k.playing ? "stop" : "hear"} onClick={k.hear} ariaPressed={k.playing} ariaLabel={k.playing ? "Stop" : "Hear it in your track"}><Icon name={k.playing ? "stop" : "hear"} /></Key>}
               {k.added
                 ? <GoPill onClick={() => { onLeave(); router.push(nextHref); }} style={{ gridColumn: "span 3" }}>{nextHref === backHref ? "back to the world" : "next lesson"}<Icon name="play" small /></GoPill>
-                : <GoPill onClick={k.add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my track</GoPill>}
+                : <GoPill onClick={k.add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my song</GoPill>}
             </div>
           </div>
         </>

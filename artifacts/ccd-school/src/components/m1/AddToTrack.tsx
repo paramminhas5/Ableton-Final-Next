@@ -116,7 +116,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
           {isIn ? (
             <GoPill href="/studio" style={{ gridColumn: "span 3" }} ariaLabel="Open studio"><Icon name="studio" />open studio</GoPill>
           ) : (
-            <GoPill onClick={add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my track</GoPill>
+            <GoPill onClick={add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my song</GoPill>
           )}
         </div>
       )}
