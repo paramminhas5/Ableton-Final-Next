@@ -14,11 +14,34 @@ use crate::dsp::filter::{Ladder, OnePoleHp};
 use crate::dsp::osc::{BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
-use crate::dsp::{note_hz, tau_coef, Rng};
+use crate::dsp::{flush_denormal, note_hz, tau_coef, Rng};
 use crate::params::*;
 
 pub const CHORD_VOICES: usize = 6;
 const STACK: usize = 16;
+
+/// The JP-8000 supersaw, measured by Adam Szabo ("How to Emulate the Super Saw", 2010): six side
+/// saws at these offsets (as fractions of the detune amount) around a centre saw.
+const SIDE_OFFSETS: [f32; 6] = [-0.110_023_13, -0.062_884_39, -0.019_523_56, 0.019_912_21, 0.062_165_38, 0.107_452_42];
+
+/// Szabo's fit of the JP-8000 detune knob: gentle over most of its travel (the sweet spot), then
+/// steep. Our knob covers 0 to 0.92 of it, so full detune is a wide 70 cents, not a whole tone.
+fn jp_detune(x: f32) -> f32 {
+    let x = (x * 0.92) as f64;
+    const C: [f64; 12] = [
+        10_028.731_289_163_4, -50_818.865_204_592_4, 111_363.480_872_936_8, -138_150.676_108_054_8,
+        106_649.667_915_829_2, -53_046.964_275_187_5, 17_019.951_858_008, -3_425.083_659_131_8,
+        404.270_393_838_8, -24.187_882_439_1, 0.671_741_763_4, 0.003_011_559_6,
+    ];
+    C.iter().fold(0.0, |acc, c| acc * x + c) as f32
+}
+/// Szabo's mix laws: the centre saw fades a little and the side saws come up as detune rises.
+fn jp_centre(x: f32) -> f32 {
+    -0.553_66 * x + 0.997_85
+}
+fn jp_side(x: f32) -> f32 {
+    -0.737_64 * x * x + 1.284_1 * x + 0.044_372
+}
 
 #[inline]
 fn smoothstep(a: f32, b: f32, x: f32) -> f32 {
@@ -33,7 +56,7 @@ struct Ctl {
     res: f32,
     env_amt: f32,
     voicing: f32,
-    /// Detune ratio between the saws.
+    /// Detune knob, 0..1 (the supersaw curve is applied in the voice).
     spread: f32,
     wave: f32,
     /// Lfo now: octaves on the cutoff, semitones on the pitch, gain on the volume.
@@ -89,6 +112,10 @@ struct Voice {
     fenv: Adsr,
     car: f32,
     modp: f32,
+    /// The six side saws of the supersaw.
+    side: [BlepOsc; 6],
+    /// High-pass at the fundamental on the saw stack (the JP-8000 does this): no rumble under it.
+    hp_s: f32,
 }
 
 impl Voice {
@@ -110,6 +137,8 @@ impl Voice {
             fenv: Adsr::new(os),
             car: 0.0,
             modp: 0.0,
+            side: [BlepOsc::new(); 6],
+            hp_s: 0.0,
         }
     }
 
@@ -136,6 +165,11 @@ impl Voice {
                 // Spread so the saws don't add up into a spike, then turned by where the oscillators are.
                 o.reset(([0.0, 0.31, 0.67, 0.12, 0.49][i] + phase).fract());
             }
+            // The JP-8000 starts its side saws at random phases on every note.
+            for (i, o) in self.side.iter_mut().enumerate() {
+                o.reset((phase * (i as f32 + 2.0) * 7.31 + i as f32 * 0.137).fract());
+            }
+            self.hp_s = 0.0;
             self.ladder.reset();
             self.car = 0.0;
             self.modp = 0.0;
@@ -158,13 +192,29 @@ impl Voice {
         let w = c.wave;
         let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
         let main = mix(self.osc[0].next(dt));
-        let up = mix(self.osc[1].next(dt * c.spread));
-        let down = mix(self.osc[2].next(dt / c.spread));
+        // The supersaw: centre saw plus six side saws on the JP-8000 curve and mix laws.
+        let x = c.spread;
+        let mut stack = main;
+        if x > 0.002 {
+            let amt = jp_detune(x);
+            let mut sides = 0.0;
+            for (o, off) in self.side.iter_mut().zip(SIDE_OFFSETS) {
+                sides += mix(o.next(dt * (1.0 + amt * off)));
+            }
+            stack = main * jp_centre(x) + sides * jp_side(x) * 0.42;
+            // One-pole high-pass at the fundamental, as on the JP-8000, blended in as detune rises so
+            // the first touch of the knob doesn't thin the sound all at once; level made up to match.
+            let a = (-core::f32::consts::TAU * f / os).exp();
+            let hp = stack - self.hp_s;
+            self.hp_s = flush_denormal(self.hp_s + (1.0 - a) * hp);
+            let k = smoothstep(0.0, 0.35, x);
+            stack = (stack + (hp - stack) * k) * (1.0 + 0.4 * k);
+        }
         let v = c.voicing;
         let w_sub = smoothstep(0.0, 0.5, v) * 0.8;
         let w_oct = smoothstep(0.35, 0.85, v) * 0.5;
         let w_fifth = smoothstep(0.7, 1.0, v) * 0.4;
-        let mut s = main * 0.45 + (up + down) * 0.3 + self.sub.next(dt * 0.5) * w_sub * 0.6;
+        let mut s = stack * 0.75 + self.sub.next(dt * 0.5) * w_sub * 0.6;
         if w_oct > 0.001 {
             s += self.osc[3].next(dt * 2.0).0 * w_oct * 0.5;
         }
@@ -243,8 +293,7 @@ impl Controls {
 
     #[inline]
     fn next(&mut self) -> Ctl {
-        // spread is 0..1 -> up to 36 cents between the saws.
-        let cents = self.spread.next() * 36.0;
+        let spread = self.spread.next();
         let amt = self.lfo_amt.next();
         self.lfo_phase += self.lfo_rate / self.os;
         self.lfo_phase -= self.lfo_phase.floor();
@@ -264,7 +313,7 @@ impl Controls {
             res: self.res.next(),
             env_amt: self.env_amt.next(),
             voicing: self.voicing.next(),
-            spread: (cents / 1200.0).exp2(),
+            spread,
             wave: self.wave.next(),
         }
     }

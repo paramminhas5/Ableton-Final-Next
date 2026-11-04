@@ -2,7 +2,8 @@
 //! can be a/b'd against another. Run it before and after an engine change, into two folders, and the
 //! app's /engine/ab page plays them side by side.
 //! Usage: cargo run --release --bin ab_clips -- <out dir>
-//! Each clip is 48 kHz, stereo, 16 bit, peak-normalised to -1 dBFS so level never decides the a/b.
+//! Each clip is 48 kHz, stereo, 16 bit, normalised to the same loudness (-30 dB RMS) so level never
+//! decides the a/b: a louder clip always sounds "better", which would make the comparison dishonest.
 
 use ccd_engine::engine::{cmd, Cmd, Engine};
 use ccd_engine::params::*;
@@ -169,10 +170,12 @@ fn main() {
     let mut index = String::from("[\n");
     for (name, what, (l, r)) in clips() {
         let peak = l.iter().chain(r.iter()).fold(0.0f32, |a, v| a.max(v.abs())).max(1e-6);
-        let g = 0.891 / peak; // -1 dBFS
+        let rms = (l.iter().chain(r.iter()).map(|v| v * v).sum::<f32>() / (2 * l.len()) as f32).sqrt().max(1e-6);
+        let g = 0.031_6 / rms; // -30 dB RMS: low enough that the sparsest clip (two snare hits) never clips
+        assert!(peak * g < 1.0, "{name} would clip at -30 dB RMS (peak {:.2})", peak * g);
         let data: Vec<i16> = l.iter().zip(r.iter()).flat_map(|(a, b)| [(a * g * 32767.0) as i16, (b * g * 32767.0) as i16]).collect();
         write_wav(&format!("{dir}/{name}.wav"), &data);
-        index.push_str(&format!("  {{\"id\": \"{name}\", \"what\": \"{what}\", \"peak_before_norm\": {peak:.4}}},\n"));
+        index.push_str(&format!("  {{\"id\": \"{name}\", \"what\": \"{what}\", \"rms_db\": {:.2}, \"peak\": {peak:.4}}},\n", 20.0 * rms.log10()));
         println!("{name}: {:.2}s, peak {peak:.3}", l.len() as f32 / SR);
     }
     index.truncate(index.len() - 2);

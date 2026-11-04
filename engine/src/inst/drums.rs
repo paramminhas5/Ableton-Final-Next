@@ -47,7 +47,13 @@ pub const MODELS: [Model; DRUM_PADS] = [
 ];
 
 /// TR-808 cymbal oscillator frequencies.
+/// The TR-808's six square-wave oscillators for hats and cymbals, at their measured nominal
+/// frequencies (Werner, Abel and Smith, ICMC/SMC 2014). Tightly packed and inharmonic: that cluster,
+/// filtered, is the metal. The 808 has no noise generator in its hats.
 const METAL: [f32; 6] = [205.3, 304.4, 369.6, 522.7, 540.0, 800.0];
+/// The two band-passes the 808 puts the cluster through: the high one for hats, both for cymbals.
+const METAL_BP_HI: f32 = 7_100.0;
+const METAL_BP_LO: f32 = 3_440.0;
 
 pub struct Pad {
     pub model: Model,
@@ -61,6 +67,8 @@ pub struct Pad {
     rng: Rng,
     bp: Svf,
     bp2: Svf,
+    /// Resonant high-pass after the 808's "swing" stage (peak near 10 kHz on the hats).
+    hpr: Svf,
     hp: OnePoleHp,
     drive: Drive,
     vel: f32,
@@ -89,6 +97,7 @@ impl Pad {
             rng: Rng::new(seed),
             bp: Svf::default(),
             bp2: Svf::default(),
+            hpr: Svf::default(),
             hp: OnePoleHp::default(),
             drive: Drive::new(),
             vel: 0.0,
@@ -111,6 +120,7 @@ impl Pad {
     fn setup_filters(&mut self) {
         let r = self.ratio();
         let sr = self.sr;
+        self.bp2.set(7_500.0, 0.7, sr);
         match self.model {
             Model::Snare => {
                 self.bp.set(3_200.0 * r, 0.8, sr);
@@ -125,20 +135,22 @@ impl Pad {
                 self.hp.set(400.0, sr);
             }
             Model::ClosedHat | Model::OpenHat => {
-                self.bp.set(10_000.0 * r.sqrt(), 1.2, sr);
-                self.hp.set(7_000.0, sr);
+                self.bp.set(METAL_BP_HI * r, 1.8, sr);
+                self.hpr.set(9_000.0 * r.sqrt(), 1.3, sr);
             }
             Model::Shaker => {
                 self.bp.set(9_000.0 * r, 0.9, sr);
                 self.hp.set(5_500.0, sr);
             }
             Model::Ride => {
-                self.bp.set(4_800.0 * r, 1.4, sr);
-                self.hp.set(3_000.0, sr);
+                self.bp.set(METAL_BP_HI * r, 1.6, sr);
+                self.bp2.set(METAL_BP_LO * r, 1.4, sr);
+                self.hpr.set(3_200.0, 0.9, sr);
             }
             Model::Crash => {
-                self.bp.set(6_500.0 * r, 0.7, sr);
-                self.hp.set(3_500.0, sr);
+                self.bp.set(METAL_BP_HI * r, 1.2, sr);
+                self.bp2.set(METAL_BP_LO * r, 1.0, sr);
+                self.hpr.set(4_200.0, 0.8, sr);
             }
             Model::Wood => {
                 self.bp.set(1_800.0 * r, 6.0, sr);
@@ -153,7 +165,6 @@ impl Pad {
             }
             _ => self.hp.set(30.0, sr),
         }
-        self.bp2.set(7_500.0, 0.7, sr);
     }
 
     /// Base length in seconds for decay = 0.5; the knob scales it 0.25x..4x.
@@ -279,19 +290,23 @@ impl Pad {
                 self.hp.tick(body + n * 2.0) * a
             }
             Model::ClosedHat | Model::OpenHat | Model::Ride | Model::Crash => {
+                // The 808 cluster: six squares, summed.
                 let mut m = 0.0;
                 for (o, f) in self.metal.iter_mut().zip(METAL) {
-                    m += o.next(f * r * 1.65 / sr).1;
+                    m += o.next(f * r / sr).1;
                 }
                 m *= 1.0 / 6.0;
-                let noise = self.rng.bipolar();
-                let mix = match self.model {
-                    Model::Crash => m * 0.6 + noise * 0.5,
-                    Model::Ride => m * 0.85 + noise * 0.12,
-                    _ => m * 0.8 + noise * 0.25,
+                let hi = self.bp.tick(m).bp;
+                let src = match self.model {
+                    // Cymbals take both bands; a breath of noise gives the crash its wash.
+                    Model::Crash => hi + 0.9 * self.bp2.tick(m).bp + self.rng.bipolar() * 0.06,
+                    Model::Ride => 0.7 * hi + self.bp2.tick(m).bp,
+                    _ => hi,
                 };
-                let b = self.bp.tick(mix).bp;
-                self.hp.tick(b) * 2.0 * a * (0.55 + 0.45 * v)
+                // The "swing" VCA: the envelope opens it, and when hit hard it clips softly, on purpose.
+                let swing = soft_clip(src * a * 4.0 * (0.55 + 0.45 * v));
+                // Trimmed so the new hats sit at the same loudness as the old ones in a mix.
+                self.hpr.tick(swing).hp * 0.8
             }
             Model::Shaker => {
                 let rise = (tsec / 0.008).min(1.0);
