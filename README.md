@@ -2,7 +2,7 @@
 
 Learn music by making it. CCD School is a music instrument and a school in one app: you learn an idea, play it on a real instrument with real sound, it becomes part of your own track, and that track opens in Ableton Live. One Rust sound engine and one React app run on the web, iPhone and Android. Part of Cats Can Dance (catscandance.com), Bengaluru.
 
-Last updated 3 Nov 2026 (late). Branch `school/field`. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
+Last updated 5 Nov 2026 (00:10). Branch `school/field`, preview at ccd-school-app-git-school-field-washedupdegen-8712s-projects.vercel.app. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
 
 ---
 
@@ -26,7 +26,8 @@ Last updated 3 Nov 2026 (late). Branch `school/field`. This file describes the w
 
 | Area | State |
 |---|---|
-| Lessons | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). New Model 1 lesson player (3 Nov, late): every step type redrawn, concept pictures drawn for the glass, a try-it step that records your line on the engine over your own track, and add to my track writes that line into track v2. Flow (five hearts, practise three answers to earn one back) and free (no hearts) use the same player. |
+| New lessons (the plan) | Five lessons in the new file-lesson player (`src/content/lessons/*.yaml`, `FileLesson.tsx`): basics 1 and 2, producer 1 and 2, dj 1. One part per lesson into one song; sound on arrival; three ways of explaining each step; build, add to song, then an optional stripe challenge; xp, stripes and trophies. Next: basics 3 to 5, producer 3 to 6, dj 2 to 4, better sounds, rewards. Plan and status: `ccd/school-plan-5nov.md`, `ccd/school-next-lessons.md`, process in `ccd/school-process.md`, fixes in `ccd/school-fixes.md`. |
+| Lessons (old) | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). New Model 1 lesson player (3 Nov, late): every step type redrawn, concept pictures drawn for the glass, a try-it step that records your line on the engine over your own track, and add to my track writes that line into track v2. Flow (five hearts, practise three answers to earn one back) and free (no hearts) use the same player. |
 | Practice | Ear Gym (EQ, compression, groove) with adaptive difficulty and real recorded sounds, now in Model 1: skill levels on the glass, drill pads, a focused drill screen with a/b keys. Spaced review, daily practice, placement test. The drills still render on Web Audio until they move onto the engine (item 4). |
 | Ableton bridge | Reads your own Live Set (`.als`): Build a Set (14 checked stages), Do it in Live (27 lesson tasks), Check my Set, Device Atlas (67 devices), Plugin Guide, Setup guide. |
 | Sound engine | Built. Rust, sample-accurate, under 0.5 ms fixed latency, drum rack, bass, polyphonic chords, lead, fx and a 16-slot sampler, channel strips, glue compressor and true-peak limiter, analysis and clash detection, reverb and echo. Runs as WebAssembly in the browser and natively on phones. Measured, not yet listened to. |
