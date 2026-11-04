@@ -17,7 +17,8 @@ export type Step = LessonScreen | { kind: "tryit" };
 /** A lesson's steps in order: its screens, with try it just before what you learned. */
 export function lessonSteps(screens: readonly LessonScreen[]): Step[] {
   const out: Step[] = [];
-  let tried = false;
+  // A lesson file's own play step is the try-it, so none is added again.
+  let tried = screens.some(s => s.kind === "play");
   for (const s of screens) {
     if (s.kind === "summary" && !tried) {
       out.push({ kind: "tryit" });

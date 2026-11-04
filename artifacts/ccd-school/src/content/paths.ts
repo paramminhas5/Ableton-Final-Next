@@ -245,7 +245,7 @@ export const PATHS: LearningPath[] = [
     description: "What Ableton Live is and how it compares to other DAWs, the browser and file management, preferences and audio setup, and Session View — the clip launcher at the heart of Live's unique workflow.",
     color: "bg-sun",
     source: "Ableton Live 12 Reference Manual — Chapter 2: First Steps",
-    missionSlugs: ["what-is-live", "interface-tour", "browser", "preferences", "files-projects", "session-view"],
+    missionSlugs: ["your-kick", "what-is-live", "interface-tour", "browser", "preferences", "files-projects", "session-view"],
   },
   {
     slug: "clips-and-workflow",

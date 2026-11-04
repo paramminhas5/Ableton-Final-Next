@@ -26,10 +26,13 @@ import { lessonSteps, readTake, saveTake, takeType, type Take } from "@/lib/less
 import { minutesFor, missionImage, missionLearns, missionUses, worldDone, worldOf, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { RANKS, rankFor } from "@/lib/ranks";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
+import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { GlassDiagram, GlassVisual, VISUAL_TAG, Chain } from "./GlassVisual";
 import { TryIt } from "./TryIt";
 import { AddToTrack } from "./AddToTrack";
+import { EarStep, HearStep, SayStep, ShapeStep } from "./LessonSteps";
+import { usePrefs } from "@/lib/prefs";
 import { SevenSeg } from "./SevenSeg";
 import "./lesson.css";
 
@@ -66,34 +69,6 @@ function Top({ back, total, now, accent, hearts }: { back: string; total: number
     </div>
   );
 }
-
-function Bottom({ left, go }: { left?: { label: string; icon: string; onClick?: () => void; href?: string; disabled?: boolean; aria?: string }; go: { label: ReactNode; onClick?: () => void; href?: string; disabled?: boolean; aria?: string } }) {
-  return (
-    <div className="ls-bottom">
-      <div className="m1-g">
-        {left ? (
-          <Key label={left.label} onClick={left.onClick} href={left.href} disabled={left.disabled} ariaLabel={left.aria ?? left.label}><Icon name={left.icon} /></Key>
-        ) : null}
-        <GoPill onClick={go.onClick} href={go.href} disabled={go.disabled} style={{ gridColumn: left ? "span 3" : "1 / -1" }} ariaLabel={go.aria}>{go.label}</GoPill>
-      </div>
-    </div>
-  );
-}
-
-function Meta({ left, right, color }: { left: ReactNode; right?: ReactNode; color?: string }) {
-  return <div className="ls-meta"><span style={color ? { color } : undefined}>{left}</span>{right ? <span>{right}</span> : null}</div>;
-}
-
-const useEnter = (fn: (() => void) | null) => {
-  useEffect(() => {
-    if (!fn) return;
-    const h = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); fn(); }
-    };
-    window.addEventListener("keydown", h);
-    return () => window.removeEventListener("keydown", h);
-  }, [fn]);
-};
 
 // ── hook ────────────────────────────────────────────────────────────────────
 const TOOL_ICON = (tool: string) => /pad|answer|cue|grid|clip/.test(tool) ? "pads" : /key|roll|piano/.test(tool) ? "keys" : /fader|mixer|level|meter/.test(tool) ? "studio" : "knob";
@@ -742,6 +717,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   const { progress, completeMission, reviewMission, loseHeart, refillHeart } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
   const { user } = useAuth();
+  const [prefs] = usePrefs();
   // Hearts belong to flow mode. A review never costs one.
   const flow = learnMode === "flow" && !isReview;
   const alreadyDone = !!progress.completedMissions[mission.slug];
@@ -842,7 +818,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   };
 
   // Labels like "concept · 2 of 7" count the steps of that kind.
-  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match" };
+  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", ear: "ear round" };
   const meta = (() => {
     if (!cur) return "";
     if (ASK.has(cur.kind)) {
@@ -890,9 +866,14 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     case "type-answer": body = <TypeStep screen={cur} {...ask} />; break;
     case "sequence": body = <OrderStep screen={cur} seed={seed + idx} {...ask} />; break;
     case "match": body = <MatchStep screen={cur} seed={seed + idx} {...ask} />; break;
+    case "say": body = <SayStep screen={cur} meta={meta} onNext={next} />; break;
+    case "hear": body = <HearStep screen={cur} meta={meta} onNext={next} />; break;
+    case "shape": body = <ShapeStep mission={mission} screen={cur} meta={meta} accent={accent} onNext={next} />; break;
+    case "ear": body = <EarStep screen={cur} meta={meta} level={prefs.level} onNext={next} />; break;
+    case "play":
     case "tryit":
-      body = <TryIt type={ttype} initial={take?.type === ttype ? take.events : undefined}
-        title={`play your ${ttype === "drums" ? "beat" : ttype === "hats" ? "hats" : ttype === "chords" ? "chords" : ttype === "bass" ? "bass line" : "lead line"}`}
+      body = <TryIt type={ttype} coach={cur.kind === "play" ? { body: cur.body, hint: cur.hint, goal: cur.goal } : undefined} initial={take?.type === ttype ? take.events : undefined}
+        title={cur.kind === "play" ? "play it in" : `play your ${ttype === "drums" ? "beat" : ttype === "hats" ? "hats" : ttype === "chords" ? "chords" : ttype === "bass" ? "bass line" : "lead line"}`}
         onUse={t => { setTake(t); saveTake(mission.slug, t); next(); }}
         onSkip={() => { setTake(null); saveTake(mission.slug, null); next(); }} />;
       break;

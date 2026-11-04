@@ -153,7 +153,15 @@ export type LessonScreen =
       answer: number;
       explain: string;       // shown after answer, ≤ 2 sentences
       hint?: string;
+      /** a reason for a specific wrong pick, keyed by option index (lesson files) */
+      whyWrong?: Record<number, string>;
     }
+  // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
+  | { kind: "say"; title: string; body: string; deeper?: { title: string; body: string }[] }
+  | { kind: "hear"; clip: string; body: string }
+  | { kind: "play"; layer: string; goal: { notes: number; note?: string }; body: string; hint?: string }
+  | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
+  | { kind: "ear"; drill: string; rounds: number; body?: string }
   | {
       /**
        * audio-id — hear a synthesised example, identify what it is.
@@ -227,6 +235,15 @@ export type Mission = {
   explainer: ExplainerBlock[];
   sim: { type: SimType; preset?: Record<string, unknown> };
   quiz: QuizQ[];
+  /** set for lessons that come from a lesson file */
+  fromFile?: {
+    /** the layer this lesson puts in the learner's song, e.g. { layer: "drums", kind: "kick" } */
+    adds: { layer: string; kind: string; part: string };
+    /** the "what you will walk away with" paragraph in the learner's voice */
+    learn: string;
+    why: string;
+    minutes: number;
+  };
 };
 
 // ─── DEEP LESSON OVERLAY (legacy, kept for Classic tab) ───────────────────────

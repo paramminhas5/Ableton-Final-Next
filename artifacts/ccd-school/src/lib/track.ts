@@ -96,10 +96,10 @@ const ORDER: LayerKind[] = ["kick", "hats", "bass", "chords", "clap", "lead", "p
 export type Offer = { kind: LayerKind; isNew: boolean; layerId?: string; what: string };
 
 /** What finishing this lesson would add. Pure: does not change the track. */
-export function offerFor(track: Track, mission: { slug: string; title: string; tagline?: string; number?: number }): Offer {
+export function offerFor(track: Track, mission: { slug: string; title: string; tagline?: string; number?: number; fromFile?: { adds: { kind: string } } }): Offer {
   const text = `${mission.slug} ${mission.title} ${mission.tagline ?? ""}`;
-  let kind: LayerKind | null = null;
-  for (const [re, k] of RULES) if (re.test(text)) { kind = k; break; }
+  let kind: LayerKind | null = (mission.fromFile?.adds.kind as LayerKind | undefined) ?? null;
+  if (!kind) for (const [re, k] of RULES) if (re.test(text)) { kind = k; break; }
   if (!kind) {
     const missing = ORDER.find(k => !track.layers.some(l => l.kind === k));
     kind = missing ?? ORDER[(mission.number ?? 0) % ORDER.length];

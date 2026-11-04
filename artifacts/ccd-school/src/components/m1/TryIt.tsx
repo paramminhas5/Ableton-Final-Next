@@ -17,9 +17,14 @@ import { useEngineTrack } from "./useEngineTrack";
 
 const SNAPS: Snap[] = ["1/16", "1/32", "off"];
 
-export function TryIt({ type, title, initial, onUse, onSkip }: {
+const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string } };
+
+export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
   title: string;
+  /** From a lesson file: what to do, what counts as done, and a nudge. */
+  coach?: Coach;
   initial?: NoteEvent[];
   onUse: (take: Take) => void;
   onSkip: () => void;
@@ -169,6 +174,9 @@ export function TryIt({ type, title, initial, onUse, onSkip }: {
         : events.length
           ? "your line"
           : "ready";
+  const goalNote = coach?.goal.note ? GOAL_NOTE[coach.goal.note] : undefined;
+  const goalHits = coach ? events.filter(e => goalNote === undefined || e.note === goalNote).length : 0;
+  const goalMet = !coach || goalHits >= coach.goal.notes;
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
   return (
@@ -201,6 +209,13 @@ export function TryIt({ type, title, initial, onUse, onSkip }: {
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>
+      {coach && (
+        <>
+          <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
+          <p className="ls-read">{coach.body}</p>
+          {coach.hint && !goalMet ? <div className="ls-hint">{coach.hint}</div> : null}
+        </>
+      )}
 
       <Silk label="transport" right="rec records · play loops it" />
       <div className="m1-g">
@@ -220,9 +235,10 @@ export function TryIt({ type, title, initial, onUse, onSkip }: {
       <div className={`ls-tray ${drumLike || type === "chords" ? "is-pads" : "is-keys"}`} style={drumLike && pads.length !== 8 ? { gridTemplateColumns: `repeat(${pads.length}, minmax(0, 1fr))` } : undefined}>
         {pads.map((p, i) => {
           const on = held.has(i) || p.notes.some(n => lit[n]);
+          const target = !!coach && !goalMet && goalNote !== undefined && p.notes[0] === goalNote;
           const isRoot = !drumLike && (i === 0 || i === 7);
           return (
-            <button key={i} type="button" className={`ls-key ${on ? "is-on" : ""} ${isRoot ? "is-root" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
+            <button key={i} type="button" className={`ls-key ${on ? "is-on" : ""} ${isRoot ? "is-root" : ""}`} style={{ ["--c" as string]: color, ...(target ? { outline: `2px solid ${color}`, outlineOffset: -2 } : null) } as CSSProperties}
               aria-label={`${p.label}${drumLike ? "" : ` (${p.notes.length > 1 ? "chord" : "note"})`}`}
               onPointerDown={e => down(i, e)} onPointerUp={e => up(i, e)} onPointerCancel={e => up(i, e)} onPointerLeave={e => { if (e.buttons) up(i, e); }}
               onContextMenu={e => e.preventDefault()}>
@@ -237,7 +253,7 @@ export function TryIt({ type, title, initial, onUse, onSkip }: {
           {events.length
             ? <Key label="clear" onClick={clear} ariaLabel="Clear the line"><Icon name="close" /></Key>
             : <Key label="skip" onClick={() => { engine.stop(); onSkip(); }} ariaLabel="Skip this step"><Icon name="back" className="ls-flip" /></Key>}
-          <GoPill onClick={use} disabled={!events.length} style={{ gridColumn: "span 3" }} ariaLabel="Use this line">use this line</GoPill>
+          <GoPill onClick={use} disabled={!events.length || !goalMet} style={{ gridColumn: "span 3" }} ariaLabel="Use this line">{coach ? "keep it" : "use this line"}</GoPill>
         </div>
       </div>
     </div>

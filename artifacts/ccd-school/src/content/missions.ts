@@ -1,3 +1,4 @@
+import { fileMissions } from "./lessons/adapt";
 import type { Mission } from "./types";
 import { FOUNDATIONS_MISSIONS } from "./missions-foundations";
 import { DJ_WORLD_MISSIONS } from "./missions-dj";
@@ -3944,6 +3945,7 @@ const allProducerMissions: Mission[] = [
 const allSynthMissions: Mission[] = SYNTHS_MISSIONS.map(withProducerScreens);
 
 export const MISSIONS: Mission[] = [
+  ...fileMissions(),
   ...FOUNDATIONS_MISSIONS,
   ...DJ_WORLD_MISSIONS,
   ...allSynthMissions,

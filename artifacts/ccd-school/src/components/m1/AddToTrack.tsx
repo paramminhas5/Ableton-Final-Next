@@ -34,7 +34,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
   const already = !!base?.added.includes(slug);
   const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
   const knobs = shapeKnobs(line.type);
-  const [params, setParams] = useState<Record<number, number>>({});
+  const [params, setParams] = useState<Record<number, number>>(() => { try { return JSON.parse(sessionStorage.getItem(`ccd.shape.${slug}`) ?? "{}") as Record<number, number>; } catch { return {}; } });
   const [added, setAdded] = useState(false);
   const [touched, setTouched] = useState<string | null>(null);
   const [beat, setBeat] = useState(-1);

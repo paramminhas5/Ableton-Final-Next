@@ -4,7 +4,9 @@
  * mode has hearts, free mode has none. The last screen has its own next key, so there
  * is no interstitial: you go on when you choose to.
  */
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
+import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
+import { usePrefs } from "@/lib/prefs";
 import { useSearchParams } from "next/navigation";
 import { M1Lesson } from "@/components/m1/Lesson";
 import { missionBySlug, nextMission } from "@/content/missions";
@@ -40,7 +42,13 @@ function Inner({ slug }: { slug: string }) {
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
 
-  const mission = missionBySlug(slug);
+  const [prefs] = usePrefs();
+  const base = missionBySlug(slug);
+  // A lesson from a file is resolved again whenever voice or level changes.
+  const mission = useMemo(() => {
+    const f = fileLesson(slug);
+    return f ? lessonToMission(f, { voice: prefs.voice, level: prefs.level }) : base;
+  }, [slug, prefs.voice, prefs.level, base]);
   if (!mission) return <Message title="no lesson here" line={`we couldn't find a lesson called ${slug}.`} back="/learn" go={{ label: "all lessons", href: "/learn" }} />;
 
   const ctx = getMissionContext(slug);
@@ -57,7 +65,7 @@ function Inner({ slug }: { slug: string }) {
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
   return (
     <M1Lesson
-      key={slug}
+      key={`${slug}.${prefs.voice}.${prefs.level}`}
       mission={mission}
       nextSlug={next?.slug}
       isReview={isReview}

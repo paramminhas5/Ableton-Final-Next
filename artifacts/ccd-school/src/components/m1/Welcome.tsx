@@ -15,7 +15,7 @@ import { CAT_SRC } from "./shell";
 const PICKS: { id: WorldId; name: string; line: string; first: string; led: string }[] = [
   { id: "fundamentals", name: "the basics", line: "sound, rhythm, melody, harmony", first: "what-is-sound", led: "#5EEAC1" },
   { id: "dj", name: "dj", line: "beatmatch, mix, read a room", first: "what-is-djing", led: "#7D96FF" },
-  { id: "producer", name: "make tracks", line: "ableton live, from zero to a finished track", first: "what-is-live", led: "#FF5FA4" },
+  { id: "producer", name: "make tracks", line: "ableton live, from zero to a finished track", first: "your-kick", led: "#FF5FA4" },
 ];
 
 const HOW = [
