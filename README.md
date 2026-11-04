@@ -2,7 +2,7 @@
 
 Learn music by making it. CCD School is a music instrument and a school in one app: you learn an idea, play it on a real instrument with real sound, it becomes part of your own track, and that track opens in Ableton Live. One Rust sound engine and one React app run on the web, iPhone and Android. Part of Cats Can Dance (catscandance.com), Bengaluru.
 
-Last updated 5 Nov 2026 (00:10). Branch `school/field`, preview at ccd-school-app-git-school-field-washedupdegen-8712s-projects.vercel.app. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
+Last updated 5 Nov 2026 (04:30). Branch `school/field`, preview at ccd-school-app-git-school-field-washedupdegen-8712s-projects.vercel.app. This file describes the whole product: what it does, why it is built this way, what the technology can do, what is missing, and what to improve next.
 
 ---
 
@@ -26,11 +26,11 @@ Last updated 5 Nov 2026 (00:10). Branch `school/field`, preview at ccd-school-ap
 
 | Area | State |
 |---|---|
-| New lessons (the plan) | Five lessons in the new file-lesson player (`src/content/lessons/*.yaml`, `FileLesson.tsx`): basics 1 and 2, producer 1 and 2, dj 1. One part per lesson into one song; sound on arrival; three ways of explaining each step; build, add to song, then an optional stripe challenge; xp, stripes and trophies. Next: basics 3 to 5, producer 3 to 6, dj 2 to 4, better sounds, rewards. Plan and status: `ccd/school-plan-5nov.md`, `ccd/school-next-lessons.md`, process in `ccd/school-process.md`, fixes in `ccd/school-fixes.md`. |
-| Lessons (old) | 171 lessons in three worlds. 116 rewritten in the deep format (8 to 13 screens). New Model 1 lesson player (3 Nov, late): every step type redrawn, concept pictures drawn for the glass, a try-it step that records your line on the engine over your own track, and add to my track writes that line into track v2. Flow (five hearts, practise three answers to earn one back) and free (no hearts) use the same player. |
+| Lessons | All 198 lessons are in the new player and act on your song: 57 song lessons (the spine, one song built across basics, producer and dj), 133 optional deeper lessons hung off them, 8 bonus rounds, placed from `ccd/school-curriculum.md` (nothing from the old 171 lost). Real controls behind them (5 Nov): an lfo, an fm operator and a separate filter envelope on the synths, an arpeggiator, key shift, a note grid with all twelve notes and velocity, a sampler step (hits, mic recording, your own files, slicing, warping), take lanes and comping, macros with saved variations, and dj decks with sync, hot cues, loops, stems, key shift, crossfader curves, your own file on either deck and record your mix. Every lesson walks start to done on desktop Chromium and phone WebKit, and every mixer goal passes, by script. Status and fixes: `ccd/school-fixes.md`, `ccd/school-curriculum.md`. |
+| Lessons (old) | The old 171-lesson player still exists for the sims and old routes; every lesson slug now opens in the new player. |
 | Practice | Ear Gym (EQ, compression, groove) with adaptive difficulty and real recorded sounds, now in Model 1: skill levels on the glass, drill pads, a focused drill screen with a/b keys. Spaced review, daily practice, placement test. The drills still render on Web Audio until they move onto the engine (item 4). |
 | Ableton bridge | Reads your own Live Set (`.als`): Build a Set (14 checked stages), Do it in Live (27 lesson tasks), Check my Set, Device Atlas (67 devices), Plugin Guide, Setup guide. |
-| Sound engine | Built. Rust, sample-accurate, under 0.5 ms fixed latency, drum rack, bass, polyphonic chords, lead, fx and a 16-slot sampler, channel strips, glue compressor and true-peak limiter, analysis and clash detection, reverb and echo. Runs as WebAssembly in the browser and natively on phones. Measured, not yet listened to. |
+| Sound engine | Built. Rust, sample-accurate, drum rack, bass, polyphonic chords, lead, fx and a 16-slot sampler, strips, glue and true-peak limiter, reverb and echo; WebAssembly in the browser, native on phones. Engine 2 in progress (plan with sources: `ccd/school-engine-plan.md`). Done 5 Nov, each with a measured test in `engine/tests/sound.rs`: anti-aliased drive (13 to 23 dB cleaner on heavy drive), voice cards and free-running oscillators, 808-circuit hats and cymbals, the JP-8000 supersaw. Hear it: `/sound`, loudness-matched before and after with a blind mode. Not yet ear-tested by Param. |
 | Studio (the instrument) | Play mode built for all six layer types plus a sampler layer (step 3): steps at 1/8, 1/16 or 1/32 in one to four bar loops, keys, pads and each type's own surface (glide, circle, chord pads, xy, rolls, riser, sample load), sound presets, several saved songs, recording with count-in, overdub and undo. Mix mode (step 2) is built: stage, clash and fix, compare, faders. First visits land on a loop already playing. |
 | Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
 | Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
@@ -199,7 +199,7 @@ flowchart LR
 
 **Sound and feel**
 - Nobody has listened critically yet. Every sound check so far is a measurement. Blind A/B against Live's instruments has not been done, so "as good as the best" is a target, not a result.
-- The chord synth is mono (no stereo width yet) and there is no multisampled kit or wavetable oscillator. The sampler voice exists, but there are no CCD kits to load into it yet.
+- The chord synth is mono (no stereo width yet) and there is no multisampled kit or wavetable oscillator yet (engine 2, item 12). The sampler plays your own files, mic recordings and the recorded kit; there are no CCD kits beyond that yet.
 - No velocity from how hard you hit, no pressure, no MPE, no MIDI controller input yet.
 
 **Studio**

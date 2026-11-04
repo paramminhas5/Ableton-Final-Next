@@ -323,17 +323,12 @@ Everything above is built: 57 song lessons, 133 deeper lessons, 8 bonus rounds, 
 
 ## Stand-ins (deeper lessons that do the nearest thing, and say so)
 
-The app has no control yet for these, so the lesson does the closest thing on your song and tells the learner it is an approximation. Each would get the real thing if we build the control.
+Most stand-ins were replaced with real controls on 5 Nov, and their lessons now use them: the lfo (synth lfo, modulation routing, max for live, automation, modulation lanes), fm (operator, fm basics), separate filter and amp envelopes, the arpeggiator (midi effects), key shift (transposition), the note grid with all twelve notes (midi and piano roll, notes and octaves), the sampler step (sampler, sampler deep, drum sampler, slicing, audio clips, recording audio, warping, warp modes, clips), comping (take lanes, comping, comping flow, capture midi), macros (racks and macros, macro variations, instrument rack), more than one part per lesson (mixing basics, groups, reverb and delay), and the dj decks (sync, loops, hot cues, stems, key shift, crossfader curves, your own file, recording your set).
 
-- **No lfo:** synth lfo (you sweep cutoff by hand), modulation routing (env against glide), max for live (filter envelope), automation (a hand sweep, only the end setting kept), modulation lanes (base level only).
-- **No arpeggiator:** midi effects (chord voicing instead).
-- **Filter envelope tied to the amp release:** amp vs filter envelope.
-- **No fm, granular or physical model:** operator and fm basics (detune, wave, env), granulator (slow pad with reverb), collision and tension (struck feel from the envelope).
-- **No sample layer in lessons:** sampler, sampler deep, drum sampler, audio clips (the recorded kit, or the kick's tune, decay and level), slicing (a new rhythm on the pads).
-- **No warping, mic or comping lanes:** warping and warp modes (the tempo knob), recording audio and capture midi (a pad or key take with rec), take lanes and comping (whole takes, keep or redo).
-- **No grid editor or key shift:** midi and piano roll (a hat play-in with snap), transposition (modes on the same home note), notes and octaves (an octave jump; the keys show seven of twelve notes).
-- **One layer per lesson:** mixing basics (the hats only), groups (the drums layer as the group), reverb and delay (kick and clap together), the mixer (chords).
-- **Mixer has no sync, hot cues, loops, stems, key shift, curve choice, tags or export:** sync (deck b starts matched), loops and hot cues (blend, phrase), stems (a bass swap), key shift (deck b keeps its key), crossfader curves (slow then fast), tags, playlists, export mode, dvs (free, blend, cut).
+Still approximations, and each says so on screen:
+- **No granular, physical-modelling or Meld engine yet:** granulator (a slow pad with reverb), collision and tension (a struck feel from the envelope), meld (two oscillators). Engine 2 items 10 and 12 add the resonator and wavetable engines.
+- **The bass has no fm yet;** fm basics uses the lead.
+- **DJ:** tags, playlists, export mode, dvs and genre strategy still use the closest mixer goal; there is no tag or playlist screen.
 
 Facts the old lessons disagreed on, or that could not be checked, were left out (Operator's algorithm count, Roar's, Meld's oscillators, Hybrid Reverb's algorithm names, rekordbox's Camelot display, hot cue counts, the Cmd+Alt+L shortcut). Two old claims were wrong and were corrected: Live's device chain runs left to right, and 512 samples is about 11.6 ms one way, not round trip. The dj culture lesson credits Frankie Knuckles at the Warehouse and no longer puts Larry Levan in Chicago.
 
