@@ -1,0 +1,1871 @@
+[
+ {
+  "world": "fundamentals",
+  "slug": "basics-the-pulse",
+  "number": 1,
+  "title": "the pulse",
+  "note": "",
+  "items": [
+   {
+    "slug": "tempo-bpm",
+    "kind": "song",
+    "isNew": false,
+    "title": "pulse and tempo",
+    "does": "adds drums.kick on the beat; sets the tempo (100, 120, 128, 140 by ear)",
+    "code": "tempo step (one knob with detents)"
+   },
+   {
+    "slug": "what-is-rhythm",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "what is rhythm?",
+    "does": "move one kick off the beat and back; feel what breaks",
+    "code": "",
+    "parent": "tempo-bpm"
+   },
+   {
+    "slug": "bars-time-signatures",
+    "kind": "song",
+    "isNew": false,
+    "title": "bars and counting",
+    "does": "adds drums.clap on 2 and 4; the loop becomes 4 bars",
+    "code": "loop length step"
+   },
+   {
+    "slug": "note-values",
+    "kind": "song",
+    "isNew": false,
+    "title": "subdivision",
+    "does": "adds hats.hats on 8ths, then 16ths; snap taught",
+    "code": "grid with snap on and off"
+   },
+   {
+    "slug": "syncopation",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "syncopation",
+    "does": "move a hat to an offbeat accent; keep it",
+    "code": "",
+    "parent": "note-values"
+   },
+   {
+    "slug": "polyrhythm",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "polyrhythm",
+    "does": "a 3-against-4 shaker over your beat; keep it or not",
+    "code": "perc lane",
+    "parent": "note-values"
+   },
+   {
+    "slug": "groove-feel",
+    "kind": "song",
+    "isNew": false,
+    "title": "groove and swing",
+    "does": "changes hats: swing",
+    "code": "send swing to the engine"
+   },
+   {
+    "slug": "rhythm-in-production",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "rhythm in production",
+    "does": "humanise: nudge two hats late by ear",
+    "code": "nudge control",
+    "parent": "groove-feel"
+   }
+  ]
+ },
+ {
+  "world": "fundamentals",
+  "slug": "basics-sound",
+  "number": 2,
+  "title": "sound",
+  "note": "",
+  "items": [
+   {
+    "slug": "what-is-sound",
+    "kind": "song",
+    "isNew": false,
+    "title": "what is sound?",
+    "does": "adds lead.lead over your beat",
+    "code": "done (preset beat drops in if none)"
+   },
+   {
+    "slug": "sound-in-space",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sound in space",
+    "does": "reverb send on your lead: near, far; keep the amount",
+    "code": "send knob",
+    "parent": "what-is-sound"
+   },
+   {
+    "slug": "frequency-pitch",
+    "kind": "song",
+    "isNew": false,
+    "title": "frequency and pitch",
+    "does": "changes lead.lead",
+    "code": "done (9b01ac3)"
+   },
+   {
+    "slug": "amplitude-volume",
+    "kind": "song",
+    "isNew": false,
+    "title": "amplitude and volume",
+    "does": "changes lead velocity; soft and hard",
+    "code": "velocity on keys"
+   },
+   {
+    "slug": "how-we-hear",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "how we hear",
+    "does": "masking: your bass under your kick with and without a duck",
+    "code": "duck knob (needs a bass; preset if none)",
+    "parent": "amplitude-volume"
+   },
+   {
+    "slug": "timbre-tone",
+    "kind": "song",
+    "isNew": false,
+    "title": "timbre and tone colour",
+    "does": "shape lead: cutoff",
+    "code": "harmonics picture"
+   },
+   {
+    "slug": "ear-higher-lower",
+    "kind": "bonus",
+    "isNew": true,
+    "title": "bonus: higher or lower?",
+    "does": "rounds played from your own melody's notes",
+    "code": "generated ear rounds",
+    "parent": "timbre-tone"
+   }
+  ]
+ },
+ {
+  "world": "fundamentals",
+  "slug": "basics-waves-and-the-studio",
+  "number": 3,
+  "title": "waves and the studio",
+  "note": "",
+  "items": [
+   {
+    "slug": "waveforms",
+    "kind": "song",
+    "isNew": false,
+    "title": "waveforms",
+    "does": "shape lead: wave (sine, triangle, saw, square)",
+    "code": "triangle in `WaveShape`, clip `four-waves`"
+   },
+   {
+    "slug": "overtones-harmonics",
+    "kind": "song",
+    "isNew": false,
+    "title": "harmonics up close",
+    "does": "changes lead (a fifth above)",
+    "code": "spectrum picture"
+   },
+   {
+    "slug": "noise",
+    "kind": "song",
+    "isNew": true,
+    "title": "noise, the odd friend",
+    "does": "changes hats: noise colour and length",
+    "code": "hat shape visual"
+   },
+   {
+    "slug": "samples-loops",
+    "kind": "song",
+    "isNew": false,
+    "title": "samples and loops",
+    "does": "adds sample (a recorded hit into your song)",
+    "code": "sampler layer in a lesson"
+   },
+   {
+    "slug": "digital-audio",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "digital audio",
+    "does": "crush your sample: bit depth and rate by ear; keep or not",
+    "code": "crush knob",
+    "parent": "samples-loops"
+   },
+   {
+    "slug": "daw-explained",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "what a daw is",
+    "does": "open your song in the studio; name the parts",
+    "code": "",
+    "parent": "samples-loops"
+   },
+   {
+    "slug": "midi-explained",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "what midi is",
+    "does": "your song is notes: change one note's velocity and length",
+    "code": "",
+    "parent": "samples-loops"
+   }
+  ]
+ },
+ {
+  "world": "fundamentals",
+  "slug": "basics-melody",
+  "number": 4,
+  "title": "melody",
+  "note": "",
+  "items": [
+   {
+    "slug": "notes-and-octaves",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "notes and octaves",
+    "does": "the twelve notes; play the five black keys on your lead",
+    "code": "all-notes keys",
+    "parent": "major-scale"
+   },
+   {
+    "slug": "major-scale",
+    "kind": "song",
+    "isNew": false,
+    "title": "scales: major and minor",
+    "does": "sets song scale; relabels keys",
+    "code": "scale step"
+   },
+   {
+    "slug": "minor-scale",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the minor scale and its cousins",
+    "does": "changes scale (natural, harmonic); hear your melody in each",
+    "code": "",
+    "parent": "major-scale"
+   },
+   {
+    "slug": "intervals",
+    "kind": "song",
+    "isNew": false,
+    "title": "intervals",
+    "does": "changes lead (a two-note phrase)",
+    "code": "interval clip"
+   },
+   {
+    "slug": "melody-writing",
+    "kind": "song",
+    "isNew": false,
+    "title": "writing a melody",
+    "does": "changes lead (motif, repeat, change one note)",
+    "code": "2-bar take"
+   },
+   {
+    "slug": "pentatonic-scales",
+    "kind": "song",
+    "isNew": false,
+    "title": "the pentatonic hook",
+    "does": "changes lead (a hook on five notes)",
+    "code": ""
+   },
+   {
+    "slug": "transposition-modes",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "transposition and modes",
+    "does": "move your song up a tone; keep or not",
+    "code": "key shift",
+    "parent": "pentatonic-scales"
+   },
+   {
+    "slug": "ear-training",
+    "kind": "bonus",
+    "isNew": false,
+    "title": "bonus: your ear",
+    "does": "which interval, which wave, rounds from your own song",
+    "code": "generated rounds",
+    "parent": "pentatonic-scales"
+   }
+  ]
+ },
+ {
+  "world": "fundamentals",
+  "slug": "basics-harmony-and-shape",
+  "number": 5,
+  "title": "harmony and shape",
+  "note": "",
+  "items": [
+   {
+    "slug": "what-are-chords",
+    "kind": "song",
+    "isNew": false,
+    "title": "what are chords?",
+    "does": "adds chords.chords",
+    "code": "chord pads exist"
+   },
+   {
+    "slug": "chord-types",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "chord types",
+    "does": "changes chords (7ths, sus)",
+    "code": "",
+    "parent": "what-are-chords"
+   },
+   {
+    "slug": "chord-progressions",
+    "kind": "song",
+    "isNew": false,
+    "title": "chord progressions",
+    "does": "changes chords (a progression)",
+    "code": ""
+   },
+   {
+    "slug": "keys-tonality",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "keys and tonality",
+    "does": "end your progression on home, then not; keep one",
+    "code": "",
+    "parent": "chord-progressions"
+   },
+   {
+    "slug": "bass-follows",
+    "kind": "song",
+    "isNew": true,
+    "title": "bass follows the chords",
+    "does": "adds bass.bass on the roots",
+    "code": ""
+   },
+   {
+    "slug": "harmony-in-production",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "harmony in production",
+    "does": "chords as a pad or as stabs; pick for your song",
+    "code": "chord length/attack",
+    "parent": "bass-follows"
+   },
+   {
+    "slug": "song-structure",
+    "kind": "song",
+    "isNew": false,
+    "title": "tension, release and structure",
+    "does": "adds sections (intro, drop)",
+    "code": "arrange step"
+   },
+   {
+    "slug": "tension-resolution",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "tension and resolution",
+    "does": "a riser into your drop; keep it",
+    "code": "fx riser",
+    "parent": "song-structure"
+   },
+   {
+    "slug": "listening-actively",
+    "kind": "bonus",
+    "isNew": false,
+    "title": "bonus: listen like a producer",
+    "does": "three questions on your own song",
+    "code": "",
+    "parent": "song-structure"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-your-first-loop",
+  "number": 1,
+  "title": "your first loop",
+  "note": "",
+  "items": [
+   {
+    "slug": "your-kick",
+    "kind": "song",
+    "isNew": false,
+    "title": "your kick",
+    "does": "adds drums.kick",
+    "code": "done"
+   },
+   {
+    "slug": "what-is-live",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "what is live?",
+    "does": "your song's parts as Live sees them (fold-out: Live's screen)",
+    "code": "",
+    "parent": "your-kick"
+   },
+   {
+    "slug": "interface-tour",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "around live",
+    "does": "find the same five things on our instrument, then in Live",
+    "code": "",
+    "parent": "your-kick"
+   },
+   {
+    "slug": "drum-rack",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the drum rack in live",
+    "does": "your drums are a rack: swap one pad's sound; keep it",
+    "code": "",
+    "parent": "your-kick"
+   },
+   {
+    "slug": "synth-what-is-sound",
+    "kind": "song",
+    "isNew": false,
+    "title": "sound, and your first synth",
+    "does": "adds lead.lead",
+    "code": "done"
+   },
+   {
+    "slug": "instruments-overview",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "live's instruments",
+    "does": "three voices on your lead line: synth, fm, sample; pick one",
+    "code": "",
+    "parent": "synth-what-is-sound"
+   },
+   {
+    "slug": "synth-oscillators",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "oscillators, the sound source",
+    "does": "shape lead: wave",
+    "code": "",
+    "parent": "synth-what-is-sound"
+   },
+   {
+    "slug": "synth-pitch-vs-amplitude",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "pitch vs amplitude",
+    "does": "detune your lead by a few cents; velocity on two notes",
+    "code": "",
+    "parent": "synth-what-is-sound"
+   },
+   {
+    "slug": "hats",
+    "kind": "song",
+    "isNew": true,
+    "title": "hats",
+    "does": "adds hats.hats; snap taught",
+    "code": "snap toggle on the play-in, hat visual"
+   },
+   {
+    "slug": "midi-piano-roll",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the piano roll",
+    "does": "edit one hat in the grid: move, lengthen, delete",
+    "code": "",
+    "parent": "hats"
+   },
+   {
+    "slug": "clap-and-snare",
+    "kind": "song",
+    "isNew": true,
+    "title": "clap and snare",
+    "does": "adds drums.clap",
+    "code": "clip and goal exist"
+   },
+   {
+    "slug": "session-view",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "session view",
+    "does": "your song as clips: launch the drums alone, then everything",
+    "code": "",
+    "parent": "clap-and-snare"
+   },
+   {
+    "slug": "clips",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "clips: midi vs audio",
+    "does": "your hats as midi, your sample as audio; swap one",
+    "code": "",
+    "parent": "clap-and-snare"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-low-end-and-your-synth",
+  "number": 2,
+  "title": "low end and your synth",
+  "note": "",
+  "items": [
+   {
+    "slug": "first-bass",
+    "kind": "song",
+    "isNew": true,
+    "title": "your first bass line",
+    "does": "adds bass.bass",
+    "code": "overlap picture"
+   },
+   {
+    "slug": "bass-poli",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "bass and poli",
+    "does": "a thicker bass voice on your bass line; keep it",
+    "code": "",
+    "parent": "first-bass"
+   },
+   {
+    "slug": "operator",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "operator",
+    "does": "an fm voice on your lead; the ratio knob; keep it",
+    "code": "",
+    "parent": "first-bass"
+   },
+   {
+    "slug": "kick-and-bass",
+    "kind": "song",
+    "isNew": true,
+    "title": "make room: kick and bass",
+    "does": "changes mix: duck; shape bass decay",
+    "code": "duck on a shape step, a/b"
+   },
+   {
+    "slug": "sidechain",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sidechain in live",
+    "does": "duck your bass under your kick; depth and release; keep it",
+    "code": "",
+    "parent": "kick-and-bass"
+   },
+   {
+    "slug": "compressor",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the compressor",
+    "does": "squeeze your drums: threshold and ratio by ear; keep it",
+    "code": "",
+    "parent": "kick-and-bass"
+   },
+   {
+    "slug": "shape-your-synth",
+    "kind": "song",
+    "isNew": true,
+    "title": "shape your synth properly",
+    "does": "shape lead: res, env, attack, release",
+    "code": "resonance and envelope in `WaveShape`"
+   },
+   {
+    "slug": "synth-filters",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "filters, carving the sound",
+    "does": "filter types on your lead: low, high, band",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-amp-envelope",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "amp envelope",
+    "does": "attack and release on your lead; pluck vs pad",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-filter-envelope",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "filter envelope",
+    "does": "the brightness moving on each note of your lead",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-amp-vs-filter-env",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "two envelopes, one voice",
+    "does": "both envelopes on one of your notes",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-timbre",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "timbre",
+    "does": "the same lead note, three timbres; pick one",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-harmonics",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "harmonics and overtones",
+    "does": "add and remove harmonics on your lead",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "synth-mixing-oscillators",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "mixing oscillators",
+    "does": "blend two oscillators on your lead",
+    "code": "",
+    "parent": "shape-your-synth"
+   },
+   {
+    "slug": "chords-on-top",
+    "kind": "song",
+    "isNew": true,
+    "title": "chords on top",
+    "does": "adds chords.chords",
+    "code": ""
+   },
+   {
+    "slug": "midi-effects",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "midi effects",
+    "does": "an arpeggiator on your chords; keep it",
+    "code": "",
+    "parent": "chords-on-top"
+   },
+   {
+    "slug": "scale-awareness",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "scale awareness in live 12",
+    "does": "lock your keys to your song's scale",
+    "code": "",
+    "parent": "chords-on-top"
+   },
+   {
+    "slug": "capture-midi",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "capture midi",
+    "does": "play without rec, then capture what you just played",
+    "code": "",
+    "parent": "chords-on-top"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-sound-design",
+  "number": 3,
+  "title": "sound design",
+  "note": "",
+  "items": [
+   {
+    "slug": "kick-designer",
+    "kind": "song",
+    "isNew": true,
+    "title": "the kick designer",
+    "does": "changes drums.kick (click, body, drop, drive, length)",
+    "code": "full designer (fix 37)"
+   },
+   {
+    "slug": "saturator-distortion",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "saturator and distortion",
+    "does": "drive on your kick; keep it",
+    "code": "",
+    "parent": "kick-designer"
+   },
+   {
+    "slug": "roar",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "roar",
+    "does": "a bigger drive on your bass; keep it",
+    "code": "",
+    "parent": "kick-designer"
+   },
+   {
+    "slug": "real-drums",
+    "kind": "song",
+    "isNew": true,
+    "title": "drums from recordings",
+    "does": "changes drums: sampler kit",
+    "code": "sampler in a lesson, `public/audio/real`"
+   },
+   {
+    "slug": "sampler-simpler",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sampler and simpler",
+    "does": "load your own hit onto a pad; keep it",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "sampler-deep",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sampler, deep",
+    "does": "start point and loop on your sample",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "drum-sampler",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "drum sampler",
+    "does": "your recorded kit on the pads",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "slicing",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "slicing to midi",
+    "does": "chop a loop onto pads; play it into your song",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "audio-clips",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "audio clips",
+    "does": "your sample's start, end and gain",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "recording-audio",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "recording audio",
+    "does": "record a sound from your mic into your song",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "warping",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "warping",
+    "does": "stretch your sample to your tempo",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "warp-modes-deep",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "warp modes",
+    "does": "the same sample, four warp modes; pick one",
+    "code": "",
+    "parent": "real-drums"
+   },
+   {
+    "slug": "lead-width",
+    "kind": "song",
+    "isNew": true,
+    "title": "width and movement",
+    "does": "shape lead: detune, lfo",
+    "code": "lfo param"
+   },
+   {
+    "slug": "synth-detune-unison",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "detune and unison",
+    "does": "width on your lead; keep it",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "synth-lfo",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the lfo",
+    "does": "a slow wobble on your lead's filter; keep it",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "synth-modulation-routing",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "modulation routing",
+    "does": "route the lfo to pitch instead; keep one",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "synth-fm-basics",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "fm basics",
+    "does": "fm on your bass; the ratio",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "wavetable",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "wavetable",
+    "does": "a wavetable voice on your lead; scan it",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "meld",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "meld",
+    "does": "meld-style voice on your lead",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "drift",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "drift",
+    "does": "a drift-style voice on your chords",
+    "code": "",
+    "parent": "lead-width"
+   },
+   {
+    "slug": "fx-riser",
+    "kind": "song",
+    "isNew": true,
+    "title": "fx: risers and sweeps",
+    "does": "adds fx.riser",
+    "code": "fx layer in a lesson"
+   },
+   {
+    "slug": "synth-noise",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "noise",
+    "does": "noise in your riser and your hats",
+    "code": "",
+    "parent": "fx-riser"
+   },
+   {
+    "slug": "synth-effects",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "synth effects",
+    "does": "an echo on your lead; keep it",
+    "code": "",
+    "parent": "fx-riser"
+   },
+   {
+    "slug": "granulator-iii",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "granulator iii",
+    "does": "grains from your sample; keep it",
+    "code": "",
+    "parent": "fx-riser"
+   },
+   {
+    "slug": "collision-tension-electric",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "collision, tension, electric, analog",
+    "does": "a physical-model voice on your chords",
+    "code": "",
+    "parent": "fx-riser"
+   },
+   {
+    "slug": "synth-preset-anatomy",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "preset anatomy",
+    "does": "take your lead apart: what each knob did",
+    "code": "",
+    "parent": "fx-riser"
+   },
+   {
+    "slug": "synth-build-your-own",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "build your own patch",
+    "does": "build a lead voice from init; keep it",
+    "code": "",
+    "parent": "fx-riser"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-the-mix",
+  "number": 4,
+  "title": "the mix",
+  "note": "",
+  "items": [
+   {
+    "slug": "balance",
+    "kind": "song",
+    "isNew": true,
+    "title": "levels and balance",
+    "does": "changes mix: levels, the stage",
+    "code": "faders step"
+   },
+   {
+    "slug": "the-mixer",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the mixer in live",
+    "does": "your faders and pans on the stage",
+    "code": "",
+    "parent": "balance"
+   },
+   {
+    "slug": "mixing-basics",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "mixing basics",
+    "does": "balance your six parts by ear",
+    "code": "",
+    "parent": "balance"
+   },
+   {
+    "slug": "signal-chain",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the signal chain",
+    "does": "your lead's chain: voice, filter, drive, send",
+    "code": "",
+    "parent": "balance"
+   },
+   {
+    "slug": "groups-routing",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "groups and routing",
+    "does": "group your drums and move them together",
+    "code": "",
+    "parent": "balance"
+   },
+   {
+    "slug": "eq-place",
+    "kind": "song",
+    "isNew": true,
+    "title": "eq: a place for everything",
+    "does": "changes mix: eq per part",
+    "code": "eq knobs on a shape step"
+   },
+   {
+    "slug": "eq-eight",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "eq eight",
+    "does": "three bands on your bass; keep it",
+    "code": "",
+    "parent": "eq-place"
+   },
+   {
+    "slug": "effects-overview",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "effects overview",
+    "does": "one of each on your lead: eq, echo, drive, reverb",
+    "code": "",
+    "parent": "eq-place"
+   },
+   {
+    "slug": "space",
+    "kind": "song",
+    "isNew": true,
+    "title": "space: reverb and echo",
+    "does": "changes mix: sends",
+    "code": "send knobs"
+   },
+   {
+    "slug": "sends-returns",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sends and returns",
+    "does": "one reverb for all your parts; amounts per part",
+    "code": "",
+    "parent": "space"
+   },
+   {
+    "slug": "reverb-delay",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "reverb and delay",
+    "does": "reverb vs echo on your clap; keep one",
+    "code": "",
+    "parent": "space"
+   },
+   {
+    "slug": "hybrid-reverb",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "hybrid reverb",
+    "does": "a bigger reverb on your chords",
+    "code": "",
+    "parent": "space"
+   },
+   {
+    "slug": "glue",
+    "kind": "song",
+    "isNew": true,
+    "title": "glue: compression and loudness",
+    "does": "changes master",
+    "code": "master step"
+   },
+   {
+    "slug": "glue-compressor",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "glue compressor",
+    "does": "the glue on your whole song",
+    "code": "",
+    "parent": "glue"
+   },
+   {
+    "slug": "limiter-truepeak",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "limiter and true peak",
+    "does": "the limiter: loud without clipping",
+    "code": "",
+    "parent": "glue"
+   },
+   {
+    "slug": "racks-macros",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "racks and macros",
+    "does": "one knob that moves three; keep it",
+    "code": "",
+    "parent": "glue"
+   },
+   {
+    "slug": "music-tech-integration",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "putting it all together",
+    "does": "your whole chain, drawn from your song",
+    "code": "",
+    "parent": "glue"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-arrangement-and-finish",
+  "number": 5,
+  "title": "arrangement and finish",
+  "note": "",
+  "items": [
+   {
+    "slug": "sections",
+    "kind": "song",
+    "isNew": true,
+    "title": "sections",
+    "does": "adds arrangement (intro, build, drop, break)",
+    "code": "arrange step"
+   },
+   {
+    "slug": "arrangement-view",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "arrangement view",
+    "does": "your sections on a timeline",
+    "code": "",
+    "parent": "sections"
+   },
+   {
+    "slug": "scenes-follow",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "scenes and follow actions",
+    "does": "scenes: drums alone, then all; a follow action",
+    "code": "",
+    "parent": "sections"
+   },
+   {
+    "slug": "tracks",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "tracks",
+    "does": "mute, solo and arm your parts",
+    "code": "",
+    "parent": "sections"
+   },
+   {
+    "slug": "automation",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "automation",
+    "does": "draw the cutoff opening over 8 bars; keep it",
+    "code": "",
+    "parent": "sections"
+   },
+   {
+    "slug": "modulation-lanes",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "modulation lanes",
+    "does": "a modulation lane on your lead's level",
+    "code": "",
+    "parent": "sections"
+   },
+   {
+    "slug": "fills",
+    "kind": "song",
+    "isNew": true,
+    "title": "variation and fills",
+    "does": "changes drums: a fill bar",
+    "code": "fill take"
+   },
+   {
+    "slug": "midi-transforms",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "midi transformations",
+    "does": "transform your fill: reverse, stretch",
+    "code": "",
+    "parent": "fills"
+   },
+   {
+    "slug": "groove-pool",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "groove pool",
+    "does": "a groove on your hats; keep it",
+    "code": "",
+    "parent": "fills"
+   },
+   {
+    "slug": "take-lanes",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "take lanes and comping",
+    "does": "three takes of your fill; pick one",
+    "code": "",
+    "parent": "fills"
+   },
+   {
+    "slug": "comping",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "comping",
+    "does": "the best bar of each take",
+    "code": "",
+    "parent": "fills"
+   },
+   {
+    "slug": "comping-flow",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "comping flow",
+    "does": "comp your lead take",
+    "code": "",
+    "parent": "fills"
+   },
+   {
+    "slug": "the-drop",
+    "kind": "song",
+    "isNew": true,
+    "title": "the breakdown and the drop",
+    "does": "changes arrangement",
+    "code": ""
+   },
+   {
+    "slug": "macro-variations",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "macro variations",
+    "does": "two versions of your drop; switch",
+    "code": "",
+    "parent": "the-drop"
+   },
+   {
+    "slug": "instrument-rack",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "instrument rack",
+    "does": "two voices on your lead in one rack",
+    "code": "",
+    "parent": "the-drop"
+   },
+   {
+    "slug": "finish-export",
+    "kind": "song",
+    "isNew": true,
+    "title": "finish and export",
+    "does": "export (midi, stems), name it, send to CCD",
+    "code": "stems export"
+   },
+   {
+    "slug": "exporting",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "exporting from live",
+    "does": "export your song as midi",
+    "code": "",
+    "parent": "finish-export"
+   },
+   {
+    "slug": "live-sets-projects",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "live sets and projects",
+    "does": "save your song as a set",
+    "code": "",
+    "parent": "finish-export"
+   },
+   {
+    "slug": "files-projects",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "files and projects",
+    "does": "your song's files",
+    "code": "",
+    "parent": "finish-export"
+   },
+   {
+    "slug": "stem-separation",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "stem separation",
+    "does": "stems from your song",
+    "code": "",
+    "parent": "finish-export"
+   },
+   {
+    "slug": "troubleshooting",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "troubleshooting",
+    "does": "your song's cpu and latency",
+    "code": "",
+    "parent": "finish-export"
+   },
+   {
+    "slug": "cpu-audio-setup",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "cpu and audio setup",
+    "does": "buffer size by ear: latency vs safety",
+    "code": "",
+    "parent": "finish-export"
+   }
+  ]
+ },
+ {
+  "world": "producer",
+  "slug": "producer-live-properly",
+  "number": 6,
+  "title": "live, properly",
+  "note": "all bonus and deeper",
+  "items": [
+   {
+    "slug": "your-song-in-live",
+    "kind": "bonus",
+    "isNew": true,
+    "title": "bonus: your song in live",
+    "does": "open your export, the tour",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "browser",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the browser",
+    "does": "find a sound for your lead in the browser",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "preferences",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "preferences",
+    "does": "set your song's default tempo and key",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "play-it-live",
+    "kind": "bonus",
+    "isNew": true,
+    "title": "bonus: play it",
+    "does": "controllers and sync",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "push-controllers",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "push and controllers",
+    "does": "your pads on a controller",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "midi-mapping",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "midi mapping",
+    "does": "map a knob to your lead's cutoff",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "push3-workflow",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "push 3 workflow",
+    "does": "your song on push",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "push3-standalone",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "push 3 standalone",
+    "does": "your song on push, no laptop",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "tempo-following",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "tempo following",
+    "does": "your song follows a live drummer",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "ableton-link-sync",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "ableton link in practice",
+    "does": "your song in time with another app",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "ableton-link",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "ableton link",
+    "does": "link, what it is",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "cv-tools",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "cv tools",
+    "does": "your song driving a modular",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "external-instrument",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "external instrument",
+    "does": "a hardware synth on your lead",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "the-toolbox",
+    "kind": "bonus",
+    "isNew": true,
+    "title": "bonus: the toolbox",
+    "does": "the rest of live 12",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "linked-track-editing",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "linked-track editing",
+    "does": "edit two of your parts together",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "sound-similarity",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "sound similarity search",
+    "does": "find a sound like your kick",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "mpe-tuning",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "mpe and tuning systems",
+    "does": "a different tuning on your lead",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "midi-effects-tour",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "midi effects tour",
+    "does": "chord and arp on your chords",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "max-for-live",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "max for live",
+    "does": "a device on your lead",
+    "code": "",
+    "parent": null
+   },
+   {
+    "slug": "accessibility-features",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "accessibility in live",
+    "does": "your song by keyboard",
+    "code": "",
+    "parent": null
+   }
+  ]
+ },
+ {
+  "world": "dj",
+  "slug": "dj-the-booth",
+  "number": 1,
+  "title": "the booth",
+  "note": "",
+  "items": [
+   {
+    "slug": "what-is-djing",
+    "kind": "song",
+    "isNew": false,
+    "title": "what is djing?",
+    "does": "adds drums.clap",
+    "code": "done"
+   },
+   {
+    "slug": "dj-culture",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "dj culture and history",
+    "does": "the first blend ever made, over your song",
+    "code": "",
+    "parent": "what-is-djing"
+   },
+   {
+    "slug": "dj-equipment",
+    "kind": "song",
+    "isNew": false,
+    "title": "the gear",
+    "does": "two decks, faders, crossfader, cue; your song on a, a bank track or your own file on b",
+    "code": "`mix` step kind, deck sources (song, bank, your file), bank"
+   },
+   {
+    "slug": "booth-setup",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the booth",
+    "does": "set up both decks: your song on a, a bank track on b",
+    "code": "",
+    "parent": "dj-equipment"
+   },
+   {
+    "slug": "rekordbox-intro",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "rekordbox",
+    "does": "your song's bpm and key as rekordbox would show them",
+    "code": "",
+    "parent": "dj-equipment"
+   },
+   {
+    "slug": "tempo-bpm-dj",
+    "kind": "song",
+    "isNew": true,
+    "title": "tempo and bpm",
+    "does": "match two tracks by ear",
+    "code": "tempo fader on the mix step"
+   },
+   {
+    "slug": "beatmatching-manual",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "manual beatmatching",
+    "does": "match by ear, pitch fader only; your song against a bank track",
+    "code": "",
+    "parent": "tempo-bpm-dj"
+   },
+   {
+    "slug": "sync-function",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the sync button",
+    "does": "sync on, then off; feel the drift",
+    "code": "",
+    "parent": "tempo-bpm-dj"
+   },
+   {
+    "slug": "bpm-analysis-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "bpm analysis",
+    "does": "read your song's bpm from the grid",
+    "code": "",
+    "parent": "tempo-bpm-dj"
+   },
+   {
+    "slug": "your-first-mix",
+    "kind": "song",
+    "isNew": false,
+    "title": "your first blend",
+    "does": "b in on a phrase, bass swap, a out",
+    "code": "mix goal"
+   },
+   {
+    "slug": "crossfader-technique",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "crossfader technique",
+    "does": "three crossfader curves on the same blend",
+    "code": "",
+    "parent": "your-first-mix"
+   }
+  ]
+ },
+ {
+  "world": "dj",
+  "slug": "dj-the-blend",
+  "number": 2,
+  "title": "the blend",
+  "note": "",
+  "items": [
+   {
+    "slug": "phrasing",
+    "kind": "song",
+    "isNew": true,
+    "title": "phrasing: count in eights",
+    "does": "come in on the 1 of an 8",
+    "code": "phrase counter"
+   },
+   {
+    "slug": "genre-bpm-reference",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "genres and bpm",
+    "does": "your song at three tempos: which genre is it now",
+    "code": "",
+    "parent": "phrasing"
+   },
+   {
+    "slug": "eq-mixing-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "eq mixing",
+    "does": "the bass swap",
+    "code": "eq on the mix step"
+   },
+   {
+    "slug": "headphone-monitoring",
+    "kind": "song",
+    "isNew": false,
+    "title": "cue and headphones",
+    "does": "pre-listen in the cue",
+    "code": "cue routing"
+   },
+   {
+    "slug": "long-mix-blend",
+    "kind": "song",
+    "isNew": false,
+    "title": "the cut and the long blend",
+    "does": "a cut on the 1, a 16-bar blend",
+    "code": ""
+   },
+   {
+    "slug": "transitions-cut-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the cut and the power transition",
+    "does": "the cut on the 1, from your song to a bank track",
+    "code": "",
+    "parent": "long-mix-blend"
+   },
+   {
+    "slug": "loop-function-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "loops and loop rolls",
+    "does": "loop 4 bars of your song to extend the blend",
+    "code": "",
+    "parent": "long-mix-blend"
+   }
+  ]
+ },
+ {
+  "world": "dj",
+  "slug": "dj-the-library",
+  "number": 3,
+  "title": "the library",
+  "note": "",
+  "items": [
+   {
+    "slug": "music-library-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "picking tracks",
+    "does": "pick three bank tracks that work together",
+    "code": "bank browser step"
+   },
+   {
+    "slug": "crate-digging",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "crate digging",
+    "does": "pick a track that fits your song's key and energy",
+    "code": "",
+    "parent": "music-library-dj"
+   },
+   {
+    "slug": "my-tags-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "my tags",
+    "does": "tag your song and three bank tracks",
+    "code": "",
+    "parent": "music-library-dj"
+   },
+   {
+    "slug": "playlists-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "playlists and set prep",
+    "does": "a playlist with your song in the middle",
+    "code": "",
+    "parent": "music-library-dj"
+   },
+   {
+    "slug": "export-mode-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "export mode",
+    "does": "your set, exported",
+    "code": "",
+    "parent": "music-library-dj"
+   },
+   {
+    "slug": "key-detection-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "key and harmonic mixing",
+    "does": "your song's key, keys that fit",
+    "code": "key per track"
+   },
+   {
+    "slug": "harmonic-mixing-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "harmonic mixing in practice",
+    "does": "two keys that fit your song, one that fights",
+    "code": "",
+    "parent": "key-detection-dj"
+   },
+   {
+    "slug": "harmonic-key-shift-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "key shift and master tempo",
+    "does": "shift a bank track into your song's key",
+    "code": "",
+    "parent": "key-detection-dj"
+   },
+   {
+    "slug": "cue-points-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "cue points and loops",
+    "does": "a cue on the 1, loop to extend",
+    "code": "cue and loop on the mix step"
+   },
+   {
+    "slug": "loop-performance-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "performance looping and hot cues",
+    "does": "hot cues on your song's drop",
+    "code": "",
+    "parent": "cue-points-dj"
+   },
+   {
+    "slug": "waveform-reading",
+    "kind": "song",
+    "isNew": false,
+    "title": "reading waveforms",
+    "does": "see the drop coming",
+    "code": "waveform render"
+   }
+  ]
+ },
+ {
+  "world": "dj",
+  "slug": "dj-the-set",
+  "number": 4,
+  "title": "the set",
+  "note": "",
+  "items": [
+   {
+    "slug": "set-structure-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "the energy arc",
+    "does": "order the bank into three acts",
+    "code": "set order step"
+   },
+   {
+    "slug": "energy-management-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "energy management",
+    "does": "where your song goes in the set",
+    "code": "",
+    "parent": "set-structure-dj"
+   },
+   {
+    "slug": "genre-strategy-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "genre strategy",
+    "does": "a set around your song's genre",
+    "code": "",
+    "parent": "set-structure-dj"
+   },
+   {
+    "slug": "reading-the-crowd",
+    "kind": "bonus",
+    "isNew": false,
+    "title": "bonus: reading the room",
+    "does": "the floor dips: pick the next track from your bank",
+    "code": "",
+    "parent": "set-structure-dj"
+   },
+   {
+    "slug": "effects-performance-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "effects in performance",
+    "does": "filter out, echo out between tracks",
+    "code": "filter and echo on the mix step"
+   },
+   {
+    "slug": "effects-deep-dj",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "effects, deep",
+    "does": "echo out of your song into the next track",
+    "code": "",
+    "parent": "effects-performance-dj"
+   },
+   {
+    "slug": "stem-djing",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "stem djing",
+    "does": "your song's drums under another track's vocal",
+    "code": "",
+    "parent": "effects-performance-dj"
+   },
+   {
+    "slug": "preparing-a-set-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "preparing a set",
+    "does": "crates, order, backups",
+    "code": ""
+   },
+   {
+    "slug": "dvs-basics",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "dvs and digital vinyl",
+    "does": "your song on a control record",
+    "code": "",
+    "parent": "preparing-a-set-dj"
+   }
+  ]
+ },
+ {
+  "world": "dj",
+  "slug": "dj-the-gig",
+  "number": 5,
+  "title": "the gig",
+  "note": "",
+  "items": [
+   {
+    "slug": "recording-your-set-dj",
+    "kind": "song",
+    "isNew": false,
+    "title": "recording your set",
+    "does": "record the mix, send it",
+    "code": "engine recorder"
+   },
+   {
+    "slug": "live-mistakes-dj",
+    "kind": "bonus",
+    "isNew": false,
+    "title": "bonus: handling mistakes",
+    "does": "recover a train wreck in your own blend",
+    "code": "mistake drills",
+    "parent": "recording-your-set-dj"
+   },
+   {
+    "slug": "dj-business",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the business of djing",
+    "does": "what to send a promoter: your set and your song",
+    "code": "",
+    "parent": "recording-your-set-dj"
+   },
+   {
+    "slug": "dj-advanced-complete",
+    "kind": "song",
+    "isNew": false,
+    "title": "from dj to artist",
+    "does": "your own track in your set; the CCD night",
+    "code": ""
+   }
+  ]
+ }
+]

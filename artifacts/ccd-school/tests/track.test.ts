@@ -54,10 +54,10 @@ describe("your track", () => {
 });
 
 describe("worlds as sequencers", () => {
-  it("lists every world's lessons in order with real missions", () => {
+  it("lists every world's song lessons in order with real missions", () => {
     for (const w of ["fundamentals", "dj", "producer"] as const) {
       const steps = worldSteps(w);
-      expect(steps.length).toBeGreaterThan(16);
+      expect(steps.length).toBeGreaterThan(1);
       for (const s of steps) expect(missionAny(s.slug)).toBeTruthy();
     }
   });

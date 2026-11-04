@@ -2,8 +2,7 @@
  * Lessons in teaching order for each world, and helpers the Model 1 screens use:
  * the next lesson, a world's 16-step banks, a lesson's picture.
  */
-import { CHAPTERS } from "../content/chapters";
-import { PATHS } from "../content/paths";
+import { curItem, curPathOf, curPaths, extrasOf, partOf, songItems, type CurItem, type CurKind } from "../content/curriculum";
 import { MISSIONS } from "../content/missions";
 import { FOUNDATIONS_MISSIONS } from "../content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "../content/missions-dj";
@@ -14,26 +13,26 @@ export const WORLD_IDS: WorldId[] = ["fundamentals", "producer", "dj"];
 export const WORLD_LABEL: Record<WorldId, string> = { fundamentals: "basics", dj: "dj", producer: "producer" };
 
 const ALL: Mission[] = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-const BY_SLUG = new Map(ALL.map(m => [m.slug, m]));
+const BY_SLUG = new Map<string, Mission>();
+for (const m of ALL) if (!BY_SLUG.has(m.slug) || m.fromFile) BY_SLUG.set(m.slug, m);
 export const missionAny = (slug: string) => BY_SLUG.get(slug);
+/** A lesson that is written as a lesson file and plays in the new player. */
+export const isRebuilt = (slug: string) => !!BY_SLUG.get(slug)?.fromFile;
 
+/** A song lesson you can open, in world order: the spine of the journey. */
 export type Step = { slug: string; title: string; path: string; pathTitle: string; chapter: string; index: number };
 
 const cache = new Map<WorldId, Step[]>();
 export function worldSteps(world: WorldId): Step[] {
   const hit = cache.get(world);
   if (hit) return hit;
-  const chapters = CHAPTERS.filter(c => c.world === world).sort((a, b) => a.number - b.number);
   const out: Step[] = [];
-  for (const ch of chapters) {
-    for (const ps of ch.pathSlugs) {
-      const p = PATHS.find(x => x.slug === ps);
-      if (!p) continue;
-      for (const s of p.missionSlugs) {
-        const m = BY_SLUG.get(s);
-        if (!m || out.some(o => o.slug === s)) continue;
-        out.push({ slug: s, title: m.title, path: p.slug, pathTitle: p.title, chapter: ch.slug, index: out.length });
-      }
+  for (const p of curPaths(world)) {
+    for (const it of p.items) {
+      if (it.kind !== "song") continue;
+      const m = BY_SLUG.get(it.slug);
+      if (!m) continue;
+      out.push({ slug: it.slug, title: m.title, path: p.slug, pathTitle: p.title, chapter: p.slug, index: out.length });
     }
   }
   cache.set(world, out);
@@ -45,14 +44,69 @@ export function nextStep(world: WorldId, done: Record<string, unknown>): Step | 
   return steps.find(s => !done[s.slug]) ?? steps[steps.length - 1];
 }
 
+/** Song lessons done out of all song lessons in the world, counting the ones still to be made. */
 export function worldDone(world: WorldId, done: Record<string, unknown>) {
-  const steps = worldSteps(world);
-  return { done: steps.filter(s => !!done[s.slug]).length, total: steps.length };
+  const songs = songItems(world);
+  return { done: songs.filter(s => !!done[s.slug]).length, total: songs.length, open: worldSteps(world).length };
 }
 
 export function worldOf(slug: string): WorldId | null {
-  for (const w of WORLD_IDS) if (worldSteps(w).some(s => s.slug === slug)) return w;
-  return null;
+  return curPathOf(slug)?.world ?? null;
+}
+
+/** What a lesson is in the course: a song lesson, a deeper lesson or a bonus round. */
+export const kindOf = (slug: string): CurKind | null => curItem(slug)?.kind ?? null;
+export { extrasOf, partOf };
+
+/**
+ * The lesson that comes after this one. After a song lesson: the next song lesson you can open.
+ * After a deeper lesson or bonus round: the next song lesson after the one it hangs off.
+ */
+export function nextAfter(slug: string): string | undefined {
+  const w = worldOf(slug);
+  if (!w) return undefined;
+  const it = curItem(slug);
+  const from = it && it.kind !== "song" ? it.parent : slug;
+  if (!from) return undefined;
+  const songs = songItems(w);
+  const at = songs.findIndex(s => s.slug === from);
+  for (let i = at + 1; i < songs.length; i++) if (BY_SLUG.has(songs[i].slug)) return songs[i].slug;
+  return undefined;
+}
+
+export type JourneyItem = CurItem & { exists: boolean; rebuilt: boolean; done: boolean };
+export type JourneyLesson = JourneyItem & { extras: JourneyItem[] };
+export type JourneyPath = { slug: string; number: number; title: string; note: string; lessons: JourneyLesson[]; songTotal: number; songDone: number; extraTotal: number; extraDone: number };
+
+/** A world's paths with their song lessons and, under each, its deeper lessons and bonus rounds. */
+export function journey(world: WorldId, done: Record<string, unknown>): JourneyPath[] {
+  const mark = (i: CurItem): JourneyItem => ({ ...i, exists: BY_SLUG.has(i.slug), rebuilt: isRebuilt(i.slug), done: !!done[i.slug] });
+  return curPaths(world).map(p => {
+    const lessons: JourneyLesson[] = [];
+    const loose: JourneyItem[] = [];
+    for (const it of p.items) {
+      if (it.kind === "song") lessons.push({ ...mark(it), extras: [] });
+    }
+    for (const it of p.items) {
+      if (it.kind === "song") continue;
+      const host = lessons.find(l => l.slug === it.parent);
+      (host ? host.extras : loose).push(mark(it));
+    }
+    // A path with no song lesson (producer's "live, properly") lists its bonus rounds as the lessons.
+    if (!lessons.length) {
+      let cur: JourneyLesson | null = null;
+      for (const it of loose) {
+        if (it.kind === "bonus" || !cur) { cur = { ...it, extras: [] }; lessons.push(cur); } else cur.extras.push(it);
+      }
+    }
+    const songs = lessons.filter(l => l.kind === "song");
+    const extras = lessons.flatMap(l => l.extras);
+    return {
+      slug: p.slug, number: p.number, title: p.title, note: p.note, lessons,
+      songTotal: songs.length, songDone: songs.filter(l => l.done).length,
+      extraTotal: extras.length, extraDone: extras.filter(e => e.done).length,
+    };
+  });
 }
 
 /** First picture in the lesson, or the world's picture. */

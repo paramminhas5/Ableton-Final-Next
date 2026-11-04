@@ -6,9 +6,8 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useProgress } from "@/lib/progress";
-import { useLearnMode } from "@/lib/mode";
-import { missionAny, missionImage, nextStep, worldDone, worldSteps, WORLD_IDS, type WorldId } from "@/lib/worldOrder";
-import { Icon, Silk, Switch, WORLD_LED } from "./controls";
+import { journey, missionAny, missionImage, nextStep, partOf, worldDone, WORLD_IDS, type WorldId } from "@/lib/worldOrder";
+import { Icon, Silk, WORLD_LED } from "./controls";
 import { DuoFilters } from "./Today";
 import "./lesson.css";
 
@@ -21,8 +20,6 @@ const LOOP = ["learn", "make", "practice", "studio", "mix"];
 
 export function Worlds() {
   const { progress } = useProgress();
-  const { learnMode, setLearnMode } = useLearnMode();
-  const flow = learnMode !== "classic";
   const done = progress.completedMissions;
   return (
     <div className="m1-page wd">
@@ -32,10 +29,6 @@ export function Worlds() {
           <div className="m1-t22">all lessons</div>
           <div className="m1-t11">three worlds, one song</div>
         </div>
-        <div className="wd-mode">
-          <Switch label="How lessons open" value={flow ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
-            options={[{ id: "flow", label: "journey" }, { id: "free", label: "see all" }]} />
-        </div>
       </header>
       <ol className="wd-loop" aria-label="How the parts connect">{LOOP.map((l, i) => <li key={l}><b>{i + 1}</b>{l}</li>)}</ol>
 
@@ -44,11 +37,13 @@ export function Worlds() {
           const c = worldDone(w, done);
           const n = nextStep(w, done);
           const m = n ? missionAny(n.slug) : undefined;
-          const steps = worldSteps(w);
-          const paths = Array.from(new Set(steps.map(s => s.path))).map(p => {
-            const inP = steps.filter(s => s.path === p);
-            return { p, title: inP[0].pathTitle, total: inP.length, done: inP.filter(s => done[s.slug]).length, cur: !!n && n.path === p };
-          });
+          const paths = journey(w, done).map(p => ({
+            p: p.slug, title: p.title,
+            total: p.songTotal || p.lessons.length,
+            done: p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length,
+            extra: p.extraTotal,
+            cur: !!n && p.lessons.some(l => l.slug === n.slug),
+          }));
           return (
             <section key={w} className="wd-col" style={{ ["--c" as string]: WORLD_LED[w] } as CSSProperties} aria-label={INFO[w].name}>
               <div className="wd-top">
@@ -62,17 +57,17 @@ export function Worlds() {
                   <div className="m1-t11">{INFO[w].line}</div>
                 </div>
               </div>
-              <div className="wd-bar"><i style={{ width: `${c.total ? (c.done / c.total) * 100 : 0}%` }} /><span>{c.done}/{c.total}</span></div>
+              <div className="wd-bar"><i style={{ width: `${c.total ? (c.done / c.total) * 100 : 0}%` }} /><span>{c.done}/{c.total} parts</span></div>
               {m && n && (
                 <Link href={`/learn/${n.slug}`} className="wd-next">
-                  <span><small>next lesson</small>{m.title.toLowerCase()}</span><Icon name="play" small />
+                  <span><small>next · adds {partOf(n.slug)}</small>{m.title.toLowerCase()}</span><Icon name="play" small />
                 </Link>
               )}
               <Silk label="paths" right={`${paths.length}`} />
               <ul className="wd-paths">
                 {paths.map((p, i) => (
                   <li key={p.p} className={p.cur ? "is-cur" : p.done === p.total ? "is-done" : ""}>
-                    <b>{i + 1}</b><span>{p.title.toLowerCase()}</span><em>{p.done}/{p.total}</em>
+                    <b>{i + 1}</b><span>{p.title}<small className="jv-sub"> · {p.extra} deeper</small></span><em>{p.done}/{p.total}</em>
                   </li>
                 ))}
               </ul>

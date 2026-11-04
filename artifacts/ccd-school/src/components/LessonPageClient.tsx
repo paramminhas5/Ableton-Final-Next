@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { M1Lesson } from "@/components/m1/Lesson";
 import { missionBySlug, nextMission } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
+import { nextAfter, worldOf } from "@/lib/worldOrder";
 import { useAuth } from "@/lib/auth";
 import { isLocked } from "@/lib/gating";
 import { useGatingMode } from "@/components/ClientProviders";
@@ -58,12 +59,13 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  // Next follows the path you're on, so lesson two always comes after lesson one.
-  const inPath = ctx.path ? ctx.path.missionSlugs.indexOf(slug) : -1;
-  const pathNext = inPath >= 0 && ctx.path ? missionBySlug(ctx.path.missionSlugs[inPath + 1] ?? "") : undefined;
-  const next = pathNext ?? nextMission(slug);
-  const missionIndex = ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
-  const missionTotal = ctx.path?.missionSlugs.length ?? 1;
+  // Next follows the song: after a song lesson, the next song lesson; after a deeper lesson or a
+  // bonus round, the song lesson after the one it hangs off (design/curriculum.md).
+  const after = nextAfter(slug);
+  const next = (after ? missionBySlug(after) : undefined) ?? (worldOf(slug) ? undefined : nextMission(slug));
+  const spine = ctx.path?.songSlugs ?? [];
+  const missionIndex = spine.includes(slug) ? spine.indexOf(slug) + 1 : ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
+  const missionTotal = spine.includes(slug) ? spine.length : ctx.path?.missionSlugs.length ?? 1;
   return (
     <M1Lesson
       key={slug}

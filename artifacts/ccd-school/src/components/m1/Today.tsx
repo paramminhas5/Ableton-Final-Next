@@ -11,7 +11,7 @@ import { YouCard } from "./YouCard";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
-import { nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { journey, nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
@@ -64,7 +64,9 @@ export function Today() {
   // Drum lanes show as separate rows but are one layer (one drum rack) in the track.
   const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
 
-  const all = useMemo(() => WORLDS.flatMap(w => worldSteps(w).map(st => ({ ...st, world: w }))), []);
+  // Search finds every lesson, deeper lessons and bonus rounds too.
+  const all = useMemo(() => WORLDS.flatMap(w => journey(w, {}).flatMap(p => p.lessons.flatMap(l => [l, ...l.extras])
+    .filter(i => i.exists).map(i => ({ slug: i.slug, title: missionAny(i.slug)?.title ?? i.title, path: p.slug, pathTitle: p.title, world: w })))), []);
   const hits = useMemo(() => {
     const t = q.trim().toLowerCase();
     if (!t) return [];
@@ -144,7 +146,7 @@ export function Today() {
               <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < Math.round((counts.done / Math.max(1, counts.total)) * 24) ? "#5EEAC1" : "#232326" }} />
             ))}
           </div>
-          <div className="m1-ss" style={{ marginTop: 8 }}>{counts.done} of {counts.total} {WORLD_LABEL[world]} lessons done{layers ? ` · your track has ${layers} ${layers === 1 ? "layer" : "layers"}` : ""}</div>
+          <div className="m1-ss" style={{ marginTop: 8 }}>{counts.done} of {counts.total} {WORLD_LABEL[world]} song lessons done{layers ? ` · your track has ${layers} ${layers === 1 ? "layer" : "layers"}` : ""}</div>
         </Screen>
       ) : (
       <Screen style={{ marginTop: 8 }}>

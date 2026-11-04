@@ -15,11 +15,12 @@ import { track } from "@/lib/analytics";
 import { applyTake, readTake, saveTake, takeType, type Take } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
-import { readSongs, newSong } from "@/lib/songs";
+import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { earnStripe, newTrophies, readStripes, type Trophy } from "@/lib/rewards";
 import { rankFor } from "@/lib/ranks";
-import { worldOf, WORLD_LABEL } from "@/lib/worldOrder";
+import { curItem, curPathOf, extrasOf } from "@/content/curriculum";
+import { isRebuilt, partOf, worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
@@ -57,7 +58,13 @@ const pageName = (p: Page | undefined): string => {
 export function SongStrip({ focus }: { focus?: string }) {
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
+  const [editing, setEditing] = useState(false);
   const [beat, setBeat] = useState(-1);
+  const rename = (n: string) => {
+    setEditing(false);
+    const i = readSongs();
+    if (n.trim()) { renameSong(i.active, n); window.dispatchEvent(new Event(SONG_EVENT)); }
+  };
   const want = useRef(false);
   useEffect(() => {
     const read = () => {
@@ -96,7 +103,10 @@ export function SongStrip({ focus }: { focus?: string }) {
         <Icon name={playing ? "stop" : "play"} />
       </button>
       <div className="fl-songbody">
-        <div className="fl-songname"><b>{name.toLowerCase()}</b><span>{empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
+        <div className="fl-songname">{editing
+          ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
+              onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
+          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
@@ -200,8 +210,11 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   }, [!!preview]); // eslint-disable-line react-hooks/exhaustive-deps
   const add = () => {
     const now = readTrackV2();
+    // Kept for the done screen's "with it / without it".
+    try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
     const next = now.added.includes(slug) ? now : applyTake(now, slug, line, world, params);
     writeTrackV2(next);
+    nameSongIfNew();
     setBase(next);
     setAdded(true);
     playFanfare();
@@ -318,6 +331,60 @@ function Rewards({ r }: { r: Reward }) {
   );
 }
 
+const beforeKey = (slug: string) => `ccd.before.${slug}`;
+
+/** Your song with what this lesson added, and without it. Pressing either plays it. */
+function WithWithout({ slug }: { slug: string }) {
+  const [pair, setPair] = useState<{ with: TrackV2; without: TrackV2 } | null>(null);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(beforeKey(slug));
+      const now = readTrackV2();
+      if (raw && now.layers.some(l => l.events.length)) setPair({ with: now, without: JSON.parse(raw) as TrackV2 });
+    } catch { /* no snapshot */ }
+  }, [slug]);
+  const [which, setWhich] = useState<"with" | "without" | null>(null);
+  const { engine, ready } = useEngineTrack((pair && which ? pair[which] : null) ?? readTrackV2());
+  useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
+  if (!pair) return null;
+  const play = (w: "with" | "without") => {
+    if (which === w) { engine.stop(); setWhich(null); return; }
+    setWhich(w);
+    void ready().then(() => window.setTimeout(() => { engine.metronome(false); engine.play(); }, 60));
+  };
+  return (
+    <>
+      <Silk label="hear the difference" right={which ? (which === "with" ? "with it" : "without it") : "tap one"} />
+      <div className="ls-pads fl-ab" role="radiogroup" aria-label="Your song with and without this lesson">
+        {(["with", "without"] as const).map(w => (
+          <button key={w} type="button" role="radio" aria-checked={which === w} className={`ls-pad ${which === w ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => play(w)}>
+            <small>{w === "with" ? "a" : "b"}</small><span>{w === "with" ? "your song now" : "before this lesson"}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/** The deeper lessons and bonus rounds that hang off this lesson, or, in one of them, the way back. */
+function GoDeeper({ slug }: { slug: string }) {
+  const item = curItem(slug);
+  const extras = extrasOf(item?.kind === "song" ? slug : item?.parent ?? "").filter(e => e.slug !== slug);
+  if (!extras.length) return null;
+  return (
+    <>
+      <Silk label={item?.kind === "song" ? "go deeper, if you like" : "more on this"} right={`${extras.length}`} />
+      <ul className="fl-deeper">
+        {extras.map(e => (
+          <li key={e.slug}>
+            <Link href={`/learn/${e.slug}`}><b className={`jv-kind is-${e.kind}`}>{e.kind}</b><span>{e.title.replace(/^bonus: /, "")}<small>{e.does}{isRebuilt(e.slug) ? "" : " · old version"}</small></span><Icon name="play" small /></Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
 function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked, onRetune, onMore }: { reward: Reward | null; mission: Mission; nextHref: string; nextTitle?: string; back: string; firstTry: number; asked: number; onRetune?: () => void; onMore?: () => void }) {
   const f = mission.fromFile!;
   useEffect(() => { playFanfare(); }, []);
@@ -330,12 +397,14 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
         <Meta left="lesson done" right={asked ? `${firstTry} of ${asked} first try` : undefined} />
         <div className="ls-title is-big fl-pop">{mission.title.toLowerCase()}</div>
       </Screen>
+      <WithWithout slug={mission.slug} />
       </div>
       <div className="fl-text">
       {reward && <Rewards r={reward} />}
       <Silk label="you can now" />
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>
       {f.next && <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
+      <GoDeeper slug={mission.slug} />
       <div className="fl-again">
         {onRetune && <button type="button" className="ls-chip" onClick={onRetune}>tune it again</button>}
         {onMore && <button type="button" className="ls-chip" onClick={onMore}>more questions</button>}
@@ -465,9 +534,12 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   }
 
   const n = mission.number ?? 1;
+  const ci = curItem(mission.slug);
+  const cp = curPathOf(mission.slug);
+  const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson ${cp.items.filter(i => i.kind === "song").findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson ${n}`;
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
-      <Top back={back} crumb={`${WORLD_LABEL[world]} · lesson ${n}`} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
+      <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
       <SongStrip focus={mission.fromFile?.adds.part} />
       <div className="ls-stage fl-stage" key={idx}>{body}</div>
     </div>

@@ -43,6 +43,7 @@ const P: Record<string, ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
   back: <path d="m14.5 6-6 6 6 6" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
+  edit: <><path d="M5 19h3.5L18 9.5 14.5 6 5 15.5z" /><path d="M13 7.5 16.5 11" /></>,
   reset: <><path d="M4.5 12a7.5 7.5 0 1 0 2.4-5.5" /><path d="M4 4v4.5h4.5" /></>,
   out: <><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 14v6h14v-6" /></>,
   check: <path d="m5 12.5 4.5 4.5L19 7" />,

@@ -289,7 +289,7 @@ What you have after dj: your song blended with bank tracks in a short set, match
 | S | `set-structure-dj` | the energy arc | order the bank into three acts | set order step |
 | D | `energy-management-dj` | energy management |where your song goes in the set| |
 | D | `genre-strategy-dj` | genre strategy |a set around your song's genre| |
-| B | `reading-the-crowd` | bonus: reading the room | | |
+| B | `reading-the-crowd` | bonus: reading the room | the floor dips: pick the next track from your bank | |
 | S | `effects-performance-dj` | effects in performance | filter out, echo out between tracks | filter and echo on the mix step |
 | D | `effects-deep-dj` | effects, deep |echo out of your song into the next track| |
 | D | `stem-djing` | stem djing |your song's drums under another track's vocal| |
@@ -300,13 +300,13 @@ What you have after dj: your song blended with bank tracks in a short set, match
 | | slug | title | does to the mix | needs code |
 |---|---|---|---|---|
 | S | `recording-your-set-dj` | recording your set | record the mix, send it | engine recorder |
-| B | `live-mistakes-dj` | bonus: handling mistakes | | mistake drills |
+| B | `live-mistakes-dj` | bonus: handling mistakes | recover a train wreck in your own blend | mistake drills |
 | D | `dj-business` | the business of djing |what to send a promoter: your set and your song| |
 | S | `dj-advanced-complete` | from dj to artist | your own track in your set; the CCD night | |
 
 ## Counts
 
-57 song lessons, 133 deeper, 8 bonus rounds, 26 new slugs. Every one of the app's 172 lessons (the 171 plus basics 2) appears exactly once above, checked by `scripts/curriculum-check.mjs`, which fails the build the day a slug goes missing or lands twice.
+57 song lessons, 133 deeper, 8 bonus rounds, 26 new slugs. Every one of the app's 172 lessons (the 171 plus basics 2) appears exactly once above, checked by `scripts/gen-curriculum.mjs` (it also writes `src/content/curriculum.gen.json`, the structure the app reads), which fails the build the day a slug goes missing or lands twice.
 
 ## Changes to paths, worlds and the app (code)
 

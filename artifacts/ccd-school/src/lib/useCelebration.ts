@@ -9,7 +9,10 @@ import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
 import { CHAPTERS } from "@/content/chapters";
-import { pathsByWorld } from "@/content/paths";
+import { pathsByWorld, type LearningPath } from "@/content/paths";
+
+/** A path is finished when its song lessons are (deeper lessons and bonus rounds are extra). */
+const spine = (p: LearningPath) => (p.songSlugs.length ? p.songSlugs : p.missionSlugs);
 import type { CelebrationEvent } from "@/components/CelebrationOverlay";
 
 const SEEN_KEY = "ccd.celebrations.v1";
@@ -108,8 +111,8 @@ export function useCelebration() {
         const paths = pathsByWorld(world);
         for (const path of paths) {
           // Path trophy
-          const allDone = path.missionSlugs.every(s => !!completed[s]);
-          const wasDone = path.missionSlugs.every(s => !!prevCompleted[s]);
+          const allDone = spine(path).every(s => !!completed[s]);
+          const wasDone = spine(path).every(s => !!prevCompleted[s]);
           if (allDone && !wasDone) {
             const celebId = `path-${path.slug}`;
             if (!seen.has(celebId)) {
@@ -125,7 +128,7 @@ export function useCelebration() {
         const chapters = CHAPTERS.filter(c => c.world === world);
         for (const ch of chapters) {
           const chPaths = paths.filter(p => p.chapter === ch.slug);
-          const chSlugs = chPaths.flatMap(p => p.missionSlugs);
+          const chSlugs = chPaths.flatMap(p => spine(p));
           const allDone = chSlugs.every(s => !!completed[s]);
           const wasDone = chSlugs.every(s => !!prevCompleted[s]);
           if (allDone && !wasDone && chSlugs.length > 0) {
@@ -140,7 +143,7 @@ export function useCelebration() {
         }
 
         // World trophy
-        const worldSlugs = paths.flatMap(p => p.missionSlugs);
+        const worldSlugs = paths.flatMap(p => spine(p));
         const allWorldDone = worldSlugs.every(s => !!completed[s]);
         const wasWorldDone = worldSlugs.every(s => !!prevCompleted[s]);
         if (allWorldDone && !wasWorldDone && worldSlugs.length > 0) {
@@ -156,11 +159,11 @@ export function useCelebration() {
 
       // CCD Master — all 3 worlds done
       const allMasterDone = (["fundamentals","dj","producer"] as const).every(w => {
-        const wSlugs = pathsByWorld(w).flatMap(p => p.missionSlugs);
+        const wSlugs = pathsByWorld(w).flatMap(p => spine(p));
         return wSlugs.every(s => !!completed[s]);
       });
       const wasMasterDone = (["fundamentals","dj","producer"] as const).every(w => {
-        const wSlugs = pathsByWorld(w).flatMap(p => p.missionSlugs);
+        const wSlugs = pathsByWorld(w).flatMap(p => spine(p));
         return wSlugs.every(s => !!prevCompleted[s]);
       });
       if (allMasterDone && !wasMasterDone) {

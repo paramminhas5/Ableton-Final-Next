@@ -132,3 +132,24 @@ export function deleteSong(id: string): SongIndex {
   }
   return open({ ...i, songs }, songs[Math.min(idx, songs.length - 1)].id, emptyTrackV2());
 }
+
+/** Names a song gets the first time a lesson adds a part to it. The learner can rename it any time. */
+export const SONG_NAMES = [
+  "first light", "night bus", "two am", "soft static", "low tide", "neon cat", "slow burn", "after hours",
+  "warm room", "blue hour", "late set", "paper moon", "cat nap", "side street", "small hours", "glow worm",
+] as const;
+const isPlaceholder = (n: string) => n === "my track" || n === "my song" || /^song \d+$/.test(n);
+
+/** Give the open song a real name if it still has a placeholder one. Returns the name it has now. */
+export function nameSongIfNew(): string {
+  const i = readSongs();
+  const info = i.songs.find(s => s.id === i.active);
+  if (!info) return "my song";
+  if (!isPlaceholder(info.name)) return info.name;
+  const taken = new Set(i.songs.map(s => s.name));
+  let h = 0;
+  for (const c of info.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const pick = SONG_NAMES.map((_, k) => SONG_NAMES[(h + k) % SONG_NAMES.length]).find(n => !taken.has(n)) ?? `song ${i.songs.length}`;
+  renameSong(info.id, pick);
+  return pick;
+}
