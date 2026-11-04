@@ -43,3 +43,5 @@ Working rules:
 - If something can only be checked on Param's Mac or phones, tell him exactly what to run.
 - Ask before merging to main, changing production, or spending money.
 - Plain copy, lowercase UI text, no em dashes. One pink go key per screen.
+
+- Docs still owed from part 4: add a 4 Nov line to `ccd/history.md` (look pass part 4 on school/field, commits 37909f3, 0157c33: reference pages, studio three-column layout at 900 px and up, emoji out, details in `school-redesign.md`) and add `school-pro.md` to the School table in `ccd/00_README.md` (Current: the Pro proposal, no reaction from Param yet).
