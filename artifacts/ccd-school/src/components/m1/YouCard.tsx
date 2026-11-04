@@ -17,18 +17,22 @@ export function YouCard({ xp, streak, done }: { xp: number; streak: number; done
   const rank = rankFor(xp);
   const trophies = trophiesFor(stripes, done);
   const gold = Object.values(stripes).filter(s => s.gold).length;
+  const seg = 20, lit = Math.round(rank.progress * seg);
+  const n = Object.keys(stripes).length;
   return (
     <Link href="/profile" className="td-you" aria-label="Your profile">
-      <div className="td-you-top"><b>{rank.current.name.toLowerCase()}</b><span>{xp} xp</span></div>
-      <div className="fl-rank"><span>rank {rank.idx + 1}</span><div><i style={{ width: `${Math.round(rank.progress * 100)}%` }} /></div><span>{rank.next ? rank.next.name.toLowerCase() : "top"}</span></div>
+      <div className="td-you-glass">
+        <div className="td-you-top"><span>rank {rank.idx + 1}</span><span>{xp} xp</span></div>
+        <div className="td-you-rank">{rank.current.name.toLowerCase()}</div>
+        <div className="td-you-leds" aria-label={`${Math.round(rank.progress * 100)}% to ${rank.next?.name ?? "the top"}`}>{Array.from({ length: seg }, (_, i) => <i key={i} className={i < lit ? "is-on" : ""} />)}</div>
+        <div className="td-you-next">{rank.next ? `next: ${rank.next.name.toLowerCase()}` : "top rank"}</div>
+      </div>
       <div className="td-you-stats">
-        <span><b>{streak}</b>day streak</span>
-        <span><b>{Object.keys(stripes).length}</b>stripes</span>
-        <span><b>{gold}</b>gold</span>
-        <span><b>{trophies.filter(t => t.won).length}/{trophies.length}</b>trophies</span>
+        <span><b className="is-fire">{streak}</b>day streak</span>
+        <span><b className="td-you-stripes">{Array.from({ length: Math.max(3, Math.min(6, n)) }, (_, i) => <i key={i} className={i < n ? (i < gold ? "is-gold" : "is-on") : ""} />)}</b>{n} {n === 1 ? "stripe" : "stripes"}{gold ? ` · ${gold} gold` : ""}</span>
       </div>
       <div className="td-shelf" aria-label="Trophies">
-        {trophies.map(t => <span key={t.id} className={t.won ? "is-won" : ""} title={`${t.name}: ${t.line}`}><Icon name={t.icon} small /></span>)}
+        {trophies.map((t, i) => <span key={t.id} className={t.won ? "is-won" : ""} style={{ animationDelay: `${i * 120}ms` }} title={`${t.name}: ${t.line}`}><Icon name={t.icon} small /></span>)}
       </div>
     </Link>
   );

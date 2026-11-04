@@ -20,7 +20,7 @@ const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "producer", "dj"];
 
 export function Today() {
-  const { progress } = useProgress();
+  const { progress, missionsNeedingReview } = useProgress();
   const { track } = useTrack();
   const [world, setWorld] = useState<WorldId>("fundamentals");
   const [sel, setSel] = useState<string | null>(null);
@@ -207,15 +207,16 @@ export function Today() {
           <Knob onStep={() => pickLesson(steps.indexOf(inZone[(li + 1) % Math.max(1, inZone.length)]))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={58} height={170} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(steps.indexOf(inZone[idxOf(v, inZone.length)]))} />
         </div>
       </div>
-      <div className="m1-g" style={{ marginTop: 12 }}>
-        <GoPill onClick={hear} disabled={!layers && !offer} style={{ gridColumn: "1 / -1" }} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"}><Icon name={playing ? "stop" : "hear"} small />{playing ? "stop" : layers ? "play my song" : "hear what this lesson adds"}</GoPill>
-      </div>
+      <Link href="/review" className="td-review">
+        <span className="td-rv-n">{missionsNeedingReview.length}</span>
+        <span><b>review</b>{missionsNeedingReview.length ? `${missionsNeedingReview.length === 1 ? "lesson is" : "lessons are"} ready for a quick refresh` : Object.keys(done).length ? "nothing due. you're fresh" : "lessons come back here so they stick"}</span>
+        <Icon name="reset" />
+      </Link>
       <div className="td-jump">
         <Silk label="jump to" />
         <div className="m1-g">
-          <Key label="words" href="/glossary" ariaLabel="Every word, explained"><Icon name="note" /></Key>
-          <Key label="ear gym" href="/gym" ariaLabel="Open the ear gym"><Icon name="hear" /></Key>
-          <Key label="review" href="/review" ariaLabel="Review what you learned"><Icon name="reset" /></Key>
+          <Key label="wiki" href="/wiki" ariaLabel="The wiki"><Icon name="note" /></Key>
+          <Key label="settings" href="/settings" ariaLabel="Settings"><Icon name="settings" /></Key>
           <Key label="all worlds" href="/worlds" ariaLabel="See all worlds"><Icon name="menu" /></Key>
         </div>
       </div>

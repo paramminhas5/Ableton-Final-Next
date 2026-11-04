@@ -81,7 +81,7 @@ export function ProfilePageClient() {
   };
 
   return (
-    <main className="m1-page" style={{ paddingTop: 4 }}>
+    <main className="m1-page pf" style={{ paddingTop: 4 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, height: 56 }}>
         <Key href="/dashboard" ariaLabel="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
         <h1 style={{ flex: 1, fontSize: 22, fontWeight: 500, letterSpacing: "-.02em", margin: 0 }}>you</h1>
@@ -89,6 +89,8 @@ export function ProfilePageClient() {
         <Key onClick={share} ariaLabel={shared ? "Link copied" : "Share your profile"} style={{ width: 44, height: 44 }}><Icon name="out" /></Key>
       </div>
 
+      <div className="pf-cols">
+      <div className="pf-col">
       <Screen>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <span style={{ width: 64, height: 64, borderRadius: "50%", background: "#141416", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)" }}>
@@ -116,6 +118,8 @@ export function ProfilePageClient() {
         <Readout value={track.layers.length} label="layers" color="var(--led-lilac)" />
       </div>
 
+      </div>
+      <div className="pf-col">
       <Silk label="settings" />
       <Row led="var(--ledoff)" label="look">
         <Switch label="Look" value={mode === "system" ? "auto" : mode} onChange={id => { setMode((id === "auto" ? "system" : id) as Mode); }}
@@ -148,6 +152,8 @@ export function ProfilePageClient() {
         })}
       </div>
 
+      </div>
+      <div className="pf-col">
       <Silk label="ranks" right={`${progress.xp} xp`} />
       <ol className="ls-learn" style={{ padding: "0 4px" }}>
         {RANKS.map((r, i) => (
@@ -198,6 +204,8 @@ export function ProfilePageClient() {
           <GoPill onClick={() => signOut()} style={{ gridColumn: "1 / -1" }}>sign out</GoPill>
         </div>
       )}
+      </div>
+      </div>
     </main>
   );
 }

@@ -556,3 +556,4 @@ body[data-focus="1"] nav[aria-label="Modes"], body[data-focus="1"] header[role="
 @media (min-width:900px){
   .m1-modebar{left:calc(50% - (min(1320px, 100vw - 48px) - 56px) / 6)!important;right:calc(50% - (min(1320px, 100vw - 48px) - 56px) / 6)!important}
 }
+@media (min-width:900px){.m1-page.pf{max-width:1320px;padding-bottom:130px}.pf-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px;align-items:start}}

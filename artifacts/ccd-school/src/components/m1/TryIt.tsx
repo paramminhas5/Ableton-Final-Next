@@ -222,7 +222,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   return (
-    <div className="ls-col">
+    <div className={`ls-col ${coach ? "is-play" : ""}`}>
       <div className="fl-inst">
       <Screen>
         <div className="ls-meta">
@@ -235,14 +235,16 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         <div className="ls-title">{title}</div>
         <svg viewBox={`0 0 ${Wd} ${Hd}`} width="100%" style={{ display: "block", marginTop: 12 }} role="img" aria-label={`${notesCount} notes recorded`}>
           {coach && Array.from({ length: loop }, (_, i) => <text key={`b${i}`} x={i * beatW + 4} y={10} fontSize={9} fill="rgba(255,255,255,.55)">{i + 1}</text>)}
-          {Array.from({ length: loop * 4 + 1 }, (_, i) => (
+          {Array.from({ length: loop * 4 }, (_, i) => (
             <path key={i} d={`M${(i * Wd) / (loop * 4)} 0V${Hd}`} stroke={i % 4 === 0 ? "rgba(255,255,255,.14)" : "rgba(255,255,255,.05)"} />
           ))}
           {Array.from({ length: rows + 1 }, (_, i) => <path key={`r${i}`} d={`M0 ${i * rh}H${Wd}`} stroke="rgba(255,255,255,.04)" />)}
           {events.map((e, i) => {
             const r = rowOf(e.note);
             if (r < 0) return null;
-            const x = (e.start / loop) * Wd;
+            // A hit a hair before beat 1 belongs to beat 1, not the end of the bar.
+            const st = e.start > loop - TOL ? e.start - loop : e.start;
+            const x = Math.max(0, (st / loop) * Wd);
             const w = drumLike ? Math.max(6, beatW * 0.45) : Math.max(6, (e.len / loop) * Wd - 2);
             const c = isOff(e) ? "#FF4A5A" : color;
             return <rect key={i} x={x + 1} y={r * rh + 1.5} width={Math.min(w, Wd - x - 1)} height={Math.max(4, rh - 3)} rx={2} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />;
