@@ -136,14 +136,13 @@ export function DecibelMeterSim() {
 
       {/* Play/stop */}
       <button
-        onPointerDown={startTone}
-        onPointerUp={stopTone}
-        onPointerLeave={stopTone}
+        onClick={() => (playing ? stopTone() : startTone())}
+        aria-pressed={playing}
         className={`brutal-border w-full py-4 font-display text-2xl brutal-press transition-colors ${
           playing ? "bg-hot text-bone" : "bg-acid text-ink"
         }`}
       >
-        {playing ? "▶ HOLD TO HEAR ◀" : "▶ HOLD & DRAG FADER"}
+        {playing ? "■ TAP TO STOP" : "▶ TAP TO PLAY, THEN DRAG THE FADER"}
       </button>
 
       <div className="grid grid-cols-2 gap-2">

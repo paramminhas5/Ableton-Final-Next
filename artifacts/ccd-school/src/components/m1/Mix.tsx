@@ -242,7 +242,17 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
   }, [frame, layers, playing, holding, shown]);
 
   const clashes = useMemo(() => (playing && frame ? frame.clashes.filter(c => layers[c.target] && layers[c.other]) : []), [frame, playing, layers]);
-  const worst = clashes[0] ?? null;
+  // The headline clash only changes when another pair clearly overtakes it (hysteresis), so the text and fix pads stay put.
+  const keepKey = useRef<string | null>(null);
+  const keepSince = useRef(0);
+  const top = clashes[0] ?? null;
+  let worst = top;
+  if (top && keepKey.current) {
+    const kept = clashes.find(c => `${c.target}:${c.other}` === keepKey.current);
+    if (kept && (kept.severity >= top.severity * 0.7 || Date.now() - keepSince.current < 1500)) worst = kept;
+  }
+  const worstKey = worst ? `${worst.target}:${worst.other}` : null;
+  if (worstKey !== keepKey.current) { keepKey.current = worstKey; keepSince.current = Date.now(); }
 
   // ── editing ───────────────────────────────────────────────────────────────
   const setLayerParam = useCallback(
@@ -455,7 +465,7 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
       </div>
       {view === "stage" ? (
         <>
-          <Silk label="the stage" right={holding ? "let go to come back" : "hold the screen to compare"} />
+          <Silk label="the stage" right={holding ? "let go to come back" : "drag a dot, hold the top screen to compare"} />
           <Stage
             track={track}
             shown={shown}
@@ -561,7 +571,7 @@ function Stage({ track, shown, spots, nowSpots, clashes, selId, onSelect, onDrag
 
   const anySolo = track.layers.some(l => l.solo);
   return (
-    <div className={`mx-stage ${holding ? "is-holding" : ""}`} ref={ref} {...holdHandlers} {...keyHandlers} tabIndex={0}
+    <div className={`mx-stage ${holding ? "is-holding" : ""}`} ref={ref} {...keyHandlers} tabIndex={0}
       aria-label={holding ? "Comparing. Let go to come back" : "The stage: pan across, pitch up and down, size is loudness. Hold to compare"}>
       {[25, 50, 75].map(y => <div key={y} className="mx-hl" style={{ top: `${y}%` }} />)}
       <div className="mx-vl" />

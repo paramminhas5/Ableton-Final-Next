@@ -13,7 +13,7 @@ const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Sent = { inst: string; events: string; duck: string; params: Map<number, number> };
 
-type Last = { bpm: number; loop: number; master?: number[]; samples?: Set<string> };
+type Last = { bpm: number; loop: number; swing?: number; master?: number[]; samples?: Set<string> };
 
 export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last) {
   const m = (last.master ??= []);
@@ -27,6 +27,10 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
   if (last.bpm !== t.bpm) {
     engine.tempo(t.bpm);
     last.bpm = t.bpm;
+  }
+  if (last.swing !== t.swing) {
+    engine.swing(t.swing ?? 0);
+    last.swing = t.swing;
   }
   if (last.loop !== t.loop) {
     engine.loop(t.loop);

@@ -84,6 +84,10 @@ export class Engine {
     this.s(CMD.tempo, 0, 0, 0, bpm);
     this.host.setTempo?.(bpm);
   }
+  /** 0 to 0.75: how late the off-beat 16ths land */
+  swing(amount: number) {
+    this.s(CMD.swing, 0, 0, 0, amount);
+  }
   loop(beats: number) {
     this.s(CMD.loop, 0, 0, 0, beats);
   }

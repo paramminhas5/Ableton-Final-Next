@@ -142,3 +142,12 @@ describe("first visit starter", () => {
     expect(t.layers.every(l => l.events.length > 3 && l.events.every(e => e.start >= 0 && e.start < t.loop))).toBe(true);
   });
 });
+
+import { effectivePad } from "../src/lib/track2";
+describe("effectivePad", () => {
+  it("a hats layer defaults to the closed hat, not the kick", () => {
+    expect(effectivePad({ type: "hats", pad: 0 })).toBe(4);
+    expect(effectivePad({ type: "hats", pad: 5 })).toBe(5);
+    expect(effectivePad({ type: "drums", pad: 0 })).toBe(0);
+  });
+});

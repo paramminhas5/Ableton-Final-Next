@@ -142,10 +142,10 @@ export function Today() {
           <WorldDial value={world} onChange={pick} />
           <span className="m1-ml">{counts.done} of {counts.total}</span>
         </div>
-        <div className="m1-m is-wide" style={{ height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 16 }}>
+        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute practice`} style={{ height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 16 }}>
           <Meter segments={9} lit={lit} />
-          <span className="m1-ml">today</span>
-        </div>
+          <span className="m1-ml">{lit >= 9 ? "goal done" : "2 min practice"}</span>
+        </Link>
         <Key wide label={playing ? "stop" : layers ? "hear track" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your track" : layers ? "Hear your track" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
           <Icon name={playing ? "stop" : "hear"} />
         </Key>

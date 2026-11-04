@@ -48,6 +48,7 @@ import {
   type LayerV2,
   type Surface,
   hasTrackV2,
+  effectivePad,
   type TrackV2,
 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
@@ -76,7 +77,7 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
     if (shift) return DRUM_RACK_PARAMS.map(spec => ({ spec, index: spec.index }));
-    return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + l.pad * DRUM_PAD_PARAMS.length + k }));
+    return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
   const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];
   return table.filter(p => p.bank === (shift ? "shift" : "sound")).map(spec => ({ spec, index: spec.index }));
@@ -91,6 +92,8 @@ export function Studio() {
   const [touched, setTouched] = useState<Touched>(null);
   const [adding, setAdding] = useState(false);
   const [songsOpen, setSongsOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [sureReset, setSureReset] = useState<string | null>(null);
   const [songs, setSongs] = useState<SongIndex | null>(null);
   const [shift, setShift] = useState(false);
   const [rate, setRate] = useState(1);
@@ -215,7 +218,7 @@ export function Studio() {
     flash(`${sel.id}:${note}`);
     if (drumLike) {
       const pad = DRUM_PAD_NOTES.indexOf(note as (typeof DRUM_PAD_NOTES)[number]);
-      if (pad >= 0 && pad !== sel.pad) patchSel(l => ({ ...l, pad }), false);
+      if (pad >= 0 && pad !== effectivePad(sel)) patchSel(l => ({ ...l, pad }), false);
     }
   };
   const up = (note: number, e: PointerEvent<HTMLElement>) => {
@@ -252,6 +255,7 @@ export function Studio() {
   // ── shaping ───────────────────────────────────────────────────────────────
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
   const setParam = (index: number, spec: ParamSpec, v: number) => {
+    start(); // a knob turned before any tap must still be heard
     const now = Date.now();
     const undoable = now - lastParamEdit.current > 800; // one drag is one undo step
     lastParamEdit.current = now;
@@ -308,7 +312,7 @@ export function Studio() {
     const s = sel.surface;
     if (s === "own") return ownHint[type?.own ?? ""] ?? "";
     if (drumLike) {
-      if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[sel.pad]} selected`;
+      if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[effectivePad(sel)]} selected`;
       if (s === "keys") return "one sound per key";
       if (s === "steps") return `a lane per sound · steps ${pageNow * 8 + 1} to ${pageNow * 8 + 8}`;
     } else if (sel.type === "sample") {
@@ -406,8 +410,8 @@ export function Studio() {
             ))}
           </div>
           <span style={{ flex: 1 }} />
-          <button type="button" className="st-tag" style={{ maxWidth: 74, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: "16px" }}
-            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
+          <button type="button" className="st-tag" style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: "16px" }}
+            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           {mode === "mix" ? (
             <span className="st-tag" style={{ cursor: "default" }}>{NOTE_NAMES[track.root % 12]} {track.scale}</span>
@@ -475,7 +479,24 @@ export function Studio() {
           )}
         </Screen>
 
-        {songsOpen ? (
+        {resetOpen ? (
+          <div className="st-main">
+            <Silk label="start over" right="undo brings it back" />
+            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+              {([
+                ["layer", sel ? `clear ${TYPE[sel.type].label ?? sel.type} notes` : "clear this layer", !!sel, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => (l.id === sel?.id ? { ...l, events: [] } : l)) })],
+                ["notes", "clear every layer's notes, keep the sounds", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => ({ ...l, events: [] })) })],
+                ["sounds", "reset every knob to its start, keep the notes", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => ({ ...l, params: {}, mute: false, solo: false })) })],
+                ["all", "empty song, start from nothing", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: [], added: [] })],
+              ] as [string, string, boolean, (t: TrackV2) => TrackV2][]).map(([id, label, ok, fn]) => (
+                <button key={id} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }} disabled={!ok}
+                  onClick={() => { if (sureReset === id) { update(fn); setSureReset(null); setResetOpen(false); } else setSureReset(id); }}>
+                  {sureReset === id ? "tap again to confirm" : label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : songsOpen ? (
           <div className="st-main"><SongsPanel songs={songs} onChange={refreshSongs} /></div>
         ) : adding ? (
           <div className="st-main"><AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} /></div>
@@ -582,6 +603,9 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
+        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+          <Icon name="reset" />
+        </Key>
         <Key label="to live" onClick={() => downloadTrackV2Midi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
           <Icon name="out" />
         </Key>
@@ -645,7 +669,7 @@ function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<
       {order.map(p => {
         const note = DRUM_PAD_NOTES[p];
         const d = ripple(p);
-        const cls = d === 0 || (p === layer.pad && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
+        const cls = d === 0 || (p === effectivePad(layer) && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
         return (
           <button key={p} type="button" className={`st-sp ${cls}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={DRUM_PAD_NAMES[p]} {...noteHandlers(note)}>
             <span className="st-lb">{DRUM_PAD_NAMES[p]}</span>

@@ -439,3 +439,8 @@ export function useTrackV2() {
 
   return { track, update, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0 };
 }
+
+/** A hats layer plays the closed hat (pad 4), never the kick that pad 0 would give it. */
+export function effectivePad(l: Pick<LayerV2, "type" | "pad">): number {
+  return l.type === "hats" && l.pad === 0 ? 4 : l.pad;
+}

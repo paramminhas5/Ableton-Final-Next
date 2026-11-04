@@ -11,8 +11,8 @@ import { ensureAudio, playCorrect, playWrong } from "@/lib/audio";
 import { track } from "@/lib/analytics";
 import { useProgress } from "@/lib/progress";
 import {
-  GYM_DRILLS, MAX_LEVEL, SESSION_SECONDS, advance, makeCompressionQuestion, makeEqQuestion, makeGrooveQuestion, mulberry32, summarize,
-  type AttackSetting, type CompressionQuestion, type EqQuestion, type GrooveKind, type GrooveQuestion, type GymDrill, type GymQuestion, type SessionResult,
+  GYM_DRILLS, MAX_LEVEL, SESSION_SECONDS, advance, makeCompressionQuestion, makeEqQuestion, makeGrooveQuestion, mulberry32, summarize, pickSource, pickTranspose, bandName,
+  type AttackSetting, type CompressionQuestion, type EqQuestion, type GrooveKind, type GrooveQuestion, type GymDrill, type GymQuestion, type GymSource, type SessionResult,
 } from "@/lib/gym/engine";
 import { ABPlayer, REAL_BPM, loadRealKit, renderMatchedPair } from "@/lib/gym/render";
 import { freshSaved, loadGym, saveGym, type GymSaved } from "@/lib/gym/store";
@@ -26,7 +26,7 @@ const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF",
 const BARS_BEFORE_ANSWER = 8;
 const fmtHz = (hz: number) => (hz >= 1000 ? `${hz / 1000} khz` : `${hz} hz`);
 const fmtClock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-const BAND = (hz: number) => (hz < 200 ? "low" : hz < 800 ? "low mid" : hz < 3000 ? "mid" : hz < 9000 ? "high mid" : "high");
+const BAND = bandName;
 
 type Phase = "idle" | "loading" | "listening" | "feedback" | "done";
 
@@ -96,6 +96,7 @@ export function GymPageClient() {
   const order = useRef<GymDrill[]>(GYM_DRILLS);
   const drillIdx = useRef(0);
   const lastGroove = useRef<GrooveKind | undefined>(undefined);
+  const lastSource = useRef<GymSource | undefined>(undefined);
   const savedRef = useRef(saved);
   savedRef.current = saved;
   const rng = useMemo(() => mulberry32(Date.now() & 0xffffffff), []);
@@ -150,17 +151,25 @@ export function GymPageClient() {
     try {
       let question: GymQuestion;
       let pair;
+      // a different sound and key every round, never the same source twice running
+      const roundBase = async () => {
+        const source = pickSource(rng, lastSource.current);
+        lastSource.current = source;
+        if (source === "real") {
+          const kit = await loadRealKit();
+          if (kit) return { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) };
+        }
+        return { bpm: 100 + Math.floor(rng() * 5) * 8, source: source === "real" ? "full" as const : source, transpose: pickTranspose(rng) };
+      };
       if (drill === "eq") {
         const e = makeEqQuestion(level, rng);
         question = e;
-        const kit = await loadRealKit();
-        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
+        const base = await roundBase();
         pair = await renderMatchedPair(base, { ...base, eq: { hz: e.answerHz, db: e.boostDb, q: e.q } });
       } else if (drill === "compression") {
         const k = makeCompressionQuestion(level, rng);
         question = k;
-        const kit = await loadRealKit();
-        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
+        const base = await roundBase();
         pair = await renderMatchedPair(base, { ...base, comp: k.compressed ? { thresholdDb: k.thresholdDb, ratio: k.ratio, attack: k.attack } : undefined });
       } else {
         const g = makeGrooveQuestion(level, rng, lastGroove.current);

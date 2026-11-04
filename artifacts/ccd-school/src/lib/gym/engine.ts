@@ -58,6 +58,26 @@ export function mulberry32(seed: number): Rng {
   };
 }
 
+/** What the learner hears in a round. Variety is the point of ear training: never the same sound twice in a row. */
+export type GymSource = "real" | "full" | "drums" | "bass" | "pad" | "hats";
+export const GYM_SOURCES: GymSource[] = ["real", "full", "drums", "bass", "pad", "hats"];
+export function pickSource(rng: Rng, prev?: GymSource): GymSource {
+  const pool = GYM_SOURCES.filter((x) => x !== prev);
+  return pool[Math.floor(rng() * pool.length)];
+}
+/** Semitones to move the synth loops, so the key changes between rounds. */
+export function pickTranspose(rng: Rng): number {
+  return Math.floor(rng() * 12) - 5;
+}
+
+/** Plain names for the ten band centres, with the Hz kept separate. */
+export function bandName(hz: number): string {
+  const names = ["sub", "bass", "low mid", "mid", "upper mid", "presence", "bite", "sparkle", "air", "top"];
+  let best = 0;
+  EQ_CENTERS.forEach((c, i) => { if (Math.abs(Math.log(hz / c)) < Math.abs(Math.log(hz / EQ_CENTERS[best]))) best = i; });
+  return names[best];
+}
+
 export const EQ_CENTERS = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 12000, 16000];
 
 export interface EqQuestion {
