@@ -52,14 +52,14 @@ What the song has after basics: a kick, a clap, hats with swing, a tempo, a melo
 | S | `amplitude-volume` | amplitude and volume | changes lead velocity; soft and hard | velocity on keys |
 | D | `how-we-hear` | how we hear | masking: your bass under your kick with and without a duck | duck knob (needs a bass; preset if none) |
 | S | `timbre-tone` | timbre and tone colour | shape lead: cutoff | harmonics picture |
-| B | (new) `ear-higher-lower` | bonus: higher or lower? | rounds played from your own melody's notes | generated ear rounds |
+| B | `ear-higher-lower` | bonus: higher or lower? | rounds played from your own melody's notes | generated ear rounds |
 
 ### Path 3: waves and the studio
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
 | S | `waveforms` | waveforms | shape lead: wave (sine, triangle, saw, square) | triangle in `WaveShape`, clip `four-waves` |
 | S | `overtones-harmonics` | harmonics up close | changes lead (a fifth above) | spectrum picture |
-| S | (new) `noise` | noise, the odd friend | changes hats: noise colour and length | hat shape visual |
+| S | `noise` | noise, the odd friend | changes hats: noise colour and length | hat shape visual |
 | S | `samples-loops` | samples and loops | adds sample (a recorded hit into your song) | sampler layer in a lesson |
 | D | `digital-audio` | digital audio | crush your sample: bit depth and rate by ear; keep or not | crush knob |
 | D | `daw-explained` | what a daw is | open your song in the studio; name the parts | |

@@ -136,7 +136,7 @@
    {
     "slug": "ear-higher-lower",
     "kind": "bonus",
-    "isNew": true,
+    "isNew": false,
     "title": "bonus: higher or lower?",
     "does": "rounds played from your own melody's notes",
     "code": "generated ear rounds",
@@ -170,7 +170,7 @@
    {
     "slug": "noise",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "noise, the odd friend",
     "does": "changes hats: noise colour and length",
     "code": "hat shape visual"

@@ -1270,6 +1270,714 @@
       "file": "foundations/06-frequency-pitch.yaml"
     },
     {
+      "slug": "amplitude-volume",
+      "world": "foundations",
+      "number": 7,
+      "title": "amplitude and volume",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "how loud your melody sits against your beat decides whether it leads or hides"
+      },
+      "learn": "What makes a sound loud, how loudness is measured, and setting how loud your melody sits in your song.",
+      "youCan": [
+        "say what amplitude is and how it differs from pitch",
+        "say roughly what decibels measure",
+        "set your melody's level against your beat by ear"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-loud",
+          "say": {
+            "mentor": "Tap quiet, then loud. Same note, same pitch. The only difference is how hard the air is being pushed. Look at the picture: the wave is the same width, just taller.\nThat height is called amplitude. Bigger pushes of air reach your ear as a louder sound.",
+            "straight": "Quiet vs loud. Same pitch, different amplitude: how far the air moves with each push. More amplitude, louder sound. The wave gets taller, not faster.",
+            "eli5": "Tap a, then b. Same note, but b is louder. A loud sound pushes the air harder, so the wiggle in the picture gets taller. It doesn't get faster, just bigger."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "decibels",
+          "say": {
+            "mentor": "Loudness is measured in decibels, written dB. The scale is odd but useful: every 6 dB or so roughly doubles the size of the wave, and about 10 dB sounds roughly twice as loud to most people.\nIn a music program you'll see a fader marked in dB, with 0 dB near the top. Pulling a part down by a few dB is how producers make room for something else without muting it.",
+            "straight": "Loudness is measured in decibels (dB). About 6 dB doubles the wave's size, about 10 dB sounds twice as loud. Faders are marked in dB, with 0 near the top.",
+            "eli5": "Grown-ups measure loudness with a number called decibels, or dB. Bigger number, louder sound. The sliders that make tracks louder or quieter are marked in dB."
+          },
+          "deeper": [
+            {
+              "title": "how loud is loud",
+              "say": "A quiet room is around 30 dB, a conversation around 60, a club near the speakers can pass 100. Long hours above about 85 dB can damage hearing, which is why DJs and producers wear earplugs at gigs and keep headphones at sensible levels."
+            },
+            {
+              "title": "velocity",
+              "say": "On a keyboard or drum pad, how hard you hit is called velocity. It sets the amplitude of each note. Soft hits and hard hits in the same line are a big part of what makes playing sound human."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "level"
+          ],
+          "say": {
+            "mentor": "Here's your song, with a level knob on your melody. Turn it down until the melody tucks in behind the beat, then up until it sits on top.\nThere's no right answer. A melody that's the star of the track sits loud. One that's more of a background colour sits lower. Leave it where your song sounds best to you.",
+            "straight": "Your melody's level in your song. Down tucks it behind the beat, up puts it in front. Set it where it sounds right.",
+            "eli5": "This knob makes your tune louder or quieter in your song. Turn it down and the boom takes over. Turn it up and your tune is the star. Stop where you like it."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "loud and quiet parts",
+          "say": {
+            "mentor": "Songs don't stay at one level. A breakdown drops the drums so everything feels softer, then the drop hits harder because of it. Producers call this dynamics: the difference between the quiet and loud moments.\nYou'll build a breakdown and a drop in your song later. For now, notice it in the next track you hear: where does it get quieter, and how does it feel when it comes back?",
+            "straight": "Dynamics is the contrast between quiet and loud moments. A drop feels big because the part before it was smaller. You'll build one later.",
+            "eli5": "Songs get quiet sometimes and then loud again, and the loud bit feels extra exciting because of the quiet bit before it. That's called dynamics."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Two notes have the same pitch but one is louder. What's different?",
+          "options": [
+            "amplitude, how hard the air is pushed",
+            "frequency, how fast it wiggles",
+            "the note name",
+            "the tempo"
+          ],
+          "answer": 0,
+          "why": "Loudness is amplitude. Pitch stays the same because the speed of the wiggle hasn't changed.",
+          "whyWrong": {
+            "1": "Frequency is pitch. Same pitch means same frequency.",
+            "2": "Same pitch, same note name.",
+            "3": "Tempo is the speed of the beat."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What unit is loudness measured in?",
+          "options": [
+            "decibels",
+            "hertz",
+            "bpm",
+            "bars"
+          ],
+          "answer": 0,
+          "why": "Decibels, dB. Hertz is for pitch, bpm for tempo.",
+          "whyWrong": {
+            "1": "Hertz measures frequency, the pitch.",
+            "2": "Bpm is the tempo.",
+            "3": "Bars are for counting time."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "In the picture, what happened to the wave when the note got louder?",
+          "options": [
+            "it got taller",
+            "it got faster",
+            "it changed shape",
+            "it got shorter"
+          ],
+          "answer": 0,
+          "why": "More amplitude, a taller wave. The speed stays the same, so the pitch does too.",
+          "whyWrong": {
+            "1": "Faster would be a higher note.",
+            "2": "Shape is tone colour, the next lesson.",
+            "3": "It's the height that changes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does a drop feel bigger after a breakdown?",
+          "options": [
+            "the quiet part before makes the loud part stand out",
+            "the tempo speeds up",
+            "a drop is always 10 dB louder",
+            "the melody changes key"
+          ],
+          "answer": 0,
+          "why": "That contrast is dynamics. Loud only feels loud next to quiet.",
+          "whyWrong": {
+            "1": "The tempo usually stays the same.",
+            "2": "There's no fixed number. It's the contrast you feel.",
+            "3": "Key changes are a different trick."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "On a keyboard, what is velocity?",
+          "options": [
+            "how hard you play each note",
+            "how fast the song is",
+            "how high the note is",
+            "how long you hold a note"
+          ],
+          "answer": 0,
+          "why": "Velocity is how hard you hit, and it sets each note's loudness.",
+          "whyWrong": {
+            "1": "That's tempo.",
+            "2": "That's pitch.",
+            "3": "That's the note's length."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: timbre. Why a saw sounds buzzy and a soft wave sounds round, and a filter to change your melody's colour."
+        }
+      ],
+      "file": "foundations/07-amplitude-volume.yaml"
+    },
+    {
+      "slug": "timbre-tone",
+      "world": "foundations",
+      "number": 8,
+      "title": "timbre and tone colour",
+      "minutes": 7,
+      "song": {
+        "changes": "lead.lead",
+        "why": "the same melody can sound soft and round or bright and buzzy, and the filter is how you choose"
+      },
+      "learn": "Why a piano and a synth playing the same note sound different, what harmonics are, and a filter on your melody to change its colour.",
+      "youCan": [
+        "say what timbre is",
+        "explain a bright sound as one with lots of harmonics",
+        "use a low pass filter to make your melody darker or brighter"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "Tap through soft, saw and square. Same note, same loudness, three completely different characters. That character is called timbre, said \"tam-ber\", or tone colour. It's how you can tell a piano from a guitar even when they play the same note.\nLook at the shapes. The smooth wave sounds round and pure. The sharp corners of the saw and the square are what make them bright and buzzy.",
+            "straight": "Same pitch, same loudness, three timbres. Timbre (tone colour) is what makes instruments sound different on the same note. Sharp corners in the wave mean a brighter, buzzier sound.",
+            "eli5": "Tap a, b and c. Same note each time, but they sound totally different: one is smooth like a flute, one is buzzy like a bee, one sounds like an old video game. That difference is called timbre."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "harmonics",
+          "say": {
+            "mentor": "Here's the cool part. A buzzy sound isn't one pitch. It's the note you hear plus a stack of quieter, higher pitches riding on top of it, at two times, three times, four times the frequency and up. Those are called harmonics.\nA pure, round wave has almost none. A saw has loads. Your ear blends them into one sound, and the mix of harmonics is the timbre. Sharp corners in the picture are what all those extra harmonics look like.",
+            "straight": "A bright sound is the main note plus harmonics: quieter pitches at 2, 3, 4 times the frequency and up. A round wave has few, a saw has many. The mix of harmonics is the timbre.",
+            "eli5": "Secret: a buzzy sound is really lots of sounds at once. There's the main note, plus a bunch of quiet higher notes hiding on top. They're called harmonics. Smooth sounds have hardly any. Buzzy ones have tons."
+          },
+          "deeper": [
+            {
+              "title": "why octaves and fifths sound good",
+              "say": "The first harmonics are twice and three times the note. Twice is the octave. Three times, brought down an octave, is the fifth. That's part of why those two intervals sound so at home together: they are already hiding inside a single note."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "cutoff",
+            "wave"
+          ],
+          "say": {
+            "mentor": "Now change your own melody's colour. The cutoff knob is a filter: it lets the low part of the sound through and cuts the high harmonics. Turn it down and your melody gets darker and rounder, like hearing music through a wall. Turn it up and all the brightness comes back.\nThe wave knob picks the starting shape. Try a buzzy wave with the cutoff halfway: that's a classic synth sound.",
+            "straight": "Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Wave picks the starting shape. Set your melody's colour.",
+            "eli5": "The cutoff knob is like a blanket over the speaker. Turn it down and the sound gets muffled and soft. Turn it up and it gets bright and clear again. The wave knob changes the shape. Play until you like how your tune sounds."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "A piano and a synth play the same note at the same volume. Why do they sound different?",
+          "options": [
+            "different timbre, a different mix of harmonics",
+            "different pitch",
+            "different tempo",
+            "different amplitude"
+          ],
+          "answer": 0,
+          "why": "Same note and loudness, different harmonics. That's timbre.",
+          "whyWrong": {
+            "1": "Same note means same pitch.",
+            "2": "Tempo is the speed of the beat, not one note.",
+            "3": "Same volume means the same amplitude."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What are harmonics?",
+          "options": [
+            "quieter, higher pitches on top of the main note",
+            "the notes of a chord",
+            "echoes of the sound",
+            "the beats in a bar"
+          ],
+          "answer": 0,
+          "why": "Pitches at two, three, four times the frequency and up, blended into one sound.",
+          "whyWrong": {
+            "1": "Chords are separate notes you play. Harmonics hide inside a single note.",
+            "2": "An echo is a delayed copy. Harmonics happen at the same moment.",
+            "3": "Beats are about rhythm."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "You turn the cutoff down on your melody. What happens?",
+          "options": [
+            "it gets darker, the high harmonics are cut",
+            "it gets higher in pitch",
+            "it gets faster",
+            "it gets brighter"
+          ],
+          "answer": 0,
+          "why": "A low pass filter keeps the lows and cuts the highs, so the sound gets rounder and darker.",
+          "whyWrong": {
+            "1": "The note stays the same. Only its colour changes.",
+            "2": "Filters don't touch the timing.",
+            "3": "Turning it up brings brightness back."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which wave has the most harmonics?",
+          "options": [
+            "the saw",
+            "the soft, round wave",
+            "they all have the same",
+            "none of them have any"
+          ],
+          "answer": 0,
+          "why": "The saw's sharp drop is made of loads of harmonics, which is why it sounds the buzziest.",
+          "whyWrong": {
+            "1": "The round wave is nearly pure, with very few harmonics.",
+            "2": "That's why they sound so different.",
+            "3": "Everything except a pure sine has some."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Why is it called a low pass filter?",
+          "options": [
+            "it lets the low part pass and cuts the highs",
+            "it makes the sound low in volume",
+            "it only works on bass",
+            "it passes the sound to a lower octave"
+          ],
+          "answer": 0,
+          "why": "Lows pass through, highs above the cutoff are cut.",
+          "whyWrong": {
+            "1": "It changes colour, not overall volume.",
+            "2": "It works on any sound.",
+            "3": "The pitch stays the same."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: waveforms. Sine, triangle, saw and square side by side, and the one that suits your melody."
+        }
+      ],
+      "file": "foundations/08-timbre-tone.yaml"
+    },
+    {
+      "slug": "waveforms",
+      "world": "foundations",
+      "number": 9,
+      "title": "waveforms",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "the wave you start from sets the whole character of your melody"
+      },
+      "learn": "The four classic waves every synth starts from, what each is used for, and the one you pick for your melody.",
+      "youCan": [
+        "name the sine, triangle, saw and square waves",
+        "say what each one is good for",
+        "pick a wave for your melody by ear"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "Every synth sound starts life as a simple repeating shape. There are four classics, and you've heard three of them already. Tap through them again and really listen to the character.\nThe round one is close to a sine: pure, soft, almost no harmonics. The saw ramps up and drops: bright, buzzy, full of harmonics. The square jumps between two levels: hollow and reedy, the sound of old video games.",
+            "straight": "The classic synth waves: sine (pure, soft), saw (bright, buzzy), square (hollow, reedy). The round one here is close to a sine.",
+            "eli5": "Synths start from simple shapes. A smooth round one sounds soft and gentle. A pointy saw sounds buzzy. A blocky square sounds like an old video game. Tap them and listen."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "what each wave is for",
+          "say": {
+            "mentor": "Sine: sub bass and soft tones. It's so pure that it's mostly felt, which is why 808 basses are close to sines. Triangle: a slightly brighter sine, sweet and flute-like. Saw: the workhorse of dance music, for leads, basses and big chords, because there's so much to filter. Square: hollow, woody tones and chiptune. Squash it into a thin pulse and it gets nasal and buzzy.\nProducers pick the wave first and then shape it, the way a painter picks a colour before the brush.",
+            "straight": "Sine: sub bass, soft tones. Triangle: sweet, flute-like. Saw: leads, basses, chords, the most used. Square: hollow, chiptune. Pick the wave, then shape it.",
+            "eli5": "Smooth waves are good for deep, soft bass. Buzzy saws are great for big exciting leads. Square waves sound like game music. Pick the one that sounds like what you want."
+          },
+          "deeper": [
+            {
+              "title": "the triangle",
+              "say": "A triangle ramps up and down in straight lines. It has a few harmonics, much fewer than a saw, so it sits between a sine and a square. Your synth here morphs from saw to square; the soft setting is a saw with the filter closed right down, which gets close to a sine."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "wave",
+            "cutoff"
+          ],
+          "say": {
+            "mentor": "Pick the wave for your melody. Turn wave from saw to square and listen to your own tune change character, then use cutoff to round it off. For something soft and sine-like, close the cutoff right down. For a bright lead, open it up.",
+            "straight": "Choose your melody's wave: saw to square, then round it off with cutoff. Low cutoff gets you close to a sine.",
+            "eli5": "Turn the wave knob to change the shape of your tune's sound. Then turn cutoff to make it softer or brighter. Keep the one you like."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which wave is best for a deep, soft sub bass?",
+          "options": [
+            "sine",
+            "saw",
+            "square",
+            "noise"
+          ],
+          "answer": 0,
+          "why": "A sine is pure, with almost no harmonics, so it's mostly felt as a deep rumble.",
+          "whyWrong": {
+            "1": "A saw is bright and buzzy, more for leads and mid basses.",
+            "2": "A square is hollow and reedy.",
+            "3": "Noise has no pitch at all."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why is the saw so popular in dance music?",
+          "options": [
+            "it's full of harmonics, so there's lots to filter",
+            "it's the quietest wave",
+            "it has no harmonics",
+            "it only plays low notes"
+          ],
+          "answer": 0,
+          "why": "All those harmonics give you plenty to shape with a filter.",
+          "whyWrong": {
+            "1": "Waves can be any volume.",
+            "2": "That's the sine.",
+            "3": "Any wave can play any note."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a square wave sound like?",
+          "options": [
+            "hollow and reedy, like old video games",
+            "pure and soft",
+            "a kick drum",
+            "a crowd cheering"
+          ],
+          "answer": 0,
+          "why": "Hollow and reedy, the chiptune sound.",
+          "whyWrong": {
+            "1": "That's a sine.",
+            "2": "A kick is a drum, not a wave shape.",
+            "3": "That's noise more than a wave."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "How can you get close to a sine on this synth?",
+          "options": [
+            "a saw with the cutoff closed right down",
+            "the square with cutoff open",
+            "turn the level up",
+            "play higher notes"
+          ],
+          "answer": 0,
+          "why": "Closing the filter removes the harmonics, leaving something close to the pure note.",
+          "whyWrong": {
+            "1": "That's the brightest, buzziest setting.",
+            "2": "Level changes loudness, not shape.",
+            "3": "Pitch doesn't change the wave's shape."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: harmonics up close, and a second note a fifth above your melody."
+        }
+      ],
+      "file": "foundations/09-waveforms.yaml"
+    },
+    {
+      "slug": "overtones-harmonics",
+      "world": "foundations",
+      "number": 10,
+      "title": "harmonics up close",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "notes that share harmonics fit together, and the fifth is the first one hiding inside every note"
+      },
+      "learn": "The harmonic series, why some pairs of notes fit together, and a fifth played into your melody.",
+      "youCan": [
+        "say what the harmonic series is",
+        "explain why octaves and fifths sound smooth",
+        "play a fifth on the keys"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "octave",
+          "say": {
+            "mentor": "Remember the octave: same note, twice as fast. That's the first harmonic above any note. The next one is three times as fast, and if you bring that down an octave you get a note called the fifth. Tap through these two and keep the octave in your ear.\nEvery note you've played already has its octave and its fifth quietly ringing inside it. That's why those two always sound at home next to it.",
+            "straight": "Harmonics come at 2, 3, 4 and more times a note's frequency. Twice is the octave. Three times, an octave down, is the fifth. That's why both sound smooth with the note.",
+            "eli5": "Every note has quiet helper notes hiding inside it. The first helper is the same note higher up, the octave. The next one is called the fifth. Notes sound good together when they share helpers."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the harmonic series",
+          "say": {
+            "mentor": "Line up the harmonics of a low a: a, then a an octave up, then e, then a again, then c sharp, then e, and on and on, getting closer together as they go. That's the harmonic series, and a lot of music theory comes out of it.\nNotes near the start of the series, the octave and the fifth, sound smooth and stable together. Notes further up sound more colourful and tense. You'll use both later.",
+            "straight": "The harmonic series of a: a, a, e, a, c sharp, e and up. Early ones (octave, fifth) sound stable together; later ones sound more colourful.",
+            "eli5": "The helper notes come in a line, each one higher and closer to the last. The first few, the octave and the fifth, make the smoothest friends for your note."
+          }
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 2
+          },
+          "say": {
+            "mentor": "Now play a fifth into your melody. On these keys, the fifth above the first key is five keys along, counting the first one as one. Press rec, wait out the count-in, and play the first key then the fifth, then anything else you like. Listen to how settled those two sound together.",
+            "straight": "Record a phrase with a fifth: first key, then five keys along (counting the first as one), then anything you like.",
+            "eli5": "Press rec, wait for four ticks. Press the first key. Then count five keys along, one, two, three, four, five, and press that one. They're best friends. Then play whatever you like."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is the first harmonic above a note?",
+          "options": [
+            "the octave, twice the frequency",
+            "the fifth",
+            "the note below",
+            "a random pitch"
+          ],
+          "answer": 0,
+          "why": "Twice the frequency, the same note an octave up.",
+          "whyWrong": {
+            "1": "The fifth comes from the next one, three times the frequency.",
+            "2": "Harmonics are always above the note.",
+            "3": "They follow a fixed pattern, whole number multiples."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does a fifth sound smooth with its root note?",
+          "options": [
+            "it's already a harmonic inside the note",
+            "it's the same pitch",
+            "it's louder",
+            "it's always in tune with everything"
+          ],
+          "answer": 0,
+          "why": "The fifth rings quietly inside every note, so the two share a lot.",
+          "whyWrong": {
+            "1": "It's a different pitch, just a very friendly one.",
+            "2": "Loudness has nothing to do with it.",
+            "3": "It fits its own root note, not every note."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "On a keyboard scale, how far is the fifth from the note you start on?",
+          "options": [
+            "five keys along, counting the first",
+            "two keys along",
+            "twelve keys along",
+            "the very next key"
+          ],
+          "answer": 0,
+          "why": "Count the start as one, then two, three, four, five.",
+          "whyWrong": {
+            "1": "Two along is a third, a different interval.",
+            "2": "Twelve semitones is the octave.",
+            "3": "The next key is a step."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: noise. Hats and claps have no pitch at all, and that's exactly why they work."
+        }
+      ],
+      "file": "foundations/10-overtones-harmonics.yaml"
+    },
+    {
+      "slug": "noise",
+      "world": "foundations",
+      "number": 11,
+      "title": "noise, the odd friend",
+      "minutes": 5,
+      "song": {
+        "changes": "hats.hats",
+        "why": "your hats are noise, and shaping the noise changes how your whole groove feels"
+      },
+      "learn": "What noise is, why every hat, clap and cymbal is made of it, and shaping your hats.",
+      "youCan": [
+        "say what noise is and how it differs from a note",
+        "hear that hats and claps are short bursts of noise",
+        "shape your hats with decay and tune"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "hats-offbeat",
+          "say": {
+            "mentor": "Listen to the hats between the kicks. Try to hum their note. You can't, because there isn't one. Hats are noise: every frequency at once, all jumbled, with no repeating shape. That's the hiss you hear from an untuned radio, and it's the raw material of hats, claps, cymbals and snares.",
+            "straight": "Hats have no note. They're noise: all frequencies at once with no repeating pattern. Hats, claps, snares and cymbals are all shaped noise.",
+            "eli5": "Try to sing along with the tss sound. You can't, because it has no note. It's noise, like the shhh of a waterfall. Hats and claps are made of noise."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "shaped noise",
+          "say": {
+            "mentor": "A hat is a tiny burst of noise with the low end filtered away, so only the bright sizzle is left. A short burst is a closed hat. Let it ring and it's an open hat. A clap is several bursts very close together, like a few people clapping at once.\nSo when you shape a hat, you're shaping noise: how long it lasts and how bright it is.",
+            "straight": "Closed hat: a short burst of bright noise. Open hat: a longer one. Clap: a few bursts in a row. Shaping them means changing length and brightness.",
+            "eli5": "A short shhh is a closed hat. A long shhhhh is an open hat. A clap is a few quick shh-shh-shh at once."
+          },
+          "deeper": [
+            {
+              "title": "noise in synths",
+              "say": "Synths have a noise source too. Mixed in a little, it adds breath to a pad. Swept up with a filter, it becomes the riser you hear before a drop. You'll build one in the producer world."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "hats",
+          "knobs": [
+            "decay",
+            "tune"
+          ],
+          "say": {
+            "mentor": "Here's your groove with your hats on two knobs. Decay sets how long each burst rings: short is tight and crisp, long starts to sound like an open hat. Tune moves the noise brighter or darker. Find hats that sit nicely between your kicks.",
+            "straight": "Decay: how long each hat rings. Tune: brighter or darker. Shape your hats.",
+            "eli5": "Decay makes your tss short or long. Tune makes it brighter or darker. Play until it sounds good."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why can't you hum the note of a hi hat?",
+          "options": [
+            "it's noise, it has no single pitch",
+            "it's too quiet",
+            "it's too fast",
+            "it's out of tune"
+          ],
+          "answer": 0,
+          "why": "Noise has every frequency at once and no repeating shape, so there's no note to hum.",
+          "whyWrong": {
+            "1": "You can't hum it even when it's loud.",
+            "2": "Speed isn't the reason. A single hat has no pitch.",
+            "3": "To be out of tune it would need a note in the first place."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What makes an open hat different from a closed one?",
+          "options": [
+            "it rings for longer",
+            "it has a note",
+            "it's played on the kick",
+            "it uses a different tempo"
+          ],
+          "answer": 0,
+          "why": "Same bright noise, left to ring longer.",
+          "whyWrong": {
+            "1": "Both are noise, neither has a note.",
+            "2": "It's a separate sound from the kick.",
+            "3": "The tempo is the song's, not the hat's."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a clap made of?",
+          "options": [
+            "a few quick bursts of noise",
+            "a low sine wave",
+            "a recorded melody",
+            "silence"
+          ],
+          "answer": 0,
+          "why": "A few bursts very close together, like a handful of people clapping.",
+          "whyWrong": {
+            "1": "A sine is a pure tone, the opposite of noise.",
+            "2": "A clap has no melody.",
+            "3": "You'd hear nothing."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: samples and loops, and a real recorded sound in your song."
+        }
+      ],
+      "file": "foundations/11-noise.yaml"
+    },
+    {
+      "slug": "ear-higher-lower",
+      "world": "foundations",
+      "number": 101,
+      "title": "bonus, higher or lower",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; this round trains the ears you use on every part of it"
+      },
+      "learn": "A quick ear round: two notes, which one is higher? It gets harder as you get them right.",
+      "youCan": [
+        "hear which of two notes is higher, even when they're close"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-pitch",
+          "say": {
+            "mentor": "A quick one, just for your ears. Tap low, then high. Easy when they're far apart. In the round coming up they start far apart and get closer together as you get them right, until it's a real test. Producers do this all day: is the bass a little too high, is that note a touch flat.",
+            "straight": "Ear round: which of two notes is higher. They get closer as you get them right.",
+            "eli5": "A listening game! You'll hear two notes. Say which one is higher. They start far apart and get closer and closer."
+          }
+        },
+        {
+          "kind": "ear",
+          "drill": "pitch",
+          "rounds": 8,
+          "say": "Two notes. Which one was higher? Replay as often as you like."
+        },
+        {
+          "kind": "ask",
+          "q": "Two notes, one at 220 hz and one at 233 hz. Which is higher?",
+          "options": [
+            "233 hz",
+            "220 hz",
+            "they're the same",
+            "you can't tell from the numbers"
+          ],
+          "answer": 0,
+          "why": "More wiggles a second, higher note. 233 is higher, though only a little.",
+          "whyWrong": {
+            "1": "220 is the lower of the two.",
+            "2": "They're 13 hz apart, about one key on a piano.",
+            "3": "The bigger number is always the higher pitch."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: waveforms, and picking the shape for your melody."
+        }
+      ],
+      "file": "foundations/101-ear-higher-lower.yaml"
+    },
+    {
       "slug": "your-kick",
       "world": "producer",
       "number": 1,

@@ -199,7 +199,9 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const already = !!base?.added.includes(slug);
   const [added, setAdded] = useState(false);
   const isIn = added || already;
-  const preview = useMemo(() => (base ? (isIn || keepOnly ? base : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, keepOnly, slug, line, world, params]);
+  // Keep-only lessons still carry the knobs you turned in their shape step onto your part.
+  const tuned = (t: TrackV2): TrackV2 => ({ ...t, layers: t.layers.map(l => (l.type === line.type && Object.keys(params).length ? { ...l, params: { ...l.params, ...params } } : l)) });
+  const preview = useMemo(() => (base ? (isIn ? base : keepOnly ? tuned(base) : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, keepOnly, slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(preview ?? readTrackV2());
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
@@ -215,7 +217,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
     try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
-    const next = now.added.includes(slug) ? now : keepOnly ? { ...now, added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params);
+    const next = now.added.includes(slug) ? now : keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params);
     writeTrackV2(next);
     nameSongIfNew();
     setBase(next);
@@ -448,7 +450,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const pages: Page[] = useMemo(() => [
     ...screens.filter(s => s.kind !== "hook" && s.kind !== "summary" && !QUESTION_KINDS.has(s.kind)),
     ...screens.filter(s => s.kind === "ear"),
-    { kind: "add" as const },
+    // A bonus round adds nothing to your song, so it has no add step.
+    ...(curItem(mission.slug)?.kind === "bonus" ? [] : [{ kind: "add" as const }]),
     ...(main.length ? [{ kind: "check" as const }] : []),
     { kind: "done" as const },
   ], [screens, main.length]);

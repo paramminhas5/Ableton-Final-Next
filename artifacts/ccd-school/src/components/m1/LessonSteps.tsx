@@ -21,7 +21,7 @@ import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { AirWave, SynthChain, WaveShape } from "./LessonVisuals";
-import { BASS_PARAMS, CHORD_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
+import { BASS_PARAMS, CHORD_PARAMS, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
@@ -178,11 +178,17 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
     // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
     const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec }))];
-    const wanted = screen.knobs.map(k => all.find(s => s.spec.key === k)).filter(Boolean) as typeof all;
+    // Layer-wide knobs (eq, drive, echo, level, pan, send, duck) are there when a lesson names them.
+    const wide = LAYER_PARAMS.map(sp => ({ index: sp.index, spec: sp as ParamSpec }));
+    const wanted = screen.knobs.map(k => all.find(s => s.spec.key === k) ?? wide.find(s => s.spec.key === k)).filter(Boolean) as typeof all;
     return wanted.length ? wanted : all;
   }, [line.type, screen.knobs]);
   const world = worldOf(mission.slug) ?? undefined;
-  const shown = useMemo(() => (base ? applyTake({ ...base, added: [] }, mission.slug, line, world, params) : null), [base, mission.slug, line, world, params]);
+  // Nothing played in this lesson and your song already has this part: shape your own part.
+  const own = !!base && !take?.events.length && base.layers.some(l => l.type === line.type && l.events.length > 0);
+  const shown = useMemo(() => (base
+    ? own ? { ...base, layers: base.layers.map(l => (l.type === line.type ? { ...l, params: { ...l.params, ...params } } : l)) } : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
+    : null), [base, own, take, mission.slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(shown ?? readTrackV2());
   const playing = beat >= 0;
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
@@ -205,7 +211,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <Screen>
         <Meta left={meta} right={touched ?? (playing ? "playing, turn a knob" : "press play")} />
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
-          : line.type === "lead" ? <WaveShape morph={val("wave")} bright={val("cutoff")} cycles={3} playing={playing} />
+          : line.type === "lead" ? <WaveShape morph={val("wave")} bright={screen.knobs.includes("cutoff") ? val("cutoff") : 0.18} amp={screen.knobs.includes("level") ? Math.min(1, val("level") / 0.75) : 1} cycles={3} playing={playing} />
           : <div className="ls-title">shape it</div>}
       </Screen>
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, knobs.length)}, 1fr)` }}>

@@ -1,0 +1,145 @@
+slug: amplitude-volume
+world: foundations
+number: 7
+title: amplitude and volume
+minutes: 6
+song:
+  changes: lead.lead
+  why: how loud your melody sits against your beat decides whether it leads or hides
+learn: >-
+  What makes a sound loud, how loudness is measured, and setting how loud your melody sits in your song.
+youCan:
+  - say what amplitude is and how it differs from pitch
+  - say roughly what decibels measure
+  - set your melody's level against your beat by ear
+steps:
+  - kind: hear
+    clip: synth-loud
+    say:
+      mentor: >-
+        Tap quiet, then loud. Same note, same pitch. The only difference is how hard the air is being
+        pushed. Look at the picture: the wave is the same width, just taller.
+
+        That height is called amplitude. Bigger pushes of air reach your ear as a louder sound.
+      straight: >-
+        Quiet vs loud. Same pitch, different amplitude: how far the air moves with each push. More amplitude,
+        louder sound. The wave gets taller, not faster.
+      eli5: >-
+        Tap a, then b. Same note, but b is louder. A loud sound pushes the air harder, so the wiggle in the
+        picture gets taller. It doesn't get faster, just bigger.
+
+  - kind: say
+    title: decibels
+    say:
+      mentor: >-
+        Loudness is measured in decibels, written dB. The scale is odd but useful: every 6 dB or so roughly
+        doubles the size of the wave, and about 10 dB sounds roughly twice as loud to most people.
+
+        In a music program you'll see a fader marked in dB, with 0 dB near the top. Pulling a part down by a
+        few dB is how producers make room for something else without muting it.
+      straight: >-
+        Loudness is measured in decibels (dB). About 6 dB doubles the wave's size, about 10 dB sounds twice as
+        loud. Faders are marked in dB, with 0 near the top.
+      eli5: >-
+        Grown-ups measure loudness with a number called decibels, or dB. Bigger number, louder sound. The
+        sliders that make tracks louder or quieter are marked in dB.
+    deeper:
+      - title: how loud is loud
+        say: >-
+          A quiet room is around 30 dB, a conversation around 60, a club near the speakers can pass 100.
+          Long hours above about 85 dB can damage hearing, which is why DJs and producers wear earplugs at
+          gigs and keep headphones at sensible levels.
+      - title: velocity
+        say: >-
+          On a keyboard or drum pad, how hard you hit is called velocity. It sets the amplitude of each note.
+          Soft hits and hard hits in the same line are a big part of what makes playing sound human.
+
+  - kind: shape
+    layer: lead
+    knobs: [level]
+    say:
+      mentor: >-
+        Here's your song, with a level knob on your melody. Turn it down until the melody tucks in behind
+        the beat, then up until it sits on top.
+
+        There's no right answer. A melody that's the star of the track sits loud. One that's more of a
+        background colour sits lower. Leave it where your song sounds best to you.
+      straight: >-
+        Your melody's level in your song. Down tucks it behind the beat, up puts it in front. Set it where it
+        sounds right.
+      eli5: >-
+        This knob makes your tune louder or quieter in your song. Turn it down and the boom takes over. Turn
+        it up and your tune is the star. Stop where you like it.
+
+  - kind: say
+    title: loud and quiet parts
+    say:
+      mentor: >-
+        Songs don't stay at one level. A breakdown drops the drums so everything feels softer, then the drop
+        hits harder because of it. Producers call this dynamics: the difference between the quiet and loud
+        moments.
+
+        You'll build a breakdown and a drop in your song later. For now, notice it in the next track you
+        hear: where does it get quieter, and how does it feel when it comes back?
+      straight: >-
+        Dynamics is the contrast between quiet and loud moments. A drop feels big because the part before
+        it was smaller. You'll build one later.
+      eli5: >-
+        Songs get quiet sometimes and then loud again, and the loud bit feels extra exciting because of the
+        quiet bit before it. That's called dynamics.
+
+  - kind: ask
+    q: Two notes have the same pitch but one is louder. What's different?
+    options: ["amplitude, how hard the air is pushed", "frequency, how fast it wiggles", "the note name", "the tempo"]
+    answer: 0
+    why: Loudness is amplitude. Pitch stays the same because the speed of the wiggle hasn't changed.
+    whyWrong:
+      1: Frequency is pitch. Same pitch means same frequency.
+      2: Same pitch, same note name.
+      3: Tempo is the speed of the beat.
+
+  - kind: ask
+    q: What unit is loudness measured in?
+    options: ["decibels", "hertz", "bpm", "bars"]
+    answer: 0
+    why: Decibels, dB. Hertz is for pitch, bpm for tempo.
+    whyWrong:
+      1: Hertz measures frequency, the pitch.
+      2: Bpm is the tempo.
+      3: Bars are for counting time.
+
+  - kind: ask
+    q: In the picture, what happened to the wave when the note got louder?
+    options: ["it got taller", "it got faster", "it changed shape", "it got shorter"]
+    answer: 0
+    why: More amplitude, a taller wave. The speed stays the same, so the pitch does too.
+    whyWrong:
+      1: Faster would be a higher note.
+      2: Shape is tone colour, the next lesson.
+      3: It's the height that changes.
+
+  - kind: ask
+    q: Why does a drop feel bigger after a breakdown?
+    options: ["the quiet part before makes the loud part stand out", "the tempo speeds up", "a drop is always 10 dB louder", "the melody changes key"]
+    answer: 0
+    why: That contrast is dynamics. Loud only feels loud next to quiet.
+    whyWrong:
+      1: The tempo usually stays the same.
+      2: There's no fixed number. It's the contrast you feel.
+      3: Key changes are a different trick.
+
+  - kind: ask
+    more: true
+    q: On a keyboard, what is velocity?
+    options: ["how hard you play each note", "how fast the song is", "how high the note is", "how long you hold a note"]
+    answer: 0
+    why: Velocity is how hard you hit, and it sets each note's loudness.
+    whyWrong:
+      1: That's tempo.
+      2: That's pitch.
+      3: That's the note's length.
+
+  - kind: keep
+    next: >-
+      Next: timbre. Why a saw sounds buzzy and a soft wave sounds round, and a filter to change your melody's
+      colour.
