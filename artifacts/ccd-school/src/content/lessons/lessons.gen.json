@@ -1452,6 +1452,235 @@
       "file": "dj/201-dj-culture.yaml"
     },
     {
+      "slug": "booth-setup",
+      "world": "dj",
+      "number": 202,
+      "title": "the booth",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "your song only reaches a crowd if both decks come through the speakers at the same level"
+      },
+      "learn": "The path your music takes from deck to speaker, setting levels so neither deck jumps out, and the soundcheck before the night starts.",
+      "youCan": [
+        "follow the signal from deck to speakers",
+        "set two decks to the same loudness",
+        "soundcheck both decks before you play"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "Track a, track b, then both. Before a single blend, a dj has to get both of those out of the speakers at the right level. Walking into a booth and getting everything working is a skill of its own, and it's what stands between you and dead air, the silence when nothing is playing.",
+            "straight": "Before you mix, both decks have to reach the speakers at the right level. Setting up the booth is a skill that prevents dead air.",
+            "eli5": "Before a dj plays, they check that both music players come out of the speakers. Otherwise there might be no music at all."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the signal chain",
+          "say": {
+            "mentor": "Sound travels in a line. The deck (a cdj or a laptop) feeds a channel on the mixer, the mixer's master output feeds an amplifier, and the amplifier feeds the speakers. Break any link and nothing comes out. That line is the signal chain.\nEach channel also has a gain knob, which sets how strong the signal is as it comes in. Set it so the loud parts sit high on the meter without hitting the red, which is called clipping and sounds harsh. That's gain staging, and it's how two tracks end up at the same loudness before you touch a fader.",
+            "straight": "Deck, mixer channel, master output, amplifier, speakers: the signal chain. Set each channel's gain so peaks sit high on the meter without clipping. That's gain staging.",
+            "eli5": "The music goes from the player, into the mixer, out to a big amplifier, then to the speakers. A knob on each channel sets how strong it comes in: strong, but not so strong it crackles."
+          },
+          "deeper": [
+            {
+              "title": "line and phono",
+              "say": "Mixer channels expect one of two kinds of signal. Line is for cdjs and controllers. Phono is for the much quieter signal from a turntable. The wrong setting gives you a channel that's very quiet or distorted, so check the input switch on every channel you use."
+            },
+            {
+              "title": "the booth monitor",
+              "say": "The booth monitor is a speaker in the dj booth just for you, with its own level, separate from the speakers the crowd hears. It's how you hear your mix clearly while the room's sound bounces around."
+            },
+            {
+              "title": "arrive early",
+              "say": "Do the soundcheck before the crowd arrives: play a track on each deck and confirm sound reaches the speakers. A problem found during setup takes minutes to fix. Found at midnight, it's dead air."
+            }
+          ]
+        },
+        {
+          "kind": "mix",
+          "goal": "free",
+          "say": {
+            "mentor": "Here's your booth. Deck a is your song. Pick a track for deck b from the bank below.\nNow soundcheck. Slide the crossfader all the way to a and listen, then all the way to b. Both should come through.\nThen set the two channel faders so the decks sound about as loud as each other. When you crossfade, nothing should jump out. When it sounds even both ways, you're set up.",
+            "straight": "Pick a bank track for deck b. Crossfade fully to a, then fully to b, to check both come through. Then set the channel faders so both decks sound equally loud.",
+            "eli5": "Pick a song for deck b. Slide the big slider all the way one way, then the other, and check you hear each song. Then make both songs equally loud."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does the sound go after the mixer's master output?",
+          "options": [
+            "into an amplifier, then the speakers",
+            "back into the deck",
+            "only into your headphones",
+            "into the gain knob"
+          ],
+          "answer": 0,
+          "why": "Master output, amplifier, speakers. That's the end of the signal chain.",
+          "whyWrong": {
+            "1": "The deck is where the sound starts.",
+            "2": "Headphones get a separate cue feed.",
+            "3": "The gain knob is at the start of each channel."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is gain staging?",
+          "options": [
+            "setting each channel's input so it's strong but not clipping",
+            "turning everything up as far as it goes",
+            "putting the crossfader in the middle",
+            "matching the tempos"
+          ],
+          "answer": 0,
+          "why": "Strong enough to be clean, not so strong it clips.",
+          "whyWrong": {
+            "1": "Too loud clips and sounds harsh.",
+            "2": "The crossfader is a different control.",
+            "3": "Tempo is the pitch fader's job."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "A turntable is plugged into a channel set to line. What happens?",
+          "options": [
+            "the channel is very quiet or sounds wrong",
+            "it plays perfectly",
+            "the tempo doubles",
+            "the key changes"
+          ],
+          "answer": 0,
+          "why": "Turntables need the phono setting. On line, the signal is far too weak.",
+          "whyWrong": {
+            "1": "Line expects a much stronger signal.",
+            "2": "Input settings don't touch tempo.",
+            "3": "Input settings don't touch key."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: tempo and bpm. Matching two tracks by ear."
+        }
+      ],
+      "file": "dj/202-booth-setup.yaml"
+    },
+    {
+      "slug": "rekordbox-intro",
+      "world": "dj",
+      "number": 203,
+      "title": "rekordbox",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "before a track goes in a set a dj reads its bpm and key, and your song has both"
+      },
+      "learn": "What rekordbox is, what its analysis finds in every track, and reading your own song's bpm and key the way a dj would.",
+      "youCan": [
+        "say what rekordbox is for",
+        "read a track's bpm and key",
+        "use the key to pick a track that fits your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Every track has a speed and a key. The speed is its bpm, beats per minute. The key is the set of notes it's built on. Before a dj plays anything they want both numbers, and software works them out for you.\nThe one you'll meet in most clubs is rekordbox, made by Pioneer DJ, the company behind the cdjs, the club players you'll find in most booths.",
+            "straight": "Every track has a bpm and a key. Djs want both before they play it. rekordbox, from Pioneer DJ, the maker of club cdjs, works them out for you.",
+            "eli5": "Every song has a speed and a set of notes. Djs use a program called rekordbox that finds both for them."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "what rekordbox does",
+          "say": {
+            "mentor": "When you add a track, rekordbox analyses it. It finds the bpm, the key, the waveform (the picture of the sound over time) and the beat grid, a marker on every beat so the software knows where each one lands.\nAll your tracks live in one library called the collection. From there you build playlists and get your music ready to play out.",
+            "straight": "Add a track and rekordbox analyses it: bpm, key, waveform and beat grid. Everything lives in your collection, where you build playlists.",
+            "eli5": "When you add a song, rekordbox listens to it and works out its speed, its notes, and where every beat is. All your songs live in one big list."
+          },
+          "deeper": [
+            {
+              "title": "two modes",
+              "say": "rekordbox has two main ways of working. Export mode gets a usb drive ready with your analysed tracks and playlists, to plug into club cdjs. Performance mode turns rekordbox itself into the decks, played with a controller."
+            },
+            {
+              "title": "pro dj link",
+              "say": "Pro dj link is the network connection between rekordbox and cdj hardware, so the software and the players can work together."
+            }
+          ]
+        },
+        {
+          "kind": "mix",
+          "goal": "key",
+          "say": {
+            "mentor": "Look at deck a. Next to your song's name you'll see its bpm and its key, written as a code like 8A. Those are the two things an analysis gives you.\nEvery bank track shows the same two numbers on its chip. Use them. Find a deck b track whose key fits your song: the screen tells you when it fits. You'll learn how the codes work properly in the key lesson.",
+            "straight": "Deck a shows your song's bpm and key code. Each bank track shows its own. Pick a deck b track whose key fits yours.",
+            "eli5": "Your song's speed and note code are on deck a. Each other song has its own code. Find one the screen says fits."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does rekordbox find when it analyses a track?",
+          "options": [
+            "bpm, key, waveform and beat grid",
+            "only the file name",
+            "who made the track",
+            "how popular it is"
+          ],
+          "answer": 0,
+          "why": "The four things a dj needs before playing a track.",
+          "whyWrong": {
+            "1": "It reads the music itself, not just the name.",
+            "2": "That comes from the track's tags, not analysis.",
+            "3": "Analysis doesn't know about popularity."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is the collection in rekordbox?",
+          "options": [
+            "your whole music library",
+            "one playlist",
+            "a type of cue point",
+            "the usb drive"
+          ],
+          "answer": 0,
+          "why": "Every track you've added, analysed and ready to organise.",
+          "whyWrong": {
+            "1": "Playlists are built from the collection.",
+            "2": "Cue points sit inside tracks.",
+            "3": "The usb is what you export to."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is export mode for?",
+          "options": [
+            "getting a usb ready for club cdjs",
+            "recording your set",
+            "adding effects",
+            "streaming music"
+          ],
+          "answer": 0,
+          "why": "It prepares your tracks and playlists on a usb you plug into the club players.",
+          "whyWrong": {
+            "1": "Recording is a separate job.",
+            "2": "Effects are for playing, not preparing.",
+            "3": "It's about files on a usb."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: tempo and bpm. Matching two tracks by ear."
+        }
+      ],
+      "file": "dj/203-rekordbox-intro.yaml"
+    },
+    {
       "slug": "tempo-bpm",
       "world": "foundations",
       "number": 1,
@@ -5509,6 +5738,280 @@
       "file": "foundations/209-midi-explained.yaml"
     },
     {
+      "slug": "notes-and-octaves",
+      "world": "foundations",
+      "number": 210,
+      "title": "notes and octaves",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "an octave jump in your melody is the same note made bigger, and it's one of the oldest tricks in a hook"
+      },
+      "learn": "The twelve notes every melody is made from, why they repeat, and a melody in your song that jumps an octave.",
+      "youCan": [
+        "say how many notes there are before the pattern repeats",
+        "say what an octave is",
+        "play the same note an octave apart in your melody"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "octave",
+          "say": {
+            "mentor": "Tap a, then b. Two different notes, but they sound like the same note, one lower and one higher. That gap is an octave, and the higher a is wiggling exactly twice as fast as the lower one.\nThis is the reason music has only twelve notes. Go up twelve steps from any note and you land on the same note again, an octave up.",
+            "straight": "Same note, an octave apart. The higher one has double the frequency. Twelve steps up from any note brings you back to the same note an octave higher.",
+            "eli5": "Tap a, then b. They're the same note, one low and one high, like a dad and a kid singing the same song. That jump is called an octave."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the twelve notes",
+          "say": {
+            "mentor": "Western music uses twelve notes: c, c sharp, d, d sharp, e, f, f sharp, g, g sharp, a, a sharp, b. After b the pattern starts over at c, one octave higher. Each step to the very next note is called a semitone, so an octave is twelve semitones.\nOn a piano the black keys have two names. C sharp and d flat are the same key, named either way. There's no black key between e and f, or between b and c, because those pairs are already a semitone apart.",
+            "straight": "Twelve notes, then they repeat an octave up. One step is a semitone; twelve make an octave. Black keys have two names (c sharp is d flat). E to f and b to c have no black key between.",
+            "eli5": "There are only twelve notes. After the twelfth, they start again, higher. Black keys on a piano have two names, like a nickname."
+          },
+          "deeper": [
+            {
+              "title": "octaves in numbers",
+              "say": "The a above middle c is a4, 440 hz. One octave up, a5, is 880 hz. Every octave doubles the frequency, which is why the two notes blend so well."
+            },
+            {
+              "title": "in live",
+              "say": "Midi numbers every note, with 60 for middle c and 69 for a4. Live labels middle c as C3, while many other programs and most theory books call it C4. The midi number is the one that never changes."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "lead",
+          "surface": "keys",
+          "goal": {
+            "notes": 4
+          },
+          "say": {
+            "mentor": "Now put an octave in your melody. This tune replaces the notes in your song.\nThe keys here show the notes of your song's scale, seven of the twelve, so the first key and the last key are the same note, an octave apart. Press rec, wait out the count-in, play the first key, then the last key, then two more you like. Listen to the jump: the note doesn't change, it just gets bigger and brighter.",
+            "straight": "Record a new tune. First and last keys are the same note an octave apart. Rec, count-in, play the low one, the high one, then any two more.",
+            "eli5": "Press rec and wait for four ticks. Press the first key, then the last key. Same note, low and high! Then press two more keys you like."
+          },
+          "hint": "The first key and the last key share a name. Play them one after the other."
+        },
+        {
+          "kind": "ask",
+          "q": "How many notes before the pattern repeats?",
+          "options": [
+            "twelve",
+            "seven",
+            "eight",
+            "ten"
+          ],
+          "answer": 0,
+          "why": "Twelve semitones, then the same notes again an octave up.",
+          "whyWrong": {
+            "1": "Seven is a scale, picked from the twelve.",
+            "2": "Eight counts the first note twice, the octave.",
+            "3": "Count every key, black and white, from c to the next c. Twelve."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Going up one octave, the frequency",
+          "options": [
+            "doubles",
+            "halves",
+            "goes up by 100 hz",
+            "stays the same"
+          ],
+          "answer": 0,
+          "why": "A4 is 440 hz, a5 is 880 hz. Twice as fast.",
+          "whyWrong": {
+            "1": "Halving takes you an octave down.",
+            "2": "It's a doubling, not a fixed step.",
+            "3": "Then it would be the same note at the same height."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "C sharp and d flat are",
+          "options": [
+            "the same key with two names",
+            "an octave apart",
+            "two different pitches",
+            "a fifth apart"
+          ],
+          "answer": 0,
+          "why": "One black key, named from the note below or the note above.",
+          "whyWrong": {
+            "1": "An octave is twelve semitones. These are the same note.",
+            "2": "Same pitch, two names.",
+            "3": "A fifth is seven semitones apart."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Which note does Live call C3?",
+          "options": [
+            "middle c, midi note 60",
+            "the c below middle c",
+            "the lowest c on a piano",
+            "a4, 440 hz"
+          ],
+          "answer": 0,
+          "why": "Live names middle c C3. Many other programs call it C4.",
+          "whyWrong": {
+            "1": "That's an octave lower.",
+            "2": "Far lower than that.",
+            "3": "That's an a, not a c."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the melody path. Next: scales, and the scale your song will use."
+        }
+      ],
+      "file": "foundations/210-notes-and-octaves.yaml"
+    },
+    {
+      "slug": "minor-scale",
+      "world": "foundations",
+      "number": 211,
+      "title": "the minor scale and its cousins",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "moving one note of the scale lifts a dark song without making it happy, and your melody follows"
+      },
+      "learn": "How the natural minor scale is built, its cousins, and your own melody heard in natural minor and in dorian.",
+      "youCan": [
+        "say the step pattern of natural minor",
+        "say what harmonic minor and dorian change",
+        "pick between minor and dorian for your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "Minor is a family, not one scale. They all share the darker sound you know, but each one moves a note or two, and each move changes the mood a little. Producers pick between them the way they'd pick between two shades of the same colour.",
+            "straight": "Minor is a family of scales. Each one moves a note or two, and each move shifts the mood.",
+            "eli5": "There isn't just one minor. There are a few cousins, all a bit moody, each one a little different."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "natural minor",
+          "say": {
+            "mentor": "The plain one is natural minor. Its steps go whole, half, whole, whole, half, whole, whole. A whole step skips a key, a half step is the very next key.\nCompared with major from the same home note, three notes are each a semitone lower: the third, the sixth and the seventh. That's where the darker sound comes from.\nA minor and c major use exactly the same white keys. A minor just treats a as home. Every major key shares its notes with a minor key that starts on its sixth note, called its relative minor.",
+            "straight": "Natural minor: whole, half, whole, whole, half, whole, whole. Against major on the same home note, the third, sixth and seventh are a semitone lower. A minor is the relative minor of c major.",
+            "eli5": "Natural minor is a staircase with the small steps in different places from major. Three of its notes are a tiny bit lower, and that makes it sound moody."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "scale",
+          "choices": [
+            "minor",
+            "dorian"
+          ],
+          "say": {
+            "mentor": "Here's your own song. Minor is natural minor. Dorian is its cousin: exactly the same, except the sixth note is a semitone higher.\nTap between them and listen to your melody. Wherever your tune uses that sixth note, it moves up a little and the darkness lifts, without turning happy. Dorian is all over funk, soul and jazz for that reason. If your melody never touches the sixth, you'll hear your chords and bass change instead. Keep the one that feels like your song.",
+            "straight": "Your song in natural minor and in dorian. Dorian raises the sixth note by a semitone, so it's minor with a lift. Pick one.",
+            "eli5": "Tap minor, then dorian. In dorian one note goes up a tiny bit, and your song sounds a little less gloomy. Pick the one you like."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "harmonic and melodic minor",
+          "say": {
+            "mentor": "Two more cousins you'll meet. Harmonic minor raises the seventh note by a semitone instead. That seventh then sits right under home and pulls hard towards it, a dramatic, almost classical sound. Many dance tracks stay in natural minor and use the raised seventh only on one chord, right before they come home.\nMelodic minor raises both the sixth and the seventh on the way up, and goes back to natural minor on the way down. It's common in jazz and rare in dance music.",
+            "straight": "Harmonic minor raises the seventh, which pulls hard to home. Melodic minor raises the sixth and seventh going up, natural going down.",
+            "eli5": "Two more cousins. One raises a note so it really wants to go home. The other changes depending on whether the tune goes up or down."
+          },
+          "deeper": [
+            {
+              "title": "in live",
+              "say": "In Live 12, give a midi clip a Root Note and a Scale Name and the piano roll marks the notes in that scale, so you can see a minor or dorian before you play a note."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "Compared with major from the same home note, natural minor lowers",
+          "options": [
+            "the third, sixth and seventh",
+            "only the home note",
+            "the fifth",
+            "every note"
+          ],
+          "answer": 0,
+          "why": "Those three notes, each a semitone lower, give minor its darker sound.",
+          "whyWrong": {
+            "1": "Home stays home.",
+            "2": "The fifth stays the same in both.",
+            "3": "Most notes are shared. Only three move."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Dorian is natural minor with",
+          "options": [
+            "a raised sixth",
+            "a raised third",
+            "a lowered fifth",
+            "two extra notes"
+          ],
+          "answer": 0,
+          "why": "One note, the sixth, up a semitone. Minor with a lift.",
+          "whyWrong": {
+            "1": "Raising the third would make it sound major.",
+            "2": "The fifth doesn't move.",
+            "3": "It still has seven notes."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "The relative minor of c major is",
+          "options": [
+            "a minor",
+            "c minor",
+            "e minor",
+            "g minor"
+          ],
+          "answer": 0,
+          "why": "Start on the sixth note of c major, a, and use the same white keys.",
+          "whyWrong": {
+            "1": "C minor has the same home as c major but different notes. That's its parallel minor.",
+            "2": "E is the third note, not the sixth.",
+            "3": "G is the fifth note, not the sixth."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Harmonic minor raises which note?",
+          "options": [
+            "the seventh",
+            "the third",
+            "the fifth",
+            "the home note"
+          ],
+          "answer": 0,
+          "why": "The raised seventh sits a semitone under home and pulls towards it.",
+          "whyWrong": {
+            "1": "Raising the third would turn it major.",
+            "2": "The fifth stays put.",
+            "3": "Home never moves."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the melody path. Next: intervals, and a two-note phrase in your melody."
+        }
+      ],
+      "file": "foundations/211-minor-scale.yaml"
+    },
+    {
       "slug": "your-kick",
       "world": "producer",
       "number": 1,
@@ -9428,6 +9931,123 @@
       "file": "producer/216-synth-filter-envelope.yaml"
     },
     {
+      "slug": "synth-amp-vs-filter-env",
+      "world": "producer",
+      "number": 217,
+      "title": "two envelopes, one voice",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "when the volume and the brightness of each note move on different schedules, your lead gets its character"
+      },
+      "learn": "How the amp envelope and the filter envelope run side by side on one note, and what happens when they don't line up.",
+      "youCan": [
+        "say what each of the two envelopes controls",
+        "hear a note swell in while it darkens",
+        "say why mismatched envelopes change a sound's character"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-loud",
+          "say": {
+            "mentor": "The same note, quiet then loud. Loudness is one thing a note does over time. Brightness is another. A synth usually gives each its own envelope: the amp envelope for volume, the filter envelope for the cutoff.\nThey run at the same time, side by side, and they don't have to agree. That's where a lot of a sound's character comes from.",
+            "straight": "Two envelopes per note: amp for volume, filter for brightness. They run together but don't have to match.",
+            "eli5": "Each note has two shapes going on: how loud it is and how bright it is. They can do different things at the same time."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "in step or out of step",
+          "say": {
+            "mentor": "Line them up and a note sounds natural and predictable. Pull them apart and you get something more interesting. A loud note that holds its volume while its brightness slowly closes sounds like it's fading dark. A long volume fade with a quick filter close gives a tail that hangs on, dull and quiet.\nOne rule to remember: once the amp envelope reaches silence, you can't hear anything the filter is still doing. The amp decides whether you hear the note at all. The filter only colours what's there.",
+            "straight": "Matched envelopes sound natural. Mismatched ones give character, like a loud note that goes dark. Once the amp is silent, filter movement can't be heard.",
+            "eli5": "If the loud shape and the bright shape match, the note sounds normal. If they don't, it sounds more unusual. When the note goes silent, the bright shape doesn't matter any more."
+          },
+          "deeper": [
+            {
+              "title": "setting them apart in live",
+              "say": "Live's synths let you give the filter an envelope of its own, separate from the amp's, each with its own attack, decay, sustain and release. Try amp sustain at full with filter sustain at zero: the note holds its volume while the cutoff closes. Or start the filter's attack a few milliseconds later than the amp's for a subtle bloom on every note."
+            },
+            {
+              "title": "an 808-style stab",
+              "say": "For a stab that goes dull fast but rings on long, give the amp no attack, a long decay and no sustain, and give the filter no attack, a short decay and no sustain."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "attack",
+            "env",
+            "release"
+          ],
+          "say": {
+            "mentor": "Here's your song. On your lead the filter envelope has a fixed shape: it jumps open at the start of each note and closes over about a third of a second. The amp envelope is yours to set. So they're already out of step, and you get to choose how far.\nTurn env up so you can hear the filter move. Now raise attack: the volume swells in slowly while the brightness has already started closing, so each note fades in getting darker. Then try release for how long the dark tail rings. Keep the shape you like.",
+            "straight": "Your lead's filter envelope opens fast and closes in about a third of a second. Env sets how much. Attack and release shape the volume. Slow attack plus env: notes swell in as they darken.",
+            "eli5": "Turn env up so each note flashes bright. Turn attack up so notes fade in slowly. Now they get louder while getting darker. Release makes the end ring on."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which envelope decides whether you hear the note at all?",
+          "options": [
+            "the amp envelope",
+            "the filter envelope",
+            "both equally",
+            "neither"
+          ],
+          "answer": 0,
+          "why": "The amp envelope sets the volume. When it reaches silence, the note is gone.",
+          "whyWrong": {
+            "1": "The filter only colours a note you can already hear.",
+            "2": "Only the amp controls volume.",
+            "3": "The amp envelope does."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Amp sustain is full and filter sustain is zero. You hold a note. What do you hear?",
+          "options": [
+            "it stays loud but gets darker",
+            "it fades out and stays bright",
+            "nothing changes",
+            "it gets higher"
+          ],
+          "answer": 0,
+          "why": "Volume holds at full sustain while the filter envelope falls back to the base cutoff.",
+          "whyWrong": {
+            "1": "That's the other way round.",
+            "2": "The cutoff is moving, so the colour changes.",
+            "3": "Neither envelope changes pitch here."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Your note fades out over two seconds, but the filter has finished closing after a tenth of a second. How does the tail sound?",
+          "options": [
+            "dull and quiet",
+            "bright and loud",
+            "silent",
+            "out of tune"
+          ],
+          "answer": 0,
+          "why": "The filter closes fast, so the long volume fade carries a dark, dull tail.",
+          "whyWrong": {
+            "1": "The filter has already closed, so it can't be bright.",
+            "2": "The amp is still fading, so you hear it.",
+            "3": "Envelopes don't change tuning."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, timbre, the colour of your lead."
+        }
+      ],
+      "file": "producer/217-synth-amp-vs-filter-env.yaml"
+    },
+    {
       "slug": "saturator-distortion",
       "world": "producer",
       "number": 230,
@@ -11468,6 +12088,123 @@
       "file": "producer/247-synth-noise.yaml"
     },
     {
+      "slug": "synth-effects",
+      "world": "producer",
+      "number": 248,
+      "title": "synth effects",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "an echo on your lead fills the gaps between notes and makes the melody feel bigger"
+      },
+      "learn": "The effects that finish a synth sound, why their order matters, and an echo on your own lead.",
+      "youCan": [
+        "say what echo, reverb, chorus and saturation each add",
+        "say why effect order changes the sound",
+        "set an echo on your lead that fills the gaps without clutter"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "One synth note, dry. Dry means no effects at all, just the raw voice. It's honest, but it can sound a little bare, like someone singing in a cupboard.\nEffects are the last part of building a synth sound. They don't change which notes play. They change the space around them, the width, the edge. A lot of the sounds you love in records are a plain synth with great effects after it.",
+            "straight": "A dry synth note, no effects. Effects finish a sound: space, width, edge. They don't change the notes.",
+            "eli5": "This note has nothing added. Effects are like putting the sound in a big room, or giving it an echo, or making it fuzzy."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "four effects, and their order",
+          "say": {
+            "mentor": "Echo, also called delay, plays your sound back again a moment later, often in time with the beat, so a short melody fills the bar. Reverb adds the sound of a room. Chorus doubles the sound with tiny shifts in pitch and timing for width and warmth. Saturation adds harmonics and edge.\nOrder matters. Distortion before reverb is a crunchy synth in a room. Reverb before distortion distorts the room too, and it turns to mush. The usual order is the synth itself, then drive, then echo, then reverb.",
+            "straight": "Echo repeats the sound in time. Reverb adds a room. Chorus adds width. Saturation adds edge. Order changes the result: drive before reverb stays clear, reverb before drive gets muddy.",
+            "eli5": "Echo says it again, again, again. Reverb puts it in a big room. Chorus makes it wider. Drive makes it fuzzy. And the order you add them changes the sound."
+          },
+          "deeper": [
+            {
+              "title": "in live",
+              "say": "Echo is Live's delay with character, including a mode that copies the warmth of tape delay. Reverb and Hybrid Reverb add space, Chorus-Ensemble adds width, Saturator adds edge. Devices run left to right on a track, so the order you see is the order the sound goes through them."
+            },
+            {
+              "title": "sends",
+              "say": "Reverb usually lives on a return track. Each part sends some of itself there, so every part shares the same room and the mix holds together."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "echo",
+            "send",
+            "drive"
+          ],
+          "say": {
+            "mentor": "Your song is playing. Turn echo up on your lead and listen to each note come back a moment later, filling the space before the next one. A little is lush. Too much and the repeats crowd the melody.\nSend pushes some of your lead into the reverb room. Drive adds edge before the echo. Try them in small amounts. Keep the version where your lead sounds finished and still clear.",
+            "straight": "Echo repeats your lead in the gaps. Send adds reverb. Drive adds edge. Small amounts. Keep the clearest, fullest version.",
+            "eli5": "Turn echo up and hear your tune repeat. Add a bit of send for a big room. Stop before it gets messy."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does an echo, or delay, do?",
+          "options": [
+            "plays the sound back again a moment later",
+            "adds the sound of a room",
+            "makes it fuzzy",
+            "changes the notes"
+          ],
+          "answer": 0,
+          "why": "Repeats, often in time with the beat.",
+          "whyWrong": {
+            "1": "That's reverb.",
+            "2": "That's distortion or saturation.",
+            "3": "Effects don't change which notes play."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does effect order matter?",
+          "options": [
+            "each effect works on what came before it",
+            "it doesn't matter",
+            "only the last effect is heard",
+            "the first effect is always muted"
+          ],
+          "answer": 0,
+          "why": "Reverb then distortion distorts the reverb too. Distortion then reverb keeps it clearer.",
+          "whyWrong": {
+            "1": "Swap two effects and you'll hear the difference.",
+            "2": "Every effect in the chain is heard.",
+            "3": "Nothing is muted."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which effect adds width with tiny shifts in pitch and timing?",
+          "options": [
+            "chorus",
+            "echo",
+            "saturation",
+            "eq"
+          ],
+          "answer": 0,
+          "why": "Chorus doubles the sound with small shifts, so it spreads wider.",
+          "whyWrong": {
+            "1": "Echo repeats the sound later.",
+            "2": "Saturation adds harmonics.",
+            "3": "An eq changes tone, not width."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song path, or try granulator iii to turn sound into a cloud."
+        }
+      ],
+      "file": "producer/248-synth-effects.yaml"
+    },
+    {
       "slug": "the-mixer",
       "world": "producer",
       "number": 260,
@@ -12077,6 +12814,247 @@
         }
       ],
       "file": "producer/264-eq-eight.yaml"
+    },
+    {
+      "slug": "effects-overview",
+      "world": "producer",
+      "number": 265,
+      "title": "effects overview",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "one effect from each family on your lead shows you what each family is for"
+      },
+      "learn": "The main families of effects, the problem each one solves, and one of each on your lead.",
+      "youCan": [
+        "name the main families of effects",
+        "pick a family for a problem",
+        "try eq, drive, echo and reverb on your lead"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-note",
+          "say": {
+            "mentor": "There are thousands of effects, but almost all of them belong to a handful of families. Learn the families and you can reach for the right tool fast, instead of guessing.\nThis plain synth note is a blank page. Every family would change it in its own way.",
+            "straight": "Thousands of effects, a handful of families. Know the families and you know which tool to reach for.",
+            "eli5": "There are lots of effects, but they come in a few families, like a family of cats and a family of dogs."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the families",
+          "say": {
+            "mentor": "Eq shapes tone by frequency. Dynamics, like compressors and limiters, control loud and quiet. Time effects, reverb and echo, put a sound in a space. Saturation, or drive, adds grit and warmth by roughing up the wave. Modulation, like chorus and phaser, makes a sound move by wobbling it with a slow wave called an lfo. Utility tools do plain jobs like gain and stereo width.\nEach family fixes a different problem. Too dull is an eq job. Jumping between loud and quiet is a dynamics job.",
+            "straight": "Eq: tone. Dynamics: loud and quiet. Time: reverb and echo. Saturation: grit. Modulation: movement. Utility: gain and width. Match the family to the problem.",
+            "eli5": "Eq changes the tone. Dynamics change loud and quiet. Reverb and echo add space. Drive adds crunch. Pick the one that fixes your problem."
+          },
+          "deeper": [
+            {
+              "title": "the families in live",
+              "say": "Live's own devices cover every family: EQ Eight for eq, Compressor, Glue Compressor and Limiter for dynamics, Reverb, Hybrid Reverb and Delay for time, Saturator for drive, and Utility for gain and width."
+            },
+            {
+              "title": "fewer is better",
+              "say": "Learn one effect in each family well before collecting more. The effects that come with your music program are often plenty. Switch each one off and on, and if you can't hear it helping, take it out."
+            },
+            {
+              "title": "insert or send",
+              "say": "Reverb and delay usually go on a send that many parts share. It uses less processing power and puts everything in the same space."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "high",
+            "drive",
+            "echo",
+            "send"
+          ],
+          "say": {
+            "mentor": "One effect from each family on your lead. High is eq: a little brighter or darker. Drive is saturation: grit. Echo and send are time: repeats, and a room.\nTry each one on its own first, then together. Keep only the ones that make your lead better, and set the rest back to where they were.",
+            "straight": "High is eq, drive is saturation, echo and send are time effects. Try each alone, then together. Keep what helps.",
+            "eli5": "Try each knob on your tune, one at a time. Keep the ones that make it sound better."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which family is reverb in?",
+          "options": [
+            "time effects",
+            "eq",
+            "dynamics",
+            "saturation"
+          ],
+          "answer": 0,
+          "why": "Reverb and echo put a sound in a space.",
+          "whyWrong": {
+            "1": "Eq shapes tone by frequency.",
+            "2": "Dynamics control loud and quiet.",
+            "3": "Saturation adds grit."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "A part jumps between loud and quiet too much. Which family helps?",
+          "options": [
+            "dynamics",
+            "time effects",
+            "modulation",
+            "eq"
+          ],
+          "answer": 0,
+          "why": "A compressor evens out loud and quiet.",
+          "whyWrong": {
+            "1": "Reverb and echo add space, not control.",
+            "2": "Modulation adds movement.",
+            "3": "Eq is about tone, not loudness over time."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does drive do?",
+          "options": [
+            "adds grit and warmth by roughing up the wave",
+            "puts the sound in a room",
+            "removes the lows",
+            "makes it repeat"
+          ],
+          "answer": 0,
+          "why": "Drive is saturation, the grit family.",
+          "whyWrong": {
+            "1": "That's reverb.",
+            "2": "That's a low cut.",
+            "3": "That's echo."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next on the path, space, reverb and echo."
+        }
+      ],
+      "file": "producer/265-effects-overview.yaml"
+    },
+    {
+      "slug": "sends-returns",
+      "world": "producer",
+      "number": 266,
+      "title": "sends and returns",
+      "minutes": 5,
+      "song": {
+        "changes": "chords.chords",
+        "why": "sending your chords into a shared reverb puts them in the same room as your other parts"
+      },
+      "learn": "What a send and a return are, why one shared reverb glues a mix, and how much of your chords to send.",
+      "youCan": [
+        "say what a send and a return are",
+        "set how much of a part goes to the reverb",
+        "make a return track in Live"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Picture a band playing in one hall. Everyone shares the same room, and that shared space is a big part of why they sound like one band. Mixes copy this with one reverb that every part can feed into, a little or a lot.",
+            "straight": "One shared reverb puts every part in the same room, which helps them sound like one record.",
+            "eli5": "If all your sounds play in the same big room, they sound like they belong together."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "sends and returns",
+          "say": {
+            "mentor": "A return is a channel that holds an effect, usually a reverb or a delay, and nothing else. A send is a knob on each part that decides how much of that part gets copied over to the return. The dry part keeps playing as it was, and the return adds the room underneath.\nSo with one reverb you can give the lead a lot, the chords some and the kick none. By default a send comes after the fader, so turning a part down turns its reverb down too.",
+            "straight": "A return holds a shared effect. Each part's send sets how much goes to it. The dry part stays. Sends follow the fader by default.",
+            "eli5": "There's one echo room. Each sound has a knob that says how much of it goes into the room."
+          },
+          "deeper": [
+            {
+              "title": "returns in live",
+              "say": "Cmd+Alt+T on a Mac or Ctrl+Alt+T on Windows makes a return track. Put a Reverb on it, and every track gets a send knob for it."
+            },
+            {
+              "title": "pre and post",
+              "say": "Sends are post-fader by default, so the send follows the track's fader. Switch one to pre-fader and it ignores the fader, handy when you want the reverb to keep going while the dry track is turned down."
+            },
+            {
+              "title": "why share",
+              "say": "One reverb on a return uses far less processing power than a reverb on every track, and it puts every part in the same room. Returns can even send to other returns."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "chords",
+          "knobs": [
+            "send"
+          ],
+          "say": {
+            "mentor": "Here's your song. Send feeds your chords into the reverb, the same way a send feeds a return in Live. Turn it up and the chords move back into the room, behind your lead. Turn it down and they come close and dry.\nChords and pads often get more reverb than drums. Find the amount where they sit behind your lead without going blurry.",
+            "straight": "Send sets how much of your chords goes to the reverb. Up moves them back, down brings them close. Stop before they blur.",
+            "eli5": "Turn send up and your chords sound further away, in a big room. Stop before they get blurry."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a send do?",
+          "options": [
+            "copies some of a part to a return",
+            "deletes the dry sound",
+            "changes the tempo",
+            "mutes the part"
+          ],
+          "answer": 0,
+          "why": "The dry part stays. A copy goes to the shared effect.",
+          "whyWrong": {
+            "1": "The dry sound keeps playing.",
+            "2": "Sends don't touch tempo.",
+            "3": "The part still plays."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why share one reverb across parts?",
+          "options": [
+            "it puts every part in one room and uses less power",
+            "it makes the song faster",
+            "you can only have one effect",
+            "it makes the drums louder"
+          ],
+          "answer": 0,
+          "why": "One room glues the mix, and one reverb is lighter than many.",
+          "whyWrong": {
+            "1": "Tempo doesn't change.",
+            "2": "You can have lots of effects.",
+            "3": "It's about space, not level."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "By default, you turn a part's fader down. What happens to its reverb?",
+          "options": [
+            "it goes down too",
+            "it gets louder",
+            "it stays exactly the same",
+            "it switches off"
+          ],
+          "answer": 0,
+          "why": "Sends come after the fader by default, so they follow it.",
+          "whyWrong": {
+            "1": "Less part, less reverb.",
+            "2": "That's a pre-fader send.",
+            "3": "It follows the fader down, it doesn't stop."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next on the path, glue, compression and loudness."
+        }
+      ],
+      "file": "producer/266-sends-returns.yaml"
     },
     {
       "slug": "browser",

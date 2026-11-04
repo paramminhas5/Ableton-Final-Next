@@ -50,8 +50,8 @@ steps:
     deeper:
       - title: setting them apart in live
         say: >-
-          Live's synths give the amp and the filter their own envelopes, each with its own attack, decay,
-          sustain and release. Try amp sustain at full with filter sustain at zero: the note holds its volume
+          Live's synths let you give the filter an envelope of its own, separate from the amp's, each with its
+          own attack, decay, sustain and release. Try amp sustain at full with filter sustain at zero: the note holds its volume
           while the cutoff closes. Or start the filter's attack a few milliseconds later than the amp's for a
           subtle bloom on every note.
       - title: an 808-style stab
@@ -92,7 +92,7 @@ steps:
     q: Amp sustain is full and filter sustain is zero. You hold a note. What do you hear?
     options: ["it stays loud but gets darker", "it fades out and stays bright", "nothing changes", "it gets higher"]
     answer: 0
-    why: Volume holds at full sustain, while the cutoff closes down to nothing extra.
+    why: Volume holds at full sustain while the filter envelope falls back to the base cutoff.
     whyWrong:
       1: That's the other way round.
       2: The cutoff is moving, so the colour changes.

@@ -1,0 +1,132 @@
+slug: minor-scale
+world: foundations
+number: 211
+title: the minor scale and its cousins
+minutes: 5
+song:
+  changes: lead.lead
+  why: moving one note of the scale lifts a dark song without making it happy, and your melody follows
+learn: >-
+  How the natural minor scale is built, its cousins, and your own melody heard in natural minor and in dorian.
+youCan:
+  - say the step pattern of natural minor
+  - say what harmonic minor and dorian change
+  - pick between minor and dorian for your song
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Minor is a family, not one scale. They all share the darker sound you know, but each one moves a note
+        or two, and each move changes the mood a little. Producers pick between them the way they'd pick
+        between two shades of the same colour.
+      straight: >-
+        Minor is a family of scales. Each one moves a note or two, and each move shifts the mood.
+      eli5: >-
+        There isn't just one minor. There are a few cousins, all a bit moody, each one a little different.
+
+  - kind: say
+    title: natural minor
+    say:
+      mentor: >-
+        The plain one is natural minor. Its steps go whole, half, whole, whole, half, whole, whole. A whole
+        step skips a key, a half step is the very next key.
+
+        Compared with major from the same home note, three notes are each a semitone lower: the third, the
+        sixth and the seventh. That's where the darker sound comes from.
+
+        A minor and c major use exactly the same white keys. A minor just treats a as home. Every major key
+        shares its notes with a minor key that starts on its sixth note, called its relative minor.
+      straight: >-
+        Natural minor: whole, half, whole, whole, half, whole, whole. Against major on the same home note, the
+        third, sixth and seventh are a semitone lower. A minor is the relative minor of c major.
+      eli5: >-
+        Natural minor is a staircase with the small steps in different places from major. Three of its notes
+        are a tiny bit lower, and that makes it sound moody.
+
+  - kind: tempo
+    set: scale
+    choices: [minor, dorian]
+    say:
+      mentor: >-
+        Here's your own song. Minor is natural minor. Dorian is its cousin: exactly the same, except the sixth
+        note is a semitone higher.
+
+        Tap between them and listen to your melody. Wherever your tune uses that sixth note, it moves up a
+        little and the darkness lifts, without turning happy. Dorian is all over funk, soul and jazz for that
+        reason. If your melody never touches the sixth, you'll hear your chords and bass change instead. Keep
+        the one that feels like your song.
+      straight: >-
+        Your song in natural minor and in dorian. Dorian raises the sixth note by a semitone, so it's minor with
+        a lift. Pick one.
+      eli5: >-
+        Tap minor, then dorian. In dorian one note goes up a tiny bit, and your song sounds a little less
+        gloomy. Pick the one you like.
+
+  - kind: say
+    title: harmonic and melodic minor
+    say:
+      mentor: >-
+        Two more cousins you'll meet. Harmonic minor raises the seventh note by a semitone instead. That
+        seventh then sits right under home and pulls hard towards it, a dramatic, almost classical sound. Many
+        dance tracks stay in natural minor and use the raised seventh only on one chord, right before they
+        come home.
+
+        Melodic minor raises both the sixth and the seventh on the way up, and goes back to natural minor on
+        the way down. It's common in jazz and rare in dance music.
+      straight: >-
+        Harmonic minor raises the seventh, which pulls hard to home. Melodic minor raises the sixth and
+        seventh going up, natural going down.
+      eli5: >-
+        Two more cousins. One raises a note so it really wants to go home. The other changes depending on
+        whether the tune goes up or down.
+    deeper:
+      - title: in live
+        say: >-
+          In Live 12, give a midi clip a Root Note and a Scale Name and the piano roll marks the notes in that
+          scale, so you can see a minor or dorian before you play a note.
+
+  - kind: ask
+    q: Compared with major from the same home note, natural minor lowers
+    options: ["the third, sixth and seventh", "only the home note", "the fifth", "every note"]
+    answer: 0
+    why: Those three notes, each a semitone lower, give minor its darker sound.
+    whyWrong:
+      1: Home stays home.
+      2: The fifth stays the same in both.
+      3: Most notes are shared. Only three move.
+
+  - kind: ask
+    q: Dorian is natural minor with
+    options: ["a raised sixth", "a raised third", "a lowered fifth", "two extra notes"]
+    answer: 0
+    why: One note, the sixth, up a semitone. Minor with a lift.
+    whyWrong:
+      1: Raising the third would make it sound major.
+      2: The fifth doesn't move.
+      3: It still has seven notes.
+
+  - kind: ask
+    q: The relative minor of c major is
+    options: ["a minor", "c minor", "e minor", "g minor"]
+    answer: 0
+    why: Start on the sixth note of c major, a, and use the same white keys.
+    whyWrong:
+      1: C minor has the same home as c major but different notes. That's its parallel minor.
+      2: E is the third note, not the sixth.
+      3: G is the fifth note, not the sixth.
+
+  - kind: ask
+    more: true
+    q: Harmonic minor raises which note?
+    options: ["the seventh", "the third", "the fifth", "the home note"]
+    answer: 0
+    why: The raised seventh sits a semitone under home and pulls towards it.
+    whyWrong:
+      1: Raising the third would turn it major.
+      2: The fifth stays put.
+      3: Home never moves.
+
+  - kind: keep
+    next: >-
+      Back to the melody path. Next: intervals, and a two-note phrase in your melody.

@@ -1,0 +1,109 @@
+slug: rekordbox-intro
+world: dj
+number: 203
+title: rekordbox
+minutes: 5
+song:
+  changes: drums.clap
+  why: before a track goes in a set a dj reads its bpm and key, and your song has both
+learn: >-
+  What rekordbox is, what its analysis finds in every track, and reading your own song's bpm and key the
+  way a dj would.
+youCan:
+  - say what rekordbox is for
+  - read a track's bpm and key
+  - use the key to pick a track that fits your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Every track has a speed and a key. The speed is its bpm, beats per minute. The key is the set of notes
+        it's built on. Before a dj plays anything they want both numbers, and software works them out for you.
+
+        The one you'll meet in most clubs is rekordbox, made by Pioneer DJ, the company behind the cdjs, the
+        club players you'll find in most booths.
+      straight: >-
+        Every track has a bpm and a key. Djs want both before they play it. rekordbox, from Pioneer DJ, the
+        maker of club cdjs, works them out for you.
+      eli5: >-
+        Every song has a speed and a set of notes. Djs use a program called rekordbox that finds both for
+        them.
+
+  - kind: say
+    title: what rekordbox does
+    say:
+      mentor: >-
+        When you add a track, rekordbox analyses it. It finds the bpm, the key, the waveform (the picture of
+        the sound over time) and the beat grid, a marker on every beat so the software knows where each one
+        lands.
+
+        All your tracks live in one library called the collection. From there you build playlists and get
+        your music ready to play out.
+      straight: >-
+        Add a track and rekordbox analyses it: bpm, key, waveform and beat grid. Everything lives in your
+        collection, where you build playlists.
+      eli5: >-
+        When you add a song, rekordbox listens to it and works out its speed, its notes, and where every beat
+        is. All your songs live in one big list.
+    deeper:
+      - title: two modes
+        say: >-
+          rekordbox has two main ways of working. Export mode gets a usb drive ready with your analysed tracks
+          and playlists, to plug into club cdjs. Performance mode turns rekordbox itself into the decks,
+          played with a controller.
+      - title: pro dj link
+        say: >-
+          Pro dj link is the network connection between rekordbox and cdj hardware, so the software and the
+          players can work together.
+
+  - kind: mix
+    goal: key
+    say:
+      mentor: >-
+        Look at deck a. Next to your song's name you'll see its bpm and its key, written as a code like 8A.
+        Those are the two things an analysis gives you.
+
+        Every bank track shows the same two numbers on its chip. Use them. Find a deck b track whose key fits
+        your song: the screen tells you when it fits. You'll learn how the codes work properly in the key
+        lesson.
+      straight: >-
+        Deck a shows your song's bpm and key code. Each bank track shows its own. Pick a deck b track whose
+        key fits yours.
+      eli5: >-
+        Your song's speed and note code are on deck a. Each other song has its own code. Find one the screen
+        says fits.
+
+  - kind: ask
+    q: What does rekordbox find when it analyses a track?
+    options: ["bpm, key, waveform and beat grid", "only the file name", "who made the track", "how popular it is"]
+    answer: 0
+    why: The four things a dj needs before playing a track.
+    whyWrong:
+      1: It reads the music itself, not just the name.
+      2: That comes from the track's tags, not analysis.
+      3: Analysis doesn't know about popularity.
+
+  - kind: ask
+    q: What is the collection in rekordbox?
+    options: ["your whole music library", "one playlist", "a type of cue point", "the usb drive"]
+    answer: 0
+    why: Every track you've added, analysed and ready to organise.
+    whyWrong:
+      1: Playlists are built from the collection.
+      2: Cue points sit inside tracks.
+      3: The usb is what you export to.
+
+  - kind: ask
+    q: What is export mode for?
+    options: ["getting a usb ready for club cdjs", "recording your set", "adding effects", "streaming music"]
+    answer: 0
+    why: It prepares your tracks and playlists on a usb you plug into the club players.
+    whyWrong:
+      1: Recording is a separate job.
+      2: Effects are for playing, not preparing.
+      3: It's about files on a usb.
+
+  - kind: keep
+    next: >-
+      Back to the song path: tempo and bpm. Matching two tracks by ear.

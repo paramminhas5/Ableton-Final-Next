@@ -1,0 +1,121 @@
+slug: notes-and-octaves
+world: foundations
+number: 210
+title: notes and octaves
+minutes: 5
+song:
+  changes: lead.lead
+  why: an octave jump in your melody is the same note made bigger, and it's one of the oldest tricks in a hook
+learn: >-
+  The twelve notes every melody is made from, why they repeat, and a melody in your song that jumps an octave.
+youCan:
+  - say how many notes there are before the pattern repeats
+  - say what an octave is
+  - play the same note an octave apart in your melody
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        Tap a, then b. Two different notes, but they sound like the same note, one lower and one higher. That
+        gap is an octave, and the higher a is wiggling exactly twice as fast as the lower one.
+
+        This is the reason music has only twelve notes. Go up twelve steps from any note and you land on the
+        same note again, an octave up.
+      straight: >-
+        Same note, an octave apart. The higher one has double the frequency. Twelve steps up from any note
+        brings you back to the same note an octave higher.
+      eli5: >-
+        Tap a, then b. They're the same note, one low and one high, like a dad and a kid singing the same song.
+        That jump is called an octave.
+
+  - kind: say
+    title: the twelve notes
+    say:
+      mentor: >-
+        Western music uses twelve notes: c, c sharp, d, d sharp, e, f, f sharp, g, g sharp, a, a sharp, b.
+        After b the pattern starts over at c, one octave higher. Each step to the very next note is called a
+        semitone, so an octave is twelve semitones.
+
+        On a piano the black keys have two names. C sharp and d flat are the same key, named either way. There's
+        no black key between e and f, or between b and c, because those pairs are already a semitone apart.
+      straight: >-
+        Twelve notes, then they repeat an octave up. One step is a semitone; twelve make an octave. Black keys
+        have two names (c sharp is d flat). E to f and b to c have no black key between.
+      eli5: >-
+        There are only twelve notes. After the twelfth, they start again, higher. Black keys on a piano have
+        two names, like a nickname.
+    deeper:
+      - title: octaves in numbers
+        say: >-
+          The a above middle c is a4, 440 hz. One octave up, a5, is 880 hz. Every octave doubles the
+          frequency, which is why the two notes blend so well.
+      - title: in live
+        say: >-
+          Midi numbers every note, with 60 for middle c and 69 for a4. Live labels middle c as C3, while many
+          other programs and most theory books call it C4. The midi number is the one that never changes.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now put an octave in your melody. This tune replaces the notes in your song.
+
+        The keys here show the notes of your song's scale, seven of the twelve, so the first key and the last
+        key are the same note, an octave apart. Press rec, wait out the count-in, play the first key, then the
+        last key, then two more you like. Listen to the jump: the note doesn't change, it just gets bigger and
+        brighter.
+      straight: >-
+        Record a new tune. First and last keys are the same note an octave apart. Rec, count-in, play the low
+        one, the high one, then any two more.
+      eli5: >-
+        Press rec and wait for four ticks. Press the first key, then the last key. Same note, low and high!
+        Then press two more keys you like.
+    hint: The first key and the last key share a name. Play them one after the other.
+
+  - kind: ask
+    q: How many notes before the pattern repeats?
+    options: ["twelve", "seven", "eight", "ten"]
+    answer: 0
+    why: Twelve semitones, then the same notes again an octave up.
+    whyWrong:
+      1: Seven is a scale, picked from the twelve.
+      2: Eight counts the first note twice, the octave.
+      3: Count every key, black and white, from c to the next c. Twelve.
+
+  - kind: ask
+    q: Going up one octave, the frequency
+    options: ["doubles", "halves", "goes up by 100 hz", "stays the same"]
+    answer: 0
+    why: A4 is 440 hz, a5 is 880 hz. Twice as fast.
+    whyWrong:
+      1: Halving takes you an octave down.
+      2: It's a doubling, not a fixed step.
+      3: Then it would be the same note at the same height.
+
+  - kind: ask
+    q: C sharp and d flat are
+    options: ["the same key with two names", "an octave apart", "two different pitches", "a fifth apart"]
+    answer: 0
+    why: One black key, named from the note below or the note above.
+    whyWrong:
+      1: An octave is twelve semitones. These are the same note.
+      2: Same pitch, two names.
+      3: A fifth is seven semitones apart.
+
+  - kind: ask
+    more: true
+    q: Which note does Live call C3?
+    options: ["middle c, midi note 60", "the c below middle c", "the lowest c on a piano", "a4, 440 hz"]
+    answer: 0
+    why: Live names middle c C3. Many other programs call it C4.
+    whyWrong:
+      1: That's an octave lower.
+      2: Far lower than that.
+      3: That's an a, not a c.
+
+  - kind: keep
+    next: >-
+      Back to the melody path. Next: scales, and the scale your song will use.

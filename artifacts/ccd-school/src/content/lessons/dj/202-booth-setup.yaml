@@ -1,0 +1,114 @@
+slug: booth-setup
+world: dj
+number: 202
+title: the booth
+minutes: 5
+song:
+  changes: drums.clap
+  why: your song only reaches a crowd if both decks come through the speakers at the same level
+learn: >-
+  The path your music takes from deck to speaker, setting levels so neither deck jumps out, and the
+  soundcheck before the night starts.
+youCan:
+  - follow the signal from deck to speakers
+  - set two decks to the same loudness
+  - soundcheck both decks before you play
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Track a, track b, then both. Before a single blend, a dj has to get both of those out of the speakers
+        at the right level. Walking into a booth and getting everything working is a skill of its own, and
+        it's what stands between you and dead air, the silence when nothing is playing.
+      straight: >-
+        Before you mix, both decks have to reach the speakers at the right level. Setting up the booth is a
+        skill that prevents dead air.
+      eli5: >-
+        Before a dj plays, they check that both music players come out of the speakers. Otherwise there might
+        be no music at all.
+
+  - kind: say
+    title: the signal chain
+    say:
+      mentor: >-
+        Sound travels in a line. The deck (a cdj or a laptop) feeds a channel on the mixer, the mixer's master
+        output feeds an amplifier, and the amplifier feeds the speakers. Break any link and nothing comes out.
+        That line is the signal chain.
+
+        Each channel also has a gain knob, which sets how strong the signal is as it comes in. Set it so the
+        loud parts sit high on the meter without hitting the red, which is called clipping and sounds harsh.
+        That's gain staging, and it's how two tracks end up at the same loudness before you touch a fader.
+      straight: >-
+        Deck, mixer channel, master output, amplifier, speakers: the signal chain. Set each channel's gain so
+        peaks sit high on the meter without clipping. That's gain staging.
+      eli5: >-
+        The music goes from the player, into the mixer, out to a big amplifier, then to the speakers. A knob
+        on each channel sets how strong it comes in: strong, but not so strong it crackles.
+    deeper:
+      - title: line and phono
+        say: >-
+          Mixer channels expect one of two kinds of signal. Line is for cdjs and controllers. Phono is for the
+          much quieter signal from a turntable. The wrong setting gives you a channel that's very quiet or
+          distorted, so check the input switch on every channel you use.
+      - title: the booth monitor
+        say: >-
+          The booth monitor is a speaker in the dj booth just for you, with its own level, separate from the
+          speakers the crowd hears. It's how you hear your mix clearly while the room's sound bounces around.
+      - title: arrive early
+        say: >-
+          Do the soundcheck before the crowd arrives: play a track on each deck and confirm sound reaches the
+          speakers. A problem found during setup takes minutes to fix. Found at midnight, it's dead air.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Here's your booth. Deck a is your song. Pick a track for deck b from the bank below.
+
+        Now soundcheck. Slide the crossfader all the way to a and listen, then all the way to b. Both should
+        come through.
+
+        Then set the two channel faders so the decks sound about as loud as each other. When you crossfade,
+        nothing should jump out. When it sounds even both ways, you're set up.
+      straight: >-
+        Pick a bank track for deck b. Crossfade fully to a, then fully to b, to check both come through. Then
+        set the channel faders so both decks sound equally loud.
+      eli5: >-
+        Pick a song for deck b. Slide the big slider all the way one way, then the other, and check you hear
+        each song. Then make both songs equally loud.
+
+  - kind: ask
+    q: Where does the sound go after the mixer's master output?
+    options: ["into an amplifier, then the speakers", "back into the deck", "only into your headphones", "into the gain knob"]
+    answer: 0
+    why: Master output, amplifier, speakers. That's the end of the signal chain.
+    whyWrong:
+      1: The deck is where the sound starts.
+      2: Headphones get a separate cue feed.
+      3: The gain knob is at the start of each channel.
+
+  - kind: ask
+    q: What is gain staging?
+    options: ["setting each channel's input so it's strong but not clipping", "turning everything up as far as it goes", "putting the crossfader in the middle", "matching the tempos"]
+    answer: 0
+    why: Strong enough to be clean, not so strong it clips.
+    whyWrong:
+      1: Too loud clips and sounds harsh.
+      2: The crossfader is a different control.
+      3: Tempo is the pitch fader's job.
+
+  - kind: ask
+    more: true
+    q: A turntable is plugged into a channel set to line. What happens?
+    options: ["the channel is very quiet or sounds wrong", "it plays perfectly", "the tempo doubles", "the key changes"]
+    answer: 0
+    why: Turntables need the phono setting. On line, the signal is far too weak.
+    whyWrong:
+      1: Line expects a much stronger signal.
+      2: Input settings don't touch tempo.
+      3: Input settings don't touch key.
+
+  - kind: keep
+    next: >-
+      Back to the song path: tempo and bpm. Matching two tracks by ear.
