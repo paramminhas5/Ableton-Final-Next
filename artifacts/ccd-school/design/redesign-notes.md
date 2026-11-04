@@ -239,3 +239,14 @@ Branch `school/field`, pushed (8d4fac9, e1fa431, dbe465d).
 - **Checks:** `npx tsc --noEmit` clean, 224 web tests pass, `next build` passes. Looked at in Chromium at 390x844 light and dark (daily, review, shop, leaderboard, placement, profile, setup, glossary, plug-ins, shortcuts, signal flow) and the Studio at 390, 1024 and 1366 wide. WebKit not yet re-checked for these pages. `scripts/shots/pages.mjs` takes `VW` and `VH` for other sizes.
 - **Gotcha:** after `npm run build`, kill the old `next-server` process by its exact PID before starting again; otherwise the running server serves the replaced build and every stylesheet 404s, giving unstyled shots.
 - **Still to do in the look pass:** see the "Look pass, still old" line in `school-next-chat-prompt.md`.
+
+## Build · whole-app look pass, part 5 (4 Nov 2026)
+Branch `school/field`, pushed (f2da7a9, c720fec, e1b5b7c).
+- **Reference pages rebuilt on the Model 1 parts** (`RefPage`, `PageHead`, `ListRow`, `SegBar`, `Chips`, `SearchField`, `Silk`, `GoPill`, `Pad`): Wiki (world chips, chapter silks, expandable path rows, trophies), Devices, Link, Build, Missions (all lessons), Challenge (glass intro, option pads, a segment bar for the 30 second clock), Upgrade (layout only; copy and prices untouched until Param answers on `school-pro.md`) and first beat (RefPage, step pads with `"<lane> step N"` labels, one pink go key). `world/WorldWiki.tsx` is deleted.
+- **Today at tablet and desktop width:** wrappers `td-root`, `td-head`, `td-switch`, `td-left`, `td-right`; 600 px max from 640 px; two columns from 900 px (screen and next lesson at the left, worlds dial, meter and hear key at the right).
+- **Emoji sweep finished:** the last pictograph fields in drills, mission screens and flagship lesson data cleared, star prefixes removed from device preset names, the fire from the streak reminder push title.
+- **Shot scripts:** `pages.mjs` and `lesson.mjs` ignore the generic "Failed to load resource" noise and report real 404s by URL; `pages.mjs` falls back to a clipped 6000 px shot when WebKit cannot take a full-page shot of a very long page. The one 404 every shot used to log is `/_vercel/insights/script.js`, which only exists on Vercel; it is not a bug.
+- **Journeys:** `scripts/journeys.mjs` has a `playLesson` helper and J1 (lesson half) passes on the new player. J1 setup and first beat are rewritten but not yet verified; J2 to J10 and placement still describe the old UI.
+- **Checks:** `npx tsc --noEmit` clean, 224 web tests pass (1 skipped), production build passes. Engine untouched this session, so `cargo test` was not re-run and the Android APK needs no rebuild. Looked at in Chromium and WebKit at 390x844, light and dark.
+- **Still old:** the path list (`PathPageClient`), playground and match pages, the device lab and the 47 sims inside their frames (item 4), Upgrade copy and rupee prices (waiting on Param), the admin page (internal tool, left alone).
+

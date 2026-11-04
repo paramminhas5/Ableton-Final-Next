@@ -119,6 +119,8 @@ One engine (call it the CCD engine) that studio, lessons, sims, practice drills 
 - Desktop layouts.
 - Light mode for studio.
 
+Status 4 Nov 2026: everything above is built except DJ on the engine, light studio and the device lab; the path list, playground and match pages are the last old-style pages.
+
 ## 7 · Testing
 
 - **Unit tests:** theory (scales, chords, Euclid), scheduler timing, parameter mapping, schema migration.
@@ -238,6 +240,7 @@ The web app goes to 100% before any more phone work. Every screen lives in the w
    - (improvement) **Mix coach:** reads the engine's meters and clash data and says exactly what is wrong and which control fixes it ("bass and kick fight at 60 Hz, try the duck"). Measured, not guessed by a language model.
    - Deepen the 55 short lessons.
 5. **The rest of the app** (step 6): Today, World, practice and drills, library and device pages, you, onboarding, sign in, menu, moments, DJ on the engine, light studio, tablet and desktop layouts, PWA.
+   - **Status 4 Nov 2026 (look pass parts 1 to 5):** done and checked in Chromium and WebKit, light and dark: Today (two columns from 900 px), World, practice and drills, library, you, sign in, menu, moments, device pages, daily, review, shop, leaderboard, placement, public profile, the Studio at tablet and desktop width, and every reference page including first beat; no emoji left. Still to do: path list, playground and match pages, the device lab and the 47 sims (item 4), journeys J2 to J10 and placement, then onboarding polish, DJ on the engine, light studio, PWA.
    - (improvement) **The CCD stage:** the showcase loop from the PRD (submit a track, crew review, picks played at CCD Episodes, picked learners get a CCD artist page). Needs track uploads with versions and comments.
    - Privacy from the PRD (India DPDP): itemised consent, data export and deletion, grievance contact.
 6. **Final pass:** copy, accessibility (contrast, keyboard and screen-reader paths for every audio drill), performance (8 layers on a mid-range phone browser), journeys, smoke and crawl across every screen.

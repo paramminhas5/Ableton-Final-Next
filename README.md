@@ -33,7 +33,7 @@ Last updated 3 Nov 2026 (late). Branch `school/field`. This file describes the w
 | Studio (the instrument) | Play mode built for all six layer types plus a sampler layer (step 3): steps at 1/8, 1/16 or 1/32 in one to four bar loops, keys, pads and each type's own surface (glide, circle, chord pads, xy, rolls, riser, sample load), sound presets, several saved songs, recording with count-in, overdub and undo. Mix mode (step 2) is built: stage, clash and fix, compare, faders. First visits land on a loop already playing. |
 | Phone apps | Tauri 2 shell with native low-latency audio built. Android APK built (unofficial, sideloaded). iPhone build runs from Xcode on a Mac. Phone work paused until the web app is complete. |
 | Ableton Link | In the phone and Mac apps (LinkKit on iOS, open-source Link on Android and Mac). Not yet tested against Live on a device. |
-| New design (Model 1) | Every screen designed (44 boards). Built: welcome, Today, All lessons and worlds, Studio (play and mix), DJ, footer, the lesson player and every step, practice and drills, you, library. Every other page renders its old blocks as the same black screen and panels. Also built: sign in, menu, rank up and world done moments, device pages. Still old: daily, placement, leaderboard, shop, review list, the device lab and sims inside their frames, the older reference pages, tablet and desktop layouts. 40 unused old components were removed. |
+| New design (Model 1) | Every screen designed (44 boards). Built and checked at 390x844 light and dark in Chromium and WebKit: welcome, Today (two columns from 900 px), All lessons and worlds, Studio (play and mix, three columns from 900 px), DJ, footer, the lesson player and every step, practice and drills, you, library, sign in, menu, moments, device pages, daily, review, shop, leaderboard, placement, public profile, header, command palette, and the reference pages (setup, glossary, plug-ins, shortcuts, signal flow, wiki, devices, link, build, all lessons, challenge, upgrade layout, first beat). No emoji in the UI or lesson data. Still old: the path list, playground and match pages, the device lab and the 47 sims inside their frames, and the journeys after J1 (they describe the old UI). |
 | Accounts and payments | Sign-in, saving, leaderboard proven on a Supabase database. Stripe and Razorpay wired, not live. Everything is free by default (decided 3 Nov); the admin switch can still turn paid lessons on. |
 | Production | `learn.catscandance.com` still serves an older build. The new work is on branches, not merged. |
 
@@ -206,7 +206,7 @@ flowchart LR
 - Export is MIDI only. Stems and a Live Set (`.als`) export are not built.
 
 **Lessons and app**
-- The lesson player, practice, library and profile are in the new look. The 47 sims and the Ear Gym still play through the browser's Web Audio, not the engine (item 4). Daily, placement, leaderboard, shop, the review list, the reference pages and the tablet and desktop layouts are still old.
+- The lesson player, practice, library and profile are in the new look. The 47 sims and the Ear Gym still play through the browser's Web Audio, not the engine (item 4). The path list, playground and match pages, and the device lab are still old.
 - 55 of 171 lessons are still in the short format.
 - Teaching quality has not been play-tested with beginners. A few rekordbox details and some Live shortcut claims are still unverified.
 - Accessibility: about 11 contrast issues remain on world pages. Audio drills need full keyboard and screen-reader paths.
