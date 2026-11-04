@@ -37,14 +37,15 @@ export function SignalFlowDiagram({ diagram }: { diagram: SignalFlowDiagram }) {
     ? getPathFromNode(selectedNodeId, diagram.nodes, diagram.connections)
     : [];
 
-  const width = 1000;
-  const height = 400;
+  const xs = diagram.nodes.map(n => n.x), ys = diagram.nodes.map(n => n.y);
+  const vx = Math.min(...xs) - 20, vy = Math.min(...ys) - 30;
+  const width = Math.max(...xs) + 140 - vx, height = Math.max(...ys) + 80 - vy;
 
   return (
     <div className="space-y-4">
       {/* SVG Diagram */}
       <div className="brutal-border bg-bone p-4 overflow-x-auto" tabIndex={0} role="region" aria-label="Signal flow diagram">
-        <svg width={width} height={height} className="mx-auto">
+        <svg width={width} height={height} viewBox={`${vx} ${vy} ${width} ${height}`} className="mx-auto">
           {/* Draw connections first (so they appear behind nodes) */}
           {diagram.connections.map((conn, idx) => {
             const fromNode = diagram.nodes.find(n => n.id === conn.from);

@@ -1,4 +1,4 @@
-// Page screenshots at 390x844, light and dark, full page.
+// Page screenshots at 390x844 (set VW and VH for another size), light and dark, full page.
 // Usage: node scripts/shots/pages.mjs <base url> <chromium|webkit> <out dir> /path [/path ...]
 // A path may end in "!click=<button name>" to press a button before the shot.
 import { chromium, webkit } from "playwright";
@@ -12,7 +12,7 @@ const noise = /auth|favicon|posthog|_vercel|500 \(Internal|access control|Client
 for (const scheme of ["light", "dark"]) {
   for (const raw of paths) {
     const [path, act] = raw.split("!");
-    const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme, deviceScaleFactor: 2 });
+    const ctx = await b.newContext({ viewport: { width: +(process.env.VW || 390), height: +(process.env.VH || 844) }, colorScheme: scheme, deviceScaleFactor: 2 });
     const p = await ctx.newPage();
     const file = (path.replace(/\W+/g, "-").replace(/^-|-$/g, "") || "home") + (act ? "-" + act.split("=")[1].replace(/\W+/g, "-") : "");
     p.on("pageerror", e => problems.push(`${file} ${scheme}: ${e.message.slice(0, 160)}`));

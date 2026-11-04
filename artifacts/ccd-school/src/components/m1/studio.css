@@ -127,3 +127,19 @@
 .st-song.is-on{color:var(--ink);font-weight:600}
 .st-song .st-ss{margin-left:auto}
 .st-song-x{width:34px;height:34px;border:0;background:none;color:var(--sub);cursor:pointer;font-size:16px;min-height:0;min-width:0}
+
+/* tablet and desktop: layers at the left, the instrument in the middle, shaping at the right (canvas ZTablet).
+   On a phone the two wrappers do not exist as boxes, so nothing moves. */
+.st-main,.st-side,.st-mixwrap{display:contents}
+@media (min-width:900px) and (min-height:560px){
+  .st-root{max-width:1240px}
+  .st-body{left:32px;right:32px;top:calc(14px + env(safe-area-inset-top,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:200px minmax(0,1fr) 300px;grid-template-rows:auto auto minmax(0,1fr);column-gap:20px;row-gap:12px}
+  .st-head{grid-column:1/-1;grid-row:1;height:44px}
+  .st-slots{grid-column:1;grid-row:2/4;display:flex!important;flex-direction:column;gap:6px;margin-top:0;overflow-y:auto;min-height:0}
+  .st-slot{flex:none;height:56px;flex-direction:row;justify-content:flex-start;padding:0 16px;gap:12px;font-size:12px}
+  .st-scr{grid-column:2;grid-row:2;margin-top:0}
+  .st-main{grid-column:2;grid-row:3;display:flex;flex-direction:column;min-height:0;gap:8px}
+  .st-side{grid-column:3;grid-row:2/4;display:flex;flex-direction:column;min-height:0;gap:8px;overflow-y:auto}
+  .st-mixwrap{grid-column:2/4;grid-row:2/4;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+  .st-transport{left:50%;right:auto;width:min(520px,calc(100% - 64px));transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+}

@@ -439,7 +439,7 @@ export function Studio() {
         </div>
 
         {mode === "mix" ? (
-          <Mix track={track} engine={engine} selId={selId} onSelect={setSelId} update={update} playing={playing} />
+          <div className="st-mixwrap"><Mix track={track} engine={engine} selId={selId} onSelect={setSelId} update={update} playing={playing} /></div>
         ) : (
         <>
         <Screen className="st-scr" height={96}>
@@ -476,11 +476,12 @@ export function Studio() {
         </Screen>
 
         {songsOpen ? (
-          <SongsPanel songs={songs} onChange={refreshSongs} />
+          <div className="st-main"><SongsPanel songs={songs} onChange={refreshSongs} /></div>
         ) : adding ? (
-          <AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} />
+          <div className="st-main"><AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} /></div>
         ) : sel ? (
           <>
+            <div className="st-main">
             <Silk label={`1 · play ${TYPE[sel.type].label} on`} right="pick how" />
             <div className="st-pick" style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1},1fr)` }}>
               {(TYPE[sel.type].surfaces).map(s => (
@@ -527,6 +528,8 @@ export function Studio() {
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
 
+            </div>
+            <div className="st-side">
             <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" />
             <div className="st-shape">
               <div className="st-bank" role="radiogroup" aria-label="Knob bank">
@@ -558,6 +561,7 @@ export function Studio() {
                   value={paramOf(sel, index)} defaultValue={spec.default}
                   onChange={v => setParam(index, spec, v)} />
               ))}
+            </div>
             </div>
           </>
         ) : null}
