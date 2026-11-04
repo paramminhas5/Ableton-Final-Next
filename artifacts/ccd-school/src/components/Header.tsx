@@ -479,7 +479,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
     { href: "/shortcuts", label: "shortcuts", icon: <M1Icon name="keys" /> },
     { href: "/setup", label: "setup", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M9 3v6M15 3v6M6 9h12v3a6 6 0 0 1-12 0zM12 18v3" /></svg> },
     { href: "/upgrade", label: "pro", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="m12 4 2.4 5 5.6.8-4 3.9.9 5.6L12 16.6 7.1 19.3l.9-5.6-4-3.9 5.6-.8z" /></svg> },
-    { href: "/profile", label: "settings", icon: <M1Icon name="user" /> },
+    { href: "/settings", label: "settings", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg> },
   ];
   const worlds = (["fundamentals", "dj", "producer"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
   return (

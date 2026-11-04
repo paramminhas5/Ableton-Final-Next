@@ -85,6 +85,7 @@ export function ProfilePageClient() {
       <div style={{ display: "flex", alignItems: "center", gap: 12, height: 56 }}>
         <Key href="/dashboard" ariaLabel="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
         <h1 style={{ flex: 1, fontSize: 22, fontWeight: 500, letterSpacing: "-.02em", margin: 0 }}>you</h1>
+        <Key href="/settings" ariaLabel="Settings" style={{ width: 44, height: 44 }}><svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg></Key>
         <Key onClick={share} ariaLabel={shared ? "Link copied" : "Share your profile"} style={{ width: 44, height: 44 }}><Icon name="out" /></Key>
       </div>
 
