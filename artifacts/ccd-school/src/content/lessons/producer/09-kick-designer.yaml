@@ -1,0 +1,69 @@
+slug: kick-designer
+world: producer
+number: 9
+title: the kick designer
+minutes: 7
+song:
+  changes: drums.kick
+  why: the kick is the loudest thing in your track, so it's worth making it exactly right
+learn: >-
+  Every part of a kick you can shape: pitch, length, drive and level, and the best kick you can make for
+  your song.
+youCan:
+  - shape a kick's tune, decay, drive and level by ear
+  - say what drive does to a kick
+  - match a kick to the style of your track
+steps:
+  - kind: hear
+    clip: short-vs-long-kick
+    say:
+      mentor: >-
+        You met decay and tune in your first lesson. Now you get the whole kick: four knobs, the ones
+        producers reach for every time. Tap short and long again to remind your ears how much the length
+        changes.
+      straight: >-
+        Four kick controls: tune, decay, drive, level. You know two already.
+      eli5: >-
+        Remember short and long kicks? Now you get four knobs to build your perfect kick.
+
+  - kind: shape
+    layer: drums
+    knobs: [tune, decay, drive, level]
+    say:
+      mentor: >-
+        Your song, your kick. Tune sets how low the body sits: match it roughly to your bass so they don't
+        clash. Decay sets how long it booms. Drive pushes the kick into soft distortion: it adds grit and
+        harmonics, so it cuts through on small speakers. Level is how loud it sits against everything else.
+
+        Techno kicks tend to be driven and a bit longer. Deep house kicks are rounder and softer. Shape yours
+        until it feels like your track.
+      straight: >-
+        Tune: pitch of the body, near your bass. Decay: length. Drive: grit and presence. Level: loudness.
+        Driven and long for techno, round and soft for deep house.
+      eli5: >-
+        Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes
+        it louder or quieter. Play until it's your favourite kick.
+
+  - kind: ask
+    q: What does drive do to a kick?
+    options: ["adds grit and harmonics so it cuts through", "makes it longer", "changes the tempo", "removes the click"]
+    answer: 0
+    why: Soft distortion adds harmonics, which help it come through on small speakers.
+    whyWrong:
+      1: Length is decay.
+      2: Kicks don't change the tempo.
+      3: Drive adds bite, it doesn't take the click away.
+
+  - kind: ask
+    q: Why tune the kick near the bass?
+    options: ["so the two low sounds don't clash", "so the kick gets louder", "it makes the song faster", "the bass will copy it"]
+    answer: 0
+    why: Kick and bass share the low end; tuning them to fit avoids a muddy clash.
+    whyWrong:
+      1: Level sets loudness.
+      2: Tuning doesn't touch tempo.
+      3: The bass plays its own notes.
+
+  - kind: keep
+    next: >-
+      Next: drums from recordings. Swap your synth kit for a real one and hear the difference.

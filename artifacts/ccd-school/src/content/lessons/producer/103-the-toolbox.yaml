@@ -1,0 +1,29 @@
+slug: the-toolbox
+world: producer
+number: 103
+title: bonus, the toolbox
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; this is about where it goes next
+learn: >-
+  The rest of Live 12.
+youCan:
+  - know where to look in Live for this
+steps:
+  - kind: say
+    title: the rest of live 12
+    say: >-
+      Live 12 has more than any one song needs: stem separation to pull apart a track, midi tools that generate and transform notes, scale awareness to lock everything to your key, and sound similarity search to find sounds like the one you have. The deeper lessons in this path walk through each.
+  - kind: ask
+    q: Where would you go next in Live to try this?
+    options: ["the deeper lessons in this path", "nowhere, Live can't do it", "a different program", "the dj world"]
+    answer: 0
+    why: Each deeper lesson here walks through one part of it, on your own song.
+    whyWrong:
+      1: Live can do all of it.
+      2: It's all inside Live.
+      3: This path is about Live itself.
+  - kind: keep
+    next: >-
+      Pick a deeper lesson below, or head to the dj world.

@@ -138,10 +138,10 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 ### Path 3: sound design
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| S | (new) `kick-designer` | the kick designer | changes drums.kick (click, body, drop, drive, length) | full designer (fix 37) |
+| S | `kick-designer` | the kick designer | changes drums.kick (click, body, drop, drive, length) | full designer (fix 37) |
 | D | `saturator-distortion` | saturator and distortion |drive on your kick; keep it| |
 | D | `roar` | roar |a bigger drive on your bass; keep it| |
-| S | (new) `real-drums` | drums from recordings | changes drums: sampler kit | sampler in a lesson, `public/audio/real` |
+| S | `real-drums` | drums from recordings | changes drums: sampler kit | sampler in a lesson, `public/audio/real` |
 | D | `sampler-simpler` | sampler and simpler |load your own hit onto a pad; keep it| |
 | D | `sampler-deep` | sampler, deep |start point and loop on your sample| |
 | D | `drum-sampler` | drum sampler |your recorded kit on the pads| |
@@ -150,7 +150,7 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `recording-audio` | recording audio |record a sound from your mic into your song| |
 | D | `warping` | warping |stretch your sample to your tempo| |
 | D | `warp-modes-deep` | warp modes |the same sample, four warp modes; pick one| |
-| S | (new) `lead-width` | width and movement | shape lead: detune, lfo | lfo param |
+| S | `lead-width` | width and movement | shape lead: detune, lfo | lfo param |
 | D | `synth-detune-unison` | detune and unison |width on your lead; keep it| |
 | D | `synth-lfo` | the lfo |a slow wobble on your lead's filter; keep it| |
 | D | `synth-modulation-routing` | modulation routing |route the lfo to pitch instead; keep one| |
@@ -158,7 +158,7 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `wavetable` | wavetable |a wavetable voice on your lead; scan it| |
 | D | `meld` | meld |meld-style voice on your lead| |
 | D | `drift` | drift |a drift-style voice on your chords| |
-| S | (new) `fx-riser` | fx: risers and sweeps | adds fx.riser | fx layer in a lesson |
+| S | `fx-riser` | fx: risers and sweeps | adds fx.riser | fx layer in a lesson |
 | D | `synth-noise` | noise |noise in your riser and your hats| |
 | D | `synth-effects` | synth effects |an echo on your lead; keep it| |
 | D | `granulator-iii` | granulator iii |grains from your sample; keep it| |
@@ -181,7 +181,7 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `sends-returns` | sends and returns |one reverb for all your parts; amounts per part| |
 | D | `reverb-delay` | reverb and delay |reverb vs echo on your clap; keep one| |
 | D | `hybrid-reverb` | hybrid reverb |a bigger reverb on your chords| |
-| S | (new) `glue` | glue: compression and loudness | changes master | master step |
+| S | `glue` | glue: compression and loudness | changes master | master step |
 | D | `glue-compressor` | glue compressor |the glue on your whole song| |
 | D | `limiter-truepeak` | limiter and true peak |the limiter: loud without clipping| |
 | D | `racks-macros` | racks and macros |one knob that moves three; keep it| |
@@ -190,22 +190,22 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 ### Path 5: arrangement and finish
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| S | (new) `sections` | sections | adds arrangement (intro, build, drop, break) | arrange step |
+| S | `sections` | sections | adds arrangement (intro, build, drop, break) | arrange step |
 | D | `arrangement-view` | arrangement view |your sections on a timeline| |
 | D | `scenes-follow` | scenes and follow actions |scenes: drums alone, then all; a follow action| |
 | D | `tracks` | tracks |mute, solo and arm your parts| |
 | D | `automation` | automation |draw the cutoff opening over 8 bars; keep it| |
 | D | `modulation-lanes` | modulation lanes |a modulation lane on your lead's level| |
-| S | (new) `fills` | variation and fills | changes drums: a fill bar | fill take |
+| S | `fills` | variation and fills | changes drums: a fill bar | fill take |
 | D | `midi-transforms` | midi transformations |transform your fill: reverse, stretch| |
 | D | `groove-pool` | groove pool |a groove on your hats; keep it| |
 | D | `take-lanes` | take lanes and comping |three takes of your fill; pick one| |
 | D | `comping` | comping |the best bar of each take| |
 | D | `comping-flow` | comping flow |comp your lead take| |
-| S | (new) `the-drop` | the breakdown and the drop | changes arrangement | |
+| S | `the-drop` | the breakdown and the drop | changes arrangement | |
 | D | `macro-variations` | macro variations |two versions of your drop; switch| |
 | D | `instrument-rack` | instrument rack |two voices on your lead in one rack| |
-| S | (new) `finish-export` | finish and export | export (midi, stems), name it, send to CCD | stems export |
+| S | `finish-export` | finish and export | export (midi, stems), name it, send to CCD | stems export |
 | D | `exporting` | exporting from live |export your song as midi| |
 | D | `live-sets-projects` | live sets and projects |save your song as a set| |
 | D | `files-projects` | files and projects |your song's files| |
@@ -217,10 +217,10 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 A path for people who want Live itself. Nothing here changes the song; it is where the rest of the Live reference lives, in a sensible order.
 | | slug | title | | |
 |---|---|---|---|---|
-| B | (new) `your-song-in-live` | bonus: your song in live | open your export, the tour | |
+| B | `your-song-in-live` | bonus: your song in live | open your export, the tour | |
 | D | `browser` | the browser |find a sound for your lead in the browser| |
 | D | `preferences` | preferences |set your song's default tempo and key| |
-| B | (new) `play-it-live` | bonus: play it | controllers and sync | |
+| B | `play-it-live` | bonus: play it | controllers and sync | |
 | D | `push-controllers` | push and controllers |your pads on a controller| |
 | D | `midi-mapping` | midi mapping |map a knob to your lead's cutoff| |
 | D | `push3-workflow` | push 3 workflow |your song on push| |
@@ -230,7 +230,7 @@ A path for people who want Live itself. Nothing here changes the song; it is whe
 | D | `ableton-link` | ableton link |link, what it is| |
 | D | `cv-tools` | cv tools |your song driving a modular| |
 | D | `external-instrument` | external instrument |a hardware synth on your lead| |
-| B | (new) `the-toolbox` | bonus: the toolbox | the rest of live 12 | |
+| B | `the-toolbox` | bonus: the toolbox | the rest of live 12 | |
 | D | `linked-track-editing` | linked-track editing |edit two of your parts together| |
 | D | `sound-similarity` | sound similarity search |find a sound like your kick| |
 | D | `mpe-tuning` | mpe and tuning systems |a different tuning on your lead| |

@@ -1,0 +1,52 @@
+slug: fx-riser
+world: producer
+number: 12
+title: fx, risers and sweeps
+minutes: 6
+song:
+  changes: fx.riser
+  why: a riser builds tension so the drop lands harder
+learn: >-
+  What a riser is, why it works, and risers placed in your arrangement before the drops.
+youCan:
+  - say what a riser does
+  - place a riser before a drop
+  - hear tension build and release
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Before a big drop you'll almost always hear a sweep: noise or a synth rising in pitch and brightness
+        over a few bars. That's a riser. It tells the whole room something is coming, and when it cuts off,
+        the drop feels huge.
+      straight: >-
+        A riser is a sweep up in pitch and brightness before a drop. It builds tension; the drop releases it.
+      eli5: >-
+        Whoooosh, getting higher and higher, then BOOM. That whoosh is a riser. It makes everyone ready for
+        the drop.
+
+  - kind: arrange
+    goal: risers
+    say:
+      mentor: >-
+        Here's your song laid out in sections. There's a riser row at the bottom. Tap it on for the section
+        right before a drop and listen to the build. One per drop is plenty.
+      straight: >-
+        Your arrangement. Turn a riser on in the section before a drop.
+      eli5: >-
+        Find the part just before a drop and tap its riser. Then listen!
+
+  - kind: ask
+    q: Where does a riser usually go?
+    options: ["in the bars just before a drop", "on beat one of the drop", "in the middle of the intro", "at the very end of the song"]
+    answer: 0
+    why: It builds over the last bars before the drop and cuts off as it lands.
+    whyWrong:
+      1: On the drop it would get in the way.
+      2: It needs something to build towards.
+      3: There's nothing to build to there.
+
+  - kind: keep
+    next: >-
+      Next: levels and balance. The mix starts here.

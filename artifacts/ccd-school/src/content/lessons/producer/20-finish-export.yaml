@@ -1,0 +1,59 @@
+slug: finish-export
+world: producer
+number: 20
+title: finish and export
+minutes: 5
+song:
+  changes: drums.kick
+  why: a song is finished when it leaves the app
+learn: >-
+  Naming your song, exporting it as midi for Ableton Live, and what happens next.
+youCan:
+  - export your song as midi
+  - open it in Live and keep working
+  - say what stems are
+steps:
+  - kind: say
+    title: done is a skill
+    say:
+      mentor: >-
+        Lots of producers have hundreds of loops and no finished songs. Finishing is a skill, and you've just
+        done it: a beat, a bass, a lead, chords, a mix and an arrangement, all yours.
+
+        From here you can take it into Ableton Live to keep going: more sounds, vocals, a proper master. You
+        export it as midi, the notes of every part, and Live plays them on its own instruments.
+      straight: >-
+        Finishing matters. Export your song as midi and open it in Live to keep going.
+      eli5: >-
+        You made a whole song! Now you can take it into a big music program called Ableton Live.
+    deeper:
+      - title: stems
+        say: >-
+          Stems are each part exported as its own audio file: drums, bass, lead and so on. Engineers and djs
+          use them to remix and master. They're coming to CCD School soon.
+
+  - kind: arrange
+    goal: export
+    say:
+      mentor: >-
+        Here's your finished song. Give it a name, play it through once more, and download the midi. Drop the
+        file into Live and every part lands on its own track. And if you're proud of it, send it to CCD: the
+        best learner tracks get played at our nights.
+      straight: >-
+        Name it, play it, download the midi, open it in Live. Send it to CCD if you're proud of it.
+      eli5: >-
+        Type a name for your song. Then tap download and open it in Live.
+
+  - kind: ask
+    q: What does a midi file hold?
+    options: ["the notes of every part", "the finished audio", "only the drums", "the song's artwork"]
+    answer: 0
+    why: Midi is notes, timing and velocity. Live plays them on its instruments.
+    whyWrong:
+      1: That's an audio export.
+      2: It holds every part.
+      3: It's music data only.
+
+  - kind: keep
+    next: >-
+      Next: the dj world. Play your own song out, with other tracks, like at a CCD night.

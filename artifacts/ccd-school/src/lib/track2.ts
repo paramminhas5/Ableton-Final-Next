@@ -72,6 +72,8 @@ export type TrackV2 = {
   layers: LayerV2[];
   /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
   master?: Record<number, number>;
+  /** The arrangement, when the song has one (src/lib/arrange.ts). */
+  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
   added: string[];
   updatedAt: number;
 };

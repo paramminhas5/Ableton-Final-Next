@@ -14,6 +14,7 @@ import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
+import { loadRealKit, REAL_KIT_ID, withRealKit, withSynthKit } from "@/lib/realKit";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
@@ -22,7 +23,7 @@ import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { AirWave, SynthChain, WaveShape } from "./LessonVisuals";
-import { BASS_PARAMS, CHORD_PARAMS, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
+import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
@@ -178,7 +179,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const knobs = useMemo(() => {
     // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
-    const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec }))];
+    // Drums: all four of the kick pad's knobs (tune, decay, drive, level) can be named.
+    const kickPad = line.type === "drums" ? DRUM_PAD_PARAMS.map((sp, k) => ({ index: INSTRUMENT_BASE + k, spec: sp as ParamSpec })) : [];
+    const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec })), ...kickPad.slice(2)];
     // Layer-wide knobs (eq, drive, echo, level, pan, send, duck) are there when a lesson names them.
     const wide = LAYER_PARAMS.map(sp => ({ index: sp.index, spec: sp as ParamSpec }));
     const wanted = screen.knobs.map(k => all.find(s => s.spec.key === k) ?? wide.find(s => s.spec.key === k)).filter(Boolean) as typeof all;
@@ -403,7 +406,89 @@ const toV = (bpm: number) => (bpm - BPM_MIN) / (BPM_MAX - BPM_MIN);
 const toBpm = (v: number) => Math.round(BPM_MIN + v * (BPM_MAX - BPM_MIN));
 
 export function TempoStep(props: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
-  return props.screen.set === "swing" ? <SwingStep {...props} /> : props.screen.set === "scale" ? <ScaleStep {...props} /> : <BpmStep {...props} />;
+  return props.screen.set === "swing" ? <SwingStep {...props} /> : props.screen.set === "scale" ? <ScaleStep {...props} /> : props.screen.set === "glue" ? <GlueStep {...props} /> : props.screen.set === "kit" ? <KitStep {...props} /> : <BpmStep {...props} />;
+}
+
+/** Synth drums or the recorded kit, on your own pattern. */
+function KitStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode }) {
+  const loop = useMemo(() => (songHasMusic() ? readTrackV2() : clipVariants("four-on-the-floor")[0].track), []);
+  const [real, setReal] = useState(loop.layers.some(l => l.id === REAL_KIT_ID));
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => { void loadRealKit().then(setLoaded); }, []);
+  const shown = useMemo(() => (real && loaded ? withRealKit(loop) : withSynthKit(loop)), [loop, real, loaded]);
+  const { engine, ready } = useEngineTrack(shown);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const playing = beat >= 0;
+  const keep = () => { const t = readTrackV2(); if (t.layers.some(l => l.events.length)) { writeTrackV2({ ...(real ? withRealKit(t) : withSynthKit(t)), updatedAt: Date.now() }); window.dispatchEvent(new Event("ccd:song")); } onNext(); };
+  useEnter(keep);
+  return (
+    <div className="ls-col">
+      <div className="fl-inst">
+        <Screen>
+          <Meta left="your kit" right={!loaded ? "loading the recordings" : playing ? "playing, switch kits" : "press play"} />
+          <div className="fl-bpm"><b style={{ fontSize: 44 }}>{real ? "recorded" : "synth"}</b><span>{real ? "a real kick, clap, hat and snare" : "drums made from numbers by the engine"}</span></div>
+        </Screen>
+        <div className="fl-marks" role="radiogroup" aria-label="Kit" style={{ ["--c" as string]: accent, marginTop: 12 } as CSSProperties}>
+          <button type="button" role="radio" aria-checked={!real} className={`ls-chip ${!real ? "is-on" : ""}`} onClick={() => setReal(false)}>synth<small>made by the engine</small></button>
+          <button type="button" role="radio" aria-checked={real} disabled={!loaded} className={`ls-chip ${real ? "is-on" : ""}`} onClick={() => setReal(true)}>recorded<small>real drums on your pattern</small></button>
+        </div>
+      </div>
+      <div className="fl-text">
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {tail}
+      </div>
+      <div className="ls-bottom">
+        <div className="m1-g">
+          <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3" }} ariaLabel="Use this kit">use the {real ? "recorded" : "synth"} kit</GoPill>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** The master bus: glue (the bus compressor) and out (the level into the limiter). Writes the song's master. */
+function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode }) {
+  const loop = useMemo(() => (songHasMusic() ? readTrackV2() : clipVariants("four-on-the-floor")[0].track), []);
+  const [glue, setGlue] = useState(loop.master?.[1] ?? 0.25);
+  const [out, setOut] = useState(loop.master?.[0] ?? 0.75);
+  const shown = useMemo(() => ({ ...loop, master: { ...(loop.master ?? {}), 0: out, 1: glue } }), [loop, glue, out]);
+  const { engine, ready } = useEngineTrack(shown);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const playing = beat >= 0;
+  const keep = () => { const t = readTrackV2(); writeTrackV2({ ...t, master: { ...(t.master ?? {}), 0: out, 1: glue }, updatedAt: Date.now() }); window.dispatchEvent(new Event("ccd:song")); onNext(); };
+  useEnter(keep);
+  return (
+    <div className="ls-col">
+      <div className="fl-inst">
+        <Screen>
+          <Meta left="master bus" right={playing ? "playing, turn the knobs" : "press play"} />
+          <div className="fl-bpm"><b>{Math.round(glue * 100)}</b><span>% glue · out {Math.round(out * 100)}%</span></div>
+          <div className="fl-airlabels"><span>glue squeezes the whole mix together</span><span>the limiter stops it clipping</span></div>
+        </Screen>
+        <div className="m1-g" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 12 }}>
+          <Knob label="glue" color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
+          <Knob label="out" color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
+        </div>
+      </div>
+      <div className="fl-text">
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {tail}
+      </div>
+      <div className="ls-bottom">
+        <div className="m1-g">
+          <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3" }} ariaLabel="Use this glue">use this</GoPill>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const SCALE_LINE: Record<string, string> = { minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones" };

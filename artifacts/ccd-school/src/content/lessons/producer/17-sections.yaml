@@ -1,0 +1,63 @@
+slug: sections
+world: producer
+number: 17
+title: sections
+minutes: 7
+song:
+  changes: drums.kick
+  why: a loop becomes a song when parts come and go
+learn: >-
+  Intro, build, drop and break, and your loop turned into a full arrangement by switching parts on and off.
+youCan:
+  - name the sections of a dance track
+  - arrange your parts across sections
+  - hear how removing a part makes its return bigger
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A dance track is mostly the same loop, changed by taking things away and bringing them back. An intro
+        for djs to mix in, a build, the drop where everything plays, a break where the drums disappear, and the
+        drop again. Nothing new is written. It's all arrangement.
+      straight: >-
+        Intro, build, drop, break, drop. Mostly the same loop with parts switched in and out.
+      eli5: >-
+        A song is your loop with bits turned on and off. Start small, build up, everything at once, take the
+        drums away, then bring it all back.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as five sections, already laid out the classic way. Each row is one of your parts,
+        each column a section. Tap a cell to switch that part off or on there. Play it through and change it
+        until the journey feels right.
+      straight: >-
+        Rows are parts, columns sections. Tap cells to switch parts off or on. Play it and adjust.
+      eli5: >-
+        Tap the squares to turn sounds on or off in each part of your song. Press play and listen.
+
+  - kind: ask
+    q: Why do intros often start without the bass?
+    options: ["so djs can mix the track in cleanly", "the bass isn't ready", "it makes the song faster", "intros never have drums"]
+    answer: 0
+    why: A sparse intro leaves room to blend from the previous track.
+    whyWrong:
+      1: It's a choice, not a limit.
+      2: Tempo stays the same.
+      3: Intros usually do have drums.
+
+  - kind: ask
+    q: Where does everything usually play at once?
+    options: ["the drop", "the intro", "the break", "the outro"]
+    answer: 0
+    why: The drop is the peak.
+    whyWrong:
+      1: The intro is sparse.
+      2: The break takes things away.
+      3: The outro thins out for the next track.
+
+  - kind: keep
+    next: >-
+      Next: fills. One bar that's different, right before things change.

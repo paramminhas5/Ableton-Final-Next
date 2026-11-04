@@ -1,0 +1,65 @@
+slug: real-drums
+world: producer
+number: 10
+title: drums from recordings
+minutes: 6
+song:
+  changes: drums.kick
+  why: recorded drums bring the texture of a real room and real hits into your track
+learn: >-
+  Synthesised drums against recorded ones, what a sampler does, and the kit your song uses.
+youCan:
+  - say the difference between synth and sampled drums
+  - say what a sampler does
+  - choose a kit for your song by ear
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Every drum you've used so far is made by the engine out of numbers: a sine for the kick's body, noise
+        for the hats. Drum machines like the 909 did the same. The other way is to record real hits and play
+        them back. That's what a sampler does: it plays a recording, at any pitch, whenever you hit a pad.
+      straight: >-
+        Synth drums are generated. Sampled drums are recordings played back. A sampler plays a recording on
+        every hit.
+      eli5: >-
+        Your drums so far are made by the computer. Another way is to record real drums and play the
+        recordings. A sampler does that.
+
+  - kind: tempo
+    set: kit
+    say:
+      mentor: >-
+        Here's your own drum pattern on both kits. Switch between synth and recorded and listen to the
+        texture: the recorded hits carry a bit of room and grit, the synth ones are cleaner and easier to
+        shape. Lots of producers layer both. Pick the one that suits your song.
+      straight: >-
+        Your pattern on the synth kit and the recorded kit. Recorded has more texture, synth is cleaner. Pick
+        one.
+      eli5: >-
+        Same beat, two drum kits. Tap synth, then recorded. Which do you like?
+
+  - kind: ask
+    q: What does a sampler do?
+    options: ["plays back a recording when you hit a pad", "makes sound from a sine wave", "adds reverb", "records your voice only"]
+    answer: 0
+    why: It plays a recorded sound, at any pitch, on every hit.
+    whyWrong:
+      1: That's a synth.
+      2: Reverb is an effect.
+      3: It can play any recording.
+
+  - kind: ask
+    q: Why might a producer layer synth and recorded drums?
+    options: ["to get control and texture at once", "to make the song faster", "because samplers can't play kicks", "to save space"]
+    answer: 0
+    why: Synth gives shape and punch you can tweak; the recording adds texture.
+    whyWrong:
+      1: Tempo is unchanged.
+      2: Samplers can play any drum.
+      3: Layering uses more, not less.
+
+  - kind: keep
+    next: >-
+      Next: width and movement. Make your lead wide and alive.

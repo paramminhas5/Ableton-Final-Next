@@ -1,0 +1,33 @@
+slug: ear-training
+world: foundations
+number: 102
+title: bonus, your ear
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; this round trains the ears you use on every part of it
+learn: >-
+  A quick ear round on intervals and pitch: hear the jump, name the direction.
+youCan:
+  - hear small and large pitch changes
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        An ear round. You know the octave by now. The round coming up asks which of two notes is higher, and
+        the gap shrinks as you get them right. It's the same skill you use to hear a bass that's out of key or
+        a lead that's a touch flat.
+      straight: >-
+        Ear round: which of two notes is higher. The gap shrinks as you go.
+      eli5: >-
+        A listening game. Two notes, which is higher? It gets trickier as you go.
+
+  - kind: ear
+    drill: pitch
+    rounds: 10
+    say: Which one was higher? Replay as often as you like.
+
+  - kind: keep
+    next: >-
+      Back to your song: chords, and the harmony under your melody.

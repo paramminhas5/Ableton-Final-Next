@@ -41,6 +41,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
+  arrange: ["kind", "say", "goal", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
@@ -198,15 +199,19 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "shape":
           playOrShape(where, raw);
           break;
+        case "arrange":
+          voice(where, "say", raw.say);
+          if (!["sections", "drop", "fills", "risers", "export"].includes(String(raw.goal))) at(where, "goal must be sections, drop, fills, risers or export");
+          break;
         case "mix":
           voice(where, "say", raw.say);
           if (!["crossfade", "match", "blend", "free"].includes(String(raw.goal))) at(where, "goal must be crossfade, match, blend or free");
           break;
         case "tempo":
           voice(where, "say", raw.say);
-          if (raw.set !== undefined && raw.set !== "tempo" && raw.set !== "swing" && raw.set !== "scale") at(where, `set must be tempo, swing or scale`);
+          if (raw.set !== undefined && raw.set !== "tempo" && raw.set !== "swing" && raw.set !== "scale" && raw.set !== "glue" && raw.set !== "kit") at(where, `set must be tempo, swing, scale, glue or kit`);
           if (raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !["minor", "major", "dorian", "minor pentatonic"].includes(c)))) at(where, "choices must be scales: minor, major, dorian, minor pentatonic");
-          if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" ? m < 0 || m > 0.75 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
+          if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" || raw.set === "glue" ? m < 0 || m > 1 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
           break;
         case "ask": {
           voice(where, "q", raw.q);

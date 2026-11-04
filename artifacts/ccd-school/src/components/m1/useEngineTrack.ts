@@ -6,6 +6,7 @@
 import { useEffect, useRef } from "react";
 import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } from "@/engine";
 import { pushSamples } from "@/lib/samples";
+import { arranged } from "@/lib/arrange";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
@@ -15,7 +16,9 @@ type Sent = { inst: string; events: string; duck: string; params: Map<number, nu
 
 type Last = { bpm: number; loop: number; swing?: number; master?: number[]; samples?: Set<string> };
 
-export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last) {
+export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: Last) {
+  // An arranged song plays as one long timeline of its sections.
+  const t = arranged(song);
   const m = (last.master ??= []);
   for (let i = 0; i < MASTER_PARAMS.length; i++) {
     const v = masterOf(t, i);

@@ -2968,6 +2968,164 @@
       "file": "foundations/18-bass-follows.yaml"
     },
     {
+      "slug": "samples-loops",
+      "world": "foundations",
+      "number": 19,
+      "title": "samples and loops",
+      "minutes": 6,
+      "song": {
+        "changes": "drums.kick",
+        "why": "recorded sounds bring a real room and real hits into your song"
+      },
+      "learn": "What a sample is, how loops are built from them, and real recorded drums playing your own beat.",
+      "youCan": [
+        "say what a sample and a loop are",
+        "hear the difference between a synth and a recorded drum",
+        "put recorded drums in your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "A sample is a recording you play back as an instrument: a single drum hit, a vocal, a chord from an old record. A loop is a sample that repeats, usually a bar or two long. Hip hop was built on loops cut from funk and soul records, and house producers sample constantly.",
+            "straight": "A sample is a recording used as an instrument. A loop is a sample that repeats.",
+            "eli5": "A sample is a recorded sound you can play like an instrument. A loop is a sample that goes round and round."
+          },
+          "deeper": [
+            {
+              "title": "sampling and permission",
+              "say": "Using a few seconds of someone else's record still needs permission if you release it. Lots of producers record their own sounds or use sample packs that come cleared. The drums here were recorded for CCD School and are free to use."
+            }
+          ]
+        },
+        {
+          "kind": "tempo",
+          "set": "kit",
+          "say": {
+            "mentor": "Here's your beat. The drums so far have been made by the engine. Switch to recorded and the same pattern plays on real recorded hits: a kick, a clap, a hat and a snare. Listen to the texture.",
+            "straight": "Your beat on synth drums or recorded samples. Pick one.",
+            "eli5": "Same beat, made by the computer or played on real recorded drums. Which sounds better to you?"
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a sample?",
+          "options": [
+            "a recording used as an instrument",
+            "a short melody",
+            "a type of synth wave",
+            "a drum machine"
+          ],
+          "answer": 0,
+          "why": "Any recording you play back as an instrument.",
+          "whyWrong": {
+            "1": "A melody can be sampled, but a sample is any recording.",
+            "2": "Waves are synthesis.",
+            "3": "A drum machine may play samples, but it isn't one."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a loop?",
+          "options": [
+            "a sample that repeats",
+            "a single drum hit",
+            "a song's chorus",
+            "a type of reverb"
+          ],
+          "answer": 0,
+          "why": "A bar or two of audio that plays round and round.",
+          "whyWrong": {
+            "1": "A single hit is a one-shot.",
+            "2": "A chorus is a section.",
+            "3": "Reverb is space."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: tension, release and structure. Your loop becomes a song."
+        }
+      ],
+      "file": "foundations/19-samples-loops.yaml"
+    },
+    {
+      "slug": "song-structure",
+      "world": "foundations",
+      "number": 20,
+      "title": "tension, release and structure",
+      "minutes": 7,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a song is a loop that changes over time"
+      },
+      "learn": "How songs build and release tension, the sections of a dance track, and your loop arranged into a song.",
+      "youCan": [
+        "say what tension and release mean in music",
+        "name an intro, build, drop and break",
+        "arrange your loop into sections"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Music works by building tension and releasing it. A chord that wants to go home, a drum roll before a change, the drums dropping out so their return feels huge. Dance music does this with arrangement: the same loop, with parts taken away and brought back.",
+            "straight": "Tension builds, release pays it off. Dance tracks do it by taking parts away and bringing them back.",
+            "eli5": "Songs make you wait for something, then give it to you. That waiting feeling is tension. Getting it is release."
+          }
+        },
+        {
+          "kind": "arrange",
+          "goal": "sections",
+          "say": {
+            "mentor": "Here's your loop laid out as a song: intro, build, drop, break, drop. Each row is one of your parts. Tap a square to switch a part off or on in that section, and tap fill for a drum roll at the end. Play it through. You've just made a song.",
+            "straight": "Your loop as sections. Tap squares to switch parts off or on; tap fill for a roll.",
+            "eli5": "Tap squares to turn sounds on and off in each part. Press play and hear your whole song."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a breakdown?",
+          "options": [
+            "a section with the drums taken out",
+            "the loudest part",
+            "a mistake",
+            "the first bar"
+          ],
+          "answer": 0,
+          "why": "Drums out, so their return is a big release.",
+          "whyWrong": {
+            "1": "That's the drop.",
+            "2": "It's on purpose.",
+            "3": "That's the start of the intro."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "In music, what is release?",
+          "options": [
+            "the payoff after tension",
+            "how loud the song is",
+            "the song's release date",
+            "the end of a note"
+          ],
+          "answer": 0,
+          "why": "Tension builds, release resolves it.",
+          "whyWrong": {
+            "1": "Loudness is separate.",
+            "2": "Different meaning of the word.",
+            "3": "That's a synth's release knob, a different idea."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the producer world. Make every part of your song sound its best."
+        }
+      ],
+      "file": "foundations/20-song-structure.yaml"
+    },
+    {
       "slug": "ear-higher-lower",
       "world": "foundations",
       "number": 101,
@@ -3020,6 +3178,92 @@
         }
       ],
       "file": "foundations/101-ear-higher-lower.yaml"
+    },
+    {
+      "slug": "ear-training",
+      "world": "foundations",
+      "number": 102,
+      "title": "bonus, your ear",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; this round trains the ears you use on every part of it"
+      },
+      "learn": "A quick ear round on intervals and pitch: hear the jump, name the direction.",
+      "youCan": [
+        "hear small and large pitch changes"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "octave",
+          "say": {
+            "mentor": "An ear round. You know the octave by now. The round coming up asks which of two notes is higher, and the gap shrinks as you get them right. It's the same skill you use to hear a bass that's out of key or a lead that's a touch flat.",
+            "straight": "Ear round: which of two notes is higher. The gap shrinks as you go.",
+            "eli5": "A listening game. Two notes, which is higher? It gets trickier as you go."
+          }
+        },
+        {
+          "kind": "ear",
+          "drill": "pitch",
+          "rounds": 10,
+          "say": "Which one was higher? Replay as often as you like."
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: chords, and the harmony under your melody."
+        }
+      ],
+      "file": "foundations/102-ear-training.yaml"
+    },
+    {
+      "slug": "listening-actively",
+      "world": "foundations",
+      "number": 103,
+      "title": "bonus, listen like a producer",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; you're learning to hear it like a producer"
+      },
+      "learn": "How producers listen: one part at a time, then the whole, then the journey.",
+      "youCan": [
+        "listen to one part of a track at a time",
+        "describe a track's structure by ear"
+      ],
+      "steps": [
+        {
+          "kind": "say",
+          "title": "three ways to listen",
+          "say": {
+            "mentor": "Producers listen in layers. First pick one part and follow only it for the whole track: just the hats, say. Then listen to the whole, and ask what's loudest, what's in front, what's far away. Then listen to the journey: when do things come in and go out, where's the drop, how long is the break.\nTry it on your own song in the studio, then on a track you love.",
+            "straight": "Listen to one part, then the balance, then the structure. Your song first, then a track you love.",
+            "eli5": "Pick one sound and only listen to that. Then listen to everything. Then listen for when things change."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's a good first way to listen like a producer?",
+          "options": [
+            "follow one part through the whole track",
+            "only listen to the drop",
+            "turn it up as loud as possible",
+            "skip the intro"
+          ],
+          "answer": 0,
+          "why": "Following one part teaches you what each part is doing.",
+          "whyWrong": {
+            "1": "You'd miss the build that makes it work.",
+            "2": "Loud hides detail.",
+            "3": "The intro tells you a lot."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "The producer world is next: make every part of your song sound its best."
+        }
+      ],
+      "file": "foundations/103-listening-actively.yaml"
     },
     {
       "slug": "your-kick",
@@ -4075,6 +4319,303 @@
       "file": "producer/08-chords-on-top.yaml"
     },
     {
+      "slug": "kick-designer",
+      "world": "producer",
+      "number": 9,
+      "title": "the kick designer",
+      "minutes": 7,
+      "song": {
+        "changes": "drums.kick",
+        "why": "the kick is the loudest thing in your track, so it's worth making it exactly right"
+      },
+      "learn": "Every part of a kick you can shape: pitch, length, drive and level, and the best kick you can make for your song.",
+      "youCan": [
+        "shape a kick's tune, decay, drive and level by ear",
+        "say what drive does to a kick",
+        "match a kick to the style of your track"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "short-vs-long-kick",
+          "say": {
+            "mentor": "You met decay and tune in your first lesson. Now you get the whole kick: four knobs, the ones producers reach for every time. Tap short and long again to remind your ears how much the length changes.",
+            "straight": "Four kick controls: tune, decay, drive, level. You know two already.",
+            "eli5": "Remember short and long kicks? Now you get four knobs to build your perfect kick."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "drums",
+          "knobs": [
+            "tune",
+            "decay",
+            "drive",
+            "level"
+          ],
+          "say": {
+            "mentor": "Your song, your kick. Tune sets how low the body sits: match it roughly to your bass so they don't clash. Decay sets how long it booms. Drive pushes the kick into soft distortion: it adds grit and harmonics, so it cuts through on small speakers. Level is how loud it sits against everything else.\nTechno kicks tend to be driven and a bit longer. Deep house kicks are rounder and softer. Shape yours until it feels like your track.",
+            "straight": "Tune: pitch of the body, near your bass. Decay: length. Drive: grit and presence. Level: loudness. Driven and long for techno, round and soft for deep house.",
+            "eli5": "Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes it louder or quieter. Play until it's your favourite kick."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does drive do to a kick?",
+          "options": [
+            "adds grit and harmonics so it cuts through",
+            "makes it longer",
+            "changes the tempo",
+            "removes the click"
+          ],
+          "answer": 0,
+          "why": "Soft distortion adds harmonics, which help it come through on small speakers.",
+          "whyWrong": {
+            "1": "Length is decay.",
+            "2": "Kicks don't change the tempo.",
+            "3": "Drive adds bite, it doesn't take the click away."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why tune the kick near the bass?",
+          "options": [
+            "so the two low sounds don't clash",
+            "so the kick gets louder",
+            "it makes the song faster",
+            "the bass will copy it"
+          ],
+          "answer": 0,
+          "why": "Kick and bass share the low end; tuning them to fit avoids a muddy clash.",
+          "whyWrong": {
+            "1": "Level sets loudness.",
+            "2": "Tuning doesn't touch tempo.",
+            "3": "The bass plays its own notes."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: drums from recordings. Swap your synth kit for a real one and hear the difference."
+        }
+      ],
+      "file": "producer/09-kick-designer.yaml"
+    },
+    {
+      "slug": "real-drums",
+      "world": "producer",
+      "number": 10,
+      "title": "drums from recordings",
+      "minutes": 6,
+      "song": {
+        "changes": "drums.kick",
+        "why": "recorded drums bring the texture of a real room and real hits into your track"
+      },
+      "learn": "Synthesised drums against recorded ones, what a sampler does, and the kit your song uses.",
+      "youCan": [
+        "say the difference between synth and sampled drums",
+        "say what a sampler does",
+        "choose a kit for your song by ear"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Every drum you've used so far is made by the engine out of numbers: a sine for the kick's body, noise for the hats. Drum machines like the 909 did the same. The other way is to record real hits and play them back. That's what a sampler does: it plays a recording, at any pitch, whenever you hit a pad.",
+            "straight": "Synth drums are generated. Sampled drums are recordings played back. A sampler plays a recording on every hit.",
+            "eli5": "Your drums so far are made by the computer. Another way is to record real drums and play the recordings. A sampler does that."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "kit",
+          "say": {
+            "mentor": "Here's your own drum pattern on both kits. Switch between synth and recorded and listen to the texture: the recorded hits carry a bit of room and grit, the synth ones are cleaner and easier to shape. Lots of producers layer both. Pick the one that suits your song.",
+            "straight": "Your pattern on the synth kit and the recorded kit. Recorded has more texture, synth is cleaner. Pick one.",
+            "eli5": "Same beat, two drum kits. Tap synth, then recorded. Which do you like?"
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a sampler do?",
+          "options": [
+            "plays back a recording when you hit a pad",
+            "makes sound from a sine wave",
+            "adds reverb",
+            "records your voice only"
+          ],
+          "answer": 0,
+          "why": "It plays a recorded sound, at any pitch, on every hit.",
+          "whyWrong": {
+            "1": "That's a synth.",
+            "2": "Reverb is an effect.",
+            "3": "It can play any recording."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why might a producer layer synth and recorded drums?",
+          "options": [
+            "to get control and texture at once",
+            "to make the song faster",
+            "because samplers can't play kicks",
+            "to save space"
+          ],
+          "answer": 0,
+          "why": "Synth gives shape and punch you can tweak; the recording adds texture.",
+          "whyWrong": {
+            "1": "Tempo is unchanged.",
+            "2": "Samplers can play any drum.",
+            "3": "Layering uses more, not less."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: width and movement. Make your lead wide and alive."
+        }
+      ],
+      "file": "producer/10-real-drums.yaml"
+    },
+    {
+      "slug": "lead-width",
+      "world": "producer",
+      "number": 11,
+      "title": "width and movement",
+      "minutes": 6,
+      "song": {
+        "changes": "lead.lead",
+        "why": "a lead that's wide and moves feels expensive; a static one feels flat"
+      },
+      "learn": "Detune for width and glide for movement, on your own lead.",
+      "youCan": [
+        "widen a sound with detune",
+        "add glide between notes",
+        "hear when a sound is too wide"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "Big synth leads are rarely one oscillator. Two or more play the same note, pulled very slightly out of tune with each other. They drift in and out, and your ears hear a thick, wide, moving sound. That's detune. Glide is the other trick: notes slide into each other instead of jumping.",
+            "straight": "Detune: two oscillators slightly apart for a wide, thick sound. Glide: notes slide into each other.",
+            "eli5": "Make two copies of a sound and put one a tiny bit out of tune: it sounds huge. That's detune. Glide makes notes slide like a trombone."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "detune",
+            "glide"
+          ],
+          "say": {
+            "mentor": "Your lead. Turn detune up slowly: first it thickens, then it shimmers, and too far it sounds out of tune and seasick. Find the edge and back off a bit. Then add some glide and listen to your melody slide between notes. A little goes a long way.",
+            "straight": "Detune up until it thickens; back off before it sounds out of tune. Add a little glide.",
+            "eli5": "Turn detune up until it sounds big but not wobbly. Then turn glide up a little and hear the notes slide."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does detune do?",
+          "options": [
+            "makes a sound thicker and wider",
+            "changes the key",
+            "slows the song",
+            "makes it quieter"
+          ],
+          "answer": 0,
+          "why": "Slightly mistuned copies beat against each other and sound wide.",
+          "whyWrong": {
+            "1": "The notes stay in key; they're only a few cents apart.",
+            "2": "Tempo stays the same.",
+            "3": "Level is separate."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does glide do?",
+          "options": [
+            "slides between notes",
+            "repeats notes",
+            "adds reverb",
+            "cuts the lows"
+          ],
+          "answer": 0,
+          "why": "Each note slides up or down into the next.",
+          "whyWrong": {
+            "1": "That's an arpeggiator or echo.",
+            "2": "Reverb is space.",
+            "3": "That's an eq."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: risers. The noise sweep that tells the room a drop is coming."
+        }
+      ],
+      "file": "producer/11-lead-width.yaml"
+    },
+    {
+      "slug": "fx-riser",
+      "world": "producer",
+      "number": 12,
+      "title": "fx, risers and sweeps",
+      "minutes": 6,
+      "song": {
+        "changes": "fx.riser",
+        "why": "a riser builds tension so the drop lands harder"
+      },
+      "learn": "What a riser is, why it works, and risers placed in your arrangement before the drops.",
+      "youCan": [
+        "say what a riser does",
+        "place a riser before a drop",
+        "hear tension build and release"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Before a big drop you'll almost always hear a sweep: noise or a synth rising in pitch and brightness over a few bars. That's a riser. It tells the whole room something is coming, and when it cuts off, the drop feels huge.",
+            "straight": "A riser is a sweep up in pitch and brightness before a drop. It builds tension; the drop releases it.",
+            "eli5": "Whoooosh, getting higher and higher, then BOOM. That whoosh is a riser. It makes everyone ready for the drop."
+          }
+        },
+        {
+          "kind": "arrange",
+          "goal": "risers",
+          "say": {
+            "mentor": "Here's your song laid out in sections. There's a riser row at the bottom. Tap it on for the section right before a drop and listen to the build. One per drop is plenty.",
+            "straight": "Your arrangement. Turn a riser on in the section before a drop.",
+            "eli5": "Find the part just before a drop and tap its riser. Then listen!"
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does a riser usually go?",
+          "options": [
+            "in the bars just before a drop",
+            "on beat one of the drop",
+            "in the middle of the intro",
+            "at the very end of the song"
+          ],
+          "answer": 0,
+          "why": "It builds over the last bars before the drop and cuts off as it lands.",
+          "whyWrong": {
+            "1": "On the drop it would get in the way.",
+            "2": "It needs something to build towards.",
+            "3": "There's nothing to build to there."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: levels and balance. The mix starts here."
+        }
+      ],
+      "file": "producer/12-fx-riser.yaml"
+    },
+    {
       "slug": "balance",
       "world": "producer",
       "number": 13,
@@ -4315,6 +4856,473 @@
         }
       ],
       "file": "producer/15-space.yaml"
+    },
+    {
+      "slug": "glue",
+      "world": "producer",
+      "number": 16,
+      "title": "glue, compression and loudness",
+      "minutes": 6,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a little bus compression makes your parts sound like one record instead of separate sounds"
+      },
+      "learn": "The glue compressor on the master, the limiter after it, and how loud is loud enough.",
+      "youCan": [
+        "say what a bus compressor does",
+        "add glue to your mix by ear",
+        "say what a limiter is for"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Mastering engineers talk about glue: when every part of a track breathes together like one record. Most of that comes from a gentle compressor across the whole mix. It turns the loudest moments down a touch, so everything moves as one. After it, a limiter catches any peaks so the song never clips.",
+            "straight": "Glue is a compressor across the whole mix: it pulls the parts together. A limiter after it stops clipping.",
+            "eli5": "Glue makes all your sounds feel like one band playing together. A limiter stops it ever getting too loud and crackly."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "glue",
+          "say": {
+            "mentor": "Your whole song. Turn glue up and listen to how the drums and bass start to pump and lock together. Too much and it sounds squashed and tired. Out sets how hard the mix hits the limiter: louder, but push it too far and the punch goes. Find the point where it sounds like a finished record.",
+            "straight": "Glue up until the mix locks together, before it sounds squashed. Out sets loudness into the limiter; too much loses punch.",
+            "eli5": "Turn glue up until everything feels tight. Then turn out up until it's nice and loud, but not crunchy."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a glue compressor on the master do?",
+          "options": [
+            "pulls the parts together so they move as one",
+            "adds echo",
+            "changes the tempo",
+            "removes the bass"
+          ],
+          "answer": 0,
+          "why": "Gentle compression across the mix makes it breathe together.",
+          "whyWrong": {
+            "1": "That's a delay.",
+            "2": "Compression doesn't touch tempo.",
+            "3": "It treats everything."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a limiter for?",
+          "options": [
+            "stopping the mix from clipping",
+            "adding width",
+            "tuning the kick",
+            "making the drums swing"
+          ],
+          "answer": 0,
+          "why": "It catches peaks so nothing goes over the top.",
+          "whyWrong": {
+            "1": "Width is detune, pan or stereo effects.",
+            "2": "Tuning is on the kick.",
+            "3": "Swing is timing."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: sections. Your loop becomes a song."
+        }
+      ],
+      "file": "producer/16-glue.yaml"
+    },
+    {
+      "slug": "sections",
+      "world": "producer",
+      "number": 17,
+      "title": "sections",
+      "minutes": 7,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a loop becomes a song when parts come and go"
+      },
+      "learn": "Intro, build, drop and break, and your loop turned into a full arrangement by switching parts on and off.",
+      "youCan": [
+        "name the sections of a dance track",
+        "arrange your parts across sections",
+        "hear how removing a part makes its return bigger"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "A dance track is mostly the same loop, changed by taking things away and bringing them back. An intro for djs to mix in, a build, the drop where everything plays, a break where the drums disappear, and the drop again. Nothing new is written. It's all arrangement.",
+            "straight": "Intro, build, drop, break, drop. Mostly the same loop with parts switched in and out.",
+            "eli5": "A song is your loop with bits turned on and off. Start small, build up, everything at once, take the drums away, then bring it all back."
+          }
+        },
+        {
+          "kind": "arrange",
+          "goal": "sections",
+          "say": {
+            "mentor": "Here's your song as five sections, already laid out the classic way. Each row is one of your parts, each column a section. Tap a cell to switch that part off or on there. Play it through and change it until the journey feels right.",
+            "straight": "Rows are parts, columns sections. Tap cells to switch parts off or on. Play it and adjust.",
+            "eli5": "Tap the squares to turn sounds on or off in each part of your song. Press play and listen."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why do intros often start without the bass?",
+          "options": [
+            "so djs can mix the track in cleanly",
+            "the bass isn't ready",
+            "it makes the song faster",
+            "intros never have drums"
+          ],
+          "answer": 0,
+          "why": "A sparse intro leaves room to blend from the previous track.",
+          "whyWrong": {
+            "1": "It's a choice, not a limit.",
+            "2": "Tempo stays the same.",
+            "3": "Intros usually do have drums."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does everything usually play at once?",
+          "options": [
+            "the drop",
+            "the intro",
+            "the break",
+            "the outro"
+          ],
+          "answer": 0,
+          "why": "The drop is the peak.",
+          "whyWrong": {
+            "1": "The intro is sparse.",
+            "2": "The break takes things away.",
+            "3": "The outro thins out for the next track."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: fills. One bar that's different, right before things change."
+        }
+      ],
+      "file": "producer/17-sections.yaml"
+    },
+    {
+      "slug": "fills",
+      "world": "producer",
+      "number": 18,
+      "title": "variation and fills",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a fill signals that something is about to change"
+      },
+      "learn": "What a fill is, where it goes, and fills at the ends of your sections.",
+      "youCan": [
+        "say what a fill does",
+        "place fills at section ends",
+        "hear how a fill sets up a change"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "A drummer playing the same beat for four minutes still tells you when something's coming: a roll on the snare at the end of a section. That's a fill. In dance music it might be a snare roll, the kick dropping out for a beat, or a burst of hats. Whatever it is, it says: change ahead.",
+            "straight": "A fill is a short variation, often the last beat or bar of a section, that signals a change.",
+            "eli5": "A fill is a little drum roll at the end of a part that says, get ready, something new is coming!"
+          }
+        },
+        {
+          "kind": "arrange",
+          "goal": "fills",
+          "say": {
+            "mentor": "Your arrangement has a fill row. Tap fill on a section and its last beat drops the kick for a quick snare roll. Put fills before the drop and the break and listen to how they lead you in.",
+            "straight": "Tap fill on sections that lead into a change. The last beat becomes a snare roll.",
+            "eli5": "Tap fill on the part before the drop. Listen to the drum roll."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a fill tell the listener?",
+          "options": [
+            "a change is coming",
+            "the song is over",
+            "the tempo is changing",
+            "nothing at all"
+          ],
+          "answer": 0,
+          "why": "It's a signal that the next section is about to start.",
+          "whyWrong": {
+            "1": "It leads into something.",
+            "2": "Tempo stays the same.",
+            "3": "It's one of the clearest signals in music."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the breakdown and the drop, the biggest moment in your track."
+        }
+      ],
+      "file": "producer/18-fills.yaml"
+    },
+    {
+      "slug": "the-drop",
+      "world": "producer",
+      "number": 19,
+      "title": "the breakdown and the drop",
+      "minutes": 6,
+      "song": {
+        "changes": "drums.kick",
+        "why": "taking the drums away makes their return the biggest moment in the track"
+      },
+      "learn": "Why a breakdown makes a drop hit, and the drop in your own arrangement.",
+      "youCan": [
+        "build a breakdown by removing the drums",
+        "bring everything back for a drop",
+        "hear tension and release"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "The moment a room screams is almost never a new sound. It's an old one coming back. Take the kick out for 8 or 16 bars, let the melody and pads float, build with a riser, then slam the kick back in. The absence is what makes the return feel huge.",
+            "straight": "Breakdown: drums out. Drop: drums back. The gap is what makes the drop hit.",
+            "eli5": "Take the boom away for a while. Everyone waits. Then BOOM, it comes back, and everyone jumps."
+          }
+        },
+        {
+          "kind": "arrange",
+          "goal": "drop",
+          "say": {
+            "mentor": "Take the drums out of one section and bring them back in the next. Add a riser and a fill before the drop if you like. Play it through and feel it land.",
+            "straight": "Switch drums off in one section and on in the next. Riser and fill optional.",
+            "eli5": "Turn off the drums in one part, then turn them back on in the next part. Press play and wait for the drop."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why does a drop feel big?",
+          "options": [
+            "the drums were missing just before",
+            "it's always louder",
+            "it's a different tempo",
+            "a new song starts"
+          ],
+          "answer": 0,
+          "why": "Contrast. After the break, the drums return with full force.",
+          "whyWrong": {
+            "1": "It's usually the same level; it just feels bigger.",
+            "2": "The tempo stays.",
+            "3": "It's the same song."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: finish and export. Name it, take it to Live, send it to CCD."
+        }
+      ],
+      "file": "producer/19-the-drop.yaml"
+    },
+    {
+      "slug": "finish-export",
+      "world": "producer",
+      "number": 20,
+      "title": "finish and export",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a song is finished when it leaves the app"
+      },
+      "learn": "Naming your song, exporting it as midi for Ableton Live, and what happens next.",
+      "youCan": [
+        "export your song as midi",
+        "open it in Live and keep working",
+        "say what stems are"
+      ],
+      "steps": [
+        {
+          "kind": "say",
+          "title": "done is a skill",
+          "say": {
+            "mentor": "Lots of producers have hundreds of loops and no finished songs. Finishing is a skill, and you've just done it: a beat, a bass, a lead, chords, a mix and an arrangement, all yours.\nFrom here you can take it into Ableton Live to keep going: more sounds, vocals, a proper master. You export it as midi, the notes of every part, and Live plays them on its own instruments.",
+            "straight": "Finishing matters. Export your song as midi and open it in Live to keep going.",
+            "eli5": "You made a whole song! Now you can take it into a big music program called Ableton Live."
+          },
+          "deeper": [
+            {
+              "title": "stems",
+              "say": "Stems are each part exported as its own audio file: drums, bass, lead and so on. Engineers and djs use them to remix and master. They're coming to CCD School soon."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "export",
+          "say": {
+            "mentor": "Here's your finished song. Give it a name, play it through once more, and download the midi. Drop the file into Live and every part lands on its own track. And if you're proud of it, send it to CCD: the best learner tracks get played at our nights.",
+            "straight": "Name it, play it, download the midi, open it in Live. Send it to CCD if you're proud of it.",
+            "eli5": "Type a name for your song. Then tap download and open it in Live."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a midi file hold?",
+          "options": [
+            "the notes of every part",
+            "the finished audio",
+            "only the drums",
+            "the song's artwork"
+          ],
+          "answer": 0,
+          "why": "Midi is notes, timing and velocity. Live plays them on its instruments.",
+          "whyWrong": {
+            "1": "That's an audio export.",
+            "2": "It holds every part.",
+            "3": "It's music data only."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the dj world. Play your own song out, with other tracks, like at a CCD night."
+        }
+      ],
+      "file": "producer/20-finish-export.yaml"
+    },
+    {
+      "slug": "your-song-in-live",
+      "world": "producer",
+      "number": 101,
+      "title": "bonus, your song in live",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; this is about where it goes next"
+      },
+      "learn": "Your song in Live.",
+      "youCan": [
+        "know where to look in Live for this"
+      ],
+      "steps": [
+        {
+          "kind": "say",
+          "title": "your song in live",
+          "say": "You exported your song as midi. Drag the file into Live and each part lands on its own track. Session view shows them as clips you can launch; arrangement view lays them out left to right. Give each track a Live instrument: Drum Rack for the drums, Operator or Drift for the synths."
+        },
+        {
+          "kind": "ask",
+          "q": "Where would you go next in Live to try this?",
+          "options": [
+            "the deeper lessons in this path",
+            "nowhere, Live can't do it",
+            "a different program",
+            "the dj world"
+          ],
+          "answer": 0,
+          "why": "Each deeper lesson here walks through one part of it, on your own song.",
+          "whyWrong": {
+            "1": "Live can do all of it.",
+            "2": "It's all inside Live.",
+            "3": "This path is about Live itself."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Pick a deeper lesson below, or head to the dj world."
+        }
+      ],
+      "file": "producer/101-your-song-in-live.yaml"
+    },
+    {
+      "slug": "play-it-live",
+      "world": "producer",
+      "number": 102,
+      "title": "bonus, play it",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; this is about where it goes next"
+      },
+      "learn": "Controllers and sync.",
+      "youCan": [
+        "know where to look in Live for this"
+      ],
+      "steps": [
+        {
+          "kind": "say",
+          "title": "controllers and sync",
+          "say": "A controller is a box of pads, knobs and faders that plays Live. Map a knob to your lead's cutoff and it turns when you turn it. Ableton Link keeps apps and devices on the same tempo over wifi, so you can jam with friends or play alongside a drum machine."
+        },
+        {
+          "kind": "ask",
+          "q": "Where would you go next in Live to try this?",
+          "options": [
+            "the deeper lessons in this path",
+            "nowhere, Live can't do it",
+            "a different program",
+            "the dj world"
+          ],
+          "answer": 0,
+          "why": "Each deeper lesson here walks through one part of it, on your own song.",
+          "whyWrong": {
+            "1": "Live can do all of it.",
+            "2": "It's all inside Live.",
+            "3": "This path is about Live itself."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Pick a deeper lesson below, or head to the dj world."
+        }
+      ],
+      "file": "producer/102-play-it-live.yaml"
+    },
+    {
+      "slug": "the-toolbox",
+      "world": "producer",
+      "number": 103,
+      "title": "bonus, the toolbox",
+      "minutes": 4,
+      "song": {
+        "changes": "lead.lead",
+        "why": "nothing changes in your song here; this is about where it goes next"
+      },
+      "learn": "The rest of Live 12.",
+      "youCan": [
+        "know where to look in Live for this"
+      ],
+      "steps": [
+        {
+          "kind": "say",
+          "title": "the rest of live 12",
+          "say": "Live 12 has more than any one song needs: stem separation to pull apart a track, midi tools that generate and transform notes, scale awareness to lock everything to your key, and sound similarity search to find sounds like the one you have. The deeper lessons in this path walk through each."
+        },
+        {
+          "kind": "ask",
+          "q": "Where would you go next in Live to try this?",
+          "options": [
+            "the deeper lessons in this path",
+            "nowhere, Live can't do it",
+            "a different program",
+            "the dj world"
+          ],
+          "answer": 0,
+          "why": "Each deeper lesson here walks through one part of it, on your own song.",
+          "whyWrong": {
+            "1": "Live can do all of it.",
+            "2": "It's all inside Live.",
+            "3": "This path is about Live itself."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Pick a deeper lesson below, or head to the dj world."
+        }
+      ],
+      "file": "producer/103-the-toolbox.yaml"
     }
   ]
 }

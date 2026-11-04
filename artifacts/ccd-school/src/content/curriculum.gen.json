@@ -674,7 +674,7 @@
    {
     "slug": "kick-designer",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "the kick designer",
     "does": "changes drums.kick (click, body, drop, drive, length)",
     "code": "full designer (fix 37)"
@@ -700,7 +700,7 @@
    {
     "slug": "real-drums",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "drums from recordings",
     "does": "changes drums: sampler kit",
     "code": "sampler in a lesson, `public/audio/real`"
@@ -780,7 +780,7 @@
    {
     "slug": "lead-width",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "width and movement",
     "does": "shape lead: detune, lfo",
     "code": "lfo param"
@@ -851,7 +851,7 @@
    {
     "slug": "fx-riser",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "fx: risers and sweeps",
     "does": "adds fx.riser",
     "code": "fx layer in a lesson"
@@ -1027,7 +1027,7 @@
    {
     "slug": "glue",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "glue: compression and loudness",
     "does": "changes master",
     "code": "master step"
@@ -1080,7 +1080,7 @@
    {
     "slug": "sections",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "sections",
     "does": "adds arrangement (intro, build, drop, break)",
     "code": "arrange step"
@@ -1133,7 +1133,7 @@
    {
     "slug": "fills",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "variation and fills",
     "does": "changes drums: a fill bar",
     "code": "fill take"
@@ -1186,7 +1186,7 @@
    {
     "slug": "the-drop",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "the breakdown and the drop",
     "does": "changes arrangement",
     "code": ""
@@ -1212,7 +1212,7 @@
    {
     "slug": "finish-export",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "finish and export",
     "does": "export (midi, stems), name it, send to CCD",
     "code": "stems export"
@@ -1283,7 +1283,7 @@
    {
     "slug": "your-song-in-live",
     "kind": "bonus",
-    "isNew": true,
+    "isNew": false,
     "title": "bonus: your song in live",
     "does": "open your export, the tour",
     "code": "",
@@ -1310,7 +1310,7 @@
    {
     "slug": "play-it-live",
     "kind": "bonus",
-    "isNew": true,
+    "isNew": false,
     "title": "bonus: play it",
     "does": "controllers and sync",
     "code": "",
@@ -1400,7 +1400,7 @@
    {
     "slug": "the-toolbox",
     "kind": "bonus",
-    "isNew": true,
+    "isNew": false,
     "title": "bonus: the toolbox",
     "does": "the rest of live 12",
     "code": "",
