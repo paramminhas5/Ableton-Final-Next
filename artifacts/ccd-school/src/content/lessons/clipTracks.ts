@@ -63,6 +63,7 @@ export function clipVariants(id: string): ClipVariant[] {
     }
     case "synth-note":
     case "synth-pitch":
+    case "octave":
     case "synth-shapes":
     case "synth-loud": {
       // The lead synth with one oscillator and no detune, so the shape you hear is the shape you see.
@@ -76,6 +77,8 @@ export function clipVariants(id: string): ClipVariant[] {
       if (id === "synth-note") return [{ label: "one note", track: tone(57, 0, 0.18) }];
       if (id === "synth-loud") return [{ label: "quiet", track: tone(57, 0, 0.18, 0.25) }, { label: "loud", track: tone(57, 0, 0.18, 1) }];
       if (id === "synth-pitch") return [{ label: "low", track: tone(45, 0, 0.18) }, { label: "high", track: tone(69, 0, 0.18) }];
+      // a3 is 220 hz, a4 is 440 hz: the same note name, the wave going twice as fast.
+      if (id === "octave") return [{ label: "a, 220 hz", track: tone(57, 0, 0.18) }, { label: "a up an octave, 440 hz", track: tone(69, 0, 0.18) }];
       return [{ label: "soft", track: tone(57, 0, 0.18) }, { label: "saw", track: tone(57, 0, 0.9) }, { label: "square", track: tone(57, 1, 0.9) }];
     }
     default:

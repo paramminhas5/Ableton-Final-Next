@@ -131,6 +131,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
         {isKick ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
           : screen.clip === "synth-note" ? <AirWave playing={playing} />
           : screen.clip === "synth-pitch" ? <><WaveShape kind="soft" cycles={v === 0 ? 2 : 8} playing={playing} /><AirWave playing={playing} speed={v === 0 ? 0.6 : 2.2} /></>
+          : screen.clip === "octave" ? <><WaveShape kind="soft" cycles={v === 0 ? 3 : 6} playing={playing} /><div className="fl-airlabels" aria-hidden><span>{v === 0 ? "3 wiggles in this window" : "6 wiggles in the same window"}</span><span>{v === 0 ? "220 a second" : "440 a second"}</span></div></>
           : screen.clip === "synth-loud" ? <><WaveShape kind="soft" cycles={3} amp={v === 0 ? 0.3 : 1} playing={playing} /><AirWave playing={playing} strength={v === 0 ? 0.35 : 1} /></>
           : screen.clip === "synth-shapes" ? <><WaveShape kind={(["soft", "saw", "square"] as const)[v] ?? "soft"} playing={playing} /><SynthChain playing={playing} /></>
           : <div className="ls-hearbar" aria-hidden>{Array.from({ length: 16 }, (_, i) => <i key={i} className={playing ? "is-on" : ""} style={{ animationDelay: `${i * 60}ms` }} />)}</div>}
