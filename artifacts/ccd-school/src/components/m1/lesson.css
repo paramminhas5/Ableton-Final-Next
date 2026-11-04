@@ -253,6 +253,10 @@
 .fl-songname b{color:var(--ink);font-weight:600}
 .fl-songempty{font-size:13px;color:var(--print);padding:6px 0}
 .fl-song svg{max-height:56px}
+.fl-ghost{display:flex;align-items:center;gap:8px;margin-top:3px}
+.fl-ghost svg{flex:1;min-width:0;height:10px;border:1px dashed color-mix(in srgb,var(--led-go) 55%,transparent);border-radius:3px}
+.fl-ghost rect{fill:color-mix(in srgb,var(--led-go) 55%,transparent)}
+.fl-ghost span{flex:none;font-size:11px;color:var(--print)}
 .fl-kick{display:block;margin-top:10px}
 .fl-kickline{animation:fl-hit 380ms var(--ease-snap) both}
 @keyframes fl-hit{from{opacity:.35;transform:scaleY(.6)}to{opacity:1;transform:none}}
@@ -469,6 +473,24 @@
 .wl-choices{display:grid;gap:8px}
 .wl-choices>*{animation:wl-in 420ms var(--ease-snap) both}
 @media (prefers-reduced-motion:reduce){.wl-stage,.wl-try,.wl-choices>*,.wl-eq i{animation:none}}
+.wl-cat{filter:drop-shadow(0 4px 14px rgba(0,0,0,.45))}
+/* Desktop: the words on the left, the thing you try on the right, so the tour fills the screen. */
+@media (min-width:1000px){
+  .wl{max-width:1080px;padding-left:40px;padding-right:40px}
+  .wl-top{max-width:640px;margin:0 auto}
+  .wl-part{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:64px;align-items:start;padding-top:56px}
+  .wl-part>.wl-tag,.wl-part>.wl-big,.wl-part>.wl-lead{grid-column:1}
+  .wl-part>.wl-tag{justify-self:start}
+  .wl-part>.wl-try{grid-column:2;grid-row:1 / span 3;margin-top:0}
+  .wl-big{font-size:52px;line-height:1.04}
+  .wl-lead{font-size:17px;line-height:27px;max-width:440px}
+  .wl-hello{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);column-gap:64px;align-items:center;padding-top:72px}
+  .wl-hello>*{grid-column:1}
+  .wl-hello>.wl-cat{grid-column:2;grid-row:1 / span 5;width:min(100%,340px);justify-self:center;margin:0}
+  .wl-hello>.wl-eq{grid-column:auto;inset:auto 0 0 auto;width:46%;height:70%;opacity:.16}
+  .wl-hero{font-size:68px}
+  .wl-hello .wl-go{max-width:420px}
+}
 
 /* ── dashboard tour ───────────────────────────────────────────────────────── */
 .tr{position:fixed;inset:0;z-index:80;pointer-events:none}

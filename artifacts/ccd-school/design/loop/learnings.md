@@ -9,11 +9,11 @@ Learned:
 - A reviewer that hasn't seen the work finds layout bugs no script catches (overlaps, things under fixed bars). Keep doing it every round, at 390 and 1440.
 - A go key should always say what's missing, never do nothing.
 Open, for the rounds (ranked):
-1. The piano roll lesson is placed under the hats song lesson ("go deeper on hats") but now teaches on the lead; move it in design/curriculum.md under a lead lesson.
-2. Copy says "your song is playing" when the song is empty (deep links). Write the empty-song case in tool and shape steps.
-3. The song strip could show the take as a ghost lane, not just words.
+1. Done: the piano roll lesson sits under the first synth lesson.
+2. Done: an empty song says "a starter loop is playing" (`starterCopy`, `useStarter`).
+3. Done: the recorded take shows as a dashed lane under the song strip until it is added.
 4. Desktop onboarding uses a 530px column; a two-column hero would fill the screen. The cat on pink bars loses contrast.
-5. Knobs don't show their value until touched; consider a small value under each.
+5. Done: lesson knobs show their value under the label (`readout` on `Knob`, also read by screen readers).
 Bigger product ideas from the reviewer (for Param to rank, not to build unasked):
 - Coaching on your own takes: a timing map per hit (early or late in ms) and the next drill built from what you got wrong.
 - Your song as the product: a timeline that grows lesson by lesson, a shareable 15-second then-and-now clip, and a full Live set export at the end of each path.

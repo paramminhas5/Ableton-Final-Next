@@ -19,7 +19,7 @@ import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
-import { Bottom, Meta, useEnter } from "./LessonParts";
+import { Body, Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { TOOL_STEPS } from "./tools";
@@ -245,14 +245,14 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
           <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150} led={accent}
-            value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default}
+            value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
             onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
       </div>
       <div className="fl-text">
-      {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+      <Body text={screen.body} starter={!!base && !base.layers.some(l => l.events.length > 0)} />
       {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
       {tail}
       </div>

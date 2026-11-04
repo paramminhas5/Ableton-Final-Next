@@ -76,7 +76,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
       return p === 0 ? "centre" : p < 0 ? `pan l ${-p}` : `pan r ${p}`;
     }
     case "pct":
-      return `${round(n * 100)}`;
+      return `${round(n * 100)}%`;
     case "none": {
       const c = round(v * 100);
       return c === 0 ? "0" : `${c > 0 ? "+" : ""}${c}`;

@@ -1,7 +1,10 @@
 "use client";
 /* Small pieces every lesson step shares: the bottom keys, the meta line, Enter to go on. */
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { readTrackV2 } from "@/lib/track2";
+import { starterCopy } from "@/lib/starterCopy";
 import { GoPill, Icon, Key } from "./controls";
+import { Gloss } from "./Gloss";
 
 export function Bottom({ left, go }: { left?: { label: string; icon: string; onClick?: () => void; href?: string; disabled?: boolean; aria?: string }; go: { label: ReactNode; onClick?: () => void; href?: string; disabled?: boolean; aria?: string } }) {
   return (
@@ -30,3 +33,16 @@ export const useEnter = (fn: (() => void) | null) => {
     return () => window.removeEventListener("keydown", h);
   }, [fn]);
 };
+
+/** True when your song has no notes yet (a lesson opened straight from a link): the step then plays a starter loop. */
+export function useStarter() {
+  const [starter, setStarter] = useState(false);
+  useEffect(() => { try { setStarter(!readTrackV2().layers.some(l => l.events.length > 0)); } catch { /* no song */ } }, []);
+  return starter;
+}
+
+/** A step's body: one paragraph per blank line, glossary words linked. */
+export function Body({ text, starter = false }: { text: string; starter?: boolean }) {
+  const t = starter ? starterCopy(text) : text;
+  return <>{t.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}</>;
+}

@@ -11,7 +11,7 @@ import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } f
 import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
 import { NOTE_NAMES } from "@/lib/theory";
 import { CAP, GoPill, Icon, Key, Knob, Screen } from "./controls";
-import { Meta, useEnter } from "./LessonParts";
+import { Body, Meta, useEnter, useStarter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
@@ -44,11 +44,12 @@ export function useLoop(track: TrackV2) {
 
 export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: { screen: Of<"tempo">; inst: ReactNode; go: string; onGo: () => void; playing: boolean; toggle: () => void; tail?: ReactNode; note?: string | null }) {
   useEnter(onGo);
+  const starter = useStarter();
   return (
     <div className="ls-col">
       <div className="fl-inst">{inst}</div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        <Body text={screen.body} starter={starter} />
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {note ? <div className="ls-hint">{note}</div> : null}
         {tail}

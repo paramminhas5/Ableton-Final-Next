@@ -229,10 +229,12 @@ type KnobProps = {
   detents?: number;
   /** A click (no drag) steps the knob on by one, wrapping round. */
   onStep?: () => void;
+  /** The value in words ("1.2 kHz", "40%"), shown under the label and read out by screen readers. */
+  readout?: string;
 };
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -257,6 +259,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
+      aria-valuetext={readout}
       {...drag}
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
@@ -276,6 +279,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       {led ? <Dash color={led} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
       <div style={{ marginTop: -12 }}>{knob}</div>
       <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>
+      {readout ? <span className="m1-kv" aria-hidden>{readout}</span> : null}
     </div>
   );
 }

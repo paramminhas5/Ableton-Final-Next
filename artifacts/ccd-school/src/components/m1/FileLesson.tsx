@@ -67,7 +67,7 @@ const pageName = (p: Page | undefined): string => {
 
 // ── your song, always on top ─────────────────────────────────────────────────
 /** `pending`: this lesson's part is recorded but not added yet, so the strip says so instead of "empty". */
-export function SongStrip({ focus, pending }: { focus?: string; pending?: boolean }) {
+export function SongStrip({ focus, pending, ghost }: { focus?: string; pending?: boolean; ghost?: Take | null }) {
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
@@ -122,8 +122,25 @@ export function SongStrip({ focus, pending }: { focus?: string; pending?: boolea
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
+        {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
       </div>
     </section>
+  );
+}
+
+/** The part you just recorded, drawn as a dashed lane under your song until you add it. */
+function Ghost({ take, loop, name }: { take: Take; loop: number; name: string }) {
+  const W = 160;
+  return (
+    <div className="fl-ghost" role="img" aria-label={`your ${name}, not added yet`}>
+      <svg viewBox={`0 0 ${W} 10`} preserveAspectRatio="none" aria-hidden>
+        {take.events.map((e, i) => {
+          const x = ((((e.start % loop) + loop) % loop) / loop) * W;
+          return <rect key={i} x={x} y={1.5} width={Math.max(1.6, Math.min(W - x, (e.len / loop) * W))} height={7} rx={1.5} />;
+        })}
+      </svg>
+      <span>{name}</span>
+    </div>
   );
 }
 
@@ -569,7 +586,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
-      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done" && !readTrackV2().added.includes(mission.slug)} />
+      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done" && !readTrackV2().added.includes(mission.slug)} ghost={take} />
       <div className="ls-stage fl-stage" key={idx}>{body}</div>
     </div>
   );

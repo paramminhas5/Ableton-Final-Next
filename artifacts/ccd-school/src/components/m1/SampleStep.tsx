@@ -152,7 +152,7 @@ export function SampleStep({ screen, accent, onNext, tail }: StepProps) {
         {knobs.length > 0 && (
           <div className="m1-g" style={{ gridTemplateColumns: `repeat(${knobs.length}, 1fr)`, marginTop: 10 }}>
             {knobs.map((k, i) => <Knob key={k.key} label={k.key === "reverse" ? "reverse" : k.label} color={CAP.navy} size={60} height={120} led={accent}
-              value={params[k.index] ?? k.default} defaultValue={k.default} onChange={v => setParams(p => ({ ...p, [k.index]: k.key === "reverse" ? (v > 0.5 ? 1 : 0) : v }))}
+              value={params[k.index] ?? k.default} defaultValue={k.default} readout={k.key === "reverse" ? ((params[k.index] ?? k.default) > 0.5 ? "on" : "off") : display(k, params[k.index] ?? k.default)} onChange={v => setParams(p => ({ ...p, [k.index]: k.key === "reverse" ? (v > 0.5 ? 1 : 0) : v }))}
               onTouch={(_, v) => setNote(`${k.label} ${k.key === "reverse" ? (v > 0.5 ? "on" : "off") : display(k, v)}`)} />)}
           </div>
         )}
