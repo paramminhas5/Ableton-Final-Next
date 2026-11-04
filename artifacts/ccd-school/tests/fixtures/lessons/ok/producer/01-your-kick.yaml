@@ -1,0 +1,72 @@
+slug: your-kick
+world: producer
+number: 1
+title: your kick
+minutes: 8
+song:
+  adds: drums.kick
+  why: the kick is the heartbeat, everything else hangs off it
+learn:
+  mentor: By the end you will have a kick that holds your song up.
+  straight: You will program a kick and set its length.
+  eli5: You will make the big boom that the whole song stands on.
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: Listen to this one kick, steady as a pulse.
+      straight: One kick on every beat.
+      eli5: Boom, boom, boom, boom.
+  - kind: say
+    title: Why the kick leads
+    say: Every other sound lines up against the kick.
+    hint: Count one two three four along with it.
+    deeper:
+      - title: Short against long
+        say: A long kick fills the gaps, a short one leaves room.
+        try:
+          kind: shape
+          layer: drums
+          knobs: [decay]
+          say: Slide decay and listen for the gaps closing.
+  - kind: play
+    layer: drums
+    surface: pads
+    goal: {notes: 4, note: kick}
+    say:
+      mentor: Tap the kick pad four times, one on each beat.
+      straight: Record four kick hits.
+    hint: Tap along with the metronome.
+  - kind: shape
+    layer: drums
+    knobs: [decay, tune]
+    say: Shorten the decay, then lower the tune.
+  - kind: ask
+    q: Which kick leaves the most room for the bass?
+    options: [the short one, the long one, the one with drive, the one with echo]
+    answer: 0
+    why: A short kick ends before the bass needs the space.
+    whyWrong:
+      1: The long kick keeps ringing into the bass.
+      3: Echo smears the kick across the beat.
+  - kind: ask
+    q: What does decay change?
+    options: [how long the kick rings, how high it sounds, how loud it is]
+    answer: 0
+    why: Decay is the length of the ring.
+    levels: [standard, hard]
+  - kind: ask
+    q: Where does the kick sit in a four on the floor bar?
+    options: [every beat, beats 2 and 4, the offbeats, only beat 1]
+    answer: 0
+    why: Four on the floor means a kick on every beat.
+  - kind: ask
+    q: Which knob changes the pitch of a pad?
+    options: [tune, decay, drive]
+    answer: 0
+    why: Tune moves the pitch in semitones.
+  - kind: ear
+    drill: timbre
+    rounds: {gentle: 3, standard: 5, hard: 8}
+  - kind: keep
+    next: Next we add a clap on 2 and 4.

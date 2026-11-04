@@ -17,7 +17,9 @@
     "crawl": "node scripts/lessons-crawl.mjs",
     "engine:types": "cd ../../engine && cargo run --release --bin gen-types -- ../artifacts/ccd-school/src/engine/params.gen.ts",
     "engine:wasm": "../../engine-wasm/build.sh",
-    "engine": "npm run engine:types && npm run engine:wasm"
+    "engine": "npm run engine:types && npm run engine:wasm",
+    "lessons": "tsx scripts/compile-lessons.mjs",
+    "prebuild": "npm run lessons"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",
@@ -55,7 +57,8 @@
     "stripe": "^22.2.0",
     "tailwind-merge": "^2.5.4",
     "tw-animate-css": "^1.2.5",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.7",
@@ -70,6 +73,7 @@
     "fast-check": "^3.22.0",
     "playwright": "^1.63.0",
     "tailwindcss": "^4.1.7",
+    "tsx": "^4.23.15",
     "typescript": "^5.6.3",
     "vitest": "^2.1.0"
   }
