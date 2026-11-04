@@ -61,6 +61,13 @@ export const CHORD_PARAMS = [
   { id: "chords.res", key: "res", label: "res", bank: "shift", index: 21, min: 0, max: 1, default: 0.15, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
   { id: "chords.env", key: "env", label: "env", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
   { id: "chords.drift", key: "drift", label: "drift", bank: "shift", index: 23, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.lforate", key: "lforate", label: "lfo rate", bank: "shift", index: 24, min: 0.1, max: 20, default: 0.5, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.lfo", key: "lfo", label: "lfo", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.lfoto", key: "lfoto", label: "lfo to", bank: "shift", index: 26, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fm", key: "fm", label: "fm", bank: "shift", index: 27, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.65, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 4000, default: 0.45, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const LEAD_PARAMS = [
@@ -72,6 +79,13 @@ export const LEAD_PARAMS = [
   { id: "lead.wave", key: "wave", label: "wave", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 15, detents: [] },
   { id: "lead.detune", key: "detune", label: "detune", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "lead.env", key: "env", label: "env", bank: "shift", index: 23, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+  { id: "lead.lforate", key: "lforate", label: "lfo rate", bank: "shift", index: 24, min: 0.1, max: 20, default: 0.5, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.lfo", key: "lfo", label: "lfo", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.lfoto", key: "lfoto", label: "lfo to", bank: "shift", index: 26, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fm", key: "fm", label: "fm", bank: "shift", index: 27, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.53, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 3000, default: 0.4, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const FX_PARAMS = [

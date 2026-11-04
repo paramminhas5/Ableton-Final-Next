@@ -30,7 +30,7 @@ import { TryIt } from "./TryIt";
 import { MixStep } from "./MixStep";
 import { ArrangeStep } from "./ArrangeStep";
 import { presetTake } from "./AddToTrack";
-import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, readShape, songHasMusic, startsFresh } from "./LessonSteps";
+import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -205,7 +205,9 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const isIn = added || already;
   // Keep-only lessons still carry the knobs you turned in their shape step onto your part.
   const tuned = (t: TrackV2): TrackV2 => withParams(t, line.type, params);
-  const preview = useMemo(() => (base ? (isIn ? base : keepOnly ? tuned(base) : applyTake({ ...base, added: [] }, slug, line, world, params)) : null), [base, isIn, keepOnly, slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Knobs this lesson turned on your other parts come along too.
+  const others = (t: TrackV2): TrackV2 => otherShapes(slug).reduce((a, [type, p]) => withParams(a, type, p), t);
+  const preview = useMemo(() => (base ? (isIn ? base : others(keepOnly ? tuned(base) : applyTake({ ...base, added: [] }, slug, line, world, params))) : null), [base, isIn, keepOnly, slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(preview ?? readTrackV2());
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
@@ -221,7 +223,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
     try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
-    const next = now.added.includes(slug) ? now : keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params);
+    const next = now.added.includes(slug) ? now : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
     writeTrackV2(next);
     nameSongIfNew();
     setBase(next);

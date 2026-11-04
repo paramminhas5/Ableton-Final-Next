@@ -17,6 +17,7 @@ for (const slug of slugs) {
   await p.goto(`${base}/learn/${slug}`, { waitUntil: "load" });
   await p.waitForSelector(".fl", { timeout: 60000 }).catch(() => errs.push("no player"));
   const seen = []; let stuck = 0;
+  try {
   for (let i = 0; i < 30; i++) {
     const kind = await p.locator(".fl").getAttribute("data-page-kind").catch(() => null);
     if (!kind) break;
@@ -29,15 +30,17 @@ for (const slug of slugs) {
     if (kind === "play") await p.getByRole("button", { name: "Skip this step" }).click();
     else if (kind === "check") await p.getByText("skip the challenge").click();
     else if (kind === "ear") { for (let k = 0; k < 20 && (await p.locator(".fl").getAttribute("data-page-kind")) === "ear"; k++) { await p.locator('[role="radio"]:not([disabled]), .ls-pad:not([disabled])').first().click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); await go.click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); } }
-    else if (kind === "arrange" && /not yet/.test(await go.innerText())) { await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await go.click(); }
+    else if (kind === "arrange" && /not yet/.test(await go.innerText())) { await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Fill"]').nth(1).click().catch(() => {}); await go.click(); }
     else await go.click();
     await p.waitForTimeout(450);
     const after = await p.locator(".fl").getAttribute("data-step");
     if (after === before && kind !== "add") { if (++stuck > 2) { errs.push(`stuck on ${kind}`); break; } } else stuck = 0;
   }
+  } catch (e) { errs.push(`threw: ${String(e.message ?? e).split("\n")[0].slice(0, 120)}`); }
   const last = seen[seen.length - 1];
-  out.push(`${last === "done" && !errs.length ? "ok  " : "FAIL"} ${slug.padEnd(24)} ${seen.join(" > ")}${errs.length ? "\n      " + [...new Set(errs)].join("\n      ") : ""}`);
+  const line = (`${last === "done" && !errs.length ? "ok  " : "FAIL"} ${slug.padEnd(24)} ${seen.join(" > ")}${errs.length ? "\n      " + [...new Set(errs)].join("\n      ") : ""}`);
+  console.log(line); out.push(line);
   await ctx.close();
 }
 await b.close();
-console.log(out.join("\n"));
+console.log(`\n${out.filter(l => l.startsWith("ok")).length} of ${out.length} ok`);

@@ -25,7 +25,7 @@ Param's calls that shape it (4 Nov 23:31, 23:51, 5 Nov 00:05 and 00:21): the son
 - **Bonus rounds** are the few lessons where there is truly nothing to add: an ear drill on your own song, reading the room, handling mistakes. Same optional rule, different mark.
 - **One song through all three worlds.** Basics gives it a beat, notes, a scale, chords, bass and your ears. Producer gives it its sound, groove, mix and arrangement and ends with an export to Live. DJ plays it out with other tracks and ends with a recorded set for a CCD night. A lesson that needs a part the song does not have yet drops a sensible one in and says so, so worlds can be played in any order.
 - **Slugs are kept.** A rebuilt lesson takes the old slug so progress and trophies carry over. Until a lesson is a YAML file it opens in the old player, marked "old version" on its card.
-- **Legend:** S = song lesson, D = deeper (hangs off the song lesson above it), B = bonus round. Slugs in backticks; new slugs marked (new). The "does to the song" column is the keep-able thing you do in that lesson.
+- **Legend:** S = song lesson, D = deeper (hangs off the song lesson above it), B = bonus round. Slugs in backticks. The "does to the song" column is the keep-able thing you do in that lesson.
 
 ## Basics (world `foundations`, shown as "basics")
 
@@ -317,20 +317,28 @@ What you have after dj: your song blended with bank tracks in a short set, match
 5. The song: auto-named on the first add (from a short list like "first light", "two am", plus the tempo), renamable from the song strip and the done screen.
 6. New step kinds, one code push before the first lesson that needs each: `tempo`, `loop` (length), `scale`, `arrange`, `mix` with decks and a bank, `set`. Engine: send swing, lfo on lead, stems export.
 
-## Order we build in
+## Where it stands (5 Nov)
 
-World by world, until Param says the world is right:
+Everything above is built: 57 song lessons, 133 deeper lessons, 8 bonus rounds, 198 lesson files, every one in the new player and acting on your song. Nothing is left in the old player. Next: Param reviews path by path on the preview, then the trophy unlocks, your own file on a dj deck, and the sounds push (needs Param's ears).
 
-1. **Structure push (next):** paths, chapters and the journey as above; the journey drawn as your song with its parts lighting up; song, deeper and bonus marks; "old version" tags; counts; next links; auto-named song with rename; "with it / without it" on every done screen. No lesson content changes. Param checks the shape of all three worlds on the preview.
-2. **Basics, path by path:** path 1 (amplitude, timbre, the bonus round, the two deeper lessons rebuilt), then paths 2 to 5. Each lesson a push.
-3. **Producer, path by path:** paths 1 to 5, then path 6. Better sounds lands with path 3.
-4. **DJ:** the mix step kind, then paths 1 to 5.
-5. **Rewards that change the interface**, once Param picks what they unlock.
+## Stand-ins (deeper lessons that do the nearest thing, and say so)
 
-Each push: YAML plus the code it needs, `npm run lessons`, tsc, vitest, cargo test, next build, shots at 390x844 and 1440x900 in light and dark on Chromium and WebKit, a scripted smoke, then the preview link.
+The app has no control yet for these, so the lesson does the closest thing on your song and tells the learner it is an approximation. Each would get the real thing if we build the control.
+
+- **No lfo:** synth lfo (you sweep cutoff by hand), modulation routing (env against glide), max for live (filter envelope), automation (a hand sweep, only the end setting kept), modulation lanes (base level only).
+- **No arpeggiator:** midi effects (chord voicing instead).
+- **Filter envelope tied to the amp release:** amp vs filter envelope.
+- **No fm, granular or physical model:** operator and fm basics (detune, wave, env), granulator (slow pad with reverb), collision and tension (struck feel from the envelope).
+- **No sample layer in lessons:** sampler, sampler deep, drum sampler, audio clips (the recorded kit, or the kick's tune, decay and level), slicing (a new rhythm on the pads).
+- **No warping, mic or comping lanes:** warping and warp modes (the tempo knob), recording audio and capture midi (a pad or key take with rec), take lanes and comping (whole takes, keep or redo).
+- **No grid editor or key shift:** midi and piano roll (a hat play-in with snap), transposition (modes on the same home note), notes and octaves (an octave jump; the keys show seven of twelve notes).
+- **One layer per lesson:** mixing basics (the hats only), groups (the drums layer as the group), reverb and delay (kick and clap together), the mixer (chords).
+- **Mixer has no sync, hot cues, loops, stems, key shift, curve choice, tags or export:** sync (deck b starts matched), loops and hot cues (blend, phrase), stems (a bass swap), key shift (deck b keeps its key), crossfader curves (slow then fast), tags, playlists, export mode, dvs (free, blend, cut).
+
+Facts the old lessons disagreed on, or that could not be checked, were left out (Operator's algorithm count, Roar's, Meld's oscillators, Hybrid Reverb's algorithm names, rekordbox's Camelot display, hot cue counts, the Cmd+Alt+L shortcut). Two old claims were wrong and were corrected: Live's device chain runs left to right, and 512 samples is about 11.6 ms one way, not round trip. The dj culture lesson credits Frankie Knuckles at the Warehouse and no longer puts Larry Levan in Chicago.
 
 ## Open with Param
 
-- Basics now opens with the beat (path 1, the pulse), so the first lesson anyone plays is tapping a kick, and producer's "your kick" then makes that kick good. Basics before producer stays.
-- The bank for dj: engine loops now, real CCD tracks when cleared. Which tracks?
-- Any lesson above in the wrong place, or a path that should split or merge: say so before the structure push, since that push sets the order the learner sees.
+- Review path by path on the preview and say what to change.
+- Which stand-in to replace with a real control first (the lfo would fix the most lessons).
+- Streaming rights for the seven bank tracks, so the real audio can go in private storage.

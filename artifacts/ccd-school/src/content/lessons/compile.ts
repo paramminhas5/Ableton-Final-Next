@@ -29,6 +29,9 @@ export function knobsFor(layer: LayerType): string[] {
   return [...new Set([...ENGINE_KEYS[layer], ...LAYER_KEYS])];
 }
 
+/** What a `tempo` step can set: song-wide settings and the tools that act on your parts. */
+export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro"];
+
 const EM_DASH = /—/;
 const EMOJI = /\p{Extended_Pictographic}/u;
 type Obj = Record<string, unknown>;
@@ -39,7 +42,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
-  tempo: ["kind", "say", "marks", "set", "choices", "hint", "levels"],
+  tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
@@ -209,7 +212,8 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           break;
         case "tempo":
           voice(where, "say", raw.say);
-          if (raw.set !== undefined && raw.set !== "tempo" && raw.set !== "swing" && raw.set !== "scale" && raw.set !== "glue" && raw.set !== "kit") at(where, `set must be tempo, swing, scale, glue or kit`);
+          if (raw.set !== undefined && !TEMPO_SETS.includes(raw.set as string)) at(where, `set must be one of ${TEMPO_SETS.join(", ")}`);
+          if (raw.layer !== undefined && !["bass", "chords", "lead", "drums", "hats"].includes(raw.layer as string)) at(where, "layer must be bass, chords, lead, drums or hats");
           if (raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !["minor", "major", "dorian", "minor pentatonic"].includes(c)))) at(where, "choices must be scales: minor, major, dorian, minor pentatonic");
           if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" || raw.set === "glue" ? m < 0 || m > 1 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
           break;

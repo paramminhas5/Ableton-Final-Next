@@ -12,7 +12,7 @@ import type { LessonScreen, Mission } from "@/content/types";
 import { applyTake, readTake, shapeKnobs, takeType, withParams } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
-import { readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
+import { readTrackV2, writeTrackV2, type LayerType, type TrackV2 } from "@/lib/track2";
 import { NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
 import { loadRealKit, REAL_KIT_ID, withRealKit, withSynthKit } from "@/lib/realKit";
 import { worldOf } from "@/lib/worldOrder";
@@ -22,6 +22,7 @@ import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
+import { TOOL_STEPS } from "./tools";
 import { AirWave, SynthChain, WaveShape } from "./LessonVisuals";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
@@ -163,19 +164,28 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
 }
 
 // ── shape: the lesson's knobs, with the loop playing ──────────────────────────
-export const shapeKey = (slug: string) => `ccd.shape.${slug}`;
-export function readShape(slug: string): Record<number, number> {
-  try { return JSON.parse(sessionStorage.getItem(shapeKey(slug)) ?? "{}") as Record<number, number>; } catch { return {}; }
+export const shapeKey = (slug: string, other?: string) => `ccd.shape.${slug}${other ? `.${other}` : ""}`;
+export function readShape(slug: string, other?: string): Record<number, number> {
+  try { return JSON.parse(sessionStorage.getItem(shapeKey(slug, other)) ?? "{}") as Record<number, number>; } catch { return {}; }
+}
+/** Knobs a lesson turned on parts other than the one it adds, by part: kept with the lesson's own. */
+export function otherShapes(slug: string): [LayerType, Record<number, number>][] {
+  const out: [LayerType, Record<number, number>][] = [];
+  for (const t of ["drums", "hats", "bass", "chords", "lead"] as LayerType[]) { const p = readShape(slug, t); if (Object.keys(p).length) out.push([t, p]); }
+  return out;
 }
 
 export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mission: Mission; screen: Of<"shape">; meta: string; accent: string; onNext: () => void; tail?: ReactNode }) {
   const [base, setBase] = useState<TrackV2 | null>(null);
   useEffect(() => setBase(readTrackV2()), []);
-  const [params, setParams] = useState<Record<number, number>>(() => readShape(mission.slug));
   const [touched, setTouched] = useState<string | null>(null);
   const [beat, setBeat] = useState(-1);
   const take = useMemo(() => readTake(mission.slug), [mission.slug]);
-  const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
+  const own0 = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
+  // A shape step can name another part of your song than the one this lesson adds: then it shapes that part.
+  const otherType = (["drums", "hats", "bass", "chords", "lead"] as LayerType[]).find(t => t === screen.layer && t !== own0.type);
+  const line = useMemo(() => (otherType ? { ...own0, type: otherType, events: [] } : own0), [own0, otherType]);
+  const [params, setParams] = useState<Record<number, number>>(() => readShape(mission.slug, otherType));
   const knobs = useMemo(() => {
     // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
@@ -189,7 +199,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   }, [line.type, screen.knobs]);
   const world = worldOf(mission.slug) ?? undefined;
   // Nothing played in this lesson and your song already has this part: shape your own part.
-  const own = !!base && !take?.events.length && base.layers.some(l => l.type === line.type && l.events.length > 0);
+  const own = !!base && (!!otherType || !take?.events.length) && base.layers.some(l => l.type === line.type && l.events.length > 0);
   const shown = useMemo(() => (base
     ? own ? withParams(base, line.type, params) : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
     : null), [base, own, take, mission.slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -197,7 +207,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const playing = beat >= 0;
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
-  useEffect(() => { try { sessionStorage.setItem(shapeKey(mission.slug), JSON.stringify(params)); } catch { /* ignore */ } }, [params, mission.slug]);
+  useEffect(() => { try { sessionStorage.setItem(shapeKey(mission.slug, otherType), JSON.stringify(params)); } catch { /* ignore */ } }, [params, mission.slug, otherType]);
   const hear = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); };
   // The loop is going when you arrive, so every turn is heard straight away.
   useEffect(() => {
@@ -406,6 +416,8 @@ const toV = (bpm: number) => (bpm - BPM_MIN) / (BPM_MAX - BPM_MIN);
 const toBpm = (v: number) => Math.round(BPM_MIN + v * (BPM_MAX - BPM_MIN));
 
 export function TempoStep(props: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
+  const Tool = TOOL_STEPS[props.screen.set];
+  if (Tool) return <Tool {...props} />;
   return props.screen.set === "swing" ? <SwingStep {...props} /> : props.screen.set === "scale" ? <ScaleStep {...props} /> : props.screen.set === "glue" ? <GlueStep {...props} /> : props.screen.set === "kit" ? <KitStep {...props} /> : <BpmStep {...props} />;
 }
 

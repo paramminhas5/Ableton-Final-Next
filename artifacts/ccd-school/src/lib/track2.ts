@@ -57,6 +57,8 @@ export type LayerV2 = {
   euclid?: Record<number, { hits: number; rot: number }>;
   /** Sampler layers: the name of the sample in each of the 16 slots (the audio lives in this browser). */
   samples?: Record<number, string>;
+  /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
+  arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
 };
 
 export type TrackV2 = {

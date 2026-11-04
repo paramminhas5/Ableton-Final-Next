@@ -5,6 +5,7 @@
  */
 import { newLayerV2, type LayerV2, type NoteEvent, type TrackV2 } from "./track2";
 import { FX_RISER_NOTE as RISER } from "../engine/params.gen";
+import { withArps } from "./arp";
 
 export type Section = { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean };
 
@@ -24,6 +25,8 @@ const KICK = 36, SNARE = 38;
 
 /** The song as the engine plays it: one long loop, every section in turn. Unchanged with no sections. */
 export function arranged(t: TrackV2): TrackV2 {
+  // Arpeggiators play first, so every section repeats the arpeggio.
+  t = withArps(t);
   const secs = (t as TrackV2 & { sections?: Section[] }).sections;
   if (!secs?.length) return t;
   const L = t.loop || 4;

@@ -43,13 +43,19 @@ export function fromValue(spec: Pick<ParamSpec, "min" | "max" | "curve">, v: num
   }
 }
 
+/** The fm ratio knob's steps (modulator over carrier), as in engine/src/params.rs. */
+export const FM_RATIOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8];
+
 const round = (v: number, d = 0) => {
   const p = 10 ** d;
   return Math.round(v * p) / p;
 };
 
 /** What the screen shows when you touch a control: "-3 db", "pan l 20", "1.2 khz". */
-export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit">, n: number): string {
+export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> & { key?: string }, n: number): string {
+  // Stepped knobs show what they choose, not a number.
+  if (spec.key === "lfoto") return n < 0.34 ? "to the filter" : n < 0.67 ? "to the pitch" : "to the volume";
+  if (spec.key === "ratio") return `ratio ${FM_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (FM_RATIOS.length - 1))]}`;
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {

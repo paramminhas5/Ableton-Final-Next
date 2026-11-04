@@ -259,6 +259,14 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("res", "res", Bank::Shift, 0.0, 1.0, 0.15, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 20.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.65, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("frel", "f release", Bank::Shift, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -268,6 +276,13 @@ pub const C_CUTOFF: usize = 4;
 pub const C_RES: usize = 5;
 pub const C_ENV: usize = 6;
 pub const C_DRIFT: usize = 7;
+pub const C_LFO_RATE: usize = 8;
+pub const C_LFO: usize = 9;
+pub const C_LFO_TO: usize = 10;
+pub const C_FM: usize = 11;
+pub const C_RATIO: usize = 12;
+pub const C_FDECAY: usize = 13;
+pub const C_FREL: usize = 14;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -280,6 +295,14 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("detune", "detune", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
+    // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 20.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.53, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("frel", "f release", Bank::Shift, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -289,6 +312,24 @@ pub const LD_GLIDE: usize = 4;
 pub const LD_WAVE: usize = 5;
 pub const LD_DETUNE: usize = 6;
 pub const LD_ENV: usize = 7;
+pub const LD_LFO_RATE: usize = 8;
+pub const LD_LFO: usize = 9;
+pub const LD_LFO_TO: usize = 10;
+pub const LD_FM: usize = 11;
+pub const LD_RATIO: usize = 12;
+pub const LD_FDECAY: usize = 13;
+pub const LD_FREL: usize = 14;
+
+/// The fm ratio knob steps through these (modulator frequency over carrier).
+pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
+pub fn fm_ratio(n: f32) -> f32 {
+    FM_RATIOS[((n.clamp(0.0, 1.0) * (FM_RATIOS.len() - 1) as f32).round()) as usize]
+}
+
+/// Where the lfo goes: 0 the filter, 1 the pitch, 2 the volume.
+pub fn lfo_dest(n: f32) -> u8 {
+    if n < 0.34 { 0 } else if n < 0.67 { 1 } else { 2 }
+}
 
 // ── FX: noise, sweeps, impacts, riser ────────────────────────────────────────
 

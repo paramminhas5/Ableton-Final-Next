@@ -36,6 +36,13 @@ struct Ctl {
     /// Detune ratio between the saws.
     spread: f32,
     wave: f32,
+    /// Lfo now: octaves on the cutoff, semitones on the pitch, gain on the volume.
+    lfo_oct: f32,
+    lfo_semi: f32,
+    lfo_gain: f32,
+    /// Fm amount (0 is the normal voice, 1 is all fm) and the modulator ratio.
+    fm: f32,
+    ratio: f32,
 }
 
 struct Voice {
@@ -52,6 +59,8 @@ struct Voice {
     ladder: Ladder,
     amp: Adsr,
     fenv: Adsr,
+    car: f32,
+    modp: f32,
 }
 
 impl Voice {
@@ -70,6 +79,8 @@ impl Voice {
             ladder: Ladder::default(),
             amp: Adsr::new(os),
             fenv: Adsr::new(os),
+            car: 0.0,
+            modp: 0.0,
         }
     }
 
@@ -94,6 +105,8 @@ impl Voice {
                 o.reset([0.0, 0.31, 0.67, 0.12, 0.49][i]);
             }
             self.ladder.reset();
+            self.car = 0.0;
+            self.modp = 0.0;
         }
         self.amp.gate_on();
         self.fenv.gate_on();
@@ -108,7 +121,7 @@ impl Voice {
     #[inline]
     fn tick(&mut self, c: &Ctl, os: f32) -> f32 {
         self.pitch = self.target + (self.pitch - self.target) * self.glide_coef;
-        let f = note_hz(self.pitch + self.drift);
+        let f = note_hz(self.pitch + self.drift + c.lfo_semi);
         let dt = f / os;
         let w = c.wave;
         let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
@@ -127,12 +140,25 @@ impl Voice {
             s += self.osc[4].next(dt * 1.5).0 * w_fifth * 0.5;
         }
         let fe = self.fenv.next();
+        // Two-operator fm, like Operator's simplest algorithm: a sine modulator bends a sine
+        // carrier's phase. The filter envelope opens the index too, so it starts bright and settles.
+        if c.fm > 0.001 {
+            self.car += dt;
+            self.car -= self.car.floor();
+            self.modp += dt * c.ratio;
+            self.modp -= self.modp.floor();
+            let index = c.fm * 5.0 * (0.3 + 0.7 * fe);
+            let m = (core::f32::consts::TAU * self.modp).sin();
+            let carrier = (core::f32::consts::TAU * self.car + index * m).sin();
+            let mix = (c.fm * 3.0).min(1.0);
+            s = s * (1.0 - mix) + carrier * mix * 0.9;
+        }
         let env_oct = c.env_amt * 5.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (self.pitch - 60.0) / 12.0 * 0.4;
-        let fc = (c.cutoff * (env_oct + key_oct).exp2()).clamp(30.0, os * 0.45);
+        let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct).exp2()).clamp(30.0, os * 0.45);
         self.ladder.set(fc, c.res, os);
         let y = self.ladder.tick(s * 0.5);
-        y * self.amp.next() * (0.4 + 0.6 * self.vel)
+        y * self.amp.next() * (0.4 + 0.6 * self.vel) * c.lfo_gain
     }
 }
 
@@ -144,6 +170,14 @@ struct Controls {
     voicing: Smooth,
     spread: Smooth,
     wave: Smooth,
+    lfo_amt: Smooth,
+    fm: Smooth,
+    /// Lfo rate in Hz, where it goes (lfo_dest) and its phase (0..1).
+    lfo_rate: f32,
+    lfo_to: u8,
+    lfo_phase: f32,
+    ratio: f32,
+    os: f32,
 }
 
 impl Controls {
@@ -155,15 +189,22 @@ impl Controls {
             voicing: Smooth::new(0.3),
             spread: Smooth::new(0.2),
             wave: Smooth::new(0.0),
+            lfo_amt: Smooth::new(0.0),
+            fm: Smooth::new(0.0),
+            lfo_rate: 1.4,
+            lfo_to: 0,
+            lfo_phase: 0.0,
+            ratio: 2.0,
+            os,
         };
-        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave] {
+        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave, &mut c.lfo_amt, &mut c.fm] {
             s.set_time(10.0, os);
         }
         c
     }
 
     fn reset(&mut self) {
-        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave] {
+        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave, &mut self.lfo_amt, &mut self.fm] {
             s.reset(s.target);
         }
     }
@@ -172,7 +213,21 @@ impl Controls {
     fn next(&mut self) -> Ctl {
         // spread is 0..1 -> up to 36 cents between the saws.
         let cents = self.spread.next() * 36.0;
+        let amt = self.lfo_amt.next();
+        self.lfo_phase += self.lfo_rate / self.os;
+        self.lfo_phase -= self.lfo_phase.floor();
+        let w = (core::f32::consts::TAU * self.lfo_phase).sin();
+        let (lfo_oct, lfo_semi, lfo_gain) = match self.lfo_to {
+            0 => (amt * 3.0 * w, 0.0, 1.0),
+            1 => (0.0, amt * 2.0 * w, 1.0),
+            _ => (0.0, 0.0, 1.0 - amt * (0.5 + 0.5 * w)),
+        };
         Ctl {
+            lfo_oct,
+            lfo_semi,
+            lfo_gain,
+            fm: self.fm.next(),
+            ratio: self.ratio,
             cutoff: self.cutoff.next(),
             res: self.res.next(),
             env_amt: self.env_amt.next(),
@@ -228,6 +283,8 @@ pub struct Poly {
     drift_count: u32,
     attack_s: f32,
     release_s: f32,
+    fdecay_s: f32,
+    frel_s: f32,
 }
 
 impl Poly {
@@ -245,6 +302,8 @@ impl Poly {
             drift_count: 0,
             attack_s: 0.05,
             release_s: 0.4,
+            fdecay_s: 0.6,
+            frel_s: 0.4,
         };
         for (i, s) in CHORD_PARAMS.iter().enumerate() {
             p.set_param(i, s.to_value(s.default));
@@ -270,15 +329,29 @@ impl Poly {
             C_RES => self.ctl.res.set(v),
             C_ENV => self.ctl.env_amt.set(v),
             C_DRIFT => self.drift_amt = v,
+            C_LFO_RATE => self.ctl.lfo_rate = v,
+            C_LFO => self.ctl.lfo_amt.set(v),
+            C_LFO_TO => self.ctl.lfo_to = lfo_dest(v),
+            C_FM => self.ctl.fm.set(v),
+            C_RATIO => self.ctl.ratio = fm_ratio(v),
+            C_FDECAY => {
+                self.fdecay_s = v * 0.001;
+                self.update_envs();
+            }
+            C_FREL => {
+                self.frel_s = v * 0.001;
+                self.update_envs();
+            }
             _ => {}
         }
     }
 
     fn update_envs(&mut self) {
         let (a, r) = (self.attack_s, self.release_s);
+        let _ = r;
         for v in self.voices.iter_mut() {
             v.amp.set(a, 0.4, 0.85, r);
-            v.fenv.set(0.002 + a * 0.5, 0.6, 0.35, r);
+            v.fenv.set(0.002 + a * 0.5, self.fdecay_s, 0.35, self.frel_s);
         }
     }
 
@@ -382,6 +455,8 @@ pub struct Lead {
     glide_ms: f32,
     release_s: f32,
     attack_s: f32,
+    fdecay_s: f32,
+    frel_s: f32,
 }
 
 impl Lead {
@@ -398,6 +473,8 @@ impl Lead {
             glide_ms: 60.0,
             release_s: 0.3,
             attack_s: 0.005,
+            fdecay_s: 0.35,
+            frel_s: 0.3,
         };
         l.ctl.voicing.set(0.15);
         for (i, s) in LEAD_PARAMS.iter().enumerate() {
@@ -423,13 +500,26 @@ impl Lead {
             LD_WAVE => self.ctl.wave.set(v),
             LD_DETUNE => self.ctl.spread.set(v),
             LD_ENV => self.ctl.env_amt.set(v),
+            LD_LFO_RATE => self.ctl.lfo_rate = v,
+            LD_LFO => self.ctl.lfo_amt.set(v),
+            LD_LFO_TO => self.ctl.lfo_to = lfo_dest(v),
+            LD_FM => self.ctl.fm.set(v),
+            LD_RATIO => self.ctl.ratio = fm_ratio(v),
+            LD_FDECAY => {
+                self.fdecay_s = v * 0.001;
+                self.update_envs();
+            }
+            LD_FREL => {
+                self.frel_s = v * 0.001;
+                self.update_envs();
+            }
             _ => {}
         }
     }
 
     fn update_envs(&mut self) {
         self.voice.amp.set(self.attack_s, 0.3, 0.9, self.release_s);
-        self.voice.fenv.set(0.001, 0.35, 0.4, self.release_s);
+        self.voice.fenv.set(0.001, self.fdecay_s, 0.4, self.frel_s);
     }
 
     fn remove(&mut self, note: u8) {
@@ -566,5 +656,100 @@ mod tests {
         l.note_off(64);
         assert_eq!(l.voice.target, 60.0);
         assert!(l.is_active());
+    }
+
+    fn rms(y: &[f32]) -> f32 {
+        (y.iter().map(|v| v * v).sum::<f32>() / y.len() as f32).sqrt()
+    }
+    /// Energy of the first difference over the energy of the signal: a rough brightness.
+    fn bright(y: &[f32]) -> f32 {
+        let d: f32 = y.windows(2).map(|w| (w[1] - w[0]).powi(2)).sum();
+        d / y.iter().map(|v| v * v).sum::<f32>().max(1e-9)
+    }
+
+    #[test]
+    fn lfo_on_volume_pulses_the_level() {
+        let mut l = Lead::new(48_000.0);
+        l.set_param(LD_LFO_RATE, 4.0);
+        l.set_param(LD_LFO, 1.0);
+        l.set_param(LD_LFO_TO, 1.0);
+        l.note_on(57, 1.0);
+        let y = run(|| l.tick(), 96_000);
+        // 10 ms windows across half a second, once the envelopes settle: loud and quiet ones.
+        let w: Vec<f32> = y[48_000..72_000].chunks(480).map(rms).collect();
+        let (lo, hi) = w.iter().fold((f32::MAX, 0.0f32), |(a, b), v| (a.min(*v), b.max(*v)));
+        assert!(hi > lo * 4.0, "lo {lo} hi {hi}");
+        // and off (detune off too, or the saws beat against each other), it holds steady
+        let mut m = Lead::new(48_000.0);
+        m.set_param(LD_DETUNE, 0.0);
+        m.note_on(57, 1.0);
+        let y = run(|| m.tick(), 96_000);
+        let w: Vec<f32> = y[48_000..72_000].chunks(480).map(rms).collect();
+        let (lo, hi) = w.iter().fold((f32::MAX, 0.0f32), |(a, b), v| (a.min(*v), b.max(*v)));
+        assert!(hi < lo * 1.5, "lo {lo} hi {hi}");
+    }
+
+    #[test]
+    fn lfo_on_the_filter_moves_the_brightness() {
+        let mut l = Lead::new(48_000.0);
+        l.set_param(LD_LFO_RATE, 2.0);
+        l.set_param(LD_LFO, 1.0);
+        l.set_param(LD_LFO_TO, 0.0);
+        l.note_on(45, 1.0);
+        let y = run(|| l.tick(), 48_000);
+        let b: Vec<f32> = y[12_000..36_000].chunks(1_200).map(bright).collect();
+        let (lo, hi) = b.iter().fold((f32::MAX, 0.0f32), |(a, c), v| (a.min(*v), c.max(*v)));
+        assert!(hi > lo * 2.0, "lo {lo} hi {hi}");
+    }
+
+    #[test]
+    fn fm_changes_the_tone_and_ratio_matters() {
+        let take = |fm: f32, ratio: f32| {
+            let mut l = Lead::new(48_000.0);
+            l.set_param(LD_CUTOFF, 12_000.0);
+            l.set_param(LD_FM, fm);
+            l.set_param(LD_RATIO, ratio);
+            l.note_on(45, 1.0);
+            run(|| l.tick(), 24_000)
+        };
+        let plain = take(0.0, 0.25);
+        let fm2 = take(1.0, 0.25);
+        let fm7 = take(1.0, 0.85);
+        assert!(fm2.iter().chain(&fm7).all(|v| v.is_finite()));
+        assert!(fm2.iter().chain(&fm7).fold(0.0f32, |a, b| a.max(b.abs())) < 1.0);
+        let (bp, b2, b7) = (bright(&plain[4_800..]), bright(&fm2[4_800..]), bright(&fm7[4_800..]));
+        assert!((b2 - bp).abs() > bp * 0.2, "plain {bp} fm2 {b2}");
+        assert!((b7 - b2).abs() > b2 * 0.2, "fm2 {b2} fm7 {b7}");
+    }
+
+    #[test]
+    fn filter_decay_is_its_own_knob() {
+        let take = |fdecay: f32| {
+            let mut l = Lead::new(48_000.0);
+            l.set_param(LD_CUTOFF, 300.0);
+            l.set_param(LD_ENV, 1.0);
+            l.set_param(LD_FDECAY, fdecay);
+            l.note_on(45, 1.0);
+            let y = run(|| l.tick(), 48_000);
+            bright(&y[19_200..24_000]) // 0.4 to 0.5 s in
+        };
+        let (short, long) = (take(60.0), take(2_500.0));
+        assert!(long > short * 1.5, "short {short} long {long}");
+    }
+
+    #[test]
+    fn chords_take_the_lfo_and_fm_too() {
+        let mut p = Poly::new(48_000.0);
+        p.set_param(C_FM, 1.0);
+        p.set_param(C_LFO, 1.0);
+        p.set_param(C_LFO_TO, 0.5);
+        for n in [57, 60, 64] {
+            p.note_on(n, 0.9);
+        }
+        let y = run(|| p.tick(), 24_000);
+        assert!(y.iter().all(|v| v.is_finite()));
+        let peak = y.iter().fold(0.0f32, |a, b| a.max(b.abs()));
+        assert!(peak > 0.05 && peak < 1.0, "peak {peak}");
+        assert!(rms(&y[12_000..]) > 0.01);
     }
 }

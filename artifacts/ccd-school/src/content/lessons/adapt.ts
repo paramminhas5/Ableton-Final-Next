@@ -6,6 +6,11 @@ import gen from "./lessons.gen.json";
 
 const KIND_FOR_PART: Record<string, string> = { kick: "kick", hats: "hats", clap: "clap", bass: "bass", chords: "chords", lead: "lead", pad: "pad", perc: "perc" };
 
+const TOOL_LEARNED: Record<string, string> = {
+  arp: "turning chords into an arpeggio", key: "moving your song to a new key", grid: "editing notes on the grid",
+  mic: "recording your own sound", comp: "comping the best take", sample: "shaping a sample", macro: "one knob that moves several",
+};
+
 export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
   const steps = resolveLesson(lesson, opts);
   const learn = resolveLearn(lesson, opts.voice);
@@ -26,7 +31,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
       case "ear": screens.push({ kind: "ear", drill: s.drill, rounds: s.rounds, body: s.say }); break;
       case "arrange": learned.push(s.goal === "export" ? "finishing and exporting your song" : s.goal === "fills" ? "adding fills" : s.goal === "risers" ? "building risers" : s.goal === "drop" ? "building a breakdown and a drop" : "arranging your song into sections"); screens.push({ kind: "arrange", body: s.say, goal: s.goal, hint: s.hint }); break;
       case "mix": learned.push(s.goal === "match" ? "matching two tracks by ear" : s.goal === "blend" ? "blending two tracks" : "using the mixer"); screens.push({ kind: "mix", body: s.say, goal: s.goal, bank: s.bank, hint: s.hint }); break;
-      case "tempo": learned.push(s.set === "kit" ? "swapping in a recorded kit" : s.set === "glue" ? "gluing your mix" : s.set === "swing" ? "swinging your groove" : s.set === "scale" ? "choosing your song's scale" : "setting your song's tempo"); screens.push({ kind: "tempo", body: s.say, marks: s.marks, set: s.set, choices: s.choices, hint: s.hint }); break;
+      case "tempo": learned.push(TOOL_LEARNED[s.set] ?? (s.set === "kit" ? "swapping in a recorded kit" : s.set === "glue" ? "gluing your mix" : s.set === "swing" ? "swinging your groove" : s.set === "scale" ? "choosing your song's scale" : "setting your song's tempo")); screens.push({ kind: "tempo", body: s.say, marks: s.marks, set: s.set, choices: s.choices, layer: s.layer, hint: s.hint }); break;
       case "keep": next = s.next; break;
     }
   }
