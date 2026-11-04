@@ -107,8 +107,8 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `instruments-overview` | live's instruments | three voices on your lead line: synth, fm, sample; pick one | |
 | D | `synth-oscillators` | oscillators, the sound source | shape lead: wave | |
 | D | `synth-pitch-vs-amplitude` | pitch vs amplitude | detune your lead by a few cents; velocity on two notes | |
+| D | `midi-piano-roll` | the piano roll | your lead on the grid: add, move, lengthen, soften, delete notes | |
 | S | `hats` | hats | adds hats.hats; snap taught | snap toggle on the play-in, hat visual |
-| D | `midi-piano-roll` | the piano roll | edit one hat in the grid: move, lengthen, delete | |
 | S | `clap-and-snare` | clap and snare | adds drums.clap | clip and goal exist |
 | D | `session-view` | session view | your song as clips: launch the drums alone, then everything | |
 | D | `clips` | clips: midi vs audio | your hats as midi, your sample as audio; swap one | |

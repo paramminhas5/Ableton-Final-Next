@@ -453,21 +453,21 @@
     "parent": "synth-what-is-sound"
    },
    {
+    "slug": "midi-piano-roll",
+    "kind": "deeper",
+    "isNew": false,
+    "title": "the piano roll",
+    "does": "your lead on the grid: add, move, lengthen, soften, delete notes",
+    "code": "",
+    "parent": "synth-what-is-sound"
+   },
+   {
     "slug": "hats",
     "kind": "song",
     "isNew": false,
     "title": "hats",
     "does": "adds hats.hats; snap taught",
     "code": "snap toggle on the play-in, hat visual"
-   },
-   {
-    "slug": "midi-piano-roll",
-    "kind": "deeper",
-    "isNew": false,
-    "title": "the piano roll",
-    "does": "edit one hat in the grid: move, lengthen, delete",
-    "code": "",
-    "parent": "hats"
    },
    {
     "slug": "clap-and-snare",
