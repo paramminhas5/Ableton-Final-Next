@@ -60,7 +60,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [lfo, lfo rate, lfo to, cutoff]
+    knobs: [lfo, lforate, lfoto, cutoff]
     say:
       mentor: >-
         Your lead now has an lfo of its own. Your song is playing. Turn lfo up and hear the filter start to breathe on its own, opening and closing without you touching anything.

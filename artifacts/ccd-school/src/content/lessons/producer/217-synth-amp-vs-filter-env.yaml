@@ -61,7 +61,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [release, f release, env, f decay]
+    knobs: [release, frel, env, fdecay]
     say:
       mentor: >-
         Two envelopes, two jobs, and now they're separate. Your song is playing. release is the amp envelope: how long the note rings after you let go. f release is the filter envelope's own release: how long the brightness takes to close.

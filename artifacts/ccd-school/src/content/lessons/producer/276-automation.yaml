@@ -57,7 +57,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [lfo, lfo rate, cutoff, lfo to]
+    knobs: [lfo, lforate, cutoff, lfoto]
     say:
       mentor: >-
         Automation is a knob moving by itself over time, drawn as a line. The closest thing to a drawn line that repeats is an lfo, and your lead has one. Turn lfo up and set lfo rate very slow: the cutoff now rises and falls over a few bars on its own, like a long automation curve.

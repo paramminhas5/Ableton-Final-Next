@@ -4,7 +4,7 @@ number: 243
 title: fm basics
 minutes: 5
 song:
-  changes: bass.bass
+  changes: lead.bass
   why: a bass with a bright, bitey start and a rounder tail is the sound fm is famous for
 learn: >-
   How fm makes rich tones from simple waves, what the ratio and the modulator level do, and a bitey start on
@@ -59,17 +59,17 @@ steps:
           fm between its oscillators too.
 
   - kind: shape
-    layer: bass
+    layer: lead
     knobs: [fm, ratio, env, cutoff]
     say:
       mentor: >-
-        This is real fm. Your bass is playing. Turn fm up and a second oscillator, the modulator, starts bending the first one's pitch thousands of times a second. You don't hear a wobble, you hear new overtones: glassy, metallic, growly.
+        This is real fm. Your lead is playing. Turn fm up and a second oscillator, the modulator, starts bending the first one's pitch thousands of times a second. You don't hear a wobble, you hear new overtones: glassy, metallic, growly.
         
-        ratio sets how fast the modulator runs compared to the note. Whole numbers like 1, 2 and 3 give harmonic, bell-like tones. Half, at the bottom, gives a sub an octave down. env makes the fm amount fall away after each note starts, so you get the classic bright attack that settles into a clean bass. Leave fm where your bass has bite but still sits under your kick.
+        ratio sets how fast the modulator runs compared to the note. Whole numbers like 1, 2 and 3 give harmonic, bell-like tones. Half, at the bottom, gives a sub an octave down. env makes the fm amount fall away after each note starts, so you get the classic bright attack that settles into a clean tone. Leave fm where your lead has bite but still sits with your bass.
       straight: >-
-        fm bends one oscillator with another. fm is how much, ratio is the modulator's speed compared to the note, env makes it settle after the attack. Keep it where the bass has bite.
+        fm bends one oscillator with another. fm is how much, ratio is the modulator's speed compared to the note, env makes it settle after the attack. Keep it where the lead has bite.
       eli5: >-
-        fm makes a second sound shake the first one really fast. It turns a smooth bass into a growly one.
+        fm makes a second sound shake the first one really fast. It turns a smooth lead into a growly one.
 
   - kind: ask
     q: In fm, which wave do you actually hear?

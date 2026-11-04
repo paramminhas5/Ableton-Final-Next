@@ -60,7 +60,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [lfo to, lfo, env, lfo rate]
+    knobs: [lfoto, lfo, env, lforate]
     say:
       mentor: >-
         Routing means choosing what a movement drives. The same lfo can shape three different things. Your song is playing with lfo a third of the way up.

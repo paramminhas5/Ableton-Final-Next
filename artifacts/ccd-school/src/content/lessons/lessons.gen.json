@@ -7927,18 +7927,14 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "grid",
           "layer": "lead",
-          "surface": "keys",
-          "goal": {
-            "notes": 4
-          },
           "say": {
-            "mentor": "Now put an octave in your melody. This tune replaces the notes in your song.\nThe keys here show the notes of your song's scale, seven of the twelve, so the first key and the last key are the same note, an octave apart. Press rec, wait out the count-in, play the first key, then the last key, then two more you like. Listen to the jump: the note doesn't change, it just gets bigger and brighter.",
-            "straight": "Record a new tune. First and last keys are the same note an octave apart. Rec, count-in, play the low one, the high one, then any two more.",
-            "eli5": "Press rec and wait for four ticks. Press the first key, then the last key. Same note, low and high! Then press two more keys you like."
-          },
-          "hint": "The first key and the last key share a name. Play them one after the other."
+            "mentor": "All twelve notes, including the black keys, are on this grid, one per row. Your lead is here. Find a note of your lead and tap the row twelve above it, in the same column: that's the same note an octave up. They sound like the same note, higher.\nNow tap a square one row above or below one of your notes. That's a semitone, the smallest step on the keyboard, and the black keys live in those rows. Add one note an octave up and one a semitone away, play them, and keep whichever your lead likes.",
+            "straight": "Rows are the twelve notes. Twelve rows up is the octave, the same note higher. One row is a semitone, where the black keys are. Add one of each.",
+            "eli5": "Count twelve rows up: same note, higher. One row up: the tiniest step."
+          }
         },
         {
           "kind": "ask",
@@ -8206,16 +8202,11 @@
         },
         {
           "kind": "tempo",
-          "set": "scale",
-          "choices": [
-            "minor",
-            "dorian",
-            "major"
-          ],
+          "set": "key",
           "say": {
-            "mentor": "You can't move your whole song to a new key in here yet, so you'll try the other half on it: modes. These three all keep your home note and change the notes around it.\nMinor here is aeolian, the darkest. Dorian lifts one note, the sixth. Major is ionian, the brightest, with three notes raised. Tap through them with your song playing and listen to the mood climb from dark to bright while your melody keeps its shape. Pick the one your song wants.",
-            "straight": "Three modes on your song's home note. Minor (aeolian) is darkest, dorian lifts the sixth, major (ionian) is brightest. Same melody shape, different mood. Pick one.",
-            "eli5": "Tap minor, dorian and major. Your tune keeps its shape but goes from gloomy to a bit brighter to sunny. Pick the one you like."
+            "mentor": "Transposition moves the whole song up or down without changing a single interval, so it still sounds like your song, just higher or lower. Your song is playing. Turn shift and hear every melodic part move together while the drums stay put.\nUp two semitones is a classic lift. Down five is a different mood entirely, darker and heavier. The key name updates as you turn. A singer might need it in a different key; a dj might want it to fit the next track. Keep the key where your song feels best.",
+            "straight": "shift moves every melodic part together, in semitones. The drums stay. Keep the key that feels best.",
+            "eli5": "Turn the knob and the whole song goes higher or lower, like singing the same tune in a higher voice."
           }
         },
         {
@@ -11627,17 +11618,13 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "grid",
           "layer": "hats",
-          "surface": "pads",
-          "snap": true,
-          "goal": {
-            "notes": 4
-          },
           "say": {
-            "mentor": "Your song, with snap switched on. Snap does what a piano roll's grid does: every hit you play lands on the nearest line. Play a few hats wherever you feel them. Then press play and watch them sit exactly in time.\nGot one wrong? Tap undo and it's gone, the same as deleting a note in the grid.",
-            "straight": "Snap is on: each hit lands on the nearest grid line. Play a few hats. Undo removes the last one.",
-            "eli5": "Play some hats. The app moves each one onto the closest line, so they're perfectly in time. Made a mistake? Tap undo."
+            "mentor": "This is the piano roll: every note your part plays, drawn on a grid. Rows are pitches, columns are sixteenths, and the bright line is where the song is playing. Your hats are here. Tap an empty square to add a hat, tap a hat to pick it.\nWith a note picked, the buttons under the grid move it, make it longer or shorter, louder or softer, or delete it. Add an open hat on an offbeat, make one hit quieter, nudge one later. In Live this is the midi note editor; the ideas are the same everywhere.",
+            "straight": "The grid is the piano roll. Tap to add a note, tap a note to pick it, then move, stretch, soften or delete it with the buttons. Change your hats.",
+            "eli5": "The grid shows your notes as little blocks. Tap to add one. Tap a block to change it."
           }
         },
         {
@@ -11857,16 +11844,14 @@
         },
         {
           "kind": "tempo",
-          "marks": [
-            100,
-            120,
-            124,
-            128
+          "set": "sample",
+          "choices": [
+            "warp"
           ],
           "say": {
-            "mentor": "Here's your song. Turn the tempo right down, then right up. Every part follows, perfectly in time, and nothing sounds stretched. That's midi doing its thing: the notes just arrive sooner or later.\nIf your hats were a recording instead, the app would have to stretch the sound to keep up. Pick the tempo that feels best and keep it.",
-            "straight": "Change the tempo. Your midi parts follow cleanly, nothing stretched. Pick a tempo and keep it.",
-            "eli5": "Make your song faster and slower. All your notes keep up perfectly, because they're note lists, not recordings. Pick a speed you like."
+            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
+            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
+            "eli5": "This is a recording. It doesn't know the tempo. Warping teaches it to follow."
           }
         },
         {
@@ -12089,13 +12074,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
-            "detune",
-            "wave"
+            "fm",
+            "ratio",
+            "wave",
+            "env"
           ],
           "say": {
-            "mentor": "Your lead isn't an fm synth, but it does share Operator's big idea: more than one oscillator on every note. It has three. Detune spreads them apart by a few cents, so they rub and widen into one bigger voice. Wave changes what each one is made of, saw at one end, square at the other.\nPush detune up and listen to your lead go from a single line to a wide stack. Then try the wave with it. Keep the voice that cuts through your song best.",
-            "straight": "Your lead has three oscillators per note. Detune spreads them a few cents for width. Wave goes from saw to square. Keep the voice that cuts through.",
-            "eli5": "Your tune is made of three waves at once. Detune spreads them out so it sounds big. Wave changes their shape. Pick the one you like."
+            "mentor": "Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.\nratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. wave picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.",
+            "straight": "Your lead is an fm synth now. fm is the amount, ratio is the modulator's multiple of the note. 1 and 2 are warm, higher is metallic. Keep what cuts through.",
+            "eli5": "This is like Operator in Live. One sound shakes another. Low ratio is soft, high ratio is like a bell."
           }
         },
         {
@@ -12805,14 +12792,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
-            "attack",
+            "release",
+            "frel",
             "env",
-            "release"
+            "fdecay"
           ],
           "say": {
-            "mentor": "Here's your song. On your lead the filter envelope has a fixed shape: it jumps open at the start of each note and closes over about a third of a second. The amp envelope is yours to set. So they're already out of step, and you get to choose how far.\nTurn env up so you can hear the filter move. Now raise attack: the volume swells in slowly while the brightness has already started closing, so each note fades in getting darker. Then try release for how long the dark tail rings. Keep the shape you like.",
-            "straight": "Your lead's filter envelope opens fast and closes in about a third of a second. Env sets how much. Attack and release shape the volume. Slow attack plus env: notes swell in as they darken.",
-            "eli5": "Turn env up so each note flashes bright. Turn attack up so notes fade in slowly. Now they get louder while getting darker. Release makes the end ring on."
+            "mentor": "Two envelopes, two jobs, and now they're separate. Your song is playing. release is the amp envelope: how long the note rings after you let go. f release is the filter envelope's own release: how long the brightness takes to close.\nSet release long and f release short. The note hangs on but goes dull at once. Now swap them: a short note that stays bright right to the end. f decay is how fast the filter settles while the note is held, and env is how far it opens. Pick the pair that gives your lead its character.",
+            "straight": "release is the amp envelope's tail, f release the filter envelope's. Set them apart and hear a long dull note, then a short bright one. f decay and env shape the filter's fall.",
+            "eli5": "One knob says how long the note lasts. The other says how long it stays bright. They don't have to match."
           }
         },
         {
@@ -13268,16 +13256,13 @@
           ]
         },
         {
-          "kind": "shape",
+          "kind": "tempo",
+          "set": "arp",
           "layer": "chords",
-          "knobs": [
-            "voicing",
-            "spread"
-          ],
           "say": {
-            "mentor": "Here's your song with your chords. Voicing stacks extra notes onto every note your chords play, the way Live's Chord device adds intervals. Turn it up: first an octave below comes in, then an octave above, then the fifth. Here it happens inside the synth rather than as a midi effect, but you hear the same thing, fuller chords from the same keys.\nSpread detunes the copies a little for width. Keep the chords that fill your song best.",
-            "straight": "Voicing adds notes to every chord note: an octave below, an octave above, then the fifth. Spread widens. Same keys, fuller chords. Keep one.",
-            "eli5": "Voicing adds more notes to your chords, lower and higher ones, so they sound bigger. Spread makes them wider. Keep the one you like."
+            "mentor": "Midi effects change the notes before they reach the instrument. The arpeggiator is the famous one, and here it is on your chords. Your song is playing. Set it to up and your held chord becomes a run of single notes climbing through it, one per sixteenth.\nTry down, then up and down. Try two octaves and it climbs higher before it starts again. 1/8 is half the speed of 1/16. Your chords are still your chords underneath: switch it off and they come back exactly as you played them, because the arpeggiator only changes what gets played, not what's saved.",
+            "straight": "The arpeggiator turns each held chord into a run of its notes. Pick a direction, a rate and how many octaves. Off gives your chords back.",
+            "eli5": "A chord is notes all at once. The arpeggiator plays them one after another, up or down, really fast."
           }
         },
         {
@@ -13513,16 +13498,13 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "comp",
           "layer": "lead",
-          "surface": "keys",
-          "goal": {
-            "notes": 6
-          },
           "say": {
-            "mentor": "Here's your song. Our version works a little differently: press rec and the app records, with no separate capture button. But the habit is the same. Don't plan it. Press rec, play loosely over the loop, and see what comes out.\nPlayed something good? Use it. Not quite? Undo, or skip and keep the lead you had. Playing freely and keeping only what worked is the whole idea.",
-            "straight": "Press rec and play loosely over your song. Keep the take if it worked, undo or skip if not. Same idea as Capture MIDI.",
-            "eli5": "Press rec and just play, no plan. If you like it, keep it. If not, skip it and your old tune stays."
+            "mentor": "Capture midi is Live's way of keeping what you played when you weren't recording. Here every take is kept the same way. Play your lead through once, loosely, and press keep on the take. Do it up to three times.\nThen the take lanes appear: for each quarter of the loop, choose the take that had the best bit. Nothing you played was lost, which is the whole point of Capture. Keep the comp and that's your lead.",
+            "straight": "Play up to three takes, every one is kept, then pick the best piece of each. Nothing is lost.",
+            "eli5": "Play it a few times. Keep the best bits of each try."
           }
         },
         {
@@ -13863,11 +13845,14 @@
         },
         {
           "kind": "tempo",
-          "set": "kit",
+          "set": "sample",
+          "choices": [
+            "hit"
+          ],
           "say": {
-            "mentor": "Here's your own beat. Switch from the synth kit to the recorded kit: same pattern, same timing, but now every hit is a recording of a real kick, clap, hat and snare, played back by a sampler on each pad.\nListen to the texture. The recordings carry a bit of room and grit. Pick the kit your song wants and keep it.",
-            "straight": "Your beat on the synth kit, then the recorded kit. Same pattern, recordings on each pad. Pick one.",
-            "eli5": "Same beat, two kits. The recorded one uses real drum sounds. Tap between them and keep the one you like."
+            "mentor": "Simpler is a sampler: one sound, played back however you like. Here's a clap. Your song is playing with it on 2 and 4. Load a file of your own, or record your mic, and it swaps in.\ntune repitches it, start skips into the sound, release decides how long it rings, reverse flips it. Pick as keys and the same sound becomes a melody, repitched for each note, which is exactly what Simpler does in classic mode. Keep the sound you like best in your song.",
+            "straight": "One sound, played back and shaped: tune, start, release, reverse. Load your own, or play it as keys. That's Simpler.",
+            "eli5": "Any sound can be an instrument. Load one, then tune it and trim it."
           }
         },
         {
@@ -13974,16 +13959,15 @@
           ]
         },
         {
-          "kind": "shape",
-          "layer": "drums",
-          "knobs": [
-            "tune",
-            "decay"
+          "kind": "tempo",
+          "set": "sample",
+          "choices": [
+            "hit"
           ],
           "say": {
-            "mentor": "Every sample on every pad gets two basic choices: what pitch it plays at, and how long it lasts. Here they are on your kick, with your song playing.\nTurn tune and the kick sits lower and heavier or higher and tighter. Turn decay and it gets short and clipped or long and booming. Find the kick that sits with your bass, and keep it.\nThese knobs work on the synth kit. If your song is on the recorded kit, switch back to synth in drums from recordings to hear them.",
-            "straight": "Tune sets your kick's pitch, decay sets how long it lasts. Set both so it sits with your bass, then keep it. These knobs act on the synth kit, not the recorded one.",
-            "eli5": "Tune makes your kick higher or lower. Decay makes it shorter or longer. Turn them until your kick sounds right with your bass."
+            "mentor": "The deeper sampler controls. Your sample is on the screen as a wave. Turn start and the white line moves into the sound: the attack is skipped and the hit gets softer and later-sounding. Pull it back for the full punch.\nrelease is the tail: short and it's a tight click, long and it rings out. reverse flips the sound so it swells up to where it used to begin, which is where reverse cymbals come from. Try your own file as keys and set start just past any silence at the front.",
+            "straight": "start skips into the sound, release sets the tail, reverse flips it. Set start just past the silence.",
+            "eli5": "Start is where the sound begins playing. Release is how long it lasts. Reverse plays it backwards."
           }
         },
         {
@@ -14087,11 +14071,14 @@
         },
         {
           "kind": "tempo",
-          "set": "kit",
+          "set": "sample",
+          "choices": [
+            "hit"
+          ],
           "say": {
-            "mentor": "Here's your beat on the pads. Switch to the recorded kit and every pad plays a recording: a real kick, clap, hat and snare, on exactly the pattern you made.\nGo back and forth a few times. The synth kit is clean and easy to shape. The recorded kit has air and grit around each hit. Keep the one your song wants.",
-            "straight": "Your beat on the synth kit and the recorded kit. Same pattern, recorded hits. Pick one and keep it.",
-            "eli5": "Same beat, two kits. One is made by the computer, one is real drum recordings. Keep the one you like."
+            "mentor": "Drum Sampler is Live's one-shot sampler for a single drum hit. Here's a kick from the recorded kit on every beat in your song. Switch to the clap or the snare and hear each one take the same pattern.\ntune shifts the pitch: a kick tuned down is heavier, a snare tuned up is snappier. release trims the tail so hits stay tight. Load your own hit or record one and it drops in the same way. Keep the hit, tuned how you like it.",
+            "straight": "One drum hit, played in a pattern and tuned. Swap between kick, clap and snare or load your own.",
+            "eli5": "Pick a drum sound. Tune it up or down. Put it in your song."
           }
         },
         {
@@ -14181,19 +14168,16 @@
           ]
         },
         {
-          "kind": "play",
-          "layer": "drums",
-          "surface": "pads",
-          "snap": true,
-          "goal": {
-            "notes": 4
-          },
+          "kind": "tempo",
+          "set": "sample",
+          "choices": [
+            "slice"
+          ],
           "say": {
-            "mentor": "Your pads are your slices. Each one holds a short piece of drum sound, the way a sliced loop would. Your beat keeps playing underneath.\nPress rec, wait out the count-in, and play a new rhythm on pads your beat isn't using yet, like the toms, the rim or the percs. Snap is on, so every tap lands on the grid. Play at least four hits, then listen to how the new pieces change your groove.",
-            "straight": "Treat the pads as slices. Record a new rhythm over your beat on unused pads: toms, rim, percs. Snap is on. Four hits or more.",
-            "eli5": "Each pad is a little piece of drum sound. Press rec and tap a new pattern on the pads you haven't used yet. The snap helper keeps your taps in time."
-          },
-          "hint": "Leave the kick pad alone, or your new taps replace your kick."
+            "mentor": "Slicing cuts a loop into pieces and puts each one on a pad. The drum loop is cut into eight slices, and you can see the cut lines on the wave. In order plays it as recorded. shuffled rearranges it. stutter repeats pieces.\nTap the numbered pads to build your own order, eight taps makes a bar. Tune repitches the whole thing, release trims each slice. This is what Live does when you slice to a new midi track: every slice becomes a pad and the midi clip plays them back in order, which you can then rewrite.",
+            "straight": "The loop is cut into eight slices on eight pads. Play them in order, shuffled, or tap your own order.",
+            "eli5": "Chop a drum loop into eight bits. Now play the bits in any order you like."
+          }
         },
         {
           "kind": "ask",
@@ -14299,17 +14283,15 @@
           ]
         },
         {
-          "kind": "shape",
-          "layer": "drums",
-          "knobs": [
-            "tune",
-            "decay",
-            "level"
+          "kind": "tempo",
+          "set": "sample",
+          "choices": [
+            "hit"
           ],
           "say": {
-            "mentor": "The same three moves you'd make on an audio clip, on your kick with your song playing. Tune is transpose: it moves the kick up or down in semitones. Decay is where the sound ends, like dragging a clip's end marker earlier or later. Level is gain, how loud the sound is before anything else touches it.\nTry a kick a couple of semitones lower, a bit shorter, sitting just under the clap. Keep whatever sounds best with your bass.",
-            "straight": "On your kick: tune is transpose, decay is where it ends, level is gain. Set them so the kick sits with your bass, then keep it. These act on the synth kit.",
-            "eli5": "Tune makes your kick higher or lower. Decay makes it shorter or longer. Level makes it louder or quieter. Turn them until it sounds good."
+            "mentor": "An audio clip has three controls you always reach for: where it starts, how it's pitched, and how loud it is. Your sample is here. start moves the start marker into the sound. tune is the clip's transpose. The level is on the song's channel fader, which you set in the mixing lessons.\nTry start a little way in to tighten a hit, tune down a few semitones for weight. In Live these live in the clip view: start and end markers, transpose and gain.",
+            "straight": "start, tune and (on the fader) gain: the three audio clip controls. Tighten the start, tune for weight.",
+            "eli5": "Where it starts, how high it is, how loud it is. That's an audio clip."
           }
         },
         {
@@ -14420,19 +14402,13 @@
           ]
         },
         {
-          "kind": "play",
-          "layer": "drums",
-          "surface": "pads",
-          "snap": true,
-          "goal": {
-            "notes": 4
-          },
+          "kind": "tempo",
+          "set": "mic",
           "say": {
-            "mentor": "We can't reach your mic here, but recording a take works the same way. Your song is playing. Press rec, and the count-in is your moment to get ready, like arming a track. Then play the pads along with your song: a rim on the offbeats, a tom fill at the end of the bar, whatever feels good.\nThat take is your playing, with your timing. Listen back, and keep it if it adds something.",
-            "straight": "Record a take over your song on the pads. Press rec, wait out the count-in, play at least four hits on spare pads. Keep it if it works.",
-            "eli5": "Press rec, wait for the ticks, then tap some pads along with your song. That's a recording of you playing."
-          },
-          "hint": "Use pads your beat doesn't use yet, so your kick and clap stay as they are."
+            "mentor": "Recording audio means capturing real sound. Press record mic and you have two seconds: clap, snap, tap the desk, say a word. Your browser will ask to use the microphone the first time.\nWhat you recorded lands on the sampler and plays on 2 and 4 in your song. Try it on every beat, or as keys where your sound is repitched into a melody. tune and start shape it, release trims the tail. If there's no mic here, load a file or use a recorded hit. In Live, this is an audio track with the input armed.",
+            "straight": "Press record mic, make a sound for two seconds, and it becomes part of your song. Choose where it plays and shape it.",
+            "eli5": "Press the button and make a noise. Now the noise is an instrument in your song."
+          }
         },
         {
           "kind": "ask",
@@ -14539,16 +14515,14 @@
         },
         {
           "kind": "tempo",
-          "marks": [
-            100,
-            120,
-            124,
-            128
+          "set": "sample",
+          "choices": [
+            "warp"
           ],
           "say": {
-            "mentor": "Here's your song. Turn the tempo and every part follows, because your parts are notes and the engine plays each note on the beat it belongs to. Even the recorded kit follows: each hit is a short sample, fired on its step.\nA long recorded loop wouldn't do that on its own. That's the job warping does in Live. Pick the tempo that feels right for your song, and know that any loop you bring in will be warped to it.",
-            "straight": "Turn your song's tempo. Your parts are notes, so they follow. A recorded loop would need warping to do the same. Pick your tempo.",
-            "eli5": "Turn the knob to make your song faster or slower. Everything you made keeps up. A recording would need warping to keep up too."
+            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
+            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
+            "eli5": "This is a recording. It doesn't know the tempo. Warping teaches it to follow."
           }
         },
         {
@@ -14656,15 +14630,14 @@
         },
         {
           "kind": "tempo",
-          "marks": [
-            90,
-            124,
-            140
+          "set": "sample",
+          "choices": [
+            "warp"
           ],
           "say": {
-            "mentor": "Here's your song. Drag the tempo a long way, down to 90 and up to 140. Your parts are notes, so they follow without any stretching at all.\nNow imagine each part were a recording instead. At 90 your drums would need Beats to stay crisp, your bass would want Tones, your chords would sit happily in Texture, and the whole song bounced to one file would need Complex. The bigger the move, the more that choice shows. Then set your song back to the tempo you love.",
-            "straight": "Move your song far, 90 to 140. Notes follow cleanly. As recordings, your drums would want Beats, bass Tones, chords Texture, the full song Complex. Then set your tempo.",
-            "eli5": "Make your song really slow, then really fast. Your notes keep up easily. Recordings would each need their own warp mode to keep up. Then pick the speed you like."
+            "mentor": "Three ways to make a recording follow the tempo, and you can hear them side by side. The loop was recorded at 120. Choose 100, then 140, and try each mode.\nwarp off is honest: the loop ignores the tempo. repitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants repitch.",
+            "straight": "warp off ignores the tempo. repitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.",
+            "eli5": "Three ways to speed up a recording. One changes the pitch, one chops it up, one doesn't follow at all."
           }
         },
         {
@@ -14908,13 +14881,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
-            "cutoff",
-            "res"
+            "lfo",
+            "lforate",
+            "lfoto",
+            "cutoff"
           ],
           "say": {
-            "mentor": "Our lead doesn't have its own lfo yet, so you're going to be the lfo. Your song is playing. Set res a little higher so the filter has some bite.\nNow turn cutoff slowly up over one bar and back down over the next, again and again, in time with the kick. Hear that sweep? That's exactly what an lfo on the filter does, only it never gets tired. The speed you're turning is the rate. How far you turn is the depth. Leave cutoff where your lead sounds best when you stop.",
-            "straight": "You're the lfo. Raise res a bit, then sweep cutoff up for a bar and down for a bar, in time. Your speed is the rate, your range is the depth. Leave cutoff where it sounds best.",
-            "eli5": "Pretend you're a robot hand. Turn cutoff up slowly, then down slowly, again and again with the beat. That's what an lfo does by itself."
+            "mentor": "Your lead now has an lfo of its own. Your song is playing. Turn lfo up and hear the filter start to breathe on its own, opening and closing without you touching anything.\nlfo rate is how fast it swings. Slow is a tide, fast is a wobble. lfo to sends it somewhere else: to the pitch for vibrato, to the volume for tremolo. Set cutoff where the sweep sits best over your bass. Leave the lfo where your lead sounds alive, or at zero if you like it still.",
+            "straight": "Turn lfo up and the filter moves by itself. lfo rate sets the speed, lfo to picks filter, pitch or volume. Leave it where it sounds good.",
+            "eli5": "Turn lfo up. A little robot now wiggles the knob for you. Rate is how fast it wiggles."
           }
         },
         {
@@ -15024,13 +14999,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
+            "lfoto",
+            "lfo",
             "env",
-            "glide"
+            "lforate"
           ],
           "say": {
-            "mentor": "Your lead has two routes already wired, and each knob is the amount. Env sends an envelope to the filter: each note starts bright and settles darker. Glide sends movement to pitch: each note slides up or down into the next instead of jumping.\nSame melody, two destinations. Try env alone, then glide alone, then both, with your song playing. Keep the one that makes your lead feel right, or keep both.",
-            "straight": "Env is an envelope routed to the filter: each note opens bright. Glide moves pitch: notes slide into each other. Try each, keep one or both.",
-            "eli5": "Env makes each note start bright and get darker. Glide makes notes slide like a trombone. Try both and keep your favourite."
+            "mentor": "Routing means choosing what a movement drives. The same lfo can shape three different things. Your song is playing with lfo a third of the way up.\nTurn lfo to across its three stops and listen. To the filter it's a sweep. To the pitch it's vibrato, your lead wavering like a singer. To the volume it's tremolo, a pulse. env is a different source, the envelope, and it only drives the filter: raise it and each note starts bright and settles. Pick one routing that suits your lead and keep it.",
+            "straight": "lfo to picks what the lfo drives: filter, pitch or volume. env is the envelope driving the filter. Keep the routing you like.",
+            "eli5": "The wiggle can shake the brightness, the note, or the loudness. Pick which one."
           }
         },
         {
@@ -15098,7 +15075,7 @@
       "title": "fm basics",
       "minutes": 5,
       "song": {
-        "changes": "bass.bass",
+        "changes": "lead.bass",
         "why": "a bass with a bright, bitey start and a rounder tail is the sound fm is famous for"
       },
       "learn": "How fm makes rich tones from simple waves, what the ratio and the modulator level do, and a bitey start on your own bass.",
@@ -15134,15 +15111,17 @@
         },
         {
           "kind": "shape",
-          "layer": "bass",
+          "layer": "lead",
           "knobs": [
-            "wave",
-            "env"
+            "fm",
+            "ratio",
+            "env",
+            "cutoff"
           ],
           "say": {
-            "mentor": "Our bass is a filter synth, not an fm one, so it can't do ratios. But it can do the famous fm bass shape, the bright start that settles, and that's what your ears will recognise. Your song is playing.\nTurn wave toward the buzzier end so there are more harmonics to work with. Then raise env: each bass note now starts brighter and rounds off, just like a modulator fading out. Keep it if your bass bites better.",
-            "straight": "Our bass can't set an fm ratio, but it can copy the fm bass shape. Buzzier wave, then raise env so each note starts bright and rounds off. Keep it.",
-            "eli5": "Make the bass buzzier with wave. Then turn env up so every note starts with a bite and then goes soft."
+            "mentor": "This is real fm. Your lead is playing. Turn fm up and a second oscillator, the modulator, starts bending the first one's pitch thousands of times a second. You don't hear a wobble, you hear new overtones: glassy, metallic, growly.\nratio sets how fast the modulator runs compared to the note. Whole numbers like 1, 2 and 3 give harmonic, bell-like tones. Half, at the bottom, gives a sub an octave down. env makes the fm amount fall away after each note starts, so you get the classic bright attack that settles into a clean tone. Leave fm where your lead has bite but still sits with your bass.",
+            "straight": "fm bends one oscillator with another. fm is how much, ratio is the modulator's speed compared to the note, env makes it settle after the attack. Keep it where the lead has bite.",
+            "eli5": "fm makes a second sound shake the first one really fast. It turns a smooth lead into a growly one."
           }
         },
         {
@@ -16396,9 +16375,37 @@
             "send"
           ],
           "say": {
-            "mentor": "Here's your song. Do the whole order on one part, your hats. Level first: down until they nearly vanish, then up until they just tick along on top. Then high, the eq: a small cut if they sting, a small boost if they sound dull. Last, send: a touch of reverb pushes them back behind the kick.\nKeep each move small, and listen to the whole song, not just the hats.",
-            "straight": "Level first, until the hats just sit on top. Then high: cut if they sting, boost if dull. Then a little send for space.",
-            "eli5": "Make your hats the right loudness first. Then make them a bit brighter or darker. Then add a tiny bit of echo."
+            "mentor": "Mixing is placing every part. Start with your hats: level for how loud, high for how bright, send for how far away. Your song is playing.",
+            "straight": "Hats first: level, high and send.",
+            "eli5": "Make the hats the right loudness, brightness and distance."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "bass",
+          "knobs": [
+            "level",
+            "low",
+            "duck"
+          ],
+          "say": {
+            "mentor": "Now your bass, the same way. Level against the kick, low for weight, and duck so it steps aside each time the kick hits. Both parts keep their settings when you add.",
+            "straight": "Now the bass: level, low and duck under the kick.",
+            "eli5": "Now the bass. Make it fit under the kick."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "level",
+            "pan",
+            "send"
+          ],
+          "say": {
+            "mentor": "And your lead: level so it leads without shouting, pan it a little off centre, send for air. Three parts placed, and that's a mix.",
+            "straight": "Now the lead: level, pan and send. Three parts placed.",
+            "eli5": "Now the lead. Loudness, left or right, and space."
           }
         },
         {
@@ -16637,12 +16644,27 @@
           "knobs": [
             "low",
             "mid",
-            "high"
+            "high",
+            "drive"
           ],
           "say": {
-            "mentor": "Here's your song with an eq on your whole drum kit, not just one drum. Turn low and the kick and clap both get fuller. Turn high and both get brighter. They move together, like one instrument.\nSet it so your kit sounds like one drummer playing one kit.",
-            "straight": "One eq on the whole kit. Kick and clap change together. Set it so they sound like one instrument.",
-            "eli5": "These knobs change all your drums at the same time. Turn them until your drums sound like one big drum kit."
+            "mentor": "A group is several tracks through one channel. Your kick and clap share this channel: turn low, mid, high and drive and both move. Your song is playing.",
+            "straight": "Kick and clap through one channel.",
+            "eli5": "The drums all go through one channel."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "hats",
+          "knobs": [
+            "high",
+            "level",
+            "drive"
+          ],
+          "say": {
+            "mentor": "Your hats are the other member of the drum group. Match the drive you gave the kick and clap so the group sounds like one kit, then set their level in it. In Live you'd make one group track and put all three inside.",
+            "straight": "Hats join the group: match the drive, set the level.",
+            "eli5": "Hats join the drums. Make them sound like one kit."
           }
         },
         {
@@ -17123,9 +17145,22 @@
             "echo"
           ],
           "say": {
-            "mentor": "Here's your song, with reverb and echo on your drum kit. Here they act on the kick and clap together, so keep them low: a lot of reverb on a kick turns to mud. In Live you'd send just the clap.\nTry send on its own and listen to the clap get a room around it. Then set send back down and try echo instead. Keep the one that suits your song, or neither.",
-            "straight": "Send is reverb, echo is delay, on the whole kit here, so keep both low. Try each alone. Keep one or neither.",
-            "eli5": "Turn send up a little for a big room. Turn it back down and try echo for repeats. Pick the one you like."
+            "mentor": "Reverb and delay on your drums. send is reverb, a room; echo is delay, repeats. Your song is playing. Keep the kick's send low so the low end stays tight.",
+            "straight": "Reverb (send) and delay (echo) on the drums. Keep send low for the kick.",
+            "eli5": "Room and repeats on the drums."
+          }
+        },
+        {
+          "kind": "shape",
+          "layer": "hats",
+          "knobs": [
+            "send",
+            "echo"
+          ],
+          "say": {
+            "mentor": "Now your hats, which can take much more. Send them further back and give them a touch of echo. Two parts, two different amounts, which is the point: space is per part.",
+            "straight": "Now the hats, with more of both. Space is set per part.",
+            "eli5": "Hats can go further away. Try it."
           }
         },
         {
@@ -17615,16 +17650,13 @@
           ]
         },
         {
-          "kind": "shape",
+          "kind": "tempo",
+          "set": "macro",
           "layer": "lead",
-          "knobs": [
-            "cutoff",
-            "send"
-          ],
           "say": {
-            "mentor": "Here's your lead with two knobs a macro could join: cutoff and send. Move them together, cutoff up as send goes up, and hear your lead open out and move back into the room in one sweep. That pair is exactly what you'd put on one macro in Live.\nLeave them where your lead sounds best.",
-            "straight": "Cutoff and send, moved together like one macro. Open both, hear the sweep, leave them where you like.",
-            "eli5": "Turn both knobs up at the same time, like one big knob would. Hear your tune get brighter and further away."
+            "mentor": "A macro is one knob mapped to several. Your lead is playing. Turn the big knob and cutoff, res and drive all move together, each over its own range. That's a rack macro: one hand, a whole sound change.\nTap the chips to choose what the macro turns: add send for space, add lfo for movement, take drive out. Save a setting as a, turn to somewhere new and save b, then jump between them. Keep the setting you like.",
+            "straight": "One knob moving several. Pick which knobs it turns, save two settings, jump between them. Keep what you like.",
+            "eli5": "One big knob turns lots of little knobs at once."
           }
         },
         {
@@ -18214,12 +18246,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
-            "cutoff"
+            "lfo",
+            "lforate",
+            "cutoff",
+            "lfoto"
           ],
           "say": {
-            "mentor": "Here's your lead's cutoff. Play the knob the way automation would: start low, dark and muffled, then open it slowly over a few bars, as if you're building to a drop. Do it a couple of times. In Live, you'd draw that sweep once and the song would do it for you.\nThen leave the knob where your lead sounds best in the loop.",
-            "straight": "Sweep the cutoff from low to open over a few bars, like automation. Then leave it where it sounds best.",
-            "eli5": "Start the knob low so the sound is muffled. Turn it up slowly. That's what automation does by itself."
+            "mentor": "Automation is a knob moving by itself over time, drawn as a line. The closest thing to a drawn line that repeats is an lfo, and your lead has one. Turn lfo up and set lfo rate very slow: the cutoff now rises and falls over a few bars on its own, like a long automation curve.\nSet cutoff where the middle of the sweep should sit. lfo to on the volume gives a slow fade in and out instead. In Live you'd draw this in the automation lane; here the shape repeats every cycle. Keep the movement in your song.",
+            "straight": "A slow lfo is a repeating automation curve. Turn it up, set the rate slow, choose what it moves. Keep it.",
+            "eli5": "Automation is a knob that moves by itself. A slow wobble does that for you."
           }
         },
         {
@@ -18334,12 +18369,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
+            "lfo",
+            "lfoto",
+            "lforate",
             "level"
           ],
           "say": {
-            "mentor": "Here's your lead's level. This is the base, the spot a modulation lane would wobble around. Set it where your lead sits best in the song.\nThen picture a slow wobble on top: a touch louder on some notes, a touch softer on others, while your setting stays exactly where you left it.",
-            "straight": "Set your lead's base level. Modulation would wobble around this spot without moving it.",
-            "eli5": "Set how loud your tune is. A wiggle would go up and down around that, but your setting stays."
+            "mentor": "Modulation lanes in Live 12 add movement on top of a value without replacing it. The lfo here does the same: level is the value you set, and the lfo moves around it.\nSet lfo to the volume, lfo up a little, and the level pulses around where you left it. Change level and the pulse moves with it, which is the whole idea: the modulation is relative. Keep a gentle pulse or none.",
+            "straight": "The lfo adds movement around the level you set. Change level and the movement moves with it. That's a modulation lane.",
+            "eli5": "Set the loudness, then let the wobble move around it."
           }
         },
         {
@@ -18679,19 +18717,14 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "comp",
           "layer": "drums",
-          "surface": "pads",
-          "goal": {
-            "notes": 2,
-            "note": "clap"
-          },
           "say": {
-            "mentor": "Time to record takes. Your song plays underneath. Press rec, wait out the count-in, and tap your clap on two and four. Not happy with it? Tap undo to take it back and record another pass.\nEvery pass is a take. When one feels right, keep it, and it goes into your song in place of your old clap.",
-            "straight": "Record your clap on two and four. Undo and go again until one take feels right, then keep it.",
-            "eli5": "Press rec and tap the clap on two and four. If you don't like it, tap undo and try again."
-          },
-          "hint": "Skip one, hit on two, skip three, hit on four."
+            "mentor": "Take lanes keep every pass you record. Play your drums and keep the take, then do it again, up to three times. Each take sits in its own lane.\nThen comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.",
+            "straight": "Record up to three takes of your drums. Then, for each quarter of the loop, pick the take that was best. Keep the comp.",
+            "eli5": "Play it three times. Then build the best version from the best bits."
+          }
         },
         {
           "kind": "ask",
@@ -18788,17 +18821,13 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "comp",
           "layer": "bass",
-          "surface": "keys",
-          "snap": true,
-          "goal": {
-            "notes": 4
-          },
           "say": {
-            "mentor": "Ours is simpler: you choose whole takes. Your song plays underneath. Press rec, wait out the count-in, and play a new bass line, four notes or more. Undo and go again as many times as you like.\nKeep the take that grooves best with your kick, or skip and keep the bass you already have.",
-            "straight": "Record a new bass take, four notes or more. Retake as often as you like. Keep the best, or skip.",
-            "eli5": "Play a new bass line. If you don't like it, undo and try again. Keep the one you like best."
+            "mentor": "Take lanes keep every pass you record. Play your bass and keep the take, then do it again, up to three times. Each take sits in its own lane.\nThen comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.",
+            "straight": "Record up to three takes of your bass. Then, for each quarter of the loop, pick the take that was best. Keep the comp.",
+            "eli5": "Play it three times. Then build the best version from the best bits."
           }
         },
         {
@@ -18909,16 +18938,13 @@
           ]
         },
         {
-          "kind": "play",
+          "kind": "tempo",
+          "set": "comp",
           "layer": "lead",
-          "surface": "keys",
-          "goal": {
-            "notes": 4
-          },
           "say": {
-            "mentor": "Your turn. Your song plays underneath. Record your lead, four notes or more, and if it's not right, undo and go again without stopping to think too hard. Keep the flow.\nWhen a take makes you smile, keep it. Or skip, and keep the lead you already have.",
-            "straight": "Record your lead, four notes or more. Retake freely, judge at the end. Keep one, or skip.",
-            "eli5": "Play your tune. If you don't like it, undo and play again. Keep the one that makes you smile."
+            "mentor": "Take lanes keep every pass you record. Play your lead and keep the take, then do it again, up to three times. Each take sits in its own lane.\nThen comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.",
+            "straight": "Record up to three takes of your lead. Then, for each quarter of the loop, pick the take that was best. Keep the comp.",
+            "eli5": "Play it three times. Then build the best version from the best bits."
           }
         },
         {
@@ -19022,12 +19048,13 @@
           ]
         },
         {
-          "kind": "arrange",
-          "goal": "drop",
+          "kind": "tempo",
+          "set": "macro",
+          "layer": "lead",
           "say": {
-            "mentor": "Here's your song as sections. Make two different drops. In the first, everything plays. In the second, switch your lead or chords off so it hits with just drums and bass. Take the drums out of the section before at least one of them, so it lands.\nPlay it through and compare the two drops: same song, two versions, like two variations of one sound.",
-            "straight": "Two drops: one with everything, one with just drums and bass. Take the drums out before one of them. Compare.",
-            "eli5": "Make two big moments in your song, one full and one with fewer sounds. Turn the drums off just before one of them."
+            "mentor": "Macro variations are snapshots of all your macros. Set the big knob low, dark and dry, and save it as a. Turn it high, bright with movement, and save it as b.\nNow tap a, tap b, in time with the song. That's what Live's variations do: store a whole rack state and recall it with one click, which is how one lead becomes a verse sound and a drop sound. Keep whichever state you want your lead to sit in.",
+            "straight": "Save the macro low as a and high as b, then jump between them. That's a variation. Keep the state you want.",
+            "eli5": "Save two settings. Flip between them. Two sounds from one lead."
           }
         },
         {
@@ -19124,13 +19151,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
+            "fm",
+            "wave",
             "detune",
-            "wave"
+            "lfo"
           ],
           "say": {
-            "mentor": "Your lead in our instrument is a small stack already. Detune puts two copies of the sound slightly apart, and together they sound thicker and wider, like two layered voices. Turn detune up and hear your lead grow from one voice to two. Then try wave to change what both voices are made of.\nKeep it if your lead sounds bigger without going blurry or out of tune.",
-            "straight": "Detune stacks two copies slightly apart, like a two-voice layer. Wave changes both. Stop before it sounds out of tune.",
-            "eli5": "Turn detune up and your tune sounds like two instruments playing together. Stop before it sounds wobbly."
+            "mentor": "An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: a wave oscillator and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.\ndetune widens the wave layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.",
+            "straight": "Two voices on one note: wave and fm. Blend them with fm, widen with detune. That's a rack.",
+            "eli5": "Two sounds play every time you press one key."
           }
         },
         {
@@ -21726,13 +21755,15 @@
           "kind": "shape",
           "layer": "lead",
           "knobs": [
-            "cutoff",
-            "env"
+            "lfo",
+            "lforate",
+            "lfoto",
+            "cutoff"
           ],
           "say": {
-            "mentor": "Here's your song with your lead. An LFO would sweep the filter on its own over time. The closest move here is env: it makes the filter open on every note and close again, so your lead moves by itself without you touching a thing.\nSet cutoff low so there's room to open, then raise env until each note has a little wah to it. Keep it where your lead feels alive but not busy.",
-            "straight": "Your lead. Env opens the filter on every note by itself, the kind of automatic movement Max for Live's LFO gives you. Cutoff low, env up, stop before it's busy.",
-            "eli5": "Turn cutoff down, then turn env up. Now every note goes wah on its own. Stop where you like it."
+            "mentor": "Max for Live's most-used device is the LFO, a modulator you point at any knob in the set. Your lead has an lfo built in, so this is the same idea. Turn lfo up and point lfo to at the filter, then the pitch, then the volume.\nRate slow is a drift, fast is a shake. In Live you'd drop the LFO device on a track and click map, then the knob you want. Keep a movement that suits your lead.",
+            "straight": "An lfo you point at any knob, like Max for Live's LFO. Choose the target and rate. Keep it.",
+            "eli5": "A wobble you can aim at any knob. Aim it, set the speed, keep it."
           }
         },
         {

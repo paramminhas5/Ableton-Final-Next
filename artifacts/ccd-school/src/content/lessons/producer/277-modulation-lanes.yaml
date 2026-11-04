@@ -58,7 +58,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [lfo, lfo to, lfo rate, level]
+    knobs: [lfo, lfoto, lforate, level]
     say:
       mentor: >-
         Modulation lanes in Live 12 add movement on top of a value without replacing it. The lfo here does the same: level is the value you set, and the lfo moves around it.

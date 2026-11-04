@@ -58,7 +58,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [lfo, lfo rate, lfo to, cutoff]
+    knobs: [lfo, lforate, lfoto, cutoff]
     say:
       mentor: >-
         Max for Live's most-used device is the LFO, a modulator you point at any knob in the set. Your lead has an lfo built in, so this is the same idea. Turn lfo up and point lfo to at the filter, then the pitch, then the volume.
