@@ -7,6 +7,7 @@ import "@/components/m1/lesson.css";
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { DashTour } from "./Tour";
+import { YouCard } from "./YouCard";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
@@ -87,6 +88,7 @@ export function Today() {
     if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }
     if (!layers) { if (offer) audition(previewLayer(track, offer)); return; }
     setPlaying(true);
+    setView("track");
     await playTrack(() => trackRef.current, s => setStep(s));
   };
 
@@ -167,6 +169,7 @@ export function Today() {
         <div style={{ marginTop: 20 }}>
           <Lanes track={track} next={offer && offer.isNew ? offer : null} playhead={playing ? step : -1} />
         </div>
+        {layers > 0 && <Link href="/studio" className="ls-chip" style={{ marginTop: 12, display: "inline-flex", color: "var(--disp-ink)" }}>open it in the studio</Link>}
         {offer && mission && (
           <div className="m1-ss" style={{ marginTop: 8 }}>
             {offer.isNew ? `${offer.kind} joins after ` : `${offer.kind} changes after `}
@@ -188,6 +191,7 @@ export function Today() {
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
         </Link>
       )}
+      <YouCard xp={progress.xp} streak={progress.streakDays} done={done} />
       </div>
 
       <div className="td-right">
@@ -209,7 +213,7 @@ export function Today() {
       <div className="td-jump">
         <Silk label="jump to" />
         <div className="m1-g">
-          <Key label="studio" href="/studio" ariaLabel="Open the studio"><Icon name="studio" /></Key>
+          <Key label="words" href="/glossary" ariaLabel="Every word, explained"><Icon name="note" /></Key>
           <Key label="ear gym" href="/gym" ariaLabel="Open the ear gym"><Icon name="hear" /></Key>
           <Key label="review" href="/review" ariaLabel="Review what you learned"><Icon name="reset" /></Key>
           <Key label="all worlds" href="/worlds" ariaLabel="See all worlds"><Icon name="menu" /></Key>

@@ -490,3 +490,68 @@
   .td-all .td-list{flex:none;height:min(46dvh,340px);overflow:auto;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 14px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(180deg,transparent 0,#000 14px,#000 calc(100% - 28px),transparent);padding-bottom:24px}
 }
 .wd-paths{-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 24px),transparent);padding-bottom:18px}
+
+/* ── one world (World.tsx) ─────────────────────────────────────────────────── */
+.wv{max-width:1320px;padding-bottom:130px}
+.wv-cols{display:grid;gap:16px;margin-top:12px}
+.wv-img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+.wv-about{margin:6px 0 0;font-size:15px;line-height:22px;color:var(--disp-ink)}
+.wv-next{margin-top:12px;padding:14px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.wv-paths{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.wv-path{position:relative;overflow:hidden;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;border:0;border-radius:12px;font:inherit;text-align:left;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);cursor:pointer;transition:transform 120ms}
+.wv-path:hover{transform:translateX(3px)}
+.wv-path b{font-size:10px;font-weight:600;color:var(--print);text-transform:uppercase;letter-spacing:.06em;width:46px;flex:none}
+.wv-path span{flex:1;font-size:15px;font-weight:500}
+.wv-path em{font-style:normal;font-size:11px;color:var(--print)}
+.wv-path.is-sel{outline:2px solid var(--c);outline-offset:-2px}
+.wv-path.is-sel b{color:var(--c)}
+.wv-meter{position:absolute;left:0;bottom:0;height:3px;background:var(--c);transition:width 400ms}
+.wv-lessons{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.wv-lessons li{animation:wl-in 360ms var(--ease-snap) both}
+.wv-lesson{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.wv-lesson b{width:26px;font-size:11px;color:var(--print);flex:none;display:inline-flex}
+.wv-lesson span{flex:1;font-size:15px;font-weight:500;display:flex;flex-direction:column}
+.wv-lesson small{font-size:11px;font-weight:400;color:var(--print);margin-top:2px}
+.wv-lesson.is-done b{color:var(--c)}
+.wv-lesson.is-next{outline:2px solid var(--c);outline-offset:-2px}
+.wv-lesson.is-locked{opacity:.5;cursor:default}
+@media (min-width:900px){
+  .wv-cols{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px;align-items:start}
+  .wv-paths,.wv-lessons{max-height:calc(100dvh - 260px);overflow:auto;padding:2px}
+}
+
+/* ── stripes and rewards ──────────────────────────────────────────────────── */
+.fl-stripes{display:flex;gap:4px;margin-bottom:10px}
+.fl-stripes i{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.1);transition:background 240ms}
+.fl-stripes i.is-on{background:var(--led-go);box-shadow:0 0 6px var(--led-go)}
+.fl-reward{display:grid;gap:10px;margin:12px 0 4px}
+.fl-rw-row{display:flex;gap:10px;align-items:stretch}
+.fl-xp{display:flex;align-items:baseline;gap:4px;padding:12px 16px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);animation:fl-pop 520ms var(--ease-snap) both}
+.fl-xp b{font-size:32px;font-weight:300;color:var(--led-go);font-variant-numeric:tabular-nums}
+.fl-xp span{font-size:12px;color:var(--print)}
+.fl-stripe{flex:1;display:flex;align-items:center;gap:5px;padding:12px 16px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);animation:fl-pop 520ms 200ms var(--ease-snap) both}
+.fl-stripe i{width:10px;height:30px;border-radius:3px;transform:skewX(-18deg);background:var(--sc)}
+.fl-stripe span{margin-left:8px;font-size:15px;font-weight:600;color:var(--ink)}
+.fl-stripe.is-gold{--sc:linear-gradient(180deg,#FFE08A,#E3A92B)}
+.fl-stripe.is-silver{--sc:linear-gradient(180deg,#F1F1F4,#A6A6AE)}
+.fl-stripe.is-none span{margin:0;font-weight:500;font-size:13px;color:var(--print)}
+.fl-rank{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--print)}
+.fl-rank div{flex:1;height:6px;border-radius:3px;background:rgba(127,127,127,.2);overflow:hidden}
+.fl-rank i{display:block;height:100%;background:var(--led-go);transition:width 300ms}
+.fl-trophy{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude),0 0 0 1px #E3A92B;animation:fl-pop 600ms var(--ease-snap) both}
+.fl-trophy b{width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:#3A2600;background:linear-gradient(180deg,#FFE08A,#E3A92B);flex:none}
+.fl-trophy span{display:flex;flex-direction:column;font-size:16px;font-weight:600;color:var(--ink)}
+.fl-trophy small{font-size:10px;font-weight:600;color:#E3A92B;text-transform:uppercase;letter-spacing:.06em}
+.fl-trophy em{font-style:normal;font-size:12px;font-weight:400;color:var(--print)}
+
+/* ── dashboard: you ───────────────────────────────────────────────────────── */
+.td-you{display:block;margin-top:12px;padding:14px;border-radius:14px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.td-you-top{display:flex;justify-content:space-between;align-items:baseline}
+.td-you-top b{font-size:17px;font-weight:600}
+.td-you-top span{font-size:12px;color:var(--print)}
+.td-you .fl-rank{margin-top:8px}
+.td-you-stats{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--print)}
+.td-you-stats b{display:block;font-size:18px;font-weight:600;color:var(--ink)}
+.td-shelf{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.td-shelf span{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:rgba(127,127,127,.12);color:var(--print);opacity:.5}
+.td-shelf span.is-won{opacity:1;color:#3A2600;background:linear-gradient(180deg,#FFE08A,#E3A92B);box-shadow:0 0 10px rgba(227,169,43,.4)}

@@ -17,6 +17,8 @@ import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { readSongs, newSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
+import { earnStripe, newTrophies, readStripes, type Trophy } from "@/lib/rewards";
+import { rankFor } from "@/lib/ranks";
 import { worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { clipVariants } from "@/content/lessons/clipTracks";
@@ -45,7 +47,7 @@ const pageName = (p: Page | undefined): string => {
     case "shape": return "shape it";
     case "ear": return "ear round";
     case "add": return "add it to your song";
-    case "check": return "questions";
+    case "check": return "earn your stripe";
     case "done": return "done";
     default: return p.kind;
   }
@@ -225,14 +227,14 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
       <div className="fl-text">
       <p className="ls-read">
         {isIn
-          ? `this is your song now. every lesson from here adds something on top of this ${part}. ${hasQuestions ? "a few quick questions next, or skip them and keep building." : ""}`
+          ? `this is your song now. every lesson from here adds something on top of this ${part}. ${hasQuestions ? "next: earn your stripe, a quick test of what you just learnt. or skip it and keep building." : ""}`
           : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
       </p>
-      {isIn && hasQuestions && <button type="button" className="ls-skip" onClick={onSkipQuestions}>skip the questions</button>}
+      {isIn && hasQuestions && <button type="button" className="ls-skip" onClick={onSkipQuestions}>skip the challenge</button>}
       </div>
       <Bottom
         left={{ label: playing ? "stop" : "hear", icon: playing ? "stop" : "hear", onClick: () => { if (playing) engine.stop(); else void ready().then(() => engine.play()); } }}
-        go={isIn ? { label: hasQuestions ? "a few questions" : "finish", onClick: onNext } : { label: <><Icon name="plus" />add to my song</>, onClick: add, aria: "Add to my song" }} />
+        go={isIn ? { label: hasQuestions ? "earn your stripe" : "finish", onClick: onNext } : { label: <><Icon name="plus" />add to my song</>, onClick: add, aria: "Add to my song" }} />
     </div>
   );
 }
@@ -268,7 +270,8 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
     <div className="ls-col">
       <div className="fl-inst">
       <Screen>
-        <Meta left={`question ${i + 1} of ${list.length}`} right={right ? "right" : out.length ? "try again" : "tap one"} />
+        <div className="fl-stripes" aria-hidden>{list.map((_, k) => <i key={k} className={k < i || (k === i && right) ? "is-on" : ""} />)}</div>
+        <Meta left={`stripe challenge · ${i + 1} of ${list.length}`} right={right ? "right" : out.length ? "try again" : "tap one"} />
         <div className="ls-title is-small"><Gloss>{q.q}</Gloss></div>
       </Screen>
       <div className="fl-opts" role="radiogroup" aria-label="Answers">
@@ -281,7 +284,7 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
       <div className="fl-text">
       {missed !== null && !right && <div className="fl-why is-wrong" role="status"><b>not quite.</b> <Gloss>{q.whyWrong?.[missed] ?? q.hint ?? "have another go."}</Gloss></div>}
       {right && <div className="fl-why is-right" role="status"><b>{out.length ? "got it." : "right."}</b> <Gloss>{q.explain}</Gloss></div>}
-      <button type="button" className="ls-skip" onClick={onDone}>skip the questions</button>
+      <button type="button" className="ls-skip" onClick={onDone}>skip the challenge</button>
       </div>
       <Bottom
         left={right && last && more.length ? { label: "ask more", icon: "plus", onClick: askMore, aria: "Ask me another question" } : undefined}
@@ -291,7 +294,31 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
 }
 
 // ── done ─────────────────────────────────────────────────────────────────────
-function DoneStep({ mission, nextHref, nextTitle, back, firstTry, asked, onRetune, onMore }: { mission: Mission; nextHref: string; nextTitle?: string; back: string; firstTry: number; asked: number; onRetune?: () => void; onMore?: () => void }) {
+type Reward = { stripe: "gold" | "silver" | null; trophies: Trophy[]; xp: number; xpBefore: number };
+
+function Rewards({ r }: { r: Reward }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!r.xp) return;
+    let k = 0; const id = window.setInterval(() => { k += Math.max(1, Math.round(r.xp / 20)); setN(Math.min(r.xp, k)); if (k >= r.xp) window.clearInterval(id); }, 40);
+    return () => window.clearInterval(id);
+  }, [r.xp]);
+  const rank = rankFor(r.xpBefore + n);
+  return (
+    <div className="fl-reward">
+      <div className="fl-rw-row">
+        <div className="fl-xp"><b>+{n}</b><span>xp</span></div>
+        {r.stripe ? <div className={`fl-stripe is-${r.stripe}`}><i /><i /><i /><span>{r.stripe} stripe</span></div> : <div className="fl-stripe is-none"><span>no stripe yet · take the challenge</span></div>}
+      </div>
+      <div className="fl-rank"><span>{rank.current.name.toLowerCase()}</span><div><i style={{ width: `${Math.round(rank.progress * 100)}%` }} /></div><span>{rank.next ? rank.next.name.toLowerCase() : "top rank"}</span></div>
+      {r.trophies.map((t, i) => (
+        <div key={t.id} className="fl-trophy" style={{ animationDelay: `${600 + i * 250}ms` }}><b><Icon name={t.icon} /></b><span><small>trophy unlocked</small>{t.name}<em>{t.line}</em></span></div>
+      ))}
+    </div>
+  );
+}
+
+function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked, onRetune, onMore }: { reward: Reward | null; mission: Mission; nextHref: string; nextTitle?: string; back: string; firstTry: number; asked: number; onRetune?: () => void; onMore?: () => void }) {
   const f = mission.fromFile!;
   useEffect(() => { playFanfare(); }, []);
   return (
@@ -305,6 +332,7 @@ function DoneStep({ mission, nextHref, nextTitle, back, firstTry, asked, onRetun
       </Screen>
       </div>
       <div className="fl-text">
+      {reward && <Rewards r={reward} />}
       <Silk label="you can now" />
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>
       {f.next && <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
@@ -359,6 +387,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const [score, setScore] = useState({ first: 0, asked: 0 });
   const [extra, setExtra] = useState(false);
   const finished = useRef(false);
+  const [reward, setReward] = useState<Reward | null>(null);
   // The other ways of saying each step, lined up with this lesson's screens.
   const alts = useMemo(() => {
     const f = fileLesson(mission.slug);
@@ -396,6 +425,9 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     if (cur?.kind !== "done" || finished.current) return;
     finished.current = true;
     const s = score.asked ? score.first / score.asked : 1;
+    const doneBefore = { ...progress.completedMissions };
+    const st = score.asked ? earnStripe(mission.slug, score.first === score.asked) : { before: readStripes(), after: readStripes() };
+    setReward({ stripe: score.asked ? (score.first === score.asked ? "gold" : "silver") : null, trophies: newTrophies(st.before, st.after, doneBefore, { ...doneBefore, [mission.slug]: true }), xp: alreadyDone ? 0 : mission.xp, xpBefore: progress.xp });
     completeMission(mission.slug, alreadyDone ? 0 : mission.xp, s, mission.badge?.slug);
     window.dispatchEvent(new CustomEvent("progress:server_event", { detail: { type: "mission_complete", missionSlug: mission.slug, xp: mission.xp, score: s } }));
     track("lesson_completed", { missionSlug: mission.slug, world: mission.world, score: s, quizTotal: score.asked, correctCount: score.first });
@@ -426,7 +458,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
         onScore={first => setScore(s => ({ first: s.first + (first ? 1 : 0), asked: s.asked + 1 }))} />;
       break;
     case "done":
-      body = <DoneStep mission={mission} nextHref={nextHref} nextTitle={nextTitle} back={back} firstTry={score.first} asked={score.asked}
+      body = <DoneStep reward={reward} mission={mission} nextHref={nextHref} nextTitle={nextTitle} back={back} firstTry={score.first} asked={score.asked}
         onRetune={at("shape") >= 0 ? () => go(at("shape")) : undefined}
         onMore={bank.length ? () => { setExtra(true); go(at("check") >= 0 ? at("check") : idx); } : undefined} />;
       break;
