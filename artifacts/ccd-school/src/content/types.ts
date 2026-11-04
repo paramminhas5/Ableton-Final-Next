@@ -243,6 +243,10 @@ export type Mission = {
     learn: string;
     why: string;
     minutes: number;
+    /** what you will learn, one short line each (no "next up") */
+    items: string[];
+    /** the one line on what comes next */
+    next: string;
   };
 };
 

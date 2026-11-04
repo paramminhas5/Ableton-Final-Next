@@ -15,6 +15,7 @@ import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, type TrackV2 } from "@/lib/track2";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
+import { readSongs } from "@/lib/songs";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
@@ -22,20 +23,34 @@ import { useEngineTrack } from "./useEngineTrack";
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
 // ── say: an explanation, with a deeper track you open when you want it ─────────
-export function SayStep({ screen, meta, onNext }: { screen: Of<"say">; meta: string; onNext: () => void }) {
+export function SayStep({ screen, meta, voice = "mentor", onNext }: { screen: Of<"say">; meta: string; voice?: "mentor" | "straight" | "eli5"; onNext: () => void }) {
   const [deep, setDeep] = useState(false);
   const [open, setOpen] = useState<number | null>(null);
   const has = !!screen.deeper?.length;
+  // Mentor and eli5 walk you through the deeper cards right here; straight keeps them behind a key.
+  const inline = has && voice !== "straight";
   useEnter(deep ? null : onNext);
   return (
     <div className="ls-col">
       <Screen>
-        <Meta left={meta} right={has ? `${screen.deeper!.length} deeper` : undefined} />
+        <Meta left={meta} right={has ? (inline ? "with the deeper bits" : `${screen.deeper!.length} deeper`) : undefined} />
         <div className="ls-title">{screen.title.toLowerCase()}</div>
       </Screen>
       <Silk label={deep ? "going deeper" : "read"} right={deep ? "tap one to open it" : undefined} />
       {!deep ? (
-        <p className="ls-read">{screen.body}</p>
+        <>
+          <p className="ls-read">{screen.body}</p>
+          {inline && (
+            <div className="ls-inline">
+              {screen.deeper!.map(d => (
+                <div key={d.title} className="ls-panel">
+                  <h4>{d.title.toLowerCase()}</h4>
+                  <p>{d.body}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <div className="ls-deeper">
           {screen.deeper!.map((d, i) => (
@@ -50,7 +65,7 @@ export function SayStep({ screen, meta, onNext }: { screen: Of<"say">; meta: str
         </div>
       )}
       <Bottom
-        left={has ? { label: deep ? "back" : "go deeper", icon: deep ? "back" : "search", onClick: () => setDeep(d => !d), aria: deep ? "Back to the lesson" : "Go deeper into this" } : undefined}
+        left={has && !inline ? { label: deep ? "back" : "go deeper", icon: deep ? "back" : "plus", onClick: () => setDeep(d => !d), aria: deep ? "Back to the lesson" : "Go deeper into this" } : undefined}
         go={{ label: "next", onClick: onNext, aria: "Next" }}
       />
     </div>
@@ -64,12 +79,12 @@ export function HearStep({ screen, meta, onNext }: { screen: Of<"hear">; meta: s
   const [v, setV] = useState(0);
   const [playing, setPlaying] = useState(false);
   const track = variants[v]?.track ?? variants[0]?.track;
-  const { engine, start } = useEngineTrack(track ?? readTrackV2());
+  const { engine, ready } = useEngineTrack(track ?? readTrackV2());
   const heard = useRef(false);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setPlaying(!!(e.flags & FLAG.playing)); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* engine not started */ } }, [engine]);
-  const toggle = () => { start(); if (playing) engine.stop(); else { engine.play(); heard.current = true; } };
-  const pick = (i: number) => { if (i === v) return; setV(i); start(); window.setTimeout(() => engine.play(), 40); heard.current = true; };
+  const toggle = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); heard.current = true; };
+  const pick = (i: number) => { if (i === v) return; setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150)); heard.current = true; };
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -123,12 +138,12 @@ export function ShapeStep({ mission, screen, meta, accent, onNext }: { mission: 
   }, [line.type, screen.knobs]);
   const world = worldOf(mission.slug) ?? undefined;
   const shown = useMemo(() => (base ? applyTake({ ...base, added: [] }, mission.slug, line, world, params) : null), [base, mission.slug, line, world, params]);
-  const { engine, start } = useEngineTrack(shown ?? readTrackV2());
+  const { engine, ready } = useEngineTrack(shown ?? readTrackV2());
   const playing = beat >= 0;
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
   useEffect(() => { try { sessionStorage.setItem(shapeKey(mission.slug), JSON.stringify(params)); } catch { /* ignore */ } }, [params, mission.slug]);
-  const hear = () => { start(); if (playing) engine.stop(); else engine.play(); };
+  const hear = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); };
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -247,6 +262,26 @@ export function EarStep({ screen, meta, level, onNext }: { screen: Of<"ear">; me
       <Bottom
         left={{ label: "again", icon: "hear", onClick: play, aria: "Play the two notes again" }}
         go={picked === null ? { label: "pick one", disabled: true } : { label: n + 1 >= total ? "finish" : "next", onClick: advance }} />
+    </div>
+  );
+}
+
+// ── a fresh song for the first lesson, and a way to hear the ones you have ────
+export const startsFresh = (m: Mission) => m.fromFile?.adds.kind === "kick";
+export const songHasMusic = () => readTrackV2().layers.some(l => l.events.length > 0);
+
+export function FreshStart() {
+  const [mine, setMine] = useState<{ has: boolean; name: string; count: number } | null>(null);
+  useEffect(() => { const i = readSongs(); setMine({ has: songHasMusic(), name: i.songs.find(x => x.id === i.active)?.name ?? "my track", count: i.songs.length }); }, []);
+  const { engine, ready } = useEngineTrack(readTrackV2());
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setPlaying(!!(e.flags & FLAG.playing)); }), [engine]);
+  if (!mine) return null;
+  const toggle = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); };
+  return (
+    <div className="ls-panel ls-fresh">
+      <p>{mine.has ? `this lesson starts a new song with a click. "${mine.name}" stays saved.` : "this lesson starts your first song. a click keeps time while you play."}</p>
+      {mine.has && <button type="button" className="ls-chip" onClick={toggle} aria-pressed={playing}>{playing ? "stop" : "hear my song"}</button>}
     </div>
   );
 }

@@ -10,9 +10,9 @@ import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
 import { nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { Icon, Key, Meter, Screen, Silk, Switch } from "./controls";
+import { CAP, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
-import { CatMark, CAT_SRC, Lanes, WeekDots, WorldDial } from "./shell";
+import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 
 const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "dj", "producer"];
@@ -22,9 +22,11 @@ export function Today() {
   const { progress } = useProgress();
   const { track } = useTrack();
   const [world, setWorld] = useState<WorldId>("fundamentals");
+  const [sel, setSel] = useState<string | null>(null);
   const [view, setView] = useState<"world" | "track">("world");
   const [playing, setPlaying] = useState(false);
   const [step, setStep] = useState(-1);
+  const [q, setQ] = useState("");
   const trackRef = useRef(track);
   trackRef.current = track;
 
@@ -36,26 +38,42 @@ export function Today() {
   }, [progress.selectedWorld]);
   useEffect(() => () => stopTrack(), []);
 
-  const [q, setQ] = useState("");
+  const done = progress.completedMissions;
+  const steps = worldSteps(world);
+  const next = nextStep(world, done);
+  const cur = steps.find(st => st.slug === sel) ?? next;
+  const mission = cur ? missionAny(cur.slug) : undefined;
+  const counts = worldDone(world, done);
+  // Zones are the paths in this world, in order. Lessons are the steps in the zone you are on.
+  const zones = useMemo(() => Array.from(new Set(steps.map(st => st.path))).map(path => ({ path, title: steps.find(st => st.path === path)!.pathTitle })), [steps]);
+  const zi = Math.max(0, zones.findIndex(z => z.path === cur?.path));
+  const inZone = steps.filter(st => st.path === zones[zi]?.path);
+  const li = Math.max(0, inZone.findIndex(st => st.slug === cur?.slug));
+  const offer = useMemo(() => (mission ? offerFor(track, mission) : null), [track, mission]);
+  const todayXp = progress.dailyXp ?? 0;
+  const lit = Math.min(9, Math.round((todayXp / DAILY_GOAL_XP) * 9));
+  // Drum lanes show as separate rows but are one layer (one drum rack) in the track.
+  const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
+
   const all = useMemo(() => WORLDS.flatMap(w => worldSteps(w).map(st => ({ ...st, world: w }))), []);
   const hits = useMemo(() => {
     const t = q.trim().toLowerCase();
     if (!t) return [];
     return all.filter(st => st.title.toLowerCase().includes(t) || st.pathTitle.toLowerCase().includes(t) || (missionAny(st.slug)?.tagline ?? "").toLowerCase().includes(t)).slice(0, 8);
   }, [q, all]);
-  const list = worldSteps(world);
 
-  const pick = (w: WorldId) => { setWorld(w); try { localStorage.setItem(WORLD_KEY, w); } catch {} };
-
-  const done = progress.completedMissions;
-  const next = nextStep(world, done);
-  const mission = next ? missionAny(next.slug) : undefined;
-  const counts = worldDone(world, done);
-  const offer = useMemo(() => (mission ? offerFor(track, mission) : null), [track, mission]);
-  const todayXp = progress.dailyXp ?? 0;
-  const lit = Math.min(9, Math.round((todayXp / DAILY_GOAL_XP) * 9));
-  // Drum lanes show as separate rows but are one layer (one drum rack) in the track.
-  const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
+  const pickWorld = (w: WorldId) => { setWorld(w); setSel(null); try { localStorage.setItem(WORLD_KEY, w); } catch {} };
+  const pickZone = (i: number) => {
+    const z = zones[i];
+    if (!z || i === zi) return;
+    const inz = steps.filter(st => st.path === z.path);
+    setSel((inz.find(st => !done[st.slug]) ?? inz[0]).slug);
+  };
+  const pickLesson = (i: number) => { const st = inZone[i]; if (st && st.slug !== cur?.slug) setSel(st.slug); };
+  const idxOf = (v: number, n: number) => Math.max(0, Math.min(n - 1, Math.round(v * (n - 1))));
+  const val = (i: number, n: number) => (n > 1 ? i / (n - 1) : 0);
+  const wi = WORLDS.indexOf(world);
+  const short = (t: string, n = 14) => (t.length > n ? `${t.slice(0, n - 1).trim()}…` : t);
 
   const hear = async () => {
     if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }
@@ -64,6 +82,7 @@ export function Today() {
     await playTrack(() => trackRef.current, s => setStep(s));
   };
 
+  const isDone = !!(cur && done[cur.slug]);
   return (
     <div className="m1-page td-root">
       <header className="td-head" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 40 }}>
@@ -81,7 +100,7 @@ export function Today() {
       </header>
 
       <div className="td-switch" style={{ marginTop: 6 }}>
-        <Switch label="what the screen shows" value={view} onChange={id => setView(id as "world" | "track")} options={[{ id: "world", label: "world" }, { id: "track", label: "your track" }]} />
+        <Switch label="what the screen shows" value={view} onChange={id => setView(id as "world" | "track")} options={[{ id: "world", label: "lesson" }, { id: "track", label: "your track" }]} />
       </div>
 
       <div className="td-search" style={{ marginTop: 12 }}>
@@ -102,22 +121,18 @@ export function Today() {
 
       <div className="td-left">
       {view === "world" ? (
-        <Screen style={{ marginTop: 8 }}>
+        <Screen style={{ marginTop: 8 }} key={cur?.slug}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={CAT_SRC} alt="" style={{ position: "absolute", right: 16, top: 14, width: 66 }} />
-          <div className="m1-ss">{WORLD_LABEL[world]} world</div>
-          <div className="m1-t36" style={{ marginTop: 8 }}>{counts.done}<span style={{ fontSize: 18, color: "var(--disp-sub)" }}> of {counts.total} lessons</span></div>
+          <img src={CAT_SRC} alt="" className="m1-dancing" style={{ position: "absolute", right: 16, top: 14, width: 66 }} />
+          <div className="m1-ss">{WORLD_LABEL[world]} · {zones[zi]?.title.toLowerCase()}</div>
+          <div className="m1-t22 td-pop" style={{ marginTop: 8, maxWidth: 230, textTransform: "lowercase" }}>{mission?.title ?? "all done"}</div>
+          <div className="m1-ss td-pop" style={{ marginTop: 8, color: "var(--disp-ink)" }}>lesson {li + 1} of {inZone.length} · zone {zi + 1} of {zones.length} · {isDone ? "done" : cur ? `${minutesFor(cur.slug)} min` : ""}</div>
           <div style={{ marginTop: 14, display: "flex", gap: 3 }} role="img" aria-label={`${counts.done} of ${counts.total} lessons done`}>
             {Array.from({ length: 24 }, (_, i) => (
               <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < Math.round((counts.done / Math.max(1, counts.total)) * 24) ? "#5EEAC1" : "#232326" }} />
             ))}
           </div>
-          {next && mission && (
-            <div className="m1-ss" style={{ marginTop: 12 }}>
-              up next · <span style={{ color: "var(--disp-ink)" }}>{next.pathTitle.toLowerCase()}</span>
-            </div>
-          )}
-          <div className="m1-ss" style={{ marginTop: 4 }}>{layers ? `your track has ${layers} ${layers === 1 ? "layer" : "layers"}` : "every lesson adds a layer to your track"}</div>
+          <div className="m1-ss" style={{ marginTop: 8 }}>{counts.done} of {counts.total} {WORLD_LABEL[world]} lessons done{layers ? ` · your track has ${layers} ${layers === 1 ? "layer" : "layers"}` : ""}</div>
         </Screen>
       ) : (
       <Screen style={{ marginTop: 8 }}>
@@ -151,33 +166,39 @@ export function Today() {
       </Screen>
       )}
 
-      {next && mission && (
-        <Link href={`/learn/${next.slug}`} className="m1-m is-wide" style={{ marginTop: 14, height: 108, justifyContent: "flex-start", gap: 14, padding: "0 12px" }}>
+      {cur && mission && (
+        <Link href={`/learn/${cur.slug}`} className="m1-m is-wide" key={`c-${cur.slug}`} style={{ marginTop: 14, height: 108, justifyContent: "flex-start", gap: 14, padding: "0 12px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={missionImage(next.slug, world)} alt="" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
+          <img src={missionImage(cur.slug, world)} alt="" className="td-pop" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
           <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
-            <div className="m1-eng" style={{ fontSize: 11, fontWeight: 500 }}>next lesson · {WORLD_LABEL[world]} {String(next.index + 1).padStart(2, "0")}</div>
+            <div className="m1-eng" style={{ fontSize: 11, fontWeight: 500 }}>{isDone ? "go again" : cur.slug === next?.slug ? "up next" : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
             <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{mission.title}</div>
-            <div className="m1-t11" style={{ marginTop: 4 }}>{minutesFor(next.slug)} min · {missionTools(next.slug).join(" · ")}</div>
+            <div className="m1-t11" style={{ marginTop: 4 }}>{minutesFor(cur.slug)} min · {missionTools(cur.slug).join(" · ")}</div>
           </div>
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
         </Link>
       )}
-
       </div>
 
       <div className="td-right">
-      <Silk label="worlds" right="today" />
-      <div className="m1-g">
-        <div className="m1-m is-wide" style={{ gridColumn: "span 2", height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 8 }}>
-          <WorldDial value={world} onChange={pick} />
-          <span className="m1-ml">{counts.done} of {counts.total}</span>
+      <Silk label="turn to choose" right="world · zone · lesson" />
+      <div className="td-knobs">
+        <div><span className="m1-ss">world</span>
+          <Knob label={WORLD_LABEL[world]} color={CAP.go} size={64} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
         </div>
-        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute quick practice`} style={{ height: 184, flexDirection: "column", justifyContent: "flex-start", paddingTop: 16 }}>
-          <Meter segments={9} lit={lit} />
-          <span className="m1-ml">{lit >= 9 ? "goal done" : "quick practice"}</span>
+        <div><span className="m1-ss">zone</span>
+          <Knob label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
+        </div>
+        <div><span className="m1-ss">lesson</span>
+          <Knob label={`${li + 1} of ${inZone.length}`} color={CAP.grey} size={64} height={170} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(idxOf(v, inZone.length))} />
+        </div>
+      </div>
+      <div className="m1-g" style={{ marginTop: 12 }}>
+        <Link href="/daily" className="m1-m is-wide" aria-label={`Today's goal, ${lit} of 9 lit. Start a two minute quick practice`} style={{ gridColumn: "span 2", height: 96, flexDirection: "row", gap: 14, justifyContent: "center" }}>
+          <span style={{ display: "flex", gap: 3 }} aria-hidden>{Array.from({ length: 9 }, (_, i) => <i key={i} style={{ width: 8, height: 22, borderRadius: 2, background: i < lit ? "#5EEAC1" : "#2a2a2e" }} />)}</span>
+          <span className="m1-ml" style={{ position: "static" }}>{lit >= 9 ? "goal done" : "quick practice"}</span>
         </Link>
-        <Key wide label={playing ? "stop" : layers ? "play my song" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ height: 184 }} capStyle={{ width: "64%" }}>
+        <Key wide label={playing ? "stop" : layers ? "play my song" : "hear next"} onClick={hear} disabled={!layers && !offer} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"} ariaPressed={playing} style={{ gridColumn: "span 2", height: 96 }} capStyle={{ width: "40%" }}>
           <Icon name={playing ? "stop" : "hear"} />
         </Key>
       </div>
@@ -191,22 +212,6 @@ export function Today() {
         </div>
       </div>
       </div>
-      <section className="td-all" aria-label={`All ${WORLD_LABEL[world]} lessons`}>
-        <Silk label={`all ${WORLD_LABEL[world]} lessons`} right={`${counts.done} of ${counts.total} done`} />
-        <div className="td-list">
-          {list.map(st => {
-            const d = !!done[st.slug];
-            const isNext = next?.slug === st.slug && !d;
-            return (
-              <Link key={st.slug} href={`/learn/${st.slug}`} className="m1-m is-wide" aria-label={`${st.title}${d ? ", done" : ""}`} style={{ height: 56, justifyContent: "flex-start", gap: 12, padding: "0 14px", textAlign: "left" }}>
-                <span className="m1-t11" style={{ width: 22, color: d ? "var(--led-mint, #5EEAC1)" : undefined }}>{d ? "✓" : String(st.index + 1).padStart(2, "0")}</span>
-                <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase", fontWeight: isNext ? 600 : 400 }}>{st.title}</span>
-                <span className="m1-t11">{isNext ? "up next" : st.pathTitle.toLowerCase()}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
       <DuoFilters />
     </div>
   );

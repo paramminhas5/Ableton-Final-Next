@@ -21,7 +21,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
         learned.push(s.title);
         break;
       case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note }, body: s.say, hint: s.hint }); break;
-      case "shape": screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
+      case "shape": learned.push(`shaping it with ${s.knobs.join(" and ")}`); screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
       case "ask": screens.push({ kind: "quiz", q: s.q, options: s.options, answer: s.answer, explain: s.why, hint: s.hint, whyWrong: s.whyWrong }); break;
       case "ear": screens.push({ kind: "ear", drill: s.drill, rounds: s.rounds, body: s.say }); break;
       case "keep": next = s.next; break;
@@ -31,7 +31,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
   return {
     slug: lesson.slug, world: lesson.world as Mission["world"], number: lesson.number, title: lesson.title,
     tagline: learn.split(/(?<=[.!?])\s/)[0] ?? learn, xp: 50, explainer: [], sim: { type: "none" as never }, quiz: [], screens,
-    fromFile: { adds: { layer, kind: KIND_FOR_PART[part] ?? "kick", part }, learn, why: typeof lesson.song.why === "string" ? lesson.song.why : lesson.song.why ? voiceText(lesson.song.why, opts.voice) : "", minutes: lesson.minutes ?? 8 },
+    fromFile: { adds: { layer, kind: KIND_FOR_PART[part] ?? "kick", part }, learn, why: typeof lesson.song.why === "string" ? lesson.song.why : lesson.song.why ? voiceText(lesson.song.why, opts.voice) : "", minutes: lesson.minutes ?? 8, items: learned.slice(), next },
   };
 }
 

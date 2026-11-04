@@ -151,7 +151,7 @@ export function Dash({ color, on = true, style }: { color?: string; on?: boolean
 }
 
 // ── shared drag behaviour for knobs and faders ──────────────────────────
-function useDrag(value: number, onChange: ((v: number) => void) | undefined, range = 180, defaultValue?: number) {
+function useDrag(value: number, onChange: ((v: number) => void) | undefined, range = 180, defaultValue?: number, detents?: number) {
   const start = useRef<{ y: number; v: number } | null>(null);
   const lastTap = useRef(0);
   const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -170,16 +170,17 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
   const onPointerUp = useCallback(() => { start.current = null; }, []);
   const onKeyDown = useCallback((e: KeyboardEvent<HTMLElement>) => {
     if (!onChange) return;
-    const step = e.shiftKey ? 0.1 : 0.02;
+    const step = detents && detents > 1 ? 1 / (detents - 1) : e.shiftKey ? 0.1 : 0.02;
     if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); onChange(clamp(value + step)); }
     if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); onChange(clamp(value - step)); }
     if (e.key === "Home") onChange(0);
     if (e.key === "End") onChange(1);
-  }, [onChange, value]);
+  }, [onChange, value, detents]);
   const onWheel = useCallback((e: React.WheelEvent<HTMLElement>) => {
     if (!onChange) return;
+    if (detents && detents > 1) { if (Math.abs(e.deltaY) > 4) onChange(clamp(value - Math.sign(e.deltaY) / (detents - 1))); return; }
     onChange(clamp(value - e.deltaY / 800));
-  }, [onChange, value]);
+  }, [onChange, value, detents]);
   return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onKeyDown, onWheel };
 }
 
@@ -208,12 +209,14 @@ type KnobProps = {
   bare?: boolean;
   height?: number;
   style?: CSSProperties;
+  /** number of click stops: arrow keys, wheel and drag move one stop at a time */
+  detents?: number;
 };
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
-  const drag = useDrag(value, onChange ? set : undefined, 180, defaultValue);
+  const drag = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.max(70, 56 * (detents - 1)) : 180, defaultValue, detents);
   const well = size + 18;
   const rot = -135 + 270 * value;
   const knob = (

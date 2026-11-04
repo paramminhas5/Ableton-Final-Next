@@ -84,10 +84,17 @@ export function useEngineTrack(track: TrackV2) {
   const latest = useRef(track);
   latest.current = track;
 
+  const booting = useRef<Promise<void> | null>(null);
   const start = () => {
     if (started.current) return;
     started.current = true;
-    void engine.start().then(() => syncEngine(engine, latest.current, sent.current, last.current));
+    booting.current = engine.start().then(() => syncEngine(engine, latest.current, sent.current, last.current));
+    syncEngine(engine, latest.current, sent.current, last.current);
+  };
+  /** Start (if needed), wait until the engine is up and holds the latest track, then resolve. */
+  const ready = async () => {
+    start();
+    await booting.current;
     syncEngine(engine, latest.current, sent.current, last.current);
   };
 
@@ -97,5 +104,5 @@ export function useEngineTrack(track: TrackV2) {
 
   useEffect(() => () => engine.stop(), [engine]);
 
-  return { engine, start, started };
+  return { engine, start, ready, started };
 }

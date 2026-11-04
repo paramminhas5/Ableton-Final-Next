@@ -25,13 +25,14 @@ import { offerFor, useTrack } from "@/lib/track";
 import { lessonSteps, readTake, saveTake, takeType, type Take } from "@/lib/lessonTake";
 import { minutesFor, missionImage, missionLearns, missionUses, worldDone, worldOf, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { RANKS, rankFor } from "@/lib/ranks";
-import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
+import { GoPill, Icon, Key, Screen, Silk, Switch, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { GlassDiagram, GlassVisual, VISUAL_TAG, Chain } from "./GlassVisual";
 import { TryIt } from "./TryIt";
 import { AddToTrack } from "./AddToTrack";
-import { EarStep, HearStep, SayStep, ShapeStep } from "./LessonSteps";
+import { EarStep, FreshStart, HearStep, SayStep, ShapeStep, songHasMusic, startsFresh } from "./LessonSteps";
+import { newSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { SevenSeg } from "./SevenSeg";
 import "./lesson.css";
@@ -54,7 +55,9 @@ const seedOf = (s: string) => Array.from(s).reduce((h, c) => (h * 31 + c.charCod
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9.\-+# ]/g, "").replace(/\s+/g, " ").trim();
 
 // ── chrome ──────────────────────────────────────────────────────────────────
-function Top({ back, total, now, accent, hearts }: { back: string; total: number; now: number; accent: string; hearts: number | null }) {
+function Top({ back, total, now, accent, hearts, tune }: { back: string; total: number; now: number; accent: string; hearts: number | null; tune?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [prefs, setPrefs] = usePrefs();
   return (
     <div className="ls-top">
       <Link href={back} className="ls-x" aria-label="Close lesson"><Icon name="close" /></Link>
@@ -65,7 +68,20 @@ function Top({ back, total, now, accent, hearts }: { back: string; total: number
         <span className="ls-hearts" role="img" aria-label={`${hearts} of ${MAX_HEARTS} hearts`}>
           {Array.from({ length: MAX_HEARTS }, (_, i) => <i key={i} className={i < hearts ? "is-on" : ""} />)}
         </span>
-      ) : <span className="m1-tag">free</span>}
+      ) : tune ? null : <span className="m1-tag">free</span>}
+      {tune && <button type="button" className="ls-chip" onClick={() => setOpen(true)} aria-label="Change voice and level">{prefs.voice} · {prefs.level}</button>}
+      {open && (
+        <div className="ls-sheet" onClick={() => setOpen(false)}>
+          <div role="dialog" aria-label="Voice and level" onClick={e => e.stopPropagation()}>
+            <Silk label="voice" right="who is teaching" />
+            <Switch label="Voice" value={prefs.voice} onChange={id => setPrefs({ voice: id as typeof prefs.voice })} options={[{ id: "mentor", label: "mentor" }, { id: "straight", label: "straight" }, { id: "eli5", label: "eli5" }]} />
+            <Silk label="level" right="how far we go" />
+            <Switch label="Level" value={prefs.level} onChange={id => setPrefs({ level: id as typeof prefs.level })} options={[{ id: "gentle", label: "gentle" }, { id: "standard", label: "standard" }, { id: "hard", label: "hard" }]} />
+            <p className="ls-sub" style={{ margin: 0 }}>mentor and eli5 explain the deeper bits as you go. straight keeps it short. your place is kept.</p>
+            <GoPill onClick={() => setOpen(false)} ariaLabel="Done">done</GoPill>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -79,6 +95,30 @@ function HookStep({ mission, screen, world, index, accent, back, onNext }: { mis
   const learns = missionLearns(mission.slug);
   const uses = missionUses(mission.slug);
   useEnter(onNext);
+  const ff = mission.fromFile;
+  if (ff) {
+    return (
+      <div className="ls-col">
+        <Screen>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
+          <Meta left={`${WORLD_LABEL[world]} ${String(index).padStart(2, "0")} · ${ff.minutes} min · +${mission.xp} xp`} />
+          <div className="ls-title is-big">{mission.title.toLowerCase()}</div>
+          <p className="ls-big">{ff.learn}</p>
+          <div className="ls-pulse" aria-hidden><i /><i /><i /><i /></div>
+        </Screen>
+        <Silk label="you'll learn" right={`${ff.items.length} things`} />
+        <ol className="ls-items">{ff.items.map((l, i) => <li key={i}><b>{String(i + 1).padStart(2, "0")}</b>{l.toLowerCase()}</li>)}</ol>
+        {startsFresh(mission) && <><Silk label="your song" /><FreshStart /></>}
+        <Silk label="adds to your song" right={ff.why ? undefined : undefined} />
+        <Screen>
+          <Meta left={<span style={{ color: accent }}>+ {offer.kind} · the line you play</span>} right="fills in as you play" />
+          <div style={{ marginTop: 10 }}><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: true }} /></div>
+        </Screen>
+        <Bottom left={{ label: "later", icon: "back", href: back, aria: "Not now, back to the world" }} go={{ label: <><Icon name="play" small />let&apos;s go</>, onClick: onNext, aria: "Start the lesson" }} />
+      </div>
+    );
+  }
   return (
     <div className="ls-col">
       <Screen>
@@ -857,7 +897,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   } else if (out && flow) body = <HeartsOut back={back} onFree={() => { setLearnMode("classic"); setOut(false); }} onPractice={() => setPractice({ at: Math.max(0, asks.findIndex(a => steps.indexOf(a) >= idx)), right: 0 })} />;
   else if (!cur) body = null;
   else switch (cur.kind) {
-    case "hook": body = <HookStep mission={mission} screen={cur} world={world} index={missionIndex} accent={accent} back={back} onNext={next} />; break;
+    case "hook": body = <HookStep mission={mission} screen={cur} world={world} index={missionIndex} accent={accent} back={back} onNext={() => { if (startsFresh(mission) && songHasMusic()) newSong("my first song"); next(); }} />; break;
     case "concept": body = <ConceptStep screen={cur} meta={meta} accent={accent} onNext={next} />; break;
     case "diagram": body = <DiagramStep screen={cur} meta={meta} accent={accent} onNext={next} />; break;
     case "interact": body = <SimStep screen={cur} meta={meta} onNext={next} />; break;
@@ -866,7 +906,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     case "type-answer": body = <TypeStep screen={cur} {...ask} />; break;
     case "sequence": body = <OrderStep screen={cur} seed={seed + idx} {...ask} />; break;
     case "match": body = <MatchStep screen={cur} seed={seed + idx} {...ask} />; break;
-    case "say": body = <SayStep screen={cur} meta={meta} onNext={next} />; break;
+    case "say": body = <SayStep screen={cur} meta={meta} voice={prefs.voice} onNext={next} />; break;
     case "hear": body = <HearStep screen={cur} meta={meta} onNext={next} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta={meta} accent={accent} onNext={next} />; break;
     case "ear": body = <EarStep screen={cur} meta={meta} level={prefs.level} onNext={next} />; break;
@@ -886,7 +926,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
 
   return (
     <div className="ls" data-world={world} data-steps={steps.map(s => s.kind).join(",")} data-step={idx}>
-      <Top back={back} total={steps.length} now={idx} accent={accent} hearts={flow ? progress.hearts : null} />
+      <Top back={back} total={steps.length} now={idx} accent={accent} hearts={flow ? progress.hearts : null} tune={!!mission.fromFile} />
       <div className="ls-stage" key={practice ? `p${practice.at}` : out ? "out" : idx}>{body}</div>
       {intro && cur?.kind === "hook" && <HeartsIntro onDone={() => { setIntro(false); try { localStorage.setItem(HEARTS_SEEN, "1"); } catch { /* ignore */ } }} />}
     </div>

@@ -25,6 +25,8 @@ export function presetTake(mission: Mission): Take {
   return { type: takeType(offer.kind), events: one.layers[0]?.events ?? [] };
 }
 
+const NOUN: Record<string, string> = { drums: "a drum", hats: "hats", bass: "a bass line", chords: "chords", lead: "a lead line", fx: "an effect", sample: "a sample" };
+
 export type AddKeys = { added: boolean; playing: boolean; hear: () => void; add: () => void };
 
 export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Mission; xp: number; take: Take | null; accent?: string; keys?: (k: AddKeys) => ReactNode }) {
@@ -87,7 +89,9 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
         <div style={{ marginTop: 18 }}>
           {v1 && <Lanes track={v1} sel={selId} playhead={playhead} />}
         </div>
-        <div className="m1-ss" style={{ marginTop: 8 }}>{isIn ? "in your track" : "joins your track when you add it"}</div>
+        {isIn
+          ? <div className="m1-t22" style={{ marginTop: 12, color: "var(--disp-ink)" }}>great, you&apos;ve added {NOUN[line.type] ?? "a layer"} to your track.</div>
+          : <div className="m1-ss" style={{ marginTop: 8 }}>joins your track when you add it</div>}
       </Screen>
 
       {!isIn && (
