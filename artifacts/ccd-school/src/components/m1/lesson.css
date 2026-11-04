@@ -133,7 +133,10 @@
 }
 @media (min-width:900px){
   .ls{max-width:520px}
-  .ls-bottom{padding-left:calc(50% - 244px);padding-right:calc(50% - 244px)}
+  /* desktop: the keys sit in the lesson column, in the flow of the page, never across the whole window */
+  .ls-bottom{position:sticky;left:auto;right:auto;bottom:0;width:100%;max-width:520px;margin:0 auto;padding:14px 0 calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,transparent,var(--deck2) 30%)}
+  .ls-col{padding-bottom:24px}
+  .ls-stage{flex:0 1 auto}
 }
 
 /* order: slots on the glass */

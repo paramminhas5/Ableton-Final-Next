@@ -1,6 +1,7 @@
 "use client";
 // Ear Training Sim — SoundGym/ToneGym-inspired musical drills.
 // Drills: Interval · Chord Quality · Scale Recognition · Note In Scale · EQ Cut · Reverb
+import { DRILL_ALIASES, drillFor, type DrillType } from "@/lib/drillAliases";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getCtx, midiToFreq } from "@/lib/audio";
 
@@ -39,7 +40,6 @@ function playNote(
 }
 
 // ─── Drill configs ───────────────────────────────────────────────────────────
-type DrillType = "interval" | "chord" | "scale" | "note-in-scale" | "eq-cut" | "reverb";
 
 const INTERVALS = [
   { name: "Minor 2nd", semis: 1, desc: "Half step — dissonant clash (Jaws theme)" },
@@ -394,7 +394,7 @@ function getExplain(type: DrillType, target: string): string {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> }) {
-  const defaultType = (preset?.mode as DrillType) ?? "interval";
+  const defaultType = drillFor(preset?.mode);
   const [activeDrill, setActiveDrill] = useState<DrillType | null>(null);
   const [round, setRound] = useState<Round | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -427,7 +427,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
   };
 
   const pick = (choice: string) => {
-    if (!round?.played || revealed) return; // must play first
+    if (!round || revealed) return;
     setPicked(choice);
     const correct = choice === round.target;
     setRevealed(true);
@@ -474,7 +474,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
     );
   }
 
-  const drill = DRILLS.find((d) => d.type === activeDrill)!;
+  const drill = DRILLS.find((d) => d.type === activeDrill) ?? DRILLS[0];
   const correct = revealed ? picked === round?.target : null;
 
   // ── Active drill ────────────────────────────────────────────────────────

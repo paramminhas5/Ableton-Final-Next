@@ -88,3 +88,15 @@ describe("lesson tools in context", () => {
     expect(withLearns).toBeGreaterThan(10);
   });
 });
+
+describe("offerFor does not match words inside other words", () => {
+  const t = emptyTrack();
+  it("what-is-sound does not offer hats", () => {
+    for (const slug of ["what-is-sound", "what-is-djing", "what-is-live"]) {
+      expect(offerFor(t, { slug, title: slug.replace(/-/g, " ") }).kind).not.toBe("hats");
+    }
+  });
+  it("a real hats lesson still offers hats", () => {
+    expect(offerFor(t, { slug: "hi-hats", title: "Hi-hats and swing" }).kind).toBe("hats");
+  });
+});

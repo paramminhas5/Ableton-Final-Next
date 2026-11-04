@@ -82,12 +82,12 @@ export function emptyTrack(): Track {
 
 const RULES: [RegExp, LayerKind][] = [
   [/kick|four.on|808|low end|sub\b/i, "kick"],
-  [/hat|hi-hat|swing|groove|shuffle|16th/i, "hats"],
+  [/\bhi-?hats?\b|\bhats?\b|swing|groove|shuffle|16th/i, "hats"],
   [/clap|snare|backbeat/i, "clap"],
   [/perc|shaker|polyrhythm|syncopat|fill/i, "perc"],
   [/bass|poli|glide|portamento|octave/i, "bass"],
-  [/chord|harmony|progression|triad|seventh|voicing|key\b|keys|scale|mode/i, "chords"],
-  [/pad|reverb|space|ambien|texture|wavetable|drift|granular/i, "pad"],
+  [/chord|harmony|progression|triad|seventh|voicing|\bkey\b|\bkeys\b|scale|\bmodes?\b/i, "chords"],
+  [/\bpads?\b|reverb|space|ambien|texture|wavetable|drift|granular/i, "pad"],
   [/melod|lead|arp|synth|oscillat|filter|envelope|lfo|operator|wave/i, "lead"],
   [/rhythm|beat|tempo|bpm|drum|loop|pattern|step|sequenc|metronome|time sig/i, "kick"],
 ];
