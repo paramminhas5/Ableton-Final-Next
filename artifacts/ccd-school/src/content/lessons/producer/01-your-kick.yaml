@@ -81,8 +81,7 @@ steps:
       eli5: >-
         Tap the big pad at the bottom left every time you hear a click. Boom, boom, boom, boom. If you are a
         bit early or late, that is okay, the song will straighten it out.
-    hint:
-      gentle: Wait for the click, then tap. Four taps and you are done.
+    hint: Wait for the click, then tap. Four taps and you are done.
   - kind: say
     title: four on the floor
     say:
@@ -119,8 +118,7 @@ steps:
       eli5: >-
         Decay is how long the thump lasts. Turn it down and it is a tap, up and it rings. Tune is how deep the
         drum is, like a small drum or a big drum. Play with both and keep the one you like.
-    hint:
-      gentle: Start with decay only. Tune can wait until you have heard decay do its work.
+    hint: Start with decay only. Tune can wait until you have heard decay do its work.
   - kind: ask
     q: >-
       Your kick is long and boomy and you are about to add a bass line. What is the most likely problem?
@@ -142,8 +140,7 @@ steps:
     options: ["1 second", "2 seconds", "4 seconds", "8 seconds"]
     answer: 1
     why: Two beats a second means four beats take two seconds.
-    hint:
-      gentle: Two beats every second. How long do four beats take?
+    hint: Two beats every second. How long do four beats take?
   - kind: ask
     q: At 140 beats per minute, about how long is one bar?
     options: ["1.5 seconds", "1.7 seconds", "2.0 seconds", "2.4 seconds"]
