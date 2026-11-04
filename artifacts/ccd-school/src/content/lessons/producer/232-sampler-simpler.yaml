@@ -1,0 +1,108 @@
+slug: sampler-simpler
+world: producer
+number: 232
+title: sampler and simpler
+minutes: 5
+song:
+  changes: drums.kick
+  why: recorded hits on your pads give your beat the sound of real drums instead of generated ones
+learn: >-
+  What a sampler does, the difference between Simpler and Sampler in Live, and recorded hits on your own
+  pattern.
+youCan:
+  - say what a sampler does
+  - say when you'd use Simpler and when Sampler
+  - put recorded hits on your own beat
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Kick, clap, hats. Every one of these is made by the engine, built from waves and noise as it plays.
+        There's another way to get a sound: record it once, then play the recording back whenever you hit a
+        pad or a key.
+
+        That's a sampler. A sample is just a recording, and a sampler is an instrument that plays recordings.
+        Any sound can become an instrument this way: a drum, a voice, a door slam.
+      straight: >-
+        These drums are generated. A sampler plays a recording instead, every time you hit a pad or key. Any
+        recording can become an instrument.
+      eli5: >-
+        These drums are made by the computer. A sampler plays a recording instead. Record any sound and you
+        can play it like a drum.
+
+  - kind: say
+    title: one sample, many notes
+    say:
+      mentor: >-
+        A sampler can play its recording at any pitch. Play a higher key and it plays the sound higher, a lower
+        key and it plays lower. One recorded bell becomes a whole melody.
+
+        For drums you usually want the opposite: the hit played once, whole, at its own pitch, every time you
+        tap the pad. That's called one-shot: tap it and the whole sound plays out, however long you hold.
+      straight: >-
+        A sampler plays its recording higher or lower by key. For drums you use one-shot: the full hit plays
+        once per tap.
+      eli5: >-
+        A sampler can play a sound high or low, like a keyboard. For drums it just plays the whole hit once
+        each time you tap.
+    deeper:
+      - title: simpler and sampler in live
+        say: >-
+          Simpler plays one sample and has three modes. Classic plays the sample across the keys with a loop,
+          One-Shot fires the whole sound once (good for drum hits and vocal chops), and Slice chops a loop into
+          pieces you can play. Sampler is the bigger instrument: many samples mapped across key and velocity
+          ranges, which is how sampled pianos and orchestras are built.
+      - title: the quick way in
+        say: >-
+          Drag any audio file onto a MIDI track and Live creates a Simpler with that sample loaded. If you
+          outgrow it, right-click the Simpler's header to turn it into a Sampler with the same sample.
+
+  - kind: tempo
+    set: kit
+    say:
+      mentor: >-
+        Here's your own beat. Switch from the synth kit to the recorded kit: same pattern, same timing, but now
+        every hit is a recording of a real kick, clap, hat and snare, played back by a sampler on each pad.
+
+        Listen to the texture. The recordings carry a bit of room and grit. Pick the kit your song wants and
+        keep it.
+      straight: >-
+        Your beat on the synth kit, then the recorded kit. Same pattern, recordings on each pad. Pick one.
+      eli5: >-
+        Same beat, two kits. The recorded one uses real drum sounds. Tap between them and keep the one you
+        like.
+
+  - kind: ask
+    q: What does a sampler do?
+    options: ["plays a recording when you hit a pad or key", "makes sound from a sine wave", "adds reverb", "only records your voice"]
+    answer: 0
+    why: It plays back a recorded sound, at any pitch, on every hit.
+    whyWrong:
+      1: That's a synth.
+      2: Reverb is an effect, not an instrument.
+      3: It can play back any recording.
+
+  - kind: ask
+    q: You want a drum hit to play in full every time, however short your tap. Which mode?
+    options: ["one-shot", "classic", "slice", "loop"]
+    answer: 0
+    why: One-shot plays the whole sound from start to end on each tap.
+    whyWrong:
+      1: Classic follows how long you hold the note.
+      2: Slice is for chopping a loop into pieces.
+      3: A loop repeats; you want the hit once.
+
+  - kind: ask
+    q: In Live, which one is built for many samples across the keyboard?
+    options: ["Sampler", "Simpler", "Drum Rack", "Saturator"]
+    answer: 0
+    why: Sampler maps many samples across key and velocity ranges. Simpler plays one.
+    whyWrong:
+      1: Simpler holds a single sample.
+      2: A Drum Rack holds pads, each with its own instrument.
+      3: Saturator is a distortion effect.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or go deeper with sampler, deep.

@@ -1,0 +1,114 @@
+slug: midi-mapping
+world: producer
+number: 303
+title: midi mapping
+minutes: 5
+song:
+  changes: lead.lead
+  why: a filter you can sweep by hand turns a static lead into one that rises and falls with the track
+learn: >-
+  Tying a knob on a controller to any control in Live, and finding the one on your lead you'd most want
+  under your hand.
+youCan:
+  - map a hardware knob to a control in Live
+  - limit a mapping to a useful range
+  - sweep your lead's filter by ear
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        A held synth note on its own. Now imagine reaching out and slowly opening it up from dark and muffled
+        to bright and buzzy, in time with the music. That move is half of dance music, and it's much more fun
+        with a real knob than a mouse.
+
+        Midi mapping is how you tie a knob on a controller to any control in Live.
+      straight: >-
+        One synth note. Sweeping its brightness by hand is a classic move. Midi mapping ties a hardware knob to
+        a control in Live.
+      eli5: >-
+        Listen to this note. What if you could turn a real knob and make it go from muffled to bright? Midi
+        mapping lets you do that.
+
+  - kind: say
+    title: map mode
+    say:
+      mentor: >-
+        Press cmd or ctrl and m and Live goes into midi map mode. Every control you can map gets highlighted.
+        Click the one you want, wiggle a knob on your controller, and they're joined. Press cmd or ctrl and m
+        again to get out and play.
+
+        The mapping is saved with your set, so the knob still does the same job next time you open the song.
+      straight: >-
+        Cmd or ctrl and m enters midi map mode. Click a control, move a hardware knob, done. Press it again to
+        exit. Mappings save with the set.
+      eli5: >-
+        Press cmd and m. Click the thing you want to control, then wiggle a real knob. Now that knob controls
+        it. Press cmd and m again when you're done.
+    deeper:
+      - title: min and max
+        say: >-
+          Each mapping has a min and a max. Set them and the full turn of your knob only covers part of the
+          control's range, so you get fine control over the bit that sounds good. Set min higher than max and
+          the knob works backwards.
+      - title: when the knob and the screen disagree
+        say: >-
+          If your knob is at one place and the control on screen is somewhere else, the takeover mode decides
+          what happens. None jumps straight to the knob. Pickup waits until the knob passes the current value,
+          so nothing jumps. Value scaling eases the two together.
+      - title: key map mode
+        say: >-
+          Cmd or ctrl and k does the same thing with your computer keyboard: click a control, press a key, and
+          that key now controls it. Handy on a laptop with no controller.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, res]
+    say:
+      mentor: >-
+        Here's your song with your lead playing. Cutoff is the knob you'd map: the filter that decides how
+        much brightness gets through. Sweep it slowly from closed to open while the song plays and feel the
+        lift.
+
+        Res, short for resonance, adds a ring right at the cutoff point, which makes a sweep sound even more
+        obvious. Leave both where your lead sounds best.
+      straight: >-
+        Your lead in your song. Cutoff is the one you'd map. Sweep it closed to open. Res adds a ring at the
+        cutoff. Leave both where they sound best.
+      eli5: >-
+        Turn cutoff slowly and your tune goes from muffled to bright. Res makes it sing a bit more. Stop where
+        you like it.
+
+  - kind: ask
+    q: Which shortcut turns on midi map mode?
+    options: ["cmd or ctrl and m", "cmd or ctrl and k", "cmd or ctrl and comma", "the tab key"]
+    answer: 0
+    why: M for midi map.
+    whyWrong:
+      1: That's key map mode, for the computer keyboard.
+      2: That opens preferences.
+      3: Tab switches views.
+
+  - kind: ask
+    q: How do you map a knob once you're in map mode?
+    options: ["click the control, then move the knob", "move the knob, then save the song", "drag the knob onto the track", "type the control's name"]
+    answer: 0
+    why: Click what you want, wiggle the hardware, and they're joined.
+    whyWrong:
+      1: Saving keeps it, but you still have to click the control first.
+      2: Hardware knobs can't be dragged.
+      3: You click, not type.
+
+  - kind: ask
+    q: Why set a mapping's min and max?
+    options: ["so the knob only covers the useful part of the range", "to make the knob louder", "to stop the mapping saving", "to map two knobs at once"]
+    answer: 0
+    why: A smaller range means finer control over the bit that sounds good.
+    whyWrong:
+      1: It changes the range, not the volume.
+      2: Mappings still save with the set.
+      3: Min and max are for one mapping.
+
+  - kind: keep
+    next: >-
+      Your lead's filter is set. Back to your song path, or on to Push 3.

@@ -1,0 +1,124 @@
+slug: recording-audio
+world: producer
+number: 237
+title: recording audio
+minutes: 5
+song:
+  changes: drums.kick
+  why: a recorded take puts your own playing, with its own feel, into your song
+learn: >-
+  How recording works in Live: input, arm, monitor, level, record. Then a take of your own recorded into your
+  song.
+youCan:
+  - say the steps to record a sound in Live
+  - say what arming and monitoring do
+  - say what a healthy recording level is
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        A kick on every beat, steady as a clock. Everything you've added so far started as something you
+        played or shaped here. Recording audio is the same idea with the outside world: a voice, a guitar,
+        keys jangling, a hand slapping a table. Whatever reaches a microphone can become part of your song.
+
+        The steps are always the same: choose where the sound comes from, get the track ready, check the level,
+        hit record.
+      straight: >-
+        Recording audio captures any real sound into your song. The steps: pick the input, arm the track, check
+        the level, record.
+      eli5: >-
+        You can record any sound into your song: your voice, a clap, a pan banging. You pick the microphone,
+        get ready, and press record.
+
+  - kind: say
+    title: arm, monitor, level
+    say:
+      mentor: >-
+        Arming a track means telling it to record. Only armed tracks capture sound when you press record, which
+        stops you recording over the wrong thing.
+
+        Monitoring means hearing yourself through the computer while you play. Handy, but there's a small delay
+        called latency, the time sound takes to go in and come back out. Too much and it's hard to play in
+        time.
+
+        Level is how loud the sound arrives. Aim for the loudest moments peaking around minus 12 to minus 6 on
+        the meter. Hit the top and the recording clips: the peaks are cut off and it crackles, and you can't
+        undo that afterwards.
+      straight: >-
+        Arm: the track will record. Monitor: you hear yourself, with a little delay called latency. Level: peaks
+        around minus 12 to minus 6 on the meter, never at the top, or it clips.
+      eli5: >-
+        Press the arm button so the track is ready. Make sure you can hear yourself. Keep the sound out of the
+        red on the meter, or it crackles.
+    deeper:
+      - title: recording in live
+        say: >-
+          On an audio track, set Audio From to your interface's input, then arm the track with its record
+          button. Monitor has three settings. In always lets the input through. Auto lets it through while
+          the track is armed and not playing back a recording. Off never does. Then press the main Record
+          button. In Session View the take lands in the selected empty clip slot; in Arrangement View it goes
+          on the timeline where playback is.
+      - title: latency
+        say: >-
+          Preferences, then Audio, shows your buffer size and latency. A smaller buffer means less delay. If
+          your audio interface has direct monitoring, you can use that and set Live's monitor to Off so you
+          hear yourself with no delay at all.
+      - title: take lanes
+        say: >-
+          When you record over a loop several times in Arrangement View, Live keeps each pass in take lanes, so
+          you can pick the best bits afterwards.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    snap: true
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        We can't reach your mic here, but recording a take works the same way. Your song is playing. Press rec,
+        and the count-in is your moment to get ready, like arming a track. Then play the pads along with your
+        song: a rim on the offbeats, a tom fill at the end of the bar, whatever feels good.
+
+        That take is your playing, with your timing. Listen back, and keep it if it adds something.
+      straight: >-
+        Record a take over your song on the pads. Press rec, wait out the count-in, play at least four hits on
+        spare pads. Keep it if it works.
+      eli5: >-
+        Press rec, wait for the ticks, then tap some pads along with your song. That's a recording of you
+        playing.
+    hint: Use pads your beat doesn't use yet, so your kick and clap stay as they are.
+
+  - kind: ask
+    q: What does arming a track do?
+    options: ["gets it ready to record", "mutes it", "solos it", "deletes it"]
+    answer: 0
+    why: Only armed tracks capture sound when you hit record.
+    whyWrong:
+      1: Mute is a different button.
+      2: Solo plays one track alone.
+      3: Nothing is deleted.
+
+  - kind: ask
+    q: Where should your recording's loudest moments peak?
+    options: ["around minus 12 to minus 6 on the meter", "right at the top", "as low as possible", "anywhere, it doesn't matter"]
+    answer: 0
+    why: That leaves room above for loud surprises, so nothing clips.
+    whyWrong:
+      1: At the top it clips, and clipping can't be undone.
+      2: Too quiet and you'll hear more noise when you turn it up.
+      3: Clipping ruins a take for good, so it matters.
+
+  - kind: ask
+    q: What is latency?
+    options: ["the delay as sound goes in and back out", "how loud the input is", "the song's tempo", "a kind of reverb"]
+    answer: 0
+    why: It's the time the sound takes to travel through the computer and back to your ears.
+    whyWrong:
+      1: That's the level.
+      2: Tempo is the speed of the song.
+      3: Reverb is space, not delay through the computer.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try warping to fit a sample to your tempo.

@@ -1,0 +1,135 @@
+slug: polyrhythm
+world: foundations
+number: 203
+title: polyrhythm
+minutes: 6
+song:
+  changes: hats.hats
+  why: a shaker counting in threes over a kick counting in fours gives your beat a rolling, hypnotic motion
+learn: >-
+  What a polyrhythm is, why two rhythms at once feel hypnotic, and a shaker in threes over your kick in fours.
+youCan:
+  - say what a polyrhythm is
+  - count threes against fours
+  - add a shaker in threes to your beat
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        Listen to the last part, the fast sixteenth hats. Count them in fours along with the kick: one e and
+        a, two e and a. Easy.
+
+        Now count the same hats in threes instead: one two three, one two three. The hats haven't changed,
+        but your counting has drifted away from the kick. Two ways of counting at once. That's the feeling
+        you're about to put into your song.
+      straight: >-
+        Count the sixteenths in fours with the kick, then in threes. Same hats, two groupings at once. That's
+        the start of a polyrhythm.
+      eli5: >-
+        Listen to the fast tss tss tss. Count them one two three four, with the boom. Now count them one two
+        three, one two three. Your counting stops matching the boom. Fun, right?
+
+  - kind: say
+    title: two rhythms at once
+    say:
+      mentor: >-
+        A polyrhythm is two rhythms playing at the same time, each with its own pulse. The classic is three
+        against two: one part plays three even hits while another plays two in the same space. They line up
+        at the start, pull against each other in the middle, and meet again at the end.
+
+        Your ear keeps flipping between hearing the three and hearing the two, and that's why polyrhythms
+        feel hypnotic. Minimal techno and Afrobeats use a pattern in threes over a straight four on the floor
+        kick all the time.
+      straight: >-
+        A polyrhythm is two rhythms at once, each with its own pulse, like three against two. They line up
+        at the start and pull apart in between. Common in techno and Afrobeats.
+      eli5: >-
+        Two people clap different patterns at the same time. They start together, drift apart, then meet
+        again. That's a polyrhythm.
+    deeper:
+      - title: polyrhythm or polymeter
+        say: >-
+          In a polyrhythm both parts fill the same span, three hits against two. In a polymeter the steps are
+          the same size but the loops are different lengths, say a three beat loop against a four beat loop,
+          so their starts drift apart and only line up again after twelve beats. In Live, clips of different
+          lengths in Session View loop on their own, which is an easy way to make one.
+      - title: keep them apart
+        say: >-
+          Two rhythms only sound like two rhythms if your ear can tell them apart. Give them different sounds,
+          different pitches or different places in the stereo, and keep them quieter than the kick so the
+          one still wins. Start slower than about 100 bpm when you're learning a new one.
+      - title: where it comes from
+        say: >-
+          West African drumming is built on polyrhythm, many interlocking parts layered at once. Ewe, Yoruba
+          and Akan drumming are the usual examples.
+
+  - kind: play
+    layer: hats
+    surface: pads
+    snap: true
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now put it in your song. Your closed hats keep going; you're adding a shaker on top.
+
+        Tap the snap key until it says sixteenths. Press rec, wait out the count-in, then count the sixteenths
+        in threes, one two three, one two three, and tap the shaker on every "one". Start counting again at
+        each new bar.
+
+        Here's what you'll hear: the shaker and the kick land together on beat one, pull apart, and meet
+        again three beats later. Sixteen doesn't split evenly into threes, so the last count of each bar gets
+        cut short and two shakes land close together as the bar starts over. That rolling, never quite
+        settling feel is three against four.
+      straight: >-
+        Set snap to sixteenths. Rec, then count sixteenths in threes and tap the shaker on every "one",
+        restarting each bar. Shaker and kick meet on beat one and again three beats later.
+      eli5: >-
+        Press rec and wait for four ticks. Count really fast, one two three, one two three, and tap the shaker
+        every time you say one. It starts with the boom, wanders off, and comes back.
+    hint: Sixteenths 1, 4, 7, 10, 13 and 16 of the bar, counting from 1. Six shakes a bar.
+
+  - kind: ask
+    q: A polyrhythm is
+    options: ["two rhythms at once, each with its own pulse", "one very fast rhythm", "changing tempo mid song", "any rhythm in 3/4"]
+    answer: 0
+    why: Two or more rhythms with their own pulses, played together.
+    whyWrong:
+      1: Fast isn't the point. It's two pulses at once.
+      2: The tempo stays the same.
+      3: A waltz has one pulse, counted in threes.
+
+  - kind: ask
+    q: In three against two, where do the two parts line up?
+    options: ["at the start of each cycle", "on every hit", "never", "only at the end of the song"]
+    answer: 0
+    why: They share the first beat, pull apart, and meet again when the cycle starts over.
+    whyWrong:
+      1: Then they'd be one rhythm.
+      2: They always meet at the start of the cycle.
+      3: They meet every cycle, not once.
+
+  - kind: ask
+    q: What helps you hear two rhythms instead of one mess?
+    options: ["a different sound, pitch or place for each part", "the same sound for both", "adding more layers", "taking out the downbeat"]
+    answer: 0
+    why: Your ear needs a way to tell the parts apart. Different sounds or positions do that.
+    whyWrong:
+      1: Same sound, same place, and they blur into one.
+      2: More layers make it busier, not clearer.
+      3: The downbeat is the anchor where they meet.
+
+  - kind: ask
+    more: true
+    q: How is polymeter different?
+    options: ["the loops are different lengths", "it only uses triplets", "it changes tempo", "it has no kick"]
+    answer: 0
+    why: Same size steps, different loop lengths, so the starts drift apart.
+    whyWrong:
+      1: Triplets are three notes in the space of two, a different idea.
+      2: The tempo stays the same.
+      3: The kick can stay.
+
+  - kind: keep
+    next: >-
+      Back to the beat path. Next: groove and swing, and a swing setting for your whole song.

@@ -1,0 +1,122 @@
+slug: preferences
+world: producer
+number: 301
+title: preferences
+minutes: 5
+song:
+  changes: drums.kick
+  why: the tempo and key you settle on become your song's defaults, the place everything else starts from
+learn: >-
+  The settings you set once in Live and leave alone, and the two your song starts from every time: its
+  tempo and its key.
+youCan:
+  - open Live's preferences and say what the main tabs are for
+  - explain the buffer size trade-off
+  - set your song's default tempo and key by ear
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Before a single sound like this comes out of Live, a few quiet decisions have already been made: which
+        sound card it talks to, how fast it has to answer you, where your plug-ins live. You set those once in
+        preferences and forget about them.
+
+        Your song has defaults too, the tempo and key it always starts from. You'll set those here.
+      straight: >-
+        Live's preferences hold the settings you set once: audio, midi, plug-ins. Your song has its own
+        defaults, tempo and key. You'll set both kinds.
+      eli5: >-
+        Before music plays, the computer needs a few settings, like where the sound comes out. You set those
+        once. Your song also has a speed and a key it always starts with.
+
+  - kind: say
+    title: set it up once
+    say:
+      mentor: >-
+        Open preferences with cmd or ctrl and the comma key, the same shortcut most apps use for settings.
+
+        The audio tab is the important one. It picks your audio driver, the sample rate, and the buffer size.
+        The buffer is a small chunk of sound the computer prepares before you hear it. Smaller means less
+        latency, the delay between pressing a key and hearing it, but the computer has to work harder. Too
+        small and you get clicks and glitches. 256 samples is a safe place to start.
+      straight: >-
+        Cmd or ctrl and comma opens preferences. The audio tab sets driver, sample rate and buffer size.
+        Lower buffer means less delay but more work for the computer. 256 samples is a safe default.
+      eli5: >-
+        Press cmd and comma (or ctrl and comma) to open the settings. The most important bit is the buffer.
+        Small buffer, quick sound, but the computer works hard. Big buffer, a bit of delay, but no crackles.
+    deeper:
+      - title: the other tabs
+        say: >-
+          Link, tempo and midi is where you switch on controllers and Ableton Link. The plug-ins settings tell
+          Live which folders to scan, and if a plug-in goes missing, rescanning there is the first thing to
+          try. The library tab sets where packs install.
+      - title: recording versus mixing
+        say: >-
+          When you're recording, a small buffer keeps what you play feeling instant. When you're mixing a big
+          song, nothing needs to be instant, so a larger buffer gives the computer room and stops the clicks.
+
+  - kind: tempo
+    set: tempo
+    marks: [120, 124, 128, 140]
+    say:
+      mentor: >-
+        Preferences are the settings for Live. Tempo belongs to your song, so in Live it sits in the control
+        bar at the top of each set instead. Think of this knob as your song's default: the speed it opens at
+        every time you come back to it.
+
+        Play it at a few speeds and pick the one that feels most like home.
+      straight: >-
+        Tempo lives in the control bar, not preferences, because it belongs to the song. Set your song's
+        default tempo.
+      eli5: >-
+        Pick the speed your song always starts at. Try a few and choose the one you like most.
+    hint: Most house sits between 120 and 128.
+
+  - kind: tempo
+    set: scale
+    choices: [minor, major]
+    say:
+      mentor: >-
+        The key is the other default. It's the set of notes your bass, chords and lead all draw from. Minor
+        tends to feel darker, major brighter. Flip between them and listen to your own parts move to the new
+        notes, then keep the one that fits the mood.
+      straight: >-
+        Your song's key, minor or major. Every melodic part follows it. Pick the mood you want.
+      eli5: >-
+        Minor sounds a bit moody, major sounds sunny. Try both and keep the one you like.
+
+  - kind: ask
+    q: Which shortcut opens Live's preferences?
+    options: ["cmd or ctrl and comma", "cmd or ctrl and p", "the tab key", "f5"]
+    answer: 0
+    why: Comma is the usual settings shortcut, and Live follows it.
+    whyWrong:
+      1: That's usually print.
+      2: Tab switches between session and arrangement.
+      3: Not a Live shortcut for this.
+
+  - kind: ask
+    q: What happens when you make the buffer size smaller?
+    options: ["less delay, but the computer works harder", "more delay and less work", "the sound gets louder", "nothing you can hear"]
+    answer: 0
+    why: A small buffer answers faster, but the computer has less time per chunk.
+    whyWrong:
+      1: That's what a bigger buffer does.
+      2: Buffer size doesn't change volume.
+      3: Too small and you'll hear clicks.
+
+  - kind: ask
+    q: Why is tempo in the control bar and not in preferences?
+    options: ["it belongs to each song, not to Live", "preferences can't hold numbers", "tempo never changes", "it's a plug-in setting"]
+    answer: 0
+    why: Preferences are for Live itself. Each song keeps its own tempo.
+    whyWrong:
+      1: Preferences hold plenty of numbers, like buffer size.
+      2: You can change it any time.
+      3: Tempo is part of every set.
+
+  - kind: keep
+    next: >-
+      Your song has its defaults. Back to your song path, or on to controllers.

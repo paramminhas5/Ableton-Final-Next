@@ -1,0 +1,111 @@
+slug: synth-modulation-routing
+world: producer
+number: 242
+title: modulation routing
+minutes: 5
+song:
+  changes: lead.lead
+  why: movement in brightness or in pitch gives your lead two very different kinds of life
+learn: >-
+  Sources, destinations and amounts, the way every modern synth wires up movement, and movement on your lead's
+  brightness or its pitch.
+youCan:
+  - say what a modulation source and destination are
+  - say what a modulation matrix does
+  - choose between brightness movement and pitch movement on your lead
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Three wave shapes on the same note. Each one is a still picture: the sound starts, holds, and stops
+        without changing. Real instruments are never that still. A trumpet gets brighter as it's blown harder,
+        a singer's pitch bends into a note.
+
+        Synths get that life from modulation: one thing moving another. And the cleanest way to think about it
+        is as wiring, from a source to a destination.
+      straight: >-
+        Three still sounds. Modulation adds movement by letting one thing move another, wired from a source to
+        a destination.
+      eli5: >-
+        These sounds don't move. Modulation makes one part of a synth push another part around, so the sound
+        changes as it plays.
+
+  - kind: say
+    title: source, destination, amount
+    say:
+      mentor: >-
+        A source is something that moves: an lfo, an envelope, how hard you play (velocity), the mod wheel on a
+        keyboard. A destination is the knob it moves: filter cutoff, pitch, volume, pan.
+
+        The amount says how much. It can be negative too, so the source pushes the knob the other way.
+
+        A modulation matrix is a grid of all of these, so any source can go to any destination. Two sources
+        can even move the same knob at once, and their movements add up.
+      straight: >-
+        Source: what moves (lfo, envelope, velocity, mod wheel). Destination: the knob it moves. Amount: how
+        much, positive or negative. A matrix lets any source reach any destination.
+      eli5: >-
+        Pick something that wiggles, pick a knob for it to wiggle, and say how much. That's modulation.
+    deeper:
+      - title: a classic route
+        say: >-
+          Velocity to filter cutoff makes a sound brighter when you play harder, the way real instruments
+          behave. It's one of the first routes to try on any patch.
+      - title: the matrix in wavetable
+        say: >-
+          Wavetable's modulation matrix sits at the bottom of the device. Pick a source row, a destination
+          column, and set the amount, positive or negative. Stacking Envelope 2 and an lfo on filter cutoff
+          gives a sweep on every note with a slow wobble on top.
+
+  - kind: shape
+    layer: lead
+    knobs: [env, glide]
+    say:
+      mentor: >-
+        Your lead has two routes already wired, and each knob is the amount. Env sends an envelope to the
+        filter: each note starts bright and settles darker. Glide sends movement to pitch: each note slides up
+        or down into the next instead of jumping.
+
+        Same melody, two destinations. Try env alone, then glide alone, then both, with your song playing. Keep
+        the one that makes your lead feel right, or keep both.
+      straight: >-
+        Env is an envelope routed to the filter: each note opens bright. Glide moves pitch: notes slide into
+        each other. Try each, keep one or both.
+      eli5: >-
+        Env makes each note start bright and get darker. Glide makes notes slide like a trombone. Try both and
+        keep your favourite.
+
+  - kind: ask
+    q: In modulation, what is the destination?
+    options: ["the knob that gets moved", "the thing doing the moving", "the speaker", "the next song"]
+    answer: 0
+    why: The source moves, the destination is what it moves.
+    whyWrong:
+      1: That's the source.
+      2: Modulation happens inside the synth.
+      3: It's all within one sound.
+
+  - kind: ask
+    q: You route velocity to filter cutoff. What happens?
+    options: ["harder notes sound brighter", "harder notes sound darker no matter what", "the tempo changes", "notes play backwards"]
+    answer: 0
+    why: Play harder and the filter opens further, like a real instrument.
+    whyWrong:
+      1: Only with a negative amount.
+      2: Tempo isn't a destination here.
+      3: Nothing reverses.
+
+  - kind: ask
+    q: Two sources move the same knob. What happens?
+    options: ["their movements add together", "they cancel out", "only the first one works", "the synth stops"]
+    answer: 0
+    why: Stacked modulation combines, which is how complex movement is built.
+    whyWrong:
+      1: They only cancel if set to exactly opposite amounts.
+      2: Both work at once.
+      3: Stacking is normal.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try fm basics for a whole new kind of tone.

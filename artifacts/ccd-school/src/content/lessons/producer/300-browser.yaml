@@ -1,0 +1,112 @@
+slug: browser
+world: producer
+number: 300
+title: the browser
+minutes: 5
+song:
+  changes: lead.lead
+  why: a different starting sound gives your lead a different character before you touch a single note
+learn: >-
+  What the browser in Live is for, how it's organised, and finding a new starting sound for your lead the
+  way you'd flip through presets.
+youCan:
+  - say what lives in Live's browser
+  - audition sounds on your own part before you commit
+  - pick a starting sound for your lead by ear
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Same note, three different sounds: a soft wave, a buzzy saw, a hollow square. Nothing about the
+        melody changed, only the sound playing it. That's what browsing is really about. Most of the time
+        you're not looking for notes, you're looking for the right voice to play them.
+
+        In Live, the place you go looking is called the browser.
+      straight: >-
+        Same note, three sounds. Picking the sound that plays your part is most of what the browser in Live
+        is for.
+      eli5: >-
+        One note, three different voices singing it. Finding the right voice for your tune is a big part of
+        making music.
+
+  - kind: say
+    title: your library in one place
+    say:
+      mentor: >-
+        The browser is the panel down the left side of Live. It holds everything you can drag into a song:
+        instrument sounds, drum kits, audio and midi effects, samples, plug-ins and packs, which are Ableton's
+        own sound libraries.
+
+        You find something, click it to hear a preview, and drag it onto a track. That's it. Drag works in
+        both views, so it doesn't matter whether you're in session or arrangement.
+
+        Live 12 added categories too, tags like bass or pads, so you can search by what a sound is instead of
+        what someone named the file.
+      straight: >-
+        The browser is Live's left panel: sounds, drums, effects, samples, plug-ins and packs. Preview a sound,
+        drag it onto a track. Live 12 added tag categories for searching by type.
+      eli5: >-
+        The browser is a big list of sounds on the left side of Live. Click one to hear it, then drag it onto
+        a track to use it.
+    deeper:
+      - title: what each section holds
+        say: >-
+          Sounds are instrument presets. Drums are kits and single hits. Instruments, audio effects and midi
+          effects are Live's devices. Plug-ins are third party ones you've installed. Samples are audio files,
+          including your own. Packs are Ableton's libraries, and you can add your own folders as places too.
+      - title: similar sounds
+        say: >-
+          Live 12 can also find samples that sound like the one you've picked, by listening to the audio
+          rather than reading the name. There's a whole deeper lesson on it further down this path.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff]
+    say:
+      mentor: >-
+        Here's your song with your own lead playing. Turn wave and listen to your melody change voice, soft
+        to buzzy to hollow. That's what clicking through presets in the browser feels like: same notes, new
+        sound, until one makes you sit up.
+
+        Then use cutoff to darken or brighten whichever one you land on. Keep the one that suits your song.
+      straight: >-
+        Your lead in your song. Wave flips its basic sound, like clicking through presets. Cutoff darkens or
+        brightens it. Keep the one that fits.
+      eli5: >-
+        Turn wave to give your tune a new voice. Turn cutoff to make it darker or brighter. Stop when you
+        like how it sounds.
+
+  - kind: ask
+    q: What do you mostly use Live's browser for?
+    options: ["finding sounds and dragging them onto tracks", "setting the tempo", "mixing tracks together", "exporting your song"]
+    answer: 0
+    why: It's your library. Find a sound, preview it, drag it onto a track.
+    whyWrong:
+      1: Tempo is in the control bar at the top.
+      2: Mixing happens in the mixer.
+      3: Export is in the file menu.
+
+  - kind: ask
+    q: Can you drag from the browser into both session and arrangement view?
+    options: ["yes, either view takes a drop", "only session view", "only arrangement view", "neither, you have to use a menu"]
+    answer: 0
+    why: Both views accept sounds dragged from the browser.
+    whyWrong:
+      1: Arrangement takes drops too.
+      2: Session takes drops too.
+      3: Dragging is the main way in.
+
+  - kind: ask
+    q: Which Live version added categories to the browser?
+    options: ["Live 12", "Live 9", "Live 10", "Live 11"]
+    answer: 0
+    why: Categories arrived in Live 12, so you can search by what a sound is.
+    whyWrong:
+      1: Too early.
+      2: Too early.
+      3: One version too early.
+
+  - kind: keep
+    next: >-
+      Your lead has its sound. Back to your song path, or carry on to preferences.

@@ -1,0 +1,96 @@
+slug: meld
+world: producer
+number: 245
+title: meld
+minutes: 5
+song:
+  changes: lead.lead
+  why: a lead built from two blended layers sounds richer than one oscillator on its own
+learn: >-
+  Meld, Live 12's synth with two engines blended into one voice, its focus on per-note expression, and a
+  two-layer voice on your own lead.
+youCan:
+  - say what Meld's two engines do
+  - say what MPE adds to playing
+  - blend two layers into one lead voice
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Soft wave, saw, square. Each has its own character: the soft one is round and calm, the saw is bright
+        and edgy. Pick one and you lose the others.
+
+        Meld's answer is to not pick. It has two separate engines, each making its own sound, and blends them
+        into one voice. Round and edgy at once, or one morphing into the other as you play.
+      straight: >-
+        Each shape has its own character. Meld runs two engines at once and blends them into one voice.
+      eli5: >-
+        Instead of picking one sound, Meld plays two at once and mixes them together.
+
+  - kind: say
+    title: two engines, every note its own
+    say:
+      mentor: >-
+        Meld arrived in Live 12. Its two engines are called A and B, and each can use a different kind of
+        oscillator, so one might be a classic synth wave and the other something stranger. You set how they
+        blend, or let the way you play move the blend.
+
+        That last part is what Meld is built around: MPE, which stands for midi polyphonic expression. On an
+        MPE controller every note you hold sends its own pitch bend, pressure and slide, so one finger can
+        bend its note while the others stay put. Pressing harder on a note could morph it from engine A toward
+        engine B.
+      straight: >-
+        Meld (Live 12) has engines A and B, each with its own oscillator type, blended into one voice. It's
+        built for MPE: every held note gets its own pitch bend, pressure and slide.
+      eli5: >-
+        Meld has two sound makers, A and B, mixed together. With a special keyboard, pressing harder on one
+        note can change just that note.
+    deeper:
+      - title: meld in live
+        say: >-
+          Meld is great without an MPE controller too: its macros and engine blend are a fast way to explore
+          sounds from a preset. With Push 3 or another MPE controller, pressure, slide and per-note bend can be
+          routed to the blend, filters and more.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, detune, env]
+    say:
+      mentor: >-
+        Your lead has two oscillators too, which is a small version of Meld's idea. Your song is playing. Wave
+        picks the shape both layers share. Detune pulls the second layer away from the first, so you hear them
+        as two voices blended rather than one.
+
+        Then try env: each note starts brighter and settles, which makes the blend feel like it's moving. Keep
+        the lead that sounds richest without getting muddy.
+      straight: >-
+        Two layers on your lead: wave sets their shape, detune separates them, env adds movement to each note.
+        Keep the richest version.
+      eli5: >-
+        Your tune has two sounds inside. Detune pulls them apart so you hear both. Env makes each note shine
+        at the start. Keep it if you like it.
+
+  - kind: ask
+    q: What is special about Meld's design?
+    options: ["two engines blended into one voice", "it only plays drums", "it's an effect, not an instrument", "it has no oscillators"]
+    answer: 0
+    why: Engines A and B each make a sound, and Meld blends them.
+    whyWrong:
+      1: It's a synth for any part.
+      2: It's an instrument.
+      3: Each engine has its own oscillator.
+
+  - kind: ask
+    q: What does MPE let you do?
+    options: ["bend and shape each held note on its own", "play faster", "record audio", "change the song's key"]
+    answer: 0
+    why: Every note gets its own pitch bend, pressure and slide.
+    whyWrong:
+      1: Speed isn't what MPE is about.
+      2: Recording is separate.
+      3: The key stays the same.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try drift for an analog-style voice on your chords.

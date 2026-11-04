@@ -1,0 +1,122 @@
+slug: daw-explained
+world: foundations
+number: 208
+title: what a daw is
+minutes: 5
+song:
+  changes: drums.kick
+  why: seeing your song as tracks and sections is how every music program shows it, and you can keep the layout
+learn: >-
+  What a daw is, the jobs it does, and your own song laid out the way a daw shows a song, tracks down the side
+  and time left to right.
+youCan:
+  - say what a daw does
+  - name a track, a clip and the master
+  - read your song as tracks and sections
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves, then both together, perfectly in time. Lining parts up like that used to need a room full
+        of tape machines, mixing desks and cables.
+
+        Now it's one program, called a daw: a digital audio workstation. Ableton Live, FL Studio, Logic and
+        Pro Tools are all daws. The app you're making your song in works the same way underneath.
+      straight: >-
+        A daw, digital audio workstation, is the program that records, edits, arranges and mixes music. It
+        replaces a studio full of gear. Live, FL Studio, Logic and Pro Tools are daws.
+      eli5: >-
+        Hear two beats join up? A daw is a music program that puts lots of sounds together in time. It's like
+        a whole music studio inside a computer.
+
+  - kind: say
+    title: four jobs in one window
+    say:
+      mentor: >-
+        Every daw does four jobs. It sequences: puts notes and clips in order in time. It hosts instruments:
+        runs synths and samplers that turn notes into sound. It hosts effects: chains of eq, compression,
+        reverb. And it mixes: sets how loud each part is, where it sits left and right, and where it goes.
+
+        The names for the pieces are worth knowing. A track is a lane that holds one part, like your drums. A
+        clip is a piece of audio or midi on that track. Everything flows down into the master, where your
+        whole song comes out.
+      straight: >-
+        A daw sequences, hosts instruments, hosts effects and mixes. A track is a lane for one part, a clip is
+        a piece of audio or midi on it, and everything ends at the master.
+      eli5: >-
+        Each sound in your song gets its own row, called a track. The bits of music on a row are called clips.
+        All the rows join up at the end in one place called the master.
+    deeper:
+      - title: in live
+        say: >-
+          Live has two views. Session View is a grid of clips for jamming and trying ideas. Arrangement View
+          lays the song out along a timeline. Press Tab to switch between them. Return tracks are shared
+          effect lanes, and the Master track is where everything finishes.
+      - title: which daw
+        say: >-
+          They all do the same four jobs. The differences are in how they feel to work in. The best daw is the
+          one you learn deeply, so pick one and stay with it for a good while before you look around.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song, opened the way a daw opens it. Each row is a track: your kick, your hats, your
+        melody, every part you've made. Time runs left to right in sections. Each square is a clip of that
+        part playing in that section.
+
+        Tap squares to switch parts off and on in different sections and play it through. That's arranging,
+        the daw's sequencing job, and you'll go deeper on it later. Keep the layout if you like it, or leave
+        your song as a loop for now.
+      straight: >-
+        Your song in a daw layout. Rows are tracks, columns are sections, squares are clips. Switch parts on
+        and off per section, play it, keep it or not.
+      eli5: >-
+        This is your song laid out in rows. Each row is one sound. Tap the squares to turn sounds on and off
+        in different parts of the song, then press play.
+
+  - kind: ask
+    q: What does daw stand for?
+    options: ["digital audio workstation", "drum and wave", "direct audio writer", "dynamic arrangement window"]
+    answer: 0
+    why: Digital audio workstation, the program that replaces a studio.
+    whyWrong:
+      1: Drums are one part of it, not the name.
+      2: It does far more than write audio.
+      3: Arranging is one of its jobs, not its name.
+
+  - kind: ask
+    q: In a daw, a track is
+    options: ["a lane that holds one part", "a whole finished song", "a single note", "the tempo"]
+    answer: 0
+    why: A track holds one part, with its clips and its effects.
+    whyWrong:
+      1: In a daw, a song is made of many tracks.
+      2: Notes live inside clips on a track.
+      3: Tempo is set for the whole song.
+
+  - kind: ask
+    q: Where does every track end up?
+    options: ["the master", "a return track", "the browser", "the first clip"]
+    answer: 0
+    why: All tracks flow into the master, and that's what you hear and export.
+    whyWrong:
+      1: A return is a shared effect lane. It also flows into the master.
+      2: The browser is where you find sounds.
+      3: A clip is a piece of a track.
+
+  - kind: ask
+    more: true
+    q: Live's two main views are
+    options: ["Session View and Arrangement View", "browser and mixer", "midi and audio", "stereo and mono"]
+    answer: 0
+    why: Session for jamming with clips, Arrangement for the timeline. Tab switches.
+    whyWrong:
+      1: Those are panels, not the two views.
+      2: Those are kinds of clips.
+      3: Those are ways a sound is spread, not views.
+
+  - kind: keep
+    next: >-
+      Back to waves and the studio. Next path: melody, starting with your song's scale.

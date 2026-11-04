@@ -1,0 +1,107 @@
+slug: external-instrument
+world: producer
+number: 310
+title: external instrument
+minutes: 5
+song:
+  changes: lead.lead
+  why: a lead with a bit of grit and drift has the character people go looking for in hardware synths
+learn: >-
+  How Live's External Instrument puts a hardware synth on a track like any software one, and giving your
+  lead some of that hardware character.
+youCan:
+  - say what External Instrument sends and receives
+  - say why hardware latency needs setting
+  - give your lead a rougher, wider, more hardware-like sound
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A soft wave, a saw, a square. Every hardware synth starts from shapes like these, but each one adds its
+        own colour: slightly uneven tuning, a circuit that grits up when you push it. People love that
+        character, and they want to use it inside Live without a separate rig.
+      straight: >-
+        Three basic shapes. Hardware synths start from these and add their own colour. External Instrument
+        brings that into Live.
+      eli5: >-
+        Three sounds. Real synth boxes make sounds like these, each with its own flavour. Live can play them
+        too.
+
+  - kind: say
+    title: hardware on a track
+    say:
+      mentor: >-
+        External Instrument is a device you put on a midi track. It sends the track's notes out to your
+        hardware synth through your interface, and brings the synth's audio back in, all on that one track. To
+        Live it looks like any other instrument. You can record it, automate it and run it through Live's
+        effects.
+
+        The trip out to the synth and back takes a moment. The hardware latency setting on the device makes up
+        for it, so the hardware lands in time with everything else.
+      straight: >-
+        External Instrument goes on a midi track. Notes out to the hardware, audio back in, one track. Set
+        hardware latency so it lands in time.
+      eli5: >-
+        External Instrument sends your notes to a real synth box and brings its sound back into Live, so it
+        works like any other instrument.
+    deeper:
+      - title: setting it up
+        say: >-
+          Pick the midi port and channel the synth listens on, and the audio input it comes back on. Set the
+          synth to one midi channel rather than all of them, so it doesn't play notes meant for something else.
+          The return needs its own input, not one you're already using.
+      - title: committing
+        say: >-
+          When you're happy with a part, record the hardware's audio onto an audio track. Then the synth is
+          free to play something else.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, detune, drive]
+    say:
+      mentor: >-
+        Here's your song with your lead. Give it some hardware character. Pick a wave, then bring in detune,
+        which pulls its oscillators slightly apart so it sounds wider and less perfect. Then add drive, which
+        pushes it until it grits up, like a circuit being leaned on.
+
+        Go too far and it gets messy. Find the point where it sounds like it came out of a box with knobs.
+      straight: >-
+        Your lead. Wave picks the shape, detune pulls it slightly out of line for width, drive adds grit. Stop
+        before it gets messy.
+      eli5: >-
+        Pick a sound with wave. Turn detune up a bit to make it wobbly and wide. Turn drive up for a rough edge.
+
+  - kind: ask
+    q: What does External Instrument do?
+    options: ["sends notes to hardware and brings its audio back on one track", "turns audio into midi", "records your voice", "makes a software copy of the synth"]
+    answer: 0
+    why: Notes out, audio back in, one track.
+    whyWrong:
+      1: It sends midi out and gets audio back.
+      2: It's for instruments, not vocals.
+      3: The real hardware still makes the sound.
+
+  - kind: ask
+    q: What kind of track does External Instrument go on?
+    options: ["a midi track", "an audio track", "the master track", "a return track"]
+    answer: 0
+    why: It plays notes, so it lives where notes live.
+    whyWrong:
+      1: It needs notes to send.
+      2: The master has no notes.
+      3: Returns are for effects.
+
+  - kind: ask
+    q: Why set the hardware latency?
+    options: ["so the hardware's sound lands in time with everything else", "to make the synth louder", "to change the synth's tuning", "to save cpu"]
+    answer: 0
+    why: The round trip takes time, and the setting makes up for it.
+    whyWrong:
+      1: It's about timing, not volume.
+      2: Tuning is on the synth.
+      3: It's about timing.
+
+  - kind: keep
+    next: >-
+      Your lead has some grit. Back to your song path, or on to linked-track editing.

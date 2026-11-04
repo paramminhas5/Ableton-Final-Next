@@ -1,0 +1,120 @@
+slug: mpe-tuning
+world: producer
+number: 313
+title: mpe and tuning systems
+minutes: 5
+song:
+  changes: lead.lead
+  why: notes that slide into each other and pitches that sit slightly off the grid make a lead sound sung instead of typed
+learn: >-
+  How mpe gives each note its own bend and pressure, how Live 12's tuning systems step outside the usual 12
+  notes, and a taste of both on your lead.
+youCan:
+  - say what mpe adds to normal midi
+  - say what a tuning system and a Scala file are
+  - give your lead slides and in-between pitches
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        A low note, then a high one, jumping straight there. That's how a keyboard thinks: one note, then the
+        next, each fixed to a set pitch. A singer or a violinist doesn't work like that. They slide between
+        notes, bend them, lean on them, and land between the keys when it feels right.
+      straight: >-
+        Low note, high note, a straight jump. Voices and violins slide, bend and land between notes. Keyboards
+        don't, by default.
+      eli5: >-
+        One note, then another, jumping. A singer can slide from one to the other like going down a slide.
+
+  - kind: say
+    title: every note its own
+    say:
+      mentor: >-
+        With normal midi there's one pitch bend for the whole keyboard. Bend one note in a chord and every note
+        bends. Mpe, short for midi polyphonic expression, gives each note its own bend, its own slide and its
+        own pressure. Press harder on one note and only that note changes.
+
+        You need a controller that can sense it, like Push 3's pads, a Roli Seaboard or a LinnStrument.
+
+        Live 12 also added tuning systems. The usual 12 equal notes in an octave is only one way to tune. Load
+        a Scala file, a tuning file that ends in .scl, and your whole set plays in a different tuning: just
+        intonation, 24 notes to the octave, an old historical tuning, or one of your own.
+      straight: >-
+        Normal midi has one bend for all notes. Mpe gives each note its own bend, slide and pressure. You need
+        an mpe controller, like Push 3.
+
+        Live 12's tuning systems let the whole set leave the usual 12 notes. Load a Scala (.scl) file for just
+        intonation, 24 notes to the octave, or older tunings.
+      eli5: >-
+        Usually if you bend one note, they all bend. With mpe, each finger can wiggle its own note.
+
+        Live 12 can also use notes that sit between the usual ones, if you load a special tuning file.
+    deeper:
+      - title: switching it on
+        say: >-
+          Mpe has to be switched on in each device that supports it, and most start with it off. On a synth
+          that doesn't support it, bends still move every note together.
+
+  - kind: shape
+    layer: lead
+    knobs: [glide, detune]
+    say:
+      mentor: >-
+        Here's your song with your lead. Glide makes each note slide up or down into the next instead of
+        jumping, the way a voice would. Turn it up and listen to your melody start to sing.
+
+        Detune pulls your lead's three oscillators slightly away from each other, by fractions of a note, so
+        the pitch sits a little off the grid. A touch sounds warm and alive. A lot sounds seasick. Keep what
+        suits your song.
+      straight: >-
+        Your lead. Glide slides between notes. Detune pulls its oscillators fractions of a note apart, off the
+        usual pitches. Keep what suits your song.
+      eli5: >-
+        Turn glide and your notes slide into each other. Turn detune and the sound gets wobbly and wide. Stop
+        where you like it.
+
+  - kind: ask
+    q: What does mpe stand for?
+    options: ["midi polyphonic expression", "multi patch editor", "modular performance engine", "midi pro edition"]
+    answer: 0
+    why: Polyphonic expression, expression on many notes at once.
+    whyWrong:
+      1: Not a patch editor.
+      2: Not an engine.
+      3: Not an edition.
+
+  - kind: ask
+    q: With normal midi, you bend one note in a chord. What happens?
+    options: ["every note bends", "only that note bends", "nothing bends", "the chord gets louder"]
+    answer: 0
+    why: Normal midi has one bend for the whole keyboard. Mpe fixes that.
+    whyWrong:
+      1: That's what mpe gives you.
+      2: Bend still works, just on everything.
+      3: Bend changes pitch, not volume.
+
+  - kind: ask
+    q: What's a Scala file for in Live 12?
+    options: ["loading a different tuning system", "loading a drum kit", "saving your song", "mapping a controller"]
+    answer: 0
+    why: A .scl file describes a tuning, and the whole set follows it.
+    whyWrong:
+      1: Kits come from the browser.
+      2: Songs save as Live sets.
+      3: Mapping happens in map mode.
+
+  - kind: ask
+    more: true
+    q: What does glide do to your lead?
+    options: ["slides each note into the next", "makes it louder", "adds reverb", "changes the tempo"]
+    answer: 0
+    why: Notes slide instead of jumping, like a voice.
+    whyWrong:
+      1: Glide is pitch, not level.
+      2: Reverb is space.
+      3: Tempo stays the same.
+
+  - kind: keep
+    next: >-
+      Your lead slides now. Back to your song path, or on to the midi effects tour.

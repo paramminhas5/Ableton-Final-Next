@@ -1,0 +1,113 @@
+slug: sidechain
+world: producer
+number: 212
+title: sidechain in live
+minutes: 5
+song:
+  changes: bass.bass
+  why: a bass that dips on every kick and swells back gives your low end that pumping dance-floor movement
+learn: >-
+  How sidechain lets your kick turn your bass down, how deep the dip goes and how fast it recovers, and how
+  to set it up in Live.
+youCan:
+  - say what a sidechain is
+  - set how deep and how long your bass ducks under the kick
+  - set up sidechain compression in Live
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Kick on every beat. Picture your bass playing underneath. Every time the kick hits, they pile up in the
+        low end. A sidechain fixes that: it lets one sound control what happens to another. Here, the kick
+        reaches over and turns the bass down for a moment on every hit.
+
+        Do it hard and you get that pumping, breathing sound all over dance music. Do it gently and you just
+        get a cleaner kick.
+      straight: >-
+        Sidechain: one sound controls another. Here the kick turns the bass down on every hit. Hard, it pumps.
+        Gentle, it's just cleaner.
+      eli5: >-
+        Every time the boom hits, the bass gets quieter for a moment, then comes back. That's called a
+        sidechain. It makes music go pump, pump, pump.
+
+  - kind: shape
+    layer: bass
+    knobs: [duck, decay]
+    say:
+      mentor: >-
+        Here's your song. Duck sets how much your bass dips under the kick, and it sets the release with it,
+        the time the bass takes to come back up. A little duck is a quick, shallow dip. More duck is a deeper
+        dip with a longer swell, so the bass pumps.
+
+        Decay shapes it from the other side: shorter bass notes leave gaps of their own around the kick. Find
+        the pump that suits your song. Subtle is fine, so is obvious.
+      straight: >-
+        Duck sets the depth of the dip and how long the bass takes to come back. More duck, deeper and longer
+        pump. Decay shortens bass notes. Set the pump you want.
+      eli5: >-
+        Turn up duck and the bass gets quieter on each boom and slowly comes back. More duck, more pumping.
+        Decay makes bass notes shorter. Stop where it feels good.
+
+  - kind: say
+    title: sidechain in live
+    say:
+      mentor: >-
+        In Live, the duck is done by a compressor, a device that turns a sound down when it gets loud. Put
+        Live's Compressor on your bass track and open its sidechain section. Switch it on and set audio from to
+        your kick track.
+
+        Now the compressor ignores the bass and listens to the kick instead. Every kick hit pulls the bass
+        down. Threshold and ratio set how deep the dip goes, and release sets how fast the bass comes back,
+        the same two things your duck knob did at once.
+      straight: >-
+        Live: Compressor on the bass, open sidechain, switch it on, audio from your kick. Threshold and ratio
+        set depth, release sets recovery.
+      eli5: >-
+        In Live you put a squeezing tool on the bass and tell it to listen to the kick. Then every kick pushes
+        the bass down.
+    deeper:
+      - title: the sidechain eq
+        say: >-
+          The sidechain section has its own eq, which filters what the compressor hears. Set it to a high pass
+          around 100 hz and only the click of the kick triggers the duck, not its long low tail. Without it, a
+          booming kick can keep the bass held down for most of the bar.
+      - title: beyond kick and bass
+        say: >-
+          The same trick works on pads and chords for a big pumping sound. You can also duck a reverb under a
+          dry vocal so the words stay clear and the reverb blooms in the gaps. If the bass suddenly gets loud,
+          check the kick track isn't muted, because no kick means no duck.
+
+  - kind: ask
+    q: What is a sidechain?
+    options: ["one sound controlling an effect on another", "a chain of reverbs", "a type of bass", "a kind of drum pattern"]
+    answer: 0
+    why: The kick controls how much the bass is turned down. One sound steering another.
+    whyWrong:
+      1: Reverb is space, not control.
+      2: It works on any sound, not just bass.
+      3: It's a routing trick, not a pattern.
+
+  - kind: ask
+    q: Your bass pumps too slowly and stays down too long. What do you shorten?
+    options: ["the release", "the threshold", "the tempo", "the sub"]
+    answer: 0
+    why: Release is how fast the bass comes back up after each kick.
+    whyWrong:
+      1: Threshold is about when it starts ducking, not how long.
+      2: Tempo changes the whole song.
+      3: The sub is part of the bass sound, not the duck.
+
+  - kind: ask
+    q: In Live's Compressor, why high-pass the sidechain eq around 100 hz?
+    options: ["so only the kick's click triggers the duck", "to remove the bass", "to make the kick louder", "to add reverb"]
+    answer: 0
+    why: Filtering out the kick's low tail stops it holding the bass down for the whole bar.
+    whyWrong:
+      1: It only changes what the compressor hears, not the bass.
+      2: The kick's level doesn't change.
+      3: Eq doesn't add reverb.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the compressor itself, on your drums.

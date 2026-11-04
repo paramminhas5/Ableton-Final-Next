@@ -13,6 +13,10 @@ for (const [slug, act] of [
       await press(p, "Deck b tempo", bb > a ? "ArrowLeft" : "ArrowRight", 1);
     }
   }],
+  ["eq-mixing-dj", async p => { await press(p, "deck b", "ArrowUp", 60); await press(p, "low a", "ArrowDown", 60); }],
+  ["long-mix-blend", async p => { await press(p, "Crossfader", "Home", 1); await press(p, "Crossfader", "End", 1); }],
+  ["key-detection-dj", async p => { for (const n of ["warm up", "smooth", "long roller", "tool", "skywalker", "space bass", "fast one"]) { await p.getByRole("radio", { name: new RegExp("^" + n) }).click(); await p.waitForTimeout(150); if (/fits/.test(await p.locator(".mx-decks").innerText())) break; } }],
+  ["effects-performance-dj", async p => { await press(p, "echo a", "ArrowUp", 60); await press(p, "deck a", "ArrowDown", 60); }],
   ["your-first-mix", async p => { await press(p, "deck b", "ArrowUp", 60); await press(p, "low a", "ArrowDown", 60); await press(p, "Crossfader", "ArrowRight", 60); }],
 ]) {
   for (const [w, h] of [[1440, 900], [390, 844]]) {

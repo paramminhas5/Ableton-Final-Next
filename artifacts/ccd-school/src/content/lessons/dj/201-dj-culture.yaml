@@ -1,0 +1,114 @@
+slug: dj-culture
+world: dj
+number: 201
+title: dj culture and history
+minutes: 5
+song:
+  changes: drums.clap
+  why: the first trick in dj history was keeping a groove going across two decks, and you'll do it with your song
+learn: >-
+  Where djing came from, from radio to the Bronx, Chicago and Detroit, and the move that started it, played
+  on your own song.
+youCan:
+  - name the scenes modern djing grew out of
+  - say what Kool Herc did with two copies of one record
+  - keep a groove going across two decks
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves, one beat. In the Bronx in the 1970s, a dj called Kool Herc noticed the crowd went
+        wildest in the break, the short part of a funk record where everything drops out except the drums.
+
+        So he bought two copies of the same record. He played the break on one, then the break on the other,
+        back and forth, so it never ended. That back and forth between two decks is the root of everything
+        you'll do in this world.
+      straight: >-
+        In the 1970s Kool Herc played the drum break of a record on one deck, then the same break on a second
+        copy, back and forth, so it never ended. Hip-hop djing started there.
+      eli5: >-
+        A long time ago a dj called Kool Herc saw people loved the drum part of a song most. He used two copies
+        of the record and switched between them so the drum part kept going.
+
+  - kind: say
+    title: where it came from
+    say:
+      mentor: >-
+        The name came first, from radio. In the 1940s and 50s, radio presenters playing records got called
+        disc jockeys, and records started replacing live bands.
+
+        Then came the scenes. In the Bronx, Herc's breaks gave birth to hip-hop djing, and Grandmaster Flash
+        took turntable technique further, using the records themselves as a rhythm instrument. In Chicago,
+        Frankie Knuckles played at a club called the Warehouse, and the music there became house. In Detroit,
+        Juan Atkins, Derrick May and Kevin Saunderson, known as the Belleville Three, made techno.
+
+        None of these were big business. They were underground scenes built by their communities, and house
+        grew out of Black and gay club culture. Knowing that is part of carrying it on.
+      straight: >-
+        Radio gave us the name disc jockey in the 1940s and 50s. Then the Bronx gave us hip-hop djing (Kool
+        Herc, Grandmaster Flash), Chicago gave us house (Frankie Knuckles at the Warehouse), and Detroit gave
+        us techno (the Belleville Three). All underground, all built by their communities.
+      eli5: >-
+        First, people on the radio played records and got called disc jockeys. Then new kinds of dance music
+        grew in different cities: hip-hop in New York, house in Chicago, techno in Detroit.
+    deeper:
+      - title: detroit and techno
+        say: >-
+          The Belleville Three were Juan Atkins, Derrick May and Kevin Saunderson. They made techno in Detroit
+          in the 1980s: futuristic music from an industrial city.
+      - title: turntablism
+        say: >-
+          Turntablism treats the record player as an instrument. Scratching, cutting and juggling breaks are
+          played the way you'd play a drum. You'll meet it again in the lessons on the crossfader and on
+          digital vinyl.
+
+  - kind: mix
+    goal: crossfade
+    say:
+      mentor: >-
+        Now do Herc's move on your song. Deck a is your song, deck b a track from the bank. Slide the
+        crossfader all the way to b, then all the way back to a.
+
+        Listen to the groove carry on across the switch. Herc did this with two copies of one record. You're
+        doing it with two different tracks, which is exactly where djing went next.
+      straight: >-
+        Deck a is your song, deck b a bank track. Slide the crossfader fully to b, then fully back to a, and
+        keep the groove going.
+      eli5: >-
+        Your song is on one side, another song on the other. Slide the big sideways slider all the way over,
+        then all the way back. The music never stops.
+
+  - kind: ask
+    q: What did Kool Herc do with two copies of the same record?
+    options: ["played the break on one, then the other, to make it last", "played both at once to make it louder", "scratched one while the other played", "kept one as a spare"]
+    answer: 0
+    why: Switching between two copies made the drum break go on as long as the crowd wanted.
+    whyWrong:
+      1: It was about making the break longer, not louder.
+      2: Scratching came after, with Grandmaster Flash and the turntablists.
+      3: Both copies were in play.
+
+  - kind: ask
+    q: Which city is house music linked to?
+    options: ["Chicago", "Detroit", "the Bronx", "London"]
+    answer: 0
+    why: Chicago, and a club called the Warehouse where Frankie Knuckles played.
+    whyWrong:
+      1: Detroit gave us techno.
+      2: The Bronx gave us hip-hop djing.
+      3: London wasn't one of the scenes in this lesson.
+
+  - kind: ask
+    q: Where did the name disc jockey come from?
+    options: ["radio, in the 1940s and 50s", "Chicago clubs", "hip-hop block parties", "the first club cdjs"]
+    answer: 0
+    why: Radio presenters playing records were the first disc jockeys.
+    whyWrong:
+      1: Chicago clubs came decades later.
+      2: Block parties came in the 1970s.
+      3: Cdjs are much newer than the name.
+
+  - kind: keep
+    next: >-
+      Back to the song path: the gear. Two decks, a mixer, and your song on deck a.

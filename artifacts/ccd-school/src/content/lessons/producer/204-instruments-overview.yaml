@@ -1,0 +1,111 @@
+slug: instruments-overview
+world: producer
+number: 204
+title: live's instruments
+minutes: 5
+song:
+  changes: drums.kick
+  why: the same drum notes played by a different instrument, synthesised or recorded, change the whole feel of your beat
+learn: >-
+  What an instrument is in a DAW, why the same notes can sound completely different, and the instruments
+  that come with Live.
+youCan:
+  - say what an instrument does with notes
+  - swap the instrument playing your drums
+  - name a few of Live's instruments and what they're good at
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A kick, a clap and hats. What you see in your song for each part is a list of notes: when to hit and
+        how hard. The notes don't make a sound on their own. Something has to turn them into sound, and that
+        something is called an instrument.
+
+        Change the instrument and the same notes come out sounding completely different.
+      straight: >-
+        Your parts are notes. An instrument turns notes into sound. Same notes, new instrument, new sound.
+      eli5: >-
+        Your song is a list of when to play each drum. An instrument is what makes the actual sound. Swap it
+        and the same beat sounds new.
+
+  - kind: tempo
+    set: kit
+    say:
+      mentor: >-
+        Here's your song, with two instruments for your drums. Synth drums are made from scratch by the
+        engine, out of waves and noise. Recorded drums play back real hits, recorded once and played on your
+        pattern. An instrument that plays recordings like that is called a sampler.
+
+        Switch between them while it plays. The pattern doesn't change at all, only the sound. Keep the kit
+        that suits your song.
+      straight: >-
+        Two instruments, same drum pattern. Synth drums are generated; recorded drums are samples. Switch, then
+        keep one.
+      eli5: >-
+        Same beat, two drum kits. One is made by the computer, one is real drums that were recorded. Pick the
+        one you like.
+
+  - kind: say
+    title: the instruments in live
+    say:
+      mentor: >-
+        In Live an instrument sits on a midi track, a track that holds notes. Drop one on, play some notes,
+        and you hear it. Live comes with a whole set.
+
+        Drum Rack holds drum kits, one sound per pad. Simpler and Sampler play recordings. Wavetable, Analog
+        and Drift are synths, and Operator is an fm synth, a different way of making sound you'll meet in a
+        later lesson. Meld is one of the newer synths in Live 12.
+
+        You don't need all of them. Most producers learn two or three really well.
+      straight: >-
+        In Live, instruments sit on midi tracks. Drum Rack for kits, Simpler and Sampler for recordings,
+        Wavetable, Analog, Drift and Meld for synths, Operator for fm. Learn two or three well.
+      eli5: >-
+        Live has lots of instruments: one for drums, some that play recordings, and lots of synths. You only
+        need to learn a few.
+    deeper:
+      - title: finding them
+        say: >-
+          Instruments live in the browser under Instruments. Drag one onto a midi track, or onto empty space to
+          make a new midi track for it. Simpler plays one sample across the keys; Sampler can map many
+          samples across the keyboard and by how hard you play, and you can turn one into the other with a
+          right-click.
+      - title: what each is good at
+        say: >-
+          A rough guide: pads and evolving sounds from Wavetable or Meld, plucks, bells and tight basses from
+          Operator, anything built on a recording from Simpler or Sampler, and kits from Drum Rack. A Drum Rack pad can hold any instrument, not only samples.
+
+  - kind: ask
+    q: What does an instrument do in a DAW?
+    options: ["turns notes into sound", "sets the tempo", "stores your samples", "mixes the tracks together"]
+    answer: 0
+    why: Notes say what to play and when. The instrument makes the sound.
+    whyWrong:
+      1: Tempo lives in the control bar.
+      2: The browser is where samples are kept.
+      3: That's the mixer's job.
+
+  - kind: ask
+    q: You swapped your drum kit. What stayed the same?
+    options: ["the pattern of notes", "the sound of the kick", "the sound of the clap", "nothing at all"]
+    answer: 0
+    why: Same notes, different instrument. Only the sound changed.
+    whyWrong:
+      1: The kick sound is exactly what changed.
+      2: The clap changed with the kit.
+      3: Your pattern stayed put.
+
+  - kind: ask
+    q: An instrument that plays back recordings is called?
+    options: ["a sampler", "a synth", "a mixer", "a metronome"]
+    answer: 0
+    why: A sampler plays recorded sounds, like Simpler and Sampler in Live.
+    whyWrong:
+      1: A synth builds its sound from waves.
+      2: A mixer balances tracks.
+      3: A metronome is the click that keeps time.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the oscillator, where every synth sound starts.

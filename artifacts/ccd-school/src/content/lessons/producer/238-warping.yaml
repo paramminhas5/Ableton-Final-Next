@@ -1,0 +1,110 @@
+slug: warping
+world: producer
+number: 238
+title: warping
+minutes: 5
+song:
+  changes: drums.kick
+  why: your song's tempo is the grid every sample has to fit, and warping is how a recording fits it
+learn: >-
+  What warping does to a recording, why a loop needs it to follow your tempo, and your song moved to a new
+  tempo.
+youCan:
+  - say what warping does
+  - say what a warp marker is
+  - set your song's tempo knowing your samples have to follow it
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves at the same tempo, then both together, locked. They only lock because they're at the same
+        speed. Grab a drum loop recorded at 100 bpm, drop it into a song at 124, and it drifts out of time
+        straight away.
+
+        Warping fixes that. It stretches or squeezes a recording in time so it follows your song's tempo, and
+        it does it without changing the pitch. Your 100 bpm loop plays at 124, and it doesn't turn into a
+        chipmunk.
+      straight: >-
+        Two grooves lock because they share a tempo. Warping stretches a recording to your song's tempo without
+        changing its pitch.
+      eli5: >-
+        Two beats at the same speed fit together. If a recording is slower than your song, warping speeds it
+        up to match, and it doesn't make it squeaky.
+
+  - kind: say
+    title: warp markers
+    say:
+      mentor: >-
+        To stretch a recording properly, Live needs to know where its beats are. A warp marker is a pin that
+        says "this point in the sound belongs on this beat". Live places them on the hits, and you can drag one
+        to fix a hit that's early or late.
+
+        Between the markers, Live stretches the audio to fit. How it stretches depends on the warp mode, which
+        has a lesson of its own.
+      straight: >-
+        A warp marker pins a point in the audio to a beat. Live stretches the audio between markers. Drag a
+        marker to fix timing.
+      eli5: >-
+        Warp markers are pins that hold each drum hit on the beat. Move a pin and the hit moves.
+    deeper:
+      - title: warping in live
+        say: >-
+          Each audio clip has a Warp switch in the clip view. With Warp on, the clip follows the project tempo.
+          With it off, it plays at its own speed. Double-click in the waveform to add a warp marker. Right-click
+          a hit and choose Warp From Here (Straight) to lock a whole loop to the grid from that point.
+      - title: six modes
+        say: >-
+          Live has six warp modes: Beats, Tones, Texture, Re-Pitch, Complex and Complex Pro. Start with Beats
+          for drums. Re-Pitch is the odd one out: like a tape machine, it changes pitch along with speed.
+
+  - kind: tempo
+    marks: [100, 120, 124, 128]
+    say:
+      mentor: >-
+        Here's your song. Turn the tempo and every part follows, because your parts are notes and the engine
+        plays each note on the beat it belongs to. Even the recorded kit follows: each hit is a short sample,
+        fired on its step.
+
+        A long recorded loop wouldn't do that on its own. That's the job warping does in Live. Pick the tempo
+        that feels right for your song, and know that any loop you bring in will be warped to it.
+      straight: >-
+        Turn your song's tempo. Your parts are notes, so they follow. A recorded loop would need warping to do
+        the same. Pick your tempo.
+      eli5: >-
+        Turn the knob to make your song faster or slower. Everything you made keeps up. A recording would need
+        warping to keep up too.
+
+  - kind: ask
+    q: What does warping do?
+    options: ["changes a recording's timing without changing its pitch", "changes the pitch only", "adds echo", "makes it louder"]
+    answer: 0
+    why: It stretches or squeezes the audio in time to fit your tempo, keeping the pitch.
+    whyWrong:
+      1: Pitch stays put; timing changes.
+      2: Echo is an effect.
+      3: Level doesn't change.
+
+  - kind: ask
+    q: What is a warp marker?
+    options: ["a pin that holds a point in the audio to a beat", "a type of reverb", "a midi note", "a track colour"]
+    answer: 0
+    why: Live stretches the audio between markers so each pinned point lands on its beat.
+    whyWrong:
+      1: Reverb is space.
+      2: Midi notes play instruments.
+      3: Colours are just labels.
+
+  - kind: ask
+    q: Which warp mode changes pitch along with speed, like a tape machine?
+    options: ["Re-Pitch", "Beats", "Complex Pro", "Texture"]
+    answer: 0
+    why: Re-Pitch ties pitch to speed, so faster means higher.
+    whyWrong:
+      1: Beats keeps the pitch and is made for drums.
+      2: Complex Pro keeps the pitch and is made for full mixes.
+      3: Texture keeps the pitch and is made for pads.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try warp modes for the same stretch done four ways.

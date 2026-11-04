@@ -1,0 +1,112 @@
+slug: midi-piano-roll
+world: producer
+number: 207
+title: the piano roll
+minutes: 5
+song:
+  changes: hats.hats
+  why: hats sit on a grid of time, and snapping them to it is what keeps your groove tight
+learn: >-
+  What midi is, the piano roll grid where notes are drawn and edited, and snapping your hats to that grid.
+youCan:
+  - say what midi stores about a note
+  - read a piano roll, pitch up the side and time along the bottom
+  - play hats onto the grid with snap on
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        A kick on every beat, then hats on the beats, then the eighths, then the sixteenths. Each step splits
+        the beat into smaller pieces. Those pieces make a grid, and every note in your song sits somewhere on
+        it.
+
+        When you played your hats in, the app wasn't recording sound. It was writing down each hit: when it
+        happened, which drum, and how hard. That written-down version is called midi.
+      straight: >-
+        Beats split into eighths and sixteenths make a grid. Your hats are stored as midi: when, which drum,
+        how hard. Not sound, instructions.
+      eli5: >-
+        The beat can be cut into smaller and smaller pieces, like lines on paper. When you play your hats, the
+        app writes down when you hit them. That writing is called midi.
+
+  - kind: say
+    title: the piano roll
+    say:
+      mentor: >-
+        Midi stores a few things about each note: its pitch, when it starts, how long it lasts, and its
+        velocity, how hard it was hit. Notice what's missing: the sound. Midi is like sheet music. The
+        instrument reads it and plays.
+
+        A piano roll is where you see and edit those notes. Pitch runs up the side, like a keyboard turned on
+        its edge. Time runs left to right across the grid. Each note is a little bar: move it to change when
+        it plays, stretch it to make it longer, delete it and it's gone.
+      straight: >-
+        Midi stores pitch, start, length and velocity, not sound. A piano roll shows it: pitch up the side,
+        time across. Move, stretch or delete each note.
+      eli5: >-
+        Midi is like a music list: which note, when, how long, how hard. The piano roll shows it as little
+        bars on a grid. You can move them, make them longer, or delete them.
+    deeper:
+      - title: the piano roll in live
+        say: >-
+          Double-click a midi clip and its notes open in the detail view at the bottom. Press B to switch to
+          draw mode and click the grid to add notes. Drag a note's right edge to lengthen it. Each note's
+          velocity is a bar along the bottom. Cmd or Ctrl plus 1 and 2 make the grid finer or coarser.
+      - title: quantise
+        say: >-
+          Select notes and press Cmd or Ctrl plus U to quantise them, which pulls each one onto the nearest grid
+          line. Cmd or Ctrl plus Shift plus U opens the quantise settings, where you can pull them only part of
+          the way for a looser feel.
+
+  - kind: play
+    layer: hats
+    surface: pads
+    snap: true
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Your song, with snap switched on. Snap does what a piano roll's grid does: every hit you play lands on
+        the nearest line. Play a few hats wherever you feel them. Then press play and watch them sit exactly in
+        time.
+
+        Got one wrong? Tap undo and it's gone, the same as deleting a note in the grid.
+      straight: >-
+        Snap is on: each hit lands on the nearest grid line. Play a few hats. Undo removes the last one.
+      eli5: >-
+        Play some hats. The app moves each one onto the closest line, so they're perfectly in time. Made a
+        mistake? Tap undo.
+
+  - kind: ask
+    q: What does midi store?
+    options: ["notes, when they play and how hard", "the recorded sound", "the reverb", "the song's file name"]
+    answer: 0
+    why: Midi is instructions, pitch, timing, length and velocity. An instrument turns them into sound.
+    whyWrong:
+      1: Recorded sound is audio, not midi.
+      2: Reverb is an effect on the sound.
+      3: Midi is about notes, not files.
+
+  - kind: ask
+    q: In a piano roll, what runs up the side?
+    options: ["pitch", "time", "loudness", "tempo"]
+    answer: 0
+    why: Pitch goes up the side like a keyboard on its edge. Time runs left to right.
+    whyWrong:
+      1: Time runs left to right.
+      2: Loudness is each note's velocity bar.
+      3: Tempo is set for the whole song.
+
+  - kind: ask
+    q: What does snapping or quantising a note do?
+    options: ["moves it to the nearest grid line", "makes it louder", "changes its pitch", "deletes it"]
+    answer: 0
+    why: It pulls the note onto the grid so it lands exactly in time.
+    whyWrong:
+      1: Loudness is velocity.
+      2: Pitch stays the same.
+      3: The note stays, only its timing changes.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, a clap on two and four.

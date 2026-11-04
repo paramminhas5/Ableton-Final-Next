@@ -1,0 +1,112 @@
+slug: synth-lfo
+world: producer
+number: 241
+title: the lfo
+minutes: 5
+song:
+  changes: lead.lead
+  why: a filter that sweeps open and closed in time makes your lead move instead of sitting still
+learn: >-
+  What an lfo is, what rate and depth do, and a slow sweep on your lead's filter, done by hand the way an lfo
+  would do it.
+youCan:
+  - say what an lfo is
+  - say what rate and depth control
+  - say what an lfo on pitch, filter or volume sounds like
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        A low note, then a high one. Pitch is how fast a wave wiggles: hundreds of times a second for these
+        notes. Slow a wave right down, below about 20 times a second, and you can't hear it as a note anymore.
+
+        But a wave that slow is still useful. Hook it up to a knob and it turns that knob up and down for you,
+        over and over. That's an lfo, a low frequency oscillator: a wave too slow to hear, used to move things.
+      straight: >-
+        Notes are fast waves. A wave slower than about 20 a second isn't heard as a note. An lfo, low frequency
+        oscillator, is a slow wave used to move a knob up and down by itself.
+      eli5: >-
+        A really, really slow wiggle is too slow to hear. But it can turn a knob up and down for you, again and
+        again. That's an lfo.
+
+  - kind: say
+    title: rate, depth, destination
+    say:
+      mentor: >-
+        Rate is how fast the lfo goes round. Depth is how far it moves the knob. And the destination is which
+        knob it moves.
+
+        Each destination has its own sound. An lfo on pitch is vibrato, the wobble a singer puts on a long
+        note. On the filter it's a wah, the brightness opening and closing. On volume it's tremolo, a pulsing
+        up and down.
+
+        Most lfos can sync to the tempo, so the movement locks to your beat: once a bar, once a beat, and so on.
+      straight: >-
+        Rate is speed, depth is how far, destination is which knob. Lfo on pitch is vibrato, on the filter a
+        wah, on volume tremolo. Tempo sync locks it to your beat.
+      eli5: >-
+        You choose how fast it wobbles and how much. Wobble the pitch and it goes wee-oo-wee. Wobble the
+        brightness and it goes wah-wah.
+    deeper:
+      - title: the lfo shape
+        say: >-
+          The lfo's wave shape sets the feel. A sine moves smoothly. A square jumps between two values. Sample
+          and hold jumps to a random value each step, which gives that bubbling, computer-ish movement.
+      - title: lfos in live
+        say: >-
+          Wavetable has two lfos. You connect them in its modulation matrix, at the bottom of the device, by
+          picking a source and a destination and setting an amount.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, res]
+    say:
+      mentor: >-
+        Our lead doesn't have its own lfo yet, so you're going to be the lfo. Your song is playing. Set res a
+        little higher so the filter has some bite.
+
+        Now turn cutoff slowly up over one bar and back down over the next, again and again, in time with the
+        kick. Hear that sweep? That's exactly what an lfo on the filter does, only it never gets tired. The
+        speed you're turning is the rate. How far you turn is the depth. Leave cutoff where your lead sounds
+        best when you stop.
+      straight: >-
+        You're the lfo. Raise res a bit, then sweep cutoff up for a bar and down for a bar, in time. Your speed
+        is the rate, your range is the depth. Leave cutoff where it sounds best.
+      eli5: >-
+        Pretend you're a robot hand. Turn cutoff up slowly, then down slowly, again and again with the beat.
+        That's what an lfo does by itself.
+
+  - kind: ask
+    q: What does lfo stand for?
+    options: ["low frequency oscillator", "loud filter output", "left fader offset", "long fade out"]
+    answer: 0
+    why: An oscillator so slow you don't hear it as a note, used to move other knobs.
+    whyWrong:
+      1: Not a filter or an output.
+      2: Not a fader.
+      3: Not a fade.
+
+  - kind: ask
+    q: An lfo moves your lead's pitch up and down. What do you hear?
+    options: ["vibrato", "tremolo", "a wah", "reverb"]
+    answer: 0
+    why: Pitch wobbling up and down is vibrato.
+    whyWrong:
+      1: Tremolo is volume moving.
+      2: A wah is the filter moving.
+      3: Reverb is space.
+
+  - kind: ask
+    q: What does the lfo's rate set?
+    options: ["how fast it moves", "how far it moves", "which knob it moves", "how loud the lead is"]
+    answer: 0
+    why: Rate is speed. Depth is how far.
+    whyWrong:
+      1: That's depth.
+      2: That's the destination.
+      3: Level is separate.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try modulation routing to send movement somewhere else.

@@ -1,0 +1,110 @@
+slug: synth-fm-basics
+world: producer
+number: 243
+title: fm basics
+minutes: 5
+song:
+  changes: bass.bass
+  why: a bass with a bright, bitey start and a rounder tail is the sound fm is famous for
+learn: >-
+  How fm makes rich tones from simple waves, what the ratio and the modulator level do, and a bitey start on
+  your own bass.
+youCan:
+  - say what a carrier and a modulator are
+  - say what whole-number and in-between ratios sound like
+  - give your bass a bright start that settles
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A soft wave, a saw, a square. The saw and square sound rich because they come with lots of harmonics
+        built in. Subtractive synths start from waves like these and filter harmonics away.
+
+        Fm, frequency modulation, does the opposite. It starts with plain, soft waves and builds harmonics up.
+        One wave wobbles the pitch of another so fast that you don't hear a wobble at all. You hear a brand new,
+        richer tone.
+      straight: >-
+        Saws and squares come with harmonics built in. Fm starts with plain waves and creates harmonics by
+        letting one wave wobble another's pitch very fast.
+      eli5: >-
+        Some waves are already buzzy. Fm takes two smooth waves and has one shake the other super fast, and
+        that makes a buzzy, shiny sound.
+
+  - kind: say
+    title: carrier, modulator, ratio
+    say:
+      mentor: >-
+        The wave you hear is the carrier. The wave doing the wobbling is the modulator. Turn the modulator up
+        and new frequencies appear around the note, called sidebands, and the tone gets brighter and more
+        complex.
+
+        The ratio is the modulator's pitch compared to the carrier's. Whole numbers, like 1 to 1 or 2 to 1, give
+        musical tones that sit in key. In-between numbers, like 1 to 1.41, give clangy, metallic sounds: bells,
+        gongs, struck metal.
+
+        The famous fm bass trick is to make the modulator loud at the start of each note and fade it quickly.
+        The note starts bright and bitey, then settles round.
+      straight: >-
+        Carrier: the wave you hear. Modulator: the wave wobbling it. More modulator, more harmonics. Whole-number
+        ratios sound musical, in-between ratios sound like bells and metal.
+      eli5: >-
+        One wave is the singer, one is the shaker. More shaking, brighter sound. Shake in step and it sounds
+        musical. Shake out of step and it sounds like a bell.
+    deeper:
+      - title: fm in live
+        say: >-
+          Operator is Live's fm synth, with four oscillators that can modulate each other. Each oscillator has
+          its own envelope, so a modulator with a short envelope gives the bright-start bass. Wavetable can do
+          fm between its oscillators too.
+
+  - kind: shape
+    layer: bass
+    knobs: [wave, env]
+    say:
+      mentor: >-
+        Our bass is a filter synth, not an fm one, so it can't do ratios. But it can do the famous fm bass
+        shape, the bright start that settles, and that's what your ears will recognise. Your song is playing.
+
+        Turn wave toward the buzzier end so there are more harmonics to work with. Then raise env: each bass
+        note now starts brighter and rounds off, just like a modulator fading out. Keep it if your bass bites
+        better.
+      straight: >-
+        Our bass can't set an fm ratio, but it can copy the fm bass shape. Buzzier wave, then raise env so each
+        note starts bright and rounds off. Keep it.
+      eli5: >-
+        Make the bass buzzier with wave. Then turn env up so every note starts with a bite and then goes soft.
+
+  - kind: ask
+    q: In fm, which wave do you actually hear?
+    options: ["the carrier", "the modulator", "neither", "the lfo"]
+    answer: 0
+    why: The modulator shapes the carrier's tone. The carrier is what reaches your ears.
+    whyWrong:
+      1: The modulator changes the carrier, you don't hear it on its own.
+      2: You hear the carrier, changed.
+      3: An lfo is a slow wave for movement, a different thing.
+
+  - kind: ask
+    q: A ratio of 1 to 1.41 will sound like?
+    options: ["a metallic bell", "a clean sine", "a soft pad", "a kick drum"]
+    answer: 0
+    why: In-between ratios make sidebands that don't line up with the note's harmonics, which sounds metallic.
+    whyWrong:
+      1: A clean sine has no modulation at all.
+      2: Pads usually come from whole-number ratios or other synths.
+      3: That's a drum sound, not a ratio.
+
+  - kind: ask
+    q: What happens when you turn the modulator up?
+    options: ["more sidebands, a brighter, richer tone", "the sound gets quieter", "the pitch drops an octave", "nothing"]
+    answer: 0
+    why: More modulation creates more new frequencies around the note.
+    whyWrong:
+      1: Level isn't what the modulator mainly changes.
+      2: The note stays the same pitch.
+      3: It changes the tone a lot.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try wavetable to scan through shapes on your lead.

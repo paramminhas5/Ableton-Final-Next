@@ -1,0 +1,112 @@
+slug: roar
+world: producer
+number: 231
+title: roar
+minutes: 5
+song:
+  changes: bass.bass
+  why: a heavier drive on your bass gives it growl and edge that cuts through the rest of the song
+learn: >-
+  Roar, Live 12's big distortion with stages, bands and feedback, and a bigger drive on your own bass.
+youCan:
+  - drive your bass hard and keep it musical
+  - use tone to choose where the grit sits
+  - say what bands and feedback do in Roar
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Listen to the same note three ways: a soft, round wave, then a buzzy saw, then a square. The buzzy ones
+        are full of harmonics, extra higher notes riding on top. Heavy distortion does something similar to
+        any sound you feed it: it piles on harmonics until a round sound starts to growl.
+
+        Roar is Live 12's distortion for when a little warmth isn't enough. You're about to put that kind of
+        growl on your bass.
+      straight: >-
+        Soft wave, saw, square. The buzzier ones carry more harmonics. Heavy distortion adds harmonics to any
+        sound, turning round into growl. Roar is Live 12's big distortion.
+      eli5: >-
+        A smooth sound, then two buzzy ones. Big distortion makes a smooth sound buzzy and growly. You're going
+        to do that to your bass.
+
+  - kind: say
+    title: stages and bands
+    say:
+      mentor: >-
+        Roar has up to three stages of distortion. You can run them one after another, side by side, or split
+        your sound into frequency bands and treat each band differently. That last one is the clever part: you
+        can roughen the mids of a bass, where the growl lives, and leave the deep lows cleaner so they still
+        hit.
+
+        It also has a feedback path, which sends some of the output back into the input. A little adds
+        richness. A lot makes it howl and ring on its own, which can be great or a mess.
+      straight: >-
+        Roar has up to three distortion stages, run in a row, side by side, or split by frequency band. Bands
+        let you grit up the mids and keep the lows cleaner. Feedback loops the output back in.
+      eli5: >-
+        Roar can split a sound into low, middle and high parts and make each one crunchy in its own way. It can
+        also feed the sound back into itself to make it howl.
+    deeper:
+      - title: roar in live
+        say: >-
+          Roar arrived in Live 12. Each stage has its own drive, tone and mix, and the stages can be routed in
+          series, in parallel, or as a multiband split with adjustable crossover points. It has built-in
+          modulators, an lfo and an envelope follower, so the drive can move over time or react to how loud
+          the input is. Watch the mix control: a fully wet Roar on a bass can swallow the low end.
+      - title: feedback, carefully
+        say: >-
+          Push feedback high and Roar can start to ring by itself. That's a sound design trick, but on a bass
+          line you usually want it low, or the notes blur together.
+
+  - kind: shape
+    layer: bass
+    knobs: [drive, tone, level]
+    say:
+      mentor: >-
+        Your song is playing, and these knobs sit on your bass. Push drive well past where you'd stop on a kick.
+        Hear the bass start to growl and bark.
+
+        Now turn tone. One way the grit goes dark and heavy, the other way it gets bright and fizzy. On our
+        instrument the drive works on the whole bass, so tone is how you steer where the growl sits. Then bring
+        level back so the bass isn't just louder than before. Keep it if your bass sounds meaner in a good way.
+      straight: >-
+        Drive your bass hard. Use tone to make the growl darker or brighter. Pull level back to match, then
+        keep it if it's better.
+      eli5: >-
+        Turn drive way up and your bass growls. Turn tone to make the growl darker or brighter. Turn level down
+        a bit. Like it? Keep it.
+
+  - kind: ask
+    q: What does splitting a sound into bands let Roar do?
+    options: ["distort the mids hard and keep the lows cleaner", "change the song's key", "add a second bass line", "speed up the beat"]
+    answer: 0
+    why: Each band gets its own treatment, so the growl and the deep low end can be handled separately.
+    whyWrong:
+      1: Distortion doesn't change the key.
+      2: It's the same bass, treated in parts.
+      3: Tempo is untouched.
+
+  - kind: ask
+    q: What does a feedback path do?
+    options: ["sends some of the output back into the input", "makes the sound quieter", "turns the bass into chords", "removes the harmonics"]
+    answer: 0
+    why: The sound loops back in, which adds richness and, pushed hard, can make it ring by itself.
+    whyWrong:
+      1: Feedback tends to add energy, not take it away.
+      2: The notes stay the same.
+      3: It adds harmonics rather than removing them.
+
+  - kind: ask
+    q: Your bass drive sounds great, but it's also much louder. What first?
+    options: ["turn level down to match, then listen again", "turn drive up more", "add reverb", "mute the kick"]
+    answer: 0
+    why: Louder always sounds better at first. Match it, then judge the drive itself.
+    whyWrong:
+      1: That only adds to the loudness problem.
+      2: Reverb doesn't help you judge drive.
+      3: The kick isn't the issue here.
+
+  - kind: keep
+    next: >-
+      Back to your song path: drums from recordings is next.

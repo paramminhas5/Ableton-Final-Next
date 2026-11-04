@@ -1,0 +1,125 @@
+slug: warp-modes-deep
+world: producer
+number: 239
+title: warp modes
+minutes: 5
+song:
+  changes: drums.kick
+  why: the further your song's tempo is from a sample's own tempo, the more the right warp mode matters
+learn: >-
+  What each of Live's warp modes is built for, and which one you'd pick for each part of your song.
+youCan:
+  - match a warp mode to drums, a bass line, a pad and a full mix
+  - say what Re-Pitch does differently
+  - hear a big tempo change on your own song
+steps:
+  - kind: hear
+    clip: straight-vs-swung
+    say:
+      mentor: >-
+        Kick, clap and fast hats, played straight, then swung. Every hit has a sharp start, a click of energy
+        called a transient. Drums are mostly transients with little gaps between them.
+
+        That matters when you stretch a recording. Stretching drums is mostly about moving those sharp starts
+        to the right place. Stretching a held note or a voice is a different job: keeping a smooth tone smooth.
+        That's why Live has more than one way to warp, called warp modes.
+      straight: >-
+        Drums are sharp starts, transients, with gaps between. A held note is a smooth tone. Each needs a
+        different kind of stretching, so Live has several warp modes.
+      eli5: >-
+        Drums go tick, tick, tick, with little gaps. A singer goes aaaah, all smooth. Stretching each one needs
+        a different trick.
+
+  - kind: say
+    title: a mode for each kind of sound
+    say:
+      mentor: >-
+        Beats is for drums and other punchy loops. It cuts the audio at each transient and moves the pieces,
+        so hits stay sharp. On a melody it can stutter.
+
+        Tones is for single melodic lines: a bass, a lead, a solo voice. Texture is for pads and noisy, washy
+        sounds. Complex is for whole mixes with everything in them, and Complex Pro is the higher quality
+        version of it, with a formants control that keeps voices from sounding like chipmunks when you move
+        their pitch.
+
+        Re-Pitch is the odd one. It doesn't keep the pitch at all: speed and pitch move together, like slowing
+        down a record. Half speed is an octave lower.
+      straight: >-
+        Beats for drums. Tones for one melodic line. Texture for pads. Complex for full mixes, Complex Pro for
+        the best quality, with formants for voices. Re-Pitch moves speed and pitch together, like vinyl.
+      eli5: >-
+        Drums get Beats. A single tune gets Tones. Big soft sounds get Texture. A whole song gets Complex. And
+        Re-Pitch is like a record player: slower is lower.
+    deeper:
+      - title: setting the mode in live
+        say: >-
+          The warp mode is a menu under the Warp switch in the clip view. Beats has a Transient Loop Mode and a
+          Transient Envelope to control how each slice fills the gap to the next. Complex Pro has a Formants
+          control. Complex and Complex Pro use the most processing power.
+      - title: common mistakes
+        say: >-
+          Leaving everything on Complex Pro softens drum transients and costs processing. Beats on a melodic
+          part stutters at every hit. And Re-Pitch on a vocal changes its key as soon as the tempo moves.
+
+  - kind: tempo
+    marks: [90, 124, 140]
+    say:
+      mentor: >-
+        Here's your song. Drag the tempo a long way, down to 90 and up to 140. Your parts are notes, so they
+        follow without any stretching at all.
+
+        Now imagine each part were a recording instead. At 90 your drums would need Beats to stay crisp, your
+        bass would want Tones, your chords would sit happily in Texture, and the whole song bounced to one file
+        would need Complex. The bigger the move, the more that choice shows. Then set your song back to the
+        tempo you love.
+      straight: >-
+        Move your song far, 90 to 140. Notes follow cleanly. As recordings, your drums would want Beats, bass
+        Tones, chords Texture, the full song Complex. Then set your tempo.
+      eli5: >-
+        Make your song really slow, then really fast. Your notes keep up easily. Recordings would each need
+        their own warp mode to keep up. Then pick the speed you like.
+
+  - kind: ask
+    q: Which warp mode would you pick for a drum loop?
+    options: ["Beats", "Tones", "Texture", "Re-Pitch"]
+    answer: 0
+    why: Beats keeps transients sharp by moving each hit as a slice.
+    whyWrong:
+      1: Tones is made for single melodic lines.
+      2: Texture is made for pads and washy sounds.
+      3: Re-Pitch would change the drums' pitch with the tempo.
+
+  - kind: ask
+    q: Which mode suits a bass line?
+    options: ["Tones", "Beats", "Texture", "Re-Pitch"]
+    answer: 0
+    why: Tones is made for single melodic lines like a bass or a lead.
+    whyWrong:
+      1: Beats can stutter on melodic parts.
+      2: Texture is better for pads.
+      3: Re-Pitch would move the bass out of key.
+
+  - kind: ask
+    q: You slow a record to half speed with Re-Pitch. What happens to the pitch?
+    options: ["it drops an octave", "it stays the same", "it goes up an octave", "it drops one semitone"]
+    answer: 0
+    why: Re-Pitch ties pitch to speed. Half the speed is half the frequency, one octave down.
+    whyWrong:
+      1: Keeping the pitch is what the other modes do.
+      2: Slower means lower, not higher.
+      3: Half speed is a much bigger drop than one semitone.
+
+  - kind: ask
+    more: true
+    q: What does the Formants control in Complex Pro help with?
+    options: ["keeping voices natural when their pitch moves", "making drums punchier", "adding reverb", "changing the tempo"]
+    answer: 0
+    why: Formants are the character of a voice. Keeping them stops the chipmunk sound.
+    whyWrong:
+      1: For drums you'd pick Beats.
+      2: Reverb is an effect.
+      3: Tempo is set by your song.
+
+  - kind: keep
+    next: >-
+      Back to your song path: width and movement is next.

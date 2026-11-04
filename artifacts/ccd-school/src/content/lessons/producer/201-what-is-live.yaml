@@ -1,0 +1,114 @@
+slug: what-is-live
+world: producer
+number: 201
+title: what is live?
+minutes: 5
+song:
+  changes: lead.lead
+  why: your song is already a set of tracks, each with its own level and place, which is exactly how Live sees it
+learn: >-
+  What a DAW is, how Live sees your song as tracks and clips, and its two views: the clip grid and the
+  timeline.
+youCan:
+  - say what a DAW is
+  - name Live's two views and what each is for
+  - set one track's level and pan in your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Listen to this loop: a kick, a clap and some hats. It sounds like one thing, but it's three parts
+        stacked up, each playing its own pattern. Your song works the same way. Your kick, your clap, your
+        hats and your lead each live in their own lane.
+
+        In a music program those lanes are called tracks. Ableton Live, the program pros use for this kind of
+        music, would show your song as one track per part.
+      straight: >-
+        A loop is parts stacked up: kick, clap, hats. Your song is the same, one lane per part. In a music
+        program those lanes are tracks.
+      eli5: >-
+        This sounds like one beat, but it's three sounds playing together. Your song is the same: every sound
+        gets its own lane, called a track.
+
+  - kind: say
+    title: a daw, and its two views
+    say:
+      mentor: >-
+        Live is a DAW, short for digital audio workstation: a program you make, record and mix music in. Most
+        DAWs give you one timeline that runs left to right, like reading a page.
+
+        Live gives you that timeline, called arrangement view, and also a grid of clips you can start in any
+        order, called session view. A clip is a short piece of music on one track, like your hat pattern. Same
+        song, two windows onto it.
+
+        The cool part: nothing you do to a sound in Live changes the original file. Stretch it, chop it,
+        reverse it, and the recording on your computer stays exactly as it was.
+      straight: >-
+        A DAW (digital audio workstation) is a program for making music. Live has two views: arrangement, a
+        timeline left to right, and session, a grid of clips you launch in any order. Edits never change the
+        original file.
+      eli5: >-
+        Live is a music-making program. It can show your song as a long line from start to end, or as a grid
+        of little loops you can start whenever you like. And whatever you do, your original sounds stay safe.
+    deeper:
+      - title: live's screen
+        say: >-
+          Press Tab to swap between session view and arrangement view. The music keeps playing while you
+          switch, because both views show the same tracks underneath. Every track, whether it holds audio or
+          midi, exists in both views with the same devices and mixer settings.
+      - title: saving and moving a project
+        say: >-
+          A Live project is saved as an .als file. That file points to your samples instead of holding them,
+          so before you move a project to another computer use File > Collect All and Save, which copies the
+          samples in with it.
+
+  - kind: shape
+    layer: lead
+    knobs: [level, pan]
+    say:
+      mentor: >-
+        Here's your song, and here's your lead as a track. Every track in a DAW has a fader, a slider for how
+        loud it is, and a pan knob, for where it sits between your left and right speakers.
+
+        Turn level down until your lead tucks behind the beat, then bring it back. Turn pan a little left or
+        right and hear it move across. Leave it where your song sounds best.
+      straight: >-
+        Your lead as a track. Level is its fader, how loud it is. Pan places it left or right. Set both by ear.
+      eli5: >-
+        Your tune has its own lane. Level makes it louder or quieter. Pan moves it to the left speaker or the
+        right one. Stop where you like it.
+
+  - kind: ask
+    q: What does DAW stand for?
+    options: ["digital audio workstation", "digital audio wave", "drum and wave", "dynamic audio window"]
+    answer: 0
+    why: A digital audio workstation, a program for making, recording and mixing music.
+    whyWrong:
+      1: Close, but the w is workstation, the whole program.
+      2: A DAW does far more than drums.
+      3: It's a whole program, not one window.
+
+  - kind: ask
+    q: Which of Live's views is a grid of clips you can start in any order?
+    options: ["session view", "arrangement view", "the mixer", "the browser"]
+    answer: 0
+    why: Session view is the grid. Arrangement view is the timeline that runs left to right.
+    whyWrong:
+      1: Arrangement is the left to right timeline.
+      2: The mixer sets levels, it doesn't launch clips.
+      3: The browser is where you find sounds.
+
+  - kind: ask
+    q: You reverse a sample in Live. What happens to the original file on your computer?
+    options: ["nothing, it stays the same", "it's reversed too", "it gets deleted", "it's copied into the song"]
+    answer: 0
+    why: Live's edits are instructions it follows when it plays. The file itself is never changed.
+    whyWrong:
+      1: Live leaves the file alone and plays it backwards.
+      2: Nothing is deleted.
+      3: The project points to the file, it doesn't copy it.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, find the same handful of things on our instrument and in Live.

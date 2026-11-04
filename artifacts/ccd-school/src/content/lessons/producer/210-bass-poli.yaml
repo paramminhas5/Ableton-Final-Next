@@ -1,0 +1,106 @@
+slug: bass-poli
+world: producer
+number: 210
+title: bass and poli
+minutes: 5
+song:
+  changes: bass.bass
+  why: a thicker bass voice gives your low end weight and character without adding a single note
+learn: >-
+  What makes a bass sound thick: a sub underneath, the wave on top, and a little drift, and the two Live
+  instruments built for bass and for chords.
+youCan:
+  - say what a sub oscillator adds to a bass
+  - make your bass thicker without changing its notes
+  - say what Live's Bass and Poli are for
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A soft wave, a saw and a square. Your bass is built from these too. Under the hood it has two
+        oscillators, one making a saw and one a square, plus a third one playing a sine wave an octave below
+        your notes. That low one is called a sub oscillator, the sub for short.
+
+        The sub is the weight you feel in your chest. The saw and square on top are the character you hear.
+      straight: >-
+        Your bass has a saw and a square on top and a sine sub an octave below. Sub is weight, the top is
+        character.
+      eli5: >-
+        Your bass is made of a few waves. A deep, smooth one underneath gives the rumble. Brighter ones on top
+        give it its sound.
+
+  - kind: shape
+    layer: bass
+    knobs: [sub, wave, drift]
+    say:
+      mentor: >-
+        Here's your song, with three knobs that thicken your bass without touching its notes. Sub turns up the
+        sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and
+        buzzy to hollow and round.
+
+        Drift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old
+        analogue synth warming up. A little makes the bass feel alive instead of perfect. Keep the bass that
+        fills your song best.
+      straight: >-
+        Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a
+        few cents, like analogue. Keep the thickest bass that still sounds clean.
+      eli5: >-
+        Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old
+        synth. Keep the one you like.
+
+  - kind: say
+    title: bass and poli in live
+    say:
+      mentor: >-
+        Live has two instruments named for exactly these jobs. Bass is made for single-note bass lines. Poli,
+        short for polyphonic, plays many notes at once, so it suits chords, pads and keys.
+
+        Both are built to sound good fast: load a preset, play, turn a few knobs. When you want to go deeper,
+        Wavetable and Operator give you every control.
+      straight: >-
+        Live's Bass is for bass lines. Poli is polyphonic, for chords, pads and keys. Quick to get a sound;
+        Wavetable and Operator go deeper.
+      eli5: >-
+        Live has a synth called Bass for bass lines and one called Poli for chords. They're quick to use. Other
+        synths let you go further.
+    deeper:
+      - title: mono and poly
+        say: >-
+          A monophonic synth plays one note at a time. Play a new note and the old one stops, which suits a bass
+          line and lets notes slide into each other. A polyphonic synth plays several at once, which chords
+          need. Your bass here is monophonic, and its glide knob slides between notes when they overlap.
+
+  - kind: ask
+    q: What does a sub oscillator add to a bass?
+    options: ["weight, from a sine an octave below", "brightness on top", "echo", "a faster tempo"]
+    answer: 0
+    why: The sub plays a sine an octave under your notes, the deep weight you feel.
+    whyWrong:
+      1: Brightness comes from the saw and square on top.
+      2: Echo is an effect.
+      3: Sound knobs don't touch tempo.
+
+  - kind: ask
+    q: What does drift do to your bass?
+    options: ["lets the pitch wander a few cents, like analogue", "makes it louder", "adds new notes", "cuts the low end"]
+    answer: 0
+    why: Drift is a slow, random pitch wobble of a few cents, the imperfection of an old analogue synth.
+    whyWrong:
+      1: Loudness is level.
+      2: Your notes stay the same.
+      3: The low end stays, drift only moves pitch slightly.
+
+  - kind: ask
+    q: Why is Poli the better pick for chords?
+    options: ["it's polyphonic, so it plays many notes at once", "it's louder", "it only plays low notes", "it plays one note at a time"]
+    answer: 0
+    why: Polyphonic means several notes at once, which a chord needs.
+    whyWrong:
+      1: Loudness isn't the difference.
+      2: It plays across the whole range.
+      3: That's monophonic, like a bass synth.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, a second kind of synth for your lead.

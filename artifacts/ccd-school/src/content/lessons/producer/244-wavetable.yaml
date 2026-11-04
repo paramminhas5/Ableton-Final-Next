@@ -1,0 +1,91 @@
+slug: wavetable
+world: producer
+number: 244
+title: wavetable
+minutes: 5
+song:
+  changes: lead.lead
+  why: scanning through wave shapes changes your lead's whole colour without touching the melody
+learn: >-
+  What a wavetable is, what scanning it does, and a scanned wave shape on your own lead.
+youCan:
+  - say what a wavetable is
+  - say what the position knob does
+  - pick a wave colour for your lead by scanning
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Soft, saw, square. Three shapes, three colours of the same note. The shape of one single wiggle of the
+        wave decides that colour, called timbre.
+
+        Now imagine not three shapes but dozens, lined up in a row, each a little different from the next.
+        That row is a wavetable. Sweep along it and the sound morphs smoothly from one colour to the next,
+        while the note stays the same.
+      straight: >-
+        Each wave shape gives a different timbre. A wavetable is a row of many shapes, and sweeping along it
+        morphs the sound smoothly.
+      eli5: >-
+        Three shapes, three sounds. A wavetable is a long line of shapes, and you can slide along it to change
+        the sound bit by bit.
+
+  - kind: say
+    title: position
+    say:
+      mentor: >-
+        The knob that moves you along the row is called position. Turn it and you scan through the table. The
+        fun part is moving it while notes play: put an lfo or an envelope on position and the sound keeps
+        morphing, which is how those evolving pads and talking basses are made.
+      straight: >-
+        Position moves you along the wavetable. Modulate position with an lfo or envelope and the sound morphs
+        while it plays.
+      eli5: >-
+        Position is where you are along the line of shapes. Make it move by itself and the sound keeps
+        changing.
+    deeper:
+      - title: wavetable in live
+        say: >-
+          Live's Wavetable synth has two wavetable oscillators, each with its own position knob, plus a sub
+          oscillator. It has two filters, envelopes and lfos, a modulation matrix at the bottom of the device,
+          and unison for thick, stacked voices.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff]
+    say:
+      mentor: >-
+        Your lead's wave knob is a small wavetable: it morphs from a soft wave through a saw to a square. Your
+        song is playing. Sweep wave slowly from one end to the other and watch the shape change on the screen
+        as you hear the colour change.
+
+        Then use cutoff to tidy it: a buzzy shape with a lower cutoff can sound warm and full. Stop where your
+        lead has the colour your song needs, and keep it.
+      straight: >-
+        Wave scans your lead from soft to saw to square. Sweep it, pick a colour, then set cutoff. Keep it.
+      eli5: >-
+        Turn wave slowly and hear your tune change from soft to buzzy. Stop on the sound you like.
+
+  - kind: ask
+    q: What is a wavetable?
+    options: ["a row of wave shapes you can sweep through", "a table of drum hits", "a list of tempos", "a type of reverb"]
+    answer: 0
+    why: Many single-cycle shapes in order, so moving through them morphs the sound.
+    whyWrong:
+      1: Drum hits live in a sampler or drum rack.
+      2: Tempo has nothing to do with it.
+      3: Reverb is space.
+
+  - kind: ask
+    q: You put an lfo on position. What happens?
+    options: ["the sound keeps morphing between shapes", "the melody changes notes", "the song speeds up", "the sound stops"]
+    answer: 0
+    why: The lfo sweeps position for you, so the timbre keeps changing.
+    whyWrong:
+      1: The notes stay the same; the colour changes.
+      2: Tempo is untouched.
+      3: It keeps playing.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try meld for a voice made of two engines.

@@ -1,0 +1,106 @@
+slug: drift
+world: producer
+number: 246
+title: drift
+minutes: 5
+song:
+  changes: chords.chords
+  why: a little wander in pitch makes your chords feel warm and played, like an old analog synth
+learn: >-
+  Live's Drift synth, why old analog synths sound warm, and analog-style wander on your own chords.
+youCan:
+  - say what the drift control adds
+  - say what subtractive synthesis is
+  - add warmth to your chords without making them sound out of tune
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One synth note, perfectly steady. A computer can hold a pitch forever without moving a hair. Old
+        analog synths couldn't. Their circuits warmed up and wandered, so every note was a tiny bit different
+        in pitch and timing.
+
+        That wander turned out to be a big part of why people love them. It sounds alive, a little imperfect,
+        warm. Drift is the name for it, and it's also the name of a synth in Live.
+      straight: >-
+        A digital note holds perfectly still. Analog synths wander slightly in pitch and timing. That wander,
+        drift, is a big part of their warm sound.
+      eli5: >-
+        Computers play notes perfectly still. Old synths wobbled a tiny bit, and that wobble sounds warm and
+        friendly.
+
+  - kind: say
+    title: a small subtractive synth
+    say:
+      mentor: >-
+        Drift is a subtractive synth. Subtractive means you start with a bright, buzzy wave full of harmonics
+        and a filter takes some away, the way a sculptor carves. Most classic synths work like this.
+
+        Drift keeps it small: two oscillators, a filter, envelopes and a few ways to add movement, all on one
+        screen, so you can make a sound fast by ear. And it has a drift control that adds that random analog
+        wander to pitch and timing.
+      straight: >-
+        Drift is subtractive: a bright wave, then a filter removes harmonics. Two oscillators, a filter,
+        envelopes, all on one screen, plus a drift control for analog wander.
+      eli5: >-
+        Drift starts with a buzzy sound and a filter makes it softer. It also has a knob that adds the old
+        synth wobble.
+    deeper:
+      - title: drift in live
+        say: >-
+          Drift has two filter types to switch between: a 12 dB state-variable filter that sounds open and
+          musical, and a 24 dB ladder filter that's tighter and more classic. Set Drift to zero for a clean,
+          digital sound, and raise it for more instability.
+
+  - kind: shape
+    layer: chords
+    knobs: [drift, cutoff, res]
+    say:
+      mentor: >-
+        Your song is playing with your chords in it. Start with drift low: tidy and a little stiff. Turn it up
+        and the chord notes start to wander against each other, and the chords loosen up and warm up. Too much
+        and they sound seasick, so find the warm spot.
+
+        Then shape the colour the subtractive way: cutoff to carve brightness away, res to give the edge of the
+        filter some bite. Keep your warmer chords.
+      straight: >-
+        Raise drift on your chords until they warm up, before they sound out of tune. Then carve with cutoff
+        and res. Keep it.
+      eli5: >-
+        Turn drift up so your chords wobble a little and sound warm. Not too much! Then make them brighter or
+        darker with cutoff.
+
+  - kind: ask
+    q: What does a drift control add?
+    options: ["small random wander in pitch and timing", "a second melody", "reverb", "a faster tempo"]
+    answer: 0
+    why: It copies the slight instability of analog circuits.
+    whyWrong:
+      1: The notes stay the same; they just wander.
+      2: Reverb is space.
+      3: Tempo is set by your song.
+
+  - kind: ask
+    q: What does subtractive synthesis mean?
+    options: ["start bright and filter harmonics away", "add sine waves one by one", "play recordings", "chop loops"]
+    answer: 0
+    why: A rich wave goes through a filter that removes some of its harmonics.
+    whyWrong:
+      1: Building from sine waves is additive.
+      2: Playing recordings is sampling.
+      3: That's slicing.
+
+  - kind: ask
+    q: Your chords sound a bit sour after turning drift up. What do you do?
+    options: ["turn drift down a little", "turn drift all the way up", "add more chords", "change the tempo"]
+    answer: 0
+    why: Past the warm spot, the wander starts to sound out of tune.
+    whyWrong:
+      1: That makes it sourer.
+      2: More chords won't fix tuning.
+      3: Tempo isn't the cause.
+
+  - kind: keep
+    next: >-
+      Back to your song path: fx, risers and sweeps is next.

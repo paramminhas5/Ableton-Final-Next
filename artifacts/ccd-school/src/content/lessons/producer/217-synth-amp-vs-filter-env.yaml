@@ -1,0 +1,113 @@
+slug: synth-amp-vs-filter-env
+world: producer
+number: 217
+title: two envelopes, one voice
+minutes: 5
+song:
+  changes: lead.lead
+  why: when the volume and the brightness of each note move on different schedules, your lead gets its character
+learn: >-
+  How the amp envelope and the filter envelope run side by side on one note, and what happens when they
+  don't line up.
+youCan:
+  - say what each of the two envelopes controls
+  - hear a note swell in while it darkens
+  - say why mismatched envelopes change a sound's character
+steps:
+  - kind: hear
+    clip: synth-loud
+    say:
+      mentor: >-
+        The same note, quiet then loud. Loudness is one thing a note does over time. Brightness is another.
+        A synth usually gives each its own envelope: the amp envelope for volume, the filter envelope for the
+        cutoff.
+
+        They run at the same time, side by side, and they don't have to agree. That's where a lot of a
+        sound's character comes from.
+      straight: >-
+        Two envelopes per note: amp for volume, filter for brightness. They run together but don't have to
+        match.
+      eli5: >-
+        Each note has two shapes going on: how loud it is and how bright it is. They can do different things at
+        the same time.
+
+  - kind: say
+    title: in step or out of step
+    say:
+      mentor: >-
+        Line them up and a note sounds natural and predictable. Pull them apart and you get something more
+        interesting. A loud note that holds its volume while its brightness slowly closes sounds like it's
+        fading dark. A long volume fade with a quick filter close gives a tail that hangs on, dull and quiet.
+
+        One rule to remember: once the amp envelope reaches silence, you can't hear anything the filter is
+        still doing. The amp decides whether you hear the note at all. The filter only colours what's there.
+      straight: >-
+        Matched envelopes sound natural. Mismatched ones give character, like a loud note that goes dark. Once
+        the amp is silent, filter movement can't be heard.
+      eli5: >-
+        If the loud shape and the bright shape match, the note sounds normal. If they don't, it sounds more
+        unusual. When the note goes silent, the bright shape doesn't matter any more.
+    deeper:
+      - title: setting them apart in live
+        say: >-
+          Live's synths give the amp and the filter their own envelopes, each with its own attack, decay,
+          sustain and release. Try amp sustain at full with filter sustain at zero: the note holds its volume
+          while the cutoff closes. Or start the filter's attack a few milliseconds later than the amp's for a
+          subtle bloom on every note.
+      - title: an 808-style stab
+        say: >-
+          For a stab that goes dull fast but rings on long, give the amp no attack, a long decay and no
+          sustain, and give the filter no attack, a short decay and no sustain.
+
+  - kind: shape
+    layer: lead
+    knobs: [attack, env, release]
+    say:
+      mentor: >-
+        Here's your song. On your lead the filter envelope has a fixed shape: it jumps open at the start of each
+        note and closes over about a third of a second. The amp envelope is yours to set. So they're already out
+        of step, and you get to choose how far.
+
+        Turn env up so you can hear the filter move. Now raise attack: the volume swells in slowly while the
+        brightness has already started closing, so each note fades in getting darker. Then try release for how
+        long the dark tail rings. Keep the shape you like.
+      straight: >-
+        Your lead's filter envelope opens fast and closes in about a third of a second. Env sets how much. Attack
+        and release shape the volume. Slow attack plus env: notes swell in as they darken.
+      eli5: >-
+        Turn env up so each note flashes bright. Turn attack up so notes fade in slowly. Now they get louder
+        while getting darker. Release makes the end ring on.
+
+  - kind: ask
+    q: Which envelope decides whether you hear the note at all?
+    options: ["the amp envelope", "the filter envelope", "both equally", "neither"]
+    answer: 0
+    why: The amp envelope sets the volume. When it reaches silence, the note is gone.
+    whyWrong:
+      1: The filter only colours a note you can already hear.
+      2: Only the amp controls volume.
+      3: The amp envelope does.
+
+  - kind: ask
+    q: Amp sustain is full and filter sustain is zero. You hold a note. What do you hear?
+    options: ["it stays loud but gets darker", "it fades out and stays bright", "nothing changes", "it gets higher"]
+    answer: 0
+    why: Volume holds at full sustain, while the cutoff closes down to nothing extra.
+    whyWrong:
+      1: That's the other way round.
+      2: The cutoff is moving, so the colour changes.
+      3: Neither envelope changes pitch here.
+
+  - kind: ask
+    q: Your note fades out over two seconds, but the filter has finished closing after a tenth of a second. How does the tail sound?
+    options: ["dull and quiet", "bright and loud", "silent", "out of tune"]
+    answer: 0
+    why: The filter closes fast, so the long volume fade carries a dark, dull tail.
+    whyWrong:
+      1: The filter has already closed, so it can't be bright.
+      2: The amp is still fading, so you hear it.
+      3: Envelopes don't change tuning.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, timbre, the colour of your lead.

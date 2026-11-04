@@ -1,0 +1,110 @@
+slug: interface-tour
+world: producer
+number: 202
+title: around live
+minutes: 5
+song:
+  changes: drums.kick
+  why: your song's tempo, set from the one place every DAW keeps it, the bar along the top
+learn: >-
+  The five things you reach for in any song, where you've already met them here, and where they live in
+  Live's window.
+youCan:
+  - name the five main parts of Live's window
+  - say where tempo, notes and sound controls live in Live
+  - set your song's tempo
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        A kick and a clap. Simple, but to make even this you've already used five things: a speed for the
+        song, a place to find sounds, a list of your parts, the notes one part plays, and knobs that shape
+        how it sounds.
+
+        Every DAW has those same five things. Once you know where they live, any music program stops looking
+        scary.
+      straight: >-
+        Even a kick and clap need five things: tempo, sounds, parts, notes and knobs. Every DAW has all five.
+      eli5: >-
+        To make this beat you need a speed, some sounds, a list of parts, the notes, and knobs. Every music
+        program has these five things.
+
+  - kind: say
+    title: five things, two places
+    say:
+      mentor: >-
+        In Live, the speed of the song sits in the control bar along the top, with play, stop, the metronome
+        (the click that keeps time) and the tempo in bpm, beats per minute.
+
+        Sounds live in the browser down the left side. Your parts, the tracks, fill the middle, which Live
+        calls the main view: either the session grid or the arrangement timeline.
+
+        Notes and knobs share the bottom panel, the detail view. Click a clip and it shows the notes. Click a
+        track's instrument and it shows the knobs. That's the same split you've been using here: play the
+        notes in, then shape the sound.
+      straight: >-
+        Live's window: control bar on top (tempo, play, metronome), browser on the left (sounds), main view in
+        the middle (your tracks), detail view at the bottom (notes or knobs, for whatever you clicked).
+      eli5: >-
+        Speed goes at the top. Sounds are on the left. Your parts are in the middle. The notes and knobs for
+        one part show up at the bottom when you click it.
+    deeper:
+      - title: the info view
+        say: >-
+          There's a fifth panel in the bottom corner called the info view. Hover over any control in Live and
+          it tells you what that control does. When you're lost, look there before you reach for the manual.
+      - title: shortcuts worth knowing
+        say: >-
+          Tab swaps the main view between session and arrangement. Every panel can be shown or hidden with the
+          small triangles at its edge or from the View menu, which helps a lot on a small laptop screen.
+
+  - kind: tempo
+    marks: [100, 120, 124, 128]
+    say:
+      mentor: >-
+        Here's your song, and here's the control bar's job: the tempo. Turn it and every part of your song
+        speeds up or slows down together, because they all follow this one number.
+
+        Try slower and it lays back. Try faster and it pushes. House usually sits somewhere around 120 to 128.
+        Leave it where your song feels right.
+      straight: >-
+        Your song's tempo, the same number Live keeps in its control bar. Every part follows it. Set it by
+        feel.
+      eli5: >-
+        This makes your whole song go faster or slower. All the sounds follow it together. Stop where it feels
+        good to dance to.
+
+  - kind: ask
+    q: Where does Live keep the tempo?
+    options: ["the control bar along the top", "the browser on the left", "the detail view at the bottom", "inside each clip"]
+    answer: 0
+    why: Tempo, play, stop and the metronome all sit in the control bar along the top.
+    whyWrong:
+      1: The browser holds sounds, samples and presets.
+      2: The detail view shows one clip's notes or one track's devices.
+      3: Every clip follows the one tempo in the control bar.
+
+  - kind: ask
+    q: You click a clip. What shows up in the detail view?
+    options: ["its notes", "the whole song's tempo", "your list of sounds", "every track at once"]
+    answer: 0
+    why: Click a clip and the detail view shows what's inside it, the notes or the audio.
+    whyWrong:
+      1: Tempo sits in the control bar.
+      2: Sounds are in the browser.
+      3: Every track is the main view's job.
+
+  - kind: ask
+    q: What does the Tab key do in Live?
+    options: ["swaps between session and arrangement view", "starts and stops playback", "opens the browser", "records a clip"]
+    answer: 0
+    why: Tab flips the main view between the session grid and the arrangement timeline.
+    whyWrong:
+      1: That's the space bar.
+      2: The browser is shown or hidden on its own.
+      3: Recording has its own button.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, your drums as a rack of pads.

@@ -1,0 +1,108 @@
+slug: push-controllers
+world: producer
+number: 302
+title: push and controllers
+minutes: 5
+song:
+  changes: drums.kick
+  why: drums played in with your fingers carry the small pushes and pulls that make a beat feel played
+learn: >-
+  What a controller is, what Push does that other controllers don't, and finger drumming a bar into your
+  song on pads.
+youCan:
+  - say what a controller does for Live
+  - name Push's two main pad layouts
+  - finger drum a bar of your beat on pads
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A beat like this can be clicked in with a mouse, one note at a time. Or you can play it, with your
+        fingers on pads, the way a drummer would. Playing it is faster, and it sounds more alive because your
+        hits are never perfectly even.
+
+        A controller is the box that lets you do that: pads, knobs and faders that play Live.
+      straight: >-
+        You can click a beat in, or play it on pads. A controller is a box of pads, knobs and faders that
+        plays Live.
+      eli5: >-
+        You can draw a beat with the mouse, or you can tap it on squares with your fingers like a little drum
+        kit. The box with the squares is called a controller.
+
+  - kind: say
+    title: push
+    say:
+      mentor: >-
+        Push is Ableton's own controller. It has 64 pads that know how hard you hit them, called velocity
+        sensitive, plus knobs and a screen. Plug it in and Live finds it straight away.
+
+        The clever part is that the pads change with what you're doing. On a drum track they become drum
+        pads, 16 for the sounds and the rest a step sequencer for whichever pad you picked. On a synth track
+        they're laid out in your song's scale, so every pad is a note in key and wrong notes simply aren't
+        there.
+      straight: >-
+        Push has 64 velocity sensitive pads, knobs and a screen. Drum mode gives 16 drum pads plus a step
+        sequencer. Melodic mode lays the pads out in your scale, so no wrong notes.
+      eli5: >-
+        Push is Ableton's controller with 64 squares to tap. Hit harder and it plays louder. On drums the
+        squares are your drum sounds. On a synth every square plays a note that fits your song.
+    deeper:
+      - title: other controllers
+        say: >-
+          Push isn't the only option. Controllers like Akai's APC and Novation's Launchpad also work closely
+          with Live, and any midi controller can be set up under preferences, in the link, tempo and midi tab,
+          as a control surface.
+      - title: push 3 on its own
+        say: >-
+          Push 3 Standalone has a computer inside, so it can run Live with no laptop at all. That has its own
+          deeper lesson further down this path.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    goal: {notes: 8}
+    say:
+      mentor: >-
+        These are your song's drum pads. Press rec, wait out the count-in, and finger drum eight hits. Kick
+        on the beats, clap or hats between them, whatever feels good. Use two or three fingers, like you would
+        on Push. Hit some harder than others and listen to the difference.
+      straight: >-
+        Your drum pads. Press rec, wait for the count-in, then play eight hits with a few fingers. Vary how
+        hard you hit.
+      eli5: >-
+        Press rec, wait for four ticks, then tap the drum squares eight times. Try using more than one finger.
+
+  - kind: ask
+    q: What does a controller do?
+    options: ["lets you play and control Live with pads, knobs and faders", "makes Live run faster", "stores your songs", "replaces your speakers"]
+    answer: 0
+    why: It's hands-on control of Live, instead of the mouse.
+    whyWrong:
+      1: It doesn't change how fast the computer runs.
+      2: Your songs stay in Live.
+      3: You still need speakers or headphones.
+
+  - kind: ask
+    q: What does velocity sensitive mean on a pad?
+    options: ["harder hits play louder", "the pad lights up", "the pad plays faster", "the pad changes colour"]
+    answer: 0
+    why: The pad measures how hard you hit it and turns that into loudness.
+    whyWrong:
+      1: Lights are separate from velocity.
+      2: Velocity is about force, not speed of the song.
+      3: Colour is just a display thing.
+
+  - kind: ask
+    q: In Push's melodic mode, why can't you play a wrong note?
+    options: ["the pads only hold notes in your scale", "Push corrects mistakes after you play", "it mutes out-of-key notes", "it only plays one note"]
+    answer: 0
+    why: Out-of-scale notes just aren't on the grid.
+    whyWrong:
+      1: Nothing is corrected later. The notes aren't there to begin with.
+      2: Nothing is muted. They're left off the layout.
+      3: You can play any note in the scale, and chords too.
+
+  - kind: keep
+    next: >-
+      Those hits are in your song now. Back to your song path, or on to midi mapping.

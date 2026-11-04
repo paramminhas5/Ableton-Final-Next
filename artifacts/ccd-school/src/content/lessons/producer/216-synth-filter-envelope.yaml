@@ -1,0 +1,112 @@
+slug: synth-filter-envelope
+world: producer
+number: 216
+title: filter envelope
+minutes: 5
+song:
+  changes: lead.lead
+  why: brightness that opens on every note and closes again gives your lead movement and bite
+learn: >-
+  Pointing an envelope at the filter instead of the volume, the envelope amount, and setting the resting
+  cutoff first.
+youCan:
+  - say what a filter envelope does on each note
+  - say what envelope amount controls
+  - make your lead brighten and close on every note
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One soft held note. It stays the same colour the whole way through. Now imagine it starting bright
+        and then darkening as it holds, like a plucked string. That movement is what makes synth sounds feel
+        alive.
+
+        You already know an envelope can shape volume. Point the same kind of shape at the filter's cutoff
+        and the brightness moves on every note instead. That's a filter envelope.
+      straight: >-
+        This note's colour doesn't move. A filter envelope moves the cutoff on every note, so it opens bright
+        and closes again.
+      eli5: >-
+        This note sounds the same all the way through. A filter envelope makes each note start bright and then
+        get darker, like plucking a guitar string.
+
+  - kind: say
+    title: amount and base cutoff
+    say:
+      mentor: >-
+        Two controls work together. The cutoff is where the filter rests, the base. The envelope amount is how
+        far the envelope pushes the cutoff up on each note. Zero amount and the envelope does nothing at all.
+
+        Set the base first, quite dark, then add amount. Now every note jumps bright and closes back down to
+        the base. A fast filter envelope with lots of amount is the classic plucky lead. Add resonance and the
+        sweep whistles as it closes.
+      straight: >-
+        Cutoff is the resting point. Envelope amount is how far each note pushes it up. Set the base dark first,
+        then add amount. Resonance makes the sweep whistle.
+      eli5: >-
+        First make your sound dark. Then turn up env, and each note will flash bright and go dark again. Res
+        makes that flash whistle.
+    deeper:
+      - title: in live's synths
+        say: >-
+          Most synths give the filter its own adsr envelope with an amount control. A short decay with little
+          sustain gives a pluck. A long decay with more sustain gives a slower, brassy swell. Many let the
+          amount go negative, so the cutoff dips on each note instead of rising. Sending velocity to the
+          envelope amount means hard notes open brighter than soft ones.
+      - title: a common mistake
+        say: >-
+          Lots of envelope amount with the cutoff already wide open does almost nothing, because the filter has
+          nowhere higher to go. Bring the base cutoff down and you'll hear the envelope straight away.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, env, res]
+    say:
+      mentor: >-
+        Here's your song. Your lead's filter envelope jumps open at the start of each note and closes over
+        about a third of a second. Turn cutoff down until your lead is dark. Then bring up env and listen to
+        every note bite and close.
+
+        Add a touch of res and the sweep starts to sing. Too much and it squeals. Keep the bite that suits your
+        melody.
+      straight: >-
+        Cutoff down for a dark base. Env up and each note bites open and closes. Res adds a whistle. Keep what
+        suits your melody.
+      eli5: >-
+        Turn cutoff down so it's dark. Turn env up so each note flashes bright. Add a little res for a whistle.
+        Keep the one you like.
+
+  - kind: ask
+    q: What does a filter envelope move on each note?
+    options: ["the cutoff", "the volume", "the pitch", "the tempo"]
+    answer: 0
+    why: It moves the cutoff, so the brightness opens and closes on each note.
+    whyWrong:
+      1: Volume is the amp envelope.
+      2: Pitch stays the same.
+      3: Tempo is the whole song.
+
+  - kind: ask
+    q: The envelope amount is at zero. What does the filter envelope do?
+    options: ["nothing", "opens the filter all the way", "makes the note louder", "shortens the note"]
+    answer: 0
+    why: Amount is how far the envelope moves the cutoff. Zero means it doesn't move.
+    whyWrong:
+      1: Zero amount means no movement.
+      2: Loudness is the amp envelope.
+      3: Length is the amp envelope too.
+
+  - kind: ask
+    q: Your filter envelope does nothing you can hear, even with lots of amount. What's the likely fix?
+    options: ["lower the base cutoff", "raise the base cutoff", "turn the volume up", "slow the tempo"]
+    answer: 0
+    why: With the cutoff wide open there's nowhere higher to go. A darker base gives the envelope room.
+    whyWrong:
+      1: Opening it further leaves even less room.
+      2: Louder doesn't make the sweep audible.
+      3: Tempo doesn't affect the filter.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, both envelopes on one note.

@@ -1,0 +1,109 @@
+slug: synth-noise
+world: producer
+number: 247
+title: noise
+minutes: 5
+song:
+  changes: hats.hats
+  why: your hats are shaped noise, and their length and colour set how busy and bright your groove feels
+learn: >-
+  What noise is, why it's the raw stuff of hats, snares and risers, and the noise in your own hats shaped by
+  hand.
+youCan:
+  - say what white and pink noise are
+  - say how an envelope and a filter turn noise into a drum
+  - shape the noise in your hats
+steps:
+  - kind: hear
+    clip: hats-offbeat
+    say:
+      mentor: >-
+        Open hats between the kicks. Listen closely to the hat itself: there's no note in it. It's a hiss, a
+        burst of noise that starts and dies away.
+
+        Noise is sound with every frequency in it at once, all jumbled, so no single pitch stands out. On its
+        own it's just static. Shaped, it becomes hats, snares, breath, wind, and the whoosh of a riser.
+      straight: >-
+        A hat has no note. It's a short burst of noise. Noise has every frequency at once. Shaped, it becomes
+        hats, snares, wind and risers.
+      eli5: >-
+        Hear the tss? That's noise, a hiss with no note in it. Make it short and it's a hat. Make it long and
+        rising and it's a whoosh.
+
+  - kind: say
+    title: white, pink, shaped
+    say:
+      mentor: >-
+        White noise has equal energy at every frequency. That sounds very bright and hissy to us. Pink noise
+        has equal energy in every octave, which puts more weight in the lows, and to our ears it sounds more
+        even and natural, like rain or a waterfall.
+
+        To make noise into something, a synth uses two tools you already know. An envelope sets its shape in
+        time: a fast attack and a short decay gives a click or a hat, a slow rise gives a riser. A filter sets
+        its colour: high-passed noise is airy and thin, low-passed noise is dark and rumbly.
+      straight: >-
+        White noise: equal energy at all frequencies, bright. Pink: equal per octave, more natural. An envelope
+        shapes it in time, a filter shapes its colour.
+      eli5: >-
+        White noise sounds like loud hiss. Pink noise sounds softer, like rain. Make noise short and it's a
+        drum. Make it brighter or darker with a filter.
+    deeper:
+      - title: noise in live's synths
+        say: >-
+          Most of Live's synths have a noise source you can mix in next to the oscillators. A touch of noise
+          under a pad adds air, and noise with a short envelope layered on a snare adds snap.
+      - title: risers
+        say: >-
+          The riser in your song is noise too: a long envelope that builds, with a filter opening as it goes.
+          The fx, risers and sweeps lesson puts one before your drop.
+
+  - kind: shape
+    layer: hats
+    knobs: [decay, tune]
+    say:
+      mentor: >-
+        Your hats are noise with an envelope and a filter on them, playing in your song right now. Turn decay
+        down and each burst gets short and tight, a closed, ticking hat. Turn it up and the noise rings out
+        longer, splashy and open.
+
+        Tune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and
+        dark. Set the hats so they sit above your kick without hissing over everything, and keep them.
+      straight: >-
+        Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour. Set them to sit
+        above your kick, then keep it.
+      eli5: >-
+        Make your hats short or long with decay. Make them brighter or darker with tune. Keep the ones you like.
+
+  - kind: ask
+    q: What is noise?
+    options: ["every frequency at once, with no single pitch", "a very low note", "a loud sine wave", "a recording of a crowd"]
+    answer: 0
+    why: All frequencies jumbled together, so no note stands out.
+    whyWrong:
+      1: A low note has a pitch; noise doesn't.
+      2: A sine is one pure frequency, the opposite.
+      3: A crowd is a recording, not noise in the synth sense.
+
+  - kind: ask
+    q: How do you turn noise into a hat?
+    options: ["a fast attack and a short decay", "a slow attack and long release", "a lower tempo", "more reverb"]
+    answer: 0
+    why: A quick, short burst of noise is a hat.
+    whyWrong:
+      1: That would make a slow swell, like a riser or a pad.
+      2: Tempo doesn't shape the sound.
+      3: Reverb adds space, not the hit itself.
+
+  - kind: ask
+    q: Which sounds more even and natural to our ears?
+    options: ["pink noise", "white noise", "they sound the same", "neither has a sound"]
+    answer: 0
+    why: Pink has equal energy per octave, which matches how we hear.
+    whyWrong:
+      1: White sounds bright and hissy to us.
+      2: They're clearly different.
+      3: Both are sounds.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try synth effects to put an echo on your lead.

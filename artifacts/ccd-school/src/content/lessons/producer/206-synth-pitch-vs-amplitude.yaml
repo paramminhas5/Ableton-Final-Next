@@ -1,0 +1,106 @@
+slug: synth-pitch-vs-amplitude
+world: producer
+number: 206
+title: pitch vs amplitude
+minutes: 5
+song:
+  changes: lead.lead
+  why: nudging pitch by a few cents and setting level are two separate moves, and your lead needs both
+learn: >-
+  How pitch and loudness are two separate things in every note, where a synth controls each, and tiny
+  pitch changes measured in cents.
+youCan:
+  - say what controls pitch and what controls loudness in a synth
+  - say what a cent is
+  - detune your lead and set its level separately
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Low, then high. Same loudness, different pitch. Pitch is how fast the wave wiggles: faster, higher.
+        Loudness is something else entirely, how big each wiggle is, which is called amplitude.
+
+        They're independent. You can play a quiet high note or a loud low one. A synth controls them in
+        different places too: the oscillator sets the pitch, and the amp, short for amplifier, sets how loud.
+      straight: >-
+        Low and high: pitch is how fast the wave moves. Loudness, or amplitude, is how big it is. Separate
+        things. Oscillator sets pitch, amp sets loudness.
+      eli5: >-
+        Low note, high note. How high a note is and how loud it is are two different things. You can change
+        one without the other.
+
+  - kind: say
+    title: cents
+    say:
+      mentor: >-
+        Pitch can move in big steps or tiny ones. The step from one piano key to the next is a semitone, and
+        each semitone splits into 100 cents. A few cents is too small to hear as a new note. Instead the note
+        sounds a touch sharp or flat.
+
+        Here's the cool part: stack two copies of the same note a few cents apart and they rub against each
+        other, which makes the sound wider and thicker. That's called detuning.
+      straight: >-
+        A semitone is 100 cents. A few cents won't change the note, it makes it slightly sharp or flat. Two
+        copies a few cents apart sound wider. That's detune.
+      eli5: >-
+        Notes can move a tiny, tiny bit, smaller than one key. Two copies of a note, one moved a tiny bit, make
+        a big wide sound.
+    deeper:
+      - title: velocity
+        say: >-
+          How hard you hit a key is called velocity. Synths usually send it to the amp, so harder hits come out
+          louder at the same pitch, like a real instrument. In Live's piano roll each note has its own velocity
+          bar, so you can make two notes the same pitch but different loudness.
+
+  - kind: shape
+    layer: lead
+    knobs: [detune, level]
+    say:
+      mentor: >-
+        Here's your song with one knob for each idea. Your lead has three oscillators playing together. Detune
+        pulls them apart by a few cents, up to 36. Turn it slowly: it thickens, then shimmers, and pushed too
+        far it starts to sound out of tune.
+
+        Level is the other side, amplitude. Turn it and only the loudness changes, never the pitch. Set both
+        until your lead sits right.
+      straight: >-
+        Detune pulls your lead's three oscillators a few cents apart: wider, then out of tune if pushed. Level
+        is loudness only. Set both.
+      eli5: >-
+        Detune makes your tune wider and shinier. Too much sounds wobbly. Level makes it louder or quieter.
+        Stop where you like it.
+
+  - kind: ask
+    q: Turning up a note's amplitude changes what?
+    options: ["how loud it is", "how high it is", "how long it is", "which wave it uses"]
+    answer: 0
+    why: Amplitude is the size of the wave, which you hear as loudness. Pitch stays put.
+    whyWrong:
+      1: Pitch is how fast the wave moves, not how big.
+      2: Length is set by the note and the envelope.
+      3: The wave shape is the oscillator's choice.
+
+  - kind: ask
+    q: How many cents are in one semitone?
+    options: ["100", "12", "2", "1,000"]
+    answer: 0
+    why: A semitone, one piano key to the next, splits into 100 cents.
+    whyWrong:
+      1: Twelve semitones make an octave.
+      2: Far too few, cents are tiny.
+      3: Ten times too many.
+
+  - kind: ask
+    q: Why does detuning a few cents make your lead sound wider?
+    options: ["the copies rub against each other", "it makes the lead louder", "it plays a new note", "it adds echo"]
+    answer: 0
+    why: Copies a few cents apart drift in and out of step, and you hear that as width and movement.
+    whyWrong:
+      1: Loudness is the level knob's job.
+      2: A few cents is too small to be a new note.
+      3: No echo is added, only slightly different pitches.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, hats on the grid.

@@ -1,0 +1,120 @@
+slug: sampler-deep
+world: producer
+number: 233
+title: sampler, deep
+minutes: 5
+song:
+  changes: drums.kick
+  why: setting the pitch and length of a hit is how a sample is made to fit your song
+learn: >-
+  How Live's Sampler maps many recordings across keys and velocities, and the pitch and length of a hit on
+  your own kick.
+youCan:
+  - say what key zones and velocity layers are
+  - say why round-robin stops the machine-gun sound
+  - set the pitch and length of a hit by ear
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        One note low, then high. A sampler can do this with a recording: play it on a higher key and it plays
+        faster and higher. That's fine for a few notes, but stretch one recording too far and it stops
+        sounding real. A piano played an octave up from one sample sounds thin and toy-like.
+
+        So real sampled instruments use lots of recordings, each one covering a small range of keys.
+      straight: >-
+        Low, then high. A sampler can play one recording at any pitch, but stretched too far it sounds fake.
+        Real sampled instruments use many recordings, each covering a few keys.
+      eli5: >-
+        Low note, high note. A sampler can play one sound high or low, but too far and it sounds silly. So
+        good sampled pianos record lots of notes.
+
+  - kind: say
+    title: zones, layers and round-robin
+    say:
+      mentor: >-
+        A key zone is the range of keys one recording covers. A sampled piano might use a different recording
+        every few keys, so every note stays close to its real sound.
+
+        A velocity layer is a recording chosen by how hard you play. Velocity means how hard you hit a key or
+        pad. A soft hit plays a soft recording and a hard hit plays a hard one, and a real drum or piano
+        really does change tone when you hit it harder, not just volume.
+
+        Round-robin is the third trick. Hit the same snare twice in a row and you'd hear the exact same
+        recording twice, which sounds like a machine gun. Round-robin cycles through several recordings of the
+        same hit, so repeats sound alive.
+      straight: >-
+        Key zone: the keys one recording covers. Velocity layer: a recording picked by how hard you play.
+        Round-robin: several recordings of the same hit, cycled, so repeats don't sound robotic.
+      eli5: >-
+        A sampler can keep lots of recordings. Some for low keys, some for high keys, some for soft hits, some
+        for hard hits. It can even swap between a few copies so the same drum never sounds exactly the same
+        twice.
+    deeper:
+      - title: sampler in live
+        say: >-
+          Sampler's zone editor maps samples by key range, velocity range and a selector range, which is how
+          round-robin and random choice are set up. Each sample can have its own envelope, filter and lfo
+          routing, and Sampler responds to MPE, per-note pitch, pressure and slide. Overlapping key zones play
+          together, which is handy for layering.
+      - title: start and loop
+        say: >-
+          In Sampler and Simpler you can move a sample's start point, to skip a slow fade-in or cut into the
+          punchiest part of a hit, and set a loop so a short recording sustains for as long as you hold the
+          key. Velocity can even move the start point, so harder hits start later in the transient for more
+          snap.
+
+  - kind: shape
+    layer: drums
+    knobs: [tune, decay]
+    say:
+      mentor: >-
+        Every sample on every pad gets two basic choices: what pitch it plays at, and how long it lasts. Here
+        they are on your kick, with your song playing.
+
+        Turn tune and the kick sits lower and heavier or higher and tighter. Turn decay and it gets short and
+        clipped or long and booming. Find the kick that sits with your bass, and keep it.
+
+        These knobs work on the synth kit. If your song is on the recorded kit, switch back to synth in drums
+        from recordings to hear them.
+      straight: >-
+        Tune sets your kick's pitch, decay sets how long it lasts. Set both so it sits with your bass, then
+        keep it. These knobs act on the synth kit, not the recorded one.
+      eli5: >-
+        Tune makes your kick higher or lower. Decay makes it shorter or longer. Turn them until your kick
+        sounds right with your bass.
+
+  - kind: ask
+    q: What is a velocity layer?
+    options: ["a recording chosen by how hard you play", "a recording for a range of keys", "a reverb setting", "a faster tempo"]
+    answer: 0
+    why: Soft hits play one recording, hard hits another, so the tone changes like a real instrument.
+    whyWrong:
+      1: That's a key zone.
+      2: Reverb has nothing to do with it.
+      3: Velocity is how hard, not how fast the song is.
+
+  - kind: ask
+    q: Why use round-robin on a snare?
+    options: ["so repeated hits don't sound identical", "so the snare is louder", "so it plays in key", "so it plays backwards"]
+    answer: 0
+    why: Cycling through several recordings avoids the machine-gun sound of one sample repeated.
+    whyWrong:
+      1: It's about variety, not level.
+      2: Key isn't the problem with repeated hits.
+      3: Reverse is a different setting.
+
+  - kind: ask
+    q: Why do sampled pianos use many recordings instead of one?
+    options: ["one recording stretched far from its pitch sounds fake", "Live can only play one octave", "to save space", "so the piano is in stereo"]
+    answer: 0
+    why: Each recording covers a few keys, so every note stays close to how it really sounds.
+    whyWrong:
+      1: Live can play any range.
+      2: More recordings take more space, not less.
+      3: Stereo is a separate thing.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try drum sampler for a kit built from recordings.

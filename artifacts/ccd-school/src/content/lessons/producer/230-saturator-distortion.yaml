@@ -1,0 +1,112 @@
+slug: saturator-distortion
+world: producer
+number: 230
+title: saturator and distortion
+minutes: 5
+song:
+  changes: drums.kick
+  why: a little drive gives your kick harmonics, so it feels fuller and still comes through on small speakers
+learn: >-
+  What saturation and distortion add to a sound, and drive on your own kick, judged at the same loudness.
+youCan:
+  - say what drive adds to a sound
+  - hear the line between warmth and distortion
+  - match loudness before deciding if drive helped
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        Here's a kick on its own. It's clean: mostly one low, round tone. That's lovely on big speakers and
+        nearly invisible on a phone, because tiny speakers can't play very low notes.
+
+        Saturation is the fix producers reach for first. It bends the shape of the wave a little, and that
+        bending adds harmonics: new, higher notes stacked on top of the original that weren't there before.
+        Those harmonics are what your ear catches on a small speaker.
+      straight: >-
+        A clean kick. Saturation bends the wave, which adds harmonics, higher notes on top of the original.
+        Harmonics help a kick come through on small speakers.
+      eli5: >-
+        This is a plain kick. If you squash its wiggle a little, it grows extra little sounds on top. Those
+        extra sounds help you hear the kick even on a phone.
+
+  - kind: say
+    title: warmth, then grit
+    say:
+      mentor: >-
+        Drive is how hard you push the sound into that bending. A little drive sounds warm and thick, like a
+        tube amp just starting to work. Push it further and the peaks of the wave get sliced off, and you hear
+        real distortion: gritty, buzzy, aggressive.
+
+        There's a trap. More drive also makes the sound louder, and louder always seems better for a second.
+        So turn the level down until it's as loud as before, then decide if the drive helped.
+      straight: >-
+        Drive sets how hard the sound is pushed. Low drive is warmth, high drive is distortion. Drive also adds
+        loudness, so match the level before you judge it.
+      eli5: >-
+        A bit of drive makes the sound warm and fat. Lots of drive makes it crunchy. Drive also makes it
+        louder, so turn it back down before you decide if you like it.
+    deeper:
+      - title: saturator in live
+        say: >-
+          Live's Saturator has a Drive knob that pushes the signal into a curve, and an Output knob to bring
+          the level back down. The curve type changes the flavour: Analog Clip and Soft Sine are gentle,
+          Sinoid Fold folds the wave back on itself for a more synth-like grit, Digital Clip is hard. A Soft
+          Clip switch tames the loudest peaks, and Dry/Wet lets you blend the saturated sound with the clean
+          one, which often keeps more punch.
+      - title: the other distortions
+        say: >-
+          Live also has Overdrive, Pedal, Dynamic Tube and Roar. They push further than gentle saturation,
+          and because they add harmonics high up, an EQ after them is useful to tame the top end.
+
+  - kind: shape
+    layer: drums
+    knobs: [drive, level]
+    say:
+      mentor: >-
+        Your song is playing, with drive on your kick. Turn drive up slowly. First the kick thickens and gets a
+        little edge, then it starts to crunch. Find the point where it feels bigger but still sounds like your
+        kick.
+
+        Now the honest test: pull level down until the kick is about as loud as it was, and listen again. If
+        it still sounds better, the drive is doing real work. Keep it.
+      straight: >-
+        Raise drive on your kick until it thickens, before it crunches. Then lower level to match the old
+        loudness and check it still sounds better.
+      eli5: >-
+        Turn drive up and listen to your kick get fatter. Stop before it sounds broken. Then turn level down a
+        bit so it's not just louder. Still better? Keep it.
+
+  - kind: ask
+    q: What does saturation add to a sound?
+    options: ["harmonics, new higher notes on top", "reverb", "a second kick", "more tempo"]
+    answer: 0
+    why: Bending the wave adds harmonics that weren't in the original.
+    whyWrong:
+      1: Reverb is space, a different effect.
+      2: It's the same kick, with more harmonics.
+      3: Tempo is the speed of the song.
+
+  - kind: ask
+    q: You turn drive up and the kick sounds better. What do you check?
+    options: ["that it isn't just louder", "that the tempo is right", "that the hats are on", "nothing, louder is better"]
+    answer: 0
+    why: Drive adds loudness, and louder always seems better. Match the level, then judge.
+    whyWrong:
+      1: Tempo doesn't change with drive.
+      2: The hats don't affect the kick's drive.
+      3: That's exactly the trap to avoid.
+
+  - kind: ask
+    q: Why can saturation help a kick on a phone speaker?
+    options: ["phones can play the harmonics but not the deepest lows", "it makes the kick lower", "phones only play distortion", "it removes the low end"]
+    answer: 0
+    why: Tiny speakers miss the deepest notes, but the added harmonics sit higher where they can play them.
+    whyWrong:
+      1: The harmonics are higher, not lower.
+      2: Phones play everything they can reach, clean or not.
+      3: The low end is still there; harmonics are added on top.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try roar for a bigger drive on your bass.

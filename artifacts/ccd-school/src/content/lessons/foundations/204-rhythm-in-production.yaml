@@ -1,0 +1,123 @@
+slug: rhythm-in-production
+world: foundations
+number: 204
+title: rhythm in production
+minutes: 5
+song:
+  changes: hats.hats
+  why: hats played in by hand, a hair behind the grid, make a programmed beat feel like someone is playing it
+learn: >-
+  The grid as a tool, when to stay on it and when to leave it, and hats in your song played by hand with snap
+  off.
+youCan:
+  - say what the grid and quantise do
+  - hear the difference between tight and laid back
+  - play hats in by hand without snap
+steps:
+  - kind: hear
+    clip: straight-vs-swung
+    say:
+      mentor: >-
+        Tap straight, then swung. In the first one every hat sits exactly on the grid, the lines that split
+        each beat. In the second some hats are moved off those lines. Same notes, different feel.
+
+        A music program will put every hit on the grid for you. Whether you let it is one of the most
+        important choices in a track.
+      straight: >-
+        Straight: every hat on the grid. Swung: some moved off it. On the grid is tight, off it feels played.
+      eli5: >-
+        Tap a, then b. In a, every tss is exactly in line like soldiers. In b, some wobble a bit. The wobbly
+        one feels more like dancing.
+
+  - kind: say
+    title: tight or human
+    say:
+      mentor: >-
+        Snapping notes to the grid is called quantising. It gives you tight, machine timing, which is great
+        for a club kick that has to hit exactly. Moving notes off the grid gives a played, human feel.
+
+        Off the grid has two directions. A hit slightly after the beat feels laid back, relaxed and deep, the
+        classic hip hop and soul pocket. A hit slightly before feels pushing, urgent, leaning forward. Most
+        producers lock the kick and bass first, then loosen the parts on top.
+      straight: >-
+        Quantise snaps notes to the grid for tight timing. Off the grid feels human. Slightly late is laid
+        back, slightly early is pushing. Lock kick and bass first, loosen the rest.
+      eli5: >-
+        A helper can line every tap up perfectly. That sounds neat but a bit robot. Taps a tiny bit late sound
+        relaxed. Taps a tiny bit early sound excited.
+    deeper:
+      - title: in live
+        say: >-
+          Quantize snaps selected notes to the grid, and quantize strength lets you go part of the way: at 80
+          percent every note moves 80 percent of the way to the line, tighter but still human. The Groove
+          Pool takes the timing, velocity and length from one clip and applies it to another, so you can
+          borrow the feel of a real drum break.
+      - title: record slow, then speed up
+        say: >-
+          If a part is hard to play in time, drop the tempo, record it, then bring the tempo back up. Notes
+          you recorded as midi follow the tempo, so the part plays back at full speed with your timing intact.
+
+  - kind: play
+    layer: hats
+    surface: pads
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now play your hats in by hand. Snap is off this time, so every hit lands exactly where you tap.
+
+        Press rec, wait out the count-in, and tap the hat on each "and", between the kicks. Don't rush. Let a
+        couple of them land a hair late, just behind where you'd expect. Then listen to the loop: that slight
+        drag is the laid back feel producers spend hours chasing. If it sounds sloppy rather than relaxed,
+        play it again a little tighter.
+      straight: >-
+        Snap is off. Rec, count-in, then tap the hat on every "and", letting a couple land a touch late. Keep
+        it if it feels relaxed, replay if it feels sloppy.
+      eli5: >-
+        No helper this time. Press rec, wait for four ticks, and tap the hat in between the booms. It's fine
+        if some are a tiny bit late. That makes it feel relaxed.
+    hint: Count "one and two and" and tap on the "and", lazily.
+
+  - kind: ask
+    q: What does quantising do?
+    options: ["moves notes onto the grid", "adds a human feel", "makes notes louder", "changes their pitch"]
+    answer: 0
+    why: Quantise snaps each note to the nearest grid line for tight timing.
+    whyWrong:
+      1: Quantise takes the human wobble out. Leaving notes off the grid keeps it.
+      2: Timing, not volume.
+      3: Timing, not pitch.
+
+  - kind: ask
+    q: A hat played slightly after the beat feels
+    options: ["laid back", "pushing and urgent", "louder", "out of key"]
+    answer: 0
+    why: Slightly late feels relaxed and deep.
+    whyWrong:
+      1: Pushing is slightly before the beat.
+      2: Timing doesn't change loudness.
+      3: Drums aren't in a key here, and timing doesn't change pitch.
+
+  - kind: ask
+    q: Which parts do producers usually lock down first?
+    options: ["kick and bass", "the melody", "the reverb", "the open hats"]
+    answer: 0
+    why: If kick and bass groove, the rest falls into place on top.
+    whyWrong:
+      1: Melody usually comes after the rhythm sits.
+      2: Effects come later.
+      3: Hats sit on top of the kick and bass.
+
+  - kind: ask
+    more: true
+    q: Quantising at 80 percent strength
+    options: ["moves notes 80 percent of the way to the grid", "quantises 80 percent of the notes", "adds 80 percent swing", "turns snap off"]
+    answer: 0
+    why: Every note moves most of the way, so it tightens up but keeps some feel.
+    whyWrong:
+      1: All the notes move, each only part of the way.
+      2: Swing is a different setting.
+      3: It still snaps, just not all the way.
+
+  - kind: keep
+    next: >-
+      Your beat is done for now. Next path: sound, and a melody over your beat.

@@ -1,0 +1,108 @@
+slug: linked-track-editing
+world: producer
+number: 311
+title: linked-track editing
+minutes: 5
+song:
+  changes: bass.bass
+  why: taking two parts out of the same section together keeps them locked as one move instead of two
+learn: >-
+  Why some tracks need every edit made to all of them at once, how Live's linked-track editing does that,
+  and making one cut across two of your parts.
+youCan:
+  - say what linked-track editing does
+  - say when you'd link tracks and when you wouldn't
+  - take two of your parts out of a section together
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A drum kit recorded for real often has a mic on every drum: one on the kick, one on the snare, two
+        overhead. Each mic catches the same performance from a different spot, so they all end up as separate
+        tracks that have to stay perfectly lined up.
+
+        Cut bar 17 on the kick track but not the overheads, and the kit falls apart. Every edit has to happen to
+        every track at once.
+      straight: >-
+        Multi-mic drums are several tracks of one performance. Every edit has to hit all of them at once, or
+        they fall out of line.
+      eli5: >-
+        Sometimes one drummer is recorded with lots of microphones, and each one becomes its own track. If you
+        cut one, you have to cut them all the same way.
+
+  - kind: say
+    title: link them
+    say:
+      mentor: >-
+        In Live's arrangement view, select the tracks and choose link tracks. From then on, a split, a trim, a
+        move or a fade on one of them happens on all of them, in the same place. It's made for multi-mic drums,
+        stems, and any parts that have to stay aligned.
+
+        You can unlink them any time. Don't link parts that are meant to move on their own, like a delay throw
+        you've nudged off the grid, or you'll drag them along by accident.
+      straight: >-
+        In arrangement view, select tracks and link them. Splits, trims, moves and fades then hit all of them.
+        Unlink any time. Don't link parts that should move on their own.
+      eli5: >-
+        Live can glue tracks together so when you cut one, the others get cut in the same place too. You can
+        unglue them whenever you like.
+    deeper:
+      - title: arrangement only
+        say: >-
+          Linking is for arrangement view, where your song runs left to right. Clips in session view are
+          separate from each other and aren't linked.
+      - title: what gets shared
+        say: >-
+          Structural edits are shared: splits, trims, moving clips and nudges. Check whether tracks are
+          linked before a creative edit, so you don't cut something you meant to leave alone.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as sections. Rows are your parts, columns are sections. Treat two of them as linked,
+        say your kick and your bass, and make the same edit to both: switch them both off in the same section,
+        so they drop out together and come back together.
+
+        Play it through. Hear how the two moving as one makes the gap feel deliberate.
+      straight: >-
+        Your song as sections. Pick two parts, like kick and bass, and switch both off in the same section.
+        Play it and listen to them leave and return together.
+      eli5: >-
+        Pick two sounds, like the boom and the bass. Turn both off in the same part of the song. Press play and
+        hear them go away and come back together.
+
+  - kind: ask
+    q: What does linked-track editing do?
+    options: ["applies the same edit to every linked track at once", "mixes tracks into one", "copies one track's sound onto another", "makes tracks louder together"]
+    answer: 0
+    why: One cut, every linked track.
+    whyWrong:
+      1: The tracks stay separate.
+      2: Each track keeps its own sound.
+      3: It's about edits, not level.
+
+  - kind: ask
+    q: Which is the best fit for linking?
+    options: ["a drum kit recorded with several mics", "a lead and a pad that move separately", "a single bass track", "a delay throw nudged off the grid"]
+    answer: 0
+    why: Several mics on one performance have to stay aligned.
+    whyWrong:
+      1: They're meant to move on their own.
+      2: One track has nothing to link with.
+      3: Linking would drag it back with everything else.
+
+  - kind: ask
+    q: Which view is linked-track editing for?
+    options: ["arrangement view", "session view", "the browser", "preferences"]
+    answer: 0
+    why: It's for edits along the timeline in arrangement.
+    whyWrong:
+      1: Session clips stay separate.
+      2: The browser is your library.
+      3: Preferences are settings for Live.
+
+  - kind: keep
+    next: >-
+      Two parts now move as one. Back to your song path, or on to sound similarity search.

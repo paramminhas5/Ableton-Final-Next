@@ -1,0 +1,125 @@
+slug: compressor
+world: producer
+number: 213
+title: the compressor
+minutes: 6
+song:
+  changes: drums.kick
+  why: squeezing the loudest part of your kick and bringing the level back up makes it hit denser and harder
+learn: >-
+  What a compressor does, threshold and ratio in plain words, and squeezing your kick by ear.
+youCan:
+  - say what threshold and ratio do
+  - say why a compressed sound needs makeup gain
+  - squeeze your kick and set its level by ear
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        A kick on every beat. Each hit has a loud front, the click, and a quieter body after it. A compressor
+        is a device that turns down the loud parts of a sound automatically, so the gap between loud and
+        quiet gets smaller. Think of it as a volume knob with reflexes.
+
+        Squeeze the loud front a little, bring the whole thing back up, and the kick sounds denser and hits
+        harder. That's why nearly every dance track compresses its drums.
+      straight: >-
+        A compressor turns down the loud parts automatically, shrinking the gap between loud and quiet.
+        Squeeze, then turn back up, and drums hit harder.
+      eli5: >-
+        A compressor is like a helper who turns the volume down whenever a sound gets too loud. It makes the
+        loud and quiet bits closer together.
+
+  - kind: say
+    title: threshold and ratio
+    say:
+      mentor: >-
+        Two controls decide most of it. Threshold is the line: anything louder than it gets turned down,
+        anything quieter is left alone. Ratio is how hard it's turned down. At a ratio of 4 to 1, a sound that
+        goes 4 dB over the line comes out only 1 dB over. A dB, or decibel, is the unit loudness is measured in.
+
+        Squeezing makes the sound quieter overall, so a compressor has a makeup control to add that level back.
+        The result is the same peak, with the quieter body brought up around it. That's the punch.
+      straight: >-
+        Threshold is where it starts. Ratio is how hard: at 4 to 1, 4 dB over becomes 1 dB over. Makeup adds
+        the lost level back, so the sound ends up denser.
+      eli5: >-
+        Threshold is how loud something has to be before it gets squeezed. Ratio is how much squeezing. Then
+        you turn it back up so it's not too quiet.
+    deeper:
+      - title: live's compressor
+        say: >-
+          Drop Compressor on a track and you'll find threshold, ratio, attack, release and makeup, with a gain
+          reduction meter showing how many dB it's turning down. Attack is how fast it grabs. A slow attack,
+          around 30 ms, lets the click of a kick slip through before it clamps the body, which adds punch
+          instead of removing it. Release is how fast it lets go. A common drum starting point is a 4 to 1
+          ratio, 30 ms attack and a fast release.
+      - title: too much
+        say: >-
+          A threshold set very low with a high ratio squashes everything flat and lifeless. And forgetting
+          makeup is the classic mistake: the sound comes out quieter, not better. In Live's Compressor the
+          sidechain section lets a different track drive it, which is the kick-ducks-bass trick from the last
+          lesson.
+
+  - kind: shape
+    layer: drums
+    knobs: [drive, level]
+    say:
+      mentor: >-
+        Your kick doesn't have a compressor knob, but drive does a rougher version of the same job. It flattens
+        the loudest moments of each hit, a bit like a compressor with a very fast grab and a very high ratio,
+        so the body comes up next to the click and the kick gets denser and grittier.
+
+        Turn drive up until the kick feels thicker. Then use level the way you'd use makeup: set how loud the
+        squeezed kick sits against your clap and hats. Keep it where it punches.
+      straight: >-
+        Drive flattens the kick's loudest moments, like a very fast, hard compressor, so it sounds denser. Level
+        works like makeup: set how loud it sits.
+      eli5: >-
+        Drive squashes the loudest bit of your boom so it sounds fatter and crunchier. Then level sets how loud
+        it is. Keep the boom that punches.
+
+  - kind: ask
+    q: What does a compressor do?
+    options: ["turns down the loud parts automatically", "adds echo", "changes the pitch", "speeds up the tempo"]
+    answer: 0
+    why: It's an automatic volume knob that pulls the loud moments down.
+    whyWrong:
+      1: Echo is a delay effect.
+      2: Pitch stays the same.
+      3: Tempo isn't touched.
+
+  - kind: ask
+    q: What does the threshold set?
+    options: ["how loud a sound must be before it's turned down", "how much it's turned down", "how fast it lets go", "the tempo"]
+    answer: 0
+    why: Threshold is the line. Only what goes over it gets squeezed.
+    whyWrong:
+      1: That's the ratio.
+      2: That's the release.
+      3: A compressor doesn't touch tempo.
+
+  - kind: ask
+    q: With a 4 to 1 ratio, a hit goes 8 dB over the threshold. How far over does it come out?
+    options: ["2 dB", "8 dB", "4 dB", "32 dB"]
+    answer: 0
+    why: Divide by the ratio. 8 dB over at 4 to 1 comes out 2 dB over.
+    whyWrong:
+      1: That would be no compression at all.
+      2: That's halving it, a 2 to 1 ratio.
+      3: Compressors turn down, they don't multiply.
+
+  - kind: ask
+    more: true
+    q: Why does a compressor have a makeup control?
+    options: ["squeezing makes it quieter, so you add level back", "to change the threshold", "to add distortion", "to slow the attack"]
+    answer: 0
+    why: Turning the peaks down lowers the overall level. Makeup brings it back up so it sounds denser, not quieter.
+    whyWrong:
+      1: Threshold has its own control.
+      2: Makeup is only level.
+      3: Attack is its own control.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, shape your synth properly with resonance and envelopes.

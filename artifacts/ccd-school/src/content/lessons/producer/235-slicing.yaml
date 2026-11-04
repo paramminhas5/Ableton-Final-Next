@@ -1,0 +1,115 @@
+slug: slicing
+world: producer
+number: 235
+title: slicing to midi
+minutes: 5
+song:
+  changes: drums.kick
+  why: pieces of sound played from pads in your own order become a new rhythm in your song
+learn: >-
+  What slicing does to a loop, how Live turns slices into pads, and a new rhythm played from pads into your
+  song.
+youCan:
+  - say what slicing a loop does
+  - say how slices are triggered once they're on pads
+  - play pieces from pads into a new rhythm
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        Hats on the beats, then on the eighths, then on the sixteenths. Each step cuts the bar into smaller,
+        even pieces. Slicing does the same thing to a recording: it chops a loop into pieces, often at each
+        drum hit, sometimes on an even grid like this.
+
+        Once a loop is in pieces, each piece can go on its own pad. Then you can play the pieces in any order
+        you like, and an old drum loop turns into a brand new beat.
+      straight: >-
+        The bar cut into quarters, eighths, sixteenths. Slicing chops a recording the same way, puts each piece
+        on a pad, and lets you replay the pieces in a new order.
+      eli5: >-
+        Hear the bar get chopped into smaller and smaller bits? Slicing chops a drum recording into bits and
+        puts each bit on a pad. Then you can play them in any order.
+
+  - kind: say
+    title: from loop to pads
+    say:
+      mentor: >-
+        Live does this in one move. It finds the hits in a loop, cuts it there, and puts every slice on its own
+        pad in a drum rack. Each pad is played by a midi note, and midi is just the note data: which pad, when,
+        and how hard, with no sound of its own.
+
+        So once the loop is sliced, the rhythm lives in notes you can move. Shift a note and that slice plays
+        somewhere else. That's how producers remix breakbeats into something new.
+      straight: >-
+        Live cuts the loop at its hits and puts each slice on a drum rack pad. Midi notes trigger the pads, so
+        moving notes rearranges the loop.
+      eli5: >-
+        The computer cuts the drum recording into pieces and puts each piece on a pad. Then you just play the
+        pads in a new order.
+    deeper:
+      - title: slicing in live
+        say: >-
+          Right-click an audio clip and choose Slice to New MIDI Track. Live asks how to slice: by transients
+          (each detected hit), by a fixed grid such as sixteenths, or by the clip's warp markers. It builds a
+          Drum Rack with one slice per pad and a MIDI clip that plays them in the original order, starting at
+          C1. Edit that MIDI clip in the piano roll to rearrange the loop.
+      - title: or inside simpler
+        say: >-
+          Simpler's Slice mode chops a sample into slices inside the one device, each playable from its own
+          note, without making a new track.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    snap: true
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Your pads are your slices. Each one holds a short piece of drum sound, the way a sliced loop would.
+        Your beat keeps playing underneath.
+
+        Press rec, wait out the count-in, and play a new rhythm on pads your beat isn't using yet, like the
+        toms, the rim or the percs. Snap is on, so every tap lands on the grid. Play at least four hits, then
+        listen to how the new pieces change your groove.
+      straight: >-
+        Treat the pads as slices. Record a new rhythm over your beat on unused pads: toms, rim, percs. Snap is
+        on. Four hits or more.
+      eli5: >-
+        Each pad is a little piece of drum sound. Press rec and tap a new pattern on the pads you haven't used
+        yet. The snap helper keeps your taps in time.
+    hint: Leave the kick pad alone, or your new taps replace your kick.
+
+  - kind: ask
+    q: What does Slice to New MIDI Track put on each pad?
+    options: ["one slice of the loop", "the whole loop", "a synth sound", "a reverb"]
+    answer: 0
+    why: The loop is cut up and each slice gets its own pad.
+    whyWrong:
+      1: The point is to split it up.
+      2: The pads hold pieces of your recording.
+      3: The pads hold sound, not effects.
+
+  - kind: ask
+    q: Once a loop is sliced, how do you rearrange it?
+    options: ["move the midi notes that trigger the pads", "re-record the loop", "change the tempo", "turn up the reverb"]
+    answer: 0
+    why: Each note plays a slice, so moving notes moves slices.
+    whyWrong:
+      1: No need, the pieces are already there.
+      2: Tempo changes speed, not order.
+      3: Reverb changes space, not order.
+
+  - kind: ask
+    q: Which of these is a way Live can decide where to slice?
+    options: ["at each detected hit, the transients", "at random", "by colour", "by track name"]
+    answer: 0
+    why: Transients are the sharp starts of hits. Live can also slice on a fixed grid or at warp markers.
+    whyWrong:
+      1: Slicing follows the audio or a grid, not chance.
+      2: Colour has nothing to do with it.
+      3: The name doesn't tell Live where hits are.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try audio clips to edit a sample's start, end and gain.

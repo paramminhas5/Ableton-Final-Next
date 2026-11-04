@@ -1,0 +1,112 @@
+slug: synth-detune-unison
+world: producer
+number: 240
+title: detune and unison
+minutes: 5
+song:
+  changes: lead.lead
+  why: a slightly detuned lead sounds wide and thick instead of thin and still
+learn: >-
+  Why two oscillators a few cents apart sound wide, what unison stacks on top, and width on your own lead.
+youCan:
+  - say why detune makes a sound wider
+  - say what unison does
+  - set detune on your lead before it sounds out of tune
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One synth note, held. It's steady, almost too steady: one oscillator, one pitch, nothing moving. An
+        oscillator is the part of a synth that makes the raw tone.
+
+        Add a second oscillator on the same note and pull it a few cents out of tune. A cent is a hundredth of
+        a semitone, a tiny amount. The two tones drift in and out of line with each other, and the note starts
+        to shimmer and spread.
+      straight: >-
+        One oscillator, one steady note. A second one a few cents off makes the two drift in and out, and the
+        note shimmers and widens. A cent is a hundredth of a semitone.
+      eli5: >-
+        One plain note. Add a copy of it that's just a tiny bit out of tune, and the two wobble together and
+        sound bigger.
+
+  - kind: say
+    title: beating, then unison
+    say:
+      mentor: >-
+        That shimmer has a name: beating. Two pitches very close together keep moving in and out of step, and
+        you hear a pulse at the speed of the difference. Five hertz apart is five pulses a second, which you
+        hear as a slow, lush wobble.
+
+        Unison takes the idea further. It stacks several copies of the whole voice, each detuned a little
+        differently, often spread left and right. That's the classic huge supersaw lead.
+
+        There's an edge though. A few cents is wide. Too many cents and the note stops sounding wide and starts
+        sounding out of tune.
+      straight: >-
+        Close pitches pulse against each other, called beating. Unison stacks several detuned copies of a voice,
+        often spread in stereo. Too much detune sounds out of tune.
+      eli5: >-
+        Two nearly-same notes go wah-wah-wah together. Unison uses lots of copies for a giant sound. Too far
+        apart and it just sounds wrong.
+    deeper:
+      - title: unison in live
+        say: >-
+          Wavetable has unison built in. Turn it on and raise the voice count, and the sound thickens with
+          every voice you add. Each voice costs a little more processing.
+      - title: a starting point
+        say: >-
+          Around 5 to 15 cents between oscillators is a common sweet spot for width that still sounds in tune.
+          Past about 20 cents most ears hear it as out of tune.
+
+  - kind: shape
+    layer: lead
+    knobs: [detune, wave]
+    say:
+      mentor: >-
+        Your song is playing with your lead in it. Start detune at zero: clean and narrow. Bring it up slowly
+        and listen for the moment the lead starts to shimmer and fill out. Keep going and it gets seasick. Find
+        the edge and back off a touch.
+
+        Then try wave. A buzzier wave has more harmonics, and detune is easier to hear on buzzy sounds, so the
+        two together go big fast. Keep the width that suits your song.
+      straight: >-
+        Raise detune until your lead shimmers, back off before it sounds out of tune. A buzzier wave makes the
+        width more obvious. Keep it.
+      eli5: >-
+        Turn detune up until your tune sounds big and shimmery. Too far sounds wobbly, so turn it back a bit.
+        Then try wave for a buzzier sound.
+
+  - kind: ask
+    q: Why does detuning two oscillators make a sound wider?
+    options: ["their pitches drift in and out of line and shimmer", "it makes the note louder", "it adds a second melody", "it slows the song"]
+    answer: 0
+    why: Close pitches beat against each other, and you hear that movement as width.
+    whyWrong:
+      1: It's movement, not level.
+      2: It's the same melody, doubled.
+      3: Tempo doesn't change.
+
+  - kind: ask
+    q: What does unison do?
+    options: ["stacks several detuned copies of the voice", "plays all notes at once", "removes all detune", "adds reverb"]
+    answer: 0
+    why: Several slightly different copies, often spread left and right, make one huge voice.
+    whyWrong:
+      1: Unison copies the voice, not the whole keyboard.
+      2: It adds detune, it doesn't remove it.
+      3: Reverb is an effect.
+
+  - kind: ask
+    q: Your lead sounds wide but also a bit sour. What do you change?
+    options: ["turn detune down a little", "turn detune up", "change the tempo", "add more notes"]
+    answer: 0
+    why: Too much detune tips from wide into out of tune. Back off.
+    whyWrong:
+      1: That makes it more sour.
+      2: Tempo isn't the problem.
+      3: More notes won't fix the tuning.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try the lfo for movement that runs by itself.

@@ -1,0 +1,107 @@
+slug: ableton-link
+world: producer
+number: 308
+title: ableton link
+minutes: 5
+song:
+  changes: drums.kick
+  why: matching tempo is only half of being in time; your song's downbeat has to land with everyone else's too
+learn: >-
+  What Ableton Link actually shares, why the same tempo isn't enough on its own, and how joining mid-song
+  still lands you on the beat.
+youCan:
+  - say the two things Link keeps the same across devices
+  - explain why tempo alone isn't enough
+  - say who can use Link
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves at the same tempo. Notice they only sound like one track once their beats land at the same
+        moment. If the second one came in half a beat late, same tempo, it would sound wrong the whole way
+        through.
+
+        So being in time takes two things: the same speed, and the same place in the beat.
+      straight: >-
+        Same tempo isn't enough. The beats also have to land together. Being in time means same speed and same
+        position.
+      eli5: >-
+        Two beats at the same speed. They only fit when the booms happen together. Same speed and same moment.
+
+  - kind: say
+    title: tempo and phase
+    say:
+      mentor: >-
+        Link shares both. The tempo, and the beat phase, which is where everyone is in the bar right now. That
+        means every device hits beat one at the same moment, not just at the same speed.
+
+        It's also why you can join a session that's already playing. Switch Link on halfway through and your
+        app lines itself up with the group's beat straight away. Nobody has to stop and count in again.
+      straight: >-
+        Link shares tempo and beat phase, where you are in the bar. Everyone hits beat one together. Join
+        mid-play and you lock to the group's beat straight away.
+      eli5: >-
+        Link makes everyone go the same speed and hit the big first beat at the same time. You can even join
+        in the middle and it lines you up.
+    deeper:
+      - title: free and open
+        say: >-
+          Link is free and open, so any developer can build it into their app. That's why it works with so
+          many things: other laptops running Live, Push, plenty of iPad and phone music apps, DJ software and
+          some hardware.
+      - title: where to find it
+        say: >-
+          The link button is in Live's control bar, and the settings are in preferences, in the link, tempo
+          and midi tab. Tempo changes from another device ease in rather than jumping.
+
+  - kind: tempo
+    set: tempo
+    marks: [120, 124, 128, 130]
+    say:
+      mentor: >-
+        Here's your song, looping. Watch the beat lights: one, two, three, four. That position in the bar is
+        the phase Link shares. Change the tempo and the lights speed up or slow down, but beat one still comes
+        round at the top of every bar. On Link, every device would hit it with you.
+
+        Leave your song at the tempo you like.
+      straight: >-
+        Your song looping. The beat lights are the phase. Change tempo, and beat one still lands at the top of
+        each bar. Leave it where you like.
+      eli5: >-
+        Watch the lights count one to four. Turn the knob and they go faster or slower. Pick the speed you
+        like best.
+
+  - kind: ask
+    q: What two things does Link keep the same across devices?
+    options: ["tempo and beat phase", "tempo and volume", "key and tempo", "sounds and effects"]
+    answer: 0
+    why: Same speed and same place in the bar.
+    whyWrong:
+      1: Volume stays with each device.
+      2: Link doesn't share the key.
+      3: Each device keeps its own sounds.
+
+  - kind: ask
+    q: Why isn't the same tempo enough on its own?
+    options: ["the beats also have to land at the same moment", "the tempo drifts every bar", "louder devices win", "only one device can play"]
+    answer: 0
+    why: Same speed but half a beat apart still sounds wrong.
+    whyWrong:
+      1: Tempo itself holds steady.
+      2: Level has nothing to do with timing.
+      3: Every device plays together.
+
+  - kind: ask
+    q: You switch Link on while a jam is already playing. What happens?
+    options: ["you lock straight onto the group's beat", "everyone has to stop and restart", "your app starts a new tempo", "your song is muted"]
+    answer: 0
+    why: Link lines you up with the group as soon as you join.
+    whyWrong:
+      1: Nobody stops.
+      2: You take the group's tempo.
+      3: Nothing gets muted.
+
+  - kind: keep
+    next: >-
+      That's Link. Back to your song path, or on to cv tools.
