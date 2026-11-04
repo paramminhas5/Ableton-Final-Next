@@ -5,7 +5,8 @@
  */
 import "@/components/m1/lesson.css";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { DashTour } from "./Tour";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
@@ -130,7 +131,7 @@ export function Today() {
 
       <div className="td-left">
       {view === "world" ? (
-        <Screen style={{ marginTop: 8 }} key={cur?.slug}>
+        <Screen style={{ marginTop: 8 }} key={cur?.slug} className="td-lessoncard">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={CAT_SRC} alt="" className="m1-dancing" style={{ position: "absolute", right: 16, top: 14, width: 66 }} />
           <div className="m1-ss">{WORLD_LABEL[world]} · {zones[zi]?.title.toLowerCase()}</div>
@@ -198,12 +199,12 @@ export function Today() {
         <div><span className="m1-ss">path</span>
           <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
         </div>
-        <div><span className="m1-ss">lesson {ci + 1} of {steps.length}</span>
-          <Knob onStep={() => pickLesson((ci + 1) % Math.max(1, steps.length))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={58} height={170} led="var(--led-cobalt, #8CA3FF)" detents={steps.length} value={val(ci, steps.length)} defaultValue={val(ci, steps.length)} onChange={v => pickLesson(idxOf(v, steps.length))} />
+        <div><span className="m1-ss">lesson {li + 1} of {inZone.length}</span>
+          <Knob onStep={() => pickLesson(steps.indexOf(inZone[(li + 1) % Math.max(1, inZone.length)]))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={58} height={170} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(steps.indexOf(inZone[idxOf(v, inZone.length)]))} />
         </div>
       </div>
       <div className="m1-g" style={{ marginTop: 12 }}>
-        <GoPill onClick={hear} disabled={!layers && !offer} style={{ gridColumn: "1 / -1" }} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"}><Icon name={playing ? "stop" : "hear"} small />{playing ? "stop" : layers ? "play my song" : "hear what's next"}</GoPill>
+        <GoPill onClick={hear} disabled={!layers && !offer} style={{ gridColumn: "1 / -1" }} ariaLabel={playing ? "Stop your song" : layers ? "Play the song you are building" : "Hear what the next lesson adds"}><Icon name={playing ? "stop" : "hear"} small />{playing ? "stop" : layers ? "play my song" : "hear what this lesson adds"}</GoPill>
       </div>
       <div className="td-jump">
         <Silk label="jump to" />
@@ -235,6 +236,7 @@ export function Today() {
         </div>
       </section>
       <DuoFilters />
+      <Suspense><DashTour /></Suspense>
     </div>
   );
 }

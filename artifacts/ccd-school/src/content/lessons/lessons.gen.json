@@ -1,6 +1,171 @@
 {
   "lessons": [
     {
+      "slug": "what-is-djing",
+      "world": "dj",
+      "number": 1,
+      "title": "what is djing?",
+      "minutes": 7,
+      "song": {
+        "adds": "drums.clap",
+        "why": "a clap on two and four, the beat a dj counts to"
+      },
+      "learn": "What a DJ actually does, why the beat never stops, and how DJs count so they know when to bring the next track in.",
+      "youCan": [
+        "say what a dj's job is on a night",
+        "hear two tracks playing in time as one",
+        "count beats, bars and phrases like a dj",
+        "play the backbeat into your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "This is the kind of groove a DJ plays all night. Kick on every beat, a clap on two and four, hats in between.\nA DJ's job is simple to say and hard to do: keep people moving. One track ends, the next is already playing, and the floor never notices the join. Everything you learn in this world is about making those joins feel like one long piece of music.",
+            "straight": "A typical dance groove: kick on every beat, clap on two and four, hats between.\nA DJ keeps the music going without gaps, moving from one track to the next so the room keeps dancing. This world teaches how to make those changes smooth.",
+            "eli5": "Hear that? That is the kind of beat that makes people dance.\nA DJ plays songs one after another without ever stopping, so the dancing never stops either. The trick is to slide from one song into the next so nobody notices the change."
+          }
+        },
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "Tap track a, then track b, then both. That last one is what DJing sounds like.\nTwo different tracks at the same speed, lined up so their kicks hit at exactly the same moment. When they line up, they sound like one bigger groove. When they don't, the kicks flam against each other and it sounds like a train wreck. Getting them to line up is called beatmatching, and it is the first real skill you will learn here.",
+            "straight": "Play a, b, then both. Two tracks, same tempo, kicks aligned: that is a mix.\nIf the kicks line up, the two tracks become one groove. If they drift, you hear double kicks and it falls apart. Lining them up is beatmatching, the core DJ skill.",
+            "eli5": "Tap track a, then track b, then both together.\nWhen both play together and their booms happen at the same time, they sound like one big song. If the booms don't line up, it sounds messy, like two people clapping out of time. Making them line up is called beatmatching."
+          },
+          "deeper": [
+            {
+              "title": "where it came from",
+              "say": "In the 1970s disco DJs in New York started blending records instead of stopping between them, using two turntables and a mixer. Hip hop DJs in the Bronx looped the drum breaks of records the same way. Every DJ setup since, CDJs, controllers, laptops, does the same job."
+            }
+          ]
+        },
+        {
+          "kind": "say",
+          "title": "counting like a dj",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "DJs are always counting, even when it looks like they are just nodding along. Count with the groove: one, two, three, four. That is one bar. The clap lands on two and four.\nBars come in groups, usually eight bars, called a phrase. Dance tracks change at the start of a phrase: a new sound comes in, the bass drops out, a big moment arrives. So a DJ brings the next track in at the start of a phrase, and the change lands where the dancers expect something to happen.",
+            "straight": "Count one to four with the groove: that is a bar, with the clap on two and four.\nEight bars make a phrase. Tracks change on phrase boundaries, so DJs start their transitions on the first beat of a phrase. That way the mix lines up with the music's structure.",
+            "eli5": "Count along: one, two, three, four. That is one bar. Hear the clap on two and four?\nSongs change every eight bars or so, like chapters in a story. DJs count those so they can bring the next song in right when a new chapter starts."
+          },
+          "deeper": [
+            {
+              "title": "why two and four",
+              "say": "The clap or snare on two and four is called the backbeat. It gives the steady kick a push and pull, and it is what most people clap along to without thinking."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "drums",
+          "surface": "pads",
+          "goal": {
+            "notes": 2,
+            "note": "clap"
+          },
+          "say": {
+            "mentor": "To mix you need to feel where two and four are, so play them. This clap goes into your song, on top of whatever is already there.\nPress rec, let the four clicks go by, then tap the clap pad on beat two and beat four. Count out loud if it helps: one, CLAP, three, CLAP. Any clap that comes in early or late shows up red, so you can play it again.",
+            "straight": "Record a clap on two and four. Press rec, wait out the count-in, then tap clap on beats two and four. Off-beat hits show red.",
+            "eli5": "Your turn! Press rec and wait for four clicks. Then count one, two, three, four, and tap the clap pad on two and on four. If a clap is too early or late it turns red, so you can try again."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a DJ's main job on a night?",
+          "options": [
+            "keep people dancing by moving from track to track without gaps",
+            "play one song at a time with breaks between",
+            "make every track louder",
+            "talk between songs"
+          ],
+          "answer": 0,
+          "why": "The music never stops. A DJ chains tracks together so the floor keeps moving.",
+          "whyWrong": {
+            "1": "Gaps are exactly what a DJ avoids.",
+            "2": "Volume matters, but it is not the job.",
+            "3": "Some DJs talk, but the job is the music."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Two tracks play together and you hear double kicks. What is wrong?",
+          "options": [
+            "their beats are not lined up",
+            "one is too quiet",
+            "they are in different keys",
+            "nothing, that is normal"
+          ],
+          "answer": 0,
+          "why": "Double kicks mean the beats are not hitting at the same moment. Lining them up is beatmatching.",
+          "whyWrong": {
+            "1": "Quiet or loud, the kicks would still clash if they are not lined up.",
+            "2": "Keys affect the notes. Double kicks are a timing problem.",
+            "3": "A good mix sounds like one groove, not two."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Where does the clap usually land in a dance groove?",
+          "options": [
+            "on two and four",
+            "on every beat",
+            "on one only",
+            "between the beats"
+          ],
+          "answer": 0,
+          "why": "The clap or snare on two and four is the backbeat.",
+          "whyWrong": {
+            "1": "That is where the kick goes in four on the floor.",
+            "2": "One is where the bar starts. The clap comes on two and four.",
+            "3": "Between the beats is where hats usually sit."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "When does a DJ usually bring the next track in?",
+          "options": [
+            "at the start of a phrase",
+            "in the middle of a bar",
+            "whenever the track gets boring",
+            "only when the track ends"
+          ],
+          "answer": 0,
+          "why": "Tracks change on phrases, usually every eight bars, so starting there makes the mix feel natural.",
+          "whyWrong": {
+            "1": "Mid-bar changes sound like a mistake.",
+            "2": "Feel matters, but timing it to a phrase is what makes it smooth.",
+            "3": "Waiting for the end leaves no time to blend."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "How many bars are usually in a phrase?",
+          "options": [
+            "eight",
+            "two",
+            "three",
+            "sixty-four"
+          ],
+          "answer": 0,
+          "why": "Eight bars is the usual phrase in dance music, often grouped into bigger sections of 16 or 32.",
+          "whyWrong": {
+            "1": "Two bars is short. Most changes come every eight.",
+            "2": "Dance music almost always counts in fours and eights.",
+            "3": "Sixty-four bars is a whole section, made of several phrases."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: the gear. Decks, a mixer and headphones, and what each one is for."
+        }
+      ],
+      "file": "dj/01-what-is-djing.yaml"
+    },
+    {
       "slug": "what-is-sound",
       "world": "foundations",
       "number": 1,

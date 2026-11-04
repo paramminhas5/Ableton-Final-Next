@@ -49,6 +49,18 @@ export function clipVariants(id: string): ClipVariant[] {
       const h = newLayerV2("hats"); h.pad = PAD("open"); h.events = hits(NOTE("open"), every(0, 8, 1, 0.5), 0.7, 0.2);
       return [{ label: "hats between the kicks", track: { ...t, layers: [d, h] } }];
     }
+    case "two-tracks": {
+      // Two short grooves at the same tempo, then the two played together in time: a blend.
+      const t = base(124, 2);
+      const a = newLayerV2("drums"); a.events = [...hits(NOTE("kick"), every(0, 8, 1)), ...hits(NOTE("clap"), every(0, 8, 2, 1), 0.8)];
+      const b = newLayerV2("hats"); b.pad = PAD("open"); b.events = hits(NOTE("open"), every(0, 8, 1, 0.5), 0.7, 0.2);
+      const bk = newLayerV2("drums"); bk.events = hits(NOTE("kick"), every(0, 8, 1));
+      return [
+        { label: "track a", track: { ...t, layers: [a] } },
+        { label: "track b", track: { ...t, layers: [bk, b] } },
+        { label: "both, in time", track: { ...t, layers: [a, b] } },
+      ];
+    }
     case "synth-note":
     case "synth-pitch":
     case "synth-shapes":

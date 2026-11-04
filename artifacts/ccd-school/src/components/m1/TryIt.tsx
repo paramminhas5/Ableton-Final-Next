@@ -207,7 +207,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   // Drum lessons ask for hits on the beat. A tune can go anywhere on the grid, so there we count notes.
   const onBeatOnly = goalNote !== undefined;
   const offOf = (e: NoteEvent) => e.start - Math.round(e.start);
-  const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && Math.abs(offOf(e)) > TOL;
+  // A clap (backbeat) only counts on two and four.
+  const backbeat = coach?.goal.note === "clap";
+  const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && (Math.abs(offOf(e)) > TOL || (backbeat && (((Math.round(e.start) % loop) + loop) % loop) % 2 === 0));
   const offs = goalEvents.filter(isOff);
   const offBeat = onBeatOnly ? offs.length : 0;
   const goalHits = onBeatOnly
@@ -218,8 +220,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
 
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
     : recording ? `recording. tap the kick on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}`
-    : !events.length ? (onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
-    : offBeat ? `${offBeat === 1 ? "one kick" : `${offBeat} kicks`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
+    : !events.length ? (backbeat ? "press rec. four clicks count you in, then tap the clap on two and four" : onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
+    : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? "one clap" : `${offBeat} claps`} landed on one or three. the clap goes on two and four. tap undo and try again`
+    : offBeat ? `${offBeat === 1 ? `one ${backbeat ? "clap" : "kick"}` : `${offBeat} ${backbeat ? "claps" : "kicks"}`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
     : !goalMet ? `${goalHits} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : " notes"}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
