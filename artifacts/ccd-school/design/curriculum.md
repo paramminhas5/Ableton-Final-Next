@@ -250,7 +250,7 @@ What you have after dj: your song blended with bank tracks in a short set, match
 | S | `dj-equipment` | the gear | two decks, faders, crossfader, cue; your song on a, a bank track or your own file on b | `mix` step kind, deck sources (song, bank, your file), bank |
 | D | `booth-setup` | the booth |set up both decks: your song on a, a bank track on b| |
 | D | `rekordbox-intro` | rekordbox |your song's bpm and key as rekordbox would show them| |
-| S | (new) `tempo-bpm-dj` | tempo and bpm | match two tracks by ear | tempo fader on the mix step |
+| S | `tempo-bpm-dj` | tempo and bpm | match two tracks by ear | tempo fader on the mix step |
 | D | `beatmatching-manual` | manual beatmatching |match by ear, pitch fader only; your song against a bank track| |
 | D | `sync-function` | the sync button |sync on, then off; feel the drift| |
 | D | `bpm-analysis-dj` | bpm analysis |read your song's bpm from the grid| |

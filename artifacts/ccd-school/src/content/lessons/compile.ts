@@ -40,6 +40,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "hint", "levels"],
+  mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
@@ -196,6 +197,10 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "play":
         case "shape":
           playOrShape(where, raw);
+          break;
+        case "mix":
+          voice(where, "say", raw.say);
+          if (!["crossfade", "match", "blend", "free"].includes(String(raw.goal))) at(where, "goal must be crossfade, match, blend or free");
           break;
         case "tempo":
           voice(where, "say", raw.say);

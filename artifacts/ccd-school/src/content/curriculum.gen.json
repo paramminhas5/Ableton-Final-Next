@@ -1515,7 +1515,7 @@
    {
     "slug": "tempo-bpm-dj",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "tempo and bpm",
     "does": "match two tracks by ear",
     "code": "tempo fader on the mix step"

@@ -27,6 +27,7 @@ import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { TryIt } from "./TryIt";
+import { MixStep } from "./MixStep";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, readShape, songHasMusic, startsFresh } from "./LessonSteps";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
@@ -46,6 +47,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
+    case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return p.set === "swing" ? "swing it" : p.set === "scale" ? "pick your scale" : "set your tempo";
     case "ear": return "ear round";
     case "add": return "add it to your song";
@@ -451,7 +453,9 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     ...screens.filter(s => s.kind !== "hook" && s.kind !== "summary" && !QUESTION_KINDS.has(s.kind)),
     ...screens.filter(s => s.kind === "ear"),
     // A bonus round adds nothing to your song, so it has no add step.
-    ...(curItem(mission.slug)?.kind === "bonus" ? [] : [{ kind: "add" as const }]),
+    // Nothing goes into your song in a bonus round or a lesson with nothing to play, shape or set (the dj
+    // mixer lessons), so those have no add step.
+    ...(curItem(mission.slug)?.kind === "bonus" || !screens.some(s => s.kind === "play" || s.kind === "shape" || s.kind === "tempo") ? [] : [{ kind: "add" as const }]),
     ...(main.length ? [{ kind: "check" as const }] : []),
     { kind: "done" as const },
   ], [screens, main.length]);
@@ -523,6 +527,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
+    case "mix": body = <MixStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
     case "ear": body = <EarStep screen={cur} meta="ear round" level="standard" onNext={next} />; break;
     case "play":
@@ -549,7 +554,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
-      <SongStrip focus={mission.fromFile?.adds.part} />
+      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} />
       <div className="ls-stage fl-stage" key={idx}>{body}</div>
     </div>
   );

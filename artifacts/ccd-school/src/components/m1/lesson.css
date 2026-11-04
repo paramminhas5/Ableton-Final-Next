@@ -661,3 +661,17 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-scalekeys i.is-in{background:color-mix(in srgb,var(--c) 75%,transparent);box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent)}
 .fl-scalekeys small{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:9px;color:var(--disp-sub)}
 .fl-scalekeys i.is-in small{color:#111}
+/* dj mixer step */
+.mx-decks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.mx-decks>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.mx-decks small{font-size:10px;color:var(--disp-sub)}
+.mx-decks b{font-size:18px;font-weight:500;color:var(--disp-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx-decks span{font-size:11px;color:var(--disp-sub)}
+.mx-leds{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.mx-leds i{height:10px;border-radius:3px;background:rgba(255,255,255,.08)}
+.mx-leds i.is-on{background:var(--c);box-shadow:0 0 8px var(--c)}
+.mx-desk{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:end;margin-top:14px}
+.mx-ch{display:flex;flex-direction:column;align-items:center;gap:10px}
+.mx-mid{display:flex;flex-direction:column;gap:14px;align-items:stretch;min-width:0}
+.mx-mid .m1-fader{margin:0 auto;max-width:100%}
+.mx-bank{margin-top:12px;grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}

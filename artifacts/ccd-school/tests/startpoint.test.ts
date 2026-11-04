@@ -17,7 +17,7 @@ describe("start point", () => {
   it("follows the chosen world and placement chapter", () => {
     expect(startSlug("producer", 1)).toBe("your-kick");
     // design/curriculum.md: the first song lesson you can open from that path on
-    expect(startSlug("producer", 3)).toBe("saturator-distortion");
+    expect(startSlug("producer", 3)).toBe("balance");
     expect(startSlug("dj", 3)).toBe("music-library-dj");
     expect(startSlug("fundamentals", 4)).toBe("major-scale");
   });

@@ -1,0 +1,83 @@
+slug: tempo-bpm-dj
+world: dj
+number: 3
+title: tempo and bpm
+minutes: 7
+song:
+  changes: drums.clap
+  why: tracks only blend when they run at the same tempo
+learn: >-
+  Why two tracks fall apart when their tempos differ, and matching them by ear with the tempo fader.
+youCan:
+  - hear when two tracks are drifting apart
+  - match a track's tempo to yours with the tempo fader
+  - check the match with the numbers
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two tracks only blend when they run at exactly the same speed. Even one bpm apart, the kicks start
+        together and slowly slide apart, first a flam, then a gallop, then a mess. A dj's first skill is
+        hearing that and fixing it.
+      straight: >-
+        Tracks at different tempos drift apart: flam, then gallop, then chaos. Matching tempos fixes it.
+      eli5: >-
+        If two songs go at different speeds, their booms stop lining up. It sounds like a horse galloping.
+        Djs make them the same speed.
+
+  - kind: mix
+    goal: match
+    bank: warm-up
+    say:
+      mentor: >-
+        Deck b is playing at its own tempo, a little off yours. Listen to the kicks: they drift. Watch the two
+        rows of lights too: when the tempos match, they flash together.
+
+        Move deck b's tempo fader until the drifting stops. Use your ears first, then check the numbers. That's
+        beatmatching.
+      straight: >-
+        Deck b is off your tempo. Move its tempo fader until the kicks stop drifting and the lights flash
+        together. Ears first, numbers second.
+      eli5: >-
+        The other song is going a bit too fast or slow. Slide its tempo slider until both booms happen at the
+        same time and the lights blink together.
+    hint: If the kicks gallop faster and faster, you're moving the wrong way.
+
+  - kind: say
+    title: the sync button
+    say:
+      mentor: >-
+        Modern decks have a sync button that matches tempos for you. Most working djs use it, and that's fine.
+        But learning to do it by ear means you'll hear when something's off, fix it when sync gets it wrong,
+        and play on any gear, including vinyl.
+      straight: >-
+        Sync matches tempo automatically and most djs use it. Matching by ear still matters for fixing
+        mistakes and playing any gear.
+      eli5: >-
+        Some players have a button that does this for you. Learning to do it yourself means you'll always know
+        when it sounds right.
+
+  - kind: ask
+    q: Two tracks are 2 bpm apart. What do you hear?
+    options: ["the kicks slowly drift apart", "nothing, it's too small", "one track gets louder", "the key changes"]
+    answer: 0
+    why: Even small differences add up beat after beat.
+    whyWrong:
+      1: Two bpm drifts audibly within a few bars.
+      2: Tempo doesn't change volume.
+      3: The key stays the same on modern decks.
+
+  - kind: ask
+    q: Matching tempos by ear is called?
+    options: ["beatmatching", "crossfading", "cueing", "eq mixing"]
+    answer: 0
+    why: Beatmatching, lining up the beats of two tracks.
+    whyWrong:
+      1: Crossfading moves between decks.
+      2: Cueing is preparing in headphones.
+      3: Eq mixing is for the bass swap.
+
+  - kind: keep
+    next: >-
+      Next: your first blend. Bring a track in, swap the bass, and let your song go.

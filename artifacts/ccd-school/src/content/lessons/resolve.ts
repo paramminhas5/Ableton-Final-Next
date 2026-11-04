@@ -115,6 +115,9 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
       case "ear":
         out.push({ kind: "ear", drill: s.drill, rounds: roundsFor(s.rounds, o.level), ...(s.say !== undefined ? { say: voiceText(s.say, o.voice) } : {}), ...hintOf(s.hint, o) });
         break;
+      case "mix":
+        out.push({ kind: "mix", say: voiceText(s.say, o.voice), goal: s.goal, ...(s.bank ? { bank: s.bank } : {}), ...hintOf(s.hint, o) });
+        break;
       case "tempo":
         out.push({ kind: "tempo", say: voiceText(s.say, o.voice), set: s.set ?? "tempo", ...(s.choices ? { choices: s.choices } : {}), marks: s.marks ?? (s.set === "swing" ? [0, 0.25, 0.5, 0.7] : [100, 120, 128, 140]), ...hintOf(s.hint, o) });
         break;

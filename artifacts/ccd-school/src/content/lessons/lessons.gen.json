@@ -166,6 +166,272 @@
       "file": "dj/01-what-is-djing.yaml"
     },
     {
+      "slug": "dj-equipment",
+      "world": "dj",
+      "number": 2,
+      "title": "the gear",
+      "minutes": 7,
+      "song": {
+        "changes": "drums.clap",
+        "why": "you'll mix your own song against other tracks, so first you learn the desk"
+      },
+      "learn": "Two decks and a mixer: what the channel faders, the low eq and the crossfader do, with your song on one deck and a track from the bank on the other.",
+      "youCan": [
+        "say what each part of a dj setup does",
+        "move between two tracks with the crossfader",
+        "turn a track's low end down with its eq"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "A dj plays two tracks at once and moves between them so the music never stops. That's all the gear is for: two decks to play the tracks, and a mixer in the middle to blend them. Tap through track a, track b and both in time to hear what a blend sounds like.",
+            "straight": "Two decks play two tracks; the mixer blends them. Tap through to hear each, then both together.",
+            "eli5": "A dj has two music players and a mixer in the middle. They play two songs and slide from one to the other so the dancing never stops."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "crossfade",
+          "say": {
+            "mentor": "This is your desk. Deck a is your own song. Deck b is a track from the bank; pick a different one below if you like. Each deck has a channel fader, how loud it is, and a low knob, which turns its bass up or down.\nThe wide slider in the middle is the crossfader. All the way left you only hear deck a, all the way right only deck b, in the middle both. Slide it all the way to b, then all the way back to a.",
+            "straight": "Deck a: your song. Deck b: a bank track. Channel faders set each deck's level, low knobs its bass. The crossfader blends between them: slide it fully to b, then back to a.",
+            "eli5": "Your song is on deck a. Another song is on deck b. The big sideways slider picks which one you hear. Slide it all the way to b, then all the way back to a."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "headphones and cue",
+          "say": {
+            "mentor": "One piece of gear you can't see here: headphones. On a real mixer each deck has a cue button that sends it to your headphones only, so you can hear and line up the next track before the crowd does. It's the most important habit in djing, and you'll use it once you play on real gear.",
+            "straight": "Real mixers have a cue button per deck that sends it to your headphones only, so you prepare the next track without the crowd hearing.",
+            "eli5": "Djs wear headphones so they can listen to the next song secretly before everyone else hears it."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does the crossfader do?",
+          "options": [
+            "blends between deck a and deck b",
+            "changes the tempo",
+            "turns the bass down",
+            "records the mix"
+          ],
+          "answer": 0,
+          "why": "Left is deck a, right is deck b, the middle is both.",
+          "whyWrong": {
+            "1": "That's the tempo fader.",
+            "2": "That's the low eq knob.",
+            "3": "Recording is separate."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a channel fader for?",
+          "options": [
+            "how loud one deck is",
+            "how fast one deck plays",
+            "which deck you hear in headphones",
+            "the key of the track"
+          ],
+          "answer": 0,
+          "why": "Each deck has its own volume fader.",
+          "whyWrong": {
+            "1": "That's tempo.",
+            "2": "That's cue.",
+            "3": "Key is a property of the track."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why do djs use headphones?",
+          "options": [
+            "to hear the next track before the crowd does",
+            "to block out the crowd",
+            "because the speakers are too quiet",
+            "to record the set"
+          ],
+          "answer": 0,
+          "why": "Cue lets you line up the next track in private.",
+          "whyWrong": {
+            "1": "They want to hear the room too.",
+            "2": "The room is loud enough.",
+            "3": "Recording is done from the mixer."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: tempo and bpm. Two tracks at different speeds, and matching them by ear."
+        }
+      ],
+      "file": "dj/02-dj-equipment.yaml"
+    },
+    {
+      "slug": "tempo-bpm-dj",
+      "world": "dj",
+      "number": 3,
+      "title": "tempo and bpm",
+      "minutes": 7,
+      "song": {
+        "changes": "drums.clap",
+        "why": "tracks only blend when they run at the same tempo"
+      },
+      "learn": "Why two tracks fall apart when their tempos differ, and matching them by ear with the tempo fader.",
+      "youCan": [
+        "hear when two tracks are drifting apart",
+        "match a track's tempo to yours with the tempo fader",
+        "check the match with the numbers"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "Two tracks only blend when they run at exactly the same speed. Even one bpm apart, the kicks start together and slowly slide apart, first a flam, then a gallop, then a mess. A dj's first skill is hearing that and fixing it.",
+            "straight": "Tracks at different tempos drift apart: flam, then gallop, then chaos. Matching tempos fixes it.",
+            "eli5": "If two songs go at different speeds, their booms stop lining up. It sounds like a horse galloping. Djs make them the same speed."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "match",
+          "bank": "warm-up",
+          "say": {
+            "mentor": "Deck b is playing at its own tempo, a little off yours. Listen to the kicks: they drift. Watch the two rows of lights too: when the tempos match, they flash together.\nMove deck b's tempo fader until the drifting stops. Use your ears first, then check the numbers. That's beatmatching.",
+            "straight": "Deck b is off your tempo. Move its tempo fader until the kicks stop drifting and the lights flash together. Ears first, numbers second.",
+            "eli5": "The other song is going a bit too fast or slow. Slide its tempo slider until both booms happen at the same time and the lights blink together."
+          },
+          "hint": "If the kicks gallop faster and faster, you're moving the wrong way."
+        },
+        {
+          "kind": "say",
+          "title": "the sync button",
+          "say": {
+            "mentor": "Modern decks have a sync button that matches tempos for you. Most working djs use it, and that's fine. But learning to do it by ear means you'll hear when something's off, fix it when sync gets it wrong, and play on any gear, including vinyl.",
+            "straight": "Sync matches tempo automatically and most djs use it. Matching by ear still matters for fixing mistakes and playing any gear.",
+            "eli5": "Some players have a button that does this for you. Learning to do it yourself means you'll always know when it sounds right."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Two tracks are 2 bpm apart. What do you hear?",
+          "options": [
+            "the kicks slowly drift apart",
+            "nothing, it's too small",
+            "one track gets louder",
+            "the key changes"
+          ],
+          "answer": 0,
+          "why": "Even small differences add up beat after beat.",
+          "whyWrong": {
+            "1": "Two bpm drifts audibly within a few bars.",
+            "2": "Tempo doesn't change volume.",
+            "3": "The key stays the same on modern decks."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Matching tempos by ear is called?",
+          "options": [
+            "beatmatching",
+            "crossfading",
+            "cueing",
+            "eq mixing"
+          ],
+          "answer": 0,
+          "why": "Beatmatching, lining up the beats of two tracks.",
+          "whyWrong": {
+            "1": "Crossfading moves between decks.",
+            "2": "Cueing is preparing in headphones.",
+            "3": "Eq mixing is for the bass swap."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: your first blend. Bring a track in, swap the bass, and let your song go."
+        }
+      ],
+      "file": "dj/03-tempo-bpm-dj.yaml"
+    },
+    {
+      "slug": "your-first-mix",
+      "world": "dj",
+      "number": 4,
+      "title": "your first blend",
+      "minutes": 8,
+      "song": {
+        "changes": "drums.clap",
+        "why": "this is the moment you mix your own song like a dj"
+      },
+      "learn": "A full blend: bring a track in under yours, swap the bass, and hand over to it, all on your own song.",
+      "youCan": [
+        "bring a second track in under yours",
+        "swap the bass with the low eq",
+        "finish a blend with the crossfader or fader"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "This is the move at the heart of djing. Two tracks, matched, playing together, and you slowly hand the room from one to the other. The trick is the bass: two bass lines at once turn to mud, so you swap them.",
+            "straight": "A blend hands over from one track to the next. Only one bass at a time, so you swap them with the eq.",
+            "eli5": "Now the big one: start with your song, sneak the other song in, swap their basses, and let your song fade away."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "blend",
+          "say": {
+            "mentor": "Your song is on deck a, playing out loud. Deck b is matched and waiting with its fader down.\nOne: bring deck b's fader up. Hear both tracks? Two: turn deck a's low knob down, so only deck b's bass is left. That's the bass swap. Three: crossfade over to b, or pull deck a's fader down. You've just mixed out of your own song.",
+            "straight": "Bring deck b's fader up, cut deck a's low, then crossfade to b or pull a down.",
+            "eli5": "Push deck b's slider up. Turn deck a's low knob down. Then slide over to b."
+          },
+          "hint": "Do it slowly. A blend usually takes 16 or 32 bars."
+        },
+        {
+          "kind": "ask",
+          "q": "Why do djs swap the bass instead of playing both?",
+          "options": [
+            "two bass lines together turn to mud",
+            "the bass is too quiet",
+            "only one deck can have bass",
+            "it changes the tempo"
+          ],
+          "answer": 0,
+          "why": "Two low ends stack up into a muddy blur.",
+          "whyWrong": {
+            "1": "It's about clashing, not level.",
+            "2": "Both decks can, it just sounds bad together.",
+            "3": "Eq doesn't touch tempo."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's the first move of a blend?",
+          "options": [
+            "bring the new track's fader up",
+            "kill both basses",
+            "stop the old track",
+            "change the key"
+          ],
+          "answer": 0,
+          "why": "First you get the new track in, quietly, under the old one.",
+          "whyWrong": {
+            "1": "You'd lose all the low end.",
+            "2": "Then it's a cut, not a blend.",
+            "3": "Key is chosen when you pick the track."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: phrasing. When to bring the next track in so it lands on the one."
+        }
+      ],
+      "file": "dj/04-your-first-mix.yaml"
+    },
+    {
       "slug": "tempo-bpm",
       "world": "foundations",
       "number": 1,
