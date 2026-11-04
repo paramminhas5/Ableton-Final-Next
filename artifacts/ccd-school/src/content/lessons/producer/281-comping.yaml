@@ -55,21 +55,18 @@ steps:
         say: >-
           When you're happy, consolidate the comp into one clip before you export.
 
-  - kind: play
+  - kind: tempo
+    set: comp
     layer: bass
-    surface: keys
-    snap: true
-    goal: {notes: 4}
     say:
       mentor: >-
-        Ours is simpler: you choose whole takes. Your song plays underneath. Press rec, wait out the
-        count-in, and play a new bass line, four notes or more. Undo and go again as many times as you like.
-
-        Keep the take that grooves best with your kick, or skip and keep the bass you already have.
+        Take lanes keep every pass you record. Play your bass and keep the take, then do it again, up to three times. Each take sits in its own lane.
+        
+        Then comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.
       straight: >-
-        Record a new bass take, four notes or more. Retake as often as you like. Keep the best, or skip.
+        Record up to three takes of your bass. Then, for each quarter of the loop, pick the take that was best. Keep the comp.
       eli5: >-
-        Play a new bass line. If you don't like it, undo and try again. Keep the one you like best.
+        Play it three times. Then build the best version from the best bits.
 
   - kind: ask
     q: What is comping?

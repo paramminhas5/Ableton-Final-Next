@@ -50,20 +50,18 @@ steps:
         say: >-
           Comping works on midi takes as well, so you can pick the best chord voicings bar by bar.
 
-  - kind: play
+  - kind: tempo
+    set: comp
     layer: lead
-    surface: keys
-    goal: {notes: 4}
     say:
       mentor: >-
-        Your turn. Your song plays underneath. Record your lead, four notes or more, and if it's not right,
-        undo and go again without stopping to think too hard. Keep the flow.
-
-        When a take makes you smile, keep it. Or skip, and keep the lead you already have.
+        Take lanes keep every pass you record. Play your lead and keep the take, then do it again, up to three times. Each take sits in its own lane.
+        
+        Then comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.
       straight: >-
-        Record your lead, four notes or more. Retake freely, judge at the end. Keep one, or skip.
+        Record up to three takes of your lead. Then, for each quarter of the loop, pick the take that was best. Keep the comp.
       eli5: >-
-        Play your tune. If you don't like it, undo and play again. Keep the one that makes you smile.
+        Play it three times. Then build the best version from the best bits.
 
   - kind: ask
     q: Why record every take before choosing?

@@ -60,21 +60,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [env, glide]
+    knobs: [lfo to, lfo, env, lfo rate]
     say:
       mentor: >-
-        Your lead has two routes already wired, and each knob is the amount. Env sends an envelope to the
-        filter: each note starts bright and settles darker. Glide sends movement to pitch: each note slides up
-        or down into the next instead of jumping.
-
-        Same melody, two destinations. Try env alone, then glide alone, then both, with your song playing. Keep
-        the one that makes your lead feel right, or keep both.
+        Routing means choosing what a movement drives. The same lfo can shape three different things. Your song is playing with lfo a third of the way up.
+        
+        Turn lfo to across its three stops and listen. To the filter it's a sweep. To the pitch it's vibrato, your lead wavering like a singer. To the volume it's tremolo, a pulse. env is a different source, the envelope, and it only drives the filter: raise it and each note starts bright and settles. Pick one routing that suits your lead and keep it.
       straight: >-
-        Env is an envelope routed to the filter: each note opens bright. Glide moves pitch: notes slide into
-        each other. Try each, keep one or both.
+        lfo to picks what the lfo drives: filter, pitch or volume. env is the envelope driving the filter. Keep the routing you like.
       eli5: >-
-        Env makes each note start bright and get darker. Glide makes notes slide like a trombone. Try both and
-        keep your favourite.
+        The wiggle can shake the brightness, the note, or the loudness. Pick which one.
 
   - kind: ask
     q: In modulation, what is the destination?

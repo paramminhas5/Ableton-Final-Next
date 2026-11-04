@@ -59,23 +59,18 @@ steps:
           line. Cmd or Ctrl plus Shift plus U opens the quantise settings, where you can pull them only part of
           the way for a looser feel.
 
-  - kind: play
+  - kind: tempo
+    set: grid
     layer: hats
-    surface: pads
-    snap: true
-    goal: {notes: 4}
     say:
       mentor: >-
-        Your song, with snap switched on. Snap does what a piano roll's grid does: every hit you play lands on
-        the nearest line. Play a few hats wherever you feel them. Then press play and watch them sit exactly in
-        time.
-
-        Got one wrong? Tap undo and it's gone, the same as deleting a note in the grid.
+        This is the piano roll: every note your part plays, drawn on a grid. Rows are pitches, columns are sixteenths, and the bright line is where the song is playing. Your hats are here. Tap an empty square to add a hat, tap a hat to pick it.
+        
+        With a note picked, the buttons under the grid move it, make it longer or shorter, louder or softer, or delete it. Add an open hat on an offbeat, make one hit quieter, nudge one later. In Live this is the midi note editor; the ideas are the same everywhere.
       straight: >-
-        Snap is on: each hit lands on the nearest grid line. Play a few hats. Undo removes the last one.
+        The grid is the piano roll. Tap to add a note, tap a note to pick it, then move, stretch, soften or delete it with the buttons. Change your hats.
       eli5: >-
-        Play some hats. The app moves each one onto the closest line, so they're perfectly in time. Made a
-        mistake? Tap undo.
+        The grid shows your notes as little blocks. Tap to add one. Tap a block to change it.
 
   - kind: ask
     q: What does midi store?

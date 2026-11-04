@@ -57,24 +57,18 @@ steps:
           With Warp on, an audio clip follows your song's tempo. With it off, the clip plays at its original
           speed. The warping lesson goes into this.
 
-  - kind: shape
-    layer: drums
-    knobs: [tune, decay, level]
+  - kind: tempo
+    set: sample
+    choices: [hit]
     say:
       mentor: >-
-        The same three moves you'd make on an audio clip, on your kick with your song playing. Tune is
-        transpose: it moves the kick up or down in semitones. Decay is where the sound ends, like dragging a
-        clip's end marker earlier or later. Level is gain, how loud the sound is before anything else touches
-        it.
-
-        Try a kick a couple of semitones lower, a bit shorter, sitting just under the clap. Keep whatever sounds
-        best with your bass.
+        An audio clip has three controls you always reach for: where it starts, how it's pitched, and how loud it is. Your sample is here. start moves the start marker into the sound. tune is the clip's transpose. The level is on the song's channel fader, which you set in the mixing lessons.
+        
+        Try start a little way in to tighten a hit, tune down a few semitones for weight. In Live these live in the clip view: start and end markers, transpose and gain.
       straight: >-
-        On your kick: tune is transpose, decay is where it ends, level is gain. Set them so the kick sits with
-        your bass, then keep it. These act on the synth kit.
+        start, tune and (on the fader) gain: the three audio clip controls. Tighten the start, tune for weight.
       eli5: >-
-        Tune makes your kick higher or lower. Decay makes it shorter or longer. Level makes it louder or
-        quieter. Turn them until it sounds good.
+        Where it starts, how high it is, how loud it is. That's an audio clip.
 
   - kind: ask
     q: What's the difference between an audio clip and a midi clip?

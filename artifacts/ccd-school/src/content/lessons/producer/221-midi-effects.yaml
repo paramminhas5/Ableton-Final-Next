@@ -60,23 +60,18 @@ steps:
           Arpeggiator after it, style up, rate 1/16, and the triad steps up in sixteenths. Put Scale after Chord
           to force any stacked notes back into your key.
 
-  - kind: shape
+  - kind: tempo
+    set: arp
     layer: chords
-    knobs: [voicing, spread]
     say:
       mentor: >-
-        Here's your song with your chords. Voicing stacks extra notes onto every note your chords play, the way
-        Live's Chord device adds intervals. Turn it up: first an octave below comes in, then an octave above,
-        then the fifth. Here it happens inside the synth rather than as a midi effect, but you hear the same
-        thing, fuller chords from the same keys.
-
-        Spread detunes the copies a little for width. Keep the chords that fill your song best.
+        Midi effects change the notes before they reach the instrument. The arpeggiator is the famous one, and here it is on your chords. Your song is playing. Set it to up and your held chord becomes a run of single notes climbing through it, one per sixteenth.
+        
+        Try down, then up and down. Try two octaves and it climbs higher before it starts again. 1/8 is half the speed of 1/16. Your chords are still your chords underneath: switch it off and they come back exactly as you played them, because the arpeggiator only changes what gets played, not what's saved.
       straight: >-
-        Voicing adds notes to every chord note: an octave below, an octave above, then the fifth. Spread widens.
-        Same keys, fuller chords. Keep one.
+        The arpeggiator turns each held chord into a run of its notes. Pick a direction, a rate and how many octaves. Off gives your chords back.
       eli5: >-
-        Voicing adds more notes to your chords, lower and higher ones, so they sound bigger. Spread makes them
-        wider. Keep the one you like.
+        A chord is notes all at once. The arpeggiator plays them one after another, up or down, really fast.
 
   - kind: ask
     q: Where does a midi effect sit?

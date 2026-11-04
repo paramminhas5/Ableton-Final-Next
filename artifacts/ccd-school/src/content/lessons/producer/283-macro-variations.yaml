@@ -46,21 +46,18 @@ steps:
           them, store another. Click a variation to recall it. You can map switching to a controller, so one
           pad recalls one section.
 
-  - kind: arrange
-    goal: drop
+  - kind: tempo
+    set: macro
+    layer: lead
     say:
       mentor: >-
-        Here's your song as sections. Make two different drops. In the first, everything plays. In the
-        second, switch your lead or chords off so it hits with just drums and bass. Take the drums out of the
-        section before at least one of them, so it lands.
-
-        Play it through and compare the two drops: same song, two versions, like two variations of one sound.
+        Macro variations are snapshots of all your macros. Set the big knob low, dark and dry, and save it as a. Turn it high, bright with movement, and save it as b.
+        
+        Now tap a, tap b, in time with the song. That's what Live's variations do: store a whole rack state and recall it with one click, which is how one lead becomes a verse sound and a drop sound. Keep whichever state you want your lead to sit in.
       straight: >-
-        Two drops: one with everything, one with just drums and bass. Take the drums out before one of them.
-        Compare.
+        Save the macro low as a and high as b, then jump between them. That's a variation. Keep the state you want.
       eli5: >-
-        Make two big moments in your song, one full and one with fewer sounds. Turn the drums off just before
-        one of them.
+        Save two settings. Flip between them. Two sounds from one lead.
 
   - kind: ask
     q: What is a macro variation?

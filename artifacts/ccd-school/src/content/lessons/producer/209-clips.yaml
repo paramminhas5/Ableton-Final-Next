@@ -59,19 +59,17 @@ steps:
           lose half your pattern.
 
   - kind: tempo
-    marks: [100, 120, 124, 128]
+    set: sample
+    choices: [warp]
     say:
       mentor: >-
-        Here's your song. Turn the tempo right down, then right up. Every part follows, perfectly in time, and
-        nothing sounds stretched. That's midi doing its thing: the notes just arrive sooner or later.
-
-        If your hats were a recording instead, the app would have to stretch the sound to keep up. Pick the
-        tempo that feels best and keep it.
+        A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.
+        
+        Switch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.
       straight: >-
-        Change the tempo. Your midi parts follow cleanly, nothing stretched. Pick a tempo and keep it.
+        A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.
       eli5: >-
-        Make your song faster and slower. All your notes keep up perfectly, because they're note lists, not
-        recordings. Pick a speed you like.
+        This is a recording. It doesn't know the tempo. Warping teaches it to follow.
 
   - kind: ask
     q: What does a midi clip hold?

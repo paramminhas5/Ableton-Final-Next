@@ -69,25 +69,17 @@ steps:
           When you record over a loop several times in Arrangement View, Live keeps each pass in take lanes, so
           you can pick the best bits afterwards.
 
-  - kind: play
-    layer: drums
-    surface: pads
-    snap: true
-    goal: {notes: 4}
+  - kind: tempo
+    set: mic
     say:
       mentor: >-
-        We can't reach your mic here, but recording a take works the same way. Your song is playing. Press rec,
-        and the count-in is your moment to get ready, like arming a track. Then play the pads along with your
-        song: a rim on the offbeats, a tom fill at the end of the bar, whatever feels good.
-
-        That take is your playing, with your timing. Listen back, and keep it if it adds something.
+        Recording audio means capturing real sound. Press record mic and you have two seconds: clap, snap, tap the desk, say a word. Your browser will ask to use the microphone the first time.
+        
+        What you recorded lands on the sampler and plays on 2 and 4 in your song. Try it on every beat, or as keys where your sound is repitched into a melody. tune and start shape it, release trims the tail. If there's no mic here, load a file or use a recorded hit. In Live, this is an audio track with the input armed.
       straight: >-
-        Record a take over your song on the pads. Press rec, wait out the count-in, play at least four hits on
-        spare pads. Keep it if it works.
+        Press record mic, make a sound for two seconds, and it becomes part of your song. Choose where it plays and shape it.
       eli5: >-
-        Press rec, wait for the ticks, then tap some pads along with your song. That's a recording of you
-        playing.
-    hint: Use pads your beat doesn't use yet, so your kick and clap stay as they are.
+        Press the button and make a noise. Now the noise is an instrument in your song.
 
   - kind: ask
     q: What does arming a track do?

@@ -65,25 +65,18 @@ steps:
           key. Velocity can even move the start point, so harder hits start later in the transient for more
           snap.
 
-  - kind: shape
-    layer: drums
-    knobs: [tune, decay]
+  - kind: tempo
+    set: sample
+    choices: [hit]
     say:
       mentor: >-
-        Every sample on every pad gets two basic choices: what pitch it plays at, and how long it lasts. Here
-        they are on your kick, with your song playing.
-
-        Turn tune and the kick sits lower and heavier or higher and tighter. Turn decay and it gets short and
-        clipped or long and booming. Find the kick that sits with your bass, and keep it.
-
-        These knobs work on the synth kit. If your song is on the recorded kit, switch back to synth in drums
-        from recordings to hear them.
+        The deeper sampler controls. Your sample is on the screen as a wave. Turn start and the white line moves into the sound: the attack is skipped and the hit gets softer and later-sounding. Pull it back for the full punch.
+        
+        release is the tail: short and it's a tight click, long and it rings out. reverse flips the sound so it swells up to where it used to begin, which is where reverse cymbals come from. Try your own file as keys and set start just past any silence at the front.
       straight: >-
-        Tune sets your kick's pitch, decay sets how long it lasts. Set both so it sits with your bass, then
-        keep it. These knobs act on the synth kit, not the recorded one.
+        start skips into the sound, release sets the tail, reverse flips it. Set start just past the silence.
       eli5: >-
-        Tune makes your kick higher or lower. Decay makes it shorter or longer. Turn them until your kick
-        sounds right with your bass.
+        Start is where the sound begins playing. Release is how long it lasts. Reverse plays it backwards.
 
   - kind: ask
     q: What is a velocity layer?

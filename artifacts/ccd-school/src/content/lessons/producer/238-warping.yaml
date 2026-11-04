@@ -59,21 +59,17 @@ steps:
           for drums. Re-Pitch is the odd one out: like a tape machine, it changes pitch along with speed.
 
   - kind: tempo
-    marks: [100, 120, 124, 128]
+    set: sample
+    choices: [warp]
     say:
       mentor: >-
-        Here's your song. Turn the tempo and every part follows, because your parts are notes and the engine
-        plays each note on the beat it belongs to. Even the recorded kit follows: each hit is a short sample,
-        fired on its step.
-
-        A long recorded loop wouldn't do that on its own. That's the job warping does in Live. Pick the tempo
-        that feels right for your song, and know that any loop you bring in will be warped to it.
+        A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.
+        
+        Switch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.
       straight: >-
-        Turn your song's tempo. Your parts are notes, so they follow. A recorded loop would need warping to do
-        the same. Pick your tempo.
+        A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.
       eli5: >-
-        Turn the knob to make your song faster or slower. Everything you made keeps up. A recording would need
-        warping to keep up too.
+        This is a recording. It doesn't know the tempo. Warping teaches it to follow.
 
   - kind: ask
     q: What does warping do?

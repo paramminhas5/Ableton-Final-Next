@@ -59,19 +59,17 @@ steps:
           outgrow it, right-click the Simpler's header to turn it into a Sampler with the same sample.
 
   - kind: tempo
-    set: kit
+    set: sample
+    choices: [hit]
     say:
       mentor: >-
-        Here's your own beat. Switch from the synth kit to the recorded kit: same pattern, same timing, but now
-        every hit is a recording of a real kick, clap, hat and snare, played back by a sampler on each pad.
-
-        Listen to the texture. The recordings carry a bit of room and grit. Pick the kit your song wants and
-        keep it.
+        Simpler is a sampler: one sound, played back however you like. Here's a clap. Your song is playing with it on 2 and 4. Load a file of your own, or record your mic, and it swaps in.
+        
+        tune repitches it, start skips into the sound, release decides how long it rings, reverse flips it. Pick as keys and the same sound becomes a melody, repitched for each note, which is exactly what Simpler does in classic mode. Keep the sound you like best in your song.
       straight: >-
-        Your beat on the synth kit, then the recorded kit. Same pattern, recordings on each pad. Pick one.
+        One sound, played back and shaped: tune, start, release, reverse. Load your own, or play it as keys. That's Simpler.
       eli5: >-
-        Same beat, two kits. The recorded one uses real drum sounds. Tap between them and keep the one you
-        like.
+        Any sound can be an instrument. Load one, then tune it and trim it.
 
   - kind: ask
     q: What does a sampler do?

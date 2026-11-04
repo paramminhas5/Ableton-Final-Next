@@ -66,17 +66,31 @@ steps:
     knobs: [level, high, send]
     say:
       mentor: >-
-        Here's your song. Do the whole order on one part, your hats. Level first: down until they nearly
-        vanish, then up until they just tick along on top. Then high, the eq: a small cut if they sting, a
-        small boost if they sound dull. Last, send: a touch of reverb pushes them back behind the kick.
-
-        Keep each move small, and listen to the whole song, not just the hats.
+        Mixing is placing every part. Start with your hats: level for how loud, high for how bright, send for how far away. Your song is playing.
       straight: >-
-        Level first, until the hats just sit on top. Then high: cut if they sting, boost if dull. Then a
-        little send for space.
+        Hats first: level, high and send.
       eli5: >-
-        Make your hats the right loudness first. Then make them a bit brighter or darker. Then add a tiny bit
-        of echo.
+        Make the hats the right loudness, brightness and distance.
+  - kind: shape
+    layer: bass
+    knobs: [level, low, duck]
+    say:
+      mentor: >-
+        Now your bass, the same way. Level against the kick, low for weight, and duck so it steps aside each time the kick hits. Both parts keep their settings when you add.
+      straight: >-
+        Now the bass: level, low and duck under the kick.
+      eli5: >-
+        Now the bass. Make it fit under the kick.
+  - kind: shape
+    layer: lead
+    knobs: [level, pan, send]
+    say:
+      mentor: >-
+        And your lead: level so it leads without shouting, pan it a little off centre, send for air. Three parts placed, and that's a mix.
+      straight: >-
+        Now the lead: level, pan and send. Three parts placed.
+      eli5: >-
+        Now the lead. Loudness, left or right, and space.
 
   - kind: ask
     q: What usually comes first in a mix?

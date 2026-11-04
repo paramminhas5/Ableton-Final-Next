@@ -60,20 +60,16 @@ steps:
 
   - kind: shape
     layer: bass
-    knobs: [wave, env]
+    knobs: [fm, ratio, env, cutoff]
     say:
       mentor: >-
-        Our bass is a filter synth, not an fm one, so it can't do ratios. But it can do the famous fm bass
-        shape, the bright start that settles, and that's what your ears will recognise. Your song is playing.
-
-        Turn wave toward the buzzier end so there are more harmonics to work with. Then raise env: each bass
-        note now starts brighter and rounds off, just like a modulator fading out. Keep it if your bass bites
-        better.
+        This is real fm. Your bass is playing. Turn fm up and a second oscillator, the modulator, starts bending the first one's pitch thousands of times a second. You don't hear a wobble, you hear new overtones: glassy, metallic, growly.
+        
+        ratio sets how fast the modulator runs compared to the note. Whole numbers like 1, 2 and 3 give harmonic, bell-like tones. Half, at the bottom, gives a sub an octave down. env makes the fm amount fall away after each note starts, so you get the classic bright attack that settles into a clean bass. Leave fm where your bass has bite but still sits under your kick.
       straight: >-
-        Our bass can't set an fm ratio, but it can copy the fm bass shape. Buzzier wave, then raise env so each
-        note starts bright and rounds off. Keep it.
+        fm bends one oscillator with another. fm is how much, ratio is the modulator's speed compared to the note, env makes it settle after the attack. Keep it where the bass has bite.
       eli5: >-
-        Make the bass buzzier with wave. Then turn env up so every note starts with a bite and then goes soft.
+        fm makes a second sound shake the first one really fast. It turns a smooth bass into a growly one.
 
   - kind: ask
     q: In fm, which wave do you actually hear?

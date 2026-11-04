@@ -56,23 +56,18 @@ steps:
           Some producers arm a sketch track at the start of every session and leave it on all day. Anything
           good they stumble on is always one press away.
 
-  - kind: play
+  - kind: tempo
+    set: comp
     layer: lead
-    surface: keys
-    goal: {notes: 6}
     say:
       mentor: >-
-        Here's your song. Our version works a little differently: press rec and the app records, with no
-        separate capture button. But the habit is the same. Don't plan it. Press rec, play loosely over the
-        loop, and see what comes out.
-
-        Played something good? Use it. Not quite? Undo, or skip and keep the lead you had. Playing freely and
-        keeping only what worked is the whole idea.
+        Capture midi is Live's way of keeping what you played when you weren't recording. Here every take is kept the same way. Play your lead through once, loosely, and press keep on the take. Do it up to three times.
+        
+        Then the take lanes appear: for each quarter of the loop, choose the take that had the best bit. Nothing you played was lost, which is the whole point of Capture. Keep the comp and that's your lead.
       straight: >-
-        Press rec and play loosely over your song. Keep the take if it worked, undo or skip if not. Same idea
-        as Capture MIDI.
+        Play up to three takes, every one is kept, then pick the best piece of each. Nothing is lost.
       eli5: >-
-        Press rec and just play, no plan. If you like it, keep it. If not, skip it and your old tune stays.
+        Play it a few times. Keep the best bits of each try.
 
   - kind: ask
     q: What does Capture MIDI do?

@@ -41,29 +41,76 @@ export function camelotFits(a: string, b: string): boolean {
 
 const KICK = 36, CLAP = 39, CLOSED = 42, OPEN = 46;
 
+/** A bank track is 16 bars: drums and bass, then everything, a break with no drums, and the drop. */
+export const TRACK_BEATS = 64;
+export const CUES = [
+  { name: "intro", at: 0 },
+  { name: "hats in", at: 16 },
+  { name: "break", at: 48 },
+  { name: "drop", at: 56 },
+];
+const sectionOf = (d: number) => (d < 16 ? "intro" : d < 48 ? "main" : d < 56 ? "break" : "drop");
+
+/** One pass of a bank track in its own beats (0 to 64), before it is laid on the transport. */
+export function bankPattern(t: BankTrack, shift = 0) {
+  const drums: NoteEvent[] = [], hats: NoteEvent[] = [], bass: NoteEvent[] = [];
+  const third = t.minor ? 3 : 4;
+  const root = t.root + shift;
+  for (let d = 0; d < TRACK_BEATS; d++) {
+    const bar = Math.floor(d / 4), beat = d % 4, sec = sectionOf(d);
+    if (sec !== "break") {
+      drums.push({ note: KICK, vel: 0.95, start: d, len: 0.25 });
+      if (beat % 2 === 1) drums.push({ note: CLAP, vel: 0.75, start: d, len: 0.25 });
+    }
+    if (sec !== "intro") {
+      if (t.style === "rolling") for (const s of [0, 0.25, 0.5, 0.75]) hats.push({ note: CLOSED, vel: s === 0.5 ? 0.6 : 0.35, start: d + s, len: 0.06 });
+      else hats.push({ note: OPEN, vel: 0.55, start: d + 0.5, len: 0.2 });
+    }
+    const r = root + [0, 0, bar % 2 ? 7 : third + 7, 5][beat];
+    if (t.style === "rolling") for (const s of [0.25, 0.5, 0.75]) bass.push({ note: r, vel: 0.8, start: d + s, len: 0.18 });
+    else if (t.style === "bouncy") bass.push({ note: r, vel: 0.85, start: d + 0.5, len: 0.3 }, { note: r + 12, vel: 0.6, start: d + 0.75, len: 0.12 });
+    else bass.push({ note: r, vel: 0.85, start: d + 0.5, len: 0.35 });
+  }
+  return { drums, hats, bass };
+}
+
+/** Where deck b is in its track: `off` is the track beat at transport beat 0; `loop` repeats a stretch. */
+export type DeckPlay = { off?: number; loop?: { start: number; len: number } | null; shift?: number };
+
+/**
+ * Lay events from track time onto the transport. One track beat takes `f` transport beats (transportBpm /
+ * deckBpm, so a faster deck has f below 1). The deck starts `off` track beats in;
+ * with a loop, it goes round that stretch instead of on through the track. Pure.
+ */
+export function layDeck(events: NoteEvent[], f: number, beats: number, play: DeckPlay): NoteEvent[] {
+  const off = play.off ?? 0;
+  const out: NoteEvent[] = [];
+  const u1 = off + beats / f; // track time at the end of the transport window, unrolled
+  const put = (u: number, e: NoteEvent) => { const x = (u - off) * f; if (x >= -1e-6 && x < beats - 0.001) out.push({ ...e, start: Math.max(0, x), len: e.len * f }); };
+  if (play.loop && play.loop.len > 0) {
+    const { start, len } = play.loop;
+    const inLoop = events.filter(e => e.start >= start - 1e-6 && e.start < start + len - 1e-6);
+    // Before the loop starts the track plays on; from the loop's start it goes round.
+    for (const e of events) if (e.start < start && e.start >= off - 1e-6) put(e.start, e);
+    const from = Math.max(start, off);
+    for (let k = Math.floor((from - start) / len) - 1; start + k * len < u1; k++) for (const e of inLoop) { const u = e.start + k * len; if (u >= off - 1e-6) put(u, e); }
+  } else {
+    for (let k = Math.floor(off / TRACK_BEATS) - 1; k * TRACK_BEATS < u1; k++) for (const e of events) put(e.start + k * TRACK_BEATS, e);
+  }
+  return out.sort((a, b) => a.start - b.start);
+}
+
 /**
  * A bank track's layers laid onto a transport running at `transportBpm`, for `beats` transport beats.
  * The track plays at `deckBpm`, so its notes drift against the transport until the two match.
  */
-export function bankLayers(t: BankTrack, deckBpm: number, transportBpm: number, beats: number, prefix: string) {
+export function bankLayers(t: BankTrack, deckBpm: number, transportBpm: number, beats: number, prefix: string, play: DeckPlay = {}) {
   const f = transportBpm / deckBpm;
-  const hit = (note: number, d: number, vel: number, len: number): NoteEvent | null => (d * f < beats - 0.001 ? { note, vel, start: d * f, len: len * f } : null);
-  const drums: NoteEvent[] = [], hats: NoteEvent[] = [], bass: NoteEvent[] = [];
-  const third = t.minor ? 3 : 4;
-  for (let d = 0; d * f < beats; d++) {
-    const bar = Math.floor(d / 4), beat = d % 4;
-    [hit(KICK, d, 0.95, 0.25), beat % 2 === 1 ? hit(CLAP, d, 0.75, 0.25) : null].forEach(e => e && drums.push(e));
-    if (t.style === "rolling") for (const s of [0, 0.25, 0.5, 0.75]) { const e = hit(CLOSED, d + s, s === 0.5 ? 0.6 : 0.35, 0.06); if (e) hats.push(e); }
-    else { const e = hit(OPEN, d + 0.5, 0.55, 0.2); if (e) hats.push(e); }
-    const roots = [0, 0, bar % 2 ? 7 : third + 7, 5];
-    const r = t.root + roots[beat];
-    if (t.style === "rolling") for (const s of [0.25, 0.5, 0.75]) { const e = hit(r, d + s, 0.8, 0.18); if (e) bass.push(e); }
-    else if (t.style === "bouncy") [hit(r, d + 0.5, 0.85, 0.3), hit(r + 12, d + 0.75, 0.6, 0.12)].forEach(e => e && bass.push(e));
-    else { const e = hit(r, d + 0.5, 0.85, 0.35); if (e) bass.push(e); }
-  }
+  const pat = bankPattern(t, play.shift ?? 0);
+  const lay = (evs: NoteEvent[]) => layDeck(evs, f, beats, play);
   const L = (type: "drums" | "hats" | "bass", events: NoteEvent[]) => ({ ...newLayerV2(type, `${prefix}:${type}`), id: `${prefix}-${type}`, events });
-  const h = L("hats", hats); h.pad = t.style === "rolling" ? 4 : 5;
-  return [L("drums", drums), h, L("bass", bass)];
+  const h = L("hats", lay(pat.hats)); h.pad = t.style === "rolling" ? 4 : 5;
+  return [L("drums", lay(pat.drums)), h, L("bass", lay(pat.bass))];
 }
 
 /** Your song repeated to fill `beats`, its layers renamed so they don't collide with deck b's. */

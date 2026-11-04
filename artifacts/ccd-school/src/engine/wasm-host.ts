@@ -94,6 +94,14 @@ export class WasmHost implements EngineHost {
     return () => this.subs.delete(fn);
   }
 
+  /** The engine and anything else on the page meet at `out`, which goes to the speakers (and to a recorder). */
+  private bus: GainNode | null = null;
+  audio(): { ctx: AudioContext; out: AudioNode } | null {
+    if (!this.ctx || !this.node) return null;
+    if (!this.bus) { this.bus = this.ctx.createGain(); this.node.disconnect(); this.node.connect(this.bus); this.bus.connect(this.ctx.destination); }
+    return { ctx: this.ctx, out: this.bus };
+  }
+
   info(): HostInfo {
     const ctx = this.ctx;
     return {
@@ -107,6 +115,7 @@ export class WasmHost implements EngineHost {
 
   async stop() {
     this.node?.disconnect();
+    this.bus = null;
     await this.ctx?.close();
     this.ctx = null;
     this.node = null;

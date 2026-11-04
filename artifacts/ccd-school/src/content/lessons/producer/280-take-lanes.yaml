@@ -46,22 +46,18 @@ steps:
         say: >-
           Name your lanes as you go, so future you knows which take was which.
 
-  - kind: play
+  - kind: tempo
+    set: comp
     layer: drums
-    surface: pads
-    goal: {notes: 2, note: clap}
     say:
       mentor: >-
-        Time to record takes. Your song plays underneath. Press rec, wait out the count-in, and tap your clap
-        on two and four. Not happy with it? Tap undo to take it back and record another pass.
-
-        Every pass is a take. When one feels right, keep it, and it goes into your song in place of your old
-        clap.
+        Take lanes keep every pass you record. Play your drums and keep the take, then do it again, up to three times. Each take sits in its own lane.
+        
+        Then comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.
       straight: >-
-        Record your clap on two and four. Undo and go again until one take feels right, then keep it.
+        Record up to three takes of your drums. Then, for each quarter of the loop, pick the take that was best. Keep the comp.
       eli5: >-
-        Press rec and tap the clap on two and four. If you don't like it, tap undo and try again.
-    hint: Skip one, hit on two, skip three, hit on four.
+        Play it three times. Then build the best version from the best bits.
 
   - kind: ask
     q: What is a take?

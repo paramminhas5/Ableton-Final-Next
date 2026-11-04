@@ -55,25 +55,18 @@ steps:
           Midi numbers every note, with 60 for middle c and 69 for a4. Live labels middle c as C3, while many
           other programs and most theory books call it C4. The midi number is the one that never changes.
 
-  - kind: play
+  - kind: tempo
+    set: grid
     layer: lead
-    surface: keys
-    goal: {notes: 4}
     say:
       mentor: >-
-        Now put an octave in your melody. This tune replaces the notes in your song.
-
-        The keys here show the notes of your song's scale, seven of the twelve, so the first key and the last
-        key are the same note, an octave apart. Press rec, wait out the count-in, play the first key, then the
-        last key, then two more you like. Listen to the jump: the note doesn't change, it just gets bigger and
-        brighter.
+        All twelve notes, including the black keys, are on this grid, one per row. Your lead is here. Find a note of your lead and tap the row twelve above it, in the same column: that's the same note an octave up. They sound like the same note, higher.
+        
+        Now tap a square one row above or below one of your notes. That's a semitone, the smallest step on the keyboard, and the black keys live in those rows. Add one note an octave up and one a semitone away, play them, and keep whichever your lead likes.
       straight: >-
-        Record a new tune. First and last keys are the same note an octave apart. Rec, count-in, play the low
-        one, the high one, then any two more.
+        Rows are the twelve notes. Twelve rows up is the octave, the same note higher. One row is a semitone, where the black keys are. Add one of each.
       eli5: >-
-        Press rec and wait for four ticks. Press the first key, then the last key. Same note, low and high!
-        Then press two more keys you like.
-    hint: The first key and the last key share a name. Play them one after the other.
+        Count twelve rows up: same note, higher. One row up: the tiniest step.
 
   - kind: ask
     q: How many notes before the pattern repeats?

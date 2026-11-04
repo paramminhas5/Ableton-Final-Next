@@ -63,22 +63,16 @@ steps:
           right before the final chorus is a classic pop lift.
 
   - kind: tempo
-    set: scale
-    choices: [minor, dorian, major]
+    set: key
     say:
       mentor: >-
-        You can't move your whole song to a new key in here yet, so you'll try the other half on it: modes.
-        These three all keep your home note and change the notes around it.
-
-        Minor here is aeolian, the darkest. Dorian lifts one note, the sixth. Major is ionian, the brightest,
-        with three notes raised. Tap through them with your song playing and listen to the mood climb from
-        dark to bright while your melody keeps its shape. Pick the one your song wants.
+        Transposition moves the whole song up or down without changing a single interval, so it still sounds like your song, just higher or lower. Your song is playing. Turn shift and hear every melodic part move together while the drums stay put.
+        
+        Up two semitones is a classic lift. Down five is a different mood entirely, darker and heavier. The key name updates as you turn. A singer might need it in a different key; a dj might want it to fit the next track. Keep the key where your song feels best.
       straight: >-
-        Three modes on your song's home note. Minor (aeolian) is darkest, dorian lifts the sixth, major
-        (ionian) is brightest. Same melody shape, different mood. Pick one.
+        shift moves every melodic part together, in semitones. The drums stay. Keep the key that feels best.
       eli5: >-
-        Tap minor, dorian and major. Your tune keeps its shape but goes from gloomy to a bit brighter to
-        sunny. Pick the one you like.
+        Turn the knob and the whole song goes higher or lower, like singing the same tune in a higher voice.
 
   - kind: ask
     q: Transposing a melody up 5 semitones moves

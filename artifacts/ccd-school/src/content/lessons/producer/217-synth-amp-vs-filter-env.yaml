@@ -61,22 +61,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [attack, env, release]
+    knobs: [release, f release, env, f decay]
     say:
       mentor: >-
-        Here's your song. On your lead the filter envelope has a fixed shape: it jumps open at the start of each
-        note and closes over about a third of a second. The amp envelope is yours to set. So they're already out
-        of step, and you get to choose how far.
-
-        Turn env up so you can hear the filter move. Now raise attack: the volume swells in slowly while the
-        brightness has already started closing, so each note fades in getting darker. Then try release for how
-        long the dark tail rings. Keep the shape you like.
+        Two envelopes, two jobs, and now they're separate. Your song is playing. release is the amp envelope: how long the note rings after you let go. f release is the filter envelope's own release: how long the brightness takes to close.
+        
+        Set release long and f release short. The note hangs on but goes dull at once. Now swap them: a short note that stays bright right to the end. f decay is how fast the filter settles while the note is held, and env is how far it opens. Pick the pair that gives your lead its character.
       straight: >-
-        Your lead's filter envelope opens fast and closes in about a third of a second. Env sets how much. Attack
-        and release shape the volume. Slow attack plus env: notes swell in as they darken.
+        release is the amp envelope's tail, f release the filter envelope's. Set them apart and hear a long dull note, then a short bright one. f decay and env shape the filter's fall.
       eli5: >-
-        Turn env up so each note flashes bright. Turn attack up so notes fade in slowly. Now they get louder
-        while getting darker. Release makes the end ring on.
+        One knob says how long the note lasts. The other says how long it stays bright. They don't have to match.
 
   - kind: ask
     q: Which envelope decides whether you hear the note at all?

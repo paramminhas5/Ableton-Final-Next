@@ -53,18 +53,17 @@ steps:
           open hat.
 
   - kind: tempo
-    set: kit
+    set: sample
+    choices: [hit]
     say:
       mentor: >-
-        Here's your beat on the pads. Switch to the recorded kit and every pad plays a recording: a real kick,
-        clap, hat and snare, on exactly the pattern you made.
-
-        Go back and forth a few times. The synth kit is clean and easy to shape. The recorded kit has air and
-        grit around each hit. Keep the one your song wants.
+        Drum Sampler is Live's one-shot sampler for a single drum hit. Here's a kick from the recorded kit on every beat in your song. Switch to the clap or the snare and hear each one take the same pattern.
+        
+        tune shifts the pitch: a kick tuned down is heavier, a snare tuned up is snappier. release trims the tail so hits stay tight. Load your own hit or record one and it drops in the same way. Keep the hit, tuned how you like it.
       straight: >-
-        Your beat on the synth kit and the recorded kit. Same pattern, recorded hits. Pick one and keep it.
+        One drum hit, played in a pattern and tuned. Swap between kick, clap and snare or load your own.
       eli5: >-
-        Same beat, two kits. One is made by the computer, one is real drum recordings. Keep the one you like.
+        Pick a drum sound. Tune it up or down. Put it in your song.
 
   - kind: ask
     q: Where does Drum Sampler sit in Live?

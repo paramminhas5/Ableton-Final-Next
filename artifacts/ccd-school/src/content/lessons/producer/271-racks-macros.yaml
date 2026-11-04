@@ -51,21 +51,18 @@ steps:
         say: >-
           Mapping too many things to one macro turns it to mush. Two or three is often plenty.
 
-  - kind: shape
+  - kind: tempo
+    set: macro
     layer: lead
-    knobs: [cutoff, send]
     say:
       mentor: >-
-        Here's your lead with two knobs a macro could join: cutoff and send. Move them together, cutoff up as
-        send goes up, and hear your lead open out and move back into the room in one sweep. That pair is
-        exactly what you'd put on one macro in Live.
-
-        Leave them where your lead sounds best.
+        A macro is one knob mapped to several. Your lead is playing. Turn the big knob and cutoff, res and drive all move together, each over its own range. That's a rack macro: one hand, a whole sound change.
+        
+        Tap the chips to choose what the macro turns: add send for space, add lfo for movement, take drive out. Save a setting as a, turn to somewhere new and save b, then jump between them. Keep the setting you like.
       straight: >-
-        Cutoff and send, moved together like one macro. Open both, hear the sweep, leave them where you like.
+        One knob moving several. Pick which knobs it turns, save two settings, jump between them. Keep what you like.
       eli5: >-
-        Turn both knobs up at the same time, like one big knob would. Hear your tune get brighter and further
-        away.
+        One big knob turns lots of little knobs at once.
 
   - kind: ask
     q: What is a macro?

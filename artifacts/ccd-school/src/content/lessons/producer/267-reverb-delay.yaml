@@ -63,17 +63,21 @@ steps:
     knobs: [send, echo]
     say:
       mentor: >-
-        Here's your song, with reverb and echo on your drum kit. Here they act on the kick and clap together,
-        so keep them low: a lot of reverb on a kick turns to mud. In Live you'd send just the clap.
-
-        Try send on its own and listen to the clap get a room around it. Then set send back down and try
-        echo instead. Keep the one that suits your song, or neither.
+        Reverb and delay on your drums. send is reverb, a room; echo is delay, repeats. Your song is playing. Keep the kick's send low so the low end stays tight.
       straight: >-
-        Send is reverb, echo is delay, on the whole kit here, so keep both low. Try each alone. Keep one or
-        neither.
+        Reverb (send) and delay (echo) on the drums. Keep send low for the kick.
       eli5: >-
-        Turn send up a little for a big room. Turn it back down and try echo for repeats. Pick the one you
-        like.
+        Room and repeats on the drums.
+  - kind: shape
+    layer: hats
+    knobs: [send, echo]
+    say:
+      mentor: >-
+        Now your hats, which can take much more. Send them further back and give them a touch of echo. Two parts, two different amounts, which is the point: space is per part.
+      straight: >-
+        Now the hats, with more of both. Space is set per part.
+      eli5: >-
+        Hats can go further away. Try it.
 
   - kind: ask
     q: What's the difference between reverb and delay?

@@ -58,20 +58,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [cutoff, env]
+    knobs: [lfo, lfo rate, lfo to, cutoff]
     say:
       mentor: >-
-        Here's your song with your lead. An LFO would sweep the filter on its own over time. The closest move
-        here is env: it makes the filter open on every note and close again, so your lead moves by itself
-        without you touching a thing.
-
-        Set cutoff low so there's room to open, then raise env until each note has a little wah to it. Keep it
-        where your lead feels alive but not busy.
+        Max for Live's most-used device is the LFO, a modulator you point at any knob in the set. Your lead has an lfo built in, so this is the same idea. Turn lfo up and point lfo to at the filter, then the pitch, then the volume.
+        
+        Rate slow is a drift, fast is a shake. In Live you'd drop the LFO device on a track and click map, then the knob you want. Keep a movement that suits your lead.
       straight: >-
-        Your lead. Env opens the filter on every note by itself, the kind of automatic movement Max for Live's
-        LFO gives you. Cutoff low, env up, stop before it's busy.
+        An lfo you point at any knob, like Max for Live's LFO. Choose the target and rate. Keep it.
       eli5: >-
-        Turn cutoff down, then turn env up. Now every note goes wah on its own. Stop where you like it.
+        A wobble you can aim at any knob. Aim it, set the speed, keep it.
 
   - kind: ask
     q: Which edition of Live comes with Max for Live?

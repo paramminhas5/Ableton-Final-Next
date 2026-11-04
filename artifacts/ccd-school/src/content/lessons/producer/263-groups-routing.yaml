@@ -59,18 +59,24 @@ steps:
 
   - kind: shape
     layer: drums
-    knobs: [low, mid, high]
+    knobs: [low, mid, high, drive]
     say:
       mentor: >-
-        Here's your song with an eq on your whole drum kit, not just one drum. Turn low and the kick and clap
-        both get fuller. Turn high and both get brighter. They move together, like one instrument.
-
-        Set it so your kit sounds like one drummer playing one kit.
+        A group is several tracks through one channel. Your kick and clap share this channel: turn low, mid, high and drive and both move. Your song is playing.
       straight: >-
-        One eq on the whole kit. Kick and clap change together. Set it so they sound like one instrument.
+        Kick and clap through one channel.
       eli5: >-
-        These knobs change all your drums at the same time. Turn them until your drums sound like one big
-        drum kit.
+        The drums all go through one channel.
+  - kind: shape
+    layer: hats
+    knobs: [high, level, drive]
+    say:
+      mentor: >-
+        Your hats are the other member of the drum group. Match the drive you gave the kick and clap so the group sounds like one kit, then set their level in it. In Live you'd make one group track and put all three inside.
+      straight: >-
+        Hats join the group: match the drive, set the level.
+      eli5: >-
+        Hats join the drums. Make them sound like one kit.
 
   - kind: ask
     q: What is a group?

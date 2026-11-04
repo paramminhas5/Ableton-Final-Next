@@ -57,19 +57,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [cutoff]
+    knobs: [lfo, lfo rate, cutoff, lfo to]
     say:
       mentor: >-
-        Here's your lead's cutoff. Play the knob the way automation would: start low, dark and muffled, then
-        open it slowly over a few bars, as if you're building to a drop. Do it a couple of times. In Live,
-        you'd draw that sweep once and the song would do it for you.
-
-        Then leave the knob where your lead sounds best in the loop.
+        Automation is a knob moving by itself over time, drawn as a line. The closest thing to a drawn line that repeats is an lfo, and your lead has one. Turn lfo up and set lfo rate very slow: the cutoff now rises and falls over a few bars on its own, like a long automation curve.
+        
+        Set cutoff where the middle of the sweep should sit. lfo to on the volume gives a slow fade in and out instead. In Live you'd draw this in the automation lane; here the shape repeats every cycle. Keep the movement in your song.
       straight: >-
-        Sweep the cutoff from low to open over a few bars, like automation. Then leave it where it sounds
-        best.
+        A slow lfo is a repeating automation curve. Turn it up, set the rate slow, choose what it moves. Keep it.
       eli5: >-
-        Start the knob low so the sound is muffled. Turn it up slowly. That's what automation does by itself.
+        Automation is a knob that moves by itself. A slow wobble does that for you.
 
   - kind: ask
     q: What is automation?

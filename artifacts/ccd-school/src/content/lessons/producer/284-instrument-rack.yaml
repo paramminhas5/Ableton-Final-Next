@@ -56,20 +56,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [detune, wave]
+    knobs: [fm, wave, detune, lfo]
     say:
       mentor: >-
-        Your lead in our instrument is a small stack already. Detune puts two copies of the sound slightly
-        apart, and together they sound thicker and wider, like two layered voices. Turn detune up and hear
-        your lead grow from one voice to two. Then try wave to change what both voices are made of.
-
-        Keep it if your lead sounds bigger without going blurry or out of tune.
+        An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: a wave oscillator and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.
+        
+        detune widens the wave layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.
       straight: >-
-        Detune stacks two copies slightly apart, like a two-voice layer. Wave changes both. Stop before it
-        sounds out of tune.
+        Two voices on one note: wave and fm. Blend them with fm, widen with detune. That's a rack.
       eli5: >-
-        Turn detune up and your tune sounds like two instruments playing together. Stop before it sounds
-        wobbly.
+        Two sounds play every time you press one key.
 
   - kind: ask
     q: What does an instrument rack let you do?

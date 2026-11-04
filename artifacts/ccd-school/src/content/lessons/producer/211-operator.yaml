@@ -64,21 +64,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [detune, wave]
+    knobs: [fm, ratio, wave, env]
     say:
       mentor: >-
-        Your lead isn't an fm synth, but it does share Operator's big idea: more than one oscillator on every
-        note. It has three. Detune spreads them apart by a few cents, so they rub and widen into one bigger
-        voice. Wave changes what each one is made of, saw at one end, square at the other.
-
-        Push detune up and listen to your lead go from a single line to a wide stack. Then try the wave with it.
-        Keep the voice that cuts through your song best.
+        Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.
+        
+        ratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. wave picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.
       straight: >-
-        Your lead has three oscillators per note. Detune spreads them a few cents for width. Wave goes from
-        saw to square. Keep the voice that cuts through.
+        Your lead is an fm synth now. fm is the amount, ratio is the modulator's multiple of the note. 1 and 2 are warm, higher is metallic. Keep what cuts through.
       eli5: >-
-        Your tune is made of three waves at once. Detune spreads them out so it sounds big. Wave changes their
-        shape. Pick the one you like.
+        This is like Operator in Live. One sound shakes another. Low ratio is soft, high ratio is like a bell.
 
   - kind: ask
     q: What does fm stand for?

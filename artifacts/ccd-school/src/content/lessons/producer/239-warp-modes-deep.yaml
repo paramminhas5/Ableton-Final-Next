@@ -62,22 +62,17 @@ steps:
           part stutters at every hit. And Re-Pitch on a vocal changes its key as soon as the tempo moves.
 
   - kind: tempo
-    marks: [90, 124, 140]
+    set: sample
+    choices: [warp]
     say:
       mentor: >-
-        Here's your song. Drag the tempo a long way, down to 90 and up to 140. Your parts are notes, so they
-        follow without any stretching at all.
-
-        Now imagine each part were a recording instead. At 90 your drums would need Beats to stay crisp, your
-        bass would want Tones, your chords would sit happily in Texture, and the whole song bounced to one file
-        would need Complex. The bigger the move, the more that choice shows. Then set your song back to the
-        tempo you love.
+        Three ways to make a recording follow the tempo, and you can hear them side by side. The loop was recorded at 120. Choose 100, then 140, and try each mode.
+        
+        warp off is honest: the loop ignores the tempo. repitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants repitch.
       straight: >-
-        Move your song far, 90 to 140. Notes follow cleanly. As recordings, your drums would want Beats, bass
-        Tones, chords Texture, the full song Complex. Then set your tempo.
+        warp off ignores the tempo. repitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.
       eli5: >-
-        Make your song really slow, then really fast. Your notes keep up easily. Recordings would each need
-        their own warp mode to keep up. Then pick the speed you like.
+        Three ways to speed up a recording. One changes the pitch, one chops it up, one doesn't follow at all.
 
   - kind: ask
     q: Which warp mode would you pick for a drum loop?

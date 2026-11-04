@@ -59,26 +59,18 @@ steps:
           Simpler's Slice mode chops a sample into slices inside the one device, each playable from its own
           note, without making a new track.
 
-  - kind: play
-    layer: drums
-    surface: pads
-    snap: true
-    goal: {notes: 4}
+  - kind: tempo
+    set: sample
+    choices: [slice]
     say:
       mentor: >-
-        Your pads are your slices. Each one holds a short piece of drum sound, the way a sliced loop would.
-        Your beat keeps playing underneath.
-
-        Press rec, wait out the count-in, and play a new rhythm on pads your beat isn't using yet, like the
-        toms, the rim or the percs. Snap is on, so every tap lands on the grid. Play at least four hits, then
-        listen to how the new pieces change your groove.
+        Slicing cuts a loop into pieces and puts each one on a pad. The drum loop is cut into eight slices, and you can see the cut lines on the wave. In order plays it as recorded. shuffled rearranges it. stutter repeats pieces.
+        
+        Tap the numbered pads to build your own order, eight taps makes a bar. Tune repitches the whole thing, release trims each slice. This is what Live does when you slice to a new midi track: every slice becomes a pad and the midi clip plays them back in order, which you can then rewrite.
       straight: >-
-        Treat the pads as slices. Record a new rhythm over your beat on unused pads: toms, rim, percs. Snap is
-        on. Four hits or more.
+        The loop is cut into eight slices on eight pads. Play them in order, shuffled, or tap your own order.
       eli5: >-
-        Each pad is a little piece of drum sound. Press rec and tap a new pattern on the pads you haven't used
-        yet. The snap helper keeps your taps in time.
-    hint: Leave the kick pad alone, or your new taps replace your kick.
+        Chop a drum loop into eight bits. Now play the bits in any order you like.
 
   - kind: ask
     q: What does Slice to New MIDI Track put on each pad?

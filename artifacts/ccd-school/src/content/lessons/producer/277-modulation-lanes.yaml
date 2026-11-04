@@ -58,18 +58,16 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [level]
+    knobs: [lfo, lfo to, lfo rate, level]
     say:
       mentor: >-
-        Here's your lead's level. This is the base, the spot a modulation lane would wobble around. Set it
-        where your lead sits best in the song.
-
-        Then picture a slow wobble on top: a touch louder on some notes, a touch softer on others, while your
-        setting stays exactly where you left it.
+        Modulation lanes in Live 12 add movement on top of a value without replacing it. The lfo here does the same: level is the value you set, and the lfo moves around it.
+        
+        Set lfo to the volume, lfo up a little, and the level pulses around where you left it. Change level and the pulse moves with it, which is the whole idea: the modulation is relative. Keep a gentle pulse or none.
       straight: >-
-        Set your lead's base level. Modulation would wobble around this spot without moving it.
+        The lfo adds movement around the level you set. Change level and the movement moves with it. That's a modulation lane.
       eli5: >-
-        Set how loud your tune is. A wiggle would go up and down around that, but your setting stays.
+        Set the loudness, then let the wobble move around it.
 
   - kind: ask
     q: How is modulation different from automation?
