@@ -1,0 +1,51 @@
+slug: preparing-a-set-dj
+world: dj
+number: 15
+title: preparing a set
+minutes: 6
+song:
+  changes: drums.clap
+  why: preparation is what lets you relax and read the room
+learn: >-
+  Crates, rough orders, backups: how working djs prepare, and practising a transition before the gig.
+youCan:
+  - build a crate for a set
+  - practise a transition before the gig
+steps:
+  - kind: say
+    title: crates and backups
+    say:
+      mentor: >-
+        Working djs bring more tracks than they need, sorted into crates by mood or energy. They plan a
+        rough order, not a script, so they can react to the room. And they bring backups: a second USB, a
+        second set of headphones. The best way to prepare is to practise the hard transitions until they're
+        easy.
+      straight: >-
+        Bring more tracks than you need, sorted by mood. Rough order, not a script. Backups. Practise the
+        hard blends.
+      eli5: >-
+        Pack lots of songs in folders. Have a plan but be ready to change it. Bring spare stuff.
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        Practise one transition now: your song into a bank track, the full blend.
+      straight: >-
+        Practise one full blend.
+      eli5: >-
+        Practise one mix from start to finish.
+
+  - kind: ask
+    q: Why do djs bring more tracks than they'll play?
+    options: ["so they can react to the room", "to look busy", "because they lose some", "to fill the USB"]
+    answer: 0
+    why: A rough plan with options lets you follow the crowd.
+    whyWrong:
+      1: It's about choices.
+      2: Backups are separate.
+      3: It's about music, not space.
+
+  - kind: keep
+    next: >-
+      Next: recording your set.

@@ -1,0 +1,52 @@
+slug: headphone-monitoring
+world: dj
+number: 7
+title: cue and headphones
+minutes: 6
+song:
+  changes: drums.clap
+  why: you always line up the next track before the room hears it
+learn: >-
+  What the cue button does, how djs listen to two things at once, and getting deck b ready before it
+  goes out.
+youCan:
+  - say what cue does
+  - prepare a track before bringing it in
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        On a real mixer, every channel has a cue button. Press it and that deck goes to your headphones
+        only, so you can hear it, match it and find the right spot while the room still hears the other
+        track. Most djs keep one ear on the headphones and one on the room.
+      straight: >-
+        Cue sends a deck to your headphones only, so you prepare it in private.
+      eli5: >-
+        The cue button lets you hear the next song in your headphones before anyone else.
+
+  - kind: mix
+    goal: match
+    bank: warm-up
+    say:
+      mentor: >-
+        Imagine deck b is only in your headphones. Match it to your song by ear, the way you would in the
+        booth, before the room hears it. When the lights flash together, it's ready to go out.
+      straight: >-
+        Match deck b as if it were only in your headphones.
+      eli5: >-
+        Make deck b the same speed as your song, like you're getting it ready in secret.
+
+  - kind: ask
+    q: What does the cue button do?
+    options: ["sends a deck to your headphones only", "plays the track to the room", "records the mix", "changes the key"]
+    answer: 0
+    why: Cue is your private listening.
+    whyWrong:
+      1: That's the channel fader.
+      2: Recording is separate.
+      3: Key stays the same.
+
+  - kind: keep
+    next: >-
+      Next: the cut and the long blend.

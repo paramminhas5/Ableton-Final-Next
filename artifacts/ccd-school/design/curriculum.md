@@ -260,7 +260,7 @@ What you have after dj: your song blended with bank tracks in a short set, match
 ### Path 2: the blend
 | | slug | title | does to the mix | needs code |
 |---|---|---|---|---|
-| S | (new) `phrasing` | phrasing: count in eights | come in on the 1 of an 8 | phrase counter |
+| S | `phrasing` | phrasing: count in eights | come in on the 1 of an 8 | phrase counter |
 | D | `genre-bpm-reference` | genres and bpm |your song at three tempos: which genre is it now| |
 | S | `eq-mixing-dj` | eq mixing | the bass swap | eq on the mix step |
 | S | `headphone-monitoring` | cue and headphones | pre-listen in the cue | cue routing |

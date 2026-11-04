@@ -1,0 +1,39 @@
+slug: reading-the-crowd
+world: dj
+number: 101
+title: bonus, reading the room
+minutes: 6
+song:
+  changes: drums.clap
+  why: great djs play the room, not the playlist
+learn: >-
+  What a dancefloor tells you, and what to do when it dips.
+youCan:
+  - read a dancefloor
+  - choose the next track for the room
+steps:
+  - kind: say
+    title: watch the floor
+    say:
+      mentor: >-
+        Look at feet, not faces. A full floor moving together is working. People drifting to the bar or
+        checking phones means it's dipped. The fix is rarely a bigger track. Often it's something more
+        familiar, or a groove change, or a slightly lower energy track that resets ears.
+      straight: >-
+        Watch feet. When it dips, try familiar, a groove change, or a reset.
+      eli5: >-
+        Watch people's feet. If they stop dancing, try a different kind of song.
+
+  - kind: ask
+    q: The floor is emptying. What's often better than your biggest track?
+    options: ["something familiar or a groove change", "an even bigger track", "stopping the music", "turning it up"]
+    answer: 0
+    why: A reset often brings people back better than more intensity.
+    whyWrong:
+      1: More of the same rarely fixes it.
+      2: Silence empties it more.
+      3: Louder doesn't help.
+
+  - kind: keep
+    next: >-
+      Back to the set: effects in performance.

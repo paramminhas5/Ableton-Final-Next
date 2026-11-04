@@ -1,0 +1,50 @@
+slug: long-mix-blend
+world: dj
+number: 8
+title: the cut and the long blend
+minutes: 6
+song:
+  changes: drums.clap
+  why: knowing when to blend for a minute and when to cut on the one is half of djing
+learn: >-
+  Two ways to change tracks: the long blend over 16 or 32 bars, and the cut, a hard switch on the one.
+youCan:
+  - cut from one track to another on the one
+  - choose between a cut and a blend
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Some changes take a minute: both tracks playing, basses swapped, the old one fading out. Others are
+        instant: a hard switch on the one, like a jump cut in a film. Both are tools. Long blends suit deep,
+        hypnotic sets; cuts suit high energy and hip hop.
+      straight: >-
+        Long blend: both tracks for 16 or 32 bars. Cut: a hard switch on the one.
+      eli5: >-
+        You can change songs slowly, or super fast in one move.
+
+  - kind: mix
+    goal: cut
+    say:
+      mentor: >-
+        Both decks are matched. Deck a is playing. Slam the crossfader from a to b in one quick move, right
+        on the one of a bar. It should sound like the music meant to change there.
+      straight: >-
+        Slam the crossfader from a to b in one quick move on the one.
+      eli5: >-
+        Swipe the big slider from a to b really fast, right on the boom.
+
+  - kind: ask
+    q: When does a cut usually land?
+    options: ["on the one of a bar or phrase", "halfway through a beat", "whenever you like", "at the end of the song"]
+    answer: 0
+    why: On the one, so it sounds planned.
+    whyWrong:
+      1: Mid beat sounds like a mistake.
+      2: Timing is the whole trick.
+      3: You'd lose the whole track.
+
+  - kind: keep
+    next: >-
+      Next: picking tracks that work together.

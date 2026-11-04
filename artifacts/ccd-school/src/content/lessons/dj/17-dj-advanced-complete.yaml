@@ -1,0 +1,50 @@
+slug: dj-advanced-complete
+world: dj
+number: 17
+title: from dj to artist
+minutes: 6
+song:
+  changes: drums.clap
+  why: the djs people remember play music nobody else has
+learn: >-
+  Playing your own track in a set, and what it takes to get booked at a CCD night.
+youCan:
+  - play your own song in a set
+  - say what makes a dj an artist
+steps:
+  - kind: say
+    title: your own sound
+    say:
+      mentor: >-
+        The djs people travel for play music nobody else has: their own tracks, edits and remixes. You made
+        a song in this app. Now you can play it out, blended with other tracks, like at a CCD night. The
+        best learner tracks and mixes get played at our nights.
+      straight: >-
+        The djs people remember play their own tracks. Yours is ready to play out.
+      eli5: >-
+        The best djs play songs they made themselves. You made one!
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        Your song is on deck a. Play the bank track into it, or out of it, your choice: the full blend, your
+        song in a set.
+      straight: >-
+        Blend your song with a bank track.
+      eli5: >-
+        Mix your song with another one.
+
+  - kind: ask
+    q: What makes djs stand out?
+    options: ["playing music nobody else has", "the most expensive gear", "playing the loudest", "playing the longest"]
+    answer: 0
+    why: Your own tracks and edits are your signature.
+    whyWrong:
+      1: Gear helps, but sound matters more.
+      2: Loud isn't a signature.
+      3: Length isn't either.
+
+  - kind: keep
+    next: >-
+      That's the dj world. Send your song and your mix to CCD.

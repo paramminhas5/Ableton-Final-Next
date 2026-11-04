@@ -1576,7 +1576,7 @@
    {
     "slug": "phrasing",
     "kind": "song",
-    "isNew": true,
+    "isNew": false,
     "title": "phrasing: count in eights",
     "does": "come in on the 1 of an 8",
     "code": "phrase counter"

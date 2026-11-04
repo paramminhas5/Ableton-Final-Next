@@ -205,7 +205,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           break;
         case "mix":
           voice(where, "say", raw.say);
-          if (!["crossfade", "match", "blend", "free"].includes(String(raw.goal))) at(where, "goal must be crossfade, match, blend or free");
+          if (!["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free"].includes(String(raw.goal))) at(where, "goal must be crossfade, match, blend, swap, key, cut, phrase, echo or free");
           break;
         case "tempo":
           voice(where, "say", raw.say);

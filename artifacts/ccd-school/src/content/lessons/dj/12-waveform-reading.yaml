@@ -1,0 +1,50 @@
+slug: waveform-reading
+world: dj
+number: 12
+title: reading waveforms
+minutes: 6
+song:
+  changes: drums.clap
+  why: seeing the drop coming lets you plan the blend
+learn: >-
+  What a waveform shows, how to spot a breakdown and a drop, and planning a blend around them.
+youCan:
+  - spot a breakdown and a drop in a waveform
+  - plan a blend from what you see
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Every dj screen shows a waveform: the track drawn as its loudness over time. Thin parts are quiet,
+        fat parts loud. A breakdown is a thin stretch, the drop is where it fattens again. Seeing that lets
+        you plan: bring the next track in during the outro, never across someone else's drop.
+      straight: >-
+        A waveform is loudness over time. Thin is a breakdown, the fat part after is the drop.
+      eli5: >-
+        The wiggly line shows loud and quiet parts. A thin bit is a breakdown, then it gets fat at the drop.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Play around: bring deck b in, swap the bass, crossfade. Think about where you'd do it in a full
+        track: over the intro and outro, not across a drop.
+      straight: >-
+        Free play. Think about where in a track you'd blend.
+      eli5: >-
+        Play with the mixer however you like.
+
+  - kind: ask
+    q: What does a thin stretch of waveform usually mean?
+    options: ["a quiet part, like a breakdown", "the loudest part", "a mistake", "the start of the bass"]
+    answer: 0
+    why: Quiet parts draw thin.
+    whyWrong:
+      1: Loud parts draw fat.
+      2: It's how the track is made.
+      3: The bass usually makes it fatter.
+
+  - kind: keep
+    next: >-
+      Next: the energy arc of a set.

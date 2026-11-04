@@ -24,6 +24,21 @@ export const DJ_BANK: BankTrack[] = [
 ];
 export const bankTrack = (id: string) => DJ_BANK.find(b => b.id === id) ?? DJ_BANK[0];
 
+const CAM_MINOR: Record<number, number> = { 8: 1, 3: 2, 10: 3, 5: 4, 0: 5, 7: 6, 2: 7, 9: 8, 4: 9, 11: 10, 6: 11, 1: 12 };
+const CAM_MAJOR: Record<number, number> = { 11: 1, 6: 2, 1: 3, 8: 4, 3: 5, 10: 6, 5: 7, 0: 8, 7: 9, 2: 10, 9: 11, 4: 12 };
+/** The Camelot code for a root note and scale, e.g. a minor is 8A. */
+export function camelotOf(root: number, minor: boolean): string {
+  const pc = ((root % 12) + 12) % 12;
+  return `${(minor ? CAM_MINOR : CAM_MAJOR)[pc]}${minor ? "A" : "B"}`;
+}
+/** Keys that mix cleanly: the same code, one step either way on the wheel, or the same number across. */
+export function camelotFits(a: string, b: string): boolean {
+  const na = parseInt(a, 10), nb = parseInt(b, 10), la = a.slice(-1), lb = b.slice(-1);
+  if (na === nb) return true;
+  const d = Math.min((na - nb + 12) % 12, (nb - na + 12) % 12);
+  return la === lb && d === 1;
+}
+
 const KICK = 36, CLAP = 39, CLOSED = 42, OPEN = 46;
 
 /**
