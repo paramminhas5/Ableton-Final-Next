@@ -1,0 +1,110 @@
+slug: synth-timbre
+world: producer
+number: 218
+title: timbre
+minutes: 5
+song:
+  changes: lead.lead
+  why: the same notes at the same loudness can sound like a flute, a buzzsaw or a wah, and you pick which
+learn: >-
+  Timbre, the colour of a sound, where it comes from, and three different timbres on your own lead.
+youCan:
+  - say what timbre is
+  - say the two things timbre comes from
+  - give your lead three timbres and keep one
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        The same note, three times, at the same loudness. A soft wave, a saw, a square. Pitch didn't change.
+        Loudness didn't change. And yet they're three clearly different sounds. That leftover difference has a
+        name: timbre, said tam-ber. It's the colour or character of a sound.
+
+        It's why a piano and a violin playing the same note at the same volume never sound alike.
+      straight: >-
+        Same pitch, same loudness, different sound. That difference is timbre (tam-ber), a sound's colour.
+      eli5: >-
+        Same note, same loudness, but three different sounds. The difference is called timbre. It's why a piano
+        and a violin sound different playing the same note.
+
+  - kind: say
+    title: where timbre comes from
+    say:
+      mentor: >-
+        Timbre comes from two things. First, the shape of the wave, which decides which higher tones ride on
+        top of the note and how strong they are. A smooth wave has almost none, so it sounds pure. A saw has
+        loads, so it sounds bright and buzzy.
+
+        Second, how that changes over time. A piano's brightness dies away fast, an organ's stays put. Most of
+        what makes an instrument recognisable happens in the first split second of each note.
+
+        Nearly all of synth design comes down to this: reshaping the wave until it has the colour you want.
+      straight: >-
+        Timbre comes from the wave's shape (which higher tones it has) and how that changes over time. Synth
+        design is mostly reshaping timbre.
+      eli5: >-
+        A sound's colour comes from the shape of its wave, and from how it changes while it plays. Making synth
+        sounds is mostly changing that colour.
+    deeper:
+      - title: seeing timbre in live
+        say: >-
+          Drop Live's Spectrum device on a track to see a sound's frequencies as a graph. A sine is one lonely
+          peak, a saw is a whole staircase of them. Watching it while you turn knobs trains your eye to predict
+          what your ear will hear.
+      - title: timbre in a mix
+        say: >-
+          Two parts with different timbres can play in the same range without fighting, one bright and one
+          dark. A louder dull sound is still dull: when a part sounds lifeless, change its timbre before you
+          reach for the fader.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff, res]
+    say:
+      mentor: >-
+        Here's your song. Make three timbres on the same melody. One: wave on saw, cutoff low, a soft, round,
+        almost flute-like lead. Two: wave on saw, cutoff open, bright and buzzy. Three: wave towards square,
+        cutoff halfway, resonance up, a hollow, nasal lead with a whistle in it.
+
+        Pitch and loudness stay the same the whole time. Only the colour moves. Keep the timbre you like best.
+      straight: >-
+        Three timbres: saw with cutoff low (soft), saw with cutoff open (bright), square with res up (hollow,
+        nasal). Same notes. Keep one.
+      eli5: >-
+        Make your tune soft, then bright, then hollow and whistly with these knobs. Your notes stay the same.
+        Pick the one you like.
+
+  - kind: ask
+    q: What is timbre?
+    options: ["the colour or character of a sound", "how high a note is", "how loud a note is", "how fast the song is"]
+    answer: 0
+    why: Timbre is what's left when pitch and loudness are the same, the sound's colour.
+    whyWrong:
+      1: That's pitch.
+      2: That's loudness.
+      3: That's tempo.
+
+  - kind: ask
+    q: A piano and a violin play the same note at the same volume. Why do they sound different?
+    options: ["different timbre", "different pitch", "different tempo", "different loudness"]
+    answer: 0
+    why: Same note, same volume, so the difference is timbre.
+    whyWrong:
+      1: It's the same note.
+      2: Tempo is about a song's speed.
+      3: They're at the same volume.
+
+  - kind: ask
+    q: Your lead sounds dull. What's more likely to help than turning it up?
+    options: ["change its timbre, say open the cutoff", "turn the tempo up", "add more notes", "turn the kick down"]
+    answer: 0
+    why: A louder dull sound is still dull. Changing the colour is what brightens it.
+    whyWrong:
+      1: Tempo doesn't change how a sound is coloured.
+      2: More notes won't change the sound itself.
+      3: That changes the balance, not the lead's colour.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the harmonics that make up your lead's sound.

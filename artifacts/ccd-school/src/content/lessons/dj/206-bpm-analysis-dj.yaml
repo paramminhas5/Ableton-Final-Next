@@ -1,0 +1,100 @@
+slug: bpm-analysis-dj
+world: dj
+number: 206
+title: bpm analysis
+minutes: 5
+song:
+  changes: drums.clap
+  why: every mix starts with knowing your song's bpm and how far the next track is from it
+learn: >-
+  How software finds a track's bpm and beat grid, where it goes wrong, and reading the gap between two
+  tracks from the numbers.
+youCan:
+  - say what a beat grid is
+  - read how far apart two tracks are in bpm
+  - spot when a tempo might have been misread
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Count the kicks: four in every bar. Bpm is how many of them land in a minute. Software finds it for
+        you when you add a track to your library, by finding the steady hits and measuring the gaps between
+        them.
+      straight: >-
+        Bpm is how many beats land in a minute. Software measures it when you add a track.
+      eli5: >-
+        Count the booms. Bpm is how many booms happen in one minute. The computer counts them for you.
+
+  - kind: say
+    title: the beat grid
+    say:
+      mentor: >-
+        Along with the bpm, the software lays a beat grid over the track: a marker on every beat, with the
+        first beat of each bar picked out. Sync and anything else that locks to the beat leans on that grid.
+
+        Steady four on the floor music is easy to read. Complex rhythms, tempo changes and unusual time
+        signatures can trip it up. And some tracks get read at half or double their real tempo: a drum and
+        bass track around 170 can come out around 85.
+      straight: >-
+        The beat grid is a marker on every beat. Steady dance music reads cleanly. Complex rhythms can trip it
+        up, and some tracks get read at half or double speed.
+      eli5: >-
+        The computer puts a little mark on every beat. Usually it gets it right. Sometimes, with tricky music,
+        it gets it wrong or counts only every other beat.
+    deeper:
+      - title: fixing a grid
+        say: >-
+          In rekordbox you can check each grid against the waveform and correct it by hand when the beats are
+          in the wrong place. Do it for any track you plan to sync, because a wrong grid means a wrong sync.
+
+  - kind: mix
+    goal: match
+    bank: operator
+    say:
+      mentor: >-
+        Now read it like a dj. Deck a shows your song's bpm. Deck b is the bank track smooth, at its own bpm.
+        Work out the gap: which is faster, and by how much?
+
+        Then close the gap with deck b's tempo fader, watching deck b's number move toward yours. When the
+        numbers agree, listen. The kicks should lock.
+      straight: >-
+        Read both bpms and work out the gap. Close it with deck b's tempo fader until the numbers agree, then
+        check by ear.
+      eli5: >-
+        Look at the two speed numbers. Move deck b's slider until its number is the same as yours. Then
+        listen to the booms.
+
+  - kind: ask
+    q: What is a beat grid?
+    options: ["markers on every beat that the software lays over a track", "a list of tracks", "a type of effect", "the mixer's eq"]
+    answer: 0
+    why: It tells the software where every beat and every bar starts.
+    whyWrong:
+      1: That's a playlist.
+      2: Effects change the sound.
+      3: The eq shapes bass, mids and highs.
+
+  - kind: ask
+    q: A drum and bass track around 170 shows up as about 85. What happened?
+    options: ["it was read at half its real tempo", "the track is broken", "it's in a different key", "the grid is perfect"]
+    answer: 0
+    why: Half or double readings happen. Trust your ears and fix it.
+    whyWrong:
+      1: The track is fine, the reading isn't.
+      2: Key and tempo are separate.
+      3: A half tempo reading means the grid is off too.
+
+  - kind: ask
+    q: Your song shows 124 and deck b shows 128. What do you do?
+    options: ["slow deck b down by 4 bpm", "speed deck b up", "turn deck b's low down", "change your song's key"]
+    answer: 0
+    why: Deck b is 4 bpm faster, so bring its tempo fader down.
+    whyWrong:
+      1: That widens the gap.
+      2: The low knob changes bass, not speed.
+      3: Key doesn't fix tempo.
+
+  - kind: keep
+    next: >-
+      Back to the song path: your first blend.

@@ -1,0 +1,95 @@
+slug: playlists-dj
+world: dj
+number: 213
+title: playlists and set prep
+minutes: 5
+song:
+  changes: drums.clap
+  why: in a set your song needs a track that leads into it and one that takes over from it
+learn: >-
+  Organising tracks into playlists, a focused list for each gig, and handing your song over to the next
+  track on the list.
+youCan:
+  - organise tracks by genre, energy or gig
+  - say why a short gig list beats your whole library
+  - hand your song over to the next track
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Track a, then track b. In a set, that order isn't luck. Djs plan it in playlists, folders of tracks
+        for a genre, an energy level or a particular night.
+      straight: >-
+        Djs plan their order in playlists, grouped by genre, energy or gig.
+      eli5: >-
+        Djs make lists of songs before they play, so they know what comes next.
+
+  - kind: say
+    title: a list for each night
+    say:
+      mentor: >-
+        For each gig, make a focused playlist, maybe 50 to 100 tracks, instead of playing from everything you
+        own. You'll spend the night on energy and blends, not scrolling.
+
+        Put your song in the middle of a short list: something before it to lead in, something after it to
+        take over. That's a set in miniature.
+      straight: >-
+        Make a focused list of 50 to 100 tracks for each gig. Put your song in the middle, with a track before
+        and after.
+      eli5: >-
+        Pick a short list of songs for each party. Put your song in the middle, with one before and one
+        after.
+    deeper:
+      - title: history
+        say: >-
+          rekordbox keeps a history of the tracks you've played, logged automatically, so after a gig you can
+          look back at exactly what you played.
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        Your song is on deck a, the middle of your list. Deck b is the track after it: pick one from the bank.
+
+        Now hand over. Bring deck b's fader up. Turn your song's low down so only one bass plays. Then
+        crossfade to b, or pull deck a down. Your song has passed the set on.
+      straight: >-
+        Pick the next track on deck b. Fader b up, low a down, then crossfade to b or pull deck a down.
+      eli5: >-
+        Pick the next song. Push its slider up, turn your song's low knob down, then slide over to it.
+
+  - kind: ask
+    q: Why make a focused playlist for each gig?
+    options: ["you spend the night on blends, not searching", "it makes the tracks sound better", "the club asks for it", "more tracks is always worse"]
+    answer: 0
+    why: Every track on the list is one you'd play there, so you're never lost.
+    whyWrong:
+      1: Sound quality doesn't change.
+      2: Clubs don't check your playlists.
+      3: It's about the right tracks, not fewer for the sake of it.
+
+  - kind: ask
+    q: What can you organise playlists by?
+    options: ["genre, energy or a particular gig", "only the file name", "only bpm", "only the date you bought them"]
+    answer: 0
+    why: Whatever helps you find the next track in the moment.
+    whyWrong:
+      1: File names don't tell you much mid set.
+      2: Bpm is one way among several.
+      3: Purchase date rarely helps on a night.
+
+  - kind: ask
+    more: true
+    q: What does rekordbox's history do?
+    options: ["logs the tracks you've played", "deletes old tracks", "records your set as audio", "builds playlists for you"]
+    answer: 0
+    why: An automatic log of what you played.
+    whyWrong:
+      1: Nothing gets deleted.
+      2: Recording is separate.
+      3: You build the playlists.
+
+  - kind: keep
+    next: >-
+      Back to the song path: key and harmonic mixing.

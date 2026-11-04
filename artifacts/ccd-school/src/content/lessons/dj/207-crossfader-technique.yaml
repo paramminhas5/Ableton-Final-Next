@@ -1,0 +1,99 @@
+slug: crossfader-technique
+world: dj
+number: 207
+title: crossfader technique
+minutes: 5
+song:
+  changes: drums.clap
+  why: how you move the crossfader decides whether your song melts into the next track or gets cut off
+learn: >-
+  Slow blends, sharp cuts, crossfader curves, and why many house and techno djs leave the crossfader alone.
+youCan:
+  - blend slowly with the crossfader
+  - make a quick cut
+  - say what a crossfader curve changes
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Track a, track b, both. The crossfader decides which of those you hear. All the way left is deck a,
+        all the way right is deck b, the middle is both at once. What makes it a technique is how fast you
+        move it.
+      straight: >-
+        Left is deck a, right is deck b, the middle is both. The technique is in the speed.
+      eli5: >-
+        The sideways slider picks the song. Left side, one song. Right side, the other. Middle, both.
+
+  - kind: say
+    title: slow, fast and the curve
+    say:
+      mentor: >-
+        Move it slowly over 16 or 32 bars and the tracks melt into each other. That's the blend, or long mix.
+        Snap it across on the first beat of a bar and you get a cut.
+
+        Mixers also let you set the crossfader curve, how quickly the sound changes as you move it. A smooth
+        curve fades gradually across the whole move. A sharp curve, the kind scratch djs use, cuts almost the
+        instant you move it. Ours is smooth.
+      straight: >-
+        Slow over 16 to 32 bars is a blend. Fast on the one is a cut. The curve sets how quickly the sound
+        changes: smooth for blends, sharp for cuts and scratching. Ours is smooth.
+      eli5: >-
+        Slide slowly and the songs mix together. Slide fast and one song jumps to the other.
+    deeper:
+      - title: faders and eq
+        say: >-
+          In house and techno clubs, many djs barely touch the crossfader. They leave it in the middle and
+          blend with the channel faders and the eq. In hip-hop and turntablism it's the main tool.
+      - title: hamster style
+        say: >-
+          Some djs reverse the crossfader so the right side plays the left deck. It's called hamster style,
+          and many turntablists and hip-hop djs prefer it for certain cuts and scratches.
+
+  - kind: mix
+    goal: crossfade
+    say:
+      mentor: >-
+        Your song is on deck a and the crossfader starts on it. First a blend: move the crossfader slowly all
+        the way to b, taking several bars to get there. Listen to your song melt into the next track.
+
+        Then the opposite: snap it back to a in one quick move. Same two tracks, two completely different
+        feelings.
+      straight: >-
+        Slowly crossfade to b over several bars. Then snap back to a in one quick move. Hear the difference.
+      eli5: >-
+        Slide the big slider slowly to b. Then whip it back to a fast. Listen to how different that feels.
+
+  - kind: ask
+    q: Where is the crossfader for an equal blend of both decks?
+    options: ["the middle", "all the way left", "all the way right", "it doesn't matter"]
+    answer: 0
+    why: The middle plays both decks at once.
+    whyWrong:
+      1: Left is deck a only.
+      2: Right is deck b only.
+      3: Where it sits is everything.
+
+  - kind: ask
+    q: What does a sharp crossfader curve do?
+    options: ["cuts almost as soon as you move it", "fades slowly across the whole move", "changes the tempo", "turns the bass down"]
+    answer: 0
+    why: Sharp curves are for cuts and scratching.
+    whyWrong:
+      1: That's a smooth curve.
+      2: Tempo is the pitch fader.
+      3: Bass is the eq.
+
+  - kind: ask
+    q: In house and techno clubs, how do many djs blend?
+    options: ["with the channel faders and the eq", "with the crossfader only", "with the tempo fader", "they don't blend"]
+    answer: 0
+    why: Crossfader in the middle, the work done on faders and eq.
+    whyWrong:
+      1: That's more hip-hop and turntablism.
+      2: Tempo matches speed, it doesn't blend.
+      3: Long blends are what those genres are known for.
+
+  - kind: keep
+    next: >-
+      Back to the song path: phrasing. Count in eights.

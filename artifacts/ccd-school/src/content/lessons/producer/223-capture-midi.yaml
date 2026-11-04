@@ -1,0 +1,109 @@
+slug: capture-midi
+world: producer
+number: 223
+title: capture midi
+minutes: 5
+song:
+  changes: lead.lead
+  why: playing loosely and keeping the take that worked is how a lot of the best melodies end up in a song
+learn: >-
+  Playing freely and keeping only what worked, and how Live's Capture MIDI saves notes you played even with
+  record switched off.
+youCan:
+  - say what Capture MIDI does
+  - say which track Live captures onto
+  - play a take for your lead and choose whether to keep it
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One soft note, held. Imagine noodling around on a keyboard, not recording, just playing. Then you hit
+        something lovely and think, wait, what was that? Usually it's gone.
+
+        Live has a fix for exactly that moment. It's called Capture MIDI, and it means you can play first and
+        decide to keep it afterwards.
+      straight: >-
+        You play something great without recording, and it's gone. Live's Capture MIDI lets you keep it
+        afterwards.
+      eli5: >-
+        Ever played something cool and forgot to record it? Live has a button that remembers it for you.
+
+  - kind: say
+    title: live is always listening
+    say:
+      mentor: >-
+        Even with the record button off, Live quietly keeps the notes coming into an armed midi track. Armed
+        means switched on to receive and record what you play. Press Capture MIDI and those notes turn into a
+        clip on that track, in time, ready to edit like any other.
+
+        If the song wasn't playing, Live works out a tempo from the gaps between your notes and sets the song
+        to match. If it was already playing, the clip locks to the song's tempo.
+      straight: >-
+        With record off, Live still keeps notes played into an armed midi track. Capture MIDI turns them into a
+        clip. Stopped, it guesses the tempo; playing, it uses the song's.
+      eli5: >-
+        Live secretly remembers what you play. Press capture and it turns your playing into a clip, like a
+        phone that saves the last thing you said.
+    deeper:
+      - title: when it doesn't work
+        say: >-
+          Capture only sees notes that reach an armed midi track. Forget to arm it and there's nothing to
+          capture. Captured clips keep everything you played, including velocity, so you can quantise,
+          transpose or cut them like any clip. It works in session and arrangement view.
+      - title: a habit worth having
+        say: >-
+          Some producers arm a sketch track at the start of every session and leave it on all day. Anything
+          good they stumble on is always one press away.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 6}
+    say:
+      mentor: >-
+        Here's your song. Our version works a little differently: press rec and the app records, with no
+        separate capture button. But the habit is the same. Don't plan it. Press rec, play loosely over the
+        loop, and see what comes out.
+
+        Played something good? Use it. Not quite? Undo, or skip and keep the lead you had. Playing freely and
+        keeping only what worked is the whole idea.
+      straight: >-
+        Press rec and play loosely over your song. Keep the take if it worked, undo or skip if not. Same idea
+        as Capture MIDI.
+      eli5: >-
+        Press rec and just play, no plan. If you like it, keep it. If not, skip it and your old tune stays.
+
+  - kind: ask
+    q: What does Capture MIDI do?
+    options: ["turns notes you just played into a clip, even with record off", "records your microphone", "deletes the last clip", "sets the scale"]
+    answer: 0
+    why: Live keeps incoming notes in the background, and Capture turns them into a clip.
+    whyWrong:
+      1: It's for midi notes, not audio.
+      2: It adds a clip, it doesn't delete one.
+      3: Scale is set in the control bar.
+
+  - kind: ask
+    q: Which track does Live capture onto?
+    options: ["the armed midi track", "the master", "every track", "the last track you clicked"]
+    answer: 0
+    why: Live only keeps notes that reach an armed midi track, and captures them there.
+    whyWrong:
+      1: The master carries sound, not notes.
+      2: Only the armed track is captured.
+      3: It has to be armed, not just clicked.
+
+  - kind: ask
+    q: You capture with the song stopped. What happens to the tempo?
+    options: ["Live works it out from your playing", "it goes to 120", "it stays where it was", "it doubles"]
+    answer: 0
+    why: With the song stopped, Live sets the tempo from the gaps between your notes.
+    whyWrong:
+      1: There's no fixed default here.
+      2: That's when the song was already playing.
+      3: It follows your playing, not a fixed rule.
+
+  - kind: keep
+    next: >-
+      Back to your song: path 3 is next, starting with the kick designer.

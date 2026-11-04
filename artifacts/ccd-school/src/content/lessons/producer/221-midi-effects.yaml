@@ -1,0 +1,113 @@
+slug: midi-effects
+world: producer
+number: 221
+title: midi effects
+minutes: 5
+song:
+  changes: chords.chords
+  why: stacking extra notes onto every chord you play makes your chords fuller without playing more keys
+learn: >-
+  What midi effects are, how they change notes before an instrument hears them, and adding notes to your
+  chords.
+youCan:
+  - say where midi effects sit and what they change
+  - say what Chord and Arpeggiator do
+  - stack extra notes onto your chords
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        A kick with hats on the beats, then eighths, then sixteenths. Imagine your chords played that way:
+        instead of every note at once, one note at a time, stepping up through the chord on the sixteenths.
+        That's an arpeggio, and there's a device that does it for you.
+
+        It's a midi effect. Most effects change sound. A midi effect changes the notes, before the instrument
+        ever hears them.
+      straight: >-
+        Imagine your chord played one note at a time on the sixteenths: an arpeggio. A midi effect does that,
+        changing notes before the instrument hears them.
+      eli5: >-
+        Instead of playing all the notes of a chord at once, you can play them one after another really fast.
+        A midi effect can do that for you.
+
+  - kind: say
+    title: notes in, different notes out
+    say:
+      mentor: >-
+        A midi effect sits before an instrument and rewrites the notes on their way in. Because it only works
+        on notes, not sound, it costs your computer almost nothing.
+
+        Live comes with a handful. Arpeggiator turns held notes into a rhythmic pattern. Chord turns each note
+        into a stack by adding the intervals you set: play one key, hear three. Scale snaps every note into the
+        scale you choose. There are others for transposing, randomising, and changing note length or
+        velocity.
+      straight: >-
+        Midi effects sit before the instrument and rewrite notes. Arpeggiator makes patterns, Chord stacks
+        intervals, Scale snaps notes into key. Almost no cpu.
+      eli5: >-
+        Midi effects change the notes before the instrument plays them. One plays notes one by one. One turns
+        one note into three. One keeps every note in key.
+    deeper:
+      - title: order matters
+        say: >-
+          You can chain midi effects, and each one works on whatever the one before it sends out. Scale before
+          Arpeggiator gives a different result than after. A midi effect placed after the instrument does
+          nothing, because by then the notes have become sound.
+      - title: try this in live
+        say: >-
+          Drop Chord on a midi track and set it to add 4 and 7 semitones: one key now plays a major triad. Add
+          Arpeggiator after it, style up, rate 1/16, and the triad steps up in sixteenths. Put Scale after Chord
+          to force any stacked notes back into your key.
+
+  - kind: shape
+    layer: chords
+    knobs: [voicing, spread]
+    say:
+      mentor: >-
+        Here's your song with your chords. Voicing stacks extra notes onto every note your chords play, the way
+        Live's Chord device adds intervals. Turn it up: first an octave below comes in, then an octave above,
+        then the fifth. Here it happens inside the synth rather than as a midi effect, but you hear the same
+        thing, fuller chords from the same keys.
+
+        Spread detunes the copies a little for width. Keep the chords that fill your song best.
+      straight: >-
+        Voicing adds notes to every chord note: an octave below, an octave above, then the fifth. Spread widens.
+        Same keys, fuller chords. Keep one.
+      eli5: >-
+        Voicing adds more notes to your chords, lower and higher ones, so they sound bigger. Spread makes them
+        wider. Keep the one you like.
+
+  - kind: ask
+    q: Where does a midi effect sit?
+    options: ["before the instrument", "after the instrument", "on the master", "in the browser only"]
+    answer: 0
+    why: It changes notes, so it has to get to them before the instrument turns them into sound.
+    whyWrong:
+      1: After the instrument there are no notes left, only sound.
+      2: The master carries sound, not notes.
+      3: The browser is where you find it, not where it works.
+
+  - kind: ask
+    q: What does an arpeggiator do?
+    options: ["plays held notes one at a time in a pattern", "adds reverb", "makes notes louder", "deletes wrong notes"]
+    answer: 0
+    why: It turns a held chord into a rhythmic pattern of single notes.
+    whyWrong:
+      1: Reverb is an audio effect.
+      2: That's a velocity effect.
+      3: Scale snaps notes into key, it doesn't delete them.
+
+  - kind: ask
+    q: Chord is set to add 4 and 7 semitones. You play one note. How many do you hear?
+    options: ["three", "one", "two", "seven"]
+    answer: 0
+    why: Your note plus the two added intervals makes three, a triad.
+    whyWrong:
+      1: Chord adds the intervals you set.
+      2: Two intervals are added to your one note.
+      3: The numbers are distances, not a count of notes.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, lock your keys to your song's scale.

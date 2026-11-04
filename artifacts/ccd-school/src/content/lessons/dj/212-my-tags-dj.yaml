@@ -1,0 +1,98 @@
+slug: my-tags-dj
+world: dj
+number: 212
+title: my tags
+minutes: 5
+song:
+  changes: drums.clap
+  why: a tag on your song tells you, at two in the morning, exactly where it fits in a set
+learn: >-
+  Labelling tracks by when you'd play them, so the right one is easy to find mid set, starting with your
+  song and the bank.
+youCan:
+  - tag a track by when you'd play it
+  - say why one track can carry several tags
+  - pick tracks that share a tag with your song
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two tracks. Which one is for early in the night, and which for the busiest moment? Mid set, under
+        pressure, you won't remember. Djs decide ahead of time and write it down with tags, their own labels
+        on each track.
+      straight: >-
+        Mid set you won't remember which track is for when. Tags, your own labels, remember for you.
+      eli5: >-
+        Djs put little labels on their songs, like early or busy, so they can find the right one fast.
+
+  - kind: say
+    title: your own labels
+    say:
+      mentor: >-
+        Tags are your words, not the shop's. Warm up, peak, closing, vocal, classic. A track can carry
+        several, so a peak time classic turns up whether you look for peak or for classic.
+
+        Mid set you filter your library to one tag and only the tracks that fit that moment show up. Build
+        your tags a little at a time as you add music, not the night before a gig.
+      straight: >-
+        Tags are your own labels: warm up, peak, closing, classic. A track can have several. Filter by tag mid
+        set. Add them as you go.
+      eli5: >-
+        You make up the labels. A song can have more than one. Then you can show only the songs with one
+        label.
+    deeper:
+      - title: in rekordbox
+        say: >-
+          rekordbox has its own feature for this, called my tag, where you set up your own labels and use them
+          to find tracks.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Here's a tiny library: your song on deck a, seven bank tracks below. Tap through each one on deck b
+        and listen against your song. Give each a tag in your head: warm up, peak or closing.
+
+        Then tag your song. Where would you play it? Find three bank tracks that share its tag. That's your
+        first filtered list.
+      straight: >-
+        Tap through the bank and tag each track warm up, peak or closing. Tag your song. Find three bank
+        tracks with the same tag.
+      eli5: >-
+        Listen to each song and decide: early, busy, or end of the night? Do the same for your song. Find
+        three that match it.
+
+  - kind: ask
+    q: What are tags for?
+    options: ["finding the right track fast mid set", "changing a track's key", "making tracks louder", "exporting audio"]
+    answer: 0
+    why: Filter by a tag and only the right tracks show.
+    whyWrong:
+      1: Tags don't change the music.
+      2: Volume is the fader.
+      3: Exporting is a separate step.
+
+  - kind: ask
+    q: Can one track have more than one tag?
+    options: ["yes, so it turns up under each of them", "no, only one", "only on vinyl", "only if it's your own track"]
+    answer: 0
+    why: More tags, more ways to find it.
+    whyWrong:
+      1: Several is the point.
+      2: Tags are a library thing, not a format thing.
+      3: Any track can be tagged.
+
+  - kind: ask
+    q: When should you build your tags?
+    options: ["a little at a time as you add music", "the night before a gig", "during the set", "never"]
+    answer: 0
+    why: Tagging thousands of tracks at once is overwhelming. A few at a time is easy.
+    whyWrong:
+      1: Too late, too many.
+      2: Mid set you need them already done.
+      3: Without them you're searching under pressure.
+
+  - kind: keep
+    next: >-
+      Back to the song path: key and harmonic mixing.

@@ -1,0 +1,109 @@
+slug: granulator-iii
+world: producer
+number: 249
+title: granulator iii
+minutes: 5
+song:
+  changes: chords.chords
+  why: chords that swell in and hang in the air like a cloud give your song a soft, floating layer
+learn: >-
+  How granular synthesis turns a recording into clouds of tiny grains, the controls that shape them, and a
+  cloud-like swell on your own chords.
+youCan:
+  - say what a grain is
+  - say what position, grain size and spray do
+  - turn your chords into a slow, floating swell
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        Hats on the beats, then eighths, then sixteenths. The hits get closer and closer together. Keep going,
+        hundreds of hits a second, each one a tiny overlapping sliver of sound, and you stop hearing hits at
+        all. You hear a smooth, shimmering texture.
+
+        That's granular synthesis. It takes a recording and plays it as thousands of tiny overlapping pieces
+        called grains. Even a single spoken word can become a long, glowing pad.
+      straight: >-
+        Hits closer and closer together. Granular synthesis plays a recording as thousands of tiny overlapping
+        pieces, grains, which blur into a smooth texture.
+      eli5: >-
+        If you chop a sound into tiny, tiny bits and play lots of them at once, it turns into a soft, shimmery
+        cloud. Those tiny bits are called grains.
+
+  - kind: say
+    title: position, size, spray
+    say:
+      mentor: >-
+        Position is where in the recording the grains come from. Move it and you scrub through the sound, so
+        the colour morphs as you go. Put an lfo on it and the texture keeps slowly changing.
+
+        Grain size is how long each grain is. Big grains keep the recording recognisable and smooth. Tiny
+        grains lose the original and get glitchy and buzzy.
+
+        Spray scatters where each grain starts, a little randomly, which makes the cloud shimmer instead of
+        sounding frozen. Spread does the same thing across left and right, for width.
+      straight: >-
+        Position: where in the recording grains come from. Grain size: big is smooth, small is glitchy. Spray:
+        random start points for shimmer. Spread: random left and right for width.
+      eli5: >-
+        Position picks which part of the sound to use. Grain size picks how big the bits are. Spray mixes them
+        up a little so it sparkles.
+    deeper:
+      - title: granulator iii in live
+        say: >-
+          Granulator III comes with Live 12. Drop a sample into it and play it from the keys: the keyboard sets
+          the pitch of the grains. It's great on vocals, field recordings and any sound you want to hold
+          suspended in time, and it can play grains backwards too.
+
+  - kind: shape
+    layer: chords
+    knobs: [attack, release, spread, send]
+    say:
+      mentor: >-
+        Our chords don't have a granular engine, so you'll make the kind of sound granular is loved for: a soft
+        cloud that floats. Your song is playing.
+
+        Raise attack so each chord swells in instead of starting with a hit. Raise release so it hangs after
+        the notes stop and the chords overlap. Spread widens the voicing, and send puts it in the reverb so it
+        blurs at the edges. Keep it if your chords now float above the beat.
+      straight: >-
+        Make your chords a cloud: longer attack to swell in, longer release to hang on, spread for width, send
+        for reverb. Keep it.
+      eli5: >-
+        Make your chords fade in slowly and fade out slowly. Add a big room with send. Now they float like a
+        cloud.
+
+  - kind: ask
+    q: What is a grain?
+    options: ["a tiny piece of a recording", "a whole drum loop", "a type of filter", "a midi note"]
+    answer: 0
+    why: Granular synthesis plays a recording as thousands of tiny overlapping pieces.
+    whyWrong:
+      1: A loop is much longer than a grain.
+      2: A filter shapes tone; a grain is sound.
+      3: A note says what to play; a grain is the sound itself.
+
+  - kind: ask
+    q: You make the grains very small. What happens?
+    options: ["it gets glitchy and loses the original sound", "it sounds cleaner and smoother", "the pitch drops an octave", "it gets louder"]
+    answer: 0
+    why: Tiny grains break up the recording's character into texture.
+    whyWrong:
+      1: Bigger grains are smoother.
+      2: The keyboard sets the pitch.
+      3: Size isn't level.
+
+  - kind: ask
+    q: What does spray do?
+    options: ["scatters where each grain starts, for shimmer", "sets the volume", "changes the tempo", "removes the reverb"]
+    answer: 0
+    why: Random start points keep the cloud moving and alive.
+    whyWrong:
+      1: Level is separate.
+      2: Tempo is untouched.
+      3: Spray has nothing to do with reverb.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try collision, tension and electric for physical-model voices.

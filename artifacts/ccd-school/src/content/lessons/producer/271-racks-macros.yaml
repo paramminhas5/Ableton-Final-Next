@@ -1,0 +1,102 @@
+slug: racks-macros
+world: producer
+number: 271
+title: racks and macros
+minutes: 5
+song:
+  changes: lead.lead
+  why: moving the filter and the space together turns two settings on your lead into one sweep
+learn: >-
+  What a rack and a macro are, how a macro's ranges work, and two of your lead's knobs moved as one.
+youCan:
+  - say what a rack and a macro are
+  - say how one macro can move knobs in opposite directions
+  - map a parameter to a macro in Live
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Build a sound with a filter, an echo and a reverb and you've got a dozen knobs. A rack wraps all
+        those devices into one, and a macro is a big knob on the front that turns several of the knobs inside
+        at once. One twist, and the filter opens while the reverb rises.
+      straight: >-
+        A rack wraps several devices into one. A macro is one knob that turns several knobs inside it.
+      eli5: >-
+        A macro is one big knob that turns lots of little knobs at the same time.
+
+  - kind: say
+    title: ranges
+    say:
+      mentor: >-
+        Each knob a macro moves gets its own range, a minimum and a maximum. So one macro can sweep your
+        cutoff all the way while only nudging the reverb a little.
+
+        Flip a range, maximum below minimum, and that knob moves the other way. One macro can open a filter
+        while it closes a reverb.
+      straight: >-
+        Each mapped knob has its own min and max. Flip them and that knob moves the other way.
+      eli5: >-
+        You can tell the big knob how far to turn each little knob, and even to turn one backwards.
+    deeper:
+      - title: racks in live
+        say: >-
+          Select devices on a track and press Cmd+G on a Mac or Ctrl+G on Windows to put them in a rack.
+          Inside, chains run side by side and Live mixes them together.
+      - title: mapping
+        say: >-
+          Right-click a parameter inside a rack and map it to a macro. Since Live 11 a rack can have up to 16
+          macros. Set each mapping's Min and Max so the knob only moves as far as you want.
+      - title: don't overload
+        say: >-
+          Mapping too many things to one macro turns it to mush. Two or three is often plenty.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, send]
+    say:
+      mentor: >-
+        Here's your lead with two knobs a macro could join: cutoff and send. Move them together, cutoff up as
+        send goes up, and hear your lead open out and move back into the room in one sweep. That pair is
+        exactly what you'd put on one macro in Live.
+
+        Leave them where your lead sounds best.
+      straight: >-
+        Cutoff and send, moved together like one macro. Open both, hear the sweep, leave them where you like.
+      eli5: >-
+        Turn both knobs up at the same time, like one big knob would. Hear your tune get brighter and further
+        away.
+
+  - kind: ask
+    q: What is a macro?
+    options: ["one knob that moves several knobs at once", "a very long sample", "a kind of eq", "the master fader"]
+    answer: 0
+    why: One twist, several changes.
+    whyWrong:
+      1: Samples are recordings.
+      2: Eq is one effect a macro might control.
+      3: The master fader sets the whole song's level.
+
+  - kind: ask
+    q: What does a rack do?
+    options: ["wraps several devices into one", "records audio", "sets the tempo", "makes a part mono"]
+    answer: 0
+    why: Several devices, one container, with macros on the front.
+    whyWrong:
+      1: Recording is the arm button.
+      2: Tempo is the song's speed.
+      3: Racks don't change stereo.
+
+  - kind: ask
+    q: How can one macro open a filter while closing a reverb?
+    options: ["flip one range so its max is below its min", "use two songs", "turn the tempo down", "it can't"]
+    answer: 0
+    why: A flipped range moves that knob the other way.
+    whyWrong:
+      1: It all happens in one rack.
+      2: Tempo has nothing to do with it.
+      3: Flipped ranges make it easy.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, sections. Your loop becomes a song.

@@ -1,0 +1,102 @@
+slug: groove-pool
+world: producer
+number: 279
+title: groove pool
+minutes: 5
+song:
+  changes: hats.hats
+  why: a groove pushes some of your hats a little late, and your beat starts to bounce
+learn: >-
+  What groove is, how Live's groove pool copies feel from one clip to another, and swing on your song.
+youCan:
+  - say what groove is
+  - say what the groove pool does
+  - swing your hats by ear
+steps:
+  - kind: hear
+    clip: straight-vs-swung
+    say:
+      mentor: >-
+        Every great loop has a feel. Some notes land a hair early or late against the grid, some hits are
+        harder than others. That feel is called groove.
+
+        Listen: the same beat played straight, then swung. Same notes, but the second one moves.
+      straight: >-
+        Groove is the feel: notes slightly off the grid, some harder than others. Straight, then swung.
+      eli5: >-
+        Listen to the same beat twice. The second one bounces. That bounce is called groove.
+
+  - kind: say
+    title: the groove pool
+    say:
+      mentor: >-
+        Live's groove pool lets you copy the feel out of one clip and put it on another. Drag a clip into it
+        and Live makes a groove from where its notes land and how hard they hit. Drop that groove on your hats
+        and they pick up the same feel.
+
+        Swing is the simplest groove there is: every off sixteenth pushed a little late.
+      straight: >-
+        The groove pool copies the timing and hit strength of one clip onto another. Swing is the simplest
+        groove: off sixteenths pushed late.
+      eli5: >-
+        You can copy the bounce from one beat and stick it on another.
+    deeper:
+      - title: groove settings
+        say: >-
+          A groove has a few controls. Timing sets how strongly it moves notes, Velocity how strongly it
+          changes how hard they hit, and Random adds a small difference to each note. Base sets which note
+          length it works on, and Quantize how much the notes snap to the grid first.
+      - title: commit
+        say: >-
+          Commit writes the groove into the notes for good. After that, the clip no longer follows the groove.
+      - title: not on everything
+        say: >-
+          The same groove at full strength on every part can make everything feel the same. Many producers
+          use it lightly, on a few parts.
+
+  - kind: tempo
+    set: swing
+    say:
+      mentor: >-
+        Here's your song with a swing knob. Turn it up and listen to your hats: the off sixteenths start to
+        land late and the beat begins to bounce. Your kick and clap stay where they are.
+
+        A little is a gentle shuffle, a lot is a heavy one. Stop where it makes you want to move.
+      straight: >-
+        Swing pushes the off sixteenths late. Kick and clap stay put. Stop where it feels good.
+      eli5: >-
+        Turn swing up and your hats start to bounce. Stop when it makes you want to dance.
+
+  - kind: ask
+    q: What is groove?
+    options: ["the feel of where notes land and how hard they hit", "the song's key", "a kind of reverb", "the number of bars"]
+    answer: 0
+    why: Timing and hit strength, just off the grid.
+    whyWrong:
+      1: Key is about which notes.
+      2: Reverb is space.
+      3: Bars are length.
+
+  - kind: ask
+    q: What does the groove pool do?
+    options: ["copies the feel of one clip onto another", "stores your samples", "makes a song louder", "records a vocal"]
+    answer: 0
+    why: Drag in a clip, then apply its groove anywhere.
+    whyWrong:
+      1: Samples live in the browser.
+      2: Loudness is the limiter's job.
+      3: Recording is a different job.
+
+  - kind: ask
+    q: What does swing move?
+    options: ["the off sixteenths, a little late", "every kick", "the whole song faster", "only the bass"]
+    answer: 0
+    why: Kick and clap stay put. The notes in between move.
+    whyWrong:
+      1: Kicks on the beat don't move.
+      2: Tempo stays the same.
+      3: It moves any part on those off sixteenths.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, the breakdown and the drop.

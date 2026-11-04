@@ -1,0 +1,108 @@
+slug: arrangement-view
+world: producer
+number: 273
+title: arrangement view
+minutes: 5
+song:
+  changes: drums.kick
+  why: laying your sections out left to right gives your loop a beginning, a middle and an end
+learn: >-
+  The timeline, how a song is laid out from left to right, and your sections arranged on it.
+youCan:
+  - read a song laid out on a timeline
+  - arrange your parts across sections
+  - switch between Live's two views
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        There are two ways to look at a song. One is a set of loops you can launch in any order, great for
+        jamming. The other is a timeline: the whole song laid out from left to right, first bar to last,
+        like a line of text.
+
+        Live calls the timeline arrangement view, and it's where a loop becomes a finished song.
+      straight: >-
+        Two ways to see a song: loops to launch, or a timeline from start to finish. The timeline is
+        arrangement view.
+      eli5: >-
+        A timeline shows your whole song in a line, from the start on the left to the end on the right.
+
+  - kind: say
+    title: parts on a line
+    say:
+      mentor: >-
+        On a timeline, each part is a lane running across, and time moves from left to right. You can see at
+        a glance where the drums drop out, how long the break lasts and where the drop lands.
+
+        Sections tend to come in 8 or 16 bar blocks, so changes land where dancers and djs expect them.
+      straight: >-
+        Each part is a lane, time runs left to right. Sections usually come in 8 or 16 bar blocks.
+      eli5: >-
+        Each sound gets its own row. You read it from left to right, like a book.
+    deeper:
+      - title: two views in live
+        say: >-
+          Live has Session view, a grid of clips you launch, and Arrangement view, the timeline. Press Tab to
+          switch between them.
+      - title: recording a jam
+        say: >-
+          Turn on Arrangement Record in the transport and play. Live records the clips you launch in Session
+          view onto the timeline.
+      - title: back to arrangement
+        say: >-
+          Launch a Session clip while the arrangement plays and that track follows the clip instead. The Back
+          to Arrangement button lights up. Click it and the timeline takes over again.
+      - title: locators
+        say: >-
+          Add a locator from the Create menu to mark where each section starts, then jump between them.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as a timeline: sections from left to right, each with its length in bars, and the
+        total running time at the top. Each row is one of your parts.
+
+        Switch a few parts off in the intro and the break, then play it through and watch the playhead
+        travel across your song.
+      straight: >-
+        Sections left to right, parts as rows. Switch parts off in the intro and break, then play it through.
+      eli5: >-
+        Tap squares to turn sounds off in some parts of your song. Press play and watch it move from left to
+        right.
+
+  - kind: ask
+    q: On a timeline, which way does time run?
+    options: ["left to right", "top to bottom", "right to left", "it doesn't move"]
+    answer: 0
+    why: First bar on the left, last bar on the right.
+    whyWrong:
+      1: Parts are stacked top to bottom. Time runs across.
+      2: It's the other way.
+      3: The playhead travels across it.
+
+  - kind: ask
+    q: What is arrangement view for?
+    options: ["laying out the whole song from start to finish", "launching loops in any order", "tuning the kick", "setting eq"]
+    answer: 0
+    why: It's the timeline, where the finished song lives.
+    whyWrong:
+      1: That's Session view.
+      2: That's the kick's own knobs.
+      3: Eq lives on each track.
+
+  - kind: ask
+    more: true
+    q: In Live, which key switches between Session and Arrangement view?
+    options: ["Tab", "Space", "A", "Enter"]
+    answer: 0
+    why: Tab flips between the two.
+    whyWrong:
+      1: Space starts and stops playback.
+      2: A shows automation in Arrangement view.
+      3: Enter isn't the view switch.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, variation and fills.

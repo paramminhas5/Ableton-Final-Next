@@ -1,0 +1,121 @@
+slug: scale-awareness
+world: producer
+number: 222
+title: scale awareness in live 12
+minutes: 5
+song:
+  changes: lead.lead
+  why: one scale for the whole song keeps every note you play in key, so nothing clashes
+learn: >-
+  Setting one scale for your whole song, why every part following it keeps things in key, and how Live 12
+  does it across the project.
+youCan:
+  - say what a song-wide scale does
+  - pick your song's scale and play in it
+  - say where Live 12 keeps the project's scale
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        A low note, then a high one. Between them on a keyboard are a dozen keys, and only some of them belong
+        to your song. The set of notes a song draws from is its scale, usually seven of the twelve.
+
+        Set the scale once for the whole song and something nice happens: every part, every key you press, can
+        follow it. You can't play a wrong note.
+      straight: >-
+        A scale is the set of notes a song uses, usually seven of twelve. Set it once and every part follows,
+        so nothing clashes.
+      eli5: >-
+        Only some notes belong in your song. That group of notes is the scale. Pick it once and every key you
+        play fits.
+
+  - kind: tempo
+    set: scale
+    choices: [minor, major]
+    say:
+      mentor: >-
+        Here's your song. Switch between minor and major while it plays and listen to the mood change. Minor
+        tends to sound darker, major brighter. Every part moves with you, because they all follow this one
+        setting.
+
+        Keep the one that fits your song.
+      straight: >-
+        Minor sounds darker, major brighter. Every part follows. Keep one.
+      eli5: >-
+        Minor sounds a bit sad. Major sounds happy. Your whole song changes. Pick one.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now play a few notes over your song. The keys only offer notes from the scale you just picked, so play
+        anything, fast or slow, high or low. It all fits. That's scale awareness: the song knows its key, and so
+        do your fingers.
+      straight: >-
+        Play a few notes. The keys only offer your scale, so everything fits.
+      eli5: >-
+        Play any keys you like. They're all in your scale, so they all sound good.
+
+  - kind: say
+    title: scale awareness in live
+    say:
+      mentor: >-
+        Live 12 added this across the whole project. You set a root note and a scale, like a minor or c major,
+        and it's shown in the control bar. Midi clips can follow it or use their own. The Scale midi effect
+        follows it automatically, and on Push 3 the pads can hide notes that aren't in the scale.
+
+        The root note is the home note the scale is built on. In a minor, everything feels like it wants to
+        come back to a.
+      straight: >-
+        Live 12 keeps a project-wide root and scale in the control bar. Clips can follow or override it. Scale
+        and Push 3 follow it too. The root is the home note.
+      eli5: >-
+        In Live 12 you pick the scale once, at the top, and lots of tools follow it. The root is the note that
+        feels like home.
+    deeper:
+      - title: fold to scale
+        say: >-
+          Right-click notes in a midi clip to fold them into the scale or transpose them while staying in it.
+          The Scale device has a fold mode that squeezes the keyboard so every key plays an in-scale note, no
+          gaps.
+      - title: watch the order
+        say: >-
+          If your song changes key, update the scale too, or your devices keep pushing notes into the old one.
+          And put Scale after Chord, not before, so the stacked notes get pulled into key.
+
+  - kind: ask
+    q: What is a scale?
+    options: ["the set of notes a song draws from", "how fast the song is", "how loud the song is", "the order of sections"]
+    answer: 0
+    why: A scale is the group of notes the song uses, usually seven of the twelve.
+    whyWrong:
+      1: That's tempo.
+      2: That's level.
+      3: That's arrangement.
+
+  - kind: ask
+    q: Why set one scale for the whole song?
+    options: ["so every part stays in key", "so it plays faster", "so it gets louder", "so it changes key each bar"]
+    answer: 0
+    why: When every part follows the same scale, nothing clashes.
+    whyWrong:
+      1: Scale has nothing to do with speed.
+      2: Scale has nothing to do with loudness.
+      3: It keeps the key steady.
+
+  - kind: ask
+    q: In Live 12, where do you see the project's scale?
+    options: ["the control bar", "the browser", "the mixer", "the info view"]
+    answer: 0
+    why: Live 12 shows the root and scale in the control bar along the top.
+    whyWrong:
+      1: The browser holds sounds.
+      2: The mixer sets levels.
+      3: The info view explains controls you hover over.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, keeping a take you didn't mean to record.

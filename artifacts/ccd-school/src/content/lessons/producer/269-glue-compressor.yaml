@@ -1,0 +1,109 @@
+slug: glue-compressor
+world: producer
+number: 269
+title: glue compressor
+minutes: 5
+song:
+  changes: drums.kick
+  why: a gentle squeeze on the whole song makes your parts move together like one record
+learn: >-
+  What a bus compressor does, how much is enough, and glue on your whole song.
+youCan:
+  - say what a compressor does
+  - say how much glue is usually enough
+  - hear when glue starts to pump
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A compressor turns a sound down when it gets loud, then lets it back up. Put a gentle one across your
+        whole song and every part starts to breathe together. Engineers call that glue.
+
+        When it's working you barely notice it. When it's missing, the parts sound like separate sounds that
+        happen to be playing at the same time.
+      straight: >-
+        A compressor turns loud moments down. A gentle one on the whole song makes the parts move together:
+        glue.
+      eli5: >-
+        A compressor is like a hand that turns the sound down a little when it gets too loud. It makes all
+        your sounds feel stuck together.
+
+  - kind: say
+    title: how much
+    say:
+      mentor: >-
+        Glue is subtle. Gain reduction is how much the compressor is turning things down at any moment, and
+        on a master engineers usually aim for about 1 to 3 dB of it.
+
+        Push it to 6 dB or more and you start to hear it pump: the whole mix ducking on every kick. Sometimes
+        that's the sound you want. On a master, usually not.
+      straight: >-
+        Gain reduction is how much it turns down. For glue, about 1 to 3 dB. At 6 dB or more it pumps.
+      eli5: >-
+        A little bit of squeeze is glue. Too much and the whole song bounces up and down with the kick.
+    deeper:
+      - title: glue compressor in live
+        say: >-
+          Live's Glue Compressor is modelled on a classic console bus compressor. A common bus setting is a
+          ratio of 4 to 1, attack around 10 ms and release on auto, then threshold down until the meter shows
+          1 to 3 dB of gain reduction.
+      - title: the sidechain filter
+        say: >-
+          Its sidechain high-pass filter stops the kick's lowest notes from driving the compressor, so the
+          whole mix doesn't duck on every beat.
+      - title: a little in two places
+        say: >-
+          Many producers use a light Glue Compressor on the drum group and another on the master, rather than
+          a lot in one place.
+      - title: check with bypass
+        say: >-
+          Switch it off and on. If you can't hear any difference, it may not be doing much.
+
+  - kind: tempo
+    set: glue
+    say:
+      mentor: >-
+        Your whole song, with glue on the master. Turn glue up slowly and listen to your drums and bass lock
+        together. Keep going until you hear the mix pump on the kick, then back off to just before that.
+        That's usually the sweet spot.
+
+        Leave out where it is for now. The next lesson is all about it.
+      straight: >-
+        Turn glue up until you hear pumping, then back off a little. Leave out alone for now.
+      eli5: >-
+        Turn glue up until your song starts to bounce, then turn it back down a little.
+
+  - kind: ask
+    q: What does a compressor do?
+    options: ["turns a sound down when it gets loud", "adds echo", "changes the pitch", "speeds up the song"]
+    answer: 0
+    why: Loud moments come down, then it lets go.
+    whyWrong:
+      1: That's a delay.
+      2: Pitch is untouched.
+      3: Tempo stays the same.
+
+  - kind: ask
+    q: How much gain reduction do engineers usually aim for as glue on a master?
+    options: ["about 1 to 3 dB", "about 20 dB", "none at all", "as much as possible"]
+    answer: 0
+    why: Glue is subtle. More starts to pump.
+    whyWrong:
+      1: That would squash the life out of it.
+      2: Then it isn't doing anything.
+      3: Too much pumps and tires the ear.
+
+  - kind: ask
+    q: What does too much glue sound like?
+    options: ["the whole mix pumps on every kick", "the song slows down", "the hats disappear", "it adds reverb"]
+    answer: 0
+    why: The compressor ducks everything each time the kick hits.
+    whyWrong:
+      1: Tempo doesn't change.
+      2: The hats get squeezed too, but they don't vanish.
+      3: A compressor adds no space.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, sections. Your loop becomes a song.

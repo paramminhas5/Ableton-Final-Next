@@ -1,0 +1,91 @@
+slug: genre-strategy-dj
+world: dj
+number: 219
+title: genre strategy
+minutes: 5
+song:
+  changes: drums.clap
+  why: your song has a sound, and the set you build around it says who you are as a dj
+learn: >-
+  Knowing your sound, playing to the room, and building a short set around your own song's genre.
+youCan:
+  - describe your sound in tempo and style
+  - pick tracks that sit around your song
+  - say how to widen your sound without losing it
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A house groove at 124. A dj known for this sound gets booked for the nights that want it. That's your
+        sound: the genres, the tempo range and the energy people know you for.
+      straight: >-
+        Your sound is the genres, tempo range and energy you're known for. It's what gets you booked.
+      eli5: >-
+        Every dj has a kind of music they're known for. That's their sound.
+
+  - kind: say
+    title: your sound
+    say:
+      mentor: >-
+        Some djs are specialists, deep in one genre. Others are eclectic and range across many. Either works
+        if it's clearly you, because promoters book the sound they can count on.
+
+        Widen it slowly, into neighbouring genres: deep house to tech house to techno, not house to drum and
+        bass overnight. And let the venue set the range. A warehouse techno night isn't a beach bar.
+
+        Above all, play music you love. A crowd can hear when you mean it.
+      straight: >-
+        Specialist or eclectic, be clearly you. Widen into neighbouring genres slowly. Fit the venue. Play
+        what you love.
+      eli5: >-
+        Play the music you love most. Add new kinds slowly. Think about where you're playing.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Build a tiny set around your song. Look at its bpm on deck a and think about which genre it sits in.
+
+        Then tap through the bank and keep the tracks that belong in the same world: close in tempo on their
+        chips, and a groove that sits with yours when you play them against your song. Three that belong is a
+        set with a sound.
+      straight: >-
+        Find your song's genre from its bpm. Tap through the bank and keep three tracks that sit with it in
+        tempo and groove.
+      eli5: >-
+        Listen to each other song with yours. Keep three that feel like they belong together.
+
+  - kind: ask
+    q: Why does a clear sound help a dj get booked?
+    options: ["promoters know what you'll deliver", "it means fewer bookings", "it makes beatmatching easier", "clubs require it"]
+    answer: 0
+    why: A promoter books the sound they can count on.
+    whyWrong:
+      1: It usually means the right bookings.
+      2: Beatmatching is the same either way.
+      3: It's not a rule.
+
+  - kind: ask
+    q: How should you widen your sound?
+    options: ["step into neighbouring genres gradually", "jump to unrelated genres", "change it every gig", "never widen it"]
+    answer: 0
+    why: Neighbouring genres keep it sounding like you.
+    whyWrong:
+      1: Big jumps lose your identity.
+      2: Then nobody knows what to expect.
+      3: Sounds grow as taste grows.
+
+  - kind: ask
+    q: What is a specialist dj?
+    options: ["one who goes deep in one genre", "one with the most gear", "one who plays every genre", "one who only plays vinyl"]
+    answer: 0
+    why: Depth in one niche.
+    whyWrong:
+      1: Gear doesn't make a specialist.
+      2: That's an eclectic dj.
+      3: Format isn't the point.
+
+  - kind: keep
+    next: >-
+      Back to the song path: effects in performance.

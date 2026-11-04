@@ -1,0 +1,134 @@
+slug: chord-types
+world: foundations
+number: 213
+title: chord types
+minutes: 5
+song:
+  changes: chords.chords
+  why: swapping one chord for a different type changes the feeling of your whole song
+learn: >-
+  The four kinds of three-note chord, sevenths and sus chords, and minor, major and diminished chords played
+  into your own song.
+youCan:
+  - say how major, minor and diminished chords are built
+  - say what a seventh and a sus chord add
+  - hear the difference between chord types in your song
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One note on its own has no mood yet. Stack two more on top of it and suddenly it's happy, sad, tense
+        or dreamy, depending on exactly which two you pick. The kind of chord you build is called its type,
+        or its quality.
+      straight: >-
+        A chord's type, or quality, is decided by which notes are stacked on its root. Same root, different
+        stack, different mood.
+      eli5: >-
+        One note is just one note. Put two more on top and it can sound happy, sad or scary. Which notes you
+        add decides the feeling.
+
+  - kind: say
+    title: the four triads
+    say:
+      mentor: >-
+        A triad is three notes. Count the semitones between them. Major stacks 4 then 3, and sounds bright.
+        Minor stacks 3 then 4, and sounds dark. Diminished stacks 3 then 3, and sounds tense. Augmented stacks
+        4 then 4, and sounds floating and unfinished.
+
+        The only difference between major and minor is the middle note, one semitone apart. One tiny move,
+        and the whole mood flips.
+      straight: >-
+        Major 4 plus 3, bright. Minor 3 plus 4, dark. Diminished 3 plus 3, tense. Augmented 4 plus 4, floating.
+        Major and minor differ by one semitone in the middle note.
+      eli5: >-
+        Three-note chords come in four flavours: happy, sad, spooky and dreamy. Moving the middle note by
+        one tiny step changes happy into sad.
+
+  - kind: play
+    layer: chords
+    surface: pads
+    goal: {notes: 3}
+    say:
+      mentor: >-
+        Now hear them in your song. This replaces your chords, so keep it at the end only if you like it.
+
+        Each pad is a chord built from your scale, and its label tells you the type. A small roman numeral is
+        a minor chord. A capital one is major. The one with a little circle after it is diminished.
+        Press rec, wait out the count-in, and play a minor one, then a major one, then the diminished one.
+        Listen to how the diminished chord leans on the edge of its seat.
+      straight: >-
+        Replaces your chords. Small numeral is minor, capital is major, the circle is diminished. Rec,
+        count-in, then play one of each.
+      eli5: >-
+        Press rec and wait for four ticks. Play a pad with a small letter (sad), a pad with a big letter
+        (happy), and the pad with a tiny circle (spooky).
+    hint: Lowercase numeral, then capital numeral, then the one with the circle.
+
+  - kind: say
+    title: sevenths and sus
+    say:
+      mentor: >-
+        Add a fourth note a third above the top of a triad and you get a seventh chord. Major triad plus a
+        major seventh is a major 7, lush and dreamy. Major triad plus a minor seventh is a dominant 7, bluesy
+        and tense, itching to move. Minor triad plus a minor seventh is a minor 7, smooth and soulful.
+
+        A sus chord swaps the middle note for the second or the fourth. Without that middle note it's neither
+        major nor minor, so it sounds open and undecided. Pop and electronic music use sus chords everywhere.
+        The pads here play triads, so sevenths and sus chords are for when you write in Live.
+      straight: >-
+        Sevenths add a fourth note. Major 7 is lush, dominant 7 tense, minor 7 smooth. Sus chords swap the
+        middle note for the second or fourth, so they're open, neither major nor minor.
+      eli5: >-
+        Add a fourth note and chords get fancier: dreamy, bluesy or smooth. Take out the middle note and the
+        chord can't decide if it's happy or sad.
+    deeper:
+      - title: why diminished is tense
+        say: >-
+          Three plus three semitones makes six from bottom to top, the tritone, the most unstable interval
+          there is. That's also what's inside a dominant 7, and why both want to move on.
+
+  - kind: ask
+    q: A minor triad stacks
+    options: ["3 then 4 semitones", "4 then 3 semitones", "3 then 3 semitones", "4 then 4 semitones"]
+    answer: 0
+    why: Minor puts the smaller gap at the bottom.
+    whyWrong:
+      1: That's major.
+      2: That's diminished.
+      3: That's augmented.
+
+  - kind: ask
+    q: What makes a diminished chord tense?
+    options: ["it contains a tritone", "it has four notes", "it's played faster", "it uses a major third"]
+    answer: 0
+    why: Three plus three is six semitones, the tritone, the most unstable interval.
+    whyWrong:
+      1: A diminished triad has three notes.
+      2: Speed has nothing to do with it.
+      3: Its bottom gap is a minor third, three semitones.
+
+  - kind: ask
+    q: A sus chord replaces the middle note with
+    options: ["the second or the fourth", "the seventh", "an octave", "nothing at all"]
+    answer: 0
+    why: Suspended chords swap the third for a second or fourth, so they're neither major nor minor.
+    whyWrong:
+      1: Adding the seventh makes a seventh chord.
+      2: An octave is the root again.
+      3: It still has three notes.
+
+  - kind: ask
+    more: true
+    q: Which seventh chord pulls hardest towards home?
+    options: ["dominant 7", "major 7", "minor 7", "sus 4"]
+    answer: 0
+    why: The tritone inside it wants to resolve.
+    whyWrong:
+      1: Major 7 is lush and settled.
+      2: Minor 7 is smooth and relaxed.
+      3: Sus 4 is open, but not a seventh chord.
+
+  - kind: keep
+    next: >-
+      Back to the harmony path. Next: chord progressions, four chords in a row.

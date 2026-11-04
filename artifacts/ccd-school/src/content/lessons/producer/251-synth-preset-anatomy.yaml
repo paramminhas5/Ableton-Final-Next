@@ -1,0 +1,106 @@
+slug: synth-preset-anatomy
+world: producer
+number: 251
+title: preset anatomy
+minutes: 5
+song:
+  changes: lead.lead
+  why: knowing what each knob on your lead does means you can fix it on purpose instead of by luck
+learn: >-
+  Every preset is built from the same few parts. Take your own lead apart one knob at a time and hear what
+  each one was doing.
+youCan:
+  - name the parts every preset is built from
+  - tell a pad, a pluck, a bass and a lead apart by their envelopes
+  - hear what each knob on your lead is doing
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Three shapes, the very first choice in any synth sound. A preset is a saved set of choices like this
+        one, all made for you: a shape, a filter setting, an envelope, some movement, some effects.
+
+        Presets are a great way to learn, if you open them up. Change one knob, listen, put it back. Every
+        choice in a good preset is there for a reason, and you can hear the reason.
+      straight: >-
+        A preset is a saved set of choices: shape, filter, envelope, movement, effects. Change one knob at a
+        time and listen to learn why it's set that way.
+      eli5: >-
+        A preset is a sound someone already made and saved. Turn one knob at a time to see what each one does.
+
+  - kind: say
+    title: the same parts, every time
+    say:
+      mentor: >-
+        Almost every synth preset is the same chain. An oscillator picks the raw shape. A filter sets the
+        brightness. An amp envelope shapes the volume of each note over time, and a filter envelope moves the
+        brightness. Modulation adds movement, and effects add space.
+
+        The amp envelope alone tells you a lot. A pad has a slow attack, holds, and fades out slowly. A pluck
+        has a fast attack and dies away quickly. A bass starts instantly and stops cleanly.
+      straight: >-
+        Oscillator, filter, amp envelope, filter envelope, modulation, effects. Slow attack and release is a
+        pad, fast attack and quick decay is a pluck, fast and clean is a bass.
+      eli5: >-
+        Every sound is built the same way: a shape, a brightness knob, and knobs for how each note starts and
+        ends. A slow start sounds like a pad. A quick start and quick end sounds like a pluck.
+    deeper:
+      - title: opening a preset in live
+        say: >-
+          Load any preset in Wavetable or Operator and read it in that order: oscillator shapes, filter cutoff
+          and resonance, the amp envelope, the filter envelope, the modulation matrix, then the effects after
+          the synth. Turn one control at a time and listen before you move on.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff, env, release]
+    say:
+      mentor: >-
+        Here are four of the knobs that make your lead what it is, with your song playing. Take it apart one at
+        a time. Swing wave to each end and back: that's the raw shape. Sweep cutoff: that's the brightness.
+        Turn env off and on: that's the brightness moving on each note. Shorten and lengthen release: that's
+        how each note ends.
+
+        For each one, ask what your lead would lose without it. Then set them all where your song sounds best,
+        and keep it.
+      straight: >-
+        Four knobs on your lead: wave is shape, cutoff is brightness, env is movement per note, release is how
+        notes end. Move each one, hear what it does, set them and keep it.
+      eli5: >-
+        Turn each knob all the way one way, then the other, and listen. Then put them where your tune sounds
+        best.
+
+  - kind: ask
+    q: Slow attack, holding, slow release. What kind of preset is it?
+    options: ["a pad", "a pluck", "a bass", "a kick"]
+    answer: 0
+    why: Fading in, holding and fading out is the pad shape.
+    whyWrong:
+      1: A pluck starts fast and dies quickly.
+      2: A bass starts instantly.
+      3: A kick is a drum hit.
+
+  - kind: ask
+    q: What's the best way to learn from a preset?
+    options: ["change one knob at a time and listen", "change everything at once", "never touch it", "only read its name"]
+    answer: 0
+    why: One change at a time tells you exactly what each knob was doing.
+    whyWrong:
+      1: Then you can't tell which change did what.
+      2: You learn by listening to changes.
+      3: The name doesn't tell you how it works.
+
+  - kind: ask
+    q: Which part of the chain mostly decides how bright a preset is?
+    options: ["the filter", "the amp envelope", "the tempo", "the pan"]
+    answer: 0
+    why: The filter cutoff lets more or fewer harmonics through.
+    whyWrong:
+      1: The amp envelope shapes volume over time.
+      2: Tempo is the song's speed.
+      3: Pan is left and right.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try build your own patch from scratch.

@@ -1,0 +1,107 @@
+slug: automation
+world: producer
+number: 276
+title: automation
+minutes: 5
+song:
+  changes: lead.lead
+  why: a filter opening slowly over a few bars builds tension in your song
+learn: >-
+  What automation is, how it moves a knob over time, and your lead's cutoff swept by hand.
+youCan:
+  - say what automation and breakpoints are
+  - sweep a filter like automation would
+  - show automation lanes in Live
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        A song that never changes gets dull fast. Automation is a knob moving on its own over time: a filter
+        slowly opening over 8 bars, a fade in, a reverb swelling before a drop. You draw the move once and the
+        song plays it back exactly the same, every time.
+      straight: >-
+        Automation moves a knob over time, like a filter opening over 8 bars. Draw it once, it plays every
+        time.
+      eli5: >-
+        Automation is like a robot that turns a knob for you while the song plays, the same way every time.
+
+  - kind: say
+    title: drawing a move
+    say:
+      mentor: >-
+        Automation is drawn as a line under a part, with breakpoints, the dots where the line changes
+        direction. Line goes up, knob goes up. Flat line, the knob holds still.
+
+        A filter sweep is the classic: cutoff low and muffled at the start of a build, wide open at the drop.
+      straight: >-
+        A line with breakpoints, the dots where it changes. Up is more, flat is still. The classic move is a
+        filter sweep into a drop.
+      eli5: >-
+        You draw a line. When the line goes up, the knob goes up. When it's flat, the knob stays still.
+    deeper:
+      - title: automation in live
+        say: >-
+          In Arrangement view, press A to show automation lanes. Pick a parameter from a lane's menu and click
+          to add breakpoints, or move the knob while recording and Live writes the line for you.
+      - title: re-enable automation
+        say: >-
+          Touch an automated knob by hand and it stops following its line until you click Re-Enable
+          Automation. If a knob won't do what you set, this is usually why.
+      - title: clip envelopes
+        say: >-
+          In Session view, automation lives inside a clip as a clip envelope, so it travels with the clip.
+      - title: curves
+        say: >-
+          Since Live 11 you can bend automation lines into curves instead of straight ramps.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff]
+    say:
+      mentor: >-
+        Here's your lead's cutoff. Play the knob the way automation would: start low, dark and muffled, then
+        open it slowly over a few bars, as if you're building to a drop. Do it a couple of times. In Live,
+        you'd draw that sweep once and the song would do it for you.
+
+        Then leave the knob where your lead sounds best in the loop.
+      straight: >-
+        Sweep the cutoff from low to open over a few bars, like automation. Then leave it where it sounds
+        best.
+      eli5: >-
+        Start the knob low so the sound is muffled. Turn it up slowly. That's what automation does by itself.
+
+  - kind: ask
+    q: What is automation?
+    options: ["a knob moving on its own over time", "a louder kick", "a kind of reverb", "a drum fill"]
+    answer: 0
+    why: Draw the move once and it plays back every time.
+    whyWrong:
+      1: A kick's level is just a knob setting.
+      2: Reverb is an effect you might automate.
+      3: A fill is notes, not a knob moving.
+
+  - kind: ask
+    q: What's a breakpoint?
+    options: ["a dot where the automation line changes", "a gap in the song", "a broken note", "a muted track"]
+    answer: 0
+    why: The line runs from dot to dot.
+    whyWrong:
+      1: A gap would be silence.
+      2: Notes aren't involved.
+      3: Muting is a button.
+
+  - kind: ask
+    more: true
+    q: You moved an automated knob by hand and now it won't follow its line. Why?
+    options: ["touching it paused the automation until you re-enable it", "the knob is broken", "the song is too fast", "automation only plays once"]
+    answer: 0
+    why: Click Re-Enable Automation and it follows the line again.
+    whyWrong:
+      1: Nothing's broken.
+      2: Tempo has nothing to do with it.
+      3: It plays every time.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, variation and fills.

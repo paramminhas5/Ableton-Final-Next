@@ -1,0 +1,101 @@
+slug: comping-flow
+world: producer
+number: 282
+title: comping flow
+minutes: 5
+song:
+  changes: lead.lead
+  why: a lead you've played a few times and chosen from sounds played, not programmed
+learn: >-
+  A comping routine that works, record everything first and choose later, and your lead recorded as takes.
+youCan:
+  - record all your takes before judging them
+  - narrow takes down to the best few
+  - record a lead take and choose whether to keep it
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Comping well is mostly about routine. Get all your takes down first, while you're in the flow of
+        playing. Then stop, take a break, and choose with fresh ears.
+
+        Picking while you're still recording makes you judge every note, and you start playing stiffly.
+      straight: >-
+        Record every take first, choose later with fresh ears. Judging while you play makes you stiff.
+      eli5: >-
+        First play lots of times without stopping. Choose the best one later.
+
+  - kind: say
+    title: a routine
+    say:
+      mentor: >-
+        Record more takes than you need. Then narrow down: find the best two or three by ear, and comp only
+        from those. Fewer choices, faster decisions.
+
+        Comp in sections. A quiet opening may want a gentler take than the big ending.
+      straight: >-
+        Record plenty, narrow to the best two or three, then comp section by section.
+      eli5: >-
+        Pick your favourite two or three tries, then choose the best bits from just those.
+    deeper:
+      - title: in live
+        say: >-
+          Loop recording makes a new take lane on every pass. With take lanes showing, a normal recording
+          makes a new lane too. Each lane shows which bits of it are in the comp.
+      - title: don't flatten early
+        say: >-
+          Keep the take lanes until the song is finished. They're your safety net.
+      - title: midi too
+        say: >-
+          Comping works on midi takes as well, so you can pick the best chord voicings bar by bar.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Your turn. Your song plays underneath. Record your lead, four notes or more, and if it's not right,
+        undo and go again without stopping to think too hard. Keep the flow.
+
+        When a take makes you smile, keep it. Or skip, and keep the lead you already have.
+      straight: >-
+        Record your lead, four notes or more. Retake freely, judge at the end. Keep one, or skip.
+      eli5: >-
+        Play your tune. If you don't like it, undo and play again. Keep the one that makes you smile.
+
+  - kind: ask
+    q: Why record every take before choosing?
+    options: ["judging while you play makes you stiff", "you can only choose once", "takes vanish after a minute", "it makes the song faster"]
+    answer: 0
+    why: Stay in the flow, then judge with fresh ears.
+    whyWrong:
+      1: You can choose as often as you like.
+      2: Takes are kept.
+      3: Tempo doesn't change.
+
+  - kind: ask
+    q: How do you make comping decisions faster?
+    options: ["narrow to the best two or three takes first", "record only one take", "choose from the waveform", "turn the volume up"]
+    answer: 0
+    why: Fewer choices, faster decisions.
+    whyWrong:
+      1: One take leaves nothing to choose from.
+      2: Choose by ear.
+      3: Louder doesn't help you choose.
+
+  - kind: ask
+    more: true
+    q: Why keep take lanes until the song is finished?
+    options: ["they're your safety net if you change your mind", "Live needs them to play", "they make the song louder", "you can't delete them"]
+    answer: 0
+    why: Once they're gone, so are the other takes.
+    whyWrong:
+      1: The comp plays without them.
+      2: They don't change the level.
+      3: You can, which is why you wait.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, the breakdown and the drop.

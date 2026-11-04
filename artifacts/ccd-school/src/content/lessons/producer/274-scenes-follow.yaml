@@ -1,0 +1,102 @@
+slug: scenes-follow
+world: producer
+number: 274
+title: scenes and follow actions
+minutes: 5
+song:
+  changes: drums.kick
+  why: starting with drums alone and then bringing everything in is how a set builds, row by row
+learn: >-
+  Scenes, rows of clips launched together, follow actions, and your song built from drums alone up to
+  everything.
+youCan:
+  - say what a scene is
+  - say what a follow action does
+  - build a section of drums alone, then everything
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        In Session view, Live lays your clips out as a grid: each part is a column, and each row is a scene.
+        Launch a scene and every clip in that row starts together, right on the beat.
+
+        Build one row with drums alone and the next with everything, and you can play your song section by
+        section, live.
+      straight: >-
+        A scene is a row of clips that launch together. One row of drums, one row of everything, and you can
+        play your song live.
+      eli5: >-
+        A scene is a row of sounds that all start at once. Press one row, then the next, and your song
+        builds up.
+
+  - kind: say
+    title: follow actions
+    say:
+      mentor: >-
+        A follow action tells a clip what to do when it finishes: play the next clip, play again, play any
+        clip at random, or stop.
+
+        Chain them and a set keeps moving on its own, changing every few bars without you touching anything.
+        Give two actions a chance each and it becomes unpredictable, a slightly different song every time.
+      straight: >-
+        A follow action says what happens when a clip ends: next, again, random, stop. Chance makes it
+        unpredictable.
+      eli5: >-
+        A follow action tells a sound what to do when it's finished, like play the next one.
+    deeper:
+      - title: follow actions in live
+        say: >-
+          The choices include Stop, Play Again, Previous, Next, First, Last, Any, Other and Jump. Each clip
+          has two slots, A and B, each with its own chance.
+      - title: tempo in a scene name
+        say: >-
+          Put a tempo in a scene's name, like 128 BPM, and Live jumps to that tempo when the scene launches.
+          A time signature like 6/8 works too.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as sections, which play one after another like scenes. Make the first one drums
+        alone: switch everything but your drums off there. Leave the next one with everything on. Play it and
+        hear the change land on the beat.
+      straight: >-
+        First section: drums only. Next: everything. Play it and hear the change.
+      eli5: >-
+        In the first part, turn off everything except the drums. Leave the next part full. Press play.
+
+  - kind: ask
+    q: What is a scene?
+    options: ["a row of clips launched together", "a single drum hit", "a kind of reverb", "the master track"]
+    answer: 0
+    why: Launch the row and every clip in it starts at once.
+    whyWrong:
+      1: A scene holds clips for many parts.
+      2: Reverb is an effect.
+      3: The master is where everything ends up.
+
+  - kind: ask
+    q: What does a follow action do?
+    options: ["tells a clip what to do when it finishes", "sets the volume", "adds swing", "records audio"]
+    answer: 0
+    why: Next, again, random or stop, chosen when the clip ends.
+    whyWrong:
+      1: That's the fader.
+      2: Swing is timing.
+      3: Recording is the arm and record buttons.
+
+  - kind: ask
+    more: true
+    q: What happens when a scene named 128 BPM launches?
+    options: ["the tempo jumps to 128", "it gets louder", "the scene is deleted", "nothing"]
+    answer: 0
+    why: Live reads the tempo from the scene's name.
+    whyWrong:
+      1: The name sets tempo, not level.
+      2: Launching keeps the scene.
+      3: Live reads tempos in scene names.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, variation and fills.

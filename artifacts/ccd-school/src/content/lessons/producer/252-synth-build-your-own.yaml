@@ -1,0 +1,126 @@
+slug: synth-build-your-own
+world: producer
+number: 252
+title: build your own patch
+minutes: 6
+song:
+  changes: lead.lead
+  why: a lead voice you built yourself, step by step, is a sound nobody else's song has
+learn: >-
+  The order sound designers build a patch in, from a blank start to a finished voice, and your own lead built
+  that way.
+youCan:
+  - say the order a patch is built in
+  - build a lead voice by ear, one stage at a time
+  - use a reference track to judge your sound
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One plain synth note. This is close to what an init patch sounds like. Init means initialised: every
+        knob at its starting point, no choices made yet. Sound designers often start here on purpose, so every
+        part of the sound is a decision they made, not one they inherited.
+
+        Building from a blank start sounds slow, but there's an order to it, and once you know the order it
+        goes fast.
+      straight: >-
+        A plain note, close to an init patch, every knob at its start. Building from init means every choice is
+        yours, and there's a set order to do it in.
+      eli5: >-
+        This is a plain, empty sound. You're going to build your own sound from it, one step at a time.
+
+  - kind: say
+    title: the order
+    say:
+      mentor: >-
+        First the oscillator: pick the shape that has the right harmonics, soft for gentle, buzzy for bright.
+        Then the filter: set how bright the sound is. Then the amp envelope: how each note starts and ends,
+        which decides if it's a pad, a pluck or a lead. Then movement: a filter envelope or an lfo. Effects
+        come last.
+
+        And keep checking by ear. Play a track you love next to yours and ask what's different. Brighter?
+        Longer? Wider? Fix that one thing, then listen again.
+      straight: >-
+        Oscillator, then filter, then amp envelope, then movement, then effects. Compare against a track you
+        like and fix the biggest difference first.
+      eli5: >-
+        First pick the shape. Then how bright. Then how notes start and stop. Then add wiggles and effects.
+        Keep listening as you go.
+    deeper:
+      - title: init in live
+        say: >-
+          In Wavetable, Operator or Drift, start from an init preset rather than a finished one, so nothing is
+          decided for you. When your sound is done, save it as your own preset so you can use it again.
+      - title: when it sounds wrong
+        say: >-
+          Check the core first: the oscillator, the filter and the envelopes. Most problems with a patch live
+          there, not in the effects.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, detune, cutoff, res]
+    say:
+      mentor: >-
+        Build your lead, stage one: the tone. Your song is playing. Pick a wave first, soft, saw or square, for
+        the harmonics you want. Add a little detune if you want it wide. Then set cutoff for how bright it
+        should be, and res for how much bite sits at the edge of the filter.
+
+        Don't worry about getting it perfect. Get it close, then move on.
+      straight: >-
+        Stage one, the tone. Pick a wave, add detune for width, set cutoff for brightness and res for bite.
+      eli5: >-
+        Pick your sound's shape with wave. Make it wider with detune. Then make it brighter or darker with
+        cutoff.
+
+  - kind: shape
+    layer: lead
+    knobs: [attack, release, env, echo]
+    say:
+      mentor: >-
+        Stage two: how it moves. Attack decides how each note starts, snappy or swelling. Release decides how it
+        ends, clipped or trailing. Env makes the brightness move on every note. Echo goes last, to give your
+        lead some space.
+
+        Now listen to the whole thing in your song. Something not right? Go back a stage. When it sounds like
+        yours, keep it.
+      straight: >-
+        Stage two, the movement. Attack and release for how notes start and end, env for brightness movement,
+        echo for space. Keep it when it sounds like yours.
+      eli5: >-
+        Now choose how each note starts and stops. Add env to make it shine and echo to make it repeat. Keep it
+        when you love it.
+
+  - kind: ask
+    q: Which comes first when building a patch?
+    options: ["the oscillator shape", "the effects", "the reverb", "the tempo"]
+    answer: 0
+    why: The shape sets the harmonics everything else works on.
+    whyWrong:
+      1: Effects come last.
+      2: Reverb is an effect, so it's last too.
+      3: Tempo belongs to the song, not the patch.
+
+  - kind: ask
+    q: Your patch sounds wrong. Where do you look first?
+    options: ["oscillator, filter and envelopes", "the effects", "the song's tempo", "the pan"]
+    answer: 0
+    why: The core of the sound causes most problems.
+    whyWrong:
+      1: Effects rarely cause the main problem.
+      2: Tempo doesn't change the patch.
+      3: Pan only moves it left or right.
+
+  - kind: ask
+    q: How does a reference track help?
+    options: ["it shows you what's different about your sound", "it replaces your sound", "it sets your tempo", "it adds reverb"]
+    answer: 0
+    why: Comparing tells you the one thing to fix next.
+    whyWrong:
+      1: You're comparing, not copying.
+      2: Your tempo is your choice.
+      3: It's for listening, not processing.
+
+  - kind: keep
+    next: >-
+      Back to your song path: levels and balance is next, where the mix starts.

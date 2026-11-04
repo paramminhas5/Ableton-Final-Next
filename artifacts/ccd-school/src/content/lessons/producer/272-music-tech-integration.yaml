@@ -1,0 +1,107 @@
+slug: music-tech-integration
+world: producer
+number: 272
+title: putting it all together
+minutes: 5
+song:
+  changes: bass.bass
+  why: hearing your bass's whole chain at once shows how the mix tools add up to one sound
+learn: >-
+  How the tools of this path join up, your bass's chain from sound to mix, and a setup that gets out of your
+  way.
+youCan:
+  - shape a part with tools from the whole mix path
+  - say what an audio interface and a template are
+  - save a template in Live
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        You've met levels, eq, effects, sends, glue and the limiter one at a time. In a real song they all
+        work at once, on every part. Putting it all together means knowing which tool does which job, and
+        setting things up so you can reach for it without thinking.
+      straight: >-
+        In a real mix every tool works at once. Know which does what, and set up so you can reach it fast.
+      eli5: >-
+        You've learned lots of tools. Now you use them all together on your song.
+
+  - kind: say
+    title: your setup
+    say:
+      mentor: >-
+        A working setup is a few pieces joined up: a computer running a music program, an audio interface,
+        which is the box that gets sound in and out of the computer, a midi controller to play, and speakers
+        or headphones to listen.
+
+        The goal is to open a new song and be making music in under a minute. Producers get there with
+        templates: a starting song with their usual tracks, sends and sounds already set up.
+      straight: >-
+        Computer, audio interface (sound in and out), midi controller, speakers. A template is a ready-made
+        starting song, so you start fast.
+      eli5: >-
+        You need a computer, a box for sound, something to play and something to listen on. A template is a
+        song that's already set up, so you can start right away.
+    deeper:
+      - title: templates in live
+        say: >-
+          Set up your usual tracks, returns and devices, then choose Save Live Set As Template from the File
+          menu. Every new set starts from it.
+      - title: map your controller
+        say: >-
+          Map your controller's play, stop and record buttons, and the knobs you reach for most, so your hands
+          stay off the mouse.
+      - title: back it up
+        say: >-
+          Back up your projects automatically, and keep a list of your plugin licences. Moving things to a new
+          drive can break them.
+
+  - kind: shape
+    layer: bass
+    knobs: [cutoff, drive, low, duck]
+    say:
+      mentor: >-
+        Your bass, with one knob from each part of the path. Cutoff is the sound itself. Drive is an effect.
+        Low is eq. Duck is the mix, dipping your bass under the kick.
+
+        Set them one at a time, then play with all four together. Notice how changing one changes what the
+        others need. That's mixing.
+      straight: >-
+        Cutoff (sound), drive (effect), low (eq), duck (mix). Set each, then adjust them together.
+      eli5: >-
+        Four knobs for your bass. Turn each one, then turn them together until your bass sounds great with
+        the kick.
+
+  - kind: ask
+    q: What does an audio interface do?
+    options: ["gets sound in and out of the computer", "writes melodies", "stores samples online", "sets the tempo"]
+    answer: 0
+    why: It's the box between your computer and your speakers, mics and instruments.
+    whyWrong:
+      1: You write the melodies.
+      2: It's hardware, not storage.
+      3: Tempo is set in the music program.
+
+  - kind: ask
+    q: What is a template?
+    options: ["a starting song with your usual tracks and sends set up", "a finished song", "a kind of reverb", "a drum pattern"]
+    answer: 0
+    why: It saves you setting up from scratch every time.
+    whyWrong:
+      1: A template is a starting point.
+      2: Reverb is an effect.
+      3: A template can hold patterns, but it's a whole setup.
+
+  - kind: ask
+    q: Why set the knobs one at a time, then adjust them together?
+    options: ["each tool changes what the others need", "the knobs only work one at a time", "it makes the song faster", "the last knob always wins"]
+    answer: 0
+    why: Every move shifts the balance, so you check them together.
+    whyWrong:
+      1: They all work at once.
+      2: Tempo doesn't change.
+      3: They all count.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, sections. Your loop becomes a song.

@@ -1,0 +1,102 @@
+slug: midi-transforms
+world: producer
+number: 278
+title: midi transformations
+minutes: 5
+song:
+  changes: drums.kick
+  why: changing a bar of notes you already have is a fast way to make a fill
+learn: >-
+  What midi transformations are, the ones Live 12 has, and fills made from your own beat.
+youCan:
+  - say what a midi transformation does
+  - name a few of Live 12's transformations
+  - place fills in your song
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Midi is notes, not sound: which note, when, how long and how hard. Because it's just notes, a program
+        can change them for you. Spread a chord out like a strum, turn it into a run of notes, shuffle a
+        rhythm. That's a midi transformation.
+
+        A fill is often exactly this: your normal beat, changed for one bar.
+      straight: >-
+        Midi is notes. A transformation changes notes you already have. A fill is often your beat, changed
+        for a bar.
+      eli5: >-
+        Midi is a list of notes. The computer can shuffle and change that list for you, like magic.
+
+  - kind: say
+    title: transformations in live 12
+    say:
+      mentor: >-
+        Live 12 has transformations built into its midi editing. Select some notes, pick one, and Live
+        reshapes them. Strum spreads a chord's notes out in time, like a guitar. Arpeggiate turns a held
+        chord into a run of single notes. Recombine shuffles the rhythm and the pitches separately. Ornament
+        adds little grace notes.
+
+        You can try one and adjust it before you commit, so it's easy to try a few and pick.
+      straight: >-
+        Strum spreads a chord in time. Arpeggiate turns it into single notes. Recombine shuffles rhythm and
+        pitch. Ornament adds grace notes. Try before you commit.
+      eli5: >-
+        Strum makes a chord sound like a guitar. Arpeggiate plays the chord one note at a time.
+    deeper:
+      - title: a starting point
+        say: >-
+          Treat a transformation as a starting point. Apply Arpeggiate, then edit the notes it made by hand.
+      - title: strum needs chords
+        say: >-
+          Strum only makes sense on two or more notes played together. On a single line there's nothing to
+          spread.
+      - title: in your scale
+        say: >-
+          When a transformation makes new pitches, it follows the scale you've set for the song.
+
+  - kind: arrange
+    goal: fills
+    say:
+      mentor: >-
+        Here's your song with a fill row. A fill here is your beat changed for its last beat: the kick drops
+        out and a snare roll takes over. Tap fill on the sections that lead into a change, and hear how the
+        changed bar sets up what's next.
+      straight: >-
+        Tap fill on sections that lead into a change. The last beat becomes a snare roll.
+      eli5: >-
+        Tap fill on the part before a big change. Listen to the drum roll.
+
+  - kind: ask
+    q: What does a midi transformation do?
+    options: ["changes notes you already have", "records audio", "adds reverb", "sets the tempo"]
+    answer: 0
+    why: It reshapes your notes instead of you editing each one.
+    whyWrong:
+      1: It works on midi notes, not recordings.
+      2: Reverb is an audio effect.
+      3: Tempo is the song's speed.
+
+  - kind: ask
+    q: What does Strum do?
+    options: ["spreads a chord's notes out in time", "turns a chord into drums", "makes notes louder", "deletes the chord"]
+    answer: 0
+    why: Like a guitarist's pick moving across the strings.
+    whyWrong:
+      1: The notes stay notes.
+      2: That's velocity.
+      3: The chord stays, just spread out.
+
+  - kind: ask
+    q: Why does Strum do nothing useful on a single melody line?
+    options: ["there's only one note at a time to spread", "it only works on drums", "melodies are too fast", "it needs a vocal"]
+    answer: 0
+    why: Strum spreads notes that start together. One note has nothing to spread.
+    whyWrong:
+      1: It's for chords, not drums.
+      2: Speed isn't the issue.
+      3: It works on midi notes.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, the breakdown and the drop.

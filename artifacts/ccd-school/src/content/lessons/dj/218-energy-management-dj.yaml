@@ -1,0 +1,96 @@
+slug: energy-management-dj
+world: dj
+number: 218
+title: energy management
+minutes: 5
+song:
+  changes: drums.clap
+  why: where your song goes in a set depends on whether it builds, holds or releases the energy
+learn: >-
+  Building, holding and releasing energy across a set, and deciding what job your song does in that arc.
+youCan:
+  - say how djs build and release energy
+  - decide what job your song does in a set
+  - blend toward more or less energy
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves. One could lift a room, the other could let it breathe. Managing energy is choosing which
+        comes next: when to push, when to hold, when to let the crowd exhale.
+      straight: >-
+        Energy management is choosing when to push, when to hold and when to release.
+      eli5: >-
+        Some songs make people jump. Some let them rest. Djs choose which one comes next.
+
+  - kind: say
+    title: peaks and valleys
+    say:
+      mentor: >-
+        To build, raise the intensity over several tracks: a little faster, busier, harder. To hold, stay on a
+        plateau for a few tracks at the top. To release, drop to a lighter track or a breakdown and let the
+        crowd breathe.
+
+        Long sets have several peaks and valleys, not one long peak. The valleys are what make the peaks feel
+        high. Done well, nobody notices you're doing it. The crowd just can't stop dancing.
+      straight: >-
+        Build over several tracks, hold at the top, release with something lighter. Several peaks and valleys
+        beat one long peak.
+      eli5: >-
+        Go up a bit at a time, stay up for a while, then come down to rest. Then go up again.
+    deeper:
+      - title: the double drop
+        say: >-
+          A double drop is two tracks hitting their drops at the same moment, both basses and both sets of
+          drums at once. Rare, risky, and huge when it works.
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        Is your song a builder, a peak or a release? Decide. Then pick deck b to do the next job: a track that
+        pushes the energy on from your song, or one that lets it settle.
+
+        Bring deck b in, swap the bass with the low knobs, and take your song out. Listen to where the room
+        would go.
+      straight: >-
+        Decide your song's job: build, peak or release. Pick deck b for the next job. Fader b up, low a down,
+        then crossfade to b or pull deck a down.
+      eli5: >-
+        Is your song for jumping or resting? Pick the next song. Push it up, turn your song's low knob down,
+        then slide over.
+
+  - kind: ask
+    q: Why have valleys in a set?
+    options: ["they make the peaks feel higher", "to give the dj a rest", "they're mistakes", "to change genre"]
+    answer: 0
+    why: Contrast. A peak only feels high next to something lower.
+    whyWrong:
+      1: They're for the crowd, not you.
+      2: Planned valleys are a choice.
+      3: Genre can stay the same.
+
+  - kind: ask
+    q: How do you build energy?
+    options: ["raise the intensity over several tracks", "play your biggest track first", "turn the master up", "stop the music"]
+    answer: 0
+    why: Step by step, a little faster or harder each time.
+    whyWrong:
+      1: Then you have nowhere to go.
+      2: Louder isn't more energy.
+      3: Silence drops it.
+
+  - kind: ask
+    q: What is a double drop?
+    options: ["two tracks hitting their drops together", "one track played twice", "halving the tempo", "two djs playing at once"]
+    answer: 0
+    why: Both drops at the same moment, both basses, both drums.
+    whyWrong:
+      1: It's two different tracks.
+      2: Tempo stays the same.
+      3: One dj, two tracks.
+
+  - kind: keep
+    next: >-
+      Back to the song path: effects in performance.

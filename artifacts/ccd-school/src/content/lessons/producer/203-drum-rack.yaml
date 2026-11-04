@@ -5,7 +5,7 @@ title: the drum rack in live
 minutes: 5
 song:
   changes: drums.kick
-  why: each drum is its own pad with its own controls, so you can reshape your kick without touching your clap
+  why: each drum is its own pad with its own controls, so you can reshape your kick without touching anything else
 learn: >-
   How a drum kit becomes a rack of pads, one sound per pad, each with its own controls, and how Live's Drum
   Rack does the same.
@@ -37,14 +37,15 @@ steps:
         long it rings: short and tight, or long and boomy. Drive pushes it into a gentle distortion so it
         sounds harder and grittier.
 
-        Listen to your clap and hats while you turn. They don't change at all. That's the whole point of a
-        rack: every pad is shaped on its own. Keep the kick you like best.
+        Every other pad stays exactly as it was. That's the whole point of a rack: each pad is shaped on its
+        own, so when your clap and hats arrive, this kick won't change under them. Keep the kick you like
+        best.
       straight: >-
-        One pad's knobs: your kick. Tune is pitch, decay is length, drive is grit. The other drums stay as
-        they are. Keep the kick you like.
+        One pad's knobs: your kick. Tune is pitch, decay is length, drive is grit. Other pads aren't touched.
+        Keep the kick you like.
       eli5: >-
         These knobs only change your boom. Tune makes it higher or lower, decay makes it shorter or longer,
-        drive makes it crunchy. The clap doesn't change. Keep the boom you like.
+        drive makes it crunchy. Other pads don't change. Keep the boom you like.
 
   - kind: say
     title: live's drum rack
@@ -85,7 +86,7 @@ steps:
       3: Tempo belongs to the whole song.
 
   - kind: ask
-    q: You turn up drive on your kick pad. What happens to your clap?
+    q: You turn up drive on your kick pad. What happens to a clap on another pad?
     options: ["nothing, it has its own pad", "it gets distorted too", "it gets quieter", "it changes pitch"]
     answer: 0
     why: Each pad has its own controls. Changing the kick leaves every other pad alone.

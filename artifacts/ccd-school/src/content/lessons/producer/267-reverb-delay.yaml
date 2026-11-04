@@ -1,0 +1,110 @@
+slug: reverb-delay
+world: producer
+number: 267
+title: reverb and delay
+minutes: 5
+song:
+  changes: drums.clap
+  why: a little room or a little echo on your drums changes how far away they feel
+learn: >-
+  Reverb and delay up close, predelay and feedback, and both tried on your drums so you can keep one.
+youCan:
+  - say how reverb and delay differ
+  - say what predelay and feedback do
+  - choose reverb or echo for your drums
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Reverb and delay both add space, in very different ways. Reverb is the sound of a room: thousands of
+        reflections smearing into a tail. Delay is a clear copy of the sound coming back, once or many times.
+
+        Here's a kick and clap with neither. Imagine the clap ringing out in a hall, or bouncing back off a
+        far wall as an echo.
+      straight: >-
+        Reverb: a room, reflections smeared into a tail. Delay: clear repeats. This is the dry version.
+      eli5: >-
+        Reverb sounds like clapping in a big hall. Delay sounds like shouting in a canyon and hearing it come
+        back.
+
+  - kind: say
+    title: two controls worth knowing
+    say:
+      mentor: >-
+        Predelay is a short gap before a reverb starts. With a little predelay, around 30 ms, the hit comes
+        through clean before the room arrives, so the sound stays clear.
+
+        Feedback is how much of each echo is fed back into the delay to echo again. Low feedback gives one or
+        two repeats. Push it near the top and the repeats pile up and can run away.
+      straight: >-
+        Predelay: a short gap before the reverb, so the hit stays clear. Feedback: how many times a delay
+        repeats. Too much runs away.
+      eli5: >-
+        Predelay makes the room wait a tiny moment before it starts. Feedback is how many echoes you get.
+    deeper:
+      - title: reverb in live
+        say: >-
+          Live's Reverb builds its tail from an input filter, predelay, early reflections and a longer decay.
+          Hybrid Reverb adds convolution, which uses a recording of a real space.
+      - title: delay in live
+        say: >-
+          The Delay device has a line for each side. Each can sync to the grid or run free in milliseconds,
+          with its own feedback and a filter on the repeats, so each echo gets duller or thinner. Ping Pong
+          bounces the echoes from left to right, and Freeze holds the current echoes while the sound moves
+          on.
+      - title: on a return
+        say: >-
+          Both usually live on return tracks, so many parts share one space. A common move is a high-pass on
+          the reverb return around 200 hz, so the room doesn't muddy the low end.
+
+  - kind: shape
+    layer: drums
+    knobs: [send, echo]
+    say:
+      mentor: >-
+        Here's your song, with reverb and echo on your drum kit. Here they act on the kick and clap together,
+        so keep them low: a lot of reverb on a kick turns to mud. In Live you'd send just the clap.
+
+        Try send on its own and listen to the clap get a room around it. Then set send back down and try
+        echo instead. Keep the one that suits your song, or neither.
+      straight: >-
+        Send is reverb, echo is delay, on the whole kit here, so keep both low. Try each alone. Keep one or
+        neither.
+      eli5: >-
+        Turn send up a little for a big room. Turn it back down and try echo for repeats. Pick the one you
+        like.
+
+  - kind: ask
+    q: What's the difference between reverb and delay?
+    options: ["reverb is a smeared room, delay is clear repeats", "delay is always louder", "reverb only works on drums", "they're the same effect"]
+    answer: 0
+    why: Reverb smears, delay repeats.
+    whyWrong:
+      1: Loudness isn't the difference.
+      2: Reverb works on anything.
+      3: They sound very different.
+
+  - kind: ask
+    q: What does predelay do?
+    options: ["leaves a short gap so the hit stays clear", "makes the reverb longer", "adds repeats", "turns the reverb off"]
+    answer: 0
+    why: The dry hit comes first, then the room.
+    whyWrong:
+      1: That's the decay.
+      2: That's a delay.
+      3: The reverb still plays, just a moment later.
+
+  - kind: ask
+    q: What happens if you push delay feedback near the top?
+    options: ["the repeats pile up and can run away", "the delay stops", "the reverb gets shorter", "the tempo changes"]
+    answer: 0
+    why: Each echo feeds the next, so they keep building.
+    whyWrong:
+      1: It does the opposite.
+      2: Feedback is a delay control.
+      3: Tempo isn't touched.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, glue, compression and loudness.

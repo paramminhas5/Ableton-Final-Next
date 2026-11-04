@@ -1,0 +1,100 @@
+slug: harmonic-key-shift-dj
+world: dj
+number: 216
+title: key shift and master tempo
+minutes: 5
+song:
+  changes: drums.clap
+  why: when the perfect next track is one step from your song's key, a small shift makes it fit
+learn: >-
+  Master tempo, which keeps a track's key steady when you change its speed, and key shift, which moves the
+  key without touching the speed.
+youCan:
+  - say what master tempo does
+  - say how far you can shift a key before it sounds wrong
+  - match a track's tempo without changing its key
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Low, then high. The same note, shifted. On an old turntable, speeding a record up also raised its
+        pitch, so matching tempos bent the key.
+
+        Modern decks have master tempo, also called key lock. Change the speed and the key stays where it is.
+      straight: >-
+        Speeding a record up used to raise its pitch. Master tempo (key lock) keeps the key steady while the
+        tempo changes.
+      eli5: >-
+        Speeding up an old record made it sound higher. New dj players have a button that keeps the notes the
+        same when you change the speed.
+
+  - kind: say
+    title: key shift
+    say:
+      mentor: >-
+        Key shift does the opposite. It moves the key up or down in semitones, the smallest step between two
+        notes, and leaves the tempo alone. If the track you want is one step from fitting your song, shift it.
+
+        Keep it small. One or two semitones usually sounds natural. Go further and you hear it, especially on
+        vocals: chipmunk going up, sluggish going down.
+      straight: >-
+        Key shift moves the key in semitones without changing tempo. One or two is fine. More and you hear it,
+        especially on vocals.
+      eli5: >-
+        You can also make a song a little higher or lower without changing its speed. Just a little, or it
+        sounds funny.
+    deeper:
+      - title: with master tempo off
+        say: >-
+          With master tempo off, the pitch fader changes speed and key together. Slow a track down to match
+          and it goes flatter. Speed it up and it goes sharper. That's why djs usually leave master tempo on
+          while beatmatching.
+
+  - kind: mix
+    goal: match
+    bank: warm-up
+    say:
+      mentor: >-
+        Deck b is at its own speed. Match it to your song with the tempo fader. As you move it, listen to
+        deck b's bass: it stays on the same notes. Our decks work as if master tempo is always on, so the
+        speed changes and the key doesn't. Watch deck b's key code too. It doesn't move.
+      straight: >-
+        Match deck b to your song with the tempo fader. Its key code and bass notes stay put: our decks work
+        like master tempo is always on.
+      eli5: >-
+        Move deck b's speed slider until the booms match. Listen: the bass notes don't go higher or lower.
+
+  - kind: ask
+    q: What does master tempo do?
+    options: ["keeps the key steady while the tempo changes", "locks the tempo so it can't change", "shifts the key", "matches the bpm for you"]
+    answer: 0
+    why: Speed and key come apart, so beatmatching doesn't bend the key.
+    whyWrong:
+      1: The tempo still moves.
+      2: That's key shift.
+      3: That's sync.
+
+  - kind: ask
+    q: How far can you usually shift a key before it sounds wrong?
+    options: ["one or two semitones", "half a semitone", "six semitones", "any amount"]
+    answer: 0
+    why: Small shifts sound natural. Bigger ones are audible, especially on vocals.
+    whyWrong:
+      1: You can go further than that.
+      2: That's far enough to hear clearly.
+      3: Big shifts sound processed.
+
+  - kind: ask
+    q: Master tempo is off and you slow a track down. What happens to its key?
+    options: ["it goes flatter", "nothing", "it gets sharper", "it jumps to the relative minor"]
+    answer: 0
+    why: Without key lock, slower also means lower.
+    whyWrong:
+      1: That's only with master tempo on.
+      2: Sharper is what happens when you speed it up.
+      3: It slides down, it doesn't jump.
+
+  - kind: keep
+    next: >-
+      Back to the song path: cue points and loops.

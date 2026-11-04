@@ -1,0 +1,101 @@
+slug: export-mode-dj
+world: dj
+number: 214
+title: export mode
+minutes: 5
+song:
+  changes: drums.clap
+  why: your set only plays in a club if it reaches the usb checked, in order, with a backup
+learn: >-
+  Getting tracks from your laptop onto a usb for club cdjs, the steps in order, and why you always bring
+  two.
+youCan:
+  - say the steps from import to usb in order
+  - say why grids get checked before export
+  - pack a backup
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A track playing cleanly on club gear. That only happens if it got there properly. In most clubs you
+        plug a usb drive into the cdjs, and in rekordbox, export mode is where you get that usb ready.
+      straight: >-
+        In most clubs you play from a usb in the cdjs. rekordbox's export mode is where you prepare it.
+      eli5: >-
+        In clubs, djs bring their music on a little usb stick. A program gets the stick ready.
+
+  - kind: say
+    title: in order
+    say:
+      mentor: >-
+        First import your tracks, and the software analyses each one. Then check the beat grids against the
+        waveforms and fix any that are off. Then set your cue points at the moments you'll want, like the
+        intro, the drop, the breakdown and the outro. Then organise your playlists. Then export to the usb.
+
+        Last, check it. Plug it into a cdj and make sure the tracks and playlists are there.
+      straight: >-
+        Import and analyse. Check grids. Set cue points. Organise playlists. Export to usb. Then check it on a
+        cdj.
+      eli5: >-
+        Add your songs, check their beat marks, mark the good bits, put them in lists, copy them to the
+        stick, then test the stick.
+    deeper:
+      - title: why grids come first
+        say: >-
+          Sync locks to the beat grid, and cue points placed on the beat depend on it too. A wrong grid makes
+          both wrong, so fix grids before anything else.
+      - title: two usb drives
+        say: >-
+          Always bring two, with the same music on each. Usb drives fail at the worst moments. If one does,
+          you plug in the other and the night carries on.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Before you export a set, play through the handover you're planning one last time. Your song on deck
+        a, your next track on deck b: pick it from the bank.
+
+        Check they sit together at your tempo, check the keys don't clash, run the blend with the faders and
+        the low knobs. If anything sounds off, this is where you fix it, not in the booth.
+      straight: >-
+        Run your planned handover once before exporting. Pick deck b, check tempo and key, run the blend. Fix
+        problems now, not at the gig.
+      eli5: >-
+        Before you copy your songs to the stick, try mixing your song into the next one. If something sounds
+        wrong, fix it now.
+
+  - kind: ask
+    q: Which order is right?
+    options: ["import, check grids, set cues, organise, export", "export, then import", "set cues, then import", "organise, export, then analyse"]
+    answer: 0
+    why: Each step leans on the one before it.
+    whyWrong:
+      1: There's nothing to export yet.
+      2: You can't set cues on a track you haven't imported.
+      3: Analysis has to come first.
+
+  - kind: ask
+    q: Why check grids before you export?
+    options: ["sync and on-beat cues depend on the grid", "it makes the files smaller", "it changes the key", "it's not needed"]
+    answer: 0
+    why: A wrong grid puts sync and your cues in the wrong place.
+    whyWrong:
+      1: File size isn't affected.
+      2: Grids are about beats, not key.
+      3: A bad grid follows you to the club.
+
+  - kind: ask
+    q: Why bring two usb drives?
+    options: ["one can fail, and the other is your backup", "you need one per cdj", "one is for the other dj", "the club requires it"]
+    answer: 0
+    why: Hardware fails at the worst moments.
+    whyWrong:
+      1: One usb works across the players.
+      2: It's for you.
+      3: It's your own insurance.
+
+  - kind: keep
+    next: >-
+      Back to the song path: key and harmonic mixing.

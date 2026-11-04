@@ -1,0 +1,124 @@
+slug: keys-tonality
+world: foundations
+number: 214
+title: keys and tonality
+minutes: 5
+song:
+  changes: chords.chords
+  why: ending your progression on home sounds settled, ending away from it sounds like a question, and you choose which
+learn: >-
+  What a key is, why one note and one chord feel like home, and your progression ending at home or away from it.
+youCan:
+  - say what a key and a tonic are
+  - hear when a progression is home and when it isn't
+  - end your progression where you want it
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Every song you know has a note it keeps coming back to. Hum the end of almost any tune and you'll land
+        on it without thinking. That note is home, and the proper word for it is the tonic.
+
+        Your song has one too: the first key on your keys and the first pad on your chords. Everything else
+        in the song pulls back towards it.
+      straight: >-
+        Every song has a home note it returns to, called the tonic. In your song it's the first key and the
+        first chord pad.
+      eli5: >-
+        Songs have a home note, like a house they go back to at the end. Your song's home is the very first
+        key.
+
+  - kind: say
+    title: a key is a set and a home
+    say:
+      mentor: >-
+        A key is seven notes plus the one that feels like home. In c major the notes are c d e f g a b, and c
+        is home. In your song, the scale you picked gives the seven notes, and the first one is home.
+
+        Build a chord on each of those seven notes and you get the chords of the key. Roman numerals name
+        them by position, so i is the home chord in a minor key and I in a major key. Notes and chords pull
+        towards home with different strengths, and that pull is what makes a tune feel like it's going
+        somewhere.
+      straight: >-
+        A key is seven notes plus a home note, the tonic. A chord on each note gives the key's chords, named by
+        roman numerals. Home is i in minor, I in major.
+      eli5: >-
+        A key is a team of seven notes with one captain. The captain is home. Every chord in the song wants
+        to get back to the captain's chord.
+    deeper:
+      - title: in live
+        say: >-
+          In Live 12, give a midi clip a Root Note and a Scale Name and the piano roll marks the notes in the
+          key. The Scale midi effect goes further and moves any note outside the scale to the nearest one
+          inside it.
+      - title: relative and parallel
+        say: >-
+          C major and a minor share the same notes with a different home, called relative keys. C major and
+          c minor share the same home with different notes, called parallel keys. Twelve major and twelve
+          minor make 24 keys in all.
+
+  - kind: play
+    layer: chords
+    surface: pads
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now feel it in your song. This replaces your chords, so you can keep it or not at the end.
+
+        Press rec, wait out the count-in, and play four chords, one per beat, ending on the first pad, home.
+        Listen to it loop: it lands, settles, starts again. Then record it again, same first three chords,
+        but end on any other pad. Hear that? It doesn't settle. It hangs there like a question, and the loop
+        pulls you back to the start to answer it. Both are good. Keep the one your song wants.
+      straight: >-
+        Replaces your chords. Record four chords ending on the first pad, home, and listen. Then record again
+        ending elsewhere. Home settles, away sounds like a question. Keep one.
+      eli5: >-
+        Press rec, wait for four ticks, and play four chord pads. Make the last one the first pad, home.
+        Sounds finished, right? Try again and end on a different pad. Now it sounds like it isn't done yet.
+    hint: The first pad is home. Play it last, then try ending on any other pad.
+
+  - kind: ask
+    q: The tonic is
+    options: ["the home note and chord", "the highest note in the song", "the loudest chord", "the fastest part"]
+    answer: 0
+    why: The tonic is home, the note and chord everything pulls back to.
+    whyWrong:
+      1: Home can be any height.
+      2: Loudness has nothing to do with it.
+      3: Speed is tempo.
+
+  - kind: ask
+    q: A key is
+    options: ["seven notes plus a home note", "the speed of the song", "all twelve notes", "the first chord you play"]
+    answer: 0
+    why: A set of seven notes, with one of them as home.
+    whyWrong:
+      1: That's tempo.
+      2: A key picks seven of the twelve.
+      3: You can start a song on any chord of the key.
+
+  - kind: ask
+    q: A progression that ends away from home sounds
+    options: ["unfinished, like a question", "finished and settled", "faster", "out of tune"]
+    answer: 0
+    why: The pull towards home hasn't been answered yet.
+    whyWrong:
+      1: That's ending on home.
+      2: Tempo doesn't change.
+      3: All the chords are in the key. It's the ending that feels open.
+
+  - kind: ask
+    more: true
+    q: How many major and minor keys are there in all?
+    options: ["24", "12", "7", "48"]
+    answer: 0
+    why: Twelve major and twelve minor, one of each on every note.
+    whyWrong:
+      1: That's only the major ones, or only the minor ones.
+      2: Seven is the number of notes in a key.
+      3: That's double the real count.
+
+  - kind: keep
+    next: >-
+      Back to the harmony path. Next: a bass that follows your chords.

@@ -1,0 +1,108 @@
+slug: hybrid-reverb
+world: producer
+number: 268
+title: hybrid reverb
+minutes: 5
+song:
+  changes: chords.chords
+  why: a bigger, longer space behind your chords makes your song feel wide and deep
+learn: >-
+  Two ways to make a reverb, recorded rooms and built ones, and a bigger space behind your chords.
+youCan:
+  - say what convolution and algorithmic reverb are
+  - give your chords a bigger space
+  - say why big reverbs belong on a return
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Not every reverb is made the same way. Some play back a recording of a real space. Others build the
+        tail with maths. Live's Hybrid Reverb runs both at once and lets you blend them, which is how you get
+        a space that sounds real and huge at the same time.
+      straight: >-
+        Some reverbs use recordings of real spaces, some are built with maths. Hybrid Reverb blends both.
+      eli5: >-
+        One kind of reverb copies a real room. Another kind is made up by the computer. Hybrid Reverb mixes
+        them together.
+
+  - kind: say
+    title: convolution and algorithmic
+    say:
+      mentor: >-
+        Convolution reverb uses an impulse response: a recording of how a real hall, room or plate rings out
+        after a sharp sound. Run your chords through it and they take on the sound of that place.
+
+        Algorithmic reverb builds the tail with maths instead. It can't copy a real room exactly, but it can
+        make tails no real room could, long and moving.
+      straight: >-
+        Convolution: a recording of a real space, applied to your sound. Algorithmic: a tail built by maths,
+        able to do things real rooms can't.
+      eli5: >-
+        Convolution is like a photo of a real room's echo. Algorithmic is like a painting of an echo that
+        could never be real.
+    deeper:
+      - title: hybrid reverb in live
+        say: >-
+          Hybrid Reverb has a convolution engine and an algorithmic engine side by side, with a blend between
+          them, plus predelay and eq. Freeze holds the current tail for as long as you like.
+      - title: share it
+        say: >-
+          Long convolution reverbs use a lot of processing power. Put one on a return and share it, rather
+          than loading one on every track.
+      - title: keep some predelay
+        say: >-
+          Skip predelay and a big reverb can swallow the sound going into it. A short gap keeps the source
+          clear.
+
+  - kind: shape
+    layer: chords
+    knobs: [send, release]
+    say:
+      mentor: >-
+        Here's your song. Turn send up for more room behind your chords. Then try release, how long each note
+        keeps sounding after it ends: longer notes ring into the reverb and the space feels bigger.
+
+        Too much of both and the chords wash over everything. Back off until your lead still sits clearly on
+        top.
+      straight: >-
+        Send for more room. Release, how long notes ring after they end, makes the space feel bigger. Stop
+        before the chords wash out the lead.
+      eli5: >-
+        Turn send up for a bigger room. Turn release up so the notes ring longer. Stop before it gets too
+        blurry.
+
+  - kind: ask
+    q: What does a convolution reverb use?
+    options: ["a recording of a real space", "only maths", "a delay line", "the song's tempo"]
+    answer: 0
+    why: An impulse response, how a real place rings.
+    whyWrong:
+      1: That's algorithmic reverb.
+      2: That's an echo.
+      3: Reverb doesn't follow tempo.
+
+  - kind: ask
+    q: What can algorithmic reverb do that a recorded room can't?
+    options: ["make tails no real room could", "sound exactly like one real hall", "remove the lows", "change the tempo"]
+    answer: 0
+    why: It's built with maths, so it isn't limited to real spaces.
+    whyWrong:
+      1: That's what convolution is best at.
+      2: That's eq.
+      3: Reverb doesn't change tempo.
+
+  - kind: ask
+    more: true
+    q: Why share one big reverb on a return?
+    options: ["long reverbs use a lot of processing power", "returns make reverb louder", "reverb only works on returns", "it adds swing"]
+    answer: 0
+    why: One shared reverb is far lighter than many.
+    whyWrong:
+      1: Level is up to the sends.
+      2: You can put reverb on a track too.
+      3: Swing is timing.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, glue, compression and loudness.

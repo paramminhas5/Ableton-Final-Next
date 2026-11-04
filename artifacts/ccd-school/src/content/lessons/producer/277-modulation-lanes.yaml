@@ -1,0 +1,107 @@
+slug: modulation-lanes
+world: producer
+number: 277
+title: modulation lanes
+minutes: 5
+song:
+  changes: lead.lead
+  why: your lead's level is the base a modulation lane wobbles around, so set it where it belongs
+learn: >-
+  How modulation differs from automation, and your lead's level set as the base a modulation lane moves
+  around.
+youCan:
+  - say how modulation and automation differ
+  - say what happens when modulation goes past a knob's range
+  - set the base level of your lead
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Automation sets a knob to an exact value: at one bar the level is here, eight bars later it's there.
+        Modulation works differently. It adds or takes away a bit from wherever the knob already is.
+
+        So you can set your lead's level by hand, and a modulation lane wobbles it a little up and down
+        around that spot.
+      straight: >-
+        Automation sets a value. Modulation adds to or takes from the value you set.
+      eli5: >-
+        Automation tells the knob exactly where to go. Modulation just wiggles it a little around where you
+        left it.
+
+  - kind: say
+    title: around your setting
+    say:
+      mentor: >-
+        Because modulation is added on top, the knob stays yours. Turn the level up and the whole wobble
+        moves up with it.
+
+        A modulation lane is drawn around a centre line. On the line, nothing changes. Above it adds, below
+        it takes away. If the total would go past the top or bottom of the knob, it stops there.
+      straight: >-
+        Modulation rides on top of your setting. Centre line is no change, above adds, below subtracts. It
+        stops at the knob's limits.
+      eli5: >-
+        The wiggle follows your knob. Turn the knob up and the wiggle goes up too.
+    deeper:
+      - title: modulation in live
+        say: >-
+          In a clip's envelopes, a switch next to the chosen parameter flips the lane between automation and
+          modulation.
+      - title: which one when
+        say: >-
+          Use automation for fixed moves that should happen the same way every time. Use modulation when you
+          want movement but still want the knob free to tweak, like in a set you perform.
+      - title: both at once
+        say: >-
+          You can automate a knob's base value and modulate around it at the same time.
+
+  - kind: shape
+    layer: lead
+    knobs: [level]
+    say:
+      mentor: >-
+        Here's your lead's level. This is the base, the spot a modulation lane would wobble around. Set it
+        where your lead sits best in the song.
+
+        Then picture a slow wobble on top: a touch louder on some notes, a touch softer on others, while your
+        setting stays exactly where you left it.
+      straight: >-
+        Set your lead's base level. Modulation would wobble around this spot without moving it.
+      eli5: >-
+        Set how loud your tune is. A wiggle would go up and down around that, but your setting stays.
+
+  - kind: ask
+    q: How is modulation different from automation?
+    options: ["modulation adds to the knob, automation sets it", "they're the same", "modulation only works on drums", "automation is random"]
+    answer: 0
+    why: Modulation rides on your setting. Automation replaces it.
+    whyWrong:
+      1: One sets, one adds.
+      2: It works on any parameter.
+      3: Automation follows the line you draw.
+
+  - kind: ask
+    q: You turn the knob up while modulation is on. What happens?
+    options: ["the whole wobble moves up with it", "the modulation is deleted", "the knob snaps back", "nothing changes"]
+    answer: 0
+    why: Modulation is added to wherever the knob is.
+    whyWrong:
+      1: The lane stays.
+      2: That's what automation does.
+      3: The base moves, so everything moves.
+
+  - kind: ask
+    more: true
+    q: What happens if the knob plus modulation goes past the top?
+    options: ["it stops at the top", "it wraps round to the bottom", "the song stops", "it gets twice as loud"]
+    answer: 0
+    why: It's held at the knob's limit.
+    whyWrong:
+      1: It doesn't wrap.
+      2: Playback carries on.
+      3: It can't go past the top.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, variation and fills.
