@@ -551,3 +551,9 @@ main:has([data-page="lesson"]) { padding-bottom: 0 !important; }
 
 /* Focus mode (a drill in progress): the screen is the whole instrument. */
 body[data-focus="1"] nav[aria-label="Modes"], body[data-focus="1"] header[role="banner"] { display: none !important; }
+
+/* big screens: the mode keys sit in a rail on the left instead of floating over the page */
+@media (min-width:1100px){
+  .m1-modebar{left:20px!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translateY(-50%);width:84px!important;grid-template-columns:1fr!important;grid-auto-rows:84px;gap:8px!important}
+  body main{padding-bottom:24px}
+}

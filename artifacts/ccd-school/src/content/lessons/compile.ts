@@ -36,7 +36,7 @@ const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !
 
 const STEP_FIELDS: Record<string, string[]> = {
   hear: ["kind", "clip", "say", "deeper", "levels"],
-  say: ["kind", "title", "say", "deeper", "hint", "levels"],
+  say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
@@ -187,6 +187,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           deeperOf(where, raw.deeper, playOrShape);
           break;
         case "say":
+          if (raw.clip !== undefined && (typeof raw.clip !== "string" || !CLIP_IDS.has(raw.clip))) at(where, `clip "${String(raw.clip)}" is not in clips.ts`);
           title(where, "title", raw.title);
           voice(where, "say", raw.say);
           deeperOf(where, raw.deeper, playOrShape);

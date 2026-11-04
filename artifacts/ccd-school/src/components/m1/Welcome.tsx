@@ -1,29 +1,33 @@
 "use client";
 /**
- * First visit to ccdschool.com: a short walk into the first lesson, one question per screen.
- * The first tap starts a kick, so sound is already on when the lesson opens (browsers need that tap).
- * hello → what do you want to make → how much do you know → how should we explain → your first lesson.
+ * First visit to ccdschool.com: what ccd school is, how its parts fit together, then three quick
+ * questions and the first lesson. Silent: sound only plays in lessons or when you play something.
+ * hello → how it fits → where to start → how much you know → how you like to learn → your first lesson.
  */
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { FLAG, OUT } from "@/engine";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { usePrefs, type Voice } from "@/lib/prefs";
 import { PlacementTest } from "@/components/PlacementTest";
-import { clipVariants } from "@/content/lessons/clipTracks";
 import { missionBySlug } from "@/content/missions";
 import { type WorldId } from "@/lib/worldOrder";
 import { GoPill, Icon, Pad, Screen, Silk } from "./controls";
 import { CAT_SRC } from "./shell";
-import { useEngineTrack } from "./useEngineTrack";
 import "./lesson.css";
 
 type Know = "new" | "some" | "lots";
 const MAKE: { id: WorldId; name: string; line: string; first: string; led: string }[] = [
+  { id: "fundamentals", name: "start from the basics", line: "how sound and music work. the best place to begin", first: "what-is-sound", led: "#5EEAC1" },
   { id: "producer", name: "make my own tracks", line: "build a song from a kick drum up, one part per lesson", first: "your-kick", led: "#FF5FA4" },
-  { id: "dj", name: "dj", line: "mix records, beatmatch, read a room", first: "what-is-djing", led: "#7D96FF" },
-  { id: "fundamentals", name: "not sure yet", line: "start with how music works: sound, rhythm, melody", first: "what-is-sound", led: "#5EEAC1" },
+  { id: "dj", name: "mix tracks as a dj", line: "beatmatch, blend, read a room. later, your own tracks", first: "what-is-djing", led: "#7D96FF" },
+];
+const PARTS: [string, string][] = [
+  ["learn", "short lessons that explain one idea at a time, with sound"],
+  ["make", "every lesson adds a part to your own song, from the first kick"],
+  ["practice", "ear training and quick reviews so it sticks"],
+  ["studio", "build your song out, layer by layer, on real instruments"],
+  ["mix", "dj your own tracks, then other people's, like at a ccd night"],
 ];
 const KNOW: { id: Know; name: string; line: string }[] = [
   { id: "new", name: "completely new", line: "never made or mixed music" },
@@ -31,11 +35,11 @@ const KNOW: { id: Know; name: string; line: string }[] = [
   { id: "lots", name: "i know my way around", line: "find my level with a few quick questions" },
 ];
 const WAYS: { id: Voice; name: string; line: string }[] = [
-  { id: "mentor", name: "explain it properly", line: "the full picture, the first time" },
-  { id: "straight", name: "keep it short", line: "just the point, i'll ask if i need more" },
-  { id: "eli5", name: "keep it really simple", line: "plain words, everyday examples" },
+  { id: "mentor", name: "walk me through it", line: "the full picture, step by step" },
+  { id: "straight", name: "give me the short version", line: "just the point, i'll ask for more if i need it" },
+  { id: "eli5", name: "keep it simple", line: "plain words and everyday examples" },
 ];
-const STEPS = ["hello", "make", "know", "explain", "ready"] as const;
+const STEPS = ["hello", "how", "make", "know", "explain", "ready"] as const;
 
 function Choice<T extends string>({ items, value, onPick, led }: { items: { id: T; name: string; line: string }[]; value: T | null; onPick: (id: T) => void; led: string }) {
   return (
@@ -64,15 +68,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const make = MAKE.find(m => m.id === world) ?? MAKE[0];
   const first = missionBySlug(make.first);
 
-  // A kick, so the very first tap is also the one that turns sound on.
-  const kick = useMemo(() => clipVariants("kick-alone")[0].track, []);
-  const { engine, ready } = useEngineTrack(kick);
-  const [playing, setPlaying] = useState(false);
-  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setPlaying(!!(e.flags & FLAG.playing)); }), [engine]);
-  const sound = (on: boolean) => { if (!on) { engine.stop(); return; } void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* no audio here */ }); };
-
   const go = (slug: string) => {
-    engine.stop();
     onLeave?.();
     setOnboarding(make.id, know === "lots" ? "hard" : "normal");
     setLearnMode("flow");
@@ -89,29 +85,35 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
       <div className="wl-top">
         {step > 0 ? <button type="button" className="fl-stepback" onClick={back} aria-label="Back"><Icon name="back" small />back</button> : <span />}
         <div className="ls-seg" aria-hidden style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties}>{STEPS.map((_, i) => <i key={i} className={i < step ? "is-done" : i === step ? "is-now" : ""} />)}</div>
-        {step > 0 ? <button type="button" className="fl-stepback" onClick={() => sound(!playing)} aria-label={playing ? "Stop the kick" : "Play the kick"}>{playing ? "sound on" : "sound off"}</button> : <span />}
+        <span />
       </div>
 
       <Screen style={{ marginTop: 6 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={CAT_SRC} alt="" className={playing ? "m1-dancing" : ""} style={{ position: "absolute", right: 14, top: 12, width: 76 }} />
+        <img src={CAT_SRC} alt="" className="m1-dancing" style={{ position: "absolute", right: 14, top: 12, width: 76 }} />
         {at === "hello" && <><div className="m1-ss">hello. this is ccd school.</div><h1 className="m1-t36" style={{ marginTop: 8, maxWidth: 230 }}>make music while you learn it</h1><div className="m1-ss" style={{ marginTop: 10 }}>free · on your phone or laptop · nothing to download</div></>}
-        {at === "make" && <><div className="m1-ss">that thump is a kick drum. it&apos;s where songs start.</div><h1 className="m1-t36 wl-q">what do you want to make?</h1></>}
+        {at === "how" && <><div className="m1-ss">five parts, one song</div><h1 className="m1-t36 wl-q">how it fits together</h1></>}
+        {at === "make" && <><div className="m1-ss">you can do all three. pick where to start</div><h1 className="m1-t36 wl-q">where do you want to start?</h1></>}
         {at === "know" && <><div className="m1-ss">so we start in the right place</div><h1 className="m1-t36 wl-q">how much have you done before?</h1></>}
-        {at === "explain" && <><div className="m1-ss">you can change this on any step, any time</div><h1 className="m1-t36 wl-q">how should we explain things?</h1></>}
+        {at === "explain" && <><div className="m1-ss">you can switch on any step, any time</div><h1 className="m1-t36 wl-q">how do you like to learn?</h1></>}
         {at === "ready" && <><div className="m1-ss">your first lesson · about {first?.fromFile?.minutes ?? 8} minutes</div><h1 className="m1-t36 wl-q">{(first?.title ?? "lesson one").toLowerCase()}</h1><div className="m1-ss" style={{ marginTop: 10, maxWidth: 260 }}>{first?.fromFile?.learn ?? first?.tagline ?? ""}</div></>}
       </Screen>
 
       {at === "hello" && (
         <>
           <Silk label="how it works" />
-          <ol className="wl-how">
-            <li><b>1</b><span><strong>learn one idea at a time</strong>explained properly, with sound on every step</span></li>
-            <li><b>2</b><span><strong>play it yourself</strong>on real instruments, right in the lesson</span></li>
-            <li><b>3</b><span><strong>it goes into your song</strong>every lesson adds a part. by the end it&apos;s a track</span></li>
-          </ol>
-          <div className="wl-go"><GoPill onClick={() => { sound(true); next(); }} style={{ height: 72, width: "100%" }} ariaLabel="Let's go, with sound">let&apos;s go, sound on <Icon name="play" small /></GoPill></div>
+          <p className="wl-lead">ccd school is the music school of cats can dance. you learn by making: every lesson ends with something new in your own song, and by the end you&apos;re mixing tracks you made yourself.</p>
+          <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }} ariaLabel="Let's go">let&apos;s go <Icon name="play" small /></GoPill></div>
           <a className="ls-skip" href="/worlds">i&apos;ve been here before · see all lessons</a>
+        </>
+      )}
+      {at === "how" && (
+        <>
+          <ol className="wl-parts">
+            {PARTS.map(([t, d], i) => <li key={t}><b>{i + 1}</b><span><strong>{t}</strong>{d}</span>{i < PARTS.length - 1 && <i aria-hidden />}</li>)}
+          </ol>
+          <p className="wl-lead">it&apos;s one loop: learn an idea, make it into your song, practise it, build the song out in the studio, then mix it. basics first, then producing, then djing your own productions.</p>
+          <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }}>got it</GoPill></div>
         </>
       )}
       {at === "make" && <Choice items={MAKE} value={world} onPick={id => { setWorld(id); next(); }} led="var(--led-go)" />}

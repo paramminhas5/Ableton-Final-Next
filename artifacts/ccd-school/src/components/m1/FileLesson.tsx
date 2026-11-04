@@ -19,6 +19,7 @@ import { readSongs, newSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
+import { clipVariants } from "@/content/lessons/clipTracks";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
@@ -117,6 +118,26 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
       </div>
       <div className="fl-now"><span>{pageName(pages[at])}</span>{pages[at + 1] ? <span>next: {pageName(pages[at + 1])}</span> : null}</div>
     </header>
+  );
+}
+
+// ── count along: the clip plays and the beat number lights up big ──────────────
+function CountAlong({ clip }: { clip: string }) {
+  const track = useMemo(() => clipVariants(clip)[0]?.track ?? readTrackV2(), [clip]);
+  const { engine, ready } = useEngineTrack(track);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const n = beat >= 0 ? (Math.floor(beat) % 4) : -1;
+  const bar = beat >= 0 ? Math.floor(beat / 4) % 2 : 0;
+  return (
+    <Screen>
+      <Meta left={beat >= 0 ? `bar ${bar + 1}` : "press play"} right={`${track.bpm} bpm`} />
+      <div className="fl-count4" aria-live="off">
+        {[1, 2, 3, 4].map((x, i) => <span key={x} className={i === n ? "is-on" : ""}>{x}</span>)}
+      </div>
+      <div className="fl-barkeys"><button type="button" className="ls-chip" onClick={() => { if (beat >= 0) engine.stop(); else void ready().then(() => engine.play()); }}>{beat >= 0 ? "stop" : "play the kick"}</button></div>
+    </Screen>
   );
 }
 
@@ -348,11 +369,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const ttype = takeType(offerFor({ ...readTrack(), added: [] }, mission).kind);
 
   useEffect(() => {
-    // Lesson one starts your first song. If you already have one with music in it, that one is kept.
-    if (startsFresh(mission) && songHasMusic() && !readTrackV2().added.includes(mission.slug) && !alreadyDone) {
-      newSong("my first song");
-      window.dispatchEvent(new Event(SONG_EVENT));
-    }
+    // One song runs through every world: basics, producer and dj all add to the same song.
     try {
       const saved = JSON.parse(sessionStorage.getItem(SESSION) ?? "null") as { idx: number; at?: number } | null;
       if (saved && saved.idx > 0 && saved.idx < pages.length && Date.now() - (saved.at ?? 0) < 3 * 3600_000) setIdx(saved.idx);
@@ -389,7 +406,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     case "say": {
       // Once you've played something, the explanations after it show your own bar, looping.
       const after = at("play") >= 0 && idx > at("play") && take?.events.length;
-      body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} visual={after && take ? <TakeBar mission={mission} take={take} /> : undefined} />;
+      const visual = cur.clip ? <CountAlong clip={cur.clip} /> : after && take ? <TakeBar mission={mission} take={take} /> : undefined;
+      body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} visual={visual} />;
       break;
     }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;

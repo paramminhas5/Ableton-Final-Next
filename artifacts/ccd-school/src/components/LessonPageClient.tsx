@@ -58,7 +58,10 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  const next = nextMission(slug);
+  // Next follows the path you're on, so lesson two always comes after lesson one.
+  const inPath = ctx.path ? ctx.path.missionSlugs.indexOf(slug) : -1;
+  const pathNext = inPath >= 0 && ctx.path ? missionBySlug(ctx.path.missionSlugs[inPath + 1] ?? "") : undefined;
+  const next = pathNext ?? nextMission(slug);
   const missionIndex = ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
   return (

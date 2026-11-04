@@ -51,16 +51,18 @@ export function clipVariants(id: string): ClipVariant[] {
     }
     case "synth-note":
     case "synth-pitch":
-    case "synth-shapes": {
+    case "synth-shapes":
+    case "synth-loud": {
       // The lead synth with one oscillator and no detune, so the shape you hear is the shape you see.
-      const tone = (note: number, wave: number, cutoff: number): TrackV2 => {
+      const tone = (note: number, wave: number, cutoff: number, vel = 0.85): TrackV2 => {
         const t = base(120, 2);
         const l = newLayerV2("lead");
-        l.events = [0, 4].map(start => ({ note, vel: 0.85, start, len: 3 }));
+        l.events = [0, 4].map(start => ({ note, vel, start, len: 3 }));
         l.params = { [LEAD("wave")]: wave, [LEAD("cutoff")]: cutoff, [LEAD("detune")]: 0, [LEAD("env")]: 0, [LEAD("release")]: 0.25 };
         return { ...t, layers: [l] };
       };
       if (id === "synth-note") return [{ label: "one note", track: tone(57, 0, 0.18) }];
+      if (id === "synth-loud") return [{ label: "quiet", track: tone(57, 0, 0.18, 0.25) }, { label: "loud", track: tone(57, 0, 0.18, 1) }];
       if (id === "synth-pitch") return [{ label: "low", track: tone(45, 0, 0.18) }, { label: "high", track: tone(69, 0, 0.18) }];
       return [{ label: "soft", track: tone(57, 0, 0.18) }, { label: "saw", track: tone(57, 0, 0.9) }, { label: "square", track: tone(57, 1, 0.9) }];
     }

@@ -43,7 +43,7 @@ export function ModeBar() {
   const pathname = usePathname() ?? "/";
   if (HIDE.some(r => r.test(pathname))) return null;
   return (
-    <nav aria-label="Modes" className="m1-g" style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(16px + env(safe-area-inset-bottom, 0px))", zIndex: 40, maxWidth: 408, margin: "0 auto", padding: "10px 8px 0", borderRadius: 18, background: "var(--deck2)", boxShadow: "0 -14px 18px -4px var(--deck2)" }}>
+    <nav aria-label="Modes" className="m1-g m1-modebar" style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(16px + env(safe-area-inset-bottom, 0px))", zIndex: 40, maxWidth: 408, margin: "0 auto", padding: "10px 8px 0", borderRadius: 18, background: "var(--deck2)", boxShadow: "0 -14px 18px -4px var(--deck2)" }}>
       {MODES.map(m => {
         const on = m.match(pathname);
         return (

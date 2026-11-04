@@ -481,7 +481,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
     { href: "/upgrade", label: "pro", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="m12 4 2.4 5 5.6.8-4 3.9.9 5.6L12 16.6 7.1 19.3l.9-5.6-4-3.9 5.6-.8z" /></svg> },
     { href: "/settings", label: "settings", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg> },
   ];
-  const worlds = (["fundamentals", "dj", "producer"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
+  const worlds = (["fundamentals", "producer", "dj"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
   return (
     <div role="dialog" aria-modal="true" aria-label="Menu" className="m1-face" style={{ position: "fixed", inset: 0, zIndex: 70, overflowY: "auto" }}>
       <div className="m1-page" style={{ paddingBottom: 32 }}>

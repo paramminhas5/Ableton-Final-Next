@@ -42,8 +42,9 @@ export function Folds({ items }: { items?: { title: string; body: string }[] }) 
 // ── say: an explanation; the extra bits fold out below if you want them ───────
 export function SayStep({ screen, meta, onNext, tail, visual }: { screen: Of<"say">; meta: string; onNext: () => void; tail?: ReactNode; visual?: ReactNode }) {
   useEnter(onNext);
+  // Nothing to play with or look at: one panel, title above the text.
   return (
-    <div className="ls-col">
+    <div className={`ls-col ${visual ? "" : "is-one"}`}>
       <div className="fl-inst">
       <Screen>
         <Meta left={meta} />
@@ -129,6 +130,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
         {isKick ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
           : screen.clip === "synth-note" ? <AirWave playing={playing} />
           : screen.clip === "synth-pitch" ? <><WaveShape kind="soft" cycles={v === 0 ? 2 : 8} playing={playing} /><AirWave playing={playing} speed={v === 0 ? 0.6 : 2.2} /></>
+          : screen.clip === "synth-loud" ? <><WaveShape kind="soft" cycles={3} amp={v === 0 ? 0.3 : 1} playing={playing} /><AirWave playing={playing} strength={v === 0 ? 0.35 : 1} /></>
           : screen.clip === "synth-shapes" ? <><WaveShape kind={(["soft", "saw", "square"] as const)[v] ?? "soft"} playing={playing} /><SynthChain playing={playing} /></>
           : <div className="ls-hearbar" aria-hidden>{Array.from({ length: 16 }, (_, i) => <i key={i} className={playing ? "is-on" : ""} style={{ animationDelay: `${i * 60}ms` }} />)}</div>}
       </Screen>

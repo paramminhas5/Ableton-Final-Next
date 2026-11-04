@@ -11,6 +11,7 @@ export const CLIPS: readonly ClipDef[] = [
   { id: "short-vs-long-kick", title: "short vs long kick", bars: 2, bpm: 120, description: "The same kick pattern first with a short decay, then with a long one." },
   { id: "synth-note", title: "one synth note", bars: 2, bpm: 120, description: "A soft synth note held for most of each bar." },
   { id: "synth-pitch", title: "low and high", bars: 2, bpm: 120, description: "The same soft synth note, low then high." },
+  { id: "synth-loud", title: "quiet and loud", bars: 2, bpm: 120, description: "The same soft note, quiet then loud." },
   { id: "synth-shapes", title: "three wave shapes", bars: 2, bpm: 120, description: "The same note as a soft wave, a saw and a square." },
   { id: "hats-offbeat", title: "hats on the offbeat", bars: 2, bpm: 124, description: "Open hats between the kicks, the lift that makes a groove bounce." },
 ];

@@ -15,7 +15,7 @@ import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 
 const WORLD_KEY = "ccd.world";
-const WORLDS: WorldId[] = ["fundamentals", "dj", "producer"];
+const WORLDS: WorldId[] = ["fundamentals", "producer", "dj"];
 
 export function Today() {
   const { progress } = useProgress();
@@ -135,7 +135,7 @@ export function Today() {
           <img src={CAT_SRC} alt="" className="m1-dancing" style={{ position: "absolute", right: 16, top: 14, width: 66 }} />
           <div className="m1-ss">{WORLD_LABEL[world]} · {zones[zi]?.title.toLowerCase()}</div>
           <div className="m1-t22 td-pop" style={{ marginTop: 8, maxWidth: 230, textTransform: "lowercase" }}>{mission?.title ?? "all done"}</div>
-          <div className="m1-ss td-pop" style={{ marginTop: 8, color: "var(--disp-ink)" }}>lesson {li + 1} of {inZone.length} · zone {zi + 1} of {zones.length} · {isDone ? "done" : cur ? `${minutesFor(cur.slug)} min` : ""}</div>
+          <div className="m1-ss td-pop" style={{ marginTop: 8, color: "var(--disp-ink)" }}>lesson {li + 1} of {inZone.length} · path {zi + 1} of {zones.length} · {isDone ? "done" : cur ? `${minutesFor(cur.slug)} min` : ""}</div>
           <div style={{ marginTop: 14, display: "flex", gap: 3 }} role="img" aria-label={`${counts.done} of ${counts.total} lessons done`}>
             {Array.from({ length: 24 }, (_, i) => (
               <span key={i} style={{ flex: 1, height: 8, borderRadius: 2, background: i < Math.round((counts.done / Math.max(1, counts.total)) * 24) ? "#5EEAC1" : "#232326" }} />
@@ -193,13 +193,13 @@ export function Today() {
       <Silk label="turn to choose" right="or tap a lesson below" />
       <div className="td-knobs">
         <div><span className="m1-ss">world</span>
-          <Knob label={WORLD_LABEL[world]} color={CAP.go} size={64} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
+          <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.go} size={72} height={170} led="var(--led-go)" detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
         </div>
-        <div><span className="m1-ss">zone</span>
-          <Knob label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
+        <div><span className="m1-ss">path</span>
+          <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={64} height={170} led="var(--led-mint)" detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
         </div>
         <div><span className="m1-ss">lesson {ci + 1} of {steps.length}</span>
-          <Knob label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={64} height={170} led="var(--led-cobalt, #8CA3FF)" detents={steps.length} value={val(ci, steps.length)} defaultValue={val(ci, steps.length)} onChange={v => pickLesson(idxOf(v, steps.length))} />
+          <Knob onStep={() => pickLesson((ci + 1) % Math.max(1, steps.length))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={58} height={170} led="var(--led-cobalt, #8CA3FF)" detents={steps.length} value={val(ci, steps.length)} defaultValue={val(ci, steps.length)} onChange={v => pickLesson(idxOf(v, steps.length))} />
         </div>
       </div>
       <div className="m1-g" style={{ marginTop: 12 }}>
@@ -223,7 +223,7 @@ export function Today() {
             const on = st.slug === cur?.slug;
             return (
               <div key={st.slug}>
-                {(i === 0 || steps[i - 1].path !== st.path) && <div className="m1-ss td-zone">{st.pathTitle.toLowerCase()}</div>}
+                {(i === 0 || steps[i - 1].path !== st.path) && <div className={`td-zone ${st.path === cur?.path ? "is-cur" : ""}`}><b>path {zones.findIndex(z => z.path === st.path) + 1}</b><span>{st.pathTitle.toLowerCase()}</span></div>}
                 <button type="button" role="option" aria-selected={on} aria-current={on ? "true" : undefined} className={`m1-m is-wide td-row ${on ? "is-sel" : ""}`} onClick={() => setSel(st.slug)}>
                   <span className="m1-t11" style={{ width: 24, color: d ? "#5EEAC1" : undefined }}>{d ? "✓" : String(i + 1).padStart(2, "0")}</span>
                   <span style={{ flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase", fontWeight: on ? 600 : 400, textAlign: "left" }}>{st.title}</span>

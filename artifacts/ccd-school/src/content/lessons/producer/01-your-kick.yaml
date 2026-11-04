@@ -32,9 +32,10 @@ steps:
 
   - kind: say
     title: count along
+    clip: kick-alone
     say:
       mentor: >-
-        Count out loud with the kick: one, two, three, four, one, two, three, four. Each count is a beat. A
+        The kick is playing again. Count out loud with it: one, two, three, four, one, two, three, four. Each count is a beat. A
         group of four beats is a bar.
 
         This song runs at 120 beats per minute, or bpm. That is two beats every second, so one bar takes
@@ -71,8 +72,8 @@ steps:
     goal: {notes: 4, note: kick}
     say:
       mentor: >-
-        Now you play the kick yourself. What you record here becomes the first loop of your song, the one
-        everything else sits on.
+        Every song starts somewhere, and yours starts with a kick. You're going to record it now, and that
+        bar becomes the loop everything else in your song sits on.
 
         The click you hear is a metronome: a steady tick on every beat so you have something to play along to.
         Press rec. You get four clicks to count you in, so just listen. Then tap the kick pad once on each of
@@ -81,7 +82,7 @@ steps:
 
         Missed one? Tap undo to take back the last hit, or hold it to start over.
       straight: >-
-        Time to record your own kick. This one bar will loop under your whole song.
+        A song needs a beat first, so you record the kick now. This one bar loops under everything you add.
 
         The ticking is a metronome, there to keep you in time. Press rec and wait out the first four ticks,
         that is the count-in. On the next four ticks, tap the kick pad once each. Hits that miss the beat
@@ -89,7 +90,7 @@ steps:
 
         Undo removes your last tap. Hold undo to clear the bar and go again.
       eli5: >-
-        Your turn to play! Whatever you tap now goes into your song.
+        To make a song, you need a kick first. So now you play yours, and it goes into your song.
 
         Hear the tick, tick, tick? That is there to help you keep time, like someone clapping along. Press
         the red rec button. Let four ticks go by without tapping. Then tap the kick pad once on every tick,

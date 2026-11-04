@@ -187,8 +187,20 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
   return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onKeyDown, onWheel };
 }
 
-function Scale({ size }: { size: number }) {
+function Scale({ size, steps, at = -1 }: { size: number; steps?: number; at?: number }) {
   const c = size / 2, r0 = size / 2 - 7, r1 = size / 2 - 2;
+  // A stepped knob gets one line per step, and the current one lit.
+  if (steps && steps > 1 && steps <= 48) {
+    return (
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }} aria-hidden>
+        {Array.from({ length: steps }, (_, i) => {
+          const a = ((135 + (i * 270) / (steps - 1)) * Math.PI) / 180;
+          const on = i === at;
+          return <path key={i} d={`M${c + (on ? r0 - 3 : r0) * Math.cos(a)} ${c + (on ? r0 - 3 : r0) * Math.sin(a)}L${c + r1 * Math.cos(a)} ${c + r1 * Math.sin(a)}`} strokeWidth={on ? 2.4 : 1.2} opacity={on ? 1 : 0.55} strokeLinecap="round" style={{ stroke: on ? "var(--led-go)" : "var(--print)" }} />;
+        })}
+      </svg>
+    );
+  }
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }} aria-hidden>
       {Array.from({ length: 11 }, (_, i) => {
@@ -214,12 +226,25 @@ type KnobProps = {
   style?: CSSProperties;
   /** number of click stops: arrow keys, wheel and drag move one stop at a time */
   detents?: number;
+  /** A click (no drag) steps the knob on by one, wrapping round. */
+  onStep?: () => void;
 };
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
-  const drag = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
+  const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
+  const press = useRef<{ x: number; y: number; t: number } | null>(null);
+  const drag = onStep ? {
+    ...drag0,
+    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => { press.current = { x: e.clientX, y: e.clientY, t: e.timeStamp }; drag0.onPointerDown?.(e as never); },
+    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
+      const p = press.current; press.current = null;
+      drag0.onPointerUp?.();
+      if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) < 5 && e.timeStamp - p.t < 400) onStep();
+    },
+  } : drag0;
+  const at = detents && detents > 1 ? Math.round(value * (detents - 1)) : -1;
   const well = size + 18;
   const rot = -135 + 270 * value;
   const knob = (
@@ -234,7 +259,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       {...drag}
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      {size >= 46 && <Scale size={well + 14} />}
+      {size >= 46 && <Scale size={well + 14} steps={detents} at={at} />}
       <div className="m1-well" style={{ width: well, height: well }}>
         <div className="m1-kb" style={{ width: size, height: size, marginTop: -4 }}>
           <div className="m1-kc" style={{ ["--c" as string]: color, width: size * 0.68, height: size * 0.68 } as CSSProperties}>

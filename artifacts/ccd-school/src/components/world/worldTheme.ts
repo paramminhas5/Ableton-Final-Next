@@ -7,7 +7,7 @@
 
 export type WorldSlug = "fundamentals" | "dj" | "producer";
 
-export const WORLD_ORDER: WorldSlug[] = ["fundamentals", "dj", "producer"];
+export const WORLD_ORDER: WorldSlug[] = ["fundamentals", "producer", "dj"];
 
 export interface WorldTheme {
   // Identity

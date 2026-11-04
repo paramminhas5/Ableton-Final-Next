@@ -293,9 +293,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       </div>
       {coach && <div className="fl-text">
         <>
-          <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
+          <div className="fl-turn">
+            <div className="fl-turnhead"><span>your turn</span><span>{goalMet ? "done" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes}`}</span></div>
+            <p className="fl-turnwhy"><Gloss>{coach.body.split(/\n+/)[0]}</Gloss></p>
+          </div>
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
-          {coach.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+          {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
           {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
           {coach.tail}
         </>

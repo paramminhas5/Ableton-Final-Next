@@ -21,10 +21,10 @@ function useClock(on: boolean) {
 }
 
 /** A speaker cone pushing and pulling air. Dots bunch up (high pressure) and spread out (low) as the wave travels. */
-export function AirWave({ playing, speed = 1 }: { playing: boolean; speed?: number }) {
+export function AirWave({ playing, speed = 1, strength = 1 }: { playing: boolean; speed?: number; strength?: number }) {
   const t = useClock(playing);
   const W = 330, H = 110, cols = 26, rows = 6;
-  const amp = playing ? 7 : 0;
+  const amp = playing ? 7 * strength : 0;
   const w = 2 * Math.PI * 0.9 * speed;
   const cone = 40 + Math.sin(w * t) * (playing ? 4 : 0);
   return (
@@ -49,7 +49,7 @@ export function AirWave({ playing, speed = 1 }: { playing: boolean; speed?: numb
 export type WaveKind = "soft" | "saw" | "square";
 
 /** The shape of a wave. `morph` 0..1 goes saw to square (the lead synth's wave knob); `bright` 0..1 rounds the corners off when low. */
-export function WaveShape({ kind, morph, bright = 1, cycles = 3, playing = false }: { kind?: WaveKind; morph?: number; bright?: number; cycles?: number; playing?: boolean }) {
+export function WaveShape({ kind, morph, bright = 1, cycles = 3, amp = 1, playing = false }: { kind?: WaveKind; morph?: number; bright?: number; cycles?: number; amp?: number; playing?: boolean }) {
   const t = useClock(playing);
   const W = 330, H = 90, mid = H / 2, N = 360;
   const m = morph ?? (kind === "square" ? 1 : 0);
@@ -64,7 +64,7 @@ export function WaveShape({ kind, morph, bright = 1, cycles = 3, playing = false
   // A simple smoothing pass stands in for the filter: less brightness, rounder wave.
   const a = soft ? 1 : 0.06 + 0.94 * Math.pow(bright, 1.6);
   let y = raw[0];
-  const pts = raw.map((v, i) => { y += a * (v - y); return `${((i / N) * W).toFixed(1)},${(mid - y * (mid - 8)).toFixed(1)}`; });
+  const pts = raw.map((v, i) => { y += a * (v - y); return `${((i / N) * W).toFixed(1)},${(mid - y * amp * (mid - 8)).toFixed(1)}`; });
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" className="fl-wave" role="img" aria-label={`${soft ? "A smooth, round wave" : m > 0.5 ? "A square wave, flat tops and sudden jumps" : "A saw wave, a slope then a sudden drop"}${cycles > 4 ? ", wobbling fast" : ""}`}>
       <path d={`M0 ${mid}H${W}`} stroke="rgba(255,255,255,.08)" />

@@ -27,7 +27,7 @@ export type RawTry = RawPlay | RawShape;
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
 
 export type RawHear = { kind: "hear"; clip: string; say: VoiceText; deeper?: RawDeeper[]; levels?: Level[] };
-export type RawSay = { kind: "say"; title: string; say: VoiceText; deeper?: RawDeeper[]; hint?: VoiceText; levels?: Level[] };
+export type RawSay = { kind: "say"; title: string; say: VoiceText; clip?: string; deeper?: RawDeeper[]; hint?: VoiceText; levels?: Level[] };
 export type RawAsk = {
   kind: "ask";
   q: VoiceText;
@@ -66,7 +66,7 @@ export type ResolvedDeeper = { title: string; say: string; try?: ResolvedTry };
 
 export type ResolvedStep =
   | { kind: "hear"; clip: string; say: string; deeper: ResolvedDeeper[] }
-  | { kind: "say"; title: string; say: string; deeper: ResolvedDeeper[]; hint?: string }
+  | { kind: "say"; title: string; say: string; clip?: string; deeper: ResolvedDeeper[]; hint?: string }
   | ({ kind: "play" } & Omit<Extract<ResolvedTry, { kind: "play" }>, "kind">)
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }

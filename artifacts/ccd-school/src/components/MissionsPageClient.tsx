@@ -24,7 +24,7 @@ const WORLD_MISSIONS: Record<WorldTab, typeof MISSIONS> = {
   dj:           DJ_WORLD_MISSIONS,
   producer:     MISSIONS,
 };
-const WORLDS = ["fundamentals", "dj", "producer"] as const;
+const WORLDS = ["fundamentals", "producer", "dj"] as const;
 
 export function MissionsPageClient() {
   const { progress }  = useProgress();

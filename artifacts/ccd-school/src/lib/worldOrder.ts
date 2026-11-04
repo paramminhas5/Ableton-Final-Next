@@ -10,7 +10,7 @@ import { DJ_WORLD_MISSIONS } from "../content/missions-dj";
 import type { Mission } from "../content/types";
 
 export type WorldId = "fundamentals" | "dj" | "producer";
-export const WORLD_IDS: WorldId[] = ["fundamentals", "dj", "producer"];
+export const WORLD_IDS: WorldId[] = ["fundamentals", "producer", "dj"];
 export const WORLD_LABEL: Record<WorldId, string> = { fundamentals: "basics", dj: "dj", producer: "producer" };
 
 const ALL: Mission[] = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
