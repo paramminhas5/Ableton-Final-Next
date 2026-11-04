@@ -1,0 +1,101 @@
+slug: live-sets-projects
+world: producer
+number: 286
+title: live sets and projects
+minutes: 5
+song:
+  changes: drums.kick
+  why: a song saved and named properly is a song you can come back to
+learn: >-
+  What a Live Set and a project are, how to save so nothing goes missing, and your song given a proper name.
+youCan:
+  - say what a Live Set and a project are
+  - save versions instead of saving over
+  - collect a set's files into its project in Live
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        In Live, your song is saved as a Live Set, a single file ending in .als. But a song is more than that
+        file. It also uses samples and presets stored in other places. The project is the folder around the
+        set that keeps all of it together.
+      straight: >-
+        A Live Set is your song's file (.als). The project is the folder that holds it and everything it
+        uses.
+      eli5: >-
+        Your song is saved as a file, and the file lives in a folder with all the sounds it needs.
+
+  - kind: say
+    title: save it properly
+    say:
+      mentor: >-
+        The habit that saves you: the first time you save a song, put it in its own new folder named after
+        the song. Before you close or move it, collect everything the song uses into that folder.
+
+        Save new versions as you go, version 1, 2, 3, instead of saving over the same file. If a change goes
+        wrong, the last good one is still there.
+      straight: >-
+        One song, one new folder. Collect everything into it. Save numbered versions instead of saving over.
+      eli5: >-
+        Give every song its own folder. Save a new copy each time, so you can always go back.
+    deeper:
+      - title: collect all and save
+        say: >-
+          Collect All and Save, in the File menu, copies every sample the set uses into its project folder, so
+          you can move it or send it to someone and it still opens.
+      - title: manage project
+        say: >-
+          In the File menu, Manage Files then Manage Project lists missing samples and unused ones, so you can
+          tidy up before you archive.
+      - title: templates
+        say: >-
+          Save Live Set As Template stores your usual starting setup: tracks, sends and devices.
+      - title: crash recovery
+        say: >-
+          Crash recovery isn't a save. It's a one-time rescue after a crash, so save often.
+
+  - kind: arrange
+    goal: export
+    say:
+      mentor: >-
+        Here's your song. Saving starts with a name. Give it a real one, not my song, and download the midi
+        as your first saved copy. In Live, this is the moment you'd make the song its own folder.
+      straight: >-
+        Give your song a real name and download the midi as your first saved copy.
+      eli5: >-
+        Give your song a name you like, then tap download to save a copy.
+
+  - kind: ask
+    q: What is a project in Live?
+    options: ["the folder that holds a set and everything it uses", "a single sample", "a kind of track", "the master fader"]
+    answer: 0
+    why: The set plus its samples and presets, all in one place.
+    whyWrong:
+      1: A project holds samples, but it's the whole folder.
+      2: Tracks live inside a set.
+      3: The fader sets level.
+
+  - kind: ask
+    q: Why save new versions instead of saving over one file?
+    options: ["if a change goes wrong, the last good one is still there", "Live can only open new files", "it makes the song louder", "older versions play faster"]
+    answer: 0
+    why: Every version is a way back.
+    whyWrong:
+      1: Live opens any saved set.
+      2: Saving doesn't touch the sound.
+      3: Tempo is saved with the song.
+
+  - kind: ask
+    q: What does Collect All and Save do?
+    options: ["copies every sample the set uses into its project folder", "deletes unused tracks", "exports an mp3", "saves a template"]
+    answer: 0
+    why: Then the project works anywhere you move it.
+    whyWrong:
+      1: Nothing is deleted.
+      2: That's an export.
+      3: That's Save Live Set As Template.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

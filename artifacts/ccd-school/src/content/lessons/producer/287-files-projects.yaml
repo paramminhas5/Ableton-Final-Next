@@ -1,0 +1,103 @@
+slug: files-projects
+world: producer
+number: 287
+title: files and projects
+minutes: 5
+song:
+  changes: drums.kick
+  why: knowing which file holds what means your song never breaks when you move it
+learn: >-
+  The files a song is made of, sets, projects, samples and packs, and your song as a file you can take
+  anywhere.
+youCan:
+  - say what a set, a project and a pack are
+  - say why a part can go silent after a move
+  - download your song as a midi file
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A song on a computer is a bundle of files. The set holds your arrangement and settings. Samples are
+        separate audio files that the set points to. Move a sample, or the set, and the set may not find it.
+        Then that part goes silent.
+
+        Knowing what's where is how you stop that happening.
+      straight: >-
+        A song is several files. The set points to samples stored separately. Lose a sample and that part
+        goes silent.
+      eli5: >-
+        Your song is made of a few files. If one goes missing, part of your song goes quiet.
+
+  - kind: say
+    title: three layers
+    say:
+      mentor: >-
+        A Live Set is one file, your song. A project is the folder around it that holds the set plus its
+        samples and presets. A pack is a bundle made for sharing sounds, the way Ableton ships its own sound
+        libraries.
+
+        One song, one project folder. Put every song in one big folder and the links between files get
+        tangled when you move things.
+      straight: >-
+        Set: your song. Project: the folder with the set and its sounds. Pack: a bundle for sharing. One song
+        per project folder.
+      eli5: >-
+        The song file goes in a folder with its sounds. Give every song its own folder.
+    deeper:
+      - title: projects in live
+        say: >-
+          Live treats any folder with an Ableton Project Info folder inside as a project, and looks for samples
+          relative to it first.
+      - title: collect before you send
+        say: >-
+          Use Collect All and Save before you send a project to someone, so every sample travels with it.
+      - title: packs
+        say: >-
+          A Live Pack is a single .alp file. Ableton uses packs to share sounds, and you can make your own.
+
+  - kind: arrange
+    goal: export
+    say:
+      mentor: >-
+        Here's your song. The midi file you download is another kind of file: just the notes, no sound,
+        which is why it's tiny. Name it, download it, and find it with your other files. It travels anywhere,
+        and almost any music program can open it.
+      straight: >-
+        Name your song and download the midi. It's just notes, so it's tiny and opens almost anywhere.
+      eli5: >-
+        Name your song and tap download. You get a tiny file with all your notes in it.
+
+  - kind: ask
+    q: What happens if a set can't find a sample it uses?
+    options: ["that part goes silent", "Live makes a new one", "the song speeds up", "nothing, it still plays"]
+    answer: 0
+    why: The set only points to the sample. No sample, no sound.
+    whyWrong:
+      1: Live can't invent the missing sound.
+      2: Tempo isn't affected.
+      3: The part that uses it can't play.
+
+  - kind: ask
+    q: What does a project folder hold?
+    options: ["the set plus its samples and presets", "only the set", "every song you've made", "only the midi"]
+    answer: 0
+    why: Everything one song needs, in one place.
+    whyWrong:
+      1: It holds what the set uses too.
+      2: One song per project.
+      3: Midi is just one kind of file it might hold.
+
+  - kind: ask
+    q: Why is a midi file so small?
+    options: ["it holds only notes, no sound", "it's squashed audio", "it only keeps the drums", "it's a shortcut to your song"]
+    answer: 0
+    why: Notes are tiny compared with recorded sound.
+    whyWrong:
+      1: There's no audio in it.
+      2: It keeps every part.
+      3: It's a real file you can open anywhere.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

@@ -1,0 +1,104 @@
+slug: stem-separation
+world: producer
+number: 288
+title: stem separation
+minutes: 5
+song:
+  changes: drums.kick
+  why: hearing your parts one at a time is what stems are, and it shows what each part adds
+learn: >-
+  What stems are, how Live 12 can pull them out of a finished track, and your own song heard part by part.
+youCan:
+  - say what a stem is
+  - say what bleed is
+  - hear your song as stems
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A finished track is one blended sound, everything mixed together. Stems are the parts pulled apart
+        again: the drums on their own, the bass on its own, and so on. Djs and producers use them to remix,
+        to sample, and to learn how a track was built.
+      straight: >-
+        Stems are a track's parts on their own: drums, bass and so on. Used for remixing, sampling and
+        learning.
+      eli5: >-
+        A song is lots of sounds mixed together. Stems are those sounds pulled apart again.
+
+  - kind: say
+    title: pulling a track apart
+    say:
+      mentor: >-
+        Live 12 can separate a mixed audio clip into four stems, using a model that runs on your own
+        computer, no internet needed.
+
+        It's never perfect. Expect some bleed: bits of one part leaking into another's stem, like a little
+        kick left in the bass. Treat stems as a starting point.
+
+        Your own song is easier. Its parts were never mixed into one, so every part is already its own stem.
+      straight: >-
+        Live 12 splits a mixed clip into four stems, on your computer. Expect bleed, parts leaking into each
+        other. Your song's parts are already stems.
+      eli5: >-
+        Live can pull a song apart into four pieces. The pieces aren't perfect, a bit of one sound leaks into
+        another.
+    deeper:
+      - title: in live
+        say: >-
+          Right-click an audio clip and choose to separate it into stems. Live makes a new audio clip for each
+          stem, lined up in time with the original.
+      - title: what separates well
+        say: >-
+          Sparse electronic tracks separate cleanly. Dense, busy mixes are harder, and so are masters that
+          have been limited very hard.
+      - title: ideas
+        say: >-
+          Pull the drums out of a track, slice them onto pads and play your own pattern. Or pull a bass line
+          out of an old record to study it.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as sections. Turn one section into a drums stem: switch everything off except your
+        drums. Make the next one a bass stem, then let the last bring everything back. Play it through and
+        hear each part alone, then all together.
+      straight: >-
+        One section drums only, one bass only, then everything. Play it and hear the stems.
+      eli5: >-
+        In one part, keep only the drums. In the next, only the bass. Then turn everything back on.
+
+  - kind: ask
+    q: What is a stem?
+    options: ["one part of a track on its own", "a whole mixed song", "a type of synth", "a tempo"]
+    answer: 0
+    why: Drums alone, bass alone, and so on.
+    whyWrong:
+      1: That's what stems are pulled from.
+      2: Stems are audio, not instruments.
+      3: Tempo is the song's speed.
+
+  - kind: ask
+    q: What is bleed?
+    options: ["bits of one part leaking into another's stem", "a clipping sound", "a long reverb", "a fade out"]
+    answer: 0
+    why: Separation isn't perfect, so some sound ends up in the wrong stem.
+    whyWrong:
+      1: Clipping is going over the top.
+      2: Reverb is space.
+      3: A fade is a change in level.
+
+  - kind: ask
+    q: Why are your own song's parts already stems?
+    options: ["they were never mixed into one sound", "the app separated them", "they're all drums", "they're mp3s"]
+    answer: 0
+    why: Each part was made on its own, so it's still on its own.
+    whyWrong:
+      1: Nothing needed separating.
+      2: Your song has more than drums.
+      3: The file type doesn't matter.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } from "@/engine";
 import { pushSamples } from "@/lib/samples";
 import { arranged } from "@/lib/arrange";
+import { REAL_KIT_ID, realKitLayer } from "@/lib/realKit";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
@@ -18,7 +19,9 @@ type Last = { bpm: number; loop: number; swing?: number; master?: number[]; samp
 
 export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: Last) {
   // An arranged song plays as one long timeline of its sections.
-  const t = arranged(song);
+  // The recorded kit plays whatever your drums and hats play now, including parts added after you chose it.
+  const kit = song.layers.some(l => l.id === REAL_KIT_ID) ? realKitLayer(song).events : null;
+  const t = arranged(kit ? { ...song, layers: song.layers.map(l => (l.id === REAL_KIT_ID ? { ...l, events: kit } : l)) } : song);
   const m = (last.master ??= []);
   for (let i = 0; i < MASTER_PARAMS.length; i++) {
     const v = masterOf(t, i);

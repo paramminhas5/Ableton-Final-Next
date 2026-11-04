@@ -32,15 +32,20 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   // Deck b starts at its own tempo, except in lessons where matching isn't the point: then it is already matched.
   const [pitch, setPitch] = useState(0);
   useEffect(() => setPitch(screen.goal === "match" ? 0 : base / b.bpm - 1), [bid]); // eslint-disable-line react-hooks/exhaustive-deps
+  // The tempo fader's range, like a cdj: 8%, then 16%, then wide when the tracks are far apart.
+  const need = Math.abs(base / b.bpm - 1);
+  const range = need < 0.075 ? 0.08 : need < 0.15 ? 0.16 : 0.5;
   const bBpm = Math.round(b.bpm * (1 + pitch) * 10) / 10;
   const [fa, setFa] = useState(screen.goal === "blend" ? 0.75 : 0.75);
-  const [fb, setFb] = useState(screen.goal === "blend" ? 0 : 0.75);
+  // Blend and phrasing start with deck b waiting, fader down.
+  const [fb, setFb] = useState(screen.goal === "blend" || screen.goal === "phrase" ? 0 : 0.75);
   const [lowA, setLowA] = useState(0.5);
   const [lowB, setLowB] = useState(0.5);
-  const [xf, setXf] = useState(screen.goal === "crossfade" || screen.goal === "cut" || screen.goal === "echo" || screen.goal === "phrase" ? 0 : 0.5);
+  const [xf, setXf] = useState(screen.goal === "crossfade" || screen.goal === "cut" || screen.goal === "echo" ? 0 : 0.5);
   const [echoA, setEchoA] = useState(0);
   const [cutAt, setCutAt] = useState<{ t: number; from: number } | null>(null);
   const [cutDone, setCutDone] = useState(false);
+  const [cutMiss, setCutMiss] = useState(false);
   const [phraseOk, setPhraseOk] = useState<boolean | null>(null);
   const [seen, setSeen] = useState({ left: false, right: false });
   useEffect(() => setSeen(s => ({ left: s.left || xf < 0.1, right: s.right || xf > 0.9 })), [xf]);
@@ -48,7 +53,12 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   useEffect(() => {
     const now = performance.now();
     if (xf < 0.1) setCutAt({ t: now, from: 0 });
-    else if (xf > 0.9 && cutAt && cutAt.from === 0 && now - cutAt.t < 250) setCutDone(true);
+    else if (xf > 0.9 && cutAt && cutAt.from === 0 && now - cutAt.t < 250) {
+      // On the one: within a beat of a bar line (or anywhere when nothing is playing yet).
+      const inBar = ((beat % 4) + 4) % 4;
+      const onOne = beat < 0 || inBar < 1 || inBar > 3.6;
+      setCutDone(onOne); setCutMiss(!onOne);
+    }
   }, [xf]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const track: TrackV2 = useMemo(() => {
@@ -83,7 +93,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const why = screen.goal === "crossfade" ? (!seen.right ? "slide the crossfader all the way to b" : "now all the way back to a")
     : screen.goal === "swap" ? (fb <= 0.6 ? "bring deck b's fader up" : lowA >= 0.25 ? "turn deck a's low down" : "keep deck b's low up")
     : screen.goal === "key" ? `your song is ${mineKey}. pick a deck b track whose key fits: the same number, or one either side with the same letter`
-    : screen.goal === "cut" ? "slam the crossfader from a to b in one quick move, on the one"
+    : screen.goal === "cut" ? (cutMiss ? "quick enough, but it landed mid bar. go back to a and slam it across right on the one" : "slam the crossfader from a to b in one quick move, on the one")
     : screen.goal === "phrase" ? (phraseOk === false ? "that came in mid phrase. pull deck b down and bring it up right as the phrase lights reset to one" : "watch the phrase counter and bring deck b's fader up right on bar one")
     : screen.goal === "echo" ? (echoA <= 0.5 ? "turn deck a's echo up" : "now pull deck a's fader down and let the echo ring out")
     : screen.goal === "match" ? `deck b is ${bBpm > base ? "faster" : "slower"} by ${off.toFixed(1)} bpm. move its tempo fader until the beats line up`
@@ -113,8 +123,8 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <Fader label="deck a" value={fa} onChange={setFa} height={130} width={40} />
           </div>
           <div className="mx-mid">
-            <Silk label="deck b tempo" right={`${pitch >= 0 ? "+" : ""}${(pitch * 100).toFixed(1)}%`} />
-            <Fader horizontal label="Deck b tempo" value={(pitch + 0.08) / 0.16} defaultValue={0.5} onChange={v => setPitch(Math.round((v * 0.16 - 0.08) * 1000) / 1000)} width={200} />
+            <Silk label="deck b tempo" right={`${pitch >= 0 ? "+" : ""}${(pitch * 100).toFixed(1)}% of ${Math.round(range * 100)}`} />
+            <Fader horizontal label={`Deck b tempo, plus or minus ${Math.round(range * 100)} percent`} value={(pitch + range) / (2 * range)} defaultValue={0.5} onChange={v => setPitch(Math.round((v * 2 * range - range) * 1000) / 1000)} width={200} />
             <Silk label="crossfader" right={xf < 0.1 ? "a" : xf > 0.9 ? "b" : "both"} />
             <Fader horizontal label="Crossfader" value={xf} defaultValue={0.5} onChange={setXf} width={200} />
           </div>

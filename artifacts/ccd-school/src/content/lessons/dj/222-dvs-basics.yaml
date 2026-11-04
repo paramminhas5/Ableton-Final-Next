@@ -1,0 +1,97 @@
+slug: dvs-basics
+world: dj
+number: 222
+title: dvs and digital vinyl
+minutes: 5
+song:
+  changes: drums.clap
+  why: with a timecode record, your song could be played and cut on a real turntable
+learn: >-
+  How timecode vinyl lets a turntable play digital files, who uses it, and the quick cut that comes from
+  turntable culture, on your song.
+youCan:
+  - say what a timecode record does
+  - name the software a dvs setup runs
+  - make a quick cut with the crossfader
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Kick and clap, the kind of beat turntablists cut up. A digital vinyl system, dvs for short, lets them
+        do it with digital files. A turntable plays a special record, and the software plays your track as if
+        it were pressed on that vinyl.
+      straight: >-
+        Dvs, a digital vinyl system, lets a turntable control digital files through a special record.
+      eli5: >-
+        A dvs lets a dj use a real record player to play songs from a computer.
+
+  - kind: say
+    title: how it works
+    say:
+      mentor: >-
+        The special record is timecode vinyl. Instead of music it carries a coded signal. The software reads
+        that signal to know where the needle is and how fast the record is moving, then plays your file to
+        match. Scratch the record and the file scratches.
+
+        You also need an audio interface that can read timecode. And expect needles and records to wear
+        faster, because they're played all the time.
+      straight: >-
+        Timecode vinyl carries a coded signal. Software reads needle position and speed from it and plays your
+        file to match. Needs a timecode audio interface. Wears needles faster.
+      eli5: >-
+        The record has a secret code instead of music. The computer listens to the code and plays your song
+        at the same speed.
+    deeper:
+      - title: serato and traktor
+        say: >-
+          Serato DJ Pro is the most common dvs software, especially in hip-hop and turntablism. Traktor Scratch
+          Pro is Native Instruments' version.
+
+  - kind: mix
+    goal: cut
+    say:
+      mentor: >-
+        Hip-hop and turntablist djs live on the crossfader, so try their basic move. Deck b is matched and the
+        crossfader is on your song.
+
+        Watch the counter and, on the one, snap the crossfader from a to b in one quick move. On a dvs rig
+        it's the same move, with your song on a timecode record.
+      straight: >-
+        On the one, snap the crossfader from a to b in one quick move.
+      eli5: >-
+        When the counter says bar 1, whip the big slider from a to b.
+
+  - kind: ask
+    q: What does a timecode record carry?
+    options: ["a coded signal the software reads for position and speed", "the music itself", "nothing, it's blank", "your playlists"]
+    answer: 0
+    why: The software turns that code into where the needle is and how fast it's moving.
+    whyWrong:
+      1: The music is in your files.
+      2: The code is what makes it work.
+      3: Playlists live in the software.
+
+  - kind: ask
+    q: Who uses dvs most?
+    options: ["turntablists and vinyl djs with digital libraries", "radio presenters only", "djs who don't own turntables", "producers in the studio"]
+    answer: 0
+    why: It keeps the vinyl feel with digital music.
+    whyWrong:
+      1: It's a club and battle tool.
+      2: It needs turntables.
+      3: It's for playing live.
+
+  - kind: ask
+    q: Why do needles wear faster with dvs?
+    options: ["the timecode records are played constantly", "timecode is louder", "the software scratches them", "the records are made of glass"]
+    answer: 0
+    why: Every track you play runs on the same record.
+    whyWrong:
+      1: Volume isn't the issue.
+      2: Software doesn't touch the needle.
+      3: They're ordinary vinyl.
+
+  - kind: keep
+    next: >-
+      Back to the song path: recording your set.

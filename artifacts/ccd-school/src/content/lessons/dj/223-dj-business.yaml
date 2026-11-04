@@ -1,0 +1,93 @@
+slug: dj-business
+world: dj
+number: 223
+title: the business of djing
+minutes: 5
+song:
+  changes: drums.clap
+  why: a promoter books you on a mix and your own music, and your song is part of both
+learn: >-
+  What to send a promoter, setting a rate, the rider, and why being reliable gets you booked again.
+youCan:
+  - say what goes to a promoter
+  - say what a rider is
+  - explain why reliability matters as much as talent
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        A clean blend between two tracks. Do that for an hour, record it, and you have the thing promoters ask
+        for first: a promo mix. It's your audio cv, 60 to 90 minutes of your sound at its best.
+      straight: >-
+        Promoters want a promo mix first: 60 to 90 minutes of your sound at its best.
+      eli5: >-
+        People who run parties want to hear you first. So djs record a long mix to send them.
+
+  - kind: say
+    title: the business side
+    say:
+      mentor: >-
+        Alongside the mix, have an artist name and look that are the same everywhere, and a steady presence
+        where your audience listens, like Instagram, SoundCloud or Mixcloud. If you make music, send it too.
+        Your own tracks are exclusives nobody else can play.
+
+        Know the local rates and don't undercut them. It devalues you and everyone else. A rider is your
+        written list of what you need for the gig, technical and personal, agreed before the night.
+
+        Then be reliable. Turn up on time, prepared, and play what you promised. A promoter who can depend on
+        you books you again.
+      straight: >-
+        Send a promo mix and your own tracks. Keep one name and look everywhere. Know the rates and don't
+        undercut. Agree a rider in advance. Be reliable.
+      eli5: >-
+        Send your mix and your songs. Ask for fair pay. Write down what you need. Always turn up on time.
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        A promo mix is this, done many times in a row. Play the handover that could open yours: your song on
+        deck a, a bank track on deck b.
+
+        Bring deck b in, swap the bass with the low knobs, and take your song out. Make it clean enough that
+        you'd send it.
+      straight: >-
+        Play a handover you'd put in a promo mix. Fader b up, low a down, then crossfade to b or pull deck a
+        down.
+      eli5: >-
+        Mix your song into another one, as nicely as you can, like you're making a mix to send.
+
+  - kind: ask
+    q: What do promoters usually ask for first?
+    options: ["a promo mix of your sound", "a list of your gear", "your follower count", "a cv of past jobs"]
+    answer: 0
+    why: It's how they hear whether your sound fits their night.
+    whyWrong:
+      1: The venue usually has the gear.
+      2: Followers help, but the mix comes first.
+      3: Your mix is the cv.
+
+  - kind: ask
+    q: What is a rider?
+    options: ["a written list of your technical and personal needs for the gig", "a dj who travels with you", "a fee on top of your rate", "a style of mixing"]
+    answer: 0
+    why: Agreed in writing before the night.
+    whyWrong:
+      1: It's a document, not a person.
+      2: It lists needs, not fees.
+      3: It's paperwork, not technique.
+
+  - kind: ask
+    q: What gets you booked again most reliably?
+    options: ["turning up prepared and on time", "having the most followers", "having the newest gear", "playing only the biggest tracks"]
+    answer: 0
+    why: Promoters rebook djs they can depend on.
+    whyWrong:
+      1: Followers don't fix a no-show.
+      2: Gear doesn't make you reliable.
+      3: Reliability matters more than any track.
+
+  - kind: keep
+    next: >-
+      Back to the song path: from dj to artist. Your own track in your set.

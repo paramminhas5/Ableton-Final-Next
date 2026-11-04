@@ -11,6 +11,7 @@ import type { LayerKind, WorldKey } from "./track";
 import { scaleNote, type ScaleName } from "./theory";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LEAD_PARAMS, type ParamSpec } from "../engine/params.gen";
 import type { LessonScreen } from "../content/types";
+import { REAL_KIT_ID, withSynthKit } from "./realKit";
 
 export type Step = LessonScreen | { kind: "tryit" };
 
@@ -104,6 +105,8 @@ export function playPads(type: LayerType, root: number, scale: ScaleName): PlayP
 export function applyTake(t: TrackV2, slug: string, take: Take, world?: WorldKey, params?: Record<number, number>): TrackV2 {
   if (t.added.includes(slug)) return t;
   const drumLike = take.type === "drums" || take.type === "hats";
+  // Shaped drums are heard on the synth kit (the recorded kit has no knobs).
+  if (drumLike && params && Object.keys(params).length && t.layers.some(l => l.id === REAL_KIT_ID)) t = withSynthKit(t);
   const events = take.events.map(e => ({ ...e })).sort((a, b) => a.start - b.start || a.note - b.note);
   const idx = t.layers.findIndex(l => l.type === take.type);
   let layers: LayerV2[];
@@ -177,6 +180,8 @@ export function readTake(slug: string): Take | null {
  */
 export function withParams(t: TrackV2, type: LayerType, params: Record<number, number>): TrackV2 {
   if (!Object.keys(params).length) return t;
+  // The drum knobs live on the synth kit, so shaping drums or hats brings the synth kit back.
+  if ((type === "drums" || type === "hats") && t.layers.some(l => l.id === REAL_KIT_ID)) t = withSynthKit(t);
   const kickLayer = t.layers.find(l => l.type === "drums" && l.events.some(e => e.note === 36));
   const duckIdx = 11; // mix.duck in LAYER_PARAMS
   return {

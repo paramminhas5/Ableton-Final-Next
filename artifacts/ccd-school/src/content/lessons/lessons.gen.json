@@ -3136,9 +3136,9 @@
           "kind": "mix",
           "goal": "phrase",
           "say": {
-            "mentor": "The move behind every hot cue is timing. Set the crossfader to the middle and pull deck b's fader all the way down.\nWatch the phrase counter. As it comes round to bar 1, push deck b's fader up, like hitting a hot cue right on the one. Miss it and try again on the next phrase.",
-            "straight": "Crossfader to the middle, deck b's fader down. On bar 1 of the phrase counter, push deck b up.",
-            "eli5": "Put the big slider in the middle and deck b's slider at the bottom. When the counter says bar 1, push deck b up."
+            "mentor": "The move behind every hot cue is timing. The crossfader sits in the middle and deck b is waiting with its fader down.\nWatch the phrase counter. As it comes round to bar 1, push deck b's fader up, like hitting a hot cue right on the one. Miss it and try again on the next phrase.",
+            "straight": "Deck b waits with its fader down. On bar 1 of the phrase counter, push deck b up.",
+            "eli5": "Deck b's slider starts at the bottom. When the counter says bar 1, push deck b up."
           },
           "hint": "Count down the last bar. Four, three, two, one, go."
         },
@@ -3409,6 +3409,420 @@
         }
       ],
       "file": "dj/219-genre-strategy-dj.yaml"
+    },
+    {
+      "slug": "effects-deep-dj",
+      "world": "dj",
+      "number": 220,
+      "title": "effects, deep",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "an echo out of your song carries its last beat across into the next track"
+      },
+      "learn": "Choosing effects on purpose: echo size, the reverb wash, flanger and phaser, and an echo out from your song into the next track.",
+      "youCan": [
+        "do an echo out of your song",
+        "say how echo size changes the feel",
+        "describe a reverb wash"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "Kick and clap. Imagine that last clap repeating, quieter each time, as the next track comes in. That's echo used on purpose. Going deeper with effects doesn't mean using more of them. It means choosing each one for what it does to the moment.",
+            "straight": "Deeper effects work is choosing each effect for the moment, not using more.",
+            "eli5": "Imagine the last clap repeating and getting quieter. Djs choose effects like that on purpose."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "choosing an effect",
+          "say": {
+            "mentor": "Echo size matters. A half beat echo flutters fast. A one bar echo leaves long gaps between repeats.\nA reverb wash turns the reverb's feedback up so it swells, then cuts the dry track (the track without the effect), leaving only the cloud. A flanger sweeps like a jet plane, strong on hats and snares. A phaser moves more slowly and adds depth to pads.\nThe hardest skill is not using them. One effect at the right moment is a memory. Effects on every blend are noise.",
+            "straight": "Half beat echo flutters, one bar echo leaves gaps. Reverb wash: feedback up, dry track cut. Flanger: jet plane sweep. Phaser: slower depth. Use them rarely.",
+            "eli5": "Short echoes flutter fast, long echoes wait between repeats. Some effects swoosh like a plane. Use them only sometimes."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "echo",
+          "say": {
+            "mentor": "Both decks are playing and matched, with the crossfader on your song. Turn deck a's echo up and let your song's last beats start to repeat.\nThen crossfade to b while the echo rings. Your song echoes away under the new track.",
+            "straight": "Echo a up, then crossfade to b while the echo rings.",
+            "eli5": "Turn up the echo on your song. Then slide the big slider over to b."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What changes between a half beat echo and a one bar echo?",
+          "options": [
+            "how fast the repeats come",
+            "the key",
+            "the tempo of the track",
+            "nothing"
+          ],
+          "answer": 0,
+          "why": "Shorter size, faster repeats.",
+          "whyWrong": {
+            "1": "Echo doesn't change key.",
+            "2": "The track's tempo stays put.",
+            "3": "They feel very different."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a reverb wash?",
+          "options": [
+            "the reverb swells up, then the dry track is cut",
+            "a short reverb with no tail",
+            "reverb on the new track only",
+            "a kind of eq"
+          ],
+          "answer": 0,
+          "why": "Only the reverb cloud is left, fading away.",
+          "whyWrong": {
+            "1": "A wash is all tail.",
+            "2": "It's on the outgoing track.",
+            "3": "Eq shapes frequencies."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's the advanced skill with effects?",
+          "options": [
+            "knowing when not to use them",
+            "using one on every blend",
+            "using as many as possible at once",
+            "only using presets"
+          ],
+          "answer": 0,
+          "why": "Restraint makes the moments count.",
+          "whyWrong": {
+            "1": "Then they stop meaning anything.",
+            "2": "More isn't better.",
+            "3": "Presets are fine. Choosing is the skill."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: preparing a set."
+        }
+      ],
+      "file": "dj/220-effects-deep-dj.yaml"
+    },
+    {
+      "slug": "stem-djing",
+      "world": "dj",
+      "number": 221,
+      "title": "stem djing",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "splitting tracks into parts lets your song and another track share one groove"
+      },
+      "learn": "What stems are, mixing parts of tracks instead of whole tracks, and a rough version of it with the eq on your song.",
+      "youCan": [
+        "say what a stem is",
+        "say why stems are never perfectly clean",
+        "split two tracks by frequency with the eq"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "Two whole tracks. Normally a dj mixes them whole. Stems change that. Software splits a track into its parts, such as drums, bass, melody and vocals, and gives each part its own level. Then you mix parts, not tracks.",
+            "straight": "Stems are the separate parts of a track, like drums, bass, melody and vocals. Stem djing mixes parts, not whole tracks.",
+            "eli5": "A computer can pull a song apart into drums, bass, tune and singing. Then you can mix just the parts you want."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "what stems make possible",
+          "say": {
+            "mentor": "Keep the drums of both tracks running while you swap the bass and the melody. Or run your song's drums under another track's vocal. The beat never breaks.\nThe split is done by machine learning, and it isn't perfect. On busy tracks a bit of one part leaks into another, so a drums only stem can still carry a ghost of the bass.",
+            "straight": "Keep both drums while swapping bass and melody, or put one track's drums under another's vocal. Machine learning does the split, and parts can leak.",
+            "eli5": "You can keep the drums going while swapping the rest. The computer isn't perfect, so bits sometimes sneak into the wrong part."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "swap",
+          "say": {
+            "mentor": "We don't have stems here, but the eq gives you a rough version. It splits by frequency instead of by instrument.\nBring deck b's fader up. Turn your song's low down and keep deck b's low up. Now deck b carries the kick and bass, and your song carries everything above them. Two tracks, split down the middle, one groove.",
+            "straight": "The eq splits by frequency, a rough stem. Fader b up, low a down, low b up. Deck b's low end under your song's top.",
+            "eli5": "Push deck b up. Turn your song's low knob down. Now deck b plays the deep sounds and your song plays the rest."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a stem?",
+          "options": [
+            "one part of a track, like the drums or the vocal",
+            "the whole track",
+            "a cue point",
+            "a playlist"
+          ],
+          "answer": 0,
+          "why": "A separated part you can control on its own.",
+          "whyWrong": {
+            "1": "A stem is a piece of the track.",
+            "2": "Cue points mark positions.",
+            "3": "Playlists hold whole tracks."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why might a stem not be perfectly clean?",
+          "options": [
+            "the machine learning split leaks between parts",
+            "stems are always perfect",
+            "the usb is too slow",
+            "the key is wrong"
+          ],
+          "answer": 0,
+          "why": "Busy productions are hard to pull apart perfectly.",
+          "whyWrong": {
+            "1": "Leaks are normal.",
+            "2": "Drive speed doesn't affect the split.",
+            "3": "Key has nothing to do with it."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "How is the eq different from stems?",
+          "options": [
+            "it splits by frequency, not by instrument",
+            "it's exactly the same",
+            "it splits by tempo",
+            "it splits by key"
+          ],
+          "answer": 0,
+          "why": "The low knob takes everything low, kick and bass together.",
+          "whyWrong": {
+            "1": "Stems separate instruments, the eq separates frequencies.",
+            "2": "Tempo isn't involved.",
+            "3": "Key isn't involved."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: preparing a set."
+        }
+      ],
+      "file": "dj/221-stem-djing.yaml"
+    },
+    {
+      "slug": "dvs-basics",
+      "world": "dj",
+      "number": 222,
+      "title": "dvs and digital vinyl",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "with a timecode record, your song could be played and cut on a real turntable"
+      },
+      "learn": "How timecode vinyl lets a turntable play digital files, who uses it, and the quick cut that comes from turntable culture, on your song.",
+      "youCan": [
+        "say what a timecode record does",
+        "name the software a dvs setup runs",
+        "make a quick cut with the crossfader"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "kick-and-clap",
+          "say": {
+            "mentor": "Kick and clap, the kind of beat turntablists cut up. A digital vinyl system, dvs for short, lets them do it with digital files. A turntable plays a special record, and the software plays your track as if it were pressed on that vinyl.",
+            "straight": "Dvs, a digital vinyl system, lets a turntable control digital files through a special record.",
+            "eli5": "A dvs lets a dj use a real record player to play songs from a computer."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "how it works",
+          "say": {
+            "mentor": "The special record is timecode vinyl. Instead of music it carries a coded signal. The software reads that signal to know where the needle is and how fast the record is moving, then plays your file to match. Scratch the record and the file scratches.\nYou also need an audio interface that can read timecode. And expect needles and records to wear faster, because they're played all the time.",
+            "straight": "Timecode vinyl carries a coded signal. Software reads needle position and speed from it and plays your file to match. Needs a timecode audio interface. Wears needles faster.",
+            "eli5": "The record has a secret code instead of music. The computer listens to the code and plays your song at the same speed."
+          },
+          "deeper": [
+            {
+              "title": "serato and traktor",
+              "say": "Serato DJ Pro is the most common dvs software, especially in hip-hop and turntablism. Traktor Scratch Pro is Native Instruments' version."
+            }
+          ]
+        },
+        {
+          "kind": "mix",
+          "goal": "cut",
+          "say": {
+            "mentor": "Hip-hop and turntablist djs live on the crossfader, so try their basic move. Deck b is matched and the crossfader is on your song.\nWatch the counter and, on the one, snap the crossfader from a to b in one quick move. On a dvs rig it's the same move, with your song on a timecode record.",
+            "straight": "On the one, snap the crossfader from a to b in one quick move.",
+            "eli5": "When the counter says bar 1, whip the big slider from a to b."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a timecode record carry?",
+          "options": [
+            "a coded signal the software reads for position and speed",
+            "the music itself",
+            "nothing, it's blank",
+            "your playlists"
+          ],
+          "answer": 0,
+          "why": "The software turns that code into where the needle is and how fast it's moving.",
+          "whyWrong": {
+            "1": "The music is in your files.",
+            "2": "The code is what makes it work.",
+            "3": "Playlists live in the software."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Who uses dvs most?",
+          "options": [
+            "turntablists and vinyl djs with digital libraries",
+            "radio presenters only",
+            "djs who don't own turntables",
+            "producers in the studio"
+          ],
+          "answer": 0,
+          "why": "It keeps the vinyl feel with digital music.",
+          "whyWrong": {
+            "1": "It's a club and battle tool.",
+            "2": "It needs turntables.",
+            "3": "It's for playing live."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why do needles wear faster with dvs?",
+          "options": [
+            "the timecode records are played constantly",
+            "timecode is louder",
+            "the software scratches them",
+            "the records are made of glass"
+          ],
+          "answer": 0,
+          "why": "Every track you play runs on the same record.",
+          "whyWrong": {
+            "1": "Volume isn't the issue.",
+            "2": "Software doesn't touch the needle.",
+            "3": "They're ordinary vinyl."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: recording your set."
+        }
+      ],
+      "file": "dj/222-dvs-basics.yaml"
+    },
+    {
+      "slug": "dj-business",
+      "world": "dj",
+      "number": 223,
+      "title": "the business of djing",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.clap",
+        "why": "a promoter books you on a mix and your own music, and your song is part of both"
+      },
+      "learn": "What to send a promoter, setting a rate, the rider, and why being reliable gets you booked again.",
+      "youCan": [
+        "say what goes to a promoter",
+        "say what a rider is",
+        "explain why reliability matters as much as talent"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "two-tracks",
+          "say": {
+            "mentor": "A clean blend between two tracks. Do that for an hour, record it, and you have the thing promoters ask for first: a promo mix. It's your audio cv, 60 to 90 minutes of your sound at its best.",
+            "straight": "Promoters want a promo mix first: 60 to 90 minutes of your sound at its best.",
+            "eli5": "People who run parties want to hear you first. So djs record a long mix to send them."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the business side",
+          "say": {
+            "mentor": "Alongside the mix, have an artist name and look that are the same everywhere, and a steady presence where your audience listens, like Instagram, SoundCloud or Mixcloud. If you make music, send it too. Your own tracks are exclusives nobody else can play.\nKnow the local rates and don't undercut them. It devalues you and everyone else. A rider is your written list of what you need for the gig, technical and personal, agreed before the night.\nThen be reliable. Turn up on time, prepared, and play what you promised. A promoter who can depend on you books you again.",
+            "straight": "Send a promo mix and your own tracks. Keep one name and look everywhere. Know the rates and don't undercut. Agree a rider in advance. Be reliable.",
+            "eli5": "Send your mix and your songs. Ask for fair pay. Write down what you need. Always turn up on time."
+          }
+        },
+        {
+          "kind": "mix",
+          "goal": "blend",
+          "say": {
+            "mentor": "A promo mix is this, done many times in a row. Play the handover that could open yours: your song on deck a, a bank track on deck b.\nBring deck b in, swap the bass with the low knobs, and take your song out. Make it clean enough that you'd send it.",
+            "straight": "Play a handover you'd put in a promo mix. Fader b up, low a down, then crossfade to b or pull deck a down.",
+            "eli5": "Mix your song into another one, as nicely as you can, like you're making a mix to send."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What do promoters usually ask for first?",
+          "options": [
+            "a promo mix of your sound",
+            "a list of your gear",
+            "your follower count",
+            "a cv of past jobs"
+          ],
+          "answer": 0,
+          "why": "It's how they hear whether your sound fits their night.",
+          "whyWrong": {
+            "1": "The venue usually has the gear.",
+            "2": "Followers help, but the mix comes first.",
+            "3": "Your mix is the cv."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a rider?",
+          "options": [
+            "a written list of your technical and personal needs for the gig",
+            "a dj who travels with you",
+            "a fee on top of your rate",
+            "a style of mixing"
+          ],
+          "answer": 0,
+          "why": "Agreed in writing before the night.",
+          "whyWrong": {
+            "1": "It's a document, not a person.",
+            "2": "It lists needs, not fees.",
+            "3": "It's paperwork, not technique."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What gets you booked again most reliably?",
+          "options": [
+            "turning up prepared and on time",
+            "having the most followers",
+            "having the newest gear",
+            "playing only the biggest tracks"
+          ],
+          "answer": 0,
+          "why": "Promoters rebook djs they can depend on.",
+          "whyWrong": {
+            "1": "Followers don't fix a no-show.",
+            "2": "Gear doesn't make you reliable.",
+            "3": "Reliability matters more than any track."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to the song path: from dj to artist. Your own track in your set."
+        }
+      ],
+      "file": "dj/223-dj-business.yaml"
     },
     {
       "slug": "tempo-bpm",
@@ -18565,6 +18979,931 @@
         }
       ],
       "file": "producer/282-comping-flow.yaml"
+    },
+    {
+      "slug": "macro-variations",
+      "world": "producer",
+      "number": 283,
+      "title": "macro variations",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "two versions of your drop give your song a second big moment"
+      },
+      "learn": "Macro variations, saved snapshots of a rack's knobs, and two versions of your drop in your song.",
+      "youCan": [
+        "say what a macro variation saves",
+        "say what happens to settings a variation doesn't cover",
+        "build two different drops"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Once a sound has macros, you'll find settings you love: a dark version for the break, a bright one for the drop. A macro variation is a saved snapshot of every macro knob on a rack. Store one, change the knobs, store another, and you can jump between whole sounds in one click.",
+            "straight": "A macro variation saves every macro on a rack. Store a few and jump between them in one click.",
+            "eli5": "A variation is like taking a photo of where all your big knobs are, so you can go back to it in one tap."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "snapshots",
+          "say": {
+            "mentor": "A variation only remembers the macros. Anything you haven't mapped to a macro stays where it is when you switch.\nMany producers use them for sections: one variation per part of the song, so going from the break to the drop changes a whole sound at once.",
+            "straight": "Variations only store macros. Unmapped settings don't change. Use one per section.",
+            "eli5": "It only remembers the big knobs. Everything else stays the same."
+          },
+          "deeper": [
+            {
+              "title": "variations in live",
+              "say": "Macro Variations live in the rack, next to the macros. Set the macros, store a new variation, change them, store another. Click a variation to recall it. You can map switching to a controller, so one pad recalls one section."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "drop",
+          "say": {
+            "mentor": "Here's your song as sections. Make two different drops. In the first, everything plays. In the second, switch your lead or chords off so it hits with just drums and bass. Take the drums out of the section before at least one of them, so it lands.\nPlay it through and compare the two drops: same song, two versions, like two variations of one sound.",
+            "straight": "Two drops: one with everything, one with just drums and bass. Take the drums out before one of them. Compare.",
+            "eli5": "Make two big moments in your song, one full and one with fewer sounds. Turn the drums off just before one of them."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a macro variation?",
+          "options": [
+            "a saved snapshot of a rack's macro knobs",
+            "a new song",
+            "a drum fill",
+            "a type of eq"
+          ],
+          "answer": 0,
+          "why": "Store it, then recall every macro in one click.",
+          "whyWrong": {
+            "1": "It lives inside one rack.",
+            "2": "Fills are notes.",
+            "3": "Eq is an effect."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "You switch variations. What happens to settings not mapped to a macro?",
+          "options": [
+            "they stay where they are",
+            "they reset to zero",
+            "they get louder",
+            "they're deleted"
+          ],
+          "answer": 0,
+          "why": "A variation only remembers the macros.",
+          "whyWrong": {
+            "1": "Nothing resets.",
+            "2": "Level doesn't change.",
+            "3": "Nothing is deleted."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next on the path, finish and export."
+        }
+      ],
+      "file": "producer/283-macro-variations.yaml"
+    },
+    {
+      "slug": "instrument-rack",
+      "world": "producer",
+      "number": 284,
+      "title": "instrument rack",
+      "minutes": 5,
+      "song": {
+        "changes": "lead.lead",
+        "why": "two voices stacked on your lead make it thicker and wider than one"
+      },
+      "learn": "What an instrument rack is, layers and splits, and your lead thickened with a second voice.",
+      "youCan": [
+        "say what layering and splitting are",
+        "say what key and velocity zones do",
+        "stack two voices on your lead"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "synth-shapes",
+          "say": {
+            "mentor": "An instrument rack holds several instruments on one track. Play a note and every instrument inside plays it together. That's layering: a soft pad under a sharp lead, two synths stacked into one bigger sound.",
+            "straight": "An instrument rack holds several instruments on one track. Layering plays them all at once.",
+            "eli5": "An instrument rack is like two or three instruments playing the same note at the same time."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "layers and splits",
+          "say": {
+            "mentor": "Each instrument in a rack sits on its own chain, a row with its own instrument and effects. Chains can all play at once, which is a layer. Or each can answer only part of the keyboard, which is a split: low keys play a bass, high keys play chords.\nChains can also answer only soft or only hard hits, so a gentle touch plays one sound and a hard one plays another.",
+            "straight": "Each instrument is a chain. All at once is a layer. Different keys for each is a split. Chains can also answer soft or hard hits.",
+            "eli5": "You can play all the instruments together, or give each one its own part of the keyboard."
+          },
+          "deeper": [
+            {
+              "title": "zones in live",
+              "say": "Every chain in an Instrument Rack has a key zone, the notes it answers, and a velocity zone, the hit strengths it answers. A chain selector lets a macro choose which chains play, so one knob can move from one sound to another."
+            },
+            {
+              "title": "watch the overlap",
+              "say": "Two chains playing the same notes both use processing power, and can clash. Overlap zones on purpose, not by accident."
+            },
+            {
+              "title": "glue the layers",
+              "say": "A compressor after the rack helps layered chains sound like one instrument."
+            }
+          ]
+        },
+        {
+          "kind": "shape",
+          "layer": "lead",
+          "knobs": [
+            "detune",
+            "wave"
+          ],
+          "say": {
+            "mentor": "Your lead in our instrument is a small stack already. Detune puts two copies of the sound slightly apart, and together they sound thicker and wider, like two layered voices. Turn detune up and hear your lead grow from one voice to two. Then try wave to change what both voices are made of.\nKeep it if your lead sounds bigger without going blurry or out of tune.",
+            "straight": "Detune stacks two copies slightly apart, like a two-voice layer. Wave changes both. Stop before it sounds out of tune.",
+            "eli5": "Turn detune up and your tune sounds like two instruments playing together. Stop before it sounds wobbly."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does an instrument rack let you do?",
+          "options": [
+            "play several instruments from one track",
+            "record vocals",
+            "change the tempo",
+            "export stems"
+          ],
+          "answer": 0,
+          "why": "Several chains, one track.",
+          "whyWrong": {
+            "1": "Recording is a track's job.",
+            "2": "Tempo is the song's speed.",
+            "3": "Exporting happens from the File menu."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a split?",
+          "options": [
+            "chains answering different parts of the keyboard",
+            "two songs at once",
+            "a cut in the audio",
+            "a drum fill"
+          ],
+          "answer": 0,
+          "why": "Low keys play one sound, high keys another.",
+          "whyWrong": {
+            "1": "It's one instrument track.",
+            "2": "Nothing gets cut.",
+            "3": "Fills are notes in a pattern."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "What does a velocity zone decide?",
+          "options": [
+            "which hit strengths a chain answers",
+            "the song's speed",
+            "the pan",
+            "the reverb size"
+          ],
+          "answer": 0,
+          "why": "Soft hits can play one chain, hard hits another.",
+          "whyWrong": {
+            "1": "Velocity is how hard, not how fast the song is.",
+            "2": "Pan is left and right.",
+            "3": "Reverb is a separate effect."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next on the path, finish and export."
+        }
+      ],
+      "file": "producer/284-instrument-rack.yaml"
+    },
+    {
+      "slug": "exporting",
+      "world": "producer",
+      "number": 285,
+      "title": "exporting from live",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "an export is the moment your song becomes a file anyone can play"
+      },
+      "learn": "What exporting is, audio files, stems and midi, and your song named and exported.",
+      "youCan": [
+        "say the difference between an audio and a midi export",
+        "choose a format for a master and for sharing",
+        "export your song"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Exporting turns your song into a file that lives outside the program. There are two main kinds. An audio export is the finished sound, a file anyone can play. A midi export is the notes, which another program can play on its own instruments.",
+            "straight": "Exporting makes a file of your song. Audio is the finished sound. Midi is the notes.",
+            "eli5": "Exporting turns your song into a file you can send to anyone."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "formats",
+          "say": {
+            "mentor": "Wav and aiff are full quality, so keep one as your master copy. Mp3 is smaller and fine for sharing, but it throws a little detail away, so it shouldn't be your master.\nStems are each part, or group of parts, exported as its own audio file. They're for collaborators, remixers and mastering engineers.",
+            "straight": "Wav or aiff for your master, mp3 for sharing. Stems are each part as its own audio file.",
+            "eli5": "Keep a best-quality copy of your song, and a smaller one to share. You can also save each sound on its own."
+          },
+          "deeper": [
+            {
+              "title": "export in live",
+              "say": "Choose Export Audio/Video from the File menu, or press Cmd+Shift+R on a Mac or Ctrl+Shift+R on Windows. Pick what to render, the master or individual tracks, the format (WAV, AIFF, FLAC or MP3), the sample rate and the bit depth."
+            },
+            {
+              "title": "set the range",
+              "say": "Live renders the length you've selected, so set it to cover the whole song. Forget, and you'll get only part of it."
+            },
+            {
+              "title": "stems in live",
+              "say": "Render All Individual Tracks to export every track as its own file."
+            },
+            {
+              "title": "hardware",
+              "say": "If hardware synths are part of your song, turn on real-time rendering so Live plays them while it exports."
+            },
+            {
+              "title": "headroom",
+              "say": "For a streaming master, many engineers leave about 1 dB of headroom rather than pushing the peak right up to the top."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "export",
+          "say": {
+            "mentor": "Here's your finished song. Give it a name, play it through once more, and download the midi: the notes of every part, ready to drop into Live, where each part lands on its own track and plays on Live's instruments.",
+            "straight": "Name it, play it through, download the midi, open it in Live.",
+            "eli5": "Type a name for your song, then tap download."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which file should you keep as your master copy?",
+          "options": [
+            "wav",
+            "mp3",
+            "a screenshot",
+            "the midi only"
+          ],
+          "answer": 0,
+          "why": "Full quality. Make smaller copies from it.",
+          "whyWrong": {
+            "1": "Mp3 throws a little detail away.",
+            "2": "A picture isn't sound.",
+            "3": "Midi is notes, not the finished sound."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What are stems?",
+          "options": [
+            "each part exported as its own audio file",
+            "the song's notes",
+            "a kind of reverb",
+            "the tempo map"
+          ],
+          "answer": 0,
+          "why": "Drums, bass, lead and so on, each in its own file.",
+          "whyWrong": {
+            "1": "That's midi.",
+            "2": "Reverb is an effect.",
+            "3": "Stems are sound files."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a midi export hold?",
+          "options": [
+            "the notes of every part",
+            "the finished sound",
+            "only the drums",
+            "the artwork"
+          ],
+          "answer": 0,
+          "why": "Which notes, when, how long and how hard.",
+          "whyWrong": {
+            "1": "That's an audio export.",
+            "2": "It holds every part.",
+            "3": "It's music data only."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/285-exporting.yaml"
+    },
+    {
+      "slug": "live-sets-projects",
+      "world": "producer",
+      "number": 286,
+      "title": "live sets and projects",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "a song saved and named properly is a song you can come back to"
+      },
+      "learn": "What a Live Set and a project are, how to save so nothing goes missing, and your song given a proper name.",
+      "youCan": [
+        "say what a Live Set and a project are",
+        "save versions instead of saving over",
+        "collect a set's files into its project in Live"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "In Live, your song is saved as a Live Set, a single file ending in .als. But a song is more than that file. It also uses samples and presets stored in other places. The project is the folder around the set that keeps all of it together.",
+            "straight": "A Live Set is your song's file (.als). The project is the folder that holds it and everything it uses.",
+            "eli5": "Your song is saved as a file, and the file lives in a folder with all the sounds it needs."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "save it properly",
+          "say": {
+            "mentor": "The habit that saves you: the first time you save a song, put it in its own new folder named after the song. Before you close or move it, collect everything the song uses into that folder.\nSave new versions as you go, version 1, 2, 3, instead of saving over the same file. If a change goes wrong, the last good one is still there.",
+            "straight": "One song, one new folder. Collect everything into it. Save numbered versions instead of saving over.",
+            "eli5": "Give every song its own folder. Save a new copy each time, so you can always go back."
+          },
+          "deeper": [
+            {
+              "title": "collect all and save",
+              "say": "Collect All and Save, in the File menu, copies every sample the set uses into its project folder, so you can move it or send it to someone and it still opens."
+            },
+            {
+              "title": "manage project",
+              "say": "In the File menu, Manage Files then Manage Project lists missing samples and unused ones, so you can tidy up before you archive."
+            },
+            {
+              "title": "templates",
+              "say": "Save Live Set As Template stores your usual starting setup: tracks, sends and devices."
+            },
+            {
+              "title": "crash recovery",
+              "say": "Crash recovery isn't a save. It's a one-time rescue after a crash, so save often."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "export",
+          "say": {
+            "mentor": "Here's your song. Saving starts with a name. Give it a real one, not my song, and download the midi as your first saved copy. In Live, this is the moment you'd make the song its own folder.",
+            "straight": "Give your song a real name and download the midi as your first saved copy.",
+            "eli5": "Give your song a name you like, then tap download to save a copy."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a project in Live?",
+          "options": [
+            "the folder that holds a set and everything it uses",
+            "a single sample",
+            "a kind of track",
+            "the master fader"
+          ],
+          "answer": 0,
+          "why": "The set plus its samples and presets, all in one place.",
+          "whyWrong": {
+            "1": "A project holds samples, but it's the whole folder.",
+            "2": "Tracks live inside a set.",
+            "3": "The fader sets level."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why save new versions instead of saving over one file?",
+          "options": [
+            "if a change goes wrong, the last good one is still there",
+            "Live can only open new files",
+            "it makes the song louder",
+            "older versions play faster"
+          ],
+          "answer": 0,
+          "why": "Every version is a way back.",
+          "whyWrong": {
+            "1": "Live opens any saved set.",
+            "2": "Saving doesn't touch the sound.",
+            "3": "Tempo is saved with the song."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does Collect All and Save do?",
+          "options": [
+            "copies every sample the set uses into its project folder",
+            "deletes unused tracks",
+            "exports an mp3",
+            "saves a template"
+          ],
+          "answer": 0,
+          "why": "Then the project works anywhere you move it.",
+          "whyWrong": {
+            "1": "Nothing is deleted.",
+            "2": "That's an export.",
+            "3": "That's Save Live Set As Template."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/286-live-sets-projects.yaml"
+    },
+    {
+      "slug": "files-projects",
+      "world": "producer",
+      "number": 287,
+      "title": "files and projects",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "knowing which file holds what means your song never breaks when you move it"
+      },
+      "learn": "The files a song is made of, sets, projects, samples and packs, and your song as a file you can take anywhere.",
+      "youCan": [
+        "say what a set, a project and a pack are",
+        "say why a part can go silent after a move",
+        "download your song as a midi file"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "A song on a computer is a bundle of files. The set holds your arrangement and settings. Samples are separate audio files that the set points to. Move a sample, or the set, and the set may not find it. Then that part goes silent.\nKnowing what's where is how you stop that happening.",
+            "straight": "A song is several files. The set points to samples stored separately. Lose a sample and that part goes silent.",
+            "eli5": "Your song is made of a few files. If one goes missing, part of your song goes quiet."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "three layers",
+          "say": {
+            "mentor": "A Live Set is one file, your song. A project is the folder around it that holds the set plus its samples and presets. A pack is a bundle made for sharing sounds, the way Ableton ships its own sound libraries.\nOne song, one project folder. Put every song in one big folder and the links between files get tangled when you move things.",
+            "straight": "Set: your song. Project: the folder with the set and its sounds. Pack: a bundle for sharing. One song per project folder.",
+            "eli5": "The song file goes in a folder with its sounds. Give every song its own folder."
+          },
+          "deeper": [
+            {
+              "title": "projects in live",
+              "say": "Live treats any folder with an Ableton Project Info folder inside as a project, and looks for samples relative to it first."
+            },
+            {
+              "title": "collect before you send",
+              "say": "Use Collect All and Save before you send a project to someone, so every sample travels with it."
+            },
+            {
+              "title": "packs",
+              "say": "A Live Pack is a single .alp file. Ableton uses packs to share sounds, and you can make your own."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "export",
+          "say": {
+            "mentor": "Here's your song. The midi file you download is another kind of file: just the notes, no sound, which is why it's tiny. Name it, download it, and find it with your other files. It travels anywhere, and almost any music program can open it.",
+            "straight": "Name your song and download the midi. It's just notes, so it's tiny and opens almost anywhere.",
+            "eli5": "Name your song and tap download. You get a tiny file with all your notes in it."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What happens if a set can't find a sample it uses?",
+          "options": [
+            "that part goes silent",
+            "Live makes a new one",
+            "the song speeds up",
+            "nothing, it still plays"
+          ],
+          "answer": 0,
+          "why": "The set only points to the sample. No sample, no sound.",
+          "whyWrong": {
+            "1": "Live can't invent the missing sound.",
+            "2": "Tempo isn't affected.",
+            "3": "The part that uses it can't play."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a project folder hold?",
+          "options": [
+            "the set plus its samples and presets",
+            "only the set",
+            "every song you've made",
+            "only the midi"
+          ],
+          "answer": 0,
+          "why": "Everything one song needs, in one place.",
+          "whyWrong": {
+            "1": "It holds what the set uses too.",
+            "2": "One song per project.",
+            "3": "Midi is just one kind of file it might hold."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why is a midi file so small?",
+          "options": [
+            "it holds only notes, no sound",
+            "it's squashed audio",
+            "it only keeps the drums",
+            "it's a shortcut to your song"
+          ],
+          "answer": 0,
+          "why": "Notes are tiny compared with recorded sound.",
+          "whyWrong": {
+            "1": "There's no audio in it.",
+            "2": "It keeps every part.",
+            "3": "It's a real file you can open anywhere."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/287-files-projects.yaml"
+    },
+    {
+      "slug": "stem-separation",
+      "world": "producer",
+      "number": 288,
+      "title": "stem separation",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "hearing your parts one at a time is what stems are, and it shows what each part adds"
+      },
+      "learn": "What stems are, how Live 12 can pull them out of a finished track, and your own song heard part by part.",
+      "youCan": [
+        "say what a stem is",
+        "say what bleed is",
+        "hear your song as stems"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "A finished track is one blended sound, everything mixed together. Stems are the parts pulled apart again: the drums on their own, the bass on its own, and so on. Djs and producers use them to remix, to sample, and to learn how a track was built.",
+            "straight": "Stems are a track's parts on their own: drums, bass and so on. Used for remixing, sampling and learning.",
+            "eli5": "A song is lots of sounds mixed together. Stems are those sounds pulled apart again."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "pulling a track apart",
+          "say": {
+            "mentor": "Live 12 can separate a mixed audio clip into four stems, using a model that runs on your own computer, no internet needed.\nIt's never perfect. Expect some bleed: bits of one part leaking into another's stem, like a little kick left in the bass. Treat stems as a starting point.\nYour own song is easier. Its parts were never mixed into one, so every part is already its own stem.",
+            "straight": "Live 12 splits a mixed clip into four stems, on your computer. Expect bleed, parts leaking into each other. Your song's parts are already stems.",
+            "eli5": "Live can pull a song apart into four pieces. The pieces aren't perfect, a bit of one sound leaks into another."
+          },
+          "deeper": [
+            {
+              "title": "in live",
+              "say": "Right-click an audio clip and choose to separate it into stems. Live makes a new audio clip for each stem, lined up in time with the original."
+            },
+            {
+              "title": "what separates well",
+              "say": "Sparse electronic tracks separate cleanly. Dense, busy mixes are harder, and so are masters that have been limited very hard."
+            },
+            {
+              "title": "ideas",
+              "say": "Pull the drums out of a track, slice them onto pads and play your own pattern. Or pull a bass line out of an old record to study it."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "sections",
+          "say": {
+            "mentor": "Here's your song as sections. Turn one section into a drums stem: switch everything off except your drums. Make the next one a bass stem, then let the last bring everything back. Play it through and hear each part alone, then all together.",
+            "straight": "One section drums only, one bass only, then everything. Play it and hear the stems.",
+            "eli5": "In one part, keep only the drums. In the next, only the bass. Then turn everything back on."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is a stem?",
+          "options": [
+            "one part of a track on its own",
+            "a whole mixed song",
+            "a type of synth",
+            "a tempo"
+          ],
+          "answer": 0,
+          "why": "Drums alone, bass alone, and so on.",
+          "whyWrong": {
+            "1": "That's what stems are pulled from.",
+            "2": "Stems are audio, not instruments.",
+            "3": "Tempo is the song's speed."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is bleed?",
+          "options": [
+            "bits of one part leaking into another's stem",
+            "a clipping sound",
+            "a long reverb",
+            "a fade out"
+          ],
+          "answer": 0,
+          "why": "Separation isn't perfect, so some sound ends up in the wrong stem.",
+          "whyWrong": {
+            "1": "Clipping is going over the top.",
+            "2": "Reverb is space.",
+            "3": "A fade is a change in level."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Why are your own song's parts already stems?",
+          "options": [
+            "they were never mixed into one sound",
+            "the app separated them",
+            "they're all drums",
+            "they're mp3s"
+          ],
+          "answer": 0,
+          "why": "Each part was made on its own, so it's still on its own.",
+          "whyWrong": {
+            "1": "Nothing needed separating.",
+            "2": "Your song has more than drums.",
+            "3": "The file type doesn't matter."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/288-stem-separation.yaml"
+    },
+    {
+      "slug": "troubleshooting",
+      "world": "producer",
+      "number": 289,
+      "title": "troubleshooting",
+      "minutes": 5,
+      "song": {
+        "changes": "drums.kick",
+        "why": "switching parts off one at a time is how you find the one causing a problem"
+      },
+      "learn": "How to track down a problem, the usual suspects in Live, and your song checked part by part.",
+      "youCan": [
+        "find a problem by switching things off one at a time",
+        "say what usually causes crackles",
+        "know where Live's audio settings are"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "four-on-the-floor",
+          "say": {
+            "mentor": "Sooner or later something goes wrong: no sound, crackles, a controller that won't respond. The fix is usually simple once you know where to look. The trick is to find which piece is at fault before you start changing things.",
+            "straight": "No sound, crackles, a dead controller. Find which piece is at fault before changing anything.",
+            "eli5": "When something goes wrong, first find out which bit is broken. Then fix just that bit."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the usual suspects",
+          "say": {
+            "mentor": "No sound: check the audio device, the master fader and where the output is going.\nCrackles and pops: the computer can't keep up. The buffer is the chunk of sound the computer works on at a time. Raise the buffer size to give it more time, or lighten the load.\nA controller doing nothing: check it's switched on in Live's midi settings.",
+            "straight": "No sound: device, master fader, output. Crackles: raise the buffer size, the chunk the computer works on at once. Dead controller: check the midi settings.",
+            "eli5": "If there's no sound, check the volume and the speakers. If it crackles, the computer is too busy, so give it more time."
+          },
+          "deeper": [
+            {
+              "title": "where to look in live",
+              "say": "Preferences, then Audio, holds the audio device, buffer size and sample rate. Live's CPU meter shows how hard the computer is working."
+            },
+            {
+              "title": "freeze",
+              "say": "Right-click a heavy track and choose Freeze. Live renders it to audio so it stops working it out as it plays, which frees up the computer. Flatten makes that permanent."
+            },
+            {
+              "title": "midi controllers",
+              "say": "In the Link, Tempo and MIDI preferences, switch on Track for your controller's input port."
+            }
+          ]
+        },
+        {
+          "kind": "arrange",
+          "goal": "sections",
+          "say": {
+            "mentor": "Here's your song as sections. Nothing's wrong with it, so practise the method. Pick a section and switch parts off one at a time, listening each time.\nIf something in your song ever sounds off, this is how you'd find it: whatever you switch off that takes the problem with it is the culprit.",
+            "straight": "Switch parts off one at a time in a section and listen. That's how you find what's causing a problem.",
+            "eli5": "Turn off one sound at a time and listen. If the problem goes away, you found it."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What's the first step in fixing a problem?",
+          "options": [
+            "find which piece is at fault",
+            "change every setting",
+            "reinstall everything",
+            "turn it up"
+          ],
+          "answer": 0,
+          "why": "Then you only fix what's broken.",
+          "whyWrong": {
+            "1": "Changing everything makes it harder to find.",
+            "2": "That's a last resort.",
+            "3": "Louder doesn't fix anything."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Crackles and pops usually mean what?",
+          "options": [
+            "the computer can't keep up",
+            "the song is too quiet",
+            "the kick is out of tune",
+            "the reverb is too long"
+          ],
+          "answer": 0,
+          "why": "Give it more time with a bigger buffer, or lighten the load.",
+          "whyWrong": {
+            "1": "Quiet songs don't crackle.",
+            "2": "Tuning doesn't crackle.",
+            "3": "A long reverb sounds smooth."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "What does freezing a track do?",
+          "options": [
+            "renders it to audio so the computer works less",
+            "deletes it",
+            "mutes it",
+            "makes it louder"
+          ],
+          "answer": 0,
+          "why": "The computer plays the render instead of working it out live.",
+          "whyWrong": {
+            "1": "The track stays.",
+            "2": "It still plays.",
+            "3": "Level doesn't change."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/289-troubleshooting.yaml"
+    },
+    {
+      "slug": "cpu-audio-setup",
+      "world": "producer",
+      "number": 290,
+      "title": "cpu and audio setup",
+      "minutes": 5,
+      "song": {
+        "changes": "hats.hats",
+        "why": "the gap between tapping a pad and hearing it decides whether playing your hats feels tight"
+      },
+      "learn": "Buffer size, the trade between a quick response and a safe one, and your hats played in to feel it.",
+      "youCan": [
+        "say what latency and buffer size are",
+        "choose a buffer for recording and for mixing",
+        "find the buffer setting in Live"
+      ],
+      "steps": [
+        {
+          "kind": "hear",
+          "clip": "hats-offbeat",
+          "say": {
+            "mentor": "When you tap a pad, the sound takes a moment to come out. The computer works on audio in small chunks, and the size of each chunk is the buffer size. That moment between tap and sound is called latency.",
+            "straight": "The computer works on audio in chunks, the buffer. The delay between playing and hearing is latency.",
+            "eli5": "When you tap, the computer needs a tiny moment before you hear the sound. That moment is called latency."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "quick or safe",
+          "say": {
+            "mentor": "A small buffer means short latency: the sound comes right as you hit, which is what you want when recording. But the computer has less time for each chunk, and if it can't keep up you get clicks and pops.\nA big buffer gives the computer room to breathe, so no clicks, but you can feel a lag when you play. So producers often record with a small buffer, around 64 to 256 samples, and mix with a bigger one, around 512 to 1024.",
+            "straight": "Small buffer: quick but risks clicks, good for recording (64 to 256 samples). Big buffer: safe but laggy, good for mixing (512 to 1024).",
+            "eli5": "A small buffer is fast but can crackle. A big buffer never crackles but feels a bit slow."
+          },
+          "deeper": [
+            {
+              "title": "the maths",
+              "say": "Latency is the buffer size divided by the sample rate. 512 samples at 44.1 khz is about 11.6 ms."
+            },
+            {
+              "title": "in live",
+              "say": "Buffer size is in Preferences, under Audio. Watch Live's CPU meter: it's the short spikes to the top, not the average, that cause clicks."
+            },
+            {
+              "title": "freeze heavy tracks",
+              "say": "Freeze a heavy track to render it to audio for now and free up the computer. Flatten makes it permanent, so save a copy of your set first."
+            }
+          ]
+        },
+        {
+          "kind": "play",
+          "layer": "hats",
+          "surface": "pads",
+          "goal": {
+            "notes": 4
+          },
+          "say": {
+            "mentor": "Play some hats into your song. Press rec, wait out the count-in, and tap along between the kicks. Notice how quickly the sound answers your finger. If it ever feels like the sound trails behind your tap, that's what a big buffer feels like.\nKeep the take if it grooves, or skip and keep your hats as they were.",
+            "straight": "Record four or more hats. Feel how fast the sound answers your tap. Keep it or skip.",
+            "eli5": "Press rec and tap the hats. Listen to how fast the sound comes when you tap."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What is latency?",
+          "options": [
+            "the gap between playing and hearing",
+            "how loud a sound is",
+            "a kind of reverb",
+            "the tempo"
+          ],
+          "answer": 0,
+          "why": "Tap, then a tiny wait, then sound.",
+          "whyWrong": {
+            "1": "That's level.",
+            "2": "Reverb is space.",
+            "3": "Tempo is the song's speed."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "What does a small buffer give you?",
+          "options": [
+            "a quick response, but more risk of clicks",
+            "no clicks, but a lag",
+            "a louder sound",
+            "better eq"
+          ],
+          "answer": 0,
+          "why": "Less waiting, less time for the computer.",
+          "whyWrong": {
+            "1": "That's a big buffer.",
+            "2": "The buffer doesn't change level.",
+            "3": "The buffer doesn't change tone."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "When do producers usually use a bigger buffer?",
+          "options": [
+            "when mixing",
+            "when recording",
+            "never",
+            "only for drums"
+          ],
+          "answer": 0,
+          "why": "No playing in, so a little lag doesn't matter and the computer gets more time.",
+          "whyWrong": {
+            "1": "Recording wants a small buffer, so it feels quick.",
+            "2": "A bigger buffer is the usual cure for clicks.",
+            "3": "The buffer is for the whole set."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Back to your song: next, the dj world. Play your own song out."
+        }
+      ],
+      "file": "producer/290-cpu-audio-setup.yaml"
     },
     {
       "slug": "browser",

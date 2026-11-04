@@ -50,15 +50,15 @@ steps:
     goal: phrase
     say:
       mentor: >-
-        The move behind every hot cue is timing. Set the crossfader to the middle and pull deck b's fader all
-        the way down.
+        The move behind every hot cue is timing. The crossfader sits in the middle and deck b is waiting with
+        its fader down.
 
         Watch the phrase counter. As it comes round to bar 1, push deck b's fader up, like hitting a hot cue
         right on the one. Miss it and try again on the next phrase.
       straight: >-
-        Crossfader to the middle, deck b's fader down. On bar 1 of the phrase counter, push deck b up.
+        Deck b waits with its fader down. On bar 1 of the phrase counter, push deck b up.
       eli5: >-
-        Put the big slider in the middle and deck b's slider at the bottom. When the counter says bar 1, push
+        Deck b's slider starts at the bottom. When the counter says bar 1, push
         deck b up.
     hint: Count down the last bar. Four, three, two, one, go.
 

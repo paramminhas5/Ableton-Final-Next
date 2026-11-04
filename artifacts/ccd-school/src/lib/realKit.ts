@@ -32,7 +32,7 @@ export function loadRealKit(): Promise<boolean> {
 export function realKitLayer(t: TrackV2): LayerV2 {
   const evs: NoteEvent[] = [];
   for (const l of t.layers) {
-    if (l.type !== "drums" && l.type !== "hats") continue;
+    if ((l.type !== "drums" && l.type !== "hats") || l.id.startsWith("__")) continue;
     for (const e of l.events) { const s = MAP[e.note]; if (s !== undefined) evs.push({ ...e, note: 36 + s }); }
   }
   const layer = newLayerV2("sample", "real-drums");
