@@ -75,34 +75,48 @@ export function syncEngine(engine: Engine, t: TrackV2, sent: Sent[], last: Last)
   }
 }
 
+// The engine is shared. When another screen has synced it since we last did, what we think we sent
+// is stale, so we forget it and send everything again.
+let owner = 0;
+let nextId = 1;
+/** Which screen last synced the shared engine. */
+export const engineOwner = () => owner;
+
 /** Start the engine on the first touch (browsers need a gesture) and keep it synced. */
 export function useEngineTrack(track: TrackV2) {
   const engine = getEngine();
+  const id = useRef(0);
+  if (!id.current) id.current = nextId++;
   const started = useRef(false);
   const sent = useRef<Sent[]>([]);
   const last = useRef<Last>({ bpm: 0, loop: 0 });
   const latest = useRef(track);
   latest.current = track;
+  const sync = (t: TrackV2) => {
+    if (owner !== id.current) { sent.current = []; last.current = { bpm: 0, loop: 0 }; owner = id.current; }
+    syncEngine(engine, t, sent.current, last.current);
+  };
 
   const booting = useRef<Promise<void> | null>(null);
   const start = () => {
     if (started.current) return;
     started.current = true;
-    booting.current = engine.start().then(() => syncEngine(engine, latest.current, sent.current, last.current));
-    syncEngine(engine, latest.current, sent.current, last.current);
+    booting.current = engine.start().then(() => sync(latest.current));
+    sync(latest.current);
   };
   /** Start (if needed), wait until the engine is up and holds the latest track, then resolve. */
   const ready = async () => {
     start();
+    if (!booting.current) booting.current = engine.start();
     await booting.current;
-    syncEngine(engine, latest.current, sent.current, last.current);
+    sync(latest.current);
   };
 
   useEffect(() => {
-    if (started.current) syncEngine(engine, track, sent.current, last.current);
-  }, [engine, track]);
+    if (started.current && owner === id.current) sync(track);
+  }, [engine, track]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => () => engine.stop(), [engine]);
 
-  return { engine, start, ready, started };
+  return { engine, start, ready, started, id: id.current };
 }

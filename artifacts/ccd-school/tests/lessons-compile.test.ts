@@ -161,3 +161,26 @@ describe("real lessons", () => {
     warn.mockRestore();
   });
 });
+
+describe("question bank and youCan (process.md)", () => {
+  const askAt = (d: any) => d.steps.findIndex((s: any) => s.kind === "ask");
+  it("accepts more: true on a question and keeps it on the resolved step", () => {
+    const l = mutate(d => { d.steps[askAt(d)].more = true; })();
+    const asks = resolveLesson(l, { voice: "mentor", level: "standard" }).filter(s => s.kind === "ask");
+    expect(asks.some(a => a.kind === "ask" && a.more)).toBe(true);
+  });
+  it("rejects more that is not true or false", () => {
+    expect(mutate(d => { d.steps[askAt(d)].more = "yes"; })).toThrow(/more must be true or false/);
+  });
+  it("accepts a youCan list and rejects an empty line", () => {
+    expect(mutate(d => { d.youCan = ["count a bar"]; })).not.toThrow();
+    expect(mutate(d => { d.youCan = [" "]; })).toThrow(/youCan/);
+  });
+  it("the real kick lesson has a question bank and every main question has a reason for each wrong answer", () => {
+    const real = parseLesson(readFileSync(join(__dirname, "../src/content/lessons/producer/01-your-kick.yaml"), "utf8"), FILE);
+    const asks = real.steps.filter((s: any) => s.kind === "ask") as any[];
+    expect(asks.filter(a => a.more).length).toBeGreaterThan(0);
+    for (const a of asks) expect(Object.keys(a.whyWrong ?? {}).length).toBe(a.options.length - 1);
+    expect(real.steps.some((s: any) => s.kind === "ear")).toBe(false);
+  });
+});

@@ -155,6 +155,8 @@ export type LessonScreen =
       hint?: string;
       /** a reason for a specific wrong pick, keyed by option index (lesson files) */
       whyWrong?: Record<number, string>;
+      /** kept for "ask me more" rather than the main questions (lesson files) */
+      more?: boolean;
     }
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; deeper?: { title: string; body: string }[] }

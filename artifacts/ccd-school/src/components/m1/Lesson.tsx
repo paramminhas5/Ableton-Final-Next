@@ -30,6 +30,7 @@ import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { GlassDiagram, GlassVisual, VISUAL_TAG, Chain } from "./GlassVisual";
 import { TryIt } from "./TryIt";
+import { FileLesson } from "./FileLesson";
 import { AddToTrack } from "./AddToTrack";
 import { EarStep, FreshStart, HearStep, SayStep, ShapeStep, songHasMusic, startsFresh } from "./LessonSteps";
 import { newSong } from "@/lib/songs";
@@ -69,7 +70,7 @@ function Top({ back, total, now, accent, hearts, tune }: { back: string; total: 
           {Array.from({ length: MAX_HEARTS }, (_, i) => <i key={i} className={i < hearts ? "is-on" : ""} />)}
         </span>
       ) : tune ? null : <span className="m1-tag">free</span>}
-      {tune && <button type="button" className="ls-chip" onClick={() => setOpen(true)} aria-label="Change voice and level"><Icon name="settings" small />{prefs.voice} · {prefs.level}</button>}
+
       {open && (
         <div className="ls-sheet" onClick={() => setOpen(false)}>
           <div role="dialog" aria-label="Voice and level" onClick={e => e.stopPropagation()}>
@@ -731,7 +732,7 @@ function HeartsIntro({ onDone }: { onDone: () => void }) {
 }
 
 // ── the player ──────────────────────────────────────────────────────────────
-type Props = { mission: Mission; nextSlug?: string; isReview?: boolean; missionIndex?: number; missionTotal?: number; onComplete: () => void };
+type Props = { mission: Mission; nextSlug?: string; nextTitle?: string; isReview?: boolean; missionIndex?: number; missionTotal?: number; onComplete: () => void };
 
 class Boundary extends Component<{ children: ReactNode; slug: string }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -749,6 +750,8 @@ class Boundary extends Component<{ children: ReactNode; slug: string }, { error:
 }
 
 export function M1Lesson(props: Props) {
+  // Lessons written as files have their own player (design/process.md). Reviews still use the old one.
+  if (props.mission.fromFile && !props.isReview) return <Boundary slug={props.mission.slug}><FileLesson mission={props.mission} nextSlug={props.nextSlug} nextTitle={props.nextTitle} onComplete={props.onComplete} /></Boundary>;
   return <Boundary slug={props.mission.slug}><Player {...props} /></Boundary>;
 }
 
@@ -906,10 +909,10 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     case "type-answer": body = <TypeStep screen={cur} {...ask} />; break;
     case "sequence": body = <OrderStep screen={cur} seed={seed + idx} {...ask} />; break;
     case "match": body = <MatchStep screen={cur} seed={seed + idx} {...ask} />; break;
-    case "say": body = <SayStep screen={cur} meta={meta} voice={prefs.voice} onNext={next} />; break;
+    case "say": body = <SayStep screen={cur} meta={meta} onNext={next} />; break;
     case "hear": body = <HearStep screen={cur} meta={meta} onNext={next} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta={meta} accent={accent} onNext={next} />; break;
-    case "ear": body = <EarStep screen={cur} meta={meta} level={prefs.level} onNext={next} />; break;
+    case "ear": body = <EarStep screen={cur} meta={meta} level="standard" onNext={next} />; break;
     case "play":
     case "tryit":
       body = <TryIt type={ttype} coach={cur.kind === "play" ? { body: cur.body, hint: cur.hint, goal: cur.goal } : undefined} initial={take?.type === ttype ? take.events : undefined}

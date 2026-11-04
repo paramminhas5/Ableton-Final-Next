@@ -107,6 +107,7 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
           why: voiceText(s.why, o.voice),
           ...(s.whyWrong ? { whyWrong } : {}),
           ...hintOf(s.hint, o),
+          ...(s.more ? { more: true } : {}),
         });
         break;
       }

@@ -97,6 +97,9 @@ export function Screen({ children, height, style, className }: { children: React
 
 // ── keys ────────────────────────────────────────────────────────────────
 type KeyProps = {
+  onPointerDown?: () => void;
+  onPointerUp?: () => void;
+  onPointerLeave?: () => void;
   children?: ReactNode;
   label?: string;
   cap?: "" | "blk" | "go";
@@ -113,7 +116,7 @@ type KeyProps = {
   className?: string;
 };
 
-export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, ariaPressed, ariaCurrent, disabled, wide, capStyle, style, className }: KeyProps) {
+export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, ariaPressed, ariaCurrent, disabled, wide, capStyle, style, className, onPointerDown, onPointerUp, onPointerLeave }: KeyProps) {
   const inner = (
     <>
       {led ? <span className="m1-dot is-on" style={{ ["--c" as string]: led }} /> : null}
@@ -127,7 +130,7 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
     return <Link href={href} className={cls} style={style} aria-label={aria} aria-current={ariaCurrent ? "page" : undefined}>{inner}</Link>;
   }
   return (
-    <button type="button" className={cls} style={style} aria-label={aria} aria-pressed={ariaPressed} disabled={disabled} onClick={onClick}>
+    <button type="button" className={cls} style={style} aria-label={aria} aria-pressed={ariaPressed} disabled={disabled} onClick={onClick} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerLeave={onPointerLeave}>
       {inner}
     </button>
   );

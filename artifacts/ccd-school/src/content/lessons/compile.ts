@@ -39,11 +39,11 @@ const STEP_FIELDS: Record<string, string[]> = {
   say: ["kind", "title", "say", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
-  ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "levels"],
+  ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
 };
-const TOP_FIELDS = ["slug", "world", "number", "title", "minutes", "song", "learn", "steps"];
+const TOP_FIELDS = ["slug", "world", "number", "title", "minutes", "song", "learn", "steps", "youCan"];
 
 function sentenceCase(s: string): boolean {
   return !s
@@ -99,6 +99,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
 
   // --- top level ---
   unknownKeys("", doc, TOP_FIELDS);
+  if (doc.youCan !== undefined && (!Array.isArray(doc.youCan) || doc.youCan.some((x) => typeof x !== "string" || !x.trim()))) top("youCan must be a list of short lines");
   if (typeof doc.slug !== "string" || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(doc.slug)) top("slug must be lowercase words joined by hyphens");
   if (typeof doc.world !== "string" || !/^[a-z0-9-]+$/.test(doc.world)) top("world must be a lowercase folder name");
   if (!posInt(doc.number)) top("number must be a positive integer");
@@ -210,6 +211,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
                 }
             }
           }
+          if (raw.more !== undefined && typeof raw.more !== "boolean") at(where, "more must be true or false");
           break;
         }
         case "ear": {

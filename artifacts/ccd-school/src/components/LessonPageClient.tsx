@@ -6,7 +6,6 @@
  */
 import { Suspense, useMemo } from "react";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
-import { usePrefs } from "@/lib/prefs";
 import { useSearchParams } from "next/navigation";
 import { M1Lesson } from "@/components/m1/Lesson";
 import { missionBySlug, nextMission } from "@/content/missions";
@@ -42,13 +41,12 @@ function Inner({ slug }: { slug: string }) {
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
 
-  const [prefs] = usePrefs();
   const base = missionBySlug(slug);
-  // A lesson from a file is resolved again whenever voice or level changes.
+  // One voice for now (process.md). Questions run easy to hard, so there is no level either.
   const mission = useMemo(() => {
     const f = fileLesson(slug);
-    return f ? lessonToMission(f, { voice: prefs.voice, level: prefs.level }) : base;
-  }, [slug, prefs.voice, prefs.level, base]);
+    return f ? lessonToMission(f, { voice: "mentor", level: "standard" }) : base;
+  }, [slug, base]);
   if (!mission) return <Message title="no lesson here" line={`we couldn't find a lesson called ${slug}.`} back="/learn" go={{ label: "all lessons", href: "/learn" }} />;
 
   const ctx = getMissionContext(slug);
@@ -65,9 +63,10 @@ function Inner({ slug }: { slug: string }) {
   const missionTotal = ctx.path?.missionSlugs.length ?? 1;
   return (
     <M1Lesson
-      key={`${slug}.${prefs.voice}.${prefs.level}`}
+      key={slug}
       mission={mission}
       nextSlug={next?.slug}
+      nextTitle={next?.title}
       isReview={isReview}
       missionIndex={missionIndex}
       missionTotal={missionTotal}

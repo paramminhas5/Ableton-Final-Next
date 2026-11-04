@@ -6,302 +6,263 @@ minutes: 8
 song:
   adds: drums.kick
   why: the kick is the heartbeat of a dance track, everything else is placed around it
-learn:
-  mentor: >-
-    Your song is silent right now. In eight minutes it will have a kick drum landing on every beat,
-    and you will have chosen how that kick sounds. Along the way you will count a beat and a bar in
-    real seconds, and hear why one kick feels tight while another feels boomy. Take your time with it.
-  straight: >-
-    Your song is empty. In eight minutes it will have a kick on every beat. You will play it in, shape
-    how long it rings, and learn what a beat and a bar are. If you DJ, the timing words are old
-    friends. The new part is making the sound.
-  eli5: >-
-    Right now your song is silent. In eight minutes it will have a heartbeat: a low thump that goes
-    boom, boom, boom, boom, again and again. You will count along with it, and make it either short
-    and punchy or long and round.
+learn: >-
+  Your song starts here. By the end of this lesson it will have a kick drum on every beat, played in
+  by you and shaped the way you like it.
+youCan:
+  - count beats and bars at 120 bpm
+  - play a kick in on the beat
+  - tell a short kick from a long one
+  - shape a kick with decay and tune
 steps:
   - kind: hear
     clip: kick-alone
     say:
       mentor: >-
-        Press the hear button and just listen for a moment. One sound, a kick drum, repeating. It is less
-        a note than a thump, the kind you feel in your chest as much as you hear it. Most of the dance
-        tracks you have ever moved to are built on something like it.
+        That thump is a kick drum. It is the lowest, loudest drum in a dance track, and the one you feel in
+        your chest. It works like the song's heartbeat: everything you add later lines up with it.
+
+        Just listen for a few seconds. Notice it never speeds up or slows down.
       straight: >-
-        Press hear. One kick, repeating. A low thump you feel in your chest as much as you hear it. This
-        is the sound you lock to when you beatmatch. Most dance tracks are built on one.
+        This is a kick drum on its own. In dance music it carries the beat: it is the deepest, heaviest hit,
+        and every other part is timed against it. Listen to how even it is. Same gap, every time.
       eli5: >-
-        Press hear. That low thump is a kick drum. It works like a heartbeat for the song, and you feel it
-        in your chest as much as you hear it. If a speaker is nearby, rest a hand on it.
+        Hear that boom, boom, boom? That is a kick drum, a big low drum. It is like a heartbeat for the song.
+        It goes at the same speed the whole time, and all the other sounds will dance along with it.
+
   - kind: say
-    title: counting along
+    title: count along
     say:
       mentor: >-
-        Count along with it: one, two, three, four, with the kick landing on every number. Each of those
-        is a beat, and four beats make a bar. Your song will run at 120 beats per minute, which is two
-        beats every second, so one bar lasts exactly two seconds. Keep that number handy. It lets you
-        judge how long anything in your song is just by counting.
+        Count out loud with the kick: one, two, three, four, one, two, three, four. Each count is a beat. A
+        group of four beats is a bar.
+
+        This song runs at 120 beats per minute, or bpm. That is two beats every second, so one bar takes
+        exactly two seconds. Counting is how producers find their way around a song, so it is worth getting
+        comfortable with now.
       straight: >-
-        Count one, two, three, four. Each count is a beat. Four beats make a bar. At 120 beats per minute
-        that is two beats a second, so a bar lasts two seconds.
+        Every kick you hear is one beat. Beats come in groups of four, and each group is called a bar. Try
+        counting one to four along with it and starting again at one.
+
+        The speed of a song is measured in beats per minute, bpm. Yours is 120, so you get two beats a second
+        and a bar every two seconds. When a producer says "bring the bass in at bar 9", this is the counting
+        they mean.
       eli5: >-
-        Count out loud with the thump: one, two, three, four. Each number is a beat, and a set of four is
-        a bar. Your song will go at 120 beats per minute. That is two beats every second, about the pace
-        of a brisk walk, so one bar takes two seconds.
+        Say it out loud with the boom: one, two, three, four. Then start again: one, two, three, four. Each
+        boom is called a beat. Four beats together are called a bar, a bit like four steps make one little
+        walk.
+
+        Your song plays 120 beats every minute. That means two booms every second, so one bar lasts two
+        seconds.
     deeper:
-      - title: where 120 comes from
-        say:
-          mentor: >-
-            Beats per minute is how many beats fit into sixty seconds. Sixty divided by 120 is half a second
-            per beat. House music tends to sit between 120 and 128, so you are starting where a lot of
-            dance floors live. Slower feels heavier, faster feels more urgent.
-          straight: >-
-            Beats per minute is beats in sixty seconds. 60 divided by 120 is 0.5 seconds a beat. A lot of
-            house sits at 120 to 128. Bars group into phrases of 4, 8 or 16, the same phrases you bring
-            tracks in on.
-          eli5: >-
-            A minute has sixty seconds. If the thump happens 120 times in that minute, it happens every half
-            second. Slow thumps feel heavy and sleepy. Fast thumps feel busy and excited.
-      - title: why four
-        say:
-          mentor: >-
-            Four beats to a bar is the most common way to count dance music, because it is easy to feel and
-            easy to dance to. You will see it written 4/4. We will meet other counts later.
-          straight: >-
-            Four beats to a bar is 4/4, the usual count for dance music. Other counts come in a later lesson.
-          eli5: >-
-            Four is an easy number to dance to, so almost all dance music counts in fours. You will see it
-            written 4/4.
-      - title: if you read music
-        say:
-          mentor: >-
-            A beat is a quarter note, so 120 beats per minute is quarter equals 120. The sixteen slots you
-            will meet in a moment are sixteenth notes, the ones you would count one e and a.
-          straight: >-
-            A beat is a quarter note, so this is quarter equals 120. The sixteen slots are sixteenth notes,
-            counted one e and a.
-          eli5: >-
-            If you have seen sheet music, a beat is a quarter note. You can skip this card if that sounds
-            like a different language.
+      - title: why 120
+        say: >-
+          House music usually sits between 120 and 128 bpm, so you are starting where a lot of dance floors
+          live. Slower feels heavier and lazier. Faster feels more urgent.
+      - title: why groups of four
+        say: >-
+          Four beats to a bar is the most common count in dance music, because it is easy to feel and easy to
+          move to. You will see it written as 4/4. Other counts exist, like the 3/4 of a waltz, and you will
+          meet them later.
+
   - kind: play
     layer: drums
     surface: pads
     goal: {notes: 4, note: kick}
     say:
       mentor: >-
-        Now you play it in. Press rec. You will hear and see four clicks first, a count-in, so do not tap
-        yet. It starts recording on its own after that. Then tap the glowing kick pad on each of the next
-        four clicks, one on every beat. Press play to hear your bar repeat. The click is a metronome, one
-        steady tick on every beat, so your kick lands where the beat is. You cannot get this wrong. Press
-        undo and go again.
+        Now you play the kick yourself. What you record here becomes the first loop of your song, the one
+        everything else sits on.
+
+        The click you hear is a metronome: a steady tick on every beat so you have something to play along to.
+        Press rec. You get four clicks to count you in, so just listen. Then tap the kick pad once on each of
+        the next four clicks. Snap is on, so a tap that is a little early or late lands right on the click.
+
+        Missed one? Tap undo to take back the last hit, or hold it to start over.
       straight: >-
-        Press rec. Four clicks count you in, then it records on its own. Tap the kick pad on each of the
-        next four clicks, one per beat. Press play to hear the loop. The click is a metronome, a steady
-        tick on every beat. Press undo to retry.
+        Time to record your own kick. This one bar will loop under your whole song.
+
+        The ticking is a metronome, there to keep you in time. Press rec and wait out the first four ticks,
+        that is the count-in. On the next four ticks, tap the kick pad once each. Snap tidies small timing
+        slips for you.
+
+        Undo removes your last tap. Hold undo to clear the bar and go again.
       eli5: >-
-        Press the red rec button. You will hear four clicks first. That is the count-in, so do not tap yet.
-        Then it starts recording by itself. Tap the glowing kick pad on each of the next four clicks. Press
-        play to hear what you made. The clicks are a metronome, a tick that keeps the beat steady. If it
-        goes wrong, press undo and try again.
-    hint: Press rec and wait. Four clicks count you in, then tap on the next four. Keep it to one kick per click.
+        Your turn to play! Whatever you tap now goes into your song.
+
+        Hear the tick, tick, tick? That is there to help you keep time, like someone clapping along. Press
+        the red rec button. Let four ticks go by without tapping. Then tap the kick pad once on every tick,
+        four times. If you are a tiny bit off, the app fixes it for you.
+
+        Made a mistake? Press undo to take back your last tap.
+
   - kind: say
     title: four on the floor
     say:
       mentor: >-
-        What you just played has a name: four on the floor, a kick on every beat. It is the pulse under
-        house, disco and a lot of techno, and it works because the beat never moves. Dancers can lock onto
-        it without thinking, and every part we add next, the hats, the bass, the chords, gets placed
-        against these four hits.
+        What you just played has a name: four on the floor. A kick on every beat, never missing one.
+
+        It is the pulse under disco, house and most techno. It works because it is completely steady. Dancers
+        lock onto it without thinking, and every part you add next, the hats, the bass, the chords, gets placed
+        around those four hits.
       straight: >-
-        A kick on every beat is called four on the floor. It is the pulse under house, disco and much
-        techno. It works because the beat never moves, so dancers can lock onto it. Every part you add next
-        is placed against it.
+        A kick on all four beats of the bar is called four on the floor.
+
+        It is the standard house and techno beat. Its strength is that it never changes, which makes it easy
+        to dance to and gives every other part of the song something solid to line up against.
       eli5: >-
-        A thump on every count has a name: four on the floor. A lot of dance music uses it, because a steady
-        beat is easy to step to. Everything you add later will dance around these four thumps.
-  - kind: say
-    title: the grid and snap
-    say:
-      mentor: >-
-        Look at the screen you just played on. That is the beat grid: one bar laid flat, four wide divisions,
-        one for each beat, each cut into four slots, sixteen in all. Every hit you play sits in a slot. Near
-        the play controls is a button called snap. If you tap a little early or late, snap moves your hit to
-        the nearest slot so it lands exactly on the grid. Producers call that quantising, a fancy word for a
-        simple job.
-      straight: >-
-        The grid is one bar: four beats, each split into four slots, sixteen in all. Snap moves every hit you
-        play to the nearest slot. That is called quantising. It fixes small timing slips.
-      eli5: >-
-        Picture one bar as a row of sixteen little boxes, four for each beat. Every drum hit sits in a box.
-        Sometimes you tap a hair early and land between two boxes. Snap picks the hit up and drops it in the
-        nearest box, so everything lines up. The proper word for that is quantising.
+        Booming on every single beat has a fun name: four on the floor. Four booms, all on the floor.
+
+        Lots of dance music does this, because a steady boom is really easy to dance to. Everything else you
+        add later will fit around these four booms.
     deeper:
-      - title: when to turn snap off
-        say:
-          mentor: >-
-            Snap is set to 1/16 here, which is one slot, and that suits a steady dance beat. Finer settings keep
-            more of the way you actually played. Turn snap off and every wobble stays exactly as you tapped it.
-            Plenty of great grooves come from a little looseness, but for a kick on every beat, neat is what
-            you want.
-          straight: >-
-            1/16 snap suits a steady dance beat. Finer settings keep more of how you played. Off keeps every
-            hit exactly where you tapped it.
-          eli5: >-
-            Snap makes your taps perfectly neat, like typed text. Handwriting is less neat but has more
-            character, so you can switch snap off when you want that. For a steady thump, typed is right.
-      - title: how snap decides
-        say:
-          mentor: >-
-            At 120 beats per minute one slot lasts 125 milliseconds. Snap picks the slot your tap is closest to,
-            so a tap up to about 60 milliseconds off still lands in the right place. Tap much further off and
-            it lands in the neighbour. That is why the count-in matters.
-          straight: >-
-            At 120 beats per minute one slot is 125 ms. Snap chooses the nearest slot, so a tap within about
-            60 ms of the right one is corrected. Further off and it snaps to the neighbour.
-          eli5: >-
-            Each box is a tiny moment of time, about an eighth of a second. Snap puts your tap in the closest
-            box. If you are very early or very late, the closest box is the wrong one, so listen to the clicks.
+      - title: where it comes from
+        say: >-
+          Disco drummers in the 1970s played the kick on every beat to keep dance floors moving. When Chicago
+          producers made the first house records in the 1980s with drum machines, they kept that same kick,
+          and it has been the backbone of dance music ever since.
+      - title: songs to listen for it in
+        say: >-
+          Donna Summer's I Feel Love, Daft Punk's Around the World, and almost any house or techno track you
+          have heard in a club. Put one on and count along: the kick lands on every number.
+      - title: other kinds of beat
+        say: >-
+          Not every beat puts the kick everywhere. A breakbeat moves the kicks around, so they fall between
+          beats too. Hip hop often has fewer kicks and leaves gaps. Two step and garage skip some beats on
+          purpose. You will try these later. For now, four on the floor is the solid ground.
+
   - kind: hear
     clip: short-vs-long-kick
     say:
       mentor: >-
-        Listen to the same kick twice. First it is tight, then it is long and round. Neither is wrong, they
-        just do different jobs. Notice how the short one stops and leaves a gap. Later a bass line will live
-        in that gap. The long one keeps ringing through it, and the whole track feels heavier.
+        Kicks come in different lengths. Tap short, then long, and listen to the end of each hit.
+
+        The short kick stops fast and leaves a gap before the next one. The long kick keeps humming through
+        that gap, so the whole beat feels bigger and heavier. Neither is wrong. Short kicks feel punchy and
+        tight, long kicks feel deep and boomy. Next you get to set your own.
       straight: >-
-        Same kick twice: short, then long. Listen to the end of each hit. The short one stops and leaves space
-        for bass. The long one keeps ringing into that space and feels heavier.
+        Same kick, two lengths. Switch between short and long and pay attention to what happens after each
+        hit.
+
+        Short kicks leave space between beats, which sounds tight and punchy. Long kicks fill that space,
+        which sounds big and heavy. Both are used all the time, it depends on the track.
       eli5: >-
-        Two thumps. The first is quick, like knocking on a table. The second keeps humming, like thumping a
-        big empty barrel. Neither is wrong, they just feel different. The long one takes up more room, and
-        later your bass will want some of that room.
+        Tap short, then tap long. Can you hear the difference?
+
+        The short one is like knocking on a table: knock, then quiet. The long one is like hitting a big
+        empty barrel: it hums for a while after. Both are good. You will pick yours next.
+
   - kind: shape
     layer: drums
     knobs: [decay, tune]
     say:
       mentor: >-
-        Two knobs. Decay is how long the kick keeps ringing after the hit: turn it down for a tight kick, up
-        for a boomy one. Tune moves the whole thump lower or higher. Play the loop while you turn, so you hear
-        each change as it happens, and stop when it suits the track you have in your head.
+        Every kick is made of two parts, and you can see both in the picture. First a click: a tiny, sharp
+        tap right at the start that helps the kick cut through. Then the body: a low hum that starts high,
+        drops quickly, and fades away.
+
+        Decay sets how long the body lasts. Turn it down for a short, punchy kick. Turn it up for a long,
+        boomy one. Tune sets how low the body sits. Down makes it deeper, up makes it higher and tighter.
+
+        Your loop is playing, so turn and listen, and watch the picture change. Try decay first. Stop when it
+        sounds like the kick you want.
       straight: >-
-        Decay is how long the kick rings after the hit. Tune sets how low it sits. Start with decay alone,
-        then try tune. Play the loop while you turn and stop where the kick suits the track you want.
+        The picture shows your kick as a wave. The sharp spike at the start is the click. The swinging part
+        after it is the body, and the dotted line shows it fading out.
+
+        Decay controls how long the body takes to fade. Tune controls its pitch, how low or high it sits. Turn
+        each one while the loop plays until the kick sounds right to you.
       eli5: >-
-        Decay is how long the thump keeps ringing after you hit it. Turn it down for the table knock, up for
-        the barrel. Tune is how deep the drum sounds, like a small drum or a big drum. Try decay first, then
-        tune, and leave both where it sounds right for your song.
-    hint: Start with decay only. Listen to the end of each hit.
-  - kind: say
-    title: what a kick is made of
-    levels: [standard, hard]
-    say:
-      mentor: >-
-        You have just turned the two things a kick is built from. A kick starts with a short sharp click, then
-        a low body whose pitch drops quickly and settles. Decay is how long that body rings. Tune is where the
-        pitch settles. Because a kick is a pitch, it is worth tuning it to your song's key later.
-      straight: >-
-        A kick is a short click, then a low body whose pitch drops fast and settles. Decay is how long the
-        body rings. Tune is where the pitch settles.
-      eli5: >-
-        A kick has a tiny click at the start, then a deep hum that slides down and fades. Decay is how long
-        the hum lasts. Tune is how deep it sounds.
-    deeper:
-      - title: the numbers
-        say:
-          mentor: >-
-            Most kicks settle somewhere between 40 and 60 hertz, the very bottom of what you can hear and feel.
-            The pitch starts several times higher and falls in a few hundredths of a second, which is the
-            thump. Lots of producers tune the kick to a note in the song's key so it does not clash with the bass.
-          straight: >-
-            Kicks usually settle between 40 and 60 Hz. The pitch starts several times higher and falls in tens
-            of milliseconds. Tune the kick to the song's key so it does not clash with the bass.
-          eli5: >-
-            A deep hum is about 50 wiggles of air a second, which is why you feel it in your chest. The slide
-            from high to low happens super fast, quicker than a blink.
+        The pink line is a drawing of your kick. See the quick little spike at the start? That is the click,
+        like the tap of a finger. The wobbly part after it is the body, the big low hum.
+
+        The decay knob makes the hum shorter or longer. The tune knob makes it deeper or higher, like a big
+        drum or a small drum. Your kick is playing, so turn them and listen. Stop when you like it.
+
   - kind: ask
-    q:
-      mentor: >-
-        Your kick is long and deep, and you are about to add a bass line. What is the most likely problem?
-      straight: >-
-        Long kick, and you add a bass line. What is the most likely problem?
-      eli5: >-
-        Your thump rings for a long time, and then a bass line joins in. What is the most likely problem?
-    options:
-      - Nothing, a long kick sits comfortably under any bass line
-      - The bass will be too quiet to hear, because the kick is louder
-      - The kick will slowly drift out of time with the click
-      - Both fill the low sounds at once, so the low end turns unclear
-    answer: 3
-    why:
-      mentor: >-
-        A long kick is still ringing when the bass wants to speak, so both are holding low notes at the same
-        moment and the bottom of the track turns unclear and heavy. You stop hearing where one ends and the
-        other begins. Shorten the kick, or arrange the bass so the two take turns.
-      straight: >-
-        A long kick is still ringing when the bass plays, so both hold low notes at once and you cannot tell
-        kick from bass. Shorten the kick or give each its own moment.
-      eli5: >-
-        Both sounds want the same low spot. The long kick is still ringing when the bass arrives, so they
-        pile up, like two people talking at once. Make the kick shorter, or let them take turns.
-    whyWrong:
-      0: Not always. A long kick can work if the bass plays in its gaps, but you have to arrange that. It is never automatic.
-      1: Quiet is a volume problem, and turning a sound up fixes volume. This is two sounds crowding the same low pitches.
-      2: Timing comes from the clock. A kick can ring for a split second or a full second and still land exactly on the beat.
-    hint: Think about the gap the short kick left in the last listen.
-  - kind: ask
-    q:
-      mentor: You tap a kick a little late. What does snap do with it?
-      straight: A kick lands a little late. What does snap do?
-      eli5: You tapped a bit late. What does snap do?
-    options:
-      - It moves the hit to the nearest slot on the grid
-      - It plays the hit a second time on the beat
-      - It speeds the song up to match your tap
-      - It turns the click off until you stop
+    q: How many beats are in one bar here?
+    options: ["four", "two", "eight", "sixteen"]
     answer: 0
-    why:
-      mentor: >-
-        Snap pulls the hit to the nearest slot, so a small slip ends up exactly on the grid. That is quantising.
-      straight: >-
-        Snap moves the hit to the nearest slot. That is quantising.
-      eli5: >-
-        Snap picks your tap up and drops it in the closest box, so it lines up.
+    why: You counted one, two, three, four, then started again. Each group of four is a bar.
     whyWrong:
-      1: Snap moves the hit you made. It does not add a copy.
-      2: The song keeps its own speed. You line up with the song, not the other way round.
-      3: The click and snap are separate. Snap only tidies where your notes sit.
-    hint: Think about the boxes on the grid.
+      2: Eight beats is two bars. Count along again and listen for where it starts over at one.
+      3: Sixteen is the number of small steps in a bar, which you will meet in the hats lesson. A bar has four beats.
+      1: Count along with the kick. It goes up to four before it starts over.
+
   - kind: ask
-    q: At 128 beats per minute, about how long does a 16 bar phrase last?
-    options: ["15 seconds", "30 seconds", "32 seconds", "60 seconds"]
-    answer: 1
-    why: 128 beats a minute is a little over two beats a second. Sixteen bars is 64 beats, and 64 divided by 128 is half a minute, so 30 seconds.
+    q: What is a kick on every beat called?
+    options: ["four on the floor", "a breakbeat", "a fill", "a bar"]
+    answer: 0
+    why: Four on the floor. A kick on every one of the four beats, the steady pulse under house and disco.
     whyWrong:
-      0: 15 seconds would be 8 bars, half a phrase.
-      2: 32 seconds is the answer at 120 beats per minute. At 128 the beats come a little faster.
-      3: 60 seconds would be 32 bars, two phrases.
-    levels: [hard]
-  - kind: ear
-    drill: kick
-    rounds: {gentle: 3, standard: 4, hard: 6}
-    say:
-      mentor: >-
-        A quick warm-up for your ears, with no wrong guesses to worry about. Two kicks play, one after the
-        other. Tell me which one was longer, or which one sits lower. Replay as often as you like, and press
-        skip if you cannot hear well right now.
-      straight: >-
-        Two kicks play. Say which is longer or lower. This trains your ear for decay and tune. Replay as often
-        as you like. Skip if you cannot hear.
-      eli5: >-
-        Time to train your ears. Two kicks will play, one after the other. Tap the one that is longer or
-        deeper. Replay as often as you like. You can skip if it is too noisy to hear.
+      1: A breakbeat moves the kicks around so they fall between beats too. Yours lands on every beat.
+      2: A fill is a short burst that leads into a new section. Your kick just keeps going.
+      3: A bar is the group of four beats. The pattern of a kick on each of them has its own name.
+
+  - kind: ask
+    q: At 120 bpm, how long does one bar last?
+    options: ["two seconds", "one second", "four seconds", "half a second"]
+    answer: 0
+    why: 120 beats a minute is two beats every second. Four beats in a bar takes two seconds.
+    whyWrong:
+      1: One second only fits two beats at 120 bpm. A bar has four.
+      2: That would be 60 bpm, half the speed of your song.
+      3: Half a second is one beat. A bar is four of them.
+
+  - kind: ask
+    q: You want a short, punchy kick. What do you change?
+    options: ["turn decay down", "turn decay up", "turn tune up", "turn tune down"]
+    answer: 0
+    why: Decay sets how long the body lasts. Less decay, shorter kick, more punch.
+    whyWrong:
+      1: More decay makes the body ring longer, which is the boomy kick.
+      2: Tune changes how high or low the kick sits, not how long it lasts.
+      3: Tune down makes it deeper, but it still rings just as long. Length is decay.
+
+  - kind: ask
+    q: What is the short, sharp sound at the very start of a kick?
+    options: ["the click", "the body", "the decay", "the metronome"]
+    answer: 0
+    why: The click is the tiny tap at the start. The body is the low hum that comes right after it.
+    whyWrong:
+      1: The body is the low hum after the start. The very first sharp bit is the click.
+      2: Decay is a knob. It sets how long the body lasts.
+      3: The metronome is the tick you played along to. It is not part of the kick.
+
+  - kind: ask
+    more: true
+    q: Your kick sounds thin and too high. What do you turn?
+    options: ["tune down", "decay down", "tune up", "the snap button"]
+    answer: 0
+    why: Tune sets how low the body sits. Turning it down makes the kick deeper and fuller.
+    whyWrong:
+      1: Decay changes the length. The kick would still sound thin, just shorter.
+      2: Tune up makes it even higher.
+      3: Snap only moves your hits onto the beat. It does not change the sound.
+
+  - kind: ask
+    more: true
+    q: Why does the metronome click while you record?
+    options: ["so you can play along in time", "to make the kick louder", "it is part of the song", "to count how many kicks you played"]
+    answer: 0
+    why: The click is a steady guide so your taps land on the beat. It is not recorded into your song.
+    whyWrong:
+      1: The click is a separate sound and does not touch your kick.
+      2: The click is only a guide while you play. Your song does not include it.
+      3: It just ticks on every beat, so you have something to play along to.
+
+  - kind: ask
+    more: true
+    q: Snap is on and you tap a little early. What happens?
+    options: ["your hit moves onto the nearest beat", "the hit is deleted", "it plays twice", "nothing, it stays early"]
+    answer: 0
+    why: Snap nudges each hit onto the nearest slot of the beat, so slightly early or late taps still land on time.
+    whyWrong:
+      1: Snap never deletes anything. It just lines your hit up.
+      2: It still plays once, only in the right place.
+      3: That is what happens with snap off. With it on, the hit moves.
+
   - kind: keep
-    next:
-      mentor: >-
-        Your song has a heartbeat. Next up is hats, the tss, tss, tss that makes a track feel alive, and you
-        will place them in the gaps between your kicks.
-      straight: >-
-        Next: hats, placed in the gaps between your kicks.
-      eli5: >-
-        Your song has a heartbeat now. Next we add hats, the tiny ticking sounds that make it feel like
-        a real track.
+    next: >-
+      Next: what sound actually is, and how a synth makes it from nothing. That is where your first melody
+      comes from.

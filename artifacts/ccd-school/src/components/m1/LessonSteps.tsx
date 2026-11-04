@@ -4,7 +4,7 @@
  * our own engine), shape (the lesson's two knobs, hear before and after) and ear (generated rounds).
  * Same Model 1 parts as the rest of the player.
  */
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT, display } from "@/engine";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
@@ -23,57 +23,77 @@ import { Gloss } from "./Gloss";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
-// ── say: an explanation, with a deeper track you open when you want it ─────────
-export function SayStep({ screen, meta, voice = "mentor", onNext }: { screen: Of<"say">; meta: string; voice?: "mentor" | "straight" | "eli5"; onNext: () => void }) {
-  const [deep, setDeep] = useState(false);
-  const has = !!screen.deeper?.length;
-  // Mentor and eli5 walk you through the deeper cards right here; straight keeps them behind a key.
-  const inline = has && voice !== "straight";
-  useEnter(deep ? null : onNext);
+// ── say: an explanation; the extra bits fold out below if you want them ───────
+export function SayStep({ screen, meta, onNext, tail }: { screen: Of<"say">; meta: string; onNext: () => void; tail?: ReactNode }) {
+  useEnter(onNext);
   return (
     <div className="ls-col">
+      <div className="fl-inst">
       <Screen>
-        <Meta left={meta} right={has ? (inline ? "with the deeper bits" : `${screen.deeper!.length} deeper`) : undefined} />
+        <Meta left={meta} />
         <div className="ls-title">{screen.title.toLowerCase()}</div>
       </Screen>
-      <Silk label={deep ? "going deeper" : "read"} right={deep ? "all of it, open" : undefined} />
-      {!deep ? (
-        <>
-          <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
-          {inline && (
-            <div className="ls-inline">
-              {screen.deeper!.map(d => (
-                <div key={d.title} className="ls-panel">
-                  <h4>{d.title.toLowerCase()}</h4>
-                  <p><Gloss>{d.body}</Gloss></p>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
-      ) : (
-        <>
-          <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
-          <div className="ls-inline">
-            {screen.deeper!.map(d => (
-              <div key={d.title} className="ls-panel">
-                <h4>{d.title.toLowerCase()}</h4>
-                <p><Gloss>{d.body}</Gloss></p>
-              </div>
-            ))}
-          </div>
-        </>
+      </div>
+      <div className="fl-text">
+      {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+      {screen.deeper?.length ? (
+        <div className="fl-more">
+          {screen.deeper.map(d => (
+            <details key={d.title} className="fl-fold">
+              <summary>{d.title.toLowerCase()}</summary>
+              {d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
+            </details>
+          ))}
+        </div>
+      ) : null}
+      {tail}
+      </div>
+      <Bottom go={{ label: "next", onClick: onNext, aria: "Next" }} />
+    </div>
+  );
+}
+
+// ── the shape of a kick: a click, then a low body that drops in pitch and dies away ──
+export function KickShape({ decay = 0.5, tune = 0.5, hit = 0, label = true }: { decay?: number; tune?: number; hit?: number; label?: boolean }) {
+  const W = 330, H = 96, mid = H / 2;
+  const span = 1.2; // seconds across the box
+  const len = 0.45 * Math.pow(4, (decay - 0.5) * 2);
+  const f0 = 50 * Math.pow(2, ((tune - 0.5) * 24) / 12);
+  const pts: string[] = [];
+  const env: string[] = [];
+  let ph = 0;
+  const N = 600;
+  for (let i = 0; i <= N; i++) {
+    const t = (i / N) * span;
+    const a = t < len ? Math.pow(1 - t / len, 2.2) : 0;
+    // Drawn slower than real so the cycles stay visible: the shape is right, the count is not.
+    const f = (f0 * (1 + 3 * Math.exp(-t / 0.03))) / 9;
+    ph += (2 * Math.PI * f * span) / N;
+    const x = (i / N) * W;
+    pts.push(`${x.toFixed(1)},${(mid - Math.sin(ph) * a * (mid - 6)).toFixed(1)}`);
+    env.push(`${x.toFixed(1)},${(mid - a * (mid - 6)).toFixed(1)}`);
+  }
+  const bodyEnd = Math.min(88, (len / span) * 100);
+  return (
+    <div className="fl-kickbox" role="img" aria-label={`A kick: a click, then a body ${len < 0.3 ? "that stops quickly" : len > 0.7 ? "that rings for a long time" : "of medium length"}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" className="fl-kick" key={hit} aria-hidden>
+        <path d={`M0 ${mid}H${W}`} stroke="rgba(255,255,255,.08)" vectorEffect="non-scaling-stroke" />
+        <polyline points={env.join(" ")} fill="none" stroke="rgba(255,255,255,.2)" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
+        <polyline points={pts.join(" ")} fill="none" stroke="var(--led-go)" strokeWidth={1.8} className="fl-kickline" vectorEffect="non-scaling-stroke" />
+      </svg>
+      {label && (
+        <div className="fl-kicklabels" aria-hidden>
+          <span style={{ left: 0 }}>click</span>
+          <span style={{ left: `${Math.max(12, bodyEnd / 2 - 4)}%` }}>body</span>
+          <span style={{ left: `${Math.min(80, bodyEnd + 2)}%` }}>{`gone at ${Math.round(len * 1000)} ms`}</span>
+        </div>
       )}
-      <Bottom
-        left={has && !inline ? { label: deep ? "back" : "go deeper", icon: deep ? "back" : "plus", onClick: () => setDeep(d => !d), aria: deep ? "Back to the lesson" : "Go deeper into this" } : undefined}
-        go={{ label: "next", onClick: onNext, aria: "Next" }}
-      />
     </div>
   );
 }
 
 // ── hear: a clip rendered live on our engine ──────────────────────────────────
-export function HearStep({ screen, meta, onNext }: { screen: Of<"hear">; meta: string; onNext: () => void }) {
+export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; meta: string; onNext: () => void; tail?: ReactNode }) {
   const variants = useMemo(() => clipVariants(screen.clip), [screen.clip]);
   const def = CLIPS.find(c => c.id === screen.clip);
   const [v, setV] = useState(0);
@@ -84,18 +104,27 @@ export function HearStep({ screen, meta, onNext }: { screen: Of<"hear">; meta: s
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setPlaying(!!(e.flags & FLAG.playing)); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* engine not started */ } }, [engine]);
   const toggle = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); heard.current = true; };
+  // It is already playing when you arrive. If the browser wants a tap first, the play key is there.
+  useEffect(() => { void ready().then(() => { engine.metronome(false); engine.play(); heard.current = true; }).catch(() => { /* needs a tap */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const [beatN, setBeatN] = useState(0);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos && e.flags & FLAG.playing) setBeatN(b => (Math.floor(e.beat) !== b ? Math.floor(e.beat) : b)); }), [engine]);
+  const isKick = /kick/.test(screen.clip);
+  const kickDecay = isKick && variants.length > 1 ? (v === 0 ? 0.12 : 0.9) : 0.5;
   const pick = (i: number) => { if (i === v) return; setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150)); heard.current = true; };
   useEnter(onNext);
   return (
     <div className="ls-col">
+      <div className="fl-inst">
       <Screen>
         <Meta left={meta} right={def ? `${def.bpm} bpm` : undefined} />
         <div className="ls-title">{(def?.title ?? "listen").toLowerCase()}</div>
-        <div className="ls-hearbar" aria-hidden>{Array.from({ length: 16 }, (_, i) => <i key={i} className={playing ? "is-on" : ""} style={{ animationDelay: `${i * 60}ms` }} />)}</div>
+        {isKick
+          ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
+          : <div className="ls-hearbar" aria-hidden>{Array.from({ length: 16 }, (_, i) => <i key={i} className={playing ? "is-on" : ""} style={{ animationDelay: `${i * 60}ms` }} />)}</div>}
       </Screen>
       {variants.length > 1 && (
         <>
-          <Silk label="same sound, two ways" right="tap to switch" />
+          <Silk label="tap one to hear it" right={variants[v]?.label} />
           <div className="ls-pads" role="radiogroup" aria-label="Versions">
             {variants.map((x, i) => (
               <button key={x.label} type="button" role="radio" aria-checked={v === i} className={`ls-pad ${v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => pick(i)}>
@@ -105,11 +134,11 @@ export function HearStep({ screen, meta, onNext }: { screen: Of<"hear">; meta: s
           </div>
         </>
       )}
-      <Silk label="listen" />
-      <p className="ls-read"><Gloss>{screen.body}</Gloss></p>
+      </div>
+      <div className="fl-text">{screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}{tail}</div>
       <div className="ls-bottom">
         <div className="m1-g">
-          <Key label={playing ? "stop" : "hear it"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the clip"}><Icon name={playing ? "stop" : "hear"} /></Key>
+          <Key label={playing ? "stop" : "play"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the clip"}><Icon name={playing ? "stop" : "hear"} /></Key>
           <GoPill onClick={onNext} style={{ gridColumn: "span 3" }} ariaLabel="Next">next</GoPill>
         </div>
       </div>
@@ -123,7 +152,7 @@ export function readShape(slug: string): Record<number, number> {
   try { return JSON.parse(sessionStorage.getItem(shapeKey(slug)) ?? "{}") as Record<number, number>; } catch { return {}; }
 }
 
-export function ShapeStep({ mission, screen, meta, accent, onNext }: { mission: Mission; screen: Of<"shape">; meta: string; accent: string; onNext: () => void }) {
+export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mission: Mission; screen: Of<"shape">; meta: string; accent: string; onNext: () => void; tail?: ReactNode }) {
   const [base, setBase] = useState<TrackV2 | null>(null);
   useEffect(() => setBase(readTrackV2()), []);
   const [params, setParams] = useState<Record<number, number>>(() => readShape(mission.slug));
@@ -144,32 +173,39 @@ export function ShapeStep({ mission, screen, meta, accent, onNext }: { mission: 
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
   useEffect(() => { try { sessionStorage.setItem(shapeKey(mission.slug), JSON.stringify(params)); } catch { /* ignore */ } }, [params, mission.slug]);
   const hear = async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); };
+  // The loop is going when you arrive, so every turn is heard straight away.
+  useEffect(() => {
+    if (!shown) return;
+    void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ });
+  }, [!!shown]); // eslint-disable-line react-hooks/exhaustive-deps
+  const val = (key: string) => { const k = knobs.find(x => x.spec.key === key); return k ? params[k.index] ?? k.spec.default : 0.5; };
+  const isKick = line.type === "drums";
   useEnter(onNext);
   return (
-    <div className="ls-col ls-split">
-      <div className="ls-left">
+    <div className="ls-col">
+      <div className="fl-inst">
       <Screen>
-        <Meta left={meta} right={touched ?? "turn one while it plays"} />
-        <div className="ls-title">shape it</div>
-        <p className="ls-sub"><Gloss>{screen.body}</Gloss></p>
+        <Meta left={meta} right={touched ?? (playing ? "playing, turn a knob" : "press play")} />
+        {isKick ? <KickShape decay={val("decay")} tune={val("tune")} /> : <div className="ls-title">shape it</div>}
       </Screen>
-      {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
-      </div>
-      <div className="ls-right">
-      <Silk label="knobs" right="double tap to reset" />
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, knobs.length)}, 1fr)` }}>
         {knobs.map((k, i) => (
-          <Knob key={k.index} label={k.spec.label} color={i === 0 ? CAP.go : CAP.navy} size={74} height={170} led={accent}
+          <Knob key={k.index} label={k.spec.label} color={i === 0 ? CAP.go : CAP.navy} size={74} height={150} led={accent}
             value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default}
             onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
       </div>
+      <div className="fl-text">
+      {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+      {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+      {tail}
+      </div>
       <div className="ls-bottom">
         <div className="m1-g">
-          <Key label={playing ? "stop" : "hear"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Hear your loop"}><Icon name={playing ? "stop" : "hear"} /></Key>
-          <GoPill onClick={onNext} style={{ gridColumn: "span 3" }} ariaLabel="Next">keep it</GoPill>
+          <Key label={playing ? "stop" : "play"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your loop"}><Icon name={playing ? "stop" : "play"} /></Key>
+          <GoPill onClick={onNext} style={{ gridColumn: "span 3" }} ariaLabel="Next">keep this sound</GoPill>
         </div>
       </div>
     </div>

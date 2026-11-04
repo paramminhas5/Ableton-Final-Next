@@ -5,7 +5,7 @@
  * again adds on top; undo takes back the last take; "use this line" keeps it for the
  * end of the lesson, where it joins your track when you press add.
  */
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
@@ -19,7 +19,7 @@ import { Gloss } from "./Gloss";
 const SNAPS: Snap[] = ["1/16", "1/32", "off"];
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string } };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string }; tail?: ReactNode };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -81,10 +81,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         } else if (e.kind === OUT.playedOff) {
           const ev = releaseNote(recHeld.current, "take", e.note, e.beat, opts);
           if (!ev) continue;
-          if (!takeOpen.current) {
-            takeOpen.current = true;
-            history.current.push(t.layers[idx]?.events ?? []);
-          }
+          // Every hit can be undone on its own.
+          history.current.push(t.layers[idx]?.events ?? []);
           setEvents(cur => overdub(cur, ev, opts));
         }
       }
@@ -104,8 +102,16 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
 
   // With nothing to play along to, the click keeps time.
   useEffect(() => {
-    engine.metronome(!backing && (recording || countIn));
-  }, [engine, backing, recording, countIn]);
+    engine.metronome(click && (coach ? true : !backing && (recording || countIn)));
+  }, [engine, backing, recording, countIn, click, coach]);
+
+  // A guided play-in opens with the click already going, so you hear the beat before you touch anything.
+  useEffect(() => {
+    if (!coach) return;
+    let gone = false;
+    void ready().then(() => { if (!gone) { engine.metronome(true); engine.play(); } }).catch(() => { /* needs a tap first */ });
+    return () => { gone = true; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => () => { engine.stop(); engine.metronome(false); }, [engine]);
 
@@ -134,6 +140,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     if (recording || countIn) engine.recordOff();
     else {
       takeOpen.current = false;
+      if (playing) engine.stop();
       engine.record(4);
     }
   };
@@ -148,6 +155,15 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     const prev = history.current.pop();
     if (prev) setEvents(() => prev);
   };
+  // Tap undo takes back the last hit. Hold it to clear the lot.
+  const held2 = useRef<{ t: number; fired: boolean }>({ t: 0, fired: false });
+  const holdStart = () => {
+    held2.current.fired = false;
+    window.clearTimeout(held2.current.t);
+    held2.current.t = window.setTimeout(() => { held2.current.fired = true; clear(); }, 600);
+  };
+  const holdEnd = () => window.clearTimeout(held2.current.t);
+  const undoTap = () => { if (held2.current.fired) { held2.current.fired = false; return; } undo(); };
   const clear = () => {
     if (!events.length) return;
     history.current.push(events);
@@ -180,20 +196,24 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           ? "your line"
           : "ready";
   const goalNote = coach?.goal.note ? GOAL_NOTE[coach.goal.note] : undefined;
-  const goalHits = coach ? new Set(events.filter(e => goalNote === undefined || e.note === goalNote).map(e => Math.round(e.start))).size : 0;
-  const goalMet = !coach || goalHits >= coach.goal.notes;
+  // Only hits that land on a beat count. A hit between beats has to be fixed, not waved through.
+  const goalEvents = coach ? events.filter(e => goalNote === undefined || e.note === goalNote) : [];
+  const offBeat = goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) > 0.13).length;
+  const goalHits = new Set(goalEvents.filter(e => Math.abs(e.start - Math.round(e.start)) <= 0.13).map(e => Math.round(e.start) % loop)).size;
+  const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
-  const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. wait, do not tap yet`
-    : recording ? `recording, beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1} of ${loop}. tap on each beat`
-    : !events.length ? "press rec. it starts on its own, with one bar of clicks first"
-    : !goalMet ? `keep going, ${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} so far. press rec to add more`
+  const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
+    : recording ? `recording. tap the kick on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}`
+    : !events.length ? "press rec. four clicks count you in, then tap the kick on the next four"
+    : offBeat ? `${offBeat === 1 ? "one kick" : `${offBeat} kicks`} landed between the clicks. press undo and play ${offBeat === 1 ? "it" : "them"} again`
+    : !goalMet ? `${goalHits} of ${coach.goal.notes} on the beat. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-go)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   return (
-    <div className={`ls-col ${coach ? "ls-split" : ""}`}>
-      <div className="ls-left">
+    <div className="ls-col">
+      <div className="fl-inst">
       <Screen>
         <div className="ls-meta">
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
@@ -222,20 +242,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <span style={{ color }}>{notesCount ? `${notesCount} ${notesCount === 1 ? "note" : "notes"}` : "nothing yet"}</span>
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
-        {coach && <div className="m1-ss" style={{ marginTop: 6 }}>the beat grid: 4 beats, each cut into 4 slots. snap pulls your taps onto the nearest slot.</div>}
       </Screen>
-      {coach && (
-        <>
-          <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
-          <div className="ls-now" role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
-          <p className="ls-read"><Gloss>{coach.body}</Gloss></p>
-          <div><button type="button" className="ls-chip" aria-pressed={click} onClick={() => setClick(c => !c)} aria-label={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}>click: {click ? "on" : "off"}</button></div>
-          {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
-        </>
-      )}
-      </div>
-      <div className="ls-right">
-      <Silk label="transport" right={coach ? "rec starts by itself · snap tidies timing" : "rec records · play loops it"} />
+      <Silk label="transport" right={coach ? "undo takes back a hit · hold to clear" : "rec records · play loops it"} />
       <div className="m1-g">
         <Key label="rec" style={coach && !events.length && !recording && !countIn ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>
           <Icon name="rec" />
@@ -243,10 +251,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         <Key label={playing && !recording && !countIn ? "stop" : "play"} style={coach && goalMet && !playing ? glow : undefined} led={playing && !recording ? "var(--led-mint)" : null} onClick={play} ariaLabel={playing && !recording ? "Stop" : "Play the loop"}>
           <Icon name={playing && !recording && !countIn ? "stop" : "play"} />
         </Key>
-        <Key label="undo" onClick={undo} disabled={!history.current.length} ariaLabel="Undo the last take"><Icon name="back" /></Key>
-        <Key label="snap" onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
+        <Key label="undo" onClick={undoTap} onPointerDown={holdStart} onPointerUp={holdEnd} onPointerLeave={holdEnd} disabled={!history.current.length && !events.length} ariaLabel="Undo the last hit. Hold to clear everything"><Icon name="back" /></Key>
+        {coach
+          ? <Key label="click" onClick={() => setClick(c => !c)} ariaPressed={click} led={click ? "var(--led-go)" : null} ariaLabel={click ? "Metronome on, tap to turn off" : "Metronome off, tap to turn on"}><span style={{ fontSize: 13, fontWeight: 600 }}>{click ? "on" : "off"}</span></Key>
+          : <Key label="snap" onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
           <span style={{ fontSize: 13, fontWeight: 600 }}>{snap}</span>
-        </Key>
+        </Key>}
       </div>
 
       <Silk label={drumLike ? "pads" : type === "chords" ? "chord pads" : "keys"} right={drumLike ? "tap in time" : `only notes in ${keyName}`} />
@@ -267,11 +277,18 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       </div>
 
       </div>
+      {coach && <div className="fl-text">
+        <>
+          <Silk label="your turn" right={goalMet ? "goal reached" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes} ${coach.goal.note ?? "notes"}`} />
+          <div className="ls-now" role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} />{nowLine}</div>
+          {coach.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+          {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
+          {coach.tail}
+        </>
+      </div>}
       <div className="ls-bottom">
         <div className="m1-g">
-          {events.length
-            ? <Key label="clear" onClick={clear} ariaLabel="Clear the line"><Icon name="close" /></Key>
-            : <Key label="skip" onClick={() => { engine.stop(); onSkip(); }} ariaLabel="Skip this step"><Icon name="back" className="ls-flip" /></Key>}
+          <Key label="skip" onClick={() => { engine.stop(); onSkip(); }} ariaLabel="Skip this step"><Icon name="back" className="ls-flip" /></Key>
           <GoPill onClick={use} disabled={!events.length || !goalMet} style={{ gridColumn: "span 3" }} ariaLabel="Use this line">{coach ? "keep it" : "use this line"}</GoPill>
         </div>
       </div>

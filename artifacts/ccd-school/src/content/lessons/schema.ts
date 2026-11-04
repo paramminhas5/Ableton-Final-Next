@@ -36,6 +36,8 @@ export type RawAsk = {
   why: VoiceText;
   whyWrong?: Record<number, VoiceText>;
   hint?: VoiceText;
+  /** Held back for "ask me more" instead of the main run. */
+  more?: boolean;
   levels?: Level[];
 };
 export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceText; hint?: VoiceText; levels?: Level[] };
@@ -52,6 +54,8 @@ export type RawLesson = {
   minutes: number;
   song: SongChange;
   learn: VoiceText;
+  /** What you can do after the lesson, one short line each. Shown on the last screen. */
+  youCan?: string[];
   steps: RawStep[];
 };
 
@@ -65,7 +69,7 @@ export type ResolvedStep =
   | { kind: "say"; title: string; say: string; deeper: ResolvedDeeper[]; hint?: string }
   | ({ kind: "play" } & Omit<Extract<ResolvedTry, { kind: "play" }>, "kind">)
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
-  | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string }
+  | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
   | { kind: "keep"; next: string };
 
