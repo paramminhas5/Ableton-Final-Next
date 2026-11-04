@@ -129,7 +129,7 @@ const FLAGSHIP_BATCH_1: Record<string, LessonScreen[]> = {
   ],
 
   "tempo-bpm": [
-    { kind: "hook", emoji: "⏱", headline: "Tempo sets the feel before any sound does", subtext: "Genres have a home range. Know yours." },
+    { kind: "hook", emoji: "", headline: "Tempo sets the feel before any sound does", subtext: "Genres have a home range. Know yours." },
     { kind: "concept", title: "What BPM is", body: "BPM is beats per minute. A beat is one pulse you would tap your foot to. At 120 BPM there are two beats every second.", keyFact: "120 BPM is two beats per second.", visual: "bpm-grid" },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap along and find the tempo." },
     { kind: "match", prompt: "Match the genre to its usual tempo", pairs: [{ left: "House", right: "About 120 to 128 BPM" }, { left: "Techno", right: "About 125 to 140 BPM" }, { left: "Drum and bass", right: "About 170 to 175 BPM" }, { left: "Hip hop", right: "About 80 to 100 BPM" }] },

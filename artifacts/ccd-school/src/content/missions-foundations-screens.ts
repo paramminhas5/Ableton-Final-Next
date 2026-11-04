@@ -366,7 +366,7 @@ export const SCREENS_WHAT_IS_RHYTHM: LessonScreen[] = [
 ];
 
 export const SCREENS_TEMPO_BPM: LessonScreen[] = [
-  { kind: "hook", emoji: "⏱", headline: "BPM is the heartbeat of a track", subtext: "125 BPM house, 140 BPM techno, 90 BPM hip-hop — tempo sets the mood." },
+  { kind: "hook", emoji: "", headline: "BPM is the heartbeat of a track", subtext: "125 BPM house, 140 BPM techno, 90 BPM hip-hop — tempo sets the mood." },
   {
     kind: "concept",
     title: "BPM = Beats Per Minute",

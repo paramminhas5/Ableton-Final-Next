@@ -85,7 +85,7 @@ export const FLAGSHIP_BATCH_4A: Record<string, LessonScreen[]> = {
   ],
 
   "genre-bpm-reference": [
-    { kind: "hook", emoji: "⏱", headline: "Every genre has a home tempo", subtext: "Know the ranges and you know which tracks will mix without strain." },
+    { kind: "hook", emoji: "", headline: "Every genre has a home tempo", subtext: "Know the ranges and you know which tracks will mix without strain." },
     { kind: "concept", title: "Rough ranges", body: "Hip-hop often sits around 70 to 100 BPM. House runs about 120 to 130. Techno is commonly 125 to 145. Drum and bass sits around 160 to 180. These are rough guides: tracks stray outside them all the time.", keyFact: "Ranges are guides, not walls." },
     { kind: "interact", sim: "bpm-tap", prompt: "Tap the beat. Find the tempo." },
     { kind: "concept", title: "Half-time and double-time", body: "Some styles feel half as fast as their BPM. A track at 140 BPM with the snare on beat three of each bar feels like 70. Because 70 and 140 share a grid, DJs can mix half-time and full-time tracks together.", keyFact: "70 and 140 live on the same grid." },

@@ -19,8 +19,8 @@ export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emo
   "eq-cut": { name: "EQ Cut", tagline: "Which band did we notch?", emoji: "" },
   compression: { name: "Compression", tagline: "Spot the squashed clip.", emoji: "" },
   reverb: { name: "Reverb Time", tagline: "Short, medium, or long tail?", emoji: "" },
-  panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "↔" },
-  tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "⏱" },
+  panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "" },
+  tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "" },
   "tempo-compare": {
     name: "A/B Faster?",
     tagline: "Two loops — which one is faster?",
@@ -34,7 +34,7 @@ export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emo
   "stereo-width": {
     name: "Stereo Width",
     tagline: "Mono, narrow, wide — hear the difference.",
-    emoji: "↔",
+    emoji: "",
   },
 };
 

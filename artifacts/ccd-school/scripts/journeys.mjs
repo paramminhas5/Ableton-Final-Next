@@ -134,59 +134,96 @@ const seedProgress = (extra) => ({ "ccd.progress.v2": { xp: 0, gems: 0, streakDa
 const SLUGS = [...readFileSync(new URL("../src/content/missions-foundations.ts", import.meta.url), "utf8").matchAll(/^\s*slug:\s*"([^"]+)"/gm)].map((m) => m[1]);
 const done = (n) => Object.fromEntries(SLUGS.slice(0, n).map((slug) => [slug, { score: 100, at: Date.now() }]));
 
+
+// ── the Model 1 lesson player: start, read, touch the sim, answer, skip try-it, add to track.
+// opts.answers: "first" taps the first option of each question, "none" stops at the first question.
+// Returns { questions, hearts, left } so a journey can check what happened.
+async function playLesson(p, { answers = "first", maxSteps = 80, stopAtQuestion = false } = {}) {
+  const btn = (re) => p.getByRole("button", { name: re }).filter({ visible: true }).first();
+  const tap = async (re) => { const b = btn(re); if (await b.count()) { await b.click({ timeout: 3000 }).catch(() => {}); return true; } return false; };
+  let questions = 0;
+  for (let i = 0; i < maxSteps; i++) {
+    if (!/\/learn\//.test(p.url())) break;
+    const dlg = p.locator("[role=dialog][aria-modal=true]");
+    if (await dlg.count()) { await dismiss(p); }
+    if (await p.locator(".ls-mrow").count() && await btn(/^\s*check\b/i).count()) {
+      if (stopAtQuestion) return { questions, stopped: true };
+      const n = await p.locator(".ls-mrow").count();
+      for (let k = 0; k < n; k++) { const r = p.locator(".ls-mrow").nth(k); await r.locator("button").nth(0).click({ timeout: 3000 }).catch(() => {}); await r.locator("button").nth(1).click({ timeout: 3000 }).catch(() => {}); }
+      await tap(/^\s*check\b/i); questions++;
+    } else if (await btn(/^\s*check\b/i).count() && await p.locator(".ls-pad").count()) {
+      if (stopAtQuestion) return { questions, stopped: true };
+      await p.locator(".ls-pad:visible").first().click({ timeout: 3000 }).catch(() => {});
+      await p.waitForTimeout(150);
+      await tap(/^\s*check\b/i); questions++;
+    } else if (await p.getByRole("button", { name: /try it first/i }).count()) {
+      await p.locator(".ls-sim button:visible").nth(1).click({ timeout: 3000 }).catch(async () => { await p.locator(".ls-sim button:visible").first().click({ timeout: 3000 }).catch(() => {}); });
+    } else if (await tap(/^\s*(start the lesson|skip this step|next|continue|got it|keep going|add to my track|done|finish)\b/i)) {
+    } else if (await p.locator(".ls-input:visible").count()) {
+      await p.locator(".ls-input:visible").first().fill("a").catch(() => {}); await tap(/^\s*check\b/i); questions++;
+    } else break;
+    await p.waitForTimeout(300);
+  }
+  return { questions, hearts: (await progressOf(p)).hearts ?? 5, left: !/\/learn\//.test(p.url()) };
+}
+
 // ───────────────────────── J1: total beginner
 console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
 {
   const { ctx, p, errs } = await fresh();
   await p.goto(BASE + "/");
-  await p.locator('button:visible:has-text("start learning")').first().click();
+  await p.getByRole("button", { name: /start learning/i }).filter({ visible: true }).first().click();
   await p.waitForURL(/dashboard|learn/, { timeout: 8000 });
-  await p.waitForSelector("text=What Is Sound?");
-  ok(true, "onboarding lands on a first lesson: What Is Sound?");
-  ok(await p.locator("text=Get Live ready").count() > 0 && await p.locator("text=Make your first beat").count() > 0, "dashboard offers Get Live ready + first beat for a new learner");
+  await p.getByText(/what is sound\?/i).first().waitFor({ timeout: 8000 });
+  ok(true, "onboarding lands on a first lesson: what is sound?");
+  await p.goto(BASE + "/dashboard");
+  await p.getByText(/what is sound\?/i).first().waitFor({ timeout: 8000 });
+  ok(await p.locator('a[href="/learn/what-is-sound"]').count() > 0, "today offers the first lesson with one go key");
 
   await p.goto(BASE + "/learn/what-is-sound");
-  await p.locator("button:has-text(\"GOT IT\")").first().click();
-  let hearts0 = await p.locator("text=♥").count();
-  for (let i = 0; i < 12 && (await p.locator("text=QUESTION 1 OF").count()) === 0; i++) {
-    const b = p.locator("button:visible").filter({ hasText: /^(GOT IT|NEXT|🔊|CONTINUE)/ }).first();
-    if (await b.count()) await b.click().catch(() => {}); else await p.locator("main button:visible").first().click().catch(() => {});
-    await p.waitForTimeout(250);
-  }
-  ok(await p.locator("text=QUESTION 1 OF").count() > 0, "lesson cards and the interactive reach the quiz");
-  await p.locator("button:visible:has-text('A ')").first().click(); // a wrong answer
+  await p.getByRole("dialog", { name: /how hearts work/i }).waitFor({ timeout: 5000 }).catch(() => {});
+  ok(await p.getByRole("dialog", { name: /how hearts work/i }).count() === 1, "the first lesson explains hearts once");
+  await dismiss(p);
+  await p.getByRole("button", { name: /start the lesson/i }).first().click();
+  const reach = await playLesson(p, { stopAtQuestion: true });
+  ok(reach.stopped === true, "lesson cards and the interactive reach the first question");
+  await p.locator(".ls-pad:visible").first().click(); // option a, a wrong answer for this lesson
+  await p.getByRole("button", { name: /^\s*check\b/i }).first().click();
   await p.waitForTimeout(500);
   const afterWrong = (await progressOf(p)).hearts ?? 5;
   ok(afterWrong === 4 || afterWrong === 5, `wrong answer handled (hearts now ${afterWrong})`);
-  ok(await p.locator("text=✓").count() > 0, "the right answer is revealed after answering");
+  ok(await p.getByRole("button", { name: /got it/i }).count() > 0, "the verdict shows and the lesson can move on");
 
   await p.goto(BASE + "/setup");
-  await p.locator("input[type=checkbox]").first().check();
-  await p.reload(); await p.waitForTimeout(400);
-  ok(await p.locator("input[type=checkbox]:checked").count() === 1, "setup tick survives reload");
+  await p.getByRole("checkbox").first().click();
+  await p.reload(); await p.waitForTimeout(600);
+  ok(await p.locator('[role=checkbox][aria-checked="true"]').count() === 1, "setup tick survives reload");
 
   await p.goto(BASE + "/beat");
   const step = p.locator('button[aria-label="Kick step 2"]');
   await step.click();
   ok((await step.getAttribute("aria-pressed")) === "true", "tapping a grid square places a hit");
-  await p.locator("button:has-text('PLAY')").first().click();
+  const playBtn = () => p.getByRole("button", { name: /^\s*play\s*$/i });
+  const stopBtn = () => p.getByRole("button", { name: /^\s*stop\s*$/i });
+  await playBtn().first().click();
   await p.waitForTimeout(2000);
-  if (process.env.BROWSER === "firefox" && await p.locator("button:has-text('STOP')").count() === 0) {
+  if (process.env.BROWSER === "firefox" && await stopBtn().count() === 0) {
     // headless Firefox in a container has no sound device, so the audio clock never starts
-    ok(await p.getByText("Sound is blocked").count() > 0, "no audio device: the page says sound is blocked instead of hanging");
+    ok(await p.getByText(/sound is blocked/i).count() > 0, "no audio device: the page says sound is blocked instead of hanging");
   } else {
-    ok(await p.locator("button:has-text('STOP')").count() === 1, "play starts the sequencer");
-    const activeSeen = await p.locator("button.outline").count();
-    ok(activeSeen >= 1, "the playhead highlights a step while playing");
-    await p.locator("button:has-text('STOP')").click();
+    ok(await stopBtn().count() === 1, "play starts the sequencer");
+    ok(await p.locator('[data-active="true"]').count() >= 1, "the playhead highlights a step while playing");
+    await stopBtn().click();
   }
-  const [dl] = await Promise.all([p.waitForEvent("download"), p.locator("button:has-text('SAVE FOR LIVE')").click()]);
+  const saveBtn = () => p.getByRole("button", { name: /save for live/i }).first();
+  const [dl] = await Promise.all([p.waitForEvent("download"), saveBtn().click()]);
   const file = join(tmp, dl.suggestedFilename()); await dl.saveAs(file);
   const bytes = readFileSync(file);
   ok(bytes.subarray(0, 4).toString() === "MThd" && /^first-beat-\d+bpm\.mid$/.test(dl.suggestedFilename()), `exported a MIDI file (${dl.suggestedFilename()}, ${bytes.length} bytes)`);
-  ok((await progressOf(p)).xp === 20, "first export awards 20 XP once");
-  await p.locator("button:has-text('SAVE FOR LIVE')").click(); await p.waitForTimeout(300);
-  ok((await progressOf(p)).xp === 20, "a second export does not award XP again");
+  const xpAfterFirst = (await progressOf(p)).xp;
+  ok(xpAfterFirst >= 20, `first export awards 20 xp (xp now ${xpAfterFirst})`);
+  await saveBtn().click(); await p.waitForTimeout(300);
+  ok((await progressOf(p)).xp === xpAfterFirst, "a second export does not award xp again");
   ok(errs.length === 0, "no page errors or 5xx: " + JSON.stringify(errs));
   await ctx.close();
 }

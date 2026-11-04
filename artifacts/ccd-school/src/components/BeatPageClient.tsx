@@ -5,6 +5,9 @@ import { track } from "@/lib/analytics";
 import { useProgress } from "@/lib/progress";
 import { LANES, PRESETS, STEPS, countHits, stepTime, type Lane, type Pattern } from "@/lib/beat/pattern";
 import { patternToMidi } from "@/lib/beat/midi";
+import { GoPill, Key, Silk } from "@/components/m1/controls";
+import { RefPage } from "@/components/m1/parts";
+import "@/components/m1/lesson.css";
 
 const KEY = "ccd.beat.v1";
 const FIRST_BEAT_XP = 20;
@@ -45,7 +48,7 @@ export function BeatPageClient() {
 
   async function start() {
     if (!(await ensureAudio())) {
-      setMsg("Sound is blocked. Tap the page once and try again.");
+      setMsg("sound is blocked. tap the page once and try again.");
       return;
     }
     const ctx = getCtx();
@@ -91,7 +94,7 @@ export function BeatPageClient() {
 
   function exportMidi() {
     if (countHits(pattern) === 0) {
-      setMsg("Add some hits first. The grid is empty.");
+      setMsg("add some hits first. the grid is empty.");
       return;
     }
     const bytes = patternToMidi(pattern, bpm, swing, 2);
@@ -110,96 +113,75 @@ export function BeatPageClient() {
     } catch {}
     if (first) addXp(FIRST_BEAT_XP);
     track("beat_exported", { preset: presetId, bpm, hits: countHits(pattern) });
-    setMsg(first ? `Saved. +${FIRST_BEAT_XP} XP for your first beat. Now drag the file into Live.` : "Saved. Drag the file into Live.");
+    setMsg(first ? `saved. +${FIRST_BEAT_XP} xp for your first beat. now drag the file into live.` : "saved. drag the file into live.");
   }
 
   const preset = PRESETS.find((p) => p.id === presetId)!;
+  const empty = () => clone({ kick: Array(STEPS).fill(false), snare: Array(STEPS).fill(false), clap: Array(STEPS).fill(false), hat: Array(STEPS).fill(false), ohat: Array(STEPS).fill(false) });
   return (
-    <main className="min-h-screen bg-bone">
-      <div className="mx-auto w-full max-w-xl px-4 py-8 space-y-6">
-        <header>
-          <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// FIRST BEAT</div>
-          <h1 className="font-display text-4xl leading-none">MAKE A BEAT. TAKE IT TO LIVE.</h1>
-          <p className="font-mono text-xs opacity-70 mt-3">
-            Tap the squares to place drum hits, press play, then save it as a MIDI file and drag it into Ableton Live.
-          </p>
-        </header>
-
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Starting patterns">
-          {PRESETS.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              aria-pressed={presetId === p.id}
-              onClick={() => pick(p.id)}
-              className={`brutal-border px-3 py-2 font-mono text-xs ${presetId === p.id ? "bg-ink text-bone" : "bg-white"}`}
-            >
-              {p.name}
-            </button>
-          ))}
-        </div>
-        <p className="font-mono text-xs opacity-70">{preset.note}</p>
-
-        <section className="brutal-border bg-white p-3 space-y-4" aria-label="Pattern grid">
-          {LANES.map((l) => (
-            <div key={l.id}>
-              <div className="font-mono text-[10px] uppercase opacity-70 mb-1">{l.label}</div>
-              {[0, 8].map((from) => (
-                <div key={from} className="grid grid-cols-8 gap-1 mb-1">
-                  {Array.from({ length: 8 }, (_, k) => from + k).map((i) => {
-                    const on = pattern[l.id][i];
-                    return (
-                      <button
-                        key={i}
-                        type="button"
-                        aria-pressed={on}
-                        aria-label={`${l.label} step ${i + 1}`}
-                        onClick={() => toggle(l.id, i)}
-                        className={`h-10 brutal-border ${on ? "bg-acid" : i % 4 === 0 ? "bg-black/10" : "bg-bone"} ${active === i ? "outline outline-2 outline-ink" : ""}`}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          ))}
-        </section>
-
-        <section className="grid grid-cols-2 gap-4">
-          <label className="font-mono text-xs">
-            Tempo: <b>{bpm} BPM</b>
-            <input type="range" min={60} max={200} value={bpm} onChange={(e) => setBpm(Number(e.target.value))} className="w-full" aria-label="Tempo in BPM" />
-          </label>
-          <label className="font-mono text-xs">
-            Swing: <b>{Math.round(swing * 100)}%</b>
-            <input type="range" min={0} max={100} value={Math.round(swing * 100)} onChange={(e) => setSwing(Number(e.target.value) / 100)} className="w-full" aria-label="Swing percent" />
-          </label>
-        </section>
-
-        <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={playing ? stop : start} className="brutal-border bg-acid px-5 py-3 font-display text-xl chunk-shadow">
-            {playing ? "STOP" : "PLAY"}
+    <RefPage title="first beat" back="/atlas" meta="make" right={`${bpm} bpm`}
+      intro="tap the squares to place drum hits, press play, then save it as a midi file and drag it into ableton live.">
+      <div role="group" aria-label="Starting patterns" style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+        {PRESETS.map((p) => (
+          <button key={p.id} type="button" aria-pressed={presetId === p.id} onClick={() => pick(p.id)} className="m1-tag"
+            style={{ cursor: "pointer", height: 30, padding: "0 12px", minHeight: 0, minWidth: 0, ...(presetId === p.id ? { background: "var(--ink)", color: "var(--c0)", borderColor: "var(--ink)" } : {}) }}>
+            {p.name.toLowerCase()}
           </button>
-          <button type="button" onClick={exportMidi} className="brutal-border bg-white px-5 py-3 font-display text-xl chunk-shadow">
-            SAVE FOR LIVE (.MID)
-          </button>
-          <button type="button" onClick={() => setPattern(clone({ kick: Array(STEPS).fill(false), snare: Array(STEPS).fill(false), clap: Array(STEPS).fill(false), hat: Array(STEPS).fill(false), ohat: Array(STEPS).fill(false) }))} className="brutal-border bg-bone px-4 py-3 font-mono text-xs">
-            Clear
-          </button>
-        </div>
-        <p role="status" className="font-mono text-xs min-h-4">{msg}</p>
-
-        <section className="brutal-border bg-bone p-4" aria-label="Using it in Live">
-          <h2 className="font-display text-2xl leading-none">IN LIVE</h2>
-          <ol className="mt-3 list-decimal ml-5 space-y-1 font-mono text-xs">
-            <li>Make a MIDI track and drop a <a className="underline" href="/atlas#drum-rack">Drum Rack</a> on it. Load a kit from the Core Library.</li>
-            <li>Drag the .mid file onto that track. Your pattern appears as a clip.</li>
-            <li>Set Live&apos;s tempo to {bpm} and press play. Kick is C1, snare D1, clap D#1, closed hat F#1, open hat A#1.</li>
-            <li>If a pad plays the wrong sound, drag a different sample onto that pad. Live kits order pads differently.</li>
-            <li>Next: <a className="underline" href="/build">build the rest of the track</a>, saving and uploading as you go.</li>
-          </ol>
-        </section>
+        ))}
       </div>
-    </main>
+      <p className="ls-sub" style={{ marginTop: 10, color: "var(--sub)", fontSize: 13 }}>{preset.note}</p>
+
+      <section aria-label="Pattern grid">
+        {LANES.map((l) => (
+          <div key={l.id}>
+            <Silk label={l.label.toLowerCase()} />
+            {[0, 8].map((from) => (
+              <div key={from} style={{ display: "grid", gridTemplateColumns: "repeat(8,1fr)", gap: 6, marginBottom: 6 }}>
+                {Array.from({ length: 8 }, (_, k) => from + k).map((i) => {
+                  const on = pattern[l.id][i];
+                  return (
+                    <button key={i} type="button" aria-pressed={on} aria-label={`${l.label} step ${i + 1}`} data-active={active === i ? "true" : undefined}
+                      onClick={() => toggle(l.id, i)} className={`m1-pd ${on ? "is-lit" : ""}`}
+                      style={{ height: 40, ["--c" as string]: "var(--led-mint)", ...(i % 4 === 0 && !on ? { opacity: 0.85 } : {}), ...(active === i ? { boxShadow: "0 0 0 2px var(--ink)" } : {}) }} />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        ))}
+      </section>
+
+      <Silk label="feel" />
+      <div className="ls-panel" style={{ flexDirection: "column", gap: 14, marginTop: 8 }}>
+        <label style={{ display: "block", width: "100%", fontSize: 13 }}>
+          tempo <b style={{ fontWeight: 500 }}>{bpm} bpm</b>
+          <input type="range" min={60} max={200} value={bpm} onChange={(e) => setBpm(Number(e.target.value))} style={{ width: "100%" }} aria-label="Tempo in BPM" />
+        </label>
+        <label style={{ display: "block", width: "100%", fontSize: 13 }}>
+          swing <b style={{ fontWeight: 500 }}>{Math.round(swing * 100)}%</b>
+          <input type="range" min={0} max={100} value={Math.round(swing * 100)} onChange={(e) => setSwing(Number(e.target.value) / 100)} style={{ width: "100%" }} aria-label="Swing percent" />
+        </label>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <GoPill onClick={playing ? stop : start}>{playing ? "stop" : "play"}</GoPill>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 10 }}>
+        <Key wide onClick={exportMidi} ariaLabel="Save for Live (.mid)"><span style={{ fontSize: 13, fontWeight: 500 }}>save for live</span></Key>
+        <Key wide onClick={() => { setPattern(empty()); setMsg(""); }} ariaLabel="Clear"><span style={{ fontSize: 13, fontWeight: 500 }}>clear</span></Key>
+      </div>
+      <p role="status" className="m1-t11" style={{ marginTop: 10, minHeight: 18 }}>{msg}</p>
+
+      <Silk label="in live" />
+      <section aria-label="Using it in Live" className="ls-panel" style={{ marginTop: 8, display: "block" }}>
+        <ol style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 8, fontSize: 14, lineHeight: 1.5 }}>
+          <li>make a midi track and drop a <a style={{ textDecoration: "underline" }} href="/atlas#drum-rack">drum rack</a> on it. load a kit from the core library.</li>
+          <li>drag the .mid file onto that track. your pattern appears as a clip.</li>
+          <li>set live&apos;s tempo to {bpm} and press play. kick is c1, snare d1, clap d#1, closed hat f#1, open hat a#1.</li>
+          <li>if a pad plays the wrong sound, drag a different sample onto that pad. live kits order pads differently.</li>
+          <li>next: <a style={{ textDecoration: "underline" }} href="/build">build the rest of the track</a>, saving and uploading as you go.</li>
+        </ol>
+      </section>
+    </RefPage>
   );
 }

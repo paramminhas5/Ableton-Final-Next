@@ -284,7 +284,7 @@ export async function POST(req: NextRequest) {
         const result = await sendPushNotification(
           { endpoint: row.endpoint, keys: { p256dh: row.p256dh, auth: row.auth } },
           JSON.stringify({
-            title: "🔥 Don't break your streak!",
+            title: "Don't break your streak!",
             body: `${row.streak_days}-day streak at risk. Do one lesson before midnight.`,
             url: "/learn",
           }),

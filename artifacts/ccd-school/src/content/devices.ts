@@ -49,7 +49,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "hi", label: "HIGH", min: -18, max: 18, default: 0, unit: "dB", explain: "Air, sparkle, cymbals. Raise for brightness." },
     ],
     presets: [
-      { name: "★ PHONE FILTER", values: { low: -18, mid: 12, midFreq: 2000, midQ: 6, hi: -18 } },
+      { name: "PHONE FILTER", values: { low: -18, mid: 12, midFreq: 2000, midQ: 6, hi: -18 } },
       { name: "TOO BOOMY", values: { low: -8, mid: 0, hi: 0 } },
       { name: "AIR & SPARKLE", values: { low: 0, mid: 0, hi: 6 } },
       { name: "VOCAL CARVE", values: { low: 0, mid: -6, midFreq: 700, midQ: 4, hi: 0 } },
@@ -80,7 +80,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "makeup", label: "MAKEUP", min: 0.5, max: 4, step: 0.05, default: 1.4, unit: "x", explain: "Volume back up after squashing. A/B at the same loudness." },
     ],
     presets: [
-      { name: "★ EXTREME SQUASH", values: { threshold: -45, ratio: 20, attack: 0.001, release: 0.4, knee: 0, makeup: 3 } },
+      { name: "EXTREME SQUASH", values: { threshold: -45, ratio: 20, attack: 0.001, release: 0.4, knee: 0, makeup: 3 } },
       { name: "DRUM PUNCH", values: { threshold: -18, ratio: 4, attack: 0.02, release: 0.15, knee: 4, makeup: 1.6 } },
       { name: "VOCAL GLUE", values: { threshold: -22, ratio: 3, attack: 0.005, release: 0.2, knee: 12, makeup: 1.5 } },
       { name: "MIX BUS", values: { threshold: -12, ratio: 2, attack: 0.03, release: 0.3, knee: 12, makeup: 1.2 } },
@@ -112,7 +112,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "output", label: "OUTPUT", min: 0, max: 2, step: 0.01, default: 0.7, explain: "Volume after the dirt. Match A/B loudness." },
     ],
     presets: [
-      { name: "★ MELT", values: { drive: 30, type: "sinoid", output: 0.4 } },
+      { name: "MELT", values: { drive: 30, type: "sinoid", output: 0.4 } },
       { name: "WARM GLUE", values: { drive: 6, type: "analog", output: 0.7 } },
       { name: "TAPE COLOUR", values: { drive: 12, type: "medium", output: 0.6 } },
       { name: "BROKEN", values: { drive: 24, type: "hard", output: 0.4 } },
@@ -142,7 +142,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.4, explain: "How much reverb vs. dry sound." },
     ],
     presets: [
-      { name: "★ CATHEDRAL", values: { size: 5, decay: 6, predelay: 20, wet: 1 } },
+      { name: "CATHEDRAL", values: { size: 5, decay: 6, predelay: 20, wet: 1 } },
       { name: "TIGHT ROOM", values: { size: 0.4, decay: 1, predelay: 5, wet: 0.3 } },
       { name: "VOCAL HALL", values: { size: 2.5, decay: 3, predelay: 30, wet: 0.35 } },
       { name: "INFINITE PAD", values: { size: 5, decay: 6, predelay: 50, wet: 0.7 } },
@@ -171,7 +171,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.4, explain: "Loudness of the echoes vs. the dry sound." },
     ],
     presets: [
-      { name: "★ DUB SIREN", values: { time: 0.4, feedback: 0.88, tone: 1800, wet: 0.9 } },
+      { name: "DUB SIREN", values: { time: 0.4, feedback: 0.88, tone: 1800, wet: 0.9 } },
       { name: "DOTTED 1/8", values: { time: 0.375, feedback: 0.45, tone: 5000, wet: 0.4 } },
       { name: "DUB ECHO", values: { time: 0.5, feedback: 0.7, tone: 1500, wet: 0.5 } },
       { name: "SLAPBACK", values: { time: 0.12, feedback: 0.1, tone: 8000, wet: 0.35 } },
@@ -205,7 +205,7 @@ export const DEVICES: DeviceDef[] = [
       ], default: "lowpass", explain: "Which part of the sound passes through." },
     ],
     presets: [
-      { name: "★ ACID SWEEP", values: { cutoff: 600, Q: 18, lfoRate: 1, lfoDepth: 3000, type: "lowpass" } },
+      { name: "ACID SWEEP", values: { cutoff: 600, Q: 18, lfoRate: 1, lfoDepth: 3000, type: "lowpass" } },
       { name: "ACID", values: { cutoff: 800, Q: 14, lfoRate: 2, lfoDepth: 1500, type: "lowpass" } },
       { name: "DUB CHORDS", values: { cutoff: 1200, Q: 1, lfoRate: 0.25, lfoDepth: 800, type: "lowpass" } },
       { name: "TELEPHONE", values: { cutoff: 2500, Q: 1, lfoRate: 0, lfoDepth: 0, type: "bandpass" } },
@@ -233,7 +233,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.5, explain: "How much of the chorus you hear." },
     ],
     presets: [
-      { name: "★ SEASICK MAX", values: { rate: 5, depth: 20, wet: 1 } },
+      { name: "SEASICK MAX", values: { rate: 5, depth: 20, wet: 1 } },
       { name: "SUBTLE WIDEN", values: { rate: 0.6, depth: 2, wet: 0.35 } },
       { name: "80s LUSH", values: { rate: 1.2, depth: 8, wet: 0.6 } },
       { name: "SEASICK", values: { rate: 4, depth: 18, wet: 0.7 } },
@@ -260,7 +260,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.5, explain: "Effect mix." },
     ],
     presets: [
-      { name: "★ JET WHOOSH", values: { rate: 0.5, depth: 2800, feedback: 0.85, wet: 1 } },
+      { name: "JET WHOOSH", values: { rate: 0.5, depth: 2800, feedback: 0.85, wet: 1 } },
       { name: "JET", values: { rate: 0.3, depth: 1500, feedback: 0.7, wet: 0.6 } },
       { name: "SUBTLE SWIRL", values: { rate: 0.15, depth: 400, feedback: 0.2, wet: 0.4 } },
       { name: "FAST WAH", values: { rate: 4, depth: 1200, feedback: 0.5, wet: 0.5 } },
@@ -289,7 +289,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "makeup", label: "MAKEUP", min: 1, max: 2.5, step: 0.05, default: 1.25, unit: "x", explain: "Volume back up. A/B at the same loudness." },
     ],
     presets: [
-      { name: "★ HEAR THE GLUE", values: { threshold: -22, ratio: 4, attack: 0.03, release: 0.2, makeup: 1.8 } },
+      { name: "HEAR THE GLUE", values: { threshold: -22, ratio: 4, attack: 0.03, release: 0.2, makeup: 1.8 } },
       { name: "MIX BUS GLUE", values: { threshold: -12, ratio: 2, attack: 0.03, release: 0.25, makeup: 1.25 } },
       { name: "DRUM BUS PUNCH", values: { threshold: -10, ratio: 4, attack: 0.01, release: 0.15, makeup: 1.5 } },
       { name: "HARD GLUE", values: { threshold: -18, ratio: 4, attack: 0.005, release: 0.1, makeup: 1.6 } },
@@ -316,7 +316,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "release", label: "RELEASE", min: 0.01, max: 0.3, step: 0.01, default: 0.05, unit: "s", explain: "How fast it lets go. Faster = louder, pumpier." },
     ],
     presets: [
-      { name: "★ SLAMMED", values: { gain: 6, ceiling: -0.3, release: 0.02 } },
+      { name: "SLAMMED", values: { gain: 6, ceiling: -0.3, release: 0.02 } },
       { name: "MASTERING", values: { gain: 1.5, ceiling: -1, release: 0.05 } },
       { name: "LOUD AS HELL", values: { gain: 4, ceiling: -0.3, release: 0.02 } },
       { name: "TRANSPARENT", values: { gain: 1.2, ceiling: -2, release: 0.15 } },
@@ -351,7 +351,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "b7g", label: "HIGH SHELF", min: -18, max: 18, default: 0, unit: "dB", explain: "12 k+ — air." },
     ],
     presets: [
-      { name: "★ SMILE", values: { b0g: 4, b1g: 0, b2g: -3, b3g: -3, b4g: 0, b5g: 2, b6g: 4, b7g: 5 } },
+      { name: "SMILE", values: { b0g: 4, b1g: 0, b2g: -3, b3g: -3, b4g: 0, b5g: 2, b6g: 4, b7g: 5 } },
       { name: "VOCAL CARVE", values: { b0g: -3, b1g: 0, b2g: -4, b3g: -2, b4g: 3, b5g: 2, b6g: 0, b7g: 2 } },
       { name: "BASS TIGHTEN", values: { b0g: 2, b1g: -2, b2g: -3, b3g: 0, b4g: 0, b5g: 0, b6g: 0, b7g: 0 } },
       { name: "FLAT", values: { b0g: 0, b1g: 0, b2g: 0, b3g: 0, b4g: 0, b5g: 0, b6g: 0, b7g: 0 } },
@@ -378,7 +378,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "release", label: "RELEASE", min: 0.005, max: 1, step: 0.005, default: 0.1, unit: "s", explain: "How fast it closes." },
     ],
     presets: [
-      { name: "★ HARD GATE", values: { threshold: -20, attack: 0.001, release: 0.05 } },
+      { name: "HARD GATE", values: { threshold: -20, attack: 0.001, release: 0.05 } },
       { name: "DRUM TIGHTEN", values: { threshold: -30, attack: 0.002, release: 0.1 } },
       { name: "GENTLE", values: { threshold: -50, attack: 0.01, release: 0.2 } },
     ],
@@ -403,7 +403,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "output", label: "OUTPUT", min: 0, max: 2, step: 0.01, default: 0.6, explain: "Volume after the dirt." },
     ],
     presets: [
-      { name: "★ AMP STACK", values: { drive: 0.85, tone: 3000, output: 0.5 } },
+      { name: "AMP STACK", values: { drive: 0.85, tone: 3000, output: 0.5 } },
       { name: "WARM CRUNCH", values: { drive: 0.3, tone: 5000, output: 0.6 } },
       { name: "FUZZ", values: { drive: 0.95, tone: 1500, output: 0.5 } },
     ],
@@ -428,7 +428,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "amount", label: "AMOUNT", min: 0, max: 1, step: 0.01, default: 0.4, explain: "How much of the destroyed signal you hear." },
     ],
     presets: [
-      { name: "★ FULL DESTROY", values: { freq: 1500, width: 4, amount: 1 } },
+      { name: "FULL DESTROY", values: { freq: 1500, width: 4, amount: 1 } },
       { name: "SUBTLE GRIT", values: { freq: 60, width: 0.3, amount: 0.25 } },
       { name: "ALIEN PHONE", values: { freq: 800, width: 1.5, amount: 0.7 } },
     ],
@@ -451,7 +451,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "downsample", label: "DOWNSAMPLE", min: 1, max: 30, step: 1, default: 1, explain: "Higher = darker, more aliased." },
     ],
     presets: [
-      { name: "★ NES BREAK", values: { bits: 4, downsample: 12 } },
+      { name: "NES BREAK", values: { bits: 4, downsample: 12 } },
       { name: "GAMEBOY", values: { bits: 4, downsample: 6 } },
       { name: "LO-FI WARM", values: { bits: 10, downsample: 3 } },
       { name: "BROKEN PHONE", values: { bits: 6, downsample: 8 } },
@@ -477,7 +477,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.7, explain: "Mix amount." },
     ],
     presets: [
-      { name: "★ JET PLANE", values: { rate: 0.3, depth: 7, feedback: 0.85, wet: 1 } },
+      { name: "JET PLANE", values: { rate: 0.3, depth: 7, feedback: 0.85, wet: 1 } },
       { name: "SUBTLE SHIMMER", values: { rate: 0.2, depth: 1, feedback: 0.2, wet: 0.4 } },
       { name: "FUNK GUITAR", values: { rate: 1.5, depth: 3, feedback: 0.5, wet: 0.6 } },
     ],
@@ -501,7 +501,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "depth", label: "DEPTH", min: 0.5, max: 10, step: 0.1, default: 4, unit: "ms", explain: "Wobble size." },
     ],
     presets: [
-      { name: "★ SEASICK", values: { rate: 7, depth: 9 } },
+      { name: "SEASICK", values: { rate: 7, depth: 9 } },
       { name: "VOCAL VIBRATO", values: { rate: 5, depth: 2 } },
       { name: "SUBTLE", values: { rate: 4, depth: 1 } },
     ],
@@ -529,7 +529,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.6, explain: "Echo level." },
     ],
     presets: [
-      { name: "★ DUB STEREO", values: { timeL: 0.375, timeR: 0.5, feedback: 0.78, hp: 250, lp: 2000, wet: 0.8 } },
+      { name: "DUB STEREO", values: { timeL: 0.375, timeR: 0.5, feedback: 0.78, hp: 250, lp: 2000, wet: 0.8 } },
       { name: "SLAP STEREO", values: { timeL: 0.09, timeR: 0.13, feedback: 0.1, hp: 200, lp: 8000, wet: 0.4 } },
       { name: "PING PONG", values: { timeL: 0.25, timeR: 0.5, feedback: 0.55, hp: 200, lp: 5000, wet: 0.55 } },
     ],
@@ -556,7 +556,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.6, explain: "Mix." },
     ],
     presets: [
-      { name: "★ GLITCH WALL", values: { time: 0.5, rate: 20, spray: 25, feedback: 0.85, wet: 1 } },
+      { name: "GLITCH WALL", values: { time: 0.5, rate: 20, spray: 25, feedback: 0.85, wet: 1 } },
       { name: "STUTTER", values: { time: 0.12, rate: 12, spray: 3, feedback: 0.5, wet: 0.55 } },
     ],
     listenFor: ["High spray on vocals = otherworldly fragments."],
@@ -583,7 +583,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 0.7, explain: "Mix." },
     ],
     presets: [
-      { name: "★ POLYRHYTHM", values: { lt: 0.5, lfb: 0.55, mt: 0.333, mfb: 0.5, ht: 0.166, hfb: 0.5, wet: 0.85 } },
+      { name: "POLYRHYTHM", values: { lt: 0.5, lfb: 0.55, mt: 0.333, mfb: 0.5, ht: 0.166, hfb: 0.5, wet: 0.85 } },
       { name: "SPACED OUT", values: { lt: 0.75, lfb: 0.7, mt: 0.5, mfb: 0.5, ht: 0.25, hfb: 0.6, wet: 0.7 } },
     ],
     listenFor: ["Each band echoing at a different rate creates motion across the spectrum."],
@@ -606,7 +606,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "boom", label: "BOOM", min: 0, max: 12, step: 0.5, default: 3, unit: "dB", explain: "Sub-bass weight." },
     ],
     presets: [
-      { name: "★ TRAP", values: { hp: 25, drive: 0.45, comp: -18, boom: 8 } },
+      { name: "TRAP", values: { hp: 25, drive: 0.45, comp: -18, boom: 8 } },
       { name: "ROCK BUS", values: { hp: 40, drive: 0.35, comp: -16, boom: 2 } },
       { name: "TIGHT BUS", values: { hp: 60, drive: 0.1, comp: -10, boom: 0 } },
     ],
@@ -630,7 +630,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "amount", label: "AMOUNT", min: 0, max: 0.5, step: 0.01, default: 0.4, explain: "How wide the pan." },
     ],
     presets: [
-      { name: "★ HARD PAN", values: { rate: 4, amount: 0.5 } },
+      { name: "HARD PAN", values: { rate: 4, amount: 0.5 } },
       { name: "LAZY MOTION", values: { rate: 0.25, amount: 0.3 } },
       { name: "TREMOLO 8th", values: { rate: 5, amount: 0.45 } },
     ],
@@ -652,7 +652,7 @@ export const DEVICES: DeviceDef[] = [
       { kind: "knob", id: "wet", label: "WET", min: 0, max: 1, step: 0.01, default: 1, explain: "Mix." },
     ],
     presets: [
-      { name: "★ ALIEN", values: { shift: 800, wet: 1 } },
+      { name: "ALIEN", values: { shift: 800, wet: 1 } },
       { name: "BELL TONES", values: { shift: 30, wet: 1 } },
       { name: "CHIRP", values: { shift: 200, wet: 0.6 } },
     ],

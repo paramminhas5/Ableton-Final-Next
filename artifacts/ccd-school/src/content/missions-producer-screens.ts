@@ -169,7 +169,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   ],
 
   "warping": [
-    { kind: "hook", emoji: "⏳", headline: "Lock any sample to your tempo", subtext: "Warping stretches time without changing pitch." },
+    { kind: "hook", emoji: "", headline: "Lock any sample to your tempo", subtext: "Warping stretches time without changing pitch." },
     { kind: "concept", title: "Warp modes overview", body: "Live has six warp modes optimised for different material: Beats (drums), Tones (melodic), Texture (pads), Re-Pitch (vinyl), Complex (full mixes), Complex Pro (best quality, most CPU).", keyFact: "Start with Beats for drums. Complex Pro for full mixes.", visual: "waveform-zoom"},
     { kind: "concept", title: "Warp markers", body: "Place warp markers on transients to pin audio to the grid. Drag a marker to shift timing. Right-click a transient → Warp from Here (Straight) to quick-lock an entire loop to tempo.", keyFact: "Double-click the waveform display to add a warp marker.", visual: "waveform-zoom"},
     { kind: "interact", sim: "warp-lab", prompt: "Set warp mode to Beats — adjust a drum loop to tempo" },
