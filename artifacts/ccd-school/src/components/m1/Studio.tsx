@@ -72,6 +72,7 @@ import { bind, PIC } from "@/lib/paramColor";
 import { assign, canTake, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, SRC_COLOR, SRC_LABEL, type ModSrc } from "@/lib/modulation";
 import { ModChips, ModOverlay } from "./Modulation";
 import { ABKey, useAB } from "./AB";
+import { ScopeView } from "./Scope";
 import { fromValue, toValue } from "@/engine";
 import { chordAt, chordEvents, chordName, chordNotes as chordMidi, inChord, romanOf, withChordTrack, type Chord } from "@/lib/chords";
 import { ChordTrackEditor } from "./ChordTrack";
@@ -719,6 +720,7 @@ export function Studio() {
                 </div>
               </div>
               {bank === "mix" && ducking && duckSrc && !live ? <DuckGraph track={track} layer={sel} src={duckSrc} /> : null}
+              {!(bank === "mix" && ducking && duckSrc && !live) ? <ScopeView engine={engine} layer={selIndex} color={type.color} className="st-scope" /> : null}
             </>
           ) : (
             <>

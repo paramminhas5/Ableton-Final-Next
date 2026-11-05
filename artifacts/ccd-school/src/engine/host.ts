@@ -40,6 +40,8 @@ export interface EngineHost {
   setTempo?(bpm: number): void;
   /** Put a mono sample into a sampler layer's slot (web only for now; the phone shell follows). */
   loadSample?(layer: number, slot: number, data: Float32Array, rate: number): void;
+  /** The engine's scope ring (cmd SCOPE): `fn` gets its latest samples about 30 times a second. Web only for now. */
+  scope?(fn: (x: Float32Array) => void): () => void;
   /** Web only: the audio context the engine plays into, so other sounds (a file on a deck) mix with it. */
   audio?(): { ctx: AudioContext; out: AudioNode } | null;
   stop(): Promise<void>;

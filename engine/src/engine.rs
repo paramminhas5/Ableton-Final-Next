@@ -84,7 +84,15 @@ pub mod cmd {
     pub const CHANCE_SEED: u32 = 41;
     /// The fill key (Elektron): a = 1 held, 0 let go. Events with the fill condition play while it is held.
     pub const FILL: u32 = 42;
+    /// The scope: keep the last SCOPE_LEN samples of part `a` (0..MAX_LAYERS), of the master
+    /// (SCOPE_MASTER), or of nothing (anything else). Read with `ccd_scope` between blocks.
+    pub const SCOPE: u32 = 27;
 }
+
+/// Samples the scope keeps: 43 ms at 48 kHz, enough for a 2048-point spectrum.
+pub const SCOPE_LEN: usize = 2048;
+pub const SCOPE_MASTER: u32 = MAX_LAYERS as u32;
+pub const SCOPE_OFF: u32 = 255;
 
 pub mod out {
     pub const PLAYED_ON: u32 = 1;
@@ -541,6 +549,10 @@ pub struct Core {
     last_meter: u64,
     snap: Snapshot,
     pub comparing: bool,
+    /// The scope (cmd::SCOPE): which part (-1 none, MAX_LAYERS the master) and its ring.
+    scope_src: i32,
+    scope: Box<[f32; SCOPE_LEN]>,
+    scope_pos: usize,
 }
 
 pub struct Engine {
@@ -665,6 +677,9 @@ impl Core {
             last_meter: 0,
             snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; crate::master::MASTER_SLOTS] },
             comparing: false,
+            scope_src: -1,
+            scope: Box::new([0.0; SCOPE_LEN]),
+            scope_pos: 0,
         };
         // The master's defaults reach the shared returns too (the echo's style, the reverb's kind and time).
         for (i, spec) in MASTER_PARAMS.iter().enumerate() {
@@ -814,6 +829,10 @@ impl Core {
                 }
             }
             cmd::MOD => self.layers[li].set_mod(c.a as usize, c.z as u8, c.y as usize, c.x),
+            cmd::SCOPE => {
+                self.scope_src = if c.a <= SCOPE_MASTER { c.a as i32 } else { -1 };
+                self.scope.fill(0.0);
+            }
             cmd::TRIM => {
                 let l = &mut self.layers[li];
                 let g = if c.x.is_finite() && c.x.abs() > 0.001 { db_to_gain(c.x.clamp(-48.0, 12.0)) } else { 1.0 };
@@ -1002,6 +1021,16 @@ impl Core {
         });
     }
 
+    /// The scope's last `out.len()` samples (at most SCOPE_LEN), oldest first. Returns how many.
+    pub fn read_scope(&self, out: &mut [f32]) -> usize {
+        let n = out.len().min(SCOPE_LEN);
+        let start = (self.scope_pos + SCOPE_LEN - n) % SCOPE_LEN;
+        for (k, o) in out[..n].iter_mut().enumerate() {
+            *o = self.scope[(start + k) % SCOPE_LEN];
+        }
+        n
+    }
+
     /// The clashes found at the last report (for tests and tools).
     pub fn detect_clashes(&mut self) -> Vec<Clash> {
         let mut info = [LayerInfo::default(); MAX_LAYERS];
@@ -1158,6 +1187,10 @@ impl Core {
                 mr += o.r;
                 echo_in += o.echo;
                 verb_in += o.verb;
+                if self.scope_src == li as i32 {
+                    self.scope[self.scope_pos] = 0.5 * (o.l + o.r);
+                    self.scope_pos = (self.scope_pos + 1) % SCOPE_LEN;
+                }
                 if self.analyse {
                     self.meters[li].tick(o.l, o.r);
                     live |= 1 << li;
@@ -1174,6 +1207,10 @@ impl Core {
             let (ol, or) = self.master.tick(ml, mr);
             self.out_l[i] = ol;
             self.out_r[i] = or;
+            if self.scope_src == SCOPE_MASTER as i32 {
+                self.scope[self.scope_pos] = 0.5 * (ol + or);
+                self.scope_pos = (self.scope_pos + 1) % SCOPE_LEN;
+            }
             if self.analyse {
                 self.loud.tick(ol, or);
                 let tp = self.out_tp.push(ol, or);

@@ -32,6 +32,7 @@ import {
 } from "@/engine";
 import { masterOf, paramOf, TYPE, type LayerV2, type TrackV2 } from "@/lib/track2";
 import { CAP, Fader, Icon, Knob, Screen, Silk } from "./controls";
+import { SpectrumView } from "./Scope";
 
 const P = Object.fromEntries(LAYER_PARAMS.map(p => [p.id, p])) as Record<string, ParamSpec>;
 const IDX = {
@@ -452,7 +453,7 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
     <>
       <div className="mx-scr-hold" {...holdHandlers} {...keyHandlers} tabIndex={0} role="button" aria-pressed={holding}
         aria-label={holding ? "Comparing with the mix before your changes. Let go to come back" : "Mix screen. Hold to compare with the mix before your changes"}>
-        <Screen className="st-scr" height={96}>{screen}</Screen>
+        <Screen className="st-scr" height={96}>{screen}<SpectrumView engine={engine} className="mx-spectrum" /></Screen>
       </div>
       {pads}
       <Silk label="see the mix as" right="same mix, two views" />

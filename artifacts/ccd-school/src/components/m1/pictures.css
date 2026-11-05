@@ -95,3 +95,9 @@
 .ls-abwrap .m1-ab{height:44px;padding:0 14px;font-size:14px}
 .ls-abwrap .m1-ab.is-on{height:44px}
 .ls-abwrap .m1-ab.is-on button{height:36px;min-width:36px}
+
+/* scope and spectrum (Scope.tsx): drawn on the screen's glass, under the words, never in the way of a touch */
+.m1-scope,.m1-spectrum{position:absolute;pointer-events:none;display:block;mix-blend-mode:screen}
+.st-scope{right:14px;bottom:5px;width:44%;height:18px;opacity:.85}
+.mx-spectrum{left:0;right:0;bottom:0;width:100%;height:38%;opacity:.55}
+@media (min-width:900px) and (min-height:560px){.st-scope{height:34px;width:40%;bottom:10px}}

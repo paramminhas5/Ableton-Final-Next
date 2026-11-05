@@ -130,10 +130,10 @@ pub fn typescript() -> String {
 
     writeln!(
         o,
-        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {}, repeat: {}, mod: {}, trim: {}, evCond: {}, chanceSeed: {}, fill: {} }} as const;",
+        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {}, repeat: {}, mod: {}, trim: {}, evCond: {}, chanceSeed: {}, fill: {}, scope: {} }} as const;",
         cmd::NOTE_ON, cmd::NOTE_OFF, cmd::PARAM, cmd::INSTRUMENT, cmd::TEMPO, cmd::LOOP, cmd::PLAY, cmd::STOP, cmd::RECORD, cmd::RECORD_OFF,
         cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF,
-        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE, cmd::REPEAT, cmd::MOD, cmd::TRIM, cmd::EV_COND, cmd::CHANCE_SEED, cmd::FILL
+        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE, cmd::REPEAT, cmd::MOD, cmd::TRIM, cmd::EV_COND, cmd::CHANCE_SEED, cmd::FILL, cmd::SCOPE
     )
     .unwrap();
     writeln!(
@@ -158,6 +158,10 @@ pub fn typescript() -> String {
     writeln!(o, "export const MIX_PARAMS = {};", crate::engine::MIX_PARAMS).unwrap();
     writeln!(o, "/** Modulation: slots per layer and the sources (cmd mod: a slot, x amount, y wire param, z source). */").unwrap();
     writeln!(o, "export const MAX_MODS = {};", crate::engine::MAX_MODS).unwrap();
+    writeln!(o, "/** The scope (cmd scope): samples it keeps, the master's number, and off. */").unwrap();
+    writeln!(o, "export const SCOPE_LEN = {};", crate::engine::SCOPE_LEN).unwrap();
+    writeln!(o, "export const SCOPE_MASTER = {};", crate::engine::SCOPE_MASTER).unwrap();
+    writeln!(o, "export const SCOPE_OFF = {};", crate::engine::SCOPE_OFF).unwrap();
     writeln!(o, "export const MOD_SRC = {{ lfo: {}, env: {} }} as const;", crate::engine::MOD_LFO, crate::engine::MOD_ENV).unwrap();
     writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {}, repeat: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK, out::F_REPEAT).unwrap();
     writeln!(o, "export const OUT_EVENT_BYTES = {};\n", std::mem::size_of::<crate::engine::OutEv>()).unwrap();

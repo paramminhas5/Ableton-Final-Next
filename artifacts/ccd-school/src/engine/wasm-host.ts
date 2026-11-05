@@ -42,12 +42,14 @@ export class WasmHost implements EngineHost {
           const evs = unpackEvents(d.e as Float64Array);
           for (const fn of this.subs) fn(evs);
         } else if (d.t === "load") this.load = d.ms / 10; // ms per second -> %
+        else if (d.t === "scope") for (const fn of this.scopes) fn(d.x as Float32Array);
       };
     });
     // Compiled inside the worklet: Chrome cannot hand a compiled module across.
     node.port.postMessage({ t: "init", bytes }, [bytes]);
     this.node = node;
     await ready;
+    if (this.scopes.size) node.port.postMessage({ t: "scope", on: true });
     if (ctx.state !== "running") await ctx.resume();
     if (this.queue.length) this.flush();
   }
@@ -87,6 +89,16 @@ export class WasmHost implements EngineHost {
     const t = at === undefined ? -1 : Date.now() - (performance.now() - at);
     this.queue.push(on ? CMD.noteOn : CMD.noteOff, layer, note, vel, t, 0);
     this.flush(); // notes go now, not on the next microtask
+  }
+
+  private scopes = new Set<(x: Float32Array) => void>();
+  /** The engine's scope ring, about 30 times a second while anyone listens. */
+  scope(fn: (x: Float32Array) => void) {
+    this.scopes.add(fn);
+    // Never starts the engine itself (that waits for a touch); boot tells the worklet if anyone is listening.
+    const tell = () => this.node?.port.postMessage({ t: "scope", on: this.scopes.size > 0 });
+    tell();
+    return () => { this.scopes.delete(fn); tell(); };
   }
 
   subscribe(fn: (e: EngineEvent[]) => void) {

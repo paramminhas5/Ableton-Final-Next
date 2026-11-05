@@ -2,7 +2,7 @@
  * The CCD engine, from the UI's side. One API whether the sound comes from
  * WebAssembly in the browser or from native code in the iOS/Android app.
  */
-import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, type InstrumentName } from "./params.gen";
+import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, SCOPE_OFF, type InstrumentName } from "./params.gen";
 import type { EngineEvent, EngineHost } from "./host";
 import { NativeHost, isTauri } from "./native-host";
 import { WasmHost } from "./wasm-host";
@@ -79,6 +79,15 @@ export class Engine {
   /** A/B level match: trim a layer by `db` after its strip (0 takes it off). Not a knob, never saved. */
   trim(layer: number, db: number) {
     this.s(CMD.trim, layer, 0, db);
+  }
+  /**
+   * The scope: the engine keeps the last samples of part `src` (or SCOPE_MASTER) and `fn` gets them about
+   * 30 times a second. Returns a function that stops it. Hosts without a scope never call `fn`.
+   */
+  scope(src: number, fn: (x: Float32Array) => void): () => void {
+    this.s(CMD.scope, 0, src);
+    const off = this.host.scope?.(fn) ?? (() => {});
+    return () => { off(); this.s(CMD.scope, 0, SCOPE_OFF); };
   }
   /** Hold a pad to roll: hits land on the grid, `beats` apart (0.25 = 1/16, 0.125 = 1/32). */
   repeat(layer: number, note: number, vel: number, beats: number) {

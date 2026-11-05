@@ -189,3 +189,15 @@ pub unsafe extern "C" fn ccd_lufs(l: *const f32, r: *const f32, frames: u32, sam
     let r = std::slice::from_raw_parts(r, frames as usize);
     crate::loudness::integrated_lufs(l, r, sample_rate)
 }
+
+/// Copy the scope's last `n` samples (at most SCOPE_LEN), oldest first, into `out`. Returns how many.
+/// Call between blocks on the audio thread (the web worklet does, about 30 times a second).
+///
+/// # Safety
+/// `out` must hold `n` floats. Audio thread only, not while `ccd_process` runs.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_scope(e: *const Engine, out: *mut f32, n: u32) -> u32 {
+    let n = (n as usize).min(crate::engine::SCOPE_LEN);
+    let o = std::slice::from_raw_parts_mut(out, n);
+    (*e).core().read_scope(o) as u32
+}

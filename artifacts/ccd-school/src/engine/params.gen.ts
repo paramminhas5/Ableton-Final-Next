@@ -172,7 +172,7 @@ export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
 export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | DrumPad2ParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
-export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24, mod: 25, trim: 26, evCond: 40, chanceSeed: 41, fill: 42 } as const;
+export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24, mod: 25, trim: 26, evCond: 40, chanceSeed: 41, fill: 42, scope: 27 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8, loudness: 9 } as const;
 /** Clash fixes, as packed in a CLASH event's flags. */
 export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;
@@ -189,6 +189,10 @@ export const GLUE_RATIOS = [2, 4, 10] as const;
 export const MIX_PARAMS = 12;
 /** Modulation: slots per layer and the sources (cmd mod: a slot, x amount, y wire param, z source). */
 export const MAX_MODS = 8;
+/** The scope (cmd scope): samples it keeps, the master's number, and off. */
+export const SCOPE_LEN = 2048;
+export const SCOPE_MASTER = 8;
+export const SCOPE_OFF = 255;
 export const MOD_SRC = { lfo: 0, env: 1 } as const;
 export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8, repeat: 16 } as const;
 export const OUT_EVENT_BYTES = 32;
