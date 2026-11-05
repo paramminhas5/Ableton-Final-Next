@@ -142,7 +142,7 @@ Tools that teach do not make music, and tools that make music do not teach.
 | **Tauri 2 for the phone apps, not Capacitor** | The app core is Rust, so the engine runs in the same process with no Swift or Kotlin bridge. Android uses AAudio low-latency exclusive mode; iOS uses RemoteIO with a 64-frame buffer. | Capacitor (a JavaScript bridge in the audio path); fully native apps (three codebases). |
 | **The web app is the one source of every screen** | Phones open the web app; only sound is native. Anything finished on the web is finished on phones. Content changes ship without app store reviews. | Separate phone screens that fall behind. |
 | **Web first, phones paused** | The app is not finished, and phone work also waits on outside steps (Apple enrolment, Ableton's licence reply). Finishing the one source first is the fastest path to everything. | Building phone polish on unfinished screens. |
-| **LinkKit on iOS, open-source Link on Android (unofficial APK)** | LinkKit is Ableton's free iOS SDK and allowed in the App Store. Open-source Link is GPL, fine for test builds. A Play Store release waits for Ableton's proprietary licence (requested 3 Nov). | Shipping GPL code in a store app; dropping Link. |
+| **LinkKit on iOS, open-source Link on Android (unofficial APK)** | LinkKit is Ableton's free iOS SDK and allowed in the App Store. Open-source Link is GPL, fine for test builds. Ableton's proprietary Link licence is signed (Param, 5 Nov), so Link can ship in a Play Store app; the Android store build is still to do. | Shipping GPL code in a store app; dropping Link. |
 | **No Link inside the browser** | Browsers cannot send the network traffic Link uses. Browser sync will use MIDI clock from Live (Chrome, Edge); real Link lives in the Mac and phone apps. | A helper app every web user must install. |
 | **Generated parameter types** | Parameter names, ranges and curves are defined once in Rust and generated into TypeScript. A test fails if they drift. | Hand-kept lists in two languages. |
 | **Track v2 with a v1 view** | Studio needed note events and 8 layers; lessons, Today and DJ use the old shape. A bridge let us change the format without breaking 171 lessons. | A big-bang rewrite of every consumer. |
@@ -216,7 +216,7 @@ flowchart LR
 **Platforms and Live**
 - Real latency on iPhone and Android is not measured, and Link has not been tested against Live on a device.
 - Link on iPhone needs Apple's multicast permission, which only a paid Apple Developer Program account can request. The account is not enrolled yet.
-- Android Link in a Play Store app needs Ableton's proprietary licence (requested).
+- Android Link: Ableton's proprietary licence is signed (5 Nov). Next: a Play Store build, and swapping the GPL Link build for the licensed one.
 - Browser tempo sync (MIDI clock) is not built.
 
 **Product and launch**

@@ -101,5 +101,5 @@ npm run android:build -- --debug
 - iOS: LinkKit is free and royalty-free under the Ableton Link SDK licence
   (`vendor/LinkKit/LICENSE.md`).
 - Android: open-source Link is GPLv2+. Fine for us and testers. If the APK is ever handed
-  out publicly, the GPL means offering the app's source with it. A Play Store release
-  needs Ableton's proprietary licence; requested from link-devs@ableton.com on 3 Nov 2026.
+  out publicly, the GPL means offering the app's source with it. Ableton's proprietary
+  Link licence was requested on 3 Nov 2026 and signed by Param on 5 Nov, so a Play Store release can use Link.
