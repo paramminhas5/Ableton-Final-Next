@@ -89,11 +89,10 @@ export function SoundCompare() {
 
   return (
     <RefPage title="sound against the open-source synths" back="/sound" meta="blind pairs, a and b shuffled"
-      right={done.length ? `${done.length} of ${COMPARE_PAIRS.length} picked` : undefined}
+      right={done.length ? `${done.length} of ${COMPARE_PAIRS.length} picked, ours ${oursCount}` : undefined}
       intro="the same notes through a free, open-source synth and through our engine, set to the same loudness (-16 lufs) so the louder one can't win. a and b are shuffled for every pair. play, flip between a and b as often as you like, then pick the one you like; only then does it say which was which.">
       {done.length > 0 && (
         <div className="ab-bar">
-          <span className="ls-sub">so far you picked ours {oursCount} of {done.length} times.</span>
           <button type="button" className="ls-chip" onClick={again}>start again</button>
         </div>
       )}
@@ -110,7 +109,7 @@ export function SoundCompare() {
               <Key label={on ? "stop" : "play"} onClick={() => void play(p, blindSide("a"))} ariaPressed={on} ariaLabel={`${on ? "Stop" : "Play"} ${p.name}`} disabled={!aIs}><Icon name={on ? "stop" : "play"} /></Key>
               <div className="ab-text">
                 <b>{p.name}</b>
-                <span>{p.what}</span>
+                <span>{p.what}. against {p.theirs}.</span>
                 {got && <span>{p.theirs} was {letterOf("theirs")}, ours was {letterOf("ours")}. you picked {got.pick === "ours" ? "ours" : p.theirs}.</span>}
                 {on && !got && (
                   <>
@@ -123,8 +122,8 @@ export function SoundCompare() {
                   </>
                 )}
                 {on && got && (
-                  <div className="ab-seg" role="radiogroup" aria-label="Which one you hear">
-                    {sidesOf(p).map(s => <button key={s} type="button" role="radio" aria-checked={side === s} className={side === s ? "is-on" : ""} onClick={() => hear(s)}>{s === "theirs" ? p.theirs.split(" (")[0] : s === "after" ? "ours now" : p.after ? "ours then" : "ours"}</button>)}
+                  <div className="ab-seg is-three" role="radiogroup" aria-label="Which one you hear">
+                    {sidesOf(p).map(s => <button key={s} type="button" role="radio" aria-checked={side === s} className={side === s ? "is-on" : ""} onClick={() => hear(s)}>{s === "theirs" ? p.theirs.split(" ")[0] : s === "after" ? "ours now" : p.after ? "ours then" : "ours"}</button>)}
                   </div>
                 )}
               </div>
