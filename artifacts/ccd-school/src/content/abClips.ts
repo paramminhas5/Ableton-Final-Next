@@ -13,6 +13,7 @@ export const AB_CLIPS: AbClip[] = [
   { id: "lead", name: "lead", what: "a held note, then a short phrase", listen: "the wide, shimmering stack of the classic trance supersaw, and no two notes start exactly the same." },
   { id: "drive", name: "driven bass", what: "a bass with the drive turned up", listen: "the grit is warmer and cleaner. the harsh fizz on top is gone." },
   { id: "kit", name: "the kit", what: "kick, clap and hats with some drive", listen: "metal hats, a punchier kick and a cleaner, warmer drive on it." },
+  { id: "glued", name: "glued song", what: "the whole song with the bus compressor pushed hard", listen: "before, the chords and hats drop in level on every kick and swell back up. after, the compressor listens past the kick's low end, so the song holds together and stays as loud." },
   { id: "sketch", name: "the whole song", what: "four bars with everything playing", listen: "all of it together: wider chords and lead, metal hats, a punchier kick, cleaner grit." },
 ];
 

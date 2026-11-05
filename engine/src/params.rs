@@ -202,6 +202,11 @@ pub const L_DUCK: usize = 11;
 pub const MASTER_PARAMS: &[ParamSpec] = &[
     p("master.out", "out", Bank::Mix, 0.0, 1.0, FADER_UNITY, Unit::Db, Curve::Fader, 15.0, UNITY),
     p("master.glue", "glue", Bank::Mix, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 6): the glue's ratio switch (2, 4, 10 to 1), the high-pass on
+    // what it listens to (off at the bottom, 90 Hz by default) and a dry/compressed mix.
+    p("master.glueratio", "ratio", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.sidechain", "sidechain", Bank::Mix, 20.0, 300.0, 0.555, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("master.gluemix", "glue mix", Bank::Mix, 0.0, 1.0, 1.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 
 /// Instrument params start here on the wire, after the layer block.

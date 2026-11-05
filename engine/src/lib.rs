@@ -5,7 +5,8 @@
 //! - `dsp`: oscillators, zero-delay-feedback filters, envelopes, oversampling.
 //! - `inst`: the drum rack and the mono bass synth.
 //! - `seq`: note events and the loop sequencer.
-//! - `strip`, `fx`: channel strips and shared returns; `master`: glue and true-peak limiter.
+//! - `strip`, `fx`: channel strips and shared returns; `master`: glue and true-peak limiter;
+//!   `loudness`: BS.1770 / EBU R 128 loudness and export normalisation.
 //! - `engine`: transport, layers, master; `ffi`: the C ABI.
 
 pub mod analysis;
@@ -14,6 +15,7 @@ pub mod engine;
 pub mod ffi;
 pub mod fx;
 pub mod inst;
+pub mod loudness;
 pub mod master;
 pub mod params;
 pub mod ring;

@@ -128,8 +128,8 @@ pub fn typescript() -> String {
     .unwrap();
     writeln!(
         o,
-        "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {}, meter: {}, bands: {}, clash: {}, masterMeter: {} }} as const;",
-        out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON, out::METER, out::BANDS, out::CLASH, out::MASTER_METER
+        "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {}, meter: {}, bands: {}, clash: {}, masterMeter: {}, loudness: {} }} as const;",
+        out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON, out::METER, out::BANDS, out::CLASH, out::MASTER_METER, out::LOUDNESS
     )
     .unwrap();
     writeln!(o, "/** Clash fixes, as packed in a CLASH event's flags. */").unwrap();
@@ -139,6 +139,12 @@ pub fn typescript() -> String {
     writeln!(o, "/** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */").unwrap();
     writeln!(o, "export const LATENCY_SAMPLES = {};", crate::engine::LATENCY).unwrap();
     writeln!(o, "export const CEILING_DB = {};", fmt(crate::master::CEILING_DB)).unwrap();
+    writeln!(o, "/** Export loudness, integrated LUFS: streaming (the default) and loud, for club play. */").unwrap();
+    writeln!(o, "export const EXPORT_LUFS = {};", fmt(crate::loudness::EXPORT_LUFS)).unwrap();
+    writeln!(o, "export const EXPORT_LOUD_LUFS = {};", fmt(crate::loudness::EXPORT_LOUD_LUFS)).unwrap();
+    let ratios: Vec<String> = crate::master::GLUE_RATIOS.iter().map(|r| fmt(*r)).collect();
+    writeln!(o, "/** The glue's ratio switch steps. */").unwrap();
+    writeln!(o, "export const GLUE_RATIOS = [{}] as const;", ratios.join(", ")).unwrap();
     writeln!(o, "export const MIX_PARAMS = {};", crate::engine::MIX_PARAMS).unwrap();
     writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {}, repeat: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK, out::F_REPEAT).unwrap();
     writeln!(o, "export const OUT_EVENT_BYTES = {};\n", std::mem::size_of::<crate::engine::OutEv>()).unwrap();

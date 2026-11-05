@@ -140,28 +140,40 @@ fn clips() -> Vec<Clip> {
     // The sketch: everything together, through the glue and the limiter.
     {
         let mut r = R::new(124.0);
-        r.inst(0, Instrument::Drums);
-        r.inst(1, Instrument::Bass);
-        r.inst(2, Instrument::Chords);
-        r.inst(3, Instrument::Lead);
-        let mut drums = four_floor();
-        drums.extend([(1.0, 39, 0.25, 0.85), (3.0, 39, 0.25, 0.85)]);
-        drums.extend((0..8).map(|i| (i as f64 * 0.5 + 0.5, 46, 0.2, 0.5)));
-        drums.extend((0..16).map(|i| (i as f64 * 0.25, 42, 0.1, if i % 4 == 0 { 0.5 } else { 0.3 })));
-        r.pattern(0, &drums);
-        r.pattern(1, &[(0.5, 33, 0.25, 0.9), (1.5, 33, 0.25, 0.9), (1.75, 45, 0.2, 0.7), (2.5, 36, 0.25, 0.9), (3.5, 31, 0.25, 0.9), (3.75, 33, 0.2, 0.7)]);
-        r.pattern(2, &[(0.5, 57, 0.2, 0.6), (0.5, 60, 0.2, 0.6), (0.5, 64, 0.2, 0.6), (2.5, 55, 0.2, 0.6), (2.5, 60, 0.2, 0.6), (2.5, 64, 0.2, 0.6)]);
-        r.pattern(3, &[(2.0, 76, 0.45, 0.8), (2.5, 74, 0.45, 0.7), (3.0, 72, 0.9, 0.8)]);
-        r.send(cmd::DUCK, 1, 0, 36.0, 0.0, 0.0);
-        r.param(1, L_DUCK, 0.45);
-        r.param(2, L_SEND, 0.35);
-        r.param(2, L_LEVEL, 0.62);
-        r.param(3, L_LEVEL, 0.6);
-        r.param(3, L_ECHO, 0.3);
-        r.param(0, L_SEND, 0.08);
+        sketch(&r);
         out.push(("sketch", "the whole song, four bars", r.play(7.74)));
     }
+    // The same song with the glue pushed hard: where a bus compressor pumps, or holds the song together.
+    {
+        let mut r = R::new(124.0);
+        sketch(&r);
+        r.send(cmd::MASTER, 0, 1, 0.8, 0.0, 0.0);
+        out.push(("glued", "the whole song with the glue pushed hard", r.play(7.74)));
+    }
     out
+}
+
+/// The four-bar song every "whole song" clip plays.
+fn sketch(r: &R) {
+    r.inst(0, Instrument::Drums);
+    r.inst(1, Instrument::Bass);
+    r.inst(2, Instrument::Chords);
+    r.inst(3, Instrument::Lead);
+    let mut drums = four_floor();
+    drums.extend([(1.0, 39, 0.25, 0.85), (3.0, 39, 0.25, 0.85)]);
+    drums.extend((0..8).map(|i| (i as f64 * 0.5 + 0.5, 46, 0.2, 0.5)));
+    drums.extend((0..16).map(|i| (i as f64 * 0.25, 42, 0.1, if i % 4 == 0 { 0.5 } else { 0.3 })));
+    r.pattern(0, &drums);
+    r.pattern(1, &[(0.5, 33, 0.25, 0.9), (1.5, 33, 0.25, 0.9), (1.75, 45, 0.2, 0.7), (2.5, 36, 0.25, 0.9), (3.5, 31, 0.25, 0.9), (3.75, 33, 0.2, 0.7)]);
+    r.pattern(2, &[(0.5, 57, 0.2, 0.6), (0.5, 60, 0.2, 0.6), (0.5, 64, 0.2, 0.6), (2.5, 55, 0.2, 0.6), (2.5, 60, 0.2, 0.6), (2.5, 64, 0.2, 0.6)]);
+    r.pattern(3, &[(2.0, 76, 0.45, 0.8), (2.5, 74, 0.45, 0.7), (3.0, 72, 0.9, 0.8)]);
+    r.send(cmd::DUCK, 1, 0, 36.0, 0.0, 0.0);
+    r.param(1, L_DUCK, 0.45);
+    r.param(2, L_SEND, 0.35);
+    r.param(2, L_LEVEL, 0.62);
+    r.param(3, L_LEVEL, 0.6);
+    r.param(3, L_ECHO, 0.3);
+    r.param(0, L_SEND, 0.08);
 }
 
 fn main() {

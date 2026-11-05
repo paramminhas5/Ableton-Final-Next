@@ -159,3 +159,21 @@ pub unsafe extern "C" fn ccd_sample_load(e: *const Engine, layer: u32, slot: u32
     let d = std::slice::from_raw_parts(data, frames as usize);
     (*e).load_sample(layer as usize, slot as usize, d, src_rate);
 }
+
+/// Export loudness: bring a rendered stereo song (in place) to `target` LUFS integrated, true peak
+/// held under the -1 dBTP ceiling. Offline only (it allocates): never from the audio callback.
+/// Writes [gain dB, LUFS after, true peak dBTP after, limited 0/1] to `report` when it is not null.
+///
+/// # Safety
+/// `l` and `r` must point to `frames` floats each; `report` to 4 floats or be null.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_normalise(l: *mut f32, r: *mut f32, frames: u32, sample_rate: f32, target: f32, report: *mut f32) -> f32 {
+    let l = std::slice::from_raw_parts_mut(l, frames as usize);
+    let r = std::slice::from_raw_parts_mut(r, frames as usize);
+    let n = crate::loudness::normalise(l, r, sample_rate, target);
+    if !report.is_null() {
+        let rep = std::slice::from_raw_parts_mut(report, 4);
+        rep.copy_from_slice(&[n.gain_db, n.lufs, n.true_peak_db, n.limited as u32 as f32]);
+    }
+    n.lufs
+}

@@ -45,7 +45,12 @@ export type ClashReading = {
 export type MasterReading = {
   /** True peak since the last frame, dBTP. */
   truePeakDb: number;
+  /** Momentary loudness (400 ms), LUFS, to ITU-R BS.1770 / EBU R 128. */
   lufs: number;
+  /** Short-term loudness (3 s), LUFS. */
+  shortTerm: number;
+  /** Integrated (gated) loudness since play started, LUFS: what streaming services measure. */
+  integrated: number;
   glueGrDb: number;
   limiterGrDb: number;
   comparing: boolean;
@@ -84,6 +89,7 @@ export function decodeClash(e: EngineEvent): ClashReading {
 export class MixReader {
   private layers: (LayerReading | null)[] = Array(MASTER_LAYER).fill(null);
   private clashes: ClashReading[] = [];
+  private loud = { shortTerm: -120, integrated: -120 };
 
   feed(evs: EngineEvent[]): MixFrame | null {
     let done: MixFrame | null = null;
@@ -106,11 +112,13 @@ export class MixReader {
         if (r) Object.assign(r, { low: e.vel, mid: e.aux, high: e.beat });
       } else if (e.kind === OUT.clash) {
         this.clashes.push(decodeClash(e));
+      } else if (e.kind === OUT.loudness) {
+        this.loud = { shortTerm: e.aux, integrated: e.beat };
       } else if (e.kind === OUT.masterMeter) {
         done = {
           layers: this.layers.slice(),
           clashes: this.clashes,
-          master: { truePeakDb: e.vel, lufs: e.aux, glueGrDb: e.beat, limiterGrDb: e.note / 100, comparing: ((e.flags >> 8) & 1) === 1 },
+          master: { truePeakDb: e.vel, lufs: e.aux, ...this.loud, glueGrDb: e.beat, limiterGrDb: e.note / 100, comparing: ((e.flags >> 8) & 1) === 1 },
         };
         this.clashes = [];
       }

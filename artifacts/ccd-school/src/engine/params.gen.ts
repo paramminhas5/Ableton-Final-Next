@@ -110,6 +110,9 @@ export const SAMPLER_PARAMS = [
 export const MASTER_PARAMS = [
   { id: "master.out", key: "out", label: "out", bank: "mix", index: 0, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 15, detents: [0.75] },
   { id: "master.glue", key: "glue", label: "glue", bank: "mix", index: 1, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.glueratio", key: "glueratio", label: "ratio", bank: "mix", index: 2, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.sidechain", key: "sidechain", label: "sidechain", bank: "mix", index: 3, min: 20, max: 300, default: 0.555, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "master.gluemix", key: "gluemix", label: "glue mix", bank: "mix", index: 4, min: 0, max: 1, default: 1, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const DRUM_PAD_NAMES = ["kick", "snare", "clap", "rim", "closed hat", "open hat", "shaker", "ride", "low tom", "mid tom", "high tom", "crash", "perc 1", "perc 2", "fx", "reverse"] as const;
@@ -135,7 +138,7 @@ export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
 export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24 } as const;
-export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;
+export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8, loudness: 9 } as const;
 /** Clash fixes, as packed in a CLASH event's flags. */
 export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;
 /** Layer number the master's readings come with. */
@@ -143,6 +146,11 @@ export const MASTER_LAYER = 8;
 /** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */
 export const LATENCY_SAMPLES = 23;
 export const CEILING_DB = -1;
+/** Export loudness, integrated LUFS: streaming (the default) and loud, for club play. */
+export const EXPORT_LUFS = -14;
+export const EXPORT_LOUD_LUFS = -9;
+/** The glue's ratio switch steps. */
+export const GLUE_RATIOS = [2, 4, 10] as const;
 export const MIX_PARAMS = 12;
 export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8, repeat: 16 } as const;
 export const OUT_EVENT_BYTES = 32;

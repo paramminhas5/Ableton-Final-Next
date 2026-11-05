@@ -136,7 +136,7 @@ const minus = (s: string) => s.replace(/^-/, "−");
 /** What the screen prints for a value: "60%" for amounts, "−3 db" for levels. */
 const readout = (spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit">, v: number) => {
   const t = display(spec, v);
-  return spec.unit === "pct" ? `${t}%` : minus(t);
+  return spec.unit === "pct" && !t.endsWith("%") ? `${t}%` : minus(t);
 };
 
 /**
@@ -743,6 +743,7 @@ function Faders({ track, open, masterOpen, onOpen, onOpenMaster, setParam, setMa
             </div>
             <div className="mx-oknobs" style={{ justifyContent: "center" }}>
               <MixKnob label="glue" value={masterOf(track, 1)} spec={MASTER_PARAMS[1]} on onChange={v => setMaster(1, v)} />
+              {[2, 3, 4].map(i => <MixKnob key={i} label={MASTER_PARAMS[i].label} value={masterOf(track, i)} spec={MASTER_PARAMS[i]} onChange={v => setMaster(i, v)} />)}
             </div>
           </div>
           <span className="mx-sname" style={{ fontSize: 9 }}>{readout(MASTER_PARAMS[0], out)}</span>
@@ -836,6 +837,8 @@ function MasterReadout({ frame, playing }: { frame: MixFrame | null; playing: bo
     <div className="mx-mread">
       <div><span className="st-ss">peak</span><b>{f(m?.truePeakDb, "dbtp")}</b></div>
       <div><span className="st-ss">loudness</span><b>{f(m?.lufs, "lufs", 0)}</b></div>
+      <div><span className="st-ss">last 3 s</span><b>{f(m?.shortTerm, "lufs", 0)}</b></div>
+      <div><span className="st-ss">song</span><b>{f(m?.integrated, "lufs", 1)}</b></div>
       <div><span className="st-ss">glue</span><b>{m ? `${minus((-m.glueGrDb).toFixed(1))} db` : "·"}</b></div>
       <div><span className="st-ss">limit</span><b>{m ? `${minus((-m.limiterGrDb).toFixed(1))} db` : "·"}</b></div>
     </div>

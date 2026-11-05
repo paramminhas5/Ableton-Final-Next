@@ -52,6 +52,7 @@ import {
   type TrackV2,
 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
 import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Mix } from "./Mix";
@@ -609,6 +610,10 @@ export function Studio() {
           <Icon name="reset" />
         </Key>
         <Key label="to live" onClick={() => downloadTrackV2Midi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+          <Icon name="out" />
+        </Key>
+        <Key label={shift ? "loud wav" : "wav"} onClick={() => void downloadWav(track, shift)} disabled={!track.layers.length}
+          ariaLabel={shift ? "Save the song as a loud wav for club play (-9 LUFS)" : "Save the song as a wav at streaming loudness (-14 LUFS)"}>
           <Icon name="out" />
         </Key>
       </div>

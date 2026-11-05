@@ -2,7 +2,7 @@
  * Parameter maths and display, mirroring engine/src/params.rs exactly
  * (tests/engine-params.test.ts checks these against values Rust computed).
  */
-import { FADER_MAX_DB, FADER_MIN_DB, FADER_UNITY, type ParamSpec } from "./params.gen";
+import { FADER_MAX_DB, FADER_MIN_DB, FADER_UNITY, GLUE_RATIOS, type ParamSpec } from "./params.gen";
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
@@ -56,6 +56,8 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   // Stepped knobs show what they choose, not a number.
   if (spec.key === "lfoto") return n < 0.34 ? "to the filter" : n < 0.67 ? "to the pitch" : "to the volume";
   if (spec.key === "ratio") return `ratio ${FM_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (FM_RATIOS.length - 1))]}`;
+  if (spec.key === "glueratio") return `${GLUE_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (GLUE_RATIOS.length - 1))]}:1`;
+  if (spec.key === "sidechain" && n < 0.01) return "hears it all";
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {

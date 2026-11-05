@@ -1,6 +1,17 @@
 # CCD School engine 2: what we build, why people will hear it, and what we can say
 
-Written 5 Nov 2026 for Param, before any engine code changes. It builds on `ccd/engine-sound.md` (3 Nov) and two research reports with sources for every claim: `design/research/engine-sound.md` (sound) and `design/research/instrument-ui.md` (instrument screens). Nothing here is built yet. Say what to change before it is.
+Written 5 Nov 2026 for Param, before any engine code changes. It builds on `ccd/engine-sound.md` (3 Nov) and two research reports with sources for every claim: `design/research/engine-sound.md` (sound) and `design/research/instrument-ui.md` (instrument screens). The build status of each item is just below; every number in it comes from `engine/tests/sound.rs` (run `cargo test --release --test sound -- --nocapture` to see them).
+
+## Build status
+
+CPU is from `engine/tests/bench.rs` (a full eight-layer song, two of each synth, analysis on, 128-frame blocks, best of five runs, native) on a shared build machine, so take the worst-block figures as rough.
+
+- **1. ADAA drive:** done (ac9d38d). Heavy drive on high notes 13 to 23 dB cleaner.
+- **2. Voice cards:** done (f10fa02).
+- **3. 808 hats and cymbals:** done (b4c598a).
+- **4. Supersaw:** done (b4c598a).
+- **5. 808 kick:** attack bump, sigh, shaped click, hold and second ring done (rounds 1 and 2); three body shapes: see below.
+- **6. Master chain:** done. The glue has a ratio switch (2, 4, 10 to 1; static gain reduction within 0.05 dB of the curve at each), auto release (two envelopes, kept), a fourth-order high-pass on what it listens to (90 Hz by default, off at the bottom of its knob) and a dry/compressed mix. Pumping on a kick under a held chord (the chord's average dip per beat): old glue 1.32 dB, new at 4:1 hearing everything 1.44 dB, at 4:1 with the 90 Hz cut 0.98 dB, the new default (2:1, 90 Hz) 0.66 dB; half mix cuts 10:1 pumping by a third. The true-peak limiter at -1 dBTP is unchanged. A loudness meter to ITU-R BS.1770-4 / EBU R 128 (K-weighting, momentary, short-term, gated integrated) reads the EBU Tech 3341 cases 1 to 5 within 0.02 LU and BS.1770's one-channel 997 Hz figure at -3.01; the old K-weighting read 0.04 dB low (the high-pass numerator was normalised twice) and is fixed for the layer meters too. The master reports momentary, short-term and integrated loudness to the mix screen. Studio has a wav export (offline render through the same engine, -14 LUFS integrated, or -9 LUFS "loud wav" with shift held), landing within 0.03 LU of target with the true peak at or under -1.0 dBTP on the standard meter. Clip: "glued song" (the whole song with the glue pushed hard). CPU: 21.4% before, 21.6% after.
 
 ## The short version
 

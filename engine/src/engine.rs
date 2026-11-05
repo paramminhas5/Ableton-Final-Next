@@ -7,6 +7,7 @@ use crate::analysis::{Clash, ClashDetector, LayerInfo, LayerMeter};
 use crate::dsp::env::Decay;
 use crate::dsp::osc::Sine;
 use crate::fx::{Echo, Reverb};
+use crate::loudness::Loudness;
 use crate::master::{Master, TruePeak, MASTER_DELAY};
 use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly, Sampler};
 use crate::params::*;
@@ -90,6 +91,10 @@ pub mod out {
     /// vel = true peak since the last frame (dBTP), aux = loudness (LUFS),
     /// beat = glue gain reduction (dB).
     pub const MASTER_METER: u32 = 8;
+    /// Sent just before MASTER_METER. layer = MASTER_LAYER, vel = momentary loudness (400 ms),
+    /// aux = short-term (3 s), beat = integrated since play or analysis started (gated, EBU R 128),
+    /// all LUFS (-120 when there is nothing to measure).
+    pub const LOUDNESS: u32 = 9;
 
     pub const F_PLAYING: u32 = 1;
     pub const F_COUNT_IN: u32 = 2;
@@ -348,7 +353,7 @@ struct Snapshot {
     valid: bool,
     layers: [[f32; MIX_PARAMS]; MAX_LAYERS],
     duck: [(i32, i32); MAX_LAYERS],
-    master: [f32; 4],
+    master: [f32; crate::master::MASTER_SLOTS],
 }
 
 // ── engine ───────────────────────────────────────────────────────────────────
@@ -371,7 +376,8 @@ pub struct Core {
     pub master: Master,
     pub analyse: bool,
     pub meters: Vec<LayerMeter>,
-    out_meter: LayerMeter,
+    /// The master's loudness, to BS.1770 / EBU R 128.
+    pub loud: Loudness,
     out_tp: TruePeak,
     out_tp_max: f32,
     pub clash: ClashDetector,
@@ -492,14 +498,14 @@ impl Core {
             master: Master::new(sr),
             analyse: false,
             meters: (0..MAX_LAYERS).map(|_| LayerMeter::new(sr)).collect(),
-            out_meter: LayerMeter::new(sr),
+            loud: Loudness::new(sr),
             out_tp: TruePeak::new(),
             out_tp_max: 0.0,
             clash: ClashDetector::new(sr),
             clashes: [Clash { target: 0, other: 0, group: 0, band: 0, severity: 0.0, fix: 0, value: 0.0, fix2: 0, value2: 0.0 }; MAX_CLASHES],
             meter_every: (sr / METER_HZ) as u64,
             last_meter: 0,
-            snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; 4] },
+            snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; crate::master::MASTER_SLOTS] },
             comparing: false,
         }
     }
@@ -638,7 +644,7 @@ impl Core {
                     for m in self.meters.iter_mut() {
                         m.clear();
                     }
-                    self.out_meter.clear();
+                    self.loud.reset();
                     self.clash.clear();
                     self.last_meter = self.frame;
                 }
@@ -673,6 +679,8 @@ impl Core {
             cmd::PLAY => {
                 if self.tr.state == State::Stopped {
                     self.start(0.0);
+                    // A new play-through: the song's loudness is measured from here.
+                    self.loud.reset_integrated();
                 }
                 self.tr.recording = false;
             }
@@ -780,7 +788,8 @@ impl Core {
             let flags = c.group as u32 | (c.band as u32) << 2 | c.fix << 5 | c.fix2 << 7;
             let _ = events.push(OutEv { kind: out::CLASH, layer: c.target as u32, note: c.other as u32, flags, vel: c.severity, aux: c.value, beat: c.value2 as f64 });
         }
-        let r = self.out_meter.read();
+        let lr = self.loud.read();
+        let _ = events.push(OutEv { kind: out::LOUDNESS, layer: MASTER_LAYER, note: 0, flags: 0, vel: lr.momentary, aux: lr.short_term, beat: lr.integrated as f64 });
         let tp = self.out_tp_max;
         self.out_tp_max = 0.0;
         let _ = events.push(OutEv {
@@ -789,7 +798,7 @@ impl Core {
             note: (self.master.limiter.gr_db * 100.0).round() as u32,
             flags: n as u32 | (self.comparing as u32) << 8,
             vel: if tp > 1e-6 { 20.0 * tp.log10() } else { -120.0 },
-            aux: r.lufs,
+            aux: lr.momentary,
             beat: self.master.glue.gr_db as f64,
         });
     }
@@ -943,7 +952,7 @@ impl Core {
             self.out_l[i] = ol;
             self.out_r[i] = or;
             if self.analyse {
-                self.out_meter.tick(ol, or);
+                self.loud.tick(ol, or);
                 let tp = self.out_tp.push(ol, or);
                 if tp > self.out_tp_max {
                     self.out_tp_max = tp;

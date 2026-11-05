@@ -241,3 +241,178 @@ fn kick_holds_then_rings_out() {
     assert!(rn > ro + 4.0, "the tail should ring out: new {rn:.1}, old {ro:.1}");
     assert!((ln - lo).abs() < 1.5, "level moved: {ln:.1} vs {lo:.1} dB");
 }
+
+// ── Engine 2, item 6: the master chain ───────────────────────────────────────────────────────────
+
+use ccd_engine::loudness::{integrated_lufs, normalise, Loudness};
+use ccd_engine::master::{reference::bs1770_true_peak, Glue, CEILING_DB};
+
+/// A stereo sine at `dbfs` peak on both channels, `secs` long (the EBU Tech 3341 test signals).
+fn tone(dbfs: f32, secs: f32, hz: f64) -> Vec<f32> {
+    sine(hz, (SR * secs) as usize, 10f32.powf(dbfs / 20.0))
+}
+
+#[test]
+fn loudness_meter_reads_the_standards_reference_signals() {
+    // EBU Tech 3341 (2016) test cases 1 to 5: each must read -23.0 LUFS integrated (case 2: -33.0),
+    // within 0.1 LU. They test the K-weighting, the absolute gate (-70) and the relative gate (-10 LU).
+    let cases: [(&str, Vec<(f32, f32)>, f32); 5] = [
+        ("case 1: 1 kHz at -23 dBFS, 20 s", vec![(-23.0, 20.0)], -23.0),
+        ("case 2: 1 kHz at -33 dBFS, 20 s", vec![(-33.0, 20.0)], -33.0),
+        ("case 3: -36 / -23 / -36 dBFS, 10 / 60 / 10 s", vec![(-36.0, 10.0), (-23.0, 60.0), (-36.0, 10.0)], -23.0),
+        ("case 4: -72 / -36 / -23 / -36 / -72 dBFS", vec![(-72.0, 10.0), (-36.0, 10.0), (-23.0, 60.0), (-36.0, 10.0), (-72.0, 10.0)], -23.0),
+        ("case 5: -26 / -20 / -26 dBFS, 20 / 20.1 / 20 s", vec![(-26.0, 20.0), (-20.0, 20.1), (-26.0, 20.0)], -23.0),
+    ];
+    for (name, parts, want) in cases {
+        let x: Vec<f32> = parts.iter().flat_map(|(d, s)| tone(*d, *s, 1_000.0)).collect();
+        let got = integrated_lufs(&x, &x, SR);
+        println!("ebu 3341 {name}: {got:.2} LUFS (want {want:.1})");
+        assert!((got - want).abs() <= 0.1, "{name}: {got:.2}");
+    }
+    // Momentary and short-term on a steady tone, and BS.1770's own figure: a 0 dBFS 997 Hz sine in one
+    // channel reads -3.01 LKFS.
+    let mut m = Loudness::new(SR);
+    for v in tone(-23.0, 4.0, 1_000.0) {
+        m.tick(v, v);
+    }
+    let r = m.read();
+    println!("steady -23 dBFS tone: momentary {:.2}, short-term {:.2} LUFS", r.momentary, r.short_term);
+    assert!((r.momentary + 23.0).abs() <= 0.1 && (r.short_term + 23.0).abs() <= 0.1);
+    let one = tone(0.0, 10.0, 997.0);
+    let got = integrated_lufs(&one, &vec![0.0; one.len()], SR);
+    println!("bs.1770: 997 Hz at 0 dBFS in one channel: {got:.2} LKFS (want -3.01)");
+    assert!((got + 3.01).abs() <= 0.1);
+}
+
+/// The glue as it was before item 6, kept so every run measures both: ratio tied to the knob
+/// (2 + 2 x amount), no sidechain filter, no mix.
+struct OldGlue {
+    amount: f32,
+    ms: f32,
+    fast: f32,
+    slow: f32,
+    k: [f32; 5],
+}
+impl OldGlue {
+    fn new(amount: f32) -> Self {
+        let c = |s: f32| (-1.0 / (s * SR)).exp();
+        OldGlue { amount, ms: 0.0, fast: 0.0, slow: 0.0, k: [c(0.005), c(0.010), c(0.120), c(0.400), c(1.200)] }
+    }
+    fn curve(&self, level: f32) -> f32 {
+        let (t, ratio, knee) = (-2.0 - 16.0 * self.amount, 2.0 + 2.0 * self.amount, 8.0);
+        let (over, s) = (level - t, 1.0 - 1.0 / ratio);
+        if 2.0 * over <= -knee { 0.0 } else if 2.0 * over >= knee { over * s } else { s * (over + knee / 2.0).powi(2) / (2.0 * knee) }
+    }
+    fn tick(&mut self, l: f32, r: f32) -> f32 {
+        let x = (l * l).max(r * r);
+        self.ms = x + (self.ms - x) * self.k[0];
+        let target = self.curve(10.0 * (self.ms + 1e-12).log10() + 3.01);
+        let c = if target > self.fast { self.k[1] } else { self.k[2] };
+        self.fast = target + (self.fast - target) * c;
+        let c = if target > self.slow { self.k[3] } else { self.k[4] };
+        self.slow = target + (self.slow - target) * c;
+        10f32.powf((self.amount * 2.5 - self.fast.max(self.slow)) / 20.0)
+    }
+}
+
+#[test]
+fn glue_ratio_switch_sets_the_gain_reduction() {
+    // A steady 1 kHz tone at -1 dB, 9 dB over the threshold (glue at 0.5: threshold -10 dB): the gain
+    // reduction settles on 9 x (1 - 1/ratio).
+    let x = tone(-1.0, 3.0, 1_000.0);
+    let mut old = OldGlue::new(0.5);
+    for v in &x {
+        old.tick(*v, *v);
+    }
+    let old_gr = old.fast.max(old.slow);
+    println!("glue 0.5, tone 9 dB over: old glue {old_gr:.2} dB (its ratio was fixed by the knob at 3:1)");
+    let mut last = 0.0;
+    for (n, ratio) in [(0.0, 2.0f32), (0.5, 4.0), (1.0, 10.0)] {
+        let mut g = Glue::new(SR);
+        g.set_amount(0.5);
+        g.set_ratio(ccd_engine::master::glue_ratio(n));
+        for v in &x {
+            g.tick(*v, *v);
+        }
+        let want = 9.0 * (1.0 - 1.0 / ratio);
+        println!("ratio {ratio}:1: gain reduction {:.2} dB (static curve says {want:.2})", g.gr_db);
+        assert!((g.gr_db - want).abs() < 0.4, "ratio {ratio}: {:.2} vs {want:.2}", g.gr_db);
+        assert!(g.gr_db > last);
+        last = g.gr_db;
+    }
+}
+
+/// A four-to-the-floor kick (a 50 Hz body falling from 150 Hz, 300 ms) under a held chord, 120 bpm.
+fn kick_and_pad(secs: f32) -> Vec<f32> {
+    let n = (SR * secs) as usize;
+    let beat = (SR * 0.5) as usize;
+    let mut ph = 0.0f64;
+    (0..n).map(|i| {
+        let t = (i % beat) as f64 / SR as f64;
+        let f = 50.0 + 100.0 * (-t / 0.02).exp();
+        ph += f / SR as f64;
+        let kick = 0.9 * (std::f64::consts::TAU * ph).sin() * (-t / 0.12).exp();
+        let ts = i as f64 / SR as f64;
+        let pad: f64 = [220.0, 277.2, 329.6, 440.0].iter().map(|h| 0.07 * (std::f64::consts::TAU * h * ts).sin()).sum();
+        (kick + pad) as f32
+    }).collect()
+}
+
+/// Pumping, steady state: the held chord's average dip under its own level in each beat, dB (how far,
+/// and for how long, the bus gain falls below where it sits between kicks). A short dip on the kick's
+/// click barely counts; a dip that holds through the beat counts in full.
+fn pumping(mut gain: impl FnMut(f32) -> f32, x: &[f32]) -> f32 {
+    let g: Vec<f32> = x.iter().map(|v| 20.0 * gain(*v).log10()).collect();
+    let tail = &g[g.len() - (SR * 2.0) as usize..];
+    tail.chunks((SR * 0.5) as usize).map(|c| {
+        let top = c.iter().cloned().fold(f32::MIN, f32::max);
+        c.iter().map(|v| top - v).sum::<f32>() / c.len() as f32
+    }).sum::<f32>() / 4.0
+}
+
+#[test]
+fn glue_listens_past_the_kick_so_the_mix_does_not_pump() {
+    let x = kick_and_pad(6.0);
+    let amount = 0.6;
+    let mut old = OldGlue::new(amount);
+    let before = pumping(|v| old.tick(v, v), &x);
+    let run = |ratio_n: f32, sc_hz: f32| {
+        let mut g = Glue::new(SR);
+        g.set_amount(amount);
+        g.set_ratio(ccd_engine::master::glue_ratio(ratio_n));
+        g.set_sidechain(sc_hz);
+        pumping(|v| g.tick(v, v), &x)
+    };
+    let (open4, cut4, cut2) = (run(0.5, 20.0), run(0.5, 90.0), run(0.0, 90.0));
+    println!("pumping (average dip of a held chord under a kick, glue {amount}): old glue {before:.2} dB; new at 4:1 hearing everything {open4:.2} dB, at 4:1 with the 90 Hz sidechain cut {cut4:.2} dB, default (2:1, 90 Hz) {cut2:.2} dB");
+    // The cut takes out the dip the long 50 Hz body held; the click and the sweep from 150 Hz still get through.
+    assert!(cut4 < open4 * 0.8, "the sidechain cut should take pumping out: {cut4:.2} vs {open4:.2}");
+    assert!(cut2 < before * 0.5, "the default should pump far less than the old glue: {cut2:.2} vs {before:.2}");
+    // The mix knob: half dry, half compressed dips less again.
+    let mut g = Glue::new(SR);
+    g.set_amount(amount);
+    g.set_ratio(10.0);
+    g.set_mix(0.5, true);
+    let mut h = Glue::new(SR);
+    h.set_amount(amount);
+    h.set_ratio(10.0);
+    let (half, full) = (pumping(|v| g.tick(v, v), &x), pumping(|v| h.tick(v, v), &x));
+    println!("10:1 hearing everything: {full:.2} dB, at half mix {half:.2} dB");
+    assert!(half < full * 0.7);
+}
+
+#[test]
+fn export_lands_on_the_loudness_target_under_the_ceiling() {
+    // A dense, peaky signal (the kick and chord, then pushed): normalised to the streaming target and to
+    // the loud target. Both must land within 0.1 LU and stay under -1 dBTP on the standard's meter.
+    for (target, name) in [(ccd_engine::loudness::EXPORT_LUFS, "streaming"), (ccd_engine::loudness::EXPORT_LOUD_LUFS, "loud")] {
+        let x = kick_and_pad(8.0);
+        let (mut l, mut r) = (x.iter().map(|v| v * 0.3).collect::<Vec<f32>>(), x.iter().map(|v| v * 0.25).collect::<Vec<f32>>());
+        let before = integrated_lufs(&l, &r, SR);
+        let n = normalise(&mut l, &mut r, SR, target);
+        let tp = 20.0 * bs1770_true_peak(&l).max(bs1770_true_peak(&r)).log10();
+        println!("export {name}: {before:.1} LUFS in, {:.2} LUFS out (target {target}), gain {:+.1} dB, true peak {tp:.2} dBTP, limited {}", n.lufs, n.gain_db, n.limited);
+        assert!((n.lufs - target).abs() <= 0.1, "{name}: {:.2}", n.lufs);
+        assert!(tp <= CEILING_DB + 0.05, "{name}: {tp:.2} dBTP");
+    }
+}
