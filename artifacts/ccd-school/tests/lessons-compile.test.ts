@@ -52,6 +52,18 @@ describe("parseLesson", () => {
     expect(mutate((d) => (d.steps[2].layer = "bass"))).toThrow(/step 3: play layer "bass" must match song\.adds/);
   });
 
+  it("a match step names knobs and a hidden target for each, 0 to 1", () => {
+    const step = { kind: "match", layer: "drums", knobs: ["tune", "decay"], target: { tune: 0.3, decay: 0.2 }, say: "Match it." };
+    const add = (d: any, st: any) => d.steps.splice(4, 0, st);
+    expect(mutate((d) => add(d, step))).not.toThrow();
+    expect(mutate((d) => add(d, { ...step, target: { tune: 0.3 } }))).toThrow(/target\.decay must be a number from 0 to 1/);
+    expect(mutate((d) => add(d, { ...step, target: { tune: 0.3, decay: 1.4 } }))).toThrow(/target\.decay must be a number from 0 to 1/);
+    expect(mutate((d) => add(d, { ...step, target: { tune: 0.3, decay: 0.2, level: 0.5 } }))).toThrow(/target\.level is not one of the step's knobs/);
+    expect(mutate((d) => add(d, { ...step, knobs: ["cutoff"], target: { cutoff: 0.2 } }))).toThrow(/knob "cutoff" does not exist for drums/);
+    const r = resolveLesson(parseLesson(stringify((() => { const d = parse(kickText); add(d, step); return d; })()), FILE), { voice: "mentor", level: "standard" });
+    expect(r.find((x) => x.kind === "match")).toMatchObject({ kind: "match", layer: "drums", knobs: ["tune", "decay"], target: { tune: 0.3, decay: 0.2 } });
+  });
+
   it("allows another play layer when the lesson changes the song", () => {
     expect(mutate((d) => (d.song = { changes: "bass.sound", why: "x" }, d.steps[2].layer = "bass"))).not.toThrow();
   });

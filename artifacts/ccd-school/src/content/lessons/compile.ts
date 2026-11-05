@@ -46,6 +46,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
+  match: ["kind", "layer", "knobs", "target", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
@@ -206,6 +207,22 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "shape":
           playOrShape(where, raw);
           break;
+        case "match": {
+          // The same knobs a shape step may name, each with a hidden target value the learner matches by ear.
+          if (!layer(where, raw.layer)) break;
+          const ks = raw.knobs;
+          const ok = knobsFor(raw.layer);
+          if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) at(where, "knobs must list one to four knobs");
+          else for (const k of ks) if (!ok.includes(k as string)) at(where, `knob "${String(k)}" does not exist for ${raw.layer}, use one of ${ok.join(", ")}`);
+          const tg = raw.target;
+          if (!isObj(tg)) at(where, "target must map each knob to its hidden value, 0 to 1");
+          else if (Array.isArray(ks)) {
+            for (const k of ks) if (typeof tg[k as string] !== "number" || (tg[k as string] as number) < 0 || (tg[k as string] as number) > 1) at(where, `target.${String(k)} must be a number from 0 to 1`);
+            for (const k of Object.keys(tg)) if (!ks.includes(k)) at(where, `target.${k} is not one of the step's knobs`);
+          }
+          voice(where, "say", raw.say);
+          break;
+        }
         case "arrange":
           voice(where, "say", raw.say);
           if (!["sections", "drop", "fills", "risers", "export"].includes(String(raw.goal))) at(where, "goal must be sections, drop, fills, risers or export");

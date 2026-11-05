@@ -28,7 +28,9 @@ for (const slug of slugs) {
     if (box && box.y + box.height > H + 1) errs.push(`go key below the fold on ${kind}`);
     const before = await p.locator(".fl").getAttribute("data-step");
     const skip = p.getByRole("button", { name: "Skip this step" });
-    if (kind === "play" || (await skip.count())) await skip.first().click();
+    // match this sound: check once (it renders through the engine), then skip on, as a learner who gives up would.
+    if (kind === "matchsound") { await go.click(); await p.waitForTimeout(1500); await skip.first().click(); }
+    else if (kind === "play" || (await skip.count())) await skip.first().click();
     else if (kind === "check") await p.getByText("skip the challenge").click();
     else if (kind === "ear") { for (let k = 0; k < 20 && (await p.locator(".fl").getAttribute("data-page-kind")) === "ear"; k++) { await p.locator('[role="radio"]:not([disabled]), .ls-pad:not([disabled])').first().click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); await go.click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); } }
     else if (kind === "arrange" && /^not yet/i.test((await go.getAttribute("aria-label")) ?? "")) { for (const n of ["drums in break", "hats in break"]) await p.locator(`.ar-cell[aria-label^="${n}"]`).first().click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Fill"]').nth(1).click().catch(() => {}); if (/^not yet/i.test((await go.getAttribute("aria-label")) ?? "")) await p.locator(".ar-cell.is-on").first().click().catch(() => {}); await go.click(); }

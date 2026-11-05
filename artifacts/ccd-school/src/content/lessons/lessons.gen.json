@@ -9558,6 +9558,24 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "bass",
+          "knobs": [
+            "cutoff",
+            "decay"
+          ],
+          "target": {
+            "cutoff": 0.3,
+            "decay": 0.25
+          },
+          "say": {
+            "mentor": "Ear training. The target is your bass line with cutoff and decay set out of sight. Switch between the target and yours: is it darker or buzzier, are the notes shorter or longer? Turn the two lit knobs until they match, then check how close you are.",
+            "straight": "The target is your bass with hidden cutoff and decay. Switch, compare, turn the knobs, check.",
+            "eli5": "Here's a hidden bass sound. Is it softer or buzzier than yours? Are its notes short or long? Turn the knobs until yours sounds the same."
+          },
+          "hint": "Cutoff changes how bright it is, decay how long each note lasts. Fix one at a time."
+        },
+        {
           "kind": "ask",
           "q": "Where does a dance music bass often sit?",
           "options": [
@@ -9735,6 +9753,24 @@
             "straight": "Res: a ringing peak at the cutoff. Env: the filter opens and closes on each note. Attack: fade in. Release: ring out. Pluck: short attack and release, lots of env. Pad: long attack and release.",
             "eli5": "Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly. Release makes them ring out after. Try a short pluck, then a long dreamy pad."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "attack",
+            "release"
+          ],
+          "target": {
+            "attack": 0.6,
+            "release": 0.7
+          },
+          "say": {
+            "mentor": "Match this sound. The target is your lead with attack and release set where you can't see them. Switch between the target and yours: does each note fade in or start straight away, and how long does it ring after it ends? Turn attack and release until you can't tell them apart, then check.",
+            "straight": "The target is your lead with hidden attack and release. Compare how notes start and how they ring out, turn the two knobs, check.",
+            "eli5": "A hidden sound is waiting. Does it fade in slowly or start right away? Does it ring after the note ends? Turn the two knobs until yours sounds the same."
+          },
+          "hint": "Attack is the start of each note, release is the tail after it. Listen to one end at a time."
         },
         {
           "kind": "ask",
@@ -9927,6 +9963,24 @@
             "straight": "Tune: pitch of the body, near your bass. Decay: length. Drive: grit and presence. Level: loudness. Driven and long for techno, round and soft for deep house.",
             "eli5": "Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes it louder or quieter. Play until it's your favourite kick."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "drums",
+          "knobs": [
+            "tune",
+            "decay"
+          ],
+          "target": {
+            "tune": 0.3,
+            "decay": 0.2
+          },
+          "say": {
+            "mentor": "Now train your ear. The target is your own kick with tune and decay set somewhere you can't see. Switch between the target and yours, listen to how low the body sits and how soon it stops, and turn the two lit knobs until you can't tell them apart. Then check how close you are.\nThis is how producers learn to hear a sound and know which knob made it. It works on any synth, in Live or anywhere else.",
+            "straight": "The target is your kick with hidden tune and decay. Switch between it and yours, turn the two knobs until they sound the same, then check.",
+            "eli5": "Somebody hid a kick in here. Listen to it, then listen to yours. Turn the two knobs until yours sounds just like it. Is it deeper? Is it shorter? Your ears will know."
+          },
+          "hint": "Listen for two things: is the target's boom lower or higher than yours, and does it stop sooner or ring longer?"
         },
         {
           "kind": "ask",

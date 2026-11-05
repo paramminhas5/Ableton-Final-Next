@@ -10,7 +10,7 @@ export const SURFACES = ["pads", "steps", "keys"] as const;
 export type LessonSurface = (typeof SURFACES)[number];
 export const DRILLS = ["pitch", "eq", "interval", "timbre", "kick"] as const;
 export type Drill = (typeof DRILLS)[number];
-export const STEP_KINDS = ["hear", "say", "play", "shape", "tempo", "mix", "arrange", "ask", "ear", "keep"] as const;
+export const STEP_KINDS = ["hear", "say", "play", "shape", "match", "tempo", "mix", "arrange", "ask", "ear", "keep"] as const;
 export type StepKind = (typeof STEP_KINDS)[number];
 
 /* ------------------------------ raw file shape ------------------------------ */
@@ -25,6 +25,12 @@ export type Rounds = number | { gentle: number; standard: number; hard: number }
 export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean };
 export type RawShape = { kind: "shape"; layer: LayerType; knobs: string[]; say: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawTry = RawPlay | RawShape;
+/**
+ * Match this sound (touch and hear, item 13; Syntorial's method on our own instruments): the engine plays
+ * a target made from hidden settings of `knobs` on the learner's own part, and they turn the lit knobs
+ * until theirs sounds the same. `target` holds each knob's hidden value, normalised 0..1.
+ */
+export type RawMatch = { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; say: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
 
 export type RawHear = { kind: "hear"; clip: string; say: VoiceText; deeper?: RawDeeper[]; levels?: Level[] };
@@ -52,7 +58,7 @@ export type RawMix = { kind: "mix"; say: VoiceText; goal: MixGoal; bank?: string
 /** Your song as sections: switch parts on and off per section, add fills, or export it. */
 export type ArrangeGoal = "sections" | "drop" | "fills" | "risers" | "export";
 export type RawArrange = { kind: "arrange"; say: VoiceText; goal: ArrangeGoal; hint?: VoiceText; levels?: Level[] };
-export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawTempo | RawMix | RawArrange | RawAsk | RawEar | RawKeep;
+export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawMatch | RawTempo | RawMix | RawArrange | RawAsk | RawEar | RawKeep;
 
 export type SongChange = { adds: string; changes?: undefined; why: VoiceText } | { changes: string; adds?: undefined; why: VoiceText };
 
@@ -79,6 +85,7 @@ export type ResolvedStep =
   | { kind: "say"; title: string; say: string; clip?: string; deeper: ResolvedDeeper[]; hint?: string }
   | ({ kind: "play" } & Omit<Extract<ResolvedTry, { kind: "play" }>, "kind">)
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
+  | { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; say: string; hint?: string }
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
   | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: string }

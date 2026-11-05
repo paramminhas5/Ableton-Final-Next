@@ -876,3 +876,16 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-else ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:4px}
 .fl-else b{font-weight:600;color:var(--ink);margin-right:4px}
 .fl-else i{font-style:normal;color:var(--ink)}
+
+
+/* match this sound (MatchSound.tsx): how close, against the pass mark */
+.ms-meter{margin-top:10px}
+.ms-big{display:flex;align-items:baseline;gap:10px;font-size:40px;font-weight:300;letter-spacing:-.03em;line-height:1;color:var(--disp-ink)}
+.ms-big span{font-size:12px;font-weight:500;letter-spacing:0;color:#9A9AA0}
+.ms-bar{position:relative;height:8px;margin-top:12px;border-radius:4px;background:rgba(255,255,255,.08)}
+.ms-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:#C9CBD1;transition:width .4s cubic-bezier(.2,.7,.3,1)}
+.ms-bar i.is-pass{background:var(--led-mint);box-shadow:0 0 10px var(--led-mint)}
+.ms-bar b{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:rgba(255,255,255,.55);border-radius:1px}
+.ms-parts{display:flex;gap:14px;margin-top:8px;font-size:11px;font-weight:500;color:#9A9AA0}
+.ms-done{color:var(--ink)}
+.ms-tip{margin-top:6px;font-size:13px;font-weight:500;color:var(--led-mint)}

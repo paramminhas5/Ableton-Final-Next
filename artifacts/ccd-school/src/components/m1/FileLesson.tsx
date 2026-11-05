@@ -34,6 +34,7 @@ import { MIX_SKIP, MixStep } from "./MixStep";
 import { ArrangeStep } from "./ArrangeStep";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
+import { MatchSoundStep } from "./MatchSound";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -57,6 +58,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
+    case "matchsound": return "match this sound";
     case "arrange": return p.goal === "export" ? "finish it" : p.goal === "fills" ? "fills" : p.goal === "drop" ? "the drop" : "arrange it";
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
@@ -654,6 +656,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
+    case "matchsound": body = <MatchSoundStep mission={mission} screen={cur} onNext={next} tail={ways} />; break;
     case "arrange": body = <ArrangeStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "mix": body = <MixStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
