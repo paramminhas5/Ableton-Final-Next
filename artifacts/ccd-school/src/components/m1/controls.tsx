@@ -5,6 +5,7 @@
  * arrow keys, double-tap to reset), pads light up. Knobs and faders never print numbers;
  * they report what you touched through `onTouch` so the screen can show it.
  */
+import "./pictures.css";
 import Link from "next/link";
 import { useCallback, useRef, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
 
@@ -233,10 +234,36 @@ type KnobProps = {
   onStep?: () => void;
   /** The value in words ("1.2 kHz", "40%"), shown under the label and read out by screen readers. */
   readout?: string;
+  /** The colour of the line this knob moves on the screen: drawn as a lit ring from rest to the value. */
+  ring?: string;
+  /** Doing nothing at this value (an amount at zero, a centred eq): the ring and led stay dark. */
+  idle?: boolean;
+  /** Where the ring starts: 0 for amounts, 0.5 for centred knobs (pan, eq, tune). */
+  ringFrom?: number;
+  /** The lesson is about another control: this one dims (but still works). */
+  dim?: boolean;
+  /** The lesson is about this control: it gets a soft halo. */
+  spot?: boolean;
 };
 
+/** The value ring: an led arc in the colour of what the knob moves, from rest to the value. Dark when idle. */
+function Ring({ size, value, color, from = 0, idle }: { size: number; value: number; color: string; from?: number; idle?: boolean }) {
+  const c = size / 2, r = size / 2 - 3.5;
+  const ang = (n: number) => ((135 + 270 * Math.max(0, Math.min(1, n))) * Math.PI) / 180;
+  const pt = (n: number) => `${(c + r * Math.cos(ang(n))).toFixed(2)} ${(c + r * Math.sin(ang(n))).toFixed(2)}`;
+  const arc = (a: number, b: number) => { const lo = Math.min(a, b), hi = Math.max(a, b); return `M${pt(lo)}A${r} ${r} 0 ${(hi - lo) * 270 > 180 ? 1 : 0} 1 ${pt(hi)}`; };
+  const lit = !idle && Math.abs(value - from) > 0.004;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={`m1-ring ${lit ? "is-lit" : ""}`} style={{ position: "absolute", inset: 0, ["--c" as string]: color } as CSSProperties} aria-hidden>
+      <path d={arc(0, 1)} className="m1-ring-bed" />
+      {lit && <path d={arc(from, value)} className="m1-ring-arc" />}
+      {lit && <circle cx={c + r * Math.cos(ang(value))} cy={c + r * Math.sin(ang(value))} r={2.2} className="m1-ring-tip" />}
+    </svg>
+  );
+}
+
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -265,7 +292,8 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       {...drag}
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      {size >= 46 && <Scale size={well + 14} steps={detents} at={at} />}
+      {size >= 46 && !ring && <Scale size={well + 14} steps={detents} at={at} />}
+      {ring ? <Ring size={well + 14} value={value} color={ring} from={ringFrom} idle={idle} /> : null}
       <div className="m1-well" style={{ width: well, height: well }}>
         <div className="m1-kb" style={{ width: size, height: size, marginTop: -4 }}>
           <div className="m1-kc" style={{ ["--c" as string]: color, width: size * 0.68, height: size * 0.68 } as CSSProperties}>
@@ -276,9 +304,10 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
     </div>
   );
   if (bare) return knob;
+  const ledC = ring ?? led;
   return (
-    <div className="m1-m is-wide" style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
-      {led ? <Dash color={led} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
+    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle ? "is-idle" : ""}`} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
+      {ledC ? <Dash color={ledC} on={ring ? !idle : true} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
       <div style={{ marginTop: -12 }}>{knob}</div>
       <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>
       {readout ? <span className="m1-kv" aria-hidden>{readout}</span> : null}

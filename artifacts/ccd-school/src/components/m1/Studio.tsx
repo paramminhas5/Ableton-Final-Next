@@ -61,9 +61,14 @@ import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
 import { useEngineTrack } from "./useEngineTrack";
+import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
+import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { bind, PIC } from "@/lib/paramColor";
+import { toValue } from "@/engine";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
-const KNOB_CAPS = [null, CAP.grey, CAP.navy, CAP.grey] as const;
+// Caps stay neutral: the ring around each knob carries the colour of the line it moves.
+const KNOB_CAPS = [CAP.navy, CAP.grey, CAP.navy, CAP.grey] as const;
 const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 const DRUM_KEY_LABELS = ["kick", "snare", "clap", "rim", "hat", "open", "shaker", "ride"];
 const MUTE_C = "#F3C14F";
@@ -260,6 +265,8 @@ export function Studio() {
 
   // ── shaping ───────────────────────────────────────────────────────────────
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
+  const selPadNote = sel && drumLike ? DRUM_PAD_NOTES[effectivePad(sel)] : -1;
+  const clock = useNoteClock(engine, selIndex, { bpm: track.bpm, loop: track.loop, events: sel?.events ?? [] }, drumLike ? (n => n === selPadNote) : undefined);
   const setParam = (index: number, spec: ParamSpec, v: number) => {
     start(); // a knob turned before any tap must still be heard
     const now = Date.now();
@@ -582,9 +589,11 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
+            {bank === "sound" ? <StudioPics layer={sel} keys={knobs.map(k => k.spec.key)} clock={clock} /> : null}
             <div className="m1-g st-knobs">
               {knobs.map(({ spec, index }, i) => (
                 <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
+                  {...bind(spec, paramOf(sel, index))}
                   value={paramOf(sel, index)} defaultValue={spec.default}
                   onChange={v => setParam(index, spec, v)} />
               ))}
@@ -620,6 +629,30 @@ export function Studio() {
           <Icon name="out" />
         </Key>
       </div>
+    </div>
+  );
+}
+
+/** The pictures for the knobs on this page: the envelope (attack, decay, release) and the filter (cutoff, res, env). */
+function StudioPics({ layer, keys, clock }: { layer: LayerV2; keys: string[]; clock: NoteClock }) {
+  const engine = TYPE[layer.type].engine;
+  const params = layer.params;
+  const pad = effectivePad(layer);
+  const env = ampEnv(engine, params, pad);
+  const showEnv = !!env && (engine === "drums" ? keys.includes("decay") : keys.some(k => k === "attack" || k === "release" || k === "decay"));
+  const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];
+  const spec = (key: string) => table.find(p => p.key === key);
+  const cut = spec("cutoff"), res = spec("res"), amt = spec("env");
+  const chr = table.find(p => CHARACTER_KEYS.includes(p.key));
+  const showFilter = !!cut && !!res && keys.some(k => k === "cutoff" || k === "res" || k === "env" || CHARACTER_KEYS.includes(k));
+  if (!showEnv && !showFilter) return null;
+  const n = (s: ParamSpec | undefined) => (s ? paramOf(layer, s.index) : 0);
+  return (
+    <div className="st-pics">
+      {showFilter && cut && res ? (
+        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))} />
+      ) : null}
+      {showEnv && env ? <EnvView env={env} clock={clock} color={PIC.env} label={engine === "drums" ? DRUM_PAD_NAMES[pad] : "envelope"} /> : null}
     </div>
   );
 }

@@ -24,6 +24,10 @@ import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { TOOL_STEPS } from "./tools";
 import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
+import { EnvView, FilterView, useNoteClock } from "./Pictures";
+import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { bind, PIC } from "@/lib/paramColor";
+import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
@@ -225,6 +229,20 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const lfoToN = lfoToK ? params[lfoToK.index] ?? lfoToK.spec.default : lfoToSpec ? params[lfoToSpec.index] ?? lfoToSpec.default : 0;
   const lfoTo = lfoToN < 0.34 ? 0 : lfoToN < 0.67 ? 1 : 2;
   const dialKnobs = knobs.filter(k => k.spec.key !== "lfoto");
+  // The engine's own pictures: the envelope when the lesson turns attack, decay or release; the filter for cutoff and res.
+  const layerAt = shown ? shown.layers.findIndex(l => l.type === line.type) : -1;
+  const shownLayer = layerAt >= 0 && shown ? shown.layers[layerAt] : null;
+  const hatPad = line.type === "hats";
+  const clock = useNoteClock(engine, layerAt, { bpm: shown?.bpm ?? 120, loop: shown?.loop ?? 4, events: shownLayer?.events ?? [] }, hatPad ? (n => n === 42) : undefined);
+  const inst = TYPE[line.type].engine;
+  const lp = shownLayer?.params ?? params;
+  const envPic = !isKick && screen.knobs.some(k => k === "attack" || k === "release" || k === "decay") ? ampEnv(inst, lp, hatPad ? 4 : 0) : null;
+  const fspec = (key: string) => (inst === "lead" ? LEAD_PARAMS : inst === "bass" ? BASS_PARAMS : inst === "chords" ? CHORD_PARAMS : []).find(p => p.key === key) as ParamSpec | undefined;
+  const fc = fspec("cutoff"), fr = fspec("res"), fe = fspec("env");
+  const fch = (inst === "lead" ? LEAD_PARAMS : inst === "bass" ? BASS_PARAMS : inst === "chords" ? CHORD_PARAMS : []).find(p => CHARACTER_KEYS.includes(p.key)) as ParamSpec | undefined;
+  // A wave lesson keeps its wave picture; the filter shows when the lesson is about the filter.
+  const filterPic = !isKick && !!fc && !!fr && (screen.knobs.some(k => k === "res" || k === "cut" || k === "fdecay" || k === "frel" || (k === "env" && !screen.knobs.includes("fm"))) || (screen.knobs.includes("cutoff") && !screen.knobs.includes("wave")));
+  const nOf = (sp?: ParamSpec) => (sp ? lp[sp.index] ?? sp.default : 0);
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -232,6 +250,12 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <Screen>
         <Meta left={meta} right={touched ?? (playing ? "playing, turn a knob" : "press play")} />
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
+          : (envPic || filterPic) && !lfoK ? (
+            <div className="ls-pics">
+              {filterPic && fc && fr ? <FilterView cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)} /> : null}
+              {envPic ? <EnvView env={envPic} clock={clock} color={PIC.env} /> : null}
+            </div>
+          )
           : lfoK ? <LfoView rate={toValue(lfoK.spec, params[lfoK.index] ?? lfoK.spec.default)} depth={val("lfo")} to={LFO_TO[lfoTo]} playing={playing} />
           : line.type === "lead" ? <WaveShape morph={val("wave")} bright={screen.knobs.includes("cutoff") ? val("cutoff") : 0.18} amp={screen.knobs.includes("level") ? Math.min(1, val("level") / 0.75) : 1} cycles={3} playing={playing} />
           : <div className="ls-title">shape it</div>}
@@ -244,7 +268,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       )}
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
-          <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150} led={accent}
+          <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
+            {...bind(k.spec, params[k.index] ?? k.spec.default)}
             value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
             onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
