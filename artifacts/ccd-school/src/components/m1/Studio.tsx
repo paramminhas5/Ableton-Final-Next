@@ -79,9 +79,12 @@ import { ChordTrackEditor } from "./ChordTrack";
 import { CONDS, hasFillSteps, setChance, setCond, stepTag, type Cond } from "@/lib/chance";
 import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
-import { elsewhereLine, knobLabel } from "@/lib/controlNames";
+import { elsewhereLine, knobLabel, stepName } from "@/lib/controlNames";
 import { commitLoop, goSection, sectionNow } from "@/lib/arrange";
 import { partLen, swingOf } from "@/lib/partLength";
+
+/** The screen's big readout: a stepped knob shows its short name ("svf"), the knob's own readout the rest. */
+const bigText = (spec: ParamSpec, v: number) => stepName(spec.key, v, false) ?? display(spec, v);
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
 // Caps stay neutral: the ring around each knob carries the colour of the line it moves.
@@ -384,7 +387,7 @@ export function Studio() {
     if (lockAt && sel) {
       patchSel(l => ({ ...l, events: setLock(l.events, lockMatch(lockAt), index, v) }), undoable);
       engine.param(selIndex, index, v);
-      setTouched({ label: `step ${lockAt.step + 1} · p-lock · ${spec.label}`, text: display(spec, v), key: "plock" });
+      setTouched({ label: `step ${lockAt.step + 1} · p-lock · ${spec.label}`, text: bigText(spec, v), key: "plock" });
       return;
     }
     patchSel(l => {
@@ -396,7 +399,7 @@ export function Studio() {
       }
       return next;
     }, undoable);
-    setTouched({ label: spec.label, text: display(spec, v), key: spec.key });
+    setTouched({ label: spec.label, text: bigText(spec, v), key: spec.key });
   };
 
   /** Apply a modulation change (knob values and routes) as one undo step per gesture. */
@@ -612,7 +615,7 @@ export function Studio() {
     if (!sel) return null;
     const ks = bankKnobs(sel, bank, shift);
     const pick = bank === "sound" ? ks[drumLike ? 1 : 0] : bank === "mix" ? ks[ducking ? 3 : 0] : ks[0];
-    return pick ? { label: pick.spec.label, text: display(pick.spec, paramOf(sel, pick.index)) } : null;
+    return pick ? { label: pick.spec.label, text: bigText(pick.spec, paramOf(sel, pick.index)) } : null;
   }, [touched, sel, bank, shift, drumLike, ducking]);
   // After a knob is turned, the line under the part's name says what that control is called elsewhere.
   const elsewhereText = touched?.key ? elsewhereLine(touched.key, 2) : null;
