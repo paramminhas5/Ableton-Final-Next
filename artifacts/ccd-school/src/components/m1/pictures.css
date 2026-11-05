@@ -52,3 +52,8 @@
 .m1-dice-k:active{transform:translateY(1px)}
 .m1-dice-k svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
 .m1-dice-k svg circle{fill:currentColor;stroke:none}
+
+/* the lesson lights one control: other pads dim until the goal is met */
+.ls-key.is-unlit{opacity:.38;filter:saturate(.3);transition:opacity .25s}
+.ls-key.is-unlit:hover,.ls-key.is-unlit:focus-visible{opacity:.7}
+.ti-clean{margin:6px 0 0;font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px;flex-wrap:wrap}

@@ -26,7 +26,7 @@ import { TOOL_STEPS } from "./tools";
 import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
 import { EnvView, FilterView, useNoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
-import { bind, PIC } from "@/lib/paramColor";
+import { bind, PIC, picOf } from "@/lib/paramColor";
 import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
@@ -243,6 +243,11 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   // A wave lesson keeps its wave picture; the filter shows when the lesson is about the filter.
   const filterPic = !isKick && !!fc && !!fr && (screen.knobs.some(k => k === "res" || k === "cut" || k === "fdecay" || k === "frel" || (k === "env" && !screen.knobs.includes("fm"))) || (screen.knobs.includes("cutoff") && !screen.knobs.includes("wave")));
   const nOf = (sp?: ParamSpec) => (sp ? lp[sp.index] ?? sp.default : 0);
+  // The lesson lights one control at a time, in the order it names them: the next knob you haven't turned
+  // glows, the rest dim (they still work). Once you've turned them all, everything is lit.
+  const [turned, setTurned] = useState<Set<string>>(() => new Set());
+  const spotKey = dialKnobs.length > 1 ? dialKnobs.find(k => !turned.has(k.spec.key))?.spec.key : undefined;
+  const picLit = (group: string) => !spotKey || picOf(spotKey) === group || (group === "filter" && picOf(spotKey) === "eq");
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -252,8 +257,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
           : (envPic || filterPic) && !lfoK ? (
             <div className="ls-pics">
-              {filterPic && fc && fr ? <FilterView cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)} /> : null}
-              {envPic ? <EnvView env={envPic} clock={clock} color={PIC.env} /> : null}
+              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)} /> : null}
+              {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} /> : null}
             </div>
           )
           : lfoK ? <LfoView rate={toValue(lfoK.spec, params[lfoK.index] ?? lfoK.spec.default)} depth={val("lfo")} to={LFO_TO[lfoTo]} playing={playing} />
@@ -271,7 +276,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
           <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
             {...bind(k.spec, params[k.index] ?? k.spec.default)}
             value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
-            onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
+            spot={spotKey === k.spec.key} dim={!!spotKey && spotKey !== k.spec.key && !turned.has(k.spec.key)}
+            onChange={v => { setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>

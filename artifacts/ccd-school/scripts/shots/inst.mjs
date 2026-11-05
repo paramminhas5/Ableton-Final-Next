@@ -155,6 +155,15 @@ const SCENES = {
     await p.waitForTimeout(2000);
     await shot("key");
   },
+  "tryit-verdict": async (p, shot) => {
+    if (!(await toLesson(p, "your-kick", "play"))) throw new Error("no play step");
+    await p.getByRole("button", { name: "Record with a one bar count-in" }).click();
+    const pad = p.locator(".ls-tray .ls-key").first();
+    await p.waitForFunction(() => /recording/.test(document.querySelector(".ls-meta")?.textContent ?? ""), null, { timeout: 8000 }).catch(() => {});
+    for (const wait of [5, 480, 530, 470]) { await p.waitForTimeout(wait); const up = await hold(p, pad, 40, 0.2); await up?.(); }
+    await p.waitForTimeout(700);
+    await shot("marks");
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();

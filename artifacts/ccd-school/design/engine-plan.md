@@ -84,6 +84,9 @@ The research's twelve interface moves, applied to every instrument screen. In bu
 11. **Fill and randomise with an amount,** for drums, arpeggios and the note grid.
 12. **The lesson lights one control.** Everything else dims, every hit gets a green, amber or red verdict, and practice loops speed up as you get it.
 
+**Built (5 Nov, instrument pass):** envelope and filter pictures from the engine's own maths (`src/lib/shapes.ts`, `Pictures.tsx`), with engine item 7's three filter characters; knob rings in their picture's colour, dark until used (`src/lib/paramColor.ts`); pads with velocity from tap height and a hit ring; hold a step, turn a knob (`src/lib/plock.ts`, played from the host at each step, 80 ms look-ahead); capture (`src/lib/capture.ts`); phone note editing in the piano roll; fill and randomise for drum, bass and lead steps, the note grid and the arp (`src/lib/dice.ts`); dj waveforms coloured by frequency (`src/lib/djWaves.ts`, bank measured offline by `scripts/dj-waves.ts`); one lit control per shape step, verdicts with ms on every play-in hit, "faster" after three clean takes.
+Still open: per-event locks inside the engine (the host sends them now, so a lock lands within a few ms, not sample-exact); touch-to-reveal beside the finger (values show on the screen and under the knob); instant slices as their own pass (slices already on lit pads); pinch for grid resolution in the piano roll; the arp screen showing the varied notes it will play; a scrolling zoomed deck view beside the 16-bar overview.
+
 ## What we can say in marketing (and what we can't)
 
 Supported by the research and provable by our own tests:

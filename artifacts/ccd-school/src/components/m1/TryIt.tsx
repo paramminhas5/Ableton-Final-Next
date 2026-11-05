@@ -214,8 +214,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const lo = Math.min(...allNotes), hi = Math.max(...allNotes);
   const rows = drumLike ? pads.length : hi - lo + 1;
   const rowOf = (n: number) => (drumLike ? pads.findIndex(p => p.notes[0] === n) : hi - n);
-  const Wd = 330, Hd = 128;
-  const rh = Hd / Math.max(1, rows);
+  const Wd = 330, Hd = coach ? 146 : 128;
+  const rollH = coach ? 128 : Hd;
+  const rh = (coach ? 128 : Hd) / Math.max(1, rows);
   const beatW = Wd / loop;
   const head = playing ? (((pos.beat % loop) + loop) % loop) * beatW : -1;
   const color = TYPE[type].color;
@@ -250,6 +251,34 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
+  // A verdict on every hit (Melodics, Yousician): green on time, amber close, red off, with how many ms.
+  const msPerBeat = 60000 / session.bpm;
+  const verdictOf = (e: NoteEvent): { ms: number; c: "on" | "close" | "off" } | null => {
+    if (!coach || (goalNote !== undefined && e.note !== goalNote)) return null;
+    const off = onBeatOnly ? offOf(e) : e.start - Math.round(e.start * 4) / 4;
+    const ms = Math.round(off * msPerBeat);
+    const bad = onBeatOnly ? isOff(e) : Math.abs(ms) > 90;
+    return { ms, c: bad ? "off" : Math.abs(ms) <= 30 ? "on" : "close" };
+  };
+  const VERDICT_C = { on: "#3BE07A", close: "#F3C14F", off: "#FF4A5A" } as const;
+  const lastHit = coach ? [...events].reverse().find(e => verdictOf(e)) : undefined;
+  const lastV = lastHit ? verdictOf(lastHit) : null;
+  const lateWord = (ms: number) => (Math.abs(ms) <= 4 ? "right on it" : `${Math.abs(ms)} ms ${ms < 0 ? "early" : "late"}`);
+  // Three clean takes in a row (goal met, no red), then the loop offers to go faster.
+  const [clean, setClean] = useState(0);
+  const wasRec = useRef(false);
+  useEffect(() => {
+    if (wasRec.current && !recording && !countIn && coach) {
+      const vs = events.map(verdictOf).filter(Boolean) as { c: string }[];
+      setClean(n => (goalMet && vs.length && !vs.some(v => v.c === "off") ? n + 1 : 0));
+    }
+    wasRec.current = recording || countIn;
+  }, [recording, countIn]); // eslint-disable-line react-hooks/exhaustive-deps
+  const faster = () => {
+    history.current.push(events);
+    setSession(t => ({ ...t, bpm: t.bpm + 5, layers: t.layers.map((l, i) => (i === idx ? { ...l, events: [] } : l)) }));
+    setClean(0);
+  };
 
   // What you play on, and one of it, in this surface's words.
   const surface = drumLike ? "pads" : type === "chords" ? "chord pads" : "keys";
@@ -292,6 +321,19 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             <path key={i} d={`M${(i * Wd) / (loop * 4)} 0V${Hd}`} stroke={i % 4 === 0 ? "rgba(255,255,255,.14)" : "rgba(255,255,255,.05)"} />
           ))}
           {Array.from({ length: rows + 1 }, (_, i) => <path key={`r${i}`} d={`M0 ${i * rh}H${Wd}`} stroke="rgba(255,255,255,.04)" />)}
+          {coach && (() => { let lastX = -99; return events.map((e, i) => {
+            const v = verdictOf(e);
+            if (!v) return null;
+            const st = e.start > loop - TOL ? e.start - loop : e.start;
+            const x = Math.max(4, Math.min(Wd - 4, (st / loop) * Wd + 4));
+            const c = VERDICT_C[v.c];
+            return (
+              <g key={`v${i}`} className="ti-verdict">
+                <circle cx={x} cy={rollH + 6} r={3.5} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />
+                {(v.c !== "on" || e === lastHit) && x - lastX > 22 && (lastX = x) ? <text x={x} y={rollH + 17} textAnchor="middle" fontSize={9} fontWeight={600} fill={c}>{v.ms > 0 ? "+" : ""}{v.ms}</text> : null}
+              </g>
+            );
+          }); })()}
           {events.map((e, i) => {
             const r = rowOf(e.note);
             if (r < 0) return null;
@@ -305,7 +347,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           {head >= 0 && <path d={`M${head} 0V${Hd}`} stroke={recording ? "#FF4A5A" : "#F3F2EF"} strokeWidth={1.5} />}
         </svg>
         <div className="ls-meta" style={{ marginTop: 10 }}>
-          <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : `${unit}${notesCount === 1 ? "" : "s"}`}` : "nothing yet"}</span>
+          <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : `${unit}${notesCount === 1 ? "" : "s"}`}` : "nothing yet"}{lastV ? <span style={{ color: VERDICT_C[lastV.c] }}> · last {lateWord(lastV.ms)}</span> : null}</span>
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>
@@ -328,11 +370,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       <Silk label={drumLike ? "pads" : type === "chords" ? "chord pads" : "keys"} right={drumLike ? "tap in time" : `only notes in ${keyName}`} />
       <div className={`ls-tray ${drumLike || type === "chords" ? "is-pads" : "is-keys"}`} style={drumLike && pads.length !== 8 ? { gridTemplateColumns: `repeat(${pads.length}, minmax(0, 1fr))` } : undefined}>
         {pads.map((p, i) => {
+          const hasTarget = !!coach && !goalMet && goalNote !== undefined && pads.some(q => q.notes[0] === goalNote);
           const on = held.has(i) || p.notes.some(n => lit[n]);
           const target = !!coach && !goalMet && goalNote !== undefined && p.notes[0] === goalNote;
           const isRoot = !drumLike && (i === 0 || i === 7);
           return (
-            <button key={i} type="button" className={`ls-key ${on ? "is-on" : ""} ${isRoot ? "is-root" : ""}`} style={{ ["--c" as string]: color, ...(target ? { outline: `2px solid ${color}`, outlineOffset: -2 } : null) } as CSSProperties}
+            <button key={i} type="button" className={`ls-key ${on ? "is-on" : ""} ${isRoot ? "is-root" : ""} ${hasTarget && !target && !on ? "is-unlit" : ""}`} style={{ ["--c" as string]: color, ...(target ? { outline: `2px solid ${color}`, outlineOffset: -2 } : null) } as CSSProperties}
               aria-label={`${p.label}${drumLike ? "" : ` (${p.notes.length > 1 ? "chord" : "note"})`}`}
               onPointerDown={e => down(i, e)} onPointerUp={e => up(i, e)} onPointerCancel={e => up(i, e)} onPointerLeave={e => { if (e.buttons) up(i, e); }}
               onKeyDown={e => keyDown(i, e)} onKeyUp={e => keyUp(i, e)}
@@ -350,6 +393,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         <>
           <div className="fl-turn">
             <div className="fl-turnhead"><span>your turn</span><span>{goalMet ? "done" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes}`}</span></div>
+            {clean > 0 && clean < 3 ? <p className="ti-clean" role="status">{clean} clean take{clean > 1 ? "s" : ""} in a row{clean < 3 ? `. ${3 - clean} more and you can go faster` : ""}</p> : null}
+            {clean >= 3 ? <p className="ti-clean" role="status">three clean takes. <button type="button" className="ls-chip" onClick={faster}>faster · {session.bpm + 5} bpm</button></p> : null}
             <p className="fl-turnwhy"><Gloss>{coach.body.split(/\n+/)[0]}</Gloss></p>
           </div>
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>
