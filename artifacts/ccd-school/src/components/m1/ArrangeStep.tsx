@@ -81,8 +81,8 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
             ))}
             <span className="ar-part">fill</span>
             {secs.map((s, i) => <button key={i} type="button" aria-pressed={!!s.fill} aria-label={`Fill at the end of ${s.name} ${i + 1}`} className={`ar-fill ${s.fill ? "is-on" : ""}`} onClick={() => fill(i)}>{s.fill ? "roll" : ""}</button>)}
-            {(screen.goal === "risers" || secs.some(s => s.riser)) && <span className="ar-part">riser</span>}
-            {(screen.goal === "risers" || secs.some(s => s.riser)) && secs.map((s, i) => <button key={`r${i}`} type="button" aria-pressed={!!s.riser} aria-label={`Riser at the end of ${s.name} ${i + 1}`} className={`ar-fill ${s.riser ? "is-on" : ""}`} onClick={() => rise(i)}>{s.riser ? "rise" : ""}</button>)}
+            {(screen.goal === "risers" || screen.goal === "drop" || secs.some(s => s.riser)) && <span className="ar-part">riser</span>}
+            {(screen.goal === "risers" || screen.goal === "drop" || secs.some(s => s.riser)) && secs.map((s, i) => <button key={`r${i}`} type="button" aria-pressed={!!s.riser} aria-label={`Riser at the end of ${s.name} ${i + 1}`} className={`ar-fill ${s.riser ? "is-on" : ""}`} onClick={() => rise(i)}>{s.riser ? "rise" : ""}</button>)}
           </div>
         </Screen>
         <div className="fl-again" style={{ justifyContent: "flex-start", marginTop: 10 }}>

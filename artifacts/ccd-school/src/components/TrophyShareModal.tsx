@@ -46,10 +46,10 @@ export function TrophyShareModal(props: Props) {
     ctx.fillText(KIND_LABEL[trophyKind], 90, 120);
     ctx.fillStyle = "#F3F2EF"; ctx.font = "300 84px Outfit, sans-serif";
     ctx.fillText(trophyName.toLowerCase().slice(0, 28), 90, 250);
-    if (worldName) { ctx.fillStyle = "#FF4F9A"; ctx.font = "500 36px Outfit, sans-serif"; ctx.fillText(worldName.toLowerCase(), 90, 312); }
+    if (worldName) { ctx.fillStyle = "#4FE3B6"; ctx.font = "500 36px Outfit, sans-serif"; ctx.fillText(worldName.toLowerCase(), 90, 312); }
     // sixteen lit steps
     for (let i = 0; i < 16; i++) {
-      ctx.fillStyle = i % 4 === 0 ? "#FF4F9A" : "#4FE3B6";
+      ctx.fillStyle = i % 4 === 0 ? "#7D96FF" : "#4FE3B6";
       ctx.globalAlpha = i % 2 === 0 ? 1 : 0.6;
       ctx.beginPath(); ctx.roundRect(90 + i * 62, 380, 52, 34, 6); ctx.fill();
     }

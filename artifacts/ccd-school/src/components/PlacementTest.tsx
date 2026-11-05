@@ -158,7 +158,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
               const cls = !answered ? (picked === i ? "is-lit" : "") : i === current.answer ? (right ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
               return (
                 <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={answered} className={`ls-pad ${cls}`}
-                  style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => handlePick(i)}>
+                  style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => handlePick(i)}>
                   <small>{String.fromCharCode(97 + i)}</small><span>{o}</span>
                 </button>
               );

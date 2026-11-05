@@ -816,3 +816,10 @@ a.jv-lane:hover{transform:translateX(3px)}
   .fl[data-page-kind="play"] .fl-song{display:none}
   .fl[data-page-kind="play"] .ls-col{padding-bottom:110px}
 }
+/* Phone, play-in: tighter so the pads or keys clear the go bar without scrolling. */
+@media (max-width:700px){
+  .fl[data-page-kind="play"] .fl-inst .m1-scr .ls-title{display:none}
+  .fl[data-page-kind="play"] .fl-inst .m1-scr svg{max-height:92px}
+  .fl[data-page-kind="play"] .fl-inst .m1-silk{display:none}
+}
+.m1-scr:has(.ls-sticker:not(.is-low)) .ls-title{padding-right:80px}

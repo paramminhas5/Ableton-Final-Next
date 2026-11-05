@@ -57,7 +57,7 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
       <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 300, display: "flex", flexDirection: "column" }}>
         <div className="ls-meta"><span>streak</span><span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: shield ? "var(--led-mint)" : undefined }}>{shield ? <><Icon name="shield" small />shield ready</> : null}</span></div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, padding: "10px 0" }}>
-          <Lcd n={n} color="var(--led-go)" digits={Math.max(2, String(days).length)} />
+          <Lcd n={n} color="var(--led-mint)" digits={Math.max(2, String(days).length)} />
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 24, fontWeight: 300, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>days in a row</div>
             <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6, maxWidth: 260 }}>{shield ? "miss a day and the shield keeps it going." : "a lesson a day keeps it lit."}</div>
@@ -71,7 +71,7 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
           const now = i === today;
           return (
             <span key={i} className="m1-m" style={{ height: 56, pointerEvents: "none" }}>
-              <span className="m1-dot is-on" style={{ ["--c" as string]: lit ? "var(--led-go)" : "var(--ledoff)", opacity: lit ? 1 : 0.5 } as React.CSSProperties} />
+              <span className="m1-dot is-on" style={{ ["--c" as string]: lit ? "var(--led-mint)" : "var(--ledoff)", opacity: lit ? 1 : 0.5 } as React.CSSProperties} />
               <span className={`m1-cap ${now ? "is-blk" : ""}`} style={{ width: "62%", marginTop: -6, fontSize: 13 }}>{d}</span>
             </span>
           );
@@ -102,7 +102,7 @@ function RankBody({ name }: { name: string }) {
           <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.02em" }}>{name.toLowerCase()}</div>
           <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.tagline.toLowerCase()}</div>
         </div>
-        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / RANKS.length} color="var(--led-go)" n={24} height={6} label={`rank ${idx + 1} of ${RANKS.length}`} /></div>
+        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / RANKS.length} color="var(--led-mint)" n={24} height={6} label={`rank ${idx + 1} of ${RANKS.length}`} /></div>
       </div>
     </div></div>
   );
@@ -114,7 +114,7 @@ function TrophyBody({ label, title, sub }: { label: string; title: string; sub?:
       <div className="ls-meta"><span>{label}</span><span /></div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
         <div style={{ display: "flex", gap: 4 }} aria-hidden>
-          {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 14, borderRadius: 3, background: i % 4 === 0 ? "var(--led-go)" : "var(--led-mint)", opacity: i % 2 ? 0.6 : 1, boxShadow: "0 0 6px currentColor" }} />)}
+          {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 14, borderRadius: 3, background: i % 4 === 0 ? "var(--led-mint)" : "var(--led-mint)", opacity: i % 2 ? 0.6 : 1, boxShadow: "0 0 6px currentColor" }} />)}
         </div>
         <div style={{ fontSize: 34, fontWeight: 300, letterSpacing: "-.03em", lineHeight: 1.05, color: "var(--disp-ink)", textWrap: "balance" as never }}>{title.toLowerCase()}</div>
         {sub && <div style={{ fontSize: 14, color: "var(--disp-sub)" }}>{sub}</div>}

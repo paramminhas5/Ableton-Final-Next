@@ -83,7 +83,7 @@ export type TrackV2 = {
 export const TYPE: Record<LayerType, { label: string; color: string; engine: InstrumentName; own: string; surfaces: Surface[] }> = {
   drums: { label: "drums", color: "#4FE3B6", engine: "drums", own: "circle", surfaces: ["steps", "keys", "pads"] },
   hats: { label: "hats", color: "#F3C14F", engine: "drums", own: "rolls", surfaces: ["steps", "keys", "pads"] },
-  bass: { label: "bass", color: "#FF4F9A", engine: "bass", own: "glide", surfaces: ["steps", "keys", "pads"] },
+  bass: { label: "bass", color: "#5CC8FF", engine: "bass", own: "glide", surfaces: ["steps", "keys", "pads"] },
   chords: { label: "chords", color: "#B89CFF", engine: "chords", own: "chord pads", surfaces: ["steps", "keys", "pads"] },
   lead: { label: "lead", color: "#7D96FF", engine: "lead", own: "xy", surfaces: ["steps", "keys", "pads"] },
   fx: { label: "fx", color: "#E9E9E6", engine: "fx", own: "riser", surfaces: ["steps", "pads"] },

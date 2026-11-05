@@ -273,7 +273,7 @@ export function GymPageClient() {
   if (phase === "idle" || phase === "done") {
     const pads: { id: string; label: string; pic: string; c: string; tag?: string; onClick?: () => void; href?: string }[] = [
       ...GYM_DRILLS.map(d => ({ id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) })),
-      { id: "review", label: "review", pic: "review", c: "#FF4F9A", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
+      { id: "review", label: "review", pic: "review", c: "#FFB35C", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },
     ];
@@ -393,7 +393,7 @@ export function GymPageClient() {
             const isPick = pick === o.id;
             const cls = !feedback ? (isPick ? "is-lit" : "") : isAns ? (feedback.correct ? "is-lit is-right" : "is-ring") : isPick ? "is-lit is-wrong" : "is-dim";
             return (
-              <button key={o.id} type="button" className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties}
+              <button key={o.id} type="button" className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties}
                 disabled={!!feedback || locked || phase !== "listening"} onClick={() => setPick(o.id)} aria-pressed={isPick}>
                 <small>{o.small ?? ""}</small><span>{o.label}</span>
               </button>

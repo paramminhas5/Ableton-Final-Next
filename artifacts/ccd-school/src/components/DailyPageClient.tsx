@@ -47,12 +47,12 @@ export function DailyPageClient() {
         <div className="ls-meta"><span>daily goal</span><span>{done ? "done" : `${DAILY_GOAL_XP - progress.dailyXp} xp to go`}</span></div>
         <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 14 }}>
           <span className="ls-lcd" style={{ marginTop: 0 }}>
-            <SevenSeg text={String(Math.min(progress.dailyXp, 999))} color={done ? "var(--led-mint)" : "var(--led-go)"} digits={3} height={40} />
+            <SevenSeg text={String(Math.min(progress.dailyXp, 999))} color={done ? "var(--led-mint)" : "var(--led-mint)"} digits={3} height={40} />
           </span>
           <span style={{ color: "var(--disp-sub)", fontSize: 14 }}>of {DAILY_GOAL_XP} xp</span>
         </div>
         <div style={{ marginTop: 16, display: "flex" }}>
-          <SegBar value={pct} color={done ? "var(--led-mint)" : "var(--led-go)"} label={`daily goal ${Math.round(pct * 100)} percent`} />
+          <SegBar value={pct} color={done ? "var(--led-mint)" : "var(--led-mint)"} label={`daily goal ${Math.round(pct * 100)} percent`} />
         </div>
         <div className="ls-meta" style={{ marginTop: 14, justifyContent: "flex-start", gap: 16, alignItems: "center" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="flame" small />{progress.streakDays} day streak</span>

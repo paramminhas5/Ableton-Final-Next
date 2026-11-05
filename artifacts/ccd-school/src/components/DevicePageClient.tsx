@@ -67,7 +67,7 @@ export function DevicePageClient({ slug }: { slug: string }) {
       {a && (
         <>
           <Silk label="reach for it" />
-          <div className="ls-panel" style={{ marginTop: 0 }}><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span>{a.reach} <Link href={`/atlas#${a.id}`} style={{ color: "var(--sub)" }}>read the guide</Link></span></div>
+          <div className="ls-panel" style={{ marginTop: 0 }}><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span>{a.reach} <Link href={`/atlas#${a.id}`} style={{ color: "var(--sub)" }}>read the guide</Link></span></div>
         </>
       )}
       {lessons.length > 0 && (
@@ -77,7 +77,7 @@ export function DevicePageClient({ slug }: { slug: string }) {
             {lessons.map(m => m && (
               <Link key={m.slug} href={`/learn/${m.slug}`} className="ls-panel is-link" style={{ marginTop: 0, alignItems: "center", textDecoration: "none" }}>
                 <span style={{ flex: 1 }}><span className="m1-t11" style={{ display: "block" }}>learn it in</span><b style={{ fontWeight: 600, fontSize: 17 }}>{m.title.toLowerCase()}</b></span>
-                <span className="ls-led" style={{ ["--c" as string]: progress.completedMissions[m.slug] ? "var(--led-go)" : "var(--ledoff)", marginTop: 0 } as CSSProperties} aria-label={progress.completedMissions[m.slug] ? "done" : "not done yet"} />
+                <span className="ls-led" style={{ ["--c" as string]: progress.completedMissions[m.slug] ? "var(--led-mint)" : "var(--ledoff)", marginTop: 0 } as CSSProperties} aria-label={progress.completedMissions[m.slug] ? "done" : "not done yet"} />
               </Link>
             ))}
           </div>

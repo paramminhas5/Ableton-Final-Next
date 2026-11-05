@@ -140,7 +140,7 @@ export function ChallengePageClient() {
     advance(isCorrect, timeUsed);
   };
 
-  const timerColor = timeLeft > 15 ? "var(--led-mint)" : timeLeft > 7 ? "var(--led-go)" : "var(--led-red)";
+  const timerColor = timeLeft > 15 ? "var(--led-mint)" : timeLeft > 7 ? "#F3C14F" : "var(--led-red)";
 
   // intro
   if (phase === "intro") {
@@ -177,7 +177,7 @@ export function ChallengePageClient() {
         </div>
         <div style={{ display: "flex", gap: 6, marginTop: 10 }} aria-hidden>
           {Array.from({ length: QUESTION_COUNT }).map((_, i) => (
-            <span key={i} className="ls-led" style={{ ["--c" as string]: i < results.length ? (results[i].correct ? "var(--led-mint)" : "var(--led-red)") : i === qIdx ? "var(--led-go)" : "var(--ledoff)", marginTop: 0 }} />
+            <span key={i} className="ls-led" style={{ ["--c" as string]: i < results.length ? (results[i].correct ? "var(--led-mint)" : "var(--led-red)") : i === qIdx ? "var(--led-mint)" : "var(--ledoff)", marginTop: 0 }} />
           ))}
         </div>
         <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, marginTop: 12 }}>

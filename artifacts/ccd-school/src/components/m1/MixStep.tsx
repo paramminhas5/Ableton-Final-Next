@@ -175,7 +175,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
         <Screen>
           <Meta left="the mixer" right={playing ? (screen.goal === "match" ? (off <= 0.3 ? "matched" : "drifting") : "playing") : "press play"} />
           <div className="mx-decks">
-            <div><small>deck a · {deckA === "file" ? "your file" : "your song"}</small><b>{deckA === "file" ? fileA.name : songName.toLowerCase()}</b><span>{base} bpm · {mineKey}</span><Leds at={beatA} label="Deck a beats" /></div>
+            <div><small>deck a · {deckA === "file" ? "your file" : mine === song ? "your song" : "a starter loop, your song is empty"}</small><b>{deckA === "file" ? fileA.name : mine === song ? songName.toLowerCase() : "kick and clap"}</b><span>{base} bpm · {mineKey}</span><Leds at={beatA} label="Deck a beats" /></div>
             <div><small>deck b · {bFile ? "your file" : "bank"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
           </div>
           {recState !== "off" && <div className="fl-airlabels"><span>{recState === "on" ? "recording your mix" : "mix recorded"}</span>{recUrl ? <a href={recUrl} download="my-mix.webm">download it</a> : null}</div>}
@@ -189,7 +189,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <Fader label="deck a" value={fa} onChange={setFa} height={130} width={40} />
           </div>
           <div className="mx-mid">
-            <Silk label="deck b tempo" right={`${pitch >= 0 ? "+" : ""}${(pitch * 100).toFixed(1)}% of ${Math.round(range * 100)}`} />
+            <Silk label="deck b tempo" right={`${bBpm.toFixed(1)} bpm, pitch ${pitch >= 0 ? "+" : ""}${(pitch * 100).toFixed(1)}% (range ±${Math.round(range * 100)}%)`} />
             <Fader horizontal label={`Deck b tempo, plus or minus ${Math.round(range * 100)} percent`} value={(pitch + range) / (2 * range)} defaultValue={0.5} onChange={v => setPitch(Math.round((v * 2 * range - range) * 1000) / 1000)} width={200} />
             <Silk label={`crossfader · ${law}`} right={xf < 0.1 ? "a" : xf > 0.9 ? "b" : "both"} />
             <Fader horizontal label="Crossfader" value={xf} defaultValue={0.5} onChange={setXf} width={200} />

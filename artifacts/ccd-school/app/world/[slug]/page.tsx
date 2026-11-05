@@ -16,7 +16,7 @@ const WORLD_TITLES: Record<string, string> = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const title = WORLD_TITLES[slug];
-  if (!title) return { title: "World Not Found" };
+  if (!title) return { title: "no world here" };
   return {
     title: title,
     description: `Learn ${title} on CCD.SCHOOL: lessons that build one song of your own.`,

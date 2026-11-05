@@ -10,12 +10,15 @@ import { TOUR_KEY } from "./Welcome";
 import { missionBySlug } from "@/content/missions";
 
 const STOPS: { sel: string; title: string; line: string }[] = [
-  { sel: ".td-lessoncard", title: "your next lesson", line: "always here. press play on it to start." },
+  { sel: ".td-lessoncard, .td-upnext", title: "your next lesson", line: "always here. press play on it to start." },
   { sel: ".td-knobs", title: "turn to choose", line: "world, path and lesson. tap a knob to step it, or drag it." },
   { sel: ".td-all", title: "every lesson, by path", line: "paths are the chapters of a world. tap any lesson to pick it." },
   { sel: ".td-switch", title: "lesson or your song", line: "flip to your track to hear the song your lessons are building." },
   { sel: ".m1-modebar", title: "the rest of ccd school", line: "practice for ear games and reviews, studio to build your song out, library for every word and sound." },
 ];
+
+/** The first element a selector list finds that is actually on the page (phones hide some cards). */
+const visible = (sel: string): Element | null => [...document.querySelectorAll(sel)].find(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; }) ?? null;
 
 export function DashTour() {
   const params = useSearchParams();
@@ -29,14 +32,14 @@ export function DashTour() {
     if (!on) return;
     // Something else on the page (the lesson list finding your lesson) can scroll after we do; put the target back first.
     const place = () => {
-      const el = document.querySelector(stop.sel);
+      const el = visible(stop.sel);
       if (el && stop.sel !== ".m1-modebar") {
         const r = el.getBoundingClientRect();
         if (r.top < 60 || r.top > window.innerHeight * 0.5) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 76), behavior: "auto" });
       }
       setBox(el ? el.getBoundingClientRect() : null);
     };
-    const el = document.querySelector(stop.sel);
+    const el = visible(stop.sel);
     // Bring the target into the part of the screen the fixed bottom bar doesn't cover, with room
     // for the card. The bottom bar itself is always on screen, so it needs no scrolling.
     if (el && stop.sel !== ".m1-modebar") {

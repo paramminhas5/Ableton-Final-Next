@@ -56,7 +56,7 @@ export function GlossaryPageClient() {
     const el = document.getElementById(hash);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.style.boxShadow = "inset 0 0 0 2px var(--led-go)";
+      el.style.boxShadow = "inset 0 0 0 2px var(--led-mint)";
       setTimeout(() => { el.style.boxShadow = ""; }, 1800);
     }
   }, []);

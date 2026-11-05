@@ -104,7 +104,7 @@ export function ProfilePageClient() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 18 }}>
           <span style={{ display: "flex", gap: 3, flex: 1 }} role="img" aria-label={`${Math.round(pct * 100)} percent to the next rank`}>
-            {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-go)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-go)" : undefined }} />)}
+            {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-mint)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-mint)" : undefined }} />)}
           </span>
           <span className="m1-ss">{next ? `${next.minXp - progress.xp} to rank ${idx + 2}` : "top rank"}</span>
         </div>
@@ -125,7 +125,7 @@ export function ProfilePageClient() {
         <Switch label="Look" value={mode === "system" ? "auto" : mode} onChange={id => { setMode((id === "auto" ? "system" : id) as Mode); }}
           options={[{ id: "light", label: "light" }, { id: "dark", label: "dark" }, { id: "auto", label: "auto" }]} />
       </Row>
-      <Row led="var(--led-go)" label="learning">
+      <Row led="var(--led-mint)" label="learning">
         <Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
           options={[{ id: "flow", label: "flow" }, { id: "free", label: "free" }]} />
       </Row>
@@ -158,7 +158,7 @@ export function ProfilePageClient() {
       <ol className="ls-learn" style={{ padding: "0 4px" }}>
         {RANKS.map((r, i) => (
           <li key={r.slug} style={{ alignItems: "center", opacity: i > idx ? 0.55 : 1 }}>
-            <span className="ls-led" style={{ ["--c" as string]: i <= idx ? "var(--led-go)" : "var(--ledoff)", boxShadow: i <= idx ? undefined : "none", background: i <= idx ? undefined : "var(--ledoff)" } as CSSProperties} />
+            <span className="ls-led" style={{ ["--c" as string]: i <= idx ? "var(--led-mint)" : "var(--ledoff)", boxShadow: i <= idx ? undefined : "none", background: i <= idx ? undefined : "var(--ledoff)" } as CSSProperties} />
             <span style={{ flex: 1, fontWeight: i === idx ? 600 : 400 }}>{r.name.toLowerCase()}</span>
             <span className="m1-t11">{i === idx ? "you are here" : `${r.minXp} xp`}</span>
           </li>
@@ -168,11 +168,11 @@ export function ProfilePageClient() {
       <Silk label="account" />
       <div className="ls-pads">
         {user ? (
-          <Link href={handle ? `/u/${encodeURIComponent(handle)}` : "/profile"} className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+          <Link href={handle ? `/u/${encodeURIComponent(handle)}` : "/profile"} className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-mint)", minHeight: 96 } as CSSProperties}>
             <small>public page</small><span>see your profile</span>
           </Link>
         ) : (
-          <Link href="/login" className="ls-pad is-lit" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+          <Link href="/login" className="ls-pad is-lit" style={{ ["--c" as string]: "var(--led-mint)", minHeight: 96 } as CSSProperties}>
             <small>sign in</small><span>save to cloud</span>
           </Link>
         )}

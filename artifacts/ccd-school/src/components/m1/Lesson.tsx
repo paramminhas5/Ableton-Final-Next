@@ -574,7 +574,7 @@ function Gauge({ at, total }: { at: number; total: number }) {
     <svg viewBox={`0 0 ${W} 170`} width="100%" aria-hidden style={{ display: "block", marginTop: 6 }}>
       {Array.from({ length: total }, (_, i) => {
         const q = ang(i), on = i === at;
-        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#4FE3B6" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #FF4F9A)" } : undefined} />;
+        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#4FE3B6" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #4FE3B6)" } : undefined} />;
       })}
       <path d={`M${cx} ${cy}L${cx + (r - 22) * Math.cos(na)} ${cy + (r - 22) * Math.sin(na)}`} stroke="#F3F2EF" strokeWidth={2.2} strokeLinecap="round" />
       <circle cx={cx} cy={cy} r={6} fill="#F3F2EF" />

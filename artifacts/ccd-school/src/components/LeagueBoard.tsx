@@ -117,9 +117,9 @@ export function LeagueBoard() {
       ) : (
         entries.map(e => {
           const z = rankZone(e.rank, tier);
-          const led = e.isCurrentUser ? "var(--led-go)" : z === "promote" ? "var(--led-mint)" : z === "demote" ? "var(--led-red)" : "var(--ledoff)";
+          const led = e.isCurrentUser ? "var(--led-mint)" : z === "promote" ? "var(--led-mint)" : z === "demote" ? "var(--led-red)" : "var(--ledoff)";
           return (
-            <ListRow key={e.userId} led={led} style={{ padding: "9px 14px 9px 16px", marginTop: 6, ...(e.isCurrentUser ? { boxShadow: "inset 0 0 0 2px var(--led-go)" } : {}) }}
+            <ListRow key={e.userId} led={led} style={{ padding: "9px 14px 9px 16px", marginTop: 6, ...(e.isCurrentUser ? { boxShadow: "inset 0 0 0 2px var(--led-mint)" } : {}) }}
               title={<span style={{ display: "flex", gap: 10, alignItems: "baseline" }}><b style={{ width: 24, fontWeight: 400, color: "var(--sub)", fontVariantNumeric: "tabular-nums" }}>{e.rank}</b>{e.isCurrentUser ? "you" : e.name.toLowerCase()}</span>}
               right={<span style={{ fontVariantNumeric: "tabular-nums", fontSize: 14 }}>{e.weeklyXp}</span>} />
           );

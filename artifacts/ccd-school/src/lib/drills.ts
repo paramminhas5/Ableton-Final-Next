@@ -14,16 +14,16 @@ export type DrillKey =
   | "stereo-width";
 
 export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emoji: string }> = {
-  interval: { name: "Interval ID", tagline: "Hear two notes — name the gap.", emoji: "" },
+  interval: { name: "Interval ID", tagline: "Hear two notes: name the gap.", emoji: "" },
   chord: { name: "Chord Quality", tagline: "Major, minor, dim, dom7…", emoji: "" },
   "eq-cut": { name: "EQ Cut", tagline: "Which band did we notch?", emoji: "" },
   compression: { name: "Compression", tagline: "Spot the squashed clip.", emoji: "" },
   reverb: { name: "Reverb Time", tagline: "Short, medium, or long tail?", emoji: "" },
   panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "" },
-  tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "" },
+  tempo: { name: "Tempo", tagline: "BPM by ear: within 5.", emoji: "" },
   "tempo-compare": {
     name: "A/B Faster?",
-    tagline: "Two loops — which one is faster?",
+    tagline: "Two loops: which one is faster?",
     emoji: "",
   },
   "dynamic-range": {
@@ -33,7 +33,7 @@ export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emo
   },
   "stereo-width": {
     name: "Stereo Width",
-    tagline: "Mono, narrow, wide — hear the difference.",
+    tagline: "Mono, narrow, wide: hear the difference.",
     emoji: "",
   },
 };
@@ -42,7 +42,7 @@ export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emo
 export const DRILL_WHY: Record<DrillKey, string[]> = {
   interval: [
     "Intervals are the bones of every melody, bassline and chord.",
-    "Producers who hear intervals can transcribe ideas instantly — no piano roll guessing.",
+    "Producers who hear intervals can transcribe ideas instantly: no piano roll guessing.",
     "Run this for 60 seconds before a writing session and your top-lines lock in tighter.",
   ],
   chord: [
@@ -56,27 +56,27 @@ export const DRILL_WHY: Record<DrillKey, string[]> = {
     "Improves both your mix bus AND your sound design.",
   ],
   compression: [
-    "Heavy comp ≠ louder. It changes feel — punch, glue, sustain.",
+    "Heavy comp ≠ louder. It changes feel: punch, glue, sustain.",
     "Spotting overcompression saves you from squashed mixes.",
     "Gateway skill to mastering and bus processing.",
   ],
   reverb: [
-    "Tail length defines space — bedroom, club, cathedral.",
+    "Tail length defines space: bedroom, club, cathedral.",
     "Hearing decay vs predelay is the difference between depth and wash.",
     "Critical for mix translation across systems.",
   ],
   panning: [
     "Width is half of a great mix. Most amateurs collapse everything to mono.",
-    "Trains stereo placement awareness — where lives kick, snare, hat, vox.",
+    "Trains stereo placement awareness: where lives kick, snare, hat, vox.",
     "Builds the ears to hear phase issues before they kill your master.",
   ],
   "tempo-compare": [
-    "Tempo perception is the most foundational rhythmic skill — faster vs slower, before you know the exact BPM.",
+    "Tempo perception is the most foundational rhythmic skill: faster vs slower, before you know the exact BPM.",
     "DJs, live performers and editors all make instant tempo judgements. This trains that reflex.",
     "Foundational for beatmatching, editing transitions, and syncing to picture.",
   ],
   "dynamic-range": [
-    "Spotting compression by ear prevents over-processing — the #1 amateur mistake.",
+    "Spotting compression by ear prevents over-processing: the #1 amateur mistake.",
     "This is the core skill tested in Golden Ears and SoundGym, the industry training tools.",
     "Trained mastering engineers use this exact A/B method before touching a limiter.",
   ],
@@ -337,9 +337,9 @@ export function playReverbHit(decaySec: number, durMs = 2200): { stop: () => voi
 }
 
 export const REVERB_LENGTHS = [
-  { sec: 0.6, name: "Short (~0.5 s — small room)" },
-  { sec: 1.5, name: "Medium (~1.5 s — hall)" },
-  { sec: 3.0, name: "Long (~3 s — cathedral)" },
+  { sec: 0.6, name: "Short (~0.5 s: small room)" },
+  { sec: 1.5, name: "Medium (~1.5 s: hall)" },
+  { sec: 3.0, name: "Long (~3 s: cathedral)" },
 ];
 
 // --- score persistence ---

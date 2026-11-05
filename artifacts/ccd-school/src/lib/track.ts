@@ -37,7 +37,7 @@ export const KIND: Record<LayerKind, { label: string; knobs: [string, string, st
   hats:   { label: "hats",   knobs: ["tone", "decay", "swing", "level"],  color: "#4FE3B6",   defaults: [0.7, 0.25, 0.0, 0.55] },
   clap:   { label: "clap",   knobs: ["tone", "decay", "space", "level"],  color: "#4FE3B6",   defaults: [0.5, 0.4, 0.3, 0.6] },
   perc:   { label: "perc",   knobs: ["tune", "decay", "pan", "level"],    color: "#4FE3B6",   defaults: [0.6, 0.2, 0.5, 0.45] },
-  bass:   { label: "bass",   knobs: ["cutoff", "res", "glide", "level"],  color: "#FF4F9A",     defaults: [0.4, 0.3, 0.0, 0.75] },
+  bass:   { label: "bass",   knobs: ["cutoff", "res", "glide", "level"],  color: "#5CC8FF",     defaults: [0.4, 0.3, 0.0, 0.75] },
   lead:   { label: "lead",   knobs: ["cutoff", "res", "echo", "level"],   color: "#7D96FF", defaults: [0.6, 0.25, 0.3, 0.5] },
   chords: { label: "chords", knobs: ["cutoff", "attack", "space", "level"], color: "#B89CFF", defaults: [0.5, 0.1, 0.35, 0.5] },
   pad:    { label: "pad",    knobs: ["cutoff", "attack", "space", "level"], color: "#B89CFF", defaults: [0.35, 0.6, 0.6, 0.45] },

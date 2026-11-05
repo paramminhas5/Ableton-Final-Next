@@ -211,7 +211,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const beatW = Wd / loop;
   const head = playing ? (((pos.beat % loop) + loop) % loop) * beatW : -1;
   const color = TYPE[type].color;
-  const notesCount = drumLike ? events.length : new Set(events.map(e => `${e.start}:${e.note}`)).size;
+  const notesCount = drumLike ? events.length : type === "chords" ? new Set(events.map(e => e.start.toFixed(3))).size : new Set(events.map(e => `${e.start}:${e.note}`)).size;
   const status = countIn
     ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}`
     : recording
@@ -234,23 +234,30 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const offBeat = onBeatOnly ? offs.length : 0;
   const goalHits = onBeatOnly
     ? new Set(goalEvents.filter(e => !isOff(e)).map(e => Math.round(e.start) % loop)).size
-    : new Set(goalEvents.map(e => `${e.start}:${e.note}`)).size;
+    // A chord is one press, not three notes: count when things start, not how many notes sound.
+    : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
 
+  // What you play on, and one of it, in this surface's words.
+  const surface = drumLike ? "pads" : type === "chords" ? "chord pads" : "keys";
+  const unit = drumLike ? "hit" : type === "chords" ? "chord" : "note";
+  const hitName = coach?.goal.note ?? "kick";
+  const shown = Math.min(goalHits, coach?.goal.notes ?? goalHits);
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
-    : recording && goalMet ? `${goalHits} of ${coach.goal.notes}, that's the lot. press keep it, or keep playing`
-    : recording ? (backbeat ? "recording. tap the clap on two and four" : onBeatOnly ? `recording. tap the ${coach.goal.note ?? "kick"} on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}` : `recording. play your ${TYPE[type].label.toLowerCase()}, ${goalHits} of ${coach.goal.notes} notes so far`)
-    : !events.length ? (backbeat ? "press rec. four clicks count you in, then tap the clap on two and four" : onBeatOnly ? "press rec. four clicks count you in, then tap the kick on the next four" : "press rec. four clicks count you in, then play any keys you like")
+    : recording && goalMet ? `${shown} of ${coach.goal.notes}, that's the lot. press keep it, or keep playing`
+    : recording && offBeat ? `recording. the red ${offBeat === 1 ? "one was" : "ones were"} off the beat. finish the bar, then undo ${offBeat === 1 ? "it" : "them"}`
+    : recording ? (backbeat ? "recording. tap the clap on two and four" : onBeatOnly ? `recording. tap the ${hitName} on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}` : `recording. ${shown} of ${coach.goal.notes} ${unit}s so far`)
+    : !events.length ? (backbeat ? "press rec. four clicks count you in, then tap the clap on two and four" : onBeatOnly ? `press rec. four clicks count you in, then tap the ${hitName} on the next four` : `press rec. four clicks count you in, then play any ${surface} you like`)
     : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? "one clap" : `${offBeat} claps`} landed on one or three. the clap goes on two and four. tap undo and try again`
-    : offBeat ? `${offBeat === 1 ? `one ${backbeat ? "clap" : "kick"}` : `${offBeat} ${backbeat ? "claps" : "kicks"}`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
-    : !goalMet ? `${goalHits} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : " notes"}. press rec and add the rest`
+    : offBeat ? `${offBeat === 1 ? `one ${backbeat ? "clap" : hitName}` : `${offBeat} ${backbeat ? "claps" : `${hitName}s`}`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
+    : !goalMet ? `${shown} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : ` ${unit}s`}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-mint)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   // The go key names what is still missing until the take is ready.
   const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
-  const noun = goalNote !== undefined ? (backbeat ? "clap" : coach?.goal.note ?? "hit") : "note";
+  const noun = goalNote !== undefined ? (backbeat ? "clap" : hitName) : unit;
   const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones" : `${need} more ${noun}${need === 1 ? "" : "s"}`;
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
@@ -266,7 +273,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <span>{drumLike ? `${session.bpm} bpm` : keyName}</span>
         </div>
         <div className="ls-title">{title}</div>
-        <svg viewBox={`0 0 ${Wd} ${Hd}`} width="100%" style={{ display: "block", marginTop: 12 }} role="img" aria-label={`${notesCount} notes recorded`}>
+        <svg viewBox={`0 0 ${Wd} ${Hd}`} width="100%" style={{ display: "block", marginTop: 12 }} role="img" aria-label={`${notesCount} ${unit}s recorded`}>
           {coach && Array.from({ length: loop }, (_, i) => <text key={`b${i}`} x={i * beatW + 4} y={10} fontSize={9} fill="rgba(255,255,255,.55)">{i + 1}</text>)}
           {Array.from({ length: loop * 4 }, (_, i) => (
             <path key={i} d={`M${(i * Wd) / (loop * 4)} 0V${Hd}`} stroke={i % 4 === 0 ? "rgba(255,255,255,.14)" : "rgba(255,255,255,.05)"} />
@@ -285,7 +292,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           {head >= 0 && <path d={`M${head} 0V${Hd}`} stroke={recording ? "#FF4A5A" : "#F3F2EF"} strokeWidth={1.5} />}
         </svg>
         <div className="ls-meta" style={{ marginTop: 10 }}>
-          <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : drumLike ? (notesCount === 1 ? "hit" : "hits") : notesCount === 1 ? "note" : "notes"}` : "nothing yet"}</span>
+          <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : `${unit}${notesCount === 1 ? "" : "s"}`}` : "nothing yet"}</span>
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>

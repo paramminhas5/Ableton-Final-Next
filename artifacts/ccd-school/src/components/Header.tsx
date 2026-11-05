@@ -502,7 +502,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         <M1Silk label="go to" right={due ? `the lit one has ${due} due` : undefined} />
         <div className="m1-g">
           {keys.map(k => (
-            <M1Key key={k.href} href={k.href} label={k.label} led={k.lit ? "var(--led-go)" : null} ariaLabel={k.label}>{k.icon}</M1Key>
+            <M1Key key={k.href} href={k.href} label={k.label} led={k.lit ? "var(--led-mint)" : null} ariaLabel={k.label}>{k.icon}</M1Key>
           ))}
         </div>
         <M1Silk label="worlds" />

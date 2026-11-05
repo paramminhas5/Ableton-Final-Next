@@ -67,7 +67,7 @@ const pageName = (p: Page | undefined): string => {
 
 // ── your song, always on top ─────────────────────────────────────────────────
 /** `pending`: this lesson's part is recorded but not added yet, so the strip says so instead of "empty". */
-export function SongStrip({ focus, pending: wait, ghost, slug }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string }) {
+export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string; changes?: boolean }) {
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
@@ -122,12 +122,12 @@ export function SongStrip({ focus, pending: wait, ghost, slug }: { focus?: strin
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
           : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} is recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
-          ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
+          ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
         {!empty && t?.sections?.length ? (
           // Your arrangement under the loop: one block per section, as long as it lasts, fainter where parts drop out.
           <div className="fl-secs" role="img" aria-label={`Arranged: ${t.sections.map(x => x.name).join(", ")}`}>
-            {t.sections.map((x, i) => <i key={i} style={{ flexGrow: x.bars, opacity: 1 - Math.min(0.6, x.off.length * 0.2) }}>{x.bars >= 8 ? x.name : ""}</i>)}
+            {t.sections.map((x, i) => <i key={i} style={{ flexGrow: x.bars, opacity: 1 - Math.min(0.6, x.off.length * 0.2) }}>{x.name}</i>)}
           </div>
         ) : null}
         {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
@@ -609,7 +609,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
-      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} />
+      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
       <div className="ls-stage fl-stage" key={idx}>{body}</div>
     </div>
   );

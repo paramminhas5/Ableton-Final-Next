@@ -6,7 +6,7 @@ interface Props { params: Promise<{ username: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { username } = await params;
   return {
-    title: `${username} on CCD.SCHOOL`,
+    title: username.toLowerCase(),
     description: `Check out ${username}'s progress on CCD.SCHOOL: the Duolingo for music.`,
     openGraph: {
       title: `${username} on CCD.SCHOOL`,

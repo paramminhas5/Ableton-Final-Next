@@ -34,7 +34,7 @@ export function DevicesPageClient() {
         <>
           <Silk label="instruments" right={`${instruments.length}`} />
           {instruments.map(i => (
-            <ListRow key={i.slug} href={`/learn/${i.slug}`} led="var(--led-go)" title={i.name} sub={i.tagline} right={<span className="m1-tag">{i.family.toLowerCase()}</span>} />
+            <ListRow key={i.slug} href={`/learn/${i.slug}`} led="var(--led-mint)" title={i.name} sub={i.tagline} right={<span className="m1-tag">{i.family.toLowerCase()}</span>} />
           ))}
         </>
       )}
