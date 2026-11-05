@@ -106,13 +106,39 @@ impl EqBand {
 /// 4-pole transistor-ladder low pass with resolved zero-delay feedback.
 /// Resonance 0..1 maps to feedback 0..4.1, so the top of the knob self-oscillates.
 /// A soft clip on the feedback path keeps self-oscillation musical and bounded.
-#[derive(Clone, Copy, Default)]
+///
+/// Since the sound shootout (5 Nov) the soft clip is anti-aliased: with the filter open, a bright high note
+/// through the clip made harmonics past the voice's Nyquist that folded back into the audible band, -55 dB
+/// of the sound at note 108. Only what the clip takes away from a straight line (clip(u) - u) goes through
+/// first-order ADAA (its average over each step), so small signals pass with no added delay and the
+/// resonance is where it was; the distortion, where the aliasing comes from, is averaged.
+#[derive(Clone, Copy)]
 pub struct Ladder {
     s: [f32; 4],
     g: f32,
     g1: f32,
     k: f32,
     comp: f32,
+    /// The clip's last input and its antiderivative there.
+    u1: f32,
+    big1: f32,
+}
+
+impl Default for Ladder {
+    fn default() -> Self {
+        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0, big1: 0.0 }
+    }
+}
+
+/// Antiderivative of what the soft clip takes from a straight line, clip(x) - x. The clip is
+/// x (27 + x^2) / (27 + 9 x^2) = x / 9 + 24 x / (9 x^2 + 27), whose antiderivative is
+/// x^2 / 18 + 4/3 ln(1 + x^2 / 3) (less its value at 0); past the clamp at 3 the clip is flat at 1.
+#[inline]
+fn clip_residual_ad(x: f32) -> f32 {
+    let a = x.abs();
+    let at = |v: f32| v * v / 18.0 + (4.0 / 3.0) * (v * v / 3.0).ln_1p();
+    let f = if a <= 3.0 { at(a) } else { at(3.0) + (a - 3.0) };
+    f - 0.5 * x * x
 }
 
 impl Ladder {
@@ -127,6 +153,8 @@ impl Ladder {
 
     pub fn reset(&mut self) {
         self.s = [0.0; 4];
+        self.u1 = 0.0;
+        self.big1 = 0.0;
     }
 
     #[inline]
@@ -138,7 +166,12 @@ impl Ladder {
         let s_sum = g1 * g1 * g1 * self.s[0] * d + g1 * g1 * self.s[1] * d + g1 * self.s[2] * d + self.s[3] * d;
         // Solve the feedback loop, then saturate what goes in.
         let u = (x * self.comp - self.k * s_sum) / (1.0 + self.k * big_g);
-        let mut y = super::soft_clip(u);
+        let big = clip_residual_ad(u);
+        let du = u - self.u1;
+        let r = if du.abs() > 1e-3 { (big - self.big1) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m };
+        let mut y = u + r;
+        self.u1 = u;
+        self.big1 = big;
         for st in self.s.iter_mut() {
             let v = (y - *st) * g1;
             let out = v + *st;

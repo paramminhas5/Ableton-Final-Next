@@ -6,7 +6,7 @@
 
 use crate::dsp::env::Adsr;
 use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
-use crate::dsp::osc::{BlepOsc, Sine};
+use crate::dsp::osc::{MinBlepOsc as BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
 use crate::dsp::{note_hz, tau_coef, Rng};

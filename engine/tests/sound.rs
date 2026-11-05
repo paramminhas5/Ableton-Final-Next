@@ -980,7 +980,10 @@ fn reverb_tails_are_dense_smooth_and_wide() {
     let (old, hall, plate) = (res[0], res[1], res[2]);
     assert!(hall.1 > old.1, "the modulated hall should have the smoother tail: {:.3} vs {:.3}", hall.1, old.1);
     assert!(hall.2.abs() < 0.2 && plate.2.abs() < 0.2, "tails should be wide");
-    assert!((hall.3 - old.3).abs() < 1.5, "the hall should sit at the old level: {:.1} vs {:.1}", hall.3, old.3);
+    // Since the sound shootout the hall's first sound comes 47 ms sooner and its first 50 ms are filled in,
+    // so the first 500 ms of an impulse carry about 2 dB more; on a real hit its loudness is the same as
+    // before (BS.1770, tests/shootout.rs), which is what the level match is for.
+    assert!((hall.3 - old.3).abs() < 2.5, "the hall should sit near the old level: {:.1} vs {:.1}", hall.3, old.3);
     assert!((plate.3 - old.3).abs() < 2.0, "the plate should sit near it: {:.1} vs {:.1}", plate.3, old.3);
 }
 

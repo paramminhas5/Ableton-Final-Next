@@ -261,16 +261,35 @@ impl Reverb {
     }
 }
 
-/// The hall: an eight-line feedback delay network with a Hadamard mix and input diffusion, as before
-/// engine 2, made smoother. Every line's length drifts slowly (its own rate, 0.1 to 0.5 Hz, a quarter
-/// of a millisecond), so no mode rings in place; and every line's loss is a first-order shelf set from
-/// the reverb time under and over a 6 kHz crossover (a two-band absorbent filter, after Jot), so the
-/// decay is as long as asked through the middle of the band and shorter, darker, at the top.
+/// The hall: an eight-line feedback delay network with a Hadamard mix, input diffusion, slow drift on
+/// every line (0.1 to 0.5 Hz, a quarter of a millisecond, so no mode rings in place) and a two-band loss
+/// per line (a first-order shelf set from the reverb time under and over a 6 kHz crossover, after Jot),
+/// so the decay is as long as asked through the middle of the band and darker at the top.
+///
+/// The sound shootout (design/sound-shootout.md, 5 Nov) found it slow to fill: the first sound came
+/// 65 ms after the hit and the echo density took 145 ms to fill in, against 18 ms and 45 ms for
+/// Dragonfly's hall. Four things fix that, each a known technique written here from the papers:
+/// - early reflections: a tapped delay line on the diffused input, starting at the predelay and thinning
+///   out over 80 ms, with its own times on each side (Moorer, "About this reverberation business", 1979);
+/// - an allpass inside every line's loop (Gardner's nested diffusion; Dattorro's and Lexicon's in-tank
+///   allpasses), so every lap multiplies the echoes instead of only adding eight more; the loss counts
+///   the allpass's delay as part of the lap, so the time knob stays honest;
+/// - the input goes into the lines with its own sign on each, so the eight first arrivals differ;
+/// - each side reads all eight lines with its own signs (two rows of a Hadamard matrix, which are
+///   orthogonal), so left and right are uncorrelated and the output is twice as dense as half the lines,
+///   and reads them again part of the way along, so the late sound starts on the first pass.
 pub struct Hall {
     pre: Line,
     diff: [Line; 4],
     lines: [Line; 8],
     lens: [f32; 8],
+    /// The in-loop allpasses and their lengths (samples).
+    ap: [Line; 8],
+    ap_len: [usize; 8],
+    /// The diffused input, smeared again by three more allpasses, for the early reflections.
+    er: Line,
+    er_diff: [Line; 3],
+    er_taps: [(usize, f32, usize, f32); ER_TAPS],
     /// Loss per line: gain under the crossover and over it, and the crossover's one-pole state.
     g_lo: [f32; 8],
     g_hi: [f32; 8],
@@ -286,22 +305,58 @@ pub struct Hall {
 const LINE_MS: [f32; 8] = [29.7, 37.1, 41.1, 43.7, 53.3, 59.9, 67.3, 73.1];
 const DIFF_MS: [f32; 4] = [4.7, 3.6, 12.7, 9.3];
 const MOD_HZ: [f32; 8] = [0.11, 0.17, 0.23, 0.29, 0.31, 0.37, 0.41, 0.47];
+/// In-loop allpass lengths (ms, mutually prime in samples at 48 kHz) and gain.
+const AP_MS: [f32; 8] = [3.1, 4.3, 5.3, 6.1, 7.3, 8.9, 9.7, 11.3];
+const AP_G: f32 = 0.7;
+/// Signs the input takes into each line, and each side's signs reading them out (rows 1 and 2 of the
+/// 8-point Hadamard matrix after the first).
+const IN_SIGN: [f32; 8] = [1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0];
+const L_SIGN: [f32; 8] = [1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0];
+const R_SIGN: [f32; 8] = [1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0];
+/// Early reflections: this many taps a side, from the predelay to 80 ms after it.
+const ER_TAPS: usize = 24;
+const ER_MS: f32 = 80.0;
+const ER_LEVEL: f32 = 0.5;
+/// The early reflections' own diffusers (ms) and their gain.
+const ER_DIFF_MS: [f32; 3] = [2.3, 5.9, 8.3];
+const ER_DIFF_G: f32 = 0.72;
+/// Each side also reads every line a quarter and half of the way along (taps inside the tank, as
+/// Dattorro's outputs are), so the late sound starts with the first pass instead of after a lap.
+const MID_TAPS: [f32; 2] = [0.27, 0.53];
+const MID_LEVEL: f32 = 0.5;
 /// Reverb time over the crossover against under it: the hall darkens as it dies.
 const HALL_TOP: f32 = 0.18;
 const HALL_XOVER: f32 = 6_000.0;
-/// Output level: the new hall sits where the old one did on the same send.
-const HALL_OUT: f32 = 0.41;
+/// Output level: the hall sits where it did before the shootout on the same send (tests/shootout.rs).
+const HALL_OUT: f32 = 0.23;
 
 impl Hall {
     pub fn new(sr: f32) -> Self {
         let ms = |m: f32| (m * 0.001 * sr) as usize;
         let depth = 0.000_25 * sr;
-        let lens: [f32; 8] = core::array::from_fn(|i| ms(LINE_MS[i] * 1.6) as f32);
+        let ap_len: [usize; 8] = core::array::from_fn(|i| ms(AP_MS[i]).max(2));
+        // The lines are shortened by their allpass, so a lap is as long as before.
+        let lens: [f32; 8] = core::array::from_fn(|i| (ms(LINE_MS[i] * 1.6) - ap_len[i]) as f32);
+        // Early reflection times: spread out, denser near the start, each side at its own times; gains
+        // fall 26 dB over the 80 ms with alternating signs (a seeded hash, so the hall is the same every time).
+        let er_taps = core::array::from_fn(|k| {
+            let u = (k as f32 + 0.5) / ER_TAPS as f32;
+            let h = |s: u32| { let mut x = (k as u32 + 1).wrapping_mul(0x9E37_79B9) ^ s; x ^= x >> 13; x = x.wrapping_mul(0x5BD1_E995); x ^= x >> 15; (x & 0xFFFF) as f32 / 65_535.0 };
+            let tl = ER_MS * u.powf(1.4) * (0.85 + 0.3 * h(7));
+            let tr = ER_MS * u.powf(1.4) * (0.85 + 0.3 * h(31));
+            let g = |t: f32| 10f32.powf(-1.3 * t / ER_MS);
+            (ms(tl).max(1), g(tl) * if h(11) < 0.5 { 1.0 } else { -1.0 }, ms(tr).max(1), g(tr) * if h(23) < 0.5 { 1.0 } else { -1.0 })
+        });
         let mut h = Hall {
             pre: Line::new(ms(120.0)),
             diff: core::array::from_fn(|i| Line::new(ms(DIFF_MS[i]) + 1)),
             lines: core::array::from_fn(|i| Line::new(lens[i] as usize + depth as usize + 4)),
             lens,
+            ap: core::array::from_fn(|i| Line::new(ap_len[i] + 1)),
+            ap_len,
+            er: Line::new(ms(ER_MS * 1.2) + 2),
+            er_diff: core::array::from_fn(|i| Line::new(ms(ER_DIFF_MS[i]) + 1)),
+            er_taps,
             g_lo: [0.0; 8],
             g_hi: [0.0; 8],
             xg: { let g = (core::f32::consts::PI * HALL_XOVER / sr).tan(); g / (1.0 + g) },
@@ -319,7 +374,9 @@ impl Hall {
 
     pub fn set(&mut self, rt60: f32) {
         for i in 0..8 {
-            let g = |rt: f32| 10f32.powf(-3.0 * self.lens[i] / (rt.max(0.05) * self.sr));
+            // A lap is the line and its allpass.
+            let lap = self.lens[i] + self.ap_len[i] as f32;
+            let g = |rt: f32| 10f32.powf(-3.0 * lap / (rt.max(0.05) * self.sr));
             // The diffusers and the crossover's skirt shave about a tenth off the middle: asked for.
             self.g_lo[i] = g(rt60 * 1.12);
             self.g_hi[i] = g(rt60 * HALL_TOP);
@@ -327,7 +384,7 @@ impl Hall {
     }
 
     pub fn clear(&mut self) {
-        for l in self.lines.iter_mut().chain(self.diff.iter_mut()).chain(core::iter::once(&mut self.pre)) {
+        for l in self.lines.iter_mut().chain(self.diff.iter_mut()).chain(self.ap.iter_mut()).chain(self.er_diff.iter_mut()).chain([&mut self.pre, &mut self.er]) {
             l.clear();
         }
         self.lp = [0.0; 8];
@@ -347,6 +404,19 @@ impl Hall {
             ap.write(flush_denormal(w));
             d = delayed - w * g;
         }
+        let mut e = d;
+        for (k, ap) in self.er_diff.iter_mut().enumerate() {
+            let delayed = ap.read_int((ER_DIFF_MS[k] * 0.001 * self.sr) as usize);
+            let w = flush_denormal(e + delayed * ER_DIFF_G);
+            ap.write(w);
+            e = delayed - w * ER_DIFF_G;
+        }
+        self.er.write(e);
+        let (mut el, mut er) = (0.0f32, 0.0f32);
+        for &(tl, gl, tr, gr) in self.er_taps.iter() {
+            el += self.er.read_int(tl) * gl;
+            er += self.er.read_int(tr) * gr;
+        }
         let mut o = [0.0f32; 8];
         for i in 0..8 {
             self.lfo[i] += self.lfo_inc[i];
@@ -354,7 +424,12 @@ impl Hall {
                 self.lfo[i] -= 1.0;
             }
             let m = crate::dsp::sin_cycle(self.lfo[i]) * self.depth;
-            o[i] = self.lines[i].read(self.lens[i] + m);
+            let z = self.lines[i].read(self.lens[i] + m);
+            // The line's allpass: v = z + g v[-n], out = v[-n] - g v.
+            let late = self.ap[i].read_int(self.ap_len[i]);
+            let v = flush_denormal(z + AP_G * late);
+            self.ap[i].write(v);
+            o[i] = late - AP_G * v;
         }
         // Fast Hadamard transform (8 points), scaled to stay lossless.
         let mut h = o;
@@ -373,6 +448,7 @@ impl Hall {
             step *= 2;
         }
         let norm = 0.353_553_4; // 1/sqrt(8)
+        let (mut l, mut r) = (0.0f32, 0.0f32);
         for i in 0..8 {
             // Loss: split at the crossover, the lows lose g_lo per pass, the highs g_hi.
             let x = h[i] * norm;
@@ -380,11 +456,15 @@ impl Hall {
             let lo = v + self.lp[i];
             self.lp[i] = flush_denormal(lo + v);
             let y = self.g_lo[i] * lo + self.g_hi[i] * (x - lo);
-            self.lines[i].write(flush_denormal(y + d * 0.35));
+            self.lines[i].write(flush_denormal(y + d * 0.35 * IN_SIGN[i]));
+            l += o[i] * L_SIGN[i];
+            r += o[i] * R_SIGN[i];
+            // Inside the line, each side at its own place along it.
+            let len = self.lens[i];
+            l += self.lines[i].read_int((len * MID_TAPS[0]) as usize) * L_SIGN[i] * MID_LEVEL;
+            r += self.lines[i].read_int((len * MID_TAPS[1]) as usize) * R_SIGN[i] * MID_LEVEL;
         }
-        let l = o[0] + o[2] + o[4] + o[6];
-        let r = o[1] + o[3] + o[5] + o[7];
-        (l * HALL_OUT, r * HALL_OUT)
+        ((l + el * ER_LEVEL) * HALL_OUT, (r + er * ER_LEVEL) * HALL_OUT)
     }
 }
 

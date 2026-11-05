@@ -13,7 +13,7 @@ use crate::dsp::env::{Adsr, Stage};
 use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
 use crate::dsp::resonator::Comb;
 use crate::dsp::wavetable::{phase_distort, FbFm, Tables};
-use crate::dsp::osc::{BlepOsc, Sine};
+use crate::dsp::osc::{MinBlepOsc as BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
 use crate::dsp::{flush_denormal, note_hz, tau_coef, Rng};

@@ -131,7 +131,7 @@ impl Tables {
 }
 
 /// In-place inverse FFT (radix 2, no scaling): x[n] = sum X[k] e^(2 pi i k n / N).
-fn ifft(re: &mut [f64], im: &mut [f64]) {
+pub(crate) fn ifft(re: &mut [f64], im: &mut [f64]) {
     let n = re.len();
     let mut j = 0;
     for i in 1..n {
