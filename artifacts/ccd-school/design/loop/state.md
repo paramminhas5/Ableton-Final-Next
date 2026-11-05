@@ -7,3 +7,4 @@ also: a cloud session for Param (5 Nov) added per-world ranks, straight-to-place
 
 round 4: product fixes only (play-in timing and device delay, shape and sections goals, phone mixer, studio wav, pink knobs). Round 5 is the last: after it, turn the scheduled task off.
 round 5: done. The loop is finished and the scheduled task is turned off. Do not start another round.
+round 5, second session: the 13:21 UTC firing ran alongside round 5 and pushed its own review fixes (019bf64, 6311d80). Nothing else runs; the scheduled task is off (checked).
