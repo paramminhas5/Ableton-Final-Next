@@ -104,6 +104,26 @@ const SCENES = {
     await p.waitForTimeout(200);
     console.log("  lead events:", await p.evaluate(() => JSON.parse(localStorage.getItem("ccd.track.v2")).layers.find(l => l.type === "lead")?.events.length));
   },
+  "grid-edit": async (p, shot) => {
+    if (!(await toLesson(p, "midi-piano-roll", "tempo"))) throw new Error("no grid step");
+    await p.waitForSelector(".gr-roll");
+    const bar = p.locator(".gr-bar").first();
+    const bb = await bar.boundingBox();
+    // tap the note to pick it, then hold another to pick it too
+    await p.mouse.click(bb.x + 4, bb.y + bb.height / 2);
+    await p.waitForTimeout(150);
+    const h = p.locator(".gr-handle").first();
+    const hb = await h.boundingBox();
+    await p.mouse.move(hb.x + hb.width / 2, hb.y + hb.height / 2);
+    await p.mouse.down();
+    await p.mouse.move(hb.x + hb.width / 2 + 2, hb.y - 30, { steps: 6 });
+    await shot("vel");
+    await p.mouse.up();
+    const bars = p.locator(".gr-bar");
+    if ((await bars.count()) > 1) { const b2 = await bars.nth(1).boundingBox(); await p.mouse.move(b2.x + 4, b2.y + b2.height / 2); await p.mouse.down(); await p.waitForTimeout(500); await p.mouse.up(); }
+    await p.waitForTimeout(150);
+    await shot("picked");
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();
