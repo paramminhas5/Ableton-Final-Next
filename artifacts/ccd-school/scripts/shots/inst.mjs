@@ -92,6 +92,18 @@ const SCENES = {
     await shot("locked");
     console.log("  stored:", await p.evaluate(() => JSON.stringify(JSON.parse(localStorage.getItem("ccd.track.v2")).layers.flatMap(l => l.events.filter(e => e.p)))));
   },
+  "studio-capture": async (p, shot) => {
+    await studioLayer(p, "lead");
+    await p.locator(".st-vk", { hasText: /^pads$/ }).first().click();
+    for (const i of [12, 13, 14, 9, 12, 10]) { const up = await hold(p, p.locator(".st-tray .st-sp").nth(i), 160, 0.3); await up?.(); await p.waitForTimeout(220); }
+    await shot("key");
+    await p.getByRole("button", { name: /^Capture what you just played/ }).click();
+    await p.waitForTimeout(200);
+    await shot("ghost");
+    await p.getByRole("button", { name: "keep it" }).click();
+    await p.waitForTimeout(200);
+    console.log("  lead events:", await p.evaluate(() => JSON.parse(localStorage.getItem("ccd.track.v2")).layers.find(l => l.type === "lead")?.events.length));
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();

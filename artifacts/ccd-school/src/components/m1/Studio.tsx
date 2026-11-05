@@ -53,6 +53,7 @@ import {
   hasTrackV2,
   effectivePad,
   type TrackV2,
+  type NoteEvent,
 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
@@ -63,6 +64,7 @@ import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, 
 import { swung, useEngineTrack } from "./useEngineTrack";
 import { lockSchedule, setLock, dueBetween, valuesAt, type Change } from "@/lib/plock";
 import { arranged } from "@/lib/arrange";
+import { captureTake, trimPlayed, type Played } from "@/lib/capture";
 import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
 import { bind, PIC } from "@/lib/paramColor";
@@ -127,6 +129,10 @@ export function Studio() {
   const [rings, setRings] = useState<Rings>({});
   // Hold a step, turn a knob: the held step (and its lane, on drums) takes the knob's value as a lock.
   const [lockAt, setLockAt] = useState<LockAt>(null);
+  // Capture: what you played while not recording, kept for a few bars; the capture key makes it a take.
+  const played = useRef<Played[]>([]);
+  const [playedN, setPlayedN] = useState(0);
+  const [pending, setPending] = useState<{ layerId: string; events: NoteEvent[] } | null>(null);
   const [held, setHeldUi] = useState<Set<number>>(new Set());
   const lastNote = useRef(33);
   const recHeld = useRef<Held>(new Map());
@@ -202,6 +208,18 @@ export function Studio() {
         }
         const layer = t.layers[e.layer];
         if (!layer) continue;
+        if ((e.kind === OUT.playedOn || e.kind === OUT.playedOff) && !(e.flags & (FLAG.recording | FLAG.countIn))) {
+          const now = performance.now();
+          const looping = !!(e.flags & FLAG.playing);
+          if (e.kind === OUT.playedOn) {
+            const roll = !!(e.flags & FLAG.repeat);
+            played.current = trimPlayed([...played.current, { layerId: layer.id, note: e.note, vel: e.vel, tOn: now, tOff: roll ? now + 90 : null, bOn: looping ? e.beat : null, bOff: null }], now, (60000 / t.bpm) * 4 * 8);
+          } else {
+            const open = [...played.current].reverse().find(p => p.layerId === layer.id && p.note === e.note && p.tOff === null);
+            if (open) { open.tOff = now; open.bOff = looping && open.bOn !== null ? e.beat : null; }
+          }
+          setPlayedN(played.current.length);
+        }
         if (e.kind === OUT.seqOn) {
           flash(`${layer.id}:${e.note}`, e.vel);
           continue;
@@ -350,6 +368,23 @@ export function Studio() {
       return next;
     }, undoable);
     setTouched({ label: spec.label, text: display(spec, v) });
+  };
+
+  const canCapture = !!sel && !recording && !countIn && playedN > 0 && played.current.some(p => p.layerId === sel.id);
+  const capture = () => {
+    if (!sel) return;
+    const events = captureTake(played.current, sel.id, { loop: track.loop, bpm: track.bpm, snap, swing: track.swing, now: performance.now() });
+    if (!events.length) return;
+    played.current = played.current.filter(p => p.layerId !== sel.id);
+    setPlayedN(played.current.length);
+    setPending({ layerId: sel.id, events });
+  };
+  const keepCapture = () => {
+    if (!pending) return;
+    const o = { loop: track.loop, snap, strength: 1, swing: track.swing };
+    update(t => ({ ...t, layers: t.layers.map(l => (l.id === pending.layerId ? { ...l, events: pending.events.reduce((acc, ev) => overdub(acc, ev, o), l.events) } : l)) }));
+    setPending(null);
+    setTouched({ label: "captured", text: "kept" });
   };
 
   /** Hold a step: it lights, and knob turns lock to it. An empty step gets its note first. */
@@ -548,7 +583,9 @@ export function Studio() {
         ) : (
         <>
         <Screen className="st-scr" height={96}>
-          {sel && type ? (
+          {sel && type && pending && pending.layerId === sel.id ? (
+            <CapturePreview track={track} layer={sel} events={pending.events} onKeep={keepCapture} onDrop={() => setPending(null)} />
+          ) : sel && type ? (
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -560,7 +597,11 @@ export function Studio() {
                   </div>
                   {bank === "mix" && ducking && duckSrc && !live ? null : (
                     <div className="st-ss" style={{ marginTop: 6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
+                      {canCapture ? (
+                        <button type="button" className="st-capkey" onClick={capture} aria-label={`Capture what you just played on ${type.label}`}>
+                          <i aria-hidden />capture what you played
+                        </button>
+                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
                     </div>
                   )}
                 </div>
@@ -719,6 +760,31 @@ export function Studio() {
           <Icon name="out" />
         </Key>
       </div>
+    </div>
+  );
+}
+
+/** A captured take as ghost notes over the loop, until you keep it or drop it. */
+function CapturePreview({ track, layer, events, onKeep, onDrop }: { track: TrackV2; layer: LayerV2; events: NoteEvent[]; onKeep: () => void; onDrop: () => void }) {
+  const c = TYPE[layer.type].color;
+  const notes = [...new Set(events.map(e => e.note))].sort((a, b) => b - a);
+  const W = 300, H = 26, rh = H / Math.max(1, Math.min(8, notes.length));
+  const row = (n: number) => Math.min(7, notes.indexOf(n));
+  return (
+    <div className="st-capview">
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span className="st-ss" style={{ color: "var(--ink)" }}>captured · {events.length} note{events.length === 1 ? "" : "s"}</span>
+        <span style={{ flex: 1 }} />
+        <button type="button" className="st-chip st-capbtn" onClick={onDrop}>drop</button>
+        <button type="button" className="st-chip st-capbtn is-keep" onClick={onKeep}>keep it</button>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" width="100%" height={H} role="img" aria-label={`${events.length} captured notes, not kept yet`} style={{ display: "block", marginTop: 6 }}>
+        {Array.from({ length: track.loop + 1 }, (_, b) => <path key={b} d={`M${(b / track.loop) * W} 0V${H}`} stroke="rgba(255,255,255,.12)" />)}
+        {events.map((e, i) => (
+          <rect key={i} x={(e.start / track.loop) * W + 0.5} y={row(e.note) * rh + 1} width={Math.max(3, (e.len / track.loop) * W - 1)} height={Math.max(3, rh - 2)} rx={1.5}
+            fill={c} fillOpacity={0.18 + 0.3 * e.vel} stroke={c} strokeDasharray="3 2" vectorEffect="non-scaling-stroke" />
+        ))}
+      </svg>
     </div>
   );
 }

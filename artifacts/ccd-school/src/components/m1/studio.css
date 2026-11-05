@@ -152,3 +152,9 @@
 @keyframes st-held{50%{box-shadow:0 0 0 3px color-mix(in srgb,var(--led-mint) 15%,transparent),0 0 6px color-mix(in srgb,var(--led-mint) 30%,transparent)}}
 .st-lockbar{align-items:center;gap:8px;min-height:22px}
 .st-lockdot{width:8px;height:8px;border-radius:2px;background:var(--led-lilac);box-shadow:0 0 6px var(--led-lilac);transform:rotate(45deg)}
+
+/* capture: the key appears once you have played something; the take shows as ghost notes until kept */
+.st-capkey{display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 10px 0 8px;border-radius:11px;border:1px solid color-mix(in srgb,var(--led-mint) 70%,transparent);background:color-mix(in srgb,var(--led-mint) 12%,transparent);color:#E9E9E6;font:inherit;font-size:11px;font-weight:600;cursor:pointer;min-height:0;min-width:0}
+.st-capkey i{width:7px;height:7px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 6px var(--led-mint);animation:st-held 1.4s ease-in-out infinite}
+.st-capbtn{background:none;color:#C9CBD1;cursor:pointer;font-family:inherit;height:24px;min-height:0;min-width:0}
+.st-capbtn.is-keep{color:#141416;background:var(--led-mint);border-color:var(--led-mint);font-weight:600}
