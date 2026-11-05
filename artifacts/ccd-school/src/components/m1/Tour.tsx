@@ -37,7 +37,10 @@ export function DashTour() {
         const r = el.getBoundingClientRect();
         if (r.top < 60 || r.top > window.innerHeight * 0.5) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 76), behavior: "auto" });
       }
-      setBox(el ? el.getBoundingClientRect() : null);
+      // Every visible match together: on desktop the lesson card and its play key are two cards, and the
+      // spotlight has to hold the key it tells you to press.
+      const all = [...document.querySelectorAll(stop.sel)].map(e => e.getBoundingClientRect()).filter(r => r.width > 0 && r.height > 0);
+      setBox(all.length ? all.reduce((u, r) => { const l = Math.min(u.left, r.left), t = Math.min(u.top, r.top); return new DOMRect(l, t, Math.max(u.right, r.right) - l, Math.max(u.bottom, r.bottom) - t); }) : null);
     };
     const el = visible(stop.sel);
     // Bring the target into the part of the screen the fixed bottom bar doesn't cover, with room
@@ -68,11 +71,13 @@ export function DashTour() {
   const barH = typeof document !== "undefined" ? document.querySelector(".m1-modebar")?.getBoundingClientRect().height ?? 0 : 0;
   const below = box ? box.bottom + 16 + 190 < window.innerHeight - barH : true;
   const above = box ? box.top - 16 - 190 > 0 : false;
-  const cardTop = !box ? 0 : below ? box.bottom + 16 : above ? box.top - 206 : Math.max(16, window.innerHeight - barH - 206);
+  // A tall target with no room above or below (the lesson card on desktop): the card goes beside it, so it never covers the key it points at.
+  const side = box && !below && !above ? (window.innerWidth - box.right > 372 ? box.right + 16 : box.left > 372 ? box.left - 356 : null) : null;
+  const cardTop = !box ? 0 : side !== null ? Math.min(Math.max(16, box.top), window.innerHeight - barH - 206) : below ? box.bottom + 16 : above ? box.top - 206 : Math.max(16, window.innerHeight - barH - 206);
   return (
     <div className="tr" role="dialog" aria-label="A quick look around">
       {box && <div className="tr-hole" style={{ top: Math.max(4, box.top - pad), left: box.left - pad, width: box.width + pad * 2, height: Math.min(box.height + pad * 2, window.innerHeight - Math.max(4, box.top - pad) - 4) }} />}
-      <div className="tr-card" style={box ? { top: cardTop, left: Math.min(Math.max(16, box.left), window.innerWidth - 356) } : { top: "40%", left: "50%", transform: "translateX(-50%)" }} key={i}>
+      <div className="tr-card" style={box ? { top: cardTop, left: side ?? Math.min(Math.max(16, box.left), window.innerWidth - 356) } : { top: "40%", left: "50%", transform: "translateX(-50%)" }} key={i}>
         <div className="tr-n">{i + 1} of {STOPS.length}</div>
         <h2>{stop.title}</h2>
         <p>{stop.line}</p>

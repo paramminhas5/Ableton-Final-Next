@@ -395,7 +395,7 @@
     "kind": "deeper",
     "isNew": false,
     "title": "what is live?",
-    "does": "your song's parts as Live sees them (fold-out: Live's screen)",
+    "does": "your song's parts as live sees them (fold-out: live's screen)",
     "code": "",
     "parent": "your-kick"
    },
@@ -404,7 +404,7 @@
     "kind": "deeper",
     "isNew": false,
     "title": "around live",
-    "does": "find the same five things on our instrument, then in Live",
+    "does": "find the same five things on our instrument, then in live",
     "code": "",
     "parent": "your-kick"
    },
@@ -1214,7 +1214,7 @@
     "kind": "song",
     "isNew": false,
     "title": "finish and export",
-    "does": "export (midi, stems), name it, send to CCD",
+    "does": "export (midi, stems), name it, send to ccd",
     "code": "stems export"
    },
    {
@@ -1863,7 +1863,7 @@
     "kind": "song",
     "isNew": false,
     "title": "from dj to artist",
-    "does": "your own track in your set; the CCD night",
+    "does": "your own track in your set; the ccd night",
     "code": ""
    }
   ]

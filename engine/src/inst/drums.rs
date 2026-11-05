@@ -65,6 +65,10 @@ pub struct Pad {
     bump_env: Decay,
     /// Kick: the slow pitch "sigh" over the tail as the bridged-T circuit rings down.
     sigh_env: Decay,
+    /// Kick: the body's second, slower decay, so the tail rings out at a low level after the punch.
+    ring_env: Decay,
+    /// Kick: samples the body holds at full level before it starts to decay.
+    hold: u32,
     osc: Sine,
     osc2: Sine,
     metal: [BlepOsc; 6],
@@ -97,6 +101,8 @@ impl Pad {
             noise_env: Decay::new(),
             bump_env: Decay::new(),
             sigh_env: Decay::new(),
+            ring_env: Decay::new(),
+            hold: 0,
             osc: Sine::default(),
             osc2: Sine::default(),
             metal: [BlepOsc::new(); 6],
@@ -217,6 +223,10 @@ impl Pad {
                 self.noise_env.trigger(0.012, sr, 0.0002);
                 self.bump_env.trigger(0.006 * 3.0, sr, 0.0001);
                 self.sigh_env.trigger((len * 1.2).max(0.3), sr, 0.0002);
+                // Engine 2 item 5, part two: a short hold at full level (4 to 30 ms, longer on a long
+                // kick), then two decays: the punch, and a slower ring under it.
+                self.hold = ((len * 0.04).clamp(0.004, 0.03) * sr) as u32;
+                self.ring_env.trigger(len * 1.6, sr, 0.0015);
                 self.osc.phase = 0.0;
             }
             Model::Tom(_) => {
@@ -240,6 +250,7 @@ impl Pad {
     /// Stop fast (choke). 4 ms so it does not click.
     pub fn choke(&mut self) {
         self.amp.set_time(0.004, self.sr);
+        self.ring_env.set_time(0.004, self.sr);
     }
 
     pub fn is_active(&self) -> bool {
@@ -253,7 +264,17 @@ impl Pad {
         }
         let sr = self.sr;
         let r = self.ratio();
-        let a = self.amp.next();
+        let mut a = self.amp.next();
+        if self.model == Model::Kick {
+            // Hold: once the declick ramp is done, keep the punch at full level until the hold ends.
+            let ramp = (0.0015 * sr) as u32;
+            if self.t >= ramp && self.t < self.hold {
+                self.amp.level = 1.0;
+                self.ring_env.level = 1.0;
+            }
+            // 0.9 keeps the kick where it sat in a mix: the longer ring adds about 1 dB over a bar.
+            a = (0.78 * a + 0.22 * self.ring_env.next()) * 0.9;
+        }
         let v = self.vel;
         let tsec = self.t as f32 / sr;
         self.t = self.t.saturating_add(1);

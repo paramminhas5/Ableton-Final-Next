@@ -15,6 +15,7 @@ import { track } from "@/lib/analytics";
 import { applyTake, drumNames, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
+import { changesSong, cueFor, cuesOf, soundsSame, withCue } from "@/lib/cues";
 import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { earnStripe, newTrophies, readStripes, type Trophy } from "@/lib/rewards";
@@ -42,7 +43,7 @@ const STEP_LABEL: Record<string, string> = {
 };
 
 type Quiz = Extract<LessonScreen, { kind: "quiz" }>;
-type Page = LessonScreen | { kind: "add"; keep?: boolean } | { kind: "check" } | { kind: "done" };
+type Page = LessonScreen | { kind: "add"; keep?: boolean; mark?: boolean } | { kind: "check" } | { kind: "done" };
 
 export const SONG_EVENT = "ccd:song";
 const QUESTION_KINDS = new Set(["quiz", "ear"]);
@@ -58,7 +59,7 @@ const pageName = (p: Page | undefined): string => {
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
     case "ear": return "ear round";
-    case "add": return p.keep ? "keep it in your song" : "add it to your song";
+    case "add": return p.mark ? "mark your song" : p.keep ? "keep it in your song" : "add it to your song";
     case "check": return "earn your stripe";
     case "done": return "done";
     default: return p.kind;
@@ -128,6 +129,11 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
           // Your arrangement under the loop: one block per section, as long as it lasts, fainter where parts drop out.
           <div className="fl-secs" role="img" aria-label={`Arranged: ${t.sections.map(x => x.name).join(", ")}`}>
             {t.sections.map((x, i) => <i key={i} style={{ flexGrow: x.bars, opacity: 1 - Math.min(0.6, x.off.length * 0.2) }}>{x.name}</i>)}
+          </div>
+        ) : null}
+        {!empty && cuesOf(t).length ? (
+          <div className="fl-cues" role="img" aria-label={`Cues: ${cuesOf(t).map(c => `${c.name}, bar ${c.bar}`).join("; ")}`}>
+            {cuesOf(t).map(c => <i key={c.slug}><b>bar {c.bar}</b>{c.name}</i>)}
           </div>
         ) : null}
         {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
@@ -243,7 +249,13 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   // A shape lesson on a part your song doesn't have yet adds the lesson's line with the sound you made,
   // rather than "keeping" knobs on nothing.
   const missingPart = useMemo(() => !changeNoun(mission.screens ?? []) && !readTrackV2().layers.some(l => l.type === line.type && l.events.length), [mission.screens, line.type]);
-  const keepOnly = useMemo(() => !(mission.screens ?? []).some(s => s.kind === "play") && songHasMusic() && !missingPart, [mission.screens, missingPart]);
+  // A play-in you skipped on a part your song already has keeps your part as it is: the lesson's preset
+  // pattern would overwrite a steady kick with a "new pattern" you never played.
+  const skippedOnOwn = useMemo(() => !take?.events.length && readTrackV2().layers.some(l => l.type === line.type && l.events.length), [take, line.type]);
+  const keepOnly = useMemo(() => (!(mission.screens ?? []).some(s => s.kind === "play") || skippedOnOwn) && songHasMusic() && !missingPart, [mission.screens, missingPart, skippedOnOwn]);
+  // A dj lesson marks your song where its mixer move lands (src/lib/cues.ts).
+  const mixGoal = useMemo(() => (changeNoun(mission.screens ?? []) === "mix" ? [...(mission.screens ?? [])].reverse().find(s => s.kind === "mix") : undefined), [mission.screens]);
+  const cue = mixGoal?.kind === "mix" && base ? cueFor(base, slug, mixGoal.goal) : null;
   const world = worldOf(slug) ?? undefined;
   const already = !!base?.added.includes(slug);
   const [added, setAdded] = useState(false);
@@ -268,7 +280,8 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
     try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
-    const next = now.added.includes(slug) ? now : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
+    const made = now.added.includes(slug) ? now : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
+    const next = mixGoal?.kind === "mix" && !now.added.includes(slug) ? withCue(made, cueFor(made, slug, mixGoal.goal)) : made;
     writeTrackV2(next);
     nameSongIfNew();
     setBase(next);
@@ -296,13 +309,19 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={CAT_SRC} alt="" className={`ls-sticker ${playing ? "m1-dancing" : ""}`} />
         <Meta left={isIn ? "in your song" : noun ? "your song, as you left it" : take?.events.length ? `the ${part} you played` : "the lesson's pattern"} />
-        <div className={`ls-title ${isIn ? "fl-pop" : ""}`}>{isIn ? `your ${what} ${is} in your song` : noun ? `keep your ${what}` : `add your ${part} to your song`}</div>
+        <div className={`ls-title ${isIn ? "fl-pop" : ""}`}>{cue ? (isIn ? `your song is marked: ${cue.name}` : `mark your song: ${cue.name}`) : isIn ? `your ${what} ${is} in your song` : noun ? `keep your ${what}` : `add your ${part} to your song`}</div>
         <div className={`fl-lanes ${isIn ? "is-in" : ""}`}>{v1 && <Lanes track={v1} playhead={playhead} />}</div>
       </Screen>
       </div>
       <div className="fl-text">
       <p className="ls-read">
-        {isIn
+        {cue
+          ? isIn
+            ? `deck a now knows where your ${cue.name} lands: bar ${cue.bar}. it's on the song strip, and every dj lesson from here marks your song the same way.${hasQuestions ? " next: earn your stripe, or skip it and keep mixing." : ""}`
+            : keepOnly
+              ? `your song sounds the same. this puts a "${cue.name}" cue on bar ${cue.bar}, the way djs mark a track before a set, so you know where the move lands.`
+              : `your song was empty, so deck a played a starter loop. this adds the lesson's ${part} as your song and puts a "${cue.name}" cue on bar ${cue.bar}.`
+          : isIn
           ? `this is your song now. ${noun ? "every lesson from here builds on it." : `every lesson from here adds something on top of ${/s$/.test(part) && !/(ss|bass)$/.test(part) ? "these" : "this"} ${part}.`} ${hasQuestions ? "next: earn your stripe, a quick test of what you just learnt. or skip it and keep building." : ""}`
           : noun ? `this is your song with your ${what}. keep it and it stays.` : missingPart && !take?.events.length ? `your song has no ${part} yet, so this adds the lesson's ${part} line with the sound you made. add it and it stays.` : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
       </p>
@@ -310,7 +329,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
       </div>
       <Bottom
         left={{ label: playing ? "stop" : "hear", icon: playing ? "stop" : "hear", onClick: () => { if (playing) engine.stop(); else void ready().then(() => engine.play()); } }}
-        go={isIn ? { label: hasQuestions ? "earn your stripe" : "finish", onClick: onNext } : { label: <><Icon name="plus" />{noun ? "keep in my song" : "add to my song"}</>, onClick: add, aria: noun ? "Keep in my song" : "Add to my song" }} />
+        go={isIn ? { label: hasQuestions ? "earn your stripe" : "finish", onClick: onNext } : { label: <><Icon name="plus" />{cue ? "mark my song" : noun ? "keep in my song" : "add to my song"}</>, onClick: add, aria: cue ? "Mark my song" : noun ? "Keep in my song" : "Add to my song" }} />
     </div>
   );
 }
@@ -399,18 +418,26 @@ const beforeKey = (slug: string) => `ccd.before.${slug}`;
 /** Your song with what this lesson added, and without it. Pressing either plays it. */
 function WithWithout({ slug }: { slug: string }) {
   const [pair, setPair] = useState<{ with: TrackV2; without: TrackV2 } | null>(null);
+  const [same, setSame] = useState<string | null>(null);
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(beforeKey(slug));
       const now = readTrackV2();
       const before = raw ? (JSON.parse(raw) as TrackV2) : null;
       // Only worth comparing when there was a song before this lesson: "before" can't be silence.
-      if (before && before.layers.some(l => l.events.length) && now.layers.some(l => l.events.length)) setPair({ with: now, without: before });
+      if (before && before.layers.some(l => l.events.length) && now.layers.some(l => l.events.length)) {
+        // Two identical songs are no comparison: say what changed instead (a cue, or nothing you can hear).
+        if (soundsSame(before, now)) {
+          const cue = cuesOf(now).find(c => c.slug === slug);
+          setSame(cue ? `your song sounds the same: this lesson marked it with a "${cue.name}" cue on bar ${cue.bar}.` : "your song sounds the same as before this lesson.");
+        } else setPair({ with: now, without: before });
+      }
     } catch { /* no snapshot */ }
   }, [slug]);
   const [which, setWhich] = useState<"with" | "without" | null>(null);
   const { engine, ready } = useEngineTrack((pair && which ? pair[which] : null) ?? readTrackV2());
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
+  if (same) return <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-cobalt, #5c7cff)" } as CSSProperties} /><span>{same}</span></div>;
   if (!pair) return null;
   const play = (w: "with" | "without") => {
     if (which === w) { engine.stop(); setWhich(null); return; }
@@ -514,7 +541,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     // A bonus round adds nothing to your song, so it has no add step.
     // Nothing goes into your song in a bonus round or a lesson with nothing to play, shape or set (the dj
     // mixer lessons), so those have no add step.
-    ...(curItem(mission.slug)?.kind === "bonus" || !screens.some(s => s.kind === "play" || s.kind === "shape" || s.kind === "tempo" || s.kind === "arrange") ? [] : [{ kind: "add" as const, keep: !screens.some(s => s.kind === "play") && !!changeNoun(screens) }]),
+    ...(curItem(mission.slug)?.kind === "bonus" || !changesSong(screens) ? [] : [{ kind: "add" as const, keep: !screens.some(s => s.kind === "play") && !!changeNoun(screens), mark: changeNoun(screens) === "mix" }]),
     ...(main.length ? [{ kind: "check" as const }] : []),
     { kind: "done" as const },
   ], [screens, main.length]);
@@ -610,7 +637,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const n = mission.number ?? 1;
   const ci = curItem(mission.slug);
   const cp = curPathOf(mission.slug);
-  const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson ${cp.items.filter(i => i.kind === "song").findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson ${n}`;
+  const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson\u00a0${cp.items.filter(i => i.kind === "song").findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson\u00a0${n}`;
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />

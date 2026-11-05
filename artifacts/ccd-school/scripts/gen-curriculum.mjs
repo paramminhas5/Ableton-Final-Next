@@ -25,7 +25,7 @@ for (const line of doc.split("\n")) {
     continue;
   }
   const r = line.match(/^\|\s*([SDB])\s*\|\s*(\(new\)\s*)?`([a-z0-9-]+)`\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|$/);
-  if (r && path) path.items.push({ slug: r[3], kind: KIND[r[1]], isNew: !!r[2], title: r[4], does: r[5], code: r[6] });
+  if (r && path) path.items.push({ slug: r[3], kind: KIND[r[1]], isNew: !!r[2], title: r[4], does: r[5].toLowerCase(), code: r[6] });
 }
 
 // Each deeper or bonus lesson hangs off the song lesson above it, or the first one below it

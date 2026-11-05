@@ -76,6 +76,8 @@ export type TrackV2 = {
   master?: Record<number, number>;
   /** The arrangement, when the song has one (src/lib/arrange.ts). */
   sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
+  /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
+  cues?: { slug: string; name: string; bar: number }[];
   added: string[];
   updatedAt: number;
 };

@@ -194,3 +194,50 @@ fn kick_has_an_attack_bump_and_a_sigh() {
     assert!(bn > bo * 1.05, "the attack should start higher: new {bn:.2}, old {bo:.2}");
     assert!((ln - lo).abs() < 1.5, "level moved: {ln:.1} vs {lo:.1} dB");
 }
+
+/// The old kick's amplitude at a given decay knob: one exponential, no hold (rebuilt from its formula).
+fn old_kick_at(decay: f32, n: usize) -> Vec<f32> {
+    let sr = SR as f64;
+    let len = 0.45 * 4.0f64.powf((decay as f64 - 0.5) * 2.0);
+    let k60 = |s: f64| (-6.907_755 / (s * sr)).exp();
+    let (cp, ca) = (k60(0.11), k60(len));
+    let (mut pe, mut a, mut ph) = (1.0f64, 1.0f64, 0.0f64);
+    (0..n).map(|_| {
+        let f = 48.0 * (1.0 + 4.5 * pe * pe + 1.2 * pe);
+        let y = (ph * std::f64::consts::TAU).sin() * 1.05 * a;
+        ph = (ph + f / sr).fract();
+        pe *= cp;
+        a *= ca;
+        y as f32
+    }).collect()
+}
+
+fn kick_at(decay: f32, n: usize) -> Vec<f32> {
+    let mut p = Pad::new(Model::Kick, SR, 7);
+    p.decay = decay;
+    p.trigger(0.9);
+    (0..n).map(|_| p.tick()).collect()
+}
+
+/// Peak of the body in a window: the envelope, one cycle or more at a time.
+fn peak_in(y: &[f32], t0: f32, t1: f32) -> f32 {
+    y[(t0 * SR) as usize..(t1 * SR) as usize].iter().fold(0.0f32, |m, v| m.max(v.abs()))
+}
+
+#[test]
+fn kick_holds_then_rings_out() {
+    // Engine 2 item 5, part two. At the middle decay (0.45 s to -60 dB): the hold keeps the punch at full
+    // level for 18 ms, and a second, slower decay under it lets the tail ring out instead of fading away.
+    let n = (SR * 1.2) as usize;
+    let (new, old) = (kick_at(0.5, n), old_kick_at(0.5, n));
+    // Hold: how far the body has fallen by 15 to 25 ms, against its level in the first 10 ms.
+    let held = |y: &[f32]| db(peak_in(y, 0.015, 0.025) / peak_in(y, 0.002, 0.012));
+    // Ring: the tail 300 to 400 ms in, against the body 40 to 80 ms in.
+    let ring = |y: &[f32]| db(peak_in(y, 0.3, 0.4) / peak_in(y, 0.04, 0.08));
+    let (hn, ho, rn, ro) = (held(&new), held(&old), ring(&new), ring(&old));
+    let (ln, lo) = (db(rms(&new[..(SR * 0.1) as usize])), db(rms(&old[..(SR * 0.1) as usize])));
+    println!("kick hold: {hn:.1} dB by 20 ms (old {ho:.1} dB); tail at 350 ms: {rn:.1} dB under the body (old {ro:.1} dB); first 100 ms {ln:.1} dB (old {lo:.1} dB)");
+    assert!(hn > ho + 0.5, "the hold should keep the punch up: new {hn:.1}, old {ho:.1}");
+    assert!(rn > ro + 4.0, "the tail should ring out: new {rn:.1}, old {ro:.1}");
+    assert!((ln - lo).abs() < 1.5, "level moved: {ln:.1} vs {lo:.1} dB");
+}

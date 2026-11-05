@@ -33,6 +33,7 @@
 .ls-sticker.is-small{width:46px;top:10px;right:12px}
 .ls-sticker.is-tilt{transform:rotate(-10deg);filter:grayscale(.3)}
 .ls-sticker.is-small~.ls-meta{padding-right:54px}
+.ls-sticker:not(.is-low):not(.is-small)~.ls-meta{padding-right:86px}
 
 /* paper side */
 .ls-read{font-size:18px;line-height:27px;margin:2px 2px 4px;color:var(--ink);text-wrap:pretty}
@@ -255,6 +256,9 @@
 .fl-songempty{font-size:13px;color:var(--print);padding:6px 0}
 .fl-song svg{max-height:56px}
 .fl-secs{display:flex;gap:2px;margin-top:3px;height:14px}
+.fl-cues{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.fl-cues i{font-style:normal;font-size:10px;line-height:16px;padding:0 6px;border-radius:8px;border:1px dashed color-mix(in srgb,var(--led-cobalt,#5c7cff) 70%,transparent);color:var(--ink);white-space:nowrap}
+.fl-cues b{font-weight:600;margin-right:4px;opacity:.7}
 .fl-secs i{flex-basis:0;min-width:0;border-radius:3px;background:color-mix(in srgb,var(--led-mint) 30%,var(--deck2));font-style:normal;font-size:9px;line-height:14px;padding-left:4px;color:var(--ink);overflow:hidden;white-space:nowrap}
 .fl-ghost{display:flex;align-items:center;gap:8px;margin-top:3px}
 .fl-ghost svg{flex:1;min-width:0;height:10px;border:1px dashed color-mix(in srgb,var(--led-mint) 55%,transparent);border-radius:3px}
@@ -504,7 +508,9 @@
 .tr-n{font-size:11px;font-weight:600;color:var(--led-mint)}
 .tr-keys{display:flex;gap:10px;align-items:center;margin-top:14px}
 .tr-go{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--deck2);animation:wl-in 420ms var(--ease-snap) both}
-.tr-go span{font-size:13px;font-weight:600;color:var(--led-mint)}
+.tr-go span{font-size:13px;font-weight:600;color:var(--ink);opacity:.75}
+/* While the tour is up, its own "next" is the one go key: the page's go keys under the veil go grey. */
+body:has(.tr) .m1-cap.is-go:not(.tr .m1-cap){filter:grayscale(1)}
 .tr-go b{font-size:40px;font-weight:300;letter-spacing:-.03em;color:var(--ink)}
 /* phone: the lesson list sits right under the lesson card, in its own box that fades at its edges */
 @media (max-width:899px){
@@ -826,4 +832,4 @@ a.jv-lane:hover{transform:translateX(3px)}
 .m1-scr:has(.ls-sticker:not(.is-low)) .ls-title{padding-right:80px}
 /* House style: lesson copy reads lowercase, like the rest of the app. Content is written in sentence case so it
    still reads well to screen readers and in exports; the page shows it lowercase. */
-.fl .ls-read,.fl .ls-title,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
+.fl .ls-read,.fl .ls-title,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
