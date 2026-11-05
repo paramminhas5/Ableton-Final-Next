@@ -16,3 +16,4 @@ coverage/
 
 # throwaway screenshot scripts from improvement-check reviewers
 scripts/shots/review[0-9]-*.mjs
+shots/
