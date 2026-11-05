@@ -2,6 +2,21 @@
 
 Each round adds what it found, built and learned, newest first. Read this before starting a round.
 
+## Round 1 (5 Nov, 0ecd5cf)
+Fixed (ccd/school-fixes.md 117 to 127): shape lessons on a part the song lacks now add the lesson's line with your sound instead of "keeping" knobs on nothing; snares draw on the backbeat lane and the add step names what you played; the drop on a drums-only song says the break is silence and points at the riser; "three worlds" counts worlds from the curriculum and "first blend" waits for your-first-mix; /sound footer was a corrupted repeat; the celebration sheet covers the whole screen (no second pink go beside it); hints in the reading column and the studio chip read in light mode; the up-next card names the lesson; lesson copy shows lowercase (css on `.fl`); onboarding's "add a clap" chip is no longer pink. Engine 2 item 5, part one: the kick's 6 ms attack bump, a pitch sigh over the tail (4.0% vs 0.0%) and a shaped click, level unchanged at -6.2 dB; kick clip added to /sound.
+Learned:
+- The webkit browser the walker needs is not in /opt/pw-browsers; install it once with `PLAYWRIGHT_BROWSERS_PATH=<scratchpad>/pwb npx playwright install webkit` and run the phone walk with that env. The wasm build needs `rustup target add wasm32-unknown-unknown` first.
+- `ab_clips` re-renders every clip; byte-different flac for unchanged sounds is churn. Keep only clips whose index.json numbers moved.
+- When rebuilding an "old" sound inside a test, measure the old pad's level by checking out the old source once; the hand-rebuilt formula missed a gain stage by 2 dB.
+- A keep-only lesson must check the song has the part it shapes. The class of bug to look for next: any `changes:` lesson whose target part may be missing (dj lessons declaring drums.clap, your-first-mix touching nothing).
+Suggestions for round 2 (ranked, why):
+1. DJ lessons act on your song: your-first-mix declares `changes: drums.clap` but leaves the song untouched and talks about "deck b's bass". Give each dj lesson a mark on the song (a cue, an intro or outro section) so the house rule holds. Not built.
+2. A real before/after on every done screen: if the song did not change, say so and offer the step that changes it, so "hear the difference" never compares two identical songs. Not built.
+3. Tour step 1 on desktop covers the pink play key it points at; the drop's glossary chips sit under the bottom bar at 390. Layout, small. Not built.
+4. Gym drills on your own song, unlocked by the lesson that teaches them (the gym offers eq and compression before those lessons). Not built.
+5. Content sweep to write lesson copy lowercase at the source (the css covers screens; exports and share text still carry capitals, "Live", "CCD"). Not built.
+Engine next: item 5 part two (hold stage, three body shapes, decay that rings out), then item 6, the master chain.
+
 ## Improvement check pass 3 (5 Nov, 4fecb0b), before the loop
 Fixed: ccd/school-fixes.md 109 to 116.
 Learned:
