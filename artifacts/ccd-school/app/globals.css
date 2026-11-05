@@ -420,8 +420,8 @@ a.m1-m:active, button.m1-m:active { transform: translateY(3px); box-shadow: var(
   outline: 3px solid var(--acid);
   outline-offset: 3px;
   border-radius: 0;
-  z-index: 9999;
-  position: relative;
+  /* no z-index or position here: a focused control must not paint over the fixed bottom keys, and an
+     absolutely placed one (a mix dot, a knob ring) must not jump out of its place when focused */
 }
 
 .kbd-active {
