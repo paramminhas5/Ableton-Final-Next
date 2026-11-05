@@ -18,12 +18,38 @@ pub struct NoteEv {
     /// The play count a condition reads is `pass * reps + it`.
     pub it: u32,
     pub reps: u32,
+    /// Parameter locks (Elektron's p-locks), applied on the note's own sample before it sounds: wire param
+    /// and normalised value, or a negative value for "back to the knob's own value" (a note after a locked
+    /// one that uses the same param). `n_locks` of them are live.
+    pub locks: [(u16, f32); MAX_EV_LOCKS],
+    pub n_locks: u8,
 }
+
+/// Most p-locks one note carries.
+pub const MAX_EV_LOCKS: usize = 8;
 
 impl NoteEv {
     /// A plain note: always plays.
     pub fn new(start: f64, len: f64, note: u8, vel: f32) -> Self {
-        NoteEv { start, len, note, vel, chance: 1.0, cond: 0, it: 0, reps: 1 }
+        NoteEv { start, len, note, vel, chance: 1.0, cond: 0, it: 0, reps: 1, locks: [(0, 0.0); MAX_EV_LOCKS], n_locks: 0 }
+    }
+
+    /// Add a p-lock (EV_LOCK). A second lock on the same param replaces the first. False when full.
+    pub fn lock(&mut self, index: u16, v: f32) -> bool {
+        let v = if v.is_finite() { if v < 0.0 { -1.0 } else { v.min(1.0) } } else { return false };
+        for l in self.locks[..self.n_locks as usize].iter_mut() {
+            if l.0 == index {
+                l.1 = v;
+                return true;
+            }
+        }
+        if (self.n_locks as usize) < MAX_EV_LOCKS {
+            self.locks[self.n_locks as usize] = (index, v);
+            self.n_locks += 1;
+            true
+        } else {
+            false
+        }
     }
 }
 

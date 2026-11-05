@@ -201,3 +201,16 @@ pub unsafe extern "C" fn ccd_scope(e: *const Engine, out: *mut f32, n: u32) -> u
     let o = std::slice::from_raw_parts_mut(out, n);
     (*e).core().read_scope(o) as u32
 }
+
+/// Copy the watched part's live modulation values (MOD_VALUES floats: the lfo, the envelope, then each slot's
+/// knob as it plays, -1 for an empty slot) into `out`. Returns how many, 0 when no part is watched
+/// (cmd MOD_WATCH). Call between blocks on the audio thread (the web worklet does, 30 or 15 times a second).
+///
+/// # Safety
+/// `out` must hold `n` floats. Audio thread only, not while `ccd_process` runs.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_mod_values(e: *const Engine, out: *mut f32, n: u32) -> u32 {
+    let n = (n as usize).min(crate::engine::MOD_VALUES);
+    let o = std::slice::from_raw_parts_mut(out, n);
+    (*e).core().read_mods(o) as u32
+}

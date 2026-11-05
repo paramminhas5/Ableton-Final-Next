@@ -12,6 +12,9 @@ pub enum Bank {
     Mix,
     /// Not on a knob yet. Kept so lessons and presets can reach it.
     Shift,
+    /// A modulation source's own settings (the layer lfo, the sampler's aux envelope): shown with the
+    /// source's chip, never on a knob page.
+    Mod,
 }
 
 impl Bank {
@@ -22,6 +25,7 @@ impl Bank {
             Bank::Fx => "fx",
             Bank::Mix => "mix",
             Bank::Shift => "shift",
+            Bank::Mod => "mod",
         }
     }
 }
@@ -253,6 +257,39 @@ pub const B_DRIFT: usize = 7;
 pub const B_CHAR: usize = 8;
 pub const B_FDRIVE: usize = 9;
 
+// ── The layer lfo: a modulation source for drums, fx and the sampler ─────────
+// Live 12's LFO device (Max for Live modulators): Rate in Hz or, with the time mode toggle, in synced beat
+// divisions; Waveform sine, up, down, triangle, square, random. The synths keep the lfo in their voice.
+// Appended to each of the three tables (after leftovers, 5 Nov), so no saved knob moves.
+
+pub const LFO_RATE_SPEC: ParamSpec = p("modrate", "rate", Bank::Mod, 0.05, 20.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE);
+pub const LFO_SYNC_SPEC: ParamSpec = p("modsync", "time mode", Bank::Mod, 0.0, 1.0, 1.0, Unit::None, Curve::Lin, 0.0, NONE);
+pub const LFO_SYNCED_SPEC: ParamSpec = p("modsynced", "rate", Bank::Mod, 0.0, 1.0, 5.0 / 7.0, Unit::None, Curve::Lin, 0.0, NONE);
+pub const LFO_WAVE_SPEC: ParamSpec = p("modwave", "waveform", Bank::Mod, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE);
+/// Offsets of the four lfo params inside the block each table appends.
+pub const LFO_RATE: usize = 0;
+pub const LFO_SYNC: usize = 1;
+pub const LFO_SYNCED: usize = 2;
+pub const LFO_WAVE: usize = 3;
+pub const LFO_PARAMS: usize = 4;
+/// Synced rates in beats: 1/32, 1/16, 1/8, 1/4, 1/2, 1 bar, 2 bars, 4 bars.
+pub const LFO_BEATS: [f64; 8] = [0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0];
+pub fn lfo_beats(n: f32) -> f64 {
+    LFO_BEATS[(n.clamp(0.0, 1.0) * 7.0).round() as usize]
+}
+/// Live's LFO waveforms, in its menu's order.
+pub mod wave {
+    pub const SINE: u8 = 0;
+    pub const UP: u8 = 1;
+    pub const DOWN: u8 = 2;
+    pub const TRIANGLE: u8 = 3;
+    pub const SQUARE: u8 = 4;
+    pub const RANDOM: u8 = 5;
+}
+pub fn lfo_wave(n: f32) -> u8 {
+    (n.clamp(0.0, 1.0) * 5.0).round() as u8
+}
+
 // ── Drum rack: 16 pads, the sound bank shapes the selected pad ───────────────
 
 pub const DRUM_PAD_PARAMS: &[ParamSpec] = &[
@@ -267,8 +304,14 @@ pub const DRUM_PADS: usize = 16;
 /// Rack-wide drum params, after the 16 pads' own: how open the closed hat is.
 pub const DRUM_RACK_PARAMS: &[ParamSpec] = &[
     p("open", "open", Bank::Sound, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    LFO_RATE_SPEC,
+    LFO_SYNC_SPEC,
+    LFO_SYNCED_SPEC,
+    LFO_WAVE_SPEC,
 ];
 pub const D_OPEN: usize = 0;
+/// The drums' lfo block, from DRUM_RACK_BASE.
+pub const D_LFO: usize = 1;
 /// Wire offset (from INSTRUMENT_BASE) of the first rack-wide drum param.
 pub const DRUM_RACK_BASE: usize = DRUM_PADS * 4;
 /// Slots kept for rack-wide drum params.
@@ -448,6 +491,10 @@ pub const FX_PARAMS: &[ParamSpec] = &[
     // The riser fader. 0 is calm, 1 is the peak. Driven by hand or by a riser hit.
     p("build", "build", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
     p("tune", "tune", Bank::Shift, -12.0, 12.0, 0.5, Unit::Semis, Curve::Lin, 0.0, CENTRE),
+    LFO_RATE_SPEC,
+    LFO_SYNC_SPEC,
+    LFO_SYNCED_SPEC,
+    LFO_WAVE_SPEC,
 ];
 pub const F_LENGTH: usize = 0;
 pub const F_NOISE: usize = 1;
@@ -455,6 +502,7 @@ pub const F_FILTER: usize = 2;
 pub const F_REVERB: usize = 3;
 pub const F_BUILD: usize = 4;
 pub const F_TUNE: usize = 5;
+pub const F_LFO: usize = 6;
 
 // ── Sampler: 16 slots as pads, or slot 0 as a keyboard ───────────────────────
 
@@ -465,6 +513,13 @@ pub const SAMPLER_PARAMS: &[ParamSpec] = &[
     p("gate", "gate", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("keys", "keys", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("reverse", "reverse", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    LFO_RATE_SPEC,
+    LFO_SYNC_SPEC,
+    LFO_SYNCED_SPEC,
+    LFO_WAVE_SPEC,
+    // Live's Sampler calls its free envelope the auxiliary envelope (its Modulation tab): attack and decay.
+    p("auxattack", "attack", Bank::Mod, 1.0, 2000.0, 0.15, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("auxdecay", "decay", Bank::Mod, 10.0, 4000.0, 0.5, Unit::Ms, Curve::Exp, 0.0, NONE),
 ];
 pub const S_TUNE: usize = 0;
 pub const S_START: usize = 1;
@@ -472,6 +527,9 @@ pub const S_RELEASE: usize = 2;
 pub const S_GATE: usize = 3;
 pub const S_PITCHED: usize = 4;
 pub const S_REVERSE: usize = 5;
+pub const S_LFO: usize = 6;
+pub const S_AUX_ATTACK: usize = 10;
+pub const S_AUX_DECAY: usize = 11;
 /// Pad n answers to this note plus n. In keys mode every note plays slot 0 from this root.
 pub const SAMPLER_NOTE_BASE: u8 = 36;
 pub const SAMPLER_ROOT: u8 = 60;
@@ -559,6 +617,16 @@ impl Instrument {
                 }
             }
         }
+    }
+}
+
+/// Wire index of the layer lfo's first param for this instrument, if it has the layer lfo.
+pub fn lfo_base(inst: Instrument) -> Option<usize> {
+    match inst {
+        Instrument::Drums => Some(INSTRUMENT_BASE + DRUM_RACK_BASE + D_LFO),
+        Instrument::Fx => Some(INSTRUMENT_BASE + F_LFO),
+        Instrument::Sampler => Some(INSTRUMENT_BASE + S_LFO),
+        _ => None,
     }
 }
 
