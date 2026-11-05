@@ -141,6 +141,20 @@ const SCENES = {
     await p.waitForTimeout(400);
     await shot("arp");
   },
+  "dj-waves": async (p, shot) => {
+    if (!(await toLesson(p, "eq-mixing-dj", "mix"))) throw new Error("no mix step");
+    await p.waitForTimeout(2500);
+    await shot("full");
+    const k = p.getByRole("slider", { name: /low a|deck a low|a low/i }).first();
+    if (await k.count()) { await k.focus(); for (let i = 0; i < 30; i++) await p.keyboard.press("ArrowDown"); }
+    await p.waitForTimeout(400);
+    await shot("lowcut");
+  },
+  "dj-key": async (p, shot) => {
+    if (!(await toLesson(p, "key-detection-dj", "mix"))) throw new Error("no mix step");
+    await p.waitForTimeout(2000);
+    await shot("key");
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();

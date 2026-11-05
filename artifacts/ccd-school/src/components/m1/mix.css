@@ -69,3 +69,22 @@
 @media (prefers-reduced-motion:reduce){
  .mx-dot,.mx-dot b{transition:none}
 }
+
+/* deck waveforms coloured by frequency (DeckWave.tsx) */
+.dw{position:relative;margin-top:8px}
+.dw-top{position:relative;height:14px}
+.dw-phrase{position:absolute;top:0;padding-left:4px;font-size:9px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.62);border-left:1px solid rgba(255,255,255,.45);line-height:12px;white-space:nowrap}
+.dw-key{position:absolute;right:0;top:-1px;height:14px;padding:0 6px;border-radius:7px;font-size:9px;font-weight:700;line-height:14px;color:#141416;background:#C9CBD1}
+.dw-key.is-fit{background:var(--led-mint);box-shadow:0 0 8px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.dw-key.is-clash{background:#F3C14F;box-shadow:0 0 8px rgba(243,193,79,.5)}
+.dw-wave{position:relative;border-radius:4px;overflow:hidden;background:#030304}
+.dw-wave svg{display:block}
+.dw-bands rect{shape-rendering:crispEdges}
+.dw-bar{stroke:rgba(255,255,255,.06)}
+.dw-bar4{stroke:rgba(255,255,255,.16)}
+.dw-phr{stroke:rgba(255,255,255,.4)}
+.dw-played{fill:rgba(3,3,4,.5)}
+.dw-head{stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 3px #fff)}
+.dw-wait{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.5)}
+.dw-bars{position:relative;height:12px}
+.dw-bars span{position:absolute;top:1px;padding-left:3px;font-size:9px;font-weight:500;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums}

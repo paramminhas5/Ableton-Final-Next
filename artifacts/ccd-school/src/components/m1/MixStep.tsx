@@ -6,7 +6,9 @@
  * so until the tempos match its beats drift against yours, which is exactly what you hear and see.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { FLAG, OUT } from "@/engine";
+import { Engine, FLAG, OUT, type EngineHost } from "@/engine";
+import { bankBands, songBands, type Bands } from "@/lib/djWaves";
+import { DeckWave } from "./DeckWave";
 import type { LessonScreen } from "@/content/types";
 import { bankLayers, bankTrack, camelotFits, camelotOf, CUES, DJ_BANK, songLayers, TRACK_BEATS, type DeckPlay } from "@/content/djBank";
 import { FileDeck, useFileDeck } from "./FileDeck";
@@ -15,7 +17,7 @@ import { readSongs } from "@/lib/songs";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CAP, Fader, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
-import { useEngineTrack } from "./useEngineTrack";
+import { syncEngine, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
 type Of<K> = Extract<LessonScreen, { kind: K }>;
@@ -29,6 +31,20 @@ const curve = (x: number, law: "smooth" | "sharp") => {
 type Stem = "drums" | "hats" | "bass";
 const STEMS: Stem[] = ["drums", "hats", "bass"];
 const LOOP_LENS = [1, 2, 4, 8];
+
+const PHRASES_A = [{ beat: 0, name: "phrase 1" }, { beat: 32, name: "phrase 2" }];
+const sectionAt = (b: number) => (b < 16 ? "intro" : b < 48 ? "main" : b < 56 ? "break" : "drop");
+const PHRASES_B = [0, 32].map(b => ({ beat: b, name: sectionAt(b) }));
+
+/** The song's engine commands, recorded instead of sent, so the browser can render it offline once. */
+function songCommands(song: TrackV2) {
+  return (send: (k: number, l: number, a: number, x: number, y: number, z: number) => void) => {
+    const host = { name: "web", start: async () => {}, stop: async () => {}, send, note: () => {}, subscribe: () => () => {}, info: () => ({ kind: "web", sampleRate: 24000, bufferFrames: 256, outputLatency: 0, load: 0 }) } as unknown as EngineHost;
+    const fake = new Engine(host);
+    syncEngine(fake, song, [], { bpm: 0, loop: 0 });
+    fake.play();
+  };
+}
 
 export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; accent: string; onNext: () => void; tail?: ReactNode }) {
   const song = useMemo(() => readTrackV2(), []);
@@ -96,6 +112,10 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const { engine, ready } = useEngineTrack(track);
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  // The waveforms: deck b's bank track was measured offline on the engine; your song is rendered once here.
+  const [bandsA, setBandsA] = useState<Bands | null>(null);
+  useEffect(() => { let gone = false; void songBands(mine, songCommands(mine)).then(b => { if (!gone) setBandsA(b); }).catch(() => { /* no wasm: the wave stays empty */ }); return () => { gone = true; }; }, [mine]);
+  const bandsB = useMemo(() => bankBands(bid, stems), [bid, stems]);
   useEffect(() => { let gone = false; void ready().then(() => { if (!gone) { engine.metronome(false); engine.play(); } }).catch(() => { /* needs a tap */ }); return () => { gone = true; try { engine.stop(); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const playing = beat >= 0;
   // Files on the decks follow the same transport, faders and crossfader.
@@ -178,6 +198,10 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <div><small>deck a · {deckA === "file" ? "your file" : mine === song ? "your song" : "a starter loop, your song is empty"}</small><b>{deckA === "file" ? fileA.name : mine === song ? songName.toLowerCase() : "kick and clap"}</b><span>{base} bpm · {mineKey}</span><Leds at={beatA} label="Deck a beats" /></div>
             <div><small>deck b · {bFile ? "your file" : "bank"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
           </div>
+          <DeckWave label="deck a" bands={deckA === "file" ? fileA.bands : bandsA} loading={deckA !== "file" && !bandsA} beat={playing ? beat : -1} lowDb={(lowA - 0.5) * 30} phrases={PHRASES_A}
+            badge={{ text: deckA === "file" ? "a" : mineKey, fits: null }} />
+          <DeckWave label="deck b" bands={bFile ? fileB.bands : bandsB} beat={bFile ? (playing ? (beat * bBpm) / base : -1) : trackBeatB} lowDb={(lowB - 0.5) * 30} phrases={bFile ? PHRASES_A : PHRASES_B}
+            badge={bFile ? undefined : { text: bKey, fits }} />
           {recState !== "off" && <div className="fl-airlabels"><span>{recState === "on" ? "recording your mix" : "mix recorded"}</span>{recUrl ? <a href={recUrl} download="my-mix.webm">download it</a> : null}</div>}
           <div className={`mx-goal ${met ? "is-met" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: met ? "var(--led-mint)" : "var(--led-mint)" } as CSSProperties} />{met ? "done. press next when you're ready" : why}</div>
           {(screen.goal === "phrase" || screen.goal === "cut") && playing ? <div className="fl-airlabels"><span>phrase bar {Math.floor((((beat % 32) + 32) % 32) / 4) + 1} of 8</span><span>beat {beatA + 1}</span></div> : null}

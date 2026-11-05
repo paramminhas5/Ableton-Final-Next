@@ -1,0 +1,13 @@
+[package]
+name = "dj-waves"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Renders each dj bank stem through the real engine and measures its low, mid and high bands,
+# for the frequency-coloured waveforms on the dj decks. Run with scripts/dj-waves.mjs.
+[dependencies]
+ccd-engine = { path = "../../../../engine" }
+
+[profile.release]
+opt-level = 3

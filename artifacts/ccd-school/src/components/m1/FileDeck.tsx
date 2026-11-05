@@ -7,6 +7,7 @@
 import { useRef, useState } from "react";
 import type { Engine } from "@/engine";
 import { decodeFile } from "@/lib/samples";
+import { analyse, type Bands } from "@/lib/djWaves";
 
 /** A rough bpm from the energy peaks of the first 20 seconds, between 80 and 170. Pure. */
 export function guessBpm(data: Float32Array, rate: number): number {
@@ -29,6 +30,8 @@ export function guessBpm(data: Float32Array, rate: number): number {
 export type FileDeckState = {
   name: string | null;
   bpm: number;
+  /** The file's low, mid and high bands over its first 64 beats, measured once on load. */
+  bands: Bands | null;
   load: (f: File) => Promise<void>;
   clear: () => void;
   /** Drive it from the mixer every render: on or off, gain (fader times crossfader), low eq 0..1, rate. */
@@ -41,9 +44,10 @@ export function useFileDeck(id: string): FileDeckState {
   const chain = useRef<{ gain: GainNode; low: BiquadFilterNode } | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [bpm, setBpm] = useState(120);
+  const [bands, setBands] = useState<Bands | null>(null);
   const stop = () => { try { src.current?.stop(); } catch { /* not started */ } src.current = null; };
   return {
-    name, bpm,
+    name, bpm, bands,
     load: async (f: File) => {
       const r = await decodeFile(f);
       const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -53,10 +57,12 @@ export function useFileDeck(id: string): FileDeckState {
       void tmp.close();
       buf.current = b;
       stop();
-      setBpm(guessBpm(r.data, r.rate));
+      const guess = guessBpm(r.data, r.rate);
+      setBpm(guess);
+      setBands(analyse(r.data, r.rate, guess, 64));
       setName(f.name.replace(/\.[^.]+$/, "").toLowerCase().slice(0, 24));
     },
-    clear: () => { stop(); buf.current = null; setName(null); },
+    clear: () => { stop(); buf.current = null; setName(null); setBands(null); },
     set: (engine, on, gain, low, rate) => {
       const a = engine.audio();
       if (!a || !buf.current) return;
