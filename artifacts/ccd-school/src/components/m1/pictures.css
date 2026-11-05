@@ -43,3 +43,12 @@
 .pad-vel{position:absolute;top:6px;left:50%;width:22%;height:2px;margin-left:-11%;border-radius:1px;background:currentColor;opacity:.16;pointer-events:none}
 .ls-key .pad-ring{inset:-4px;border-radius:13px;box-shadow:0 0 0 2px color-mix(in srgb,var(--c,#fff) 60%,#fff),0 0 calc(8px + 16px * var(--v,.85)) var(--c,#fff)}
 .st-sp .pad-ring{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),inset 0 0 calc(8px + 18px * var(--v,.85)) color-mix(in srgb,var(--c,#fff) 80%,#fff)}
+
+/* fill and randomise (Dice in controls.tsx) */
+.m1-dice{display:flex;align-items:center;gap:8px;flex:none;min-height:34px}
+.m1-dice-l{font-size:11px;font-weight:600;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo)}
+.m1-dice-v{font-size:11px;font-weight:500;color:var(--sub);min-width:30px;font-variant-numeric:tabular-nums}
+.m1-dice-k{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:9px;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;min-height:0;min-width:0;background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
+.m1-dice-k:active{transform:translateY(1px)}
+.m1-dice-k svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
+.m1-dice-k svg circle{fill:currentColor;stroke:none}

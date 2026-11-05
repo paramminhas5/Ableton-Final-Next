@@ -840,3 +840,4 @@ a.jv-lane:hover{transform:translateX(3px)}
 /* House style: lesson copy reads lowercase, like the rest of the app. Content is written in sentence case so it
    still reads well to screen readers and in exports; the page shows it lowercase. */
 .fl .ls-read,.fl .ls-title,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
+.gr-dice{display:flex;margin-top:10px}

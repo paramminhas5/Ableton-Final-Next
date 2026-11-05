@@ -158,3 +158,4 @@
 .st-capkey i{width:7px;height:7px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 6px var(--led-mint);animation:st-held 1.4s ease-in-out infinite}
 .st-capbtn{background:none;color:#C9CBD1;cursor:pointer;font-family:inherit;height:24px;min-height:0;min-width:0}
 .st-capbtn.is-keep{color:#141416;background:var(--led-mint);border-color:var(--led-mint);font-weight:600}
+.st-dicerow{display:flex;justify-content:flex-start;margin-top:6px;flex:none}

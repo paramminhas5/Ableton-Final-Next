@@ -124,6 +124,23 @@ const SCENES = {
     await p.waitForTimeout(150);
     await shot("picked");
   },
+  "dice-studio": async (p, shot) => {
+    await studioLayer(p, "drums");
+    await p.locator(".st-vk", { hasText: /^steps$/ }).first().click();
+    await p.getByRole("button", { name: "roll" }).click();
+    await p.waitForTimeout(150);
+    const f = p.getByRole("slider", { name: "fill" });
+    await f.focus();
+    for (let i = 0; i < 12; i++) await p.keyboard.press("ArrowUp");
+    await p.waitForTimeout(200);
+    await shot("fill");
+  },
+  "dice-arp": async (p, shot) => {
+    if (!(await toLesson(p, "midi-effects", "tempo"))) throw new Error("no arp step");
+    await p.getByRole("button", { name: "roll" }).click();
+    await p.waitForTimeout(400);
+    await shot("arp");
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();

@@ -58,7 +58,8 @@ import {
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
-import { CAP, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
+import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
+import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
 import { swung, useEngineTrack } from "./useEngineTrack";
@@ -133,6 +134,11 @@ export function Studio() {
   const played = useRef<Played[]>([]);
   const [playedN, setPlayedN] = useState(0);
   const [pending, setPending] = useState<{ layerId: string; events: NoteEvent[] } | null>(null);
+  // Fill and randomise: the notes before the dice, so the amount grows and shrinks the same fill.
+  const dice = useRef<{ layerId: string; base: NoteEvent[]; result: string } | null>(null);
+  const [diceAmt, setDiceAmt] = useState(0);
+  const [diceSeed, setDiceSeed] = useState(1);
+  const lastDice = useRef(0);
   const [held, setHeldUi] = useState<Set<number>>(new Set());
   const lastNote = useRef(33);
   const recHeld = useRef<Held>(new Map());
@@ -369,6 +375,28 @@ export function Studio() {
     }, undoable);
     setTouched({ label: spec.label, text: display(spec, v) });
   };
+
+  const diceable = !!sel && (sel.type === "drums" || sel.type === "hats" || sel.type === "bass" || sel.type === "lead");
+  const rollDice = (amt: number, seed: number) => {
+    if (!sel || !diceable) return;
+    let d = dice.current;
+    if (!d || d.layerId !== sel.id || d.result !== JSON.stringify(sel.events)) d = dice.current = { layerId: sel.id, base: sel.events, result: "" };
+    const lanes = (sel.type === "hats" ? DRUM_LANES.hats : DRUM_LANES.drums).slice(0, 4);
+    const root = sel.type === "bass" ? bassRoot(track) : (track.root ?? 45) + 12;
+    const ev = sel.type === "drums" || sel.type === "hats"
+      ? fillDrums(d.base, lanes, track.loop, grid, amt, seed)
+      : fillMelody(d.base, { loop: track.loop, step: grid, root: track.root ?? 45, scale: track.scale === "major" ? "major" : "minor", amount: amt, seed, lo: root, hi: root + 19 });
+    d.result = JSON.stringify(ev);
+    const now = Date.now();
+    const undoable = now - lastDice.current > 800;
+    lastDice.current = now;
+    patchSel(l => ({ ...l, events: ev }), undoable);
+    setDiceAmt(amt);
+    setDiceSeed(seed);
+    setTouched({ label: sel.type === "drums" || sel.type === "hats" ? "fill" : "notes", text: `${Math.round(amt * 100)}%` });
+  };
+  useEffect(() => { setDiceAmt(0); dice.current = null; }, [selId]);
+  const diceRow = diceable && !lockAt ? <Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" /> : null;
 
   const canCapture = !!sel && !recording && !countIn && playedN > 0 && played.current.some(p => p.layerId === sel.id);
   const capture = () => {
@@ -683,12 +711,12 @@ export function Studio() {
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
                 onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
                 onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
@@ -934,12 +962,14 @@ function Keys({ drum, held, hits, layerId, noteHandlers }: { drum: boolean; held
 const FX_LANES = [36, 38, 39, 41];
 
 /** Back, forward and the bars. A page is what fits on screen; a bar is four beats. */
-function PageBar({ page, pages, setPage, bars, setBars, perPage, grid }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number }) {
+function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number; dice?: React.ReactNode }) {
   const perBar = 4 / grid;
   const from = page * perPage + 1;
   const to = (page + 1) * perPage;
   const bar = Math.floor((page * perPage) / perBar) + 1;
   return (
+    <>
+    {dice ? <div className="st-dicerow">{dice}</div> : null}
     <div className="st-pages" style={{ alignItems: "center", gap: 6 }}>
       <button type="button" className="st-tag" aria-label="Previous steps" disabled={page === 0} onClick={() => setPage(page - 1)}>‹</button>
       <span className="st-ss" style={{ minWidth: 88, textAlign: "center" }}>{bars > 1 ? `bar ${bar} · ` : ""}{from}-{to}</span>
@@ -950,11 +980,12 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid }: { page:
         <button key={n} type="button" className={`st-tag ${bars === n ? "is-on" : ""}`} aria-pressed={bars === n} aria-label={`${n} bar${n > 1 ? "s" : ""}`} onClick={() => setBars(n)}>{n}</button>
       ))}
     </div>
+    </>
   );
 }
 
 type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void;
-  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void };
+  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode };
 
 /** A step you can tap (on or off) or hold (lock knobs to it). Shift+Enter holds from the keyboard. */
 function useStepPress(onTap: () => void, onHold: () => void, held: boolean, onRelease: () => void) {
@@ -988,7 +1019,7 @@ function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>
 }
 
 /** A lane per sound, 8 steps a page. The playing step glows. */
-function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks }: StepsProps & { onToggle: (note: number, step: number) => void }) {
+function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
   const smp = layer.type === "sample";
@@ -1005,7 +1036,7 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
           <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} />
         ))}
       </div>
-      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} />}
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} />}
     </>
   );
 }
@@ -1040,7 +1071,7 @@ function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle, loc
   );
 }
 
-function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks }: StepsProps & { onToggle: (step: number) => void }) {
+function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (step: number) => void }) {
   const c = TYPE[layer.type].color;
   return (
     <>
@@ -1058,7 +1089,7 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
           );
         })}
       </div>
-      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} />}
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} />}
     </>
   );
 }

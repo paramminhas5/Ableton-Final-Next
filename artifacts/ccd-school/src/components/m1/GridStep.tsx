@@ -9,7 +9,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { readTrackV2, writeTrackV2, type LayerType, type NoteEvent } from "@/lib/track2";
 import { NOTE_NAMES } from "@/lib/theory";
-import { Screen } from "./controls";
+import { Dice, Screen } from "./controls";
+import { fillMelody, newSeed } from "@/lib/dice";
 import { Meta } from "./LessonParts";
 import { Frame, useLoop, withPart, type StepProps } from "./ToolSteps";
 
@@ -60,6 +61,23 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
   const past = useRef<NoteEvent[][]>([]);
   const commit = (next: NoteEvent[]) => { past.current.push(evs); if (past.current.length > 60) past.current.shift(); setEvs(next); };
   const undo = () => { const prev = past.current.pop(); if (prev) { setEvs(prev); setSel(null); } };
+  // Fill and randomise: the notes before the dice, so the amount grows and shrinks the same fill.
+  const dice = useRef<{ base: NoteEvent[]; result: string } | null>(null);
+  const [diceAmt, setDiceAmt] = useState(0);
+  const [diceSeed, setDiceSeed] = useState(1);
+  const lastDice = useRef(0);
+  const rollDice = (amt: number, seed: number) => {
+    if (!dice.current || dice.current.result !== JSON.stringify(evs)) dice.current = { base: evs, result: "" };
+    const root = base.track.root ?? 45;
+    const next = fillMelody(dice.current.base, { loop, step: STEP, root, scale: base.track.scale === "major" ? "major" : "minor", amount: amt, seed, lo: rows[rows.length - 1] + 5, hi: rows[0] - 5 });
+    dice.current.result = JSON.stringify(next);
+    const now = Date.now();
+    if (now - lastDice.current > 800) commit(next); else setEvs(next);
+    lastDice.current = now;
+    setDiceAmt(amt);
+    setDiceSeed(seed);
+    setSel(null);
+  };
   const holdT = useRef(0);
   const held = useRef(false);
   const tap = (note: number, col: number) => {
@@ -187,6 +205,7 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
           {past.current.length ? <button type="button" className="ls-chip" onClick={undo} aria-label="Undo the last edit">undo</button> : null}
           {evs.length > 1 ? <button type="button" className="ls-chip" onClick={() => { setPicked(new Set(evs.map((_, i) => i))); setSelRaw(evs.length - 1); }} aria-label="Pick every note">all</button> : null}
         </div>
+        <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" width={110} /></div>
       </>} />
   );
 }

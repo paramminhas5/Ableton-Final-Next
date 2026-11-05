@@ -10,7 +10,8 @@ import type { LessonScreen } from "@/content/types";
 import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } from "@/lib/track2";
 import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
 import { NOTE_NAMES } from "@/lib/theory";
-import { CAP, GoPill, Icon, Key, Knob, Screen } from "./controls";
+import { CAP, Dice, GoPill, Icon, Key, Knob, Screen } from "./controls";
+import { newSeed } from "@/lib/dice";
 import { Body, Meta, useEnter, useStarter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
@@ -83,7 +84,10 @@ export function ArpStep({ screen, accent, onNext, tail }: StepProps) {
   const [mode, setMode] = useState<ArpMode | "off">("up");
   const [rate, setRate] = useState<2 | 4>(4);
   const [oct, setOct] = useState<1 | 2>(1);
-  const arp: Arp | undefined = mode === "off" ? undefined : { mode, rate, oct };
+  // Variation: one amount and a dice key; the seed makes a roll repeat exactly every loop.
+  const [rand, setRand] = useState(0);
+  const [seed, setSeed] = useState(1);
+  const arp: Arp | undefined = mode === "off" ? undefined : { mode, rate, oct, ...(rand > 0 ? { rand: Math.round(rand * 100) / 100, seed } : {}) };
   const shown = useMemo(() => ({ ...base.track, layers: base.track.layers.map(l => (l.type === type ? { ...l, arp } : l)) }), [base, type, mode, rate, oct]); // eslint-disable-line react-hooks/exhaustive-deps
   const { beat, playing, toggle } = useLoop(shown);
   const part = base.track.layers.find(l => l.type === type);
@@ -112,6 +116,7 @@ export function ArpStep({ screen, accent, onNext, tail }: StepProps) {
         <Chips label="Arpeggiator direction" accent={accent} items={["off", ...ARP_MODES] as (ArpMode | "off")[]} value={mode} onPick={setMode} name={m => (m === "off" ? "off" : ARP_LABEL[m as ArpMode])} />
         <Chips label="Arpeggiator rate" accent={accent} items={[2, 4] as (2 | 4)[]} value={rate} onPick={setRate} name={r => `1/${r * 4}`} />
         <Chips label="Octaves" accent={accent} items={[1, 2] as (1 | 2)[]} value={oct} onPick={setOct} name={o => `${o} octave${o > 1 ? "s" : ""}`} />
+        {mode !== "off" ? <div className="gr-dice"><Dice amount={rand} onAmount={setRand} onRoll={() => { setSeed(newSeed()); if (!rand) setRand(0.35); }} label="vary" width={110} /></div> : null}
       </>} />
   );
 }

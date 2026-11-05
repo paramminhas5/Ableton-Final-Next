@@ -151,6 +151,21 @@ export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, heig
   return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
 }
 
+/** Fill and randomise: one amount (a short fader) and one key that rolls the dice. */
+export function Dice({ amount, onAmount, onRoll, label = "fill", width = 84 }: { amount: number; onAmount: (v: number) => void; onRoll: () => void; label?: string; width?: number }) {
+  return (
+    <div className="m1-dice">
+      <span className="m1-dice-l" aria-hidden>{label}</span>
+      <Fader horizontal width={width} value={amount} onChange={onAmount} label={label} defaultValue={0} valueText={`${Math.round(amount * 100)}%`} />
+      <span className="m1-dice-v" aria-hidden>{Math.round(amount * 100)}%</span>
+      <button type="button" className="m1-dice-k" onClick={onRoll} aria-label="roll">
+        <svg viewBox="0 0 24 24" aria-hidden><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="9" cy="9" r="1.4" /><circle cx="15" cy="15" r="1.4" /><circle cx="15" cy="9" r="1.4" /><circle cx="9" cy="15" r="1.4" /></svg>
+        roll
+      </button>
+    </div>
+  );
+}
+
 /** A ring that flashes out from a pad on every hit. Give it a new `key` per hit; `v` is the velocity, 0..1. */
 export function PadRing({ v = 0.85 }: { v?: number }) {
   return <i className="pad-ring" aria-hidden style={{ ["--v" as string]: v.toFixed(2) } as CSSProperties} />;
@@ -345,7 +360,7 @@ export function Fader({ value, onChange, onTouch, label, led, height = 140, widt
   if (horizontal) {
     const w = width;
     return (
-      <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)}
+      <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-valuetext={valueText}
         {...drag}
         onPointerMove={(e) => {
           if (!onChange || !(e.buttons & 1)) return;
