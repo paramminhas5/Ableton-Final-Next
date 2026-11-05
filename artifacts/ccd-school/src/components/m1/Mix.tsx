@@ -508,7 +508,7 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
           />
         </>
       )}
-      <Silk label="punch-in effects" right="hold one, higher is more · rec keeps them" />
+      <Silk label="punch-in effects" right="hold one, higher is more" />
       <PunchPads engine={engine} compact onSay={(label, text) => setTouched({ label, text, at: Date.now() })} />
       <PunchLane engine={engine} track={track} update={update} />
     </>

@@ -73,7 +73,7 @@
 @media (prefers-reduced-motion:reduce){.m1-mod-live{transition:none}}
 /* a source's own settings (SourcePanel): the layer lfo's rate, time mode and waveform; the aux env's times */
 .m1-srcpanel{display:flex;align-items:center;gap:10px;padding:6px 8px;margin:6px 0 2px;border-radius:12px;border:1px solid color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 7%,transparent);min-width:0}
-.m1-srcpanel .m1-m{flex:none;width:76px;height:84px;aspect-ratio:auto!important}
+.m1-srcpanel .m1-m{flex:none;width:84px;height:106px;aspect-ratio:auto!important}
 .m1-srcopts{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
 .m1-seg{display:flex;gap:4px;flex-wrap:wrap}
 .m1-seg button{min-height:30px;min-width:34px;padding:0 9px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.3));background:none;color:var(--sub);font:inherit;font-size:12px;font-weight:600;cursor:pointer}

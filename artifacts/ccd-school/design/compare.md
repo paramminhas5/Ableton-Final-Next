@@ -62,7 +62,7 @@ Built 5 Nov, in two parallel streams (`school-fixes.md` 170 to 181):
 - **Touch and hear (0035d7b to a71db29):** 1 drag on the picture, 2 drag to modulate, 3 a/b, 4 scope, 13 match this sound.
 - **Write and play (to 826c5a2):** 5 scales, 6 chord track, 7 drummer and bass player, 8 transformations, 9 chance and conditions, 10 punch-in effects, 11 commit, 12 per-part length and swing.
 
-Match this sound is in the ear gym now (`design/engine-plan.md`, leftovers (screens)). Left over from these: modulation sources on drums, fx and the sampler; rings that move while playing; chance in the midi export; recording punch-in effects into the song.
+Match this sound is in the ear gym now (`design/engine-plan.md`, leftovers (screens)). The rest of the leftovers are built too (engine-plan.md, "After engine 2: leftovers (engine)"): modulation sources on drums, fx and the sampler; rings that move while playing; chance in the midi export (as heard, or every note); free-running part lengths; punch-in effects recorded into the song; sample-exact p-locks.
 
 Waiting on Param: 14 (assistant, cost), 15 (stems on your own files, cost or download size). Later: 16 to 19.
 

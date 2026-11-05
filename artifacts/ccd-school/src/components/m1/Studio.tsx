@@ -932,7 +932,7 @@ export function Studio() {
             {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
               <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
                 label={src => srcLabel(TYPE[sel.type].engine, src)}
-                onEdit={src => { setModEdit(src); setTouched(src ? { label: srcLabel(TYPE[sel.type].engine, src), text: hasLayerLfo(TYPE[sel.type].engine) ? "its settings, then set amounts" : "set amounts" } : null); }}
+                onEdit={src => { setModEdit(src); setTouched(src ? { label: srcLabel(TYPE[sel.type].engine, src), text: "set amounts" } : null); }}
                 onOver={setDropOver}
                 onDrop={(src, to) => {
                   const k = knobs.find(x => x.index === to);
