@@ -69,6 +69,10 @@ pub mod cmd {
     /// Note repeat. note `a`, velocity `x` (0 lets go), division `y` in beats (0.25 = 1/16,
     /// 0.125 = 1/32). Hits land on the grid of the transport, or a free clock when stopped.
     pub const REPEAT: u32 = 24;
+    /// Modulation (Live 12's modulation: the knob keeps turning, the source moves it from there).
+    /// Route slot `a` (0..MAX_MODS) of the layer: source `z` (MOD_LFO, MOD_ENV) onto wire param `y`, by
+    /// `x` (-1..1, in shares of the knob's travel). Amount 0 clears the slot and puts the knob back.
+    pub const MOD: u32 = 25;
 }
 
 pub mod out {
@@ -197,6 +201,23 @@ impl Transport {
 
 pub const MAX_REPEATS: usize = 4;
 
+/// Modulation slots per layer.
+pub const MAX_MODS: usize = 8;
+/// Sources: the instrument's lfo (chords, lead), and its filter envelope (chords, lead, bass).
+pub const MOD_LFO: u8 = 0;
+pub const MOD_ENV: u8 = 1;
+/// The routed knobs move every this many samples (0.33 ms at 48 kHz); each knob's own smoothing joins
+/// the steps, as it does for a hand on the knob.
+pub const MOD_EVERY: u32 = 16;
+
+/// One modulation: a source, the wire param it moves, and by how much (shares of the knob's travel).
+#[derive(Clone, Copy, Debug, Default)]
+pub struct ModRoute {
+    pub src: u8,
+    pub dest: u16,
+    pub amount: f32,
+}
+
 pub struct Layer {
     pub inst: Instrument,
     pub drums: Box<DrumRack>,
@@ -219,6 +240,13 @@ pub struct Layer {
     cmp_duck: Option<(i32, i32)>,
     /// Held note-repeat pads: (note, velocity, beats per hit, last grid index fired).
     pub rep: [(i32, f32, f64, i64); MAX_REPEATS],
+    /// Modulation routes (cmd::MOD) and how many are live. With none, nothing below runs.
+    pub mods: [ModRoute; MAX_MODS],
+    pub n_mods: usize,
+    mod_count: u32,
+    /// The filter envelope as a modulation source: one per layer, at the control rate, gated by notes held.
+    mod_env: crate::dsp::env::Adsr,
+    held: u32,
 }
 
 impl Layer {
@@ -246,6 +274,11 @@ impl Layer {
             duck_note: -1,
             cmp_duck: None,
             rep: [(-1, 0.0, 0.25, i64::MIN); MAX_REPEATS],
+            mods: [ModRoute::default(); MAX_MODS],
+            n_mods: 0,
+            mod_count: 0,
+            mod_env: crate::dsp::env::Adsr::new(sr / MOD_EVERY as f32),
+            held: 0,
         }
     }
 
@@ -255,6 +288,10 @@ impl Layer {
     }
 
     fn note_on(&mut self, note: u8, vel: f32) {
+        if self.n_mods > 0 {
+            self.mod_note_on();
+        }
+        self.held = self.held.saturating_add(1);
         match self.inst {
             Instrument::Drums => self.drums.note_on(note, vel),
             Instrument::Bass => self.bass.note_on(note, vel),
@@ -267,6 +304,10 @@ impl Layer {
     }
 
     fn note_off(&mut self, note: u8) {
+        self.held = self.held.saturating_sub(1);
+        if self.held == 0 {
+            self.mod_env.gate_off();
+        }
         match self.inst {
             Instrument::Bass => self.bass.note_off(note),
             Instrument::Chords => self.chords.note_off(note),
@@ -278,6 +319,8 @@ impl Layer {
     }
 
     fn all_off(&mut self) {
+        self.held = 0;
+        self.mod_env.gate_off();
         self.n_offs = 0;
         self.bass.all_off();
         self.chords.all_off();
@@ -287,11 +330,21 @@ impl Layer {
     }
 
     fn set_param(&mut self, index: usize, norm: f32, jump: bool) {
-        if index >= MAX_PARAMS {
+        if index >= MAX_PARAMS || spec_for(self.inst, index).is_none() {
             return;
         }
-        let Some(spec) = spec_for(self.inst, index) else { return };
         self.params[index] = norm.clamp(0.0, 1.0);
+        if self.n_mods > 0 && self.mods.iter().any(|m| m.amount != 0.0 && m.dest as usize == index) {
+            // A modulated knob moves from its new place on the very next sample.
+            self.mod_count = MOD_EVERY - 1;
+        } else {
+            self.apply(index, norm, jump);
+        }
+    }
+
+    /// Send a normalised value to the strip or the instrument without making it the knob's value.
+    fn apply(&mut self, index: usize, norm: f32, jump: bool) {
+        let Some(spec) = spec_for(self.inst, index) else { return };
         let v = spec.to_value(norm);
         if index < INSTRUMENT_BASE {
             // While comparing, the strip plays the snapshot; the live value waits.
@@ -323,6 +376,81 @@ impl Layer {
         if self.n_offs < MAX_OFFS {
             self.offs[self.n_offs] = (note, at);
             self.n_offs += 1;
+        }
+    }
+
+    /// Route a modulation slot (cmd::MOD). Clearing or moving a slot puts the knob it moved back.
+    fn set_mod(&mut self, slot: usize, src: u8, dest: usize, amount: f32) {
+        if slot >= MAX_MODS {
+            return;
+        }
+        let old = self.mods[slot];
+        let amount = if dest < MAX_PARAMS && spec_for(self.inst, dest).is_some() && amount.is_finite() { amount.clamp(-1.0, 1.0) } else { 0.0 };
+        self.mods[slot] = ModRoute { src, dest: if amount == 0.0 { 0 } else { dest as u16 }, amount };
+        self.n_mods = self.mods.iter().filter(|m| m.amount != 0.0).count();
+        if old.amount != 0.0 && (amount == 0.0 || old.dest as usize != dest) {
+            let d = old.dest as usize;
+            self.apply(d, self.params[d], false);
+        }
+        if self.n_mods > 0 && self.held > 0 && old.amount == 0.0 {
+            self.mod_note_on();
+        }
+        self.mod_count = MOD_EVERY - 1;
+    }
+
+    /// The modulation envelope's times follow the instrument's filter envelope, taken at each note.
+    fn mod_note_on(&mut self) {
+        let v = |i: usize| spec_for(self.inst, INSTRUMENT_BASE + i).map(|s| s.to_value(self.params[INSTRUMENT_BASE + i])).unwrap_or(0.0);
+        match self.inst {
+            Instrument::Bass => {
+                let d = v(B_DECAY) * 0.001;
+                self.mod_env.set(0.001, d, 0.0, d * 0.6);
+            }
+            Instrument::Lead => self.mod_env.set(0.001, v(LD_FDECAY) * 0.001, 0.4, v(LD_FREL) * 0.001),
+            Instrument::Chords => self.mod_env.set(0.002 + v(C_ATTACK) * 0.0005, v(C_FDECAY) * 0.001, 0.35, v(C_FREL) * 0.001),
+            _ => {}
+        }
+        self.mod_env.gate_on();
+    }
+
+    /// The lfo now, -1..1: the instrument's own lfo (same phase as the one inside its voices), 0 if it has none.
+    fn lfo_now(&self) -> f32 {
+        let ph = match self.inst {
+            Instrument::Chords => self.chords.lfo_phase(),
+            Instrument::Lead => self.lead.lfo_phase(),
+            _ => return 0.0,
+        };
+        (core::f32::consts::TAU * ph).sin()
+    }
+
+    /// Every MOD_EVERY samples: move each routed knob to its value plus its sources. The knob's own
+    /// value (`params`) is never touched, so turning it still works and clearing the route puts it back.
+    #[inline]
+    fn mod_tick(&mut self, comparing: bool) {
+        self.mod_count += 1;
+        if self.mod_count < MOD_EVERY {
+            return;
+        }
+        self.mod_count = 0;
+        let lfo = self.lfo_now();
+        let env = self.mod_env.next();
+        for i in 0..MAX_MODS {
+            let m = self.mods[i];
+            if m.amount == 0.0 || self.mods[..i].iter().any(|o| o.amount != 0.0 && o.dest == m.dest) {
+                continue;
+            }
+            let dest = m.dest as usize;
+            if comparing && dest < MIX_PARAMS {
+                continue;
+            }
+            let mut sum = 0.0;
+            for o in self.mods[i..].iter() {
+                if o.amount != 0.0 && o.dest == m.dest {
+                    sum += o.amount * if o.src == MOD_LFO { lfo } else { env };
+                }
+            }
+            let n = (self.params[dest] + sum).clamp(0.0, 1.0);
+            self.apply(dest, n, false);
         }
     }
 
@@ -654,6 +782,7 @@ impl Core {
                     }
                 }
             }
+            cmd::MOD => self.layers[li].set_mod(c.a as usize, c.z as u8, c.y as usize, c.x),
             cmd::SNAPSHOT => self.snapshot(),
             cmd::COMPARE => self.compare(c.a != 0),
             cmd::ANALYSE => {
@@ -671,6 +800,9 @@ impl Core {
             cmd::INSTRUMENT => {
                 let l = &mut self.layers[li];
                 l.all_off();
+                // Routes belong to an instrument's knobs: a new instrument starts with none.
+                l.mods = [ModRoute::default(); MAX_MODS];
+                l.n_mods = 0;
                 l.inst = Instrument::from_u8(c.a as u8);
                 self.meters[li].clear();
                 // Push this instrument's defaults through, keep the strip as it is.
@@ -943,9 +1075,13 @@ impl Core {
             // Render.
             let (mut ml, mut mr, mut echo_in, mut verb_in) = (0.0, 0.0, 0.0, 0.0);
             let mut live = 0u8;
+            let comparing = self.comparing;
             for (li, l) in self.layers.iter_mut().enumerate() {
                 if l.inst == Instrument::None {
                     continue;
+                }
+                if l.n_mods > 0 {
+                    l.mod_tick(comparing);
                 }
                 let x = l.tick();
                 let o = l.strip.tick(x);

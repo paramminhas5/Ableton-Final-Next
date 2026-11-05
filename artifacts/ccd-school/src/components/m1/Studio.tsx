@@ -69,6 +69,8 @@ import { captureTake, trimPlayed, type Played } from "@/lib/capture";
 import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC } from "@/lib/paramColor";
+import { assign, canTake, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, SRC_COLOR, SRC_LABEL, type ModSrc } from "@/lib/modulation";
+import { ModChips, ModOverlay } from "./Modulation";
 import { fromValue, toValue } from "@/engine";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
@@ -146,6 +148,9 @@ export function Studio() {
   const recHeld = useRef<Held>(new Map());
   const takeOpen = useRef(false);
   const lastParamEdit = useRef(0);
+  // Modulation: the source being edited (every knob shows its amount), and the knob a dragged source is over.
+  const [modEdit, setModEdit] = useState<ModSrc | null>(null);
+  const [dropOver, setDropOver] = useState<number | null>(null);
   const trackRef = useRef(track);
   trackRef.current = track;
 
@@ -377,6 +382,17 @@ export function Studio() {
     }, undoable);
     setTouched({ label: spec.label, text: display(spec, v) });
   };
+
+  /** Apply a modulation change (knob values and routes) as one undo step per gesture. */
+  const patchMod = (r: { params: Record<number, number>; mods: { src: ModSrc; to: number; amt: number }[] }, label: string, text: string) => {
+    start();
+    const now = Date.now();
+    const undoable = now - lastParamEdit.current > 800;
+    lastParamEdit.current = now;
+    patchSel(l => ({ ...l, params: { ...l.params, ...r.params }, mods: r.mods.length ? r.mods : undefined }), undoable);
+    setTouched({ label, text });
+  };
+  useEffect(() => { setModEdit(null); }, [selId]);
 
   const diceable = !!sel && (sel.type === "drums" || sel.type === "hats" || sel.type === "bass" || sel.type === "lead");
   const rollDice = (amt: number, seed: number) => {
@@ -750,14 +766,38 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
+            {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
+              <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
+                onEdit={src => { setModEdit(src); setTouched(src ? { label: SRC_LABEL[src], text: "set amounts" } : null); }}
+                onOver={setDropOver}
+                onDrop={(src, to) => {
+                  const k = knobs.find(x => x.index === to);
+                  if (!k || !canTake(k.spec.key)) return;
+                  patchMod(assign(TYPE[sel.type].engine, sel.params, sel.mods, src, to), `${SRC_LABEL[src]} to ${k.spec.label}`, "modulating");
+                }} />
+            ) : null}
             {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
             <div className="m1-g st-knobs">
-              {knobs.map(({ spec, index }, i) => (
-                <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
-                  {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lfoto" ? 3 : undefined}
-                  value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
-                  onChange={v => setParam(index, spec, v)} />
-              ))}
+              {knobs.map(({ spec, index }, i) => {
+                const eng = TYPE[sel.type].engine;
+                const rs = ringsOf(eng, sel.params, sel.mods).get(index) ?? [];
+                const mine = modEdit ? rs.find(r => r.src === modEdit) : undefined;
+                const takes = sourcesFor(eng).length > 0 && canTake(spec.key) && !lockAt;
+                return (
+                  <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
+                    {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lfoto" ? 3 : undefined}
+                    value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
+                    mods={rs.map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
+                    modTo={takes ? index : undefined} drop={dropOver === index && takes}
+                    overlay={modEdit && takes ? (
+                      <ModOverlay src={modEdit} ring={mine} knob={spec.label}
+                        onAssign={() => patchMod(assign(eng, sel.params, sel.mods, modEdit, index), `${SRC_LABEL[modEdit]} to ${spec.label}`, "modulating")}
+                        onAmount={a => mine && patchMod(setAmount(eng, sel.mods, mine, a), `${SRC_LABEL[modEdit]} on ${spec.label}`, `${Math.round(a * 100)}%`)}
+                        onRemove={() => mine && patchMod(removeRing(eng, sel.mods, mine), `${SRC_LABEL[modEdit]} on ${spec.label}`, "off")} />
+                    ) : undefined}
+                    onChange={v => setParam(index, spec, v)} />
+                );
+              })}
             </div>
             </div>
           </>

@@ -28,6 +28,7 @@ import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
 import { EnvView, FilterView, useNoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC, picOf } from "@/lib/paramColor";
+import { ringsOf, SRC_COLOR } from "@/lib/modulation";
 import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
@@ -285,6 +286,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         {dialKnobs.map(k => (
           <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
             {...bind(k.spec, params[k.index] ?? k.spec.default)}
+            mods={(ringsOf(inst, { ...lp, ...params }, shownLayer?.mods).get(k.index) ?? []).map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
             value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
             spot={spotKey === k.spec.key} dim={!!spotKey && spotKey !== k.spec.key && !turned.has(k.spec.key)}
             onChange={v => { setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}

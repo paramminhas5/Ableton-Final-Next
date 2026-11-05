@@ -62,3 +62,22 @@
 .ls-key.is-unlit{opacity:.38;filter:saturate(.3);transition:opacity .25s}
 .ls-key.is-unlit:hover,.ls-key.is-unlit:focus-visible{opacity:.7}
 .ti-clean{margin:6px 0 0;font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* modulation (Modulation.tsx): source chips, dark until used; arcs outside a knob's ring; the amount while editing */
+.m1-mod-arc{fill:none;stroke:var(--c);stroke-width:2.2;stroke-linecap:round;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--c) 70%,transparent))}
+.m1-mod-arc.is-back{opacity:.45}
+.m1-modchips{display:flex;gap:6px;align-items:center;flex:none;min-width:0}
+.m1-modchip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 8px;border-radius:9px;border:1px solid color-mix(in srgb,var(--c) 30%,transparent);background:none;color:var(--sub);font:inherit;font-size:12px;font-weight:600;cursor:grab;touch-action:none;min-height:0;min-width:0;-webkit-user-select:none;user-select:none}
+.m1-modchip svg{width:16px;height:10px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+.m1-modchip.is-used{color:var(--ink);border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);box-shadow:0 0 10px -2px color-mix(in srgb,var(--c) 70%,transparent)}
+.m1-modchip.is-used svg{stroke:var(--c);opacity:1}
+.m1-modchip.is-edit{background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--ink);border-color:var(--c)}
+.m1-modchip:focus-visible{outline:2px solid var(--led-cobalt,#4C7DFF);outline-offset:2px}
+.m1-modghost{position:fixed;z-index:60;transform:translate(-50%,-140%);padding:4px 10px;border-radius:9px;background:var(--c);color:#141416;font-size:12px;font-weight:700;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.m1-m.is-drop{box-shadow:0 0 0 2px var(--led-mint),0 0 18px -4px var(--led-mint)}
+.m1-modpick,.m1-modamt{position:absolute;inset:4px;z-index:3;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:inherit;color:var(--ink);min-height:0;min-width:0}
+.m1-modpick{border:1.5px dashed color-mix(in srgb,var(--c) 70%,transparent);background:color-mix(in srgb,var(--c) 10%,transparent);cursor:pointer;font-size:20px;font-weight:400}
+.m1-modamt{border:1.5px solid var(--c);background:color-mix(in srgb,var(--deck,#1b1b1e) 72%,var(--c));cursor:ns-resize;touch-action:none}
+.m1-modamt-v{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.m1-modamt-l{font-size:10px;font-weight:600;color:var(--sub)}
+.m1-modpick:focus-visible,.m1-modamt:focus-visible{outline:2px solid var(--led-cobalt,#4C7DFF);outline-offset:1px}

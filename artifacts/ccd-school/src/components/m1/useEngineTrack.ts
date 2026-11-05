@@ -9,11 +9,12 @@ import { pushSamples } from "@/lib/samples";
 import { arranged } from "@/lib/arrange";
 import { REAL_KIT_ID, realKitLayer } from "@/lib/realKit";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
+import { engineSlots } from "@/lib/modulation";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
 const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
-type Sent = { inst: string; events: string; duck: string; params: Map<number, number> };
+type Sent = { inst: string; events: string; duck: string; params: Map<number, number>; mods?: string };
 
 type Last = { bpm: number; loop: number; swing?: number; master?: number[]; samples?: Set<string> };
 
@@ -54,6 +55,7 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
       s.inst = inst;
       s.params.clear();
       s.events = "";
+      s.mods = undefined; // a new instrument starts with no routes in the engine
     }
     if (!l) continue;
     // Every param the layer might have, so a reset to default reaches the engine too.
@@ -66,6 +68,12 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
         engine.param(i, p, v);
         s.params.set(p, v);
       }
+    }
+    // Modulation routes: every slot, so a removed route is cleared in the engine too.
+    const mk = JSON.stringify(l.mods ?? []);
+    if (s.mods !== mk) {
+      engineSlots(l.mods).forEach((m, slot) => engine.mod(i, slot, m.src, m.to, m.amt));
+      s.mods = mk;
     }
     const sw = t.swing ?? 0;
     const ev = JSON.stringify(l.events) + "|" + sw;

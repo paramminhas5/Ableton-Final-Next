@@ -64,6 +64,8 @@ export type LayerV2 = {
   samples?: Record<number, string>;
   /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
   arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
+  /** Modulation routes (src/lib/modulation.ts): a source onto a knob by an amount. None when missing. */
+  mods?: { src: "lfo" | "env"; to: number; amt: number }[];
 };
 
 export type TrackV2 = {
