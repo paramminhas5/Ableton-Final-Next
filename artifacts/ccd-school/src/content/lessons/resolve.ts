@@ -96,6 +96,9 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
         out.push({ kind, ...rest } as ResolvedStep);
         break;
       }
+      case "match":
+        out.push({ kind: "match", layer: s.layer, knobs: s.knobs, target: s.target, say: voiceText(s.say, o.voice), ...hintOf(s.hint, o) });
+        break;
       case "ask": {
         const order = orders.get(i)!;
         const whyWrong: Record<number, string> = {};

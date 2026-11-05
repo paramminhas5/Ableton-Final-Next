@@ -45,6 +45,25 @@ steps:
         Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly.
         Release makes them ring out after. Try a short pluck, then a long dreamy pad.
 
+
+  - kind: match
+    layer: lead
+    knobs: [attack, release]
+    target: {attack: 0.6, release: 0.7}
+    say:
+      mentor: >-
+        Match this sound. The target is your lead with attack and release set where you can't see them.
+        Switch between the target and yours: does each note fade in or start straight away, and how long does
+        it ring after it ends? Turn attack and release until you can't tell them apart, then check.
+      straight: >-
+        The target is your lead with hidden attack and release. Compare how notes start and how they ring
+        out, turn the two knobs, check.
+      eli5: >-
+        A hidden sound is waiting. Does it fade in slowly or start right away? Does it ring after the note
+        ends? Turn the two knobs until yours sounds the same.
+    hint: >-
+      Attack is the start of each note, release is the tail after it. Listen to one end at a time.
+
   - kind: ask
     q: What does resonance do?
     options: ["adds a ringing peak at the cutoff", "makes notes longer", "changes the tempo", "adds reverb"]

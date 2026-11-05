@@ -24,7 +24,7 @@ export type DeviceDef = {
   signalFlow: string;
   defaultSample?: SampleName;
   // Phase-1 enrichments — optional so existing entries still type-check.
-  whatLong?: string[];                                    // 2–3 plain-English paragraphs
+  whatLong?: string[];                                    // 2 to 3 plain-English paragraphs
   commonMistakes?: string[];                              // top 3
   workedExample?: { goal: string; steps: string[]; preset?: string };
   related?: { devices?: string[]; missions?: string[] };
@@ -279,7 +279,7 @@ export const DEVICES: DeviceDef[] = [
     category: "DYNAMICS",
     tagline: "Makes a mix feel like one thing instead of many.",
     what: "A compressor tuned for whole mixes and drum buses. It glues separate parts into one cohesive, 'finished' sound. The secret on most records.",
-    how: "Same idea as a normal compressor, but gentle and slow on purpose. Aim for just 1–3 dB of gain reduction on the loudest bits.",
+    how: "Same idea as a normal compressor, but gentle and slow on purpose. Aim for just 1 to 3 dB of gain reduction on the loudest bits.",
     factory: makeGlueComp,
     params: [
       { kind: "knob", id: "threshold", label: "THRESHOLD", min: -30, max: 0, default: -12, unit: "dB", explain: "Where the squash starts." },
@@ -296,7 +296,7 @@ export const DEVICES: DeviceDef[] = [
     ],
     listenFor: [
       "A/B: should barely hear difference. That's correct.",
-      "Aim for 1–3 dB gain reduction on peaks only.",
+      "Aim for 1 to 3 dB gain reduction on peaks only.",
       "Without it, the mix feels separated and amateur.",
     ],
     signalFlow: "MIX → DETECTOR → SLOW COMP → MAKEUP → OUT",
@@ -656,7 +656,7 @@ export const DEVICES: DeviceDef[] = [
       { name: "BELL TONES", values: { shift: 30, wet: 1 } },
       { name: "CHIRP", values: { shift: 200, wet: 0.6 } },
     ],
-    listenFor: ["Tiny shifts (5–20 Hz) sound like a chorus from another planet.", "Big shifts on drums = robot percussion."],
+    listenFor: ["Tiny shifts (5 to 20 Hz) sound like a chorus from another planet.", "Big shifts on drums = robot percussion."],
     signalFlow: "SRC × SINE(shift Hz) → OUT  (ring-mod approximation)",
     commonMistakes: ["Confusing with pitch shifter: this destroys harmonic relationships on purpose"],
     source: "Live 12 manual §22.21",

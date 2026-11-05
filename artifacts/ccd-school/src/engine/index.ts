@@ -2,7 +2,7 @@
  * The CCD engine, from the UI's side. One API whether the sound comes from
  * WebAssembly in the browser or from native code in the iOS/Android app.
  */
-import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, type InstrumentName } from "./params.gen";
+import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, SCOPE_OFF, type InstrumentName } from "./params.gen";
 import type { EngineEvent, EngineHost } from "./host";
 import { NativeHost, isTauri } from "./native-host";
 import { WasmHost } from "./wasm-host";
@@ -12,7 +12,12 @@ export * from "./format";
 export * from "./mix";
 export type { EngineEvent, EngineHost, HostInfo } from "./host";
 
-export type NoteEvent = { note: number; vel: number; start: number; len: number };
+/** `chance` 0..1 and `cond` (a trig condition: "1:2", "fill"...) decide in the engine whether a note plays
+ * each time round; `it` and `reps` say which play of the part's loop it is in an arranged song. */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; chance?: number; cond?: string; it?: number; reps?: number };
+
+/** Trig conditions in the engine's wire order (engine/src/seq.rs, cond). */
+const COND_CODE: Record<string, number> = { "1:2": 1, "2:2": 2, "1:4": 3, "2:4": 4, "3:4": 5, "4:4": 6, fill: 7, "not fill": 8 };
 
 /** Wire index of a param, by id. Drum pad params need the pad. */
 export function paramIndex(id: string, pad = 0): number {
@@ -45,14 +50,49 @@ export class Engine {
   /** Replace a layer's events. Swapped in atomically on the audio thread. */
   pattern(layer: number, events: NoteEvent[]) {
     this.s(CMD.evClear, layer);
-    for (const e of events) this.s(CMD.evAdd, layer, e.note, e.vel, e.start, e.len);
+    for (const e of events) {
+      this.s(CMD.evAdd, layer, e.note, e.vel, e.start, e.len);
+      const cond = e.cond ? (COND_CODE[e.cond] ?? 0) : 0;
+      const chance = e.chance ?? 1;
+      if (cond || chance < 1) this.s(CMD.evCond, layer, cond, chance, e.it ?? 0, e.reps ?? 1);
+    }
     this.s(CMD.evCommit, layer);
+  }
+  /** The song's seed for chance: the same seed plays the same chances. */
+  chanceSeed(seed: number) {
+    this.s(CMD.chanceSeed, 0, seed >>> 0);
+  }
+  /** Punch-in effect on the whole mix (PUNCH.repeat, filter, tapeStop, throw) at `amount` 0..1, while held;
+   * PUNCH.off lets go and the mix fades back to exactly dry. Send again to move the amount. */
+  punch(mode: number, amount = 0.5) {
+    this.s(CMD.punch, 0, mode, amount);
+  }
+  /** The fill key: steps with the fill condition play while it is held (Elektron's fill). */
+  fill(on: boolean) {
+    this.s(CMD.fill, 0, on ? 1 : 0);
   }
   noteOn(layer: number, note: number, vel: number, at?: number) {
     this.host.note(true, layer, note, vel, at);
   }
   noteOff(layer: number, note: number, at?: number) {
     this.host.note(false, layer, note, 0, at);
+  }
+  /** Modulation slot `slot` of a layer: source `src` (MOD_SRC) onto wire param `to` by `amount` (-1..1 of its travel; 0 clears). */
+  mod(layer: number, slot: number, src: number, to: number, amount: number) {
+    this.s(CMD.mod, layer, slot, amount, to, src);
+  }
+  /** A/B level match: trim a layer by `db` after its strip (0 takes it off). Not a knob, never saved. */
+  trim(layer: number, db: number) {
+    this.s(CMD.trim, layer, 0, db);
+  }
+  /**
+   * The scope: the engine keeps the last samples of part `src` (or SCOPE_MASTER) and `fn` gets them about
+   * 30 times a second. Returns a function that stops it. Hosts without a scope never call `fn`.
+   */
+  scope(src: number, fn: (x: Float32Array) => void): () => void {
+    this.s(CMD.scope, 0, src);
+    const off = this.host.scope?.(fn) ?? (() => {});
+    return () => { off(); this.s(CMD.scope, 0, SCOPE_OFF); };
   }
   /** Hold a pad to roll: hits land on the grid, `beats` apart (0.25 = 1/16, 0.125 = 1/32). */
   repeat(layer: number, note: number, vel: number, beats: number) {

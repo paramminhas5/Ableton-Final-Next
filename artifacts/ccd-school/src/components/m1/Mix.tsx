@@ -32,6 +32,8 @@ import {
 } from "@/engine";
 import { masterOf, paramOf, TYPE, type LayerV2, type TrackV2 } from "@/lib/track2";
 import { CAP, Fader, Icon, Knob, Screen, Silk } from "./controls";
+import { SpectrumView } from "./Scope";
+import { PunchPads } from "./PunchPads";
 
 const P = Object.fromEntries(LAYER_PARAMS.map(p => [p.id, p])) as Record<string, ParamSpec>;
 const IDX = {
@@ -452,7 +454,7 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
     <>
       <div className="mx-scr-hold" {...holdHandlers} {...keyHandlers} tabIndex={0} role="button" aria-pressed={holding}
         aria-label={holding ? "Comparing with the mix before your changes. Let go to come back" : "Mix screen. Hold to compare with the mix before your changes"}>
-        <Screen className="st-scr" height={96}>{screen}</Screen>
+        <Screen className={`st-scr ${view === "faders" && masterOpen && !focus ? "is-master" : ""}`} height={96}>{screen}<SpectrumView engine={engine} className="mx-spectrum" /></Screen>
       </div>
       {pads}
       <Silk label="see the mix as" right="same mix, two views" />
@@ -505,6 +507,8 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
           />
         </>
       )}
+      <Silk label="punch-in effects" right="hold one, higher is more" />
+      <PunchPads engine={engine} compact onSay={(label, text) => setTouched({ label, text, at: Date.now() })} />
     </>
   );
 }
@@ -763,10 +767,11 @@ function Faders({ track, open, masterOpen, onOpen, onOpenMaster, setParam, setMa
   );
 }
 
-function MixKnob({ label, value, spec, on, onChange }: { label: string; value: number; spec: Pick<ParamSpec, "default">; on?: boolean; onChange: (v: number) => void }) {
+// Pink is the go key's alone: a knob that's working gets the navy cap, and every knob says its value.
+function MixKnob({ label, value, spec, on, onChange }: { label: string; value: number; spec: ParamSpec; on?: boolean; onChange: (v: number) => void }) {
   return (
     <div className="mx-knob">
-      <Knob bare size={22} label={label} value={value} defaultValue={spec.default} color={on ? CAP.go : CAP.grey} onChange={onChange} />
+      <Knob bare size={22} label={label} value={value} defaultValue={spec.default} color={on ? CAP.navy : CAP.grey} readout={display(spec, value)} onChange={onChange} />
       <span className="m1-eng mx-klabel" style={on ? { color: "var(--ink)", fontWeight: 600 } : undefined}>{label}</span>
     </div>
   );
@@ -832,6 +837,8 @@ function DuckLine({ track, layer, src }: { track: TrackV2; layer: LayerV2; src: 
 /** The master's numbers: true peak, loudness, how hard the glue and limiter work. */
 function MasterReadout({ frame, playing }: { frame: MixFrame | null; playing: boolean }) {
   const m = playing ? frame?.master : null;
+  // gain reduction reads "0.0 db" when nothing is pulled down, never "-0.0 db"
+  const gr = (db: number) => (Math.abs(db) < 0.05 ? "0.0 db" : `${minus((-db).toFixed(1))} db`);
   const f = (v: number | undefined, unit: string, d = 1) => (v === undefined || v <= -100 ? "·" : `${minus(v.toFixed(d))} ${unit}`);
   return (
     <div className="mx-mread">
@@ -839,8 +846,8 @@ function MasterReadout({ frame, playing }: { frame: MixFrame | null; playing: bo
       <div><span className="st-ss">loudness</span><b>{f(m?.lufs, "lufs", 0)}</b></div>
       <div><span className="st-ss">last 3 s</span><b>{f(m?.shortTerm, "lufs", 0)}</b></div>
       <div><span className="st-ss">song</span><b>{f(m?.integrated, "lufs", 1)}</b></div>
-      <div><span className="st-ss">glue</span><b>{m ? `${minus((-m.glueGrDb).toFixed(1))} db` : "·"}</b></div>
-      <div><span className="st-ss">limit</span><b>{m ? `${minus((-m.limiterGrDb).toFixed(1))} db` : "·"}</b></div>
+      <div><span className="st-ss">glue</span><b>{m ? gr(m.glueGrDb) : "·"}</b></div>
+      <div><span className="st-ss">limit</span><b>{m ? gr(m.limiterGrDb) : "·"}</b></div>
     </div>
   );
 }

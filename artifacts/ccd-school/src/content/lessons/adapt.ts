@@ -9,6 +9,8 @@ const KIND_FOR_PART: Record<string, string> = { kick: "kick", hats: "hats", clap
 const TOOL_LEARNED: Record<string, string> = {
   arp: "turning chords into an arpeggio", key: "moving your song to a new key", grid: "editing notes on the grid",
   mic: "recording your own sound", comp: "comping the best take", sample: "shaping a sample", macro: "one knob that moves several",
+  chords: "writing a chord track", player: "letting a session player write a part", chance: "chance and trig conditions on steps",
+  length: "a part with its own length and swing", commit: "committing a loop to a new section",
 };
 
 export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
@@ -27,6 +29,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
         break;
       case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note, ...(s.goal.on ? { on: s.goal.on } : {}) }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;
       case "shape": learned.push(`shaping it with ${s.knobs.join(" and ")}`); screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
+      case "match": learned.push(`matching a sound by ear with ${s.knobs.join(" and ")}`); screens.push({ kind: "matchsound", layer: s.layer, knobs: s.knobs, target: s.target, body: s.say, hint: s.hint }); break;
       case "ask": screens.push({ kind: "quiz", q: s.q, options: s.options, answer: s.answer, explain: s.why, hint: s.hint, whyWrong: s.whyWrong, ...(s.more ? { more: true } : {}) }); break;
       case "ear": screens.push({ kind: "ear", drill: s.drill, rounds: s.rounds, body: s.say }); break;
       case "arrange": learned.push(s.goal === "export" ? "finishing and exporting your song" : s.goal === "fills" ? "adding fills" : s.goal === "risers" ? "building risers" : s.goal === "drop" ? "building a breakdown and a drop" : "arranging your song into sections"); screens.push({ kind: "arrange", body: s.say, goal: s.goal, hint: s.hint }); break;

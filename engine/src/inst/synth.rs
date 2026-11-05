@@ -679,6 +679,11 @@ impl Poly {
         }
     }
 
+    /// Where the lfo is in its cycle (0..1), for modulation routed from it (engine.rs).
+    pub fn lfo_phase(&self) -> f32 {
+        self.ctl.lfo_phase
+    }
+
     /// Voices that are making sound (held or ringing out).
     pub fn active_voices(&self) -> usize {
         self.voices.iter().filter(|v| v.active()).count()
@@ -866,6 +871,11 @@ impl Lead {
 
     pub fn is_active(&self) -> bool {
         self.voice.active()
+    }
+
+    /// Where the lfo is in its cycle (0..1), for modulation routed from it (engine.rs).
+    pub fn lfo_phase(&self) -> f32 {
+        self.ctl.lfo_phase
     }
 
     #[inline]

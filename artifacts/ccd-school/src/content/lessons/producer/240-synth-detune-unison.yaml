@@ -68,14 +68,14 @@ steps:
         and listen for the moment the lead starts to shimmer and fill out. Keep going and it gets seasick. Find
         the edge and back off a touch.
 
-        Then try wave. A buzzier wave has more harmonics, and detune is easier to hear on buzzy sounds, so the
+        Then try shape. A buzzier wave has more harmonics, and detune is easier to hear on buzzy sounds, so the
         two together go big fast. Keep the width that suits your song.
       straight: >-
         Raise detune until your lead shimmers, back off before it sounds out of tune. A buzzier wave makes the
         width more obvious. Keep it.
       eli5: >-
         Turn detune up until your tune sounds big and shimmery. Too far sounds wobbly, so turn it back a bit.
-        Then try wave for a buzzier sound.
+        Then try shape for a buzzier sound.
 
   - kind: ask
     q: Why does detuning two oscillators make a sound wider?

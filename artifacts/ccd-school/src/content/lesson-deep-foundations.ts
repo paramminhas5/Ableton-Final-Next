@@ -145,7 +145,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Frequency f (Hz) relates to wavelength λ in air by λ = c/f where c ≈ 343 m/s. So 100 Hz has a 3.43 m wavelength: bigger than most rooms, which is why low end is room-dependent.",
-        "Human hearing spans roughly 20 Hz – 20 kHz, with sensitivity peaking around 2–5 kHz (Fletcher-Munson). High-frequency sensitivity declines with age and exposure.",
+        "Human hearing spans roughly 20 Hz to 20 kHz, with sensitivity peaking around 2 to 5 kHz (Fletcher-Munson). High-frequency sensitivity declines with age and exposure.",
         "Octave = 2:1 frequency ratio. The 12-tone equal temperament divides that ratio into 12 equal multiplicative steps of 2^(1/12) ≈ 1.0595.",
       ],
       edgeCases: [
@@ -154,7 +154,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "Tuning standards vary: A=440 is modern default, A=432 and A=442 exist in classical contexts.",
       ],
       engineerNotes: [
-        "Frequency ranges to memorise: sub 20–60, bass 60–250, low-mid 250–500, mid 500–2k, presence 2k–5k, brilliance 5k–10k, air 10k–20k.",
+        "Frequency ranges to memorise: sub 20 to 60, bass 60 to 250, low-mid 250 to 500, mid 500 to 2k, presence 2k to 5k, brilliance 5k to 10k, air 10k to 20k.",
         "A spectrum analyser uses an FFT to decompose any signal into its component frequencies in real time.",
       ],
     },
@@ -164,16 +164,16 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Play A4 = 440 Hz then A5 = 880 Hz.", listen: "Same letter name, doubled frequency, one octave up." },
       { do: "EQ-boost 4 kHz on a vocal.", listen: "Consonants and 'presence' jump forward." },
       { do: "Lower a male vocal one octave with pitch shift.", listen: "Same identity, halved frequency: proves the 2:1 ratio." },
-      { do: "Sweep a high-Q EQ bell from 200 Hz to 4 kHz on a snare.", listen: "Body lives ~200 Hz; crack lives ~3–5 kHz." },
+      { do: "Sweep a high-Q EQ bell from 200 Hz to 4 kHz on a snare.", listen: "Body lives ~200 Hz; crack lives ~3 to 5 kHz." },
     ],
-    listenFor: ["Sub energy as feeling, not pitch.", "Mud around 200–400 Hz.", "Harshness 2–5 kHz when boosted too much.", "Air shimmer above 10 kHz.",
+    listenFor: ["Sub energy as feeling, not pitch.", "Mud around 200 to 400 Hz.", "Harshness 2 to 5 kHz when boosted too much.", "Air shimmer above 10 kHz.",
       "Beating between two notes a few Hz apart: that's frequency difference made audible.",],
     mistakes: ["Boosting bass to fix a thin mix instead of cutting mud.", "Believing more highs = more clarity (it's often less mud).", "Mixing at one volume only: Fletcher-Munson tricks you."],
     proMoves: ["Sweep an EQ band with high Q to find resonances by ear.", "Learn to identify ~7 anchor frequencies (60, 120, 250, 500, 1k, 4k, 10k Hz).", "A-B at different volumes to catch loudness-curve illusions."],
     quizHard: [
       { q: "Frequency ratio of one octave?", options: ["3:2", "2:1", "5:4", "9:8"], answer: 1 },
       { q: "Approximate wavelength of 100 Hz in air?", options: ["3.4 cm", "34 cm", "3.4 m", "34 m"], answer: 2, explain: "λ = 343/100 ≈ 3.43 m." },
-      { q: "Where does human hearing typically peak in sensitivity?", options: ["100 Hz", "500 Hz", "2–5 kHz", "15 kHz"], answer: 2 },
+      { q: "Where does human hearing typically peak in sensitivity?", options: ["100 Hz", "500 Hz", "2 to 5 kHz", "15 kHz"], answer: 2 },
       { q: "Syncopation primarily accents…", options: ["On-beats", "Off-beats / weak positions", "The downbeat", "Bar one"], answer: 1 },
     ],
   },
@@ -187,7 +187,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "In your DAW, 0 dBFS is the absolute ceiling. Going above it doesn't get louder: it clips and distorts.",
       ],
       why: [
-        "Fader moves of 1–3 dB make audible mix differences. You don't need huge changes.",
+        "Fader moves of 1 to 3 dB make audible mix differences. You don't need huge changes.",
         "Headroom prevents clipping when you stack tracks and add effects.",
         "Perceived loudness depends on duration and frequency, not just peak: which is why LUFS exists.",
       ],
@@ -219,7 +219,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Bounce at -1 dBTP and check on a true-peak meter.", listen: "Inter-sample peaks revealed even when sample peaks pass." },
     ],
     listenFor: ["The 'pump' of a limiter doing too much work.", "Subtle distortion on transients = clipping.", "Mix translating quietly = good dynamics.",
-      "Loudness perception shifting when volume changes (Fletcher–Munson at work).",],
+      "Loudness perception shifting when volume changes (Fletcher-Munson at work).",],
     mistakes: ["Mixing only at high volume.", "Pushing every track up instead of pulling problem tracks down.", "Trusting peak meters alone: track LUFS too."],
     proMoves: ["Pink-noise reference at -18 dBFS RMS to calibrate monitors.", "Reference commercial masters at matched LUFS.", "Leave at least 6 dB of master headroom before mastering."],
     quizHard: [
@@ -271,12 +271,12 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Harmonic 'colour' as bright/warm/hollow.", "Attack transients identifying instruments instantly.", "Noise content (breath, bow scrape) carrying realism.",
       "Spectral brightness changing across the same note as a filter sweeps.",],
-    mistakes: ["EQ-ing the fundamental only: most timbral character is in harmonics 2–10.", "Killing all transients with a compressor: destroys timbre cues.", "Layering instruments with identical harmonic profiles: they pile up instead of complementing."],
+    mistakes: ["EQ-ing the fundamental only: most timbral character is in harmonics 2 to 10.", "Killing all transients with a compressor: destroys timbre cues.", "Layering instruments with identical harmonic profiles: they pile up instead of complementing."],
     proMoves: ["Use a spectrum analyser to see why two sounds clash.", "Saturation adds harmonics: use it to thicken thin sources.", "Match attack times across a layered patch for cohesive timbre."],
     quizHard: [
       { q: "Timbre is primarily encoded in…", options: ["Pitch", "Amplitude", "Harmonic spectrum + envelope", "Phase only"], answer: 2 },
       { q: "Even-order harmonics tend to sound…", options: ["Warm/musical", "Harsh/aggressive", "Inaudible", "Random"], answer: 0 },
-      { q: "Attack transient duration on most instruments is roughly…", options: ["1 ms", "20–80 ms", "500 ms", "2 s"], answer: 1 },
+      { q: "Attack transient duration on most instruments is roughly…", options: ["1 ms", "20 to 80 ms", "500 ms", "2 s"], answer: 1 },
       { q: "A melody resolving onto scale degree 1 creates…", options: ["Tension", "Resolution / arrival", "Modulation", "Syncopation"], answer: 1 },
     ],
   },
@@ -323,7 +323,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Sine = no buzz.", "Saw = buzzy and bright.", "Square = woody/hollow.", "Triangle = soft, slightly hollow.",
       "Aliasing as metallic ringing when a digital saw plays very high notes.",],
     mistakes: ["Using a saw for sub bass: too many harmonics fight the kick.", "Picking sine for a 'big' lead: too thin without harmonics.", "Forgetting to enable anti-aliasing on digital synths."],
-    proMoves: ["Detune three saws by ±5–15 cents for instant width.", "Mix sine sub under a saw bass for both weight and presence.", "Use noise as a fifth 'waveform' for breath and air."],
+    proMoves: ["Detune three saws by ±5 to 15 cents for instant width.", "Mix sine sub under a saw bass for both weight and presence.", "Use noise as a fifth 'waveform' for breath and air."],
     quizHard: [
       { q: "Which waveform contains only odd harmonics with 1/n falloff?", options: ["Sine", "Square", "Triangle", "Saw"], answer: 1 },
       { q: "PWM stands for…", options: ["Pulse Wave Mixer", "Pulse Width Modulation", "Peak Wave Modifier", "Phase Width Master"], answer: 1 },
@@ -350,7 +350,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "A room impulse response (IR) captures direct sound, early reflections (first ~80 ms), and late reverberation (diffuse tail). Convolution reverbs use IRs to simulate real spaces.",
-        "RT60 is the time for reverb to decay 60 dB. Bedrooms ~0.3 s, concert halls 1.5–2.5 s, cathedrals 4+ s.",
+        "RT60 is the time for reverb to decay 60 dB. Bedrooms ~0.3 s, concert halls 1.5 to 2.5 s, cathedrals 4+ s.",
         "Room modes (standing waves) create peaks and nulls at low frequencies determined by room dimensions: the dominant problem in untreated mixing rooms.",
       ],
       edgeCases: [
@@ -374,7 +374,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Reverb tail length giving a sense of room size.", "Early reflections colouring the tone.", "Bass nulls when you move 30 cm in your room.",
       "Pre-delay separating source from room without losing the sense of space.",],
     mistakes: ["Mixing in an untreated room and trusting the bass.", "Using too much reverb to hide a weak source.", "Ignoring headphone vs speaker discrepancies."],
-    proMoves: ["Use a mono short reverb for 'glue', a long stereo reverb for 'space': two different jobs.", "EQ reverb returns to cut mud and harshness.", "Pre-delay your reverb 20–40 ms to keep vocals upfront."],
+    proMoves: ["Use a mono short reverb for 'glue', a long stereo reverb for 'space': two different jobs.", "EQ reverb returns to cut mud and harshness.", "Pre-delay your reverb 20 to 40 ms to keep vocals upfront."],
     quizHard: [
       { q: "RT60 measures…", options: ["Reverb decay to -60 dB", "Room temperature", "Round-trip latency", "Reflection at 60°"], answer: 0 },
       { q: "Early reflections fuse with direct sound when they arrive within roughly…", options: ["1 ms", "15 ms", "150 ms", "1500 ms"], answer: 1, explain: "Haas / precedence effect: reflections under ~15 ms fuse with direct sound." },
@@ -440,12 +440,12 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       what: [
         "The outer ear funnels sound to the eardrum. The eardrum vibrates and pushes three tiny bones in the middle ear, which amplify and pass the motion to the cochlea: a fluid-filled spiral lined with hair cells.",
         "Different positions along the cochlea respond to different frequencies. Hair cells convert that vibration into nerve signals. The brain reads the pattern as pitch, loudness, location, and timbre.",
-        "Your hearing is not flat. You're most sensitive around 2–5 kHz (baby cry / consonant range) and less sensitive at the extremes. Low and high content needs more energy to seem 'equal'.",
+        "Your hearing is not flat. You're most sensitive around 2 to 5 kHz (baby cry / consonant range) and less sensitive at the extremes. Low and high content needs more energy to seem 'equal'.",
       ],
       why: [
         "This is why mixes change at different volumes (Fletcher-Munson).",
         "Why ear fatigue is real: and dangerous past 85 dB SPL sustained.",
-        "Why presence around 2–4 kHz feels 'forward' even at low boosts.",
+        "Why presence around 2 to 4 kHz feels 'forward' even at low boosts.",
       ],
       analogy: "Your ear is a violin's body, not a perfect microphone: every frequency gets coloured before it reaches your brain.",
     },
@@ -461,7 +461,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "Headphones bypass HRTF: front/back and elevation cues collapse.",
       ],
       engineerNotes: [
-        "Mix at ~75–85 dB SPL average for most accurate balance perception.",
+        "Mix at ~75 to 85 dB SPL average for most accurate balance perception.",
         "Take 10-minute breaks every hour to reset auditory adaptation.",
         "Reference at very low volume to check arrangement balance: when small, only essential elements remain.",
       ],
@@ -471,15 +471,15 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Play a mix at 60 dB then 90 dB SPL.", listen: "Loud version has obviously more bass and treble: same mix, different ears." },
       { do: "Listen to a sine sweep at constant amplitude.", listen: "It seems quieter at 50 Hz and 15 kHz than at 3 kHz: your sensitivity is not flat." },
       { do: "After an hour of loud mixing, take 15 minutes off and re-listen.", listen: "Things you thought were 'fine' suddenly reveal problems: your ears were tired." },
-      { do: "Reference a mix at 65 dB SPL, then at 85 dB SPL.", listen: "Bass and highs feel louder at 85: Fletcher–Munson curve." },
+      { do: "Reference a mix at 65 dB SPL, then at 85 dB SPL.", listen: "Bass and highs feel louder at 85: Fletcher-Munson curve." },
       { do: "Mix for 15 minutes, then take a 5-minute silent break.", listen: "Returning, you hear problems your fatigued ears were hiding." },
     ],
-    listenFor: ["The 2–5 kHz 'presence' bias in your perception.", "Volume-dependent EQ balance shifts.", "Stereo image collapse when you nod your head (HRTF in action).",
-      "Ear fatigue creeping in after 45–60 minutes: decisions get worse, not better.",],
+    listenFor: ["The 2 to 5 kHz 'presence' bias in your perception.", "Volume-dependent EQ balance shifts.", "Stereo image collapse when you nod your head (HRTF in action).",
+      "Ear fatigue creeping in after 45 to 60 minutes: decisions get worse, not better.",],
     mistakes: ["Mixing too loud and adding too little bass.", "Ignoring ear fatigue and trusting late-session decisions.", "Skipping low-volume checks."],
     proMoves: ["Calibrate monitors to a known SPL with pink noise.", "Protect your hearing: your career depends on it.", "Test mixes on phone speakers + car + headphones + monitors: your audience uses all four."],
     quizHard: [
-      { q: "Human hearing peaks in sensitivity around…", options: ["100 Hz", "500 Hz", "2–5 kHz", "12 kHz"], answer: 2 },
+      { q: "Human hearing peaks in sensitivity around…", options: ["100 Hz", "500 Hz", "2 to 5 kHz", "12 kHz"], answer: 2 },
       { q: "Equal-loudness contours flatten as level…", options: ["Decreases", "Increases", "Stays constant", "Goes negative"], answer: 1 },
       { q: "ITD and ILD provide cues for…", options: ["Pitch", "Loudness", "Timbre", "Localisation"], answer: 3 },
       { q: "Relative minor of C major is…", options: ["A minor", "E minor", "G minor", "F minor"], answer: 0 },
@@ -617,7 +617,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["The click 'disappearing' into the kick when perfectly aligned.", "Drift on long takes without a click.", "Subdivisions snapping to the grid lines."],
     mistakes: ["Recording without a click and trying to grid-edit later.", "Over-quantising live drums: drains the life.", "Ignoring plugin latency compensation."],
-    proMoves: ["Set a count-in (1–2 bars) so the performer enters in pocket.", "Use a percussion click (rim, side-stick) instead of a beep: easier on ears.", "Tap-tempo a reference track to find its BPM, then build at exactly that."],
+    proMoves: ["Set a count-in (1 to 2 bars) so the performer enters in pocket.", "Use a percussion click (rim, side-stick) instead of a beep: easier on ears.", "Tap-tempo a reference track to find its BPM, then build at exactly that."],
     quizHard: [
       { q: "PDC stands for…", options: ["Pre-Delay Compensation", "Plugin Delay Compensation", "Phase Drift Control", "Peak Detection Curve"], answer: 1 },
       { q: "Quantising at 80% strength…", options: ["Snaps to grid 80% of the way", "Quantises 80% of notes only", "Adds 80 ms swing", "Disables snap"], answer: 0 },
@@ -630,7 +630,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Tempo is the speed of the pulse, measured in beats per minute (BPM). 120 BPM means 120 beats happen every 60 seconds: two per second.",
-        "Different genres cluster around typical tempos: hip-hop 70–100, house 120–128, drum & bass 170–180, techno 125–135.",
+        "Different genres cluster around typical tempos: hip-hop 70 to 100, house 120 to 128, drum & bass 170 to 180, techno 125 to 135.",
         "Every clip, sample, and automation in your DAW is timed against this number. Change the project BPM and (with warping on) the whole arrangement speeds up or slows down without changing pitch.",
       ],
       why: [
@@ -671,7 +671,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     quizHard: [
       { q: "Quarter-note delay time at 120 BPM in milliseconds?", options: ["250 ms", "500 ms", "750 ms", "1000 ms"], answer: 1 },
       { q: "Half-time feel typically moves the snare to which beat in 4/4?", options: ["Beat 1", "Beat 2", "Beat 3", "Beat 4"], answer: 2 },
-      { q: "Drum & bass tempo range is typically…", options: ["70–90 BPM", "120–130 BPM", "170–180 BPM", "200–220 BPM"], answer: 2 },
+      { q: "Drum & bass tempo range is typically…", options: ["70 to 90 BPM", "120 to 130 BPM", "170 to 180 BPM", "200 to 220 BPM"], answer: 2 },
       { q: "Best practice when learning from a reference?", options: ["Listen once casually", "Loop short sections and dissect", "Skip to the drop", "Compare loudness only"], answer: 1 },
     ],
   },
@@ -751,7 +751,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       edgeCases: [
         "Layered drum kits need consistent grooves applied to all layers, or they smear.",
         "Quantising after applying groove undoes the groove: order matters.",
-        "Too much swing on fast 16ths starts to sound like triplets: pull it back to 54–58%.",
+        "Too much swing on fast 16ths starts to sound like triplets: pull it back to 54 to 58%.",
       ],
       engineerNotes: [
         "Steal grooves from MPC60, SP1200, J Dilla loops for instant character.",
@@ -1009,7 +1009,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "Capstone exercise: pick a target genre, identify its rhythmic fingerprint (kick pattern, snare position, hat subdivision, characteristic syncopation), build it from scratch, apply genre-typical groove template, and one transition (fill, reverse, silence).",
         "Test against a reference at the same tempo: your loop should sit in the same pocket without obvious mismatches.",
       ],
-      edgeCases: ["Don't quantise everything 100%: leave 80–90% for feel.", "Layered kits need consistent groove application."],
+      edgeCases: ["Don't quantise everything 100%: leave 80 to 90% for feel.", "Layered kits need consistent groove application."],
       engineerNotes: ["Bus and compress the rhythm group as one: this is where 'glue' starts."],
     },
     flow: "Tempo → Meter → Kick/snare → Hats → Perc syncopation → Groove → Transition",
@@ -1065,7 +1065,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "Frequency of MIDI note n = 440 × 2^((n−69)/12). MIDI 69 = A4 = 440 Hz exactly.",
         "Cents are 1/100 of a semitone: 1200 cents per octave. Detune offsets on synths are usually expressed in cents.",
         "When layering bass + sub, keep them exactly one octave apart and the sub mono: anything else introduces phase cancellation in the low end.",
-        "For melody doubling at the octave, low-pass the upper voice ~6 kHz to avoid harshness; for unison doubling, detune ±5–8 cents.",
+        "For melody doubling at the octave, low-pass the upper voice ~6 kHz to avoid harshness; for unison doubling, detune ±5 to 8 cents.",
       ],
     },
     flow: "Pitch class (one of 12) + Octave number → Specific frequency",
@@ -1083,7 +1083,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       "The point where octave-doubling gets thin (above ~3 kHz).",
     ],
     mistakes: ["Mixing up sharp and flat naming for the same key.", "Programming bass in the wrong octave (sub-50 Hz disappears on phones).", "Forgetting C3 vs C4 conventions between DAWs.", "Octave-doubling a bassline and not making the sub mono."],
-    proMoves: ["Layer bass + sub one octave apart for fullness.", "Doubling a melody at the octave thickens it without harmonic ambiguity.", "Use octave shifts for instant arrangement variation.", "Use cents-level detune (±5–8 cents) for unison fatness without flagrant pitch drift."],
+    proMoves: ["Layer bass + sub one octave apart for fullness.", "Doubling a melody at the octave thickens it without harmonic ambiguity.", "Use octave shifts for instant arrangement variation.", "Use cents-level detune (±5 to 8 cents) for unison fatness without flagrant pitch drift."],
     quizHard: [
       { q: "MIDI note 60 is…", options: ["A4", "Middle C", "C0", "C6"], answer: 1, explain: "MIDI 60 is middle C regardless of DAW-specific labelling (C3 in Live, C4 elsewhere)." },
       { q: "Frequency ratio of one octave?", options: ["3:2", "2:1", "5:4", "4:3"], answer: 1 },
@@ -1149,7 +1149,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Major scale intervals from root: 2, 2, 1, 2, 2, 2, 1 (semitones). Degrees numbered 1–7 (I–VII). Tonic = 1, supertonic = 2, mediant = 3, subdominant = 4, dominant = 5, submediant = 6, leading tone = 7.",
+        "Major scale intervals from root: 2, 2, 1, 2, 2, 2, 1 (semitones). Degrees numbered 1 to 7 (I-VII). Tonic = 1, supertonic = 2, mediant = 3, subdominant = 4, dominant = 5, submediant = 6, leading tone = 7.",
         "Modes derived by starting on each degree: Ionian (major), Dorian, Phrygian, Lydian, Mixolydian, Aeolian (natural minor), Locrian.",
         "Diatonic triads in major: I, ii, iii, IV, V, vi, vii°: the chord vocabulary of the key.",
       ],
@@ -1168,7 +1168,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Play all white keys C to C.", listen: "C major scale: bright and resolved." },
       { do: "Apply the same WWHWWWH pattern starting on G.", listen: "G major: sounds the same shape, but you needed F# to complete it." },
       { do: "Build a melody using only scale notes.", listen: "Cohesive, no 'wrong notes'." },
-      { do: "Play C major up two octaves, then back down.", listen: "Whole–whole–half–whole–whole–whole–half: the shape is constant." },
+      { do: "Play C major up two octaves, then back down.", listen: "Whole-whole-half-whole-whole-whole-half: the shape is constant." },
       { do: "Transpose the same melody up a 5th to G major.", listen: "Identical mood, higher position: proves scale = relative pattern." },
     ],
     listenFor: ["The resolved feel of landing on the tonic (note 1).", "The pull of the leading tone (note 7) toward the tonic.", "Major as 'bright' compared to minor.",
@@ -1225,7 +1225,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Minor's darker, more serious feel vs major.", "Raised 7 creating a strong resolution pull.", "Relative-minor relationship sharing notes with major.",
       "Lowered 3rd as the defining minor colour.",],
     mistakes: ["Treating relative minor as 'just a different start': the tonic changes everything.", "Forgetting to raise the 7 in harmonic minor cadences.", "Using melodic minor descending notes: switch back to natural."],
-    proMoves: ["Borrow harmonic minor's V chord at cadences inside a natural-minor song.", "Modal mixture: use VI from minor inside major for nostalgic colour.", "Build minor melodies around the 5–1 cadence with raised 7."],
+    proMoves: ["Borrow harmonic minor's V chord at cadences inside a natural-minor song.", "Modal mixture: use VI from minor inside major for nostalgic colour.", "Build minor melodies around the 5 to 1 cadence with raised 7."],
     quizHard: [
       { q: "Relative minor of C major is…", options: ["A minor", "D minor", "E minor", "F minor"], answer: 0 },
       { q: "Harmonic minor differs from natural minor by…", options: ["Raised 5", "Raised 6", "Raised 7", "Lowered 3"], answer: 2 },
@@ -1323,7 +1323,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Play C major pentatonic (C D E G A) over a Cmaj7 chord pad.", listen: "Bright and song-like: no clashing notes." },
       { do: "Switch to A minor pentatonic (A C D E G) over an Am pad.", listen: "Bluesy, soulful, modal." },
       { do: "Add the blue note (E♭) and pass through it on the way to E.", listen: "Classic blues phrase territory: friction then resolution." },
-      { do: "Improvise a melody using only the 5 notes over a I–IV–V progression in C.", listen: "Every phrase fits regardless of which chord is sounding." },
+      { do: "Improvise a melody using only the 5 notes over a I-IV-V progression in C.", listen: "Every phrase fits regardless of which chord is sounding." },
       { do: "Play the same shape one octave up, then doubled an octave below.", listen: "Hookable line, instantly orchestrated without changing notes." },
     ],
     listenFor: [
@@ -1562,7 +1562,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       what: [
         "A chord is two or more notes played simultaneously. The most common chord type is the triad: three notes stacked in 3rds (skip one scale note each time). A C major triad is C-E-G: count C, skip D, take E, skip F, take G.",
         "Three things define how a triad sounds. The bottom note (the root) names the chord. The middle note (the 3rd) decides whether it's major (bright) or minor (dark). The top note (the 5th) gives it weight and stability.",
-        "Almost every song you've heard is built from a sequence of chords. Pop usually moves between 3–5 chords for the whole song; jazz might use 50. Choose the chords well and the song writes itself: your melody gains an emotional context the moment a chord plays under it.",
+        "Almost every song you've heard is built from a sequence of chords. Pop usually moves between 3 to 5 chords for the whole song; jazz might use 50. Choose the chords well and the song writes itself: your melody gains an emotional context the moment a chord plays under it.",
         "Chord families: major triads sound happy, minor triads sound sad, diminished triads sound tense and unresolved, and augmented triads sound dreamy or unsettling. These four flavours are the entire colour wheel of basic harmony.",
       ],
       why: [
@@ -1698,7 +1698,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       what: [
         "A chord progression is a sequence of chords played in order. Some progressions are so common they appear in hundreds of hit songs: I-V-vi-IV (the 'Axis' progression) is probably the most famous.",
         "Roman numerals (I, ii, iii, IV, V, vi, vii°) name chords by their scale degree, so you can talk about progressions independently of key. 'I-V-vi-IV' works in C, G, Eb, or any key.",
-        "Learning 5–10 standard progressions covers 80% of pop, rock and EDM. Then you can deviate intentionally for character.",
+        "Learning 5 to 10 standard progressions covers 80% of pop, rock and EDM. Then you can deviate intentionally for character.",
       ],
       why: ["Progressions provide forward motion and resolution.", "Common progressions are familiar: listeners predict and feel rewarded.", "Lets you transpose songs and reharmonise easily."],
       analogy: "Progressions are like recipes for an emotional journey. Each chord is an ingredient, and the order matters.",
@@ -1710,7 +1710,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
         "Reharmonisation = replacing chords while keeping the melody. Substitution rules: any I can become iii or vi; any V can become vii° or bII7.",
       ],
       edgeCases: ["Modal progressions (I-bVII-IV-I etc.) don't follow major-key cadential logic: they cycle without resolution.", "Modulation between progressions creates section change feel.",
-      "Modal progressions (e.g. Dorian i–IV) avoid the classical V–I cadence and feel suspended.",],
+      "Modal progressions (e.g. Dorian i-IV) avoid the classical V-I cadence and feel suspended.",],
       engineerNotes: ["Use Roman numerals when discussing chords with collaborators in any key.", "Loop one progression for a whole track: variation comes from rhythm, melody, arrangement, not chord changes."],
     },
     flow: "Tonic → Predominant → Dominant → Tonic → loop",
@@ -1718,7 +1718,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Loop I-V-vi-IV in C major (C-G-Am-F).", listen: "Instantly recognisable pop progression." },
       { do: "Try vi-IV-I-V in same key (Am-F-C-G).", listen: "Sadder, more cinematic." },
       { do: "Add 7ths to all four chords.", listen: "Same progression, neo-soul colour." },
-      { do: "Loop I–V–vi–IV in C major.", listen: "Most-used pop progression ever; instant familiarity." },
+      { do: "Loop I-V-vi-IV in C major.", listen: "Most-used pop progression ever; instant familiarity." },
       { do: "Swap the IV for a iv (minor IV).", listen: "Bittersweet colour from a single semitone change." },
     ],
     listenFor: ["Resolution pull on V → I.", "Familiarity of common progressions.", "Mood shift when reordering same chords.",
@@ -1751,7 +1751,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: ["Key can be ambiguous in modal or chromatic music: listener may flip-flop perception.", "Pop songs sometimes blur major and minor (modal mixture) without truly modulating.",
       "Some tracks are ambiguous (modal interchange, no clear cadence): analysers can be wrong.",],
-      engineerNotes: ["Detect key by ear: find the chord/note the song resolves to. Detect with tools: KeyFinder, Mixed In Key.", "DJ Camelot wheel uses 1A–12B notation for harmonic mixing."],
+      engineerNotes: ["Detect key by ear: find the chord/note the song resolves to. Detect with tools: KeyFinder, Mixed In Key.", "DJ Camelot wheel uses 1A to 12B notation for harmonic mixing."],
     },
     flow: "Tonic + scale → Key → Defines safe notes and chord functions",
     walkthrough: [
@@ -1913,7 +1913,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { do: "Open a reference song and mark every section with locators.", listen: "Notice typical section lengths." },
       { do: "Map out empty sections for your own track first.", listen: "Skeleton-first arrangement." },
       { do: "Add or remove instruments per section.", listen: "Contrast emerges automatically." },
-      { do: "Sketch intro – verse – chorus – verse – chorus – bridge – chorus.", listen: "Familiar pop arc: predictable in the best way." },
+      { do: "Sketch intro, verse, chorus, verse, chorus, bridge, chorus.", listen: "Familiar pop arc: predictable in the best way." },
       { do: "Add a 4-bar pre-chorus that pulls energy back before the drop.", listen: "Contrast makes the chorus hit harder." },
     ],
     listenFor: ["Section transitions creating expectation.", "Choruses feeling 'bigger' than verses.", "Bridge offering harmonic or rhythmic contrast.",
@@ -2089,7 +2089,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       what: [
         "MIDI 1.0 is a serial protocol of 1- to 3-byte messages on 16 channels; status bytes encode message type and channel, data bytes carry note number, velocity, controller value, or program.",
         "Note On with velocity 0 is functionally identical to Note Off: many controllers use it as a bandwidth optimisation.",
-        "Continuous Controllers (CC) are 7-bit (0–127) by default; CC numbers 0/32, 6/38, etc. pair into 14-bit MSB/LSB messages for finer resolution.",
+        "Continuous Controllers (CC) are 7-bit (0 to 127) by default; CC numbers 0/32, 6/38, etc. pair into 14-bit MSB/LSB messages for finer resolution.",
         "MIDI 2.0 introduces bidirectional negotiation, 32-bit data resolution, per-note controllers (true polyphonic expression), and property exchange: adoption is partial across DAWs and hardware.",
         "MPE (MIDI Polyphonic Expression) sits on top of MIDI 1.0 by assigning each note its own channel so pitch bend and CCs can be per-note: Push 3 and ROLI controllers rely on this.",
       

@@ -59,11 +59,11 @@ steps:
     knobs: [fm, wave, detune, lfo]
     say:
       mentor: >-
-        An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: a wave oscillator and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.
+        An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: an oscillator you set with shape and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.
         
-        detune widens the wave layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.
+        detune widens the oscillator layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.
       straight: >-
-        Two voices on one note: wave and fm. Blend them with fm, widen with detune. That's a rack.
+        Two voices on one note: the oscillator and fm. Blend them with fm, widen with detune. That's a rack.
       eli5: >-
         Two sounds play every time you press one key.
 

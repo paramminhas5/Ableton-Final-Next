@@ -29,7 +29,7 @@ steps:
   - kind: play
     layer: bass
     surface: keys
-    goal: {notes: 2}
+    goal: {notes: 2, on: between}
     say:
       mentor: >-
         Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a
@@ -53,6 +53,24 @@ steps:
         Cutoff: warm and round when low, buzzy when high. Decay: plucky when short, rolling when long.
       eli5: >-
         Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like.
+
+
+  - kind: match
+    layer: bass
+    knobs: [cutoff, decay]
+    target: {cutoff: 0.3, decay: 0.25}
+    say:
+      mentor: >-
+        Ear training. The target is your bass line with cutoff and decay set out of sight. Switch between the
+        target and yours: is it darker or buzzier, are the notes shorter or longer? Turn the two lit knobs until
+        they match, then check how close you are.
+      straight: >-
+        The target is your bass with hidden cutoff and decay. Switch, compare, turn the knobs, check.
+      eli5: >-
+        Here's a hidden bass sound. Is it softer or buzzier than yours? Are its notes short or long? Turn the
+        knobs until yours sounds the same.
+    hint: >-
+      Cutoff changes how bright it is, decay how long each note lasts. Fix one at a time.
 
   - kind: ask
     q: Where does a dance music bass often sit?

@@ -183,9 +183,9 @@ pub const LAYER_PARAMS: &[ParamSpec] = &[
     p("mix.duck", "duck", Bank::Mix, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     // A filter on every part (a cloud session, 5 Nov): cutoff (fully open by default, so nothing changes
     // until you turn it), resonance, and the three characters, so drums, samples and fx can teach filters too.
-    p("fx.lp", "filter", Bank::Fx, 40.0, 20000.0, 1.0, Unit::Hz, Curve::Exp, 15.0, NONE),
+    p("fx.lp", "cutoff", Bank::Fx, 40.0, 20000.0, 1.0, Unit::Hz, Curve::Exp, 15.0, NONE),
     p("fx.lpres", "resonance", Bank::Fx, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
-    p("fx.lpkind", "character", Bank::Fx, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fx.lpkind", "circuit", Bank::Fx, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 
 pub const L_EQ_LOW: usize = 0;
@@ -214,13 +214,13 @@ pub const MASTER_PARAMS: &[ParamSpec] = &[
     // what it listens to (off at the bottom, 90 Hz by default) and a dry/compressed mix.
     p("master.glueratio", "ratio", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("master.sidechain", "sidechain", Bank::Mix, 20.0, 300.0, 0.555, Unit::Hz, Curve::Exp, 0.0, NONE),
-    p("master.gluemix", "glue mix", Bank::Mix, 0.0, 1.0, 1.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("master.gluemix", "dry/wet", Bank::Mix, 0.0, 1.0, 1.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     // Appended 5 Nov (engine 2, item 9): which reverb the send goes to (hall or plate) and how long it rings.
-    p("master.space", "space", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("master.verbtime", "verb time", Bank::Mix, 400.0, 8000.0, 0.598, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("master.space", "algorithm", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.verbtime", "decay", Bank::Mix, 400.0, 8000.0, 0.598, Unit::Ms, Curve::Exp, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 11): the echo's style (clean, tape, analogue) and how many repeats.
     p("master.echotype", "echo", Bank::Mix, 0.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, NONE),
-    p("master.repeats", "repeats", Bank::Mix, 0.0, 0.9, 0.4667, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("master.repeats", "feedback", Bank::Mix, 0.0, 0.9, 0.4667, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 
 /// Instrument params start here on the wire, after the layer block.
@@ -234,12 +234,12 @@ pub const BASS_PARAMS: &[ParamSpec] = &[
     p("env", "env", Bank::Sound, 0.0, 1.0, 0.45, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("glide", "glide", Bank::Sound, 0.0, 400.0, 0.15, Unit::Ms, Curve::Lin, 0.0, NONE),
     p("decay", "decay", Bank::Shift, 30.0, 2000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
-    p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
+    p("wave", "shape", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("sub", "sub", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.2, Unit::Pct, Curve::Lin, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
-    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("character", "circuit", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 
 pub const B_CUTOFF: usize = 0;
@@ -280,16 +280,16 @@ pub const DRUM_RACK_SLOTS: usize = 16;
 pub const DRUM_PAD2_PARAMS: &[ParamSpec] = &[
     // Item 5, part three: the kick's body, round (the 808's sine), tight (rounded off, like a 909's)
     // or hard (clipped almost square). Other pads ignore it.
-    p("shape", "body", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("shape", "shape", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     // Item 8: every pad is a tone layer and a noise layer, each with its own envelope and filter.
     // noise: the balance (tone alone at 0, noise alone at 1); snap: how long the noise layer rings;
     // color: where its filter sits; sweep: how far the pitch falls; wobble: a pitch wobble on every
     // hit; random: each hit a little different (pitch, level, length, color).
     p("noise", "noise", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
-    p("snap", "snap", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("snap", "noise decay", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
     p("color", "color", Bank::Shift, -1.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, CENTRE),
-    p("sweep", "sweep", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
-    p("wobble", "wobble", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("sweep", "pitch env", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("wobble", "vibrato", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
     p("random", "random", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 pub const DP_SHAPE: usize = 0;
@@ -327,13 +327,13 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.65, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("frel", "f release", Bank::Shift, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
-    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    p("character", "circuit", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
     // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
     // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
-    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
-    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("voice", "exciter", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "decay", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "stiffness", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
     // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
     // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
@@ -370,7 +370,7 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("attack", "attack", Bank::Sound, 1.0, 800.0, 0.1, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("release", "release", Bank::Sound, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("glide", "glide", Bank::Shift, 0.0, 400.0, 0.2, Unit::Ms, Curve::Lin, 0.0, NONE),
-    p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
+    p("wave", "shape", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("detune", "detune", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
     // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
@@ -382,13 +382,13 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.53, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("frel", "f release", Bank::Shift, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
-    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    p("character", "circuit", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
     // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
     // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
-    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
-    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("voice", "exciter", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "decay", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "stiffness", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
     // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
     // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
@@ -443,7 +443,7 @@ pub fn lfo_dest(n: f32) -> u8 {
 pub const FX_PARAMS: &[ParamSpec] = &[
     p("length", "length", Bank::Sound, 1.0, 8.0, 0.43, Unit::None, Curve::Lin, 0.0, NONE),
     p("noise", "noise", Bank::Sound, 0.0, 1.0, 0.6, Unit::Pct, Curve::Lin, 15.0, NONE),
-    p("filter", "filter", Bank::Sound, 200.0, 14000.0, 0.7, Unit::Hz, Curve::Exp, 15.0, NONE),
+    p("filter", "cutoff", Bank::Sound, 200.0, 14000.0, 0.7, Unit::Hz, Curve::Exp, 15.0, NONE),
     p("reverb", "reverb", Bank::Sound, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
     // The riser fader. 0 is calm, 1 is the peak. Driven by hand or by a riser hit.
     p("build", "build", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),

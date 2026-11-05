@@ -33,6 +33,7 @@ import { TryIt } from "./TryIt";
 import { FileLesson } from "./FileLesson";
 import { AddToTrack } from "./AddToTrack";
 import { EarStep, FreshStart, HearStep, SayStep, ShapeStep, songHasMusic, startsFresh } from "./LessonSteps";
+import { MatchSoundStep } from "./MatchSound";
 import { newSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { SevenSeg } from "./SevenSeg";
@@ -861,7 +862,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   };
 
   // Labels like "concept · 2 of 7" count the steps of that kind.
-  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", ear: "ear round" };
+  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", matchsound: "match this sound", ear: "ear round" };
   const meta = (() => {
     if (!cur) return "";
     if (ASK.has(cur.kind)) {
@@ -912,6 +913,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     case "say": body = <SayStep screen={cur} meta={meta} onNext={next} />; break;
     case "hear": body = <HearStep screen={cur} meta={meta} onNext={next} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta={meta} accent={accent} onNext={next} />; break;
+    case "matchsound": body = <MatchSoundStep mission={mission} screen={cur} onNext={next} />; break;
     case "ear": body = <EarStep screen={cur} meta={meta} level="standard" onNext={next} />; break;
     case "play":
     case "tryit":

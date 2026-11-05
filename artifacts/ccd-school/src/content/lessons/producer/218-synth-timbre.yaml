@@ -63,8 +63,8 @@ steps:
     knobs: [wave, cutoff, res]
     say:
       mentor: >-
-        Here's your song. Make three timbres on the same melody. One: wave on saw, cutoff low, a soft, round,
-        almost flute-like lead. Two: wave on saw, cutoff open, bright and buzzy. Three: wave towards square,
+        Here's your song. Make three timbres on the same melody. One: shape on saw, cutoff low, a soft, round,
+        almost flute-like lead. Two: shape on saw, cutoff open, bright and buzzy. Three: shape towards square,
         cutoff halfway, resonance up, a hollow, nasal lead with a whistle in it.
 
         Pitch and loudness stay the same the whole time. Only the colour moves. Keep the timbre you like best.

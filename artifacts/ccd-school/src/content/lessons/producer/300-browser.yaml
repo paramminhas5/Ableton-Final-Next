@@ -65,16 +65,16 @@ steps:
     knobs: [wave, cutoff]
     say:
       mentor: >-
-        Here's your song with your own lead playing. Turn wave and listen to your melody change voice, soft
+        Here's your song with your own lead playing. Turn shape and listen to your melody change voice, soft
         to buzzy to hollow. That's what clicking through presets in the browser feels like: same notes, new
         sound, until one makes you sit up.
 
         Then use cutoff to darken or brighten whichever one you land on. Keep the one that suits your song.
       straight: >-
-        Your lead in your song. Wave flips its basic sound, like clicking through presets. Cutoff darkens or
+        Your lead in your song. Shape flips its basic sound, like clicking through presets. Cutoff darkens or
         brightens it. Keep the one that fits.
       eli5: >-
-        Turn wave to give your tune a new voice. Turn cutoff to make it darker or brighter. Stop when you
+        Turn shape to give your tune a new voice. Turn cutoff to make it darker or brighter. Stop when you
         like how it sounds.
 
   - kind: ask

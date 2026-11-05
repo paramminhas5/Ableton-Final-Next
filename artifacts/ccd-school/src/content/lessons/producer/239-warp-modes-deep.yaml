@@ -68,9 +68,9 @@ steps:
       mentor: >-
         Three ways to make a recording follow the tempo, and you can hear them side by side. The loop was recorded at 120. Choose 100, then 140, and try each mode.
         
-        warp off is honest: the loop ignores the tempo. repitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants repitch.
+        warp off is honest: the loop ignores the tempo. re-pitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants re-pitch.
       straight: >-
-        warp off ignores the tempo. repitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.
+        warp off ignores the tempo. re-pitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.
       eli5: >-
         Three ways to speed up a recording. One changes the pitch, one chops it up, one doesn't follow at all.
 

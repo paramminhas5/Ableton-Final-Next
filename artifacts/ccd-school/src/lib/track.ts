@@ -18,6 +18,8 @@ export type WorldKey = "fundamentals" | "dj" | "producer";
 export type Layer = {
   id: string;
   kind: LayerKind;
+  /** A name the lane shows instead of the kind's, e.g. "snare" when the backbeat lane holds only snares. */
+  label?: string;
   steps: boolean[];          // 16
   notes: number[];           // 16 midi notes (melodic kinds); ignored for drums
   params: [number, number, number, number]; // 0..1, meaning per kind (see KIND)

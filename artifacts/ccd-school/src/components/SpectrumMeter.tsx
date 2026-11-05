@@ -3,11 +3,11 @@ import { useEffect, useRef } from "react";
 
 // RGB-by-frequency spectrum meter.
 // Maps each bar to a hue based on its frequency band:
-//   lows  → red/orange (0–25°)
-//   low-mids → yellow (25–60°)
-//   mids  → green (60–150°)
-//   high-mids → cyan/blue (150–230°)
-//   highs → indigo/violet (230–300°)
+//   lows  → red/orange (0 to 25°)
+//   low-mids → yellow (25 to 60°)
+//   mids  → green (60 to 150°)
+//   high-mids → cyan/blue (150 to 230°)
+//   highs → indigo/violet (230 to 300°)
 export function SpectrumMeter({
   analyser,
   height = 80,

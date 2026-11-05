@@ -36,6 +36,25 @@ steps:
       eli5: >-
         Tap fill on the part before the drop. Listen to the drum roll.
 
+  - kind: tempo
+    set: chance
+    layer: hats
+    say:
+      mentor: >-
+        A fill can also live inside the loop. Pick a step on your hats and give it a condition. 1:2 plays it
+        every second time round the loop, 1:4 every fourth: that is an Elektron trig condition, and the beat
+        changes a little each pass without you writing a second pattern. Or turn its chance down, Live 12's
+        name for it: at 50% it plays about half the time. Fill plays the step only while you hold the fill
+        key, the way Elektron drummers throw in a roll.
+
+        Same control elsewhere: Live 12 calls it chance in the note editor, Elektron calls them trig
+        conditions and probability.
+      straight: >-
+        Pick a hat step. 1:2 plays it every second loop, 1:4 every fourth (Elektron's trig conditions). Chance
+        (Live 12) plays it some of the time. Fill plays it only while the fill key is held.
+      eli5: >-
+        Pick a step. Make it play only sometimes. Your beat changes a little every time round.
+
   - kind: ask
     q: What does a fill tell the listener?
     options: ["a change is coming", "the song is over", "the tempo is changing", "nothing at all"]

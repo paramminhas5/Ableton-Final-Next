@@ -129,7 +129,7 @@ const SCENES = {
     await p.locator(".st-vk", { hasText: /^steps$/ }).first().click();
     await p.getByRole("button", { name: "roll" }).click();
     await p.waitForTimeout(150);
-    const f = p.getByRole("slider", { name: "fill" });
+    const f = p.getByRole("slider", { name: "density" });
     await f.focus();
     for (let i = 0; i < 12; i++) await p.keyboard.press("ArrowUp");
     await p.waitForTimeout(200);

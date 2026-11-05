@@ -73,6 +73,22 @@ fn song() -> Engine {
             }
         }
     }
+    // CCD_BENCH_MOD=1: touch and hear, items 2 to 4: every synth layer with four modulation routes (the lfo
+    // on its cutoff and pan, the filter envelope on its drive and send), every layer level-matched by an
+    // a/b trim, and the scope on the master.
+    if std::env::var("CCD_BENCH_MOD").is_ok() {
+        for (l, inst) in insts.iter().enumerate() {
+            let l = l as u32;
+            if *inst != 1 {
+                send(&e, cmd::MOD, l, 0, 0.3, (INSTRUMENT_BASE + 0) as f64, 0.0);
+                send(&e, cmd::MOD, l, 1, 0.2, L_PAN as f64, 0.0);
+                send(&e, cmd::MOD, l, 2, 0.4, L_DRIVE as f64, 1.0);
+                send(&e, cmd::MOD, l, 3, 0.3, L_SEND as f64, 1.0);
+            }
+            send(&e, cmd::TRIM, l, 0, -1.5, 0.0, 0.0);
+        }
+        send(&e, cmd::SCOPE, 0, ccd_engine::engine::SCOPE_MASTER, 0.0, 0.0, 0.0);
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

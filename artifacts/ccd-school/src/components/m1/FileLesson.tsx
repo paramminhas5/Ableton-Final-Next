@@ -34,6 +34,7 @@ import { MIX_SKIP, MixStep } from "./MixStep";
 import { ArrangeStep } from "./ArrangeStep";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
+import { MatchSoundStep } from "./MatchSound";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -42,6 +43,7 @@ import "./lesson.css";
 const STEP_LABEL: Record<string, string> = {
   swing: "swing it", scale: "pick your scale", glue: "glue it", kit: "pick your kit", arp: "set the arp", key: "move the key",
   grid: "edit the notes", mic: "record a sound", comp: "comp the takes", macro: "map the macro",
+  chords: "write the chord track", player: "let a player write it", chance: "vary the steps", length: "set its length", commit: "commit the loop",
 };
 
 type Quiz = Extract<LessonScreen, { kind: "quiz" }>;
@@ -57,6 +59,7 @@ const pageName = (p: Page | undefined): string => {
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
     case "shape": return "shape it";
+    case "matchsound": return "match this sound";
     case "arrange": return p.goal === "export" ? "finish it" : p.goal === "fills" ? "fills" : p.goal === "drop" ? "the drop" : "arrange it";
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
@@ -134,7 +137,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} ${(focus ?? "").endsWith("s") ? "are" : "is"} recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}
@@ -242,7 +245,7 @@ function TakeBar({ mission, take }: { mission: Mission; take: Take }) {
 }
 
 // ── add to your song: the moment the part goes in ───────────────────────────
-const SET_NOUN: Record<string, string> = { tempo: "tempo", swing: "swing", scale: "scale", glue: "glue", kit: "kit", arp: "arp", key: "key", grid: "notes", mic: "recording", comp: "comp", sample: "sample", macro: "macro" };
+const SET_NOUN: Record<string, string> = { tempo: "tempo", swing: "swing", scale: "scale", glue: "glue", kit: "kit", arp: "arp", key: "key", grid: "notes", mic: "recording", comp: "comp", sample: "sample", macro: "macro", chords: "chord track", player: "notes", chance: "variation", length: "part length", commit: "sections" };
 /** What a lesson with nothing to play in changes about your song, in a word ("arrangement", "arp"), or null when it shapes a part. */
 export function changeNoun(screens: LessonScreen[]): string | null {
   const tool = [...screens].reverse().find(s => s.kind === "arrange" || s.kind === "tempo" || s.kind === "mix");
@@ -654,6 +657,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     }
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
+    case "matchsound": body = <MatchSoundStep mission={mission} screen={cur} onNext={next} tail={ways} />; break;
     case "arrange": body = <ArrangeStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "mix": body = <MixStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;

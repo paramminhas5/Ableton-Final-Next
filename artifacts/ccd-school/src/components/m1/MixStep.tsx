@@ -6,12 +6,14 @@
  * so until the tempos match its beats drift against yours, which is exactly what you hear and see.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { minorish } from "@/lib/theory";
 import { Engine, FLAG, OUT, type EngineHost } from "@/engine";
 import { bankBands, songBands, type Bands } from "@/lib/djWaves";
 import { DeckWave } from "./DeckWave";
 import type { LessonScreen } from "@/content/types";
 import { bankLayers, bankTrack, camelotFits, camelotOf, CUES, fitShift, preferReal, realOf, similarFirst, songLayers, TRACK_BEATS, type DeckPlay } from "@/content/djBank";
 import { FileDeck, useFileDeck } from "./FileDeck";
+import { PunchPads } from "./PunchPads";
 import { cuesOf, fromBar } from "@/lib/cues";
 import { arranged } from "@/lib/arrange";
 import { readTrackV2, type LayerV2, type TrackV2 } from "@/lib/track2";
@@ -20,7 +22,7 @@ import { clipVariants } from "@/content/lessons/clipTracks";
 import { CAP, Fader, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { syncEngine, useEngineTrack } from "./useEngineTrack";
-import { ProLine } from "./LessonSteps";
+import { SameElsewhere } from "./LessonSteps";
 import { Gloss } from "./Gloss";
 
 type Of<K> = Extract<LessonScreen, { kind: K }>;
@@ -57,20 +59,22 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const songName = useMemo(() => { const i = readSongs(); return i.songs.find(s => s.id === i.active)?.name ?? "your song"; }, []);
   // A lesson names a stand-in; when one of Param's picks is close in tempo and key, that one goes on deck b first.
   const keyGoal = screen.goal === "key" || screen.goal === "shift";
-  const [bid, setBid] = useState(() => preferReal(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"), keyGoal ? undefined : camelotOf(mine.root, mine.scale !== "major")).id);
+  const [bid, setBid] = useState(() => preferReal(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"), keyGoal ? undefined : camelotOf(mine.root, minorish(mine.scale))).id);
   const b = bankTrack(bid);
   const base = mine.bpm || 120;
   // Deck b starts at its own tempo, except in lessons where matching isn't the point: then it is already matched.
   const [pitch, setPitch] = useState(0);
   // Sync: one press matches deck b's tempo to deck a (and from then on it stays matched).
   const [synced, setSynced] = useState(false);
+  // Punch-in effects the learner held long enough to hear, while the decks played.
+  const [punched, setPunched] = useState<Set<string>>(new Set());
   const [law, setLaw] = useState<"smooth" | "sharp">(screen.goal === "cut" ? "sharp" : "smooth");
   const [cue, setCue] = useState(0); // which hot cue deck b started from (beats into its track)
   const [loopLen, setLoopLen] = useState<number | null>(null);
   const [loopAt, setLoopAt] = useState(0);
   const [stems, setStems] = useState<Record<Stem, boolean>>({ drums: true, hats: true, bass: true });
   // Outside the key lessons, a stand-in on deck b starts in a key that mixes with your song (real picks keep their own key).
-  const [shift, setShift] = useState(() => (keyGoal || realOf(bid) ? 0 : fitShift(bankTrack(bid), camelotOf(mine.root, mine.scale !== "major")))); // semitones on deck b's key
+  const [shift, setShift] = useState(() => (keyGoal || realOf(bid) ? 0 : fitShift(bankTrack(bid), camelotOf(mine.root, minorish(mine.scale))))); // semitones on deck b's key
   const [cueHits, setCueHits] = useState(0);
   const [bFile, setBFile] = useState<string | null>(null);
   const [deckA, setDeckA] = useState<"song" | "file">("song");
@@ -93,6 +97,17 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const [recState, setRecState] = useState<"off" | "on" | "done">("off");
   const [recUrl, setRecUrl] = useState<string | null>(null);
   const needMatch = screen.goal === "match" || screen.goal === "sync" || screen.goal === "shift";
+  // On a phone the desk's crossfader opens under the fixed go bar: bring the whole desk above it once.
+  useEffect(() => {
+    if (window.innerWidth > 720) return;
+    const t = window.setTimeout(() => {
+      const d = document.querySelector(".mx-desk");
+      const bar = document.querySelector(".ls-bottom")?.getBoundingClientRect().top ?? window.innerHeight;
+      const r = d?.getBoundingClientRect();
+      if (r && r.bottom > bar - 8) window.scrollBy({ top: r.bottom - bar + 16, behavior: "smooth" });
+    }, 120);
+    return () => window.clearTimeout(t);
+  }, []);
   useEffect(() => { setPitch(needMatch && !synced ? 0 : base / b.bpm - 1); }, [bid]); // eslint-disable-line react-hooks/exhaustive-deps
   const sync = () => { setPitch(base / b.bpm - 1); setSynced(true); };
   // The tempo fader's range, like a cdj: 8%, then 16%, then wide when the tracks are far apart.
@@ -155,7 +170,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     await ready(); const r = engine.recordOutput(); if (!r) { setSay("recording needs the web engine"); return; } recorder.current = r; setRecState("on"); if (!playing) engine.play();
   };
   const off = Math.abs(bBpm - base);
-  const mineKey = camelotOf(mine.root ?? 45, (mine.scale ?? "minor") === "minor");
+  const mineKey = camelotOf(mine.root ?? 45, minorish(mine.scale));
   // Deck b's key as it plays now, after any key shift.
   const bKey = camelotOf(b.root + shift, b.minor);
   const fits = camelotFits(mineKey, bKey);
@@ -179,6 +194,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "curve" ? law === "sharp" && cutDone
     : screen.goal === "file" ? true // never blocks: not everyone has a file to hand
     : screen.goal === "record" ? recState === "done"
+    : screen.goal === "punch" ? punched.size >= 2
     : fb > 0.6 && lowA < 0.25 && (xf > 0.85 || fa < 0.15);
   const why = screen.goal === "crossfade" ? (!seen.right ? "slide the crossfader all the way to b" : "now all the way back to a")
     : screen.goal === "swap" ? (fb <= 0.6 ? "bring deck b's fader up" : lowA >= 0.25 ? "turn deck a's low down" : "keep deck b's low up")
@@ -194,6 +210,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "curve" ? (law !== "sharp" ? "switch the crossfader curve to sharp" : "now cut from a to b on the one")
     : screen.goal === "file" ? "load one of your own files on a deck"
     : screen.goal === "record" ? (recState === "on" ? "do a mix, then press stop recording" : "press record, mix, then stop")
+    : screen.goal === "punch" ? (!playing ? "press play, then hold a punch-in effect" : punched.size === 0 ? "hold beat repeat or tape stop for a beat, then let go" : "now hold a different one")
     : screen.goal === "match" ? `deck b is ${bBpm > base ? "faster" : "slower"} by ${off.toFixed(1)} bpm. move its tempo fader until the beats line up`
     : fb <= 0.6 ? "bring deck b's fader up first" : lowA >= 0.25 ? "now turn deck a's low knob down: swap the bass" : "last: crossfade to b, or pull deck a's fader down";
   const [say, setSay] = useState<string | null>(null);
@@ -204,9 +221,9 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
 
   // Only the controls this lesson is about are out; the rest wait behind "more controls".
   const [more, setMore] = useState(screen.goal === "free");
-  const TOOLS: Record<string, string[]> = { sync: ["sync"], cue: ["cues"], loop: ["loops"], stems: ["stems"], shift: ["key", "sync"], curve: ["curve"], record: ["record"], file: ["files"], key: ["bank", "key"], match: ["bank"] };
+  const TOOLS: Record<string, string[]> = { sync: ["sync"], cue: ["cues"], loop: ["loops"], stems: ["stems"], shift: ["key", "sync"], curve: ["curve"], record: ["record"], file: ["files"], key: ["bank", "key"], match: ["bank"], punch: ["punch"] };
   const shows = (t: string) => more || (TOOLS[screen.goal] ?? []).includes(t);
-  const hidden = ["bank", "sync", "cues", "loops", "stems", "key", "curve", "record", "files"].some(t => !shows(t));
+  const hidden = ["bank", "sync", "cues", "loops", "stems", "key", "curve", "record", "files", "punch"].some(t => !shows(t));
 
   const Leds = ({ at, label }: { at: number; label: string }) => (
     <div className="mx-leds" aria-label={label}>{[0, 1, 2, 3].map(i => <i key={i} className={at === i ? "is-on" : ""} />)}</div>
@@ -245,14 +262,16 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
             <Fader label="deck b" value={fb} onChange={setFb} height={130} width={40} />
           </div>
         </div>
+        {shows("punch") && <><Silk label="punch-in effects" right="hold one, higher is more" /><PunchPads engine={engine} compact onStart={() => void ready()} onUse={(k, ms) => { if (ms >= 300 && playing) setPunched(s => new Set(s).add(k)); }} /></>}
         {shows("bank") && <div className="fl-marks mx-bank" role="radiogroup" aria-label="Deck b track">
-          {similarFirst(base, camelotOf(mine.root, mine.scale !== "major")).map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); setShift(keyGoal || realOf(t.id) ? 0 : fitShift(t, camelotOf(mine.root, mine.scale !== "major"))); }} title={realOf(t.id) ? `${realOf(t.id)!.artist}, ${realOf(t.id)!.title}` : "a stand-in made on our engine"}>{t.name}<small>{t.bpm} · {t.camelot}{realOf(t.id) ? (keyGoal ? "" : camelotFits(t.camelot, camelotOf(mine.root, mine.scale !== "major")) ? " · fits" : " · clashes") : " · stand-in"}</small></button>)}
+          {similarFirst(base, camelotOf(mine.root, minorish(mine.scale))).map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); setShift(keyGoal || realOf(t.id) ? 0 : fitShift(t, camelotOf(mine.root, minorish(mine.scale)))); }} title={realOf(t.id) ? `${realOf(t.id)!.artist}, ${realOf(t.id)!.title}` : "a stand-in made on our engine"}>{t.name}<small>{t.bpm} · {t.camelot}{realOf(t.id) ? (keyGoal ? "" : camelotFits(t.camelot, camelotOf(mine.root, minorish(mine.scale))) ? " · fits" : " · clashes") : " · stand-in"}</small></button>)}
         </div>}
         {songCues.length > 0 && deckA === "song" && (mine.sections?.length ?? 0) > 0 && <div className="fl-marks mx-cuesa" role="group" aria-label="Your song's cues on deck a">
           {songCues.map(c => <button key={c.slug} type="button" className={`ls-chip ${cueA === c.bar ? "is-on" : ""}`} aria-pressed={cueA === c.bar} aria-label={`deck a from your cue ${c.name}, bar ${c.bar}`} onClick={() => setCueA(c.bar)}>a · {c.name}<small>bar {c.bar}</small></button>)}
         </div>}
         {songCues.length > 0 && !(mine.sections?.length) ? <p className="fl-pro">your song's cues: {songCues.map(c => `${c.name}, bar ${c.bar} of the phrase`).join(" · ")}. arrange your song and deck a can jump to them.</p> : null}
-        <ProLine tool="rekordbox" names={["deck a", "low a", "crossfader", ...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("stems") ? ["stems"] : []), ...(shows("curve") ? ["curve"] : []), ...(screen.goal === "echo" || screen.goal === "free" ? ["echo a"] : [])]} />
+        <SameElsewhere keys={[...(shows("sync") ? ["sync"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key"] : [])]}
+          labels={[...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key b"] : [])]} />
         <div className="fl-marks mx-tools" role="group" aria-label="Deck tools">
           {shows("sync") && <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>}
           {shows("cues") && CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`cue ${i + 1} ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}

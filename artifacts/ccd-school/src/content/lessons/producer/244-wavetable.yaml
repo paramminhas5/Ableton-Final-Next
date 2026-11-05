@@ -55,16 +55,16 @@ steps:
     knobs: [wave, cutoff]
     say:
       mentor: >-
-        Your lead's wave knob is a small wavetable: it morphs from a soft wave through a saw to a square. Your
-        song is playing. Sweep wave slowly from one end to the other and watch the shape change on the screen
+        Your lead's shape knob is a small wavetable: it morphs from a soft wave through a saw to a square. Your
+        song is playing. Sweep shape slowly from one end to the other and watch the shape change on the screen
         as you hear the colour change.
 
         Then use cutoff to tidy it: a buzzy shape with a lower cutoff can sound warm and full. Stop where your
         lead has the colour your song needs, and keep it.
       straight: >-
-        Wave scans your lead from soft to saw to square. Sweep it, pick a colour, then set cutoff. Keep it.
+        Shape scans your lead from soft to saw to square. Sweep it, pick a colour, then set cutoff. Keep it.
       eli5: >-
-        Turn wave slowly and hear your tune change from soft to buzzy. Stop on the sound you like.
+        Turn shape slowly and hear your tune change from soft to buzzy. Stop on the sound you like.
 
   - kind: ask
     q: What is a wavetable?

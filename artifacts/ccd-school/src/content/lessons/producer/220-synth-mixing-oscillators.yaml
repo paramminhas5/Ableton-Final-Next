@@ -62,16 +62,16 @@ steps:
     say:
       mentor: >-
         Here's your song. Your lead already has three oscillators per note, so you can try two of the moves.
-        Wave mixes two shapes inside every oscillator: saw at one end, square at the other, and a blend of the
+        Shape mixes two waves inside every oscillator: saw at one end, square at the other, and a blend of the
         two in between. Set it somewhere in the middle and listen for a colour neither end has.
 
         Detune is the other move: it spreads the three copies apart by a few cents. At zero they're in tune and
         just sound like one. Turn it up and the lead widens and moves. Keep the mix you like.
       straight: >-
-        Wave blends saw and square in each oscillator. Detune spreads the three copies a few cents apart. Keep
+        Shape blends saw and square in each oscillator. Detune spreads the three copies a few cents apart. Keep
         the mix you like.
       eli5: >-
-        Wave mixes two shapes together. Detune spreads the three waves apart so your tune sounds wide. Pick the
+        Shape mixes two waves together. Detune spreads the three waves apart so your tune sounds wide. Pick the
         one you like.
 
   - kind: ask

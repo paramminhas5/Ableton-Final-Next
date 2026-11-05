@@ -114,7 +114,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
       "Producers and DJs measure tempo in BPM: Beats Per Minute. 60 BPM means exactly one beat every second. 120 BPM (the most common dance music speed) means two beats every second.",
     ],
     analogy:
-      "Tempo is like your walking speed. A slow stroll is 60–80 BPM. A brisk walk is 100–110 BPM. Running is 140+ BPM. Most hip-hop walks (80–100 BPM). Most house music runs (120–130 BPM).",
+      "Tempo is like your walking speed. A slow stroll is 60 to 80 BPM. A brisk walk is 100 to 110 BPM. Running is 140+ BPM. Most hip-hop walks (80 to 100 BPM). Most house music runs (120 to 130 BPM).",
     deeper: [
       "Music is organised into bars (also called measures). In standard 4/4 time, there are 4 beats per bar. Most pop and electronic music uses 4/4. A bar marker in your DAW shows you exactly where you are in the song.",
       "The downbeat (beat 1) feels strong and grounded. The backbeat (beats 2 and 4) is where you typically clap along to pop and rock. Knowing where beat 1 is helps you line up samples, loops and transitions perfectly.",
@@ -155,7 +155,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["Very slow", "Typical lullaby speed", "Typical house music speed", "Extremely fast"],
         answer: 2,
         explain:
-          "House, techno and dance music typically sits between 120–135 BPM. 128 is the sweet spot for most club music.",
+          "House, techno and dance music typically sits between 120 to 135 BPM. 128 is the sweet spot for most club music.",
         hint: "Think dance floor, not bedtime.",
       },
     ],
@@ -432,7 +432,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     analogy:
       "Audio is like a photograph of a concert, it captures exactly what happened. MIDI is like sheet music, it tells a musician (your computer's instrument) what to play, and you can give the same sheet music to any musician (instrument) for a different sound.",
     deeper: [
-      "MIDI stands for Musical Instrument Digital Interface. It was invented in 1983 so different electronic instruments could talk to each other. A MIDI message includes: note number (0–127), velocity (how hard, 0–127), channel (1–16), and timing.",
+      "MIDI stands for Musical Instrument Digital Interface. It was invented in 1983 so different electronic instruments could talk to each other. A MIDI message includes: note number (0 to 127), velocity (how hard, 0 to 127), channel (1 to 16), and timing.",
       "MIDI velocity maps to loudness. Velocity 127 = maximum force (fortissimo). Velocity 1 = barely touched (pianissimo). This makes MIDI performances sound human: real musicians don't hit every note with the same force.",
       "When you export a finished track from a DAW, you're exporting audio (usually WAV or MP3). MIDI by itself is unplayable on most devices: it needs an instrument to interpret it.",
     ],
@@ -639,7 +639,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     analogy:
       "Genres are like cuisines. 'Italian food' tells you a lot immediately, pasta, olive oil, garlic. 'House music' tells you just as much, 4/4 kick, soulful vocals, 125 BPM. You know roughly what you're getting before the first bite (or bar).",
     deeper: [
-      "Key genre BPMs: Hip-hop 70–100 BPM · House 120–130 BPM · Techno 130–145 BPM · Drum & Bass 160–180 BPM · Ambient 60–90 BPM · Pop 100–130 BPM · Trap 130–170 BPM (but uses half-time, so it feels slower).",
+      "Key genre BPMs: Hip-hop 70 to 100 BPM · House 120 to 130 BPM · Techno 130 to 145 BPM · Drum & Bass 160 to 180 BPM · Ambient 60 to 90 BPM · Pop 100 to 130 BPM · Trap 130 to 170 BPM (but uses half-time, so it feels slower).",
       "Subgenres often emerged when producers pushed the sonic or structural limits of a genre. Deep house slowed down and deepened classic house. Minimal techno stripped techno down to almost nothing. Understanding the lineage helps you make informed creative choices.",
       "You don't have to stay in one genre. Many of the most exciting modern tracks blend elements from multiple genres: a trap hi-hat pattern over a house chord progression at 140 BPM. Genre is a tool, not a cage.",
     ],
@@ -669,10 +669,10 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
       },
       {
         q: "House music typically sits at…",
-        options: ["60–80 BPM", "90–110 BPM", "120–130 BPM", "160–180 BPM"],
+        options: ["60 to 80 BPM", "90 to 110 BPM", "120 to 130 BPM", "160 to 180 BPM"],
         answer: 2,
         explain:
-          "House music, from Chicago, 1980s, typically runs 120–130 BPM, built around a four-on-the-floor kick drum pattern.",
+          "House music, from Chicago, 1980s, typically runs 120 to 130 BPM, built around a four-on-the-floor kick drum pattern.",
         hint: "House is a dance floor genre: what tempo makes you want to move?",
       },
       {

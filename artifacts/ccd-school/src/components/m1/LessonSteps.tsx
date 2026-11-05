@@ -5,8 +5,8 @@
  * Same Model 1 parts as the rest of the player.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { FLAG, OUT, display, toValue } from "@/engine";
-import { proName, type ProTool } from "@/lib/proNames";
+import { FLAG, OUT, display, fromValue, toValue } from "@/engine";
+import { CONTROLS, knobLabel } from "@/lib/controlNames";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -14,20 +14,23 @@ import { applyTake, readTake, shapeKnobs, takeType, withParams } from "@/lib/les
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, writeTrackV2, type LayerType, type TrackV2 } from "@/lib/track2";
-import { NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
+import { asScale, NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
 import { loadRealKit, REAL_KIT_ID, withRealKit, withSynthKit } from "@/lib/realKit";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
-import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { CAP, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Body, Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import { TOOL_STEPS } from "./tools";
 import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
 import { EnvView, FilterView, useNoteClock } from "./Pictures";
-import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC, picOf } from "@/lib/paramColor";
+import { ringsOf, SRC_COLOR } from "@/lib/modulation";
+import { levelMatch } from "@/lib/offline";
+import { ABKey, type Side } from "./AB";
 import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
@@ -191,6 +194,10 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const otherType = (["drums", "hats", "bass", "chords", "lead"] as LayerType[]).find(t => t === screen.layer && t !== own0.type);
   const line = useMemo(() => (otherType ? { ...own0, type: otherType, events: [] } : own0), [own0, otherType]);
   const [params, setParams] = useState<Record<number, number>>(() => readShape(mission.slug, otherType));
+  // A/B: a is the sound before your tweak (as you arrived), b is now; both at the same loudness.
+  const [before] = useState<Record<number, number>>(() => readShape(mission.slug, otherType));
+  const [abOn, setAbOn] = useState<Side | null>(null);
+  const heard = abOn === "a" ? before : params;
   const knobs = useMemo(() => {
     // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
@@ -207,10 +214,26 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const world = worldOf(mission.slug) ?? undefined;
   // Nothing played in this lesson and your song already has this part: shape your own part.
   const own = !!base && (!!otherType || !take?.events.length) && base.layers.some(l => l.type === line.type && l.events.length > 0);
-  const shown = useMemo(() => (base
-    ? own ? withParams(base, line.type, params) : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
-    : null), [base, own, take, mission.slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  const make = (p: Record<number, number>) => (base ? (own ? withParams(base, line.type, p) : applyTake({ ...base, added: [] }, mission.slug, line, world, p)) : null);
+  const shown = useMemo(() => make(heard), [base, own, take, mission.slug, line, world, heard]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(shown ?? readTrackV2());
+  // Level match a and b whenever either changes while comparing (the louder one is trimmed).
+  useEffect(() => {
+    if (!abOn || !base) return;
+    let gone = false;
+    const t = window.setTimeout(() => {
+      const sa = make(before), sb = make(params);
+      const i = sb ? sb.layers.findIndex(l => l.type === line.type) : -1;
+      if (!sa || !sb || i < 0) return;
+      void levelMatch(sb, sa.layers[i], sb.layers[i]).then(m => {
+        if (gone) return;
+        engine.trim(i, abOn === "a" ? m.a : m.b);
+        setTouched(`${abOn === "a" ? "a · before your tweak" : "b · now"}${Math.abs(m.diff) < 0.1 ? "" : ` · ${m.diff > 0 ? "now" : "before"} ${Math.abs(m.diff).toFixed(1)} db louder, matched`}`);
+      }).catch(() => {});
+    }, 200);
+    return () => { gone = true; window.clearTimeout(t); };
+  }, [abOn, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => { for (let i = 0; i < 8; i++) engine.trim(i, 0); }, [engine]);
   const playing = beat >= 0;
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
@@ -246,12 +269,24 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   // A wave lesson keeps its wave picture; the filter shows when the lesson is about the filter.
   const filterPic = !isKick && !!fc && !!fr && (screen.knobs.some(k => k === "res" || k === "cut" || k === "fdecay" || k === "frel" || (k === "env" && !screen.knobs.includes("fm"))) || (screen.knobs.includes("cutoff") && !screen.knobs.includes("wave")));
   const nOf = (sp?: ParamSpec) => (sp ? lp[sp.index] ?? sp.default : 0);
+  // A knob's name, as the instrument it copies calls it (the shape knob is "position" on a wavetable).
+  const labelOf = (sp: ParamSpec) => knobLabel(sp, key => { const f = fspec(key); return f ? params[f.index] ?? nOf(f) : undefined; });
   // The lesson lights one control at a time, in the order it names them: the next knob you haven't turned
   // glows, the rest dim (they still work). Once you've turned them all, everything is lit.
   const [turned, setTurned] = useState<Set<string>>(() => new Set());
   const spotKey = dialKnobs.length > 1 ? dialKnobs.find(k => !turned.has(k.spec.key))?.spec.key : undefined;
   const picLit = (group: string) => !spotKey || picOf(spotKey) === group || (group === "filter" && picOf(spotKey) === "eq");
-  useEnter(onNext);
+  // Drag on the pictures, for the knobs this lesson names: the filter's knee, the envelope's corners.
+  const turn = (index: number, key: string, v: number) => { if (abOn === "a") setAbOn("b"); setParams(p => ({ ...p, [index]: v })); if (!turned.has(key)) setTurned(t => new Set(t).add(key)); const k = dialKnobs.find(x => x.index === index); if (k) setTouched(`${k.spec.label} ${display(k.spec, v)}`); };
+  const named = (sp?: ParamSpec) => (sp && dialKnobs.some(k => k.index === sp.index) ? sp : undefined);
+  const dragCut = named(fc), dragRes = named(fr);
+  const hs = envHandles(inst, lp, hatPad ? 4 : 0);
+  const envSet = (h?: { index: number; key: string; toN: (s: number) => number }) => (h && dialKnobs.some(k => k.index === h.index) ? (s: number) => turn(h.index, h.key, h.toN(s)) : undefined);
+  // A shape step is met once you've turned something: arriving and pressing keep is not shaping a sound.
+  const shaped = turned.size > 0;
+  const why = `turn ${dialKnobs[0]?.spec.label ?? "a knob"} first`;
+  const keep = () => { if (shaped) onNext(); else setTouched(why); };
+  useEnter(keep);
   return (
     <div className="ls-col">
       <div className="fl-inst">
@@ -260,8 +295,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
           : (envPic || filterPic) && !lfoK ? (
             <div className="ls-pics">
-              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)} /> : null}
-              {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} /> : null}
+              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "prd"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)}
+                onCutoff={dragCut ? hz => turn(dragCut.index, dragCut.key, fromValue(dragCut, hz)) : undefined} onRes={dragRes ? r => turn(dragRes.index, dragRes.key, fromValue(dragRes, r)) : undefined} /> : null}
+              {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} drag={{ a: envSet(hs.a), d: envSet(hs.d), r: envSet(hs.r) }} /> : null}
             </div>
           )
           : lfoK ? <LfoView rate={toValue(lfoK.spec, params[lfoK.index] ?? lfoK.spec.default)} depth={val("lfo")} to={LFO_TO[lfoTo]} playing={playing} />
@@ -271,20 +307,21 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       {lfoToK && (
         <div className="fl-marks tl-row lfo-to" role="radiogroup" aria-label="Where the lfo goes" style={{ ["--c" as string]: accent } as CSSProperties}>
           {LFO_TO.map((name, i) => <button key={name} type="button" role="radio" aria-checked={lfoTo === i} className={`ls-chip ${lfoTo === i ? "is-on" : ""}`}
-            onClick={() => { setParams(p => ({ ...p, [lfoToK.index]: [0.15, 0.5, 0.85][i] })); setTouched(`lfo to the ${name}`); }}>to the {name}</button>)}
+            onClick={() => { setParams(p => ({ ...p, [lfoToK.index]: [0.15, 0.5, 0.85][i] })); setTouched(`lfo to the ${name}`); setTurned(t => new Set(t).add("lfoto")); }}>to the {name}</button>)}
         </div>
       )}
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
-          <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
-            {...bind(k.spec, params[k.index] ?? k.spec.default)}
-            value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
+          <Knob key={k.index} label={labelOf(k.spec)} color={CAP.navy} size={74} height={150}
+            {...bind(k.spec, heard[k.index] ?? k.spec.default)}
+            mods={(ringsOf(inst, { ...lp, ...params }, shownLayer?.mods).get(k.index) ?? []).map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
+            value={heard[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, heard[k.index] ?? k.spec.default)}
             spot={spotKey === k.spec.key} dim={!!spotKey && spotKey !== k.spec.key && !turned.has(k.spec.key)}
-            onChange={v => { setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
+            onChange={v => { if (abOn === "a") setAbOn("b"); setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
-      <ProLine tool="ableton" names={knobs.map(k => k.spec.key)} labels={knobs.map(k => k.spec.label)} />
+      <SameElsewhere keys={dialKnobs.map(k => k.spec.key)} labels={dialKnobs.map(k => labelOf(k.spec))} />
       </div>
       <div className="fl-text">
       <Body text={screen.body} starter={!!base && !base.layers.some(l => l.events.length > 0)} />
@@ -294,7 +331,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your loop"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={onNext} style={{ gridColumn: "span 3" }} ariaLabel="Next">keep this sound</GoPill>
+          <div className="ls-abwrap"><ABKey on={abOn} labels={["before your tweak", "now"]} onStart={() => { setAbOn("a"); setTouched("a · before your tweak"); }} onSwitch={s => { setAbOn(s); setTouched(s === "a" ? "a · before your tweak" : "b · now"); }} /></div>
+          <GoPill onClick={keep} style={{ gridColumn: "span 2", opacity: shaped ? 1 : 0.6 }} ariaLabel={shaped ? "Next" : `Not yet: ${why}`}>{shaped ? "keep this sound" : <NotYet why={why} />}</GoPill>
         </div>
       </div>
     </div>
@@ -538,7 +576,7 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
           <Knob label="glue" readout={`${Math.round(glue * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
           <Knob label="out" readout={`${Math.round(out * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
         </div>
-        <ProLine tool="ableton" names={["glue", "out"]} />
+        <SameElsewhere keys={["glue"]} />
       </div>
       <div className="fl-text">
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
@@ -555,7 +593,11 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
   );
 }
 
-const SCALE_LINE: Record<string, string> = { minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones" };
+const SCALE_LINE: Record<string, string> = {
+  minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones",
+  phrygian: "dark, with a tense second note", mixolydian: "major with a bluesy seventh", lydian: "major, floating", "major pentatonic": "five bright notes",
+  "harmonic minor": "minor with a pull home", "minor blues": "pentatonic plus the blue note", "phrygian dominant": "tense, eastern",
+};
 
 /** Your song's melody, bass and chords moved into another scale, note by note. */
 function inScale(t: TrackV2, to: ScaleName): TrackV2 {
@@ -565,10 +607,12 @@ function inScale(t: TrackV2, to: ScaleName): TrackV2 {
 }
 
 function ScaleStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
-  const choices = (screen.choices?.length ? screen.choices : ["minor", "major"]) as ScaleName[];
+  const listed = (screen.choices?.length ? screen.choices : ["minor", "major"]) as ScaleName[];
   const [sc, setSc] = useState<ScaleName>("minor");
   const loop = useMemo(() => mine ?? (songHasMusic() ? readTrackV2() : clipVariants("synth-note")[0].track), [mine]);
-  useEffect(() => setSc(((loop.scale as ScaleName) ?? "minor")), [loop]);
+  useEffect(() => setSc(asScale(loop.scale)), [loop]);
+  // Your song's own scale is always one of the choices, even when the lesson lists others.
+  const choices = listed.includes(asScale(loop.scale)) ? listed : [asScale(loop.scale), ...listed];
   const shown = useMemo(() => inScale(loop, sc), [loop, sc]);
   const { engine, ready } = useEngineTrack(shown);
   const [beat, setBeat] = useState(-1);
@@ -640,7 +684,7 @@ function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
           </svg>
           <div className="fl-airlabels"><span>one beat, four sixteenths</span><span>the 2nd and 4th land {pct}% of the way</span></div>
         </Screen>
-        <ProLine tool="ableton" names={["swing"]} />
+        <SameElsewhere keys={["swing"]} />
         <div className="fl-tempo">
           <Knob label="swing" readout={`${Math.round(sw * 100)}%`} color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
           <div className="fl-marks" role="radiogroup" aria-label="Amounts to try" style={{ ["--c" as string]: accent } as CSSProperties}>
@@ -720,9 +764,24 @@ function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; 
   );
 }
 
-/** Under a row of controls: what each one is called in Ableton Live or rekordbox, when the name differs. */
-export function ProLine({ tool, names, labels }: { tool: ProTool; names: string[]; labels?: string[] }) {
-  const pairs = names.map((n, i) => [labels?.[i] ?? n, proName(tool, n)] as const).filter(([, p]) => p);
-  if (!pairs.length) return null;
-  return <p className="fl-pro">in {tool}: {pairs.map(([o, p], i) => <span key={o}>{i ? ", " : ""}{o} is <b>{p}</b></span>)}</p>;
+/**
+ * Under a row of controls, folded away: what each one is called on other instruments (controlNames.ts),
+ * so what you learn here carries to Live, other synths and the decks. `keys` are control keys; `labels`
+ * what this screen shows for them.
+ */
+export function SameElsewhere({ keys, labels }: { keys: string[]; labels?: string[] }) {
+  const rows = keys.map((k, i) => ({ k, label: labels?.[i] ?? CONTROLS[k]?.label ?? k, where: CONTROLS[k]?.elsewhere ?? [] })).filter(r => r.where.length);
+  const seen = new Set<string>();
+  const unique = rows.filter(r => (seen.has(r.label) ? false : (seen.add(r.label), true)));
+  if (!unique.length) return null;
+  return (
+    <details className="fl-else">
+      <summary>same control elsewhere</summary>
+      <ul>
+        {unique.map(r => (
+          <li key={r.k}><b>{r.label}</b> {r.where.map(([w, n], i) => <span key={w}>{i ? " · " : ""}{w}: <i>{n}</i></span>)}</li>
+        ))}
+      </ul>
+    </details>
+  );
 }

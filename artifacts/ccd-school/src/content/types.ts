@@ -161,11 +161,13 @@ export type LessonScreen =
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; clip?: string; deeper?: { title: string; body: string }[] }
   | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
-  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; body: string; hint?: string; snap?: boolean }
+  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" }; body: string; hint?: string; snap?: boolean }
   | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
+  /** Match this sound: a target from hidden settings of `knobs` on the learner's part, matched by ear (lesson files' `match`). */
+  | { kind: "matchsound"; layer: string; knobs: string[]; target: Record<string, number>; body: string; hint?: string }
   | { kind: "arrange"; body: string; goal: "sections" | "drop" | "fills" | "risers" | "export"; hint?: string }
-  | { kind: "mix"; body: string; goal: "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record"; bank?: string; hint?: string }
-  | { kind: "tempo"; body: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: string }
+  | { kind: "mix"; body: string; goal: "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record" | "punch"; bank?: string; hint?: string }
+  | { kind: "tempo"; body: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: string }
   | { kind: "ear"; drill: string; rounds: number; body?: string }
   | {
       /**
@@ -186,7 +188,7 @@ export type LessonScreen =
        */
       kind: "match";
       prompt: string;
-      pairs: { left: string; right: string }[];  // 3–5 pairs
+      pairs: { left: string; right: string }[];  // 3 to 5 pairs
     }
   | {
       /**

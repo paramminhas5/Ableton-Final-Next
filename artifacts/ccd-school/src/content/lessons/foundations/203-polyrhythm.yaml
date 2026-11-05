@@ -89,6 +89,22 @@ steps:
         every time you say one. It starts with the boom, wanders off, and comes back.
     hint: Sixteenths 1, 4, 7, 10, 13 and 16 of the bar, counting from 1. Six shakes a bar.
 
+  - kind: tempo
+    set: length
+    layer: hats
+    say:
+      mentor: >-
+        Now let the computer keep a polyrhythm going for you. Shorten your hats to three steps while the kick
+        stays on sixteen: the hats loop every three, so they land somewhere new against the kick each beat
+        and only meet it again at the top of the loop. That is a polymeter, and it is how Elektron machines
+        work, each track with its own length. Give the hats their own swing too if you like: Live keeps a
+        groove per clip the same way.
+      straight: >-
+        Make the hats three steps long against the sixteen step kick. They drift and meet again at the top.
+        Elektron calls it per track length. Swing can be per part too.
+      eli5: >-
+        Make the hats loop on three steps. The kick loops on sixteen. Listen to them chase each other.
+
   - kind: ask
     q: A polyrhythm is
     options: ["two rhythms at once, each with its own pulse", "one very fast rhythm", "changing tempo mid song", "any rhythm in 3/4"]

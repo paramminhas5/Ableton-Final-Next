@@ -9,6 +9,70 @@ pub struct NoteEv {
     pub len: f64,
     pub note: u8,
     pub vel: f32,
+    /// Chance it plays each time round, 0..1 (Live 12's "chance"). 1 always plays.
+    pub chance: f32,
+    /// Trig condition (Elektron): see `cond`. 0 always plays.
+    pub cond: u8,
+    /// Which play of the part's loop this event belongs to inside the engine's loop, and how many plays
+    /// the engine's loop holds (an arranged song repeats a part's loop many times in one engine loop).
+    /// The play count a condition reads is `pass * reps + it`.
+    pub it: u32,
+    pub reps: u32,
+}
+
+impl NoteEv {
+    /// A plain note: always plays.
+    pub fn new(start: f64, len: f64, note: u8, vel: f32) -> Self {
+        NoteEv { start, len, note, vel, chance: 1.0, cond: 0, it: 0, reps: 1 }
+    }
+}
+
+/// Elektron's trig conditions, as sent in EV_COND. `A:B` plays on the A-th of every B plays of the loop.
+pub mod cond {
+    pub const NONE: u8 = 0;
+    pub const C1_2: u8 = 1;
+    pub const C2_2: u8 = 2;
+    pub const C1_4: u8 = 3;
+    pub const C2_4: u8 = 4;
+    pub const C3_4: u8 = 5;
+    pub const C4_4: u8 = 6;
+    /// Plays only while the fill key is held.
+    pub const FILL: u8 = 7;
+    /// Plays only while it is not.
+    pub const NOT_FILL: u8 = 8;
+}
+
+/// A number in 0..1 from the seed, the play count and the event: the same three always give the same
+/// number, so chance is repeatable. Mirrored exactly in TypeScript (src/lib/chance.ts).
+pub fn roll(seed: u32, n: u32, key: u32) -> f32 {
+    let mut h = seed ^ n.wrapping_mul(0x9E37_79B1) ^ key.wrapping_mul(0x85EB_CA77);
+    h ^= h >> 16;
+    h = h.wrapping_mul(0x7FEB_352D);
+    h ^= h >> 15;
+    h = h.wrapping_mul(0x846C_A68B);
+    h ^= h >> 16;
+    (h >> 8) as f32 / 16_777_216.0
+}
+
+/// The event's key for `roll`: where it starts (in 1/960 beats) and its note.
+pub fn ev_key(e: &NoteEv) -> u32 {
+    ((e.start * 960.0).round() as i64 as u32) ^ ((e.note as u32) << 20)
+}
+
+/// Whether an event plays on play `n` of its loop, with the fill key `fill` and the song's `seed`.
+pub fn plays(e: &NoteEv, n: u32, fill: bool, seed: u32) -> bool {
+    let ok = match e.cond {
+        cond::C1_2 => n % 2 == 0,
+        cond::C2_2 => n % 2 == 1,
+        cond::C1_4 => n % 4 == 0,
+        cond::C2_4 => n % 4 == 1,
+        cond::C3_4 => n % 4 == 2,
+        cond::C4_4 => n % 4 == 3,
+        cond::FILL => fill,
+        cond::NOT_FILL => !fill,
+        _ => true,
+    };
+    ok && (e.chance >= 1.0 || roll(seed, n, ev_key(e)) < e.chance)
 }
 
 pub const MAX_EVENTS: usize = 1024;
@@ -17,25 +81,34 @@ pub const MAX_OFFS: usize = 64;
 /// A sorted list of events with a fixed capacity, so the audio thread never allocates.
 pub struct Pattern {
     pub evs: Vec<NoteEv>,
+    last: Option<usize>,
 }
 
 impl Pattern {
     pub fn new() -> Self {
-        Pattern { evs: Vec::with_capacity(MAX_EVENTS) }
+        Pattern { evs: Vec::with_capacity(MAX_EVENTS), last: None }
     }
 
     pub fn clear(&mut self) {
         self.evs.clear();
+        self.last = None;
     }
 
     /// Insert keeping start order. Returns false when full.
     pub fn insert(&mut self, ev: NoteEv) -> bool {
         if self.evs.len() >= self.evs.capacity().min(MAX_EVENTS) {
+            self.last = None;
             return false;
         }
         let i = self.evs.partition_point(|e| e.start <= ev.start);
         self.evs.insert(i, ev);
+        self.last = Some(i);
         true
+    }
+
+    /// The event the last `insert` put in (for EV_COND, which follows its EV_ADD).
+    pub fn last_mut(&mut self) -> Option<&mut NoteEv> {
+        self.last.and_then(|i| self.evs.get_mut(i))
     }
 
     /// First event at or after `beat`.
@@ -46,6 +119,8 @@ impl Pattern {
     /// Swap contents with another pattern without allocating.
     pub fn swap(&mut self, other: &mut Pattern) {
         std::mem::swap(&mut self.evs, &mut other.evs);
+        self.last = None;
+        other.last = None;
     }
 }
 
@@ -91,7 +166,52 @@ mod tests {
     use super::*;
 
     fn ev(start: f64) -> NoteEv {
-        NoteEv { start, len: 0.25, note: 36, vel: 1.0 }
+        NoteEv::new(start, 0.25, 36, 1.0)
+    }
+
+    #[test]
+    fn conditions_play_on_their_pass() {
+        let mut e = ev(0.0);
+        let on = |e: &NoteEv, fill: bool| (0..8).filter(|&n| plays(e, n, fill, 1)).collect::<Vec<u32>>();
+        e.cond = cond::C1_2;
+        assert_eq!(on(&e, false), vec![0, 2, 4, 6]);
+        e.cond = cond::C2_2;
+        assert_eq!(on(&e, false), vec![1, 3, 5, 7]);
+        e.cond = cond::C1_4;
+        assert_eq!(on(&e, false), vec![0, 4]);
+        e.cond = cond::C3_4;
+        assert_eq!(on(&e, false), vec![2, 6]);
+        e.cond = cond::FILL;
+        assert!(on(&e, false).is_empty());
+        assert_eq!(on(&e, true).len(), 8);
+        e.cond = cond::NOT_FILL;
+        assert_eq!(on(&e, false).len(), 8);
+        assert!(on(&e, true).is_empty());
+    }
+
+    #[test]
+    fn chance_is_repeatable_and_near_its_rate() {
+        let mut e = ev(1.5);
+        e.chance = 0.25;
+        let a: Vec<bool> = (0..4000).map(|n| plays(&e, n, false, 9)).collect();
+        let b: Vec<bool> = (0..4000).map(|n| plays(&e, n, false, 9)).collect();
+        assert_eq!(a, b, "same seed, same plays");
+        let c: Vec<bool> = (0..4000).map(|n| plays(&e, n, false, 10)).collect();
+        assert_ne!(a, c, "another seed, other plays");
+        let rate = a.iter().filter(|&&x| x).count() as f32 / 4000.0;
+        assert!((rate - 0.25).abs() < 0.03, "rate {rate}");
+        e.chance = 0.0;
+        assert!((0..100).all(|n| !plays(&e, n, false, 9)));
+    }
+
+    /// The same numbers src/lib/chance.ts must give (tests/chance.test.ts checks the same table).
+    #[test]
+    fn roll_matches_the_typescript_table() {
+        let got = [roll(1, 0, 0), roll(1, 1, 0), roll(7, 3, 1440), roll(123_456, 9, ev_key(&NoteEv::new(2.25, 0.2, 38, 1.0)))];
+        let want = [0.408_349_04_f32, 0.771_487_36, 0.610_525, 0.766_091_9];
+        for (g, w) in got.iter().zip(want) {
+            assert!((g - w).abs() < 1e-6, "{got:?}");
+        }
     }
 
     #[test]

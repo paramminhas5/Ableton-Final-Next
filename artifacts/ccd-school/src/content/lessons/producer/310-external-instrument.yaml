@@ -61,16 +61,16 @@ steps:
     knobs: [wave, detune, drive]
     say:
       mentor: >-
-        Here's your song with your lead. Give it some hardware character. Pick a wave, then bring in detune,
+        Here's your song with your lead. Give it some hardware character. Set shape, then bring in detune,
         which pulls its oscillators slightly apart so it sounds wider and less perfect. Then add drive, which
         pushes it until it grits up, like a circuit being leaned on.
 
         Go too far and it gets messy. Find the point where it sounds like it came out of a box with knobs.
       straight: >-
-        Your lead. Wave picks the shape, detune pulls it slightly out of line for width, drive adds grit. Stop
+        Your lead. Shape picks the wave, detune pulls it slightly out of line for width, drive adds grit. Stop
         before it gets messy.
       eli5: >-
-        Pick a sound with wave. Turn detune up a bit to make it wobbly and wide. Turn drive up for a rough edge.
+        Pick a sound with shape. Turn detune up a bit to make it wobbly and wide. Turn drive up for a rough edge.
 
   - kind: ask
     q: What does External Instrument do?

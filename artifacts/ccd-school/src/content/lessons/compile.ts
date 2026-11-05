@@ -2,6 +2,7 @@ import { parse } from "yaml";
 import * as P from "../../engine/params.gen";
 import type { LayerType } from "../../lib/track2";
 import { CLIP_IDS } from "./clips";
+import { SCALES } from "../../lib/theory";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -30,10 +31,10 @@ export function knobsFor(layer: LayerType): string[] {
 }
 
 /** What a `tempo` step can set: song-wide settings and the tools that act on your parts. */
-export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro"];
+export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro", "chords", "player", "chance", "length", "commit"];
 
 /** What a `mix` step asks for on the two decks. */
-export const MIX_GOALS = ["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free", "sync", "cue", "loop", "stems", "shift", "curve", "file", "record"];
+export const MIX_GOALS = ["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free", "sync", "cue", "loop", "stems", "shift", "curve", "file", "record", "punch"];
 
 const EM_DASH = /—/;
 const EMOJI = /\p{Extended_Pictographic}/u;
@@ -45,6 +46,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
+  match: ["kind", "layer", "knobs", "target", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
@@ -179,7 +181,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         if (o.kind === "play") {
           if (songLayer && !songChanges && o.layer !== songLayer) at(w, `play layer "${o.layer}" must match song.adds layer "${songLayer}" (or use song.changes)`);
           if (!(SURFACES as readonly unknown[]).includes(o.surface)) at(w, `surface must be one of ${SURFACES.join(", ")}`);
-          if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string") || (o.goal.on !== undefined && !["beat", "and", "backbeat"].includes(String(o.goal.on)))) at(w, "goal must look like {notes: <count>, note: <name>, on: beat|and|backbeat}");
+          if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string") || (o.goal.on !== undefined && !["beat", "and", "backbeat", "between", "different"].includes(String(o.goal.on)))) at(w, "goal must look like {notes: <count>, note: <name>, on: beat|and|backbeat|between|different}");
         } else {
           const ks = o.knobs;
           if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) return at(w, "knobs must list one to four knobs");
@@ -205,6 +207,22 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         case "shape":
           playOrShape(where, raw);
           break;
+        case "match": {
+          // The same knobs a shape step may name, each with a hidden target value the learner matches by ear.
+          if (!layer(where, raw.layer)) break;
+          const ks = raw.knobs;
+          const ok = knobsFor(raw.layer);
+          if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) at(where, "knobs must list one to four knobs");
+          else for (const k of ks) if (!ok.includes(k as string)) at(where, `knob "${String(k)}" does not exist for ${raw.layer}, use one of ${ok.join(", ")}`);
+          const tg = raw.target;
+          if (!isObj(tg)) at(where, "target must map each knob to its hidden value, 0 to 1");
+          else if (Array.isArray(ks)) {
+            for (const k of ks) if (typeof tg[k as string] !== "number" || (tg[k as string] as number) < 0 || (tg[k as string] as number) > 1) at(where, `target.${String(k)} must be a number from 0 to 1`);
+            for (const k of Object.keys(tg)) if (!ks.includes(k)) at(where, `target.${k} is not one of the step's knobs`);
+          }
+          voice(where, "say", raw.say);
+          break;
+        }
         case "arrange":
           voice(where, "say", raw.say);
           if (!["sections", "drop", "fills", "risers", "export"].includes(String(raw.goal))) at(where, "goal must be sections, drop, fills, risers or export");
@@ -218,7 +236,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           if (raw.set !== undefined && !TEMPO_SETS.includes(raw.set as string)) at(where, `set must be one of ${TEMPO_SETS.join(", ")}`);
           if (raw.layer !== undefined && !["bass", "chords", "lead", "drums", "hats"].includes(raw.layer as string)) at(where, "layer must be bass, chords, lead, drums or hats");
           if (raw.set === "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.length !== 1 || !["hit", "slice", "warp"].includes(String(raw.choices[0])))) at(where, "a sample step's choices names one job: hit, slice or warp");
-          if (raw.set !== "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !["minor", "major", "dorian", "minor pentatonic"].includes(c)))) at(where, "choices must be scales: minor, major, dorian, minor pentatonic");
+          if (raw.set !== "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !(c in SCALES)))) at(where, "choices must be Live 12 scale names (src/lib/theory.ts), lowercase");
           if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" || raw.set === "glue" ? m < 0 || m > 1 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
           break;
         case "ask": {

@@ -124,15 +124,15 @@ steps:
     knobs: [wave, cutoff]
     say:
       mentor: >-
-        Now shape your synth while your line plays. Wave slides from saw to square, the same shapes you just
+        Now shape your synth while your line plays. Shape slides from saw to square, the same shapes you just
         heard. Cutoff is brightness: turn it down and the corners of the wave get rounded off, so the sound
         goes soft and dark. Turn it up for bright and buzzy. Watch the picture change as you turn.
       straight: >-
-        Shape your line while it loops. Wave moves between saw and square. Cutoff controls brightness by
+        Shape your line while it loops. The shape knob moves between saw and square. Cutoff controls brightness by
         smoothing the wave's sharp edges: low is dark and soft, high is bright. The picture shows the shape
         you are hearing.
       eli5: >-
-        Turn the knobs while your tune plays. Wave changes the drawing from buzzy saw to video game square.
+        Turn the knobs while your tune plays. Shape changes the drawing from buzzy saw to video game square.
         Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it.
 
   - kind: ask

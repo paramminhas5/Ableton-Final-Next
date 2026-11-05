@@ -76,7 +76,7 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
   {
     kind: "concept",
     title: "Human hearing range",
-    body: "Human ears hear roughly 20 Hz to 20,000 Hz. Bass sits at 20–250 Hz. Midrange 250–4,000 Hz. Treble 4,000–20,000 Hz.",
+    body: "Human ears hear roughly 20 Hz to 20,000 Hz. Bass sits at 20 to 250 Hz. Midrange 250 to 4,000 Hz. Treble 4,000 to 20,000 Hz.",
     keyFact: "Sub-bass (20-60 Hz) is felt as much as heard.",
     visual: "frequency-bar",
   },
@@ -85,9 +85,9 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
     kind: "audio-id",
     prompt: "Which frequency range does this tone belong to?",
     audioType: "frequency-bar",
-    options: ["Sub-bass (20–60 Hz)", "Bass (60–250 Hz)", "Midrange (250–4k Hz)", "Treble (4k–20k Hz)"],
+    options: ["Sub-bass (20 to 60 Hz)", "Bass (60 to 250 Hz)", "Midrange (250 to 4k Hz)", "Treble (4k to 20k Hz)"],
     answer: 2,
-    explain: "The frequency sweep covers the full hearing range. Midrange (250 Hz–4 kHz) is the most audible region: where voices and most instruments live.",
+    explain: "The frequency sweep covers the full hearing range. Midrange (250 Hz to 4 kHz) is the most audible region: where voices and most instruments live.",
   },
   {
     kind: "quiz",
@@ -99,12 +99,12 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
   {
     kind: "sequence",
     prompt: "Order these frequency ranges from lowest to highest",
-    items: ["Sub-bass (20–60 Hz)", "Bass (60–250 Hz)", "Midrange (250–4,000 Hz)", "Treble (4,000–20,000 Hz)"],
+    items: ["Sub-bass (20 to 60 Hz)", "Bass (60 to 250 Hz)", "Midrange (250 to 4,000 Hz)", "Treble (4,000 to 20,000 Hz)"],
     explain: "Sub-bass → Bass → Midrange → Treble. This ordering mirrors the piano keyboard: left (low) to right (high). Understanding this order is fundamental to EQ work.",
   },
   {
     kind: "summary",
-    learned: ["Frequency (Hz) = how many cycles per second", "Higher Hz = higher pitch; double Hz = one octave up", "Humans hear 20 Hz–20,000 Hz"],
+    learned: ["Frequency (Hz) = how many cycles per second", "Higher Hz = higher pitch; double Hz = one octave up", "Humans hear 20 Hz to 20,000 Hz"],
   },
 ];
 
@@ -239,7 +239,7 @@ export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
     kind: "type-answer",
     q: "What is the standard measurement for how long a reverb tail lasts? (abbreviation)",
     acceptableAnswers: ["RT60", "rt60", "RT-60"],
-    explain: "RT60 (Reverberation Time 60 dB) is the standard measure. It's the time in seconds for sound energy to decay by 60 dB after the source stops. A concert hall has RT60 of 2–3 seconds.",
+    explain: "RT60 (Reverberation Time 60 dB) is the standard measure. It's the time in seconds for sound energy to decay by 60 dB after the source stops. A concert hall has RT60 of 2 to 3 seconds.",
     hint: "It's an abbreviation ending in the number 60",
   },
   {
@@ -247,7 +247,7 @@ export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
     q: "What does pre-delay do on a reverb plugin?",
     options: ["Slows down the attack of the reverb", "Adds a short gap between the dry sound and the reverb tail", "Increases reverb time", "Cuts high frequencies from the reverb"],
     answer: 1,
-    explain: "Pre-delay creates a gap (5–30ms typically) before the reverb starts. This lets the direct sound hit your ear first, keeping it clear and intelligible before the space washes in.",
+    explain: "Pre-delay creates a gap (5 to 30ms typically) before the reverb starts. This lets the direct sound hit your ear first, keeping it clear and intelligible before the space washes in.",
   },
   {
     kind: "summary",
@@ -290,8 +290,8 @@ export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
   {
     kind: "concept",
     title: "Equal-loudness contours",
-    body: "Human hearing is most sensitive between 2–5 kHz (consonants in speech). At the same SPL, a 1 kHz tone sounds much quieter than a 3 kHz tone. This is why mix engineers use reference tracks.",
-    keyFact: "We're most sensitive at 2–5 kHz: the speech range.",
+    body: "Human hearing is most sensitive between 2 to 5 kHz (consonants in speech). At the same SPL, a 1 kHz tone sounds much quieter than a 3 kHz tone. This is why mix engineers use reference tracks.",
+    keyFact: "We're most sensitive at 2 to 5 kHz: the speech range.",
     visual: "eq-curve",
   },
   {
@@ -304,9 +304,9 @@ export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
   {
     kind: "quiz",
     q: "Human hearing is most sensitive in which frequency range?",
-    options: ["20–100 Hz", "2,000–5,000 Hz", "8,000–12,000 Hz", "100–200 Hz"],
+    options: ["20 to 100 Hz", "2,000 to 5,000 Hz", "8,000 to 12,000 Hz", "100 to 200 Hz"],
     answer: 1,
-    explain: "The ear is tuned for the human voice. 2–5 kHz contains speech consonants: we evolved to hear this range very clearly. This is why harshness in mixes often lives at 3–4 kHz.",
+    explain: "The ear is tuned for the human voice. 2 to 5 kHz contains speech consonants: we evolved to hear this range very clearly. This is why harshness in mixes often lives at 3 to 4 kHz.",
   },
   {
     kind: "match",
@@ -319,7 +319,7 @@ export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
   },
   {
     kind: "summary",
-    learned: ["Ears are most sensitive at 2–5 kHz (speech range)", "Low volumes = bass and treble seem quieter", "Mix at consistent volume, check on multiple systems"],
+    learned: ["Ears are most sensitive at 2 to 5 kHz (speech range)", "Low volumes = bass and treble seem quieter", "Mix at consistent volume, check on multiple systems"],
   },
 ];
 
@@ -371,7 +371,7 @@ export const SCREENS_TEMPO_BPM: LessonScreen[] = [
     kind: "concept",
     title: "BPM = Beats Per Minute",
     body: "BPM counts how many beats happen in 60 seconds. 120 BPM = 2 beats per second. Tempo determines the energy and genre feel of a track.",
-    keyFact: "BPM range by genre: Hip-hop 80–100, House 120–130, Techno 130–150, D&B 170–180.",
+    keyFact: "BPM range by genre: Hip-hop 80 to 100, House 120 to 130, Techno 130 to 150, D&B 170 to 180.",
     visual: "bpm-grid",
   },
   { kind: "interact", sim: "bpm-tap", prompt: "Tap the button in time: discover the BPM" },
@@ -379,10 +379,10 @@ export const SCREENS_TEMPO_BPM: LessonScreen[] = [
     kind: "match",
     prompt: "Match each genre to its typical BPM range",
     pairs: [
-      { left: "Hip-hop", right: "80–100 BPM" },
-      { left: "House", right: "120–130 BPM" },
-      { left: "Techno", right: "130–150 BPM" },
-      { left: "Drum and Bass", right: "170–180 BPM" },
+      { left: "Hip-hop", right: "80 to 100 BPM" },
+      { left: "House", right: "120 to 130 BPM" },
+      { left: "Techno", right: "130 to 150 BPM" },
+      { left: "Drum and Bass", right: "170 to 180 BPM" },
     ],
   },
   {
@@ -1187,7 +1187,7 @@ export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
   {
     kind: "sequence",
     prompt: "Put a typical electronic song structure in order",
-    items: ["Intro (8–16 bars)", "Build/rise (16 bars)", "Drop (16–32 bars)", "Breakdown (16 bars)", "Drop 2 (16–32 bars)", "Outro (8–16 bars)"],
+    items: ["Intro (8 to 16 bars)", "Build/rise (16 bars)", "Drop (16 to 32 bars)", "Breakdown (16 bars)", "Drop 2 (16 to 32 bars)", "Outro (8 to 16 bars)"],
     explain: "Electronic structure: Intro establishes mood → Build creates anticipation → Drop delivers energy → Breakdown recovers → Drop 2 repeats payoff → Outro winds down. Every section has a purpose.",
   },
   {
@@ -1489,9 +1489,9 @@ export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
   {
     kind: "quiz",
     q: "You have a vocal that sounds muddy and too dense. Which effect do you reach for first?",
-    options: ["Reverb: to add space", "Compressor: to control dynamics", "EQ: cut the muddy frequencies (usually 200–400 Hz)", "Delay: to add rhythmic texture"],
+    options: ["Reverb: to add space", "Compressor: to control dynamics", "EQ: cut the muddy frequencies (usually 200 to 400 Hz)", "Delay: to add rhythmic texture"],
     answer: 2,
-    explain: "Muddiness lives at 200–400 Hz. A surgical EQ cut in that range cleans up the low-mid clutter. Always EQ before adding space effects (reverb/delay): otherwise you're adding mud on top of mud.",
+    explain: "Muddiness lives at 200 to 400 Hz. A surgical EQ cut in that range cleans up the low-mid clutter. Always EQ before adding space effects (reverb/delay): otherwise you're adding mud on top of mud.",
   },
   {
     kind: "summary",

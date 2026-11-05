@@ -42,6 +42,11 @@ steps:
     layer: drums
     knobs: [decay, tune]
     say: ...
+  - kind: match              # match this sound: a target from hidden settings of the knobs on their own part,
+    layer: drums             # matched by ear (switch target and yours, turn the lit knobs, check); a closeness
+    knobs: [tune, decay]     # score from the sound and the settings, hints after two tries, and a close match
+    target: {tune: 0.3, decay: 0.2}   # is kept in their song. target: each knob's hidden value, 0 to 1
+    say: ...
   - kind: ask                # question about what they just heard or made; replaces quiz
     q: ...
     options: [...]

@@ -485,7 +485,7 @@ const w2: Mission[] = [
         ],
         answer: 1,
         explain:
-          "Transposing audio re-pitches via stretching algorithms: go too far (>6–8 semitones) and time-stretch artifacts appear.",
+          "Transposing audio re-pitches via stretching algorithms: go too far (>6 to 8 semitones) and time-stretch artifacts appear.",
         hint: "It's adjusting pitch: what processing does that require on audio?",
       },
     ],
@@ -633,7 +633,7 @@ const w3: Mission[] = [
         options: ["Pitch", "Length", "How hard", "Quantize"],
         answer: 2,
         explain:
-          "Velocity determines how hard a note is hit: in MIDI it maps 0–127, and instruments often use it to change timbre.",
+          "Velocity determines how hard a note is hit: in MIDI it maps 0 to 127, and instruments often use it to change timbre.",
         hint: "Think about dynamics on a real instrument: what determines softness vs loudness?",
       },
       {
@@ -2540,7 +2540,7 @@ const wExtra: Mission[] = [
         kind: "list",
         items: [
           "Pick from 13 saturation algorithms (Tube, Diode, Wavefolder, Bit, Digital Clip…).",
-          "Run them in series, parallel, or split into 2–3 frequency bands.",
+          "Run them in series, parallel, or split into 2 to 3 frequency bands.",
           "Built-in LFO/envelope follower modulates any stage parameter.",
         ],
       },
@@ -2594,7 +2594,7 @@ const wExtra: Mission[] = [
       {
         kind: "list",
         items: [
-          "Threshold low (1–3 dB gain reduction) is enough.",
+          "Threshold low (1 to 3 dB gain reduction) is enough.",
           "Attack 10ms, Release Auto, Ratio 4: start there.",
           "Built-in soft clipper at the output.",
         ],
@@ -2617,10 +2617,10 @@ const wExtra: Mission[] = [
       },
       {
         q: "Typical bus GR?",
-        options: ["1–3 dB", "10 dB", "20 dB"],
+        options: ["1 to 3 dB", "10 dB", "20 dB"],
         answer: 0,
         explain:
-          "1–3dB of gain reduction on a mix bus adds cohesion without squashing dynamics: this is 'glue', not limiting.",
+          "1 to 3dB of gain reduction on a mix bus adds cohesion without squashing dynamics: this is 'glue', not limiting.",
         hint: "Bus compression is subtle: how much gain reduction creates cohesion?",
       },
       {
@@ -2657,7 +2657,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "warn",
-        text: "Limiting more than 3–4 dB will pump and squash. Mix into the limiter, don't fix the mix with it.",
+        text: "Limiting more than 3 to 4 dB will pump and squash. Mix into the limiter, don't fix the mix with it.",
       },
     ],
     sim: { type: "device-lab", preset: { device: "limiter" } },

@@ -20,7 +20,14 @@ for (const [slug, act] of [
     // No bank track fits this song's key: shift deck b's key, as the hint says.
     for (let i = 0; i < 12 && !/fits/.test(await p.locator(".mx-decks").innerText()); i++) await p.getByRole("button", { name: /^key b \+/ }).click();
   }],
-  ["effects-performance-dj", async p => { await press(p, "echo a", "ArrowUp", 60); await press(p, "deck a", "ArrowDown", 60); }],
+  ["effects-performance-dj", async p => {
+    await press(p, "echo a", "ArrowUp", 60); await press(p, "deck a", "ArrowDown", 60);
+    // Then the punch-in effects step: play, hold two of them for half a second each.
+    for (let i = 0; i < 8 && !(await p.locator(".pp-key").count()); i++) { await p.waitForTimeout(600); await p.locator(".ls-bottom .m1-g > :last-child").first().click(); await p.waitForTimeout(900); }
+    if (!(await p.locator(".pp-key").count())) return;
+    const play = p.locator(".ls-bottom .m1-g > :first-child").first(); if (/play/i.test((await play.getAttribute("aria-label")) ?? "")) await play.click(); await p.waitForTimeout(1200);
+    for (const n of [/^beat repeat/, /^tape stop/]) { const k = p.getByRole("button", { name: n }); await k.focus(); await p.keyboard.down("Space"); await p.waitForTimeout(600); await p.keyboard.up("Space"); await p.waitForTimeout(300); }
+  }],
   ["sync-function", async p => { await p.getByRole("button", { name: "sync b", exact: true }).click(); }],
   ["loop-function-dj", async p => { await p.getByRole("button", { name: "loop 4", exact: true }).click(); await press(p, "deck b", "ArrowUp", 60); }],
   ["loop-performance-dj", async p => { await p.getByRole("button", { name: /^cue 3/ }).click(); await p.waitForTimeout(300); await p.getByRole("button", { name: /^cue 4/ }).click(); }],

@@ -8,8 +8,9 @@
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { readTrackV2, writeTrackV2, type LayerType, type NoteEvent } from "@/lib/track2";
-import { NOTE_NAMES } from "@/lib/theory";
-import { Dice, Screen } from "./controls";
+import { asScale, inScale, keyName, NOTE_NAMES, pitchClass } from "@/lib/theory";
+import { Dice, Fader, Screen } from "./controls";
+import { humanize, strum, velocityShape } from "@/lib/transform";
 import { fillMelody, newSeed } from "@/lib/dice";
 import { Meta } from "./LessonParts";
 import { Frame, useLoop, withPart, type StepProps } from "./ToolSteps";
@@ -32,7 +33,12 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
   // Two octaves, centred on the part's notes; highest row on top.
   const mid = evs.length ? Math.round(evs.reduce((a, e) => a + e.note, 0) / evs.length) : 60;
   const lo = Math.max(24, Math.min(96, mid - 12));
-  const rows = Array.from({ length: 25 }, (_, i) => lo + 24 - i);
+  // The song's key: rows outside it are dim, the root rows are marked (Live's highlight scale), and
+  // fold hides the rows outside it (Live's fold to scale).
+  const root = base.track.root ?? 45;
+  const scale = asScale(base.track.scale);
+  const [fold, setFold] = useState(false);
+  const rows = Array.from({ length: 25 }, (_, i) => lo + 24 - i).filter(n => !fold || inScale(n, root, scale) || evs.some(e => e.note === n));
   const shown = useMemo(() => ({ ...base.track, layers: base.track.layers.map(l => (l.type === type ? { ...l, events: evs } : l)) }), [base, type, evs]);
   const { beat, playing, toggle } = useLoop(shown);
   // Open with your notes in view, not the empty top of the roll.
@@ -68,8 +74,7 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
   const lastDice = useRef(0);
   const rollDice = (amt: number, seed: number) => {
     if (!dice.current || dice.current.result !== JSON.stringify(evs)) dice.current = { base: evs, result: "" };
-    const root = base.track.root ?? 45;
-    const next = fillMelody(dice.current.base, { loop, step: STEP, root, scale: base.track.scale === "major" ? "major" : "minor", amount: amt, seed, lo: rows[rows.length - 1] + 5, hi: rows[0] - 5 });
+    const next = fillMelody(dice.current.base, { loop, step: STEP, root, scale, amount: amt, seed, lo: rows[rows.length - 1] + 5, hi: rows[0] - 5 });
     dice.current.result = JSON.stringify(next);
     const now = Date.now();
     if (now - lastDice.current > 800) commit(next); else setEvs(next);
@@ -151,6 +156,16 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
     window.dispatchEvent(new Event("ccd:song"));
     onNext();
   };
+  // Transformations (Live 12): strum, humanize, velocity shaper. One amount, one key each; each press is one
+  // undo step and works on the picked notes, or every note when none are picked.
+  const [amt, setAmt] = useState(0.5);
+  const xform = (name: string, f: (e: NoteEvent[], p?: Set<number>) => NoteEvent[]) => {
+    const next = f(evs, picked.size ? picked : undefined);
+    if (next === evs || JSON.stringify(next) === JSON.stringify(evs)) { setXf(name === "strum" ? "strum spreads notes that start together: pick a chord" : `${name}: turn the amount up`); return; }
+    commit(next);
+    setXf(`${name} ${amt > 0 ? "+" : ""}${Math.round(amt * 100)}%${picked.size ? ` on ${picked.size} note${picked.size > 1 ? "s" : ""}` : " on every note"}`);
+  };
+  const [xf, setXf] = useState<string | null>(null);
   const many = picked.size > 1;
   const it = many ? "the picked notes" : "the note";
   // The strip: what a phone can do without dragging. Each is one undo step.
@@ -173,12 +188,12 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
       note={base.added ? `your song has no ${type} yet, so here are a few notes to edit. keep adds them.` : null}
       inst={<>
         <Screen>
-          <Meta left={`note grid · your ${type}`} right={drag ? drag.text : many ? `${picked.size} notes picked` : s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
+          <Meta left={`note grid · ${keyName(root, scale)}`} right={drag ? drag.text : many ? `${picked.size} notes picked` : s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
           <div ref={roll} className="gr-roll" role="grid" onKeyDown={onRollKey} aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
             {rows.map((n, ri) => (
-              <div key={n} role="row" className={`gr-row ${BLACK.has(n % 12) ? "is-black" : ""}`}>
-                {/* A keyboard down the side: black keys dark, every C named. */}
-                <span className={`gr-key ${BLACK.has(n % 12) ? "is-black" : ""}`}>{n % 12 === 0 ? `${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}` : ""}</span>
+              <div key={n} role="row" className={`gr-row ${BLACK.has(n % 12) ? "is-black" : ""} ${inScale(n, root, scale) ? "" : "is-out"} ${pitchClass(n) === pitchClass(root) ? "is-root" : ""}`}>
+                {/* A keyboard down the side: black keys dark, every C and every root named. */}
+                <span className={`gr-key ${BLACK.has(n % 12) ? "is-black" : ""}`}>{n % 12 === 0 || pitchClass(n) === pitchClass(root) || fold ? `${NOTE_NAMES[n % 12]}${Math.floor(n / 12) - 1}` : ""}</span>
                 {/* Each note drawn as one bar over its squares; the squares underneath take the taps. */}
                 {evs.map((e, i) => e.note === n ? (
                   <i key={`n${i}`} className={`gr-bar ${picked.has(i) ? "is-sel" : ""}`} aria-hidden style={{ left: `calc(var(--kw) + (100% - var(--kw)) * ${e.start / loop})`, width: `calc((100% - var(--kw)) * ${e.len / loop} - 1px)`, ["--v" as string]: e.vel } as CSSProperties}>
@@ -204,8 +219,18 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
           {s ? tools.map(([l, a, f]) => <button key={l} type="button" className="ls-chip" aria-label={a} title={a} onClick={f}>{l}</button>) : <span className="gr-tip">tap a square to add a note. tap a note to pick it, hold more to pick several. drag a picked note&apos;s edge: sideways for length, up or down for velocity</span>}
           {past.current.length ? <button type="button" className="ls-chip" onClick={undo} aria-label="Undo the last edit">undo</button> : null}
           {evs.length > 1 ? <button type="button" className="ls-chip" onClick={() => { setPicked(new Set(evs.map((_, i) => i))); setSelRaw(evs.length - 1); }} aria-label="Pick every note">all</button> : null}
+          <button type="button" className={`ls-chip ${fold ? "is-on" : ""}`} aria-pressed={fold} onClick={() => setFold(f => !f)} aria-label={`Fold to scale: show only the rows in ${keyName(root, scale)}`}>fold</button>
         </div>
-        <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" width={110} /></div>
+        <div className="gr-xform" role="group" aria-label="Transformations">
+          <span className="gr-xf-l" aria-hidden>amount</span>
+          <Fader horizontal width={96} value={(amt + 1) / 2} defaultValue={0.75} label="Transformation amount" valueText={`${Math.round(amt * 100)}%`} onChange={v => setAmt(Math.round((v * 2 - 1) * 20) / 20)} />
+          <span className="gr-xf-v" aria-hidden>{amt > 0 ? "+" : ""}{Math.round(amt * 100)}%</span>
+          <button type="button" className="ls-chip" onClick={() => xform("strum", (e, p) => strum(e, amt, p))} aria-label={`Strum ${amt >= 0 ? "low to high" : "high to low"}`}>strum</button>
+          <button type="button" className="ls-chip" onClick={() => xform("humanize", (e, p) => humanize(e, amt, newSeed(), p, loop))} aria-label="Humanize timing and velocity">humanize</button>
+          <button type="button" className="ls-chip" onClick={() => xform("velocity shaper", (e, p) => velocityShape(e, amt, p))} aria-label={`Velocity shaper: ${amt >= 0 ? "louder" : "softer"} across the notes`}>velocity shaper</button>
+          {xf ? <span className="gr-tip" role="status">{xf}</span> : null}
+        </div>
+        <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="density" width={110} /></div>
       </>} />
   );
 }

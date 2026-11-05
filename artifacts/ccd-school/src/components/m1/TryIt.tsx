@@ -5,13 +5,13 @@
  * again adds on top; undo takes back the last take; "use this line" keeps it for the
  * end of the lesson, where it joins your track when you press add.
  */
-import { beatsToMs, msToBeats, readLatencyMs, saveLatencyMs, steadyDelay } from "@/lib/latency";
+import { MAX_DEVICE_MS, beatsToMs, slotStart, msToBeats, readLatencyMs, saveLatencyMs, steadyDelay } from "@/lib/latency";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
 import { newLayerV2, readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
-import { NOTE_NAMES, type Snap } from "@/lib/theory";
+import { asScale, NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocityAt } from "@/lib/touch";
 import { GoPill, Icon, Key, PadRing, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
@@ -22,7 +22,7 @@ const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 const TOL = 0.15;
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; tail?: ReactNode; snap?: boolean };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" }; tail?: ReactNode; snap?: boolean };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -68,7 +68,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const sessionRef = useRef(session);
   sessionRef.current = session;
 
-  const pads = useMemo(() => playPads(type, session.root, session.scale === "major" ? "major" : "minor"), [type, session.root, session.scale]);
+  const pads = useMemo(() => playPads(type, session.root, asScale(session.scale)), [type, session.root, session.scale]);
   const padsRef = useRef(pads);
   padsRef.current = pads;
   const events = session.layers[idx]?.events ?? [];
@@ -213,8 +213,13 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       return;
     }
     engine.stop();
-    // Hits that were close enough to the beat are kept exactly on it.
-    onUse({ type, events: coach && onBeatOnly ? events.map(e => (isOff(e) ? e : { ...e, start: ((Math.round(e.start) % loop) + loop) % loop })) : events });
+    // Hits that were close enough to their slot (the beat, or the "and" for open hats) are kept exactly on it;
+    // a tune is kept on the nearest 16th, the grid its timing marks are drawn against.
+    const wrap = (b: number) => ((b % loop) + loop) % loop;
+    const kept = !coach ? events
+      : onBeatOnly ? events.map(e => (goalNote !== undefined && e.note !== goalNote) || isOff(e) ? e : { ...e, start: slotStart(e.start, offbeat, loop) })
+      : events.map(e => ({ ...e, start: wrap(Math.round(e.start * 4) / 4) }));
+    onUse({ type, events: kept });
   };
 
   // ── the screen: a piano roll of the take ────────────────────────────────
@@ -223,7 +228,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const lo = Math.min(...allNotes), hi = Math.max(...allNotes);
   const rows = drumLike ? pads.length : hi - lo + 1;
   const rowOf = (n: number) => (drumLike ? pads.findIndex(p => p.notes[0] === n) : hi - n);
-  const Wd = 330, Hd = coach ? 146 : 128;
+  const Wd = 330, Hd = coach ? 154 : 128;
   const rollH = coach ? 128 : Hd;
   const rh = (coach ? 128 : Hd) / Math.max(1, rows);
   const beatW = Wd / loop;
@@ -254,17 +259,34 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && (Math.abs(offOf(e)) > TOL || (backbeat && slotOf(e) % 2 === 0));
   const offs = goalEvents.filter(isOff);
   const offBeat = onBeatOnly ? offs.length : 0;
+  // A tune's goal in music terms: "between" counts only notes in the gaps between the kicks (off the beat),
+  // "different" counts different chords (one chord may come back, as i in i iv v i), so the same pad four
+  // times is one chord plus a return, not a progression.
+  const between = !onBeatOnly && on === "between";
+  const different = !onBeatOnly && on === "different";
+  const onKick = (e: NoteEvent) => Math.abs(e.start - Math.round(e.start)) < 0.125;
+  const kickHits = between ? new Set(goalEvents.filter(onKick).map(e => e.start.toFixed(3))).size : 0;
+  const shapes = () => {
+    const by = new Map<string, number[]>();
+    for (const e of goalEvents) { const k = e.start.toFixed(3); by.set(k, [...(by.get(k) ?? []), e.note]); }
+    return new Set([...by.values()].map(n => n.sort((a, b) => a - b).join(","))).size;
+  };
+  const presses = new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalHits = onBeatOnly
     ? new Set(goalEvents.filter(e => !isOff(e)).map(slotOf)).size
+    : between ? new Set(goalEvents.filter(e => !onKick(e)).map(e => e.start.toFixed(3))).size
+    : different ? Math.min(presses, shapes() + 1)
     // A chord is one press, not three notes: count when things start, not how many notes sound.
-    : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
+    : presses;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   // When a take ends: a steady lateness is the device, so take it out; otherwise count it as a miss.
   const wasTake = useRef(false);
   useEffect(() => {
     const now = recording || countIn;
     if (wasTake.current && !now && coach && onBeatOnly && goalEvents.length) {
-      const shift = backbeat ? 0 : steadyDelay(goalEvents.map(offOf), TOL);
+      // Only what's left of the device allowance can be learned, so a learned delay never grows into a 16th.
+      const room = msToBeats(Math.max(0, MAX_DEVICE_MS - latencyMs.current), session.bpm || 120);
+      const shift = backbeat ? 0 : steadyDelay(goalEvents.map(offOf), TOL, room);
       if (shift) {
         const bpm = session.bpm || 120;
         const ms = beatsToMs(shift, bpm);
@@ -334,6 +356,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} landed on one or three. the ${hitName} goes on two and four. tap undo and try again`
     : offBeat && offbeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} missed the "and", the red ${offBeat === 1 ? "one" : "ones"}. the ${hitName} goes halfway between the kicks. tap undo and try again`
     : offBeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
+    : !goalMet && between && kickHits ? `${kickHits === 1 ? "one note lands" : `${kickHits} notes land`} on the kick. the bass goes in the gaps between the kicks: ${shown} of ${coach.goal.notes} there so far`
+    : !goalMet && different && presses > goalHits ? `that's the same chord again. a progression moves: ${shapes()} different so far, try another pad`
     : !goalMet ? `${shown} of ${coach.goal.notes}${offbeat ? ' on the "and"' : backbeat ? " on two and four" : onBeatOnly ? " on the beat" : ` ${unit}s`}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
@@ -341,7 +365,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   // The go key names what is still missing until the take is ready.
   const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
   const noun = goalNote !== undefined ? hitName : unit;
-  const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones" : `${need} more ${noun}${need === 1 ? "" : "s"}`;
+  const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones"
+    : between ? `${need} more between the kicks` : different ? `${need} more different chord${need === 1 ? "" : "s"}` : `${need} more ${noun}${need === 1 ? "" : "s"}`;
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
       {/* Phone: one live instruction above the instrument, so rec and the pads are on the first screen. */}
@@ -357,7 +382,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         </div>
         <div className="ls-title">{title}</div>
         <svg viewBox={`0 0 ${Wd} ${Hd}`} width="100%" style={{ display: "block", marginTop: 12 }} role="img" aria-label={`${notesCount} ${unit}s recorded`}>
-          {coach && Array.from({ length: loop }, (_, i) => <text key={`b${i}`} x={i * beatW + 4} y={10} fontSize={9} fill="rgba(255,255,255,.55)">{i + 1}</text>)}
+          {coach && Array.from({ length: loop }, (_, i) => <text key={`b${i}`} x={i * beatW + 4} y={11} fontSize={10.5} fill="rgba(255,255,255,.55)">{i + 1}</text>)}
           {Array.from({ length: loop * 4 }, (_, i) => (
             <path key={i} d={`M${(i * Wd) / (loop * 4)} 0V${Hd}`} stroke={i % 4 === 0 ? "rgba(255,255,255,.14)" : "rgba(255,255,255,.05)"} />
           ))}
@@ -371,7 +396,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             return (
               <g key={`v${i}`} className="ti-verdict">
                 <circle cx={x} cy={rollH + 6} r={3.5} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />
-                {(v.c !== "on" || e === lastHit) && x - lastX > 22 && (lastX = x) ? <text x={x} y={rollH + 17} textAnchor="middle" fontSize={9} fontWeight={600} fill={c}>{v.ms > 0 ? "+" : ""}{v.ms}</text> : null}
+                {(v.c !== "on" || e === lastHit) && x - lastX > 34 && (lastX = x) ? <text x={x} y={rollH + 21} textAnchor="middle" fontSize={13} fontWeight={700} fill={c}>{v.ms > 0 ? "+" : ""}{v.ms}</text> : null}
               </g>
             );
           }); })()}

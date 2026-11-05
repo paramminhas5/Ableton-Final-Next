@@ -9,7 +9,10 @@
  *   to within a millisecond.
  * Worklet -> main: { t: "ready", frame0 }, { t: "ev", e: Float64Array } groups of 7:
  *   kind, layer, note, flags, vel, aux, beat. And { t: "load", ms } every second.
+ * Scope: main -> { t: "scope", on } starts or stops { t: "scope", x: Float32Array } about 30 times a
+ *   second, the engine's last SCOPE_LEN samples of whatever cmd SCOPE picked (a part or the master).
  */
+const SCOPE_LEN = 2048;
 const EV_BYTES = 32;
 const EV_MAX = 256;
 
@@ -45,6 +48,9 @@ class CcdEngine extends AudioWorkletProcessor {
       this.port.postMessage({ t: "ready", frame0: this.frame0, sampleRate });
     } else if (d.t === "cmds") {
       this.pending.push(d.c);
+    } else if (d.t === "scope") {
+      this.scopeOn = !!d.on;
+      this.scopeAt = 0;
     } else if (d.t === "sample") {
       // Between blocks, in this same thread: safe to allocate. Order with cmds is kept.
       if (this.pending.length) this.flush();
@@ -106,6 +112,17 @@ class CcdEngine extends AudioWorkletProcessor {
     out[0].set(new Float32Array(mem, x.ccd_out_left(this.e), frames));
     if (out[1]) out[1].set(new Float32Array(mem, x.ccd_out_right(this.e), frames));
     this.drain();
+    if (this.scopeOn && x.ccd_scope) {
+      this.scopeAt += frames;
+      if (this.scopeAt >= sampleRate / 30) {
+        this.scopeAt = 0;
+        if (!this.scopePtr) this.scopePtr = x.ccd_alloc(SCOPE_LEN * 4);
+        const n = x.ccd_scope(this.e, this.scopePtr, SCOPE_LEN);
+        const copy = new Float32Array(n);
+        copy.set(new Float32Array(x.memory.buffer, this.scopePtr, n));
+        this.port.postMessage({ t: "scope", x: copy }, [copy.buffer]);
+      }
+    }
     this.busy += Date.now() - t0;
     if (++this.blocks * frames >= sampleRate) {
       // Rough load: time spent rendering per second of audio.

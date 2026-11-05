@@ -65,16 +65,16 @@ steps:
         Here's your song. Your melody is midi: the notes you played are saved as instructions, and a synth is
         reading them.
 
-        Turn wave and the synth changes from a bright, buzzy saw to a hollow square. Every note in your melody stays
+        Turn shape and the synth changes from a bright, buzzy saw to a hollow square. Every note in your melody stays
         exactly where you put it, same pitch, same timing. Only the instrument changed. Then try release,
         which sets how long each note keeps ringing after it ends. The note lengths saved in your song don't
         move; the synth just lets each one fade out slower or faster. Pick the sound you want reading your
         notes.
       straight: >-
-        Your melody is midi. Wave changes the instrument, release how long notes ring after they end. The
+        Your melody is midi. Shape changes the instrument, release how long notes ring after they end. The
         saved notes stay exactly as you played them. Pick a sound.
       eli5: >-
-        Turn wave: same tune, different sound. Your notes don't change at all. Turn release: the notes ring
+        Turn shape: same tune, different sound. Your notes don't change at all. Turn release: the notes ring
         on longer or stop quicker. Pick the one you like.
 
   - kind: ask

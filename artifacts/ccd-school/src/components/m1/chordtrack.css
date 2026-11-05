@@ -1,0 +1,17 @@
+/* the chord track (Logic's Chord Track): a slot per bar, the chords in key, progressions */
+.ct{display:flex;flex-direction:column;gap:8px;min-height:0}
+.ct-bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:5px}
+.ct-bar{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:52px;padding:6px 8px;border-radius:9px;border:1px solid var(--tag);background:var(--well);color:var(--ink);font:inherit;cursor:pointer;text-align:left}
+.ct-bar small{font-size:9px;color:var(--sub)}
+.ct-bar b{font-size:17px;font-weight:500;letter-spacing:-.02em}
+.ct-bar span{font-size:11px;color:var(--sub);min-height:13px}
+.ct-bar.is-sel{border-color:var(--led-mint);box-shadow:0 0 0 1px color-mix(in srgb,var(--led-mint) 45%,transparent)}
+.ct-bar.is-now{background:color-mix(in srgb,var(--led-mint) 16%,var(--well))}
+.ct-bar:focus-visible,.ct-chip:focus-visible,.ct-prog:focus-visible{outline:2px solid var(--led-cobalt,#4A6CFF);outline-offset:2px}
+.ct-pick{display:flex;flex-wrap:wrap;gap:5px}
+.ct-chip{display:inline-flex;align-items:baseline;gap:5px;min-height:44px;min-width:44px;padding:0 10px;border-radius:9px;border:1px solid var(--tag);background:none;color:var(--ink);font:inherit;font-size:14px;cursor:pointer;justify-content:center;align-items:center}
+.ct-chip span{font-size:10px;color:var(--sub)}
+.ct-chip.is-on{border-color:var(--led-mint);background:color-mix(in srgb,var(--led-mint) 18%,transparent)}
+.ct-progs{display:flex;flex-wrap:wrap;gap:5px}
+.ct-prog{min-height:32px;padding:0 9px;border-radius:16px;border:1px dashed var(--tag);background:none;color:var(--sub);font:inherit;font-size:11px;cursor:pointer}
+.ct-prog.is-on{color:var(--ink);border-style:solid;border-color:var(--led-mint)}

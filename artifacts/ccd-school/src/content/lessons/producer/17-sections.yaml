@@ -30,11 +30,11 @@ steps:
     goal: sections
     say:
       mentor: >-
-        Here's your song as five sections, already laid out the classic way. Each row is one of your parts,
-        each column a section. Tap a cell to switch that part off or on there. Play it through and change it
-        until the journey feels right.
+        Here's your song as five sections, with every part playing in all of them. Each row is one of your
+        parts, each column a section. Tap a cell to switch that part off or on there. Thin out the intro and the
+        break, keep the drops full, and play it through until the journey feels right.
       straight: >-
-        Rows are parts, columns sections. Tap cells to switch parts off or on. Play it and adjust.
+        Rows are parts, columns sections. Switch parts off in the intro or the break, keep the drops full.
       eli5: >-
         Tap the squares to turn sounds on or off in each part of your song. Press play and listen.
 

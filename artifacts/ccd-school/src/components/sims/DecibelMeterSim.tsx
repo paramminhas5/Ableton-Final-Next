@@ -23,7 +23,7 @@ function linearToDb(linear: number) {
 }
 
 export function DecibelMeterSim() {
-  const [fader, setFader] = useState(70); // 0–100 maps to -60dB–0dB
+  const [fader, setFader] = useState(70); // 0 to 100 maps to -60dB to 0dB
   const oscRef = useRef<OscillatorNode | null>(null);
   const gainRef = useRef<GainNode | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);

@@ -177,3 +177,27 @@ pub unsafe extern "C" fn ccd_normalise(l: *mut f32, r: *mut f32, frames: u32, sa
     }
     n.lufs
 }
+
+/// Integrated loudness (BS.1770, gated) of a rendered stereo buffer, in LUFS. Offline only. The a/b
+/// level match and "match this sound" use it on short renders of one part.
+///
+/// # Safety
+/// `l` and `r` must point to `frames` floats each.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_lufs(l: *const f32, r: *const f32, frames: u32, sample_rate: f32) -> f32 {
+    let l = std::slice::from_raw_parts(l, frames as usize);
+    let r = std::slice::from_raw_parts(r, frames as usize);
+    crate::loudness::integrated_lufs(l, r, sample_rate)
+}
+
+/// Copy the scope's last `n` samples (at most SCOPE_LEN), oldest first, into `out`. Returns how many.
+/// Call between blocks on the audio thread (the web worklet does, about 30 times a second).
+///
+/// # Safety
+/// `out` must hold `n` floats. Audio thread only, not while `ccd_process` runs.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_scope(e: *const Engine, out: *mut f32, n: u32) -> u32 {
+    let n = (n as usize).min(crate::engine::SCOPE_LEN);
+    let o = std::slice::from_raw_parts_mut(out, n);
+    (*e).core().read_scope(o) as u32
+}

@@ -157,7 +157,7 @@ export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, heig
   return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
 }
 
-/** Fill and randomise: one amount (a short fader) and one key that rolls the dice. */
+/** Generate (Live 12 calls the amount density): one amount (a short fader) and one key that rolls the dice. */
 export function Dice({ amount, onAmount, onRoll, label = "fill", width = 84 }: { amount: number; onAmount: (v: number) => void; onRoll: () => void; label?: string; width?: number }) {
   return (
     <div className="m1-dice">
@@ -246,6 +246,8 @@ type KnobProps = {
   value: number;
   onChange?: (v: number) => void;
   onTouch?: (label: string, v: number) => void;
+  /** A hover note: what this control is called on other instruments. */
+  title?: string;
   label: string;
   color?: string;
   led?: string | null;
@@ -270,10 +272,18 @@ type KnobProps = {
   dim?: boolean;
   /** The lesson is about this control: it gets a soft halo. */
   spot?: boolean;
+  /** Modulation on this knob: an arc per source in its colour, from the knob's value as far as the source moves it. */
+  mods?: { color: string; amt: number; bipolar: boolean }[];
+  /** The wire param a modulation source dropped here goes to (data-mod-to). */
+  modTo?: number;
+  /** A source is being dragged over this knob. */
+  drop?: boolean;
+  /** Drawn over the knob (the modulation amount while editing a source). */
+  overlay?: ReactNode;
 };
 
 /** The value ring: an led arc in the colour of what the knob moves, from rest to the value. Dark when idle. */
-function Ring({ size, value, color, from = 0, idle }: { size: number; value: number; color: string; from?: number; idle?: boolean }) {
+function Ring({ size, value, color, from = 0, idle, mods }: { size: number; value: number; color: string; from?: number; idle?: boolean; mods?: KnobProps["mods"] }) {
   const c = size / 2, r = size / 2 - 3.5;
   const ang = (n: number) => ((135 + 270 * Math.max(0, Math.min(1, n))) * Math.PI) / 180;
   const pt = (n: number) => `${(c + r * Math.cos(ang(n))).toFixed(2)} ${(c + r * Math.sin(ang(n))).toFixed(2)}`;
@@ -284,12 +294,24 @@ function Ring({ size, value, color, from = 0, idle }: { size: number; value: num
       <path d={arc(0, 1)} className="m1-ring-bed" />
       {lit && <path d={arc(from, value)} className="m1-ring-arc" />}
       {lit && <circle cx={c + r * Math.cos(ang(value))} cy={c + r * Math.sin(ang(value))} r={2.2} className="m1-ring-tip" />}
+      {mods?.map((m, i) => {
+        // Outside the value ring: how far each source takes the knob from where it is.
+        const rr = r + 3.6 + i * 3;
+        const ptm = (n: number) => `${(c + rr * Math.cos(ang(n))).toFixed(2)} ${(c + rr * Math.sin(ang(n))).toFixed(2)}`;
+        const arcm = (a: number, b: number) => { const lo = Math.max(0, Math.min(a, b)), hi = Math.min(1, Math.max(a, b)); return hi - lo < 0.002 ? "" : `M${ptm(lo)}A${rr} ${rr} 0 ${(hi - lo) * 270 > 180 ? 1 : 0} 1 ${ptm(hi)}`; };
+        return (
+          <g key={i} style={{ ["--c" as string]: m.color } as CSSProperties}>
+            <path d={arcm(value, value + m.amt)} className="m1-mod-arc" />
+            {m.bipolar ? <path d={arcm(value, value - m.amt)} className="m1-mod-arc is-back" /> : null}
+          </g>
+        );
+      })}
     </svg>
   );
 }
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -308,6 +330,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
   const knob = (
     <div
       className="m1-knob"
+      title={title}
       role="slider"
       tabIndex={onChange ? 0 : -1}
       aria-label={label}
@@ -319,7 +342,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
       {size >= 46 && !ring && <Scale size={well + 14} steps={detents} at={at} />}
-      {ring ? <Ring size={well + 14} value={value} color={ring} from={ringFrom} idle={idle} /> : null}
+      {ring ? <Ring size={well + 14} value={value} color={ring} from={ringFrom} idle={idle} mods={mods} /> : null}
       <div className="m1-well" style={{ width: well, height: well }}>
         <div className="m1-kb" style={{ width: size, height: size, marginTop: -4 }}>
           <div className="m1-kc" style={{ ["--c" as string]: color, width: size * 0.68, height: size * 0.68 } as CSSProperties}>
@@ -332,11 +355,12 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
   if (bare) return knob;
   const ledC = ring ?? led;
   return (
-    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle ? "is-idle" : ""}`} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
-      {ledC ? <Dash color={ledC} on={ring ? !idle : true} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
+    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle && !mods?.length ? "is-idle" : ""} ${drop ? "is-drop" : ""}`} data-mod-to={modTo} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
+      {ledC ? <Dash color={ledC} on={ring ? !idle || !!mods?.length : true} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
       <div style={{ marginTop: -12 }}>{knob}</div>
       <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>
       {readout ? <span className="m1-kv" aria-hidden>{readout}</span> : null}
+      {overlay}
     </div>
   );
 }

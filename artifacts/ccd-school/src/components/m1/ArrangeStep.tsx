@@ -47,7 +47,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   const drums = parts.filter(l => DRUMS.has(l.type)).map(l => l.id);
   const onlyDrums = parts.length > 0 && parts.every(l => DRUMS.has(l.type));
   const met = arrangeMet(secs, drums, screen.goal);
-  const why = screen.goal === "risers" ? "tap riser on the section before a drop" : screen.goal === "fills" ? "tap fill on at least one section" : screen.goal === "drop" ? "take the drums out of one section and bring them back in the next" : "switch a part off in at least one section";
+  const why = screen.goal === "risers" ? "tap riser on the section before a drop" : screen.goal === "fills" ? "tap fill on at least one section" : screen.goal === "drop" ? "take the drums out of one section and bring them back in the next" : secs.some(s => s.name === "drop" && s.off.length) ? "keep every part on in the drop, it's the peak" : "switch a part off in the intro or the break";
   const [say, setSay] = useState<string | null>(null);
   // Audio export at a loudness target: -14 lufs for streaming, -9 for clubs (src/lib/loudness.ts).
   const [exp, setExp] = useState<{ state: "idle" | "rendering" | "done"; note?: string }>({ state: "idle" });

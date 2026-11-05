@@ -86,4 +86,29 @@ describe("loop round 3: no arrange lesson opens already met", () => {
     const drop = startLayout(t, "drop").map((s, i) => (i === 3 ? { ...s, off: [...s.off, ...drums] } : s));
     expect(arrangeMet(drop, drums, "drop")).toBe(true);
   });
+  it("loop round 4: sections wants the drops full and a part off elsewhere", async () => {
+    const { arrangeMet } = await import("../src/lib/arrange");
+    const t = song();
+    const drums = t.layers.filter(l => l.type === "drums" || l.type === "hats").map(l => l.id);
+    const start = startLayout(t, "sections");
+    const offInDrop = start.map(s => (s.name === "drop" ? { ...s, off: [...drums] } : s));
+    expect(arrangeMet(offInDrop, drums, "sections")).toBe(false);
+    const offInBreak = start.map(s => (s.name === "break" ? { ...s, off: [...drums] } : s));
+    expect(arrangeMet(offInBreak, drums, "sections")).toBe(true);
+  });
+});
+
+describe("loop round 5: what changed names the move, not the size", () => {
+  it("names the pads of a new drum part", () => {
+    const a = song();
+    const d = songDiff({ ...a, layers: [a.layers[1], a.layers[2]] }, a);
+    expect(d[0]).toBe("+ drums (kick)");
+  });
+  it("says what went out of a section when the sections stay the same", () => {
+    const a = { ...song() };
+    const secs = [{ name: "intro", bars: 4, off: [] as string[] }, { name: "break", bars: 4, off: [] as string[] }];
+    const before = { ...a, sections: secs };
+    const after = { ...a, sections: [secs[0], { name: "break", bars: 4, off: [a.layers[0].id], riser: true }] };
+    expect(songDiff(before, after)).toEqual(["break: drums out, riser on"]);
+  });
 });

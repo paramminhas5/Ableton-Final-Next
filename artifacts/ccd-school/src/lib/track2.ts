@@ -28,17 +28,23 @@ import {
   type InstrumentName,
 } from "../engine/params.gen";
 import { cleanLocks } from "./plock";
+import { asScale, type ScaleName } from "./theory";
+import { cleanChords, type Chord } from "./chords";
+import { cleanChance, type Cond } from "./chance";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
 export const STEP_BEATS = 0.25;
 
 export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "sample";
-export type Surface = "steps" | "keys" | "pads" | "own";
+/** "player": a session player writes the part (drums and bass, src/lib/players.ts). */
+export type Surface = "steps" | "keys" | "pads" | "own" | "player";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
-/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts). */
-export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number> };
+/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts).
+ * `chance` (Live 12, 0..1, missing plays every time) and `cond` (Elektron's trig condition) decide in the
+ * engine whether it plays each time round (src/lib/chance.ts). `it` and `reps` are only set by `arranged`. */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number>; chance?: number; cond?: Cond; it?: number; reps?: number };
 
 export type LayerV2 = {
   id: string;
@@ -62,15 +68,24 @@ export type LayerV2 = {
   euclid?: Record<number, { hits: number; rot: number }>;
   /** Sampler layers: the name of the sample in each of the 16 slots (the audio lives in this browser). */
   samples?: Record<number, string>;
+  /** A session player's settings on this part (src/lib/players.ts), kept so its screen opens where you left it. */
+  player?: { complexity: number; intensity: number; fill: number; swing: number; seed: number };
+  /** This part's own loop length in beats (Elektron's per-track length), when shorter than the song's loop. */
+  len?: number;
+  /** This part's own swing, 0..0.75; missing follows the song's (src/lib/partLength.ts). */
+  swing?: number;
   /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
   arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
+  /** Modulation routes (src/lib/modulation.ts): a source onto a knob by an amount. None when missing. */
+  mods?: { src: "lfo" | "env"; to: number; amt: number }[];
 };
 
 export type TrackV2 = {
   v: 2;
   bpm: number;
   root: number;
-  scale: "minor" | "major";
+  /** One of Live 12's scales (src/lib/theory.ts). Songs before 5 Nov only have minor or major. */
+  scale: ScaleName;
   swing: number;
   /** Loop length in beats: 4 per bar, one to four bars. */
   loop: number;
@@ -80,7 +95,13 @@ export type TrackV2 = {
   /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
   master?: Record<number, number>;
   /** The arrangement, when the song has one (src/lib/arrange.ts). */
-  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
+  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean; notes?: Record<string, NoteEvent[]> }[];
+  /** The section the studio is editing (its parts' events are that section's loop). Missing: the loop all sections share. */
+  at?: number;
+  /** The seed chance plays with (src/lib/chance.ts). Missing: 1. */
+  seed?: number;
+  /** The chord track (Logic's Chord Track): one chord per bar of the loop, null for a bar without one. */
+  chords?: (Chord | null)[];
   /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
   cues?: { slug: string; name: string; bar: number }[];
   added: string[];
@@ -285,7 +306,7 @@ export function toV1View(t: TrackV2): V1Track {
         // The backbeat lane draws snares as well as claps; anything else in the kit draws as percussion.
         const evs = l.events.filter(e => (kind === "clap" ? e.note === 38 || e.note === 39 : kind === "perc" ? e.note !== 36 && e.note !== 38 && e.note !== 39 : e.note === PATTERN_LANE[kind]));
         if (!evs.length && kind !== "kick") continue;
-        layers.push({ id: `${l.id}:${kind}`, kind, steps: stepsOf(evs), notes: Array(16).fill(36), params: [0.5, 0.5, 0.2, level(l)], mute: l.mute, from: l.from, world: l.world, variant: l.variant });
+        layers.push({ id: `${l.id}:${kind}`, kind, ...(kind === "clap" && evs.length && evs.every(e => e.note === 38) ? { label: "snare" } : {}), steps: stepsOf(evs), notes: Array(16).fill(36), params: [0.5, 0.5, 0.2, level(l)], mute: l.mute, from: l.from, world: l.world, variant: l.variant });
       }
       continue;
     }
@@ -357,7 +378,11 @@ export function readTrackV2(): TrackV2 {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const t = JSON.parse(raw) as TrackV2;
-      if (t && t.v === 2) return Array.isArray(t.layers) ? cleanLocks(t) : t;
+      if (t && t.v === 2) {
+        if (t.scale !== undefined && asScale(t.scale) !== t.scale) t.scale = asScale(t.scale);
+        if (t.chords !== undefined) t.chords = cleanChords(t.chords);
+        return Array.isArray(t.layers) ? cleanChance(cleanLocks(t)) : t;
+      }
     }
     const v1 = localStorage.getItem(V1_KEY);
     if (v1) {

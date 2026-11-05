@@ -12,8 +12,9 @@ use crate::master::{Master, TruePeak, MASTER_DELAY};
 use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly, Sampler};
 use crate::params::*;
 use crate::ring::Ring;
-use crate::seq::{fire_range, NoteEv, Pattern, MAX_OFFS};
+use crate::seq::{fire_range, plays, NoteEv, Pattern, MAX_OFFS};
 use crate::strip::Strip;
+use crate::punch::Punch;
 
 pub const MAX_LAYERS: usize = 8;
 pub const MAX_BLOCK: usize = 4096;
@@ -69,7 +70,33 @@ pub mod cmd {
     /// Note repeat. note `a`, velocity `x` (0 lets go), division `y` in beats (0.25 = 1/16,
     /// 0.125 = 1/32). Hits land on the grid of the transport, or a free clock when stopped.
     pub const REPEAT: u32 = 24;
+    /// Modulation (Live 12's modulation: the knob keeps turning, the source moves it from there).
+    /// Route slot `a` (0..MAX_MODS) of the layer: source `z` (MOD_LFO, MOD_ENV) onto wire param `y`, by
+    /// `x` (-1..1, in shares of the knob's travel). Amount 0 clears the slot and puts the knob back.
+    pub const MOD: u32 = 25;
+    /// A/B level match: trim the layer by `x` dB after its strip, sends included (glides over 20 ms). Not a knob and not
+    /// saved: 0 dB takes it off, and the layer is then exactly as it was.
+    pub const TRIM: u32 = 26;
+    /// Chance and trig condition for the event the last EV_ADD on this layer put in: condition `a`
+    /// (seq::cond), chance `x` (0..1), and for an arranged song which play of the part's loop it is (`y`)
+    /// and how many plays the engine's loop holds (`z`).
+    pub const EV_COND: u32 = 40;
+    /// The song's seed for chance (`a`), so the same song plays the same chances.
+    pub const CHANCE_SEED: u32 = 41;
+    /// The fill key (Elektron): a = 1 held, 0 let go. Events with the fill condition play while it is held.
+    pub const FILL: u32 = 42;
+    /// The scope: keep the last SCOPE_LEN samples of part `a` (0..MAX_LAYERS), of the master
+    /// (SCOPE_MASTER), or of nothing (anything else). Read with `ccd_scope` between blocks.
+    pub const SCOPE: u32 = 27;
+    /// Punch-in effect (punch.rs): hold effect `a` (REPEAT, FILTER, TAPE_STOP, THROW) at amount `x`
+    /// (0..1); a = OFF lets go. Sending the same effect again moves its amount.
+    pub const PUNCH: u32 = 43;
 }
+
+/// Samples the scope keeps: 43 ms at 48 kHz, enough for a 2048-point spectrum.
+pub const SCOPE_LEN: usize = 2048;
+pub const SCOPE_MASTER: u32 = MAX_LAYERS as u32;
+pub const SCOPE_OFF: u32 = 255;
 
 pub mod out {
     pub const PLAYED_ON: u32 = 1;
@@ -159,6 +186,12 @@ pub struct Transport {
     pub lpos: f64,
     pub link: bool,
     pub metronome: bool,
+    /// How many times the loop has come round since play started (trig conditions and chance read it).
+    pub pass: u32,
+    /// The fill key is held.
+    pub fill: bool,
+    /// The song's seed for chance.
+    pub seed: u32,
 }
 
 impl Transport {
@@ -197,6 +230,23 @@ impl Transport {
 
 pub const MAX_REPEATS: usize = 4;
 
+/// Modulation slots per layer.
+pub const MAX_MODS: usize = 8;
+/// Sources: the instrument's lfo (chords, lead), and its filter envelope (chords, lead, bass).
+pub const MOD_LFO: u8 = 0;
+pub const MOD_ENV: u8 = 1;
+/// The routed knobs move every this many samples (0.33 ms at 48 kHz); each knob's own smoothing joins
+/// the steps, as it does for a hand on the knob.
+pub const MOD_EVERY: u32 = 16;
+
+/// One modulation: a source, the wire param it moves, and by how much (shares of the knob's travel).
+#[derive(Clone, Copy, Debug, Default)]
+pub struct ModRoute {
+    pub src: u8,
+    pub dest: u16,
+    pub amount: f32,
+}
+
 pub struct Layer {
     pub inst: Instrument,
     pub drums: Box<DrumRack>,
@@ -219,6 +269,16 @@ pub struct Layer {
     cmp_duck: Option<(i32, i32)>,
     /// Held note-repeat pads: (note, velocity, beats per hit, last grid index fired).
     pub rep: [(i32, f32, f64, i64); MAX_REPEATS],
+    /// Modulation routes (cmd::MOD) and how many are live. With none, nothing below runs.
+    pub mods: [ModRoute; MAX_MODS],
+    pub n_mods: usize,
+    mod_count: u32,
+    /// The filter envelope as a modulation source: one per layer, at the control rate, gated by notes held.
+    mod_env: crate::dsp::env::Adsr,
+    held: u32,
+    /// The a/b level match (cmd::TRIM). Off, it is not in the signal path at all.
+    trim: crate::dsp::smooth::Smooth,
+    trim_on: bool,
 }
 
 impl Layer {
@@ -246,6 +306,13 @@ impl Layer {
             duck_note: -1,
             cmp_duck: None,
             rep: [(-1, 0.0, 0.25, i64::MIN); MAX_REPEATS],
+            mods: [ModRoute::default(); MAX_MODS],
+            n_mods: 0,
+            mod_count: 0,
+            mod_env: crate::dsp::env::Adsr::new(sr / MOD_EVERY as f32),
+            held: 0,
+            trim: { let mut t = crate::dsp::smooth::Smooth::new(1.0); t.set_time(20.0, sr); t },
+            trim_on: false,
         }
     }
 
@@ -255,6 +322,10 @@ impl Layer {
     }
 
     fn note_on(&mut self, note: u8, vel: f32) {
+        if self.n_mods > 0 {
+            self.mod_note_on();
+        }
+        self.held = self.held.saturating_add(1);
         match self.inst {
             Instrument::Drums => self.drums.note_on(note, vel),
             Instrument::Bass => self.bass.note_on(note, vel),
@@ -267,6 +338,10 @@ impl Layer {
     }
 
     fn note_off(&mut self, note: u8) {
+        self.held = self.held.saturating_sub(1);
+        if self.held == 0 {
+            self.mod_env.gate_off();
+        }
         match self.inst {
             Instrument::Bass => self.bass.note_off(note),
             Instrument::Chords => self.chords.note_off(note),
@@ -278,6 +353,8 @@ impl Layer {
     }
 
     fn all_off(&mut self) {
+        self.held = 0;
+        self.mod_env.gate_off();
         self.n_offs = 0;
         self.bass.all_off();
         self.chords.all_off();
@@ -287,11 +364,21 @@ impl Layer {
     }
 
     fn set_param(&mut self, index: usize, norm: f32, jump: bool) {
-        if index >= MAX_PARAMS {
+        if index >= MAX_PARAMS || spec_for(self.inst, index).is_none() {
             return;
         }
-        let Some(spec) = spec_for(self.inst, index) else { return };
         self.params[index] = norm.clamp(0.0, 1.0);
+        if self.n_mods > 0 && self.mods.iter().any(|m| m.amount != 0.0 && m.dest as usize == index) {
+            // A modulated knob moves from its new place on the very next sample.
+            self.mod_count = MOD_EVERY - 1;
+        } else {
+            self.apply(index, norm, jump);
+        }
+    }
+
+    /// Send a normalised value to the strip or the instrument without making it the knob's value.
+    fn apply(&mut self, index: usize, norm: f32, jump: bool) {
+        let Some(spec) = spec_for(self.inst, index) else { return };
         let v = spec.to_value(norm);
         if index < INSTRUMENT_BASE {
             // While comparing, the strip plays the snapshot; the live value waits.
@@ -323,6 +410,86 @@ impl Layer {
         if self.n_offs < MAX_OFFS {
             self.offs[self.n_offs] = (note, at);
             self.n_offs += 1;
+        }
+    }
+
+    /// Is the a/b level match in the signal path (for tests)?
+    pub fn strip_trimmed(&self) -> bool {
+        self.trim_on
+    }
+
+    /// Route a modulation slot (cmd::MOD). Clearing or moving a slot puts the knob it moved back.
+    fn set_mod(&mut self, slot: usize, src: u8, dest: usize, amount: f32) {
+        if slot >= MAX_MODS {
+            return;
+        }
+        let old = self.mods[slot];
+        let amount = if dest < MAX_PARAMS && spec_for(self.inst, dest).is_some() && amount.is_finite() { amount.clamp(-1.0, 1.0) } else { 0.0 };
+        self.mods[slot] = ModRoute { src, dest: if amount == 0.0 { 0 } else { dest as u16 }, amount };
+        self.n_mods = self.mods.iter().filter(|m| m.amount != 0.0).count();
+        if old.amount != 0.0 && (amount == 0.0 || old.dest as usize != dest) {
+            let d = old.dest as usize;
+            self.apply(d, self.params[d], false);
+        }
+        if self.n_mods > 0 && self.held > 0 && old.amount == 0.0 {
+            self.mod_note_on();
+        }
+        self.mod_count = MOD_EVERY - 1;
+    }
+
+    /// The modulation envelope's times follow the instrument's filter envelope, taken at each note.
+    fn mod_note_on(&mut self) {
+        let v = |i: usize| spec_for(self.inst, INSTRUMENT_BASE + i).map(|s| s.to_value(self.params[INSTRUMENT_BASE + i])).unwrap_or(0.0);
+        match self.inst {
+            Instrument::Bass => {
+                let d = v(B_DECAY) * 0.001;
+                self.mod_env.set(0.001, d, 0.0, d * 0.6);
+            }
+            Instrument::Lead => self.mod_env.set(0.001, v(LD_FDECAY) * 0.001, 0.4, v(LD_FREL) * 0.001),
+            Instrument::Chords => self.mod_env.set(0.002 + v(C_ATTACK) * 0.0005, v(C_FDECAY) * 0.001, 0.35, v(C_FREL) * 0.001),
+            _ => {}
+        }
+        self.mod_env.gate_on();
+    }
+
+    /// The lfo now, -1..1: the instrument's own lfo (same phase as the one inside its voices), 0 if it has none.
+    fn lfo_now(&self) -> f32 {
+        let ph = match self.inst {
+            Instrument::Chords => self.chords.lfo_phase(),
+            Instrument::Lead => self.lead.lfo_phase(),
+            _ => return 0.0,
+        };
+        (core::f32::consts::TAU * ph).sin()
+    }
+
+    /// Every MOD_EVERY samples: move each routed knob to its value plus its sources. The knob's own
+    /// value (`params`) is never touched, so turning it still works and clearing the route puts it back.
+    #[inline]
+    fn mod_tick(&mut self, comparing: bool) {
+        self.mod_count += 1;
+        if self.mod_count < MOD_EVERY {
+            return;
+        }
+        self.mod_count = 0;
+        let lfo = self.lfo_now();
+        let env = self.mod_env.next();
+        for i in 0..MAX_MODS {
+            let m = self.mods[i];
+            if m.amount == 0.0 || self.mods[..i].iter().any(|o| o.amount != 0.0 && o.dest == m.dest) {
+                continue;
+            }
+            let dest = m.dest as usize;
+            if comparing && dest < MIX_PARAMS {
+                continue;
+            }
+            let mut sum = 0.0;
+            for o in self.mods[i..].iter() {
+                if o.amount != 0.0 && o.dest == m.dest {
+                    sum += o.amount * if o.src == MOD_LFO { lfo } else { env };
+                }
+            }
+            let n = (self.params[dest] + sum).clamp(0.0, 1.0);
+            self.apply(dest, n, false);
         }
     }
 
@@ -374,6 +541,8 @@ pub struct Core {
     /// Free-running beat clock for note repeat while the transport is stopped.
     rep_clock: f64,
     pub master: Master,
+    /// Punch-in effects on the whole mix, before the master (so the limiter still guards them).
+    pub punch: Punch,
     pub analyse: bool,
     pub meters: Vec<LayerMeter>,
     /// The master's loudness, to BS.1770 / EBU R 128.
@@ -386,6 +555,10 @@ pub struct Core {
     last_meter: u64,
     snap: Snapshot,
     pub comparing: bool,
+    /// The scope (cmd::SCOPE): which part (-1 none, MAX_LAYERS the master) and its ring.
+    scope_src: i32,
+    scope: Box<[f32; SCOPE_LEN]>,
+    scope_pos: usize,
 }
 
 pub struct Engine {
@@ -483,6 +656,9 @@ impl Core {
                 lpos: 0.0,
                 link: false,
                 metronome: false,
+                pass: 0,
+                fill: false,
+                seed: 1,
             },
             layers: (0..MAX_LAYERS).map(|_| Layer::new(sr)).collect(),
             echo,
@@ -496,6 +672,7 @@ impl Core {
             fired: Vec::with_capacity(256),
             rep_clock: 0.0,
             master: Master::new(sr),
+            punch: Punch::new(sr),
             analyse: false,
             meters: (0..MAX_LAYERS).map(|_| LayerMeter::new(sr)).collect(),
             loud: Loudness::new(sr),
@@ -507,6 +684,9 @@ impl Core {
             last_meter: 0,
             snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; crate::master::MASTER_SLOTS] },
             comparing: false,
+            scope_src: -1,
+            scope: Box::new([0.0; SCOPE_LEN]),
+            scope_pos: 0,
         };
         // The master's defaults reach the shared returns too (the echo's style, the reverb's kind and time).
         for (i, spec) in MASTER_PARAMS.iter().enumerate() {
@@ -604,6 +784,7 @@ impl Core {
         }
         tr.count_in = count_in_beats > 0.0;
         tr.state = State::Armed;
+        tr.pass = 0;
         for l in self.layers.iter_mut() {
             l.cursor = 0;
         }
@@ -654,6 +835,19 @@ impl Core {
                     }
                 }
             }
+            cmd::MOD => self.layers[li].set_mod(c.a as usize, c.z as u8, c.y as usize, c.x),
+            cmd::SCOPE => {
+                self.scope_src = if c.a <= SCOPE_MASTER { c.a as i32 } else { -1 };
+                self.scope.fill(0.0);
+            }
+            cmd::TRIM => {
+                let l = &mut self.layers[li];
+                let g = if c.x.is_finite() && c.x.abs() > 0.001 { db_to_gain(c.x.clamp(-48.0, 12.0)) } else { 1.0 };
+                if g != 1.0 || l.trim_on {
+                    l.trim.set(g);
+                    l.trim_on = true;
+                }
+            }
             cmd::SNAPSHOT => self.snapshot(),
             cmd::COMPARE => self.compare(c.a != 0),
             cmd::ANALYSE => {
@@ -671,6 +865,9 @@ impl Core {
             cmd::INSTRUMENT => {
                 let l = &mut self.layers[li];
                 l.all_off();
+                // Routes belong to an instrument's knobs: a new instrument starts with none.
+                l.mods = [ModRoute::default(); MAX_MODS];
+                l.n_mods = 0;
                 l.inst = Instrument::from_u8(c.a as u8);
                 self.meters[li].clear();
                 // Push this instrument's defaults through, keep the strip as it is.
@@ -719,8 +916,22 @@ impl Core {
             cmd::RECORD_OFF => self.tr.recording = false,
             cmd::EV_CLEAR => self.layers[li].staging.clear(),
             cmd::EV_ADD => {
-                let ev = NoteEv { start: c.y.max(0.0), len: c.z.max(1.0 / 64.0), note: c.a as u8, vel: c.x };
+                let ev = NoteEv::new(c.y.max(0.0), c.z.max(1.0 / 64.0), c.a as u8, c.x);
                 self.layers[li].staging.insert(ev);
+            }
+            cmd::EV_COND => {
+                if let Some(e) = self.layers[li].staging.last_mut() {
+                    e.cond = c.a.min(255) as u8;
+                    e.chance = c.x.clamp(0.0, 1.0);
+                    e.it = c.y.max(0.0) as u32;
+                    e.reps = (c.z.max(1.0) as u32).max(1);
+                }
+            }
+            cmd::CHANCE_SEED => self.tr.seed = c.a,
+            cmd::FILL => self.tr.fill = c.a != 0,
+            cmd::PUNCH => {
+                let bps = self.tr.tempo / 60.0;
+                self.punch.set(c.a.min(255) as u8, c.x, bps);
             }
             cmd::EV_COMMIT => {
                 let lb = if self.tr.state == State::Playing { self.tr.lpos } else { 0.0 };
@@ -821,6 +1032,16 @@ impl Core {
         });
     }
 
+    /// The scope's last `out.len()` samples (at most SCOPE_LEN), oldest first. Returns how many.
+    pub fn read_scope(&self, out: &mut [f32]) -> usize {
+        let n = out.len().min(SCOPE_LEN);
+        let start = (self.scope_pos + SCOPE_LEN - n) % SCOPE_LEN;
+        for (k, o) in out[..n].iter_mut().enumerate() {
+            *o = self.scope[(start + k) % SCOPE_LEN];
+        }
+        n
+    }
+
     /// The clashes found at the last report (for tests and tools).
     pub fn detect_clashes(&mut self) -> Vec<Clash> {
         let mut info = [LayerInfo::default(); MAX_LAYERS];
@@ -848,6 +1069,7 @@ impl Core {
                 tr.state = State::Playing;
                 tr.count_in = false;
                 tr.lpos = 0.0;
+                tr.pass = 0;
                 for l in self.layers.iter_mut() {
                     l.cursor = 0;
                 }
@@ -897,6 +1119,7 @@ impl Core {
                 let to = from + bps;
                 let song = self.tr.beat + ahead;
                 let len = self.tr.loop_len;
+                let (pass, fill, seed) = (self.tr.pass, self.tr.fill, self.tr.seed);
                 for li in 0..MAX_LAYERS {
                     self.fired.clear();
                     {
@@ -907,8 +1130,12 @@ impl Core {
                         let mut cursor = l.cursor;
                         let fired = &mut self.fired;
                         fire_range(&l.live, &mut cursor, from, to, len, |e, off| {
-                            if fired.len() < fired.capacity() {
-                                fired.push((e.note, e.vel, off, e.len));
+                            // Chance and trig conditions: an event past the loop end is on the next pass.
+                            let p = if e.start < from { pass.wrapping_add(1) } else { pass };
+                            if (e.cond == 0 && e.chance >= 1.0) || plays(e, p.wrapping_mul(e.reps).wrapping_add(e.it), fill, seed) {
+                                if fired.len() < fired.capacity() {
+                                    fired.push((e.note, e.vel, off, e.len));
+                                }
                             }
                         });
                         self.layers[li].cursor = cursor;
@@ -943,16 +1170,38 @@ impl Core {
             // Render.
             let (mut ml, mut mr, mut echo_in, mut verb_in) = (0.0, 0.0, 0.0, 0.0);
             let mut live = 0u8;
+            let comparing = self.comparing;
             for (li, l) in self.layers.iter_mut().enumerate() {
                 if l.inst == Instrument::None {
                     continue;
                 }
+                if l.n_mods > 0 {
+                    l.mod_tick(comparing);
+                }
                 let x = l.tick();
-                let o = l.strip.tick(x);
+                let mut o = l.strip.tick(x);
+                if l.trim_on {
+                    // After the strip, sends too: the whole part as you hear it.
+                    let g = l.trim.next();
+                    o.l *= g;
+                    o.r *= g;
+                    o.echo *= g;
+                    o.verb *= g;
+                    // Back at unity (within 0.001 dB: a one-pole in f32 stalls a few ulps short of its
+                    // target): out of the path again, so the layer is bit for bit as it was.
+                    if l.trim.target == 1.0 && (g - 1.0).abs() < 1e-4 {
+                        l.trim.reset(1.0);
+                        l.trim_on = false;
+                    }
+                }
                 ml += o.l;
                 mr += o.r;
                 echo_in += o.echo;
                 verb_in += o.verb;
+                if self.scope_src == li as i32 {
+                    self.scope[self.scope_pos] = 0.5 * (o.l + o.r);
+                    self.scope_pos = (self.scope_pos + 1) % SCOPE_LEN;
+                }
                 if self.analyse {
                     self.meters[li].tick(o.l, o.r);
                     live |= 1 << li;
@@ -961,14 +1210,22 @@ impl Core {
             if self.analyse {
                 self.clash.tick(&self.meters, live);
             }
+            // A reverb throw sends what the parts play into the reverb while its key is held.
+            verb_in += self.punch.throw_send(ml, mr);
             let (el, er) = self.echo.tick(echo_in);
             let (vl, vr) = self.verb.tick(verb_in + (el + er) * 0.15);
             let c = if self.click.env.is_active() { self.click.osc.next(self.click.hz / self.sr) * self.click.env.next() * 0.35 } else { 0.0 };
             ml += el + vl + c;
             mr += er + vr + c;
+            // Punch-in effects: exactly the mix when no key is held.
+            let (ml, mr) = self.punch.tick(ml, mr);
             let (ol, or) = self.master.tick(ml, mr);
             self.out_l[i] = ol;
             self.out_r[i] = or;
+            if self.scope_src == SCOPE_MASTER as i32 {
+                self.scope[self.scope_pos] = 0.5 * (ol + or);
+                self.scope_pos = (self.scope_pos + 1) % SCOPE_LEN;
+            }
             if self.analyse {
                 self.loud.tick(ol, or);
                 let tp = self.out_tp.push(ol, or);
@@ -984,6 +1241,7 @@ impl Core {
                     self.tr.lpos += bps;
                     if self.tr.lpos >= self.tr.loop_len {
                         self.tr.lpos -= self.tr.loop_len;
+                        self.tr.pass = self.tr.pass.wrapping_add(1);
                     }
                 }
             }

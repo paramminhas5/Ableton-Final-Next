@@ -9,8 +9,9 @@ import { BASS_PARAMS, CHORD_PARAMS, FLAG, LAYER_PARAMS, LEAD_PARAMS, OUT } from 
 import type { LessonScreen } from "@/content/types";
 import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } from "@/lib/track2";
 import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
-import { NOTE_NAMES } from "@/lib/theory";
-import { CAP, Dice, GoPill, Icon, Key, Knob, Screen } from "./controls";
+import { asScale, NOTE_NAMES } from "@/lib/theory";
+import { chordNotes as chordMidi, progression } from "@/lib/chords";
+import { CAP, Dice, GoPill, Icon, Key, Knob, NotYet, Screen } from "./controls";
 import { newSeed } from "@/lib/dice";
 import { Body, Meta, useEnter, useStarter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
@@ -24,9 +25,11 @@ export function withPart(t: TrackV2, type: LayerType): { track: TrackV2; added: 
   if (t.layers.some(l => l.type === type && l.events.length)) return { track: t, added: false };
   const L = t.loop || 4;
   const root = 57 + (((t.root ?? 45) - 45) % 12);
-  const minor = (t.scale ?? "minor") === "minor";
-  // i, VI, III, VII in minor; I, V, vi, IV in major. One chord per quarter of the loop.
-  const prog = minor ? [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]] : [[0, 4, 7], [-5, -1, 2], [-3, 0, 4], [-7, -3, 0]];
+  const sc = asScale(t.scale);
+  // i, VI, III, VII in minor; I, V, vi, IV in major; the first, sixth, third and seventh chords in any other
+  // scale. One chord per quarter of the loop.
+  const prog = sc === "minor" ? [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]] : sc === "major" ? [[0, 4, 7], [-5, -1, 2], [-3, 0, 4], [-7, -3, 0]]
+    : progression(root, sc, [0, 5, 2, 6], 4).map(c => chordMidi(c, root - 5).map(n => n - root));
   const l = newLayerV2(type, "__tool");
   const each = L / 4;
   l.events = prog.flatMap((c, i) => (type === "chords" ? c : [c[0]]).map(n => ({ start: i * each, len: each * 0.95, note: root + n + (type === "bass" ? -12 : 0), vel: 0.8 })));
@@ -43,7 +46,8 @@ export function useLoop(track: TrackV2) {
   return { beat, playing, toggle };
 }
 
-export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: { screen: Of<"tempo">; inst: ReactNode; go: string; onGo: () => void; playing: boolean; toggle: () => void; tail?: ReactNode; note?: string | null }) {
+/** `notYet`: what is still missing; the go key says it and does nothing until it is done. */
+export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note, notYet }: { screen: Of<"tempo">; inst: ReactNode; go: string; onGo: () => void; playing: boolean; toggle: () => void; tail?: ReactNode; note?: string | null; notYet?: string | null }) {
   useEnter(onGo);
   const starter = useStarter();
   return (
@@ -58,7 +62,8 @@ export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: {
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your song"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={onGo} style={{ gridColumn: "span 3" }} ariaLabel={go}>{go}</GoPill>
+          {notYet ? <GoPill onClick={() => {}} style={{ gridColumn: "span 3", opacity: 0.6 }} ariaLabel={`Not yet: ${notYet}`}><NotYet why={notYet} /></GoPill>
+            : <GoPill onClick={onGo} style={{ gridColumn: "span 3" }} ariaLabel={go}>{go}</GoPill>}
         </div>
       </div>
     </div>

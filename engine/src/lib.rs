@@ -19,6 +19,7 @@ pub mod loudness;
 pub mod master;
 pub mod params;
 pub mod ring;
+pub mod punch;
 pub mod seq;
 pub mod strip;
 pub mod typegen;

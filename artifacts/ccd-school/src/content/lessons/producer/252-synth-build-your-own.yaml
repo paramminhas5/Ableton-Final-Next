@@ -62,15 +62,15 @@ steps:
     knobs: [wave, detune, cutoff, res]
     say:
       mentor: >-
-        Build your lead, stage one: the tone. Your song is playing. Pick a wave first, soft, saw or square, for
+        Build your lead, stage one: the tone. Your song is playing. Set shape first, soft, saw or square, for
         the harmonics you want. Add a little detune if you want it wide. Then set cutoff for how bright it
         should be, and res for how much bite sits at the edge of the filter.
 
         Don't worry about getting it perfect. Get it close, then move on.
       straight: >-
-        Stage one, the tone. Pick a wave, add detune for width, set cutoff for brightness and res for bite.
+        Stage one, the tone. Set shape, add detune for width, set cutoff for brightness and res for bite.
       eli5: >-
-        Pick your sound's shape with wave. Make it wider with detune. Then make it brighter or darker with
+        Pick your sound's wave with shape. Make it wider with detune. Then make it brighter or darker with
         cutoff.
 
   - kind: shape

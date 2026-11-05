@@ -44,6 +44,29 @@ steps:
         Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes
         it louder or quieter. Play until it's your favourite kick.
 
+
+  - kind: match
+    layer: drums
+    knobs: [tune, decay]
+    target: {tune: 0.3, decay: 0.2}
+    say:
+      mentor: >-
+        Now train your ear. The target is your own kick with tune and decay set somewhere you can't see.
+        Switch between the target and yours, listen to how low the body sits and how soon it stops, and turn
+        the two lit knobs until you can't tell them apart. Then check how close you are.
+
+        This is how producers learn to hear a sound and know which knob made it. It works on any synth, in
+        Live or anywhere else.
+      straight: >-
+        The target is your kick with hidden tune and decay. Switch between it and yours, turn the two knobs
+        until they sound the same, then check.
+      eli5: >-
+        Somebody hid a kick in here. Listen to it, then listen to yours. Turn the two knobs until yours sounds
+        just like it. Is it deeper? Is it shorter? Your ears will know.
+    hint: >-
+      Listen for two things: is the target's boom lower or higher than yours, and does it stop sooner or
+      ring longer?
+
   - kind: ask
     q: What does drive do to a kick?
     options: ["adds grit and harmonics so it cuts through", "makes it longer", "changes the tempo", "removes the click"]

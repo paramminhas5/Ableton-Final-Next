@@ -1,0 +1,10 @@
+/* punch-in effects: four hold keys; the fill shows how high you pressed */
+.pp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;flex:none;height:88px}
+.pp.is-compact{height:64px}
+.pp-key{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:8px;border-radius:12px;border:1px solid var(--tag);background:var(--well);color:var(--ink);font:inherit;cursor:pointer;touch-action:none;min-height:44px;min-width:0;text-align:left}
+.pp-key:focus-visible{outline:2px solid var(--led-cobalt);outline-offset:2px}
+.pp-fill{position:absolute;left:0;right:0;bottom:0;height:calc(var(--a,0) * 100%);background:color-mix(in srgb,var(--led-mint) 30%,transparent);pointer-events:none;transition:height 40ms linear}
+.pp-l{position:relative;font-size:12px;font-weight:600;line-height:1.15}
+.pp-v{position:relative;font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums}
+.pp-key.is-on{border-color:var(--led-mint);box-shadow:0 0 14px color-mix(in srgb,var(--led-mint) 45%,transparent)}
+.pp-key.is-on .pp-v{color:var(--ink)}

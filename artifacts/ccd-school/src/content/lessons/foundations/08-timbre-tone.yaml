@@ -64,14 +64,14 @@ steps:
         through and cuts the high harmonics. Turn it down and your melody gets darker and rounder, like
         hearing music through a wall. Turn it up and all the brightness comes back.
 
-        The wave knob picks the starting shape. Try a buzzy wave with the cutoff halfway: that's a classic
+        The shape knob picks the starting wave. Try a buzzy wave with the cutoff halfway: that's a classic
         synth sound.
       straight: >-
-        Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Wave
-        picks the starting shape. Set your melody's colour.
+        Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Shape
+        picks the starting wave. Set your melody's colour.
       eli5: >-
         The cutoff knob is like a blanket over the speaker. Turn it down and the sound gets muffled and soft.
-        Turn it up and it gets bright and clear again. The wave knob changes the shape. Play until you like
+        Turn it up and it gets bright and clear again. The shape knob changes the wave. Play until you like
         how your tune sounds.
 
   - kind: ask

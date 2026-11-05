@@ -1035,6 +1035,15 @@
           }
         },
         {
+          "kind": "mix",
+          "goal": "punch",
+          "say": {
+            "mentor": "Now the punch-in effects: hold a key and the whole mix goes through it, let go and it is dry again. Beat repeat loops the last slice (higher on the key is a shorter slice), the filter sweeps from low pass to high pass, tape stop slows everything to a halt, and a reverb throw sends the mix into the reverb so it rings on after you let go. The EP-133 has these as its punch-in fx, Push 3 as its XY punch-in effects, and djay puts them on the crossfader.\nWith both decks playing, hold one for a beat or two, let go on the one, then try another.",
+            "straight": "Hold a punch-in effect for a beat or two, let go on the one, then try a different one.",
+            "eli5": "Hold a button and the music does something wild. Let go and it's back. Try two of them."
+          }
+        },
+        {
           "kind": "ask",
           "q": "What is an echo out?",
           "options": [
@@ -5140,9 +5149,9 @@
             "wave"
           ],
           "say": {
-            "mentor": "Now change your own melody's colour. The cutoff knob is a filter: it lets the low part of the sound through and cuts the high harmonics. Turn it down and your melody gets darker and rounder, like hearing music through a wall. Turn it up and all the brightness comes back.\nThe wave knob picks the starting shape. Try a buzzy wave with the cutoff halfway: that's a classic synth sound.",
-            "straight": "Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Wave picks the starting shape. Set your melody's colour.",
-            "eli5": "The cutoff knob is like a blanket over the speaker. Turn it down and the sound gets muffled and soft. Turn it up and it gets bright and clear again. The wave knob changes the shape. Play until you like how your tune sounds."
+            "mentor": "Now change your own melody's colour. The cutoff knob is a filter: it lets the low part of the sound through and cuts the high harmonics. Turn it down and your melody gets darker and rounder, like hearing music through a wall. Turn it up and all the brightness comes back.\nThe shape knob picks the starting wave. Try a buzzy wave with the cutoff halfway: that's a classic synth sound.",
+            "straight": "Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Shape picks the starting wave. Set your melody's colour.",
+            "eli5": "The cutoff knob is like a blanket over the speaker. Turn it down and the sound gets muffled and soft. Turn it up and it gets bright and clear again. The shape knob changes the wave. Play until you like how your tune sounds."
           }
         },
         {
@@ -5287,9 +5296,9 @@
             "cutoff"
           ],
           "say": {
-            "mentor": "Pick the wave for your melody. Turn wave from saw to square and listen to your own tune change character, then use cutoff to round it off. For something soft and sine-like, close the cutoff right down. For a bright lead, open it up.",
+            "mentor": "Pick the wave for your melody. Turn shape from saw to square and listen to your own tune change character, then use cutoff to round it off. For something soft and sine-like, close the cutoff right down. For a bright lead, open it up.",
             "straight": "Choose your melody's wave: saw to square, then round it off with cutoff. Low cutoff gets you close to a sine.",
-            "eli5": "Turn the wave knob to change the shape of your tune's sound. Then turn cutoff to make it softer or brighter. Keep the one you like."
+            "eli5": "Turn the shape knob to change your tune's wave. Then turn cutoff to make it softer or brighter. Keep the one you like."
           }
         },
         {
@@ -6192,13 +6201,24 @@
           "layer": "chords",
           "surface": "pads",
           "goal": {
-            "notes": 4
+            "notes": 4,
+            "on": "different"
           },
           "say": {
             "mentor": "Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and VII, or any order you like. Listen for which one makes you want to go back to i.",
             "straight": "Record four chords, one per beat, starting on i. Try i VI III VII or your own order.",
             "eli5": "Press rec. Play four chord pads, one on each tick. Start with i, then try VI, III and VII."
           }
+        },
+        {
+          "kind": "tempo",
+          "set": "chords",
+          "say": {
+            "mentor": "Now write the progression down for the whole song, the way Logic's Chord Track does: one chord per bar, each with its name (am, f, c, g) and its roman numeral in your key. Tap a bar, then a chord, or tap a progression to fill all four bars. Your chords part plays it as you go.\nFrom now on your bass, lead and chord pads light the notes of the chord under the playhead in the studio, so you always know which notes fit. FL Studio's chord progression tool and Live 12's chord tools do the same job.",
+            "straight": "A chord track: one chord per bar, named, with its numeral. Tap a bar then a chord, or pick a progression. Your chords part plays it, and the studio lights its notes on bass and lead.",
+            "eli5": "Pick a chord for each bar. Your chords play them. Later, the studio lights up the notes that fit."
+          },
+          "hint": "Try i VI III VII first, then swap one bar for another chord and listen."
         },
         {
           "kind": "ask",
@@ -6295,6 +6315,16 @@
             "mentor": "Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key one is the root of i, key six the root of VI, key three of III, key seven of VII. Press rec and play the roots in the same order as your chords, one per chord.",
             "straight": "Record the roots of your chords on the bass keys, in order. Key number matches the numeral: i is one, VI is six, III three, VII seven.",
             "eli5": "Press rec. Play the bass key with the same number as each chord: one for i, six for VI, three for III, seven for VII."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "player",
+          "layer": "bass",
+          "say": {
+            "mentor": "You played the bass yourself. Here is a bass player to compare, like Logic's Bass Player: it follows your chord track (or your key's root, if you have no chords yet) and writes ordinary notes you can edit. Drag the dot: left is simple, right is complex, up is louder and busier, with slides. Fill and swing sit below.\nIt is a starting point, not a replacement for your hands. Keep its notes, or skip this and keep yours.",
+            "straight": "A bass player (Logic's idea) follows your chords and writes notes you can edit. Left simple, right complex, up louder. Keep it or skip.",
+            "eli5": "Drag the dot and a bass line appears that follows your chords. Keep it if you like it."
           }
         },
         {
@@ -7003,6 +7033,16 @@
           "hint": "Sixteenths 1, 4, 7, 10, 13 and 16 of the bar, counting from 1. Six shakes a bar."
         },
         {
+          "kind": "tempo",
+          "set": "length",
+          "layer": "hats",
+          "say": {
+            "mentor": "Now let the computer keep a polyrhythm going for you. Shorten your hats to three steps while the kick stays on sixteen: the hats loop every three, so they land somewhere new against the kick each beat and only meet it again at the top of the loop. That is a polymeter, and it is how Elektron machines work, each track with its own length. Give the hats their own swing too if you like: Live keeps a groove per clip the same way.",
+            "straight": "Make the hats three steps long against the sixteen step kick. They drift and meet again at the top. Elektron calls it per track length. Swing can be per part too.",
+            "eli5": "Make the hats loop on three steps. The kick loops on sixteen. Listen to them chase each other."
+          }
+        },
+        {
           "kind": "ask",
           "q": "A polyrhythm is",
           "options": [
@@ -7136,6 +7176,16 @@
             "eli5": "No helper this time. Press rec, wait for four ticks, and tap the hat in between the booms. It's fine if some are a tiny bit late. That makes it feel relaxed."
           },
           "hint": "Count \"one and two and\" and tap on the \"and\", lazily."
+        },
+        {
+          "kind": "tempo",
+          "set": "player",
+          "layer": "drums",
+          "say": {
+            "mentor": "You played your hats. Producers also start from a beat someone else plays and change it. Logic calls it the Drummer: two sliders, complexity and intensity, and it writes the notes into your song so you can edit every hit. Live 12.3's Patterns does the same job. Drag the dot and listen to how busy and how hard it plays.\nYour own hats stay yours: it only writes your drums part. Keep its beat, or skip.",
+            "straight": "A drummer (Logic's Drummer): complexity left to right, intensity up. It writes notes you can edit into your drums. Keep it or skip.",
+            "eli5": "Drag the dot and a drummer plays your drums. Keep it if you like it."
+          }
         },
         {
           "kind": "ask",
@@ -7804,9 +7854,9 @@
             "release"
           ],
           "say": {
-            "mentor": "Here's your song. Your melody is midi: the notes you played are saved as instructions, and a synth is reading them.\nTurn wave and the synth changes from a bright, buzzy saw to a hollow square. Every note in your melody stays exactly where you put it, same pitch, same timing. Only the instrument changed. Then try release, which sets how long each note keeps ringing after it ends. The note lengths saved in your song don't move; the synth just lets each one fade out slower or faster. Pick the sound you want reading your notes.",
-            "straight": "Your melody is midi. Wave changes the instrument, release how long notes ring after they end. The saved notes stay exactly as you played them. Pick a sound.",
-            "eli5": "Turn wave: same tune, different sound. Your notes don't change at all. Turn release: the notes ring on longer or stop quicker. Pick the one you like."
+            "mentor": "Here's your song. Your melody is midi: the notes you played are saved as instructions, and a synth is reading them.\nTurn shape and the synth changes from a bright, buzzy saw to a hollow square. Every note in your melody stays exactly where you put it, same pitch, same timing. Only the instrument changed. Then try release, which sets how long each note keeps ringing after it ends. The note lengths saved in your song don't move; the synth just lets each one fade out slower or faster. Pick the sound you want reading your notes.",
+            "straight": "Your melody is midi. Shape changes the instrument, release how long notes ring after they end. The saved notes stay exactly as you played them. Pick a sound.",
+            "eli5": "Turn shape: same tune, different sound. Your notes don't change at all. Turn release: the notes ring on longer or stop quicker. Pick the one you like."
           }
         },
         {
@@ -9144,9 +9194,9 @@
             "cutoff"
           ],
           "say": {
-            "mentor": "Now shape your synth while your line plays. Wave slides from saw to square, the same shapes you just heard. Cutoff is brightness: turn it down and the corners of the wave get rounded off, so the sound goes soft and dark. Turn it up for bright and buzzy. Watch the picture change as you turn.",
-            "straight": "Shape your line while it loops. Wave moves between saw and square. Cutoff controls brightness by smoothing the wave's sharp edges: low is dark and soft, high is bright. The picture shows the shape you are hearing.",
-            "eli5": "Turn the knobs while your tune plays. Wave changes the drawing from buzzy saw to video game square. Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it."
+            "mentor": "Now shape your synth while your line plays. Shape slides from saw to square, the same shapes you just heard. Cutoff is brightness: turn it down and the corners of the wave get rounded off, so the sound goes soft and dark. Turn it up for bright and buzzy. Watch the picture change as you turn.",
+            "straight": "Shape your line while it loops. The shape knob moves between saw and square. Cutoff controls brightness by smoothing the wave's sharp edges: low is dark and soft, high is bright. The picture shows the shape you are hearing.",
+            "eli5": "Turn the knobs while your tune plays. Shape changes the drawing from buzzy saw to video game square. Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it."
           }
         },
         {
@@ -9536,7 +9586,8 @@
           "layer": "bass",
           "surface": "keys",
           "goal": {
-            "notes": 2
+            "notes": 2,
+            "on": "between"
           },
           "say": {
             "mentor": "Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a few short notes in the gaps between kicks. Start on the first key, your song's home note, and try one or two others. Short and simple beats long and busy.",
@@ -9556,6 +9607,24 @@
             "straight": "Cutoff: warm and round when low, buzzy when high. Decay: plucky when short, rolling when long.",
             "eli5": "Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "bass",
+          "knobs": [
+            "cutoff",
+            "decay"
+          ],
+          "target": {
+            "cutoff": 0.3,
+            "decay": 0.25
+          },
+          "say": {
+            "mentor": "Ear training. The target is your bass line with cutoff and decay set out of sight. Switch between the target and yours: is it darker or buzzier, are the notes shorter or longer? Turn the two lit knobs until they match, then check how close you are.",
+            "straight": "The target is your bass with hidden cutoff and decay. Switch, compare, turn the knobs, check.",
+            "eli5": "Here's a hidden bass sound. Is it softer or buzzier than yours? Are its notes short or long? Turn the knobs until yours sounds the same."
+          },
+          "hint": "Cutoff changes how bright it is, decay how long each note lasts. Fix one at a time."
         },
         {
           "kind": "ask",
@@ -9735,6 +9804,24 @@
             "straight": "Res: a ringing peak at the cutoff. Env: the filter opens and closes on each note. Attack: fade in. Release: ring out. Pluck: short attack and release, lots of env. Pad: long attack and release.",
             "eli5": "Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly. Release makes them ring out after. Try a short pluck, then a long dreamy pad."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "attack",
+            "release"
+          ],
+          "target": {
+            "attack": 0.6,
+            "release": 0.7
+          },
+          "say": {
+            "mentor": "Match this sound. The target is your lead with attack and release set where you can't see them. Switch between the target and yours: does each note fade in or start straight away, and how long does it ring after it ends? Turn attack and release until you can't tell them apart, then check.",
+            "straight": "The target is your lead with hidden attack and release. Compare how notes start and how they ring out, turn the two knobs, check.",
+            "eli5": "A hidden sound is waiting. Does it fade in slowly or start right away? Does it ring after the note ends? Turn the two knobs until yours sounds the same."
+          },
+          "hint": "Attack is the start of each note, release is the tail after it. Listen to one end at a time."
         },
         {
           "kind": "ask",
@@ -9927,6 +10014,24 @@
             "straight": "Tune: pitch of the body, near your bass. Decay: length. Drive: grit and presence. Level: loudness. Driven and long for techno, round and soft for deep house.",
             "eli5": "Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes it louder or quieter. Play until it's your favourite kick."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "drums",
+          "knobs": [
+            "tune",
+            "decay"
+          ],
+          "target": {
+            "tune": 0.3,
+            "decay": 0.2
+          },
+          "say": {
+            "mentor": "Now train your ear. The target is your own kick with tune and decay set somewhere you can't see. Switch between the target and yours, listen to how low the body sits and how soon it stops, and turn the two lit knobs until you can't tell them apart. Then check how close you are.\nThis is how producers learn to hear a sound and know which knob made it. It works on any synth, in Live or anywhere else.",
+            "straight": "The target is your kick with hidden tune and decay. Switch between it and yours, turn the two knobs until they sound the same, then check.",
+            "eli5": "Somebody hid a kick in here. Listen to it, then listen to yours. Turn the two knobs until yours sounds just like it. Is it deeper? Is it shorter? Your ears will know."
+          },
+          "hint": "Listen for two things: is the target's boom lower or higher than yours, and does it stop sooner or ring longer?"
         },
         {
           "kind": "ask",
@@ -10532,8 +10637,8 @@
           "kind": "arrange",
           "goal": "sections",
           "say": {
-            "mentor": "Here's your song as five sections, already laid out the classic way. Each row is one of your parts, each column a section. Tap a cell to switch that part off or on there. Play it through and change it until the journey feels right.",
-            "straight": "Rows are parts, columns sections. Tap cells to switch parts off or on. Play it and adjust.",
+            "mentor": "Here's your song as five sections, with every part playing in all of them. Each row is one of your parts, each column a section. Tap a cell to switch that part off or on there. Thin out the intro and the break, keep the drops full, and play it through until the journey feels right.",
+            "straight": "Rows are parts, columns sections. Switch parts off in the intro or the break, keep the drops full.",
             "eli5": "Tap the squares to turn sounds on or off in each part of your song. Press play and listen."
           }
         },
@@ -10611,6 +10716,16 @@
             "mentor": "Your arrangement has a fill row. Tap fill on a section and its last beat drops the kick for a quick snare roll. Put fills before the drop and the break and listen to how they lead you in.",
             "straight": "Tap fill on sections that lead into a change. The last beat becomes a snare roll.",
             "eli5": "Tap fill on the part before the drop. Listen to the drum roll."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "chance",
+          "layer": "hats",
+          "say": {
+            "mentor": "A fill can also live inside the loop. Pick a step on your hats and give it a condition. 1:2 plays it every second time round the loop, 1:4 every fourth: that is an Elektron trig condition, and the beat changes a little each pass without you writing a second pattern. Or turn its chance down, Live 12's name for it: at 50% it plays about half the time. Fill plays the step only while you hold the fill key, the way Elektron drummers throw in a roll.\nSame control elsewhere: Live 12 calls it chance in the note editor, Elektron calls them trig conditions and probability.",
+            "straight": "Pick a hat step. 1:2 plays it every second loop, 1:4 every fourth (Elektron's trig conditions). Chance (Live 12) plays it some of the time. Fill plays it only while the fill key is held.",
+            "eli5": "Pick a step. Make it play only sometimes. Your beat changes a little every time round."
           }
         },
         {
@@ -11404,9 +11519,9 @@
             "wave"
           ],
           "say": {
-            "mentor": "Here's your song, with one knob on your lead's oscillator. Wave slides from saw at one end to square at the other, with blends in between.\nTurn it slowly while your melody plays. Saw is bright and forward. Square is hollower and a little more retro. Somewhere in between is a mix of both. Keep the one that suits your song.",
-            "straight": "Your lead's oscillator. Wave goes from saw to square. Saw is bright, square is hollow. Keep one.",
-            "eli5": "This knob changes the shape of your tune's wave, from buzzy saw to hollow square. Pick the one you like."
+            "mentor": "Here's your song, with one knob on your lead's oscillator. Shape slides from saw at one end to square at the other, with blends in between.\nTurn it slowly while your melody plays. Saw is bright and forward. Square is hollower and a little more retro. Somewhere in between is a mix of both. Keep the one that suits your song.",
+            "straight": "Your lead's oscillator. Shape goes from saw to square. Saw is bright, square is hollow. Keep one.",
+            "eli5": "The shape knob changes your tune's wave, from buzzy saw to hollow square. Pick the one you like."
           }
         },
         {
@@ -11856,8 +11971,8 @@
             "warp"
           ],
           "say": {
-            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
-            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
+            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to re-pitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
+            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, re-pitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
             "eli5": "This is a recording. It doesn't know the tempo. Warping teaches it to follow."
           }
         },
@@ -11929,7 +12044,7 @@
         "changes": "bass.bass",
         "why": "a thicker bass voice gives your low end weight and character without adding a single note"
       },
-      "learn": "What makes a bass sound thick: a sub underneath, the wave on top, and a little drift, and the two Live instruments built for bass and for chords.",
+      "learn": "What makes a bass sound thick: a sub underneath, the shape on top, and a little drift, and the two Live instruments built for bass and for chords.",
       "youCan": [
         "say what a sub oscillator adds to a bass",
         "make your bass thicker without changing its notes",
@@ -11955,9 +12070,9 @@
             "character"
           ],
           "say": {
-            "mentor": "Here's your song, with four knobs that thicken your bass without touching its notes. Sub turns up the sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and buzzy to hollow and round.\nDrift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old analogue synth warming up. A little makes the bass feel alive instead of perfect.\nCharacter picks how the filter sounds. Warm is the classic four-pole ladder: round, and it gives up a little bass when you push the resonance. Scream is a two-pole filter that saturates as it resonates, the sound of acid and rave. Smooth is a clean two-pole: softer slope, sweet resonance. Keep the bass that fills your song best.",
-            "straight": "Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a few cents, like analogue. Character: warm, scream or smooth. Keep the thickest bass that still sounds clean.",
-            "eli5": "Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old synth. Character changes how the bass growls. Keep the one you like."
+            "mentor": "Here's your song, with four knobs that thicken your bass without touching its notes. Sub turns up the sine an octave below: more weight, more rumble. Shape blends the top from saw to square, bright and buzzy to hollow and round. Live's Drift calls this knob shape too.\nDrift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old analogue synth warming up. A little makes the bass feel alive instead of perfect.\nCircuit picks how the filter sounds, with the names Live's Auto Filter uses. Prd is the classic four-pole ladder: round, and it gives up a little bass when you push the resonance. Ms2 is a two-pole filter that saturates as it resonates, the sound of acid and rave. Svf is a clean two-pole state variable filter: softer slope, sweet resonance. Keep the bass that fills your song best.",
+            "straight": "Sub is weight, an octave down. Shape moves the top from saw to square. Drift lets the pitch wander a few cents, like analogue. Circuit: prd, ms2 or svf, as in Live's Auto Filter. Keep the thickest bass that still sounds clean.",
+            "eli5": "Sub makes the rumble bigger. Shape changes the buzzy part. Drift makes it wobble a tiny bit, like an old synth. Circuit changes how the bass growls. Keep the one you like."
           }
         },
         {
@@ -12088,7 +12203,7 @@
             "env"
           ],
           "say": {
-            "mentor": "Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.\nratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. wave picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.",
+            "mentor": "Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.\nratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. shape picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.",
             "straight": "Your lead is an fm synth now. fm is the amount, ratio is the modulator's multiple of the note. 1 and 2 are warm, higher is metallic. Keep what cuts through.",
             "eli5": "This is like Operator in Live. One sound shakes another. Low ratio is soft, high ratio is like a bell."
           }
@@ -12456,9 +12571,9 @@
             "character"
           ],
           "say": {
-            "mentor": "Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and your lead goes dark. Cut is a high-pass on the lead's channel: turn it up and the lows fall away so it thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the middle.\nThen add resonance and sweep the cutoff to hear it sing. Character picks how it sounds: warm is a round four-pole ladder, scream is a two-pole that distorts as it resonates, smooth is a clean two-pole with a gentler slope. Keep the shape that sits best in your song.",
-            "straight": "Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff. Character: warm, scream or smooth. Carve your lead and keep it.",
-            "eli5": "Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res makes it whistle. Character changes how it whistles. Pick the sound you like."
+            "mentor": "Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and your lead goes dark. Low cut is a high-pass on the lead's channel: turn it up and the lows fall away so it thins out. Bring cutoff down and low cut up together and you've made a band-pass, just a slice in the middle.\nThen add resonance and sweep the cutoff to hear it sing. Circuit picks how it sounds, by the names Live's Auto Filter uses: prd is a round four-pole ladder, ms2 is a two-pole that distorts as it resonates, svf is a clean two-pole with a gentler slope. Keep the one that sits best in your song.",
+            "straight": "Cutoff is low-pass, low cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff. Circuit: prd, ms2 or svf, the same names as Live's Auto Filter. Carve your lead and keep it.",
+            "eli5": "Cutoff makes your tune darker. Low cut makes it thinner. Both together make it sound like a phone. Res makes it whistle. Circuit changes how it whistles. Pick the sound you like."
           }
         },
         {
@@ -12924,7 +13039,7 @@
             "res"
           ],
           "say": {
-            "mentor": "Here's your song. Make three timbres on the same melody. One: wave on saw, cutoff low, a soft, round, almost flute-like lead. Two: wave on saw, cutoff open, bright and buzzy. Three: wave towards square, cutoff halfway, resonance up, a hollow, nasal lead with a whistle in it.\nPitch and loudness stay the same the whole time. Only the colour moves. Keep the timbre you like best.",
+            "mentor": "Here's your song. Make three timbres on the same melody. One: shape on saw, cutoff low, a soft, round, almost flute-like lead. Two: shape on saw, cutoff open, bright and buzzy. Three: shape towards square, cutoff halfway, resonance up, a hollow, nasal lead with a whistle in it.\nPitch and loudness stay the same the whole time. Only the colour moves. Keep the timbre you like best.",
             "straight": "Three timbres: saw with cutoff low (soft), saw with cutoff open (bright), square with res up (hollow, nasal). Same notes. Keep one.",
             "eli5": "Make your tune soft, then bright, then hollow and whistly with these knobs. Your notes stay the same. Pick the one you like."
           }
@@ -13040,9 +13155,9 @@
             "cutoff"
           ],
           "say": {
-            "mentor": "Here's your song. Wave on saw gives your lead every harmonic. Turn it towards square and the even ones drop out, so it goes hollow. That's removing harmonics by changing the wave.\nCutoff removes them from the top down. Close it slowly and hear the brightest ones disappear first, until only the fundamental and a few low harmonics are left, soft and round. Keep the recipe that suits your song.",
-            "straight": "Wave: saw has every harmonic, square drops the even ones. Cutoff removes harmonics from the top down. Keep a recipe.",
-            "eli5": "Wave on saw has all the hidden notes. Turn it to square and some go away. Cutoff takes away the top ones. Pick the sound you like."
+            "mentor": "Here's your song. Shape on saw gives your lead every harmonic. Turn it towards square and the even ones drop out, so it goes hollow. That's removing harmonics by changing the wave.\nCutoff removes them from the top down. Close it slowly and hear the brightest ones disappear first, until only the fundamental and a few low harmonics are left, soft and round. Keep the recipe that suits your song.",
+            "straight": "Shape: saw has every harmonic, square drops the even ones. Cutoff removes harmonics from the top down. Keep a recipe.",
+            "eli5": "Shape on saw has all the hidden notes. Turn it to square and some go away. Cutoff takes away the top ones. Pick the sound you like."
           }
         },
         {
@@ -13156,9 +13271,9 @@
             "detune"
           ],
           "say": {
-            "mentor": "Here's your song. Your lead already has three oscillators per note, so you can try two of the moves. Wave mixes two shapes inside every oscillator: saw at one end, square at the other, and a blend of the two in between. Set it somewhere in the middle and listen for a colour neither end has.\nDetune is the other move: it spreads the three copies apart by a few cents. At zero they're in tune and just sound like one. Turn it up and the lead widens and moves. Keep the mix you like.",
-            "straight": "Wave blends saw and square in each oscillator. Detune spreads the three copies a few cents apart. Keep the mix you like.",
-            "eli5": "Wave mixes two shapes together. Detune spreads the three waves apart so your tune sounds wide. Pick the one you like."
+            "mentor": "Here's your song. Your lead already has three oscillators per note, so you can try two of the moves. Shape mixes two waves inside every oscillator: saw at one end, square at the other, and a blend of the two in between. Set it somewhere in the middle and listen for a colour neither end has.\nDetune is the other move: it spreads the three copies apart by a few cents. At zero they're in tune and just sound like one. Turn it up and the lead widens and moves. Keep the mix you like.",
+            "straight": "Shape blends saw and square in each oscillator. Detune spreads the three copies a few cents apart. Keep the mix you like.",
+            "eli5": "Shape mixes two waves together. Detune spreads the three waves apart so your tune sounds wide. Pick the one you like."
           }
         },
         {
@@ -13363,12 +13478,16 @@
           "set": "scale",
           "choices": [
             "minor",
-            "major"
+            "major",
+            "dorian",
+            "phrygian",
+            "minor pentatonic",
+            "harmonic minor"
           ],
           "say": {
-            "mentor": "Here's your song. Switch between minor and major while it plays and listen to the mood change. Minor tends to sound darker, major brighter. Every part moves with you, because they all follow this one setting.\nKeep the one that fits your song.",
-            "straight": "Minor sounds darker, major brighter. Every part follows. Keep one.",
-            "eli5": "Minor sounds a bit sad. Major sounds happy. Your whole song changes. Pick one."
+            "mentor": "Here's your song. Switch scales while it plays and listen to the mood change. Minor tends to sound darker, major brighter, dorian is minor with a lift, phrygian dark and tense, the minor pentatonic has five notes and no wrong ones, harmonic minor pulls hard back home. These are Live 12's names, and the studio's key panel has Live's whole list. Every part moves with you, because they all follow this one setting.\nKeep the one that fits your song.",
+            "straight": "Minor darker, major brighter, dorian lifted, phrygian tense, pentatonic five notes, harmonic minor pulls home. Every part follows. Keep one.",
+            "eli5": "Each scale gives your song a different mood. Try a few. Your whole song changes. Pick one."
           }
         },
         {
@@ -13388,7 +13507,7 @@
           "kind": "say",
           "title": "scale awareness in live",
           "say": {
-            "mentor": "Live 12 added this across the whole project. You set a root note and a scale, like a minor or c major, and it's shown in the control bar. Midi clips can follow it or use their own. The Scale midi effect follows it automatically, and on Push 3 the pads can hide notes that aren't in the scale.\nThe root note is the home note the scale is built on. In a minor, everything feels like it wants to come back to a.",
+            "mentor": "Live 12 added this across the whole project. You set a root note and a scale, like a minor or c major, and it's shown in the control bar. Midi clips can follow it or use their own. The Scale midi effect follows it automatically, and on Push 3 the pads can hide notes that aren't in the scale.\nThe root note is the home note the scale is built on. In a minor, everything feels like it wants to come back to a.\nOur studio works the same way: the key sits in the top bar, tap it to pick a root and any of Live's scales. The keys dim the notes outside it and mark the root, and the note grid can fold to the scale, like Live's fold.",
             "straight": "Live 12 keeps a project-wide root and scale in the control bar. Clips can follow or override it. Scale and Push 3 follow it too. The root is the home note.",
             "eli5": "In Live 12 you pick the scale once, at the top, and lots of tools follow it. The root is the note that feels like home."
           },
@@ -14529,8 +14648,8 @@
             "warp"
           ],
           "say": {
-            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
-            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
+            "mentor": "A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.\nSwitch to re-pitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.",
+            "straight": "A recorded loop at 120 bpm against other tempos. warp off drifts, re-pitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.",
             "eli5": "This is a recording. It doesn't know the tempo. Warping teaches it to follow."
           }
         },
@@ -14644,8 +14763,8 @@
             "warp"
           ],
           "say": {
-            "mentor": "Three ways to make a recording follow the tempo, and you can hear them side by side. The loop was recorded at 120. Choose 100, then 140, and try each mode.\nwarp off is honest: the loop ignores the tempo. repitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants repitch.",
-            "straight": "warp off ignores the tempo. repitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.",
+            "mentor": "Three ways to make a recording follow the tempo, and you can hear them side by side. The loop was recorded at 120. Choose 100, then 140, and try each mode.\nwarp off is honest: the loop ignores the tempo. re-pitch is the turntable: faster is higher, slower is lower, and it's the cleanest for a big change because nothing is cut. beats slices on the transients and keeps the pitch, which is what you want for drums, though at 140 you may hear the slices get clipped short. Pick the mode that suits each of your parts: drums want beats, a bass line often wants re-pitch.",
+            "straight": "warp off ignores the tempo. re-pitch changes pitch with speed, clean for big changes. beats slices on the hits and keeps the pitch, best for drums. Try 100 and 140.",
             "eli5": "Three ways to speed up a recording. One changes the pitch, one chops it up, one doesn't follow at all."
           }
         },
@@ -14778,9 +14897,9 @@
             "wave"
           ],
           "say": {
-            "mentor": "Your song is playing with your lead in it. Start detune at zero: clean and narrow. Bring it up slowly and listen for the moment the lead starts to shimmer and fill out. Keep going and it gets seasick. Find the edge and back off a touch.\nThen try wave. A buzzier wave has more harmonics, and detune is easier to hear on buzzy sounds, so the two together go big fast. Keep the width that suits your song.",
+            "mentor": "Your song is playing with your lead in it. Start detune at zero: clean and narrow. Bring it up slowly and listen for the moment the lead starts to shimmer and fill out. Keep going and it gets seasick. Find the edge and back off a touch.\nThen try shape. A buzzier wave has more harmonics, and detune is easier to hear on buzzy sounds, so the two together go big fast. Keep the width that suits your song.",
             "straight": "Raise detune until your lead shimmers, back off before it sounds out of tune. A buzzier wave makes the width more obvious. Keep it.",
-            "eli5": "Turn detune up until your tune sounds big and shimmery. Too far sounds wobbly, so turn it back a bit. Then try wave for a buzzier sound."
+            "eli5": "Turn detune up until your tune sounds big and shimmery. Too far sounds wobbly, so turn it back a bit. Then try shape for a buzzier sound."
           }
         },
         {
@@ -15240,9 +15359,9 @@
             "cutoff"
           ],
           "say": {
-            "mentor": "Your lead's wave knob is a small wavetable: it morphs from a soft wave through a saw to a square. Your song is playing. Sweep wave slowly from one end to the other and watch the shape change on the screen as you hear the colour change.\nThen use cutoff to tidy it: a buzzy shape with a lower cutoff can sound warm and full. Stop where your lead has the colour your song needs, and keep it.",
-            "straight": "Wave scans your lead from soft to saw to square. Sweep it, pick a colour, then set cutoff. Keep it.",
-            "eli5": "Turn wave slowly and hear your tune change from soft to buzzy. Stop on the sound you like."
+            "mentor": "Your lead's shape knob is a small wavetable: it morphs from a soft wave through a saw to a square. Your song is playing. Sweep shape slowly from one end to the other and watch the shape change on the screen as you hear the colour change.\nThen use cutoff to tidy it: a buzzy shape with a lower cutoff can sound warm and full. Stop where your lead has the colour your song needs, and keep it.",
+            "straight": "Shape scans your lead from soft to saw to square. Sweep it, pick a colour, then set cutoff. Keep it.",
+            "eli5": "Turn shape slowly and hear your tune change from soft to buzzy. Stop on the sound you like."
           }
         },
         {
@@ -15336,8 +15455,8 @@
             "env"
           ],
           "say": {
-            "mentor": "Your lead has two oscillators too, which is a small version of Meld's idea. Your song is playing. Wave picks the shape both layers share. Detune pulls the second layer away from the first, so you hear them as two voices blended rather than one.\nThen try env: each note starts brighter and settles, which makes the blend feel like it's moving. Keep the lead that sounds richest without getting muddy.",
-            "straight": "Two layers on your lead: wave sets their shape, detune separates them, env adds movement to each note. Keep the richest version.",
+            "mentor": "Your lead has two oscillators too, which is a small version of Meld's idea. Your song is playing. Shape picks the wave both layers share. Detune pulls the second layer away from the first, so you hear them as two voices blended rather than one.\nThen try env: each note starts brighter and settles, which makes the blend feel like it's moving. Keep the lead that sounds richest without getting muddy.",
+            "straight": "Two layers on your lead: shape sets their wave, detune separates them, env adds movement to each note. Keep the richest version.",
             "eli5": "Your tune has two sounds inside. Detune pulls them apart so you hear both. Env makes each note shine at the start. Keep it if you like it."
           }
         },
@@ -15550,9 +15669,9 @@
             "lpkind"
           ],
           "say": {
-            "mentor": "Your hats are noise with an envelope and a filter on them, playing in your song right now. Turn decay down and each burst gets short and tight, a closed, ticking hat. Turn it up and the noise rings out longer, splashy and open.\nTune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and dark.\nEvery part in your song has its own filter too, the same three characters as on the synths. Filter sets where it cuts the top off; bring it down and your hats go soft and distant. Character picks how: warm is a round ladder, scream is a two-pole that bites as it resonates, smooth is a clean two-pole. Set the hats so they sit above your kick without hissing over everything, and keep them.",
-            "straight": "Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour, filter cuts the top off, character is warm, scream or smooth. Set them to sit above your kick, then keep it.",
-            "eli5": "Make your hats short or long with decay. Make them brighter or darker with tune and filter. Keep the ones you like."
+            "mentor": "Your hats are noise with an envelope and a filter on them, playing in your song right now. Turn decay down and each burst gets short and tight, a closed, ticking hat. Turn it up and the noise rings out longer, splashy and open.\nTune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and dark.\nEvery part in your song has its own filter too, the same three circuits as on the synths. Cutoff sets where it cuts the top off; bring it down and your hats go soft and distant. Circuit picks how, with Live's Auto Filter names: prd is a round ladder, ms2 is a two-pole that bites as it resonates, svf is a clean two-pole. Set the hats so they sit above your kick without hissing over everything, and keep them.",
+            "straight": "Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour, cutoff cuts the top off, circuit is prd, ms2 or svf. Set them to sit above your kick, then keep it.",
+            "eli5": "Make your hats short or long with decay. Make them brighter or darker with tune and cutoff. Keep the ones you like."
           }
         },
         {
@@ -16008,8 +16127,8 @@
             "release"
           ],
           "say": {
-            "mentor": "Here are four of the knobs that make your lead what it is, with your song playing. Take it apart one at a time. Swing wave to each end and back: that's the raw shape. Sweep cutoff: that's the brightness. Turn env off and on: that's the brightness moving on each note. Shorten and lengthen release: that's how each note ends.\nFor each one, ask what your lead would lose without it. Then set them all where your song sounds best, and keep it.",
-            "straight": "Four knobs on your lead: wave is shape, cutoff is brightness, env is movement per note, release is how notes end. Move each one, hear what it does, set them and keep it.",
+            "mentor": "Here are four of the knobs that make your lead what it is, with your song playing. Take it apart one at a time. Swing shape to each end and back: that's the raw wave. Sweep cutoff: that's the brightness. Turn env off and on: that's the brightness moving on each note. Shorten and lengthen release: that's how each note ends.\nFor each one, ask what your lead would lose without it. Then set them all where your song sounds best, and keep it.",
+            "straight": "Four knobs on your lead: shape is the wave, cutoff is brightness, env is movement per note, release is how notes end. Move each one, hear what it does, set them and keep it.",
             "eli5": "Turn each knob all the way one way, then the other, and listen. Then put them where your tune sounds best."
           }
         },
@@ -16126,9 +16245,9 @@
             "res"
           ],
           "say": {
-            "mentor": "Build your lead, stage one: the tone. Your song is playing. Pick a wave first, soft, saw or square, for the harmonics you want. Add a little detune if you want it wide. Then set cutoff for how bright it should be, and res for how much bite sits at the edge of the filter.\nDon't worry about getting it perfect. Get it close, then move on.",
-            "straight": "Stage one, the tone. Pick a wave, add detune for width, set cutoff for brightness and res for bite.",
-            "eli5": "Pick your sound's shape with wave. Make it wider with detune. Then make it brighter or darker with cutoff."
+            "mentor": "Build your lead, stage one: the tone. Your song is playing. Set shape first, soft, saw or square, for the harmonics you want. Add a little detune if you want it wide. Then set cutoff for how bright it should be, and res for how much bite sits at the edge of the filter.\nDon't worry about getting it perfect. Get it close, then move on.",
+            "straight": "Stage one, the tone. Set shape, add detune for width, set cutoff for brightness and res for bite.",
+            "eli5": "Pick your sound's wave with shape. Make it wider with detune. Then make it brighter or darker with cutoff."
           }
         },
         {
@@ -16536,8 +16655,8 @@
             "send"
           ],
           "say": {
-            "mentor": "Here's your lead's chain, in order. Wave is the voice itself. Cutoff is the filter right after it. Drive roughs it up. Send passes a copy to the reverb at the end.\nMove them one at a time, from the first to the last, and listen to each stage change what came before it. Keep the chain that makes your lead sound most like yours.",
-            "straight": "Your lead's chain: wave (voice), cutoff (filter), drive, send (reverb). Set them in order, one at a time.",
+            "mentor": "Here's your lead's chain, in order. Shape is the voice itself. Cutoff is the filter right after it. Drive roughs it up. Send passes a copy to the reverb at the end.\nMove them one at a time, from the first to the last, and listen to each stage change what came before it. Keep the chain that makes your lead sound most like yours.",
+            "straight": "Your lead's chain: shape (voice), cutoff (filter), drive, send (reverb). Set them in order, one at a time.",
             "eli5": "These four knobs are your lead's trip. Turn them one at a time, left to right, and hear each one change the sound."
           }
         },
@@ -18026,6 +18145,15 @@
           }
         },
         {
+          "kind": "tempo",
+          "set": "commit",
+          "say": {
+            "mentor": "A quick way to make scenes as you play: commit. Teenage Engineering's EP-133 has a commit key that copies the loop you are playing into the next scene and takes you there, so you can change it without stopping. Ours does the same with your song: press commit, then make this new section different with the density fader. Your first section keeps the loop you started with.",
+            "straight": "Commit copies your loop into the next section and moves you there (the EP-133's commit). Then change the new one.",
+            "eli5": "Press commit to make a copy of your loop. Then change the copy."
+          }
+        },
+        {
           "kind": "ask",
           "q": "What is a scene?",
           "options": [
@@ -18498,6 +18626,16 @@
               "say": "When a transformation makes new pitches, it follows the scale you've set for the song."
             }
           ]
+        },
+        {
+          "kind": "tempo",
+          "set": "grid",
+          "layer": "chords",
+          "say": {
+            "mentor": "Here are your chords on the note grid, with three of Live 12's transformations under it. Set the amount, then press one: strum spreads the notes of each chord out low to high (or high to low with a negative amount), like a hand across guitar strings; humanize moves every note a little early or late and a little softer or harder; velocity shaper makes them get louder or softer from first to last. Each press is one step you can undo. Pick a few notes first to change only those.",
+            "straight": "Your chords on the note grid. Set an amount, press strum, humanize or velocity shaper. Each press undoes. Pick notes first to change only those.",
+            "eli5": "Press strum and your chords sound like a guitar. Humanize makes them less robotic. Try them."
+          }
         },
         {
           "kind": "arrange",
@@ -19168,8 +19306,8 @@
             "lfo"
           ],
           "say": {
-            "mentor": "An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: a wave oscillator and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.\ndetune widens the wave layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.",
-            "straight": "Two voices on one note: wave and fm. Blend them with fm, widen with detune. That's a rack.",
+            "mentor": "An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: an oscillator you set with shape and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.\ndetune widens the oscillator layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.",
+            "straight": "Two voices on one note: the oscillator and fm. Blend them with fm, widen with detune. That's a rack.",
             "eli5": "Two sounds play every time you press one key."
           }
         },
@@ -19998,9 +20136,9 @@
             "cutoff"
           ],
           "say": {
-            "mentor": "Here's your song with your own lead playing. Turn wave and listen to your melody change voice, soft to buzzy to hollow. That's what clicking through presets in the browser feels like: same notes, new sound, until one makes you sit up.\nThen use cutoff to darken or brighten whichever one you land on. Keep the one that suits your song.",
-            "straight": "Your lead in your song. Wave flips its basic sound, like clicking through presets. Cutoff darkens or brightens it. Keep the one that fits.",
-            "eli5": "Turn wave to give your tune a new voice. Turn cutoff to make it darker or brighter. Stop when you like how it sounds."
+            "mentor": "Here's your song with your own lead playing. Turn shape and listen to your melody change voice, soft to buzzy to hollow. That's what clicking through presets in the browser feels like: same notes, new sound, until one makes you sit up.\nThen use cutoff to darken or brighten whichever one you land on. Keep the one that suits your song.",
+            "straight": "Your lead in your song. Shape flips its basic sound, like clicking through presets. Cutoff darkens or brightens it. Keep the one that fits.",
+            "eli5": "Turn shape to give your tune a new voice. Turn cutoff to make it darker or brighter. Stop when you like how it sounds."
           }
         },
         {
@@ -21183,9 +21321,9 @@
             "drive"
           ],
           "say": {
-            "mentor": "Here's your song with your lead. Give it some hardware character. Pick a wave, then bring in detune, which pulls its oscillators slightly apart so it sounds wider and less perfect. Then add drive, which pushes it until it grits up, like a circuit being leaned on.\nGo too far and it gets messy. Find the point where it sounds like it came out of a box with knobs.",
-            "straight": "Your lead. Wave picks the shape, detune pulls it slightly out of line for width, drive adds grit. Stop before it gets messy.",
-            "eli5": "Pick a sound with wave. Turn detune up a bit to make it wobbly and wide. Turn drive up for a rough edge."
+            "mentor": "Here's your song with your lead. Give it some hardware character. Set shape, then bring in detune, which pulls its oscillators slightly apart so it sounds wider and less perfect. Then add drive, which pushes it until it grits up, like a circuit being leaned on.\nGo too far and it gets messy. Find the point where it sounds like it came out of a box with knobs.",
+            "straight": "Your lead. Shape picks the wave, detune pulls it slightly out of line for width, drive adds grit. Stop before it gets messy.",
+            "eli5": "Pick a sound with shape. Turn detune up a bit to make it wobbly and wide. Turn drive up for a rough edge."
           }
         },
         {

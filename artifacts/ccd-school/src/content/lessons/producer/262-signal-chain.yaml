@@ -60,13 +60,13 @@ steps:
     knobs: [wave, cutoff, drive, send]
     say:
       mentor: >-
-        Here's your lead's chain, in order. Wave is the voice itself. Cutoff is the filter right after it.
+        Here's your lead's chain, in order. Shape is the voice itself. Cutoff is the filter right after it.
         Drive roughs it up. Send passes a copy to the reverb at the end.
 
         Move them one at a time, from the first to the last, and listen to each stage change what came
         before it. Keep the chain that makes your lead sound most like yours.
       straight: >-
-        Your lead's chain: wave (voice), cutoff (filter), drive, send (reverb). Set them in order, one at a
+        Your lead's chain: shape (voice), cutoff (filter), drive, send (reverb). Set them in order, one at a
         time.
       eli5: >-
         These four knobs are your lead's trip. Turn them one at a time, left to right, and hear each one

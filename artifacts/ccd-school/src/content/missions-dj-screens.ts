@@ -48,7 +48,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       q: "DJing emerged primarily from which scenes?",
       options: ["Concert orchestras", "Radio disc jockeys, New York discotheques, Bronx hip-hop block parties, Chicago/Detroit underground clubs", "Classical music conservatories", "TV talent shows"],
       answer: 1,
-      explain: "Modern DJing grew from radio DJs, the disco era, hip-hop culture, and the underground scenes of Chicago and Detroit in the 1970s–80s.",
+      explain: "Modern DJing grew from radio DJs, the disco era, hip-hop culture, and the underground scenes of Chicago and Detroit in the 1970s to 80s.",
     },
     {
       kind: "type-answer",
@@ -307,7 +307,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "House and techno origins",
-      body: "House emerged from Chicago's underground clubs in the late 1970s–80s (Frankie Knuckles, The Warehouse). Techno was developed in Detroit by the Belleville Three.",
+      body: "House emerged from Chicago's underground clubs in the late 1970s to 80s (Frankie Knuckles, The Warehouse). Techno was developed in Detroit by the Belleville Three.",
       keyFact: "House = Chicago warehouse. Techno = Detroit. Both underground.",
       visual: "waveform-zoom",
     },
@@ -326,7 +326,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "quiz",
       q: "House music emerged from",
-      options: ["London rock clubs", "Chicago underground clubs in the late 1970s–80s: Frankie Knuckles, Larry Levan, Ron Hardy", "New York jazz clubs", "Los Angeles hip-hop parties"],
+      options: ["London rock clubs", "Chicago underground clubs in the late 1970s to 80s: Frankie Knuckles, Larry Levan, Ron Hardy", "New York jazz clubs", "Los Angeles hip-hop parties"],
       answer: 1,
       explain: "House music grew from Chicago underground clubs: The Warehouse, The Music Box.",
     },
@@ -339,7 +339,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     },
     {
       kind: "summary",
-      learned: ["Kool Herc extended breaks: hip-hop DJing born 1973", "House = Chicago warehouse culture, late 70s–80s", "Techno = Detroit, the Belleville Three"],
+      learned: ["Kool Herc extended breaks: hip-hop DJing born 1973", "House = Chicago warehouse culture, late 70s to 80s", "Techno = Detroit, the Belleville Three"],
     },
   ],
 
@@ -355,14 +355,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "The BPM spectrum",
-      body: "Hip-hop sits at 70–100 BPM. House runs at 120–130. Techno at 130–145. Drum and bass at 160–180. Knowing these ranges guides mixing and track selection.",
-      keyFact: "House: 120–130. Techno: 130–145. DnB: 160–180.",
+      body: "Hip-hop sits at 70 to 100 BPM. House runs at 120 to 130. Techno at 130 to 145. Drum and bass at 160 to 180. Knowing these ranges guides mixing and track selection.",
+      keyFact: "House: 120 to 130. Techno: 130 to 145. DnB: 160 to 180.",
       visual: "bpm-grid",
     },
     {
       kind: "concept",
       title: "Half-time feel explained",
-      body: "Trap is technically 130–150 BPM but the kick and snare pattern creates a half-time feel: it grooves at 65–75 BPM. Dubstep works similarly at 138–142 BPM.",
+      body: "Trap is technically 130 to 150 BPM but the kick and snare pattern creates a half-time feel: it grooves at 65 to 75 BPM. Dubstep works similarly at 138 to 142 BPM.",
       keyFact: "Half-time: groove feels half as fast as the technical BPM.",
       visual: "bpm-grid",
     },
@@ -374,27 +374,27 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "quiz",
       q: "Standard house music runs at approximately",
-      options: ["90–100 BPM", "120–130 BPM", "150–165 BPM", "170–180 BPM"],
+      options: ["90 to 100 BPM", "120 to 130 BPM", "150 to 165 BPM", "170 to 180 BPM"],
       answer: 1,
-      explain: "House music typically runs at 120–130 BPM: four-on-the-floor kick drum at this tempo.",
+      explain: "House music typically runs at 120 to 130 BPM: four-on-the-floor kick drum at this tempo.",
     },
     {
       kind: "quiz",
       q: "Drum and bass runs at",
-      options: ["120–130 BPM", "140–150 BPM", "160–180 BPM", "200+ BPM"],
+      options: ["120 to 130 BPM", "140 to 150 BPM", "160 to 180 BPM", "200+ BPM"],
       answer: 2,
-      explain: "Drum and bass typically runs at 160–180 BPM: the fastest mainstream dance genre.",
+      explain: "Drum and bass typically runs at 160 to 180 BPM: the fastest mainstream dance genre.",
     },
     {
       kind: "quiz",
-      q: "Trap music is listed at 130–150 BPM but feels like 65–75 BPM because",
+      q: "Trap music is listed at 130 to 150 BPM but feels like 65 to 75 BPM because",
       options: ["The tempo is wrong", "It uses a half-time feel: the kick and snare pattern sounds like half the actual BPM", "Trap is always played at double speed", "It uses 3/4 time"],
       answer: 1,
       explain: "Trap uses a half-time rhythmic feel: the kick and snare land in positions that make the groove feel much slower than the technical BPM.",
     },
     {
       kind: "summary",
-      learned: ["House: 120–130 BPM. Techno: 130–145. DnB: 160–180", "Half-time feel makes a track groove slower than its BPM", "BPM ranges guide which tracks can be mixed together"],
+      learned: ["House: 120 to 130 BPM. Techno: 130 to 145. DnB: 160 to 180", "Half-time feel makes a track groove slower than its BPM", "BPM ranges guide which tracks can be mixed together"],
     },
   ],
 
@@ -410,7 +410,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "The first-mix method",
-      body: "Choose two tracks in the same key and similar BPM. Use SYNC to match tempo. Bring in the incoming track at low volume over 8–16 bars, then cut the outgoing track.",
+      body: "Choose two tracks in the same key and similar BPM. Use SYNC to match tempo. Bring in the incoming track at low volume over 8 to 16 bars, then cut the outgoing track.",
       keyFact: "Simple first. Same key, same BPM, one clean transition.",
       visual: "waveform-zoom",
     },
@@ -693,7 +693,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "History and focused set playlists",
-      body: "rekordbox automatically logs every track you play with timestamps. Prepare a focused 50–100 track playlist for each gig: narrow choices force deliberate curation.",
+      body: "rekordbox automatically logs every track you play with timestamps. Prepare a focused 50 to 100 track playlist for each gig: narrow choices force deliberate curation.",
       keyFact: "History log auto-records every played track. Review it.",
       visual: "waveform-zoom",
     },
@@ -718,14 +718,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     },
     {
       kind: "quiz",
-      q: "For a specific gig preparing a focused playlist of 50–100 tracks means",
+      q: "For a specific gig preparing a focused playlist of 50 to 100 tracks means",
       options: ["You have fewer choices which is worse", "You can focus on energy and transitions rather than searching: and make more deliberate choices", "It limits your creativity", "The full library is always better"],
       answer: 1,
       explain: "Narrowing your options forces deliberate curation and means you are never lost searching during a set.",
     },
     {
       kind: "summary",
-      learned: ["Organise by genre, energy level, and venue", "rekordbox History auto-logs every played track", "50–100 focused tracks beats navigating 5000 live"],
+      learned: ["Organise by genre, energy level, and venue", "rekordbox History auto-logs every played track", "50 to 100 focused tracks beats navigating 5000 live"],
     },
   ],
 
@@ -1182,13 +1182,13 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       kind: "hook",
       emoji: "",
       headline: "The crowd never notices the track changed",
-      subtext: "Long blends flow from one track to the next over 16–32 bars.",
+      subtext: "Long blends flow from one track to the next over 16 to 32 bars.",
     },
     {
       kind: "concept",
       title: "How the long mix works",
-      body: "Incoming track starts with bass cut. Over 16–32 bars the channel fader rises gradually. At the midpoint: do the bass swap. Outgoing fader falls. Done.",
-      keyFact: "16–32 bars. Incoming rises. Bass swap mid-mix. Outgoing falls.",
+      body: "Incoming track starts with bass cut. Over 16 to 32 bars the channel fader rises gradually. At the midpoint: do the bass swap. Outgoing fader falls. Done.",
+      keyFact: "16 to 32 bars. Incoming rises. Bass swap mid-mix. Outgoing falls.",
       visual: "waveform-zoom",
     },
     {
@@ -1206,7 +1206,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "quiz",
       q: "A long mix transition involves",
-      options: ["Cutting sharply between tracks", "Gradually blending two tracks over 16–32 bars", "Playing one track twice", "Using a reverb effect only"],
+      options: ["Cutting sharply between tracks", "Gradually blending two tracks over 16 to 32 bars", "Playing one track twice", "Using a reverb effect only"],
       answer: 1,
       explain: "The long mix gradually crossfades two tracks over a long period. Classic for house and techno.",
     },
@@ -1226,7 +1226,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     },
     {
       kind: "summary",
-      learned: ["Long mix: 16–32 bars, gradual blend, bass swap mid-mix", "Start incoming with bass cut, exit before breakdown", "DJ-friendly tracks have 32+ bar mixing zones"],
+      learned: ["Long mix: 16 to 32 bars, gradual blend, bass swap mid-mix", "Start incoming with bass cut, exit before breakdown", "DJ-friendly tracks have 32+ bar mixing zones"],
     },
   ],
 
@@ -1472,7 +1472,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
       kind: "concept",
       title: "Key shifting on CDJ",
       body: "Master Tempo + semitone shift buttons allow real-time key adjustment without tempo change. A track 1 semitone away from perfect compatibility can be shifted to match.",
-      keyFact: "Shift up/down 1–2 semitones max. Beyond that = artifacts.",
+      keyFact: "Shift up/down 1 to 2 semitones max. Beyond that = artifacts.",
       visual: "camelot-wheel",
     },
     {
@@ -1684,7 +1684,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "Research and curate",
-      body: "Research the event: audience type, time slot, context. Then curate 60–100 tracks specific to this gig. Not your full library: every track must be relevant to this specific night.",
+      body: "Research the event: audience type, time slot, context. Then curate 60 to 100 tracks specific to this gig. Not your full library: every track must be relevant to this specific night.",
       keyFact: "Know the gig. Curate for it. Not your full library.",
       visual: "waveform-zoom",
     },
@@ -1716,14 +1716,14 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     },
     {
       kind: "quiz",
-      q: "Preparing only 60–100 tracks for a specific set rather than your full library means",
+      q: "Preparing only 60 to 100 tracks for a specific set rather than your full library means",
       options: ["You have fewer choices which is always worse", "Focused deliberate curation: every track is relevant and you can navigate quickly under pressure", "You should always take your full library", "Your set will be less creative"],
       answer: 1,
       explain: "A focused gig playlist means every track is relevant to this specific context.",
     },
     {
       kind: "summary",
-      learned: ["Research the event before curating your playlist", "First track = statement of intent: prepare it", "60–100 focused tracks. Two identical USB drives."],
+      learned: ["Research the event before curating your playlist", "First track = statement of intent: prepare it", "60 to 100 focused tracks. Two identical USB drives."],
     },
   ],
 
@@ -1913,8 +1913,8 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "Safe shift range",
-      body: "Shifting 1–2 semitones is generally undetectable. Beyond 2–3 semitones, pitch-shifting algorithms introduce audible artifacts: especially on vocals and acoustic instruments.",
-      keyFact: "1–2 semitones = safe. Beyond 3 = artifacts become audible.",
+      body: "Shifting 1 to 2 semitones is generally undetectable. Beyond 2 to 3 semitones, pitch-shifting algorithms introduce audible artifacts: especially on vocals and acoustic instruments.",
+      keyFact: "1 to 2 semitones = safe. Beyond 3 = artifacts become audible.",
       visual: "waveform-zoom",
     },
     {
@@ -1932,20 +1932,20 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "quiz",
       q: "Key shifting is useful for harmonic mixing because",
-      options: ["It changes the BPM to match", "It allows you to move a track by 1–2 semitones to match the key of the current track", "It automatically finds compatible keys", "It changes the scale of the track"],
+      options: ["It changes the BPM to match", "It allows you to move a track by 1 to 2 semitones to match the key of the current track", "It automatically finds compatible keys", "It changes the scale of the track"],
       answer: 1,
       explain: "A track that is 1 semitone away from perfect harmonic compatibility can be shifted to match.",
     },
     {
       kind: "quiz",
       q: "The maximum safe key shift without obvious artifacts is approximately",
-      options: ["Half a semitone", "1–2 semitones maximum", "5–6 semitones", "Any shift is fine"],
+      options: ["Half a semitone", "1 to 2 semitones maximum", "5 to 6 semitones", "Any shift is fine"],
       answer: 1,
-      explain: "Pitch-shifting algorithms introduce audible artifacts at larger shifts: especially on vocals. 1–2 semitones is generally acceptable.",
+      explain: "Pitch-shifting algorithms introduce audible artifacts at larger shifts: especially on vocals. 1 to 2 semitones is generally acceptable.",
     },
     {
       kind: "summary",
-      learned: ["Master Tempo: BPM changes, key stays constant", "Key shift: 1–2 semitones max before artifacts", "Enable Master Tempo by default when beatmatching"],
+      learned: ["Master Tempo: BPM changes, key stays constant", "Key shift: 1 to 2 semitones max before artifacts", "Enable Master Tempo by default when beatmatching"],
     },
   ],
 
@@ -2127,7 +2127,7 @@ export const DJ_SCREENS: Record<string, LessonScreen[]> = {
     {
       kind: "concept",
       title: "Promotional mix and brand",
-      body: "Your promotional mix is your audio CV: 60–90 minutes of your sound at its best. Pair it with a consistent artist identity across all platforms: name, photo, social presence.",
+      body: "Your promotional mix is your audio CV: 60 to 90 minutes of your sound at its best. Pair it with a consistent artist identity across all platforms: name, photo, social presence.",
       keyFact: "Promo mix = audio CV. Consistent identity = recognisable brand.",
       visual: "waveform-zoom",
     },

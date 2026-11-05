@@ -6,7 +6,9 @@
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { DRUM_PAD_NAMES, DRUM_PAD_NOTES, FX_IMPACT_NOTE, INSTRUMENT_BASE, LEAD_PARAMS, FX_PARAMS, type Engine } from "@/engine";
-import { noteName, pitchClass, scaleNote, SCALES, NOTE_NAMES, type ScaleName } from "@/lib/theory";
+import { asScale, noteName, pitchClass, scaleNote, SCALES, NOTE_NAMES, type ScaleName } from "@/lib/theory";
+import { chordPads, inChord, type Chord, type PadChord } from "@/lib/chords";
+export { chordPads };
 import { paramOf, STEP_BEATS, type LayerV2, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { euclid } from "@/lib/euclid";
 import { CAP, Icon, Knob, Silk } from "./controls";
@@ -24,12 +26,14 @@ export type SurfaceCtx = {
   /** Put a label and a value on the screen. */
   say: (label: string, text: string) => void;
   hits: Record<string, number>;
+  /** The chord track's chord under the playhead (bar 1 when stopped), or null: its notes light as suggestions. */
+  chord: Chord | null;
 };
 
 const dotColor = (c: string) => ({ ["--c" as string]: c }) as CSSProperties;
 
 /** The track's key, as a scale name the theory helpers know. */
-export const scaleOf = (t: TrackV2): ScaleName => (t.scale === "major" ? "major" : "minor");
+export const scaleOf = (t: TrackV2): ScaleName => asScale(t.scale);
 
 /** Bass lives low: the key's root in the octave from a1 up. */
 export const bassRoot = (t: TrackV2) => 33 + ((pitchClass(t.root) - 9 + 12) % 12);
@@ -114,7 +118,7 @@ export function GlideSurface({ ctx }: { ctx: SurfaceCtx }) {
         onPointerCancel={release}
       >
         {notes.map((n, i) => (
-          <div key={i} className="st-lane-col">
+          <div key={i} className={`st-lane-col ${inChord(ctx.chord, n) ? "is-sug" : ""}`}>
             <span className={i === 0 || i === 7 ? "is-root" : ""}>{noteName(n).replace(/\d+$/, "")}</span>
           </div>
         ))}
@@ -208,19 +212,7 @@ export function CircleSurface({ ctx }: { ctx: SurfaceCtx }) {
 
 // ── chords: pads in key, and a strum strip ───────────────────────────────────
 
-type ChordDef = { deg: number[]; roman: string };
-const CHORDS: Record<ScaleName, ChordDef[]> = {
-  minor: [
-    { deg: [0, 2, 4], roman: "i" }, { deg: [3, 5, 7], roman: "iv" }, { deg: [4, 6, 8], roman: "v" }, { deg: [5, 7, 9], roman: "VI" },
-    { deg: [2, 4, 6], roman: "III" }, { deg: [6, 8, 10], roman: "VII" }, { deg: [0, 2, 4, 6], roman: "i7" }, { deg: [3, 5, 7, 9], roman: "iv9" },
-  ],
-  major: [
-    { deg: [0, 2, 4], roman: "I" }, { deg: [3, 5, 7], roman: "IV" }, { deg: [4, 6, 8], roman: "V" }, { deg: [5, 7, 9], roman: "vi" },
-    { deg: [1, 3, 5], roman: "ii" }, { deg: [2, 4, 6], roman: "iii" }, { deg: [0, 2, 4, 6], roman: "I7" }, { deg: [3, 5, 7, 9], roman: "IV9" },
-  ],
-  dorian: [],
-  "minor pentatonic": [],
-};
+type ChordDef = PadChord;
 
 export function chordNotes(track: TrackV2, c: ChordDef): number[] {
   const base = 48 + pitchClass(track.root) - (pitchClass(track.root) > 6 ? 12 : 0);
@@ -237,7 +229,7 @@ function chordName(notes: number[]): string {
 /** The chord pads. Each plays its chord; the strip below plucks the chosen chord one note at a time. */
 export function ChordSurface({ ctx }: { ctx: SurfaceCtx }) {
   const { track, color } = ctx;
-  const list = CHORDS[scaleOf(track)];
+  const list = useMemo(() => chordPads(track.root, scaleOf(track)), [track.root, track.scale]); // eslint-disable-line react-hooks/exhaustive-deps
   const [sel, setSel] = useState(3);
   const down = useRef<Map<number, number[]>>(new Map());
   const chord = list[sel];
@@ -287,8 +279,10 @@ export function ChordSurface({ ctx }: { ctx: SurfaceCtx }) {
         {list.map((c, i) => {
           const ns = chordNotes(track, c);
           const lit = sel === i;
+          // The chord track's chord for this bar: same root and same third.
+          const sug = !!ctx.chord && pitchClass(ns[0]) === ctx.chord.root && ns.slice(0, 3).every(n => inChord(ctx.chord, n));
           return (
-            <button key={c.roman} type="button" className={`st-sp ${lit ? "is-lit" : ""}`} style={dotColor(color)} aria-label={`${chordName(ns)}, ${c.roman}`}
+            <button key={c.roman} type="button" className={`st-sp ${lit ? "is-lit" : ""} ${sug ? "is-sug" : ""}`} style={dotColor(color)} aria-label={`${chordName(ns)}, ${c.roman}${sug ? ", the chord track's chord now" : ""}`}
               onPointerDown={e => press(i, e)} onPointerUp={lift} onPointerCancel={lift} onContextMenu={e => e.preventDefault()}>
               <span className="st-lv" style={{ left: 10, right: "auto", top: 9, opacity: 0.8 }}>{chordName(ns)}</span>
               <span className="st-lb" style={{ fontSize: 22, fontWeight: 400, bottom: 8 }}>{c.roman}</span>
@@ -383,7 +377,7 @@ export function XYSurface({ ctx }: { ctx: SurfaceCtx }) {
     >
       <span className="st-xy-l" style={{ top: 12 }}>filter open</span>
       <span className="st-xy-l" style={{ bottom: 22 }}>filter closed</span>
-      <span className="st-xy-notes">{notes.map((n, i) => <b key={i}>{noteName(n).replace(/\d+$/, "")}</b>)}</span>
+      <span className="st-xy-notes">{notes.map((n, i) => <b key={i} className={inChord(ctx.chord, n) ? "is-sug" : ""}>{noteName(n).replace(/\d+$/, "")}</b>)}</span>
       {pt ? (
         <>
           <span className="st-xy-h" style={{ top: `${pt.y * 100}%` }} />
