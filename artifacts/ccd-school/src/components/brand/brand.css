@@ -1,0 +1,35 @@
+/* ustad: the wordmark and the mark (src/components/brand). Tokens from the identity brief.
+   The wordmark is engraved into the faceplate: a 1px light highlight above the letters and a 1px dark
+   shadow below, letterspaced, lowercase. The "u" is drawn as the knob, its indicator line at one o'clock. */
+
+.ustad-wm {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+  font-family: "Space Grotesk", "Outfit", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: lowercase;
+  color: var(--ustad-engrave, var(--print, #8e8e93));
+  text-shadow: 0 1px 0 var(--ustad-engrave-hi, var(--ehi, rgba(255, 255, 255, 0.95))), 0 -1px 0 var(--ustad-engrave-lo, var(--elo, rgba(0, 0, 0, 0.16)));
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ustad-wm > svg { flex: none; }
+/* the rest of the letters, after the knob */
+.ustad-wm__rest { display: inline-block; }
+
+/* On the black glass and on ink (the banner) the letters go cream; the recess keeps its dark upper
+   edge and its faint lit lower edge, as the dark deck's engraved labels do. */
+.ustad-wm.is-glass,
+.ccd-banner .ustad-wm {
+  --ustad-engrave: #f2f2f7;
+  --ustad-engrave-hi: rgba(255, 255, 255, 0.12);
+  --ustad-engrave-lo: rgba(0, 0, 0, 0.6);
+}
+
+/* The mark alone keeps its own colours; it is a knob, not type. */
+.ustad-mark { display: inline-block; vertical-align: middle; flex: none; }
