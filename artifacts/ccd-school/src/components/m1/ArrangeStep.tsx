@@ -7,7 +7,7 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT } from "@/engine";
 import type { LessonScreen } from "@/content/types";
-import { arranged, sectionAt, startLayout, type Section } from "@/lib/arrange";
+import { arranged, arrangeMet, sectionAt, startLayout, type Section } from "@/lib/arrange";
 import { readTrackV2, writeTrackV2, TYPE, type TrackV2 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
@@ -46,11 +46,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   const rise = (si: number) => setSecs(s => s.map((x, i) => (i === si ? { ...x, riser: !x.riser } : x)));
   const drums = parts.filter(l => DRUMS.has(l.type)).map(l => l.id);
   const onlyDrums = parts.length > 0 && parts.every(l => DRUMS.has(l.type));
-  const met = screen.goal === "export" ? true
-    : screen.goal === "fills" ? secs.some(s => s.fill)
-    : screen.goal === "risers" ? secs.some(s => s.riser)
-    : screen.goal === "drop" ? secs.some((s, i) => i > 0 && drums.some(d => secs[i - 1].off.includes(d)) && !drums.some(d => s.off.includes(d)))
-    : secs.length >= 3 && secs.some(s => s.off.length > 0);
+  const met = arrangeMet(secs, drums, screen.goal);
   const why = screen.goal === "risers" ? "tap riser on the section before a drop" : screen.goal === "fills" ? "tap fill on at least one section" : screen.goal === "drop" ? "take the drums out of one section and bring them back in the next" : "switch a part off in at least one section";
   const [say, setSay] = useState<string | null>(null);
   // Audio export at a loudness target: -14 lufs for streaming, -9 for clubs (src/lib/loudness.ts).

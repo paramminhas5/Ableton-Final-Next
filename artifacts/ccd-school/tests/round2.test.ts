@@ -11,13 +11,15 @@ const song = () => {
 };
 
 describe("loop round 2: dj lessons mark your song", () => {
-  it("a blend marks a mix-out cue on the last bar, the tempo lesson a cue on bar 1", () => {
+  it("a blend marks a mix-out cue where the last 16 bars start, the tempo lesson a cue on bar 1", () => {
     const t = song();
     expect(songBars(t)).toBe(2);
     expect(cueFor(t, "your-first-mix", "blend")).toEqual({ slug: "your-first-mix", name: "mix out", bar: 8 });
     expect(cueFor(t, "tempo-bpm-dj", "match").bar).toBe(1);
     const arranged = { ...t, sections: [{ name: "intro", bars: 4, off: [] }, { name: "drop", bars: 8, off: [] }] };
-    expect(cueFor(arranged, "x", "blend").bar).toBe(12);
+    expect(cueFor(arranged, "x", "blend").bar).toBe(1);
+    const long = { ...t, sections: [{ name: "intro", bars: 16, off: [] }, { name: "drop", bars: 16, off: [] }] };
+    expect(cueFor(long, "x", "blend").bar).toBe(17);
   });
   it("one cue per lesson, sorted by bar, and the sound is unchanged", () => {
     const t = song();

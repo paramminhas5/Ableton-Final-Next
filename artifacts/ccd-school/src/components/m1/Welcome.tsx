@@ -263,7 +263,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
             <Choice items={WAYS} value={prefs.voice} onPick={id => setPrefs({ voice: id })} />
             <div className="wl-go"><GoPill onClick={go} style={{ height: 72, width: "100%" }}>take me in <Icon name="play" small /></GoPill></div>
             {know === "lots" && <button type="button" className="ls-skip" onClick={() => setPlacement(true)}>find my level again</button>}
-            <div className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>first lesson: {(missionBySlug(make.first)?.title ?? "").toLowerCase()}</div>
+            <div className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>a quick look round your dashboard, then your first lesson: {(missionBySlug(make.first)?.title ?? "").toLowerCase()}</div>
           </Part>
         )}
       </div>

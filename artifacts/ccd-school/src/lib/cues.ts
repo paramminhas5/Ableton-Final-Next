@@ -8,7 +8,8 @@ import type { TrackV2 } from "./track2";
 
 export type Cue = { slug: string; name: string; bar: number };
 
-/** What each mixer move marks on your song, and where: "first" is bar 1, "last" the last bar of the song. */
+/** What each mixer move marks on your song, and where: "first" is bar 1, "last" the start of the song's last
+ * 16 bars (where a dj starts a mix out), or bar 1 on a song shorter than that. */
 const CUE: Record<MixGoal, { name: string; at: "first" | "last" }> = {
   crossfade: { name: "crossfade out", at: "last" },
   match: { name: "tempo checked", at: "first" },
@@ -39,7 +40,8 @@ export function songBars(t: Pick<TrackV2, "loop" | "sections">): number {
 export function cueFor(t: Pick<TrackV2, "loop" | "sections">, slug: string, goal: MixGoal): Cue {
   const c = CUE[goal] ?? CUE.free;
   // A looping song has no last bar of its own: djs mix out at the end of an eight-bar phrase, so that's where it goes.
-  return { slug, name: c.name, bar: c.at === "first" ? 1 : t.sections?.length ? songBars(t) : 8 };
+  // An arranged song gets it where its last 16 bars start, where a dj starts the mix out.
+  return { slug, name: c.name, bar: c.at === "first" ? 1 : t.sections?.length ? Math.max(1, songBars(t) - 15) : 8 };
 }
 
 /** The song with this lesson's cue on it. One cue per lesson: doing it again replaces it. */

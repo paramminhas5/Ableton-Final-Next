@@ -70,3 +70,20 @@ describe("loop round 3: play-ins check the musical idea", () => {
     expect(play("clap-and-snare")?.goal.note).toBe("snare");
   });
 });
+
+describe("loop round 3: no arrange lesson opens already met", () => {
+  it("every arrange step's goal is unmet on a fresh song, and met once the learner does the move", async () => {
+    const { arrangeMet } = await import("../src/lib/arrange");
+    const t = song();
+    const drums = t.layers.filter(l => l.type === "drums" || l.type === "hats").map(l => l.id);
+    const steps = fileMissions().flatMap(m => (m.screens ?? []).filter(s => s.kind === "arrange").map(s => ({ slug: m.slug, goal: (s as { goal: "sections" | "drop" | "fills" | "risers" | "export" }).goal })));
+    expect(steps.length).toBeGreaterThan(3);
+    for (const { slug, goal } of steps) {
+      if (goal === "export") continue;
+      const start = startLayout(t, goal);
+      expect(arrangeMet(start, drums, goal), `${slug} (${goal}) opens met`).toBe(false);
+    }
+    const drop = startLayout(t, "drop").map((s, i) => (i === 3 ? { ...s, off: [...s.off, ...drums] } : s));
+    expect(arrangeMet(drop, drums, "drop")).toBe(true);
+  });
+});

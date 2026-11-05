@@ -9716,7 +9716,7 @@
           "kind": "hear",
           "clip": "synth-shapes",
           "say": {
-            "mentor": "You've already used cutoff to make your lead darker or brighter. Now you'll make the sound move. Real synth sounds change during each note: they open up, sparkle, fade. Four knobs do most of it.",
+            "mentor": "Cutoff makes a synth darker or brighter. Now you'll make the sound move. Real synth sounds change during each note: they open up, sparkle, fade. Four knobs do most of it.",
             "straight": "Synth sounds move within each note. Four knobs control that: resonance, envelope, attack, release.",
             "eli5": "Good synth sounds change while the note plays. They open up and fade away. You'll learn four knobs that do it."
           }
@@ -9731,7 +9731,7 @@
             "release"
           ],
           "say": {
-            "mentor": "Your lead, four knobs. Resonance makes the filter ring right at the cutoff, a whistly, squelchy peak. Envelope makes the filter open on every note and close again, so each note sparkles then darkens. Attack is how slowly a note fades in: zero for a pluck, high for a swell. Release is how long it rings after you let go.\nTry a short attack, short release and lots of envelope for a pluck. Then long attack and long release for a pad.",
+            "mentor": "Four knobs on the lead (if your song has no lead yet, this one goes in when you add it). Resonance makes the filter ring right at the cutoff, a whistly, squelchy peak. Envelope makes the filter open on every note and close again, so each note sparkles then darkens. Attack is how slowly a note fades in: zero for a pluck, high for a swell. Release is how long it rings after you let go.\nTry a short attack, short release and lots of envelope for a pluck. Then long attack and long release for a pad.",
             "straight": "Res: a ringing peak at the cutoff. Env: the filter opens and closes on each note. Attack: fade in. Release: ring out. Pluck: short attack and release, lots of env. Pad: long attack and release.",
             "eli5": "Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly. Release makes them ring out after. Try a short pluck, then a long dreamy pad."
           }

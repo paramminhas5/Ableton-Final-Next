@@ -32,6 +32,15 @@ export function startLayout(t: TrackV2, goal: "sections" | "drop" | "fills" | "r
   return c;
 }
 
+/** Whether an arrangement meets a lesson's goal. `drums` are the ids of the drum and hat parts. */
+export function arrangeMet(secs: Section[], drums: string[], goal: "sections" | "drop" | "fills" | "risers" | "export"): boolean {
+  if (goal === "export") return true;
+  if (goal === "fills") return secs.some(s => s.fill);
+  if (goal === "risers") return secs.some(s => s.riser);
+  if (goal === "drop") return secs.some((s, i) => i > 0 && drums.some(d => secs[i - 1].off.includes(d)) && !drums.some(d => s.off.includes(d)));
+  return secs.length >= 3 && secs.some(s => s.off.length > 0);
+}
+
 const KICK = 36, SNARE = 38;
 
 /** The song as the engine plays it: one long loop, every section in turn. Unchanged with no sections. */
