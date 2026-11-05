@@ -78,12 +78,13 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const songCues = useMemo(() => cuesOf(song), [song]);
   const [cueA, setCueA] = useState(1);
   const fileA = useFileDeck("a"), fileB = useFileDeck("b");
-  // The real track, when CCD's private bank is configured for this deployment (design/dj-bank-private.md).
-  // Without it, deck b plays our engine at the track's tempo and key, and says so.
+  // The real track, from CCD's private bank: /api/bank hands a signed-in learner a ten-minute link
+  // (design/dj-bank-private.md). Signed out, or with the bank off, deck b plays our engine at the track's
+  // tempo and key, and says so.
   useEffect(() => {
-    const base = process.env.NEXT_PUBLIC_CCD_BANK_URL;
+    const base = process.env.NEXT_PUBLIC_CCD_BANK_URL || "/api/bank";
     const r = realOf(bid);
-    if (!base || !r) return;
+    if (!r) return;
     let gone = false;
     void fileB.loadUrl(`${base.replace(/\/$/, "")}/${r.id}/full.ogg`, r.name, r.bpm).then(ok => { if (ok && !gone) setBFile(r.name); });
     return () => { gone = true; };

@@ -32,8 +32,10 @@ The keys are machine estimates. Before a lesson leans on one, check it by ear or
 
 ## Turning on the real audio
 
-1. Run `python3 -I scripts/bank/chop.py <folder of the files> <a folder outside the repo>`. It writes `full.ogg` and one 16-bar chop per cue for each track. The script refuses to write inside the repo, and `private-bank/` is ignored.
-2. Upload that folder to a private bucket that serves through signed or logged-in URLs.
-3. Set `NEXT_PUBLIC_CCD_BANK_URL` to the bucket's base url on the deployment. Deck b then loads the real track, at its measured bpm, through the file deck.
+The private bucket exists: `dj-bank` in the ccd-school Supabase project (not public, 50 MB a file, audio types only). The app asks `/api/bank/<track id>/<file>` for a track; the route checks the learner is signed in and redirects to a signed link that works for ten minutes. Signed out, or with the bank off, it answers 401 or 503 and deck b plays our engine at the track's tempo and key, as before.
 
-Steps 2 and 3 are Param's to do. They are an environment key and a storage decision, and they need CCD to have the rights to stream these tracks to learners. They are released commercial tracks, so playing them inside a public app is different from playing them in a club set.
+1. Run `python3 -I scripts/bank/chop.py <folder of the files> <a folder outside the repo>`. It writes `full.ogg` and one 16-bar chop per cue (`intro.ogg`, `drums-in.ogg`, `break.ogg`, `drop.ogg`) for each track. The script refuses to write inside the repo, and `private-bank/` is ignored.
+2. Upload it: `CCD_BANK_SERVICE_KEY=<service role key> node scripts/bank/upload.mjs <that folder>`. The key is in Supabase, ccd-school, project settings, api keys.
+3. Add `CCD_BANK_SERVICE_KEY` (the same service role key) to the Vercel project's environment. It is server-only; never put it in a `NEXT_PUBLIC_` variable.
+
+Steps 2 and 3 need the service role key, so they are Param's to do. Param confirmed on 5 Nov that the tracks live privately; streaming them also needs CCD to have the rights to stream these tracks to learners. They are released commercial tracks, so playing them inside a public app is different from playing them in a club set.
