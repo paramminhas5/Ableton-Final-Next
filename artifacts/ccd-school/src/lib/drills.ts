@@ -193,12 +193,12 @@ export const pickRootMidi = () => 60 + Math.floor(Math.random() * 7);
 // --- EQ CUT ---
 // Play a brief noise/pad burst with a deep notch at the chosen freq, ask which band it was.
 export const EQ_BANDS = [
-  { hz: 80, name: "60–120 Hz (sub)" },
-  { hz: 250, name: "200–350 Hz (mud)" },
-  { hz: 600, name: "500–800 Hz (boxy)" },
-  { hz: 2000, name: "1.5–2.5 kHz (presence)" },
-  { hz: 5000, name: "4–6 kHz (sizzle)" },
-  { hz: 10000, name: "8–12 kHz (air)" },
+  { hz: 80, name: "60 to 120 Hz (sub)" },
+  { hz: 250, name: "200 to 350 Hz (mud)" },
+  { hz: 600, name: "500 to 800 Hz (boxy)" },
+  { hz: 2000, name: "1.5 to 2.5 kHz (presence)" },
+  { hz: 5000, name: "4 to 6 kHz (sizzle)" },
+  { hz: 10000, name: "8 to 12 kHz (air)" },
 ];
 export function playEqExcerpt(freq: number, durSec = 2.5): { stop: () => void } {
   const c = getCtx();

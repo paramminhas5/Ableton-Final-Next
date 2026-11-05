@@ -142,7 +142,7 @@ export function DJ() {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, width: 116, marginTop: 8 }}>
         <Key ariaLabel={`Cue deck ${lbl}`} onClick={() => { if (playing) toggle(); }}><span style={{ fontSize: 12, fontWeight: 600 }}>cue</span></Key>
-        <Key ariaLabel={`${playing ? "Pause" : "Play"} deck ${lbl}`} cap={playing ? "blk" : "go"} led={playing ? color : null} onClick={toggle} ariaPressed={playing}>
+        <Key ariaLabel={`${playing ? "Pause" : "Play"} deck ${lbl}`} cap={playing ? "blk" : lbl === "a" || playA ? "go" : undefined} led={playing ? color : null} onClick={toggle} ariaPressed={playing}>
           <Icon name={playing ? "stop" : "play"} />
         </Key>
       </div>
@@ -168,7 +168,7 @@ export function DJ() {
             return <span key={i} style={{ width: 8, height: 8, borderRadius: 4, background: on ? "#F3F2EF" : "#2A2A2D", boxShadow: on && Math.floor(beat / 2) === i ? "0 0 5px #F3F2EF" : undefined }} />;
           })}
           <span className="m1-ss" style={{ color: "var(--disp-ink)", marginLeft: 6 }}>
-            {hint ?? (beatsLeft === null ? "play a, then bring b in" : `bring b in · ${Math.ceil(beatsLeft / 4)} beats`)}
+            {hint ?? (beatsLeft === null ? "play a, then bring b in" : `bring b in · ${Math.ceil(beatsLeft / 4)} beat${Math.ceil(beatsLeft / 4) === 1 ? "" : "s"}`)}
           </span>
         </div>
         <div><Wave data={WB} color={LED.cobalt} pos={playB ? 0.3 : 0.02} /></div>

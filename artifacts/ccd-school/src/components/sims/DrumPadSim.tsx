@@ -298,7 +298,7 @@ export function DrumPadSim() {
       </div>
 
       <div className="brutal-border bg-ink text-bone p-3 font-mono text-[10px] uppercase opacity-80 leading-relaxed">
-        TIP: In Ableton, the Drum Rack maps each pad to a MIDI note. Steps 1–4 = Beat 1, steps 5–8 =
+        TIP: In Ableton, the Drum Rack maps each pad to a MIDI note. Steps 1 to 4 = Beat 1, steps 5 to 8 =
         Beat 2, and so on. The highlighted step is the playhead: audio is scheduled{" "}
         <span className="text-acid">{LOOK_AHEAD * 1000}ms ahead</span> of the clock for glitch-free
         timing.

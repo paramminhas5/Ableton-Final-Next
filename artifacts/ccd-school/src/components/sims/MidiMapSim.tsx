@@ -317,7 +317,7 @@ export function MidiMapSim() {
               <span>→</span>
               <span>{PARAMS.find((p) => p.id === a.paramId)?.label}</span>
               <span className="opacity-40">
-                ({a.min}–{a.max})
+                ({a.min}-{a.max})
               </span>
             </div>
           ))}

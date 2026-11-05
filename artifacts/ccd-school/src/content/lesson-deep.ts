@@ -1682,7 +1682,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         options: ["Allowed (nested)", "Forbidden", "Crashes Live"],
         answer: 0,
       },
-      { q: "Choke groups range…", options: ["1–16", "1–8", "Unlimited"], answer: 0 },
+      { q: "Choke groups range…", options: ["1 to 16", "1 to 8", "Unlimited"], answer: 0 },
     ],
     sources: [src("Drum Racks", "Live 12 Manual §25")],
   },
@@ -1947,12 +1947,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Eight bands. The fastest way to surgical or sweeping tone shaping.",
     beginner: {
       what: [
-        "EQ Eight boosts or cuts specific frequencies. Low end (20–200 Hz) = bass/kick. Mids (200–3 kHz) = body. Highs (3–20 kHz) = air and clarity.",
+        "EQ Eight boosts or cuts specific frequencies. Low end (20 to 200 Hz) = bass/kick. Mids (200 to 3 kHz) = body. Highs (3 to 20 kHz) = air and clarity.",
         "Drag a band point → boost up, cut down. Hold Q to widen or narrow the slope.",
       ],
       why: [
         "Carve space for vocals: cut where they sit on the kick.",
-        "Make muddy tracks tight by trimming low-mid build-up around 200–500 Hz.",
+        "Make muddy tracks tight by trimming low-mid build-up around 200 to 500 Hz.",
       ],
       analogy: "Like spice on food: a little where it's missing, never everywhere.",
     },
@@ -1984,7 +1984,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Switch to M/S mode → cut Side at 80 Hz.", listen: "Bass becomes mono and tight." },
     ],
     listenFor: [
-      "200–500 Hz cuts unmuddy almost everything.",
+      "200 to 500 Hz cuts unmuddy almost everything.",
       "10 kHz shelf adds 'air' to vocals and cymbals.",
     ],
     mistakes: [
@@ -1997,7 +1997,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     quizEasy: [
       { q: "EQ Eight has how many bands?", options: ["8", "4", "16"], answer: 0 },
-      { q: "200–500 Hz is often called…", options: ["Mud zone", "Air", "Sub"], answer: 0 },
+      { q: "200 to 500 Hz is often called…", options: ["Mud zone", "Air", "Sub"], answer: 0 },
       { q: "Q controls…", options: ["Bandwidth", "Frequency", "Gain"], answer: 0 },
     ],
     quizHard: [
@@ -2057,7 +2057,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     flow: "Audio → Detector → Gain Reduction → VCA → Makeup → Out",
     walkthrough: [
       {
-        do: "Drop Compressor on a vocal. Threshold so GR meter shows 3–6 dB on peaks.",
+        do: "Drop Compressor on a vocal. Threshold so GR meter shows 3 to 6 dB on peaks.",
         listen: "Loudest words pulled down.",
       },
       {
@@ -2424,13 +2424,13 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Group 3 devices into an Audio Effect Rack (Cmd/Ctrl+G).", listen: "Wrapper appears." },
       { do: "Right-click filter cutoff → Map to Macro 1.", listen: "Macro 1 now drives cutoff." },
       {
-        do: "Map reverb wet to Macro 1 too. Set range 0–60%.",
+        do: "Map reverb wet to Macro 1 too. Set range 0 to 60%.",
         listen: "One knob = filter sweep + reverb rise.",
       },
     ],
     listenFor: ["Multiple parameters move in parallel from one knob."],
     mistakes: [
-      "Forgetting to set Min/Max ranges: every macro becomes 0–127.",
+      "Forgetting to set Min/Max ranges: every macro becomes 0 to 127.",
       "Mapping too many params to one macro = mush.",
     ],
     proMoves: [
@@ -2495,7 +2495,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "The Mixer is Live's summing engine: every audio and instrument track ends in a stereo channel strip with volume, pan, mute, solo, sends, and a level meter, and all those strips sum into the Master. The fader is post-fader for sends by default (so muting a track also kills its reverb), but you can flip an individual send pre-fader when you want the FX to keep ringing under a mute.",
         "Section-by-section, a strip is: input/output choice \u2192 device chain \u2192 sends \u2192 fader/pan \u2192 meter \u2192 master. Each section can be inspected and automated independently, which is what makes Live's mixer feel like both a console and a programmable instrument.",
-        "Headroom matters because Live mixes in 32-bit float internally: clipping the master is fine in the box but kills any analog gear you print to and exhausts plugin headroom in non-linear devices like Saturator and Limiter. Pros leave 3–6 dB of headroom on the master and use Utility for gain staging instead of pushing channel faders.",
+        "Headroom matters because Live mixes in 32-bit float internally: clipping the master is fine in the box but kills any analog gear you print to and exhausts plugin headroom in non-linear devices like Saturator and Limiter. Pros leave 3 to 6 dB of headroom on the master and use Utility for gain staging instead of pushing channel faders.",
       ],
       edgeCases: [
         "Cue Out routing must be different from Master Out for headphone preview to work.",
@@ -2881,7 +2881,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       },
       {
         q: "Modulation values are…",
-        options: ["Bipolar (±)", "Always 0–127", "Always positive"],
+        options: ["Bipolar (±)", "Always 0 to 127", "Always positive"],
         answer: 0,
       },
       { q: "Live 11 introduced…", options: ["Modulation lanes", "Macros", "Operator"], answer: 0 },
@@ -3009,7 +3009,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         answer: 0,
       },
     ],
-    sources: [src("Compressor – Sidechain", "Live 12 Manual §22.7.3")],
+    sources: [src("Compressor, Sidechain", "Live 12 Manual §22.7.3")],
   },
 
   // ============ WORLD 6 — PERFORMANCE & LIVE ============
@@ -4234,7 +4234,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Round-robin disables when only one sample is loaded: load several variations to hear the variation.",
-        "Pitch envelope set too long can detune the start of the hit; for kicks, a 30–80 ms decay is usually right.",
+        "Pitch envelope set too long can detune the start of the hit; for kicks, a 30 to 80 ms decay is usually right.",
       ],
       engineerNotes: [
         "Use multi-velocity sample folders from packs: Drum Sampler maps them in one drag.",
@@ -4316,7 +4316,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Convolution IRs vary wildly in length: long IRs cost CPU; freeze if you only need the tail character, not real-time response.",
-        "Predelay too short bleeds the source into the wet: 20–40 ms keeps the source clear.",
+        "Predelay too short bleeds the source into the wet: 20 to 40 ms keeps the source clear.",
       ],
       engineerNotes: [
         "On a vocal: 80% convolution plate + 20% Shimmer = breath that sounds real but lifts.",
@@ -4384,7 +4384,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Multiband, modulated saturation: Live 12's tonal Swiss Army knife.",
     beginner: {
       what: [
-        "Roar is a saturator with up to three stages of distortion. You can run them one after another, in parallel, or split your signal into 2–3 frequency bands and saturate each band differently.",
+        "Roar is a saturator with up to three stages of distortion. You can run them one after another, in parallel, or split your signal into 2 to 3 frequency bands and saturate each band differently.",
         "It also has its own LFO and envelope follower built in: modulation that changes the saturation amount over time, without leaving the device.",
       ],
       why: [
@@ -4465,8 +4465,8 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "The bus compressor that makes a mix sound like one record, not many tracks.",
     beginner: {
       what: [
-        "Glue Compressor is Live's emulation of the SSL G-bus compressor: the unit on the master bus of countless hit records. On a drum bus or master, 1–3 dB of gain reduction is enough to make everything feel like one cohesive thing.",
-        "It's a stereo VCA design with fast attack, musical auto-release, and a soft clipper at the output. Plug it in, set Threshold for 1–3 dB GR, and you're done.",
+        "Glue Compressor is Live's emulation of the SSL G-bus compressor: the unit on the master bus of countless hit records. On a drum bus or master, 1 to 3 dB of gain reduction is enough to make everything feel like one cohesive thing.",
+        "It's a stereo VCA design with fast attack, musical auto-release, and a soft clipper at the output. Plug it in, set Threshold for 1 to 3 dB GR, and you're done.",
       ],
       why: [
         "Mixes feel cohesive instead of separate tracks playing together.",
@@ -4478,7 +4478,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Glue is a VCA-style stereo bus compressor modelled on the SSL G master compressor. Its character comes from a fast linear attack curve, a program-dependent auto-release that times itself to the source's envelope, and a soft-clipping output stage that catches transient peaks before the limiter sees them.",
-        "Standard bus settings, Ratio 4:1, Attack 10 ms, Release Auto, Threshold for 1–3 dB GR, produce 'glue' (cohesion across the bus) without obvious compression artifacts. Pushing harder (5+ dB GR with fast attack) gives the pumped, hyped sound on EDM masters.",
+        "Standard bus settings, Ratio 4:1, Attack 10 ms, Release Auto, Threshold for 1 to 3 dB GR, produce 'glue' (cohesion across the bus) without obvious compression artifacts. Pushing harder (5+ dB GR with fast attack) gives the pumped, hyped sound on EDM masters.",
         "The internal sidechain HPF (60 Hz / 90 Hz / 120 Hz) prevents kick fundamentals from triggering excessive GR on the master bus: essential when the kick is loud and you don't want the whole mix ducking on every beat.",
       ],
       edgeCases: [
@@ -4512,7 +4512,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     quizEasy: [
       { q: "Glue emulates…", options: ["SSL G-bus", "1176"], answer: 0 },
-      { q: "Typical bus GR?", options: ["1–3 dB", "10 dB"], answer: 0 },
+      { q: "Typical bus GR?", options: ["1 to 3 dB", "10 dB"], answer: 0 },
       { q: "Output stage has…", options: ["Soft clipper", "Reverb"], answer: 0 },
     ],
     quizHard: [
@@ -4550,11 +4550,11 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Streaming codecs (MP3/AAC/Opus) introduce additional peak overshoot during encoding. Mastering to -1 dBTP (true peak) leaves headroom for that overshoot; mastering to 0 dBFS guarantees codec clipping artifacts on aggressive material.",
       ],
       edgeCases: [
-        "More than 3–4 dB of limiting on a full mix produces audible pumping on bass-heavy material.",
+        "More than 3 to 4 dB of limiting on a full mix produces audible pumping on bass-heavy material.",
         "True Peak detection adds CPU cost and a small additional latency: use it on the master only.",
       ],
       engineerNotes: [
-        "Mix into the Limiter at low GR (1–2 dB) to set loudness target without squashing dynamics.",
+        "Mix into the Limiter at low GR (1 to 2 dB) to set loudness target without squashing dynamics.",
         "For streaming, target -14 LUFS integrated with -1 dBTP ceiling; for club masters, -8 LUFS, -0.5 dBTP.",
       ],
     },
@@ -4917,11 +4917,11 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Round-robin prevents the 'machine gun' effect: Sampler cycles through multiple recordings of the same note so repeated hits never sound identical.",
       ],
       analogy:
-        "Sampler is like a filing cabinet full of recordings. You tell it: 'play this recording for keys C2–E3, this one for F3–B4, and when they press hard, use this louder version'.",
+        "Sampler is like a filing cabinet full of recordings. You tell it: 'play this recording for keys C2-E3, this one for F3-B4, and when they press hard, use this louder version'.",
     },
     advanced: {
       what: [
-        "Sampler's zones are defined by key range (start/end note), velocity range (0–127), and selector (sequential, random, all). Each zone hosts an independent sample with its own amplitude envelope, filter, LFO, and modulation routing. Sampler also supports MPE: per-note pressure, slide, and pitch are fully routable.",
+        "Sampler's zones are defined by key range (start/end note), velocity range (0 to 127), and selector (sequential, random, all). Each zone hosts an independent sample with its own amplitude envelope, filter, LFO, and modulation routing. Sampler also supports MPE: per-note pressure, slide, and pitch are fully routable.",
       ],
       edgeCases: [
         "Overlapping key zones play simultaneously: useful for layering but can cause phase issues",
@@ -4939,7 +4939,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "The subtle randomness of round-robin vs the robotic repetition without it",
     ],
     proMoves: [
-      "Map velocity 0–80 to a 'room mic' sample and 81–127 to a 'close mic' for instant depth",
+      "Map velocity 0 to 80 to a 'room mic' sample and 81 to 127 to a 'close mic' for instant depth",
       "Modulate sample start by velocity: high velocity starts later in the transient for more snap",
       "Use 'All' selector to layer all zones simultaneously for massive textural pads",
     ],
@@ -5003,7 +5003,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     beginner: {
       what: [
-        "Granulator takes a sample and cuts it into tiny pieces called grains: each about 10–500ms long. It plays thousands of these overlapping grains simultaneously, which lets you stretch time without changing pitch, freeze audio into drones, or scatter grains randomly to create dense textures that sound nothing like the source.",
+        "Granulator takes a sample and cuts it into tiny pieces called grains: each about 10 to 500ms long. It plays thousands of these overlapping grains simultaneously, which lets you stretch time without changing pitch, freeze audio into drones, or scatter grains randomly to create dense textures that sound nothing like the source.",
       ],
       why: [
         "It's the tool for creating evolving atmospheric pads and textures that no conventional synth can make.",

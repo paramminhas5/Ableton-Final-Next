@@ -39,7 +39,7 @@ export type LessonStrength = {
 // FSRS card stored per mission
 export type FSRSCardStored = {
   stability: number;    // days until 90% retention
-  difficulty: number;   // 1–10
+  difficulty: number;   // 1 to 10
   lastReview: number;   // Unix ms
   reps: number;
 };

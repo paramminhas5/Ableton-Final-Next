@@ -27,7 +27,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Technically, DJing is real-time audio mixing of two or more pre-recorded sources synchronised in tempo and beat phase, with EQ and level used to shape the spectral and dynamic crossover between them.",
-        "Modern DJing splits into three modes: turntablist (cuts, scratches, juggles on vinyl/CDJs), club mixer (long blends, energy curves over 1–6 hours), and performance DJ (stems, loops, effects, sometimes live remixing in software like rekordbox Performance Mode or Ableton).",
+        "Modern DJing splits into three modes: turntablist (cuts, scratches, juggles on vinyl/CDJs), club mixer (long blends, energy curves over 1 to 6 hours), and performance DJ (stems, loops, effects, sometimes live remixing in software like rekordbox Performance Mode or Ableton).",
         "The discipline rewards three meta-skills: pattern recognition (structure, key, energy), motor control (beatmatching, faders, EQ rides) and crowd modelling (predicting what 200 people will need in 90 seconds).",
       ],
       edgeCases: [
@@ -36,7 +36,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
         "Streaming-restricted services (Beatport LINK, TIDAL via rekordbox) are not legal to play in commercial venues in every territory.",
       ],
       engineerNotes: [
-        "A DJ mixer is essentially a 2–4 channel summing console with per-channel 3-band EQ, gain, fader, cue bus and a crossfader. Everything you do is volume × frequency × time.",
+        "A DJ mixer is essentially a 2 to 4 channel summing console with per-channel 3-band EQ, gain, fader, cue bus and a crossfader. Everything you do is volume × frequency × time.",
         "Latency budget matters once you add software FX: aim for <10 ms round-trip on the audio interface or rides feel sluggish.",
       ],
     },
@@ -179,7 +179,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     walkthrough: [
       { do: "Open rekordbox → drag a track from your Downloads folder into the Collection panel.", listen: "Watch the BPM, Key columns populate after analysis. The waveform appears in the lower preview." },
       { do: "Click the track to load it to a virtual deck (top of the screen).", listen: "Hit play on the deck and the waveform scrolls: that's the same view you'll see on a CDJ-3000." },
-      { do: "On the first downbeat after the intro, hit Hot Cue A (numeric keys 1–8 in Performance Mode).", listen: "An orange marker drops on the waveform. From now on, pressing A jumps the playhead there instantly." },
+      { do: "On the first downbeat after the intro, hit Hot Cue A (numeric keys 1 to 8 in Performance Mode).", listen: "An orange marker drops on the waveform. From now on, pressing A jumps the playhead there instantly." },
       { do: "Right-click the track → Open in Browser → check the file's actual location on disk.", listen: "rekordbox doesn't move your audio: it just remembers where it lives. Move the file and rekordbox shows a red ! warning." },
       { do: "Create a new Playlist (left panel), drag 5 tracks into it, then Export to a USB stick (File → Export to Device).", listen: "rekordbox copies the audio + database to the stick. Plug into a CDJ and you have your playlist, cues, BPM, key: all of it." },
     ],
@@ -196,7 +196,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Set hot cue A on every track's first downbeat after the intro. Universal launching position.",
-      "Use My Tags for Energy 1–5 and Role (Opener / Builder / Peak / Closer). Filter by tag during the set.",
+      "Use My Tags for Energy 1 to 5 and Role (Opener / Builder / Peak / Closer). Filter by tag during the set.",
       "Two USB sticks, identical, kept synced via Sync Manager. One in the deck, one in your pocket.",
       "Set Preferences → Analysis → Quality to High before importing: re-analysis on 5000 tracks later is painful.",
     ],
@@ -269,7 +269,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     quizHard: [
       { q: "What does the Cue/Master knob on a DJ mixer actually do?", options: ["Sets master volume", "Crossfades between the cue bus and master bus into the headphone output", "Turns headphones on/off", "Sets EQ on cue"], answer: 1, explain: "It's a balance between two summed buses going into the headphone amp: neither replaces the other.", hint: "It blends two signals into your phones." },
-      { q: "Why are wireless headphones unsuitable for beatmatching?", options: ["They sound worse", "Bluetooth audio latency is typically 150–300 ms: far above the 20 ms you need to feel beat phase", "They aren't loud enough", "They lack bass response"], answer: 1, explain: "You need real-time monitoring. 200 ms of latency means the track you hear is hundreds of ms behind reality.", hint: "Latency, not fidelity." },
+      { q: "Why are wireless headphones unsuitable for beatmatching?", options: ["They sound worse", "Bluetooth audio latency is typically 150 to 300 ms: far above the 20 ms you need to feel beat phase", "They aren't loud enough", "They lack bass response"], answer: 1, explain: "You need real-time monitoring. 200 ms of latency means the track you hear is hundreds of ms behind reality.", hint: "Latency, not fidelity." },
       { q: "Safe long-set headphone level is approximately", options: ["Whatever sounds good", "≤85 dB SPL average per ear over 8 hours (NIOSH)", "100 dB", "120 dB"], answer: 1, explain: "Allowable exposure halves per +3 dB. A 4-hour set at 88 dB is the same dose as 8 hours at 85.", hint: "Hearing damage is a dose, not a moment." },
     ],
     sources: [
@@ -412,8 +412,8 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Different styles of dance music live at different tempos. Knowing the rough BPM range of each genre lets you plan a set, find compatible tracks, and decide when to gear-shift the energy.",
-        "Rough reference: Hip-hop / RnB 70–100, Reggae / Dub 80–100, House (most flavours) 118–128, Techno 125–140, Disco 110–125, Drum & Bass 160–180, UK Garage 130–140, Trance 130–145, Dubstep 138–150 (often felt at 75 half-time), Hardcore 150–180+.",
-        "Within a genre, sub-styles cluster around specific BPMs: Deep house ≈122, Tech house ≈124–127, Peak-time techno 130–138, Liquid DnB 170–175, Footwork 160.",
+        "Rough reference: Hip-hop / RnB 70 to 100, Reggae / Dub 80 to 100, House (most flavours) 118 to 128, Techno 125 to 140, Disco 110 to 125, Drum & Bass 160 to 180, UK Garage 130 to 140, Trance 130 to 145, Dubstep 138 to 150 (often felt at 75 half-time), Hardcore 150 to 180+.",
+        "Within a genre, sub-styles cluster around specific BPMs: Deep house ≈122, Tech house ≈124 to 127, Peak-time techno 130 to 138, Liquid DnB 170 to 175, Footwork 160.",
       ],
       why: [
         "Mixing a 124 BPM track into a 128 BPM track is easy. 124 into 138 is a gear change you have to plan for.",
@@ -435,7 +435,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
         "Old funk and disco have a wide tempo variance within a single track because they were recorded live: beatgrid carefully and use Dynamic mode.",
       ],
       engineerNotes: [
-        "Build BPM-bracketed crates: e.g. 118–122, 122–126, 126–130, 130–134. Within each, sort by key and energy.",
+        "Build BPM-bracketed crates: e.g. 118 to 122, 122 to 126, 126 to 130, 130 to 134. Within each, sort by key and energy.",
         "When ramping tempo across a set, plan inflection points (e.g. +2 BPM every 25 minutes) rather than chasing per-track tempo bumps.",
       ],
     },
@@ -448,7 +448,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { do: "Find a 70 BPM hip-hop track and play it under a 140 BPM techno track (kicks on alternating beats).", listen: "If the rhythmic feel matches, that's a half-time bridge: useful for genre transitions." },
     ],
     listenFor: [
-      "The 'sweet spot' of a track: most have a 2–4 BPM window where they sound best, not just where they were written.",
+      "The 'sweet spot' of a track: most have a 2 to 4 BPM window where they sound best, not just where they were written.",
       "Half-time vs. double-time feel on detection: if your detected BPM seems wrong, halve or double it and check.",
       "Genre boundaries blur at the edges: 128 BPM is 'fast house' or 'slow techno' depending on production.",
     ],
@@ -492,7 +492,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "A standard 'long blend' is 16–32 bars on 4/4 dance music at 120–130 BPM (~30–60 seconds). The crossover happens on a phrase boundary, not arbitrarily.",
+        "A standard 'long blend' is 16 to 32 bars on 4/4 dance music at 120 to 130 BPM (~30 to 60 seconds). The crossover happens on a phrase boundary, not arbitrarily.",
         "Three faders involved: outgoing channel fader (down), incoming channel fader (up), optional crossfader if you DJ in crossfader-centric style (mainly hip-hop/scratch). Most house/techno DJs leave the crossfader centred and use channel faders.",
         "Layered with EQ: as you bring track B in, you typically cut B's lows to prevent two-bass clash. Around the halfway point, you cut A's lows and let B's bass take over. By the end, A is fully out and B is full-range.",
       ],
@@ -1084,7 +1084,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Beatmatching = matching BPM (tempo) and phase (where in the bar each beat falls). Tempo fader handles speed; jog wheel handles phase.",
-        "Drift: even matched tracks drift over time on analog gear because crystals are imperfect. Listen and re-nudge every 16–32 bars.",
+        "Drift: even matched tracks drift over time on analog gear because crystals are imperfect. Listen and re-nudge every 16 to 32 bars.",
         "On the CDJ-3000, the jog wheel operates in two modes (rekordbox 6.0.0 Manual §CDJ-3000 Integration): VINYL mode engages the platter as a scratch surface; CDJ mode uses the outer ring for pitch-bend nudging during beatmatch. The CDJ-3000's multi-colour waveform display lets you visually confirm phase alignment: when both waveform beat markers align, you have lock.",
       ],
       edgeCases: [
@@ -1104,7 +1104,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { do: "Nudge the jog wheel forward or back to align the kick onsets.", listen: "When they land together, the two kicks become one fatter kick: that's lock." },
       { do: "Bring channel 2 up over 8 bars; watch it drift after 32 and re-nudge.", listen: "If it drifts, the BPM wasn't perfect: fine-tune the tempo fader." },
     ],
-    listenFor: ["Galloping = BPM mismatch", "Flamming = phase off by ~10–30 ms", "One fat kick = locked", "Slow drift = small BPM error"],
+    listenFor: ["Galloping = BPM mismatch", "Flamming = phase off by ~10 to 30 ms", "One fat kick = locked", "Slow drift = small BPM error"],
     mistakes: ["Adjusting tempo with the jog wheel: jog is for phase, fader is for speed.", "Trusting the BPM display alone. Numbers can round.", "Bringing the new fader up before it's locked. The room hears every wobble."],
     proMoves: ["Beatmatch with the screen off. Forces you to use ears.", "Practice with tracks whose BPMs differ by 4+: bigger pitch changes train your ear faster.", "Record practice and listen for drift in the recording."],
     quizHard: [
@@ -1166,7 +1166,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "A cue point is a saved location in a track: press a button and you jump there instantly.",
-        "Memory cues are stored navigation points; hot cues (1–8) are colourful instant-jump buttons on the deck.",
+        "Memory cues are stored navigation points; hot cues (1 to 8) are colourful instant-jump buttons on the deck.",
         "Set them on intros, drops, breakdowns and outros: the structural moments you mix from.",
       ],
       why: ["Lets you start a track exactly where you need it.", "Enables creative re-edits live by jumping between sections.", "Removes the 'where do I cue this up' panic mid-set."],
@@ -1174,16 +1174,16 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "rekordbox supports 8 hot cues per track (A–H, formerly 1–8), each colour-coded and labelled.",
+        "rekordbox supports 8 hot cues per track (A-H, formerly 1 to 8), each colour-coded and labelled.",
         "Memory cues are unlimited; they appear as small triangles in the waveform. Both transfer to USB.",
         "Hot Cue Auto-Load (CDJ-3000) makes hot cues active on track load: no setup needed live.",
       ],
       edgeCases: [
-        "Cues set with Quantize OFF can be ~10–30 ms off the beat: re-set with Quantize ON for clean triggering.",
+        "Cues set with Quantize OFF can be ~10 to 30 ms off the beat: re-set with Quantize ON for clean triggering.",
         "Cues on tracks with bad grids may sound wrong when triggered into another deck via Beat Jump.",
       ],
       engineerNotes: [
-        "Convention: hot cue 1 = intro start, 2 = first drop, 3 = breakdown, 4 = second drop, 5–8 = creative re-cues.",
+        "Convention: hot cue 1 = intro start, 2 = first drop, 3 = breakdown, 4 = second drop, 5 to 8 = creative re-cues.",
         "Colour convention: green = safe entry, orange = build, red = drop, blue = breakdown. Train your eye to read it pre-attentively.",
       ],
     },
@@ -1199,8 +1199,8 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Setting too many cues: 8 is enough; clutter slows decisions.", "Not labelling: 'red cue 3' tells you nothing in a panic.", "Setting cues on phrase boundaries that are 1 bar off: always verify by triggering live."],
     proMoves: ["Adopt one colour convention across your whole library: pre-attentive reading saves seconds.", "Set 'safety cue' on the last possible re-entry before a vocal: for emergencies.", "Hot Cue Auto-Load + colour convention = zero prep time on familiar tracks."],
     quizHard: [
-      { q: "Difference between memory cue and hot cue?", options: ["No difference", "Memory cues are navigation markers; hot cues are colour-coded instant-trigger buttons (1–8)", "Memory cues are for loops only", "Hot cues don't save to USB"], answer: 1, explain: "Memory = unlimited markers for navigation. Hot cues = bound to physical pads for instant triggering.", hint: "One is for navigating, one is for performing." },
-      { q: "Quantize OFF when setting cues causes", options: ["Crash", "Cues land exactly where you pressed: possibly 10–30 ms off the beat", "Higher quality cues", "Cues to be removed"], answer: 1, explain: "Without Quantize, cues are placed at the press moment, not snapped to a beat.", hint: "Without snap, you get press-timing accuracy only." },
+      { q: "Difference between memory cue and hot cue?", options: ["No difference", "Memory cues are navigation markers; hot cues are colour-coded instant-trigger buttons (1 to 8)", "Memory cues are for loops only", "Hot cues don't save to USB"], answer: 1, explain: "Memory = unlimited markers for navigation. Hot cues = bound to physical pads for instant triggering.", hint: "One is for navigating, one is for performing." },
+      { q: "Quantize OFF when setting cues causes", options: ["Crash", "Cues land exactly where you pressed: possibly 10 to 30 ms off the beat", "Higher quality cues", "Cues to be removed"], answer: 1, explain: "Without Quantize, cues are placed at the press moment, not snapped to a beat.", hint: "Without snap, you get press-timing accuracy only." },
       { q: "Why use a colour convention for hot cues?", options: ["Looks pretty", "Pre-attentive reading: you process colour faster than text or position, vital under stage lights at 2am", "Required by the software", "Saves disk space"], answer: 1, explain: "Colour is read pre-attentively (~200 ms): faster than reading a label.", hint: "Visual processing speed in stress." },
     ],
     sources: [{ label: "rekordbox 6 Operating Manual", section: "Memory & Hot Cue" }],
@@ -1220,7 +1220,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Pioneer DJM mixers use isolator-style EQ: full counter-clockwise = full kill (-∞ dB) of that band.",
-        "Crossover frequencies: typically LOW <200 Hz, MID 200–2500 Hz, HIGH >2500 Hz. Varies by mixer.",
+        "Crossover frequencies: typically LOW <200 Hz, MID 200 to 2500 Hz, HIGH >2500 Hz. Varies by mixer.",
         "Bass swap technique: cut Deck B bass, bring channel up, on the phrase boundary cut Deck A bass and uncut Deck B simultaneously.",
       ],
       edgeCases: [
@@ -1229,7 +1229,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       ],
       engineerNotes: [
         "Bass clashes are the #1 cause of muddy mixes. Always kill one bass before the other comes in.",
-        "EQ rides during long blends: shave 2–4 dB off the outgoing track's MID over 8 bars to clear room for the incoming vocal.",
+        "EQ rides during long blends: shave 2 to 4 dB off the outgoing track's MID over 8 bars to clear room for the incoming vocal.",
       ],
     },
     flow: "Cue Deck B → Kill Deck B bass → Bring fader up → On phrase: swap basses → Slowly lower Deck A mid + high → Out",
@@ -1274,7 +1274,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       ],
       engineerNotes: [
         "Innofader / Pro X Fade upgrades give magnetic, contactless faders with adjustable curve and tension: standard for scratch DJs.",
-        "Cut-in distance: the % of travel before signal appears. Tight cut-in (3%) for scratch, loose (10–15%) for blends.",
+        "Cut-in distance: the % of travel before signal appears. Tight cut-in (3%) for scratch, loose (10 to 15%) for blends.",
       ],
     },
     flow: "Set curve → Assign channels → Use for cuts/scratches OR leave centered → Reset curve after",
@@ -1328,7 +1328,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { do: "Identify outro of A (last 32 bars, breakdown) and intro of B (first 32 bars, beat-only).", listen: "Find the structural overlap window." },
       { do: "Cue B at intro start, kill its bass, raise fader to full as A enters its outro.", listen: "Both tracks audible; bass only from A." },
       { do: "On bar 33 (midpoint), swap basses: A's LOW kill, B's LOW restore.", listen: "Bass now driven by B." },
-      { do: "Over bars 33–56, gradually cut A's HIGH then MID. Pull A's fader at bar 64.", listen: "A washes out cleanly; B continues alone." },
+      { do: "Over bars 33 to 56, gradually cut A's HIGH then MID. Pull A's fader at bar 64.", listen: "A washes out cleanly; B continues alone." },
     ],
     listenFor: ["Vocal clashes mid-blend", "Tempo drift after 32 bars", "Phrase misalignment on bar 33 (the bass swap moment)"],
     mistakes: ["Blending tracks with clashing keys: sounds wrong even if BPMs match.", "Bringing B in too loud: masks A and ruins the gradual reveal.", "Not planning structurally: bass swap on bar 27 instead of 33 = phrase break."],
@@ -1492,7 +1492,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "1-hour opener: start 10 BPM under peak target, climb 2–3 BPM per 15 min, peak at 50-min mark, soft outro.",
+        "1-hour opener: start 10 BPM under peak target, climb 2 to 3 BPM per 15 min, peak at 50-min mark, soft outro.",
         "3-hour headline: 6 mini-arcs (~30 min each) with progressive peaks; biggest peak at hour 2.",
         "Genre transition strategy: don't jump genres at peak: use a breakdown to pivot.",
       ],
@@ -1501,7 +1501,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
         "Festival sets are different: 60 minutes of peaks because the audience demands it.",
       ],
       engineerNotes: [
-        "Plan 'anchor tracks': 3–5 known-winners spaced through the set as guaranteed peaks.",
+        "Plan 'anchor tracks': 3 to 5 known-winners spaced through the set as guaranteed peaks.",
         "Leave 30% of slots empty in your pre-plan for crowd-driven decisions.",
       ],
     },
@@ -1628,7 +1628,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Energy components: tempo (objective), arrangement density (objective), perceived intensity (subjective). All three contribute.",
-        "Tag your library: 1–10 energy scale (My Tag): sortable for live decisions.",
+        "Tag your library: 1 to 10 energy scale (My Tag): sortable for live decisions.",
         "Build-release-build: 16 bars climb, 8 bars hold, 16 bars climb beats 40 bars constant climb every time.",
       ],
       edgeCases: [
@@ -1642,7 +1642,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     flow: "Sketch energy curve → Tag library by energy → Place tracks along curve → Adjust live based on read",
     walkthrough: [
-      { do: "Take 10 favourite tracks, rate them 1–10 for energy, write down.", listen: "Forces you to articulate intensity." },
+      { do: "Take 10 favourite tracks, rate them 1 to 10 for energy, write down.", listen: "Forces you to articulate intensity." },
       { do: "Sketch a 90-min curve: start at 4, climb to 8 by min 60, hold, peak at 9 at min 80, close at 6.", listen: "Visual plan to follow." },
       { do: "Place your rated tracks on the curve: energy 7 track at minute 40, energy 9 at minute 80.", listen: "Curve fills with structure." },
       { do: "Identify a 'micro-release' track (energy 6) to drop at minute 70: pause before the peak.", listen: "Crowd takes a breath; peak hits harder." },
@@ -1650,7 +1650,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Plateau = need release", "Bass drop = guaranteed energy spike", "Vocal entry = perceived spike without arrangement change"],
     mistakes: ["Constant peak = no peak.", "Releasing too often = no momentum.", "Confusing BPM with energy."],
-    proMoves: ["Energy-tag every track 1–10; refine after every gig.", "Design 'release tracks': known crowd-favourites that lower intensity without losing engagement.", "Treat peak as something you visit, not somewhere you live."],
+    proMoves: ["Energy-tag every track 1 to 10; refine after every gig.", "Design 'release tracks': known crowd-favourites that lower intensity without losing engagement.", "Treat peak as something you visit, not somewhere you live."],
     quizHard: [
       { q: "Why does constant peak energy fail?", options: ["It doesn't: peak is best", "Sensory adaptation: sustained intensity normalises, perceived energy drops", "Software limits", "Hearing damage"], answer: 1, explain: "Brain adapts to sustained signals; contrast is what registers as intensity.", hint: "Sensory systems adapt to constants." },
       { q: "A 128 BPM peak track can feel bigger than a 140 BPM track because", options: ["Always wrong", "Perceived energy depends on arrangement density, bass weight, and vocals: not BPM alone", "BPM doesn't matter", "140 BPM is too fast for clubs"], answer: 1, explain: "BPM is one input. Mix of all energy factors determines perception.", hint: "Energy is multi-dimensional." },
@@ -1672,7 +1672,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Tempo families: 90–105 (hip-hop, RnB), 110–124 (deep house), 124–132 (house, tech house), 130–140 (techno), 138–145 (trance), 150–180 (DnB).",
+        "Tempo families: 90 to 105 (hip-hop, RnB), 110 to 124 (deep house), 124 to 132 (house, tech house), 130 to 140 (techno), 138 to 145 (trance), 150 to 180 (DnB).",
         "Within a family, mixing technique transfers; across families requires bridge tracks.",
         "Cross-genre sets work via 'pivot tracks': tracks that share elements of both genres.",
       ],
@@ -1695,7 +1695,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Style mismatches when mixing across genres", "Technique that doesn't transfer (e.g. long blends in DnB)", "Crowd confusion at genre pivots"],
     mistakes: ["Jumping straight to multi-genre before mastering one.", "No pivot tracks for cross-genre = crowd loses thread.", "Treating all genres the same: tech house ≠ techno even at same BPM."],
-    proMoves: ["Master one genre in 6–12 months before expanding.", "Cultivate 'pivot' tracks for every cross-genre move you plan.", "Study sets from icons in your genre: annotate their structure and selection logic."],
+    proMoves: ["Master one genre in 6 to 12 months before expanding.", "Cultivate 'pivot' tracks for every cross-genre move you plan.", "Study sets from icons in your genre: annotate their structure and selection logic."],
     quizHard: [
       { q: "Why do specialists get booked over generalists?", options: ["Less competition", "Promoters book sounds, not skills: a specialist signals a known sound; a generalist signals risk", "Cheaper", "Faster setup"], answer: 1, explain: "Promoters need predictability; specialists deliver it.", hint: "Promoters book what they can describe." },
       { q: "A pivot track is", options: ["The last track of a set", "A track sharing elements of two genres, used to bridge between them in a cross-genre set", "A scratch sample", "An FX preset"], answer: 1, explain: "Pivot = bridge. Eases the transition and tells the crowd 'we're going somewhere'.", hint: "Bridge between two sounds." },
@@ -1710,7 +1710,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       what: [
         "Set prep = picking, analysing, organising and rehearsing tracks before the gig.",
         "Steps: shortlist 2× the tracks you'll need, analyse all in rekordbox, sort into playlist by intended order, set cues + loops.",
-        "Rehearse 3–4 key transitions but leave room for live decisions.",
+        "Rehearse 3 to 4 key transitions but leave room for live decisions.",
       ],
       why: ["Removes 90% of in-the-moment thinking: frees you to read crowd.", "Catches bad grids, missing tracks, key clashes in advance.", "Confidence boost: you've already mentally played the set."],
       analogy: "A chef preps mise en place before service. Knives sharp, ingredients chopped, sauces ready. Then the cooking flows.",
@@ -1718,7 +1718,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Shortlist: 2× set length in tracks (60-min set = ~25 tracks at 4-min each, shortlist 50).",
-        "Analyse all in rekordbox: BPM, key, beat grids, set hot cues 1–4 (intro/drop/breakdown/outro).",
+        "Analyse all in rekordbox: BPM, key, beat grids, set hot cues 1 to 4 (intro/drop/breakdown/outro).",
         "Playlist organisation: rough order, energy-tagged, marked anchors. Leave gaps for live picks.",
       ],
       edgeCases: [
@@ -2044,7 +2044,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Dust/scratches on timecode vinyl = tracking drift.",
-        "Worn needles = signal degradation; replace every 6–12 months heavy use.",
+        "Worn needles = signal degradation; replace every 6 to 12 months heavy use.",
         "Audio interface latency >5 ms feels sluggish in scratch.",
       ],
       engineerNotes: [
@@ -2084,7 +2084,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Pricing tiers: opening (£100–£300), residency (£200–£500), peak slot (£500–£2000+), headline (£2000+).",
+        "Pricing tiers: opening (£100 to £300), residency (£200 to £500), peak slot (£500 to £2000+), headline (£2000+).",
         "Contract essentials: fee, hospitality, travel, accommodation, tech rider, cancellation policy.",
         "Tax: keep all gig income records; deduct gear, travel, music purchases. Get an accountant past £20k/year.",
       ],
@@ -2107,7 +2107,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Inconsistent brand across channels = amateur signal", "No press kit = friction for promoters", "Underpricing = devalues category"],
     mistakes: ["Free gigs as default: devalues the category.", "No contracts: burned by cancellations.", "No tax tracking: disaster at year end."],
-    proMoves: ["Set a personal floor fee and stick to it: protects market value.", "Build relationships with 3–5 promoters who book you regularly: beats cold outreach.", "Invest in production: original tracks open doors gigs can't."],
+    proMoves: ["Set a personal floor fee and stick to it: protects market value.", "Build relationships with 3 to 5 promoters who book you regularly: beats cold outreach.", "Invest in production: original tracks open doors gigs can't."],
     quizHard: [
       { q: "Why have a press kit?", options: ["Vanity", "Reduces friction for promoters to evaluate and book you: they review hundreds of inquiries", "Required by law", "Marketing trend"], answer: 1, explain: "Friction kills bookings. Press kit = instant decision support.", hint: "Reduce friction for the person paying you." },
       { q: "Standard cancellation fee within 48 hours?", options: ["0%", "100%: the artist held the date and turned down other work", "10%", "Variable"], answer: 1, explain: "Held date + turned-down alternatives = full fee on short-notice cancellation.", hint: "Opportunity cost is real." },
@@ -2144,7 +2144,7 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     },
     flow: "Audit current level → Pick 3 deepening areas → Set 12-month goals → Weekly practice schedule → Review quarterly",
     walkthrough: [
-      { do: "Self-audit: rate yourself 1–10 on each path covered.", listen: "Find the lowest 3: your growth areas." },
+      { do: "Self-audit: rate yourself 1 to 10 on each path covered.", listen: "Find the lowest 3: your growth areas." },
       { do: "Set 12-month goals: 'Master harmonic mixing in techno', 'Release first track', '10 paid gigs'.", listen: "Specific + measurable." },
       { do: "Weekly schedule: 3× practice (1h), 1× production (2h), 1× business admin (30min).", listen: "Rhythm beats intensity." },
       { do: "Review quarterly: what worked, what didn't, what to adjust.", listen: "Iteration creates compound growth." },

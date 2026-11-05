@@ -51,7 +51,7 @@
 
 /* fill and randomise (Dice in controls.tsx) */
 .m1-dice{display:flex;align-items:center;gap:8px;flex:none;min-height:34px}
-.m1-dice-l{font-size:11px;font-weight:600;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo)}
+.m1-dice-l{flex:none;white-space:nowrap;margin-right:8px;font-size:11px;font-weight:600;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo)}
 .m1-dice-v{font-size:11px;font-weight:500;color:var(--sub);min-width:30px;font-variant-numeric:tabular-nums}
 .m1-dice-k{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:9px;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;min-height:0;min-width:0;background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
 .m1-dice-k:active{transform:translateY(1px)}

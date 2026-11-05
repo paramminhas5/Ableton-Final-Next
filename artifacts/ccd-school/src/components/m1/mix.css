@@ -63,7 +63,11 @@
 .mx-master .mx-sname{white-space:nowrap}
 
 /* the master's numbers on the screen */
-.mx-mread{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.mx-mread{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 10px;margin-top:10px}
+@media (min-width:900px){.mx-mread{grid-template-columns:repeat(6,1fr)}}
+/* the master's numbers need the whole screen: it grows to fit them and the spectrum sits underneath, clear of the numbers */
+.st-scr.is-master .m1-glass{height:auto!important;padding-bottom:44px!important}
+.st-scr.is-master .mx-spectrum{height:34px}
 .mx-mread b{display:block;font-weight:300;font-size:15px;margin-top:4px;color:#F3F2EF;font-variant-numeric:tabular-nums}
 
 @media (prefers-reduced-motion:reduce){
@@ -88,3 +92,4 @@
 .dw-wait{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.5)}
 .dw-bars{position:relative;height:12px}
 .dw-bars span{position:absolute;top:1px;padding-left:3px;font-size:9px;font-weight:500;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
+@media (max-width:720px){.dw-wave svg{height:30px}}

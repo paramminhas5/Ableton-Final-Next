@@ -188,7 +188,7 @@ export type LessonScreen =
        */
       kind: "match";
       prompt: string;
-      pairs: { left: string; right: string }[];  // 3–5 pairs
+      pairs: { left: string; right: string }[];  // 3 to 5 pairs
     }
   | {
       /**

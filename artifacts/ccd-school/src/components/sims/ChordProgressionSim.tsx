@@ -14,7 +14,7 @@ type ChordDef = {
 
 const PROGRESSIONS: { label: string; key: string; chords: ChordDef[] }[] = [
   {
-    label: "I–IV–V–I (Major)",
+    label: "I-IV-V-I (Major)",
     key: "C Major",
     chords: [
       { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Home: stable & settled",     color: "bg-acid text-ink" },
@@ -24,7 +24,7 @@ const PROGRESSIONS: { label: string; key: string; chords: ChordDef[] }[] = [
     ],
   },
   {
-    label: "i–iv–V–i (Minor)",
+    label: "i-iv-V-i (Minor)",
     key: "A Minor",
     chords: [
       { numeral: "i",   name: "Am",       notes: [57,60,64,69], feel: "Home: dark & melancholic",    color: "bg-ink text-bone" },
@@ -34,7 +34,7 @@ const PROGRESSIONS: { label: string; key: string; chords: ChordDef[] }[] = [
     ],
   },
   {
-    label: "I–V–vi–IV (Pop)",
+    label: "I-V-vi-IV (Pop)",
     key: "C Major",
     chords: [
       { numeral: "I",   name: "C Major",  notes: [60,64,67,72], feel: "Bright start",                 color: "bg-acid text-ink" },

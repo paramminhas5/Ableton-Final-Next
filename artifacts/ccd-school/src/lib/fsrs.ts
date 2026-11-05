@@ -5,8 +5,8 @@
  *
  * FSRS models each card with three parameters:
  *   stability (S) — how long before 90% retention
- *   difficulty (D) — inherent card difficulty (1–10)
- *   retrievability (R) — current recall probability (0–1)
+ *   difficulty (D) — inherent card difficulty (1 to 10)
+ *   retrievability (R) — current recall probability (0 to 1)
  *
  * After each review the scheduler outputs:
  *   nextIntervalDays — when to review next
@@ -14,7 +14,7 @@
  *   newDifficulty    — updated D
  *
  * We store {stability, difficulty, lastReview} per mission slug in progress.
- * `getLessonStrength` (already used throughout the app) maps R → 0–1.
+ * `getLessonStrength` (already used throughout the app) maps R → 0 to 1.
  *
  * ---
  * The legacy strength model used:
@@ -52,7 +52,7 @@ export type FSRSGrade = "again" | "hard" | "good" | "easy";
 
 export interface FSRSCard {
   stability: number;    // days until 90% retention
-  difficulty: number;   // 1–10, higher = harder
+  difficulty: number;   // 1 to 10, higher = harder
   lastReview: number;   // Unix ms timestamp
   reps: number;         // total reviews
 }
@@ -70,7 +70,7 @@ export function retrievability(stability: number, daysSince: number): number {
   return Math.pow(1 + daysSince / (9 * stability), -1);
 }
 
-// Get current strength (0–1) for display — maps R directly
+// Get current strength (0 to 1) for display — maps R directly
 export function fsrsStrength(card: FSRSCard): number {
   const daysSince = (Date.now() - card.lastReview) / (1000 * 60 * 60 * 24);
   return Math.max(0, Math.min(1, retrievability(card.stability, daysSince)));

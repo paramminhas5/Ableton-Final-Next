@@ -96,6 +96,8 @@ const SOLO_C = "#7D96FF";
 const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 /** What the screen shows: the control just touched, its value, and its key (for the same control elsewhere). */
+/** "a minor" to "a min", "f# dorian" to "f# dor": the key chip on a phone. */
+const shortKey = (k: string) => { const [r, ...rest] = k.split(" "); const sc = rest.join(" "); return sc ? `${r} ${sc.slice(0, 3)}` : r; };
 type Touched = { label: string; text: string; key?: string } | null;
 type LockAt = { note: number | null; step: number } | null;
 type Mode = "play" | "mix";
@@ -545,6 +547,8 @@ export function Studio() {
     setTouched({ label: `step ${lockAt.step + 1}`, text: "p-locks cleared", key: "plock" });
   };
   useEffect(() => { setLockAt(null); }, [selId, sel?.surface]);
+  // letting go of a held step clears its p-lock readout, so the screen never says a step is still held
+  useEffect(() => { if (!lockAt) setTouched(t => (t?.key === "plock" ? null : t)); }, [lockAt]);
 
   const addLayer = (t: LayerV2["type"]) => {
     if (track.layers.length >= MAX_LAYERS) return;
@@ -699,7 +703,9 @@ export function Studio() {
             aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
-            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setKeyOpen(o => !o); }}>{keyName(track.root, scaleOf(track))}</button>
+            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setKeyOpen(o => !o); }}>
+            {/* a phone shows the short key (a min) so the chip is never cut to "a mi..." */}
+            <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button>
           {mode === "mix" ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}

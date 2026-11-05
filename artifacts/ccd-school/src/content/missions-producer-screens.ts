@@ -1,7 +1,7 @@
 import type { LessonScreen } from "./types";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PRODUCER MISSION SCREENS  ·  All 91 missions  ·  7–8 screens each
+// PRODUCER MISSION SCREENS  ·  All 91 missions  ·  7 to 8 screens each
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
@@ -43,7 +43,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "preferences": [
     { kind: "hook", emoji: "", headline: "Set it up once, correctly", subtext: "Wrong buffer size = glitches. Wrong audio driver = silence." },
-    { kind: "concept", title: "Audio preferences", body: "Preferences > Audio sets your driver (ASIO/Core Audio), sample rate (44.1/48 kHz), and buffer size. Buffer size is the key trade-off: lower = less latency, higher = more CPU headroom.", keyFact: "256 samples = safe default. 64–128 for recording, 512+ for mixing.", visual: "signal-chain"},
+    { kind: "concept", title: "Audio preferences", body: "Preferences > Audio sets your driver (ASIO/Core Audio), sample rate (44.1/48 kHz), and buffer size. Buffer size is the key trade-off: lower = less latency, higher = more CPU headroom.", keyFact: "256 samples = safe default. 64 to 128 for recording, 512+ for mixing.", visual: "signal-chain"},
     { kind: "concept", title: "MIDI and plugins", body: "Preferences > Link/MIDI activates connected MIDI devices. Preferences > Plug-Ins tells Live where to scan for VST/AU plugins. Always verify plugin folder paths after installing new software.", keyFact: "Re-scan plugins after installing: Preferences > Plug-Ins > Rescan.", visual: "piano"},
     { kind: "interact", sim: "buffer-sim", prompt: "Adjust buffer size: observe the latency/CPU trade-off" },
     { kind: "quiz", q: "Lower buffer size means…", options: ["More latency", "Less latency, more CPU load", "Less CPU load", "Better quality"], answer: 1, explain: "Smaller buffer = faster roundtrip between input and output, but the CPU has less time per chunk: works harder." },
@@ -149,12 +149,12 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "midi-piano-roll": [
     { kind: "hook", emoji: "", headline: "Click, drag, compose in the piano roll", subtext: "Every MIDI note is a block you can place and reshape." },
     { kind: "concept", title: "Piano roll basics", body: "Double-click a MIDI clip to open the piano roll. The vertical axis is pitch (piano keyboard left), horizontal axis is time. Draw notes in Pencil Mode (B), select in Pointer Mode.", keyFact: "B = Pencil mode toggle. Cmd/Ctrl+A = select all notes.", visual: "piano"},
-    { kind: "concept", title: "Velocity and quantise", body: "Each note has a velocity (0–127) shown as a bar below. Higher velocity = louder and often brighter. Cmd/Ctrl+U quantises all selected notes to the grid.", keyFact: "Shift+drag a note = constrain to horizontal movement only.", visual: "piano"},
+    { kind: "concept", title: "Velocity and quantise", body: "Each note has a velocity (0 to 127) shown as a bar below. Higher velocity = louder and often brighter. Cmd/Ctrl+U quantises all selected notes to the grid.", keyFact: "Shift+drag a note = constrain to horizontal movement only.", visual: "piano"},
     { kind: "interact", sim: "piano-roll", prompt: "Draw a 4-note melody: adjust velocities" },
     { kind: "quiz", q: "B key in the piano roll toggles…", options: ["Browser", "Pencil/draw mode", "Bar count", "Bypass"], answer: 1, explain: "B toggles Pencil mode for drawing notes vs the default select/pointer mode." },
-    { kind: "quiz", q: "Velocity controls…", options: ["Pitch", "Note length", "How hard/loud the note plays", "Quantise amount"], answer: 2, explain: "Velocity (0–127) maps to how hard the note is struck: instruments often change timbre with velocity too." },
+    { kind: "quiz", q: "Velocity controls…", options: ["Pitch", "Note length", "How hard/loud the note plays", "Quantise amount"], answer: 2, explain: "Velocity (0 to 127) maps to how hard the note is struck: instruments often change timbre with velocity too." },
     { kind: "quiz", q: "Live 12 generative MIDI tools are called…", options: ["Macro controls", "Note Transformations", "Follow Actions", "Groove Pool"], answer: 1, explain: "Live 12's Note Transformations (Strum, Pitch Shift, Arpeggiate, etc.) are accessible from the Piano Roll toolbar." },
-    { kind: "summary", learned: ["B = draw notes. Pointer = select notes", "Velocity = dynamics (0–127)", "Cmd/Ctrl+U quantises notes to the grid"] },
+    { kind: "summary", learned: ["B = draw notes. Pointer = select notes", "Velocity = dynamics (0 to 127)", "Cmd/Ctrl+U quantises notes to the grid"] },
   ],
 
   "audio-clips": [
@@ -315,7 +315,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "reverb-delay": [
     { kind: "hook", emoji: "", headline: "Space and echo define depth", subtext: "Reverb = room. Delay = echo. Both create dimension." },
-    { kind: "concept", title: "Reverb types in Live", body: "Reverb is Live's algorithmic reverb (size, decay, diffusion). Hybrid Reverb (Live 11+) combines convolution IRs with algorithmic processing. Always use Returns for reverb: one instance serves all tracks.", keyFact: "Pre-delay (20–30 ms) keeps vocals clear before the reverb washes in.", visual: "signal-chain"},
+    { kind: "concept", title: "Reverb types in Live", body: "Reverb is Live's algorithmic reverb (size, decay, diffusion). Hybrid Reverb (Live 11+) combines convolution IRs with algorithmic processing. Always use Returns for reverb: one instance serves all tracks.", keyFact: "Pre-delay (20 to 30 ms) keeps vocals clear before the reverb washes in.", visual: "signal-chain"},
     { kind: "concept", title: "Delay devices", body: "Delay is a simple tempo-synced delay. Echo (Live 11) adds vintage character: wobble, filter, modulation. Set delay time to musical divisions (1/8, 1/4) for rhythmic lock to your project tempo.", keyFact: "Tempo-sync delay: use 1/8 note for a tight slap; 1/4 for classic echo.", visual: "signal-chain"},
     { kind: "interact", sim: "send-return", prompt: "Route a track to a Return with Reverb: adjust decay" },
     { kind: "quiz", q: "Hybrid Reverb combines…", options: ["Two algorithms", "Convolution IRs + algorithmic processing", "Delay + reverb", "EQ + reverb"], answer: 1, explain: "Hybrid Reverb (Live 11) blends real-room convolution IRs with algorithmic reverb for unprecedented space control." },
@@ -419,7 +419,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "sidechain": [
     { kind: "hook", emoji: "", headline: "The kick tells the bass to duck", subtext: "Sidechain compression creates the pulse of dance music." },
     { kind: "concept", title: "How sidechain works", body: "A compressor can use a different track as its trigger source: the sidechain input. When the kick hits, it triggers the compressor on the bass or pad track, ducking it momentarily. That duck IS the pump.", keyFact: "Kick → Sidechain Input of Compressor on Bass = classic EDM pump.", visual: "signal-chain"},
-    { kind: "concept", title: "Sculpting the pump shape", body: "Attack determines how quickly the duck happens (fast = immediate grab). Release determines how quickly the signal recovers (medium = musical breathing). The release length shapes the pump's musical feel.", keyFact: "Fast attack + 150–200ms release = the iconic dance floor pump.", visual: "signal-chain"},
+    { kind: "concept", title: "Sculpting the pump shape", body: "Attack determines how quickly the duck happens (fast = immediate grab). Release determines how quickly the signal recovers (medium = musical breathing). The release length shapes the pump's musical feel.", keyFact: "Fast attack + 150 to 200ms release = the iconic dance floor pump.", visual: "signal-chain"},
     { kind: "interact", sim: "sidechain", prompt: "Set kick as sidechain source: hear the pad duck on each hit" },
     { kind: "quiz", q: "Sidechain ducks…", options: ["The kick track", "The track the compressor is on", "The reverb return", "The master bus"], answer: 1, explain: "The compressor sits on the track being ducked: sidechain input determines what triggers the compression." },
     { kind: "quiz", q: "Classic pump settings use…", options: ["Slow attack, slow release", "Fast attack, medium release (~150ms)", "No attack, no release", "Soft knee only"], answer: 1, explain: "Fast attack grabs immediately when kick hits. Medium release lets signal breathe back before next kick: the classic EDM pulse." },
@@ -441,7 +441,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "glue-compressor": [
     { kind: "hook", emoji: "", headline: "Glue Compressor binds a mix together", subtext: "Bus compression makes multiple tracks sound like one." },
     { kind: "concept", title: "What makes Glue Compressor special", body: "Glue Compressor models an SSL G-Bus compressor: famous for making mixes 'stick together'. Low ratios (2:1, 4:1), slow attack, and the Makeup and Dry/Wet controls make subtle bus glue straightforward.", keyFact: "Try: Threshold −10, Ratio 4:1, Attack 30ms, Release Auto.", visual: "amplitude-dial"},
-    { kind: "concept", title: "Parallel compression", body: "Glue Compressor's Dry/Wet knob enables parallel (New York) compression: mix heavily compressed signal with the dry original. You get the punch of compression without losing transient snap.", keyFact: "Dry/Wet at 30–50% = classic parallel bus compression sound.", visual: "signal-chain"},
+    { kind: "concept", title: "Parallel compression", body: "Glue Compressor's Dry/Wet knob enables parallel (New York) compression: mix heavily compressed signal with the dry original. You get the punch of compression without losing transient snap.", keyFact: "Dry/Wet at 30 to 50% = classic parallel bus compression sound.", visual: "signal-chain"},
     { kind: "interact", sim: "device-lab", prompt: "Apply Glue Compressor to a drum group: find the sweet spot" },
     { kind: "quiz", q: "Glue Compressor models a…", options: ["Neve 1073 preamp", "SSL G-Bus compressor", "Fairchild 670 limiter", "Urei 1176"], answer: 1, explain: "Glue Compressor emulates the SSL G-Bus master bus compressor: the classic 'glue' sound of commercial mixes." },
     { kind: "quiz", q: "Parallel compression mixes…", options: ["Two reverbs", "Compressed + dry signal together", "Two limiters", "EQ + compressor"], answer: 1, explain: "Parallel (New York) compression blends heavily compressed signal with the uncompressed dry signal for punch + transients." },
@@ -478,7 +478,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "midi-mapping": [
     { kind: "hook", emoji: "", headline: "Map any knob to anything in Live", subtext: "MIDI Map Mode turns controllers into custom instruments." },
     { kind: "concept", title: "MIDI Map Mode", body: "Cmd/Ctrl+M enters MIDI Map Mode: the interface highlights green showing mappable parameters. Click any green element, then wiggle your hardware control. That parameter is now mapped.", keyFact: "Cmd/Ctrl+M = toggle MIDI Map Mode on/off.", visual: "piano"},
-    { kind: "concept", title: "Mapping ranges and curves", body: "After mapping, click the mapping row to adjust Min/Max range (map 0–100% hardware range to only 50–80% of parameter range). Response curves (linear, logarithmic) shape how the control feels.", keyFact: "Narrow the Min/Max range for fine-detail control on one parameter.", visual: "signal-chain"},
+    { kind: "concept", title: "Mapping ranges and curves", body: "After mapping, click the mapping row to adjust Min/Max range (map 0 to 100% hardware range to only 50 to 80% of parameter range). Response curves (linear, logarithmic) shape how the control feels.", keyFact: "Narrow the Min/Max range for fine-detail control on one parameter.", visual: "signal-chain"},
     { kind: "interact", sim: "midi-map", prompt: "Map a knob to filter cutoff using MIDI Map Mode" },
     { kind: "quiz", q: "Enter MIDI Map Mode with…", options: ["Cmd/Ctrl+K", "Cmd/Ctrl+M", "Cmd/Ctrl+Alt+M", "F5"], answer: 1, explain: "Cmd/Ctrl+M toggles MIDI Map Mode: the interface goes green and every mappable parameter highlights." },
     { kind: "quiz", q: "After MIDI mapping, you can adjust…", options: ["Nothing: it's fixed", "The Min/Max parameter range per mapping", "Only the hardware device", "The track colour"], answer: 1, explain: "Each mapping has Min/Max range controls: limit the hardware travel to a useful parameter range." },
@@ -647,7 +647,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "instrument-rack": [
     { kind: "hook", emoji: "", headline: "Stack, layer, split, morph instruments", subtext: "Instrument Rack: multiple synths, one device, infinite possibilities." },
     { kind: "concept", title: "Layering and splitting", body: "Drop multiple instruments into an Instrument Rack to layer them (all play at once). Set Key Zones to split the keyboard: low keys = bass, high keys = lead. Velocity zones trigger different chains dynamically.", keyFact: "Layer = all chains play. Split = key zone determines which chain.", visual: "signal-chain"},
-    { kind: "concept", title: "Chain Selector morphing", body: "Map the Chain Selector to a macro knob. As you sweep the knob, different chains cross-fade in and out: morph between two completely different sounds across 0–100% of one knob.", keyFact: "Chain Selector + Macro = smooth morph between any two sounds.", visual: "signal-chain"},
+    { kind: "concept", title: "Chain Selector morphing", body: "Map the Chain Selector to a macro knob. As you sweep the knob, different chains cross-fade in and out: morph between two completely different sounds across 0 to 100% of one knob.", keyFact: "Chain Selector + Macro = smooth morph between any two sounds.", visual: "signal-chain"},
     { kind: "interact", sim: "device-chain", prompt: "Create a key split: bass chain on C1-B2, lead chain on C3 up" },
     { kind: "quiz", q: "Layering in Instrument Rack means…", options: ["All chains play simultaneously on every note", "Only the selected chain plays", "Chains alternate each note", "Chains play in sequence"], answer: 0, explain: "In a layer configuration (full key zone overlap), every chain plays every note: creating thick layered timbres." },
     { kind: "quiz", q: "Chain Selector + Macro enables…", options: ["Step sequencing", "Smooth morphing between chains", "MIDI mapping", "Tempo changes"], answer: 1, explain: "Chain Selector defines which zones activate which chains: automating it creates a morph between any two sounds." },
@@ -769,7 +769,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "comping-flow": [
     { kind: "hook", emoji: "", headline: "Multiple takes, one perfect performance", subtext: "Comp lanes + crossfades = professional vocal and instrument takes." },
-    { kind: "concept", title: "Recording for comping", body: "Loop a section and record multiple passes. Enable Loop Overdub to have each pass land on a new take lane automatically. Record as many takes as you need: quality beats quantity on each pass.", keyFact: "Record 4–8 takes. Even one great moment per take = a perfect comp.", visual: "signal-chain"},
+    { kind: "concept", title: "Recording for comping", body: "Loop a section and record multiple passes. Enable Loop Overdub to have each pass land on a new take lane automatically. Record as many takes as you need: quality beats quantity on each pass.", keyFact: "Record 4 to 8 takes. Even one great moment per take = a perfect comp.", visual: "signal-chain"},
     { kind: "concept", title: "The comping workflow", body: "In the take lanes area, click and drag horizontally across sections of each lane. Selected regions turn to the comp colour and appear on the top comp lane. Automatic crossfades handle the boundaries.", keyFact: "Drag edge handles on comp regions to adjust crossfade length.", visual: "signal-chain"},
     { kind: "interact", sim: "comp-lake", prompt: "Comp three vocal takes into a finished performance" },
     { kind: "quiz", q: "Take Lanes show…", options: ["Only the final take", "Each pass as a separate row", "Only audio (not MIDI)", "Returns and sends"], answer: 1, explain: "Each recording pass creates a new take lane row: you can see and select from all your takes stacked below the comp." },
@@ -813,7 +813,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "cpu-audio-setup": [
     { kind: "hook", emoji: "", headline: "When CPU maxes: here's what to do", subtext: "Four levers: buffer, freeze, flatten, and routing efficiency." },
-    { kind: "concept", title: "Buffer size and CPU", body: "Larger buffer size gives the CPU more time per audio chunk: the primary lever for reducing dropouts. Trade-off is higher latency. Use 512–1024 samples for mixing-heavy sessions where real-time input isn't critical.", keyFact: "Recording: 128 samples. Mixing/mastering: 512–1024 samples.", visual: "signal-chain"},
+    { kind: "concept", title: "Buffer size and CPU", body: "Larger buffer size gives the CPU more time per audio chunk: the primary lever for reducing dropouts. Trade-off is higher latency. Use 512 to 1024 samples for mixing-heavy sessions where real-time input isn't critical.", keyFact: "Recording: 128 samples. Mixing/mastering: 512 to 1024 samples.", visual: "signal-chain"},
     { kind: "concept", title: "Freeze and Flatten workflow", body: "Freeze renders a track to a temporary audio file: saves CPU while preserving device chain for future edits. Flatten permanently bakes the freeze and removes devices. Duplicate before flattening if you might need the original.", keyFact: "Freeze + Flatten = maximum CPU relief. Duplicate first = safety net.", visual: "signal-chain"},
     { kind: "interact", sim: "buffer-sim", prompt: "Observe CPU meter: freeze a heavy synth and watch it drop" },
     { kind: "quiz", q: "Bigger buffer size provides…", options: ["Less CPU headroom", "More CPU headroom at cost of more latency", "Better audio quality", "Faster rendering"], answer: 1, explain: "Larger buffer = more time per chunk = CPU has more time to process = less crackling. Trades off against latency." },
@@ -896,7 +896,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
   "synth-oscillators": [
     { kind: "hook", emoji: "", headline: "Oscillators are the voice of a synth", subtext: "They generate the raw waveform: everything starts here." },
     { kind: "concept", title: "What oscillators do", body: "An oscillator generates a repeating waveform at a set frequency. The keyboard sets the frequency. The waveform choice (sine, saw, square, triangle, noise) determines the harmonic content and initial timbre.", keyFact: "Oscillator = pitch + waveform. The synth's raw voice.", visual: "waveform-compare"},
-    { kind: "concept", title: "Multiple oscillators", body: "Most synths have 2–3 oscillators. Running them at the same pitch creates a fatter sound. Detune them slightly for a chorus effect. Tune one an octave up for brightness, or a fifth for a classic 2-oscillator texture.", keyFact: "2 oscillators slightly detuned = instant super-saw pad width.", visual: "waveform" },
+    { kind: "concept", title: "Multiple oscillators", body: "Most synths have 2 to 3 oscillators. Running them at the same pitch creates a fatter sound. Detune them slightly for a chorus effect. Tune one an octave up for brightness, or a fifth for a classic 2-oscillator texture.", keyFact: "2 oscillators slightly detuned = instant super-saw pad width.", visual: "waveform" },
     { kind: "interact", sim: "osc-mixer", prompt: "Add a second oscillator: detune slightly and hear the width" },
     { kind: "quiz", q: "An oscillator generates…", options: ["MIDI notes", "A repeating waveform at a set frequency", "Reverb", "Velocity data"], answer: 1, explain: "Oscillators generate repeating electrical waveforms: the fundamental sound source for all synthesis." },
     { kind: "quiz", q: "Slightly detuning two oscillators creates…", options: ["Out-of-tune sound", "A chorus/width effect", "Pitch instability", "Noise"], answer: 1, explain: "When two oscillators are nearly (but not exactly) the same frequency, they beat against each other: creating the chorus thickening effect." },
@@ -917,13 +917,13 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "synth-detune-unison": [
     { kind: "hook", emoji: "", headline: "Detune creates width. Unison creates mass.", subtext: "These two techniques separate amateur patches from pro ones." },
-    { kind: "concept", title: "Detune and beating", body: "When two oscillators are slightly detuned (a few cents apart), they beat against each other at a rate equal to their frequency difference. 5 Hz apart = five beats per second: heard as slow chorus shimmer.", keyFact: "0 cents = clean. 5–10 cents = chorus. 20+ cents = out of tune.", visual: "waveform-compare"},
+    { kind: "concept", title: "Detune and beating", body: "When two oscillators are slightly detuned (a few cents apart), they beat against each other at a rate equal to their frequency difference. 5 Hz apart = five beats per second: heard as slow chorus shimmer.", keyFact: "0 cents = clean. 5 to 10 cents = chorus. 20+ cents = out of tune.", visual: "waveform-compare"},
     { kind: "concept", title: "Unison voicing", body: "Unison stacks multiple copies of the voice (2, 4, 8, 16) simultaneously, each slightly detuned. The result is a 'supersaw' or thick pad sound. Unison voices are spread stereo for massive width.", keyFact: "Unison 8 voices + detune 10 cents = the classic trance supersawpad.", visual: "waveform-compare"},
     { kind: "interact", sim: "osc-mixer", prompt: "Enable Unison on Wavetable: increase voice count and hear it thicken" },
     { kind: "quiz", q: "Beating between oscillators occurs because…", options: ["They are the same pitch", "They are slightly different frequencies: interference creates oscillation", "One is louder", "They use different waveforms"], answer: 1, explain: "Two frequencies close but not identical create constructive/destructive interference at a rate = their frequency difference." },
     { kind: "quiz", q: "Unison stacks voices by…", options: ["Octave intervals only", "Multiple copies slightly detuned (often spread stereo)", "Adding reverb", "Layering different instruments"], answer: 1, explain: "Unison stacks copies of the same voice at slightly different detune amounts, spread across the stereo field: creates thickness." },
-    { kind: "quiz", q: "Too much detune sounds…", options: ["Professional and wide", "Out of tune and incoherent", "Brighter", "More compressed"], answer: 1, explain: "Extreme detuning loses the fundamental pitch relationship: sounds detuned rather than wide. 5–15 cents is the sweet spot." },
-    { kind: "summary", learned: ["Detune: slight frequency offset between oscillators = chorus", "5–15 cents = sweet spot for warmth and width", "Unison: multiple detuned voices = thick pad/supersaw sound"] },
+    { kind: "quiz", q: "Too much detune sounds…", options: ["Professional and wide", "Out of tune and incoherent", "Brighter", "More compressed"], answer: 1, explain: "Extreme detuning loses the fundamental pitch relationship: sounds detuned rather than wide. 5 to 15 cents is the sweet spot." },
+    { kind: "summary", learned: ["Detune: slight frequency offset between oscillators = chorus", "5 to 15 cents = sweet spot for warmth and width", "Unison: multiple detuned voices = thick pad/supersaw sound"] },
   ],
 
   "synth-filters": [
@@ -972,7 +972,7 @@ export const PRODUCER_SCREENS: Record<string, LessonScreen[]> = {
 
   "synth-lfo": [
     { kind: "hook", emoji: "〰", headline: "LFO creates automatic cyclic movement", subtext: "Below 20 Hz: too slow to hear as pitch, but felt as modulation." },
-    { kind: "concept", title: "What is an LFO?", body: "A Low Frequency Oscillator (LFO) generates a waveform below the audible range (typically 0.1–20 Hz). Route its output to a parameter, pitch (vibrato), filter (wah), volume (tremolo), for automatic cyclic movement.", keyFact: "LFO to pitch = vibrato. LFO to filter = wah. LFO to amp = tremolo.", visual: "waveform"},
+    { kind: "concept", title: "What is an LFO?", body: "A Low Frequency Oscillator (LFO) generates a waveform below the audible range (typically 0.1 to 20 Hz). Route its output to a parameter, pitch (vibrato), filter (wah), volume (tremolo), for automatic cyclic movement.", keyFact: "LFO to pitch = vibrato. LFO to filter = wah. LFO to amp = tremolo.", visual: "waveform"},
     { kind: "concept", title: "LFO controls", body: "Rate controls how fast the LFO cycles. Depth controls how much it moves the target. Waveform shapes the movement: sine = smooth, square = binary stepping, S&H = random steps. Sync to tempo for rhythmically locked movement.", keyFact: "LFO synced to 1/4 note rate = filter modulation that pulses on the beat.", visual: "waveform"},
     { kind: "interact", sim: "lfo-lab", prompt: "Route an LFO to filter cutoff: adjust rate and depth" },
     { kind: "quiz", q: "LFO stands for…", options: ["Loud Frequency Oscillator", "Low Frequency Oscillator", "Left Filter Output", "Layered FM Operator"], answer: 1, explain: "LFO = Low Frequency Oscillator: operates below the audible range (under ~20 Hz) as a modulation source." },

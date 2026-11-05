@@ -254,7 +254,7 @@ interface Round {
 }
 
 function buildRound(type: DrillType): Round {
-  const root = 48 + Math.floor(Math.random() * 12); // C3–B3
+  const root = 48 + Math.floor(Math.random() * 12); // C3-B3
   switch (type) {
     case "interval": {
       const pool = sample(INTERVALS, 4);

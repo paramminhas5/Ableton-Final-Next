@@ -234,3 +234,6 @@
 .st-main .st-player{overflow:hidden}
 .st-main .st-playerxy{min-height:96px}
 .st-main .st-playernote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.st-keyshort{display:none}
+@media (max-width:480px){.st-keyfull{display:none}.st-keyshort{display:inline}}
