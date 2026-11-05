@@ -52,5 +52,10 @@ describe("modulation", () => {
     expect(s.length).toBe(MAX_MODS);
     expect(s[0]).toEqual({ src: MOD_SRC.env, to: PAN, amt: 0.4 });
     expect(s.slice(1).every(x => x.amt === 0)).toBe(true);
+    // a damaged save never sends nonsense
+    const bad = engineSlots([{ src: "nope", to: 3, amt: 0.5 }, { src: "lfo", to: NaN, amt: 0.5 }, { src: "lfo", to: 3, amt: 9 }] as never);
+    expect(bad[0].amt).toBe(0);
+    expect(bad[1].amt).toBe(0);
+    expect(bad[2].amt).toBe(1);
   });
 });

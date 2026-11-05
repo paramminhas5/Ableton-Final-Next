@@ -119,7 +119,9 @@ export function removeRing(engine: string, mods: Mod[] | undefined, ring: Ring) 
 export function engineSlots(mods: Mod[] | undefined): { src: number; to: number; amt: number }[] {
   return Array.from({ length: MAX_MODS }, (_, i) => {
     const m = mods?.[i];
-    return m && m.amt !== 0 ? { src: MOD_SRC[m.src], to: m.to, amt: m.amt } : { src: 0, to: 0, amt: 0 };
+    // A route from a saved song is only sent when it still makes sense (a known source, a real knob).
+    const ok = m && (m.src === "lfo" || m.src === "env") && Number.isInteger(m.to) && m.to >= 0 && Number.isFinite(m.amt) && m.amt !== 0;
+    return ok ? { src: MOD_SRC[m.src], to: m.to, amt: Math.max(-1, Math.min(1, m.amt)) } : { src: 0, to: 0, amt: 0 };
   });
 }
 
