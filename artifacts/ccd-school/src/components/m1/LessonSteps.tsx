@@ -29,6 +29,8 @@ import { EnvView, FilterView, useNoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC, picOf } from "@/lib/paramColor";
 import { ringsOf, SRC_COLOR } from "@/lib/modulation";
+import { levelMatch } from "@/lib/offline";
+import { ABKey, type Side } from "./AB";
 import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
@@ -192,6 +194,10 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const otherType = (["drums", "hats", "bass", "chords", "lead"] as LayerType[]).find(t => t === screen.layer && t !== own0.type);
   const line = useMemo(() => (otherType ? { ...own0, type: otherType, events: [] } : own0), [own0, otherType]);
   const [params, setParams] = useState<Record<number, number>>(() => readShape(mission.slug, otherType));
+  // A/B: a is the sound before your tweak (as you arrived), b is now; both at the same loudness.
+  const [before] = useState<Record<number, number>>(() => readShape(mission.slug, otherType));
+  const [abOn, setAbOn] = useState<Side | null>(null);
+  const heard = abOn === "a" ? before : params;
   const knobs = useMemo(() => {
     // The lesson's usual pair, plus any other knob of the instrument a lesson file names.
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
@@ -208,10 +214,26 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const world = worldOf(mission.slug) ?? undefined;
   // Nothing played in this lesson and your song already has this part: shape your own part.
   const own = !!base && (!!otherType || !take?.events.length) && base.layers.some(l => l.type === line.type && l.events.length > 0);
-  const shown = useMemo(() => (base
-    ? own ? withParams(base, line.type, params) : applyTake({ ...base, added: [] }, mission.slug, line, world, params)
-    : null), [base, own, take, mission.slug, line, world, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  const make = (p: Record<number, number>) => (base ? (own ? withParams(base, line.type, p) : applyTake({ ...base, added: [] }, mission.slug, line, world, p)) : null);
+  const shown = useMemo(() => make(heard), [base, own, take, mission.slug, line, world, heard]); // eslint-disable-line react-hooks/exhaustive-deps
   const { engine, ready } = useEngineTrack(shown ?? readTrackV2());
+  // Level match a and b whenever either changes while comparing (the louder one is trimmed).
+  useEffect(() => {
+    if (!abOn || !base) return;
+    let gone = false;
+    const t = window.setTimeout(() => {
+      const sa = make(before), sb = make(params);
+      const i = sb ? sb.layers.findIndex(l => l.type === line.type) : -1;
+      if (!sa || !sb || i < 0) return;
+      void levelMatch(sb, sa.layers[i], sb.layers[i]).then(m => {
+        if (gone) return;
+        engine.trim(i, abOn === "a" ? m.a : m.b);
+        setTouched(`${abOn === "a" ? "a · before your tweak" : "b · now"}${Math.abs(m.diff) < 0.1 ? "" : ` · ${m.diff > 0 ? "now" : "before"} ${Math.abs(m.diff).toFixed(1)} db louder, matched`}`);
+      }).catch(() => {});
+    }, 200);
+    return () => { gone = true; window.clearTimeout(t); };
+  }, [abOn, params]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => { for (let i = 0; i < 8; i++) engine.trim(i, 0); }, [engine]);
   const playing = beat >= 0;
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
@@ -253,7 +275,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const spotKey = dialKnobs.length > 1 ? dialKnobs.find(k => !turned.has(k.spec.key))?.spec.key : undefined;
   const picLit = (group: string) => !spotKey || picOf(spotKey) === group || (group === "filter" && picOf(spotKey) === "eq");
   // Drag on the pictures, for the knobs this lesson names: the filter's knee, the envelope's corners.
-  const turn = (index: number, key: string, v: number) => { setParams(p => ({ ...p, [index]: v })); if (!turned.has(key)) setTurned(t => new Set(t).add(key)); const k = dialKnobs.find(x => x.index === index); if (k) setTouched(`${k.spec.label} ${display(k.spec, v)}`); };
+  const turn = (index: number, key: string, v: number) => { if (abOn === "a") setAbOn("b"); setParams(p => ({ ...p, [index]: v })); if (!turned.has(key)) setTurned(t => new Set(t).add(key)); const k = dialKnobs.find(x => x.index === index); if (k) setTouched(`${k.spec.label} ${display(k.spec, v)}`); };
   const named = (sp?: ParamSpec) => (sp && dialKnobs.some(k => k.index === sp.index) ? sp : undefined);
   const dragCut = named(fc), dragRes = named(fr);
   const hs = envHandles(inst, lp, hatPad ? 4 : 0);
@@ -285,11 +307,11 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
           <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
-            {...bind(k.spec, params[k.index] ?? k.spec.default)}
+            {...bind(k.spec, heard[k.index] ?? k.spec.default)}
             mods={(ringsOf(inst, { ...lp, ...params }, shownLayer?.mods).get(k.index) ?? []).map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
-            value={params[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, params[k.index] ?? k.spec.default)}
+            value={heard[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, heard[k.index] ?? k.spec.default)}
             spot={spotKey === k.spec.key} dim={!!spotKey && spotKey !== k.spec.key && !turned.has(k.spec.key)}
-            onChange={v => { setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
+            onChange={v => { if (abOn === "a") setAbOn("b"); setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
@@ -303,7 +325,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your loop"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={onNext} style={{ gridColumn: "span 3" }} ariaLabel="Next">keep this sound</GoPill>
+          <div className="ls-abwrap"><ABKey on={abOn} labels={["before your tweak", "now"]} onStart={() => { setAbOn("a"); setTouched("a · before your tweak"); }} onSwitch={s => { setAbOn(s); setTouched(s === "a" ? "a · before your tweak" : "b · now"); }} /></div>
+          <GoPill onClick={onNext} style={{ gridColumn: "span 2" }} ariaLabel="Next">keep this sound</GoPill>
         </div>
       </div>
     </div>

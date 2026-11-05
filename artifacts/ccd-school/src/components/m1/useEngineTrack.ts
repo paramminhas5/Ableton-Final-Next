@@ -123,7 +123,11 @@ export function useEngineTrack(track: TrackV2) {
   const latest = useRef(track);
   latest.current = track;
   const sync = (t: TrackV2) => {
-    if (owner !== id.current) { sent.current = []; last.current = { bpm: 0, loop: 0 }; owner = id.current; }
+    if (owner !== id.current) {
+      sent.current = []; last.current = { bpm: 0, loop: 0 }; owner = id.current;
+      // Another screen's a/b level match must not follow us here.
+      for (let i = 0; i < MAX_LAYERS; i++) engine.trim(i, 0);
+    }
     syncEngine(engine, t, sent.current, last.current);
   };
 

@@ -58,6 +58,10 @@ export class Engine {
   mod(layer: number, slot: number, src: number, to: number, amount: number) {
     this.s(CMD.mod, layer, slot, amount, to, src);
   }
+  /** A/B level match: trim a layer by `db` after its strip (0 takes it off). Not a knob, never saved. */
+  trim(layer: number, db: number) {
+    this.s(CMD.trim, layer, 0, db);
+  }
   /** Hold a pad to roll: hits land on the grid, `beats` apart (0.25 = 1/16, 0.125 = 1/32). */
   repeat(layer: number, note: number, vel: number, beats: number) {
     this.s(CMD.repeat, layer, note, vel, beats);

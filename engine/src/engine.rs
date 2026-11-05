@@ -73,6 +73,9 @@ pub mod cmd {
     /// Route slot `a` (0..MAX_MODS) of the layer: source `z` (MOD_LFO, MOD_ENV) onto wire param `y`, by
     /// `x` (-1..1, in shares of the knob's travel). Amount 0 clears the slot and puts the knob back.
     pub const MOD: u32 = 25;
+    /// A/B level match: trim the layer by `x` dB after its strip, sends included (glides over 20 ms). Not a knob and not
+    /// saved: 0 dB takes it off, and the layer is then exactly as it was.
+    pub const TRIM: u32 = 26;
 }
 
 pub mod out {
@@ -247,6 +250,9 @@ pub struct Layer {
     /// The filter envelope as a modulation source: one per layer, at the control rate, gated by notes held.
     mod_env: crate::dsp::env::Adsr,
     held: u32,
+    /// The a/b level match (cmd::TRIM). Off, it is not in the signal path at all.
+    trim: crate::dsp::smooth::Smooth,
+    trim_on: bool,
 }
 
 impl Layer {
@@ -279,6 +285,8 @@ impl Layer {
             mod_count: 0,
             mod_env: crate::dsp::env::Adsr::new(sr / MOD_EVERY as f32),
             held: 0,
+            trim: { let mut t = crate::dsp::smooth::Smooth::new(1.0); t.set_time(20.0, sr); t },
+            trim_on: false,
         }
     }
 
@@ -377,6 +385,11 @@ impl Layer {
             self.offs[self.n_offs] = (note, at);
             self.n_offs += 1;
         }
+    }
+
+    /// Is the a/b level match in the signal path (for tests)?
+    pub fn strip_trimmed(&self) -> bool {
+        self.trim_on
     }
 
     /// Route a modulation slot (cmd::MOD). Clearing or moving a slot puts the knob it moved back.
@@ -783,6 +796,14 @@ impl Core {
                 }
             }
             cmd::MOD => self.layers[li].set_mod(c.a as usize, c.z as u8, c.y as usize, c.x),
+            cmd::TRIM => {
+                let l = &mut self.layers[li];
+                let g = if c.x.is_finite() && c.x.abs() > 0.001 { db_to_gain(c.x.clamp(-48.0, 12.0)) } else { 1.0 };
+                if g != 1.0 || l.trim_on {
+                    l.trim.set(g);
+                    l.trim_on = true;
+                }
+            }
             cmd::SNAPSHOT => self.snapshot(),
             cmd::COMPARE => self.compare(c.a != 0),
             cmd::ANALYSE => {
@@ -1084,7 +1105,21 @@ impl Core {
                     l.mod_tick(comparing);
                 }
                 let x = l.tick();
-                let o = l.strip.tick(x);
+                let mut o = l.strip.tick(x);
+                if l.trim_on {
+                    // After the strip, sends too: the whole part as you hear it.
+                    let g = l.trim.next();
+                    o.l *= g;
+                    o.r *= g;
+                    o.echo *= g;
+                    o.verb *= g;
+                    // Back at unity (within 0.001 dB: a one-pole in f32 stalls a few ulps short of its
+                    // target): out of the path again, so the layer is bit for bit as it was.
+                    if l.trim.target == 1.0 && (g - 1.0).abs() < 1e-4 {
+                        l.trim.reset(1.0);
+                        l.trim_on = false;
+                    }
+                }
                 ml += o.l;
                 mr += o.r;
                 echo_in += o.echo;

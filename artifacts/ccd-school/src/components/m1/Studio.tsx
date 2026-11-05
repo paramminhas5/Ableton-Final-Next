@@ -71,6 +71,7 @@ import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/li
 import { bind, PIC } from "@/lib/paramColor";
 import { assign, canTake, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, SRC_COLOR, SRC_LABEL, type ModSrc } from "@/lib/modulation";
 import { ModChips, ModOverlay } from "./Modulation";
+import { ABKey, useAB } from "./AB";
 import { fromValue, toValue } from "@/engine";
 import { chordAt, chordEvents, chordName, chordNotes as chordMidi, inChord, romanOf, withChordTrack, type Chord } from "@/lib/chords";
 import { ChordTrackEditor } from "./ChordTrack";
@@ -398,6 +399,8 @@ export function Studio() {
     setTouched({ label, text });
   };
   useEffect(() => { setModEdit(null); }, [selId]);
+  // A/B on every instrument (Live 12.3), level matched.
+  const ab = useAB(engine, track, sel, selIndex, snap => patchSel(l => ({ ...l, params: snap.params, mods: snap.mods }), false), (label, text) => setTouched({ label, text }));
 
   const diceable = !!sel && (sel.type === "drums" || sel.type === "hats" || sel.type === "bass" || sel.type === "lead");
   const rollDice = (amt: number, seed: number) => {
@@ -793,6 +796,7 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
+            <div className="m1-modrow">
             {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
               <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
                 onEdit={src => { setModEdit(src); setTouched(src ? { label: SRC_LABEL[src], text: "set amounts" } : null); }}
@@ -802,7 +806,9 @@ export function Studio() {
                   if (!k || !canTake(k.spec.key)) return;
                   patchMod(assign(TYPE[sel.type].engine, sel.params, sel.mods, src, to), `${SRC_LABEL[src]} to ${k.spec.label}`, "modulating");
                 }} />
-            ) : null}
+            ) : <span style={{ flex: 1 }} />}
+            {!lockAt ? <ABKey {...ab} /> : null}
+            </div>
             {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
             <div className="m1-g st-knobs">
               {knobs.map(({ spec, index }, i) => {

@@ -18,7 +18,7 @@ const SR = 48_000;
 const BLOCK = 512;
 const TAIL_S = 2.5;
 
-type Wasm = {
+export type Wasm = {
   memory: WebAssembly.Memory;
   ccd_engine_new(sr: number): number;
   ccd_engine_free(e: number): void;
@@ -30,10 +30,11 @@ type Wasm = {
   ccd_dealloc(p: number, bytes: number): void;
   ccd_sample_load(e: number, layer: number, slot: number, data: number, frames: number, rate: number): void;
   ccd_normalise(l: number, r: number, frames: number, sr: number, target: number, report: number): number;
+  ccd_lufs(l: number, r: number, frames: number, sr: number): number;
 };
 
 /** Commands go straight into the offline engine, in order. */
-class OfflineHost implements EngineHost {
+export class OfflineHost implements EngineHost {
   readonly name = "web" as const;
   constructor(private x: Wasm, private e: number) {}
   start() { return Promise.resolve(); }

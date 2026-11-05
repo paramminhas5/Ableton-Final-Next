@@ -177,3 +177,15 @@ pub unsafe extern "C" fn ccd_normalise(l: *mut f32, r: *mut f32, frames: u32, sa
     }
     n.lufs
 }
+
+/// Integrated loudness (BS.1770, gated) of a rendered stereo buffer, in LUFS. Offline only. The a/b
+/// level match and "match this sound" use it on short renders of one part.
+///
+/// # Safety
+/// `l` and `r` must point to `frames` floats each.
+#[no_mangle]
+pub unsafe extern "C" fn ccd_lufs(l: *const f32, r: *const f32, frames: u32, sample_rate: f32) -> f32 {
+    let l = std::slice::from_raw_parts(l, frames as usize);
+    let r = std::slice::from_raw_parts(r, frames as usize);
+    crate::loudness::integrated_lufs(l, r, sample_rate)
+}
