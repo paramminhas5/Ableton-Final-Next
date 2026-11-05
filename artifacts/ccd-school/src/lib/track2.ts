@@ -28,6 +28,8 @@ import {
   type InstrumentName,
 } from "../engine/params.gen";
 import { cleanLocks } from "./plock";
+import { asScale, type ScaleName } from "./theory";
+import { cleanChords, type Chord } from "./chords";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
@@ -72,7 +74,8 @@ export type TrackV2 = {
   v: 2;
   bpm: number;
   root: number;
-  scale: "minor" | "major";
+  /** One of Live 12's scales (src/lib/theory.ts). Songs before 5 Nov only have minor or major. */
+  scale: ScaleName;
   swing: number;
   /** Loop length in beats: 4 per bar, one to four bars. */
   loop: number;
@@ -83,6 +86,8 @@ export type TrackV2 = {
   master?: Record<number, number>;
   /** The arrangement, when the song has one (src/lib/arrange.ts). */
   sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
+  /** The chord track (Logic's Chord Track): one chord per bar of the loop, null for a bar without one. */
+  chords?: (Chord | null)[];
   /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
   cues?: { slug: string; name: string; bar: number }[];
   added: string[];
@@ -359,7 +364,11 @@ export function readTrackV2(): TrackV2 {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const t = JSON.parse(raw) as TrackV2;
-      if (t && t.v === 2) return Array.isArray(t.layers) ? cleanLocks(t) : t;
+      if (t && t.v === 2) {
+        if (t.scale !== undefined && asScale(t.scale) !== t.scale) t.scale = asScale(t.scale);
+        if (t.chords !== undefined) t.chords = cleanChords(t.chords);
+        return Array.isArray(t.layers) ? cleanLocks(t) : t;
+      }
     }
     const v1 = localStorage.getItem(V1_KEY);
     if (v1) {

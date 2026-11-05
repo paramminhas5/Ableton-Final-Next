@@ -5,13 +5,63 @@
 
 export const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"] as const;
 
+/**
+ * Ableton Live 12's scale list, in the order of its scale chooser (control bar, clip view, Push 3),
+ * lowercase. Intervals in semitones from the root. "minor" and "major" stay first so old songs, which
+ * only ever had those two, load unchanged.
+ */
 export const SCALES = {
-  minor: [0, 2, 3, 5, 7, 8, 10],
   major: [0, 2, 4, 5, 7, 9, 11],
+  minor: [0, 2, 3, 5, 7, 8, 10],
   dorian: [0, 2, 3, 5, 7, 9, 10],
+  mixolydian: [0, 2, 4, 5, 7, 9, 10],
+  lydian: [0, 2, 4, 6, 7, 9, 11],
+  phrygian: [0, 1, 3, 5, 7, 8, 10],
+  locrian: [0, 1, 3, 5, 6, 8, 10],
+  "whole tone": [0, 2, 4, 6, 8, 10],
+  "half-whole dim.": [0, 1, 3, 4, 6, 7, 9, 10],
+  "whole-half dim.": [0, 2, 3, 5, 6, 8, 9, 11],
+  "minor blues": [0, 3, 5, 6, 7, 10],
   "minor pentatonic": [0, 3, 5, 7, 10],
+  "major pentatonic": [0, 2, 4, 7, 9],
+  "harmonic minor": [0, 2, 3, 5, 7, 8, 11],
+  "harmonic major": [0, 2, 4, 5, 7, 8, 11],
+  "dorian #4": [0, 2, 3, 6, 7, 9, 10],
+  "phrygian dominant": [0, 1, 4, 5, 7, 8, 10],
+  "melodic minor": [0, 2, 3, 5, 7, 9, 11],
+  "lydian augmented": [0, 2, 4, 6, 8, 9, 11],
+  "lydian dominant": [0, 2, 4, 6, 7, 9, 10],
+  "super locrian": [0, 1, 3, 4, 6, 8, 10],
+  "8-tone spanish": [0, 1, 3, 4, 5, 6, 8, 10],
+  bhairav: [0, 1, 4, 5, 7, 8, 11],
+  "hungarian minor": [0, 2, 3, 6, 7, 8, 11],
+  hirajoshi: [0, 2, 3, 7, 8],
+  "in-sen": [0, 1, 5, 7, 10],
+  iwato: [0, 1, 5, 6, 10],
+  kumoi: [0, 2, 3, 7, 9],
+  "pelog selisir": [0, 1, 3, 7, 8],
+  "pelog tembung": [0, 1, 5, 7, 8],
+  "messiaen 3": [0, 2, 3, 4, 6, 7, 8, 10, 11],
+  "messiaen 4": [0, 1, 2, 5, 6, 7, 8, 11],
+  "messiaen 5": [0, 1, 5, 6, 7, 11],
+  "messiaen 6": [0, 2, 4, 5, 6, 8, 10, 11],
+  "messiaen 7": [0, 1, 2, 3, 5, 6, 7, 8, 9, 11],
 } as const;
 export type ScaleName = keyof typeof SCALES;
+/** Every scale, in Live's order. */
+export const SCALE_NAMES = Object.keys(SCALES) as ScaleName[];
+/** A stored scale name, or minor when it is missing or unknown (an old or damaged song). */
+export function asScale(s: unknown): ScaleName {
+  return typeof s === "string" && s in SCALES ? (s as ScaleName) : "minor";
+}
+/** A scale with a minor third and no major third: minor, dorian, phrygian, the minor pentatonic... Camelot and
+ * other major-or-minor views use this. */
+export function minorish(s: ScaleName | string | undefined): boolean {
+  const iv = SCALES[asScale(s ?? "minor")] as readonly number[];
+  return iv.includes(3) && !iv.includes(4);
+}
+/** "a minor", "c# dorian #4". */
+export const keyName = (root: number, scale: ScaleName | string) => `${NOTE_NAMES[((root % 12) + 12) % 12]} ${scale}`;
 
 /** "a2" for 45. Octave numbering where 60 is c4 (Ableton uses c3 for 60: see `liveName`). */
 export function noteName(midi: number): string {
@@ -66,8 +116,9 @@ export function snapToScale(midi: number, root: number, scale: ScaleName): numbe
  * plays the same in any key. Returns 16 notes, row 0 = top row (screen order).
  */
 export function padGrid(root: number, scale: ScaleName, rows = 4, cols = 4): number[] {
-  const len = SCALES[scale].length;
-  const rowStep = len >= 7 ? 3 : 2;
+  // A row is a fourth up, as on Push: as many scale steps as the scale has notes below the fourth
+  // (3 on a seven-note scale, 2 on a pentatonic, 4 on the eight-note ones).
+  const rowStep = Math.max(1, (SCALES[scale] as readonly number[]).filter(i => i < 5).length);
   const out: number[] = [];
   for (let r = rows - 1; r >= 0; r--) {
     for (let c = 0; c < cols; c++) out.push(scaleNote(root, scale, r * rowStep + c));

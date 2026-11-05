@@ -6,6 +6,7 @@
  * so until the tempos match its beats drift against yours, which is exactly what you hear and see.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { minorish } from "@/lib/theory";
 import { Engine, FLAG, OUT, type EngineHost } from "@/engine";
 import { bankBands, songBands, type Bands } from "@/lib/djWaves";
 import { DeckWave } from "./DeckWave";
@@ -57,7 +58,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const songName = useMemo(() => { const i = readSongs(); return i.songs.find(s => s.id === i.active)?.name ?? "your song"; }, []);
   // A lesson names a stand-in; when one of Param's picks is close in tempo and key, that one goes on deck b first.
   const keyGoal = screen.goal === "key" || screen.goal === "shift";
-  const [bid, setBid] = useState(() => preferReal(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"), keyGoal ? undefined : camelotOf(mine.root, mine.scale !== "major")).id);
+  const [bid, setBid] = useState(() => preferReal(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"), keyGoal ? undefined : camelotOf(mine.root, minorish(mine.scale))).id);
   const b = bankTrack(bid);
   const base = mine.bpm || 120;
   // Deck b starts at its own tempo, except in lessons where matching isn't the point: then it is already matched.
@@ -70,7 +71,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const [loopAt, setLoopAt] = useState(0);
   const [stems, setStems] = useState<Record<Stem, boolean>>({ drums: true, hats: true, bass: true });
   // Outside the key lessons, a stand-in on deck b starts in a key that mixes with your song (real picks keep their own key).
-  const [shift, setShift] = useState(() => (keyGoal || realOf(bid) ? 0 : fitShift(bankTrack(bid), camelotOf(mine.root, mine.scale !== "major")))); // semitones on deck b's key
+  const [shift, setShift] = useState(() => (keyGoal || realOf(bid) ? 0 : fitShift(bankTrack(bid), camelotOf(mine.root, minorish(mine.scale))))); // semitones on deck b's key
   const [cueHits, setCueHits] = useState(0);
   const [bFile, setBFile] = useState<string | null>(null);
   const [deckA, setDeckA] = useState<"song" | "file">("song");
@@ -155,7 +156,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     await ready(); const r = engine.recordOutput(); if (!r) { setSay("recording needs the web engine"); return; } recorder.current = r; setRecState("on"); if (!playing) engine.play();
   };
   const off = Math.abs(bBpm - base);
-  const mineKey = camelotOf(mine.root ?? 45, (mine.scale ?? "minor") === "minor");
+  const mineKey = camelotOf(mine.root ?? 45, minorish(mine.scale));
   // Deck b's key as it plays now, after any key shift.
   const bKey = camelotOf(b.root + shift, b.minor);
   const fits = camelotFits(mineKey, bKey);
@@ -246,7 +247,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           </div>
         </div>
         {shows("bank") && <div className="fl-marks mx-bank" role="radiogroup" aria-label="Deck b track">
-          {similarFirst(base, camelotOf(mine.root, mine.scale !== "major")).map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); setShift(keyGoal || realOf(t.id) ? 0 : fitShift(t, camelotOf(mine.root, mine.scale !== "major"))); }} title={realOf(t.id) ? `${realOf(t.id)!.artist}, ${realOf(t.id)!.title}` : "a stand-in made on our engine"}>{t.name}<small>{t.bpm} · {t.camelot}{realOf(t.id) ? (keyGoal ? "" : camelotFits(t.camelot, camelotOf(mine.root, mine.scale !== "major")) ? " · fits" : " · clashes") : " · stand-in"}</small></button>)}
+          {similarFirst(base, camelotOf(mine.root, minorish(mine.scale))).map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); setShift(keyGoal || realOf(t.id) ? 0 : fitShift(t, camelotOf(mine.root, minorish(mine.scale)))); }} title={realOf(t.id) ? `${realOf(t.id)!.artist}, ${realOf(t.id)!.title}` : "a stand-in made on our engine"}>{t.name}<small>{t.bpm} · {t.camelot}{realOf(t.id) ? (keyGoal ? "" : camelotFits(t.camelot, camelotOf(mine.root, minorish(mine.scale))) ? " · fits" : " · clashes") : " · stand-in"}</small></button>)}
         </div>}
         {songCues.length > 0 && deckA === "song" && (mine.sections?.length ?? 0) > 0 && <div className="fl-marks mx-cuesa" role="group" aria-label="Your song's cues on deck a">
           {songCues.map(c => <button key={c.slug} type="button" className={`ls-chip ${cueA === c.bar ? "is-on" : ""}`} aria-pressed={cueA === c.bar} aria-label={`deck a from your cue ${c.name}, bar ${c.bar}`} onClick={() => setCueA(c.bar)}>a · {c.name}<small>bar {c.bar}</small></button>)}

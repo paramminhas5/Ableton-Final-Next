@@ -11,7 +11,7 @@ import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
 import { newLayerV2, readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
-import { NOTE_NAMES, type Snap } from "@/lib/theory";
+import { asScale, NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocityAt } from "@/lib/touch";
 import { GoPill, Icon, Key, PadRing, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
@@ -68,7 +68,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const sessionRef = useRef(session);
   sessionRef.current = session;
 
-  const pads = useMemo(() => playPads(type, session.root, session.scale === "major" ? "major" : "minor"), [type, session.root, session.scale]);
+  const pads = useMemo(() => playPads(type, session.root, asScale(session.scale)), [type, session.root, session.scale]);
   const padsRef = useRef(pads);
   padsRef.current = pads;
   const events = session.layers[idx]?.events ?? [];

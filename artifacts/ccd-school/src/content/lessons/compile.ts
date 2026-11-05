@@ -2,6 +2,7 @@ import { parse } from "yaml";
 import * as P from "../../engine/params.gen";
 import type { LayerType } from "../../lib/track2";
 import { CLIP_IDS } from "./clips";
+import { SCALES } from "../../lib/theory";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -218,7 +219,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           if (raw.set !== undefined && !TEMPO_SETS.includes(raw.set as string)) at(where, `set must be one of ${TEMPO_SETS.join(", ")}`);
           if (raw.layer !== undefined && !["bass", "chords", "lead", "drums", "hats"].includes(raw.layer as string)) at(where, "layer must be bass, chords, lead, drums or hats");
           if (raw.set === "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.length !== 1 || !["hit", "slice", "warp"].includes(String(raw.choices[0])))) at(where, "a sample step's choices names one job: hit, slice or warp");
-          if (raw.set !== "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !["minor", "major", "dorian", "minor pentatonic"].includes(c)))) at(where, "choices must be scales: minor, major, dorian, minor pentatonic");
+          if (raw.set !== "sample" && raw.choices !== undefined && (!Array.isArray(raw.choices) || raw.choices.some((c: unknown) => typeof c !== "string" || !(c in SCALES)))) at(where, "choices must be Live 12 scale names (src/lib/theory.ts), lowercase");
           if (raw.marks !== undefined && (!Array.isArray(raw.marks) || raw.marks.some((m: unknown) => typeof m !== "number" || (raw.set === "swing" || raw.set === "glue" ? m < 0 || m > 1 : m < 60 || m > 180)))) at(where, raw.set === "swing" ? "swing marks are between 0 and 0.75" : "marks must be a list of tempos between 60 and 180");
           break;
         case "ask": {

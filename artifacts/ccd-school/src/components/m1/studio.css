@@ -159,3 +159,40 @@
 .st-capbtn{background:none;color:#C9CBD1;cursor:pointer;font-family:inherit;height:24px;min-height:0;min-width:0}
 .st-capbtn.is-keep{color:#141416;background:var(--led-mint);border-color:var(--led-mint);font-weight:600}
 .st-dicerow{display:flex;justify-content:flex-start;margin-top:6px;flex:none}
+
+/* keys and scales (Live 12): the key in the header, the key panel, dim keys outside the key */
+.st-keytag{max-width:104px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;line-height:16px}
+.st-keytag[aria-pressed="true"],.st-roots .st-tag.is-on,.st-scales .st-tag.is-on{color:var(--ink);border-color:var(--led-mint);box-shadow:0 0 0 1px color-mix(in srgb,var(--led-mint) 40%,transparent)}
+.st-keypanel{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.st-roots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;flex:none}
+.st-roots .st-tag{height:30px;justify-content:center;font-size:13px}
+.st-scales{flex:1;min-height:0;overflow-y:auto;display:flex;flex-wrap:wrap;align-content:flex-start;gap:5px}
+.st-scales .st-tag{height:30px;gap:6px;font-size:12px}
+.st-scales .st-tag small{font-size:9px;opacity:.6}
+.st-keyfoot{display:flex;align-items:center;gap:8px;flex:none;min-height:24px}
+.st-keyfoot .st-tag{height:24px}
+.st-key.is-out{opacity:.38}
+.st-key.is-root .m1-ml{color:var(--led-mint)!important;font-weight:600}
+.st-sharp.is-out{opacity:.35}
+.st-sharp.is-root{box-shadow:0 0 0 2px var(--led-mint)!important}
+.st-keytabs{display:flex;gap:6px;flex:none;margin-bottom:8px}
+.st-keytabs .st-tag{height:30px;font-size:12px;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-keytabs .st-tag.is-on{color:var(--ink);border-color:var(--led-mint)}
+/* the chord track's notes, lit as suggestions on the surfaces */
+.st-chordnow{color:var(--led-mint)}
+.st-sp.is-sug:not(.is-lit){box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--led-mint) 75%,transparent)}
+.st-key.is-sug:not(.is-hit) .m1-cap{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--led-mint) 80%,transparent)!important}
+.st-sharp.is-sug:not(.is-hit){box-shadow:0 0 0 2px var(--led-mint)!important}
+.st-lane-col.is-sug{background:color-mix(in srgb,var(--led-mint) 12%,transparent)}
+.st-xy-notes b.is-sug{color:var(--led-mint)}
+/* the header holds the song, tempo, key and snap: tags never wrap, the song and key names shrink first */
+.st-head{gap:8px}
+.st-head .st-tag{white-space:nowrap;flex:none;position:relative}
+.st-head .st-tag::after{content:"";position:absolute;inset:-13px -3px}
+.st-mode2{width:122px;flex:none}
+.st-songtag{flex:0 1 auto!important;min-width:0!important;max-width:120px;overflow:hidden;text-overflow:ellipsis;display:block!important;line-height:16px}
+.st-keytag{flex:0 1 auto!important;min-width:0!important}
+@media (max-width:430px){.st-head{gap:6px}.st-mode2{width:100px}.st-songtag{max-width:84px}}
+.st-roots .st-tag,.st-scales .st-tag,.st-keyfoot .st-tag,.st-keytabs .st-tag{position:relative}
+.st-roots .st-tag::after,.st-scales .st-tag::after,.st-keyfoot .st-tag::after,.st-keytabs .st-tag::after{content:"";position:absolute;inset:-7px -3px}
+.st-keyfoot .st-tag{height:30px}

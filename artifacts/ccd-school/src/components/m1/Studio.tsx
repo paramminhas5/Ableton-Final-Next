@@ -32,7 +32,7 @@ import {
 } from "@/engine";
 import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
 import { velocityAt } from "@/lib/touch";
-import { keyRow, noteName, padGrid, pitchClass, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
+import { inScale, keyName, keyRow, noteName, padGrid, pitchClass, SCALE_NAMES, SCALES, snapToScale, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
 import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
 import { deleteSong, duplicateSong, newSong, readSongs, renameSong, switchSong, type SongIndex } from "@/lib/songs";
@@ -72,6 +72,8 @@ import { bind, PIC } from "@/lib/paramColor";
 import { assign, canTake, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, SRC_COLOR, SRC_LABEL, type ModSrc } from "@/lib/modulation";
 import { ModChips, ModOverlay } from "./Modulation";
 import { fromValue, toValue } from "@/engine";
+import { chordAt, chordEvents, chordName, chordNotes as chordMidi, inChord, romanOf, withChordTrack, type Chord } from "@/lib/chords";
+import { ChordTrackEditor } from "./ChordTrack";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
 // Caps stay neutral: the ring around each knob carries the colour of the line it moves.
@@ -122,6 +124,7 @@ export function Studio() {
   const [touched, setTouched] = useState<Touched>(null);
   const [adding, setAdding] = useState(false);
   const [songsOpen, setSongsOpen] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [sureReset, setSureReset] = useState<string | null>(null);
   const [songs, setSongs] = useState<SongIndex | null>(null);
@@ -403,7 +406,7 @@ export function Studio() {
     const root = sel.type === "bass" ? bassRoot(track) : (track.root ?? 45) + 12;
     const ev = sel.type === "drums" || sel.type === "hats"
       ? fillDrums(d.base, lanes, track.loop, grid, amt, seed)
-      : fillMelody(d.base, { loop: track.loop, step: grid, root: track.root ?? 45, scale: track.scale === "major" ? "major" : "minor", amount: amt, seed, lo: root, hi: root + 19 });
+      : fillMelody(d.base, { loop: track.loop, step: grid, root: track.root ?? 45, scale: scaleOf(track), amount: amt, seed, lo: root, hi: root + 19 });
     d.result = JSON.stringify(ev);
     const now = Date.now();
     const undoable = now - lastDice.current > 800;
@@ -467,6 +470,10 @@ export function Studio() {
     setAdding(false);
   };
 
+  // The chord track's chord under the playhead (bar 1 when stopped): its notes light on the surfaces.
+  const chordNow = chordAt(track.chords, playing ? pos.beat : 0, track.loop);
+  const melodicSel = !!sel && (sel.type === "bass" || sel.type === "chords" || sel.type === "lead");
+
   // ── screen text ───────────────────────────────────────────────────────────
   const totalSteps = Math.round(track.loop / grid);
   const playStep = playing ? stepOf(pos.beat, totalSteps, track.loop) : -1;
@@ -483,7 +490,7 @@ export function Studio() {
   const ownHint: Record<string, string> = {
     glide: "slide your finger, the note bends",
     circle: "hits spread evenly round the bar",
-    "chord pads": `one pad, one chord, always in ${NOTE_NAMES[track.root % 12]} ${track.scale}`,
+    "chord pads": `one pad, one chord, always in ${keyName(track.root, scaleOf(track))}`,
     xy: "slide across for the note, up to open the filter",
     rolls: "hold a pad, slide the strip to change the roll",
     riser: "push up over the bars before the drop",
@@ -502,8 +509,8 @@ export function Studio() {
       if (s === "keys") return "slot 1 played as a keyboard · pick the keys sound";
       if (s === "steps") return "a lane per slot · load sounds under load";
     } else {
-      if (s === "pads") return `only notes in a minor · lit pads are a`;
-      if (s === "keys") return "hold one key, play another to glide";
+      if (s === "pads") return `only notes in ${keyName(track.root, scaleOf(track))} · lit pads are ${NOTE_NAMES[pitchClass(track.root)]}`;
+      if (s === "keys") return `dim keys are outside ${keyName(track.root, scaleOf(track))}`;
       if (s === "steps") return `${sel.events.length} steps on · tap to switch a step`;
     }
     return "";
@@ -554,6 +561,7 @@ export function Studio() {
         setLayer: patchSel,
         say: (label, text) => setTouched({ label, text }),
         hits,
+        chord: chordNow,
       }
     : null;
   const chooseSurface = (sf: Surface) => {
@@ -582,22 +590,22 @@ export function Studio() {
   return (
     <div className="st-root" onPointerDownCapture={unlock}>
       <div className="st-body">
-        <div className="st-head" style={{ gap: 8 }}>
+        <div className="st-head">
           <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}>
             <Icon name="back" />
           </Link>
-          <div className="st-mode" style={{ width: 122 }} role="radiogroup" aria-label="Studio mode">
+          <div className="st-mode st-mode2" role="radiogroup" aria-label="Studio mode">
             {(["play", "mix"] as Mode[]).map(m => (
               <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m}</button>
             ))}
           </div>
           <span style={{ flex: 1 }} />
-          <button type="button" className="st-tag" style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: "16px" }}
-            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
+          <button type="button" className="st-tag st-songtag"
+            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
-          {mode === "mix" ? (
-            <span className="st-tag" style={{ cursor: "default" }}>{NOTE_NAMES[track.root % 12]} {track.scale}</span>
-          ) : (
+          <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
+            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setKeyOpen(o => !o); }}>{keyName(track.root, scaleOf(track))}</button>
+          {mode === "mix" ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}
         </div>
@@ -609,7 +617,7 @@ export function Studio() {
             const c = TYPE[l.type].color;
             return (
               <button key={l.id} type="button" className={`m1-m is-wide st-slot ${on ? "is-on" : ""} ${l.mute ? "is-muted" : ""}`} aria-pressed={on}
-                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setShift(false); }}>
+                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setKeyOpen(false); setShift(false); }}>
                 <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: c } as CSSProperties} />
                 {TYPE[l.type].label}
                 {l.solo ? <i className="st-solo" /> : null}
@@ -618,7 +626,7 @@ export function Studio() {
           })}
           {track.layers.length < MAX_LAYERS ? (
             <button type="button" className={`m1-m is-wide st-slot st-plus ${adding ? "is-on" : ""}`} aria-label="Add a layer" aria-pressed={adding}
-              onClick={() => { setMode("play"); setSongsOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
+              onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
               <Icon name="plus" />
             </button>
           ) : null}
@@ -637,6 +645,7 @@ export function Studio() {
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>
                     <span className="st-big" style={{ fontSize: 28, color: type.color }}>{type.label}</span>
+                    {melodicSel && chordNow ? <span className="st-chip st-chordnow" title="the chord track's chord now">{chordName(chordNow)} · {romanOf(chordNow, track.root, scaleOf(track))}</span> : null}
                     {ducking && duckSrc ? (
                       <><span className="st-ss">ducks under</span><span className="st-chip" style={{ color: TYPE[duckSrc.type].color }}>{TYPE[duckSrc.type].label}{sel.duck.note === 36 ? " · kick" : ""}</span></>
                     ) : null}
@@ -684,6 +693,9 @@ export function Studio() {
               ))}
             </div>
           </div>
+        ) : keyOpen ? (
+          <div className="st-main"><KeyPanel track={track} update={update} now={playing ? Math.floor((((pos.beat % track.loop) + track.loop) % track.loop) / 4) : -1}
+            onPreview={ns => { const li = track.layers.findIndex(l => l.type === "chords" || l.type === "lead" || l.type === "bass"); const i = melodicSel ? selIndex : li; if (i < 0) return; start(); ns.forEach(n => engine.noteOn(i, n, 0.8)); window.setTimeout(() => ns.forEach(n => engine.noteOff(i, n)), 420); }} /></div>
         ) : songsOpen ? (
           <div className="st-main"><SongsPanel songs={songs} onChange={refreshSongs} /></div>
         ) : adding ? (
@@ -723,10 +735,10 @@ export function Studio() {
             )}
             {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && !drumLike && sel.type !== "fx" && sel.type !== "sample" && (
-              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} rings={rings} noteHandlers={noteHandlers} />
+              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} rings={rings} noteHandlers={noteHandlers} chord={chordNow} />
             )}
             {sel.surface === "keys" && sel.type !== "fx" && (
-              <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
+              <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} root={track.root} scale={scaleOf(track)} chord={chordNow} />
             )}
             {sel.surface === "steps" && laneLike && (
               <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
@@ -819,7 +831,7 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
-        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
           <Icon name="reset" />
         </Key>
         <Key label="to live" onClick={() => downloadTrackV2Midi(arranged(track))} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
@@ -960,7 +972,7 @@ function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: 
 }
 
 /** Scale grid: only notes in key, rows a fourth apart, roots glow. */
-function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
+function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers, chord }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers; chord: Chord | null }) {
   const c = TYPE[layer.type].color;
   const notes = padGrid(root, scale);
   return (
@@ -970,8 +982,8 @@ function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers }: { la
         const isRoot = pitchClass(n) === pitchClass(root);
         const name = noteName(n);
         return (
-          <button key={i} type="button" className={`st-sp ${on ? "is-lit" : isRoot ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
-            aria-label={`Note ${name}${isRoot ? ", root" : ""}`} {...noteHandlers(n)}>
+          <button key={i} type="button" className={`st-sp ${on ? "is-lit" : isRoot ? "is-dim" : ""} ${inChord(chord, n) ? "is-sug" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
+            aria-label={`Note ${name}${isRoot ? ", root" : ""}${inChord(chord, n) ? ", in the chord now" : ""}`} {...noteHandlers(n)}>
             <i className="pad-vel" />
             <span className="st-lb" style={{ fontSize: 15 }}>{name.replace(/-?\d+$/, "")}<span style={{ fontSize: 10, opacity: 0.6 }}>{name.match(/-?\d+$/)?.[0]}</span></span>
             {ringOf(rings, `${layer.id}:${n}`)}
@@ -983,15 +995,17 @@ function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers }: { la
 }
 
 /** Eight white keys with black keys set between them. Drums: one sound per key. */
-function Keys({ drum, held, hits, layerId, noteHandlers }: { drum: boolean; held: Set<number>; hits: Record<string, number>; layerId: string; noteHandlers: NoteHandlers }) {
+function Keys({ drum, held, hits, layerId, noteHandlers, root, scale, chord }: { drum: boolean; held: Set<number>; hits: Record<string, number>; layerId: string; noteHandlers: NoteHandlers; root: number; scale: ScaleName; chord: Chord | null }) {
   const row = keyRow(36);
   const whites = drum ? DRUM_PAD_NOTES.slice(0, 8) : row.white;
   const lit = (n: number) => held.has(n) || !!hits[`${layerId}:${n}`];
+  // Live's highlight scale: keys outside the key are dim, the root is marked. They still play.
+  const tone = (n: number) => (drum ? "" : `${inScale(n, root, scale) ? "" : " is-out"}${pitchClass(n) === pitchClass(root) ? " is-root" : ""}${inChord(chord, n) ? " is-sug" : ""}`);
   return (
     <div className={`st-keys ${drum ? "is-drum" : ""}`}>
       <div className="st-keys-row">
         {whites.map((n, i) => (
-          <button key={i} type="button" className={`m1-m is-wide st-key ${lit(n) ? "is-hit" : ""}`} aria-label={drum ? DRUM_KEY_LABELS[i] : `Note ${noteName(n)}`} {...noteHandlers(n)}>
+          <button key={i} type="button" className={`m1-m is-wide st-key ${lit(n) ? "is-hit" : ""}${tone(n)}`} aria-label={drum ? DRUM_KEY_LABELS[i] : `Note ${noteName(n)}${inScale(n, root, scale) ? "" : ", outside the key"}`} {...noteHandlers(n)}>
             <span className="m1-cap" />
             <span className="m1-ml">{drum ? DRUM_KEY_LABELS[i] : noteName(n).replace(/\d+$/, "")}</span>
           </button>
@@ -999,7 +1013,7 @@ function Keys({ drum, held, hits, layerId, noteHandlers }: { drum: boolean; held
       </div>
       {!drum &&
         row.black.map(b => (
-          <button key={b.note} type="button" aria-label={`Note ${noteName(b.note)}`} className={`m1-cap is-blk st-sharp ${lit(b.note) ? "is-hit" : ""}`}
+          <button key={b.note} type="button" aria-label={`Note ${noteName(b.note)}${inScale(b.note, root, scale) ? "" : ", outside the key"}`} className={`m1-cap is-blk st-sharp ${lit(b.note) ? "is-hit" : ""}${tone(b.note)}`}
             style={{ left: `calc((100% - 35px) / 8 * ${b.after + 1} + ${5 * (b.after + 1)}px - 2.5px - 15px)` }} {...noteHandlers(b.note)} />
         ))}
     </div>
@@ -1293,6 +1307,72 @@ function AddPanel({ track, sel, onAdd, onRemove }: { track: TrackV2; sel: LayerV
           </button>
         ) : null}
       </div>
+    </>
+  );
+}
+
+/**
+ * The song's key: a root and one of Live 12's scales. Every keyboard, pad, lane and the note grid follow
+ * it. Like Live, changing it does not move your notes; "fit to scale" (Live's name) moves the ones outside.
+ */
+function KeyPanel({ track, update, onPreview, now }: { track: TrackV2; update: (fn: (t: TrackV2) => TrackV2, undoable?: boolean) => void; onPreview: (notes: number[]) => void; now: number }) {
+  const [tab, setTab] = useState<"key" | "chords">("key");
+  const scale = scaleOf(track);
+  const melodic = (l: LayerV2) => l.type === "bass" || l.type === "chords" || l.type === "lead";
+  const outside = track.layers.filter(melodic).reduce((n, l) => n + l.events.filter(e => !inScale(e.note, track.root, scale)).length, 0);
+  const setKey = (root: number, sc: ScaleName) => {
+    update(t => ({ ...t, root, scale: sc }));
+    const s = SCALES[sc] as readonly number[];
+    s.forEach((iv, i) => window.setTimeout(() => onPreview([57 + ((root - 45 + 120) % 12) + iv]), i * 90));
+  };
+  const fit = () => update(t => ({ ...t, layers: t.layers.map(l => (melodic(l) ? { ...l, events: l.events.map(e => ({ ...e, note: snapToScale(e.note, t.root, scaleOf(t)) })) } : l)) }));
+  const chords = track.chords ?? [];
+  const hasChords = chords.some(Boolean);
+  const chordsPart = track.layers.find(l => l.type === "chords");
+  // FL's chord stamp: the chord track written into the chords part as notes you can edit. One undo step.
+  const writeChords = () => update(t => {
+    const evs = chordEvents(t.chords ?? [], t.loop);
+    const has = t.layers.find(l => l.type === "chords");
+    if (has) return { ...t, layers: t.layers.map(l => (l.id === has.id ? { ...l, events: evs } : l)) };
+    if (t.layers.length >= MAX_LAYERS) return t;
+    return { ...t, layers: [...t.layers, { ...newLayerV2("chords", "chord track"), events: evs }] };
+  });
+  return (
+    <>
+      <div className="st-keytabs" role="tablist" aria-label="Key or chord track">
+        {(["key", "chords"] as const).map(k => (
+          <button key={k} type="button" role="tab" aria-selected={tab === k} className={`st-tag ${tab === k ? "is-on" : ""}`} onClick={() => setTab(k)}>{k === "key" ? `key · ${keyName(track.root, scale)}` : `chord track${hasChords ? ` · ${chords.filter(Boolean).length}` : ""}`}</button>
+        ))}
+      </div>
+      {tab === "key" ? (
+        <div className="st-keypanel">
+          <div className="st-roots" role="radiogroup" aria-label="Root note">
+            {NOTE_NAMES.map((n, pc) => {
+              const on = pitchClass(track.root) === pc;
+              return <button key={n} type="button" role="radio" aria-checked={on} className={`st-tag ${on ? "is-on" : ""}`} onClick={() => setKey(33 + ((pc - 9 + 12) % 12) + 12, scale)}>{n}</button>;
+            })}
+          </div>
+          <div className="st-scales" role="radiogroup" aria-label="Scale">
+            {SCALE_NAMES.map(sc => {
+              const on = sc === scale;
+              return <button key={sc} type="button" role="radio" aria-checked={on} className={`st-tag ${on ? "is-on" : ""}`} onClick={() => setKey(track.root, sc)}>{sc}<small>{(SCALES[sc] as readonly number[]).length}</small></button>;
+            })}
+          </div>
+          <div className="st-ss st-keyfoot">
+            {outside ? <><span>{outside} note{outside > 1 ? "s" : ""} outside the key</span><button type="button" className="st-tag" onClick={fit}>fit to scale</button></> : <span>every note is in key</span>}
+          </div>
+        </div>
+      ) : (
+        <div className="st-keypanel" style={{ overflowY: "auto" }}>
+          <ChordTrackEditor track={track} chords={chords} now={now} onChange={c => update(t => withChordTrack(t, c))} onPreview={c => onPreview(chordMidi(c, 52))} />
+          <div className="st-ss st-keyfoot">
+            {hasChords ? (
+              <><span>{chordsPart ? "your chords part can play it" : "no chords part yet"}</span>
+                <button type="button" className="st-tag" disabled={!chordsPart && track.layers.length >= MAX_LAYERS} onClick={writeChords}>{chordsPart ? "write into chords" : "add chords that play it"}</button></>
+            ) : <span>pick a chord for each bar. bass, lead and chord pads light its notes</span>}
+          </div>
+        </div>
+      )}
     </>
   );
 }

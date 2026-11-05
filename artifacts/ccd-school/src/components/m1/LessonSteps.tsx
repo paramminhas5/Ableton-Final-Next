@@ -14,7 +14,7 @@ import { applyTake, readTake, shapeKnobs, takeType, withParams } from "@/lib/les
 import { offerFor, readTrack } from "@/lib/track";
 import { getCtx, playCorrect, playWrong } from "@/lib/audio";
 import { readTrackV2, writeTrackV2, type LayerType, type TrackV2 } from "@/lib/track2";
-import { NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
+import { asScale, NOTE_NAMES, remapToScale, SCALES, type ScaleName } from "@/lib/theory";
 import { loadRealKit, REAL_KIT_ID, withRealKit, withSynthKit } from "@/lib/realKit";
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
@@ -564,7 +564,11 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
   );
 }
 
-const SCALE_LINE: Record<string, string> = { minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones" };
+const SCALE_LINE: Record<string, string> = {
+  minor: "darker, moodier", major: "bright, happy", dorian: "minor with a lift", "minor pentatonic": "five notes, no wrong ones",
+  phrygian: "dark, with a tense second note", mixolydian: "major with a bluesy seventh", lydian: "major, floating", "major pentatonic": "five bright notes",
+  "harmonic minor": "minor with a pull home", "minor blues": "pentatonic plus the blue note", "phrygian dominant": "tense, eastern",
+};
 
 /** Your song's melody, bass and chords moved into another scale, note by note. */
 function inScale(t: TrackV2, to: ScaleName): TrackV2 {
@@ -574,10 +578,12 @@ function inScale(t: TrackV2, to: ScaleName): TrackV2 {
 }
 
 function ScaleStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; accent: string; onNext: () => void; tail?: ReactNode; mine?: TrackV2 | null }) {
-  const choices = (screen.choices?.length ? screen.choices : ["minor", "major"]) as ScaleName[];
+  const listed = (screen.choices?.length ? screen.choices : ["minor", "major"]) as ScaleName[];
   const [sc, setSc] = useState<ScaleName>("minor");
   const loop = useMemo(() => mine ?? (songHasMusic() ? readTrackV2() : clipVariants("synth-note")[0].track), [mine]);
-  useEffect(() => setSc(((loop.scale as ScaleName) ?? "minor")), [loop]);
+  useEffect(() => setSc(asScale(loop.scale)), [loop]);
+  // Your song's own scale is always one of the choices, even when the lesson lists others.
+  const choices = listed.includes(asScale(loop.scale)) ? listed : [asScale(loop.scale), ...listed];
   const shown = useMemo(() => inScale(loop, sc), [loop, sc]);
   const { engine, ready } = useEngineTrack(shown);
   const [beat, setBeat] = useState(-1);

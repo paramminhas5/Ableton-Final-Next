@@ -9,7 +9,8 @@ import { BASS_PARAMS, CHORD_PARAMS, FLAG, LAYER_PARAMS, LEAD_PARAMS, OUT } from 
 import type { LessonScreen } from "@/content/types";
 import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } from "@/lib/track2";
 import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
-import { NOTE_NAMES } from "@/lib/theory";
+import { asScale, NOTE_NAMES } from "@/lib/theory";
+import { chordNotes as chordMidi, progression } from "@/lib/chords";
 import { CAP, Dice, GoPill, Icon, Key, Knob, Screen } from "./controls";
 import { newSeed } from "@/lib/dice";
 import { Body, Meta, useEnter, useStarter } from "./LessonParts";
@@ -24,9 +25,11 @@ export function withPart(t: TrackV2, type: LayerType): { track: TrackV2; added: 
   if (t.layers.some(l => l.type === type && l.events.length)) return { track: t, added: false };
   const L = t.loop || 4;
   const root = 57 + (((t.root ?? 45) - 45) % 12);
-  const minor = (t.scale ?? "minor") === "minor";
-  // i, VI, III, VII in minor; I, V, vi, IV in major. One chord per quarter of the loop.
-  const prog = minor ? [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]] : [[0, 4, 7], [-5, -1, 2], [-3, 0, 4], [-7, -3, 0]];
+  const sc = asScale(t.scale);
+  // i, VI, III, VII in minor; I, V, vi, IV in major; the first, sixth, third and seventh chords in any other
+  // scale. One chord per quarter of the loop.
+  const prog = sc === "minor" ? [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]] : sc === "major" ? [[0, 4, 7], [-5, -1, 2], [-3, 0, 4], [-7, -3, 0]]
+    : progression(root, sc, [0, 5, 2, 6], 4).map(c => chordMidi(c, root - 5).map(n => n - root));
   const l = newLayerV2(type, "__tool");
   const each = L / 4;
   l.events = prog.flatMap((c, i) => (type === "chords" ? c : [c[0]]).map(n => ({ start: i * each, len: each * 0.95, note: root + n + (type === "bass" ? -12 : 0), vel: 0.8 })));

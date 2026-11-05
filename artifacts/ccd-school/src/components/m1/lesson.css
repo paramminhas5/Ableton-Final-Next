@@ -859,3 +859,8 @@ a.jv-lane:hover{transform:translateX(3px)}
 .is-placement .ls-title,.is-placement .ls-sub,.is-placement .ls-panel,.is-placement .ls-pad,.is-placement .ls-read{text-transform:lowercase}
 /* long track names wrap inside their chip instead of spilling out */
 .fl-marks.mx-bank .ls-chip{white-space:normal;overflow-wrap:anywhere;min-width:0;text-align:left;line-height:1.2}
+/* the song's key in the note grid: rows outside it dim, root rows marked */
+.gr-row.is-out .gr-cell{background:rgba(255,255,255,.015)}
+.gr-row.is-out .gr-key{opacity:.45}
+.gr-row.is-root .gr-key{box-shadow:inset -3px 0 0 var(--led-mint)}
+.gr-row.is-root .gr-cell{background:color-mix(in srgb,var(--led-mint) 12%,rgba(255,255,255,.06))}
