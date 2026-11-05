@@ -43,6 +43,24 @@ steps:
         Press rec. Play the bass key with the same number as each chord: one for i, six for VI, three for III,
         seven for VII.
 
+  - kind: tempo
+    set: player
+    layer: bass
+    say:
+      mentor: >-
+        You played the bass yourself. Here is a bass player to compare, like Logic's Bass Player: it follows
+        your chord track (or your key's root, if you have no chords yet) and writes ordinary notes you can
+        edit. Drag the dot: left is simple, right is complex, up is louder and busier, with slides. Fill and
+        swing sit below.
+
+        It is a starting point, not a replacement for your hands. Keep its notes, or skip this and keep
+        yours.
+      straight: >-
+        A bass player (Logic's idea) follows your chords and writes notes you can edit. Left simple, right
+        complex, up louder. Keep it or skip.
+      eli5: >-
+        Drag the dot and a bass line appears that follows your chords. Keep it if you like it.
+
   - kind: say
     title: the glue
     say:

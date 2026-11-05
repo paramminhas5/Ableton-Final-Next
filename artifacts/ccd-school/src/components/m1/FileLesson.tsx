@@ -43,6 +43,7 @@ import "./lesson.css";
 const STEP_LABEL: Record<string, string> = {
   swing: "swing it", scale: "pick your scale", glue: "glue it", kit: "pick your kit", arp: "set the arp", key: "move the key",
   grid: "edit the notes", mic: "record a sound", comp: "comp the takes", macro: "map the macro",
+  chords: "write the chord track", player: "let a player write it", chance: "vary the steps", length: "set its length", commit: "commit the loop",
 };
 
 type Quiz = Extract<LessonScreen, { kind: "quiz" }>;
@@ -244,7 +245,7 @@ function TakeBar({ mission, take }: { mission: Mission; take: Take }) {
 }
 
 // ── add to your song: the moment the part goes in ───────────────────────────
-const SET_NOUN: Record<string, string> = { tempo: "tempo", swing: "swing", scale: "scale", glue: "glue", kit: "kit", arp: "arp", key: "key", grid: "notes", mic: "recording", comp: "comp", sample: "sample", macro: "macro" };
+const SET_NOUN: Record<string, string> = { tempo: "tempo", swing: "swing", scale: "scale", glue: "glue", kit: "kit", arp: "arp", key: "key", grid: "notes", mic: "recording", comp: "comp", sample: "sample", macro: "macro", chords: "chord track", player: "notes", chance: "variation", length: "part length", commit: "sections" };
 /** What a lesson with nothing to play in changes about your song, in a word ("arrangement", "arp"), or null when it shapes a part. */
 export function changeNoun(screens: LessonScreen[]): string | null {
   const tool = [...screens].reverse().find(s => s.kind === "arrange" || s.kind === "tempo" || s.kind === "mix");

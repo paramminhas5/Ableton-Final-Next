@@ -55,6 +55,22 @@ steps:
         say: >-
           When a transformation makes new pitches, it follows the scale you've set for the song.
 
+  - kind: tempo
+    set: grid
+    layer: chords
+    say:
+      mentor: >-
+        Here are your chords on the note grid, with three of Live 12's transformations under it. Set the
+        amount, then press one: strum spreads the notes of each chord out low to high (or high to low with a
+        negative amount), like a hand across guitar strings; humanize moves every note a little early or
+        late and a little softer or harder; velocity shaper makes them get louder or softer from first to
+        last. Each press is one step you can undo. Pick a few notes first to change only those.
+      straight: >-
+        Your chords on the note grid. Set an amount, press strum, humanize or velocity shaper. Each press
+        undoes. Pick notes first to change only those.
+      eli5: >-
+        Press strum and your chords sound like a guitar. Humanize makes them less robotic. Try them.
+
   - kind: arrange
     goal: fills
     say:

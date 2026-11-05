@@ -226,3 +226,4 @@
 .st-partv{min-width:18px;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums}
 .st-sp.st-past{opacity:.12;pointer-events:none}
 .st-dicerow{flex-wrap:wrap}
+.st-main .st-secrow{margin:0 0 2px;min-height:28px}

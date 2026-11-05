@@ -77,6 +77,23 @@ steps:
         if some are a tiny bit late. That makes it feel relaxed.
     hint: Count "one and two and" and tap on the "and", lazily.
 
+  - kind: tempo
+    set: player
+    layer: drums
+    say:
+      mentor: >-
+        You played your hats. Producers also start from a beat someone else plays and change it. Logic calls
+        it the Drummer: two sliders, complexity and intensity, and it writes the notes into your song so you
+        can edit every hit. Live 12.3's Patterns does the same job. Drag the dot and listen to how busy and
+        how hard it plays.
+
+        Your own hats stay yours: it only writes your drums part. Keep its beat, or skip.
+      straight: >-
+        A drummer (Logic's Drummer): complexity left to right, intensity up. It writes notes you can edit
+        into your drums. Keep it or skip.
+      eli5: >-
+        Drag the dot and a drummer plays your drums. Keep it if you like it.
+
   - kind: ask
     q: What does quantising do?
     options: ["moves notes onto the grid", "adds a human feel", "makes notes louder", "changes their pitch"]

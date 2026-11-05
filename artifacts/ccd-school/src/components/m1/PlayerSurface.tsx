@@ -1,4 +1,5 @@
 "use client";
+import "./studio.css";
 /**
  * A session player on a part (Logic Pro's Drummer and Bass Player): drag the puck, left to right from
  * simple to complex, bottom to top from soft to loud; fill and swing below. Every move writes ordinary

@@ -35,6 +35,22 @@ steps:
       eli5: >-
         Turn up echo on deck a, then slide deck a down.
 
+  - kind: mix
+    goal: punch
+    say:
+      mentor: >-
+        Now the punch-in effects: hold a key and the whole mix goes through it, let go and it is dry again.
+        Beat repeat loops the last slice (higher on the key is a shorter slice), the filter sweeps from low
+        pass to high pass, tape stop slows everything to a halt, and a reverb throw sends the mix into the
+        reverb so it rings on after you let go. The EP-133 has these as its punch-in fx, Push 3 as its XY
+        punch-in effects, and djay puts them on the crossfader.
+
+        With both decks playing, hold one for a beat or two, let go on the one, then try another.
+      straight: >-
+        Hold a punch-in effect for a beat or two, let go on the one, then try a different one.
+      eli5: >-
+        Hold a button and the music does something wild. Let go and it's back. Try two of them.
+
   - kind: ask
     q: What is an echo out?
     options: ["echo on the old track as its fader comes down", "turning the music off", "a very loud drop", "changing the key"]

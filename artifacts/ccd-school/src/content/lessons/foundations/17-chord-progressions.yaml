@@ -60,6 +60,25 @@ steps:
       eli5: >-
         Press rec. Play four chord pads, one on each tick. Start with i, then try VI, III and VII.
 
+  - kind: tempo
+    set: chords
+    say:
+      mentor: >-
+        Now write the progression down for the whole song, the way Logic's Chord Track does: one chord per
+        bar, each with its name (am, f, c, g) and its roman numeral in your key. Tap a bar, then a chord, or
+        tap a progression to fill all four bars. Your chords part plays it as you go.
+
+        From now on your bass, lead and chord pads light the notes of the chord under the playhead in the
+        studio, so you always know which notes fit. FL Studio's chord progression tool and Live 12's chord
+        tools do the same job.
+      straight: >-
+        A chord track: one chord per bar, named, with its numeral. Tap a bar then a chord, or pick a
+        progression. Your chords part plays it, and the studio lights its notes on bass and lead.
+      eli5: >-
+        Pick a chord for each bar. Your chords play them. Later, the studio lights up the notes that fit.
+    hint: >-
+      Try i VI III VII first, then swap one bar for another chord and listen.
+
   - kind: ask
     q: What is a chord progression?
     options: ["chords played in an order", "a scale", "a single loud chord", "a drum fill"]

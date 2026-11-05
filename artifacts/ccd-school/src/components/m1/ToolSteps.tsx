@@ -11,7 +11,7 @@ import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } f
 import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
 import { asScale, NOTE_NAMES } from "@/lib/theory";
 import { chordNotes as chordMidi, progression } from "@/lib/chords";
-import { CAP, Dice, GoPill, Icon, Key, Knob, Screen } from "./controls";
+import { CAP, Dice, GoPill, Icon, Key, Knob, NotYet, Screen } from "./controls";
 import { newSeed } from "@/lib/dice";
 import { Body, Meta, useEnter, useStarter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
@@ -46,7 +46,8 @@ export function useLoop(track: TrackV2) {
   return { beat, playing, toggle };
 }
 
-export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: { screen: Of<"tempo">; inst: ReactNode; go: string; onGo: () => void; playing: boolean; toggle: () => void; tail?: ReactNode; note?: string | null }) {
+/** `notYet`: what is still missing; the go key says it and does nothing until it is done. */
+export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note, notYet }: { screen: Of<"tempo">; inst: ReactNode; go: string; onGo: () => void; playing: boolean; toggle: () => void; tail?: ReactNode; note?: string | null; notYet?: string | null }) {
   useEnter(onGo);
   const starter = useStarter();
   return (
@@ -61,7 +62,8 @@ export function Frame({ screen, inst, go, onGo, playing, toggle, tail, note }: {
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your song"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={onGo} style={{ gridColumn: "span 3" }} ariaLabel={go}>{go}</GoPill>
+          {notYet ? <GoPill onClick={() => {}} style={{ gridColumn: "span 3", opacity: 0.6 }} ariaLabel={`Not yet: ${notYet}`}><NotYet why={notYet} /></GoPill>
+            : <GoPill onClick={onGo} style={{ gridColumn: "span 3" }} ariaLabel={go}>{go}</GoPill>}
         </div>
       </div>
     </div>

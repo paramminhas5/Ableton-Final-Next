@@ -889,3 +889,24 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ms-parts{display:flex;gap:14px;margin-top:8px;font-size:11px;font-weight:500;color:#9A9AA0}
 .ms-done{color:var(--ink)}
 .ms-tip{margin-top:6px;font-size:13px;font-weight:500;color:var(--led-mint)}
+/* write-and-play lesson steps: a row of steps, chance and conditions, length, sections */
+.ws-steps{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;margin-top:10px}
+.ws-step{position:relative;height:40px;min-height:0;min-width:0;border:0;border-radius:5px;background:rgba(255,255,255,.07);padding:0;cursor:pointer}
+.ws-step:nth-child(4n+1){box-shadow:inset 1px 0 0 rgba(255,255,255,.2)}
+.ws-step.is-on{background:color-mix(in srgb,var(--c) 75%,#0b0b0d)}
+.ws-step.is-now{outline:1px solid rgba(255,255,255,.6)}
+.ws-step.is-sel{outline:2px solid var(--led-mint);outline-offset:1px}
+.ws-step.is-past{opacity:.15}
+.ws-step:disabled{cursor:default}
+.ws-step small{position:absolute;left:0;right:0;bottom:2px;font-size:8px;font-weight:600;color:#fff;text-align:center;line-height:1}
+.ws-chance{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.ws-conds{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:200px}
+.ws-len{display:flex;align-items:center;gap:8px}
+.ws-len b{font-size:22px;font-weight:400;min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
+.ws-len small{font-size:12px;color:var(--print)}
+.ws-secs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.ws-sec{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.15);font-size:16px;color:var(--disp-ink,#F4F3F0)}
+.ws-sec small{font-size:10px;opacity:.6}
+.ws-sec.is-on{border-color:var(--led-mint);background:color-mix(in srgb,var(--led-mint) 14%,transparent)}
+.ws-player{display:flex;flex-direction:column;min-height:300px}
+.ws-player .st-player{min-height:300px}

@@ -1035,6 +1035,15 @@
           }
         },
         {
+          "kind": "mix",
+          "goal": "punch",
+          "say": {
+            "mentor": "Now the punch-in effects: hold a key and the whole mix goes through it, let go and it is dry again. Beat repeat loops the last slice (higher on the key is a shorter slice), the filter sweeps from low pass to high pass, tape stop slows everything to a halt, and a reverb throw sends the mix into the reverb so it rings on after you let go. The EP-133 has these as its punch-in fx, Push 3 as its XY punch-in effects, and djay puts them on the crossfader.\nWith both decks playing, hold one for a beat or two, let go on the one, then try another.",
+            "straight": "Hold a punch-in effect for a beat or two, let go on the one, then try a different one.",
+            "eli5": "Hold a button and the music does something wild. Let go and it's back. Try two of them."
+          }
+        },
+        {
           "kind": "ask",
           "q": "What is an echo out?",
           "options": [
@@ -6201,6 +6210,16 @@
           }
         },
         {
+          "kind": "tempo",
+          "set": "chords",
+          "say": {
+            "mentor": "Now write the progression down for the whole song, the way Logic's Chord Track does: one chord per bar, each with its name (am, f, c, g) and its roman numeral in your key. Tap a bar, then a chord, or tap a progression to fill all four bars. Your chords part plays it as you go.\nFrom now on your bass, lead and chord pads light the notes of the chord under the playhead in the studio, so you always know which notes fit. FL Studio's chord progression tool and Live 12's chord tools do the same job.",
+            "straight": "A chord track: one chord per bar, named, with its numeral. Tap a bar then a chord, or pick a progression. Your chords part plays it, and the studio lights its notes on bass and lead.",
+            "eli5": "Pick a chord for each bar. Your chords play them. Later, the studio lights up the notes that fit."
+          },
+          "hint": "Try i VI III VII first, then swap one bar for another chord and listen."
+        },
+        {
           "kind": "ask",
           "q": "What is a chord progression?",
           "options": [
@@ -6295,6 +6314,16 @@
             "mentor": "Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key one is the root of i, key six the root of VI, key three of III, key seven of VII. Press rec and play the roots in the same order as your chords, one per chord.",
             "straight": "Record the roots of your chords on the bass keys, in order. Key number matches the numeral: i is one, VI is six, III three, VII seven.",
             "eli5": "Press rec. Play the bass key with the same number as each chord: one for i, six for VI, three for III, seven for VII."
+          }
+        },
+        {
+          "kind": "tempo",
+          "set": "player",
+          "layer": "bass",
+          "say": {
+            "mentor": "You played the bass yourself. Here is a bass player to compare, like Logic's Bass Player: it follows your chord track (or your key's root, if you have no chords yet) and writes ordinary notes you can edit. Drag the dot: left is simple, right is complex, up is louder and busier, with slides. Fill and swing sit below.\nIt is a starting point, not a replacement for your hands. Keep its notes, or skip this and keep yours.",
+            "straight": "A bass player (Logic's idea) follows your chords and writes notes you can edit. Left simple, right complex, up louder. Keep it or skip.",
+            "eli5": "Drag the dot and a bass line appears that follows your chords. Keep it if you like it."
           }
         },
         {
@@ -7003,6 +7032,16 @@
           "hint": "Sixteenths 1, 4, 7, 10, 13 and 16 of the bar, counting from 1. Six shakes a bar."
         },
         {
+          "kind": "tempo",
+          "set": "length",
+          "layer": "hats",
+          "say": {
+            "mentor": "Now let the computer keep a polyrhythm going for you. Shorten your hats to three steps while the kick stays on sixteen: the hats loop every three, so they land somewhere new against the kick each beat and only meet it again at the top of the loop. That is a polymeter, and it is how Elektron machines work, each track with its own length. Give the hats their own swing too if you like: Live keeps a groove per clip the same way.",
+            "straight": "Make the hats three steps long against the sixteen step kick. They drift and meet again at the top. Elektron calls it per track length. Swing can be per part too.",
+            "eli5": "Make the hats loop on three steps. The kick loops on sixteen. Listen to them chase each other."
+          }
+        },
+        {
           "kind": "ask",
           "q": "A polyrhythm is",
           "options": [
@@ -7136,6 +7175,16 @@
             "eli5": "No helper this time. Press rec, wait for four ticks, and tap the hat in between the booms. It's fine if some are a tiny bit late. That makes it feel relaxed."
           },
           "hint": "Count \"one and two and\" and tap on the \"and\", lazily."
+        },
+        {
+          "kind": "tempo",
+          "set": "player",
+          "layer": "drums",
+          "say": {
+            "mentor": "You played your hats. Producers also start from a beat someone else plays and change it. Logic calls it the Drummer: two sliders, complexity and intensity, and it writes the notes into your song so you can edit every hit. Live 12.3's Patterns does the same job. Drag the dot and listen to how busy and how hard it plays.\nYour own hats stay yours: it only writes your drums part. Keep its beat, or skip.",
+            "straight": "A drummer (Logic's Drummer): complexity left to right, intensity up. It writes notes you can edit into your drums. Keep it or skip.",
+            "eli5": "Drag the dot and a drummer plays your drums. Keep it if you like it."
+          }
         },
         {
           "kind": "ask",
@@ -10668,6 +10717,16 @@
           }
         },
         {
+          "kind": "tempo",
+          "set": "chance",
+          "layer": "hats",
+          "say": {
+            "mentor": "A fill can also live inside the loop. Pick a step on your hats and give it a condition. 1:2 plays it every second time round the loop, 1:4 every fourth: that is an Elektron trig condition, and the beat changes a little each pass without you writing a second pattern. Or turn its chance down, Live 12's name for it: at 50% it plays about half the time. Fill plays the step only while you hold the fill key, the way Elektron drummers throw in a roll.\nSame control elsewhere: Live 12 calls it chance in the note editor, Elektron calls them trig conditions and probability.",
+            "straight": "Pick a hat step. 1:2 plays it every second loop, 1:4 every fourth (Elektron's trig conditions). Chance (Live 12) plays it some of the time. Fill plays it only while the fill key is held.",
+            "eli5": "Pick a step. Make it play only sometimes. Your beat changes a little every time round."
+          }
+        },
+        {
           "kind": "ask",
           "q": "What does a fill tell the listener?",
           "options": [
@@ -13417,12 +13476,16 @@
           "set": "scale",
           "choices": [
             "minor",
-            "major"
+            "major",
+            "dorian",
+            "phrygian",
+            "minor pentatonic",
+            "harmonic minor"
           ],
           "say": {
-            "mentor": "Here's your song. Switch between minor and major while it plays and listen to the mood change. Minor tends to sound darker, major brighter. Every part moves with you, because they all follow this one setting.\nKeep the one that fits your song.",
-            "straight": "Minor sounds darker, major brighter. Every part follows. Keep one.",
-            "eli5": "Minor sounds a bit sad. Major sounds happy. Your whole song changes. Pick one."
+            "mentor": "Here's your song. Switch scales while it plays and listen to the mood change. Minor tends to sound darker, major brighter, dorian is minor with a lift, phrygian dark and tense, the minor pentatonic has five notes and no wrong ones, harmonic minor pulls hard back home. These are Live 12's names, and the studio's key panel has Live's whole list. Every part moves with you, because they all follow this one setting.\nKeep the one that fits your song.",
+            "straight": "Minor darker, major brighter, dorian lifted, phrygian tense, pentatonic five notes, harmonic minor pulls home. Every part follows. Keep one.",
+            "eli5": "Each scale gives your song a different mood. Try a few. Your whole song changes. Pick one."
           }
         },
         {
@@ -13442,7 +13505,7 @@
           "kind": "say",
           "title": "scale awareness in live",
           "say": {
-            "mentor": "Live 12 added this across the whole project. You set a root note and a scale, like a minor or c major, and it's shown in the control bar. Midi clips can follow it or use their own. The Scale midi effect follows it automatically, and on Push 3 the pads can hide notes that aren't in the scale.\nThe root note is the home note the scale is built on. In a minor, everything feels like it wants to come back to a.",
+            "mentor": "Live 12 added this across the whole project. You set a root note and a scale, like a minor or c major, and it's shown in the control bar. Midi clips can follow it or use their own. The Scale midi effect follows it automatically, and on Push 3 the pads can hide notes that aren't in the scale.\nThe root note is the home note the scale is built on. In a minor, everything feels like it wants to come back to a.\nOur studio works the same way: the key sits in the top bar, tap it to pick a root and any of Live's scales. The keys dim the notes outside it and mark the root, and the note grid can fold to the scale, like Live's fold.",
             "straight": "Live 12 keeps a project-wide root and scale in the control bar. Clips can follow or override it. Scale and Push 3 follow it too. The root is the home note.",
             "eli5": "In Live 12 you pick the scale once, at the top, and lots of tools follow it. The root is the note that feels like home."
           },
@@ -18080,6 +18143,15 @@
           }
         },
         {
+          "kind": "tempo",
+          "set": "commit",
+          "say": {
+            "mentor": "A quick way to make scenes as you play: commit. Teenage Engineering's EP-133 has a commit key that copies the loop you are playing into the next scene and takes you there, so you can change it without stopping. Ours does the same with your song: press commit, then make this new section different with the density fader. Your first section keeps the loop you started with.",
+            "straight": "Commit copies your loop into the next section and moves you there (the EP-133's commit). Then change the new one.",
+            "eli5": "Press commit to make a copy of your loop. Then change the copy."
+          }
+        },
+        {
           "kind": "ask",
           "q": "What is a scene?",
           "options": [
@@ -18552,6 +18624,16 @@
               "say": "When a transformation makes new pitches, it follows the scale you've set for the song."
             }
           ]
+        },
+        {
+          "kind": "tempo",
+          "set": "grid",
+          "layer": "chords",
+          "say": {
+            "mentor": "Here are your chords on the note grid, with three of Live 12's transformations under it. Set the amount, then press one: strum spreads the notes of each chord out low to high (or high to low with a negative amount), like a hand across guitar strings; humanize moves every note a little early or late and a little softer or harder; velocity shaper makes them get louder or softer from first to last. Each press is one step you can undo. Pick a few notes first to change only those.",
+            "straight": "Your chords on the note grid. Set an amount, press strum, humanize or velocity shaper. Each press undoes. Pick notes first to change only those.",
+            "eli5": "Press strum and your chords sound like a guitar. Humanize makes them less robotic. Try them."
+          }
         },
         {
           "kind": "arrange",

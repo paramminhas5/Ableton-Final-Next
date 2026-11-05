@@ -9,6 +9,8 @@ const KIND_FOR_PART: Record<string, string> = { kick: "kick", hats: "hats", clap
 const TOOL_LEARNED: Record<string, string> = {
   arp: "turning chords into an arpeggio", key: "moving your song to a new key", grid: "editing notes on the grid",
   mic: "recording your own sound", comp: "comping the best take", sample: "shaping a sample", macro: "one knob that moves several",
+  chords: "writing a chord track", player: "letting a session player write a part", chance: "chance and trig conditions on steps",
+  length: "a part with its own length and swing", commit: "committing a loop to a new section",
 };
 
 export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {

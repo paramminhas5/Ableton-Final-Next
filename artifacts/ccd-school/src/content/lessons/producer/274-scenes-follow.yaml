@@ -66,6 +66,20 @@ steps:
       eli5: >-
         In the first part, turn off everything except the drums. Leave the next part full. Press play.
 
+  - kind: tempo
+    set: commit
+    say:
+      mentor: >-
+        A quick way to make scenes as you play: commit. Teenage Engineering's EP-133 has a commit key that
+        copies the loop you are playing into the next scene and takes you there, so you can change it
+        without stopping. Ours does the same with your song: press commit, then make this new section
+        different with the density fader. Your first section keeps the loop you started with.
+      straight: >-
+        Commit copies your loop into the next section and moves you there (the EP-133's commit). Then change
+        the new one.
+      eli5: >-
+        Press commit to make a copy of your loop. Then change the copy.
+
   - kind: ask
     q: What is a scene?
     options: ["a row of clips launched together", "a single drum hit", "a kind of reverb", "the master track"]

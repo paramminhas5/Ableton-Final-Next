@@ -51,7 +51,7 @@ export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceTex
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
 /** Set the song's tempo on one knob, the loop playing at whatever it is turned to. `marks` are the speeds named on the dial. */
 /** `set: swing` turns the same step into the song's swing knob (marks are 0 to 0.75). */
-export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: VoiceText; levels?: Level[] };
+export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: VoiceText; levels?: Level[] };
 /** Two decks and a mixer. Deck a plays your song, deck b a bank track. `goal` is what has to happen before go. */
 export type MixGoal = "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record" | "punch";
 export type RawMix = { kind: "mix"; say: VoiceText; goal: MixGoal; bank?: string; hint?: VoiceText; levels?: Level[] };
@@ -88,7 +88,7 @@ export type ResolvedStep =
   | { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; say: string; hint?: string }
   | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
-  | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: string }
+  | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: string }
   | { kind: "mix"; say: string; goal: MixGoal; bank?: string; hint?: string }
   | { kind: "arrange"; say: string; goal: ArrangeGoal; hint?: string }
   | { kind: "keep"; next: string };

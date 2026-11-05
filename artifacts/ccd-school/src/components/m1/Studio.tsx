@@ -489,7 +489,7 @@ export function Studio() {
     setTouched({ label: `${TYPE[sel.type].label} swing`, text: next === undefined ? `song's, ${Math.round((track.swing ?? 0) * 100)}%` : `${Math.round(next * 100)}%` });
   };
   const partRow = sel && !lockAt ? (
-    <div className="st-partrow" role="group" aria-label={`${TYPE[sel.type].label}'s own length and swing`}>
+    <div className="st-partrow" role="group" aria-label={`Own length and swing for ${TYPE[sel.type].label}`}>
       <span className="st-ss">length</span>
       <button type="button" className="st-tag" aria-label="One step shorter" disabled={partSteps <= 1} onClick={() => setPartSteps(partSteps - 1)}>−</button>
       <span className="st-ss st-partv" aria-live="polite">{plen !== null ? partSteps : `${loopSteps}`}</span>
@@ -497,7 +497,14 @@ export function Studio() {
       <button type="button" className={`st-tag ${sel.swing !== undefined ? "is-on" : ""}`} aria-label="This part's swing, tap to change" onClick={cycleSwing}>swing {sel.swing === undefined ? "song" : `${Math.round(sel.swing * 100)}%`}</button>
     </div>
   ) : null;
-  const stepsExtra = diceRow || fillKey || partRow ? <>{diceRow}{fillKey}{partRow}</> : null;
+  // One row at a time above the steps: density and fill, or (with "part" on) the part's length and swing.
+  const [partOpen, setPartOpen] = useState(false);
+  const stepsExtra = partOpen && partRow ? partRow : diceRow || fillKey ? <>{diceRow}{fillKey}</> : null;
+  const partTag = sel && !lockAt ? (
+    <button type="button" className={`st-tag ${partOpen ? "is-on" : ""}`} aria-pressed={partOpen} aria-label={`Own length and swing for ${TYPE[sel.type].label}`} onClick={() => setPartOpen(o => !o)}>
+      part{plen !== null || sel.swing !== undefined ? ` · ${plen !== null ? partSteps : loopSteps}${sel.swing !== undefined ? ` · ${Math.round(sel.swing * 100)}%` : ""}` : ""}
+    </button>
+  ) : null;
 
   const canCapture = !!sel && !recording && !countIn && playedN > 0 && played.current.some(p => p.layerId === sel.id);
   const capture = () => {
@@ -762,23 +769,6 @@ export function Studio() {
           )}
         </Screen>
 
-        {track.layers.length ? (
-          <div className="st-secrow" role="group" aria-label="Sections">
-            {secNow ? (
-              <>
-                <button type="button" className="st-tag" aria-label="Previous section" disabled={secNow.index === 0} onClick={() => { update(t => goSection(t, secNow.index - 1)); setTouched({ label: "section", text: track.sections![secNow.index - 1].name }); }}>‹</button>
-                <span className="st-ss st-secname">{secNow.section.name} · {secNow.index + 1} of {track.sections!.length}</span>
-                <button type="button" className="st-tag" aria-label="Next section" disabled={secNow.index >= track.sections!.length - 1} onClick={() => { update(t => goSection(t, secNow.index + 1)); setTouched({ label: "section", text: track.sections![secNow.index + 1].name }); }}>›</button>
-              </>
-            ) : track.sections?.length ? (
-              <><span className="st-ss st-secname">one loop, {track.sections.length} sections</span>
-                <button type="button" className="st-tag" onClick={() => update(t => goSection(t, 0))}>edit {track.sections[0].name}</button></>
-            ) : <span className="st-ss st-secname">your loop</span>}
-            <span style={{ flex: 1 }} />
-            <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into the next section and go there"
-              onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "committed", text: `now in ${next.sections![next.at!].name}` }); }}>commit</button>
-          </div>
-        ) : null}
 
         {wavOpen ? (
           <div className="st-main">
@@ -817,7 +807,22 @@ export function Studio() {
         ) : sel ? (
           <>
             <div className="st-main">
-            <Silk label={`1 · play ${TYPE[sel.type].label} on`} right="pick how" />
+            {/* Where you are in the arrangement, and commit (the EP-133's): in place of the "play on" label, to keep the phone's height for the pads. */}
+            <div className="st-secrow" role="group" aria-label="Sections">
+                {secNow ? (
+                  <>
+                    <button type="button" className="st-tag" aria-label="Previous section" disabled={secNow.index === 0} onClick={() => { update(t => goSection(t, secNow.index - 1)); setTouched({ label: "section", text: track.sections![secNow.index - 1].name }); }}>‹</button>
+                    <span className="st-ss st-secname">{secNow.section.name} · {secNow.index + 1} of {track.sections!.length}</span>
+                    <button type="button" className="st-tag" aria-label="Next section" disabled={secNow.index >= track.sections!.length - 1} onClick={() => { update(t => goSection(t, secNow.index + 1)); setTouched({ label: "section", text: track.sections![secNow.index + 1].name }); }}>›</button>
+                  </>
+                ) : track.sections?.length ? (
+                  <><span className="st-ss st-secname">one loop, {track.sections.length} sections</span>
+                    <button type="button" className="st-tag" onClick={() => update(t => goSection(t, 0))}>edit {track.sections[0].name}</button></>
+                ) : <span className="st-ss st-secname">your loop</span>}
+                <span style={{ flex: 1 }} />
+                <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into the next section and go there"
+                  onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "committed", text: `now in ${next.sections![next.at!].name}` }); }}>commit</button>
+              </div>
             <div className="st-pick" style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0)},1fr)` }}>
               {(TYPE[sel.type].surfaces).map(s => (
                 <button key={s} type="button" className={`m1-m is-wide st-vk ${sel.surface === s ? "is-on" : ""}`} aria-pressed={sel.surface === s}
@@ -867,12 +872,12 @@ export function Studio() {
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} root={track.root} scale={scaleOf(track)} chord={chordNow} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
                 onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
                 onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
@@ -1152,7 +1157,7 @@ function Keys({ drum, held, hits, layerId, noteHandlers, root, scale, chord }: {
 const FX_LANES = [36, 38, 39, 41];
 
 /** Back, forward and the bars. A page is what fits on screen; a bar is four beats. */
-function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number; dice?: React.ReactNode }) {
+function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice, tag }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number; dice?: React.ReactNode; tag?: React.ReactNode }) {
   const perBar = 4 / grid;
   const from = page * perPage + 1;
   const to = (page + 1) * perPage;
@@ -1165,6 +1170,7 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: {
       <span className="st-ss" style={{ minWidth: 88, textAlign: "center" }}>{bars > 1 ? `bar ${bar} · ` : ""}{from}-{to}</span>
       <button type="button" className="st-tag" aria-label="Next steps" disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>›</button>
       <span style={{ flex: 1 }} />
+      {tag}
       <span className="st-ss">bars</span>
       {[1, 2, 3, 4].map(n => (
         <button key={n} type="button" className={`st-tag ${bars === n ? "is-on" : ""}`} aria-pressed={bars === n} aria-label={`${n} bar${n > 1 ? "s" : ""}`} onClick={() => setBars(n)}>{n}</button>
@@ -1175,7 +1181,7 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: {
 }
 
 type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void;
-  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode; lockRow?: React.ReactNode; partSteps?: number };
+  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode; lockRow?: React.ReactNode; partSteps?: number; tag?: React.ReactNode };
 
 /** A step you can tap (on or off) or hold (lock knobs to it). Shift+Enter holds from the keyboard. */
 function useStepPress(onTap: () => void, onHold: () => void, held: boolean, onRelease: () => void) {
@@ -1209,7 +1215,7 @@ function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>
 }
 
 /** A lane per sound, 8 steps a page. The playing step glows. */
-function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow, partSteps }: StepsProps & { onToggle: (note: number, step: number) => void }) {
+function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow, partSteps, tag }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
   const smp = layer.type === "sample";
@@ -1226,7 +1232,7 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
           <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} partSteps={partSteps} />
         ))}
       </div>
-      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} />}
+      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} tag={tag} />}
     </>
   );
 }
@@ -1265,7 +1271,7 @@ function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle, loc
   );
 }
 
-function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow, partSteps }: StepsProps & { onToggle: (step: number) => void }) {
+function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow, partSteps, tag }: StepsProps & { onToggle: (step: number) => void }) {
   const c = TYPE[layer.type].color;
   return (
     <>
@@ -1285,7 +1291,7 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
           );
         })}
       </div>
-      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} />}
+      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} tag={tag} />}
     </>
   );
 }

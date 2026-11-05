@@ -32,18 +32,21 @@ steps:
 
   - kind: tempo
     set: scale
-    choices: [minor, major]
+    choices: [minor, major, dorian, phrygian, minor pentatonic, harmonic minor]
     say:
       mentor: >-
-        Here's your song. Switch between minor and major while it plays and listen to the mood change. Minor
-        tends to sound darker, major brighter. Every part moves with you, because they all follow this one
-        setting.
+        Here's your song. Switch scales while it plays and listen to the mood change. Minor tends to sound
+        darker, major brighter, dorian is minor with a lift, phrygian dark and tense, the minor pentatonic
+        has five notes and no wrong ones, harmonic minor pulls hard back home. These are Live 12's names, and
+        the studio's key panel has Live's whole list. Every part moves with you, because they all follow
+        this one setting.
 
         Keep the one that fits your song.
       straight: >-
-        Minor sounds darker, major brighter. Every part follows. Keep one.
+        Minor darker, major brighter, dorian lifted, phrygian tense, pentatonic five notes, harmonic minor
+        pulls home. Every part follows. Keep one.
       eli5: >-
-        Minor sounds a bit sad. Major sounds happy. Your whole song changes. Pick one.
+        Each scale gives your song a different mood. Try a few. Your whole song changes. Pick one.
 
   - kind: play
     layer: lead
@@ -69,6 +72,10 @@ steps:
 
         The root note is the home note the scale is built on. In a minor, everything feels like it wants to
         come back to a.
+
+        Our studio works the same way: the key sits in the top bar, tap it to pick a root and any of Live's
+        scales. The keys dim the notes outside it and mark the root, and the note grid can fold to the scale,
+        like Live's fold.
       straight: >-
         Live 12 keeps a project-wide root and scale in the control bar. Clips can follow or override it. Scale
         and Push 3 follow it too. The root is the home note.

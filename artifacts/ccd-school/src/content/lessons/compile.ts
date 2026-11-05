@@ -31,7 +31,7 @@ export function knobsFor(layer: LayerType): string[] {
 }
 
 /** What a `tempo` step can set: song-wide settings and the tools that act on your parts. */
-export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro"];
+export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro", "chords", "player", "chance", "length", "commit"];
 
 /** What a `mix` step asks for on the two decks. */
 export const MIX_GOALS = ["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free", "sync", "cue", "loop", "stems", "shift", "curve", "file", "record", "punch"];
