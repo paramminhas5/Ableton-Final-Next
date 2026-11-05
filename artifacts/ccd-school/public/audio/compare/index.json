@@ -1,0 +1,104 @@
+[
+ {
+  "id": "supersaw-surge",
+  "plugin": "surge",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "supersaw-vital",
+  "plugin": "vital",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "ladder-surge",
+  "plugin": "surge",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "ladder-vital",
+  "plugin": "vital",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "ms2-k35",
+  "plugin": "surge",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "svf-digital",
+  "plugin": "vital",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "acid-odin",
+  "plugin": "odin",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "ep-dexed",
+  "plugin": "dexed",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "bell-dexed",
+  "plugin": "dexed",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "pad-vital",
+  "plugin": "vital",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "kick808-geonkick",
+  "plugin": "geonkick",
+  "lufs": -16.0,
+  "after": false
+ },
+ {
+  "id": "kicktechno-geonkick",
+  "plugin": "geonkick",
+  "lufs": -16.0,
+  "after": false
+ },
+ {
+  "id": "hall-snare",
+  "plugin": "dragonfly",
+  "lufs": -21.4,
+  "after": true
+ },
+ {
+  "id": "hall-chord",
+  "plugin": "dragonfly",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "plate-snare",
+  "plugin": "dragonfly",
+  "lufs": -21.0,
+  "after": false
+ },
+ {
+  "id": "plate-chord",
+  "plugin": "dragonfly",
+  "lufs": -16.0,
+  "after": true
+ },
+ {
+  "id": "tape-chow",
+  "plugin": "chow",
+  "lufs": -16.0,
+  "after": true
+ }
+]
