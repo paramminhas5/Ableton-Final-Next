@@ -14,6 +14,9 @@ import {
   CHORD_PARAMS,
   DRUM_RACK_BASE,
   DRUM_RACK_PARAMS,
+  DRUM_PAD2_BASE,
+  DRUM_PAD2_PARAMS,
+  DRUM_PAD2_STRIDE,
   FX_PARAMS,
   SAMPLER_PARAMS,
   LEAD_PARAMS,
@@ -117,6 +120,7 @@ export function paramOf(l: LayerV2, index: number): number {
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
     const i = index - INSTRUMENT_BASE;
+    if (i >= DRUM_PAD2_BASE) return DRUM_PAD2_PARAMS[(i - DRUM_PAD2_BASE) % DRUM_PAD2_STRIDE]?.default ?? 0;
     if (i >= DRUM_RACK_BASE) return DRUM_RACK_PARAMS[i - DRUM_RACK_BASE]?.default ?? 0;
     return DRUM_PAD_PARAMS[i % DRUM_PAD_PARAMS.length]?.default ?? 0;
   }
@@ -134,7 +138,7 @@ export const INSTRUMENT_TABLES: Partial<Record<InstrumentName, readonly { index:
 
 /** How many wire params the engine takes for an instrument (layer params excluded). */
 export function instrumentParamCount(engine: InstrumentName): number {
-  if (engine === "drums") return DRUM_RACK_BASE + DRUM_RACK_PARAMS.length;
+  if (engine === "drums") return DRUM_PAD2_BASE + DRUM_PAD_NOTES.length * DRUM_PAD2_STRIDE;
   return INSTRUMENT_TABLES[engine]?.length ?? 0;
 }
 

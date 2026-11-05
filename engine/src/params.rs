@@ -252,6 +252,25 @@ pub const DRUM_RACK_PARAMS: &[ParamSpec] = &[
 pub const D_OPEN: usize = 0;
 /// Wire offset (from INSTRUMENT_BASE) of the first rack-wide drum param.
 pub const DRUM_RACK_BASE: usize = DRUM_PADS * 4;
+/// Slots kept for rack-wide drum params.
+pub const DRUM_RACK_SLOTS: usize = 16;
+
+/// Per pad, second page (engine 2): appended as its own block so the first four knobs keep their wire
+/// indices. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. The stride
+/// keeps room so knobs added later never move the ones a saved song holds.
+pub const DRUM_PAD2_PARAMS: &[ParamSpec] = &[
+    // Item 5, part three: the kick's body, round (the 808's sine), tight (rounded off, like a 909's)
+    // or hard (clipped almost square). Other pads ignore it.
+    p("shape", "body", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+];
+pub const DP_SHAPE: usize = 0;
+pub const DRUM_PAD2_BASE: usize = DRUM_RACK_BASE + DRUM_RACK_SLOTS;
+pub const DRUM_PAD2_STRIDE: usize = 8;
+
+/// Which of three steps a stepped knob is on.
+pub fn step3(n: f32) -> u8 {
+    if n < 0.34 { 0 } else if n < 0.67 { 1 } else { 2 }
+}
 
 // ── Chords: polyphonic synth ─────────────────────────────────────────────────
 
@@ -430,7 +449,7 @@ impl Instrument {
     pub fn param_count(self) -> usize {
         match self {
             Instrument::None => 0,
-            Instrument::Drums => DRUM_RACK_BASE + DRUM_RACK_PARAMS.len(),
+            Instrument::Drums => DRUM_PAD2_BASE + DRUM_PADS * DRUM_PAD2_STRIDE,
             Instrument::Bass => BASS_PARAMS.len(),
             Instrument::Chords => CHORD_PARAMS.len(),
             Instrument::Lead => LEAD_PARAMS.len(),
@@ -450,8 +469,10 @@ impl Instrument {
             Instrument::Drums => {
                 if i < DRUM_RACK_BASE {
                     DRUM_PAD_PARAMS.get(i % DRUM_PAD_PARAMS.len())
-                } else {
+                } else if i < DRUM_PAD2_BASE {
                     DRUM_RACK_PARAMS.get(i - DRUM_RACK_BASE)
+                } else {
+                    DRUM_PAD2_PARAMS.get((i - DRUM_PAD2_BASE) % DRUM_PAD2_STRIDE)
                 }
             }
         }
@@ -459,7 +480,7 @@ impl Instrument {
 }
 
 /// Total param slots per layer.
-pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_RACK_BASE + 16;
+pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_PAD2_BASE + DRUM_PADS * DRUM_PAD2_STRIDE;
 
 /// Look up any wire index for a layer of this instrument.
 pub fn spec_for(inst: Instrument, index: usize) -> Option<&'static ParamSpec> {
@@ -498,6 +519,7 @@ mod tests {
     fn layer_params_fit_before_instrument_block() {
         assert!(LAYER_PARAMS.len() <= INSTRUMENT_BASE);
         assert!(INSTRUMENT_BASE + Instrument::Drums.param_count() <= MAX_PARAMS);
+        assert!(DRUM_RACK_PARAMS.len() <= DRUM_RACK_SLOTS && DRUM_PAD2_PARAMS.len() <= DRUM_PAD2_STRIDE);
         for i in [Instrument::Bass, Instrument::Chords, Instrument::Lead, Instrument::Fx, Instrument::Sampler] {
             assert!(INSTRUMENT_BASE + i.param_count() <= MAX_PARAMS);
         }
@@ -505,7 +527,7 @@ mod tests {
 
     #[test]
     fn defaults_are_normalised() {
-        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(SAMPLER_PARAMS).chain(MASTER_PARAMS) {
+        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(DRUM_PAD2_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(SAMPLER_PARAMS).chain(MASTER_PARAMS) {
             assert!((0.0..=1.0).contains(&s.default), "{}", s.id);
             for d in s.detents {
                 assert!((0.0..=1.0).contains(d));

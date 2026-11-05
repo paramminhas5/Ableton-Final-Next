@@ -11,5 +11,6 @@
   {"id": "echo", "what": "one lead note into the echo", "rms_db": -31.81, "peak": 0.2913},
   {"id": "drive", "what": "the bass with the drive up", "rms_db": -14.69, "peak": 0.2803},
   {"id": "sketch", "what": "the whole song, four bars", "rms_db": -16.09, "peak": 0.6945},
-  {"id": "glued", "what": "the whole song with the glue pushed hard", "rms_db": -16.17, "peak": 0.7414}
+  {"id": "glued", "what": "the whole song with the glue pushed hard", "rms_db": -16.17, "peak": 0.7414},
+  {"id": "kicks", "what": "the kick's three bodies, two hits each", "rms_db": -19.97, "peak": 0.4682}
 ]

@@ -416,3 +416,36 @@ fn export_lands_on_the_loudness_target_under_the_ceiling() {
         assert!(tp <= CEILING_DB + 0.05, "{name}: {tp:.2} dBTP");
     }
 }
+
+// ── Engine 2, item 5, part three: three kick bodies ─────────────────────────────────────────────
+
+#[test]
+fn kick_has_three_body_shapes() {
+    // The body's overtones against its fundamental, in the tail (120 to 290 ms, where the pitch has
+    // settled near 50 Hz): round is a sine, tight rounds it towards a square, hard clips it nearly square.
+    let take = |shape: u8| {
+        let mut p = Pad::new(Model::Kick, SR, 7);
+        p.shape = shape;
+        p.trigger(0.9);
+        (0..(SR * 0.6) as usize).map(|_| p.tick()).collect::<Vec<f32>>()
+    };
+    let over = |y: &[f32]| {
+        let a = (SR * 0.12) as usize;
+        let s = spectrum(&y[a..a + 8_192]);
+        let bin = SR / 8_192.0;
+        let band = |lo: f32, hi: f32| s.iter().enumerate().filter(|(i, _)| (*i as f32 * bin) >= lo && (*i as f32 * bin) < hi).map(|(_, m)| (*m as f64).powi(2)).sum::<f64>();
+        10.0 * (band(75.0, 4_000.0) / band(30.0, 75.0)).log10() as f32
+    };
+    let round = take(0);
+    let base_level = db(rms(&round[..(SR * 0.1) as usize]));
+    let mut last = f32::MIN;
+    for (shape, name) in [(0u8, "round"), (1, "tight"), (2, "hard")] {
+        let y = take(shape);
+        let (o, lv) = (over(&y), db(rms(&y[..(SR * 0.1) as usize])));
+        println!("kick body {name}: overtones {o:.1} dB against the fundamental, first 100 ms {lv:.1} dB");
+        assert!(o > last + 6.0, "{name} should carry more overtones: {o:.1} after {last:.1}");
+        assert!((lv - base_level).abs() < 1.5, "{name} moved the level: {lv:.1} vs {base_level:.1}");
+        assert!(y.iter().all(|v| v.is_finite()));
+        last = o;
+    }
+}

@@ -46,6 +46,9 @@ export function fromValue(spec: Pick<ParamSpec, "min" | "max" | "curve">, v: num
 /** The fm ratio knob's steps (modulator over carrier), as in engine/src/params.rs. */
 export const FM_RATIOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8];
 
+/** Which of three words a three-step knob is on (the engine's `step3`). */
+const STEP3 = (n: number, words: [string, string, string]) => words[n < 0.34 ? 0 : n < 0.67 ? 1 : 2];
+
 const round = (v: number, d = 0) => {
   const p = 10 ** d;
   return Math.round(v * p) / p;
@@ -58,6 +61,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   if (spec.key === "ratio") return `ratio ${FM_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (FM_RATIOS.length - 1))]}`;
   if (spec.key === "glueratio") return `${GLUE_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (GLUE_RATIOS.length - 1))]}:1`;
   if (spec.key === "sidechain" && n < 0.01) return "hears it all";
+  if (spec.key === "shape") return STEP3(n, ["round", "tight", "hard"]);
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {

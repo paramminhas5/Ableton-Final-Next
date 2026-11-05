@@ -9,6 +9,9 @@ use ccd_engine::engine::{cmd, Cmd, Engine};
 use ccd_engine::params::*;
 
 const SR: f32 = 48_000.0;
+/// Wire index of pad 0's second page (INSTRUMENT_BASE + DRUM_PAD2_BASE), written out so this file also
+/// builds against the pre-engine-2 commit that renders the before set (which ignores the param).
+const PAD2: usize = 96;
 
 struct R {
     e: Engine,
@@ -76,6 +79,18 @@ fn clips() -> Vec<Clip> {
         };
         r.pattern(0, &ev);
         out.push((name, what, r.play(3.87)));
+    }
+    // The kick's three bodies: round, tight and hard, two hits each.
+    {
+        let mut r = R::new(124.0);
+        r.send(cmd::LOOP, 0, 0, 0.0, 8.0, 0.0);
+        for (layer, shape) in [(0u32, 0.0f32), (1, 0.5), (2, 1.0)] {
+            r.inst(layer, Instrument::Drums);
+            r.param(layer, PAD2, shape);
+            let b = layer as f64 * 2.0;
+            r.pattern(layer, &[(b, 36, 0.25, 1.0), (b + 1.0, 36, 0.25, 1.0)]);
+        }
+        out.push(("kicks", "the kick's three bodies, two hits each", r.play(3.87)));
     }
     {
         let mut r = R::new(124.0);

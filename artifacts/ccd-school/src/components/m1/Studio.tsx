@@ -17,6 +17,9 @@ import {
   DRUM_PAD_NOTES,
   DRUM_PAD_PARAMS,
   DRUM_RACK_PARAMS,
+  DRUM_PAD2_BASE,
+  DRUM_PAD2_PARAMS,
+  DRUM_PAD2_STRIDE,
   FX_NAMES,
   FX_NOTE_BASE,
   SAMPLER_NOTE_BASE,
@@ -77,7 +80,7 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
   if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
-    if (shift) return DRUM_RACK_PARAMS.map(spec => ({ spec, index: spec.index }));
+    if (shift) return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...DRUM_PAD2_PARAMS.map((spec, k) => ({ spec: spec as ParamSpec, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + effectivePad(l) * DRUM_PAD2_STRIDE + k }))];
     return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
   const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];

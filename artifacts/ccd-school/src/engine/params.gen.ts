@@ -7,7 +7,7 @@ export type Curve = "lin" | "exp" | "fader";
 export type ParamSpec = { id: string; key: string; label: string; bank: Bank; index: number; min: number; max: number; default: number; unit: Unit; curve: Curve; smoothMs: number; detents: number[] };
 
 export const INSTRUMENT_BASE = 16;
-export const MAX_PARAMS = 96;
+export const MAX_PARAMS = 224;
 export const FADER_UNITY = 0.75;
 export const FADER_MIN_DB = -60;
 export const FADER_MAX_DB = 6;
@@ -51,6 +51,13 @@ export const DRUM_RACK_PARAMS = [
   { id: "drums.open", key: "open", label: "open", bank: "sound", index: 80, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 export const DRUM_RACK_BASE = 64;
+
+/** Per pad, second page. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. */
+export const DRUM_PAD2_PARAMS = [
+  { id: "drums.pad.shape", key: "shape", label: "body", bank: "shift", index: 0, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+export const DRUM_PAD2_BASE = 80;
+export const DRUM_PAD2_STRIDE = 8;
 
 export const CHORD_PARAMS = [
   { id: "chords.voicing", key: "voicing", label: "voicing", bank: "sound", index: 16, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
@@ -131,11 +138,12 @@ export type LayerParamId = `${(typeof LAYER_PARAMS)[number]["id"]}`;
 export type BassParamId = `${(typeof BASS_PARAMS)[number]["id"]}`;
 export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number]["id"]}`;
 export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number]["id"]}`;
+export type DrumPad2ParamId = `${(typeof DRUM_PAD2_PARAMS)[number]["id"]}`;
 export type ChordParamId = `${(typeof CHORD_PARAMS)[number]["id"]}`;
 export type LeadParamId = `${(typeof LEAD_PARAMS)[number]["id"]}`;
 export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
 export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
-export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
+export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | DrumPad2ParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
 export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8, loudness: 9 } as const;

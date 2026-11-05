@@ -111,7 +111,7 @@ describe("layer types play their own instruments", () => {
     expect(paramOf(newLayerV2("fx"), FX_PARAMS[5].index)).toBe(FX_PARAMS[5].default);
     expect(instrumentParamCount("chords")).toBe(15); // 8, then lfo rate, lfo, lfo to, fm, ratio, f decay, f release
     expect(instrumentParamCount("fx")).toBe(6);
-    expect(instrumentParamCount("drums")).toBe(65);
+    expect(instrumentParamCount("drums")).toBe(208); // 16 pads x 4, 16 rack slots, then 16 pads x 8 on the second page
     const t = emptyTrackV2();
     expect(gridOf(t)).toBe(0.25);
     expect(gridOf({ ...t, grid: 0.125 })).toBe(0.125);

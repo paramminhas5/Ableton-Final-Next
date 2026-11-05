@@ -89,7 +89,17 @@ pub struct Pad {
     pub level: f32,
     /// Stretches the length, so the closed hat can be opened with the rack's open knob.
     pub len_mul: f32,
+    /// Kick body: 0 round, 1 tight, 2 hard (`DRUM_PAD2_PARAMS`).
+    pub shape: u8,
+    /// Anti-aliased saturator that rounds or clips the kick's body.
+    body_sat: crate::dsp::Adaa,
 }
+
+/// Kick body shapes: drive into the saturator, the make-up that keeps the body's level (RMS) where
+/// the round one is, and the pitch sweep's time to fall. Round is the 808's bridged-T sine; tight is
+/// rounded off towards a square and sweeps faster, the way a 909's body sounds; hard is clipped almost
+/// square, for harder styles.
+const BODY: [(f32, f32, f32); 3] = [(0.0, 1.0, 0.11), (1.5, 1.060, 0.07), (9.0, 0.750, 0.09)];
 
 impl Pad {
     pub fn new(model: Model, sr: f32, seed: u32) -> Self {
@@ -120,6 +130,8 @@ impl Pad {
             drive_amt: 0.0,
             level: 1.0,
             len_mul: 1.0,
+            shape: 0,
+            body_sat: crate::dsp::Adaa::new(),
         };
         p.setup_filters();
         p
@@ -219,7 +231,7 @@ impl Pad {
         }
         match self.model {
             Model::Kick => {
-                self.pitch_env.trigger(0.11, sr, 0.0002);
+                self.pitch_env.trigger(BODY[self.shape.min(2) as usize].2, sr, 0.0002);
                 self.noise_env.trigger(0.012, sr, 0.0002);
                 self.bump_env.trigger(0.006 * 3.0, sr, 0.0001);
                 self.sigh_env.trigger((len * 1.2).max(0.3), sr, 0.0002);
@@ -287,7 +299,10 @@ impl Pad {
                 let bump = self.bump_env.next();
                 let sigh = 1.0 - 0.1 * (1.0 - self.sigh_env.next());
                 let f = 50.0 * r * (1.0 + 4.5 * pe * pe + 1.2 * pe + 1.6 * bump) * sigh;
-                let body = self.osc.next(f / sr);
+                let s = self.osc.next(f / sr);
+                // Item 5, part three: the body's shape (round passes the sine straight through).
+                let (drive, makeup, _) = BODY[self.shape.min(2) as usize];
+                let body = if drive > 0.0 { self.body_sat.process(s * drive) * makeup } else { s };
                 // The click is a shaped pulse (a 1 ms raised cosine) with a little noise on it, not a burst of hiss.
                 let pulse = if tsec < 0.001 { 0.5 - 0.5 * (tsec * 2_000.0 * core::f32::consts::PI).cos() } else { 0.0 };
                 let click = (pulse * 0.55 + self.hp.tick(self.rng.bipolar()) * self.noise_env.next() * 0.4) * (0.25 + 0.35 * v);
@@ -414,8 +429,16 @@ impl DrumRack {
         }
     }
 
-    /// `i` counts from the instrument block: pad * 4 + knob.
+    /// `i` counts from the instrument block: pad * 4 + knob, then the rack, then each pad's second page.
     pub fn set_param(&mut self, i: usize, v: f32) {
+        if i >= DRUM_PAD2_BASE {
+            let pad = (i - DRUM_PAD2_BASE) / DRUM_PAD2_STRIDE;
+            let k = (i - DRUM_PAD2_BASE) % DRUM_PAD2_STRIDE;
+            if let Some(p) = self.pads.get_mut(pad) {
+                set_pad2(p, k, v);
+            }
+            return;
+        }
         if i >= DRUM_RACK_BASE {
             // Rack-wide knobs. open: the closed hat rings out up to 10x longer.
             if i - DRUM_RACK_BASE == D_OPEN {
@@ -451,6 +474,12 @@ fn set_pad(p: &mut Pad, k: usize, v: f32) {
         2 => p.drive_amt = v,
         3 => p.level = fader_gain(DRUM_PAD_PARAMS[3].from_value(v)),
         _ => {}
+    }
+}
+
+fn set_pad2(p: &mut Pad, k: usize, v: f32) {
+    if k == DP_SHAPE {
+        p.shape = step3(v);
     }
 }
 
