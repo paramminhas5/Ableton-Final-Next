@@ -139,6 +139,12 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
 }
 
 /** Wide key with a pill cap, for the one main action on a screen. */
+/** A go key that can't go yet says what's missing, in a smaller face so a whole clause fits. */
+export function NotYet({ why }: { why: string }) {
+  const short = why.split(/[.:(]/)[0].trim();
+  return <span style={{ fontSize: short.length > 24 ? 12.5 : 14, lineHeight: 1.15, textAlign: "center", whiteSpace: "normal", padding: "0 6px" }}>{short}</span>;
+}
+
 export function GoPill({ children, href, onClick, ariaLabel, style, disabled }: { children: ReactNode; href?: string; onClick?: () => void; ariaLabel?: string; style?: CSSProperties; disabled?: boolean }) {
   const cap = <span className="m1-cap is-go is-pill" style={{ width: "90%", height: "58%", gap: 8, fontSize: 16, fontWeight: 500, marginTop: -12 }}>{children}</span>;
   if (href && !disabled) return <Link href={href} className="m1-m is-wide" style={style} aria-label={ariaLabel}>{cap}</Link>;

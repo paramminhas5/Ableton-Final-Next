@@ -21,7 +21,7 @@ const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 const TOL = 0.15;
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string }; tail?: ReactNode; snap?: boolean };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; tail?: ReactNode; snap?: boolean };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -234,14 +234,18 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const goalEvents = coach ? events.filter(e => goalNote === undefined || e.note === goalNote) : [];
   // Drum lessons ask for hits on the beat. A tune can go anywhere on the grid, so there we count notes.
   const onBeatOnly = goalNote !== undefined;
-  const offOf = (e: NoteEvent) => e.start - Math.round(e.start);
-  // A clap (backbeat) only counts on two and four.
-  const backbeat = coach?.goal.note === "clap";
-  const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && (Math.abs(offOf(e)) > TOL || (backbeat && (((Math.round(e.start) % loop) + loop) % loop) % 2 === 0));
+  // Where the hits must land: a clap or snare on two and four, an open hat on the "and", any other drum on the beat.
+  const on = coach?.goal.on ?? (coach?.goal.note === "clap" || coach?.goal.note === "snare" ? "backbeat" : "beat");
+  const offbeat = on === "and";
+  const offOf = (e: NoteEvent) => (offbeat ? e.start - (Math.floor(e.start) + 0.5) : e.start - Math.round(e.start));
+  const slotOf = (e: NoteEvent) => (((Math.round(offbeat ? e.start - 0.5 : e.start) % loop) + loop) % loop);
+  // A clap or snare (backbeat) only counts on two and four.
+  const backbeat = onBeatOnly && on === "backbeat";
+  const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && (Math.abs(offOf(e)) > TOL || (backbeat && slotOf(e) % 2 === 0));
   const offs = goalEvents.filter(isOff);
   const offBeat = onBeatOnly ? offs.length : 0;
   const goalHits = onBeatOnly
-    ? new Set(goalEvents.filter(e => !isOff(e)).map(e => Math.round(e.start) % loop)).size
+    ? new Set(goalEvents.filter(e => !isOff(e)).map(slotOf)).size
     // A chord is one press, not three notes: count when things start, not how many notes sound.
     : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
@@ -255,17 +259,18 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
     : recording && goalMet ? `${shown} of ${coach.goal.notes}, that's the lot. press keep it, or keep playing`
     : recording && offBeat ? `recording. the red ${offBeat === 1 ? "one was" : "ones were"} off the beat. finish the bar, then undo ${offBeat === 1 ? "it" : "them"}`
-    : recording ? (backbeat ? "recording. tap the clap on two and four" : onBeatOnly ? `recording. tap the ${hitName} on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}` : `recording. ${shown} of ${coach.goal.notes} ${unit}s so far`)
-    : !events.length ? (backbeat ? "press rec. four clicks count you in, then tap the clap on two and four" : onBeatOnly ? `press rec. four clicks count you in, then tap the ${hitName} on the next four` : `press rec. four clicks count you in, then play any ${surface} you like`)
-    : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? "one clap" : `${offBeat} claps`} landed on one or three. the clap goes on two and four. tap undo and try again`
-    : offBeat ? `${offBeat === 1 ? `one ${backbeat ? "clap" : hitName}` : `${offBeat} ${backbeat ? "claps" : `${hitName}s`}`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
-    : !goalMet ? `${shown} of ${coach.goal.notes}${onBeatOnly ? " on the beat" : ` ${unit}s`}. press rec and add the rest`
+    : recording ? (backbeat ? `recording. tap the ${hitName} on two and four` : offbeat ? `recording. tap the ${hitName} on every "and"` : onBeatOnly ? `recording. tap the ${hitName} on beat ${Math.floor(((pos.beat % loop) + loop) % loop) + 1}` : `recording. ${shown} of ${coach.goal.notes} ${unit}s so far`)
+    : !events.length ? (backbeat ? `press rec. four clicks count you in, then tap the ${hitName} on two and four` : offbeat ? `press rec. four clicks count you in, then tap the ${hitName} between the kicks, on every "and"` : onBeatOnly ? `press rec. four clicks count you in, then tap the ${hitName} on the next four` : `press rec. four clicks count you in, then play any ${surface} you like`)
+    : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} landed on one or three. the ${hitName} goes on two and four. tap undo and try again`
+    : offBeat && offbeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} missed the "and", the red ${offBeat === 1 ? "one" : "ones"}. the ${hitName} goes halfway between the kicks. tap undo and try again`
+    : offBeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
+    : !goalMet ? `${shown} of ${coach.goal.notes}${offbeat ? ' on the "and"' : backbeat ? " on two and four" : onBeatOnly ? " on the beat" : ` ${unit}s`}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
   const glow = { outline: "2px solid var(--led-mint)", outlineOffset: -2, borderRadius: 14 } as CSSProperties;
   // The go key names what is still missing until the take is ready.
   const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
-  const noun = goalNote !== undefined ? (backbeat ? "clap" : hitName) : unit;
+  const noun = goalNote !== undefined ? hitName : unit;
   const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones" : `${need} more ${noun}${need === 1 ? "" : "s"}`;
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>

@@ -25,7 +25,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
         screens.push({ kind: "say", title: s.title, body: s.say, ...(s.clip ? { clip: s.clip } : {}), deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) });
         learned.push(s.title);
         break;
-      case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;
+      case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note, ...(s.goal.on ? { on: s.goal.on } : {}) }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;
       case "shape": learned.push(`shaping it with ${s.knobs.join(" and ")}`); screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
       case "ask": screens.push({ kind: "quiz", q: s.q, options: s.options, answer: s.answer, explain: s.why, hint: s.hint, whyWrong: s.whyWrong, ...(s.more ? { more: true } : {}) }); break;
       case "ear": screens.push({ kind: "ear", drill: s.drill, rounds: s.rounds, body: s.say }); break;

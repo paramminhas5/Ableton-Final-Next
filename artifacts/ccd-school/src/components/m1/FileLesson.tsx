@@ -16,6 +16,7 @@ import { applyTake, drumNames, readTake, saveTake, takeType, withParams, type Ta
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { changesSong, cueFor, cuesOf, soundsSame, withCue } from "@/lib/cues";
+import { songDiff } from "@/lib/songdiff";
 import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { earnStripe, newTrophies, readStripes, type Trophy } from "@/lib/rewards";
@@ -121,7 +122,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} is recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} ${(focus ?? "").endsWith("s") ? "are" : "is"} recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} />}
@@ -251,7 +252,13 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const missingPart = useMemo(() => !changeNoun(mission.screens ?? []) && !readTrackV2().layers.some(l => l.type === line.type && l.events.length), [mission.screens, line.type]);
   // A play-in you skipped on a part your song already has keeps your part as it is: the lesson's preset
   // pattern would overwrite a steady kick with a "new pattern" you never played.
-  const skippedOnOwn = useMemo(() => !take?.events.length && readTrackV2().layers.some(l => l.type === line.type && l.events.length), [take, line.type]);
+  // On drums, "your part" means the sound this lesson is about: a kick doesn't stand in for a skipped clap.
+  const skippedOnOwn = useMemo(() => {
+    if (take?.events.length) return false;
+    const want = new Set(line.events.map(e => e.note));
+    const drumish = line.type === "drums" || line.type === "hats";
+    return readTrackV2().layers.some(l => l.type === line.type && l.events.length && (!drumish || l.events.some(e => want.has(e.note))));
+  }, [take, line]);
   const keepOnly = useMemo(() => (!(mission.screens ?? []).some(s => s.kind === "play") || skippedOnOwn) && songHasMusic() && !missingPart, [mission.screens, missingPart, skippedOnOwn]);
   // A dj lesson marks your song where its mixer move lands (src/lib/cues.ts).
   const mixGoal = useMemo(() => (changeNoun(mission.screens ?? []) === "mix" ? [...(mission.screens ?? [])].reverse().find(s => s.kind === "mix") : undefined), [mission.screens]);
@@ -279,7 +286,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const add = () => {
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
-    try { if (!now.added.includes(slug)) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
+    try { if (!now.added.includes(slug) && !sessionStorage.getItem(beforeKey(slug))) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
     const made = now.added.includes(slug) ? now : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
     const next = mixGoal?.kind === "mix" && !now.added.includes(slug) ? withCue(made, cueFor(made, slug, mixGoal.goal)) : made;
     writeTrackV2(next);
@@ -419,13 +426,17 @@ const beforeKey = (slug: string) => `ccd.before.${slug}`;
 function WithWithout({ slug }: { slug: string }) {
   const [pair, setPair] = useState<{ with: TrackV2; without: TrackV2 } | null>(null);
   const [same, setSame] = useState<string | null>(null);
+  const [diff, setDiff] = useState<string[]>([]);
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(beforeKey(slug));
       const now = readTrackV2();
       const before = raw ? (JSON.parse(raw) as TrackV2) : null;
-      // Only worth comparing when there was a song before this lesson: "before" can't be silence.
-      if (before && before.layers.some(l => l.events.length) && now.layers.some(l => l.events.length)) {
+      if (!before) return;
+      // What changed, in words: every lesson acts on your song, and this says how.
+      setDiff(songDiff(before, now));
+      // Only worth comparing by ear when there was a song before this lesson: "before" can't be silence.
+      if (before.layers.some(l => l.events.length) && now.layers.some(l => l.events.length)) {
         // Two identical songs are no comparison: say what changed instead (a cue, or nothing you can hear).
         if (soundsSame(before, now)) {
           const cue = cuesOf(now).find(c => c.slug === slug);
@@ -437,8 +448,11 @@ function WithWithout({ slug }: { slug: string }) {
   const [which, setWhich] = useState<"with" | "without" | null>(null);
   const { engine, ready } = useEngineTrack((pair && which ? pair[which] : null) ?? readTrackV2());
   useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
+  const changed = diff.length && !same ? (
+    <div className="ls-panel fl-nextline fl-changed"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span><b>what changed</b> {diff.join(" · ")}</span></div>
+  ) : null;
   if (same) return <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-cobalt, #5c7cff)" } as CSSProperties} /><span>{same}</span></div>;
-  if (!pair) return null;
+  if (!pair) return changed;
   const play = (w: "with" | "without") => {
     if (which === w) { engine.stop(); setWhich(null); return; }
     setWhich(w);
@@ -446,6 +460,7 @@ function WithWithout({ slug }: { slug: string }) {
   };
   return (
     <>
+      {changed}
       <Silk label="hear the difference" right={which ? (which === "with" ? "with it" : "without it") : "tap one"} />
       <div className="ls-pads fl-ab" role="radiogroup" aria-label="Your song with and without this lesson">
         {(["with", "without"] as const).map(w => (
@@ -570,7 +585,12 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     // One song runs through every world: basics, producer and dj all add to the same song.
     try {
       const saved = JSON.parse(sessionStorage.getItem(SESSION) ?? "null") as { idx: number; at?: number } | null;
-      if (saved && saved.idx > 0 && saved.idx < pages.length && Date.now() - (saved.at ?? 0) < 3 * 3600_000) setIdx(saved.idx);
+      const resumed = !!(saved && saved.idx > 0 && saved.idx < pages.length && Date.now() - (saved.at ?? 0) < 3 * 3600_000);
+      if (resumed && saved) setIdx(saved.idx);
+      // The done screen's "before this lesson" is the song as it was when the lesson opened: some steps
+      // (an arrangement, a tempo) write to the song before the add step.
+      const now = readTrackV2();
+      if (!now.added.includes(mission.slug) && (!resumed || !sessionStorage.getItem(beforeKey(mission.slug)))) sessionStorage.setItem(beforeKey(mission.slug), JSON.stringify(now));
     } catch { /* fresh */ }
     setTake(readTake(mission.slug));
     track("lesson_started", { missionSlug: mission.slug, world: mission.world, xp: mission.xp, alreadyCompleted: alreadyDone });

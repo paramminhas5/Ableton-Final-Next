@@ -50,7 +50,7 @@ for (const [slug, act] of [
 }
 /** A person tries the cut again until it lands on the one: back to a, then slam to b. */
 async function cutOnTheOne(p) {
-  for (let i = 0; i < 30 && /not yet/.test(await p.locator(".ls-bottom .m1-g > :last-child").first().innerText()); i++) {
+  for (let i = 0; i < 30 && /^not yet/i.test((await p.locator(".ls-bottom .m1-g > :last-child").first().getAttribute("aria-label")) ?? ""); i++) {
     await press(p, "Crossfader", "Home", 1); await p.waitForTimeout(90 + (i * 37) % 200); await press(p, "Crossfader", "End", 1); await p.waitForTimeout(120);
   }
 }

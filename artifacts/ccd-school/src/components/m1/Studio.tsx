@@ -1,4 +1,5 @@
 "use client";
+import { arranged } from "@/lib/arrange";
 /**
  * Studio (canvas "Model 1 · final"). Two modes: play and mix. Mix lives in Mix.tsx.
  *
@@ -780,7 +781,7 @@ export function Studio() {
         <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
           <Icon name="reset" />
         </Key>
-        <Key label="to live" onClick={() => downloadTrackV2Midi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+        <Key label="to live" onClick={() => downloadTrackV2Midi(arranged(track))} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
           <Icon name="out" />
         </Key>
         <Key label={shift ? "loud wav" : "wav"} onClick={() => void downloadWav(track, shift)} disabled={!track.layers.length}

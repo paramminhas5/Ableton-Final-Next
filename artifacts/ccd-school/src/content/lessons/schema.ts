@@ -18,7 +18,8 @@ export type StepKind = (typeof STEP_KINDS)[number];
 /** A string applies to every voice. An object must carry `mentor`; the others fall back to it. */
 export type VoiceText = string | { mentor: string; straight?: string; eli5?: string };
 
-export type PlayGoal = { notes: number; note?: string };
+/** `on`: where the hits must land. "beat" on the beat, "and" halfway between beats, "backbeat" on two and four. Missing: backbeat for a clap or snare, the beat for any other named drum. */
+export type PlayGoal = { notes: number; note?: string; on?: "beat" | "and" | "backbeat" };
 export type Rounds = number | { gentle: number; standard: number; hard: number };
 
 export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean };

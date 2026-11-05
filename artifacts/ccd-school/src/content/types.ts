@@ -161,7 +161,7 @@ export type LessonScreen =
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; clip?: string; deeper?: { title: string; body: string }[] }
   | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
-  | { kind: "play"; layer: string; goal: { notes: number; note?: string }; body: string; hint?: string; snap?: boolean }
+  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; body: string; hint?: string; snap?: boolean }
   | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
   | { kind: "arrange"; body: string; goal: "sections" | "drop" | "fills" | "risers" | "export"; hint?: string }
   | { kind: "mix"; body: string; goal: "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record"; bank?: string; hint?: string }

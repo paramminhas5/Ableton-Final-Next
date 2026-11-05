@@ -13,7 +13,7 @@ import { FileDeck, useFileDeck } from "./FileDeck";
 import { readTrackV2, type LayerV2, type TrackV2 } from "@/lib/track2";
 import { readSongs } from "@/lib/songs";
 import { clipVariants } from "@/content/lessons/clipTracks";
-import { CAP, Fader, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { CAP, Fader, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
@@ -226,7 +226,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play both decks"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={go} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel={met ? "Next" : `Not yet: ${why}`}>{met ? "next" : "not yet"}</GoPill>
+          <GoPill onClick={go} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel={met ? "Next" : `Not yet: ${why}`}>{met ? "next" : <NotYet why={why} />}</GoPill>
         </div>
       </div>
     </div>

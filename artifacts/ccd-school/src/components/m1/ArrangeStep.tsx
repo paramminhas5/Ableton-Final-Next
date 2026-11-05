@@ -7,17 +7,19 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT } from "@/engine";
 import type { LessonScreen } from "@/content/types";
-import { arranged, CLASSIC, sectionAt, type Section } from "@/lib/arrange";
+import { arranged, sectionAt, startLayout, type Section } from "@/lib/arrange";
 import { readTrackV2, writeTrackV2, TYPE, type TrackV2 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { readSongs, renameSong } from "@/lib/songs";
 import { clipVariants } from "@/content/lessons/clipTracks";
-import { GoPill, Icon, Key, Screen } from "./controls";
+import { GoPill, Icon, Key, NotYet, Screen } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
 type Of<K> = Extract<LessonScreen, { kind: K }>;
+
+const DRUMS = new Set(["drums", "hats"]);
 
 export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arrange">; accent: string; onNext: () => void; tail?: ReactNode }) {
   const [song, setSong] = useState<TrackV2 | null>(null);
@@ -27,7 +29,9 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   }, []);
   const parts = useMemo(() => (song?.layers ?? []).filter(l => l.events.length), [song]);
   const [secs, setSecs] = useState<Section[]>([]);
-  useEffect(() => { if (song) setSecs(song.sections?.length ? song.sections : CLASSIC(song)); }, [song]);
+  // A song with no arrangement yet starts from a layout that doesn't already answer the lesson: the learner
+  // takes the drums out for the drop, adds the fills, switches the parts off. Hats count as drums.
+  useEffect(() => { if (song) setSecs(song.sections?.length ? song.sections : startLayout(song, screen.goal)); }, [song]); // eslint-disable-line react-hooks/exhaustive-deps
   const shown = useMemo(() => (song ? { ...song, sections: secs } : readTrackV2()), [song, secs]);
   const { engine, ready } = useEngineTrack(shown);
   const [beat, setBeat] = useState(-1);
@@ -38,8 +42,8 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   const toggle = (si: number, id: string) => setSecs(s => s.map((x, i) => (i === si ? { ...x, off: x.off.includes(id) ? x.off.filter(o => o !== id) : [...x.off, id] } : x)));
   const fill = (si: number) => setSecs(s => s.map((x, i) => (i === si ? { ...x, fill: !x.fill } : x)));
   const rise = (si: number) => setSecs(s => s.map((x, i) => (i === si ? { ...x, riser: !x.riser } : x)));
-  const drums = parts.filter(l => l.type === "drums").map(l => l.id);
-  const onlyDrums = parts.length > 0 && parts.every(l => l.type === "drums");
+  const drums = parts.filter(l => DRUMS.has(l.type)).map(l => l.id);
+  const onlyDrums = parts.length > 0 && parts.every(l => DRUMS.has(l.type));
   const met = screen.goal === "export" ? true
     : screen.goal === "fills" ? secs.some(s => s.fill)
     : screen.goal === "risers" ? secs.some(s => s.riser)
@@ -87,7 +91,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
           </div>
         </Screen>
         <div className="fl-again" style={{ justifyContent: "flex-start", marginTop: 10 }}>
-          <button type="button" className="ls-chip" onClick={() => song && setSecs(CLASSIC(song))}>classic layout</button>
+          <button type="button" className="ls-chip" onClick={() => song && setSecs(startLayout(song, screen.goal))}>start over</button>
           {screen.goal === "export" && song && <button type="button" className="ls-chip" onClick={() => downloadTrackV2Midi(arranged({ ...readTrackV2(), sections: secs }))}>download midi for live</button>}
         </div>
         {screen.goal === "export" && (
@@ -104,7 +108,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={async () => { if (playing) { engine.stop(); return; } await ready(); engine.play(); }} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the arrangement"}><Icon name={playing ? "stop" : "play"} /></Key>
-          <GoPill onClick={keep} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel="Keep this arrangement">{met ? (screen.goal === "export" ? "finish" : "keep this") : "not yet"}</GoPill>
+          <GoPill onClick={keep} style={{ gridColumn: "span 3", opacity: met ? 1 : 0.6 }} ariaLabel={met ? "Keep this arrangement" : `Not yet: ${why}`}>{met ? (screen.goal === "export" ? "finish" : "keep this") : <NotYet why={why} />}</GoPill>
         </div>
       </div>
     </div>

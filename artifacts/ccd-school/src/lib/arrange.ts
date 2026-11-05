@@ -21,6 +21,17 @@ export const CLASSIC = (t: TrackV2): Section[] => {
   ];
 };
 
+/** Where an unarranged song starts for a lesson's goal: the classic layout minus the thing the lesson teaches,
+ * so the learner makes the drop (hats count as drums), adds the fills, switches the parts off. */
+export function startLayout(t: TrackV2, goal: "sections" | "drop" | "fills" | "risers" | "export"): Section[] {
+  const c = CLASSIC(t);
+  const drumIds = new Set(t.layers.filter(l => l.type === "drums" || l.type === "hats").map(l => l.id));
+  if (goal === "drop") return c.map(s => ({ ...s, off: s.off.filter(id => !drumIds.has(id)) }));
+  if (goal === "fills") return c.map(s => ({ ...s, fill: false }));
+  if (goal === "sections") return c.map(s => ({ ...s, off: [], fill: false }));
+  return c;
+}
+
 const KICK = 36, SNARE = 38;
 
 /** The song as the engine plays it: one long loop, every section in turn. Unchanged with no sections. */

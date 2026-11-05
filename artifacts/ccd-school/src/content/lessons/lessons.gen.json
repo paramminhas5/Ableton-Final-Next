@@ -9309,7 +9309,9 @@
           "surface": "pads",
           "snap": true,
           "goal": {
-            "notes": 1
+            "notes": 4,
+            "note": "open hat",
+            "on": "and"
           },
           "say": {
             "mentor": "Add hats to your song. Snap is on, set to eighths, so every hit lands exactly on the grid. Press rec, wait out the count-in, and tap the open hat between each kick: on every \"and\". Want a busier feel? Tap the snap key to change it to sixteenths and add some closed hats too.",

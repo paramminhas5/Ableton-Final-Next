@@ -31,7 +31,7 @@ for (const slug of slugs) {
     if (kind === "play" || (await skip.count())) await skip.first().click();
     else if (kind === "check") await p.getByText("skip the challenge").click();
     else if (kind === "ear") { for (let k = 0; k < 20 && (await p.locator(".fl").getAttribute("data-page-kind")) === "ear"; k++) { await p.locator('[role="radio"]:not([disabled]), .ls-pad:not([disabled])').first().click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); await go.click({ timeout: 2000 }).catch(() => {}); await p.waitForTimeout(250); } }
-    else if (kind === "arrange" && /not yet/.test(await go.innerText())) { await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Fill"]').nth(1).click().catch(() => {}); await go.click(); }
+    else if (kind === "arrange" && /^not yet/i.test((await go.getAttribute("aria-label")) ?? "")) { for (const n of ["drums in break", "hats in break"]) await p.locator(`.ar-cell[aria-label^="${n}"]`).first().click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Riser"]').nth(1).click().catch(() => {}); await p.locator('.ar-fill[aria-label^="Fill"]').nth(1).click().catch(() => {}); if (/^not yet/i.test((await go.getAttribute("aria-label")) ?? "")) await p.locator(".ar-cell.is-on").first().click().catch(() => {}); await go.click(); }
     else await go.click();
     await p.waitForTimeout(450);
     const after = await p.locator(".fl").getAttribute("data-step");

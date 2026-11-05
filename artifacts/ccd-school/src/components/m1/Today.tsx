@@ -10,6 +10,7 @@ import { DashTour } from "./Tour";
 import { YouCard } from "./YouCard";
 import { useProgress, DAILY_GOAL_XP } from "@/lib/progress";
 import { useTrack, offerFor, previewLayer } from "@/lib/track";
+import { readTrackV2 } from "@/lib/track2";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
 import { journey, nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
@@ -63,6 +64,16 @@ export function Today() {
   const lit = Math.min(9, Math.round((todayXp / DAILY_GOAL_XP) * 9));
   // Drum lanes show as separate rows but are one layer (one drum rack) in the track.
   const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
+  // Key and length come from the full song: an arrangement makes it "20 bars · 5 sections", not a loop.
+  const [shape, setShape] = useState({ key: "a minor", length: "1 bar loop" });
+  useEffect(() => {
+    const t = readTrackV2();
+    const NOTE = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
+    const secs = t.sections ?? [];
+    const bars = secs.reduce((a, x) => a + x.bars, 0);
+    const loopBars = Math.max(1, Math.round((t.loop || 4) / 4));
+    setShape({ key: `${NOTE[((t.root % 12) + 12) % 12]} ${t.scale}`, length: secs.length ? `${bars} bars · ${secs.length} sections` : `${loopBars} bar loop` });
+  }, [track]);
 
   // Search finds every lesson, deeper lessons and bonus rounds too.
   const all = useMemo(() => WORLDS.flatMap(w => journey(w, {}).flatMap(p => p.lessons.flatMap(l => [l, ...l.extras])
@@ -158,8 +169,8 @@ export function Today() {
             <div className="m1-t36" style={{ marginTop: 8 }}>{layers} {layers === 1 ? "layer" : "layers"}</div>
             <div style={{ display: "flex", gap: 14, marginTop: 10 }}>
               <span className="m1-ss" style={{ color: "var(--disp-ink)" }}>{track.bpm} bpm</span>
-              <span className="m1-ss" style={{ color: "var(--disp-ink)" }}>a minor</span>
-              <span className="m1-ss" style={{ color: "var(--disp-ink)" }}>{playing ? `step ${step + 1}` : "1 bar loop"}</span>
+              <span className="m1-ss" style={{ color: "var(--disp-ink)" }}>{shape.key}</span>
+              <span className="m1-ss" style={{ color: "var(--disp-ink)" }}>{playing ? `step ${step + 1}` : shape.length}</span>
             </div>
           </>
         ) : (
