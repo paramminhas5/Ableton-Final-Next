@@ -75,6 +75,23 @@ const SCENES = {
     await shot("hit");
     await up?.();
   },
+  "studio-lock": async (p, shot) => {
+    await studioLayer(p, "drums");
+    await p.locator(".st-vk", { hasText: /^steps$/ }).first().click();
+    await p.waitForTimeout(300);
+    const step = p.locator('.st-tray button[aria-label^="kick step 3 "]').first();
+    const up = await hold(p, step, 520);
+    await up?.();
+    const k = p.getByRole("slider", { name: "decay" }).first();
+    await k.focus();
+    for (let i = 0; i < 18; i++) await p.keyboard.press("ArrowUp");
+    await p.waitForTimeout(250);
+    await shot("held");
+    await p.getByRole("button", { name: "done" }).click();
+    await p.waitForTimeout(250);
+    await shot("locked");
+    console.log("  stored:", await p.evaluate(() => JSON.stringify(JSON.parse(localStorage.getItem("ccd.track.v2")).layers.flatMap(l => l.events.filter(e => e.p)))));
+  },
   "tryit-pads": async (p, shot) => {
     if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
     const pad = p.locator(".ls-tray .ls-key").first();

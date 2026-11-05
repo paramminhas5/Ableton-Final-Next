@@ -60,7 +60,9 @@ import { starterTrack } from "@/lib/starter";
 import { CAP, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
-import { useEngineTrack } from "./useEngineTrack";
+import { swung, useEngineTrack } from "./useEngineTrack";
+import { lockSchedule, setLock, dueBetween, valuesAt, type Change } from "@/lib/plock";
+import { arranged } from "@/lib/arrange";
 import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
 import { bind, PIC } from "@/lib/paramColor";
@@ -76,6 +78,7 @@ const SOLO_C = "#7D96FF";
 const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Touched = { label: string; text: string } | null;
+type LockAt = { note: number | null; step: number } | null;
 type Mode = "play" | "mix";
 const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 
@@ -122,6 +125,8 @@ export function Studio() {
   const [pos, setPos] = useState<{ beat: number; flags: number }>({ beat: 0, flags: 0 });
   const [hits, setHits] = useState<Record<string, number>>({});
   const [rings, setRings] = useState<Rings>({});
+  // Hold a step, turn a knob: the held step (and its lane, on drums) takes the knob's value as a lock.
+  const [lockAt, setLockAt] = useState<LockAt>(null);
   const [held, setHeldUi] = useState<Set<number>>(new Set());
   const lastNote = useRef(33);
   const recHeld = useRef<Held>(new Map());
@@ -192,6 +197,7 @@ export function Studio() {
       for (const e of evs) {
         if (e.kind === OUT.pos) {
           setPos(p => (p.beat === e.beat && p.flags === e.flags ? p : { beat: e.beat, flags: e.flags }));
+          tickLocks(e.beat, e.flags);
           continue;
         }
         const layer = t.layers[e.layer];
@@ -224,7 +230,43 @@ export function Studio() {
         }
       }
     });
-  }, [engine, flash, snap, update]);
+  }, [engine, flash, snap, update]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── parameter locks: the engine plays one value per layer, so we send each lock at its step ──
+  const locks = useRef<{ sched: { layer: number; changes: Change[]; base: (i: number) => number }[]; loop: number; bpm: number; until: number | null }>({ sched: [], loop: 4, bpm: 120, until: null });
+  useEffect(() => {
+    const t = arranged(track);
+    const anySolo = t.layers.some(l => l.solo);
+    locks.current.sched = t.layers.map((l, i) => {
+      if (!l.events.some(e => e.p) || (anySolo ? !l.solo : l.mute)) return null;
+      const base = (idx: number) => paramOf(l, idx);
+      return { layer: i, base, changes: lockSchedule(swung(l.events, t.swing ?? 0), base, TYPE[l.type].engine === "drums") };
+    }).filter((x): x is { layer: number; changes: Change[]; base: (i: number) => number } => !!x && x.changes.length > 0);
+    locks.current.loop = t.loop;
+    locks.current.bpm = t.bpm;
+  }, [track]);
+  function tickLocks(beat: number, flags: number) {
+    const L = locks.current;
+    const on = !!(flags & FLAG.playing) && !(flags & FLAG.countIn);
+    if (!on || !L.sched.length) {
+      if (L.until !== null) { for (const s of L.sched) for (const c of s.changes) engine.param(s.layer, c.index, s.base(c.index)); L.until = null; }
+      return;
+    }
+    const loop = L.loop, mod = (x: number) => ((x % loop) + loop) % loop;
+    const b = mod(beat), msPerBeat = 60000 / L.bpm, ahead = 80 / msPerBeat;
+    if (L.until === null || mod(L.until - b) > loop / 2) {
+      for (const s of L.sched) valuesAt(s.changes, b, loop).forEach((v, idx) => engine.param(s.layer, idx, v));
+      L.until = b;
+    }
+    const to = mod(b + ahead);
+    for (const s of L.sched) {
+      for (const d of dueBetween(s.changes, L.until, to, loop)) {
+        const wait = mod(d.change.beat - b) * msPerBeat - 4;
+        window.setTimeout(() => engine.param(s.layer, d.change.index, d.change.value), Math.max(0, wait));
+      }
+    }
+    L.until = to;
+  }
 
   useEffect(() => {
     if (!recording && !countIn) takeOpen.current = false;
@@ -281,11 +323,23 @@ export function Studio() {
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
   const selPadNote = sel && drumLike ? DRUM_PAD_NOTES[effectivePad(sel)] : -1;
   const clock = useNoteClock(engine, selIndex, { bpm: track.bpm, loop: track.loop, events: sel?.events ?? [] }, drumLike ? (n => n === selPadNote) : undefined);
+  const lockMatch = (at: NonNullable<LockAt>) => (e: { note: number; start: number }) => Math.abs(e.start - at.step * grid) < grid / 2 && (at.note === null || e.note === at.note);
+  const lockedValue = (index: number) => {
+    if (!lockAt || !sel) return undefined;
+    const ev = sel.events.find(lockMatch(lockAt));
+    return ev?.p?.[index];
+  };
   const setParam = (index: number, spec: ParamSpec, v: number) => {
     start(); // a knob turned before any tap must still be heard
     const now = Date.now();
     const undoable = now - lastParamEdit.current > 800; // one drag is one undo step
     lastParamEdit.current = now;
+    if (lockAt && sel) {
+      patchSel(l => ({ ...l, events: setLock(l.events, lockMatch(lockAt), index, v) }), undoable);
+      engine.param(selIndex, index, v);
+      setTouched({ label: `step ${lockAt.step + 1} · ${spec.label}`, text: display(spec, v) });
+      return;
+    }
     patchSel(l => {
       const next = { ...l, params: { ...l.params, [index]: v } };
       // Turning duck up with nowhere to duck from: duck under the drums' kick.
@@ -297,6 +351,26 @@ export function Studio() {
     }, undoable);
     setTouched({ label: spec.label, text: display(spec, v) });
   };
+
+  /** Hold a step: it lights, and knob turns lock to it. An empty step gets its note first. */
+  const holdStep = (note: number | null, step: number, len: number) => {
+    if (!sel) return;
+    const at = { note, step };
+    if (!sel.events.some(lockMatch(at))) {
+      const n = note ?? lastNote.current;
+      patchSel(l => ({ ...l, events: toggleStep(l.events, n, step, grid, len) }));
+    }
+    setLockAt(at);
+    const k = bankKnobs(sel, bank, shift)[0];
+    setTouched({ label: `step ${step + 1} held`, text: k ? "turn a knob" : "" });
+  };
+  const clearLocks = () => {
+    if (!lockAt) return;
+    const m = lockMatch(lockAt);
+    patchSel(l => ({ ...l, events: l.events.map(e => { if (!m(e) || !e.p) return e; const { p: _p, ...rest } = e; return rest; }) })); // eslint-disable-line @typescript-eslint/no-unused-vars
+    setTouched({ label: `step ${lockAt.step + 1}`, text: "unlocked" });
+  };
+  useEffect(() => { setLockAt(null); }, [selId, sel?.surface]);
 
   const addLayer = (t: LayerV2["type"]) => {
     if (track.layers.length >= MAX_LAYERS) return;
@@ -568,11 +642,13 @@ export function Studio() {
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt}
+                onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt}
+                onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
 
@@ -603,12 +679,12 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
-            {bank === "sound" ? <StudioPics layer={sel} keys={knobs.map(k => k.spec.key)} clock={clock} /> : null}
+            {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} /> : null}
             <div className="m1-g st-knobs">
               {knobs.map(({ spec, index }, i) => (
                 <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
-                  {...bind(spec, paramOf(sel, index))}
-                  value={paramOf(sel, index)} defaultValue={spec.default}
+                  {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lfoto" ? 3 : undefined}
+                  value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
                   onChange={v => setParam(index, spec, v)} />
               ))}
             </div>
@@ -811,10 +887,42 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid }: { page:
   );
 }
 
-type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void };
+type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void;
+  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void };
+
+/** A step you can tap (on or off) or hold (lock knobs to it). Shift+Enter holds from the keyboard. */
+function useStepPress(onTap: () => void, onHold: () => void, held: boolean, onRelease: () => void) {
+  const t = useRef(0);
+  const fired = useRef(false);
+  return {
+    onPointerDown: () => { fired.current = false; window.clearTimeout(t.current); t.current = window.setTimeout(() => { fired.current = true; onHold(); }, 380); },
+    onPointerUp: () => window.clearTimeout(t.current),
+    onPointerLeave: () => window.clearTimeout(t.current),
+    onPointerCancel: () => window.clearTimeout(t.current),
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+    onClick: () => { if (fired.current) { fired.current = false; return; } if (held) { onRelease(); return; } onTap(); },
+    onKeyDown: (e: React.KeyboardEvent) => { if (e.key === "Enter" && e.shiftKey) { e.preventDefault(); if (held) onRelease(); else onHold(); } if (e.key === "Escape" && held) onRelease(); },
+  };
+}
+
+/** While a step is held: what to do, and a way to clear its locks or let go. Replaces the page bar. */
+function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>; layer: LayerV2; grid: number; onClear: () => void; onDone: () => void }) {
+  const ev = layer.events.find(e => Math.abs(e.start - at.step * grid) < grid / 2 && (at.note === null || e.note === at.note));
+  const n = ev?.p ? Object.keys(ev.p).length : 0;
+  return (
+    <div className="st-pages st-lockbar" role="status">
+      <span className="st-lockdot" aria-hidden />
+      <span className="st-ss" style={{ color: "var(--ink)" }}>step {at.step + 1} held</span>
+      <span className="st-ss">{n ? `${n} knob${n > 1 ? "s" : ""} locked` : "turn a knob to lock it here"}</span>
+      <span style={{ flex: 1 }} />
+      {n ? <button type="button" className="st-tag" onClick={onClear}>clear</button> : null}
+      <button type="button" className="st-tag is-on" onClick={onDone}>done</button>
+    </div>
+  );
+}
 
 /** A lane per sound, 8 steps a page. The playing step glows. */
-function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle }: StepsProps & { onToggle: (note: number, step: number) => void }) {
+function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
   const smp = layer.type === "sample";
@@ -828,32 +936,45 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
     <>
       <div className="st-tray" style={{ gridTemplateColumns: "44px repeat(8,1fr)", gridTemplateRows: `repeat(${lanes.length},1fr)` }}>
         {lanes.map((note, li) => (
-          <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} />
+          <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} />
         ))}
       </div>
-      <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} />
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} />}
     </>
   );
 }
 
-function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle }: { name: string; note: number; layer: LayerV2; page: number; playStep: number; color: string; grid: number; onToggle: (note: number, step: number) => void }) {
+/** One step: tap to switch it, hold to lock knobs to it. A step with locks shows a second colour. */
+function StepBtn({ cls, color, label, pressed, locked, held, onTap, onHold, onRelease, children }: { cls: string; color: string; label: string; pressed: boolean; locked: boolean; held: boolean; onTap: () => void; onHold: () => void; onRelease: () => void; children?: React.ReactNode }) {
+  const press = useStepPress(onTap, onHold, held, onRelease);
+  return (
+    <button type="button" className={`st-sp ${cls} ${locked ? "is-lock" : ""} ${held ? "is-held" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
+      aria-label={`${label}${locked ? ", locked knobs" : ""}${held ? ", held" : ""}`} aria-pressed={pressed} aria-keyshortcuts="Shift+Enter" {...press}>
+      {children}
+    </button>
+  );
+}
+
+function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle, lockAt, onHold, onRelease }: { name: string; note: number; layer: LayerV2; page: number; playStep: number; color: string; grid: number; onToggle: (note: number, step: number) => void; lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void }) {
   return (
     <>
       <div className="st-lane">{name}</div>
       {Array.from({ length: 8 }, (_, k) => {
         const step = page * 8 + k;
-        const on = layer.events.some(e => e.note === note && Math.abs(e.start - step * grid) < grid / 2);
+        const ev = layer.events.find(e => e.note === note && Math.abs(e.start - step * grid) < grid / 2);
+        const on = !!ev;
         const here = step === playStep;
         return (
-          <button key={k} type="button" className={`st-sp ${on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
-            aria-label={`${name} step ${step + 1} ${on ? "on" : "off"}`} aria-pressed={on} onClick={() => onToggle(note, step)} />
+          <StepBtn key={k} cls={on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={color} label={`${name} step ${step + 1} ${on ? "on" : "off"}`} pressed={on}
+            locked={!!ev?.p} held={!!lockAt && lockAt.step === step && lockAt.note === note}
+            onTap={() => onToggle(note, step)} onHold={() => onHold(note, step)} onRelease={onRelease} />
         );
       })}
     </>
   );
 }
 
-function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle }: StepsProps & { onToggle: (step: number) => void }) {
+function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks }: StepsProps & { onToggle: (step: number) => void }) {
   const c = TYPE[layer.type].color;
   return (
     <>
@@ -863,15 +984,15 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
           const ev = layer.events.find(e => Math.abs(e.start - s * grid) < grid / 2);
           const here = s === playStep;
           return (
-            <button key={k} type="button" className={`st-sp ${ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
-              aria-label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} aria-pressed={!!ev} onClick={() => onToggle(s)}>
+            <StepBtn key={k} cls={ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={c} label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} pressed={!!ev}
+              locked={!!ev?.p} held={!!lockAt && lockAt.step === s} onTap={() => onToggle(s)} onHold={() => onHold(null, s)} onRelease={onRelease}>
               <span className="st-lv">{s + 1}</span>
               {ev ? <span className="st-lb">{noteName(ev.note)}</span> : null}
-            </button>
+            </StepBtn>
           );
         })}
       </div>
-      <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} />
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} />}
     </>
   );
 }

@@ -147,7 +147,7 @@ export const envTail = (e: Env) => (e.kind === "decay" ? e.d : e.r);
 
 // ── the filter ───────────────────────────────────────────────────────────────
 
-/** Filter characters a learner sees. Only "warm" (the ladder) exists in the engine until engine item 7 lands. */
+/** Filter characters a learner sees: the engine's `character` knob in thirds (params.rs step3). */
 export type FilterCharacter = "warm" | "scream" | "smooth";
 
 /** Keys engine item 7 may give its filter character param; the first one present is read. */
@@ -159,8 +159,7 @@ export const characterOf = (n: number | undefined): FilterCharacter => (n === un
  * Magnitude of the engine's ladder at `f` Hz, cutoff `fc`, resonance `res` 0..1, in db. The linear
  * part of filter.rs's Ladder (analog prototype, before saturation): four one-pole stages in a loop
  * with feedback k = 4.1 * r * max(sqrt r, r) and the bass given back by 1 + 0.55 k.
- * The other two characters are drawn from their textbook shapes (MS-20: 2-pole with a sharper
- * peak; Oberheim SEM: 2-pole state variable, gentle peak).
+ * The other two characters (scream, smooth) are the linear parts of filter.rs's Ms20 and SEM Svf.
  */
 export function filterDb(f: number, fc: number, res: number, character: FilterCharacter = "warm"): number {
   const w = f / Math.max(1, fc);
@@ -175,11 +174,12 @@ export function filterDb(f: number, fc: number, res: number, character: FilterCh
     const re4 = re2 * re2 - im2 * im2 + k, im4 = 2 * re2 * im2;
     return 20 * Math.log10(comp / Math.max(1e-9, Math.hypot(re4, im4)));
   }
-  // 2-pole low pass: 1 / (1 - w^2 + j w / Q)
-  const q = character === "scream" ? 0.6 + r * 14 : 0.6 + r * 4;
-  const re = 1 - w * w, im = w / q;
-  const scream = character === "scream" ? 1 + r * 0.5 : 1;
-  return 20 * Math.log10(scream / Math.max(1e-9, Math.hypot(re, im)));
+  // Both 2-pole characters are 1 / (1 - w^2 + j d w), from filter.rs (engine item 7):
+  // scream is the Korg35 loop, d = 2 - 2.05 r (it self-oscillates at the top, drawn just short of it);
+  // smooth is the SEM state-variable filter, d = 1 / (0.55 + 9 r^2). Output gains as the engine's.
+  const d = character === "scream" ? Math.max(0.035, 2 - 2.05 * r) : 1 / (0.55 + 9 * r * r);
+  const gain = character === "scream" ? 0.794 : 0.668;
+  return 20 * Math.log10(gain / Math.max(1e-9, Math.hypot(1 - w * w, d * w)));
 }
 
 /** Cutoff in Hz after the filter envelope opens it, `level` 0..1 of the env, `amount` 0..1 (the env knob). */

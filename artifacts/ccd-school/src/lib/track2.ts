@@ -27,6 +27,7 @@ import {
   MASTER_PARAMS,
   type InstrumentName,
 } from "../engine/params.gen";
+import { cleanLocks } from "./plock";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
@@ -36,7 +37,8 @@ export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "
 export type Surface = "steps" | "keys" | "pads" | "own";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
-export type NoteEvent = { note: number; vel: number; start: number; len: number };
+/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts). */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number> };
 
 export type LayerV2 = {
   id: string;
@@ -355,7 +357,7 @@ export function readTrackV2(): TrackV2 {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const t = JSON.parse(raw) as TrackV2;
-      if (t && t.v === 2) return t;
+      if (t && t.v === 2) return Array.isArray(t.layers) ? cleanLocks(t) : t;
     }
     const v1 = localStorage.getItem(V1_KEY);
     if (v1) {
