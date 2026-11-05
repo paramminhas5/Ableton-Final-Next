@@ -9,7 +9,7 @@ import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks } from "@/lib/worldRanks";
 import { GoPill, Icon, Screen, Silk, WORLD_LED } from "@/components/m1/controls";
 import { SevenSeg } from "@/components/m1/SevenSeg";
 import { ListRow, PageHead, RankMark, Readout, SegBar } from "@/components/m1/parts";
@@ -19,7 +19,7 @@ const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS
 export function DailyPageClient() {
   const { progress, missionsNeedingReview } = useProgress();
   const completed = progress.completedMissions;
-  const { current: rank, idx } = rankFor(progress.xp);
+  const { current: rank, idx } = allWorldRanks(progress.completedMissions)[0];
 
   const allDoneSlugs = Object.keys(completed).filter(s => completed[s]);
   const lastSlug = allDoneSlugs[allDoneSlugs.length - 1];

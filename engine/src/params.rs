@@ -181,6 +181,11 @@ pub const LAYER_PARAMS: &[ParamSpec] = &[
     p("mix.pan", "pan", Bank::Mix, -1.0, 1.0, 0.5, Unit::Pan, Curve::Lin, 15.0, CENTRE),
     p("mix.send", "send", Bank::Mix, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("mix.duck", "duck", Bank::Mix, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    // A filter on every part (a cloud session, 5 Nov): cutoff (fully open by default, so nothing changes
+    // until you turn it), resonance, and the three characters, so drums, samples and fx can teach filters too.
+    p("fx.lp", "filter", Bank::Fx, 40.0, 20000.0, 1.0, Unit::Hz, Curve::Exp, 15.0, NONE),
+    p("fx.lpres", "resonance", Bank::Fx, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("fx.lpkind", "character", Bank::Fx, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 
 pub const L_EQ_LOW: usize = 0;
@@ -195,6 +200,9 @@ pub const L_LEVEL: usize = 8;
 pub const L_PAN: usize = 9;
 pub const L_SEND: usize = 10;
 pub const L_DUCK: usize = 11;
+pub const L_LP: usize = 12;
+pub const L_LP_RES: usize = 13;
+pub const L_LP_KIND: usize = 14;
 
 // ── Master bus ───────────────────────────────────────────────────────────────
 // Sent with the MASTER command; index order is the wire format. Append only.

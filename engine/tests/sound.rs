@@ -1295,3 +1295,26 @@ fn feedback_goes_from_sine_to_saw_to_noise_and_phase_distortion_opens_like_a_fil
         assert!((lv - base).abs() < 4.0, "{name}: {lv:.1} vs {base:.1}");
     }
 }
+
+#[test]
+fn every_part_has_a_filter_that_does_nothing_until_turned() {
+    // A filter in every channel strip, so drums, samples and fx can teach filters too: open by default,
+    // and each of the three characters takes the top off when it comes down.
+    use ccd_engine::params::{L_LP, L_LP_KIND, L_LP_RES};
+    use ccd_engine::strip::Strip;
+    let sr = 48_000.0;
+    let run = |hz: Option<f32>, kind: f32| {
+        let mut s = Strip::new(sr);
+        if let Some(h) = hz { s.set_param(L_LP, h, true); s.set_param(L_LP_RES, 0.6, true); s.set_param(L_LP_KIND, kind, true); }
+        let mut ph = 0.0f32;
+        let y: Vec<f32> = (0..48_000).map(|_| { ph = (ph + 220.0 / sr).fract(); s.tick(0.5 * (2.0 * ph - 1.0)).l }).collect();
+        let sp = spectrum(&y[16_384..16_384 + 16_384]);
+        let bin = |f: f32| (f * 16_384.0 / sr) as usize;
+        let top: f32 = sp[bin(3_000.0)..bin(10_000.0)].iter().map(|v| v * v).sum();
+        let all: f32 = sp[1..bin(10_000.0)].iter().map(|v| v * v).sum();
+        10.0 * (top / all).log10()
+    };
+    let open = run(None, 0.0);
+    println!("strip filter: open {open:.1} dB of top end, at 600 Hz warm {:.1}, scream {:.1}, smooth {:.1}", run(Some(600.0), 0.0), run(Some(600.0), 0.5), run(Some(600.0), 1.0));
+    for k in [0.0, 0.5, 1.0] { assert!(run(Some(600.0), k) < open - 12.0, "filter {k} should take the top off"); }
+}

@@ -35,7 +35,7 @@ export function DashTour() {
       const el = visible(stop.sel);
       if (el && stop.sel !== ".m1-modebar") {
         const r = el.getBoundingClientRect();
-        if (r.top < 60 || r.top > window.innerHeight * 0.5) window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 76), behavior: "auto" });
+        if (r.top < 60 || r.top > window.innerHeight * 0.5) { const y = window.scrollY + r.top - 76; window.scrollTo({ top: y < 140 ? 0 : y, behavior: "auto" }); }
       }
       // Every visible match together: on desktop the lesson card and its play key are two cards, and the
       // spotlight has to hold the key it tells you to press.
@@ -48,7 +48,9 @@ export function DashTour() {
     if (el && stop.sel !== ".m1-modebar") {
       // The target's top just under the header, so the card fits below it (or above, when it's tall).
       const r = el.getBoundingClientRect();
-      window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 76), behavior: "auto" });
+      // Near the top of the page, scroll to the very top so the header stays whole (phones cut it in half).
+      const y = window.scrollY + r.top - 76;
+      window.scrollTo({ top: y < 140 ? 0 : y, behavior: "auto" });
     }
     const first = window.setTimeout(place, 60);
     const id = window.setTimeout(place, 450);

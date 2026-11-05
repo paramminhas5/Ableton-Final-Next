@@ -57,6 +57,9 @@ const round = (v: number, d = 0) => {
 /** What the screen shows when you touch a control: "-3 db", "pan l 20", "1.2 khz". */
 export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> & { key?: string }, n: number): string {
   // Stepped knobs show what they choose, not a number.
+  // Filter character: our name first, what it is second (engine 2 item 7).
+  if (spec.key === "character" || spec.key === "lpkind") return n < 0.34 ? "warm · ladder" : n < 0.67 ? "scream · 2-pole drive" : "smooth · 2-pole";
+  if (spec.key === "lp" && n > 0.995) return "open";
   if (spec.key === "lfoto") return n < 0.34 ? "to the filter" : n < 0.67 ? "to the pitch" : "to the volume";
   if (spec.key === "ratio") return `ratio ${FM_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (FM_RATIOS.length - 1))]}`;
   if (spec.key === "glueratio") return `${GLUE_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (GLUE_RATIOS.length - 1))]}:1`;

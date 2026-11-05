@@ -10,6 +10,8 @@ import type { LessonScreen } from "@/content/types";
 import { arranged, sectionAt, startLayout, type Section } from "@/lib/arrange";
 import { readTrackV2, writeTrackV2, TYPE, type TrackV2 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { downloadWav } from "@/lib/bounce";
+import { EXPORT_LOUD_LUFS, EXPORT_LUFS } from "@/engine";
 import { readSongs, renameSong } from "@/lib/songs";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { GoPill, Icon, Key, NotYet, Screen } from "./controls";
@@ -51,6 +53,23 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
     : secs.length >= 3 && secs.some(s => s.off.length > 0);
   const why = screen.goal === "risers" ? "tap riser on the section before a drop" : screen.goal === "fills" ? "tap fill on at least one section" : screen.goal === "drop" ? "take the drums out of one section and bring them back in the next" : "switch a part off in at least one section";
   const [say, setSay] = useState<string | null>(null);
+  // Audio export at a loudness target: -14 lufs for streaming, -9 for clubs (src/lib/loudness.ts).
+  const [exp, setExp] = useState<{ state: "idle" | "rendering" | "done"; note?: string }>({ state: "idle" });
+  // Audio rendered offline by the engine and set to its loudness target: -14 lufs for streaming, -9 for clubs.
+  const exportAudio = async (loud: boolean) => {
+    if (!song || exp.state === "rendering") return;
+    setExp({ state: "rendering", note: "rendering your song" });
+    try {
+      const base = readTrackV2();
+      const track = arranged({ ...(base.layers.some(l => l.events.length) ? base : song), sections: secs });
+      const b = await downloadWav(track, loud, (name || "my song").replace(/[^a-z0-9 ]/gi, "").trim() || "my song");
+      const target = loud ? EXPORT_LOUD_LUFS : EXPORT_LUFS;
+      setExp({ state: "done", note: `saved at ${b.lufs.toFixed(1)} lufs, peaks at ${b.truePeakDb.toFixed(1)} dbtp.${b.lufs < target - 0.5 ? ` it stopped ${(target - b.lufs).toFixed(1)} short of ${target} to keep the peaks clean.` : ""}` });
+    } catch {
+      setExp({ state: "idle" });
+      setSay("this browser couldn't render the audio. the midi download still works");
+    }
+  };
   const [name, setName] = useState("");
   useEffect(() => { const i = readSongs(); setName(i.songs.find(s => s.id === i.active)?.name ?? "my song"); }, []);
   const keep = () => {
@@ -93,7 +112,10 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
         <div className="fl-again" style={{ justifyContent: "flex-start", marginTop: 10 }}>
           <button type="button" className="ls-chip" onClick={() => song && setSecs(startLayout(song, screen.goal))}>start over</button>
           {screen.goal === "export" && song && <button type="button" className="ls-chip" onClick={() => downloadTrackV2Midi(arranged({ ...readTrackV2(), sections: secs }))}>download midi for live</button>}
+          {screen.goal === "export" && song && <button type="button" className="ls-chip" disabled={exp.state === "rendering"} onClick={() => void exportAudio(false)}>audio for streaming<small>-14 lufs</small></button>}
+          {screen.goal === "export" && song && <button type="button" className="ls-chip" disabled={exp.state === "rendering"} onClick={() => void exportAudio(true)}>audio, loud for clubs<small>-9 lufs</small></button>}
         </div>
+        {exp.note ? <div className="ls-hint fl-export-note" role="status">{exp.note}</div> : null}
         {screen.goal === "export" && (
           <label className="ar-name"><span>song name</span><input value={name} maxLength={24} onChange={e => setName(e.target.value)} onBlur={() => { const i = readSongs(); renameSong(i.active, name); window.dispatchEvent(new Event("ccd:song")); }} /></label>
         )}

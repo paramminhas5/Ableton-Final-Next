@@ -20,6 +20,12 @@ import { canUsePass, recordSession, takeFreePass, weekStatus } from "@/lib/gym/w
 import { GoPill, Icon, Key, Screen, Silk } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
 
+/** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
+const TAUGHT_BY: Record<GymDrill, { slugs: string[]; first: string; title: string }> = {
+  eq: { slugs: ["eq-place", "eq-eight", "eq-mixing-dj"], first: "eq-place", title: "eq: a place for everything" },
+  compression: { slugs: ["glue", "compressor", "glue-compressor"], first: "glue", title: "glue: compression and loudness" },
+  groove: { slugs: [], first: "groove-feel", title: "groove and swing" },
+};
 const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove" };
 const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?" };
 const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF" };
@@ -86,7 +92,9 @@ export function GymPageClient() {
   const [summary, setSummary] = useState<ReturnType<typeof summarize> | null>(null);
   const [error, setError] = useState("");
   const [count, setCount] = useState(0);
-  const { missionsNeedingReview } = useProgress();
+  const { missionsNeedingReview, progress } = useProgress();
+  const open = (d: GymDrill) => !TAUGHT_BY[d].slugs.length || TAUGHT_BY[d].slugs.some(sl => !!progress.completedMissions[sl]);
+  const openDrills = GYM_DRILLS.filter(open);
 
   const player = useRef<ABPlayer | null>(null);
   const token = useRef(0);
@@ -118,7 +126,7 @@ export function GymPageClient() {
   const now = new Date();
   const week = weekStatus(saved.week, now);
   // Today's pick: the skill you have trained least.
-  const today = [...GYM_DRILLS].sort((a, b) => saved.levels[a].level - saved.levels[b].level)[0];
+  const today = [...GYM_DRILLS.filter(d => !TAUGHT_BY[d].slugs.length || TAUGHT_BY[d].slugs.some(sl => !!progress.completedMissions[sl]))].sort((a, b) => saved.levels[a].level - saved.levels[b].level)[0];
 
   useEffect(() => {
     if (phase !== "listening" && phase !== "feedback" && phase !== "loading") return;
@@ -201,7 +209,7 @@ export function GymPageClient() {
     const ok = await ensureAudio();
     if (!ok) { setError("tap again to allow sound."); return; }
     results.current = [];
-    order.current = first ? [first, ...GYM_DRILLS.filter(d => d !== first)] : GYM_DRILLS;
+    order.current = first ? [first, ...openDrills.filter(d => d !== first)] : openDrills;
     drillIdx.current = 0;
     startedAt.current = Date.now();
     setElapsed(0);
@@ -272,7 +280,9 @@ export function GymPageClient() {
   // ── home ──────────────────────────────────────────────────────────────────
   if (phase === "idle" || phase === "done") {
     const pads: { id: string; label: string; pic: string; c: string; tag?: string; onClick?: () => void; href?: string }[] = [
-      ...GYM_DRILLS.map(d => ({ id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) })),
+      ...GYM_DRILLS.map(d => open(d)
+        ? { id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) }
+        : { id: d, label: `${NAME[d]}: opens after ${TAUGHT_BY[d].title}`, pic: d, c: "#8A8A8E", tag: "lesson first", href: `/learn/${TAUGHT_BY[d].first}` }),
       { id: "review", label: "review", pic: "review", c: "#FFB35C", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },
@@ -291,7 +301,7 @@ export function GymPageClient() {
             <div className="ls-title" aria-live="polite">{summary.counts ? `session done. ${summary.correct} of ${summary.answered} right.` : `${summary.correct} of ${summary.answered}. answer five to count.`}</div>
           ) : null}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
-            {GYM_DRILLS.map(d => (
+            {openDrills.map(d => (
               <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13, color: "var(--disp-ink)" }}>
                 <span style={{ width: 118 }}>{NAME[d]}</span>
                 <Bars level={saved.levels[d].level} c={COLOR[d]} />

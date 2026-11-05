@@ -28,7 +28,7 @@ describe("loop round 3: the done screen says what changed", () => {
     expect(d).toContain("+ bass");
     expect(d).toContain("120 to 128 bpm");
     expect(d.some(x => x.startsWith("lead ") && x.includes(" to "))).toBe(true);
-    expect(d).toContain("cue: mix out on bar 1");
+    expect(d).toContain("cue: mix out on bar 8");
   });
   it("is empty when nothing changed, and caps the list", () => {
     const a = song();

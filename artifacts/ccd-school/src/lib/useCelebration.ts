@@ -7,7 +7,8 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { rankFor } from "@/lib/ranks";
+import { rankUpFrom } from "@/lib/worldRanks";
+import { curPathOf } from "@/content/curriculum";
 import { CHAPTERS } from "@/content/chapters";
 import { pathsByWorld, type LearningPath } from "@/content/paths";
 
@@ -16,6 +17,7 @@ const spine = (p: LearningPath) => (p.songSlugs.length ? p.songSlugs : p.mission
 import type { CelebrationEvent } from "@/components/CelebrationOverlay";
 
 const SEEN_KEY = "ccd.celebrations.v1";
+const PENDING_KEY = "ccd.celebrations.pending";
 
 function getSeenSet(): Set<string> {
   if (typeof localStorage === "undefined") return new Set();
@@ -32,7 +34,16 @@ function markSeen(id: string) {
 
 export function useCelebration() {
   const { progress } = useProgress();
-  const [event, setEvent] = useState<CelebrationEvent | null>(null);
+  const [event, setEventState] = useState<CelebrationEvent | null>(null);
+  // A moment earned inside a lesson waits until you leave it (ClientProviders), and survives a reload or a
+  // typed url on the way: it is kept in storage until it has been shown and dismissed.
+  const setEvent = (e: CelebrationEvent | null) => {
+    setEventState(e);
+    try { if (e) localStorage.setItem(PENDING_KEY, JSON.stringify(e)); else localStorage.removeItem(PENDING_KEY); } catch { /* storage blocked */ }
+  };
+  useEffect(() => {
+    try { const raw = localStorage.getItem(PENDING_KEY); if (raw) setEventState(JSON.parse(raw) as CelebrationEvent); } catch { /* none */ }
+  }, []);
   const prevXp = useRef(progress.xp);
   const prevStreak = useRef(progress.streakDays);
   const prevShield = useRef(progress.streakShield);
@@ -51,18 +62,21 @@ export function useCelebration() {
     }
     const seen = getSeenSet();
 
-    // ── Rank-up ──────────────────────────────────────────────────────────────
-    if (progress.xp > prevXp.current) {
-      const { current: oldRank } = rankFor(prevXp.current);
-      const { current: newRank } = rankFor(progress.xp);
-      if (newRank.slug !== oldRank.slug) {
-        const celebId = `rank-${newRank.slug}`;
-        if (!seen.has(celebId)) {
-          markSeen(celebId);
-          setEvent({ kind: "rank-up", rankName: newRank.name });
-          prevXp.current = progress.xp;
-          return;
-        }
+    // ── Rank-up, per world: the lesson you just finished moves its own world's rank ─────────
+    {
+      const fresh = Object.keys(progress.completedMissions).filter(s => progress.completedMissions[s] && !prevMissions.current[s]);
+      for (const slug of fresh) {
+        const world = curPathOf(slug)?.world;
+        if (!world) continue;
+        const up = rankUpFrom(world, prevMissions.current, progress.completedMissions);
+        if (!up) continue;
+        const celebId = `rank-${world}-${up.current.slug}`;
+        if (seen.has(celebId)) continue;
+        markSeen(celebId);
+        setEvent({ kind: "rank-up", rankName: up.current.name, world });
+        prevXp.current = progress.xp;
+        prevMissions.current = { ...progress.completedMissions };
+        return;
       }
       prevXp.current = progress.xp;
     }

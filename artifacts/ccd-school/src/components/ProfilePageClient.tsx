@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { useProgress } from "@/lib/progress";
-import { RANKS, rankFor } from "@/lib/ranks";
+import { allWorldRanks, WORLD_NAME, WORLD_RANKS } from "@/lib/worldRanks";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
@@ -58,7 +58,8 @@ export function ProfilePageClient() {
   const [shared, setShared] = useState(false);
   useEffect(() => setSound(uiSoundsOn()), []);
 
-  const { current: rank, next, progress: pct, idx } = rankFor(progress.xp);
+  const top = allWorldRanks(progress.completedMissions)[0];
+  const { current: rank, next, progress: pct, idx } = top;
   const lessons = ALL.filter(m => !!progress.completedMissions[m.slug]).length;
   const handle = user?.name ?? user?.email?.split("@")[0] ?? null;
   const lit = Math.round(pct * 16);
@@ -99,14 +100,14 @@ export function ProfilePageClient() {
           </span>
           <div>
             <div style={{ fontSize: 22, fontWeight: 400, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>{(user?.name ?? "you").toLowerCase()}</div>
-            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4 }}>{rank.name.toLowerCase()} · rank {idx + 1} of {RANKS.length}{isPro ? " · pro" : ""}</div>
+            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4 }}>{rank.name} · {WORLD_NAME[top.world]} rank {idx + 1} of {top.total}{isPro ? " · pro" : ""}</div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 18 }}>
           <span style={{ display: "flex", gap: 3, flex: 1 }} role="img" aria-label={`${Math.round(pct * 100)} percent to the next rank`}>
             {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-mint)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-mint)" : undefined }} />)}
           </span>
-          <span className="m1-ss">{next ? `${next.minXp - progress.xp} to rank ${idx + 2}` : "top rank"}</span>
+          <span className="m1-ss">{next ? `next: ${next.name}` : "top rank"}</span>
         </div>
         {shared && <div className="m1-ss" style={{ marginTop: 8, color: "var(--led-mint)" }}>link copied</div>}
       </Screen>
@@ -154,16 +155,21 @@ export function ProfilePageClient() {
 
       </div>
       <div className="pf-col">
-      <Silk label="ranks" right={`${progress.xp} xp`} />
-      <ol className="ls-learn" style={{ padding: "0 4px" }}>
-        {RANKS.map((r, i) => (
-          <li key={r.slug} style={{ alignItems: "center", opacity: i > idx ? 0.55 : 1 }}>
-            <span className="ls-led" style={{ ["--c" as string]: i <= idx ? "var(--led-mint)" : "var(--ledoff)", boxShadow: i <= idx ? undefined : "none", background: i <= idx ? undefined : "var(--ledoff)" } as CSSProperties} />
-            <span style={{ flex: 1, fontWeight: i === idx ? 600 : 400 }}>{r.name.toLowerCase()}</span>
-            <span className="m1-t11">{i === idx ? "you are here" : `${r.minXp} xp`}</span>
-          </li>
-        ))}
-      </ol>
+      {/* One ladder per world: a dj lesson moves your dj rank, not your producer one. */}
+      {allWorldRanks(progress.completedMissions).map(w => (
+        <div key={w.world}>
+          <Silk label={`${WORLD_NAME[w.world]} ranks`} right={`${Math.floor(w.share * 100)}% of the world`} />
+          <ol className="ls-learn" style={{ padding: "0 4px" }}>
+            {WORLD_RANKS[w.world].map((r, i) => (
+              <li key={r.slug} style={{ alignItems: "center", opacity: i > w.idx ? 0.55 : 1 }}>
+                <span className="ls-led" style={{ ["--c" as string]: i <= w.idx ? "var(--led-mint)" : "var(--ledoff)", boxShadow: i <= w.idx ? undefined : "none", background: i <= w.idx ? undefined : "var(--ledoff)" } as CSSProperties} />
+                <span style={{ flex: 1, fontWeight: i === w.idx ? 600 : 400 }}>{r.name}</span>
+                <span className="m1-t11">{i === w.idx ? "you are here" : r.line}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
 
       <Silk label="account" />
       <div className="ls-pads">

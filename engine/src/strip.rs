@@ -11,6 +11,10 @@ pub struct Strip {
     sr: f32,
     cut: Svf,
     cut_hz: f32,
+    /// The part's own filter: open (bypassed) until its cutoff comes down.
+    lp: crate::dsp::filter::CharFilter,
+    lp_hz: Smooth,
+    lp_res: Smooth,
     low: EqBand,
     mid: EqBand,
     high: EqBand,
@@ -57,6 +61,9 @@ impl Strip {
             sr,
             cut: Svf::default(),
             cut_hz: 20.0,
+            lp: crate::dsp::filter::CharFilter::default(),
+            lp_hz: Smooth::new(20_000.0),
+            lp_res: Smooth::new(0.0),
             low: EqBand::low_shelf(),
             mid: EqBand::bell(),
             high: EqBand::high_shelf(),
@@ -89,7 +96,7 @@ impl Strip {
         s.cut.set(20.0, 0.707, sr);
         s.tone_lp.set(700.0, sr);
         s.tone_hp.set(700.0, sr);
-        for sm in [&mut s.drive_amt, &mut s.crush, &mut s.tone, &mut s.level, &mut s.pan, &mut s.send, &mut s.echo, &mut s.duck_amt_s] {
+        for sm in [&mut s.drive_amt, &mut s.crush, &mut s.tone, &mut s.level, &mut s.pan, &mut s.send, &mut s.echo, &mut s.duck_amt_s, &mut s.lp_hz, &mut s.lp_res] {
             sm.set_time(15.0, sr);
         }
         s.duck_attack = tau_coef(0.002, sr);
@@ -123,6 +130,9 @@ impl Strip {
                     self.cut.set(v, 0.707, self.sr);
                 }
             }
+            L_LP => set(&mut self.lp_hz, v),
+            L_LP_RES => set(&mut self.lp_res, v),
+            L_LP_KIND => self.lp.set_mode(crate::params::step3(v)),
             L_DRIVE => set(&mut self.drive_amt, v),
             L_CRUSH => set(&mut self.crush, v),
             L_ECHO => set(&mut self.echo, v),
@@ -182,6 +192,11 @@ impl Strip {
         let mut y = x;
         if self.cut_hz > 21.0 {
             y = self.cut.tick(y).hp;
+        }
+        let (lp_hz, lp_res) = (self.lp_hz.next(), self.lp_res.next());
+        if lp_hz < 19_500.0 {
+            self.lp.set(lp_hz, lp_res, self.sr);
+            y = self.lp.tick(y);
         }
         if self.eq_db[0] != 0.0 {
             y = self.low.tick(y);

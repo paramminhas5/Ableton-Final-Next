@@ -1,6 +1,6 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { CommandPalette } from "@/components/CommandPalette";
@@ -168,8 +168,10 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
 
 function CelebrationLayer() {
   const { celebrationEvent, dismissCelebration } = useCelebration();
-  // Inside a lesson the done screen comes first: a rank-up or trophy waits until you leave it.
   const path = usePathname() ?? "";
-  if (path.startsWith("/learn/")) return null;
+  // Inside a lesson the done screen shows your rank and trophies first; the big moment waits until you
+  // leave the lesson, so it never covers the screen you just earned.
+  const inLesson = /^\/learn\/(?!world\/)[^/]+$/.test(path);
+  if (inLesson) return null;
   return <CelebrationOverlay event={celebrationEvent} onDone={dismissCelebration} />;
 }

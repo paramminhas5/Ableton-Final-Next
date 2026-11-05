@@ -10706,8 +10706,9 @@
         "changes": "drums.kick",
         "why": "a song is finished when it leaves the app"
       },
-      "learn": "Naming your song, exporting it as midi for Ableton Live, and what happens next.",
+      "learn": "Naming your song, exporting it as audio at the right loudness and as midi for Ableton Live, and what happens next.",
       "youCan": [
+        "export your song as audio at -14 lufs for streaming, or louder for clubs",
         "export your song as midi",
         "open it in Live and keep working",
         "say what stems are"
@@ -10732,9 +10733,9 @@
           "kind": "arrange",
           "goal": "export",
           "say": {
-            "mentor": "Here's your finished song. Give it a name, play it through once more, and download the midi. Drop the file into Live and every part lands on its own track. And if you're proud of it, send it to CCD: the best learner tracks get played at our nights.",
-            "straight": "Name it, play it, download the midi, open it in Live. Send it to CCD if you're proud of it.",
-            "eli5": "Type a name for your song. Then tap download and open it in Live."
+            "mentor": "Here's your finished song. Give it a name and play it through once more. Then take it out two ways. Audio for streaming saves a wav at -14 lufs, the loudness the big streaming services turn songs to, so yours sounds the same there as here; loud for clubs pushes it to -9, with the peaks held under -1 dbtp either way. Midi for Live drops every part onto its own track to keep working. And if you're proud of it, send it to CCD: the best learner tracks get played at our nights.",
+            "straight": "Name it, play it, download the audio (-14 lufs, or -9 for clubs) and the midi for Live. Send it to CCD if you're proud of it.",
+            "eli5": "Type a name for your song. Then save it as audio to play anywhere, or as midi to open in Live."
           }
         },
         {
@@ -11950,12 +11951,13 @@
           "knobs": [
             "sub",
             "wave",
-            "drift"
+            "drift",
+            "character"
           ],
           "say": {
-            "mentor": "Here's your song, with three knobs that thicken your bass without touching its notes. Sub turns up the sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and buzzy to hollow and round.\nDrift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old analogue synth warming up. A little makes the bass feel alive instead of perfect. Keep the bass that fills your song best.",
-            "straight": "Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a few cents, like analogue. Keep the thickest bass that still sounds clean.",
-            "eli5": "Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old synth. Keep the one you like."
+            "mentor": "Here's your song, with four knobs that thicken your bass without touching its notes. Sub turns up the sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and buzzy to hollow and round.\nDrift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old analogue synth warming up. A little makes the bass feel alive instead of perfect.\nCharacter picks how the filter sounds. Warm is the classic four-pole ladder: round, and it gives up a little bass when you push the resonance. Scream is a two-pole filter that saturates as it resonates, the sound of acid and rave. Smooth is a clean two-pole: softer slope, sweet resonance. Keep the bass that fills your song best.",
+            "straight": "Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a few cents, like analogue. Character: warm, scream or smooth. Keep the thickest bass that still sounds clean.",
+            "eli5": "Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old synth. Character changes how the bass growls. Keep the one you like."
           }
         },
         {
@@ -12450,12 +12452,13 @@
           "knobs": [
             "cutoff",
             "res",
-            "cut"
+            "cut",
+            "character"
           ],
           "say": {
-            "mentor": "Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and your lead goes dark. Cut is a high-pass on the lead's channel: turn it up and the lows fall away so it thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the middle.\nThen add resonance and sweep the cutoff to hear it sing. Keep the shape that sits best in your song.",
-            "straight": "Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff. Carve your lead and keep it.",
-            "eli5": "Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res makes it whistle. Pick the sound you like."
+            "mentor": "Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and your lead goes dark. Cut is a high-pass on the lead's channel: turn it up and the lows fall away so it thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the middle.\nThen add resonance and sweep the cutoff to hear it sing. Character picks how it sounds: warm is a round four-pole ladder, scream is a two-pole that distorts as it resonates, smooth is a clean two-pole with a gentler slope. Keep the shape that sits best in your song.",
+            "straight": "Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff. Character: warm, scream or smooth. Carve your lead and keep it.",
+            "eli5": "Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res makes it whistle. Character changes how it whistles. Pick the sound you like."
           }
         },
         {
@@ -15542,12 +15545,14 @@
           "layer": "hats",
           "knobs": [
             "decay",
-            "tune"
+            "tune",
+            "lp",
+            "lpkind"
           ],
           "say": {
-            "mentor": "Your hats are noise with an envelope and a filter on them, playing in your song right now. Turn decay down and each burst gets short and tight, a closed, ticking hat. Turn it up and the noise rings out longer, splashy and open.\nTune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and dark. Set the hats so they sit above your kick without hissing over everything, and keep them.",
-            "straight": "Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour. Set them to sit above your kick, then keep it.",
-            "eli5": "Make your hats short or long with decay. Make them brighter or darker with tune. Keep the ones you like."
+            "mentor": "Your hats are noise with an envelope and a filter on them, playing in your song right now. Turn decay down and each burst gets short and tight, a closed, ticking hat. Turn it up and the noise rings out longer, splashy and open.\nTune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and dark.\nEvery part in your song has its own filter too, the same three characters as on the synths. Filter sets where it cuts the top off; bring it down and your hats go soft and distant. Character picks how: warm is a round ladder, scream is a two-pole that bites as it resonates, smooth is a clean two-pole. Set the hats so they sit above your kick without hissing over everything, and keep them.",
+            "straight": "Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour, filter cuts the top off, character is warm, scream or smooth. Set them to sit above your kick, then keep it.",
+            "eli5": "Make your hats short or long with decay. Make them brighter or darker with tune and filter. Keep the ones you like."
           }
         },
         {

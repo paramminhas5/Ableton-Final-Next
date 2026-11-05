@@ -33,6 +33,8 @@ export type FileDeckState = {
   /** The file's low, mid and high bands over its first 64 beats, measured once on load. */
   bands: Bands | null;
   load: (f: File) => Promise<void>;
+  /** A track from the private bank (design/dj-bank-private.md), with its measured bpm. */
+  loadUrl: (url: string, name: string, bpm: number) => Promise<boolean>;
   clear: () => void;
   /** Drive it from the mixer every render: on or off, gain (fader times crossfader), low eq 0..1, rate. */
   set: (engine: Engine, on: boolean, gain: number, low: number, rate: number) => void;
@@ -61,6 +63,25 @@ export function useFileDeck(id: string): FileDeckState {
       setBpm(guess);
       setBands(analyse(r.data, r.rate, guess, 64));
       setName(f.name.replace(/\.[^.]+$/, "").toLowerCase().slice(0, 24));
+    },
+    loadUrl: async (url: string, label: string, known: number) => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return false;
+        const f = new File([await res.blob()], label);
+        const r = await decodeFile(f);
+        const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const tmp = new Ctx();
+        const b = tmp.createBuffer(1, Math.min(r.data.length, r.rate * 300), r.rate);
+        b.copyToChannel(new Float32Array(r.data.subarray(0, b.length)), 0);
+        void tmp.close();
+        buf.current = b;
+        stop();
+        setBpm(known);
+        setBands(analyse(r.data, r.rate, known, 64));
+        setName(label.toLowerCase().slice(0, 24));
+        return true;
+      } catch { return false; }
     },
     clear: () => { stop(); buf.current = null; setName(null); setBands(null); },
     set: (engine, on, gain, low, rate) => {

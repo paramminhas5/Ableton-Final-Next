@@ -251,10 +251,12 @@
 .fl-songplay.is-on{color:var(--led-mint)}
 .fl-songplay:disabled{opacity:.4;cursor:default}
 .fl-songbody{flex:1;min-width:0}
-.fl-songname{display:flex;justify-content:space-between;font-size:12px;color:var(--print);margin-bottom:2px}
+.fl-songname{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;color:var(--print);margin-bottom:2px}
+.fl-songname>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .fl-songname b{color:var(--ink);font-weight:600}
 .fl-songempty{font-size:13px;color:var(--print);padding:6px 0}
 .fl-song svg{max-height:56px}
+@media (min-width:900px){.fl-song svg{max-height:120px}}
 .fl-secs{display:flex;gap:2px;margin-top:3px;height:14px}
 .fl-cues{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .fl-cues i{font-style:normal;font-size:10px;line-height:16px;padding:0 6px;border-radius:8px;border:1px dashed color-mix(in srgb,var(--led-cobalt,#5c7cff) 70%,transparent);color:var(--ink);white-space:nowrap}
@@ -569,6 +571,7 @@ body:has(.tr) .m1-cap.is-go:not(.tr .m1-cap){filter:grayscale(1)}
 .fl-rank{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--print)}
 .fl-rank div{flex:1;height:6px;border-radius:3px;background:rgba(127,127,127,.2);overflow:hidden}
 .fl-rank i{display:block;height:100%;background:var(--led-mint);transition:width 300ms}
+.fl-rank.is-up>span:first-child{color:var(--ink);font-weight:600}
 .fl-trophy{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude),0 0 0 1px #E3A92B;animation:fl-pop 600ms var(--ease-snap) both}
 .fl-trophy b{width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:#3A2600;background:linear-gradient(180deg,#FFE08A,#E3A92B);flex:none}
 .fl-trophy span{display:flex;flex-direction:column;font-size:16px;font-weight:600;color:var(--ink)}
@@ -842,3 +845,17 @@ a.jv-lane:hover{transform:translateX(3px)}
    still reads well to screen readers and in exports; the page shows it lowercase. */
 .fl .ls-read,.fl .ls-title,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
 .gr-dice{display:flex;margin-top:10px}
+
+/* what changed in your song, on the done screen */
+.fl-changed small{display:block;font-size:11px;font-weight:600;color:var(--print);margin-bottom:2px}
+.fl-changed ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:4px 12px}
+.fl-changed li{font-size:14px}
+.fl-changed em{font-style:normal;color:var(--print)}
+
+/* the pro name under our chill one: Ableton Live for producing, rekordbox for djing */
+.fl-pro{margin:8px 2px 0;font-size:12px;line-height:1.4;color:var(--print)}
+.fl-pro b{font-weight:600;color:var(--ink)}
+/* placement questions are written in sentence case; the page shows them lowercase like the rest */
+.is-placement .ls-title,.is-placement .ls-sub,.is-placement .ls-panel,.is-placement .ls-pad,.is-placement .ls-read{text-transform:lowercase}
+/* long track names wrap inside their chip instead of spilling out */
+.fl-marks.mx-bank .ls-chip{white-space:normal;overflow-wrap:anywhere;min-width:0;text-align:left;line-height:1.2}

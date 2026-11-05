@@ -32,22 +32,26 @@ steps:
 
   - kind: shape
     layer: bass
-    knobs: [sub, wave, drift]
+    knobs: [sub, wave, drift, character]
     say:
       mentor: >-
-        Here's your song, with three knobs that thicken your bass without touching its notes. Sub turns up the
+        Here's your song, with four knobs that thicken your bass without touching its notes. Sub turns up the
         sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and
         buzzy to hollow and round.
 
         Drift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old
-        analogue synth warming up. A little makes the bass feel alive instead of perfect. Keep the bass that
-        fills your song best.
+        analogue synth warming up. A little makes the bass feel alive instead of perfect.
+
+        Character picks how the filter sounds. Warm is the classic four-pole ladder: round, and it gives up a
+        little bass when you push the resonance. Scream is a two-pole filter that saturates as it resonates,
+        the sound of acid and rave. Smooth is a clean two-pole: softer slope, sweet resonance. Keep the bass
+        that fills your song best.
       straight: >-
         Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a
-        few cents, like analogue. Keep the thickest bass that still sounds clean.
+        few cents, like analogue. Character: warm, scream or smooth. Keep the thickest bass that still sounds clean.
       eli5: >-
         Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old
-        synth. Keep the one you like.
+        synth. Character changes how the bass growls. Keep the one you like.
 
   - kind: say
     title: bass and poli in live

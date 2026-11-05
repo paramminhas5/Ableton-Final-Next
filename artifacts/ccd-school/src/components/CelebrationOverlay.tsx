@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { playFanfare } from "@/lib/audio";
 import { useProgress } from "@/lib/progress";
 import { RANKS } from "@/lib/ranks";
+import { WORLD_NAME, WORLD_RANKS } from "@/lib/worldRanks";
+import type { CurWorld } from "@/content/curriculum";
 import { TrophyShareModal } from "@/components/TrophyShareModal";
 import { GoPill, Icon, Key } from "@/components/m1/controls";
 import { SevenSeg } from "@/components/m1/SevenSeg";
@@ -14,7 +16,7 @@ import { RankMark, SegBar } from "@/components/m1/parts";
 import "@/components/m1/lesson.css";
 
 export type CelebrationEvent =
-  | { kind: "rank-up"; rankName: string; rankEmoji?: string }
+  | { kind: "rank-up"; rankName: string; rankEmoji?: string; world?: CurWorld }
   | { kind: "streak"; days: number }
   | { kind: "shield-earned"; streakDays: number }
   | { kind: "path-trophy"; trophyName: string; pathTitle: string }
@@ -90,19 +92,21 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
   );
 }
 
-function RankBody({ name }: { name: string }) {
-  const idx = Math.max(0, RANKS.findIndex(r => r.name === name));
-  const r = RANKS[idx];
+function RankBody({ name, world }: { name: string; world?: CurWorld }) {
+  // World ranks (src/lib/worldRanks.ts); the old xp ladder only for events from before them.
+  const ladder = world ? WORLD_RANKS[world] : RANKS.map(r => ({ slug: r.slug, name: r.name, line: r.tagline }));
+  const idx = Math.max(0, ladder.findIndex(r => r.name.toLowerCase() === name.toLowerCase()));
+  const r = ladder[idx];
   return (
     <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 360, display: "flex", flexDirection: "column" }}>
-      <div className="ls-meta"><span>rank up</span><span>{idx + 1} of {RANKS.length}</span></div>
+      <div className="ls-meta"><span>{world ? `${WORLD_NAME[world]} rank up` : "rank up"}</span><span>{idx + 1} of {ladder.length}</span></div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, color: "var(--disp-ink)" }}>
-        <RankMark idx={idx} size={120} />
+        <RankMark idx={Math.min(idx, RANKS.length - 1)} size={120} />
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.02em" }}>{name.toLowerCase()}</div>
-          <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.tagline.toLowerCase()}</div>
+          <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.line.toLowerCase()}</div>
         </div>
-        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / RANKS.length} color="var(--led-mint)" n={24} height={6} label={`rank ${idx + 1} of ${RANKS.length}`} /></div>
+        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / ladder.length} color="var(--led-mint)" n={ladder.length} height={6} label={`rank ${idx + 1} of ${ladder.length}`} /></div>
       </div>
     </div></div>
   );
@@ -173,7 +177,7 @@ export function CelebrationOverlay({ event, onDone }: Props) {
       <div className="ls-top"><button type="button" className="ls-x" aria-label="Close" onClick={onDone}><Icon name="close" /></button><span style={{ flex: 1 }} /></div>
       <div className="ls-col">
         {event.kind === "streak" && <StreakBody days={event.days} shield={progress.streakShield} />}
-        {event.kind === "rank-up" && <RankBody name={event.rankName} />}
+        {event.kind === "rank-up" && <RankBody name={event.rankName} world={event.world} />}
         {event.kind === "path-trophy" && <TrophyBody label="path done" title={event.pathTitle} sub="every lesson on this path is done" />}
         {event.kind === "chapter-trophy" && <TrophyBody label="chapter done" title={event.chapterTitle} sub="on to the next chapter" />}
         {event.kind === "world-trophy" && <TrophyBody label="world done" title={event.worldName} sub="your track from this world is ready to send to live" />}

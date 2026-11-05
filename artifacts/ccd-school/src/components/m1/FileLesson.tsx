@@ -20,8 +20,9 @@ import { songDiff } from "@/lib/songdiff";
 import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
 import { usePrefs } from "@/lib/prefs";
 import { earnStripe, newTrophies, readStripes, type Trophy } from "@/lib/rewards";
-import { rankFor } from "@/lib/ranks";
-import { curItem, curPathOf, extrasOf } from "@/content/curriculum";
+import { worldRankFor, WORLD_NAME } from "@/lib/worldRanks";
+import type { CurWorld } from "@/content/curriculum";
+import { curItem, curPathOf, extrasOf, songItems } from "@/content/curriculum";
 import { isRebuilt, partOf, worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { clipVariants } from "@/content/lessons/clipTracks";
@@ -29,7 +30,7 @@ import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { TryIt } from "./TryIt";
-import { MixStep } from "./MixStep";
+import { MIX_SKIP, MixStep } from "./MixStep";
 import { ArrangeStep } from "./ArrangeStep";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
@@ -108,6 +109,17 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
     setT(readTrackV2());
   };
   const v1 = t ? toV1View(t) : null;
+  // The lanes draw at the strip's real width, so on a wide screen the song fills the strip instead of
+  // sitting small in the middle; the part this lesson works on is lit.
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const [laneW, setLaneW] = useState(338);
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([e]) => setLaneW(Math.max(338, Math.min(1100, Math.round(e.contentRect.width)))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const empty = !t || !t.layers.some(l => l.events.length);
   // Recorded but not added: goes away the moment the add step writes it, without waiting for the next step.
   const pending = !!wait && !(slug && t?.added.includes(slug));
@@ -118,14 +130,14 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
       <button type="button" className={`fl-songplay ${playing ? "is-on" : ""}`} onClick={toggle} disabled={empty} aria-label={playing ? "Stop your song" : "Play your song"}>
         <Icon name={playing ? "stop" : "play"} />
       </button>
-      <div className="fl-songbody">
+      <div className="fl-songbody" ref={bodyRef}>
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
           : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} ${(focus ?? "").endsWith("s") ? "are" : "is"} recorded, not added yet` : empty ? "empty so far" : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
-          : v1 && <Lanes track={v1} playhead={playhead} />}
+          : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}
         {!empty && t?.sections?.length ? (
           // Your arrangement under the loop: one block per section, as long as it lasts, fainter where parts drop out.
           <div className="fl-secs" role="img" aria-label={`Arranged: ${t.sections.map(x => x.name).join(", ")}`}>
@@ -262,7 +274,9 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const keepOnly = useMemo(() => (!(mission.screens ?? []).some(s => s.kind === "play") || skippedOnOwn) && songHasMusic() && !missingPart, [mission.screens, missingPart, skippedOnOwn]);
   // A dj lesson marks your song where its mixer move lands (src/lib/cues.ts).
   const mixGoal = useMemo(() => (changeNoun(mission.screens ?? []) === "mix" ? [...(mission.screens ?? [])].reverse().find(s => s.kind === "mix") : undefined), [mission.screens]);
-  const cue = mixGoal?.kind === "mix" && base ? cueFor(base, slug, mixGoal.goal) : null;
+  // A skipped mixer step leaves nothing to mark: the song is kept as it is, and the copy says so.
+  const mixSkipped = useMemo(() => { try { return typeof window !== "undefined" && sessionStorage.getItem(MIX_SKIP) === location.pathname; } catch { return false; } }, []);
+  const cue = mixGoal?.kind === "mix" && base && !mixSkipped ? cueFor(base, slug, mixGoal.goal) : null;
   const world = worldOf(slug) ?? undefined;
   const already = !!base?.added.includes(slug);
   const [added, setAdded] = useState(false);
@@ -287,8 +301,10 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const now = readTrackV2();
     // Kept for the done screen's "with it / without it".
     try { if (!now.added.includes(slug) && !sessionStorage.getItem(beforeKey(slug))) sessionStorage.setItem(beforeKey(slug), JSON.stringify(now)); } catch { /* ignore */ }
-    const made = now.added.includes(slug) ? now : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
-    const next = mixGoal?.kind === "mix" && !now.added.includes(slug) ? withCue(made, cueFor(made, slug, mixGoal.goal)) : made;
+    // A dj lesson on an empty song: deck a played the kick-and-clap starter, so that loop becomes your song.
+    const djStarter = !!mixGoal && !now.layers.some(l => l.events.length) && !now.added.includes(slug);
+    const made = now.added.includes(slug) ? now : djStarter ? { ...now, ...clipVariants("kick-and-clap")[0].track, added: [...now.added, slug], updatedAt: Date.now() } : others(keepOnly ? { ...tuned(now), added: [...now.added, slug], updatedAt: Date.now() } : applyTake(now, slug, line, world, params));
+    const next = mixGoal?.kind === "mix" && !mixSkipped && !now.added.includes(slug) ? withCue(made, cueFor(made, slug, mixGoal.goal)) : made;
     writeTrackV2(next);
     nameSongIfNew();
     setBase(next);
@@ -327,7 +343,9 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
             ? `deck a now knows where your ${cue.name} lands: bar ${cue.bar}. it's on the song strip, and every dj lesson from here marks your song the same way.${hasQuestions ? " next: earn your stripe, or skip it and keep mixing." : ""}`
             : keepOnly
               ? `your song sounds the same. this puts a "${cue.name}" cue on bar ${cue.bar}, the way djs mark a track before a set, so you know where the move lands.`
-              : `your song was empty, so deck a played a starter loop. this adds the lesson's ${part} as your song and puts a "${cue.name}" cue on bar ${cue.bar}.`
+              : `your song was empty, so deck a played a starter loop, a kick and a clap. that loop becomes your song, with a "${cue.name}" cue on bar ${cue.bar}.`
+          : mixSkipped
+          ? `you skipped the mixer, so there's no move to mark on your song this time. do the lesson again to mark it.`
           : isIn
           ? `this is your song now. ${noun ? "every lesson from here builds on it." : `every lesson from here adds something on top of ${/s$/.test(part) && !/(ss|bass)$/.test(part) ? "these" : "this"} ${part}.`} ${hasQuestions ? "next: earn your stripe, a quick test of what you just learnt. or skip it and keep building." : ""}`
           : noun ? `this is your song with your ${what}. keep it and it stays.` : missingPart && !take?.events.length ? `your song has no ${part} yet, so this adds the lesson's ${part} line with the sound you made. add it and it stays.` : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
@@ -396,7 +414,7 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
 }
 
 // ── done ─────────────────────────────────────────────────────────────────────
-type Reward = { stripe: "gold" | "silver" | null; trophies: Trophy[]; xp: number; xpBefore: number };
+type Reward = { stripe: "gold" | "silver" | null; trophies: Trophy[]; xp: number; xpBefore: number; world: CurWorld | null; doneBefore: Record<string, unknown>; doneAfter: Record<string, unknown> };
 
 function Rewards({ r }: { r: Reward }) {
   const [n, setN] = useState(0);
@@ -405,14 +423,17 @@ function Rewards({ r }: { r: Reward }) {
     let k = 0; const id = window.setInterval(() => { k += Math.max(1, Math.round(r.xp / 20)); setN(Math.min(r.xp, k)); if (k >= r.xp) window.clearInterval(id); }, 40);
     return () => window.clearInterval(id);
   }, [r.xp]);
-  const rank = rankFor(r.xpBefore + n);
+  // Your rank in this lesson's world: a dj lesson moves your dj rank, nothing else.
+  const before = r.world ? worldRankFor(r.world, r.doneBefore) : null;
+  const rank = r.world ? worldRankFor(r.world, r.doneAfter) : null;
+  const up = !!(before && rank && rank.idx > before.idx);
   return (
     <div className="fl-reward">
       <div className="fl-rw-row">
         <div className="fl-xp"><b>+{n}</b><span>xp</span></div>
         {r.stripe ? <div className={`fl-stripe is-${r.stripe}`}><i /><i /><i /><span>{r.stripe} stripe</span></div> : <div className="fl-stripe is-none"><span>no stripe yet · take the challenge</span></div>}
       </div>
-      <div className="fl-rank"><span>{rank.current.name.toLowerCase()}</span><div><i style={{ width: `${Math.round(rank.progress * 100)}%` }} /></div><span>{rank.next ? rank.next.name.toLowerCase() : "top rank"}</span></div>
+      {rank && r.world && <div className={`fl-rank ${up ? "is-up" : ""}`}><span>{up ? `${WORLD_NAME[r.world]} rank up: ${rank.current.name}` : `${WORLD_NAME[r.world]}: ${rank.current.name}`}</span><div><i style={{ width: `${Math.round(rank.progress * 100)}%` }} /></div><span>{rank.next ? rank.next.name : `top ${WORLD_NAME[r.world]} rank`}</span></div>}
       {r.trophies.map((t, i) => (
         <div key={t.id} className="fl-trophy" style={{ animationDelay: `${600 + i * 250}ms` }}><b><Icon name={t.icon} /></b><span><small>trophy unlocked</small>{t.name}<em>{t.line}</em></span></div>
       ))}
@@ -440,7 +461,7 @@ function WithWithout({ slug }: { slug: string }) {
         // Two identical songs are no comparison: say what changed instead (a cue, or nothing you can hear).
         if (soundsSame(before, now)) {
           const cue = cuesOf(now).find(c => c.slug === slug);
-          setSame(cue ? `your song sounds the same: this lesson marked it with a "${cue.name}" cue on bar ${cue.bar}.` : "your song sounds the same as before this lesson.");
+          setSame(cue ? `your song sounds the same: this lesson marked it with a "${cue.name}" cue on bar ${cue.bar}.` : "your song sounds the same as before this lesson. tune it again to make the change yours.");
         } else setPair({ with: now, without: before });
       }
     } catch { /* no snapshot */ }
@@ -614,7 +635,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     const s = score.asked ? score.first / score.asked : 1;
     const doneBefore = { ...progress.completedMissions };
     const st = score.asked ? earnStripe(mission.slug, score.first === score.asked) : { before: readStripes(), after: readStripes() };
-    setReward({ stripe: score.asked ? (score.first === score.asked ? "gold" : "silver") : null, trophies: newTrophies(st.before, st.after, doneBefore, { ...doneBefore, [mission.slug]: true }), xp: alreadyDone ? 0 : mission.xp, xpBefore: progress.xp });
+    setReward({ stripe: score.asked ? (score.first === score.asked ? "gold" : "silver") : null, trophies: newTrophies(st.before, st.after, doneBefore, { ...doneBefore, [mission.slug]: true }), xp: alreadyDone ? 0 : mission.xp, xpBefore: progress.xp, world: (curPathOf(mission.slug)?.world ?? null), doneBefore, doneAfter: { ...doneBefore, [mission.slug]: true } });
     completeMission(mission.slug, alreadyDone ? 0 : mission.xp, s, mission.badge?.slug);
     window.dispatchEvent(new CustomEvent("progress:server_event", { detail: { type: "mission_complete", missionSlug: mission.slug, xp: mission.xp, score: s } }));
     track("lesson_completed", { missionSlug: mission.slug, world: mission.world, score: s, quizTotal: score.asked, correctCount: score.first });
@@ -657,7 +678,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const n = mission.number ?? 1;
   const ci = curItem(mission.slug);
   const cp = curPathOf(mission.slug);
-  const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson\u00a0${cp.items.filter(i => i.kind === "song").findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson\u00a0${n}`;
+  const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson\u00a0${songItems(cp.world).findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson\u00a0${n}`;
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />

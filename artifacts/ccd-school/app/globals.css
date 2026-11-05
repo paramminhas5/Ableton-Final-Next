@@ -326,6 +326,9 @@ a.m1-m:active, button.m1-m:active { transform: translateY(3px); box-shadow: var(
 .m1-kc > b { position: absolute; left: 50%; top: 5%; width: 3px; height: 30%; margin-left: -1.5px; border-radius: 2px; background: #fff; box-shadow: 0 0 2px rgba(0,0,0,.3); transform-origin: 50% 150%; }
 .m1-knob { touch-action: none; cursor: ns-resize; outline: none; }
 .m1-knob:focus-visible .m1-well { box-shadow: inset 0 4px 8px var(--shA), 0 0 0 2px var(--cobalt); }
+/* The focus ring passes behind the value, never through it. */
+.m1-m:has(.m1-knob:focus-visible) .m1-kv { z-index: 2; }
+.m1-m:has(.m1-knob:focus-visible) .m1-kv { background: var(--t1, #EDECE8); width: max-content; margin: 0 auto; padding: 1px 4px; border-radius: 4px; }
 
 .m1-pd { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 2px; border-radius: 11px; border: 0; font: inherit; background: linear-gradient(180deg, var(--padt), color-mix(in srgb, var(--padt) 88%, #000)); box-shadow: inset 0 1.5px 0 var(--hi), inset 0 -3px 5px rgba(0,0,0,.10), 0 1px 0 var(--pads), 0 2px 0 var(--pads), 0 3px 0 var(--pads), 0 7px 8px -2px var(--shA); text-decoration: none; color: var(--ink); font-size: 12px; font-weight: 500; transition: transform 60ms; min-height: 0; min-width: 0; cursor: pointer; }
 .m1-pd:active { transform: translateY(2px); }

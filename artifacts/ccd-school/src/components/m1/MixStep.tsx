@@ -10,14 +10,17 @@ import { Engine, FLAG, OUT, type EngineHost } from "@/engine";
 import { bankBands, songBands, type Bands } from "@/lib/djWaves";
 import { DeckWave } from "./DeckWave";
 import type { LessonScreen } from "@/content/types";
-import { bankLayers, bankTrack, camelotFits, camelotOf, CUES, DJ_BANK, songLayers, TRACK_BEATS, type DeckPlay } from "@/content/djBank";
+import { bankLayers, bankTrack, camelotFits, camelotOf, CUES, fitShift, preferReal, realOf, similarFirst, songLayers, TRACK_BEATS, type DeckPlay } from "@/content/djBank";
 import { FileDeck, useFileDeck } from "./FileDeck";
+import { cuesOf, fromBar } from "@/lib/cues";
+import { arranged } from "@/lib/arrange";
 import { readTrackV2, type LayerV2, type TrackV2 } from "@/lib/track2";
 import { readSongs } from "@/lib/songs";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CAP, Fader, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { syncEngine, useEngineTrack } from "./useEngineTrack";
+import { ProLine } from "./LessonSteps";
 import { Gloss } from "./Gloss";
 
 type Of<K> = Extract<LessonScreen, { kind: K }>;
@@ -31,6 +34,8 @@ const curve = (x: number, law: "smooth" | "sharp") => {
 type Stem = "drums" | "hats" | "bass";
 const STEMS: Stem[] = ["drums", "hats", "bass"];
 const LOOP_LENS = [1, 2, 4, 8];
+/** Set when the learner skipped the mixer step on this page: the lesson then has no move to mark on the song. */
+export const MIX_SKIP = "ccd.mixskip";
 
 const PHRASES_A = [{ beat: 0, name: "phrase 1" }, { beat: 32, name: "phrase 2" }];
 const sectionAt = (b: number) => (b < 16 ? "intro" : b < 48 ? "main" : b < 56 ? "break" : "drop");
@@ -50,7 +55,9 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const song = useMemo(() => readTrackV2(), []);
   const mine = song.layers.some(l => l.events.length) ? song : clipVariants("kick-and-clap")[0].track;
   const songName = useMemo(() => { const i = readSongs(); return i.songs.find(s => s.id === i.active)?.name ?? "your song"; }, []);
-  const [bid, setBid] = useState(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"));
+  // A lesson names a stand-in; when one of Param's picks is close in tempo and key, that one goes on deck b first.
+  const keyGoal = screen.goal === "key" || screen.goal === "shift";
+  const [bid, setBid] = useState(() => preferReal(screen.bank ?? (screen.goal === "match" ? "warm-up" : "operator"), keyGoal ? undefined : camelotOf(mine.root, mine.scale !== "major")).id);
   const b = bankTrack(bid);
   const base = mine.bpm || 120;
   // Deck b starts at its own tempo, except in lessons where matching isn't the point: then it is already matched.
@@ -62,11 +69,25 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const [loopLen, setLoopLen] = useState<number | null>(null);
   const [loopAt, setLoopAt] = useState(0);
   const [stems, setStems] = useState<Record<Stem, boolean>>({ drums: true, hats: true, bass: true });
-  const [shift, setShift] = useState(0); // semitones on deck b's key
+  // Outside the key lessons, a stand-in on deck b starts in a key that mixes with your song (real picks keep their own key).
+  const [shift, setShift] = useState(() => (keyGoal || realOf(bid) ? 0 : fitShift(bankTrack(bid), camelotOf(mine.root, mine.scale !== "major")))); // semitones on deck b's key
   const [cueHits, setCueHits] = useState(0);
   const [bFile, setBFile] = useState<string | null>(null);
   const [deckA, setDeckA] = useState<"song" | "file">("song");
+  // Deck a plays your arranged song, and its hot cues are the cues your dj lessons marked on it.
+  const songCues = useMemo(() => cuesOf(song), [song]);
+  const [cueA, setCueA] = useState(1);
   const fileA = useFileDeck("a"), fileB = useFileDeck("b");
+  // The real track, when CCD's private bank is configured for this deployment (design/dj-bank-private.md).
+  // Without it, deck b plays our engine at the track's tempo and key, and says so.
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_CCD_BANK_URL;
+    const r = realOf(bid);
+    if (!base || !r) return;
+    let gone = false;
+    void fileB.loadUrl(`${base.replace(/\/$/, "")}/${r.id}/full.ogg`, r.name, r.bpm).then(ok => { if (ok && !gone) setBFile(r.name); });
+    return () => { gone = true; };
+  }, [bid]); // eslint-disable-line react-hooks/exhaustive-deps
   const recorder = useRef<{ stop: () => Promise<Blob> } | null>(null);
   const [recState, setRecState] = useState<"off" | "on" | "done">("off");
   const [recUrl, setRecUrl] = useState<string | null>(null);
@@ -104,11 +125,11 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
 
   const track: TrackV2 = useMemo(() => {
     const [ga, gb] = curve(xf, law);
-    const A = deckA === "file" ? [] : songLayers(mine, BEATS, "a", 5).map((l: LayerV2) => ({ ...l, params: { ...l.params, [LEVEL]: Math.min(1, 0.75 * fa * ga * 1.414), [LOW]: lowA, [ECHO]: echoA } }));
+    const A = deckA === "file" ? [] : songLayers(fromBar(arranged(mine), cueA), BEATS, "a", 5).map((l: LayerV2) => ({ ...l, params: { ...l.params, [LEVEL]: Math.min(1, 0.75 * fa * ga * 1.414), [LOW]: lowA, [ECHO]: echoA } }));
     const play: DeckPlay = { off: cue, loop: loopLen ? { start: loopAt, len: loopLen } : null, shift };
     const B = bFile ? [] : bankLayers(b, bBpm, base, BEATS, "b", play).filter(l => stems[l.type as Stem] !== false).map(l => ({ ...l, params: { ...l.params, [LEVEL]: Math.min(1, 0.75 * fb * gb * 1.414), [LOW]: lowB } }));
     return { ...mine, bpm: base, swing: mine.swing ?? 0, loop: BEATS, root: b.root, layers: [...A, ...B].slice(0, 8) };
-  }, [mine, b, bBpm, base, fa, fb, lowA, lowB, xf, echoA, law, cue, loopLen, loopAt, shift, stems, bFile, deckA]);
+  }, [mine, b, bBpm, base, fa, fb, lowA, lowB, xf, echoA, law, cue, loopLen, loopAt, shift, stems, bFile, deckA, cueA]);
   const { engine, ready } = useEngineTrack(track);
   const [beat, setBeat] = useState(-1);
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
@@ -174,10 +195,28 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "record" ? (recState === "on" ? "do a mix, then press stop recording" : "press record, mix, then stop")
     : screen.goal === "match" ? `deck b is ${bBpm > base ? "faster" : "slower"} by ${off.toFixed(1)} bpm. move its tempo fader until the beats line up`
     : fb <= 0.6 ? "bring deck b's fader up first" : lowA >= 0.25 ? "now turn deck a's low knob down: swap the bass" : "last: crossfade to b, or pull deck a's fader down";
+  // The go key says the next move in a few words, like the play-in's ("bring deck b up"), never just "not yet".
+  const g = screen.goal;
+  const short = g === "crossfade" ? (!seen.right ? "crossfader to b" : "back to a")
+    : g === "swap" ? (fb <= 0.6 ? "bring deck b up" : lowA >= 0.25 ? "cut a's low" : "keep b's low up")
+    : g === "key" ? "pick a track that fits"
+    : g === "cut" ? "cut to b on the one"
+    : g === "phrase" ? "bring b in on bar one"
+    : g === "echo" ? (echoA <= 0.5 ? "turn echo a up" : "fade deck a out")
+    : g === "sync" ? (synced ? "nudge, then sync again" : "press sync b")
+    : g === "cue" ? "tap two hot cues"
+    : g === "loop" ? (loopLen === null ? "set a loop on b" : "bring deck b up")
+    : g === "stems" ? (stems.drums ? "take b's drums out" : fb <= 0.5 ? "bring deck b up" : "keep both faders up")
+    : g === "shift" ? (!fits ? "shift b's key" : "match the tempo")
+    : g === "curve" ? (law !== "sharp" ? "curve to sharp" : "cut on the one")
+    : g === "record" ? (recState === "on" ? "stop recording" : "press record")
+    : g === "match" ? `tempo b ${bBpm > base ? "down" : "up"} ${off.toFixed(1)}`
+    : g === "file" || g === "free" ? "next"
+    : fb <= 0.6 ? "bring deck b up" : lowA >= 0.25 ? "cut a's low" : "crossfade to b";
   const [say, setSay] = useState<string | null>(null);
   // After one "not yet", a way on: nobody gets stuck on a mixer step.
   const [stuck, setStuck] = useState(false);
-  const go = () => { if (met) onNext(); else { setSay(why); setStuck(true); window.setTimeout(() => setSay(null), 2600); } };
+  const go = () => { if (met) { try { sessionStorage.removeItem(MIX_SKIP); } catch { /* ignore */ } onNext(); } else { setSay(why); setStuck(true); window.setTimeout(() => setSay(null), 2600); } };
   useEnter(go);
 
   // Only the controls this lesson is about are out; the rest wait behind "more controls".
@@ -196,7 +235,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           <Meta left="the mixer" right={playing ? (screen.goal === "match" ? (off <= 0.3 ? "matched" : "drifting") : "playing") : "press play"} />
           <div className="mx-decks">
             <div><small>deck a · {deckA === "file" ? "your file" : mine === song ? "your song" : "a starter loop, your song is empty"}</small><b>{deckA === "file" ? fileA.name : mine === song ? songName.toLowerCase() : "kick and clap"}</b><span>{base} bpm · {mineKey}</span><Leds at={beatA} label="Deck a beats" /></div>
-            <div><small>deck b · {bFile ? "your file" : "bank"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
+            <div><small>deck b · {bFile && realOf(bid)?.name === bFile ? `${realOf(bid)!.artist || "ccd pick"}, the real track` : bFile ? "your file" : realOf(b.id) ? `${realOf(b.id)!.artist || "ccd pick"}, our engine at its tempo and key` : "a stand-in on our engine"}{synced ? " · sync" : ""}</small><b>{bFile ?? b.name}</b><span>{bBpm} bpm · {bFile ? "" : `${camelotOf(b.root + shift, b.minor)}${shift ? ` (${shift > 0 ? "+" : ""}${shift})` : ""}`}{screen.goal === "key" || screen.goal === "shift" ? (fits ? " · fits" : " · clashes") : ""}{!bFile && playing ? ` · ${sectionB}${loopLen ? ` · loop ${loopLen}` : ""}` : ""}</span><Leds at={beatB} label="Deck b beats" /></div>
           </div>
           <DeckWave label="deck a" bands={deckA === "file" ? fileA.bands : bandsA} loading={deckA !== "file" && !bandsA} beat={playing ? beat : -1} lowDb={(lowA - 0.5) * 30} phrases={PHRASES_A}
             badge={{ text: deckA === "file" ? "a" : mineKey, fits: null }} />
@@ -224,8 +263,13 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           </div>
         </div>
         {shows("bank") && <div className="fl-marks mx-bank" role="radiogroup" aria-label="Deck b track">
-          {DJ_BANK.map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); }}>{t.name}<small>{t.bpm} · {t.camelot}</small></button>)}
+          {similarFirst(base, camelotOf(mine.root, mine.scale !== "major")).map(t => <button key={t.id} type="button" role="radio" aria-checked={t.id === bid && !bFile} className={`ls-chip ${t.id === bid && !bFile ? "is-on" : ""}`} onClick={() => { setBid(t.id); setBFile(null); setSynced(false); setCue(0); setLoopLen(null); setShift(keyGoal || realOf(t.id) ? 0 : fitShift(t, camelotOf(mine.root, mine.scale !== "major"))); }} title={realOf(t.id) ? `${realOf(t.id)!.artist}, ${realOf(t.id)!.title}` : "a stand-in made on our engine"}>{t.name}<small>{t.bpm} · {t.camelot}{realOf(t.id) ? (keyGoal ? "" : camelotFits(t.camelot, camelotOf(mine.root, mine.scale !== "major")) ? " · fits" : " · clashes") : " · stand-in"}</small></button>)}
         </div>}
+        {songCues.length > 0 && deckA === "song" && (mine.sections?.length ?? 0) > 0 && <div className="fl-marks mx-cuesa" role="group" aria-label="Your song's cues on deck a">
+          {songCues.map(c => <button key={c.slug} type="button" className={`ls-chip ${cueA === c.bar ? "is-on" : ""}`} aria-pressed={cueA === c.bar} aria-label={`deck a from your cue ${c.name}, bar ${c.bar}`} onClick={() => setCueA(c.bar)}>a · {c.name}<small>bar {c.bar}</small></button>)}
+        </div>}
+        {songCues.length > 0 && !(mine.sections?.length) ? <p className="fl-pro">your song's cues: {songCues.map(c => `${c.name}, bar ${c.bar} of the phrase`).join(" · ")}. arrange your song and deck a can jump to them.</p> : null}
+        <ProLine tool="rekordbox" names={["deck a", "low a", "crossfader", ...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("stems") ? ["stems"] : []), ...(shows("curve") ? ["curve"] : []), ...(screen.goal === "echo" || screen.goal === "free" ? ["echo a"] : [])]} />
         <div className="fl-marks mx-tools" role="group" aria-label="Deck tools">
           {shows("sync") && <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>}
           {shows("cues") && CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`cue ${i + 1} ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}
@@ -244,7 +288,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {say ? <div className="ls-hint" role="status">{say}</div> : null}
-        {stuck && !met ? <button type="button" className="ls-skip" onClick={() => { engine.stop(); onNext(); }}>skip this step</button> : null}
+        {stuck && !met ? <button type="button" className="ls-skip" onClick={() => { engine.stop(); try { sessionStorage.setItem(MIX_SKIP, location.pathname); } catch { /* ignore */ } onNext(); }}>skip this step</button> : null}
         {tail}
       </div>
       <div className="ls-bottom">

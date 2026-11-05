@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks } from "@/lib/worldRanks";
 import { useAuth } from "@/lib/auth";
 import { LeagueBoard } from "@/components/LeagueBoard";
 import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
@@ -13,7 +13,7 @@ type Tab = "league" | "alltime";
 
 export function LeaderboardPageClient() {
   const { progress } = useProgress();
-  const { current: rank, idx } = rankFor(progress.xp);
+  const { current: rank, idx } = allWorldRanks(progress.completedMissions)[0];
   const { user } = useAuth();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [myRank, setMyRank] = useState<number | null>(null);

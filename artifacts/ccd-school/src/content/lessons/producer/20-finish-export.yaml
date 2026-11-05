@@ -7,8 +7,9 @@ song:
   changes: drums.kick
   why: a song is finished when it leaves the app
 learn: >-
-  Naming your song, exporting it as midi for Ableton Live, and what happens next.
+  Naming your song, exporting it as audio at the right loudness and as midi for Ableton Live, and what happens next.
 youCan:
+  - export your song as audio at -14 lufs for streaming, or louder for clubs
   - export your song as midi
   - open it in Live and keep working
   - say what stems are
@@ -36,13 +37,16 @@ steps:
     goal: export
     say:
       mentor: >-
-        Here's your finished song. Give it a name, play it through once more, and download the midi. Drop the
-        file into Live and every part lands on its own track. And if you're proud of it, send it to CCD: the
-        best learner tracks get played at our nights.
+        Here's your finished song. Give it a name and play it through once more. Then take it out two ways.
+        Audio for streaming saves a wav at -14 lufs, the loudness the big streaming services turn songs to, so
+        yours sounds the same there as here; loud for clubs pushes it to -9, with the peaks held under -1 dbtp
+        either way. Midi for Live drops every part onto its own track to keep working. And if you're proud of
+        it, send it to CCD: the best learner tracks get played at our nights.
       straight: >-
-        Name it, play it, download the midi, open it in Live. Send it to CCD if you're proud of it.
+        Name it, play it, download the audio (-14 lufs, or -9 for clubs) and the midi for Live. Send it to CCD if
+        you're proud of it.
       eli5: >-
-        Type a name for your song. Then tap download and open it in Live.
+        Type a name for your song. Then save it as audio to play anywhere, or as midi to open in Live.
 
   - kind: ask
     q: What does a midi file hold?

@@ -38,7 +38,8 @@ export function songBars(t: Pick<TrackV2, "loop" | "sections">): number {
 /** The cue a lesson's mixer goal leaves on this song. */
 export function cueFor(t: Pick<TrackV2, "loop" | "sections">, slug: string, goal: MixGoal): Cue {
   const c = CUE[goal] ?? CUE.free;
-  return { slug, name: c.name, bar: c.at === "first" ? 1 : songBars(t) };
+  // A looping song has no last bar of its own: djs mix out at the end of an eight-bar phrase, so that's where it goes.
+  return { slug, name: c.name, bar: c.at === "first" ? 1 : t.sections?.length ? songBars(t) : 8 };
 }
 
 /** The song with this lesson's cue on it. One cue per lesson: doing it again replaces it. */
@@ -58,3 +59,11 @@ export function soundsSame(a: TrackV2, b: TrackV2): boolean {
 /** Steps that change your song, so a lesson with one of them ends with an add (or keep, or mark) step. */
 const SONG_STEPS = new Set(["play", "shape", "tempo", "arrange", "mix"]);
 export const changesSong = (screens: { kind: string }[]): boolean => screens.some(s => SONG_STEPS.has(s.kind));
+
+/** The song started from a bar: every event moved back by that many bars, wrapping round the song. */
+export function fromBar(t: TrackV2, bar: number): TrackV2 {
+  const L = t.loop || 4;
+  const off = (((bar - 1) * 4) % L + L) % L;
+  if (!off) return t;
+  return { ...t, layers: t.layers.map(l => ({ ...l, events: l.events.map(e => ({ ...e, start: (((e.start - off) % L) + L) % L })).sort((a, b) => a.start - b.start) })) };
+}

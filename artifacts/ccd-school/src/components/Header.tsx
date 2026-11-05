@@ -22,7 +22,7 @@ import { worldDone as worldDoneOf } from "@/lib/worldOrder";
 import { CatMark, WeekDots } from "@/components/m1/shell";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks, WORLD_NAME } from "@/lib/worldRanks";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
@@ -223,7 +223,8 @@ interface XpStreakPopoverProps {
 
 function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds, onClose }: XpStreakPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { current: rank, next, progress: rankPct, idx: rankIdx } = rankFor(progress.xp);
+  const top = allWorldRanks(progress.completedMissions)[0];
+  const { current: rank, next, progress: rankPct, idx: rankIdx } = top;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -233,7 +234,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
-  const xpToNext = next ? next.minXp - progress.xp : 0;
+
 
   return (
     <div ref={ref}
@@ -243,13 +244,13 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
         <RankMark idx={rankIdx} size={34} />
         <div className="flex-1">
           <p className="font-display text-base">{rank.name}</p>
-          <p className="font-mono text-xs opacity-70 uppercase">{rank.tagline}</p>
+          <p className="font-mono text-xs opacity-70">{WORLD_NAME[top.world]} · {rank.line}</p>
         </div>
       </div>
       <div className="px-4 py-3 border-b-4 border-ink">
         <div className="flex justify-between items-baseline mb-2">
-          <span className="font-mono text-xs uppercase opacity-70">XP to next rank</span>
-          <span className="font-mono text-xs tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
+          <span className="font-mono text-xs opacity-70">next rank</span>
+          <span className="font-mono text-xs tabular-nums">{next ? next.name : "top"}</span>
         </div>
         <div className="w-full bg-ink/10 h-2 overflow-hidden border-2 border-ink">
           <div className="bg-acid h-full transition-all" style={{ width: `${rankPct * 100}%` }} />

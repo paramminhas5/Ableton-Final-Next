@@ -5,6 +5,7 @@
  * again adds on top; undo takes back the last take; "use this line" keeps it for the
  * end of the lesson, where it joins your track when you press add.
  */
+import { beatsToMs, msToBeats, readLatencyMs, saveLatencyMs, steadyDelay } from "@/lib/latency";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
@@ -57,6 +58,11 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const [rings, setRings] = useState<Record<number, { t: number; v: number }>>({});
   const ring = useCallback((pad: number, v: number) => { if (pad >= 0) setRings(r => ({ ...r, [pad]: { t: performance.now() + Math.random(), v } })); }, []);
   const history = useRef<NoteEvent[][]>([]);
+  const latencyMs = useRef(0);
+  useEffect(() => { latencyMs.current = readLatencyMs(); }, []);
+  // How many takes ended with hits off the beat, and what the forgiving fixes said.
+  const [misses, setMisses] = useState(0);
+  const [fixNote, setFixNote] = useState<string | null>(null);
   const takeOpen = useRef(false);
   const recHeld = useRef<Held>(new Map());
   const sessionRef = useRef(session);
@@ -96,8 +102,11 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         if (e.kind === OUT.playedOn && rec) {
           pressNote(recHeld.current, "take", e.note, e.vel, e.beat, !!(e.flags & FLAG.countIn));
         } else if (e.kind === OUT.playedOff) {
-          const ev = releaseNote(recHeld.current, "take", e.note, e.beat, opts);
-          if (!ev) continue;
+          const raw = releaseNote(recHeld.current, "take", e.note, e.beat, opts);
+          if (!raw) continue;
+          // The device's known delay comes off every hit (src/lib/latency.ts).
+          const lat = coach ? msToBeats(latencyMs.current, t.bpm || 120) : 0;
+          const ev = lat ? { ...raw, start: (((raw.start - lat) % t.loop) + t.loop) % t.loop } : raw;
           // Every hit can be undone on its own.
           history.current.push(t.layers[idx]?.events ?? []);
           setEvents(cur => overdub(cur, ev, opts));
@@ -250,6 +259,38 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     // A chord is one press, not three notes: count when things start, not how many notes sound.
     : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
+  // When a take ends: a steady lateness is the device, so take it out; otherwise count it as a miss.
+  const wasTake = useRef(false);
+  useEffect(() => {
+    const now = recording || countIn;
+    if (wasTake.current && !now && coach && onBeatOnly && goalEvents.length) {
+      const shift = backbeat ? 0 : steadyDelay(goalEvents.map(offOf), TOL);
+      if (shift) {
+        const bpm = session.bpm || 120;
+        const ms = beatsToMs(shift, bpm);
+        latencyMs.current += ms;
+        saveLatencyMs(latencyMs.current);
+        history.current.push(events);
+        setEvents(cur => cur.map(e => ({ ...e, start: (((e.start - shift) % loop) + loop) % loop })));
+        setFixNote(`every hit came in about ${Math.round(ms)} ms late, the same each time. that's your device, not you, so we took it out, now and for next time.`);
+      } else if (offBeat) setMisses(m => m + 1);
+    }
+    wasTake.current = now;
+  }, [recording, countIn]); // eslint-disable-line react-hooks/exhaustive-deps
+  // After two takes with hits off the beat, offer to put them on it.
+  const snapForMe = () => {
+    history.current.push(events);
+    const seen = new Set<number>();
+    setEvents(cur => cur.flatMap(e => {
+      if (goalNote !== undefined && e.note !== goalNote) return [e];
+      let b = ((Math.round(e.start) % loop) + loop) % loop;
+      if (backbeat && b % 2 === 0) b = (b + 1) % loop;
+      if (seen.has(b)) return [];
+      seen.add(b);
+      return [{ ...e, start: b }];
+    }));
+    setFixNote("snapped onto the beat for you. next time try it with the click, but this counts.");
+  };
   const keyName = `${NOTE_NAMES[((session.root % 12) + 12) % 12]} ${session.scale}`;
   // A verdict on every hit (Melodics, Yousician): green on time, amber close, red off, with how many ms.
   const msPerBeat = 60000 / session.bpm;
@@ -351,6 +392,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>
+      {fixNote ? <div className="ls-hint fl-fix" role="status">{fixNote}</div> : null}
+      {coach && onBeatOnly && offBeat > 0 && misses >= 2 && !recording && !countIn ? <button type="button" className="ls-chip fl-snapme" onClick={snapForMe}>snap it for me</button> : null}
       <Silk label="transport" right={coach ? "undo takes back a hit · hold to clear" : "rec records · play loops it"} />
       <div className="m1-g">
         <Key label="rec" style={coach && ((!events.length && !recording && !countIn) || (nudge && !goalMet)) ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>

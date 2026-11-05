@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { changesSong, cueFor, cuesOf, songBars, soundsSame, withCue } from "../src/lib/cues";
+import { changesSong, cueFor, cuesOf, fromBar, songBars, soundsSame, withCue } from "../src/lib/cues";
 import { emptyTrackV2, newLayerV2 } from "../src/lib/track2";
 import { fileMissions } from "../src/content/lessons/adapt";
 
@@ -14,7 +14,7 @@ describe("loop round 2: dj lessons mark your song", () => {
   it("a blend marks a mix-out cue on the last bar, the tempo lesson a cue on bar 1", () => {
     const t = song();
     expect(songBars(t)).toBe(2);
-    expect(cueFor(t, "your-first-mix", "blend")).toEqual({ slug: "your-first-mix", name: "mix out", bar: 2 });
+    expect(cueFor(t, "your-first-mix", "blend")).toEqual({ slug: "your-first-mix", name: "mix out", bar: 8 });
     expect(cueFor(t, "tempo-bpm-dj", "match").bar).toBe(1);
     const arranged = { ...t, sections: [{ name: "intro", bars: 4, off: [] }, { name: "drop", bars: 8, off: [] }] };
     expect(cueFor(arranged, "x", "blend").bar).toBe(12);
@@ -33,5 +33,14 @@ describe("loop round 2: dj lessons mark your song", () => {
     expect(mix.length).toBeGreaterThan(30);
     for (const m of mix) expect(changesSong(m.screens ?? [])).toBe(true);
     expect(mix.some(m => m.slug === "your-first-mix")).toBe(true);
+  });
+  it("deck a starts your song from a cue's bar", () => {
+    const t = song();
+    expect(fromBar(t, 1)).toBe(t);
+    expect(fromBar(t, 2).layers[0].events.map(e => e.start)).toEqual([4, 5, 6, 7]);
+    const longer = { ...t, layers: [{ ...t.layers[0], events: [0, 4].map(start => ({ start, len: 0.25, note: 36, vel: 1 })) }] };
+    expect(fromBar(longer, 2).layers[0].events.map(e => e.start)).toEqual([0, 4]);
+    const three = { ...longer, layers: [{ ...longer.layers[0], events: [0, 5].map(start => ({ start, len: 0.25, note: 36, vel: 1 })) }] };
+    expect(fromBar(three, 2).layers[0].events.map(e => e.start)).toEqual([1, 4]);
   });
 });

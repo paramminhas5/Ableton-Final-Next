@@ -164,11 +164,10 @@ export function Lanes({ track, next, sel, solo, onLane, width = 338, playhead = 
         const y = top + i * (lh + gap);
         const dim = (!!solo && solo !== r.id) || r.muted;
         const isSel = sel === r.id;
-        const tc = isSel || r.ghost ? r.color : dim ? "#55555A" : "#A6A6AC";
         return (
           <g key={r.id} onClick={onLane && !r.ghost ? () => onLane(r.id) : undefined} style={{ cursor: onLane && !r.ghost ? "pointer" : undefined }}>
             <rect x={0} y={y - 4} width={width} height={lh + 8} fill="transparent" />
-            <text x={0} y={y + lh - 1} fontFamily="Outfit" fontSize={12} fontWeight={500} fill={tc}>{r.name}</text>
+            <text x={0} y={y + lh - 1} fontFamily="Outfit" fontSize={12} fontWeight={isSel ? 600 : 500} style={{ fill: isSel || r.ghost ? r.color : dim ? "#55555A" : "var(--print, #A6A6AC)" }}>{r.name}</text>
             <rect x={x0} y={y} width={x1 - x0} height={lh} rx={2} fill="#141416" />
             {r.ghost ? (
               <rect x={x0 + 1} y={y + 0.5} width={x1 - x0 - 2} height={lh - 1} rx={2} fill="none" stroke={r.color} strokeWidth={1} strokeDasharray="3 3" />

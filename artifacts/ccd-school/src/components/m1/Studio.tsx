@@ -88,6 +88,8 @@ const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", 
 
 /** The knobs for this bank: four specs and their wire indices. `shift` is the second page of the sound bank. */
 function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; index: number }[] {
+  // The fx bank's second page is the part's filter: cutoff, resonance and character (warm, scream, smooth).
+  if (bank === "fx") return LAYER_PARAMS.filter(p => p.bank === "fx").slice(shift ? 4 : 0, shift ? 7 : 4).map(spec => ({ spec, index: spec.index }));
   if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
@@ -730,10 +732,10 @@ export function Studio() {
                   <button key={b} type="button" role="radio" aria-checked={bank === b}
                     onClick={() => {
                       // Tap sound again for its second page.
-                      setShift(b === "sound" && bank === "sound" ? !shift : false);
+                      setShift((b === "sound" || b === "fx") && bank === b ? !shift : false);
                       setBank(b);
                       setTouched(null);
-                    }}>{b === "sound" && shift ? "sound 2" : b}</button>
+                    }}>{b === "sound" && shift ? "sound 2" : b === "fx" && bank === "fx" && shift ? "filter" : b}</button>
                 ))}
               </div>
               <button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}

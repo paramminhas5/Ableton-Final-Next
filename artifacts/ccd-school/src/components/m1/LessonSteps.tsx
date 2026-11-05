@@ -6,6 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT, display, toValue } from "@/engine";
+import { proName, type ProTool } from "@/lib/proNames";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -28,7 +29,7 @@ import { EnvView, FilterView, useNoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
 import { bind, PIC, picOf } from "@/lib/paramColor";
 import { TYPE } from "@/lib/track2";
-import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
+import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
 
@@ -195,7 +196,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
     const inst = line.type === "lead" ? LEAD_PARAMS : line.type === "bass" ? BASS_PARAMS : line.type === "chords" ? CHORD_PARAMS : [];
     // Drums: all four of the kick pad's knobs (tune, decay, drive, level) can be named.
     const kickPad = line.type === "drums" ? DRUM_PAD_PARAMS.map((sp, k) => ({ index: INSTRUMENT_BASE + k, spec: sp as ParamSpec })) : [];
-    const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec })), ...kickPad.slice(2)];
+    // Rack-wide drum knobs too: the kick's body shape, the hat's open.
+    const rack = line.type === "drums" || line.type === "hats" ? DRUM_RACK_PARAMS.map(sp => ({ index: sp.index, spec: sp as ParamSpec })) : [];
+    const all = [...shapeKnobs(line.type), ...inst.map(sp => ({ index: sp.index, spec: sp as ParamSpec })), ...kickPad.slice(2), ...rack];
     // Layer-wide knobs (eq, drive, echo, level, pan, send, duck) are there when a lesson names them.
     const wide = LAYER_PARAMS.map(sp => ({ index: sp.index, spec: sp as ParamSpec }));
     const wanted = screen.knobs.map(k => all.find(s => s.spec.key === k) ?? wide.find(s => s.spec.key === k)).filter(Boolean) as typeof all;
@@ -281,6 +284,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
+      <ProLine tool="ableton" names={knobs.map(k => k.spec.key)} labels={knobs.map(k => k.spec.label)} />
       </div>
       <div className="fl-text">
       <Body text={screen.body} starter={!!base && !base.layers.some(l => l.events.length > 0)} />
@@ -534,6 +538,7 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
           <Knob label="glue" readout={`${Math.round(glue * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
           <Knob label="out" readout={`${Math.round(out * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
         </div>
+        <ProLine tool="ableton" names={["glue", "out"]} />
       </div>
       <div className="fl-text">
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
@@ -635,6 +640,7 @@ function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
           </svg>
           <div className="fl-airlabels"><span>one beat, four sixteenths</span><span>the 2nd and 4th land {pct}% of the way</span></div>
         </Screen>
+        <ProLine tool="ableton" names={["swing"]} />
         <div className="fl-tempo">
           <Knob label="swing" readout={`${Math.round(sw * 100)}%`} color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
           <div className="fl-marks" role="radiogroup" aria-label="Amounts to try" style={{ ["--c" as string]: accent } as CSSProperties}>
@@ -712,4 +718,11 @@ function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; 
       </div>
     </div>
   );
+}
+
+/** Under a row of controls: what each one is called in Ableton Live or rekordbox, when the name differs. */
+export function ProLine({ tool, names, labels }: { tool: ProTool; names: string[]; labels?: string[] }) {
+  const pairs = names.map((n, i) => [labels?.[i] ?? n, proName(tool, n)] as const).filter(([, p]) => p);
+  if (!pairs.length) return null;
+  return <p className="fl-pro">in {tool}: {pairs.map(([o, p], i) => <span key={o}>{i ? ", " : ""}{o} is <b>{p}</b></span>)}</p>;
 }

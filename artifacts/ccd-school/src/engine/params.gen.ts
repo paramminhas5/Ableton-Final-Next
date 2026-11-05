@@ -25,6 +25,9 @@ export const LAYER_PARAMS = [
   { id: "mix.pan", key: "pan", label: "pan", bank: "mix", index: 9, min: -1, max: 1, default: 0.5, unit: "pan", curve: "lin", smoothMs: 15, detents: [0.5] },
   { id: "mix.send", key: "send", label: "send", bank: "mix", index: 10, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "mix.duck", key: "duck", label: "duck", bank: "mix", index: 11, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.lp", key: "lp", label: "filter", bank: "fx", index: 12, min: 40, max: 20000, default: 1, unit: "hz", curve: "exp", smoothMs: 15, detents: [] },
+  { id: "fx.lpres", key: "lpres", label: "resonance", bank: "fx", index: 13, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.lpkind", key: "lpkind", label: "character", bank: "fx", index: 14, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const BASS_PARAMS = [

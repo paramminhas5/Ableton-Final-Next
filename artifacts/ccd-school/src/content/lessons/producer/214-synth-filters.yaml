@@ -62,7 +62,7 @@ steps:
 
   - kind: shape
     layer: lead
-    knobs: [cutoff, res, cut]
+    knobs: [cutoff, res, cut, character]
     say:
       mentor: >-
         Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and
@@ -70,13 +70,15 @@ steps:
         thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the
         middle.
 
-        Then add resonance and sweep the cutoff to hear it sing. Keep the shape that sits best in your song.
+        Then add resonance and sweep the cutoff to hear it sing. Character picks how it sounds: warm is a round
+        four-pole ladder, scream is a two-pole that distorts as it resonates, smooth is a clean two-pole with
+        a gentler slope. Keep the shape that sits best in your song.
       straight: >-
         Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff.
-        Carve your lead and keep it.
+        Character: warm, scream or smooth. Carve your lead and keep it.
       eli5: >-
         Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res
-        makes it whistle. Pick the sound you like.
+        makes it whistle. Character changes how it whistles. Pick the sound you like.
 
   - kind: ask
     q: What does a low-pass filter do?

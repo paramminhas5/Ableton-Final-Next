@@ -31,7 +31,7 @@ const MAKE: { id: WorldId; name: string; line: string; first: string }[] = [
 const KNOW: { id: Know; name: string; line: string }[] = [
   { id: "new", name: "completely new", line: "never made or mixed music" },
   { id: "some", name: "a little", line: "played around with an app or a controller" },
-  { id: "lots", name: "i know my way around", line: "find my level with a few quick questions" },
+  { id: "lots", name: "i know my way around", line: "straight to a few quick questions that find your level" },
 ];
 const WAYS: { id: Voice; name: string; line: string }[] = [
   { id: "mentor", name: "walk me through it", line: "the full picture, step by step" },
@@ -142,7 +142,14 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   };
   const next = () => setStep(s => Math.min(TOUR.length - 1, s + 1));
   const back = () => setStep(s => Math.max(0, s - 1));
-  if (placement) return <PlacementTest world={make.id} onSkip={() => setPlacement(false)} onComplete={slug => { onLeave?.(); router.push(`/learn/${slug}`); }} />;
+  // "i know my way around" goes straight to placement (Param, 5 Nov). Skipping it carries on with the tour's last step.
+  if (placement) return <PlacementTest world={make.id} startNow onSkip={() => { setPlacement(false); next(); }} onComplete={slug => {
+    onLeave?.();
+    setOnboarding(make.id, "hard");
+    setLearnMode("flow");
+    try { localStorage.setItem("ccd.world", make.id); } catch { /* ignore */ }
+    router.push(`/learn/${slug}`);
+  }} />;
 
   const v1 = toV1View(track);
   const loop = track.loop || 8;
@@ -248,14 +255,14 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
         )}
         {at === "know" && (
           <Part n={7} name="you" title="how much have you done before?" line="so we start you in the right place.">
-            <Choice items={KNOW} value={know} onPick={id => { setKnow(id); next(); }} />
+            <Choice items={KNOW} value={know} onPick={id => { setKnow(id); if (id === "lots") setPlacement(true); else next(); }} />
           </Part>
         )}
         {at === "explain" && (
           <Part n={8} name="you" title="how do you like to learn?" line="every step also has buttons to hear it another way, any time.">
             <Choice items={WAYS} value={prefs.voice} onPick={id => setPrefs({ voice: id })} />
             <div className="wl-go"><GoPill onClick={go} style={{ height: 72, width: "100%" }}>take me in <Icon name="play" small /></GoPill></div>
-            {know === "lots" && <button type="button" className="ls-skip" onClick={() => setPlacement(true)}>or find my level first</button>}
+            {know === "lots" && <button type="button" className="ls-skip" onClick={() => setPlacement(true)}>find my level again</button>}
             <div className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>first lesson: {(missionBySlug(make.first)?.title ?? "").toLowerCase()}</div>
           </Part>
         )}

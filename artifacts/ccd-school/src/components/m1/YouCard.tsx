@@ -2,7 +2,7 @@
 /** The dashboard's "you" panel: rank and xp, streak, stripes, and the trophy shelf. Opens your profile. */
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks, WORLD_NAME } from "@/lib/worldRanks";
 import { readStripes, STRIPES_EVENT, trophiesFor, type Stripes } from "@/lib/rewards";
 import { Icon } from "./controls";
 
@@ -14,7 +14,9 @@ export function YouCard({ xp, streak, done }: { xp: number; streak: number; done
     window.addEventListener(STRIPES_EVENT, r);
     return () => window.removeEventListener(STRIPES_EVENT, r);
   }, []);
-  const rank = rankFor(xp);
+  // Ranks are per world; the card leads with the world you have gone furthest in.
+  const ranks = allWorldRanks(done);
+  const rank = ranks[0];
   const trophies = trophiesFor(stripes, done);
   const gold = Object.values(stripes).filter(s => s.gold).length;
   const seg = 20, lit = Math.round(rank.progress * seg);
@@ -22,10 +24,10 @@ export function YouCard({ xp, streak, done }: { xp: number; streak: number; done
   return (
     <Link href="/profile" className="td-you" aria-label="Your profile">
       <div className="td-you-glass">
-        <div className="td-you-top"><span>rank {rank.idx + 1}</span><span>{xp} xp</span></div>
+        <div className="td-you-top"><span>{WORLD_NAME[rank.world]} rank {rank.idx + 1} of {rank.total}</span><span>{xp} xp</span></div>
         <div className="td-you-rank">{rank.current.name.toLowerCase()}</div>
         <div className="td-you-leds" aria-label={`${Math.round(rank.progress * 100)}% to ${rank.next?.name ?? "the top"}`}>{Array.from({ length: seg }, (_, i) => <i key={i} className={i < lit ? "is-on" : ""} />)}</div>
-        <div className="td-you-next">{rank.next ? `next: ${rank.next.name.toLowerCase()}` : "top rank"}</div>
+        <div className="td-you-next">{rank.next ? `next: ${rank.next.name}` : "top rank"} · {ranks.slice(1).map(r => `${WORLD_NAME[r.world]}: ${r.current.name}`).join(" · ")}</div>
       </div>
       <div className="td-you-stats">
         <span><b className="is-fire">{streak}</b>day streak</span>
