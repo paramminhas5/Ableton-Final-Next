@@ -6,7 +6,7 @@
  * at the end does it tell you how often you picked the new engine. Your picks stay in this browser.
  */
 import { useEffect, useRef, useState } from "react";
-import { AB_CLIPS, abUrl, type AbClip } from "@/content/abClips";
+import { AB_CLIPS, AB_PAIRS, abUrl, type AbClip } from "@/content/abClips";
 import { Icon, Key } from "./controls";
 import { RefPage } from "./parts";
 import "./lesson.css";
@@ -49,7 +49,8 @@ export function SoundAB() {
     ctx.current ??= new AudioContext();
     const ac = ctx.current;
     await ac.resume();
-    const [a, b] = await Promise.all([load(ac, abUrl("before", c.id)), load(ac, abUrl("after", c.id))]);
+    // A clip with nothing before it plays its after on both sides.
+    const [a, b] = await Promise.all([load(ac, abUrl(c.afterOnly ? "after" : "before", c.id)), load(ac, abUrl("after", c.id))]);
     const gains = { before: ac.createGain(), after: ac.createGain() };
     const srcs = ([["before", a], ["after", b]] as [Side, AudioBuffer][]).map(([k, buf]) => {
       const s = ac.createBufferSource(); s.buffer = buf; s.loop = true; s.connect(gains[k]); gains[k].connect(ac.destination); return s;
@@ -66,7 +67,7 @@ export function SoundAB() {
   // ── blind test: five rounds ─────────────────────────────────────────────
   const startBlind = () => {
     stop();
-    const pool = [...AB_CLIPS].sort(() => Math.random() - 0.5);
+    const pool = AB_PAIRS().sort(() => Math.random() - 0.5);
     setTrials(Array.from({ length: 5 }, (_, i) => ({ clip: pool[i % pool.length], x: Math.random() < 0.5 ? "after" : "before" })));
     setAt(0); setSide("after");
   };
@@ -128,7 +129,7 @@ export function SoundAB() {
               <div className="ab-text">
                 <b>{c.name}</b>
                 <span>{c.listen}</span>
-                {on && (
+                {on && !c.afterOnly && (
                   <div className="ab-seg" role="radiogroup" aria-label="Engine">
                     {(["before", "after"] as Side[]).map(s => <button key={s} type="button" role="radio" aria-checked={side === s} className={side === s ? "is-on" : ""} onClick={() => flip(s)}>{s === "before" ? "then" : "now"}</button>)}
                   </div>

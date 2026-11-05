@@ -17,5 +17,8 @@
   {"id": "smooth", "what": "the rolling bass through the smooth filter", "rms_db": -22.2, "peak": 0.8538},
   {"id": "snares", "what": "one snare three ways: fat body, tight snap, long rattle", "rms_db": -27.44, "peak": 0.5701},
   {"id": "perc", "what": "a bell and a metal bar over hats that change a little every hit", "rms_db": -25.57, "peak": 0.7184},
-  {"id": "plate", "what": "one clap into the plate reverb", "rms_db": -35.92, "peak": 0.4333}
+  {"id": "plate", "what": "one clap into the plate reverb", "rms_db": -35.92, "peak": 0.4333},
+  {"id": "pluck", "what": "plucked strings: an arpeggio on the resonator voice", "rms_db": -21.01, "peak": 0.5082},
+  {"id": "mallet", "what": "a marimba line on the two-resonator mallet voice", "rms_db": -23.42, "peak": 0.3075},
+  {"id": "keys", "what": "chords on the struck-string keys voice", "rms_db": -26.06, "peak": 0.4446}
 ]

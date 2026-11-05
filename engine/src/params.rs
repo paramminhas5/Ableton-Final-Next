@@ -317,7 +317,12 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("frel", "f release", Bank::Shift, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
     p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
+    // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
+    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -336,6 +341,9 @@ pub const C_FDECAY: usize = 13;
 pub const C_FREL: usize = 14;
 pub const C_CHAR: usize = 15;
 pub const C_FDRIVE: usize = 16;
+pub const C_VOICE: usize = 17;
+pub const C_RING: usize = 18;
+pub const C_BRIGHT: usize = 19;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -358,7 +366,12 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("frel", "f release", Bank::Shift, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
     // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
     p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
-    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
+    // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
+    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -377,11 +390,19 @@ pub const LD_FDECAY: usize = 13;
 pub const LD_FREL: usize = 14;
 pub const LD_CHAR: usize = 15;
 pub const LD_FDRIVE: usize = 16;
+pub const LD_VOICE: usize = 17;
+pub const LD_RING: usize = 18;
+pub const LD_BRIGHT: usize = 19;
 
 /// The fm ratio knob steps through these (modulator frequency over carrier).
 pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
 pub fn fm_ratio(n: f32) -> f32 {
     FM_RATIOS[((n.clamp(0.0, 1.0) * (FM_RATIOS.len() - 1) as f32).round()) as usize]
+}
+
+/// What makes a synth's sound: 0 the oscillators, 1 pluck, 2 mallet, 3 keys (engine 2, item 10).
+pub fn voice_model(n: f32) -> u8 {
+    (n.clamp(0.0, 1.0) * 3.0).round() as u8
 }
 
 /// Where the lfo goes: 0 the filter, 1 the pitch, 2 the volume.

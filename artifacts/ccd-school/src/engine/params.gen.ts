@@ -85,6 +85,9 @@ export const CHORD_PARAMS = [
   { id: "chords.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 4000, default: 0.45, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "chords.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
   { id: "chords.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.voice", key: "voice", label: "voice", bank: "shift", index: 33, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.ring", key: "ring", label: "ring", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.bright", key: "bright", label: "bright", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const LEAD_PARAMS = [
@@ -105,6 +108,9 @@ export const LEAD_PARAMS = [
   { id: "lead.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 3000, default: 0.4, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "lead.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
   { id: "lead.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.voice", key: "voice", label: "voice", bank: "shift", index: 33, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.ring", key: "ring", label: "ring", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.bright", key: "bright", label: "bright", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const FX_PARAMS = [

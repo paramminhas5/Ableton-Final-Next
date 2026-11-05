@@ -983,3 +983,118 @@ fn reverb_tails_are_dense_smooth_and_wide() {
     assert!((hall.3 - old.3).abs() < 1.5, "the hall should sit at the old level: {:.1} vs {:.1}", hall.3, old.3);
     assert!((plate.3 - old.3).abs() < 2.0, "the plate should sit near it: {:.1} vs {:.1}", plate.3, old.3);
 }
+
+// ── Engine 2, item 10: resonator voices for plucks, mallets and keys ─────────────────────────────
+
+/// Pitch from the autocorrelation peak (parabolic), over a window, Hz. Accurate to a fraction of a cent.
+fn pitch_ac(y: &[f32], hz_guess: f32) -> f32 {
+    let p0 = SR / hz_guess;
+    let (lo, hi) = ((p0 * 0.8) as usize, (p0 * 1.25) as usize + 2);
+    let n = y.len() - hi - 1;
+    let ac = |lag: usize| (0..n).map(|i| (y[i] * y[i + lag]) as f64).sum::<f64>();
+    let vals: Vec<f64> = (lo..=hi).map(ac).collect();
+    let k = (1..vals.len() - 1).max_by(|a, b| vals[*a].partial_cmp(&vals[*b]).unwrap()).unwrap();
+    let (a, b, c) = (vals[k - 1], vals[k], vals[k + 1]);
+    let den = a - 2.0 * b + c;
+    let off = if den.abs() > 1e-30 { 0.5 * (a - c) / den } else { 0.0 };
+    SR / ((lo + k) as f32 + off as f32)
+}
+
+fn lead_with(model: f32, note: u8, secs: f32, set: &[(usize, f32)]) -> Vec<f32> {
+    let mut l = Lead::new(SR);
+    let n = |i: usize, v: f32| LEAD_PARAMS[i].to_value(v);
+    l.set_param(LD_VOICE, n(LD_VOICE, model));
+    l.set_param(LD_CUTOFF, n(LD_CUTOFF, 1.0));
+    l.set_param(LD_RES, 0.0);
+    l.set_param(LD_DETUNE, 0.0);
+    l.set_param(LD_RELEASE, 3000.0);
+    for (i, v) in set {
+        l.set_param(*i, n(*i, *v));
+    }
+    l.note_on(note, 0.9);
+    (0..(SR * secs) as usize).map(|_| l.tick()).collect()
+}
+
+#[test]
+fn resonators_play_in_tune_across_the_keyboard() {
+    for (m, name) in [(1.0 / 3.0, "pluck"), (2.0 / 3.0, "mallet"), (1.0, "keys")] {
+        let mut worst = (0.0f32, 0u8);
+        let mut line = String::new();
+        for note in (24u8..=108).step_by(6) {
+            let y = lead_with(m, note, 0.4, &[]);
+            let want = ccd_engine::dsp::note_hz(note as f32);
+            let got = pitch_ac(&y[(SR * 0.1) as usize..(SR * 0.35) as usize], want);
+            let cents = 1200.0 * (got / want).log2();
+            line.push_str(&format!(" {note}:{cents:+.1}"));
+            if cents.abs() > worst.0.abs() {
+                worst = (cents, note);
+            }
+        }
+        println!("{name}, cents off per note:{line}; worst {:+.2} at note {}", worst.0, worst.1);
+        assert!(worst.0.abs() < 3.0, "{name}: {:+.2} cents at note {}", worst.0, worst.1);
+    }
+}
+
+#[test]
+fn resonators_decay_as_set_per_note() {
+    // Ring at its default (2 s at middle c): the time for the fundamental to fall 30 dB, times two,
+    // against what the voice asks of the resonator at that note (longer for low notes).
+    // (Keys are two strings a hair apart, so their level beats as it falls, the way a piano's unison
+    // gives a prompt sound and a slower aftersound: a single decay time does not describe them.)
+    for (m, name, exp) in [(1.0 / 3.0, "pluck", 0.5f32), (2.0 / 3.0, "mallet", 0.3)] {
+        let mut line = String::new();
+        for note in [36u8, 48, 60, 72, 84] {
+            let y = lead_with(m, note, 5.0, &[]);
+            let f = ccd_engine::dsp::note_hz(note as f32);
+            let mut bp = ccd_engine::dsp::filter::Svf::default();
+            bp.set(f, 8.0, SR);
+            let b: Vec<f32> = y.iter().map(|v| bp.tick(*v).bp).collect();
+            let win = (SR * 0.02) as usize;
+            let env: Vec<f32> = b.chunks(win).map(|c| db(rms(c))).collect();
+            // A straight line through the level in dB from 100 ms until it has fallen 40 dB (or the end):
+            // two strings beat, so a fit reads the decay, not the beats.
+            let start = 5;
+            let end = env[start..].iter().position(|v| *v < env[start] - 40.0).map(|k| k + start).unwrap_or(env.len());
+            let pts: Vec<(f32, f32)> = (start..end).map(|k| (k as f32 * 0.02, env[k])).collect();
+            let (mx, my) = (pts.iter().map(|p| p.0).sum::<f32>() / pts.len() as f32, pts.iter().map(|p| p.1).sum::<f32>() / pts.len() as f32);
+            let slope = pts.iter().map(|p| (p.0 - mx) * (p.1 - my)).sum::<f32>() / pts.iter().map(|p| (p.0 - mx).powi(2)).sum::<f32>();
+            let rt = -60.0 / slope;
+            let want = 1.968 * (261.63 / f).powf(exp);
+            line.push_str(&format!(" note {note}: {rt:.2} s (asked {want:.2})"));
+            assert!((rt - want).abs() < want * 0.2 + 0.05, "{name} note {note}: {rt:.2} vs {want:.2}");
+        }
+        println!("{name} decay (RT60 at the fundamental):{line}");
+    }
+}
+
+#[test]
+fn mallet_has_two_resonators_and_voices_sit_at_the_synths_level() {
+    // The mallet's second resonator: energy at four times the note, dying faster than the note.
+    let y = lead_with(2.0 / 3.0, 60, 1.5, &[]);
+    let f = ccd_engine::dsp::note_hz(60.0);
+    let band = |y: &[f32], hz: f32| { let mut bp = ccd_engine::dsp::filter::Svf::default(); bp.set(hz, 6.0, SR); db(rms(&y.iter().map(|v| bp.tick(*v).bp).collect::<Vec<f32>>())) };
+    let (e0, e1) = (&y[..(SR * 0.2) as usize], &y[(SR * 0.8) as usize..(SR * 1.0) as usize]);
+    let early = band(e0, 4.0 * f) - band(e0, f);
+    let late = band(e1, 4.0 * f) - band(e1, f);
+    println!("mallet: the 4x resonator {early:.1} dB against the note at the strike, {late:.1} dB 800 ms on");
+    assert!(early > -20.0 && late < early - 6.0);
+    // Levels: a held note, first 300 ms.
+    let synth = db(rms(&lead_with(0.0, 60, 0.3, &[])));
+    let lv: Vec<(f32, &str)> = [(1.0 / 3.0, "pluck"), (2.0 / 3.0, "mallet"), (1.0, "keys")].iter().map(|(m, name)| (db(rms(&lead_with(*m, 60, 0.3, &[]))), *name)).collect();
+    println!("first 300 ms of middle c: synth {synth:.1} dB, pluck {:.1} dB, mallet {:.1} dB, keys {:.1} dB", lv[0].0, lv[1].0, lv[2].0);
+    for (l, name) in lv {
+        assert!((l - synth).abs() < 3.0, "{name}: {l:.1} vs {synth:.1}");
+    }
+    // Chords: six resonator voices at once, every model, stay finite.
+    for m in [1.0f32 / 3.0, 2.0 / 3.0, 1.0] {
+        let mut p = Poly::new(SR);
+        p.set_param(C_VOICE, CHORD_PARAMS[C_VOICE].to_value(m));
+        p.set_param(C_BRIGHT, 1.0);
+        p.set_param(C_RING, 8_000.0);
+        for n in [21u8, 40, 60, 79, 100, 108] {
+            p.note_on(n, 1.0);
+        }
+        let y: Vec<f32> = (0..(SR * 2.0) as usize).map(|_| p.tick()).collect();
+        assert!(y.iter().all(|v| v.is_finite() && v.abs() < 2.0));
+    }
+}

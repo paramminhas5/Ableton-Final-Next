@@ -11,6 +11,7 @@
 
 use crate::dsp::env::{Adsr, Stage};
 use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
+use crate::dsp::resonator::Comb;
 use crate::dsp::osc::{BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
@@ -69,7 +70,18 @@ struct Ctl {
     /// Filter character (warm, scream, smooth) and the drive into the filter, 0..1.
     character: u8,
     fdrive: f32,
+    /// What makes the sound (`voice_model`), the resonator's ring at middle c (s) and the strike's brightness.
+    model: u8,
+    ring: f32,
+    bright: f32,
 }
+
+/// Resonator voices: output gains that put each at about the level of the synth voice (tests/sound.rs).
+const PLUCK_GAIN: f32 = 3.80;
+const MALLET_GAIN: f32 = 0.617;
+const KEYS_GAIN: f32 = 1.95;
+/// Keys: the two strings sit this far either side of the note (1.2 cents), so they beat slowly.
+const KEYS_SPLIT: f32 = 0.000_7;
 
 /// A voice card: the small fixed differences between the voices of a real polysynth, where each
 /// voice is its own circuit board with its own component tolerances. Voice 3 is always a touch sharp,
@@ -120,6 +132,18 @@ struct Voice {
     side: [BlepOsc; 6],
     /// High-pass at the fundamental on the saw stack (the JP-8000 does this): no rumble under it.
     hp_s: f32,
+    /// The resonators (engine 2, item 10) and their strike: samples since the strike, its length, a
+    /// one-pole state for the pluck's noise, and the voice's own noise.
+    res: [Comb; 2],
+    exc_t: u32,
+    exc_len: u32,
+    exc_lp: f32,
+    /// Mallet: the note it struck and the second mode's own strike this sample.
+    exc_f: f32,
+    exc_x1: f32,
+    noise: Rng,
+    /// The resonators have rung since they were last cleared.
+    res_dirty: bool,
 }
 
 impl Voice {
@@ -144,6 +168,100 @@ impl Voice {
             modp: 0.0,
             side: [BlepOsc::new(); 6],
             hp_s: 0.0,
+            res: [Comb::new(), Comb::new()],
+            exc_t: u32::MAX,
+            exc_len: 0,
+            exc_lp: 0.0,
+            exc_f: 440.0,
+            exc_x1: 0.0,
+            noise: Rng::new(0x5EED + slot as u32 * 7_919),
+            res_dirty: false,
+        }
+    }
+
+    /// Strike the resonators for a new note: tune their loss and decay, and start the exciter.
+    fn strike(&mut self, c: &Ctl, os: f32) {
+        let f = note_hz(self.pitch + self.drift + self.card.semis);
+        let mid = 261.63;
+        let br = c.bright;
+        self.exc_t = 0;
+        self.exc_lp = 0.0;
+        match c.model {
+            1 => {
+                // Pluck: a burst of noise one period long, darker with less brightness; low strings ring longer.
+                self.exc_len = (os / f) as u32;
+                let t60 = (c.ring * (mid / f).powf(0.5)).min(20.0);
+                self.res[0].tune(f, os, 0.02 + 0.2 * (1.0 - br), t60);
+            }
+            2 => {
+                // Mallet: two resonators, a bar's first mode and its overtone four times up (dying three
+                // times faster), each struck at its own mode by a short windowed sine, so each rings close
+                // to a single mode as a bar does; a click on top for the mallet's hardness.
+                self.exc_len = ((2.0 / f).max(0.0015) * os) as u32;
+                self.exc_f = f;
+                let t60 = (c.ring * (mid / f).powf(0.3)).min(20.0);
+                self.res[0].tune(f, os, 0.15, t60);
+                self.res[1].tune(f * 4.0, os, 0.15, t60 / 3.0);
+            }
+            _ => {
+                // Keys: a hammer (shorter, so brighter, when struck hard) on two strings a hair apart.
+                self.exc_len = ((0.0008 + 0.0025 * (1.0 - br * (0.4 + 0.6 * self.vel))).min(0.6 / f) * os) as u32;
+                let t60 = (c.ring * (mid / f).powf(0.6)).min(20.0);
+                let taper = 0.03 + 0.15 * (1.0 - br);
+                self.res[0].tune(f * (1.0 + KEYS_SPLIT), os, taper, t60);
+                self.res[1].tune(f * (1.0 - KEYS_SPLIT), os, taper, t60);
+            }
+        }
+    }
+
+    /// One sample of the resonator voice at pitch `f`.
+    #[inline]
+    fn resonate(&mut self, c: &Ctl, f: f32, os: f32) -> f32 {
+        // The strike.
+        let x = if self.exc_t < self.exc_len {
+            let t = self.exc_t as f32 / self.exc_len as f32;
+            self.exc_t += 1;
+            match c.model {
+                1 => {
+                    let k = 0.1 + 0.85 * c.bright;
+                    self.exc_lp += k * (self.noise.bipolar() - self.exc_lp);
+                    self.exc_lp
+                }
+                2 => {
+                    // The bar's strike: a windowed sine at each mode (the second goes in below), and a
+                    // click in the first millisecond as hard as the brightness asks.
+                    let ts = self.exc_t as f32 / os;
+                    let win = 0.5 - 0.5 * (core::f32::consts::TAU * t).cos();
+                    self.exc_x1 = win * crate::dsp::sin_cycle((ts * self.exc_f * 4.0).fract()) * 0.6;
+                    let click = if ts < 0.001 { (0.5 - 0.5 * (core::f32::consts::TAU * ts * 1_000.0).cos()) * c.bright } else { 0.0 };
+                    win * crate::dsp::sin_cycle((ts * self.exc_f).fract()) + click
+                }
+                // A raised-cosine pulse and a little noise (the felt).
+                _ => (0.5 - 0.5 * (core::f32::consts::TAU * t).cos()) + 0.15 * self.noise.bipolar(),
+            }
+        } else {
+            self.exc_x1 = 0.0;
+            0.0
+        };
+        let x = x * (0.3 + 0.7 * self.vel);
+        self.res_dirty = true;
+        match c.model {
+            1 => {
+                self.res[0].retune(f, os);
+                self.res[0].tick(x) * PLUCK_GAIN
+            }
+            2 => {
+                self.res[0].retune(f, os);
+                self.res[1].retune(f * 4.0, os);
+                let x1 = self.exc_x1 * (0.3 + 0.7 * self.vel);
+                (self.res[0].tick(x) + self.res[1].tick(x1)) * MALLET_GAIN
+            }
+            _ => {
+                self.res[0].retune(f * (1.0 + KEYS_SPLIT), os);
+                self.res[1].retune(f * (1.0 - KEYS_SPLIT), os);
+                // Unequal strings, as in a piano's unison: they beat without ever cancelling.
+                (self.res[0].tick(x) * 0.62 + self.res[1].tick(x) * 0.38) * KEYS_GAIN
+            }
         }
     }
 
@@ -177,11 +295,20 @@ impl Voice {
             self.hp_s = 0.0;
             self.filt.reset();
             self.fdrive.reset();
+            // A resonator may still hold the last note under the envelope's end: start it silent.
+            if self.res_dirty {
+                for r in self.res.iter_mut() {
+                    r.clear();
+                }
+                self.res_dirty = false;
+            }
             self.car = 0.0;
             self.modp = 0.0;
         }
         self.amp.gate_on();
         self.fenv.gate_on();
+        // The resonators are struck on the next sample, when the controls are at hand.
+        self.exc_t = u32::MAX - 1;
     }
 
     fn release(&mut self) {
@@ -194,6 +321,14 @@ impl Voice {
     fn tick(&mut self, c: &Ctl, os: f32) -> f32 {
         self.pitch = self.target + (self.pitch - self.target) * self.glide_coef;
         let f = note_hz(self.pitch + self.drift + c.lfo_semi + self.card.semis);
+        if c.model > 0 {
+            if self.exc_t == u32::MAX - 1 {
+                self.strike(c, os);
+            }
+            let s = self.resonate(c, f, os);
+            let fe = self.fenv.next();
+            return self.finish(s, fe, c, os);
+        }
         let dt = f / os;
         let w = c.wave;
         let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
@@ -241,6 +376,12 @@ impl Voice {
             let mix = (c.fm * 3.0).min(1.0);
             s = s * (1.0 - mix) + carrier * mix * 0.9;
         }
+        self.finish(s, fe, c, os)
+    }
+
+    /// The filter, its drive and the amp: the same for every voice model. `fe` is the filter envelope now.
+    #[inline]
+    fn finish(&mut self, s: f32, fe: f32, c: &Ctl, os: f32) -> f32 {
         let env_oct = c.env_amt * 5.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (self.pitch - 60.0) / 12.0 * 0.4;
         let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct + self.card.cut_oct).exp2()).clamp(30.0, os * 0.45);
@@ -264,6 +405,9 @@ struct Controls {
     fm: Smooth,
     fdrive: Smooth,
     character: u8,
+    model: u8,
+    ring: f32,
+    bright: f32,
     /// Lfo rate in Hz, where it goes (lfo_dest) and its phase (0..1).
     lfo_rate: f32,
     lfo_to: u8,
@@ -285,6 +429,9 @@ impl Controls {
             fm: Smooth::new(0.0),
             fdrive: Smooth::new(0.0),
             character: 0,
+            model: 0,
+            ring: 2.0,
+            bright: 0.5,
             lfo_rate: 1.4,
             lfo_to: 0,
             lfo_phase: 0.0,
@@ -323,6 +470,9 @@ impl Controls {
             ratio: self.ratio,
             character: self.character,
             fdrive: self.fdrive.next(),
+            model: self.model,
+            ring: self.ring,
+            bright: self.bright,
             cutoff: self.cutoff.next(),
             res: self.res.next(),
             env_amt: self.env_amt.next(),
@@ -439,6 +589,9 @@ impl Poly {
             }
             C_CHAR => self.ctl.character = step3(v),
             C_FDRIVE => self.ctl.fdrive.set(v),
+            C_VOICE => self.ctl.model = voice_model(v),
+            C_RING => self.ctl.ring = v * 0.001,
+            C_BRIGHT => self.ctl.bright = v,
             _ => {}
         }
     }
@@ -618,6 +771,9 @@ impl Lead {
             }
             LD_CHAR => self.ctl.character = step3(v),
             LD_FDRIVE => self.ctl.fdrive.set(v),
+            LD_VOICE => self.ctl.model = voice_model(v),
+            LD_RING => self.ctl.ring = v * 0.001,
+            LD_BRIGHT => self.ctl.bright = v,
             _ => {}
         }
     }

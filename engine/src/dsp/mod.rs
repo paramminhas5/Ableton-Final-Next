@@ -4,6 +4,7 @@ pub mod env;
 pub mod filter;
 pub mod osc;
 pub mod oversample;
+pub mod resonator;
 pub mod smooth;
 
 pub const TAU: f32 = std::f32::consts::TAU;

@@ -57,6 +57,14 @@ fn song() -> Engine {
             send(&e, cmd::PARAM, l as u32, fd as u32, 0.6, 0.0, 0.0);
         }
     }
+    // CCD_BENCH_KEYS=1: the chords and leads on the keys voice, two resonators a voice (engine 2, item 10).
+    if std::env::var("CCD_BENCH_KEYS").is_ok() {
+        for (l, inst) in insts.iter().enumerate() {
+            if *inst == 3 || *inst == 4 {
+                send(&e, cmd::PARAM, l as u32, (INSTRUMENT_BASE + 17) as u32, 1.0, 0.0, 0.0);
+            }
+        }
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

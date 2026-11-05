@@ -16,6 +16,9 @@ const PAD2: usize = 96;
 /// the same reason.
 const BASS_CHAR: usize = 24;
 const BASS_FDRIVE: usize = 25;
+/// The chord synth's voice and bright knobs (INSTRUMENT_BASE + C_VOICE, + C_BRIGHT).
+const CHORD_VOICE: usize = 33;
+const CHORD_BRIGHT: usize = 35;
 
 struct R {
     e: Engine,
@@ -176,6 +179,24 @@ fn clips() -> Vec<Clip> {
         r.param(0, INSTRUMENT_BASE + C_RELEASE, 0.6);
         r.param(0, INSTRUMENT_BASE + C_VOICING, 0.6);
         out.push(("pad", "a chord pad, slow attack, octave voicing", r.play(5.8)));
+    }
+    // Item 10, after only (the old engine had no resonators): pluck, mallet and keys on the chord synth.
+    for (name, what, model, bright, ev) in [
+        ("pluck", "plucked strings: an arpeggio on the resonator voice", 1.0f32 / 3.0, 0.6f32, (0..16).map(|i| (i as f64 * 0.25, [57u32, 60, 64, 69, 72, 69, 64, 60][i % 8], 0.2, 0.85)).collect::<Vec<_>>()),
+        ("mallet", "a marimba line on the two-resonator mallet voice", 2.0 / 3.0, 0.5, [(0.0, 69u32), (0.5, 72), (1.0, 76), (1.5, 72), (2.0, 74), (2.5, 77), (3.0, 81), (3.25, 79), (3.5, 76)].iter().map(|(b, n)| (*b as f64, *n, 0.2, 0.85)).collect()),
+        ("keys", "chords on the struck-string keys voice", 1.0, 0.55, [(0.0, [57u32, 60, 64]), (2.0, [55, 59, 62])].iter().flat_map(|(b, ns)| ns.iter().map(move |n| (*b as f64, *n, 1.8, 0.75))).collect()),
+    ] {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Chords);
+        r.param(0, CHORD_VOICE, model);
+        r.param(0, CHORD_BRIGHT, bright);
+        r.param(0, INSTRUMENT_BASE + C_ATTACK, 0.0);
+        r.param(0, INSTRUMENT_BASE + C_CUTOFF, 0.9);
+        r.param(0, INSTRUMENT_BASE + C_SPREAD, 0.0);
+        r.param(0, INSTRUMENT_BASE + C_RELEASE, 0.6);
+        r.param(0, L_SEND, 0.2);
+        r.pattern(0, &ev);
+        out.push((name, what, r.play(3.87)));
     }
     // Reverb on a clap, echo on a lead note, drive on the bass.
     {
