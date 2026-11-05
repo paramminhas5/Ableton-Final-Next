@@ -8,6 +8,7 @@ import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } 
 import { pushSamples } from "@/lib/samples";
 import { arranged } from "@/lib/arrange";
 import { REAL_KIT_ID, realKitLayer } from "@/lib/realKit";
+import { swingOf } from "@/lib/partLength";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 import { engineSlots } from "@/lib/modulation";
 
@@ -79,7 +80,7 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
       engineSlots(l.mods).forEach((m, slot) => engine.mod(i, slot, m.src, m.to, m.amt));
       s.mods = mk;
     }
-    const sw = t.swing ?? 0;
+    const sw = swingOf(l, t);
     const ev = JSON.stringify(l.events) + "|" + sw;
     if (s.events !== ev) {
       engine.pattern(i, swung(l.events, sw));

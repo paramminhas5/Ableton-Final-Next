@@ -6,6 +6,7 @@
 import { newLayerV2, type LayerV2, type NoteEvent, type TrackV2 } from "./track2";
 import { FX_RISER_NOTE as RISER } from "../engine/params.gen";
 import { withArps } from "./arp";
+import { partLen, tiled, withPartLengths } from "./partLength";
 
 /** `notes`: this section's own loop for some parts, by layer id (written by commit or a session player).
  * A part without its own notes here plays the layer's events, as every section did before. */
@@ -50,8 +51,9 @@ const KICK = 36, SNARE = 38;
 
 /** The song as the engine plays it: one long loop, every section in turn. Unchanged with no sections. */
 export function arranged(t: TrackV2): TrackV2 {
-  // Arpeggiators play first, so every section repeats the arpeggio.
-  t = withArps(t);
+  // Parts with their own length repeat across the loop first, then arpeggiators, so every section
+  // repeats both.
+  t = withArps(withPartLengths(t));
   const secs = (t as TrackV2 & { sections?: Section[] }).sections;
   if (!secs?.length) return t;
   const L = t.loop || 4;
@@ -69,7 +71,9 @@ export function arranged(t: TrackV2): TrackV2 {
       if (s.off.includes(l.id)) continue;
       const evs = out.get(l.id)!;
       // The section you are editing plays the part as it is now; others play their own copy if they have one.
-      const src = si === editing ? l.events : (s.notes?.[l.id] ?? l.events);
+      const own = si === editing ? undefined : s.notes?.[l.id];
+      const plen = own ? partLen(l, L) : null;
+      const src = own ? (plen !== null ? tiled(own, plen, L) : own) : l.events;
       const before = playsOf.get(l.id) ?? 0;
       let k = 0;
       for (; k * L < beats; k++) {
@@ -132,4 +136,33 @@ export function sectionNow(t: TrackV2): { index: number; section: Section } | nu
   const secs = t.sections;
   if (!secs?.length || t.at === undefined || t.at < 0 || t.at >= secs.length) return null;
   return { index: t.at, section: secs[t.at] };
+}
+
+/** The name of a section commit adds: the next letter after the sections there are (a, b, c...). */
+export const nextSectionName = (secs: Section[]) => String.fromCharCode(97 + Math.min(25, secs.length));
+
+/**
+ * Commit (the EP-133's commit): copy the loop you are playing into the next section of the arrangement and
+ * move there, so you can make a variation without stopping. With no arrangement yet, the loop becomes
+ * section a and its copy section b. From the last section, commit adds a section. One undo step. Pure.
+ */
+export function commitLoop(t: TrackV2): TrackV2 {
+  const loopBars = Math.max(1, Math.round((t.loop || 4) / 4));
+  const bars = Math.max(4, loopBars);
+  const copy = Object.fromEntries(t.layers.map(l => [l.id, l.events]));
+  const secs = t.sections;
+  if (!secs?.length) {
+    return { ...t, sections: [{ name: "a", bars, off: [], notes: copy }, { name: "b", bars, off: [], notes: copy }], at: 1 };
+  }
+  const cur = t.at ?? 0;
+  // Every section keeps what it played: the first time, that is the loop they all shared.
+  let sections = secs.map((s, i) => (t.at === undefined ? { ...s, notes: { ...copy, ...(s.notes ?? {}) } } : i === cur ? { ...s, notes: { ...(s.notes ?? {}), ...copy } } : s));
+  const next = cur + 1;
+  if (next >= sections.length) {
+    const from = sections[cur];
+    sections = [...sections, { name: nextSectionName(sections), bars: from.bars, off: [...from.off], notes: copy }];
+  } else {
+    sections = sections.map((s, i) => (i === next ? { ...s, notes: { ...(s.notes ?? {}), ...copy } } : s));
+  }
+  return { ...t, sections, at: next };
 }

@@ -214,3 +214,15 @@
 .st-fillkey{flex:none;min-width:56px;height:44px;border-radius:12px;border:1px solid var(--tag);background:var(--well);color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer;touch-action:none}
 .st-fillkey.is-on{background:var(--led-mint);border-color:var(--led-mint);color:#141416;box-shadow:0 0 12px color-mix(in srgb,var(--led-mint) 60%,transparent)}
 .st-dicerow{gap:10px;align-items:center}
+/* sections and commit (the EP-133's commit), per-part length and swing */
+.st-secrow{display:flex;align-items:center;gap:6px;flex:none;margin-top:8px;min-height:30px}
+.st-secrow .st-tag{height:26px;font-size:12px;position:relative;padding:0 9px}
+.st-secrow .st-tag::after,.st-partrow .st-tag::after{content:"";position:absolute;inset:-9px -3px}
+.st-secname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.st-commit{color:var(--ink);border-color:var(--led-mint)}
+.st-partrow{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.st-partrow .st-tag{height:26px;font-size:12px;position:relative;padding:0 8px}
+.st-partrow .st-tag.is-on{color:var(--ink);border-color:var(--led-mint)}
+.st-partv{min-width:18px;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums}
+.st-sp.st-past{opacity:.12;pointer-events:none}
+.st-dicerow{flex-wrap:wrap}

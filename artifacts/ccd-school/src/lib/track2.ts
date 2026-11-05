@@ -70,6 +70,10 @@ export type LayerV2 = {
   samples?: Record<number, string>;
   /** A session player's settings on this part (src/lib/players.ts), kept so its screen opens where you left it. */
   player?: { complexity: number; intensity: number; fill: number; swing: number; seed: number };
+  /** This part's own loop length in beats (Elektron's per-track length), when shorter than the song's loop. */
+  len?: number;
+  /** This part's own swing, 0..0.75; missing follows the song's (src/lib/partLength.ts). */
+  swing?: number;
   /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
   arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
   /** Modulation routes (src/lib/modulation.ts): a source onto a knob by an amount. None when missing. */
