@@ -24,7 +24,7 @@ const P = (key: string) => SAMPLER_PARAMS.find(p => p.key === key)!;
 const idx = (key: string) => P(key).index;
 const SLICE_ORDERS: Record<string, number[]> = { "in order": [0, 1, 2, 3, 4, 5, 6, 7], shuffled: [0, 3, 2, 1, 4, 7, 6, 5], "stutter": [0, 0, 2, 2, 4, 5, 4, 7] };
 type Warp = "off" | "repitch" | "beats";
-const WARP_LABEL: Record<Warp, string> = { off: "warp off", repitch: "repitch", beats: "beats" };
+const WARP_LABEL: Record<Warp, string> = { off: "warp off", repitch: "re-pitch", beats: "beats" };
 
 const loopOf = (t: TrackV2) => t.loop || 4;
 function everyBar(loop: number, f: (bar: number) => NoteEvent[]): NoteEvent[] {

@@ -6,7 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT, display, fromValue, toValue } from "@/engine";
-import { proName, type ProTool } from "@/lib/proNames";
+import { CONTROLS, knobLabel } from "@/lib/controlNames";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -269,6 +269,8 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   // A wave lesson keeps its wave picture; the filter shows when the lesson is about the filter.
   const filterPic = !isKick && !!fc && !!fr && (screen.knobs.some(k => k === "res" || k === "cut" || k === "fdecay" || k === "frel" || (k === "env" && !screen.knobs.includes("fm"))) || (screen.knobs.includes("cutoff") && !screen.knobs.includes("wave")));
   const nOf = (sp?: ParamSpec) => (sp ? lp[sp.index] ?? sp.default : 0);
+  // A knob's name, as the instrument it copies calls it (the shape knob is "position" on a wavetable).
+  const labelOf = (sp: ParamSpec) => knobLabel(sp, key => { const f = fspec(key); return f ? params[f.index] ?? nOf(f) : undefined; });
   // The lesson lights one control at a time, in the order it names them: the next knob you haven't turned
   // glows, the rest dim (they still work). Once you've turned them all, everything is lit.
   const [turned, setTurned] = useState<Set<string>>(() => new Set());
@@ -289,7 +291,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
           : (envPic || filterPic) && !lfoK ? (
             <div className="ls-pics">
-              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)}
+              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "prd"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)}
                 onCutoff={dragCut ? hz => turn(dragCut.index, dragCut.key, fromValue(dragCut, hz)) : undefined} onRes={dragRes ? r => turn(dragRes.index, dragRes.key, fromValue(dragRes, r)) : undefined} /> : null}
               {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} drag={{ a: envSet(hs.a), d: envSet(hs.d), r: envSet(hs.r) }} /> : null}
             </div>
@@ -306,7 +308,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       )}
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
-          <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={150}
+          <Knob key={k.index} label={labelOf(k.spec)} color={CAP.navy} size={74} height={150}
             {...bind(k.spec, heard[k.index] ?? k.spec.default)}
             mods={(ringsOf(inst, { ...lp, ...params }, shownLayer?.mods).get(k.index) ?? []).map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
             value={heard[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, heard[k.index] ?? k.spec.default)}
@@ -315,7 +317,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
         ))}
       </div>
-      <ProLine tool="ableton" names={knobs.map(k => k.spec.key)} labels={knobs.map(k => k.spec.label)} />
+      <SameElsewhere keys={dialKnobs.map(k => k.spec.key)} labels={dialKnobs.map(k => labelOf(k.spec))} />
       </div>
       <div className="fl-text">
       <Body text={screen.body} starter={!!base && !base.layers.some(l => l.events.length > 0)} />
@@ -570,7 +572,7 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
           <Knob label="glue" readout={`${Math.round(glue * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={glue} defaultValue={0.25} onChange={setGlue} />
           <Knob label="out" readout={`${Math.round(out * 100)}%`} color={CAP.navy} size={84} height={160} led={accent} value={out} defaultValue={0.75} onChange={setOut} />
         </div>
-        <ProLine tool="ableton" names={["glue", "out"]} />
+        <SameElsewhere keys={["glue"]} />
       </div>
       <div className="fl-text">
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
@@ -678,7 +680,7 @@ function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
           </svg>
           <div className="fl-airlabels"><span>one beat, four sixteenths</span><span>the 2nd and 4th land {pct}% of the way</span></div>
         </Screen>
-        <ProLine tool="ableton" names={["swing"]} />
+        <SameElsewhere keys={["swing"]} />
         <div className="fl-tempo">
           <Knob label="swing" readout={`${Math.round(sw * 100)}%`} color={CAP.navy} size={92} height={170} led={accent} value={sw / 0.75} defaultValue={0} onChange={v => setSw(Math.round(v * 0.75 * 100) / 100)} />
           <div className="fl-marks" role="radiogroup" aria-label="Amounts to try" style={{ ["--c" as string]: accent } as CSSProperties}>
@@ -758,9 +760,24 @@ function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; 
   );
 }
 
-/** Under a row of controls: what each one is called in Ableton Live or rekordbox, when the name differs. */
-export function ProLine({ tool, names, labels }: { tool: ProTool; names: string[]; labels?: string[] }) {
-  const pairs = names.map((n, i) => [labels?.[i] ?? n, proName(tool, n)] as const).filter(([, p]) => p);
-  if (!pairs.length) return null;
-  return <p className="fl-pro">in {tool}: {pairs.map(([o, p], i) => <span key={o}>{i ? ", " : ""}{o} is <b>{p}</b></span>)}</p>;
+/**
+ * Under a row of controls, folded away: what each one is called on other instruments (controlNames.ts),
+ * so what you learn here carries to Live, other synths and the decks. `keys` are control keys; `labels`
+ * what this screen shows for them.
+ */
+export function SameElsewhere({ keys, labels }: { keys: string[]; labels?: string[] }) {
+  const rows = keys.map((k, i) => ({ k, label: labels?.[i] ?? CONTROLS[k]?.label ?? k, where: CONTROLS[k]?.elsewhere ?? [] })).filter(r => r.where.length);
+  const seen = new Set<string>();
+  const unique = rows.filter(r => (seen.has(r.label) ? false : (seen.add(r.label), true)));
+  if (!unique.length) return null;
+  return (
+    <details className="fl-else">
+      <summary>same control elsewhere</summary>
+      <ul>
+        {unique.map(r => (
+          <li key={r.k}><b>{r.label}</b> {r.where.map(([w, n], i) => <span key={w}>{i ? " · " : ""}{w}: <i>{n}</i></span>)}</li>
+        ))}
+      </ul>
+    </details>
+  );
 }

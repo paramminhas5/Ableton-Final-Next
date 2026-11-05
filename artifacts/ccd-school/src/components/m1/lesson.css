@@ -274,7 +274,7 @@
 .fl-fold{border-radius:12px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);padding:0 14px}
 .fl-fold summary{list-style:none;cursor:pointer;padding:12px 0;font-size:14px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between}
 .fl-fold summary::after{content:"+";color:var(--print);font-weight:400}
-.fl-fold[open] summary::after{content:"–"}
+.fl-fold[open] summary::after{content:"\2212"}
 .fl-fold summary::-webkit-details-marker{display:none}
 .fl-fold p{margin:0 0 12px;font-size:15px;line-height:23px;color:var(--ink)}
 .fl-opts{display:grid;gap:8px;margin-top:12px}
@@ -868,3 +868,11 @@ a.jv-lane:hover{transform:translateX(3px)}
 .gr-xform{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
 .gr-xf-l,.gr-xf-v{font-size:11px;color:var(--print);font-variant-numeric:tabular-nums}
 .gr-xf-v{min-width:38px}
+.fl-else{margin:8px 2px 0;font-size:12px;line-height:1.45;color:var(--print)}
+.fl-else summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-weight:500;color:var(--print)}
+.fl-else summary::-webkit-details-marker{display:none}
+.fl-else summary::before{content:"+";display:inline-block;width:12px;text-align:center;font-weight:600}
+.fl-else[open] summary::before{content:"\2212"}
+.fl-else ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.fl-else b{font-weight:600;color:var(--ink);margin-right:4px}
+.fl-else i{font-style:normal;color:var(--ink)}

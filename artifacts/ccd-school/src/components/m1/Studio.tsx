@@ -78,6 +78,7 @@ import { ChordTrackEditor } from "./ChordTrack";
 import { CONDS, hasFillSteps, setChance, setCond, stepTag, type Cond } from "@/lib/chance";
 import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
+import { elsewhereLine, knobLabel } from "@/lib/controlNames";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
 // Caps stay neutral: the ring around each knob carries the colour of the line it moves.
@@ -88,7 +89,8 @@ const MUTE_C = "#F3C14F";
 const SOLO_C = "#7D96FF";
 const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
-type Touched = { label: string; text: string } | null;
+/** What the screen shows: the control just touched, its value, and its key (for the same control elsewhere). */
+type Touched = { label: string; text: string; key?: string } | null;
 type LockAt = { note: number | null; step: number } | null;
 type Mode = "play" | "mix";
 const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
@@ -96,7 +98,7 @@ const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", 
 
 /** The knobs for this bank: four specs and their wire indices. `shift` is the second page of the sound bank. */
 function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; index: number }[] {
-  // The fx bank's second page is the part's filter: cutoff, resonance and character (warm, scream, smooth).
+  // The fx bank's second page is the part's filter: cutoff, resonance and circuit (prd, ms2, svf).
   if (bank === "fx") return LAYER_PARAMS.filter(p => p.bank === "fx").slice(shift ? 4 : 0, shift ? 7 : 4).map(spec => ({ spec, index: spec.index }));
   if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
   const engine = TYPE[l.type].engine;
@@ -108,7 +110,7 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
       const shapeKey = pad === 0 ? "shape" : pad === 12 ? "shapeblip" : pad === 13 ? "shapewood" : null;
       const page = DRUM_PAD2_PARAMS.flatMap((spec, k) => {
         if (spec.key === "shape" && !shapeKey) return [];
-        const s = (spec.key === "shape" ? { ...spec, key: shapeKey, label: pad === 0 ? "body" : "sound" } : spec) as ParamSpec;
+        const s = (spec.key === "shape" ? { ...spec, key: shapeKey, label: knobLabel({ key: shapeKey!, label: spec.label }) } : spec) as ParamSpec;
         return [{ spec: s, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + k }];
       });
       return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...page];
@@ -116,7 +118,9 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
     return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
   const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];
-  return table.filter(p => p.bank === (shift ? "shift" : "sound")).map(spec => ({ spec, index: spec.index }));
+  // The shape knob takes the name it has on the instrument the chosen osc copies (wave position, feedback).
+  const byKey = (key: string) => { const p = table.find(x => x.key === key); return p ? paramOf(l, p.index) : undefined; };
+  return table.filter(p => p.bank === (shift ? "shift" : "sound")).map(spec => ({ spec: { ...spec, label: knobLabel(spec, byKey) }, index: spec.index }));
 }
 
 export function Studio() {
@@ -375,7 +379,7 @@ export function Studio() {
     if (lockAt && sel) {
       patchSel(l => ({ ...l, events: setLock(l.events, lockMatch(lockAt), index, v) }), undoable);
       engine.param(selIndex, index, v);
-      setTouched({ label: `step ${lockAt.step + 1} · ${spec.label}`, text: display(spec, v) });
+      setTouched({ label: `step ${lockAt.step + 1} · p-lock · ${spec.label}`, text: display(spec, v), key: "plock" });
       return;
     }
     patchSel(l => {
@@ -387,7 +391,7 @@ export function Studio() {
       }
       return next;
     }, undoable);
-    setTouched({ label: spec.label, text: display(spec, v) });
+    setTouched({ label: spec.label, text: display(spec, v), key: spec.key });
   };
 
   /** Apply a modulation change (knob values and routes) as one undo step per gesture. */
@@ -420,10 +424,10 @@ export function Studio() {
     patchSel(l => ({ ...l, events: ev }), undoable);
     setDiceAmt(amt);
     setDiceSeed(seed);
-    setTouched({ label: sel.type === "drums" || sel.type === "hats" ? "fill" : "notes", text: `${Math.round(amt * 100)}%` });
+    setTouched({ label: "density", text: `${Math.round(amt * 100)}%`, key: "density" });
   };
   useEffect(() => { setDiceAmt(0); dice.current = null; }, [selId]);
-  const diceRow = diceable && !lockAt ? <Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" /> : null;
+  const diceRow = diceable && !lockAt ? <Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="density" /> : null;
 
   // Chance (Live 12) and trig conditions (Elektron), set like a lock: hold a step, turn chance, pick a condition.
   const lastChance = useRef(0);
@@ -478,7 +482,7 @@ export function Studio() {
     const o = { loop: track.loop, snap, strength: 1, swing: track.swing };
     update(t => ({ ...t, layers: t.layers.map(l => (l.id === pending.layerId ? { ...l, events: pending.events.reduce((acc, ev) => overdub(acc, ev, o), l.events) } : l)) }));
     setPending(null);
-    setTouched({ label: "captured", text: "kept" });
+    setTouched({ label: "captured", text: "kept", key: "capture" });
   };
 
   /** Hold a step: it lights, and knob turns lock to it. An empty step gets its note first. */
@@ -491,13 +495,13 @@ export function Studio() {
     }
     setLockAt(at);
     const k = bankKnobs(sel, bank, shift)[0];
-    setTouched({ label: `step ${step + 1} held`, text: k ? "turn a knob" : "" });
+    setTouched({ label: `step ${step + 1} held`, text: k ? "turn a knob" : "", key: "plock" });
   };
   const clearLocks = () => {
     if (!lockAt) return;
     const m = lockMatch(lockAt);
     patchSel(l => ({ ...l, events: l.events.map(e => { if (!m(e) || !e.p) return e; const { p: _p, ...rest } = e; return rest; }) })); // eslint-disable-line @typescript-eslint/no-unused-vars
-    setTouched({ label: `step ${lockAt.step + 1}`, text: "unlocked" });
+    setTouched({ label: `step ${lockAt.step + 1}`, text: "p-locks cleared", key: "plock" });
   };
   useEffect(() => { setLockAt(null); }, [selId, sel?.surface]);
 
@@ -571,6 +575,9 @@ export function Studio() {
     const pick = bank === "sound" ? ks[drumLike ? 1 : 0] : bank === "mix" ? ks[ducking ? 3 : 0] : ks[0];
     return pick ? { label: pick.spec.label, text: display(pick.spec, paramOf(sel, pick.index)) } : null;
   }, [touched, sel, bank, shift, drumLike, ducking]);
+  // After a knob is turned, the line under the part's name says what that control is called elsewhere.
+  const elsewhereText = touched?.key ? elsewhereLine(touched.key, 2) : null;
+  const elsewhere = elsewhereText ? `elsewhere · ${elsewhereText}` : null;
   const live = countIn || recording || playing;
 
   const unlock = () => {
@@ -702,7 +709,7 @@ export function Studio() {
                         <button type="button" className="st-capkey" onClick={capture} aria-label={`Capture what you just played on ${type.label}`}>
                           <i aria-hidden />capture what you played
                         </button>
-                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
+                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : elsewhere ? <span className="st-else">{elsewhere}</span> : playing ? `playing · beat ${status}` : hint}
                     </div>
                   )}
                 </div>
@@ -857,8 +864,8 @@ export function Studio() {
                 const mine = modEdit ? rs.find(r => r.src === modEdit) : undefined;
                 const takes = sourcesFor(eng).length > 0 && canTake(spec.key) && !lockAt;
                 return (
-                  <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
-                    {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lfoto" ? 3 : undefined}
+                  <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color} title={elsewhereLine(spec.key) ?? undefined}
+                    {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lpkind" || spec.key === "lfoto" ? 3 : undefined}
                     value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
                     mods={rs.map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
                     modTo={takes ? index : undefined} drop={dropOver === index && takes}
@@ -953,7 +960,7 @@ function StudioPics({ layer, keys, clock, onParam }: { layer: LayerV2; keys: str
   return (
     <div className="st-pics">
       {showFilter && cut && res ? (
-        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))}
+        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "prd"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))}
           onCutoff={onParam ? hz => onParam(cut.index, cut, fromValue(cut, hz)) : undefined} onRes={onParam ? r => onParam(res.index, res, fromValue(res, r)) : undefined} />
       ) : null}
       {showEnv && env ? <EnvView env={env} clock={clock} color={PIC.env} label={engine === "drums" ? DRUM_PAD_NAMES[pad] : "envelope"} drag={{ a: envSet(hs.a), d: envSet(hs.d), r: envSet(hs.r) }} /> : null}
@@ -1132,7 +1139,7 @@ function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>
     <div className="st-pages st-lockbar" role="status">
       <span className="st-lockdot" aria-hidden />
       <span className="st-ss" style={{ color: "var(--ink)" }}>step {at.step + 1} held</span>
-      <span className="st-ss">{n ? `${n} knob${n > 1 ? "s" : ""} locked` : "turn a knob to lock it here"}</span>
+      <span className="st-ss">{n ? `${n} p-lock${n > 1 ? "s" : ""}` : "turn a knob: a parameter lock (p-lock) for this step"}</span>
       <span style={{ flex: 1 }} />
       {n ? <button type="button" className="st-tag" onClick={onClear}>clear</button> : null}
       <button type="button" className="st-tag is-on" onClick={onDone}>done</button>
@@ -1168,7 +1175,7 @@ function StepBtn({ cls, color, label, pressed, locked, held, onTap, onHold, onRe
   const press = useStepPress(onTap, onHold, held, onRelease);
   return (
     <button type="button" className={`st-sp ${cls} ${locked ? "is-lock" : ""} ${held ? "is-held" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
-      aria-label={`${label}${locked ? ", locked knobs" : ""}${held ? ", held" : ""}`} aria-pressed={pressed} aria-keyshortcuts="Shift+Enter" {...press}>
+      aria-label={`${label}${locked ? ", has parameter locks" : ""}${held ? ", held" : ""}`} aria-pressed={pressed} aria-keyshortcuts="Shift+Enter" {...press}>
       {children}
     </button>
   );

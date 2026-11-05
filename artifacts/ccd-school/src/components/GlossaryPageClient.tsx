@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Silk, Icon } from "@/components/m1/controls";
 import { Chips, RefPage, SearchField } from "@/components/m1/parts";
 import { TERMS, slugTerm, type GlossaryTerm as Term } from "@/content/glossary";
+import { elsewhereLine } from "@/lib/controlNames";
 
-const CATS: Term["cat"][] = ["Rhythm", "Workflow", "Devices", "Audio", "MIDI", "Performance", "Live 12", "Files"];
+const CATS: Term["cat"][] = ["Rhythm", "Controls", "Workflow", "Devices", "Audio", "MIDI", "Performance", "Live 12", "Files"];
 
 // P2 #27: Map key glossary terms to their most relevant mission slug
 const TERM_MISSION_MAP: Record<string, string> = {
@@ -75,6 +76,9 @@ export function GlossaryPageClient() {
               <span className="m1-tag">{t.cat.toLowerCase()}</span>
             </div>
             <span style={{ fontSize: 14, lineHeight: 1.5, color: "var(--sub)", fontWeight: 400 }}>{t.def}</span>
+            {t.ctl && elsewhereLine(t.ctl, 6) ? (
+              <span style={{ fontSize: 13, lineHeight: 1.5, color: "var(--sub)" }}><b style={{ fontWeight: 600, color: "var(--ink)" }}>same control elsewhere</b> · {elsewhereLine(t.ctl, 6)}</span>
+            ) : null}
             {missionSlug && (
               <Link href={`/learn/${missionSlug}`} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 500, color: "var(--ink)" }}>
                 learn this in a lesson <Icon name="back" small className="ls-flip" />

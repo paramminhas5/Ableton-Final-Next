@@ -157,7 +157,7 @@ export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, heig
   return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
 }
 
-/** Fill and randomise: one amount (a short fader) and one key that rolls the dice. */
+/** Generate (Live 12 calls the amount density): one amount (a short fader) and one key that rolls the dice. */
 export function Dice({ amount, onAmount, onRoll, label = "fill", width = 84 }: { amount: number; onAmount: (v: number) => void; onRoll: () => void; label?: string; width?: number }) {
   return (
     <div className="m1-dice">
@@ -246,6 +246,8 @@ type KnobProps = {
   value: number;
   onChange?: (v: number) => void;
   onTouch?: (label: string, v: number) => void;
+  /** A hover note: what this control is called on other instruments. */
+  title?: string;
   label: string;
   color?: string;
   led?: string | null;
@@ -309,7 +311,7 @@ function Ring({ size, value, color, from = 0, idle, mods }: { size: number; valu
 }
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -328,6 +330,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
   const knob = (
     <div
       className="m1-knob"
+      title={title}
       role="slider"
       tabIndex={onChange ? 0 : -1}
       aria-label={label}

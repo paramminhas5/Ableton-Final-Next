@@ -21,7 +21,7 @@ import { clipVariants } from "@/content/lessons/clipTracks";
 import { CAP, Fader, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { syncEngine, useEngineTrack } from "./useEngineTrack";
-import { ProLine } from "./LessonSteps";
+import { SameElsewhere } from "./LessonSteps";
 import { Gloss } from "./Gloss";
 
 type Of<K> = Extract<LessonScreen, { kind: K }>;
@@ -253,7 +253,8 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           {songCues.map(c => <button key={c.slug} type="button" className={`ls-chip ${cueA === c.bar ? "is-on" : ""}`} aria-pressed={cueA === c.bar} aria-label={`deck a from your cue ${c.name}, bar ${c.bar}`} onClick={() => setCueA(c.bar)}>a · {c.name}<small>bar {c.bar}</small></button>)}
         </div>}
         {songCues.length > 0 && !(mine.sections?.length) ? <p className="fl-pro">your song's cues: {songCues.map(c => `${c.name}, bar ${c.bar} of the phrase`).join(" · ")}. arrange your song and deck a can jump to them.</p> : null}
-        <ProLine tool="rekordbox" names={["deck a", "low a", "crossfader", ...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("stems") ? ["stems"] : []), ...(shows("curve") ? ["curve"] : []), ...(screen.goal === "echo" || screen.goal === "free" ? ["echo a"] : [])]} />
+        <SameElsewhere keys={[...(shows("sync") ? ["sync"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key"] : [])]}
+          labels={[...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key b"] : [])]} />
         <div className="fl-marks mx-tools" role="group" aria-label="Deck tools">
           {shows("sync") && <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>}
           {shows("cues") && CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`cue ${i + 1} ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}

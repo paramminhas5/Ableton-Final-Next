@@ -230,7 +230,7 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
           <button type="button" className="ls-chip" onClick={() => xform("velocity shaper", (e, p) => velocityShape(e, amt, p))} aria-label={`Velocity shaper: ${amt >= 0 ? "louder" : "softer"} across the notes`}>velocity shaper</button>
           {xf ? <span className="gr-tip" role="status">{xf}</span> : null}
         </div>
-        <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" width={110} /></div>
+        <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="density" width={110} /></div>
       </>} />
   );
 }
