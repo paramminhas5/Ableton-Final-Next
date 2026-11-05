@@ -9,6 +9,7 @@ Learned:
 - The reviewer's top two were one class again, but a new one: a forgiving rule (device delay) that is wide enough to swallow a musical mistake. Any tolerance must be smaller than the smallest musical error the lesson grades (a 16th at the fastest tempo). Test both edges.
 - A step's goal can be "already met" by default state in a step kind nobody checked (shape). Every step kind with a go key needs a "met on arrival?" check, not only play-ins and arrange.
 - Another session pushed four commits mid-round and touched the same go key lines. Commit early and rebase before the full walk, not after; resolving by keeping their markup and re-applying the one changed prop was quick.
+- Project docs (history, school-fixes) are 25 to 45 KB and `project_read` returns them inline. To edit without retyping, pull the read result out of the session transcript (`/root/.claude/projects/<project>/<session>.jsonl`) with a short python script, edit the copy, and `project_write` it with `local_path` from a folder inside the repo (delete it after; never commit it).
 - Walks under load take about 25 minutes each for 158 lessons when two run at once with a reviewer. Start them right after the final build and do docs while they run.
 Suggestions for round 5 (ranked, why):
 1. Device calibration as its own ten-second tap test (onboarding or settings), and grade every play-in strictly against the musical slot. Round 4 capped the guess at 80 ms; a real bluetooth delay (150 to 250 ms) now falls back to "snap it for me", which is honest but not great. Not built.
