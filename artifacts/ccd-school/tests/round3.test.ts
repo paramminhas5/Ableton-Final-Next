@@ -97,3 +97,18 @@ describe("loop round 3: no arrange lesson opens already met", () => {
     expect(arrangeMet(offInBreak, drums, "sections")).toBe(true);
   });
 });
+
+describe("loop round 5: what changed names the move, not the size", () => {
+  it("names the pads of a new drum part", () => {
+    const a = song();
+    const d = songDiff({ ...a, layers: [a.layers[1], a.layers[2]] }, a);
+    expect(d[0]).toBe("+ drums (kick)");
+  });
+  it("says what went out of a section when the sections stay the same", () => {
+    const a = { ...song() };
+    const secs = [{ name: "intro", bars: 4, off: [] as string[] }, { name: "break", bars: 4, off: [] as string[] }];
+    const before = { ...a, sections: secs };
+    const after = { ...a, sections: [secs[0], { name: "break", bars: 4, off: [a.layers[0].id], riser: true }] };
+    expect(songDiff(before, after)).toEqual(["break: drums out, riser on"]);
+  });
+});

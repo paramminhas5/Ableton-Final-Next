@@ -6,6 +6,7 @@
 import { display } from "../engine/format";
 import {
   DRUM_PAD_NAMES,
+  DRUM_PAD_NOTES,
   DRUM_PAD_PARAMS,
   DRUM_RACK_BASE,
   DRUM_RACK_PARAMS,
@@ -40,6 +41,13 @@ function specOf(l: LayerV2, index: number): { spec: ParamSpec; name: string } | 
   return spec ? { spec, name: spec.label } : null;
 }
 
+/** The pads a new drum part plays, so "+ drums" reads "+ drums (kick)". */
+function padsOf(l: LayerV2): string {
+  if (TYPE[l.type].engine !== "drums") return "";
+  const names = [...new Set(l.events.map(e => DRUM_PAD_NAMES[DRUM_PAD_NOTES.indexOf(e.note as (typeof DRUM_PAD_NOTES)[number])]).filter(Boolean))];
+  return names.length && names.length <= 3 ? ` (${names.join(", ")})` : "";
+}
+
 const close = (a: number, b: number) => Math.abs(a - b) < 0.005;
 const notesKey = (l: LayerV2) => JSON.stringify(l.events.map(e => [e.note, e.start, e.len, Math.round(e.vel * 20)]).sort());
 
@@ -48,7 +56,7 @@ export function songDiff(before: TrackV2, now: TrackV2, max = 5): string[] {
   const out: string[] = [];
   const was = new Map(before.layers.map(l => [l.id, l]));
   const is = new Map(now.layers.map(l => [l.id, l]));
-  for (const l of now.layers) if (!was.has(l.id) && l.events.length) out.push(`+ ${TYPE[l.type].label}`);
+  for (const l of now.layers) if (!was.has(l.id) && l.events.length) out.push(`+ ${TYPE[l.type].label}${padsOf(l)}`);
   for (const l of before.layers) if (!is.has(l.id) && l.events.length) out.push(`- ${TYPE[l.type].label}`);
   if (before.bpm !== now.bpm) out.push(`${before.bpm} to ${now.bpm} bpm`);
   if (before.root !== now.root || before.scale !== now.scale) out.push(`key ${keyName(before)} to ${keyName(now)}`);
@@ -82,7 +90,22 @@ export function songDiff(before: TrackV2, now: TrackV2, max = 5): string[] {
   const secs = (t: TrackV2) => JSON.stringify(t.sections ?? null);
   if (secs(before) !== secs(now)) {
     const s = now.sections ?? [];
-    out.push(s.length ? `arrangement: ${s.length} sections, ${s.reduce((a, x) => a + x.bars, 0)} bars` : "arrangement cleared");
+    const was = before.sections ?? [];
+    const same = was.length === s.length && was.every((x, i) => x.name === s[i].name && x.bars === s[i].bars);
+    if (same && s.length) {
+      // the same sections: name what moved in each one ("break: drums out", "build: riser on")
+      const label = (id: string) => { const l = now.layers.find(x => x.id === id) ?? before.layers.find(x => x.id === id); return l ? TYPE[l.type].label : null; };
+      for (let i = 0; i < s.length; i++) {
+        const a = was[i], b = s[i];
+        const outs = b.off.filter(id => !a.off.includes(id)).map(label).filter(Boolean);
+        const ins = a.off.filter(id => !b.off.includes(id)).map(label).filter(Boolean);
+        const bits = [...(outs.length ? [`${outs.join(" and ")} out`] : []), ...(ins.length ? [`${ins.join(" and ")} in`] : []),
+          ...(!!a.riser !== !!b.riser ? [`riser ${b.riser ? "on" : "off"}`] : []), ...(!!a.fill !== !!b.fill ? [`fill ${b.fill ? "on" : "off"}`] : [])];
+        if (bits.length) out.push(`${b.name}: ${bits.join(", ")}`);
+      }
+    } else {
+      out.push(s.length ? `arrangement: ${s.length} sections, ${s.reduce((a, x) => a + x.bars, 0)} bars` : "arrangement cleared");
+    }
   }
   const old = new Set((before.cues ?? []).map(c => `${c.slug}|${c.name}|${c.bar}`));
   for (const c of now.cues ?? []) if (!old.has(`${c.slug}|${c.name}|${c.bar}`)) out.push(`cue: ${c.name} on bar ${c.bar}`);

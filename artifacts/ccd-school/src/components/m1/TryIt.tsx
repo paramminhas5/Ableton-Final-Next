@@ -228,7 +228,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const lo = Math.min(...allNotes), hi = Math.max(...allNotes);
   const rows = drumLike ? pads.length : hi - lo + 1;
   const rowOf = (n: number) => (drumLike ? pads.findIndex(p => p.notes[0] === n) : hi - n);
-  const Wd = 330, Hd = coach ? 152 : 128;
+  const Wd = 330, Hd = coach ? 154 : 128;
   const rollH = coach ? 128 : Hd;
   const rh = (coach ? 128 : Hd) / Math.max(1, rows);
   const beatW = Wd / loop;
@@ -396,7 +396,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             return (
               <g key={`v${i}`} className="ti-verdict">
                 <circle cx={x} cy={rollH + 6} r={3.5} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />
-                {(v.c !== "on" || e === lastHit) && x - lastX > 30 && (lastX = x) ? <text x={x} y={rollH + 20} textAnchor="middle" fontSize={11.5} fontWeight={700} fill={c}>{v.ms > 0 ? "+" : ""}{v.ms}</text> : null}
+                {(v.c !== "on" || e === lastHit) && x - lastX > 34 && (lastX = x) ? <text x={x} y={rollH + 21} textAnchor="middle" fontSize={13} fontWeight={700} fill={c}>{v.ms > 0 ? "+" : ""}{v.ms}</text> : null}
               </g>
             );
           }); })()}

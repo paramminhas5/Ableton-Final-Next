@@ -93,3 +93,4 @@
 .dw-bars{position:relative;height:12px}
 .dw-bars span{position:absolute;top:1px;padding-left:3px;font-size:9px;font-weight:500;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
 @media (max-width:720px){.dw-wave svg{height:30px}}
+@media (max-width:720px){.mx-master .mx-oknobs{grid-template-columns:repeat(3,1fr);align-content:start;row-gap:6px;padding:2px 0}}

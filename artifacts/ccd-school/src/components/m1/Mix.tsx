@@ -837,6 +837,8 @@ function DuckLine({ track, layer, src }: { track: TrackV2; layer: LayerV2; src: 
 /** The master's numbers: true peak, loudness, how hard the glue and limiter work. */
 function MasterReadout({ frame, playing }: { frame: MixFrame | null; playing: boolean }) {
   const m = playing ? frame?.master : null;
+  // gain reduction reads "0.0 db" when nothing is pulled down, never "-0.0 db"
+  const gr = (db: number) => (Math.abs(db) < 0.05 ? "0.0 db" : `${minus((-db).toFixed(1))} db`);
   const f = (v: number | undefined, unit: string, d = 1) => (v === undefined || v <= -100 ? "·" : `${minus(v.toFixed(d))} ${unit}`);
   return (
     <div className="mx-mread">
@@ -844,8 +846,8 @@ function MasterReadout({ frame, playing }: { frame: MixFrame | null; playing: bo
       <div><span className="st-ss">loudness</span><b>{f(m?.lufs, "lufs", 0)}</b></div>
       <div><span className="st-ss">last 3 s</span><b>{f(m?.shortTerm, "lufs", 0)}</b></div>
       <div><span className="st-ss">song</span><b>{f(m?.integrated, "lufs", 1)}</b></div>
-      <div><span className="st-ss">glue</span><b>{m ? `${minus((-m.glueGrDb).toFixed(1))} db` : "·"}</b></div>
-      <div><span className="st-ss">limit</span><b>{m ? `${minus((-m.limiterGrDb).toFixed(1))} db` : "·"}</b></div>
+      <div><span className="st-ss">glue</span><b>{m ? gr(m.glueGrDb) : "·"}</b></div>
+      <div><span className="st-ss">limit</span><b>{m ? gr(m.limiterGrDb) : "·"}</b></div>
     </div>
   );
 }
