@@ -181,7 +181,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
         if (o.kind === "play") {
           if (songLayer && !songChanges && o.layer !== songLayer) at(w, `play layer "${o.layer}" must match song.adds layer "${songLayer}" (or use song.changes)`);
           if (!(SURFACES as readonly unknown[]).includes(o.surface)) at(w, `surface must be one of ${SURFACES.join(", ")}`);
-          if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string") || (o.goal.on !== undefined && !["beat", "and", "backbeat"].includes(String(o.goal.on)))) at(w, "goal must look like {notes: <count>, note: <name>, on: beat|and|backbeat}");
+          if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string") || (o.goal.on !== undefined && !["beat", "and", "backbeat", "between", "different"].includes(String(o.goal.on)))) at(w, "goal must look like {notes: <count>, note: <name>, on: beat|and|backbeat|between|different}");
         } else {
           const ks = o.knobs;
           if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) return at(w, "knobs must list one to four knobs");

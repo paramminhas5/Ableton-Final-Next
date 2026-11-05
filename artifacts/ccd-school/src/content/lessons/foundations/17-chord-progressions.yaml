@@ -50,7 +50,7 @@ steps:
   - kind: play
     layer: chords
     surface: pads
-    goal: {notes: 4}
+    goal: {notes: 4, on: different}
     say:
       mentor: >-
         Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and

@@ -6201,7 +6201,8 @@
           "layer": "chords",
           "surface": "pads",
           "goal": {
-            "notes": 4
+            "notes": 4,
+            "on": "different"
           },
           "say": {
             "mentor": "Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and VII, or any order you like. Listen for which one makes you want to go back to i.",
@@ -9585,7 +9586,8 @@
           "layer": "bass",
           "surface": "keys",
           "goal": {
-            "notes": 2
+            "notes": 2,
+            "on": "between"
           },
           "say": {
             "mentor": "Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a few short notes in the gaps between kicks. Start on the first key, your song's home note, and try one or two others. Short and simple beats long and busy.",

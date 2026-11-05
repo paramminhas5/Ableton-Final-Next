@@ -41,7 +41,7 @@ export function ChordTrackEditor({ track, chords, onChange, now, onPreview, acce
           <button key={i} type="button" role="radio" aria-checked={i === at} className={`ct-bar ${i === at ? "is-sel" : ""} ${i === now ? "is-now" : ""}`}
             aria-label={`bar ${i + 1}: ${c ? `${chordName(c)}, ${romanOf(c, track.root, scale)}` : "no chord"}`} onClick={() => setBar(i)}>
             <small>bar {i + 1}</small>
-            <b>{c ? chordName(c) : "–"}</b>
+            <b>{c ? chordName(c) : "·"}</b>
             <span>{c ? romanOf(c, track.root, scale) : ""}</span>
           </button>
         ))}

@@ -159,11 +159,14 @@ export function applyPlayer(t: TrackV2, kind: "drummer" | "bass", layerId: strin
   const target = t.layers.find(l => l.id === layerId);
   if (!target) return t;
   const hatsPart = kind === "drummer" ? t.layers.find(l => l.type === "hats" && l.id !== layerId) : undefined;
+  // Hats you played are yours: the drummer leaves a hats part with notes alone and plays no hats of its own
+  // (so they are not doubled). An empty hats part is the drummer's to fill.
+  const keepHats = !!hatsPart && hatsPart.events.length > 0;
   const scale = asScale(t.scale);
   const write = (q: PlayerSettings, loop: number): Record<string, NoteEvent[]> => {
     if (kind === "bass") return { [layerId]: bassPlayer({ ...q, loop, root: t.root, scale, chords: t.chords }) };
     const out: Record<string, NoteEvent[]> = { [layerId]: drummer({ ...q, loop, hats: !hatsPart }) };
-    if (hatsPart) out[hatsPart.id] = drummerHats({ ...q, loop });
+    if (hatsPart && !keepHats) out[hatsPart.id] = drummerHats({ ...q, loop });
     return out;
   };
   const loop = t.loop || 4;

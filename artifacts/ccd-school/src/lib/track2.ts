@@ -306,7 +306,7 @@ export function toV1View(t: TrackV2): V1Track {
         // The backbeat lane draws snares as well as claps; anything else in the kit draws as percussion.
         const evs = l.events.filter(e => (kind === "clap" ? e.note === 38 || e.note === 39 : kind === "perc" ? e.note !== 36 && e.note !== 38 && e.note !== 39 : e.note === PATTERN_LANE[kind]));
         if (!evs.length && kind !== "kick") continue;
-        layers.push({ id: `${l.id}:${kind}`, kind, steps: stepsOf(evs), notes: Array(16).fill(36), params: [0.5, 0.5, 0.2, level(l)], mute: l.mute, from: l.from, world: l.world, variant: l.variant });
+        layers.push({ id: `${l.id}:${kind}`, kind, ...(kind === "clap" && evs.length && evs.every(e => e.note === 38) ? { label: "snare" } : {}), steps: stepsOf(evs), notes: Array(16).fill(36), params: [0.5, 0.5, 0.2, level(l)], mute: l.mute, from: l.from, world: l.world, variant: l.variant });
       }
       continue;
     }

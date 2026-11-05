@@ -63,7 +63,9 @@ export function ChordsStep({ screen, accent, onNext, tail }: StepProps) {
   }, [base, chords]);
   const { beat, playing, toggle } = useLoop(shown);
   const distinct = new Set(chords.filter((c): c is Chord => !!c).map(chordName)).size;
-  const notYet = !touched ? "pick a chord for a bar" : distinct < 2 ? "pick a different chord for another bar" : null;
+  // A one-bar song has room for one chord: a progression chip lays out four bars, so point there.
+  const bars = Math.max(1, Math.min(4, Math.round((shown.loop || 4) / 4)));
+  const notYet = !touched ? (bars < 2 ? "tap a progression to lay out four bars" : "pick a chord for a bar") : distinct < 2 ? (bars < 2 ? "tap a progression to lay out four bars" : "pick a different chord for another bar") : null;
   const keep = () => {
     if (notYet) return;
     const t = readTrackV2();
@@ -204,8 +206,11 @@ export function LengthStep({ screen, accent, onNext, tail }: StepProps) {
     return { ...rest, ...(steps < loopSteps ? { len: steps * grid } : {}), ...(swing !== undefined ? { swing } : {}) };
   }) }), [base, part.id, steps, swing, loopSteps]);
   const { beat, playing, toggle } = useLoop(shown);
-  const changed = steps !== (startLen !== null ? Math.round(startLen / grid) : loopSteps);
-  const notYet = changed && steps < loopSteps ? null : "make the part shorter than the loop";
+  // A polymeter: a length that doesn't fit a bar of 16 steps evenly, short enough to hear it drift
+  // (3, 5, 6 or 7). 8 or 4 just repeat inside the bar; 15 against 16 drifts too slowly to hear.
+  const BAR = 16;
+  const drifts = steps <= 7 && steps >= 3 && BAR % steps !== 0;
+  const notYet = drifts ? null : steps >= 3 && steps <= 8 && BAR % steps === 0 ? `${steps} fits the bar evenly, try 3, 5, 6 or 7` : "make it 3 steps, against the kick's 16";
   const now = playing ? Math.floor(((((beat % loop) + loop) % loop) % (steps * grid)) / grid) : -1;
   const keep = () => {
     if (notYet) return;
@@ -224,7 +229,7 @@ export function LengthStep({ screen, accent, onNext, tail }: StepProps) {
       note={base.added ? `your song has no ${type} yet, so here are some to try it on. keep adds them.` : null}
       inst={<>
         <Screen>
-          <Meta left={`your ${type} · its own length`} right={steps < loopSteps ? `${steps} steps against ${loopSteps}` : "the song's length"} />
+          <Meta left={`your ${type} · its own length`} right={steps < loopSteps ? `${steps} steps against the kick's ${BAR}` : "the song's length"} />
           <div className="ws-steps" aria-label={`The first ${shownSteps} steps of your ${type}`} style={{ ["--c" as string]: accent } as CSSProperties}>
             {Array.from({ length: shownSteps }, (_, s) => {
               const on = part.events.some(e => Math.abs(e.start - s * grid) < grid / 2);
@@ -238,6 +243,7 @@ export function LengthStep({ screen, accent, onNext, tail }: StepProps) {
             <b aria-live="polite">{steps}</b>
             <button type="button" className="ls-chip" aria-label="One step longer" disabled={steps >= loopSteps} onClick={() => setSteps(n => Math.min(loopSteps, n + 1))}>+</button>
             <small>steps</small>
+            {[3, 5, 7].map(n => <button key={n} type="button" className={`ls-chip ${steps === n ? "is-on" : ""}`} aria-pressed={steps === n} disabled={n > loopSteps} onClick={() => setSteps(n)}>{n}</button>)}
           </div>
           <div className="ws-conds" role="radiogroup" aria-label={`Swing for your ${type}`}>
             {SWINGS.map(v => <button key={String(v)} type="button" role="radio" aria-checked={swing === v} className={`ls-chip ${swing === v ? "is-on" : ""}`} onClick={() => setSwing(v)}>{v === undefined ? "song's swing" : `${Math.round(v * 100)}%`}</button>)}

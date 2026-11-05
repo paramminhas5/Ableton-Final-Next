@@ -13,7 +13,7 @@ import { applyTake, readTake, shapeKnobs, withParams } from "@/lib/lessonTake";
 import { readTrackV2, type LayerType, type LayerV2, type TrackV2 } from "@/lib/track2";
 import { worldOf } from "@/lib/worldOrder";
 import { bind } from "@/lib/paramColor";
-import { features, MATCH_PASS, mono, score, which, type Features, type Score } from "@/lib/matchScore";
+import { features, KNOB_TOL, MATCH_PASS, mono, passes, score, which, type Features, type Score } from "@/lib/matchScore";
 import { renderPart } from "@/lib/offline";
 import { presetTake } from "./AddToTrack";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
@@ -90,7 +90,9 @@ export function MatchSoundStep({ mission, screen, onNext, tail }: { mission: Mis
   const [result, setResult] = useState<Score | null>(null);
   const [busy, setBusy] = useState(false);
   const [touched, setTouched] = useState<string | null>(null);
-  const passed = !!result && result.close >= MATCH_PASS;
+  const passed = passes(result);
+  // Close overall but one lit knob still off: say so straight away, not after two tries.
+  const nearlyBut = !!result && !passed && result.close >= MATCH_PASS;
   const check = async () => {
     if (!song || !part || busy) return;
     setBusy(true);
@@ -110,7 +112,7 @@ export function MatchSoundStep({ mission, screen, onNext, tail }: { mission: Mis
     for (const k of knobs) { const d = target[k.index] - value(k); if (!w || Math.abs(d) > Math.abs(w.d)) w = { k, d }; }
     return w && Math.abs(w.d) > 0.02 ? w : null;
   }, [knobs, target, mine, part]); // eslint-disable-line react-hooks/exhaustive-deps
-  const hint = tries >= 2 && !passed && worst ? `try ${worst.k.spec.label}: the target's is ${which(worst.k.spec.key, worst.d > 0)}` : null;
+  const hint = (tries >= 2 || nearlyBut) && !passed && worst && Math.abs(worst.d) > (nearlyBut ? KNOB_TOL : 0) ? `try ${worst.k.spec.label}: the target's is ${which(worst.k.spec.key, worst.d > 0)}` : null;
   const keep = () => {
     // Your matched knobs go into your song with the rest of this lesson's sound.
     try { sessionStorage.setItem(shapeKey(mission.slug, otherType), JSON.stringify({ ...shaped, ...mine })); } catch { /* ignore */ }

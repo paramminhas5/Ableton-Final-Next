@@ -91,7 +91,7 @@ export function distances(target: Features, mine: Features): { spectrum: number;
   return { spectrum: sn ? sd / sn : 0, envelope: en ? ed / en : 0 };
 }
 
-export type Score = { close: number; sound: number; settings: number; spectrum: number; envelope: number };
+export type Score = { close: number; sound: number; settings: number; spectrum: number; envelope: number; worstKnob: number };
 
 /** Pass mark: this close or closer keeps it. */
 export const MATCH_PASS = 85;
@@ -106,8 +106,14 @@ export function score(target: Features, mine: Features, knobs: { mine: number; t
   const off = knobs.length ? knobs.reduce((a, k) => a + Math.abs(k.mine - k.target), 0) / knobs.length : 0;
   const settings = Math.max(0, 1 - off * 2.5);
   const close = Math.round(100 * (0.7 * sound + 0.3 * settings));
-  return { close, sound: Math.round(sound * 100), settings: Math.round(settings * 100), spectrum: d.spectrum, envelope: d.envelope };
+  const worstKnob = knobs.reduce((a, k) => Math.max(a, Math.abs(k.mine - k.target)), 0);
+  return { close, sound: Math.round(sound * 100), settings: Math.round(settings * 100), spectrum: d.spectrum, envelope: d.envelope, worstKnob };
 }
+
+/** How far any one lit knob may sit from the target's (share of its travel) and still pass. */
+export const KNOB_TOL = 0.08;
+/** A match passes when it is close overall and every lit knob is near the target: one knob right is not a match. */
+export const passes = (s: Score | null) => !!s && s.close >= MATCH_PASS && s.worstKnob <= KNOB_TOL;
 
 /** Mono from a stereo render. */
 export const mono = (l: Float32Array, r: Float32Array) => Float32Array.from(l, (v, i) => 0.5 * (v + r[i]));

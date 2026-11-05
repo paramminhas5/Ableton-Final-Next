@@ -150,7 +150,7 @@ export function Lanes({ track, next, sel, solo, onLane, width = 338, playhead = 
   playhead?: number;
 }) {
   const rows: { id: string; name: string; color: string; steps: boolean[]; ghost?: boolean; muted?: boolean }[] = track.layers.map(l => ({
-    id: l.id, name: KIND[l.kind].label, color: KIND[l.kind].color, steps: l.steps, muted: l.mute,
+    id: l.id, name: l.label ?? KIND[l.kind].label, color: KIND[l.kind].color, steps: l.steps, muted: l.mute,
   }));
   if (next?.isNew && rows.length < 8) rows.push({ id: "__next", name: next.kind, color: KIND[next.kind].color, steps: [], ghost: true });
   const lh = rows.length > 5 ? 7 : 10, gap = rows.length > 5 ? 8 : 12, nameW = 54, top = 12;

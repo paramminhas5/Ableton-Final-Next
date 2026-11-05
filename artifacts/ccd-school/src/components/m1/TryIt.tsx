@@ -22,7 +22,7 @@ const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 const TOL = 0.15;
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; tail?: ReactNode; snap?: boolean };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" }; tail?: ReactNode; snap?: boolean };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -259,10 +259,25 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const isOff = (e: NoteEvent) => onBeatOnly && (goalNote === undefined || e.note === goalNote) && (Math.abs(offOf(e)) > TOL || (backbeat && slotOf(e) % 2 === 0));
   const offs = goalEvents.filter(isOff);
   const offBeat = onBeatOnly ? offs.length : 0;
+  // A tune's goal in music terms: "between" counts only notes in the gaps between the kicks (off the beat),
+  // "different" counts different chords (one chord may come back, as i in i iv v i), so the same pad four
+  // times is one chord plus a return, not a progression.
+  const between = !onBeatOnly && on === "between";
+  const different = !onBeatOnly && on === "different";
+  const onKick = (e: NoteEvent) => Math.abs(e.start - Math.round(e.start)) < 0.125;
+  const kickHits = between ? new Set(goalEvents.filter(onKick).map(e => e.start.toFixed(3))).size : 0;
+  const shapes = () => {
+    const by = new Map<string, number[]>();
+    for (const e of goalEvents) { const k = e.start.toFixed(3); by.set(k, [...(by.get(k) ?? []), e.note]); }
+    return new Set([...by.values()].map(n => n.sort((a, b) => a - b).join(","))).size;
+  };
+  const presses = new Set(goalEvents.map(e => e.start.toFixed(3))).size;
   const goalHits = onBeatOnly
     ? new Set(goalEvents.filter(e => !isOff(e)).map(slotOf)).size
+    : between ? new Set(goalEvents.filter(e => !onKick(e)).map(e => e.start.toFixed(3))).size
+    : different ? Math.min(presses, shapes() + 1)
     // A chord is one press, not three notes: count when things start, not how many notes sound.
-    : new Set(goalEvents.map(e => e.start.toFixed(3))).size;
+    : presses;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
   // When a take ends: a steady lateness is the device, so take it out; otherwise count it as a miss.
   const wasTake = useRef(false);
@@ -341,6 +356,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     : offBeat && backbeat && Math.abs(offOf(offs[0])) <= TOL ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} landed on one or three. the ${hitName} goes on two and four. tap undo and try again`
     : offBeat && offbeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} missed the "and", the red ${offBeat === 1 ? "one" : "ones"}. the ${hitName} goes halfway between the kicks. tap undo and try again`
     : offBeat ? `${offBeat === 1 ? `one ${hitName}` : `${offBeat} ${hitName}s`} came in ${offOf(offs[0]) < 0 ? "early" : "late"}, the red ${offBeat === 1 ? "one" : "ones"}. tap undo and play ${offBeat === 1 ? "it" : "them"} again with the click`
+    : !goalMet && between && kickHits ? `${kickHits === 1 ? "one note lands" : `${kickHits} notes land`} on the kick. the bass goes in the gaps between the kicks: ${shown} of ${coach.goal.notes} there so far`
+    : !goalMet && different && presses > goalHits ? `that's the same chord again. a progression moves: ${shapes()} different so far, try another pad`
     : !goalMet ? `${shown} of ${coach.goal.notes}${offbeat ? ' on the "and"' : backbeat ? " on two and four" : onBeatOnly ? " on the beat" : ` ${unit}s`}. press rec and add the rest`
     : !playing ? "nice. now press play to hear your loop"
     : "that is your loop. press keep it when you like it";
@@ -348,7 +365,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   // The go key names what is still missing until the take is ready.
   const need = coach ? Math.max(0, coach.goal.notes - goalHits) : 0;
   const noun = goalNote !== undefined ? hitName : unit;
-  const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones" : `${need} more ${noun}${need === 1 ? "" : "s"}`;
+  const goLabel = !coach ? "use this line" : goalMet ? "keep it" : offBeat ? "fix the red ones"
+    : between ? `${need} more between the kicks` : different ? `${need} more different chord${need === 1 ? "" : "s"}` : `${need} more ${noun}${need === 1 ? "" : "s"}`;
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
       {/* Phone: one live instruction above the instrument, so rec and the pads are on the first screen. */}
