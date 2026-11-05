@@ -19,7 +19,7 @@ import { loadRealKit, REAL_KIT_ID, withRealKit, withSynthKit } from "@/lib/realK
 import { worldOf } from "@/lib/worldOrder";
 import { presetTake } from "./AddToTrack";
 import { readSongs } from "@/lib/songs";
-import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { CAP, GoPill, Icon, Key, Knob, NotYet, Screen, Silk } from "./controls";
 import { Body, Bottom, Meta, useEnter } from "./LessonParts";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
@@ -282,7 +282,11 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const dragCut = named(fc), dragRes = named(fr);
   const hs = envHandles(inst, lp, hatPad ? 4 : 0);
   const envSet = (h?: { index: number; key: string; toN: (s: number) => number }) => (h && dialKnobs.some(k => k.index === h.index) ? (s: number) => turn(h.index, h.key, h.toN(s)) : undefined);
-  useEnter(onNext);
+  // A shape step is met once you've turned something: arriving and pressing keep is not shaping a sound.
+  const shaped = turned.size > 0;
+  const why = `turn ${dialKnobs[0]?.spec.label ?? "a knob"} first`;
+  const keep = () => { if (shaped) onNext(); else setTouched(why); };
+  useEnter(keep);
   return (
     <div className="ls-col">
       <div className="fl-inst">
@@ -303,7 +307,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       {lfoToK && (
         <div className="fl-marks tl-row lfo-to" role="radiogroup" aria-label="Where the lfo goes" style={{ ["--c" as string]: accent } as CSSProperties}>
           {LFO_TO.map((name, i) => <button key={name} type="button" role="radio" aria-checked={lfoTo === i} className={`ls-chip ${lfoTo === i ? "is-on" : ""}`}
-            onClick={() => { setParams(p => ({ ...p, [lfoToK.index]: [0.15, 0.5, 0.85][i] })); setTouched(`lfo to the ${name}`); }}>to the {name}</button>)}
+            onClick={() => { setParams(p => ({ ...p, [lfoToK.index]: [0.15, 0.5, 0.85][i] })); setTouched(`lfo to the ${name}`); setTurned(t => new Set(t).add("lfoto")); }}>to the {name}</button>)}
         </div>
       )}
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
@@ -328,7 +332,7 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={hear} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play your loop"}><Icon name={playing ? "stop" : "play"} /></Key>
           <div className="ls-abwrap"><ABKey on={abOn} labels={["before your tweak", "now"]} onStart={() => { setAbOn("a"); setTouched("a · before your tweak"); }} onSwitch={s => { setAbOn(s); setTouched(s === "a" ? "a · before your tweak" : "b · now"); }} /></div>
-          <GoPill onClick={onNext} style={{ gridColumn: "span 2" }} ariaLabel="Next">keep this sound</GoPill>
+          <GoPill onClick={keep} style={{ gridColumn: "span 2", opacity: shaped ? 1 : 0.6 }} ariaLabel={shaped ? "Next" : `Not yet: ${why}`}>{shaped ? "keep this sound" : <NotYet why={why} />}</GoPill>
         </div>
       </div>
     </div>

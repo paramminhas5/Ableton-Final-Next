@@ -94,6 +94,17 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
   const [recState, setRecState] = useState<"off" | "on" | "done">("off");
   const [recUrl, setRecUrl] = useState<string | null>(null);
   const needMatch = screen.goal === "match" || screen.goal === "sync" || screen.goal === "shift";
+  // On a phone the desk's crossfader opens under the fixed go bar: bring the whole desk above it once.
+  useEffect(() => {
+    if (window.innerWidth > 720) return;
+    const t = window.setTimeout(() => {
+      const d = document.querySelector(".mx-desk");
+      const bar = document.querySelector(".ls-bottom")?.getBoundingClientRect().top ?? window.innerHeight;
+      const r = d?.getBoundingClientRect();
+      if (r && r.bottom > bar - 8) window.scrollBy({ top: r.bottom - bar + 16, behavior: "smooth" });
+    }, 120);
+    return () => window.clearTimeout(t);
+  }, []);
   useEffect(() => { setPitch(needMatch && !synced ? 0 : base / b.bpm - 1); }, [bid]); // eslint-disable-line react-hooks/exhaustive-deps
   const sync = () => { setPitch(base / b.bpm - 1); setSynced(true); };
   // The tempo fader's range, like a cdj: 8%, then 16%, then wide when the tracks are far apart.

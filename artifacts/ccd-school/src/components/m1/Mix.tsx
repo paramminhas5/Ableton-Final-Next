@@ -764,10 +764,11 @@ function Faders({ track, open, masterOpen, onOpen, onOpenMaster, setParam, setMa
   );
 }
 
-function MixKnob({ label, value, spec, on, onChange }: { label: string; value: number; spec: Pick<ParamSpec, "default">; on?: boolean; onChange: (v: number) => void }) {
+// Pink is the go key's alone: a knob that's working gets the navy cap, and every knob says its value.
+function MixKnob({ label, value, spec, on, onChange }: { label: string; value: number; spec: ParamSpec; on?: boolean; onChange: (v: number) => void }) {
   return (
     <div className="mx-knob">
-      <Knob bare size={22} label={label} value={value} defaultValue={spec.default} color={on ? CAP.go : CAP.grey} onChange={onChange} />
+      <Knob bare size={22} label={label} value={value} defaultValue={spec.default} color={on ? CAP.navy : CAP.grey} readout={display(spec, value)} onChange={onChange} />
       <span className="m1-eng mx-klabel" style={on ? { color: "var(--ink)", fontWeight: 600 } : undefined}>{label}</span>
     </div>
   );

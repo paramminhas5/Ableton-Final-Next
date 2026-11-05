@@ -5,7 +5,7 @@
  * again adds on top; undo takes back the last take; "use this line" keeps it for the
  * end of the lesson, where it joins your track when you press add.
  */
-import { beatsToMs, msToBeats, readLatencyMs, saveLatencyMs, steadyDelay } from "@/lib/latency";
+import { MAX_DEVICE_MS, beatsToMs, slotStart, msToBeats, readLatencyMs, saveLatencyMs, steadyDelay } from "@/lib/latency";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { FLAG, OUT, type EngineEvent } from "@/engine";
 import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
@@ -213,8 +213,13 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       return;
     }
     engine.stop();
-    // Hits that were close enough to the beat are kept exactly on it.
-    onUse({ type, events: coach && onBeatOnly ? events.map(e => (isOff(e) ? e : { ...e, start: ((Math.round(e.start) % loop) + loop) % loop })) : events });
+    // Hits that were close enough to their slot (the beat, or the "and" for open hats) are kept exactly on it;
+    // a tune is kept on the nearest 16th, the grid its timing marks are drawn against.
+    const wrap = (b: number) => ((b % loop) + loop) % loop;
+    const kept = !coach ? events
+      : onBeatOnly ? events.map(e => (goalNote !== undefined && e.note !== goalNote) || isOff(e) ? e : { ...e, start: slotStart(e.start, offbeat, loop) })
+      : events.map(e => ({ ...e, start: wrap(Math.round(e.start * 4) / 4) }));
+    onUse({ type, events: kept });
   };
 
   // ── the screen: a piano roll of the take ────────────────────────────────
@@ -264,7 +269,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   useEffect(() => {
     const now = recording || countIn;
     if (wasTake.current && !now && coach && onBeatOnly && goalEvents.length) {
-      const shift = backbeat ? 0 : steadyDelay(goalEvents.map(offOf), TOL);
+      // Only what's left of the device allowance can be learned, so a learned delay never grows into a 16th.
+      const room = msToBeats(Math.max(0, MAX_DEVICE_MS - latencyMs.current), session.bpm || 120);
+      const shift = backbeat ? 0 : steadyDelay(goalEvents.map(offOf), TOL, room);
       if (shift) {
         const bpm = session.bpm || 120;
         const ms = beatsToMs(shift, bpm);

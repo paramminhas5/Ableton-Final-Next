@@ -86,4 +86,14 @@ describe("loop round 3: no arrange lesson opens already met", () => {
     const drop = startLayout(t, "drop").map((s, i) => (i === 3 ? { ...s, off: [...s.off, ...drums] } : s));
     expect(arrangeMet(drop, drums, "drop")).toBe(true);
   });
+  it("loop round 4: sections wants the drops full and a part off elsewhere", async () => {
+    const { arrangeMet } = await import("../src/lib/arrange");
+    const t = song();
+    const drums = t.layers.filter(l => l.type === "drums" || l.type === "hats").map(l => l.id);
+    const start = startLayout(t, "sections");
+    const offInDrop = start.map(s => (s.name === "drop" ? { ...s, off: [...drums] } : s));
+    expect(arrangeMet(offInDrop, drums, "sections")).toBe(false);
+    const offInBreak = start.map(s => (s.name === "break" ? { ...s, off: [...drums] } : s));
+    expect(arrangeMet(offInBreak, drums, "sections")).toBe(true);
+  });
 });

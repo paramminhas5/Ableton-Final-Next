@@ -135,6 +135,8 @@ export function Studio() {
   const [songsOpen, setSongsOpen] = useState(false);
   const [keyOpen, setKeyOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
+  // Saving a wav asks how loud, on its own panel; it never borrows the knob page's shift.
+  const [wavOpen, setWavOpen] = useState(false);
   const [sureReset, setSureReset] = useState<string | null>(null);
   const [songs, setSongs] = useState<SongIndex | null>(null);
   const [shift, setShift] = useState(false);
@@ -655,10 +657,10 @@ export function Studio() {
           </div>
           <span style={{ flex: 1 }} />
           <button type="button" className="st-tag st-songtag"
-            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
+            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
-            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setKeyOpen(o => !o); }}>{keyName(track.root, scaleOf(track))}</button>
+            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setKeyOpen(o => !o); }}>{keyName(track.root, scaleOf(track))}</button>
           {mode === "mix" ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}
@@ -671,7 +673,7 @@ export function Studio() {
             const c = TYPE[l.type].color;
             return (
               <button key={l.id} type="button" className={`m1-m is-wide st-slot ${on ? "is-on" : ""} ${l.mute ? "is-muted" : ""}`} aria-pressed={on}
-                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setKeyOpen(false); setShift(false); }}>
+                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setShift(false); }}>
                 <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: c } as CSSProperties} />
                 {TYPE[l.type].label}
                 {l.solo ? <i className="st-solo" /> : null}
@@ -680,7 +682,7 @@ export function Studio() {
           })}
           {track.layers.length < MAX_LAYERS ? (
             <button type="button" className={`m1-m is-wide st-slot st-plus ${adding ? "is-on" : ""}`} aria-label="Add a layer" aria-pressed={adding}
-              onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
+              onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
               <Icon name="plus" />
             </button>
           ) : null}
@@ -731,7 +733,17 @@ export function Studio() {
           )}
         </Screen>
 
-        {resetOpen ? (
+        {wavOpen ? (
+          <div className="st-main">
+            <Silk label="save a wav" right="the whole song, arranged" />
+            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+              {([[false, "for streaming and sharing (-14 lufs)"], [true, "loud, for club play (-9 lufs)"]] as [boolean, string][]).map(([loud, label]) => (
+                <button key={label} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }}
+                  onClick={() => { void downloadWav(track, loud); setWavOpen(false); }}>{label}</button>
+              ))}
+            </div>
+          </div>
+        ) : resetOpen ? (
           <div className="st-main">
             <Silk label="start over" right="undo brings it back" />
             <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
@@ -901,14 +913,14 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
-        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
           <Icon name="reset" />
         </Key>
         <Key label="to live" onClick={() => downloadTrackV2Midi(arranged(track))} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
           <Icon name="out" />
         </Key>
-        <Key label={shift ? "loud wav" : "wav"} onClick={() => void downloadWav(track, shift)} disabled={!track.layers.length}
-          ariaLabel={shift ? "Save the song as a loud wav for club play (-9 LUFS)" : "Save the song as a wav at streaming loudness (-14 LUFS)"}>
+        <Key label="wav" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setWavOpen(o => !o); }} ariaPressed={wavOpen} disabled={!track.layers.length}
+          ariaLabel="Save the song as a wav: pick streaming (-14 LUFS) or club (-9 LUFS) loudness">
           <Icon name="out" />
         </Key>
       </div>
@@ -925,7 +937,7 @@ function CapturePreview({ track, layer, events, onKeep, onDrop }: { track: Track
   return (
     <div className="st-capview">
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span className="st-ss" style={{ color: "var(--ink)" }}>captured · {events.length} note{events.length === 1 ? "" : "s"}</span>
+        <span className="st-ss" style={{ color: "#EDEDF0" }}>captured · {events.length} note{events.length === 1 ? "" : "s"}</span>
         <span style={{ flex: 1 }} />
         <button type="button" className="st-chip st-capbtn" onClick={onDrop}>drop</button>
         <button type="button" className="st-chip st-capbtn is-keep" onClick={onKeep}>keep it</button>

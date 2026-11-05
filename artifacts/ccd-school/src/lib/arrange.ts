@@ -40,7 +40,10 @@ export function arrangeMet(secs: Section[], drums: string[], goal: "sections" | 
   if (goal === "fills") return secs.some(s => s.fill);
   if (goal === "risers") return secs.some(s => s.riser);
   if (goal === "drop") return secs.some((s, i) => i > 0 && drums.some(d => secs[i - 1].off.includes(d)) && !drums.some(d => s.off.includes(d)));
-  return secs.length >= 3 && secs.some(s => s.off.length > 0);
+  // Sections: a journey, not just any change. The drop is where everything plays, so every drop stays full
+  // and some other section takes a part away. Switching parts off only in the drop is the wrong way round.
+  const isDrop = (s: Section) => s.name === "drop";
+  return secs.length >= 3 && secs.filter(isDrop).every(s => s.off.length === 0) && secs.some(s => !isDrop(s) && s.off.length > 0);
 }
 
 const KICK = 36, SNARE = 38;
