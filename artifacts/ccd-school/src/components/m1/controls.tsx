@@ -193,7 +193,7 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
     const now = Date.now();
     if (defaultValue !== undefined && now - lastTap.current < 300) { onChange(defaultValue); lastTap.current = 0; return; }
     lastTap.current = now;
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch { /* the pointer has already gone */ }
     start.current = { y: e.clientY, v: value };
   }, [onChange, value, defaultValue]);
   const onPointerMove = useCallback((e: PointerEvent<HTMLElement>) => {
