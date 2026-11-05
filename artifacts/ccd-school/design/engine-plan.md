@@ -21,6 +21,21 @@ CPU is from `engine/tests/bench.rs` (a full eight-layer song, two of each synth,
 
 All twelve items are built. What only an ear can judge, and has not been judged yet: whether each "after" is better than its "before" (Param's blind a/b, per `school-process.md`), the three filter characters' voicing at high resonance, the kick bodies' and the snare layers' defaults, the plate's damping, how much wow is too much on the tape echo, and the resonator voices' strike sounds. Nothing here claims to match any product.
 
+## Sound shootout
+
+Against Surge XT, Vitalium, Odin 2, Dexed, Geonkick, Dragonfly and CHOW Tape, our own patches on both sides, one measurement script; method and every number in `design/sound-shootout.md`, before/after tests in `engine/tests/shootout.rs`, blind pairs on `/sound/compare` (not linked, noindex). Param okayed running the open-source synths on 5 Nov, 20:18. Not ear-tested yet.
+
+- **Supersaw lead (Surge, Vital):** oscillator fixed, width not. Saw off the harmonics, notes 84 to 108: theirs -77 to -91 dB, ours -49 to -56 before, -67 to -74 after through the default prd circuit, -88 to -96 through svf, the oscillator alone -89 (minBLEP). Left/right: theirs 0.22 / 0.36, ours 1.00 (mono voices: open).
+- **Filter sweeps (Surge and Vital filters against prd, ms2, svf):** ours cleaner driven (prd -90 to -96 dB, svf -72 to -75, against Surge's K35 -43 to -60 and Vital's digital -49 to -55), keeps its bass; theirs ring further (+40 dB Surge ladder, +23 dB Vital analog at 90%, ours +14 prd, +5.7 ms2) and Surge's ladder sits at its cutoff where ours sits about a semitone under. Ladder clip now anti-aliased (open, note 108: -54.7 to -67.1 dB; peak within 0.35 dB). Resonance range and tuning left for Param's ear.
+- **Acid bass (Odin 2):** matched by brightness (centroid 586 against 641 Hz); nothing measured worse; minBLEP saw.
+- **FM piano and bell (Dexed):** close (bell strike -56.2 against -59.5 dB off the harmonics); no inharmonic ratios yet.
+- **Wavetable pad (Vitalium):** table saw -85 to -88 dB after (-70 to -88 before), Vital -89 to -91; the chord synth's table has no position knob (open).
+- **808 and techno kicks (Geonkick):** nothing measured worse; ours has a click and a faster attack by design; unchanged.
+- **Hall (Dragonfly):** fixed, the known gap. First sound 65.5 to 18.2 ms, density over the first 50 ms 0.47 to 0.87 (Dragonfly 0.84), 0.9 reached at 145 to 30 ms (45), smoothness 0.380 to 0.475 (0.453), left/right 0.139 to 0.007 (-0.005), RT60 and loudness kept. Default changed (pure win on every hall measure).
+- **Plate (Dragonfly):** theirs denser (0.87 against 0.51 in the first 50 ms, 0.9 at 35 against 190 ms), ours wider; a denser try lost smoothness and was not kept (open).
+- **Tape (CHOW Tape):** different, not ranked: CHOW's hysteresis knee is gentler (third harmonic -22.8 against -16.3 dB at 0 dBFS), our flutter deeper; wow matched (10.2 against 10.4 cents at 0.6 Hz). Hysteresis model open.
+- **CPU** (`engine/tests/bench.rs`, alternating runs, best of five): the full song 22.3 / 22.1 / 21.6% before, 23.6 / 24.7 / 23.0% after (the hall alone 0.63 to 1.26% of a core). Per voice and per effect against theirs in `design/sound-shootout.md`.
+
 ## After engine 2: touch and hear
 
 The "touch and hear" stream from `design/compare.md` (items 1, 2, 3, 4 and 13). Names are Ableton Live 12's where Live has one.
