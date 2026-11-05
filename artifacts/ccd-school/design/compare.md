@@ -3,7 +3,7 @@
 5 Nov 2026. What the best tools do that we don't, what we do that they don't, and what we build next. Every outside claim has its source. The earlier screen research (OP-1, Note, Move, Pigments, Koala, Elektron, djay, Melodics and others) is in `research-instrument-ui.md`; its twelve moves are now built (`school-fixes.md` 157 to 165), so this doc covers the next layer.
 
 Two rules from Param run through all of it:
-- **No invented names.** A learner who finishes CCD School should recognise every control in Ableton Live, Serum, Vital or a hardware synth. Ableton's name comes first (the lessons teach Live), then the name most synths share. Done 5 Nov (5035208 to a536bb9): the filter "character" is now **circuit** with Live 12 Auto Filter's prd, ms2 and svf; "wave" is **shape** (position, feedback or dcw by osc type); the resonator voices use Collision and Tension names (exciter, decay, stiffness); drums use Drum Sampler names (pitch env, noise decay); step locks are **p-locks**. Engine param ids didn't change, so saved songs still load. The full table is in `design/naming.md` in the repo; Serum and Vital names are still missing because their manuals couldn't be reached.
+- **No invented names.** A learner who finishes CCD School should recognise every control in Ableton Live, Serum, Vital or a hardware synth. Ableton's name comes first (the lessons teach Live), then the name most synths share. Done 5 Nov (5035208 to a536bb9): the filter "character" is now **circuit** with Live 12 Auto Filter's prd, ms2 and svf; "wave" is **shape** (position, feedback or dcw by osc type); the resonator voices use Collision and Tension names (exciter, decay, stiffness); drums use Drum Sampler names (pitch env, noise decay); step locks are **p-locks**. Engine param ids didn't change, so saved songs still load. The full table is in `design/naming.md` in the repo; Vital's names were added from its own source and rekordbox's from its manual, and Serum 2 has only SEM and MAIN because the rest of its manual is not online.
 - **Teach the other instruments too.** Every control gets a "same control elsewhere" note (live, serum, vital, hardware), like Syntorial's free transfer lessons for Serum and Massive ([ProducerHive](https://producerhive.com/?p=13321)).
 
 ## What we have that they don't
@@ -62,7 +62,7 @@ Built 5 Nov, in two parallel streams (`school-fixes.md` 170 to 181):
 - **Touch and hear (0035d7b to a71db29):** 1 drag on the picture, 2 drag to modulate, 3 a/b, 4 scope, 13 match this sound.
 - **Write and play (to 826c5a2):** 5 scales, 6 chord track, 7 drummer and bass player, 8 transformations, 9 chance and conditions, 10 punch-in effects, 11 commit, 12 per-part length and swing.
 
-Left over from these: modulation sources on drums, fx and the sampler; match this sound in the ear gym; rings that move while playing; chance in the midi export; recording punch-in effects into the song.
+Match this sound is in the ear gym now (`design/engine-plan.md`, leftovers (screens)). Left over from these: modulation sources on drums, fx and the sampler; rings that move while playing; chance in the midi export; recording punch-in effects into the song.
 
 Waiting on Param: 14 (assistant, cost), 15 (stems on your own files, cost or download size). Later: 16 to 19.
 
