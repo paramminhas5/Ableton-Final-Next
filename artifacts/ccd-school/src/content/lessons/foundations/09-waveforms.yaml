@@ -59,14 +59,14 @@ steps:
     knobs: [wave, cutoff]
     say:
       mentor: >-
-        Pick the wave for your melody. Turn wave from saw to square and listen to your own tune change
+        Pick the wave for your melody. Turn shape from saw to square and listen to your own tune change
         character, then use cutoff to round it off. For something soft and sine-like, close the cutoff right
         down. For a bright lead, open it up.
       straight: >-
         Choose your melody's wave: saw to square, then round it off with cutoff. Low cutoff gets you close to
         a sine.
       eli5: >-
-        Turn the wave knob to change the shape of your tune's sound. Then turn cutoff to make it softer or
+        Turn the shape knob to change your tune's wave. Then turn cutoff to make it softer or
         brighter. Keep the one you like.
 
   - kind: ask

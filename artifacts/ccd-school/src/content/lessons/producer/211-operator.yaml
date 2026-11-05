@@ -69,7 +69,7 @@ steps:
       mentor: >-
         Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.
         
-        ratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. wave picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.
+        ratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. shape picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.
       straight: >-
         Your lead is an fm synth now. fm is the amount, ratio is the modulator's multiple of the note. 1 and 2 are warm, higher is metallic. Keep what cuts through.
       eli5: >-

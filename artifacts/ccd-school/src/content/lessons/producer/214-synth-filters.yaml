@@ -66,19 +66,19 @@ steps:
     say:
       mentor: >-
         Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and
-        your lead goes dark. Cut is a high-pass on the lead's channel: turn it up and the lows fall away so it
-        thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the
+        your lead goes dark. Low cut is a high-pass on the lead's channel: turn it up and the lows fall away so it
+        thins out. Bring cutoff down and low cut up together and you've made a band-pass, just a slice in the
         middle.
 
-        Then add resonance and sweep the cutoff to hear it sing. Character picks how it sounds: warm is a round
-        four-pole ladder, scream is a two-pole that distorts as it resonates, smooth is a clean two-pole with
-        a gentler slope. Keep the shape that sits best in your song.
+        Then add resonance and sweep the cutoff to hear it sing. Circuit picks how it sounds, by the names
+        Live's Auto Filter uses: prd is a round four-pole ladder, ms2 is a two-pole that distorts as it
+        resonates, svf is a clean two-pole with a gentler slope. Keep the one that sits best in your song.
       straight: >-
-        Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff.
-        Character: warm, scream or smooth. Carve your lead and keep it.
+        Cutoff is low-pass, low cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff.
+        Circuit: prd, ms2 or svf, the same names as Live's Auto Filter. Carve your lead and keep it.
       eli5: >-
-        Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res
-        makes it whistle. Character changes how it whistles. Pick the sound you like.
+        Cutoff makes your tune darker. Low cut makes it thinner. Both together make it sound like a phone. Res
+        makes it whistle. Circuit changes how it whistles. Pick the sound you like.
 
   - kind: ask
     q: What does a low-pass filter do?

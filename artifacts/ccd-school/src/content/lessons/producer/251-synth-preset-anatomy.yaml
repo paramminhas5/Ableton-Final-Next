@@ -58,14 +58,14 @@ steps:
     say:
       mentor: >-
         Here are four of the knobs that make your lead what it is, with your song playing. Take it apart one at
-        a time. Swing wave to each end and back: that's the raw shape. Sweep cutoff: that's the brightness.
+        a time. Swing shape to each end and back: that's the raw wave. Sweep cutoff: that's the brightness.
         Turn env off and on: that's the brightness moving on each note. Shorten and lengthen release: that's
         how each note ends.
 
         For each one, ask what your lead would lose without it. Then set them all where your song sounds best,
         and keep it.
       straight: >-
-        Four knobs on your lead: wave is shape, cutoff is brightness, env is movement per note, release is how
+        Four knobs on your lead: shape is the wave, cutoff is brightness, env is movement per note, release is how
         notes end. Move each one, hear what it does, set them and keep it.
       eli5: >-
         Turn each knob all the way one way, then the other, and listen. Then put them where your tune sounds

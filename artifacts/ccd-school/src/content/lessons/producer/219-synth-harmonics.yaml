@@ -66,17 +66,17 @@ steps:
     knobs: [wave, cutoff]
     say:
       mentor: >-
-        Here's your song. Wave on saw gives your lead every harmonic. Turn it towards square and the even ones
+        Here's your song. Shape on saw gives your lead every harmonic. Turn it towards square and the even ones
         drop out, so it goes hollow. That's removing harmonics by changing the wave.
 
         Cutoff removes them from the top down. Close it slowly and hear the brightest ones disappear first,
         until only the fundamental and a few low harmonics are left, soft and round. Keep the recipe that suits
         your song.
       straight: >-
-        Wave: saw has every harmonic, square drops the even ones. Cutoff removes harmonics from the top down.
+        Shape: saw has every harmonic, square drops the even ones. Cutoff removes harmonics from the top down.
         Keep a recipe.
       eli5: >-
-        Wave on saw has all the hidden notes. Turn it to square and some go away. Cutoff takes away the top
+        Shape on saw has all the hidden notes. Turn it to square and some go away. Cutoff takes away the top
         ones. Pick the sound you like.
 
   - kind: ask

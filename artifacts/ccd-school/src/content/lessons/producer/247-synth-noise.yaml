@@ -69,15 +69,16 @@ steps:
         Tune moves the colour of the noise higher or lower. Higher feels crisp and light, lower feels dusty and
         dark.
 
-        Every part in your song has its own filter too, the same three characters as on the synths. Filter
-        sets where it cuts the top off; bring it down and your hats go soft and distant. Character picks how:
-        warm is a round ladder, scream is a two-pole that bites as it resonates, smooth is a clean two-pole. Set
+        Every part in your song has its own filter too, the same three circuits as on the synths. Cutoff
+        sets where it cuts the top off; bring it down and your hats go soft and distant. Circuit picks how,
+        with Live's Auto Filter names: prd is a round ladder, ms2 is a two-pole that bites as it resonates,
+        svf is a clean two-pole. Set
         the hats so they sit above your kick without hissing over everything, and keep them.
       straight: >-
-        Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour, filter cuts the
-        top off, character is warm, scream or smooth. Set them to sit above your kick, then keep it.
+        Your hats are shaped noise. Decay sets how long each burst lasts, tune sets its colour, cutoff cuts the
+        top off, circuit is prd, ms2 or svf. Set them to sit above your kick, then keep it.
       eli5: >-
-        Make your hats short or long with decay. Make them brighter or darker with tune and filter. Keep the ones
+        Make your hats short or long with decay. Make them brighter or darker with tune and cutoff. Keep the ones
         you like.
 
   - kind: ask

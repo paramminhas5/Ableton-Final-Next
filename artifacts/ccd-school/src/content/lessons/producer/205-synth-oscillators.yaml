@@ -60,15 +60,15 @@ steps:
     knobs: [wave]
     say:
       mentor: >-
-        Here's your song, with one knob on your lead's oscillator. Wave slides from saw at one end to square
+        Here's your song, with one knob on your lead's oscillator. Shape slides from saw at one end to square
         at the other, with blends in between.
 
         Turn it slowly while your melody plays. Saw is bright and forward. Square is hollower and a little
         more retro. Somewhere in between is a mix of both. Keep the one that suits your song.
       straight: >-
-        Your lead's oscillator. Wave goes from saw to square. Saw is bright, square is hollow. Keep one.
+        Your lead's oscillator. Shape goes from saw to square. Saw is bright, square is hollow. Keep one.
       eli5: >-
-        This knob changes the shape of your tune's wave, from buzzy saw to hollow square. Pick the one you
+        The shape knob changes your tune's wave, from buzzy saw to hollow square. Pick the one you
         like.
 
   - kind: ask

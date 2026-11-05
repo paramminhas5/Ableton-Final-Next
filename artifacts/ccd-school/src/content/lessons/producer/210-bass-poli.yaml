@@ -7,7 +7,7 @@ song:
   changes: bass.bass
   why: a thicker bass voice gives your low end weight and character without adding a single note
 learn: >-
-  What makes a bass sound thick: a sub underneath, the wave on top, and a little drift, and the two Live
+  What makes a bass sound thick: a sub underneath, the shape on top, and a little drift, and the two Live
   instruments built for bass and for chords.
 youCan:
   - say what a sub oscillator adds to a bass
@@ -36,22 +36,22 @@ steps:
     say:
       mentor: >-
         Here's your song, with four knobs that thicken your bass without touching its notes. Sub turns up the
-        sine an octave below: more weight, more rumble. Wave blends the top from saw to square, bright and
-        buzzy to hollow and round.
+        sine an octave below: more weight, more rumble. Shape blends the top from saw to square, bright and
+        buzzy to hollow and round. Live's Drift calls this knob shape too.
 
         Drift is the subtle one. It lets the pitch wander a few cents, slowly and at random, like an old
         analogue synth warming up. A little makes the bass feel alive instead of perfect.
 
-        Character picks how the filter sounds. Warm is the classic four-pole ladder: round, and it gives up a
-        little bass when you push the resonance. Scream is a two-pole filter that saturates as it resonates,
-        the sound of acid and rave. Smooth is a clean two-pole: softer slope, sweet resonance. Keep the bass
-        that fills your song best.
+        Circuit picks how the filter sounds, with the names Live's Auto Filter uses. Prd is the classic
+        four-pole ladder: round, and it gives up a little bass when you push the resonance. Ms2 is a two-pole
+        filter that saturates as it resonates, the sound of acid and rave. Svf is a clean two-pole state
+        variable filter: softer slope, sweet resonance. Keep the bass that fills your song best.
       straight: >-
-        Sub is weight, an octave down. Wave moves the top from saw to square. Drift lets the pitch wander a
-        few cents, like analogue. Character: warm, scream or smooth. Keep the thickest bass that still sounds clean.
+        Sub is weight, an octave down. Shape moves the top from saw to square. Drift lets the pitch wander a
+        few cents, like analogue. Circuit: prd, ms2 or svf, as in Live's Auto Filter. Keep the thickest bass that still sounds clean.
       eli5: >-
-        Sub makes the rumble bigger. Wave changes the buzzy part. Drift makes it wobble a tiny bit, like an old
-        synth. Character changes how the bass growls. Keep the one you like.
+        Sub makes the rumble bigger. Shape changes the buzzy part. Drift makes it wobble a tiny bit, like an old
+        synth. Circuit changes how the bass growls. Keep the one you like.
 
   - kind: say
     title: bass and poli in live

@@ -58,14 +58,14 @@ steps:
     knobs: [wave, detune, env]
     say:
       mentor: >-
-        Your lead has two oscillators too, which is a small version of Meld's idea. Your song is playing. Wave
-        picks the shape both layers share. Detune pulls the second layer away from the first, so you hear them
+        Your lead has two oscillators too, which is a small version of Meld's idea. Your song is playing. Shape
+        picks the wave both layers share. Detune pulls the second layer away from the first, so you hear them
         as two voices blended rather than one.
 
         Then try env: each note starts brighter and settles, which makes the blend feel like it's moving. Keep
         the lead that sounds richest without getting muddy.
       straight: >-
-        Two layers on your lead: wave sets their shape, detune separates them, env adds movement to each note.
+        Two layers on your lead: shape sets their wave, detune separates them, env adds movement to each note.
         Keep the richest version.
       eli5: >-
         Your tune has two sounds inside. Detune pulls them apart so you hear both. Env makes each note shine
