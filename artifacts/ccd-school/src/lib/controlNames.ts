@@ -115,7 +115,7 @@ export const CONTROLS: Record<string, Control> = {
   repeats: { label: "feedback", was: ["repeats"], elsewhere: [["live echo", "feedback"], ["live delay", "feedback"]] },
 
   // ── studio tools that are not params ──
-  plock: { label: "p-lock", was: ["lock", "locked"], elsewhere: [["elektron", "parameter lock (hold a trig, turn a knob)"]] },
+  plock: { label: "p-lock", was: ["lock", "locked"], elsewhere: [["elektron", "parameter lock"]] },
   density: { label: "density", was: ["fill"], elsewhere: [["live 12 rhythm generator", "density"], ["live 12 seed generator", "density"]] },
   capture: { label: "capture", elsewhere: [["live", "capture midi"]] },
   macro: { label: "macro", elsewhere: [["live racks", "macro variations"]] },

@@ -26,7 +26,7 @@
 @media (min-width:900px) and (min-height:560px){.st-scr .m1-glass{padding:14px 18px!important;height:96px!important}}
 .st-big{font-weight:300;letter-spacing:-.035em;line-height:1;text-shadow:0 0 14px rgba(255,255,255,.16)}
 .st-ss{color:#9A9AA0;font-size:11px;font-weight:500}
-.st-else{color:var(--ink);opacity:.85}
+.st-else{color:var(--disp-ink,#E9E9E6)}
 .st-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;border:1px solid currentColor;font-size:11px;font-weight:500}
 
 /* surface picker */
