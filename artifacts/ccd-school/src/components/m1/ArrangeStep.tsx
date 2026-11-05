@@ -9,7 +9,7 @@ import { FLAG, OUT } from "@/engine";
 import type { LessonScreen } from "@/content/types";
 import { arranged, arrangeMet, sectionAt, startLayout, type Section } from "@/lib/arrange";
 import { readTrackV2, writeTrackV2, TYPE, type TrackV2 } from "@/lib/track2";
-import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { downloadSongMidi } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { EXPORT_LOUD_LUFS, EXPORT_LUFS } from "@/engine";
 import { readSongs, renameSong } from "@/lib/songs";
@@ -107,7 +107,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
         </Screen>
         <div className="fl-again" style={{ justifyContent: "flex-start", marginTop: 10 }}>
           <button type="button" className="ls-chip" onClick={() => song && setSecs(startLayout(song, screen.goal))}>start over</button>
-          {screen.goal === "export" && song && <button type="button" className="ls-chip" onClick={() => downloadTrackV2Midi(arranged({ ...readTrackV2(), sections: secs }))}>download midi for live</button>}
+          {screen.goal === "export" && song && <button type="button" className="ls-chip" onClick={() => downloadSongMidi({ ...readTrackV2(), sections: secs })}>download midi for live</button>}
           {screen.goal === "export" && song && <button type="button" className="ls-chip" disabled={exp.state === "rendering"} onClick={() => void exportAudio(false)}>audio for streaming<small>-14 lufs</small></button>}
           {screen.goal === "export" && song && <button type="button" className="ls-chip" disabled={exp.state === "rendering"} onClick={() => void exportAudio(true)}>audio, loud for clubs<small>-9 lufs</small></button>}
         </div>

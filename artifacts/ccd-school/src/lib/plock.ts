@@ -113,3 +113,38 @@ export function valuesAt(changes: Change[], beat: number, loop: number): Map<num
   }
   return out;
 }
+
+/**
+ * The locks the engine plays (cmd evLock): each note that uses a locked param carries its value, a lock or -1
+ * for the knob's own, so the engine sets it on the note's exact sample, before it sounds (Elektron). Same-beat
+ * notes share the winning value, as `lockSchedule` does. A note whose value is the same as the note before it
+ * carries nothing, unless that note may not play (chance or a condition), so a skipped note never leaves a lock
+ * behind. Events with no locks come back unchanged (the same array).
+ */
+export function withEngineLocks<E extends NoteEvent>(events: E[], drums = false): (E & { locks?: [number, number][] })[] {
+  const indices = new Set<number>();
+  for (const e of events) if (e.p) for (const k of Object.keys(e.p)) indices.add(Number(k));
+  if (!indices.size) return events;
+  const add = new Map<E, [number, number][]>();
+  const order = events.map((e, i) => ({ e, i })).sort((a, b) => a.e.start - b.e.start || a.i - b.i).map(x => x.e);
+  for (const index of indices) {
+    const pad = padOfIndex(index, drums);
+    const uses = pad === null ? order : order.filter(e => padOfNote(e.note) === pad);
+    if (!uses.length) continue;
+    const groups: { beat: number; value: number; evs: E[]; sure: boolean }[] = [];
+    for (const e of uses) {
+      const v = e.p?.[index];
+      const g = groups[groups.length - 1];
+      const sure = !e.cond && (e.chance ?? 1) >= 1;
+      if (g && Math.abs(g.beat - e.start) < 1e-6) { if (v !== undefined) g.value = v; g.evs.push(e); g.sure &&= sure; continue; }
+      groups.push({ beat: e.start, value: v ?? -1, evs: [e], sure });
+    }
+    if (groups.every(g => g.value === -1)) continue;
+    groups.forEach((g, i) => {
+      const prev = groups[(i - 1 + groups.length) % groups.length];
+      if (groups.length > 1 && prev.value === g.value && prev.sure) return;
+      for (const e of g.evs) add.set(e, [...(add.get(e) ?? []), [index, g.value]]);
+    });
+  }
+  return events.map(e => { const l = add.get(e); return l ? { ...e, locks: l } : e; });
+}

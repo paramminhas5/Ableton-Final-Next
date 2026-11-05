@@ -320,6 +320,8 @@ type KnobProps = {
   drop?: boolean;
   /** Drawn over the knob (the modulation amount while editing a source). */
   overlay?: ReactNode;
+  /** The wire index the live modulation dot answers to (useModLive finds the knob by it). */
+  liveIndex?: number;
 };
 
 /** The value ring: an led arc in the colour of what the knob moves, from rest to the value. Dark when idle. */
@@ -334,6 +336,12 @@ function Ring({ size, value, color, from = 0, idle, mods }: { size: number; valu
       <path d={arc(0, 1)} className="m1-ring-bed" />
       {lit && <path d={arc(from, value)} className="m1-ring-arc" />}
       {lit && <circle cx={c + r * Math.cos(ang(value))} cy={c + r * Math.sin(ang(value))} r={2.2} className="m1-ring-tip" />}
+      {mods?.length ? (
+        // Where the source has the knob right now, moved by useModLive straight on the DOM (never a re-render).
+        <g className="m1-mod-live" data-live="" style={{ transformOrigin: `${c}px ${c}px`, ["--c" as string]: mods[0].color } as CSSProperties}>
+          <circle cx={c + r + 3.6} cy={c} r={2.6} />
+        </g>
+      ) : null}
       {mods?.map((m, i) => {
         // Outside the value ring: how far each source takes the knob from where it is.
         const rr = r + 3.6 + i * 3;
@@ -351,7 +359,7 @@ function Ring({ size, value, color, from = 0, idle, mods }: { size: number; valu
 }
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, tipValue, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, tipValue, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title, liveIndex }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -404,7 +412,7 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
   if (bare) return knob;
   const ledC = ring ?? led;
   return (
-    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle && !mods?.length ? "is-idle" : ""} ${drop ? "is-drop" : ""}`} data-mod-to={modTo} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
+    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle && !mods?.length ? "is-idle" : ""} ${drop ? "is-drop" : ""}`} data-mod-to={modTo} data-knob={liveIndex} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
       {ledC ? <Dash color={ledC} on={ring ? !idle || !!mods?.length : true} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
       <div style={{ marginTop: -12 }}>{knob}</div>
       <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>

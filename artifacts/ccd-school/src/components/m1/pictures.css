@@ -66,6 +66,23 @@
 /* modulation (Modulation.tsx): source chips, dark until used; arcs outside a knob's ring; the amount while editing */
 .m1-mod-arc{fill:none;stroke:var(--c);stroke-width:2.2;stroke-linecap:round;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--c) 70%,transparent))}
 .m1-mod-arc.is-back{opacity:.45}
+/* The live modulation dot (useModLive): where the source has the knob this moment, on the modulation ring. */
+.m1-mod-live{opacity:0;transform:rotate(calc(135deg + 270deg * var(--live,0)));transition:opacity .25s}
+.m1-mod-live.is-on{opacity:1}
+.m1-mod-live circle{fill:#fff;stroke:var(--c);stroke-width:1.4;filter:drop-shadow(0 0 3px var(--c))}
+@media (prefers-reduced-motion:reduce){.m1-mod-live{transition:none}}
+/* a source's own settings (SourcePanel): the layer lfo's rate, time mode and waveform; the aux env's times */
+.m1-srcpanel{display:flex;align-items:center;gap:10px;padding:6px 8px;margin:6px 0 2px;border-radius:12px;border:1px solid color-mix(in srgb,var(--c) 35%,transparent);background:color-mix(in srgb,var(--c) 7%,transparent);min-width:0}
+.m1-srcpanel .m1-m{flex:none;width:76px;height:84px;aspect-ratio:auto!important}
+.m1-srcopts{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.m1-seg{display:flex;gap:4px;flex-wrap:wrap}
+.m1-seg button{min-height:30px;min-width:34px;padding:0 9px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.3));background:none;color:var(--sub);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.m1-seg button.is-on{color:var(--ink);border-color:var(--c);background:color-mix(in srgb,var(--c) 18%,transparent)}
+.m1-seg button:focus-visible{outline:2px solid var(--led-cobalt,#4C7DFF);outline-offset:2px}
+.m1-seg.is-waves button{padding:0 7px;min-width:32px}
+.m1-seg svg{width:16px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block}
+.m1-seg button.is-on svg{stroke:var(--c)}
+.m1-srcwave{font-size:11px;color:var(--sub)}
 .m1-modchips{display:flex;gap:6px;align-items:center;flex:none;min-width:0}
 .m1-modchip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 8px;border-radius:9px;border:1px solid color-mix(in srgb,var(--c) 30%,transparent);background:none;color:var(--sub);font:inherit;font-size:12px;font-weight:600;cursor:grab;touch-action:none;min-height:0;min-width:0;-webkit-user-select:none;user-select:none}
 .m1-modchip svg{width:16px;height:10px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.6}

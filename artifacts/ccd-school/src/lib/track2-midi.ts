@@ -3,8 +3,12 @@
  * Ableton Live as separate tracks. Drums on channel 10 with General MIDI notes, which
  * line up with Live's Drum Rack pads. Note events are exported exactly as recorded.
  */
-import { TYPE, type TrackV2 } from "./track2";
+import { TYPE, type NoteEvent, type TrackV2 } from "./track2";
 import { withArps } from "./arp";
+import { arranged } from "./arrange";
+import { plays } from "./chance";
+import { freeTiled, isFree, partLen, swingOf } from "./partLength";
+import { swung } from "../components/m1/useEngineTrack";
 
 const PPQ = 480;
 const vlq = (n: number) => {
@@ -48,6 +52,65 @@ export function trackV2ToMidi(t: TrackV2, repeats = 4): Uint8Array {
 
 export function downloadTrackV2Midi(t: TrackV2) {
   const blob = new Blob([trackV2ToMidi(t).buffer as ArrayBuffer], { type: "audio/midi" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "my-track-ccd-school.mid";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/**
+ * How chance and trig conditions reach Live. A Standard MIDI File holds notes and velocities, nothing for chance
+ * (Live keeps chance per note in its own Live Set, not in a .mid; Ableton's manual says nothing of a .mid carrying
+ * it), so a file can either hold the notes as you heard them or every note:
+ * - "heard" (the default): the song played through, as the engine plays it, with the same seeded roll
+ *   (src/lib/chance.ts mirrors engine/src/seq.rs): what you heard is what Live gets. A 1:4 step lands on every
+ *   fourth bar, a 50% hat on the passes it played. In Live, the same as recording the clip's output.
+ * - "every": every note at its own velocity, chance and conditions dropped (the file as it was before 5 Nov).
+ * A song with no chance, no conditions and no free-running part writes exactly the file it always did.
+ */
+export type MidiMode = "heard" | "every";
+
+/** Does the song have anything that plays differently from pass to pass? */
+export function variesByPass(t: TrackV2): boolean {
+  const ev = (e: { chance?: number; cond?: string }) => !!e.cond || (e.chance ?? 1) < 1;
+  return t.layers.some(l => l.events.some(ev) || isFree(l, t.loop || 4)) || !!t.sections?.some(s => Object.values(s.notes ?? {}).some(n => n.some(ev)));
+}
+
+/** Passes the heard export plays: at least 8 bars and at least 4 times round (so a 1:4 step shows). */
+export const heardPasses = (loop: number) => Math.max(4, Math.ceil(32 / Math.max(0.25, loop)));
+
+/** The song as Live gets it, `mode` as above. Takes the song as saved (it arranges it itself). */
+export function songToMidi(song: TrackV2, mode: MidiMode = "heard"): Uint8Array {
+  const a = arranged(song);
+  if (mode === "every" || !variesByPass(song)) return trackV2ToMidi(a, 4);
+  const L = a.loop || 4;
+  const passes = heardPasses(L);
+  const total = passes * L;
+  const seed = song.seed ?? 1;
+  const unarranged = !song.sections?.length;
+  const layers = a.layers.map(l => {
+    const sw = swingOf(l, a);
+    const out: NoteEvent[] = [];
+    const strip = (e: NoteEvent): NoteEvent => ({ note: e.note, vel: e.vel, start: e.start, len: e.len });
+    // The engine decides with the notes as sent: swung, so the roll's key is the swung start.
+    const heard = (e: NoteEvent, n: number) => plays(swung([e], sw)[0], n, false, seed);
+    if (unarranged && isFree(l, song.loop || 4)) {
+      // Free running: its own time from the first beat, its plays counted by itself.
+      const n = partLen(l, song.loop || 4)!;
+      for (const e of freeTiled(l.events, n, 0, total)) if (heard({ ...e, start: e.start - (e.it ?? 0) * n }, e.it ?? 0)) out.push(strip(e));
+    } else {
+      for (let r = 0; r < passes; r++) {
+        for (const e of l.events) if (heard(e, r * (e.reps ?? 1) + (e.it ?? 0))) out.push(strip({ ...e, start: r * L + e.start }));
+      }
+    }
+    return { ...l, events: out };
+  });
+  return trackV2ToMidi({ ...a, loop: total, layers }, 1);
+}
+
+export function downloadSongMidi(t: TrackV2, mode: MidiMode = "heard") {
+  const blob = new Blob([songToMidi(t, mode).buffer as ArrayBuffer], { type: "audio/midi" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "my-track-ccd-school.mid";

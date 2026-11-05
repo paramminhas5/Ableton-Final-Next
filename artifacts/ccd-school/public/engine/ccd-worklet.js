@@ -11,8 +11,12 @@
  *   kind, layer, note, flags, vel, aux, beat. And { t: "load", ms } every second.
  * Scope: main -> { t: "scope", on } starts or stops { t: "scope", x: Float32Array } about 30 times a
  *   second, the engine's last SCOPE_LEN samples of whatever cmd SCOPE picked (a part or the master).
+ * Live modulation: main -> { t: "mods", on, fps } starts or stops { t: "mods", x: Float32Array } `fps` times a
+ *   second (30, or 15 on a slow phone): the watched part's MOD_VALUES floats (cmd MOD_WATCH). Nothing is sent
+ *   while it is off.
  */
 const SCOPE_LEN = 2048;
+const MOD_VALUES = 10;
 const EV_BYTES = 32;
 const EV_MAX = 256;
 
@@ -51,6 +55,10 @@ class CcdEngine extends AudioWorkletProcessor {
     } else if (d.t === "scope") {
       this.scopeOn = !!d.on;
       this.scopeAt = 0;
+    } else if (d.t === "mods") {
+      this.modsOn = !!d.on && d.fps > 0;
+      this.modsEvery = sampleRate / Math.max(1, Math.min(60, d.fps || 30));
+      this.modsAt = 0;
     } else if (d.t === "sample") {
       // Between blocks, in this same thread: safe to allocate. Order with cmds is kept.
       if (this.pending.length) this.flush();
@@ -70,8 +78,8 @@ class CcdEngine extends AudioWorkletProcessor {
       for (let i = 0; i + 5 < c.length; i += 6) {
         const kind = c[i];
         let y = c[i + 4];
-        // Note on/off carry the touch's wall-clock time: turn it into an engine frame.
-        if ((kind === 1 || kind === 2) && y >= 0) y = Math.max(0, nowFrame - ((nowMs - y) / 1000) * sampleRate);
+        // Note on/off and punch-in presses (43) carry the touch's wall-clock time: turn it into an engine frame.
+        if ((kind === 1 || kind === 2 || kind === 43) && y >= 0) y = Math.max(0, nowFrame - ((nowMs - y) / 1000) * sampleRate);
         x.ccd_send(this.e, kind, c[i + 1], c[i + 2], c[i + 3], y, c[i + 5]);
       }
     }
@@ -121,6 +129,19 @@ class CcdEngine extends AudioWorkletProcessor {
         const copy = new Float32Array(n);
         copy.set(new Float32Array(x.memory.buffer, this.scopePtr, n));
         this.port.postMessage({ t: "scope", x: copy }, [copy.buffer]);
+      }
+    }
+    if (this.modsOn && x.ccd_mod_values) {
+      this.modsAt += frames;
+      if (this.modsAt >= this.modsEvery) {
+        this.modsAt -= this.modsEvery;
+        if (!this.modsPtr) this.modsPtr = x.ccd_alloc(MOD_VALUES * 4);
+        const n = x.ccd_mod_values(this.e, this.modsPtr, MOD_VALUES);
+        if (n) {
+          const copy = new Float32Array(n);
+          copy.set(new Float32Array(x.memory.buffer, this.modsPtr, n));
+          this.port.postMessage({ t: "mods", x: copy }, [copy.buffer]);
+        }
       }
     }
     this.busy += Date.now() - t0;

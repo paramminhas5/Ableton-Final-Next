@@ -6,7 +6,7 @@
 import { newLayerV2, type LayerV2, type NoteEvent, type TrackV2 } from "./track2";
 import { FX_RISER_NOTE as RISER } from "../engine/params.gen";
 import { withArps } from "./arp";
-import { partLen, tiled, withPartLengths } from "./partLength";
+import { freeTiled, isFree, partLen, tiled, withPartLengths } from "./partLength";
 
 /** `notes`: this section's own loop for some parts, by layer id (written by commit or a session player).
  * A part without its own notes here plays the layer's events, as every section did before. */
@@ -53,10 +53,12 @@ const KICK = 36, SNARE = 38;
 export function arranged(t: TrackV2): TrackV2 {
   // Parts with their own length repeat across the loop first, then arpeggiators, so every section
   // repeats both.
-  t = withArps(withPartLengths(t));
   const secs = (t as TrackV2 & { sections?: Section[] }).sections;
+  // A free-running part in an arrangement runs across the whole song (laid out below), not one loop.
+  t = withArps(withPartLengths(t, secs?.length ? { keepFree: true } : undefined));
   if (!secs?.length) return t;
   const L = t.loop || 4;
+  const total = secs.reduce((a, s) => a + s.bars * 4, 0);
   let at = 0;
   const out = new Map<string, NoteEvent[]>(t.layers.map(l => [l.id, []]));
   const firstDrums = t.layers.find(l => l.type === "drums");
@@ -72,6 +74,16 @@ export function arranged(t: TrackV2): TrackV2 {
       const evs = out.get(l.id)!;
       // The section you are editing plays the part as it is now; others play their own copy if they have one.
       const own = si === editing ? undefined : s.notes?.[l.id];
+      if (isFree(l, L)) {
+        // Free running: its own time from the song's first beat, through every section it plays in.
+        const n = partLen(l, L)!;
+        for (const e of freeTiled(own ?? l.events, n, at, at + beats)) {
+          if (e.start >= fillFrom && l.type === "drums" && e.note === KICK) continue;
+          evs.push(e);
+        }
+        playsOf.set(l.id, Math.ceil(total / n - 1e-9));
+        continue;
+      }
       const plen = own ? partLen(l, L) : null;
       const src = own ? (plen !== null ? tiled(own, plen, L) : own) : l.events;
       const before = playsOf.get(l.id) ?? 0;

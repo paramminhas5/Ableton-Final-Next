@@ -19,15 +19,16 @@ export function PunchPads({ engine, onStart, onSay, onUse, compact }: { engine: 
     const r = e.currentTarget.getBoundingClientRect();
     return Math.min(1, Math.max(0, 1 - (e.clientY - r.top) / r.height));
   };
-  const press = (k: (typeof PUNCH_KEYS)[number], amount: number) => {
+  // `at`: the touch's timeStamp, so a press recorded into the song lands on the beat you heard.
+  const press = (k: (typeof PUNCH_KEYS)[number], amount: number, at?: number) => {
     onStart?.();
-    engine.punch(k.mode, amount);
+    engine.punch(k.mode, amount, at);
     if (since.current?.key !== k.key) since.current = { key: k.key, t: performance.now() };
     setHeld({ key: k.key, amount });
     onSay?.(k.label, punchReadout(k.key, amount));
   };
-  const letGo = () => {
-    engine.punch(PUNCH.off, 0);
+  const letGo = (e?: { timeStamp: number }) => {
+    engine.punch(PUNCH.off, 0, e?.timeStamp);
     if (since.current) onUse?.(since.current.key, performance.now() - since.current.t);
     since.current = null;
     setHeld(null);
@@ -40,11 +41,11 @@ export function PunchPads({ engine, onStart, onSay, onUse, compact }: { engine: 
         return (
           <button key={k.key} type="button" className={`pp-key ${on ? "is-on" : ""}`} aria-pressed={on}
             aria-label={`${k.label}: hold, ${k.hint}`} style={on ? ({ ["--a" as string]: held!.amount } as CSSProperties) : undefined}
-            onPointerDown={e => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* synthetic */ } pid.current = e.pointerId; press(k, amountAt(e)); }}
-            onPointerMove={e => { if (pid.current === e.pointerId) press(k, amountAt(e)); }}
-            onPointerUp={letGo} onPointerCancel={letGo} onContextMenu={e => e.preventDefault()}
-            onKeyDown={e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(k, 0.5); } }}
-            onKeyUp={e => { if (e.key === " " || e.key === "Enter") letGo(); }}
+            onPointerDown={e => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* synthetic */ } pid.current = e.pointerId; press(k, amountAt(e), e.timeStamp); }}
+            onPointerMove={e => { if (pid.current === e.pointerId) press(k, amountAt(e), e.timeStamp); }}
+            onPointerUp={e => letGo(e)} onPointerCancel={e => letGo(e)} onContextMenu={e => e.preventDefault()}
+            onKeyDown={e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(k, 0.5, e.timeStamp); } }}
+            onKeyUp={e => { if (e.key === " " || e.key === "Enter") letGo(e); }}
             onBlur={() => { if (on) letGo(); }}>
             <i className="pp-fill" aria-hidden />
             <span className="pp-l">{k.label}</span>

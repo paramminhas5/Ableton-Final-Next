@@ -31,6 +31,7 @@ import { cleanLocks } from "./plock";
 import { asScale, type ScaleName } from "./theory";
 import { cleanChords, type Chord } from "./chords";
 import { cleanChance, type Cond } from "./chance";
+import { cleanPunches, type Punch } from "./punch";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
@@ -72,6 +73,9 @@ export type LayerV2 = {
   player?: { complexity: number; intensity: number; fill: number; swing: number; seed: number };
   /** This part's own loop length in beats (Elektron's per-track length), when shorter than the song's loop. */
   len?: number;
+  /** With its own length: true runs free (it never restarts with the song's loop, Elektron's master length at
+   * inf); missing restarts with the loop, as before. */
+  free?: boolean;
   /** This part's own swing, 0..0.75; missing follows the song's (src/lib/partLength.ts). */
   swing?: number;
   /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
@@ -102,6 +106,8 @@ export type TrackV2 = {
   seed?: number;
   /** The chord track (Logic's Chord Track): one chord per bar of the loop, null for a bar without one. */
   chords?: (Chord | null)[];
+  /** Punch-in effects recorded into the song (src/lib/punch.ts), played by the engine. Missing: none. */
+  punches?: Punch[];
   /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
   cues?: { slug: string; name: string; bar: number }[];
   added: string[];
@@ -381,6 +387,7 @@ export function readTrackV2(): TrackV2 {
       if (t && t.v === 2) {
         if (t.scale !== undefined && asScale(t.scale) !== t.scale) t.scale = asScale(t.scale);
         if (t.chords !== undefined) t.chords = cleanChords(t.chords);
+        if (t.punches !== undefined) { const p = cleanPunches(t.punches); if (p) t.punches = p; else delete t.punches; }
         return Array.isArray(t.layers) ? cleanChance(cleanLocks(t)) : t;
       }
     }

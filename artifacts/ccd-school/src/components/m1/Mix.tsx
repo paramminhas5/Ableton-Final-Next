@@ -34,6 +34,7 @@ import { masterOf, paramOf, TYPE, type LayerV2, type TrackV2 } from "@/lib/track
 import { CAP, Fader, Icon, Knob, Screen, Silk } from "./controls";
 import { SpectrumView } from "./Scope";
 import { PunchPads } from "./PunchPads";
+import { PunchLane } from "./PunchLane";
 
 const P = Object.fromEntries(LAYER_PARAMS.map(p => [p.id, p])) as Record<string, ParamSpec>;
 const IDX = {
@@ -507,8 +508,9 @@ export function Mix({ track, engine, selId, onSelect, update, playing }: Props) 
           />
         </>
       )}
-      <Silk label="punch-in effects" right="hold one, higher is more" />
+      <Silk label="punch-in effects" right="hold one, higher is more · rec keeps them" />
       <PunchPads engine={engine} compact onSay={(label, text) => setTouched({ label, text, at: Date.now() })} />
+      <PunchLane engine={engine} track={track} update={update} />
     </>
   );
 }

@@ -26,11 +26,36 @@ export function tiled(events: NoteEvent[], len: number, loop: number): NoteEvent
   return out.sort((a, b) => a.start - b.start || a.note - b.note);
 }
 
-/** Every part with its own length tiled across the loop. Unchanged (the same object) when none has one. */
-export function withPartLengths(t: TrackV2): TrackV2 {
+/** A part that runs free (Elektron's master length at inf): its own length, and never restarted by the loop. */
+export const isFree = (l: Pick<LayerV2, "len" | "free">, loop: number) => l.free === true && partLen(l, loop) !== null;
+
+/** Every part with its own length tiled across the loop. Unchanged (the same object) when none has one.
+ * `keepFree` leaves free-running parts as they are (an arrangement lays them across the whole song). */
+export function withPartLengths(t: TrackV2, opts?: { keepFree?: boolean }): TrackV2 {
   const L = t.loop || 4;
-  if (!t.layers.some(l => partLen(l, L) !== null)) return t;
-  return { ...t, layers: t.layers.map(l => { const n = partLen(l, L); return n === null ? l : { ...l, events: tiled(l.events, n, L) }; }) };
+  const tile = (l: LayerV2) => partLen(l, L) !== null && !(opts?.keepFree && isFree(l, L));
+  if (!t.layers.some(tile)) return t;
+  return { ...t, layers: t.layers.map(l => (tile(l) ? { ...l, events: tiled(l.events, partLen(l, L)!, L) } : l)) };
+}
+
+/**
+ * A free-running part laid across `total` beats from the song's start: its first `len` beats over and over,
+ * never restarted, each copy marked with which play of the part it is (`it`, for chance and conditions) when
+ * it has any. Used by the arrangement and the midi export; the engine runs an unarranged song's free part
+ * itself (cmd partLen).
+ */
+export function freeTiled(events: NoteEvent[], len: number, from: number, to: number): NoteEvent[] {
+  const one = events.filter(e => e.start < len - 1e-9).map(e => ({ ...e, len: Math.min(e.len, len) }));
+  const out: NoteEvent[] = [];
+  if (!one.length || len <= 0) return out;
+  for (let g = Math.max(0, Math.floor(from / len)); g * len < to - 1e-9; g++) {
+    for (const e of one) {
+      const start = Math.round((g * len + e.start) * 1e6) / 1e6;
+      if (start < from - 1e-9 || start >= to - 1e-9) continue;
+      out.push(e.cond || (e.chance ?? 1) < 1 ? { ...e, start, it: g } : { ...e, start });
+    }
+  }
+  return out.sort((a, b) => a.start - b.start || a.note - b.note);
 }
 
 /** The swing a part plays with: its own, or the song's. */

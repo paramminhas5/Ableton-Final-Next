@@ -21,6 +21,8 @@ export type Mod = { src: ModSrc; to: number; amt: number };
 
 /** What a learner reads: Live's names (Wavetable and Drift call them LFO and Env; this one is the filter's). */
 export const SRC_LABEL: Record<ModSrc, string> = { lfo: "lfo", env: "filter env" };
+/** The sampler's envelope source is its own, as in Live's Sampler: the auxiliary envelope. */
+export const srcLabel = (engine: string, src: ModSrc) => (src === "env" && engine === "sampler" ? "aux env" : SRC_LABEL[src]);
 /** The source's colour: the lfo's own, the envelope's own. */
 export const SRC_COLOR: Record<ModSrc, string> = { lfo: PIC.lfo, env: PIC.env };
 
@@ -29,12 +31,17 @@ const tableOf = (engine: string): readonly Spec[] | null => (engine === "lead" ?
 const spec = (engine: string, key: string) => tableOf(engine)?.find(p => p.key === key);
 const val = (params: Record<number, number>, s?: { index: number; default?: number }) => (s ? params[s.index] ?? (s as { default?: number }).default ?? 0 : 0);
 
-/** The sources an instrument has: the synths have an lfo and a filter envelope, the bass its filter envelope. */
+/** The sources an instrument has: the synths have an lfo and a filter envelope, the bass its filter envelope,
+ * drums and fx a layer lfo (Live's LFO device), the sampler a layer lfo and its aux envelope. */
 export function sourcesFor(engine: string): ModSrc[] {
-  if (engine === "lead" || engine === "chords") return ["lfo", "env"];
+  if (engine === "lead" || engine === "chords" || engine === "sampler") return ["lfo", "env"];
   if (engine === "bass") return ["env"];
+  if (engine === "drums" || engine === "fx") return ["lfo"];
   return [];
 }
+
+/** Whether the lfo is the layer's own (rate, time mode and waveform on the chip's panel) rather than the voice's. */
+export const hasLayerLfo = (engine: string) => engine === "drums" || engine === "fx" || engine === "sampler";
 
 /** Octaves the cutoff knob spans, so the voice's own routes draw in shares of its travel. */
 const cutOctaves = (engine: string) => { const c = spec(engine, "cutoff"); return c ? Math.log2(c.max / c.min) : 1; };
@@ -124,5 +131,28 @@ export function engineSlots(mods: Mod[] | undefined): { src: number; to: number;
     return ok ? { src: MOD_SRC[m.src], to: m.to, amt: Math.max(-1, Math.min(1, m.amt)) } : { src: 0, to: 0, amt: 0 };
   });
 }
+
+/**
+ * Where each modulated knob is right now, from the engine's live values (cmd modWatch): `vals` is the lfo,
+ * the envelope, then each slot's knob as the engine plays it. A slot's own value is exact; the voice's own
+ * routes (the lfo and the filter envelope on the cutoff) are the knob plus their amount times the source.
+ * Returns normalised positions by wire index.
+ */
+export function liveValues(rings: Map<number, Ring[]>, value: (index: number) => number, vals: ArrayLike<number>): Map<number, number> {
+  const out = new Map<number, number>();
+  const src = (s: ModSrc) => (s === "lfo" ? vals[0] : vals[1]);
+  for (const [i, rs] of rings) {
+    if (!rs.length) continue;
+    const slot = rs.find(r => !r.own && r.slot >= 0 && r.slot + 2 < vals.length && vals[r.slot + 2] >= 0);
+    let v = slot ? vals[slot.slot + 2] : value(i);
+    for (const r of rs) if (r.own) v += r.amt * src(r.src);
+    if (!Number.isFinite(v)) continue;
+    out.set(i, Math.max(0, Math.min(1, v)));
+  }
+  return out;
+}
+
+/** How often the live rings move: 30 a second, 15 on a phone with few cores (as the scope halves). */
+export const liveFps = (cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency ?? 8 : 8) => (cores <= 4 ? 15 : 30);
 
 export type { ParamSpec };

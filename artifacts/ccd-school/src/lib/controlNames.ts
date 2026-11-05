@@ -40,6 +40,8 @@ export const SOURCES = {
   // Serum 2's web manual: "Using Pitch Controls" (OCT, SEM, FIN, CRS) and "Controlling the Main Output
   // Volume" (the MAIN knob). The rest of the manual is not online, so no other Serum names are listed.
   serum: "https://xferrecords.com/web-manual/serum-2/using-pitch-controls",
+  /** Sampler's Modulation tab and its auxiliary envelope (Ableton's own manual page for Sampler could not be read here). */
+  liveSampler: "https://www.loopmasters.com/articles/3487-5-Sound-Design-Tips-With-Ableton-s-Sampler",
 } as const;
 
 /** One place the same control lives: the instrument, and the name printed on it there. */
@@ -89,6 +91,15 @@ export const CONTROLS: Record<string, Control> = {
   lfo: { label: "lfo", elsewhere: [["live auto filter", "lfo amt"], ["surge xt", "amplitude"]] },
   // vital: an lfo's rate is printed FREQUENCY (lfo_section.cpp).
   lforate: { label: "lfo rate", elsewhere: [["live auto filter", "rate"], ["surge xt", "rate"], ["vital lfo", "frequency"]] },
+  // The layer lfo on drums, fx and the sampler: Live 12's LFO device (Max for Live modulators, liveM4l): Rate,
+  // switched between Hz and synced beat divisions by its Time Mode toggles, and Waveform.
+  modrate: { label: "rate", elsewhere: [["live lfo", "rate (hz)"], ["surge xt", "rate"]] },
+  modsync: { label: "time mode", elsewhere: [["live lfo", "time mode (hz or beats)"]] },
+  modsynced: { label: "rate", elsewhere: [["live lfo", "rate (synced)"]] },
+  modwave: { label: "waveform", elsewhere: [["live lfo", "waveform"]] },
+  // The sampler's envelope source: Live's Sampler calls it the auxiliary envelope (its Modulation tab).
+  auxattack: { label: "attack", elsewhere: [["live sampler", "aux env attack"]] },
+  auxdecay: { label: "decay", elsewhere: [["live sampler", "aux env decay"]] },
 
   // ── the resonator voices ──
   voice: { label: "exciter", was: ["voice"], elsewhere: [["live tension", "exciter type (plectrum, hammer)"], ["live collision", "mallet"]] },
@@ -175,6 +186,10 @@ export const STEPS: Record<string, readonly string[]> = {
   space: ["hall", "plate"],
   echotype: ["digital", "tape", "bbd"],
   gate: ["trigger", "gate"],
+  // Live's LFO device: Hz or synced; its waveforms in its menu's order; the synced rates we offer.
+  modsync: ["hz", "sync"],
+  modwave: ["sine", "up", "down", "triangle", "square", "random"],
+  modsynced: ["1/32", "1/16", "1/8", "1/4", "1/2", "1 bar", "2 bars", "4 bars"],
 };
 
 /** A short line after the name, for the stepped knobs whose name alone says little. */

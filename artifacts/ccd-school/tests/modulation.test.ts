@@ -1,15 +1,39 @@
 import { describe, expect, it } from "vitest";
-import { assign, engineSlots, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed } from "../src/lib/modulation";
+import { assign, engineSlots, hasLayerLfo, liveFps, liveValues, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, srcLabel } from "../src/lib/modulation";
 import { BASS_PARAMS, LEAD_PARAMS, LAYER_PARAMS, MAX_MODS, MOD_SRC } from "../src/engine/params.gen";
 
 const L = (k: string) => LEAD_PARAMS.find(p => p.key === k)!;
 const PAN = LAYER_PARAMS.find(p => p.key === "pan")!.index;
 
 describe("modulation", () => {
-  it("synths have an lfo and a filter envelope, the bass its envelope, drums none", () => {
+  it("synths have an lfo and a filter envelope, the bass its envelope, drums and fx a layer lfo, the sampler an lfo and its aux envelope", () => {
     expect(sourcesFor("lead")).toEqual(["lfo", "env"]);
     expect(sourcesFor("bass")).toEqual(["env"]);
-    expect(sourcesFor("drums")).toEqual([]);
+    expect(sourcesFor("drums")).toEqual(["lfo"]);
+    expect(sourcesFor("fx")).toEqual(["lfo"]);
+    expect(sourcesFor("sampler")).toEqual(["lfo", "env"]);
+    expect(srcLabel("sampler", "env")).toBe("aux env");
+    expect(srcLabel("lead", "env")).toBe("filter env");
+    expect(hasLayerLfo("drums") && hasLayerLfo("sampler") && !hasLayerLfo("lead")).toBe(true);
+  });
+  it("live rings: a slot's knob where the engine plays it, the voice's own routes as the knob plus amount times the source", () => {
+    const cut = L("cutoff").index;
+    const p = { [L("lfo").index]: 0.5, [L("lfoto").index]: 0, [L("env").index]: 0 };
+    const mods = [{ src: "lfo" as const, to: PAN, amt: 0.25 }];
+    const rings = ringsOf("lead", p, mods);
+    // lfo at -0.5, env 0.2, slot 0 playing pan at 0.375
+    const vals = new Float32Array([-0.5, 0.2, 0.375, -1, -1, -1, -1, -1, -1, -1]);
+    const live = liveValues(rings, i => (i === cut ? 0.6 : 0.5), vals);
+    expect(live.get(PAN)).toBeCloseTo(0.375, 6);
+    const own = (0.5 * 3) / Math.log2(16000 / 120);
+    expect(live.get(cut)).toBeCloseTo(0.6 - 0.5 * own, 6);
+    // knobs without a ring have no dot; a dot never leaves the knob's travel
+    expect(live.has(L("res").index)).toBe(false);
+    expect(liveValues(rings, () => 0.99, new Float32Array([1, 0, 1.2, -1, -1, -1, -1, -1, -1, -1])).get(cut)).toBe(1);
+  });
+  it("live rings move 30 times a second, 15 on a phone with four cores or fewer", () => {
+    expect(liveFps(8)).toBe(30);
+    expect(liveFps(4)).toBe(15);
   });
   it("the lead's own lfo to the filter is a ring on the cutoff, as far as the voice takes it", () => {
     const p = { [L("lfo").index]: 0.5, [L("lfoto").index]: 0 };

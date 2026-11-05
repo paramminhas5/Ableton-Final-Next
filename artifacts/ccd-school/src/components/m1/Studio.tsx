@@ -55,7 +55,7 @@ import {
   type TrackV2,
   type NoteEvent,
 } from "@/lib/track2";
-import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { downloadSongMidi, heardPasses, variesByPass } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
 import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
@@ -63,14 +63,14 @@ import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
 import { swung, useEngineTrack } from "./useEngineTrack";
-import { lockSchedule, setLock, dueBetween, valuesAt, type Change } from "@/lib/plock";
+import { setLock } from "@/lib/plock";
 import { arranged } from "@/lib/arrange";
 import { captureTake, trimPlayed, type Played } from "@/lib/capture";
 import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
 import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC } from "@/lib/paramColor";
-import { assign, canTake, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, SRC_COLOR, SRC_LABEL, type ModSrc } from "@/lib/modulation";
-import { ModChips, ModOverlay } from "./Modulation";
+import { assign, canTake, hasLayerLfo, removeRing, ringsOf, setAmount, sourcesFor, sourceUsed, srcLabel, SRC_COLOR, type ModSrc, type Ring as ModRing } from "@/lib/modulation";
+import { ModChips, ModOverlay, SourcePanel, useModLive } from "./Modulation";
 import { ABKey, useAB } from "./AB";
 import { ScopeView } from "./Scope";
 import { fromValue, toValue } from "@/engine";
@@ -122,7 +122,8 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
         const s = (spec.key === "shape" ? { ...spec, key: shapeKey, label: knobLabel({ key: shapeKey!, label: spec.label }) } : spec) as ParamSpec;
         return [{ spec: s, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + k }];
       });
-      return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...page];
+      // The rack's lfo settings sit with the lfo chip, not on a page.
+      return [...DRUM_RACK_PARAMS.filter(spec => spec.bank !== "mod").map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...page];
     }
     return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
@@ -145,6 +146,7 @@ export function Studio() {
   const [resetOpen, setResetOpen] = useState(false);
   // Saving a wav asks how loud, on its own panel; it never borrows the knob page's shift.
   const [wavOpen, setWavOpen] = useState(false);
+  const [midiOpen, setMidiOpen] = useState(false);
   const [sureReset, setSureReset] = useState<string | null>(null);
   const [songs, setSongs] = useState<SongIndex | null>(null);
   const [shift, setShift] = useState(false);
@@ -238,7 +240,10 @@ export function Studio() {
       for (const e of evs) {
         if (e.kind === OUT.pos) {
           setPos(p => (p.beat === e.beat && p.flags === e.flags ? p : { beat: e.beat, flags: e.flags }));
-          tickLocks(e.beat, e.flags);
+          // Times round the loop since play, so a free-running part's step light follows its own time.
+          const sb = songBeat.current;
+          if (!(e.flags & FLAG.playing) || e.flags & FLAG.countIn) { sb.wraps = 0; sb.last = 0; }
+          else { if (e.beat < sb.last - t.loop / 2) sb.wraps++; sb.last = e.beat; }
           continue;
         }
         const layer = t.layers[e.layer];
@@ -285,41 +290,10 @@ export function Studio() {
     });
   }, [engine, flash, snap, update]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── parameter locks: the engine plays one value per layer, so we send each lock at its step ──
-  const locks = useRef<{ sched: { layer: number; changes: Change[]; base: (i: number) => number }[]; loop: number; bpm: number; until: number | null }>({ sched: [], loop: 4, bpm: 120, until: null });
-  useEffect(() => {
-    const t = arranged(track);
-    const anySolo = t.layers.some(l => l.solo);
-    locks.current.sched = t.layers.map((l, i) => {
-      if (!l.events.some(e => e.p) || (anySolo ? !l.solo : l.mute)) return null;
-      const base = (idx: number) => paramOf(l, idx);
-      return { layer: i, base, changes: lockSchedule(swung(l.events, swingOf(l, t)), base, TYPE[l.type].engine === "drums") };
-    }).filter((x): x is { layer: number; changes: Change[]; base: (i: number) => number } => !!x && x.changes.length > 0);
-    locks.current.loop = t.loop;
-    locks.current.bpm = t.bpm;
-  }, [track]);
-  function tickLocks(beat: number, flags: number) {
-    const L = locks.current;
-    const on = !!(flags & FLAG.playing) && !(flags & FLAG.countIn);
-    if (!on || !L.sched.length) {
-      if (L.until !== null) { for (const s of L.sched) for (const c of s.changes) engine.param(s.layer, c.index, s.base(c.index)); L.until = null; }
-      return;
-    }
-    const loop = L.loop, mod = (x: number) => ((x % loop) + loop) % loop;
-    const b = mod(beat), msPerBeat = 60000 / L.bpm, ahead = 80 / msPerBeat;
-    if (L.until === null || mod(L.until - b) > loop / 2) {
-      for (const s of L.sched) valuesAt(s.changes, b, loop).forEach((v, idx) => engine.param(s.layer, idx, v));
-      L.until = b;
-    }
-    const to = mod(b + ahead);
-    for (const s of L.sched) {
-      for (const d of dueBetween(s.changes, L.until, to, loop)) {
-        const wait = mod(d.change.beat - b) * msPerBeat - 4;
-        window.setTimeout(() => engine.param(s.layer, d.change.index, d.change.value), Math.max(0, wait));
-      }
-    }
-    L.until = to;
-  }
+  // ── parameter locks: they ride on the notes to the engine (useEngineTrack, cmd evLock), which sets each on its
+  // note's own sample. Turning a knob on a held step lets you hear it at once; letting go puts the knob back.
+  const auditioned = useRef<Set<number>>(new Set());
+  const songBeat = useRef({ wraps: 0, last: 0 });
 
   useEffect(() => {
     if (!recording && !countIn) takeOpen.current = false;
@@ -374,6 +348,11 @@ export function Studio() {
 
   // ── shaping ───────────────────────────────────────────────────────────────
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
+  // Rings that move while the sound plays: the engine reports this part's modulation while a ring is on screen.
+  const knobsRef = useRef<HTMLDivElement>(null);
+  const liveRings: Map<number, ModRing[]> = sel ? ringsOf(TYPE[sel.type].engine, sel.params, sel.mods) : new Map();
+  const ringShown = knobs.some(k => (liveRings.get(k.index)?.length ?? 0) > 0);
+  useModLive(engine, selIndex, ringShown && mode === "play" && !lockAt, knobsRef, liveRings, i => (sel ? paramOf(sel, i) : 0));
   const selPadNote = sel && drumLike ? DRUM_PAD_NOTES[effectivePad(sel)] : -1;
   const clock = useNoteClock(engine, selIndex, { bpm: track.bpm, loop: track.loop, events: sel?.events ?? [] }, drumLike ? (n => n === selPadNote) : undefined);
   const lockMatch = (at: NonNullable<LockAt>) => (e: { note: number; start: number }) => Math.abs(e.start - at.step * grid) < grid / 2 && (at.note === null || e.note === at.note);
@@ -390,6 +369,7 @@ export function Studio() {
     if (lockAt && sel) {
       patchSel(l => ({ ...l, events: setLock(l.events, lockMatch(lockAt), index, v) }), undoable);
       engine.param(selIndex, index, v);
+      auditioned.current.add(index);
       setTouched({ label: `step ${lockAt.step + 1} · p-lock · ${spec.label}`, text: bigText(spec, v), key: "plock" });
       return;
     }
@@ -481,6 +461,13 @@ export function Studio() {
   const loopSteps = Math.round(track.loop / grid);
   const plen = sel ? partLen(sel, track.loop) : null;
   const partSteps = plen !== null ? Math.max(1, Math.round(plen / grid)) : loopSteps;
+  // A free-running part (Elektron's master length at inf) never restarts with the loop; the default restarts.
+  const freeSel = !!sel && plen !== null && sel.free === true;
+  const toggleFree = () => {
+    if (!sel) return;
+    patchSel(l => { const { free: _f, ...rest } = l; return l.free ? rest : { ...rest, free: true }; }); // eslint-disable-line @typescript-eslint/no-unused-vars
+    setTouched({ label: `${TYPE[sel.type].label} length`, text: sel.free ? "restarts with the loop" : "runs free, drifting across the song" });
+  };
   const setPartSteps = (n: number) => {
     const steps = Math.max(1, Math.min(loopSteps, n));
     patchSel(l => { const { len: _len, ...rest } = l; return steps >= loopSteps ? rest : { ...rest, len: steps * grid }; }); // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -500,6 +487,9 @@ export function Studio() {
       <button type="button" className="st-tag" aria-label="One step shorter" disabled={partSteps <= 1} onClick={() => setPartSteps(partSteps - 1)}>−</button>
       <span className="st-ss st-partv" aria-live="polite">{plen !== null ? partSteps : `${loopSteps}`}</span>
       <button type="button" className="st-tag" aria-label="One step longer" disabled={plen === null} onClick={() => setPartSteps(partSteps + 1)}>+</button>
+      <button type="button" className={`st-tag ${freeSel ? "is-on" : ""}`} aria-pressed={freeSel} disabled={plen === null}
+        aria-label={freeSel ? "Runs free: never restarts with the loop. Tap to restart with the loop" : "Restarts with the loop. Tap to run free (Elektron's master length inf)"}
+        onClick={toggleFree}>{freeSel ? "free" : "restart"}</button>
       <button type="button" className={`st-tag ${sel.swing !== undefined ? "is-on" : ""}`} aria-label="This part's swing, tap to change" onClick={cycleSwing}>swing {sel.swing === undefined ? "song" : `${Math.round(sel.swing * 100)}%`}</button>
     </div>
   ) : null;
@@ -508,7 +498,7 @@ export function Studio() {
   const stepsExtra = partOpen && partRow ? partRow : diceRow || fillKey ? <>{diceRow}{fillKey}</> : null;
   const partTag = sel && !lockAt ? (
     <button type="button" className={`st-tag ${partOpen ? "is-on" : ""}`} aria-pressed={partOpen} aria-label={`Own length and swing for ${TYPE[sel.type].label}`} onClick={() => setPartOpen(o => !o)}>
-      part{plen !== null || sel.swing !== undefined ? ` · ${plen !== null ? partSteps : loopSteps}${sel.swing !== undefined ? ` · ${Math.round(sel.swing * 100)}%` : ""}` : ""}
+      part{plen !== null || sel.swing !== undefined ? ` · ${plen !== null ? partSteps : loopSteps}${freeSel ? " free" : ""}${sel.swing !== undefined ? ` · ${Math.round(sel.swing * 100)}%` : ""}` : ""}
     </button>
   ) : null;
 
@@ -548,6 +538,13 @@ export function Studio() {
     setTouched({ label: `step ${lockAt.step + 1}`, text: "p-locks cleared", key: "plock" });
   };
   useEffect(() => { setLockAt(null); }, [selId, sel?.surface]);
+  // Done locking: every knob the held step auditioned goes back to its own value (the locks play from the notes).
+  useEffect(() => {
+    if (lockAt || !auditioned.current.size) return;
+    const l = trackRef.current.layers[selIndex];
+    if (l) for (const i of auditioned.current) engine.param(selIndex, i, paramOf(l, i));
+    auditioned.current.clear();
+  }, [lockAt]); // eslint-disable-line react-hooks/exhaustive-deps
   // letting go of a held step clears its p-lock readout, so the screen never says a step is still held
   useEffect(() => { if (!lockAt) setTouched(t => (t?.key === "plock" ? null : t)); }, [lockAt]);
 
@@ -574,6 +571,8 @@ export function Studio() {
   // ── screen text ───────────────────────────────────────────────────────────
   const totalSteps = Math.round(track.loop / grid);
   const playStep = playing ? stepOf(pos.beat, totalSteps, track.loop) : -1;
+  const loopBeat = ((pos.beat % track.loop) + track.loop) % track.loop;
+  const partPlayStep = plen === null || !playing ? playStep : Math.floor(((freeSel ? (songBeat.current.wraps * track.loop + loopBeat) % plen : loopBeat % plen)) / grid);
   const laneLike = drumLike || sel?.type === "fx" || sel?.type === "sample";
   const stepPages = Math.max(1, Math.ceil(totalSteps / (laneLike ? 8 : 16)));
   const pageNow = Math.min(page, stepPages - 1);
@@ -701,10 +700,10 @@ export function Studio() {
           </div>
           <span style={{ flex: 1 }} />
           <button type="button" className="st-tag st-songtag"
-            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
+            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
-            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setKeyOpen(o => !o); }}>
+            onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setMidiOpen(false); setKeyOpen(o => !o); }}>
             {/* a phone shows the short key (a min) so the chip is never cut to "a mi..." */}
             <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button>
           {mode === "mix" ? null : (
@@ -719,7 +718,7 @@ export function Studio() {
             const c = TYPE[l.type].color;
             return (
               <button key={l.id} type="button" className={`m1-m is-wide st-slot ${on ? "is-on" : ""} ${l.mute ? "is-muted" : ""}`} aria-pressed={on}
-                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setShift(false); }}>
+                onClick={() => { setSelId(l.id); setTouched(null); setAdding(false); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setShift(false); }}>
                 <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: c } as CSSProperties} />
                 {TYPE[l.type].label}
                 {l.solo ? <i className="st-solo" /> : null}
@@ -728,7 +727,7 @@ export function Studio() {
           })}
           {track.layers.length < MAX_LAYERS ? (
             <button type="button" className={`m1-m is-wide st-slot st-plus ${adding ? "is-on" : ""}`} aria-label="Add a layer" aria-pressed={adding}
-              onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
+              onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setAdding(a => (mode === "mix" ? true : !a)); }}>
               <Icon name="plus" />
             </button>
           ) : null}
@@ -780,13 +779,23 @@ export function Studio() {
         </Screen>
 
 
-        {wavOpen ? (
+        {midiOpen ? (
+          <div className="st-main">
+            <Silk label="to live" right="chance and conditions in a midi file" />
+            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+              {([["heard", `as you hear it: ${track.sections?.length ? "the arrangement" : `${Math.round((heardPasses(track.loop) * track.loop) / 4)} bars`}${track.sections?.length && heardPasses(arranged(track).loop) > 1 ? ` ${heardPasses(arranged(track).loop)} times` : ""}, chance rolled as it plays`], ["every", "every note, chance left out (a midi file can't hold it)"]] as ["heard" | "every", string][]).map(([m, label]) => (
+                <button key={m} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }}
+                  onClick={() => { downloadSongMidi(track, m); setMidiOpen(false); setTouched({ label: "to live", text: m === "heard" ? "as heard" : "every note" }); }}>{label}</button>
+              ))}
+            </div>
+          </div>
+        ) : wavOpen ? (
           <div className="st-main">
             <Silk label="save a wav" right="the whole song, arranged" />
             <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
               {([[false, "for streaming and sharing (-14 lufs)"], [true, "loud, for club play (-9 lufs)"]] as [boolean, string][]).map(([loud, label]) => (
                 <button key={label} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }}
-                  onClick={() => { void downloadWav(track, loud); setWavOpen(false); }}>{label}</button>
+                  onClick={() => { void downloadWav(track, loud); setWavOpen(false); setMidiOpen(false); }}>{label}</button>
               ))}
             </div>
           </div>
@@ -882,12 +891,12 @@ export function Studio() {
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} root={track.root} scale={scaleOf(track)} chord={chordNow} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={partPlayStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
                 onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={plen !== null && playing ? Math.floor(((((pos.beat % track.loop) + track.loop) % track.loop) % plen) / grid) : playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={partPlayStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow} partSteps={plen !== null ? partSteps : undefined} tag={partTag}
                 onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
@@ -922,34 +931,38 @@ export function Studio() {
             <div className="m1-modrow">
             {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
               <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
-                onEdit={src => { setModEdit(src); setTouched(src ? { label: SRC_LABEL[src], text: "set amounts" } : null); }}
+                label={src => srcLabel(TYPE[sel.type].engine, src)}
+                onEdit={src => { setModEdit(src); setTouched(src ? { label: srcLabel(TYPE[sel.type].engine, src), text: hasLayerLfo(TYPE[sel.type].engine) ? "its settings, then set amounts" : "set amounts" } : null); }}
                 onOver={setDropOver}
                 onDrop={(src, to) => {
                   const k = knobs.find(x => x.index === to);
                   if (!k || !canTake(k.spec.key)) return;
-                  patchMod(assign(TYPE[sel.type].engine, sel.params, sel.mods, src, to), `${SRC_LABEL[src]} to ${k.spec.label}`, "modulating");
+                  patchMod(assign(TYPE[sel.type].engine, sel.params, sel.mods, src, to), `${srcLabel(TYPE[sel.type].engine, src)} to ${k.spec.label}`, "modulating");
                 }} />
             ) : <span style={{ flex: 1 }} />}
             {!lockAt ? <ABKey {...ab} /> : null}
             </div>
+            {modEdit && sel && hasLayerLfo(TYPE[sel.type].engine) && !lockAt ? (
+              <SourcePanel engine={TYPE[sel.type].engine} src={modEdit} value={i => paramOf(sel, i)} onParam={(i, spec, v) => setParam(i, spec, v)} />
+            ) : null}
             {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
-            <div className="m1-g st-knobs">
+            <div className="m1-g st-knobs" ref={knobsRef}>
               {knobs.map(({ spec, index }, i) => {
                 const eng = TYPE[sel.type].engine;
-                const rs = ringsOf(eng, sel.params, sel.mods).get(index) ?? [];
+                const rs = liveRings.get(index) ?? [];
                 const mine = modEdit ? rs.find(r => r.src === modEdit) : undefined;
                 const takes = sourcesFor(eng).length > 0 && canTake(spec.key) && !lockAt;
                 return (
                   <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color} title={elsewhereLine(spec.key) ?? undefined}
                     {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lpkind" || spec.key === "lfoto" ? 3 : undefined}
                     value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default} tipValue={bigText(spec, lockedValue(index) ?? paramOf(sel, index))}
-                    mods={rs.map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
+                    mods={rs.map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))} liveIndex={index}
                     modTo={takes ? index : undefined} drop={dropOver === index && takes}
                     overlay={modEdit && takes ? (
                       <ModOverlay src={modEdit} ring={mine} knob={spec.label}
-                        onAssign={() => patchMod(assign(eng, sel.params, sel.mods, modEdit, index), `${SRC_LABEL[modEdit]} to ${spec.label}`, "modulating")}
-                        onAmount={a => mine && patchMod(setAmount(eng, sel.mods, mine, a), `${SRC_LABEL[modEdit]} on ${spec.label}`, `${Math.round(a * 100)}%`)}
-                        onRemove={() => mine && patchMod(removeRing(eng, sel.mods, mine), `${SRC_LABEL[modEdit]} on ${spec.label}`, "off")} />
+                        onAssign={() => patchMod(assign(eng, sel.params, sel.mods, modEdit, index), `${srcLabel(eng, modEdit)} to ${spec.label}`, "modulating")}
+                        onAmount={a => mine && patchMod(setAmount(eng, sel.mods, mine, a), `${srcLabel(eng, modEdit)} on ${spec.label}`, `${Math.round(a * 100)}%`)}
+                        onRemove={() => mine && patchMod(removeRing(eng, sel.mods, mine), `${srcLabel(eng, modEdit)} on ${spec.label}`, "off")} />
                     ) : undefined}
                     onChange={v => setParam(index, spec, v)} />
                 );
@@ -975,13 +988,15 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
-        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
           <Icon name="reset" />
         </Key>
-        <Key label="to live" onClick={() => downloadTrackV2Midi(arranged(track))} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+        <Key label="to live" disabled={!track.layers.length} ariaPressed={midiOpen}
+          onClick={() => { if (!variesByPass(track)) { downloadSongMidi(track); return; } setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(o => !o); }}
+          ariaLabel={variesByPass(track) ? "Export to Ableton Live as MIDI: pick as heard or every note" : "Export to Ableton Live as MIDI"}>
           <Icon name="out" />
         </Key>
-        <Key label="wav" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setWavOpen(o => !o); }} ariaPressed={wavOpen} disabled={!track.layers.length}
+        <Key label="wav" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setMidiOpen(false); setWavOpen(o => !o); }} ariaPressed={wavOpen} disabled={!track.layers.length}
           ariaLabel="Save the song as a wav: pick streaming (-14 LUFS) or club (-9 LUFS) loudness">
           <Icon name="out" />
         </Key>

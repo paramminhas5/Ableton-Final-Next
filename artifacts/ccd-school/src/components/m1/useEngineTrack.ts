@@ -8,16 +8,18 @@ import { getEngine, INSTRUMENT_BASE, LAYER_PARAMS, MASTER_PARAMS, type Engine } 
 import { pushSamples } from "@/lib/samples";
 import { arranged } from "@/lib/arrange";
 import { REAL_KIT_ID, realKitLayer } from "@/lib/realKit";
-import { swingOf } from "@/lib/partLength";
+import { isFree, partLen, swingOf } from "@/lib/partLength";
+import { withEngineLocks } from "@/lib/plock";
+import { punchPoints } from "@/lib/punch";
 import { instrumentParamCount, masterOf, MAX_LAYERS, paramOf, TYPE, type TrackV2 } from "@/lib/track2";
 import { engineSlots } from "@/lib/modulation";
 
 const LEVEL = LAYER_PARAMS.find(p => p.id === "mix.level")!.index;
 const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
-type Sent = { inst: string; events: string; duck: string; params: Map<number, number>; mods?: string };
+type Sent = { inst: string; events: string; duck: string; params: Map<number, number>; mods?: string; plen?: number };
 
-type Last = { bpm: number; loop: number; swing?: number; seed?: number; master?: number[]; samples?: Set<string> };
+type Last = { bpm: number; loop: number; swing?: number; seed?: number; master?: number[]; samples?: Set<string>; punches?: string };
 
 export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: Last) {
   // An arranged song plays as one long timeline of its sections.
@@ -48,6 +50,15 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
     engine.loop(t.loop);
     last.loop = t.loop;
   }
+  // Punch-ins recorded into the song: the engine plays them on their exact sample.
+  const pk = `${t.loop}|${JSON.stringify(t.punches ?? [])}`;
+  if (last.punches !== pk) {
+    engine.punchAuto(punchPoints(t.punches, t.loop));
+    last.punches = pk;
+  }
+  // A free-running part in an unarranged song runs in the engine at its own length (an arrangement lays it
+  // across the song itself).
+  const unarranged = !song.sections?.length;
   void pushSamples(engine, t.layers, (last.samples ??= new Set()));
   const anySolo = t.layers.some(l => l.solo);
   for (let i = 0; i < MAX_LAYERS; i++) {
@@ -61,6 +72,7 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
       s.params.clear();
       s.events = "";
       s.mods = undefined; // a new instrument starts with no routes in the engine
+      s.plen = undefined;
     }
     if (!l) continue;
     // Every param the layer might have, so a reset to default reaches the engine too.
@@ -80,10 +92,18 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
       engineSlots(l.mods).forEach((m, slot) => engine.mod(i, slot, m.src, m.to, m.amt));
       s.mods = mk;
     }
+    const free = unarranged && isFree(l, t.loop) ? partLen(l, t.loop)! : 0;
+    if (s.plen !== free) {
+      engine.partLen(i, free, free > 0);
+      s.plen = free;
+      s.events = "";
+    }
     const sw = swingOf(l, t);
     const ev = JSON.stringify(l.events) + "|" + sw;
     if (s.events !== ev) {
-      engine.pattern(i, swung(l.events, sw));
+      // Free: one play of the part (the first copy of its tiling); p-locks ride on the notes to the engine.
+      const evs = free ? l.events.filter(e => e.start < free - 1e-9) : l.events;
+      engine.pattern(i, withEngineLocks(swung(evs, sw), TYPE[l.type].engine === "drums"));
       s.events = ev;
     }
     const srcIndex = l.duck.src ? t.layers.findIndex(x => x.id === l.duck.src) : -1;

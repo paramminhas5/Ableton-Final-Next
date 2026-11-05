@@ -42,6 +42,8 @@ export interface EngineHost {
   loadSample?(layer: number, slot: number, data: Float32Array, rate: number): void;
   /** The engine's scope ring (cmd SCOPE): `fn` gets its latest samples about 30 times a second. Web only for now. */
   scope?(fn: (x: Float32Array) => void): () => void;
+  /** The watched part's live modulation values (cmd modWatch), `fps` times a second. Web only for now. */
+  mods?(fps: number, fn: (v: Float32Array) => void): () => void;
   /** Web only: the audio context the engine plays into, so other sounds (a file on a deck) mix with it. */
   audio?(): { ctx: AudioContext; out: AudioNode } | null;
   stop(): Promise<void>;

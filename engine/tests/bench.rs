@@ -89,6 +89,35 @@ fn song() -> Engine {
         }
         send(&e, cmd::SCOPE, 0, ccd_engine::engine::SCOPE_MASTER, 0.0, 0.0, 0.0);
     }
+    // CCD_BENCH_LEFTOVERS=1: the engine leftovers in use. Both drum layers with their own lfo (synced, random)
+    // on pan and the part's cutoff, every drum step p-locked (tune and pan), the bass parts free running at 3
+    // and 5 steps, punch-in automation pressing and letting go the filter every beat, and a layer watched
+    // for its live modulation values.
+    if std::env::var("CCD_BENCH_LEFTOVERS").is_ok() {
+        for l in [0u32, 4] {
+            let b = lfo_base(Instrument::Drums).unwrap() as u32;
+            send(&e, cmd::PARAM, l, b + LFO_WAVE as u32, 1.0, 0.0, 0.0);
+            send(&e, cmd::PARAM, l, b + LFO_SYNCED as u32, 2.0 / 7.0, 0.0, 0.0);
+            send(&e, cmd::MOD, l, 0, 0.3, L_PAN as f64, 0.0);
+            send(&e, cmd::MOD, l, 1, 0.3, L_LP as f64, 0.0);
+            send(&e, cmd::EV_CLEAR, l, 0, 0.0, 0.0, 0.0);
+            for s in 0..16 {
+                send(&e, cmd::EV_ADD, l, DRUM_PAD_NOTES[s % 16] as u32, 1.0, s as f64 * 0.25, 0.2);
+                send(&e, cmd::EV_LOCK, l, (INSTRUMENT_BASE + (s % 16) * 4) as u32, (s % 5) as f32 / 5.0, 0.0, 0.0);
+                send(&e, cmd::EV_LOCK, l, L_PAN as u32, (s % 3) as f32 / 3.0, 0.0, 0.0);
+            }
+            send(&e, cmd::EV_COMMIT, l, 0, 0.0, 0.0, 0.0);
+        }
+        send(&e, cmd::PART_LEN, 1, 1, 0.0, 0.75, 0.0);
+        send(&e, cmd::PART_LEN, 5, 1, 0.0, 1.25, 0.0);
+        send(&e, cmd::PUNCH_CLEAR, 0, 0, 0.0, 0.0, 0.0);
+        for b in 0..4 {
+            send(&e, cmd::PUNCH_ADD, 0, 2, 0.3, b as f64, 0.0);
+            send(&e, cmd::PUNCH_ADD, 0, 0, 0.0, b as f64 + 0.5, 0.0);
+        }
+        send(&e, cmd::PUNCH_COMMIT, 0, 0, 0.0, 0.0, 0.0);
+        send(&e, cmd::MOD_WATCH, 0, 1, 0.0, 0.0, 0.0);
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

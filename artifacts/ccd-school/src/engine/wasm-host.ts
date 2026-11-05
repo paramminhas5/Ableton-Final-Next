@@ -43,6 +43,7 @@ export class WasmHost implements EngineHost {
           for (const fn of this.subs) fn(evs);
         } else if (d.t === "load") this.load = d.ms / 10; // ms per second -> %
         else if (d.t === "scope") for (const fn of this.scopes) fn(d.x as Float32Array);
+        else if (d.t === "mods") for (const w of this.modSubs) w.fn(d.x as Float32Array);
       };
     });
     // Compiled inside the worklet: Chrome cannot hand a compiled module across.
@@ -50,6 +51,7 @@ export class WasmHost implements EngineHost {
     this.node = node;
     await ready;
     if (this.scopes.size) node.port.postMessage({ t: "scope", on: true });
+    if (this.modSubs.size) this.tellMods();
     if (ctx.state !== "running") await ctx.resume();
     if (this.queue.length) this.flush();
   }
@@ -99,6 +101,19 @@ export class WasmHost implements EngineHost {
     const tell = () => this.node?.port.postMessage({ t: "scope", on: this.scopes.size > 0 });
     tell();
     return () => { this.scopes.delete(fn); tell(); };
+  }
+
+  private modSubs = new Set<{ fps: number; fn: (v: Float32Array) => void }>();
+  private tellMods() {
+    const fps = Math.max(0, ...[...this.modSubs].map(w => w.fps));
+    this.node?.port.postMessage({ t: "mods", on: this.modSubs.size > 0, fps });
+  }
+  /** Live modulation values, `fps` times a second while anyone watches (the fastest watcher sets the rate). */
+  mods(fps: number, fn: (v: Float32Array) => void) {
+    const w = { fps, fn };
+    this.modSubs.add(w);
+    this.tellMods();
+    return () => { this.modSubs.delete(w); this.tellMods(); };
   }
 
   subscribe(fn: (e: EngineEvent[]) => void) {

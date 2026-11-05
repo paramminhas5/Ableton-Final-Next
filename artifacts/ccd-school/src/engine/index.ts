@@ -2,7 +2,7 @@
  * The CCD engine, from the UI's side. One API whether the sound comes from
  * WebAssembly in the browser or from native code in the iOS/Android app.
  */
-import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, SCOPE_OFF, type InstrumentName } from "./params.gen";
+import { BASS_PARAMS, CMD, DRUM_PAD_PARAMS, INSTRUMENT, INSTRUMENT_BASE, LAYER_PARAMS, MAX_EV_LOCKS, SCOPE_OFF, type InstrumentName } from "./params.gen";
 import type { EngineEvent, EngineHost } from "./host";
 import { NativeHost, isTauri } from "./native-host";
 import { WasmHost } from "./wasm-host";
@@ -14,7 +14,7 @@ export type { EngineEvent, EngineHost, HostInfo } from "./host";
 
 /** `chance` 0..1 and `cond` (a trig condition: "1:2", "fill"...) decide in the engine whether a note plays
  * each time round; `it` and `reps` say which play of the part's loop it is in an arranged song. */
-export type NoteEvent = { note: number; vel: number; start: number; len: number; chance?: number; cond?: string; it?: number; reps?: number };
+export type NoteEvent = { note: number; vel: number; start: number; len: number; chance?: number; cond?: string; it?: number; reps?: number; locks?: [index: number, value: number][] };
 
 /** Trig conditions in the engine's wire order (engine/src/seq.rs, cond). */
 const COND_CODE: Record<string, number> = { "1:2": 1, "2:2": 2, "1:4": 3, "2:4": 4, "3:4": 5, "4:4": 6, fill: 7, "not fill": 8 };
@@ -55,6 +55,8 @@ export class Engine {
       const cond = e.cond ? (COND_CODE[e.cond] ?? 0) : 0;
       const chance = e.chance ?? 1;
       if (cond || chance < 1) this.s(CMD.evCond, layer, cond, chance, e.it ?? 0, e.reps ?? 1);
+      // P-locks: applied by the engine on the note's own sample (a negative value is the knob's own).
+      if (e.locks) for (const [i, v] of e.locks.slice(0, MAX_EV_LOCKS)) this.s(CMD.evLock, layer, i, v);
     }
     this.s(CMD.evCommit, layer);
   }
@@ -64,8 +66,30 @@ export class Engine {
   }
   /** Punch-in effect on the whole mix (PUNCH.repeat, filter, tapeStop, throw) at `amount` 0..1, while held;
    * PUNCH.off lets go and the mix fades back to exactly dry. Send again to move the amount. */
-  punch(mode: number, amount = 0.5) {
-    this.s(CMD.punch, 0, mode, amount);
+  punch(mode: number, amount = 0.5, at?: number) {
+    // `at`: the touch's event.timeStamp, so a recorded press lands on the beat you heard (-1: now).
+    this.s(CMD.punch, 0, mode, amount, at === undefined ? -1 : Date.now() - (performance.now() - at));
+  }
+  /** Punch-in automation recorded into the song: points (effect, amount, loop beat as heard), played by the
+   * engine on their exact sample while the song plays. An empty list clears it. */
+  punchAuto(points: { mode: number; amount: number; beat: number }[]) {
+    this.s(CMD.punchClear);
+    for (const p of points) this.s(CMD.punchAdd, 0, p.mode, p.amount, p.beat);
+    this.s(CMD.punchCommit);
+  }
+  /** A part that runs free at its own length (Elektron's per-track length with no master reset). 0 follows the loop. */
+  partLen(layer: number, beats: number, free: boolean) {
+    this.s(CMD.partLen, layer, free && beats > 0 ? 1 : 0, 0, beats);
+  }
+  /**
+   * Live modulation values of one part (rings that move while the sound plays): `fn` gets MOD_VALUES floats
+   * (the lfo -1..1, the envelope 0..1, then each slot's knob as it plays, -1 for none) `fps` times a second.
+   * Nothing is sent while nobody watches. Returns a function that stops it.
+   */
+  modWatch(layer: number, fps: number, fn: (v: Float32Array) => void): () => void {
+    this.s(CMD.modWatch, layer, 1);
+    const off = this.host.mods?.(fps, fn) ?? (() => {});
+    return () => { off(); this.s(CMD.modWatch, layer, 0); };
   }
   /** The fill key: steps with the fill condition play while it is held (Elektron's fill). */
   fill(on: boolean) {
