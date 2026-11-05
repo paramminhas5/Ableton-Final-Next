@@ -18,6 +18,8 @@ import { ABPlayer, REAL_BPM, loadRealKit, renderMatchedPair } from "@/lib/gym/re
 import { freshSaved, loadGym, saveGym, type GymSaved } from "@/lib/gym/store";
 import { canUsePass, recordSession, takeFreePass, weekStatus } from "@/lib/gym/week";
 import { GoPill, Icon, Key, Screen, Silk } from "@/components/m1/controls";
+import { makeMatchQuestion, type MatchPart, type MatchQuestion } from "@/lib/gym/match";
+import { GymMatch } from "./GymMatch";
 import "@/components/m1/lesson.css";
 
 /** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
@@ -25,10 +27,12 @@ const TAUGHT_BY: Record<GymDrill, { slugs: string[]; first: string; title: strin
   eq: { slugs: ["eq-place", "eq-eight", "eq-mixing-dj"], first: "eq-place", title: "eq: a place for everything" },
   compression: { slugs: ["glue", "compressor", "glue-compressor"], first: "glue", title: "glue: compression and loudness" },
   groove: { slugs: [], first: "groove-feel", title: "groove and swing" },
+  // Opens after any lesson with a match step (first-bass is the first).
+  match: { slugs: ["first-bass", "shape-your-synth", "kick-designer", "saturator-distortion", "warp-modes-deep", "collision-tension-electric"], first: "first-bass", title: "your first bass line" },
 };
-const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove" };
-const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?" };
-const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF" };
+const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove", match: "match this sound" };
+const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?", match: "match this sound" };
+const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF", match: "#5CC8FF" };
 const BARS_BEFORE_ANSWER = 8;
 const fmtHz = (hz: number) => (hz >= 1000 ? `${hz / 1000} khz` : `${hz} hz`);
 const fmtClock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -43,6 +47,7 @@ function Pic({ kind, c }: { kind: string; c: string }) {
     eq: <path d="M4 26h12c6 0 7-16 12-16s6 16 12 16h12" {...s} />,
     compression: <>{[6, 12, 18, 24, 30, 36, 42, 48].map((x, i) => <path key={x} d={`M${x} ${18 - (i < 4 ? 8 : 4)}v${i < 4 ? 16 : 8}`} {...s} opacity={i < 4 ? 0.5 : 1} />)}</>,
     groove: <><circle cx="10" cy="18" r="3" fill={c} /><circle cx="22" cy="18" r="3" fill={c} /><circle cx="36" cy="18" r="3" fill={c} /><circle cx="48" cy="18" r="3" fill={c} opacity={0.5} /></>,
+    match: <><path d="M4 18c5-11 9-11 14 0s9 11 14 0 9-11 14 0" {...s} opacity={0.45} /><path d="M10 18c5-10 9-10 14 0s9 10 14 0 9-10 14 0" {...s} /></>,
     review: <><path d="M8 18a11 11 0 0 1 19-7.5M30 18a11 11 0 0 1-19 7.5" {...s} /><path d="m27 6 0 5-5 0M11 30l0-5 5 0" {...s} /></>,
     daily: <><circle cx="18" cy="18" r="11" {...s} /><path d="M18 11v7l5 3" {...s} /></>,
     train: <><path d="M6 22v-6M12 26v-14M18 20v-2M24 28v-18M30 22v-6M36 24v-10M42 20v-2M48 26v-14" {...s} /></>,
@@ -105,6 +110,7 @@ export function GymPageClient() {
   const drillIdx = useRef(0);
   const lastGroove = useRef<GrooveKind | undefined>(undefined);
   const lastSource = useRef<GymSource | undefined>(undefined);
+  const lastPart = useRef<MatchPart | undefined>(undefined);
   const savedRef = useRef(saved);
   savedRef.current = saved;
   const rng = useMemo(() => mulberry32(Date.now() & 0xffffffff), []);
@@ -157,6 +163,16 @@ export function GymPageClient() {
     drillIdx.current++;
     const level = savedRef.current.levels[drill].level;
     try {
+      // Match this sound plays on the engine itself (GymMatch), so there are no clips to render.
+      if (drill === "match") {
+        const mq = makeMatchQuestion(level, rng, lastPart.current);
+        lastPart.current = mq.part;
+        setQ(mq);
+        setCount(c => c + 1);
+        shownAt.current = Date.now();
+        setPhase("listening");
+        return;
+      }
       let question: GymQuestion;
       let pair;
       // a different sound and key every round, never the same source twice running
@@ -363,6 +379,24 @@ export function GymPageClient() {
       : g?.kind === "tempo" ? "which clip is faster?" : "which clip is swung?";
   const bLabel = q?.drill === "eq" ? "boosted" : q?.drill === "compression" ? "maybe" : "clip b";
 
+  const top = (
+    <div className="ls-top">
+      <button type="button" className="ls-x" aria-label="End the session" onClick={finishSession} style={{ border: 0, background: "none" }}><Icon name="close" /></button>
+      <div className="ls-seg" role="progressbar" aria-label="Time used" aria-valuemin={0} aria-valuemax={SESSION_SECONDS} aria-valuenow={elapsed} style={{ ["--c" as string]: c } as CSSProperties}>
+        {Array.from({ length: 10 }, (_, i) => <i key={i} className={i < Math.floor((elapsed / SESSION_SECONDS) * 10) ? "is-done" : i === Math.floor((elapsed / SESSION_SECONDS) * 10) ? "is-now" : ""} />)}
+      </div>
+      <span className="m1-t11" aria-label="Time left">{fmtClock(remaining)}</span>
+    </div>
+  );
+  if (q?.drill === "match") {
+    return (
+      <div className="ls">
+        {top}
+        <GymMatch key={count} q={q as MatchQuestion} level={saved.levels.match.level} count={count} feedback={feedback} timeUp={timeUp}
+          onAnswer={(ok, note, answer) => record("match", ok, note, answer)} onEnd={finishSession} onNext={next} />
+      </div>
+    );
+  }
   return (
     <div className="ls">
       <div className="ls-top">
