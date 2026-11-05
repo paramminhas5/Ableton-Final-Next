@@ -864,3 +864,7 @@ a.jv-lane:hover{transform:translateX(3px)}
 .gr-row.is-out .gr-key{opacity:.45}
 .gr-row.is-root .gr-key{box-shadow:inset -3px 0 0 var(--led-mint)}
 .gr-row.is-root .gr-cell{background:color-mix(in srgb,var(--led-mint) 12%,rgba(255,255,255,.06))}
+/* transformations on the note grid (Live 12): one amount, one key each */
+.gr-xform{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.gr-xf-l,.gr-xf-v{font-size:11px;color:var(--print);font-variant-numeric:tabular-nums}
+.gr-xf-v{min-width:38px}

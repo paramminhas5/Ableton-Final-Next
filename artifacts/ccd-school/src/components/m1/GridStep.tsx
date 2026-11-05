@@ -9,7 +9,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { readTrackV2, writeTrackV2, type LayerType, type NoteEvent } from "@/lib/track2";
 import { asScale, inScale, keyName, NOTE_NAMES, pitchClass } from "@/lib/theory";
-import { Dice, Screen } from "./controls";
+import { Dice, Fader, Screen } from "./controls";
+import { humanize, strum, velocityShape } from "@/lib/transform";
 import { fillMelody, newSeed } from "@/lib/dice";
 import { Meta } from "./LessonParts";
 import { Frame, useLoop, withPart, type StepProps } from "./ToolSteps";
@@ -155,6 +156,16 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
     window.dispatchEvent(new Event("ccd:song"));
     onNext();
   };
+  // Transformations (Live 12): strum, humanize, velocity shaper. One amount, one key each; each press is one
+  // undo step and works on the picked notes, or every note when none are picked.
+  const [amt, setAmt] = useState(0.5);
+  const xform = (name: string, f: (e: NoteEvent[], p?: Set<number>) => NoteEvent[]) => {
+    const next = f(evs, picked.size ? picked : undefined);
+    if (next === evs || JSON.stringify(next) === JSON.stringify(evs)) { setXf(name === "strum" ? "strum spreads notes that start together: pick a chord" : `${name}: turn the amount up`); return; }
+    commit(next);
+    setXf(`${name} ${amt > 0 ? "+" : ""}${Math.round(amt * 100)}%${picked.size ? ` on ${picked.size} note${picked.size > 1 ? "s" : ""}` : " on every note"}`);
+  };
+  const [xf, setXf] = useState<string | null>(null);
   const many = picked.size > 1;
   const it = many ? "the picked notes" : "the note";
   // The strip: what a phone can do without dragging. Each is one undo step.
@@ -209,6 +220,15 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
           {past.current.length ? <button type="button" className="ls-chip" onClick={undo} aria-label="Undo the last edit">undo</button> : null}
           {evs.length > 1 ? <button type="button" className="ls-chip" onClick={() => { setPicked(new Set(evs.map((_, i) => i))); setSelRaw(evs.length - 1); }} aria-label="Pick every note">all</button> : null}
           <button type="button" className={`ls-chip ${fold ? "is-on" : ""}`} aria-pressed={fold} onClick={() => setFold(f => !f)} aria-label={`Fold to scale: show only the rows in ${keyName(root, scale)}`}>fold</button>
+        </div>
+        <div className="gr-xform" role="group" aria-label="Transformations">
+          <span className="gr-xf-l" aria-hidden>amount</span>
+          <Fader horizontal width={96} value={(amt + 1) / 2} defaultValue={0.75} label="Transformation amount" valueText={`${Math.round(amt * 100)}%`} onChange={v => setAmt(Math.round((v * 2 - 1) * 20) / 20)} />
+          <span className="gr-xf-v" aria-hidden>{amt > 0 ? "+" : ""}{Math.round(amt * 100)}%</span>
+          <button type="button" className="ls-chip" onClick={() => xform("strum", (e, p) => strum(e, amt, p))} aria-label={`Strum ${amt >= 0 ? "low to high" : "high to low"}`}>strum</button>
+          <button type="button" className="ls-chip" onClick={() => xform("humanize", (e, p) => humanize(e, amt, newSeed(), p, loop))} aria-label="Humanize timing and velocity">humanize</button>
+          <button type="button" className="ls-chip" onClick={() => xform("velocity shaper", (e, p) => velocityShape(e, amt, p))} aria-label={`Velocity shaper: ${amt >= 0 ? "louder" : "softer"} across the notes`}>velocity shaper</button>
+          {xf ? <span className="gr-tip" role="status">{xf}</span> : null}
         </div>
         <div className="gr-dice"><Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" width={110} /></div>
       </>} />
