@@ -2,6 +2,17 @@
 
 Each round adds what it found, built and learned, newest first. Read this before starting a round.
 
+## Improvement check pass 3 (5 Nov, 4fecb0b), before the loop
+Fixed: ccd/school-fixes.md 109 to 116.
+Learned:
+- Count what the learner did, not what the engine played: one chord press is three notes. Every counter should clamp at its goal.
+- Phone layout: hiding a card on phone breaks anything that points at it (the tour). Look elements up by "visible", not by class.
+- Each pass finds fewer layout bugs and more product-logic ones (what a lesson does to the song, what a deck plays). The loop should spend more of each round walking lessons start to finish and reading the song after.
+Open for the loop (ranked):
+1. The reviewer's world-class ideas: song at the centre of the dashboard ("your track" as default, next part as a ghost lane); auto a/b on every done screen with a 15-second share clip; scrub-able, lit arrangement blocks; deck a always the learner's own song; per-hit timing marks with ms offsets on play-in.
+2. Lesson copy that mentions parts the learner may not have ("over your bass", "your six parts"): needs a per-song phrasing pass.
+3. Per-world ranks and going straight to placement for experienced learners: Param's call.
+
 ## Improvement check pass 2 (5 Nov, 59dcbf5), before the loop
 Fixed: see ccd/school-fixes.md 96 to 108.
 Learned:
