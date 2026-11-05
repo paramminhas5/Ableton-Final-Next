@@ -65,6 +65,14 @@ fn song() -> Engine {
             }
         }
     }
+    // CCD_BENCH_TABLE=1: the chords and leads on the wavetable (engine 2, item 12).
+    if std::env::var("CCD_BENCH_TABLE").is_ok() {
+        for (l, inst) in insts.iter().enumerate() {
+            if *inst == 3 || *inst == 4 {
+                send(&e, cmd::PARAM, l as u32, (INSTRUMENT_BASE + 20) as u32, 1.0 / 3.0, 0.0, 0.0);
+            }
+        }
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

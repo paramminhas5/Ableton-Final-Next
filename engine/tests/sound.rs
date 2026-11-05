@@ -1210,3 +1210,88 @@ fn echo_repeats_darken_saturate_and_duck() {
         }
     }
 }
+
+// ── Engine 2, item 12: wavetable, feedback fm and phase distortion ───────────────────────────────
+
+fn lead_osc(osc: f32, wave: f32, note: u8) -> Vec<f32> {
+    let mut l = Lead::new(SR);
+    let n = |i: usize, v: f32| LEAD_PARAMS[i].to_value(v);
+    l.set_param(LD_OSC, n(LD_OSC, osc));
+    l.set_param(LD_WAVE, wave);
+    l.set_param(LD_CUTOFF, n(LD_CUTOFF, 1.0));
+    l.set_param(LD_RES, 0.0);
+    l.set_param(LD_ENV, 0.0);
+    l.set_param(LD_DETUNE, 0.0);
+    l.note_on(note, 0.9);
+    (0..(SR * 0.6) as usize).map(|_| l.tick()).collect()
+}
+
+#[test]
+fn new_oscillators_stay_clean_up_the_keyboard() {
+    // Aliasing: the energy that is not a harmonic of the note (in the audible band), against the
+    // harmonics, from a held note's steady part. The classic saw (band-limited steps, the engine's
+    // oscillator before item 12) is the reference.
+    let kinds: [(&str, f32, f32); 5] = [
+        ("classic saw (before)", 0.0, 0.0),
+        ("table, saw frame", 1.0 / 3.0, 2.0 / 7.0),
+        ("table, bright frame", 1.0 / 3.0, 6.0 / 7.0),
+        ("feedback, saw-like", 2.0 / 3.0, 0.33),
+        ("phase, bent far", 1.0, 1.0),
+    ];
+    let mut worst = vec![];
+    for (name, osc, wave) in kinds {
+        let mut line = String::new();
+        let mut w = f32::MIN;
+        for note in [36u8, 48, 60, 72, 84, 96, 108] {
+            let y = lead_osc(osc, wave, note);
+            // The lead keeps a little of its sub octave in, so the harmonics are those of half the note.
+            let f0 = ccd_engine::dsp::note_hz(note as f32) * 0.5;
+            let a = inharmonic_db(&y[(SR * 0.2) as usize..(SR * 0.2) as usize + 16_384], f0);
+            line.push_str(&format!(" {note}:{a:.0}"));
+            w = w.max(a);
+        }
+        println!("{name}: aliasing per note (dB under the harmonics):{line}; worst {w:.1}");
+        worst.push(w);
+    }
+    for (i, (name, _, _)) in kinds.iter().enumerate().skip(1) {
+        // Every new oscillator's worst note stays under -55 dB: cleaner than the classic saw at its worst.
+        assert!(worst[i] < -55.0, "{name}: worst {:.1} against the classic saw's {:.1}", worst[i], worst[0]);
+    }
+}
+
+#[test]
+fn feedback_goes_from_sine_to_saw_to_noise_and_phase_distortion_opens_like_a_filter() {
+    let f0 = ccd_engine::dsp::note_hz(57.0);
+    // Feedback: harmonic content (energy over the fundamental's band) and noisiness (spectral flatness
+    // between harmonics) as the wave knob rises.
+    let mut last_bright = f32::MIN;
+    for (w, name) in [(0.0f32, "off"), (0.15, "a little"), (0.33, "saw-like"), (0.95, "noise")] {
+        let y = lead_osc(2.0 / 3.0, w, 57);
+        let seg = &y[(SR * 0.2) as usize..(SR * 0.2) as usize + 16_384];
+        let bright = band_db(seg, f0 * 1.5, 12_000.0);
+        let inh = inharmonic_db(seg, f0 * 0.5);
+        println!("feedback {name}: overtones {bright:.1} dB of the whole, between the harmonics {inh:.1} dB");
+        if w < 0.9 {
+            assert!(bright > last_bright, "more feedback, more overtones");
+            last_bright = bright;
+        } else {
+            assert!(inh > -20.0, "full feedback should be noise: {inh:.1}");
+        }
+    }
+    // Phase distortion: the tone's brightness follows the bend, as a filter sweep would.
+    let mut last = f32::MIN;
+    for w in [0.0f32, 0.4, 0.8, 1.0] {
+        let y = lead_osc(1.0, w, 45);
+        let b = band_db(&y[(SR * 0.2) as usize..], 300.0, 12_000.0);
+        println!("phase distortion {w}: overtones {b:.1} dB of the whole");
+        assert!(b > last);
+        last = b;
+    }
+    // Levels: each oscillator's held note within 4 dB of the classic saw.
+    let base = db(rms(&lead_osc(0.0, 0.0, 57)[(SR * 0.2) as usize..]));
+    for (osc, w, name) in [(1.0 / 3.0, 2.0 / 7.0, "table"), (2.0 / 3.0, 0.33, "feedback"), (1.0, 0.8, "phase")] {
+        let lv = db(rms(&lead_osc(osc, w, 57)[(SR * 0.2) as usize..]));
+        println!("{name}: {lv:.1} dB (classic {base:.1} dB)");
+        assert!((lv - base).abs() < 4.0, "{name}: {lv:.1} vs {base:.1}");
+    }
+}

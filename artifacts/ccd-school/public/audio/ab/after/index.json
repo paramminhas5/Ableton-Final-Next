@@ -20,5 +20,8 @@
   {"id": "plate", "what": "one clap into the plate reverb", "rms_db": -35.92, "peak": 0.4333},
   {"id": "pluck", "what": "plucked strings: an arpeggio on the resonator voice", "rms_db": -21.01, "peak": 0.5082},
   {"id": "mallet", "what": "a marimba line on the two-resonator mallet voice", "rms_db": -23.42, "peak": 0.3075},
-  {"id": "keys", "what": "chords on the struck-string keys voice", "rms_db": -26.06, "peak": 0.4446}
+  {"id": "keys", "what": "chords on the struck-string keys voice", "rms_db": -26.06, "peak": 0.4446},
+  {"id": "table", "what": "a lead on the wavetable, the vowel frame", "rms_db": -28.53, "peak": 0.2087},
+  {"id": "feedback", "what": "a lead on feedback fm, between saw and grit", "rms_db": -22.45, "peak": 0.2344},
+  {"id": "phase", "what": "a bass line on phase distortion: the envelope bends the wave, no filter moves", "rms_db": -23.38, "peak": 0.1917}
 ]

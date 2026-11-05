@@ -6,6 +6,7 @@ pub mod osc;
 pub mod oversample;
 pub mod resonator;
 pub mod smooth;
+pub mod wavetable;
 
 pub const TAU: f32 = std::f32::consts::TAU;
 pub const PI: f32 = std::f32::consts::PI;

@@ -326,6 +326,11 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
+    // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
+    // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
+    // knob and the filter envelope bend it from a cosine to a saw).
+    p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -347,6 +352,7 @@ pub const C_FDRIVE: usize = 16;
 pub const C_VOICE: usize = 17;
 pub const C_RING: usize = 18;
 pub const C_BRIGHT: usize = 19;
+pub const C_OSC: usize = 20;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -375,6 +381,11 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
+    // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
+    // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
+    // knob and the filter envelope bend it from a cosine to a saw).
+    p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -396,6 +407,7 @@ pub const LD_FDRIVE: usize = 16;
 pub const LD_VOICE: usize = 17;
 pub const LD_RING: usize = 18;
 pub const LD_BRIGHT: usize = 19;
+pub const LD_OSC: usize = 20;
 
 /// The fm ratio knob steps through these (modulator frequency over carrier).
 pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
@@ -405,6 +417,11 @@ pub fn fm_ratio(n: f32) -> f32 {
 
 /// What makes a synth's sound: 0 the oscillators, 1 pluck, 2 mallet, 3 keys (engine 2, item 10).
 pub fn voice_model(n: f32) -> u8 {
+    (n.clamp(0.0, 1.0) * 3.0).round() as u8
+}
+
+/// Which oscillator: 0 classic, 1 table, 2 feedback, 3 phase (engine 2, item 12).
+pub fn osc_kind(n: f32) -> u8 {
     (n.clamp(0.0, 1.0) * 3.0).round() as u8
 }
 

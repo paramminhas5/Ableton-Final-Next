@@ -12,6 +12,7 @@
 use crate::dsp::env::{Adsr, Stage};
 use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
 use crate::dsp::resonator::Comb;
+use crate::dsp::wavetable::{phase_distort, FbFm, Tables};
 use crate::dsp::osc::{BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
@@ -74,6 +75,8 @@ struct Ctl {
     model: u8,
     ring: f32,
     bright: f32,
+    /// Which oscillator (`osc_kind`).
+    osc: u8,
 }
 
 /// Resonator voices: output gains that put each at about the level of the synth voice (tests/sound.rs).
@@ -144,6 +147,10 @@ struct Voice {
     noise: Rng,
     /// The resonators have rung since they were last cleared.
     res_dirty: bool,
+    /// Item 12: the table and phase-distortion phase, the feedback fm's memory, and the tables.
+    wt_ph: f32,
+    fbfm: FbFm,
+    tables: &'static Tables,
 }
 
 impl Voice {
@@ -176,6 +183,9 @@ impl Voice {
             exc_x1: 0.0,
             noise: Rng::new(0x5EED + slot as u32 * 7_919),
             res_dirty: false,
+            wt_ph: 0.0,
+            fbfm: FbFm::default(),
+            tables: Tables::get(),
         }
     }
 
@@ -304,6 +314,8 @@ impl Voice {
             }
             self.car = 0.0;
             self.modp = 0.0;
+            self.wt_ph = phase;
+            self.fbfm.reset();
         }
         self.amp.gate_on();
         self.fenv.gate_on();
@@ -332,9 +344,22 @@ impl Voice {
         let dt = f / os;
         let w = c.wave;
         let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
-        let main = mix(self.osc[0].next(dt));
-        // The supersaw: centre saw plus six side saws on the JP-8000 curve and mix laws.
-        let x = c.spread;
+        let fe = self.fenv.next();
+        let main = if c.osc == 0 {
+            mix(self.osc[0].next(dt))
+        } else {
+            // Item 12: the wavetable, feedback fm or phase distortion, on their own phase.
+            let ph = self.wt_ph;
+            self.wt_ph += dt;
+            self.wt_ph -= self.wt_ph.floor();
+            match c.osc {
+                1 => self.tables.sample(w, f, ph),
+                2 => self.fbfm.next(ph, w * 4.5),
+                _ => phase_distort(ph, w * (0.35 + 0.65 * fe), dt),
+            }
+        };
+        // The supersaw: centre saw plus six side saws on the JP-8000 curve and mix laws (classic only).
+        let x = if c.osc == 0 { c.spread } else { 0.0 };
         let mut stack = main;
         if x > 0.002 {
             let amt = jp_detune(x);
@@ -362,7 +387,6 @@ impl Voice {
         if w_fifth > 0.001 {
             s += self.osc[4].next(dt * 1.5).0 * w_fifth * 0.5;
         }
-        let fe = self.fenv.next();
         // Two-operator fm, like Operator's simplest algorithm: a sine modulator bends a sine
         // carrier's phase. The filter envelope opens the index too, so it starts bright and settles.
         if c.fm > 0.001 {
@@ -408,6 +432,7 @@ struct Controls {
     model: u8,
     ring: f32,
     bright: f32,
+    osc: u8,
     /// Lfo rate in Hz, where it goes (lfo_dest) and its phase (0..1).
     lfo_rate: f32,
     lfo_to: u8,
@@ -432,6 +457,7 @@ impl Controls {
             model: 0,
             ring: 2.0,
             bright: 0.5,
+            osc: 0,
             lfo_rate: 1.4,
             lfo_to: 0,
             lfo_phase: 0.0,
@@ -473,6 +499,7 @@ impl Controls {
             model: self.model,
             ring: self.ring,
             bright: self.bright,
+            osc: self.osc,
             cutoff: self.cutoff.next(),
             res: self.res.next(),
             env_amt: self.env_amt.next(),
@@ -592,6 +619,7 @@ impl Poly {
             C_VOICE => self.ctl.model = voice_model(v),
             C_RING => self.ctl.ring = v * 0.001,
             C_BRIGHT => self.ctl.bright = v,
+            C_OSC => self.ctl.osc = osc_kind(v),
             _ => {}
         }
     }
@@ -774,6 +802,7 @@ impl Lead {
             LD_VOICE => self.ctl.model = voice_model(v),
             LD_RING => self.ctl.ring = v * 0.001,
             LD_BRIGHT => self.ctl.bright = v,
+            LD_OSC => self.ctl.osc = osc_kind(v),
             _ => {}
         }
     }

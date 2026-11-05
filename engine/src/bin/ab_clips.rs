@@ -19,6 +19,8 @@ const BASS_FDRIVE: usize = 25;
 /// The chord synth's voice and bright knobs (INSTRUMENT_BASE + C_VOICE, + C_BRIGHT).
 const CHORD_VOICE: usize = 33;
 const CHORD_BRIGHT: usize = 35;
+/// The lead's oscillator knob (INSTRUMENT_BASE + LD_OSC).
+const LEAD_OSC: usize = 36;
 
 struct R {
     e: Engine,
@@ -196,6 +198,31 @@ fn clips() -> Vec<Clip> {
         r.param(0, INSTRUMENT_BASE + C_RELEASE, 0.6);
         r.param(0, L_SEND, 0.2);
         r.pattern(0, &ev);
+        out.push((name, what, r.play(3.87)));
+    }
+    // Item 12, after only: the wavetable and feedback fm on a lead (a slow lfo on the filter), and phase
+    // distortion on a bass line, where the filter envelope bends the wave and the filter stays open.
+    for (name, what, osc, wave) in [
+        ("table", "a lead on the wavetable, the vowel frame", 1.0f32 / 3.0, 5.0f32 / 7.0),
+        ("feedback", "a lead on feedback fm, between saw and grit", 2.0 / 3.0, 0.42),
+        ("phase", "a bass line on phase distortion: the envelope bends the wave, no filter moves", 1.0, 0.9),
+    ] {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Lead);
+        r.param(0, LEAD_OSC, osc);
+        r.param(0, INSTRUMENT_BASE + LD_WAVE, wave);
+        r.param(0, INSTRUMENT_BASE + LD_DETUNE, 0.0);
+        if name == "phase" {
+            r.param(0, INSTRUMENT_BASE + LD_CUTOFF, 1.0);
+            r.param(0, INSTRUMENT_BASE + LD_ENV, 0.0);
+            r.param(0, INSTRUMENT_BASE + LD_FDECAY, 0.3);
+            r.pattern(0, &[(0.0, 45, 0.2, 0.9), (0.5, 45, 0.2, 0.7), (1.0, 57, 0.2, 0.9), (1.5, 45, 0.2, 0.7), (2.0, 48, 0.2, 0.9), (2.5, 45, 0.2, 0.7), (3.0, 52, 0.2, 0.9), (3.5, 43, 0.2, 0.8)]);
+        } else {
+            r.param(0, INSTRUMENT_BASE + LD_LFO, 0.25);
+            r.param(0, INSTRUMENT_BASE + LD_LFO_RATE, 0.35);
+            r.param(0, L_ECHO, 0.25);
+            r.pattern(0, &[(0.0, 69, 1.4, 0.9), (1.5, 72, 0.45, 0.85), (2.0, 74, 0.45, 0.85), (2.5, 76, 1.3, 0.9)]);
+        }
         out.push((name, what, r.play(3.87)));
     }
     // Reverb on a clap, echo on a lead note, drive on the bass.

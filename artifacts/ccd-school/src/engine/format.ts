@@ -65,6 +65,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   if (spec.key === "character") return STEP3(n, ["warm", "scream", "smooth"]);
   if (spec.key === "space") return n < 0.5 ? "hall" : "plate";
   if (spec.key === "echotype") return STEP3(n, ["clean", "tape", "analogue"]);
+  if (spec.key === "osc") return ["classic", "table", "feedback", "phase"][Math.round(Math.min(1, Math.max(0, n)) * 3)];
   if (spec.key === "voice") return ["synth", "pluck", "mallet", "keys"][Math.round(Math.min(1, Math.max(0, n)) * 3)];
   if (spec.key === "shapeblip") return STEP3(n, ["blip", "bell", "metal"]);
   if (spec.key === "shapewood") return STEP3(n, ["wood", "bell", "metal"]);
