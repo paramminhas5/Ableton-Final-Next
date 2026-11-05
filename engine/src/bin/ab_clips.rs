@@ -12,6 +12,10 @@ const SR: f32 = 48_000.0;
 /// Wire index of pad 0's second page (INSTRUMENT_BASE + DRUM_PAD2_BASE), written out so this file also
 /// builds against the pre-engine-2 commit that renders the before set (which ignores the param).
 const PAD2: usize = 96;
+/// The bass's character and filter drive knobs (INSTRUMENT_BASE + B_CHAR, + B_FDRIVE), written out for
+/// the same reason.
+const BASS_CHAR: usize = 24;
+const BASS_FDRIVE: usize = 25;
 
 struct R {
     e: Engine,
@@ -110,6 +114,17 @@ fn clips() -> Vec<Clip> {
         r.param(0, INSTRUMENT_BASE + B_ENV, 0.7);
         r.param(0, INSTRUMENT_BASE + B_RES, 0.5);
         out.push(("bass", "a rolling bass with the filter envelope working", r.play(3.87)));
+    }
+    // The same rolling bass through the other two filter characters, resonance up and some drive in.
+    for (name, what, ch) in [("scream", "the rolling bass through the scream filter, driven", 0.5f32), ("smooth", "the rolling bass through the smooth filter", 1.0)] {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Bass);
+        r.pattern(0, &[(0.5, 33, 0.25, 0.9), (1.5, 33, 0.25, 0.9), (1.75, 45, 0.2, 0.7), (2.5, 36, 0.25, 0.9), (3.5, 31, 0.25, 0.9), (3.75, 33, 0.2, 0.7)]);
+        r.param(0, INSTRUMENT_BASE + B_ENV, 0.7);
+        r.param(0, INSTRUMENT_BASE + B_RES, 0.65);
+        r.param(0, BASS_CHAR, ch);
+        r.param(0, BASS_FDRIVE, if ch < 0.75 { 0.55 } else { 0.2 });
+        out.push((name, what, r.play(3.87)));
     }
     // Lead: a held note with detune, then a short phrase.
     {

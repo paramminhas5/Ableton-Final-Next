@@ -149,6 +149,161 @@ impl Ladder {
     }
 }
 
+/// MS-20 style low pass (the Korg35 Sallen-Key circuit), zero-delay feedback: two one-pole low passes
+/// with positive feedback from the output through a one-pole high pass, so the loop peaks right at the
+/// cutoff. Resonance 0..1 maps to loop gain 0..2.05: it self-oscillates near the top. A soft clipper in
+/// the loop (where the MS-20 has its diodes) bounds it, and is what makes it scream when pushed. Unlike
+/// the ladder it keeps its bass as the resonance rises. 12 dB per octave.
+#[derive(Clone, Copy, Default)]
+pub struct Ms20 {
+    s1: f32,
+    s2: f32,
+    sh: f32,
+    big_g: f32,
+    k: f32,
+}
+
+impl Ms20 {
+    pub fn set(&mut self, fc: f32, res: f32, sr: f32) {
+        let g = prewarp(fc, sr);
+        self.big_g = g / (1.0 + g);
+        self.k = 2.05 * res.clamp(0.0, 1.0);
+    }
+
+    pub fn reset(&mut self) {
+        self.s1 = 0.0;
+        self.s2 = 0.0;
+        self.sh = 0.0;
+    }
+
+    #[inline]
+    pub fn tick(&mut self, x: f32) -> f32 {
+        let gg = self.big_g;
+        let ig = 1.0 - gg;
+        let k = self.k;
+        // First low pass: outside the loop.
+        let v1 = (x - self.s1) * gg;
+        let y1 = v1 + self.s1;
+        self.s1 = flush_denormal(y1 + v1);
+        // Solve the loop (input of the second low pass), then clip it.
+        let u = (y1 + ig * (k * ig * self.s2 - self.sh)) / (1.0 - k * gg * ig);
+        let u = super::sat(u);
+        let v2 = (u - self.s2) * gg;
+        let lp = v2 + self.s2;
+        self.s2 = flush_denormal(lp + v2);
+        // The high pass in the feedback path hears the loop's output.
+        let y = k * lp;
+        let vh = (y - self.sh) * gg;
+        let lph = vh + self.sh;
+        self.sh = flush_denormal(lph + vh);
+        lp
+    }
+}
+
+/// The three filter characters a synth can pick (`params::step3` of its character knob).
+pub const WARM: u8 = 0;
+pub const SCREAM: u8 = 1;
+pub const SMOOTH: u8 = 2;
+
+/// One of three low passes, chosen by character: warm (the 4-pole transistor ladder, loses bass as the
+/// resonance rises), scream (MS-20 style, 2-pole, screams when driven) or smooth (an Oberheim SEM style
+/// 2-pole state-variable filter: sweet, keeps its bass, rings but never self-oscillates).
+#[derive(Clone, Copy, Default)]
+pub struct CharFilter {
+    mode: u8,
+    ladder: Ladder,
+    ms20: Ms20,
+    sem: Svf,
+}
+
+impl CharFilter {
+    pub fn set_mode(&mut self, m: u8) {
+        if m != self.mode {
+            self.mode = m;
+            self.ladder.reset();
+            self.ms20.reset();
+            self.sem.reset();
+        }
+    }
+
+    pub fn mode(&self) -> u8 {
+        self.mode
+    }
+
+    pub fn reset(&mut self) {
+        self.ladder.reset();
+        self.ms20.reset();
+        self.sem.reset();
+    }
+
+    #[inline]
+    pub fn set(&mut self, fc: f32, res: f32, sr: f32) {
+        match self.mode {
+            SCREAM => self.ms20.set(fc, res, sr),
+            SMOOTH => {
+                let r = res.clamp(0.0, 1.0);
+                self.sem.set(fc, 0.55 + 9.0 * r * r, sr)
+            }
+            _ => self.ladder.set(fc, res, sr),
+        }
+    }
+
+    #[inline]
+    pub fn tick(&mut self, x: f32) -> f32 {
+        match self.mode {
+            // Gains so the three sit at about the same loudness on a bass line (tests/sound.rs).
+            SCREAM => self.ms20.tick(x) * MS20_GAIN,
+            SMOOTH => self.sem.tick(x).lp * SEM_GAIN,
+            _ => self.ladder.tick(x),
+        }
+    }
+}
+
+const MS20_GAIN: f32 = 0.794;
+const SEM_GAIN: f32 = 0.668;
+
+/// Drive into a filter, the way Drift does it: an asymmetric, anti-aliased saturator (it adds even
+/// harmonics as well as odd), and a second, gentler stage after the filter that takes up to 6 dB of
+/// gain, so resonant peaks round off instead of spiking. At zero both are bypassed exactly.
+#[derive(Clone, Copy, Default)]
+pub struct FilterDrive {
+    pre: super::Adaa,
+    post: super::Adaa,
+}
+
+/// Offset into the first stage: makes it asymmetric.
+const BIAS: f32 = 0.35;
+
+impl FilterDrive {
+    /// Before the filter. `amt` 0..1 is up to +24 dB into the saturator, level-matched.
+    #[inline]
+    pub fn pre(&mut self, x: f32, amt: f32) -> f32 {
+        if amt <= 0.001 {
+            return x;
+        }
+        let g = 1.0 + amt * amt * 15.0;
+        // Matched on the swing of a half-scale sine, both sides (the offset squashes one more).
+        // and squared off it carries more power, so a little less as the knob goes up.
+        let makeup = 1.0 / ((super::sat(0.5 * g + BIAS) - super::sat(BIAS - 0.5 * g)) * (1.0 + 0.4 * amt));
+        (self.pre.process(x * g + BIAS) - super::sat(BIAS)) * makeup
+    }
+
+    /// After the filter: up to +6 dB into a soft saturator, then back down.
+    #[inline]
+    pub fn post(&mut self, y: f32, amt: f32) -> f32 {
+        if amt <= 0.001 {
+            return y;
+        }
+        let g = 1.0 + amt;
+        self.post.process(y * g) / g
+    }
+
+    pub fn reset(&mut self) {
+        self.pre.reset();
+        self.post.reset();
+    }
+}
+
 /// One-pole high pass, for DC blocking and low cut.
 #[derive(Clone, Copy, Default)]
 pub struct OnePoleHp {

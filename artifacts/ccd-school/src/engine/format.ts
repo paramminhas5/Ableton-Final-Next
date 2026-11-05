@@ -62,6 +62,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   if (spec.key === "glueratio") return `${GLUE_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (GLUE_RATIOS.length - 1))]}:1`;
   if (spec.key === "sidechain" && n < 0.01) return "hears it all";
   if (spec.key === "shape") return STEP3(n, ["round", "tight", "hard"]);
+  if (spec.key === "character") return STEP3(n, ["warm", "scream", "smooth"]);
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {

@@ -10,7 +10,7 @@
 //! "spread" is how far the three saws are detuned from each other (0 to 36 cents).
 
 use crate::dsp::env::{Adsr, Stage};
-use crate::dsp::filter::{Ladder, OnePoleHp};
+use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
 use crate::dsp::osc::{BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
@@ -66,6 +66,9 @@ struct Ctl {
     /// Fm amount (0 is the normal voice, 1 is all fm) and the modulator ratio.
     fm: f32,
     ratio: f32,
+    /// Filter character (warm, scream, smooth) and the drive into the filter, 0..1.
+    character: u8,
+    fdrive: f32,
 }
 
 /// A voice card: the small fixed differences between the voices of a real polysynth, where each
@@ -107,7 +110,8 @@ struct Voice {
     drift_target: f32,
     osc: [BlepOsc; 5],
     sub: Sine,
-    ladder: Ladder,
+    filt: CharFilter,
+    fdrive: FilterDrive,
     amp: Adsr,
     fenv: Adsr,
     car: f32,
@@ -132,7 +136,8 @@ impl Voice {
             drift_target: 0.0,
             osc: [BlepOsc::new(); 5],
             sub: Sine::default(),
-            ladder: Ladder::default(),
+            filt: CharFilter::default(),
+            fdrive: FilterDrive::default(),
             amp: Adsr::new(os),
             fenv: Adsr::new(os),
             car: 0.0,
@@ -170,7 +175,8 @@ impl Voice {
                 o.reset((phase * (i as f32 + 2.0) * 7.31 + i as f32 * 0.137).fract());
             }
             self.hp_s = 0.0;
-            self.ladder.reset();
+            self.filt.reset();
+            self.fdrive.reset();
             self.car = 0.0;
             self.modp = 0.0;
         }
@@ -238,8 +244,10 @@ impl Voice {
         let env_oct = c.env_amt * 5.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (self.pitch - 60.0) / 12.0 * 0.4;
         let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct + self.card.cut_oct).exp2()).clamp(30.0, os * 0.45);
-        self.ladder.set(fc, c.res, os);
-        let y = self.ladder.tick(s * 0.5);
+        self.filt.set_mode(c.character);
+        self.filt.set(fc, c.res, os);
+        let x = self.fdrive.pre(s * 0.5, c.fdrive);
+        let y = self.fdrive.post(self.filt.tick(x), c.fdrive);
         y * self.amp.next() * (0.4 + 0.6 * self.vel) * c.lfo_gain
     }
 }
@@ -254,6 +262,8 @@ struct Controls {
     wave: Smooth,
     lfo_amt: Smooth,
     fm: Smooth,
+    fdrive: Smooth,
+    character: u8,
     /// Lfo rate in Hz, where it goes (lfo_dest) and its phase (0..1).
     lfo_rate: f32,
     lfo_to: u8,
@@ -273,20 +283,22 @@ impl Controls {
             wave: Smooth::new(0.0),
             lfo_amt: Smooth::new(0.0),
             fm: Smooth::new(0.0),
+            fdrive: Smooth::new(0.0),
+            character: 0,
             lfo_rate: 1.4,
             lfo_to: 0,
             lfo_phase: 0.0,
             ratio: 2.0,
             os,
         };
-        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave, &mut c.lfo_amt, &mut c.fm] {
+        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave, &mut c.lfo_amt, &mut c.fm, &mut c.fdrive] {
             s.set_time(10.0, os);
         }
         c
     }
 
     fn reset(&mut self) {
-        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave, &mut self.lfo_amt, &mut self.fm] {
+        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave, &mut self.lfo_amt, &mut self.fm, &mut self.fdrive] {
             s.reset(s.target);
         }
     }
@@ -309,6 +321,8 @@ impl Controls {
             lfo_gain,
             fm: self.fm.next(),
             ratio: self.ratio,
+            character: self.character,
+            fdrive: self.fdrive.next(),
             cutoff: self.cutoff.next(),
             res: self.res.next(),
             env_amt: self.env_amt.next(),
@@ -423,6 +437,8 @@ impl Poly {
                 self.frel_s = v * 0.001;
                 self.update_envs();
             }
+            C_CHAR => self.ctl.character = step3(v),
+            C_FDRIVE => self.ctl.fdrive.set(v),
             _ => {}
         }
     }
@@ -600,6 +616,8 @@ impl Lead {
                 self.frel_s = v * 0.001;
                 self.update_envs();
             }
+            LD_CHAR => self.ctl.character = step3(v),
+            LD_FDRIVE => self.ctl.fdrive.set(v),
             _ => {}
         }
     }

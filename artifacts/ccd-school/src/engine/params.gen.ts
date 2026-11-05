@@ -36,6 +36,8 @@ export const BASS_PARAMS = [
   { id: "bass.wave", key: "wave", label: "wave", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 15, detents: [] },
   { id: "bass.sub", key: "sub", label: "sub", bank: "shift", index: 22, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "bass.drift", key: "drift", label: "drift", bank: "shift", index: 23, min: 0, max: 1, default: 0.2, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "bass.character", key: "character", label: "character", bank: "shift", index: 24, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "bass.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 /** Per pad. Wire index = INSTRUMENT_BASE + pad * DRUM_PAD_PARAMS.length + index. */
@@ -75,6 +77,8 @@ export const CHORD_PARAMS = [
   { id: "chords.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
   { id: "chords.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.65, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "chords.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 4000, default: 0.45, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const LEAD_PARAMS = [
@@ -93,6 +97,8 @@ export const LEAD_PARAMS = [
   { id: "lead.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
   { id: "lead.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.53, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "lead.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 3000, default: 0.4, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const FX_PARAMS = [

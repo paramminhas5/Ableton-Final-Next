@@ -223,6 +223,9 @@ pub const BASS_PARAMS: &[ParamSpec] = &[
     p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("sub", "sub", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.2, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 
 pub const B_CUTOFF: usize = 0;
@@ -233,6 +236,8 @@ pub const B_DECAY: usize = 4;
 pub const B_WAVE: usize = 5;
 pub const B_SUB: usize = 6;
 pub const B_DRIFT: usize = 7;
+pub const B_CHAR: usize = 8;
+pub const B_FDRIVE: usize = 9;
 
 // ── Drum rack: 16 pads, the sound bank shapes the selected pad ───────────────
 
@@ -291,6 +296,9 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
     p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.65, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("frel", "f release", Bank::Shift, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -307,6 +315,8 @@ pub const C_FM: usize = 11;
 pub const C_RATIO: usize = 12;
 pub const C_FDECAY: usize = 13;
 pub const C_FREL: usize = 14;
+pub const C_CHAR: usize = 15;
+pub const C_FDRIVE: usize = 16;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -327,6 +337,9 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
     p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.53, Unit::Ms, Curve::Exp, 0.0, NONE),
     p("frel", "f release", Bank::Shift, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -343,6 +356,8 @@ pub const LD_FM: usize = 11;
 pub const LD_RATIO: usize = 12;
 pub const LD_FDECAY: usize = 13;
 pub const LD_FREL: usize = 14;
+pub const LD_CHAR: usize = 15;
+pub const LD_FDRIVE: usize = 16;
 
 /// The fm ratio knob steps through these (modulator frequency over carrier).
 pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];

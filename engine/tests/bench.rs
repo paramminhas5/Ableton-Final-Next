@@ -45,6 +45,18 @@ fn song() -> Engine {
     for l in [2u32, 3, 6, 7] {
         send(&e, cmd::PARAM, l, (INSTRUMENT_BASE + 1) as u32, 0.6, 0.0, 0.0);
     }
+    // CCD_BENCH_HEAVY=1: every synth on the scream filter with its drive up (engine 2, item 7).
+    if std::env::var("CCD_BENCH_HEAVY").is_ok() {
+        for (l, inst) in insts.iter().enumerate() {
+            let (ch, fd) = match inst {
+                2 => (INSTRUMENT_BASE + 8, INSTRUMENT_BASE + 9),
+                3 | 4 => (INSTRUMENT_BASE + 15, INSTRUMENT_BASE + 16),
+                _ => continue,
+            };
+            send(&e, cmd::PARAM, l as u32, ch as u32, 0.5, 0.0, 0.0);
+            send(&e, cmd::PARAM, l as u32, fd as u32, 0.6, 0.0, 0.0);
+        }
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

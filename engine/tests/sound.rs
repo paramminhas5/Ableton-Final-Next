@@ -449,3 +449,176 @@ fn kick_has_three_body_shapes() {
         last = o;
     }
 }
+
+// ── Engine 2, item 7: three filter characters ─────────────────────────────────────────────────────
+
+use ccd_engine::dsp::filter::{CharFilter, FilterDrive, SCREAM, SMOOTH, WARM};
+use ccd_engine::inst::{Bass, Poly};
+use ccd_engine::params::*;
+
+const OS: f32 = 96_000.0;
+const CHARS: [(u8, &str); 3] = [(WARM, "warm"), (SCREAM, "scream"), (SMOOTH, "smooth")];
+
+/// Gain of a filter at one frequency, small signal (the linear part of its response), dB.
+fn gain_at(mode: u8, fc: f32, res: f32, hz: f64) -> f32 {
+    let mut f = CharFilter::default();
+    f.set_mode(mode);
+    f.set(fc, res, OS);
+    let n = (OS * 0.4) as usize;
+    let amp = 0.02;
+    let mut acc = 0.0f64;
+    for i in 0..n {
+        let x = (amp as f64 * (std::f64::consts::TAU * hz * i as f64 / OS as f64).sin()) as f32;
+        let y = f.tick(x);
+        if i >= n / 2 {
+            acc += (y * y) as f64;
+        }
+    }
+    db(((acc / (n / 2) as f64).sqrt() as f32) / (amp / 2f32.sqrt()))
+}
+
+#[test]
+fn filter_characters_each_have_their_own_response() {
+    for (mode, name) in CHARS {
+        let g = |res: f32, hz: f64| gain_at(mode, 1_000.0, res, hz);
+        let slope = g(0.0, 8_000.0) - g(0.0, 4_000.0);
+        let (pass0, pass6) = (g(0.0, 60.0), g(0.6, 60.0));
+        let (peak0, peak6) = (g(0.0, 1_000.0), g(0.6, 1_000.0));
+        println!("{name}: cutoff 1 kHz, {slope:.1} dB per octave above it; at res 0.6 the bass (60 Hz) moves {:+.1} dB and the cutoff rises {:+.1} dB", pass6 - pass0, peak6 - peak0);
+        match mode {
+            WARM => {
+                assert!(slope < -20.0, "{name}: {slope:.1}");
+                assert!(pass6 - pass0 < -1.0, "the ladder loses bass as resonance rises: {:.1}", pass6 - pass0);
+            }
+            _ => {
+                assert!((-15.0..-9.0).contains(&slope), "{name}: {slope:.1}");
+                assert!((pass6 - pass0).abs() < 0.5, "{name} keeps its bass: {:.1}", pass6 - pass0);
+            }
+        }
+        assert!(peak6 - peak0 > 6.0, "{name}: resonance should peak at the cutoff: {:.1}", peak6 - peak0);
+    }
+}
+
+#[test]
+fn warm_and_scream_self_oscillate_smooth_rings_out() {
+    for (mode, name) in CHARS {
+        let mut f = CharFilter::default();
+        f.set_mode(mode);
+        f.set(1_000.0, 1.0, OS);
+        let mut y = vec![f.tick(0.5)];
+        y.extend((0..(OS as usize)).map(|_| f.tick(0.0)));
+        let tail = &y[(OS * 0.8) as usize..];
+        let level = db(rms(tail));
+        let earlier = db(rms(&y[(OS * 0.4) as usize..(OS * 0.6) as usize]));
+        // Pitch of the ring, from upward zero crossings.
+        let ups: Vec<usize> = (1..tail.len()).filter(|&i| tail[i - 1] < 0.0 && tail[i] >= 0.0).collect();
+        let hz = if ups.len() > 2 { (ups.len() - 1) as f32 * OS / (ups[ups.len() - 1] - ups[0]) as f32 } else { 0.0 };
+        println!("{name}: full resonance, a second after a click: {level:.1} dB{}", if hz > 0.0 && level > -60.0 { format!(", ringing at {hz:.0} Hz (cutoff 1000)") } else { String::new() });
+        assert!(y.iter().all(|v| v.is_finite() && v.abs() < 2.0));
+        if mode == SMOOTH {
+            assert!(level < -80.0, "smooth should never self-oscillate: {level:.1}");
+        } else {
+            // A steady ring, not a decay: as loud at the end of the second as 400 ms in.
+            assert!(level > -40.0 && (level - earlier).abs() < 1.0, "{name} should self-oscillate: {earlier:.1} then {level:.1}");
+            assert!((hz - 1_000.0).abs() < 120.0, "{name} rings at {hz:.0}");
+        }
+    }
+}
+
+fn bass_line(char_n: f32, set: &[(usize, f32)]) -> Vec<f32> {
+    let mut b = Bass::new(SR);
+    let spec = |i: usize| &BASS_PARAMS[i];
+    b.set_param(B_CHAR, spec(B_CHAR).to_value(char_n));
+    for (i, n) in set {
+        b.set_param(*i, spec(*i).to_value(*n));
+    }
+    let mut y = Vec::new();
+    for (k, note) in [33u8, 33, 45, 36, 31, 33, 40, 28].iter().enumerate() {
+        b.note_on(*note, 0.9);
+        for _ in 0..(SR * 0.18) as usize {
+            y.push(b.tick());
+        }
+        b.note_off(*note);
+        for _ in 0..(SR * 0.06) as usize {
+            y.push(b.tick());
+        }
+        let _ = k;
+    }
+    y
+}
+
+#[test]
+fn resonance_stays_stable_under_a_fast_envelope_and_nothing_breaks_at_the_extremes() {
+    // A bass line with the resonance and the filter envelope at full and the shortest decay: the cutoff
+    // sweeps several octaves in 30 ms, every note.
+    for (k, (_, name)) in CHARS.iter().enumerate() {
+        let n = k as f32 * 0.5;
+        for fd in [0.0, 1.0] {
+            let y = bass_line(n, &[(B_RES, 1.0), (B_ENV, 1.0), (B_DECAY, 0.0), (B_CUTOFF, 0.3), (B_FDRIVE, fd)]);
+            let peak = y.iter().fold(0.0f32, |m, v| m.max(v.abs()));
+            println!("{name}, drive {fd}: full resonance, fast envelope: peak {peak:.2}");
+            assert!(y.iter().all(|v| v.is_finite()) && peak < 2.0, "{name}: peak {peak}");
+        }
+    }
+    // Every synth, every character, at the ends of every filter knob and the ends of the keyboard.
+    for ch in [0.0f32, 0.5, 1.0] {
+        for (cut, res, fd) in [(0.0f32, 0.0f32, 0.0f32), (1.0, 1.0, 1.0), (0.0, 1.0, 1.0), (1.0, 0.0, 1.0)] {
+            let mut b = Bass::new(SR);
+            let mut l = Lead::new(SR);
+            let mut p = Poly::new(SR);
+            for (i, v) in [(B_CHAR, ch), (B_CUTOFF, cut), (B_RES, res), (B_FDRIVE, fd), (B_ENV, 1.0)] {
+                b.set_param(i, BASS_PARAMS[i].to_value(v));
+            }
+            for (i, v) in [(LD_CHAR, ch), (LD_CUTOFF, cut), (LD_RES, res), (LD_FDRIVE, fd), (LD_ENV, 1.0)] {
+                l.set_param(i, LEAD_PARAMS[i].to_value(v));
+            }
+            for (i, v) in [(C_CHAR, ch), (C_CUTOFF, cut), (C_RES, res), (C_FDRIVE, fd), (C_ENV, 1.0)] {
+                p.set_param(i, CHORD_PARAMS[i].to_value(v));
+            }
+            for note in [0u8, 127] {
+                for vel in [0.0, 1.0] {
+                    b.note_on(note, vel);
+                    l.note_on(note, vel);
+                    p.note_on(note, vel);
+                    for _ in 0..4_800 {
+                        let ys = [b.tick(), l.tick(), p.tick()];
+                        assert!(ys.iter().all(|v| v.is_finite() && v.abs() < 4.0), "character {ch}, cutoff {cut}, res {res}, drive {fd}, note {note}: {ys:?}");
+                    }
+                    b.note_off(note);
+                    l.note_off(note);
+                    p.note_off(note);
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn filter_drive_is_asymmetric_and_level_matched() {
+    // A sine through the drive stage alone: the offset adds a second harmonic (even), which a
+    // symmetric clipper cannot, and the level stays within a couple of dB as the knob goes up.
+    let x = sine(220.0, 32_768, 0.5);
+    for amt in [0.3f32, 0.7, 1.0] {
+        let mut d = FilterDrive::default();
+        let y: Vec<f32> = x.iter().map(|v| d.pre(*v, amt)).collect();
+        let s = spectrum(&y[..16_384]);
+        let bin = |hz: f32| (hz / SR * 16_384.0).round() as usize;
+        let h = |k: f32| (bin(220.0 * k) - 2..=bin(220.0 * k) + 2).map(|i| s[i]).fold(0.0f32, f32::max);
+        let (h2, h3) = (db(h(2.0) / h(1.0)), db(h(3.0) / h(1.0)));
+        let lv = db(rms(&y)) - db(rms(&x));
+        println!("filter drive {amt}: 2nd harmonic {h2:.1} dB, 3rd {h3:.1} dB, level {lv:+.1} dB");
+        assert!(h2 > -40.0, "even harmonics: {h2:.1}");
+        assert!(lv.abs() < 2.5, "level {lv:.1}");
+    }
+}
+
+#[test]
+fn three_characters_sit_at_about_the_same_loudness() {
+    let set = [(B_RES, 0.5), (B_ENV, 0.7)];
+    let warm = db(rms(&bass_line(0.0, &set)));
+    let others: Vec<(f32, &str)> = [(0.5, "scream"), (1.0, "smooth")].iter().map(|(n, name)| (db(rms(&bass_line(*n, &set))), *name)).collect();
+    println!("bass line, res 0.5, env 0.7: warm {warm:.1} dB, scream {:.1} dB, smooth {:.1} dB", others[0].0, others[1].0);
+    for (lv, name) in others {
+        assert!((lv - warm).abs() < 1.5, "{name}: {lv:.1} vs warm {warm:.1}");
+    }
+}
