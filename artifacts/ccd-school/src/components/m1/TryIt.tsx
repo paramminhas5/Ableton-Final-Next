@@ -122,7 +122,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
 
   const down = (pad: number, e: PointerEvent<HTMLElement>) => {
     e.preventDefault();
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    try { (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId); } catch { /* no active pointer (synthetic events) */ }
     start();
     const vel = velocity(e);
     for (const n of pads[pad].notes) engine.noteOn(idx, n, vel, e.timeStamp);
