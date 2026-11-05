@@ -61,7 +61,17 @@ impl R {
         }
         self.send(cmd::EV_COMMIT, layer, 0, 0.0, 0.0, 0.0);
     }
+    /// For matching patches by ear and meter: SHOOT_SET="3=0.4,5=0.8" sets instrument params on layer 0.
+    fn overrides(&self) {
+        if let Ok(v) = std::env::var("SHOOT_SET") {
+            for kv in v.split(',').filter(|s| !s.is_empty()) {
+                let (k, n) = kv.split_once('=').unwrap();
+                self.ip(k.parse().unwrap(), n.parse().unwrap());
+            }
+        }
+    }
     fn play(&mut self, seconds: f64, auto: Option<Auto>) -> Vec<[f32; 2]> {
+        self.overrides();
         self.send(cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
         let total = (SR as f64 * seconds) as usize;
         let mut out = Vec::with_capacity(total);
@@ -165,6 +175,9 @@ fn main() {
                     r.ip(C_ENV, 0.0);
                     r.ip(C_CUTOFF, 1.0);
                     r.ip(C_DRIFT, 0.0);
+                    if let Ok(c) = std::env::var("SHOOT_CHAR") {
+                        r.ip(C_CHAR, c.parse().unwrap());
+                    }
                 } else {
                     // The chord synth's table has no position knob (it plays the sine frame), so the
                     // table's saw frame is played on the lead (which adds a quiet sine sub an octave down).
@@ -230,9 +243,10 @@ fn main() {
     if want("acid") {
         let mut r = R::new(ACID_BPM, 64.0);
         r.inst(Instrument::Bass);
-        r.ip(B_CUTOFF, 0.25);
+        // Cutoff and envelope set so the line opens as far as Odin 2's does (spectral centroid, measured).
+        r.ip(B_CUTOFF, 0.66);
         r.ip(B_RES, 0.75);
-        r.ip(B_ENV, 0.65);
+        r.ip(B_ENV, 0.8);
         r.ip(B_DECAY, 0.3);
         r.ip(B_GLIDE, 0.15);
         r.ip(B_SUB, 0.0);
@@ -253,7 +267,8 @@ fn main() {
             r.inst(Instrument::Chords);
             r.ip(C_VOICING, 0.0);
             r.ip(C_SPREAD, 0.0);
-            r.ip(C_FM, 0.6);
+            // The index set so the brightness matches Dexed's patch (spectral centroid, measured).
+            r.ip(C_FM, 0.7);
             r.ip(C_RATIO, ratio);
             r.ip(C_ATTACK, 0.0);
             r.ip(C_CUTOFF, 1.0);
@@ -261,6 +276,12 @@ fn main() {
             r.ip(C_ENV, 0.0);
             r.ip(C_FDECAY, 0.55);
             r.ip(C_RELEASE, 0.55);
+            if let Ok(d) = std::env::var("SHOOT_DRIFT") {
+                r.ip(C_DRIFT, d.parse().unwrap());
+            }
+            if let Ok(c) = std::env::var("SHOOT_CHAR") {
+                r.ip(C_CHAR, c.parse().unwrap());
+            }
             r.notes(120.0, &ev);
             save(name, &r.play(3.6, None));
         }
@@ -279,7 +300,7 @@ fn main() {
             r.ip_on(l, LD_WAVE, 2.0 / 7.0);
             r.ip_on(l, LD_ATTACK, 0.85);
             r.ip_on(l, LD_RELEASE, 0.6);
-            r.ip_on(l, LD_CUTOFF, 0.75);
+            r.ip_on(l, LD_CUTOFF, 0.86);
             r.ip_on(l, LD_RES, 0.1);
             r.ip_on(l, LD_ENV, 0.0);
             r.ip_on(l, LD_GLIDE, 0.0);

@@ -52,7 +52,10 @@ def surge():
     if want("supersaw"):
         surge_init(p)
         sh.setp(p, "a_osc_1_unison_voices", "7 voices")
-        sh.setp(p, "a_filter_configuration", "Wide")  # Surge's own default: the unison voices spread in stereo
+        # Surge's own default routing, "Wide", where the unison voices spread in stereo (set in the patch:
+        # like the filter switches, the host knob for it is only applied by the editor).
+        jstate.surge_xml(p, {"a_fb_config": 7})
+        p([], duration=0.1, sample_rate=sh.SR, num_channels=2, buffer_size=256, reset=False)
         sh.setp(p, "a_osc_1_unison_detune", 22.0)  # outer voices at +-22 cents, as ours at detune 0.6
         sh.setp(p, "a_amp_eg_release", 300.0)
         save("supersaw", sh.render(p, SUPERSAW, 4.0))

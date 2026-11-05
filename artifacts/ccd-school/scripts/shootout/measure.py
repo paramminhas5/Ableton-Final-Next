@@ -70,6 +70,20 @@ def alias_db(y, note, sub=False):
 
 
 # ── stereo ──────────────────────────────────────────────────────────────────
+def brightness(y):
+    """Spectral centroid in 20 ms frames where the sound is within 30 dB of its loudest: the 10th, 50th and
+    90th percentile, Hz (how far the filter envelope opens and closes, for a bass line)."""
+    x = mono(y); n = 960
+    fr = [x[i:i + n] for i in range(0, len(x) - n, n)]
+    rms = np.array([np.sqrt((f ** 2).mean()) for f in fr])
+    f = np.fft.rfftfreq(n, 1 / SR); w = np.hanning(n); cs = []
+    for k, seg in enumerate(fr):
+        if rms[k] < rms.max() * 0.03:
+            continue
+        s = np.abs(np.fft.rfft(seg * w)); cs.append((s * f).sum() / max(s.sum(), 1e-12))
+    return {"centroid_p10": round(float(np.percentile(cs, 10))), "centroid_p50": round(float(np.percentile(cs, 50))), "centroid_p90": round(float(np.percentile(cs, 90)))}
+
+
 def stereo(y):
     l, r = y[:, 0], y[:, 1]
     corr = float(np.corrcoef(l, r)[0, 1]) if np.std(l) > 0 and np.std(r) > 0 else 1.0
@@ -288,16 +302,22 @@ def side(d):
     for name in ["acid", "fm_ep", "fm_bell", "pad"]:
         y = load(d, name)
         if y is not None:
-            r[name] = {"lufs": round(lufs(y), 1), **stereo(y)}
+            r[name] = {"lufs": round(lufs(y), 1), **stereo(y), **brightness(y)}
     for name in ["fm_bell"]:
         y = load(d, name)
         if y is not None:
-            # the bell's highest note (88, 1319 Hz): energy off its harmonics in the strike's first 250 ms
-            seg = y[int(2.4 * SR):int(2.4 * SR) + 12000]
-            x = mono(seg); n = len(x); s = np.abs(np.fft.rfft(x * bh(n))) ** 2; f = np.fft.rfftfreq(n, 1 / SR); f0 = note_hz(88)
+            # the bell's first note (76, 659 Hz, nothing ringing before it): energy off its harmonics in the strike's first 250 ms
+            seg = y[:12000]
+            x = mono(seg); n = len(x); s = np.abs(np.fft.rfft(x * bh(n))) ** 2; f = np.fft.rfftfreq(n, 1 / SR)
+            # the note's real pitch (a voice may sit a few cents off): the strongest peak over its harmonic number
+            k = int(np.argmax(s)); fp = f[k]
+            if 0 < k < len(s) - 1:
+                a_, b_, c_ = np.log(s[k - 1] + 1e-30), np.log(s[k] + 1e-30), np.log(s[k + 1] + 1e-30)
+                fp = (k + 0.5 * (a_ - c_) / (a_ - 2 * b_ + c_)) * SR / n
+            f0 = fp / max(round(fp / note_hz(76)), 1)
             near = np.abs(f - np.maximum(np.round(f / f0), 1) * f0) < 8 * SR / n
             band = (f >= 30) & (f <= 20000)
-            r[name]["alias_top_db"] = round(10 * math.log10(s[band & ~near].sum() / s[band & near].sum()), 1)
+            r[name]["off_harm_db"] = round(10 * math.log10(s[band & ~near].sum() / s[band & near].sum()), 1)
     for name in ["kick_808", "kick_techno"]:
         y = load(d, name)
         if y is not None:

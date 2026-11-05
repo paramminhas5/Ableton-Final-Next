@@ -9,7 +9,7 @@ PLUG = {
     "hall": f"{S}/dl/dragonfly/x/usr/lib/vst3/DragonflyHallReverb.vst3",
     "plate": f"{S}/dl/dragonfly/x/usr/lib/vst3/DragonflyPlateReverb.vst3",
     "odin": f"{S}/build-odin2/Odin2_artefacts/Release/VST3/Odin2.vst3",
-    "vital": "/tmp/claude-0/-home-claude/14482081-5c9f-509e-afde-b9b4be190bf9/scratchpad/shootout/build-vitalium/ports/vitalium.vst3",
+    "vital": f"{S}/build-vitalium/ports/vitalium.vst3",
 }
 def load(k):
     return pedalboard.load_plugin(PLUG[k])
