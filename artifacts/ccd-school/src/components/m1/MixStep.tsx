@@ -195,24 +195,6 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
     : screen.goal === "record" ? (recState === "on" ? "do a mix, then press stop recording" : "press record, mix, then stop")
     : screen.goal === "match" ? `deck b is ${bBpm > base ? "faster" : "slower"} by ${off.toFixed(1)} bpm. move its tempo fader until the beats line up`
     : fb <= 0.6 ? "bring deck b's fader up first" : lowA >= 0.25 ? "now turn deck a's low knob down: swap the bass" : "last: crossfade to b, or pull deck a's fader down";
-  // The go key says the next move in a few words, like the play-in's ("bring deck b up"), never just "not yet".
-  const g = screen.goal;
-  const short = g === "crossfade" ? (!seen.right ? "crossfader to b" : "back to a")
-    : g === "swap" ? (fb <= 0.6 ? "bring deck b up" : lowA >= 0.25 ? "cut a's low" : "keep b's low up")
-    : g === "key" ? "pick a track that fits"
-    : g === "cut" ? "cut to b on the one"
-    : g === "phrase" ? "bring b in on bar one"
-    : g === "echo" ? (echoA <= 0.5 ? "turn echo a up" : "fade deck a out")
-    : g === "sync" ? (synced ? "nudge, then sync again" : "press sync b")
-    : g === "cue" ? "tap two hot cues"
-    : g === "loop" ? (loopLen === null ? "set a loop on b" : "bring deck b up")
-    : g === "stems" ? (stems.drums ? "take b's drums out" : fb <= 0.5 ? "bring deck b up" : "keep both faders up")
-    : g === "shift" ? (!fits ? "shift b's key" : "match the tempo")
-    : g === "curve" ? (law !== "sharp" ? "curve to sharp" : "cut on the one")
-    : g === "record" ? (recState === "on" ? "stop recording" : "press record")
-    : g === "match" ? `tempo b ${bBpm > base ? "down" : "up"} ${off.toFixed(1)}`
-    : g === "file" || g === "free" ? "next"
-    : fb <= 0.6 ? "bring deck b up" : lowA >= 0.25 ? "cut a's low" : "crossfade to b";
   const [say, setSay] = useState<string | null>(null);
   // After one "not yet", a way on: nobody gets stuck on a mixer step.
   const [stuck, setStuck] = useState(false);
