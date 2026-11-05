@@ -1,0 +1,115 @@
+slug: synth-filters
+world: producer
+number: 214
+title: filters, carving the sound
+minutes: 5
+song:
+  changes: lead.lead
+  why: a filter decides which part of your lead's sound gets through, from dark and round to thin and bright
+learn: >-
+  What a filter does, the main filter types, low-pass, high-pass and band-pass, and resonance, all on your
+  own lead.
+youCan:
+  - say what low-pass, high-pass and band-pass filters keep
+  - say what resonance does at the cutoff
+  - carve your lead with a low-pass and a high-pass
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A soft wave, then a saw, then a square. The saw is the brightest because it's packed with high
+        frequencies, the fizzy top part of the sound. A filter is a device that takes some of those
+        frequencies away.
+
+        Starting bright and taking things away is called subtractive synthesis, and it's how most classic
+        synth sounds are made. Almost every big sweep you've heard in a dance track is a filter moving.
+      straight: >-
+        Bright waves are full of high frequencies. A filter removes some. Start bright, take away: subtractive
+        synthesis.
+      eli5: >-
+        Some sounds are very bright and fizzy. A filter is like a sieve that lets some of the sound through and
+        holds the rest back.
+
+  - kind: say
+    title: three filter types
+    say:
+      mentor: >-
+        A low-pass filter lets the lows pass and cuts the highs above a point called the cutoff. Lower the
+        cutoff and the sound goes darker and rounder. This is the one you'll use most.
+
+        A high-pass does the opposite: it keeps the highs and cuts the lows, so a sound gets thinner and
+        lighter. A band-pass keeps only a slice in the middle, which sounds like a telephone or a small radio.
+
+        Resonance is a boost right at the cutoff. Turn it up and the filter starts to ring and whistle there.
+        Sweep the cutoff with resonance up and you get the classic synth wah.
+      straight: >-
+        Low-pass keeps lows, cuts highs above the cutoff. High-pass keeps highs, cuts lows. Band-pass keeps a
+        middle slice. Resonance is a ringing peak at the cutoff.
+      eli5: >-
+        Low-pass makes a sound darker. High-pass makes it thinner. Band-pass makes it sound like an old phone.
+        Resonance makes it whistle.
+    deeper:
+      - title: filters in live
+        say: >-
+          Live's synths each have a filter section where you pick the type, low-pass, high-pass, band-pass or
+          notch, which cuts a narrow slice out. Auto Filter puts the same filters on any track as an effect. A
+          filter's slope, often 12 or 24 dB per octave, sets how steeply it cuts: 24 is the more aggressive.
+      - title: careful with resonance
+        say: >-
+          High resonance with a low cutoff can make big, sudden peaks in the bass. Keep an eye on your meters.
+          Pushed far enough, a filter's resonance can even ring on its own as a pure tone.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, res, cut, character]
+    say:
+      mentor: >-
+        Here's your song with all three filter types on your lead. Cutoff is the low-pass: turn it down and
+        your lead goes dark. Cut is a high-pass on the lead's channel: turn it up and the lows fall away so it
+        thins out. Bring cutoff down and cut up together and you've made a band-pass, just a slice in the
+        middle.
+
+        Then add resonance and sweep the cutoff to hear it sing. Character picks how it sounds: warm is a round
+        four-pole ladder, scream is a two-pole that distorts as it resonates, smooth is a clean two-pole with
+        a gentler slope. Keep the shape that sits best in your song.
+      straight: >-
+        Cutoff is low-pass, cut is high-pass. Both together make a band-pass. Res adds a peak at the cutoff.
+        Character: warm, scream or smooth. Carve your lead and keep it.
+      eli5: >-
+        Cutoff makes your tune darker. Cut makes it thinner. Both together make it sound like a phone. Res
+        makes it whistle. Character changes how it whistles. Pick the sound you like.
+
+  - kind: ask
+    q: What does a low-pass filter do?
+    options: ["keeps the lows, cuts the highs", "keeps the highs, cuts the lows", "keeps only the middle", "makes it louder"]
+    answer: 0
+    why: Low-pass lets the lows pass and cuts above the cutoff, so the sound goes darker.
+    whyWrong:
+      1: That's a high-pass.
+      2: That's a band-pass.
+      3: A filter removes sound, it doesn't add level.
+
+  - kind: ask
+    q: What does resonance do?
+    options: ["boosts a ringing peak at the cutoff", "moves the cutoff", "adds echo", "makes notes longer"]
+    answer: 0
+    why: Resonance boosts the frequencies right at the cutoff, so it rings and whistles.
+    whyWrong:
+      1: Cutoff is its own control.
+      2: Echo is a delay effect.
+      3: Note length is the envelope's job.
+
+  - kind: ask
+    q: You want your lead to sound like it's coming through a small radio. Which filter?
+    options: ["band-pass", "low-pass", "high-pass", "no filter"]
+    answer: 0
+    why: Keeping only a middle slice, cutting both lows and highs, gives that small radio sound.
+    whyWrong:
+      1: Low-pass alone keeps all the lows, so it's dark and full.
+      2: High-pass alone keeps all the highs, so it's thin and fizzy.
+      3: No filter leaves the full range.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, how loud each note is from start to finish.

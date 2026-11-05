@@ -1,0 +1,107 @@
+slug: collision-tension-electric
+world: producer
+number: 250
+title: collision, tension, electric, analog
+minutes: 5
+song:
+  changes: chords.chords
+  why: chords that strike and ring out like a struck or plucked instrument feel more played than a flat pad
+learn: >-
+  Physical modelling, synthesis that copies how real instruments make sound, Live's four modelled instruments,
+  and a struck, ringing feel on your own chords.
+youCan:
+  - say what physical modelling is
+  - match Collision, Tension and Electric to the instruments they model
+  - give your chords a struck or plucked feel
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        A soft synth note that fades in and holds. Nothing about it says how it was made. Now think of a
+        marimba: a mallet hits a wooden bar, the bar rings, the ring dies away. The sound comes from that
+        physical event.
+
+        Physical modelling is synthesis that copies the event itself. Instead of oscillators and filters, it
+        simulates a mallet hitting a bar, a string vibrating, a hammer striking a metal tine. Play harder and
+        it doesn't just get louder, the tone changes, like the real thing.
+      straight: >-
+        Physical modelling simulates how real instruments make sound: a mallet on a bar, a vibrating string, a
+        hammer on a tine. Harder playing changes the tone, not just the level.
+      eli5: >-
+        Some synths pretend to be real things: a stick hitting wood, a string being plucked. Hit harder and it
+        sounds different, just like a real instrument.
+
+  - kind: say
+    title: four modelled instruments
+    say:
+      mentor: >-
+        Collision models mallets striking things: marimbas, bells, kalimbas, metal. Tension models strings,
+        plucked, hit or bowed. Electric models electric pianos, the hammers and tines of Rhodes and
+        Wurlitzer-style keys.
+
+        Analog belongs to the same family in Live, though it's a little different: it models the circuits of a
+        classic two-oscillator analog synth rather than an acoustic instrument.
+      straight: >-
+        Collision: mallets, bells, marimbas. Tension: plucked and bowed strings. Electric: electric pianos.
+        Analog: a modelled classic two-oscillator synth.
+      eli5: >-
+        Collision is for things you hit, like bells. Tension is for strings. Electric is for electric pianos.
+        Analog is an old-style synth.
+    deeper:
+      - title: in live
+        say: >-
+          Tension's controls describe a real string: its stiffness, its length, where the pickup sits, how hard
+          the bow presses. Electric lets you shape the hammer, the tine and the pickup. Reach for these when a
+          sampled instrument sounds static, because a model reacts to every note differently.
+
+  - kind: shape
+    layer: chords
+    knobs: [attack, release, cutoff]
+    say:
+      mentor: >-
+        Our chords aren't a physical model, but you can give them the shape of a struck instrument, and that
+        shape is most of what your ear hears. Your song is playing.
+
+        Turn attack right down so every chord starts with a hit, like a mallet or a hammer. Set release so the
+        chord rings and fades instead of stopping dead. Then lower cutoff a little: struck bars and electric
+        pianos are warm, not fizzy. Keep it if your chords now feel played.
+      straight: >-
+        Give your chords a struck shape: short attack, a release that rings, cutoff a bit lower for warmth.
+        Keep it.
+      eli5: >-
+        Make your chords start with a hit, ring out, and sound warm, like a bell or a piano.
+
+  - kind: ask
+    q: What does physical modelling simulate?
+    options: ["how a real instrument physically makes sound", "a recording of an instrument", "a drum loop", "a reverb room"]
+    answer: 0
+    why: It models the mallet, string or hammer, not a recording of it.
+    whyWrong:
+      1: Playing recordings is sampling.
+      2: Loops are recordings too.
+      3: Rooms are reverb.
+
+  - kind: ask
+    q: Which one models plucked and bowed strings?
+    options: ["Tension", "Collision", "Electric", "Analog"]
+    answer: 0
+    why: Tension simulates a vibrating string.
+    whyWrong:
+      1: Collision is mallets and bars.
+      2: Electric is electric pianos.
+      3: Analog is a classic synth.
+
+  - kind: ask
+    q: You play a physical model harder. What changes?
+    options: ["the tone, as well as the level", "only the level", "the tempo", "nothing"]
+    answer: 0
+    why: Like a real instrument, a harder hit sounds different, not just louder.
+    whyWrong:
+      1: That's what simpler instruments do.
+      2: Tempo isn't affected by how hard you play.
+      3: It reacts to every note.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try preset anatomy to take your lead apart.

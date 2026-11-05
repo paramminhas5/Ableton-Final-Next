@@ -1,0 +1,65 @@
+slug: lead-width
+world: producer
+number: 11
+title: width and movement
+minutes: 6
+song:
+  changes: lead.lead
+  why: a lead that's wide and moves feels expensive; a static one feels flat
+learn: >-
+  Detune for width and glide for movement, on your own lead.
+youCan:
+  - widen a sound with detune
+  - add glide between notes
+  - hear when a sound is too wide
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Big synth leads are rarely one oscillator. Two or more play the same note, pulled very slightly out of
+        tune with each other. They drift in and out, and your ears hear a thick, wide, moving sound. That's
+        detune. Glide is the other trick: notes slide into each other instead of jumping.
+      straight: >-
+        Detune: two oscillators slightly apart for a wide, thick sound. Glide: notes slide into each other.
+      eli5: >-
+        Make two copies of a sound and put one a tiny bit out of tune: it sounds huge. That's detune. Glide
+        makes notes slide like a trombone.
+
+  - kind: shape
+    layer: lead
+    knobs: [detune, glide]
+    say:
+      mentor: >-
+        Your lead. Turn detune up slowly: first it thickens, then it shimmers, and too far it sounds out of
+        tune and seasick. Find the edge and back off a bit. Then add some glide and listen to your melody slide
+        between notes. A little goes a long way.
+      straight: >-
+        Detune up until it thickens; back off before it sounds out of tune. Add a little glide.
+      eli5: >-
+        Turn detune up until it sounds big but not wobbly. Then turn glide up a little and hear the notes
+        slide.
+
+  - kind: ask
+    q: What does detune do?
+    options: ["makes a sound thicker and wider", "changes the key", "slows the song", "makes it quieter"]
+    answer: 0
+    why: Slightly mistuned copies beat against each other and sound wide.
+    whyWrong:
+      1: The notes stay in key; they're only a few cents apart.
+      2: Tempo stays the same.
+      3: Level is separate.
+
+  - kind: ask
+    q: What does glide do?
+    options: ["slides between notes", "repeats notes", "adds reverb", "cuts the lows"]
+    answer: 0
+    why: Each note slides up or down into the next.
+    whyWrong:
+      1: That's an arpeggiator or echo.
+      2: Reverb is space.
+      3: That's an eq.
+
+  - kind: keep
+    next: >-
+      Next: risers. The noise sweep that tells the room a drop is coming.

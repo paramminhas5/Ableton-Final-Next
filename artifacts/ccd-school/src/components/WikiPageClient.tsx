@@ -27,7 +27,7 @@ function PathBlock({ path, done }: { path: ReturnType<typeof pathsByWorld>[numbe
   return (
     <>
       <ListRow
-        led={n === total && total > 0 ? "var(--led-mint)" : n > 0 ? "var(--led-go)" : "var(--ledoff)"}
+        led={n === total && total > 0 ? "var(--led-mint)" : n > 0 ? "var(--led-mint)" : "var(--ledoff)"}
         title={path.title}
         sub={path.tagline}
         right={<span className="m1-t11">{n}/{total}</span>}

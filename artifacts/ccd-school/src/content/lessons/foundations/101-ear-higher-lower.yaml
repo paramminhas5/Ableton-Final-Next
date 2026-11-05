@@ -1,0 +1,44 @@
+slug: ear-higher-lower
+world: foundations
+number: 101
+title: bonus, higher or lower
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; this round trains the ears you use on every part of it
+learn: >-
+  A quick ear round: two notes, which one is higher? It gets harder as you get them right.
+youCan:
+  - hear which of two notes is higher, even when they're close
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        A quick one, just for your ears. Tap low, then high. Easy when they're far apart. In the round
+        coming up they start far apart and get closer together as you get them right, until it's a real
+        test. Producers do this all day: is the bass a little too high, is that note a touch flat.
+      straight: >-
+        Ear round: which of two notes is higher. They get closer as you get them right.
+      eli5: >-
+        A listening game! You'll hear two notes. Say which one is higher. They start far apart and get closer
+        and closer.
+
+  - kind: ear
+    drill: pitch
+    rounds: 8
+    say: Two notes. Which one was higher? Replay as often as you like.
+
+  - kind: ask
+    q: Two notes, one at 220 hz and one at 233 hz. Which is higher?
+    options: ["233 hz", "220 hz", "they're the same", "you can't tell from the numbers"]
+    answer: 0
+    why: More wiggles a second, higher note. 233 is higher, though only a little.
+    whyWrong:
+      1: 220 is the lower of the two.
+      2: They're 13 hz apart, about one key on a piano.
+      3: The bigger number is always the higher pitch.
+
+  - kind: keep
+    next: >-
+      Back to your song: waveforms, and picking the shape for your melody.

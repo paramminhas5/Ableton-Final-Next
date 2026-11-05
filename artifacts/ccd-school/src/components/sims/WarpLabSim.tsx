@@ -98,9 +98,9 @@ export function WarpLabSim() {
           Off = raw sample (off-grid). On = hits play at your marker positions.
         </span>
       </div>
-      {/* RAW lane — shows the unprocessed sample with markers users drag */}
+      {/* RAW lane: shows the unprocessed sample with markers users drag */}
       <div className="font-mono text-[10px] uppercase opacity-70">
-        RAW SAMPLE — drag pink markers onto the transient peaks
+        RAW SAMPLE: drag pink markers onto the transient peaks
       </div>
       <svg
         ref={ref}
@@ -148,9 +148,9 @@ export function WarpLabSim() {
         ))}
       </svg>
 
-      {/* WARPED lane — same waveform stretched so each marker→grid segment maps onto the grid cell */}
+      {/* WARPED lane: same waveform stretched so each marker→grid segment maps onto the grid cell */}
       <div className="font-mono text-[10px] uppercase opacity-70 mt-2">
-        WARPED RESULT — what Live plays back ({warped ? "live" : "preview"})
+        WARPED RESULT: what Live plays back ({warped ? "live" : "preview"})
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full brutal-border bg-volt/20">
         {[0, 0.25, 0.5, 0.75, 1].map((g, i) => (

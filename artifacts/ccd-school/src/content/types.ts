@@ -153,7 +153,20 @@ export type LessonScreen =
       answer: number;
       explain: string;       // shown after answer, ≤ 2 sentences
       hint?: string;
+      /** a reason for a specific wrong pick, keyed by option index (lesson files) */
+      whyWrong?: Record<number, string>;
+      /** kept for "ask me more" rather than the main questions (lesson files) */
+      more?: boolean;
     }
+  // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
+  | { kind: "say"; title: string; body: string; clip?: string; deeper?: { title: string; body: string }[] }
+  | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
+  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" }; body: string; hint?: string; snap?: boolean }
+  | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
+  | { kind: "arrange"; body: string; goal: "sections" | "drop" | "fills" | "risers" | "export"; hint?: string }
+  | { kind: "mix"; body: string; goal: "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record"; bank?: string; hint?: string }
+  | { kind: "tempo"; body: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: string }
+  | { kind: "ear"; drill: string; rounds: number; body?: string }
   | {
       /**
        * audio-id — hear a synthesised example, identify what it is.
@@ -193,7 +206,7 @@ export type LessonScreen =
        */
       kind: "sequence";
       prompt: string;
-      items: string[];        // already in correct order — will be shuffled for display
+      items: string[];        // already in correct order: will be shuffled for display
       explain: string;
     }
   | {
@@ -227,6 +240,19 @@ export type Mission = {
   explainer: ExplainerBlock[];
   sim: { type: SimType; preset?: Record<string, unknown> };
   quiz: QuizQ[];
+  /** set for lessons that come from a lesson file */
+  fromFile?: {
+    /** the layer this lesson puts in the learner's song, e.g. { layer: "drums", kind: "kick" } */
+    adds: { layer: string; kind: string; part: string };
+    /** the "what you will walk away with" paragraph in the learner's voice */
+    learn: string;
+    why: string;
+    minutes: number;
+    /** what you will learn, one short line each (no "next up") */
+    items: string[];
+    /** the one line on what comes next */
+    next: string;
+  };
 };
 
 // ─── DEEP LESSON OVERLAY (legacy, kept for Classic tab) ───────────────────────

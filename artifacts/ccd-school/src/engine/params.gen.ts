@@ -7,7 +7,7 @@ export type Curve = "lin" | "exp" | "fader";
 export type ParamSpec = { id: string; key: string; label: string; bank: Bank; index: number; min: number; max: number; default: number; unit: Unit; curve: Curve; smoothMs: number; detents: number[] };
 
 export const INSTRUMENT_BASE = 16;
-export const MAX_PARAMS = 96;
+export const MAX_PARAMS = 224;
 export const FADER_UNITY = 0.75;
 export const FADER_MIN_DB = -60;
 export const FADER_MAX_DB = 6;
@@ -25,6 +25,9 @@ export const LAYER_PARAMS = [
   { id: "mix.pan", key: "pan", label: "pan", bank: "mix", index: 9, min: -1, max: 1, default: 0.5, unit: "pan", curve: "lin", smoothMs: 15, detents: [0.5] },
   { id: "mix.send", key: "send", label: "send", bank: "mix", index: 10, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "mix.duck", key: "duck", label: "duck", bank: "mix", index: 11, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.lp", key: "lp", label: "filter", bank: "fx", index: 12, min: 40, max: 20000, default: 1, unit: "hz", curve: "exp", smoothMs: 15, detents: [] },
+  { id: "fx.lpres", key: "lpres", label: "resonance", bank: "fx", index: 13, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "fx.lpkind", key: "lpkind", label: "character", bank: "fx", index: 14, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const BASS_PARAMS = [
@@ -36,6 +39,8 @@ export const BASS_PARAMS = [
   { id: "bass.wave", key: "wave", label: "wave", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 15, detents: [] },
   { id: "bass.sub", key: "sub", label: "sub", bank: "shift", index: 22, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "bass.drift", key: "drift", label: "drift", bank: "shift", index: 23, min: 0, max: 1, default: 0.2, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "bass.character", key: "character", label: "character", bank: "shift", index: 24, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "bass.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 /** Per pad. Wire index = INSTRUMENT_BASE + pad * DRUM_PAD_PARAMS.length + index. */
@@ -52,6 +57,19 @@ export const DRUM_RACK_PARAMS = [
 ] as const satisfies readonly ParamSpec[];
 export const DRUM_RACK_BASE = 64;
 
+/** Per pad, second page. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. */
+export const DRUM_PAD2_PARAMS = [
+  { id: "drums.pad.shape", key: "shape", label: "body", bank: "shift", index: 0, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.noise", key: "noise", label: "noise", bank: "shift", index: 1, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.snap", key: "snap", label: "snap", bank: "shift", index: 2, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.color", key: "color", label: "color", bank: "shift", index: 3, min: -1, max: 1, default: 0.5, unit: "none", curve: "lin", smoothMs: 0, detents: [0.5] },
+  { id: "drums.pad.sweep", key: "sweep", label: "sweep", bank: "shift", index: 4, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.wobble", key: "wobble", label: "wobble", bank: "shift", index: 5, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.random", key: "random", label: "random", bank: "shift", index: 6, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+] as const satisfies readonly ParamSpec[];
+export const DRUM_PAD2_BASE = 80;
+export const DRUM_PAD2_STRIDE = 8;
+
 export const CHORD_PARAMS = [
   { id: "chords.voicing", key: "voicing", label: "voicing", bank: "sound", index: 16, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "chords.spread", key: "spread", label: "spread", bank: "sound", index: 17, min: 0, max: 1, default: 0.4, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
@@ -61,6 +79,19 @@ export const CHORD_PARAMS = [
   { id: "chords.res", key: "res", label: "res", bank: "shift", index: 21, min: 0, max: 1, default: 0.15, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
   { id: "chords.env", key: "env", label: "env", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
   { id: "chords.drift", key: "drift", label: "drift", bank: "shift", index: 23, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.lforate", key: "lforate", label: "lfo rate", bank: "shift", index: 24, min: 0.1, max: 10, default: 0.5, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.lfo", key: "lfo", label: "lfo", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.lfoto", key: "lfoto", label: "lfo to", bank: "shift", index: 26, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fm", key: "fm", label: "fm", bank: "shift", index: 27, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.65, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 4000, default: 0.45, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "chords.voice", key: "voice", label: "voice", bank: "shift", index: 33, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.ring", key: "ring", label: "ring", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "chords.bright", key: "bright", label: "bright", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.osc", key: "osc", label: "osc", bank: "shift", index: 36, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const LEAD_PARAMS = [
@@ -72,6 +103,19 @@ export const LEAD_PARAMS = [
   { id: "lead.wave", key: "wave", label: "wave", bank: "shift", index: 21, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 15, detents: [] },
   { id: "lead.detune", key: "detune", label: "detune", bank: "shift", index: 22, min: 0, max: 1, default: 0.3, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
   { id: "lead.env", key: "env", label: "env", bank: "shift", index: 23, min: 0, max: 1, default: 0.35, unit: "pct", curve: "lin", smoothMs: 8, detents: [] },
+  { id: "lead.lforate", key: "lforate", label: "lfo rate", bank: "shift", index: 24, min: 0.1, max: 10, default: 0.5, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.lfo", key: "lfo", label: "lfo", bank: "shift", index: 25, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.lfoto", key: "lfoto", label: "lfo to", bank: "shift", index: 26, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fm", key: "fm", label: "fm", bank: "shift", index: 27, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.ratio", key: "ratio", label: "ratio", bank: "shift", index: 28, min: 0, max: 1, default: 0.25, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fdecay", key: "fdecay", label: "f decay", bank: "shift", index: 29, min: 30, max: 3000, default: 0.53, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.frel", key: "frel", label: "f release", bank: "shift", index: 30, min: 20, max: 3000, default: 0.4, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.character", key: "character", label: "character", bank: "shift", index: 31, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.fdrive", key: "fdrive", label: "filter drive", bank: "shift", index: 32, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "lead.voice", key: "voice", label: "voice", bank: "shift", index: 33, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.ring", key: "ring", label: "ring", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "lead.bright", key: "bright", label: "bright", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.osc", key: "osc", label: "osc", bank: "shift", index: 36, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const FX_PARAMS = [
@@ -96,6 +140,13 @@ export const SAMPLER_PARAMS = [
 export const MASTER_PARAMS = [
   { id: "master.out", key: "out", label: "out", bank: "mix", index: 0, min: 0, max: 1, default: 0.75, unit: "db", curve: "fader", smoothMs: 15, detents: [0.75] },
   { id: "master.glue", key: "glue", label: "glue", bank: "mix", index: 1, min: 0, max: 1, default: 0.25, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.glueratio", key: "glueratio", label: "ratio", bank: "mix", index: 2, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.sidechain", key: "sidechain", label: "sidechain", bank: "mix", index: 3, min: 20, max: 300, default: 0.555, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "master.gluemix", key: "gluemix", label: "glue mix", bank: "mix", index: 4, min: 0, max: 1, default: 1, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "master.space", key: "space", label: "space", bank: "mix", index: 5, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.verbtime", key: "verbtime", label: "verb time", bank: "mix", index: 6, min: 400, max: 8000, default: 0.598, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
+  { id: "master.echotype", key: "echotype", label: "echo", bank: "mix", index: 7, min: 0, max: 1, default: 0.5, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.repeats", key: "repeats", label: "repeats", bank: "mix", index: 8, min: 0, max: 0.9, default: 0.4667, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const DRUM_PAD_NAMES = ["kick", "snare", "clap", "rim", "closed hat", "open hat", "shaker", "ride", "low tom", "mid tom", "high tom", "crash", "perc 1", "perc 2", "fx", "reverse"] as const;
@@ -114,14 +165,15 @@ export type LayerParamId = `${(typeof LAYER_PARAMS)[number]["id"]}`;
 export type BassParamId = `${(typeof BASS_PARAMS)[number]["id"]}`;
 export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number]["id"]}`;
 export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number]["id"]}`;
+export type DrumPad2ParamId = `${(typeof DRUM_PAD2_PARAMS)[number]["id"]}`;
 export type ChordParamId = `${(typeof CHORD_PARAMS)[number]["id"]}`;
 export type LeadParamId = `${(typeof LEAD_PARAMS)[number]["id"]}`;
 export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
 export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
-export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
+export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | DrumPad2ParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
 export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24 } as const;
-export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8 } as const;
+export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8, loudness: 9 } as const;
 /** Clash fixes, as packed in a CLASH event's flags. */
 export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;
 /** Layer number the master's readings come with. */
@@ -129,6 +181,11 @@ export const MASTER_LAYER = 8;
 /** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */
 export const LATENCY_SAMPLES = 23;
 export const CEILING_DB = -1;
+/** Export loudness, integrated LUFS: streaming (the default) and loud, for club play. */
+export const EXPORT_LUFS = -14;
+export const EXPORT_LOUD_LUFS = -9;
+/** The glue's ratio switch steps. */
+export const GLUE_RATIOS = [2, 4, 10] as const;
 export const MIX_PARAMS = 12;
 export const FLAG = { playing: 1, countIn: 2, recording: 4, link: 8, repeat: 16 } as const;
 export const OUT_EVENT_BYTES = 32;

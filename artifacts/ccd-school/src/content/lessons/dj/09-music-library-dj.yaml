@@ -1,0 +1,51 @@
+slug: music-library-dj
+world: dj
+number: 9
+title: picking tracks
+minutes: 6
+song:
+  changes: drums.clap
+  why: a set is only as good as the tracks you choose to put next to each other
+learn: >-
+  What makes two tracks work together: tempo, key and energy, and picking from the bank.
+youCan:
+  - pick tracks with nearby tempos
+  - pick tracks whose keys fit
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Djs spend more time choosing tracks than mixing them. Three things make two tracks sit together: a
+        tempo close enough to match, keys that fit, and an energy that makes sense next to each other.
+      straight: >-
+        Tempo, key and energy decide whether two tracks work together.
+      eli5: >-
+        Good djs pick songs that go well together: similar speed, matching notes, same energy.
+
+  - kind: mix
+    goal: file
+    bank: skywalker
+    say:
+      mentor: >-
+        Your library is your music, not just the bank. Load one of your own tracks on deck b with file on b. It stays in your browser; nothing is uploaded. The app guesses its tempo.
+        
+        Match it to your song with the tempo fader and blend it in. If you don't have a file handy, the bank is here, and you can come back to this any time.
+      straight: >-
+        Load your own track on deck b. It stays on your device. Match its tempo and blend it in.
+      eli5: >-
+        Put one of your own songs on deck b and mix it in.
+
+  - kind: ask
+    q: Which three things make two tracks work together?
+    options: ["tempo, key and energy", "colour, length and title", "artist, label and year", "volume, pan and reverb"]
+    answer: 0
+    why: Tempo to match, key to fit, energy to flow.
+    whyWrong:
+      1: None of these change how they mix.
+      2: Those don't decide if they blend.
+      3: Those are mixing controls.
+
+  - kind: keep
+    next: >-
+      Next: key and harmonic mixing, up close.

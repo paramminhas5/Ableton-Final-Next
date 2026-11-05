@@ -1,0 +1,29 @@
+slug: your-song-in-live
+world: producer
+number: 101
+title: bonus, your song in live
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; this is about where it goes next
+learn: >-
+  Your song in Live.
+youCan:
+  - know where to look in Live for this
+steps:
+  - kind: say
+    title: your song in live
+    say: >-
+      You exported your song as midi. Drag the file into Live and each part lands on its own track. Session view shows them as clips you can launch; arrangement view lays them out left to right. Give each track a Live instrument: Drum Rack for the drums, Operator or Drift for the synths.
+  - kind: ask
+    q: Where would you go next in Live to try this?
+    options: ["the deeper lessons in this path", "nowhere, Live can't do it", "a different program", "the dj world"]
+    answer: 0
+    why: Each deeper lesson here walks through one part of it, on your own song.
+    whyWrong:
+      1: Live can do all of it.
+      2: It's all inside Live.
+      3: This path is about Live itself.
+  - kind: keep
+    next: >-
+      Pick a deeper lesson below, or head to the dj world.

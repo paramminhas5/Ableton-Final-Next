@@ -4,11 +4,13 @@
  * mode has hearts, free mode has none. The last screen has its own next key, so there
  * is no interstitial: you go on when you choose to.
  */
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
+import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { useSearchParams } from "next/navigation";
 import { M1Lesson } from "@/components/m1/Lesson";
 import { missionBySlug, nextMission } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
+import { nextAfter, worldOf } from "@/lib/worldOrder";
 import { useAuth } from "@/lib/auth";
 import { isLocked } from "@/lib/gating";
 import { useGatingMode } from "@/components/ClientProviders";
@@ -40,7 +42,12 @@ function Inner({ slug }: { slug: string }) {
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
 
-  const mission = missionBySlug(slug);
+  const base = missionBySlug(slug);
+  // One voice for now (process.md). Questions run easy to hard, so there is no level either.
+  const mission = useMemo(() => {
+    const f = fileLesson(slug);
+    return f ? lessonToMission(f, { voice: "mentor", level: "standard" }) : base;
+  }, [slug, base]);
   if (!mission) return <Message title="no lesson here" line={`we couldn't find a lesson called ${slug}.`} back="/learn" go={{ label: "all lessons", href: "/learn" }} />;
 
   const ctx = getMissionContext(slug);
@@ -52,14 +59,19 @@ function Inner({ slug }: { slug: string }) {
     );
   }
 
-  const next = nextMission(slug);
-  const missionIndex = ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
-  const missionTotal = ctx.path?.missionSlugs.length ?? 1;
+  // Next follows the song: after a song lesson, the next song lesson; after a deeper lesson or a
+  // bonus round, the song lesson after the one it hangs off (design/curriculum.md).
+  const after = nextAfter(slug);
+  const next = (after ? missionBySlug(after) : undefined) ?? (worldOf(slug) ? undefined : nextMission(slug));
+  const spine = ctx.path?.songSlugs ?? [];
+  const missionIndex = spine.includes(slug) ? spine.indexOf(slug) + 1 : ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
+  const missionTotal = spine.includes(slug) ? spine.length : ctx.path?.missionSlugs.length ?? 1;
   return (
     <M1Lesson
       key={slug}
       mission={mission}
       nextSlug={next?.slug}
+      nextTitle={next?.title}
       isReview={isReview}
       missionIndex={missionIndex}
       missionTotal={missionTotal}

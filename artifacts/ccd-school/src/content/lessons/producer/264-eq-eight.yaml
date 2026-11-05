@@ -1,0 +1,110 @@
+slug: eq-eight
+world: producer
+number: 264
+title: eq eight
+minutes: 5
+song:
+  changes: bass.bass
+  why: three bands of eq decide how deep, how solid and how clear your bass sounds
+learn: >-
+  Lows, mids and highs, what lives where, and three bands of eq on your bass.
+youCan:
+  - say roughly where lows, mids and highs sit
+  - clean up a muddy sound with a small cut
+  - shape your bass with three bands
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        An eq splits a sound into ranges of frequency and lets you turn each one up or down. Roughly: the
+        lows, from about 20 to 200 hz, are weight and boom. The mids, from about 200 hz to 3 khz, are the
+        body of a sound. The highs, above about 3 khz, are bite, clarity and air.
+
+        Your bass lives mostly in the lows, but its mids and highs are what let you hear it on small
+        speakers.
+      straight: >-
+        Lows, about 20 to 200 hz: weight. Mids, 200 hz to 3 khz: body. Highs, above 3 khz: bite and air.
+      eli5: >-
+        Every sound has a deep part, a middle part and a high part. An eq lets you turn each part up or down.
+
+  - kind: say
+    title: cut before you boost
+    say:
+      mentor: >-
+        A lot of muddy mixes have too much going on between about 200 and 500 hz, where many parts overlap.
+        A small cut there often cleans a sound up more than any boost would.
+
+        Cutting first is a good habit: take away what's in the way before you add anything.
+      straight: >-
+        Mud usually lives around 200 to 500 hz. A small cut there cleans things up. Cut before you boost.
+      eli5: >-
+        When sounds get muddy, take a little bit away from the middle. Taking away often works better than
+        adding.
+    deeper:
+      - title: eq eight in live
+        say: >-
+          EQ Eight has eight bands. Each band has a shape: low cut and high cut remove everything past a
+          frequency, shelves tilt a wide region up or down, a bell boosts or cuts around one point, and a
+          notch removes one narrow frequency.
+      - title: frequency, gain and q
+        say: >-
+          Each band has three controls. Frequency is where it works, gain is how much it boosts or cuts, and
+          Q is how wide or narrow the band is. A narrow Q is surgical, for hunting one ringing note. A wide Q
+          is musical, for shaping tone.
+      - title: mid and side
+        say: >-
+          In M/S mode, EQ Eight works on the middle of the stereo picture and on the sides separately.
+          Cutting the lows on the sides keeps the low end mono and tight.
+
+  - kind: shape
+    layer: bass
+    knobs: [low, mid, high]
+    say:
+      mentor: >-
+        Your bass with three bands. Low is the weight: a little up for more boom, down if it's swamping your
+        kick. Mid is the body, and where a bass turns muddy, so try a small cut. High is the edge that lets a
+        bass come through on a phone speaker.
+
+        Keep the moves small and keep listening to the whole song.
+      straight: >-
+        Low: weight, down if it swamps the kick. Mid: try a small cut for less mud. High: edge for small
+        speakers.
+      eli5: >-
+        Turn low for more or less boom. Turn mid down a little if it sounds muddy. Turn high for a bit of
+        edge.
+
+  - kind: ask
+    q: Roughly where do the lows sit?
+    options: ["below about 200 hz", "above about 3 khz", "between 1 and 3 khz", "everywhere"]
+    answer: 0
+    why: About 20 to 200 hz is weight and boom.
+    whyWrong:
+      1: That's the highs.
+      2: That's the upper mids.
+      3: Each range has its own place.
+
+  - kind: ask
+    q: A sound is muddy. Where might you try a small cut?
+    options: ["between about 200 and 500 hz", "above 10 khz", "below 20 hz", "nowhere, boost instead"]
+    answer: 0
+    why: That's where lots of parts overlap and build up.
+    whyWrong:
+      1: That's air, not mud.
+      2: That's below what most of us hear.
+      3: Boosting usually adds more mud.
+
+  - kind: ask
+    more: true
+    q: In EQ Eight, what does Q set?
+    options: ["how wide or narrow a band is", "the frequency", "the track's volume", "the number of bands"]
+    answer: 0
+    why: Narrow for surgery, wide for tone.
+    whyWrong:
+      1: That's the frequency control.
+      2: That's the fader.
+      3: There are always eight.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, space, reverb and echo.

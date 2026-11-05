@@ -4,7 +4,7 @@ import { LeaderboardPageClient } from "@/components/LeaderboardPageClient";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Leaderboard — CCD.SCHOOL",
+  title: "leaderboard",
   description: "Top learners on CCD.SCHOOL ranked by XP.",
 };
 

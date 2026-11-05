@@ -1,0 +1,110 @@
+slug: synth-amp-envelope
+world: producer
+number: 215
+title: amp envelope
+minutes: 5
+song:
+  changes: lead.lead
+  why: how each note starts and stops turns the same melody into a pluck or a soft pad
+learn: >-
+  The amp envelope, attack, decay, sustain and release, and turning your lead into a pluck or a pad with
+  attack and release.
+youCan:
+  - say what each part of an adsr envelope does
+  - make your lead a pluck or a pad
+  - say the difference between decay and release
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One soft synth note, held for most of the bar. Listen to how it starts and how it ends. Does it pop in
+        or fade in? Does it stop dead or ring on?
+
+        That journey from start to finish is set by an envelope, a shape that tells part of the synth what to
+        do over the life of each note. The amp envelope controls loudness.
+      straight: >-
+        A held note. How it starts and ends is set by an envelope. The amp envelope shapes loudness over time.
+      eli5: >-
+        Listen to how the note starts and stops. An envelope decides that: does it pop in, or slowly fade in?
+        Does it stop fast, or ring on?
+
+  - kind: say
+    title: adsr
+    say:
+      mentor: >-
+        The classic envelope has four stages, written adsr. Attack is how long the note takes to rise from
+        silence to full volume when it starts. Decay is how long it then takes to fall to the sustain level.
+        Sustain is how loud it stays while the note is held. Release is how long it takes to fade to silence
+        after the note ends.
+
+        A short attack, little sustain and a short release make a pluck. A long attack, high sustain and a long
+        release make a pad, a soft sound that swells in and fades away.
+      straight: >-
+        Attack is the rise. Decay falls to sustain. Sustain is the level while held. Release is the fade after.
+        Short everything is a pluck; long attack and release is a pad.
+      eli5: >-
+        Attack is how fast the note gets loud. Release is how long it takes to go quiet after. Fast is a pluck.
+        Slow is a soft, dreamy pad.
+    deeper:
+      - title: envelopes in live
+        say: >-
+          Every Live synth has an amp envelope with these stages, and the same four letters turn up on samplers
+          and drum devices too. A 0 ms attack can click on some waves, so a few milliseconds is usually safer.
+          Anything under about 10 ms still reads as a sharp start.
+      - title: decay vs release
+        say: >-
+          Decay happens while the note is still held. Release happens after it ends. If sustain is at zero the
+          note has already died during decay, so release has nothing left to do.
+
+  - kind: shape
+    layer: lead
+    knobs: [attack, release]
+    say:
+      mentor: >-
+        Here's your song with your lead's amp envelope. Attack first: at zero each note snaps in, turn it up and
+        the notes swell in softly. Release next: short, and each note stops tight; long, and the notes ring
+        into each other.
+
+        Try both short for a pluck, then both long for a pad. Same melody, two completely different songs.
+        Keep the one you like.
+      straight: >-
+        Attack is how fast each note comes in. Release is how long it rings after. Short and short is a pluck,
+        long and long a pad. Keep one.
+      eli5: >-
+        Attack makes notes start fast or slow. Release makes them stop fast or ring on. Try both short, then
+        both long. Pick your favourite.
+
+  - kind: ask
+    q: Which part of the envelope is how fast a note fades in?
+    options: ["attack", "decay", "sustain", "release"]
+    answer: 0
+    why: Attack is the rise from silence to full volume.
+    whyWrong:
+      1: Decay is the fall after the peak.
+      2: Sustain is the level while held.
+      3: Release is the fade after the note ends.
+
+  - kind: ask
+    q: For a soft pad that swells in, what attack do you want?
+    options: ["long", "zero", "it doesn't matter", "the same as decay"]
+    answer: 0
+    why: A long attack makes each note swell in slowly.
+    whyWrong:
+      1: Zero snaps in, like a pluck.
+      2: Attack is most of what makes a swell.
+      3: Decay is a separate stage.
+
+  - kind: ask
+    q: What's the difference between decay and release?
+    options: ["decay happens while held, release after the note ends", "they're the same thing", "release is while held, decay after", "decay is pitch, release is volume"]
+    answer: 0
+    why: Decay falls to sustain while you hold the note. Release fades it once the note ends.
+    whyWrong:
+      1: They're two separate stages.
+      2: That's the wrong way round.
+      3: Both are loudness on the amp envelope.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, an envelope on the filter instead of the volume.

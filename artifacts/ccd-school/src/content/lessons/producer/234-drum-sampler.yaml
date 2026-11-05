@@ -1,0 +1,90 @@
+slug: drum-sampler
+world: producer
+number: 234
+title: drum sampler
+minutes: 5
+song:
+  changes: drums.kick
+  why: a recorded kit on your pads gives your beat real hits with real texture
+learn: >-
+  What Live 12's Drum Sampler is for, why recorded kits sound alive, and your own beat on recorded hits.
+youCan:
+  - say what Drum Sampler is for
+  - say what velocity layers and round-robin do for drums
+  - choose between a synth and a recorded kit by ear
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Kick on every beat, clap on two and four. Notice every kick is exactly the same. That's perfect for a
+        lot of electronic music, but a real drummer never hits twice the same way. Each hit is a little
+        softer or harder, and the drum sounds a little different each time.
+
+        A recorded kit brings some of that life in, and a sampler built for drums can bring in more.
+      straight: >-
+        Every hit here is identical. Real drums vary from hit to hit. Recorded kits, and samplers built for
+        drums, bring that variety back.
+      eli5: >-
+        Every boom here sounds exactly the same, like a robot. A real drummer is never that exact. Recorded
+        drums sound more like a real drummer.
+
+  - kind: say
+    title: a sampler made for drums
+    say:
+      mentor: >-
+        Live 12 has a sampler built just for drum pads, called Drum Sampler. It sits on a pad in a drum rack,
+        the grid of pads where each pad holds its own sound.
+
+        What makes a sampled kit feel real is two tricks. Velocity layers play a different recording depending
+        on how hard you hit, so a soft snare sounds light and a hard one cracks. Round-robin cycles through
+        several recordings of the same hit, so a fast run of hats doesn't sound like a machine gun.
+      straight: >-
+        Drum Sampler is Live 12's sampler for drum rack pads. Velocity layers pick a recording by how hard you
+        hit. Round-robin cycles recordings so repeats vary.
+      eli5: >-
+        Drum Sampler is a sampler just for drums. It can play a soft recording for soft taps and a loud one
+        for hard taps, and swap between copies so it never sounds robotic.
+    deeper:
+      - title: drum sampler in live
+        say: >-
+          Drum Sampler lives on a Drum Rack pad, where older kits used Simpler. It's made for one-shot hits and
+          works with the rack's choke groups, which let one pad cut off another, like a closed hat stopping an
+          open hat.
+
+  - kind: tempo
+    set: sample
+    choices: [hit]
+    say:
+      mentor: >-
+        Drum Sampler is Live's one-shot sampler for a single drum hit. Here's a kick from the recorded kit on every beat in your song. Switch to the clap or the snare and hear each one take the same pattern.
+        
+        tune shifts the pitch: a kick tuned down is heavier, a snare tuned up is snappier. release trims the tail so hits stay tight. Load your own hit or record one and it drops in the same way. Keep the hit, tuned how you like it.
+      straight: >-
+        One drum hit, played in a pattern and tuned. Swap between kick, clap and snare or load your own.
+      eli5: >-
+        Pick a drum sound. Tune it up or down. Put it in your song.
+
+  - kind: ask
+    q: Where does Drum Sampler sit in Live?
+    options: ["on a pad in a drum rack", "on the master track", "in the browser only", "inside the reverb"]
+    answer: 0
+    why: It's an instrument for one pad, so each pad can have its own.
+    whyWrong:
+      1: The master is for the whole mix, not one drum.
+      2: You find it in the browser, but it plays on a pad.
+      3: It's an instrument, not part of an effect.
+
+  - kind: ask
+    q: A fast run of hats sounds like a machine gun. Which trick helps?
+    options: ["round-robin", "more reverb", "a higher tempo", "louder hats"]
+    answer: 0
+    why: Cycling through several recordings means repeats don't sound identical.
+    whyWrong:
+      1: Reverb adds space; each hit is still identical.
+      2: Faster makes the problem more obvious.
+      3: Louder identical hits are still identical.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try slicing to chop a loop onto pads.

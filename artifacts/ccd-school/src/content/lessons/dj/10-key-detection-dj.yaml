@@ -1,0 +1,64 @@
+slug: key-detection-dj
+world: dj
+number: 10
+title: key and harmonic mixing
+minutes: 6
+song:
+  changes: drums.clap
+  why: tracks in keys that fit blend without a sour clash
+learn: >-
+  The Camelot wheel, the code djs use for keys, and finding tracks that fit your own song's key.
+youCan:
+  - read a Camelot code
+  - say which keys fit together
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        When two tracks in clashing keys play together, the melodies rub and it sounds sour even if the
+        beats are perfect. Djs use the Camelot wheel: every key gets a number and a letter, and keys that
+        fit sit next to each other on the wheel.
+      straight: >-
+        Clashing keys sound sour. The Camelot wheel numbers keys so fitting ones sit side by side.
+      eli5: >-
+        Some songs sound bad together because their notes clash. Djs use number codes to find songs that
+        fit.
+
+  - kind: say
+    title: the camelot wheel
+    say:
+      mentor: >-
+        Twelve numbers round a wheel, A for minor and B for major. A key fits the same code, one step either
+        side with the same letter (8A fits 7A and 9A), or the same number with the other letter (8A fits
+        8B). Your song's code is shown on deck a.
+      straight: >-
+        Same code, one either side with the same letter, or the same number across.
+      eli5: >-
+        Look for the same number, or one bigger or smaller with the same letter.
+
+  - kind: mix
+    goal: key
+    bank: sandman
+    say:
+      mentor: >-
+        Find a bank track that fits your song's key. Try one that clashes first and listen for the sourness,
+        then one that fits.
+      straight: >-
+        Find a bank track that fits your key. Try a clashing one first to hear the difference.
+      eli5: >-
+        Find a song that fits yours. Try one that doesn't first, and listen.
+
+  - kind: ask
+    q: Your song is 8A. Which key fits?
+    options: ["9A", "3B", "5A", "11B"]
+    answer: 0
+    why: One step on the wheel with the same letter.
+    whyWrong:
+      1: Too far round the wheel.
+      2: Three steps is too far.
+      3: Different letter and number.
+
+  - kind: keep
+    next: >-
+      Next: cue points and loops.

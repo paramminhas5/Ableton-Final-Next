@@ -1,0 +1,123 @@
+slug: midi-explained
+world: foundations
+number: 209
+title: what midi is
+minutes: 5
+song:
+  changes: lead.lead
+  why: your melody is stored as notes, so you can change the sound playing them without touching a single note
+learn: >-
+  What midi is, why it's instructions and not sound, and your own melody played by a different sound with every
+  note left exactly as you played it.
+youCan:
+  - say what midi stores
+  - say what velocity is
+  - change your lead's sound while its notes stay the same
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Tap through the three. Same note, three very different sounds. Here's the cool part: the instruction
+        was identical every time. Play this note, start here, stop there. Only the instrument reading it
+        changed.
+
+        That instruction is midi. The name stands for musical instrument digital interface, and it's how
+        keyboards, pads and music programs tell instruments what to play.
+      straight: >-
+        Same note, three sounds, one instruction. Midi (musical instrument digital interface) is the
+        instruction: which note, when, how long. The instrument makes the sound.
+      eli5: >-
+        Tap a, b and c. Same note each time, played by three different sounds. The message saying "play this
+        note now" is called midi.
+
+  - kind: say
+    title: notes, not sound
+    say:
+      mentor: >-
+        Midi records which note, when it starts, how long it lasts and how hard it was played. No sound is
+        stored at all. A synth or a sampler reads those instructions and makes the audio.
+
+        How hard a note is played is called velocity, a number from 1 to 127. It usually changes how loud the
+        note is and often how bright. Because midi is just instructions, you can change any of it later: fix a
+        wrong note, shorten one, swap the instrument. Nothing has to be played again.
+      straight: >-
+        Midi stores note, start, length and velocity, no sound. Velocity, 1 to 127, is how hard the note was
+        played. All of it stays editable, and the instrument can be swapped any time.
+      eli5: >-
+        Midi is like a list of instructions: this note, now, this long, this hard. How hard you press is
+        called velocity. You can change the list whenever you like.
+    deeper:
+      - title: in live
+        say: >-
+          You can play a midi keyboard, draw notes with the mouse in the piano roll, or press Capture MIDI to
+          save what you just played even if you weren't recording.
+      - title: knobs send midi too
+        say: >-
+          Turning a knob or the mod wheel on a controller sends control change messages, CC for short, with
+          values from 0 to 127. That's how a hardware knob can move a filter in a synth on your computer.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, release]
+    say:
+      mentor: >-
+        Here's your song. Your melody is midi: the notes you played are saved as instructions, and a synth is
+        reading them.
+
+        Turn wave and the synth changes from a bright, buzzy saw to a hollow square. Every note in your melody stays
+        exactly where you put it, same pitch, same timing. Only the instrument changed. Then try release,
+        which sets how long each note keeps ringing after it ends. The note lengths saved in your song don't
+        move; the synth just lets each one fade out slower or faster. Pick the sound you want reading your
+        notes.
+      straight: >-
+        Your melody is midi. Wave changes the instrument, release how long notes ring after they end. The
+        saved notes stay exactly as you played them. Pick a sound.
+      eli5: >-
+        Turn wave: same tune, different sound. Your notes don't change at all. Turn release: the notes ring
+        on longer or stop quicker. Pick the one you like.
+
+  - kind: ask
+    q: What does midi store?
+    options: ["which note, when, how long and how hard", "the recorded sound", "an mp3 of the song", "the speaker settings"]
+    answer: 0
+    why: Midi is instructions. The instrument turns them into sound.
+    whyWrong:
+      1: That's audio. Midi stores no sound at all.
+      2: An mp3 is audio too.
+      3: Speakers just play what comes out.
+
+  - kind: ask
+    q: You changed your lead's wave. What happened to your notes?
+    options: ["nothing, only the sound changed", "they moved up an octave", "they got shorter", "they were deleted"]
+    answer: 0
+    why: Same instructions, new instrument reading them.
+    whyWrong:
+      1: Pitch stayed the same.
+      2: The saved lengths didn't move.
+      3: They're all still there.
+
+  - kind: ask
+    q: Velocity is
+    options: ["how hard a note is played", "how high the note is", "how fast the song is", "how long a note lasts"]
+    answer: 0
+    why: Velocity runs from 1 to 127 and usually sets how loud, and often how bright, a note is.
+    whyWrong:
+      1: That's the note number, the pitch.
+      2: That's tempo.
+      3: That's the note's length.
+
+  - kind: ask
+    more: true
+    q: What do CC messages carry?
+    options: ["knob and controller moves", "note pitches", "recorded audio", "the song's tempo"]
+    answer: 0
+    why: Control change messages carry knob, pedal and mod wheel values from 0 to 127.
+    whyWrong:
+      1: Notes have their own messages.
+      2: Midi carries no audio.
+      3: Tempo isn't what CC is for.
+
+  - kind: keep
+    next: >-
+      Back to waves and the studio. Next path: melody, starting with your song's scale.

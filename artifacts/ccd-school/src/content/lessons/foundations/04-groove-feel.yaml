@@ -1,0 +1,114 @@
+slug: groove-feel
+world: foundations
+number: 4
+title: groove and swing
+minutes: 6
+song:
+  changes: hats.hats
+  why: swing pushes every other sixteenth a little late, and your beat starts to bounce instead of march
+learn: >-
+  What swing is, why it makes people move, and a swing setting for your whole song.
+youCan:
+  - hear the difference between straight and swung
+  - say which notes swing moves and which it leaves alone
+  - set the swing on your song by ear
+steps:
+  - kind: hear
+    clip: straight-vs-swung
+    say:
+      mentor: >-
+        Tap straight, then swung. Same kick, same clap, same hats. In the swung one, every other hat is
+        pushed a little late, and suddenly it bounces. That's swing, and it's the difference between a beat
+        that marches and a beat that grooves.
+      straight: >-
+        Straight vs swung. The swung version delays every other sixteenth a little. That small delay is what
+        gives it a bounce.
+      eli5: >-
+        Tap a, then b. In b, every second tss is a tiny bit late, like a skip in your step. Hear how it
+        bounces now? That's called swing.
+
+  - kind: tempo
+    set: swing
+    say:
+      mentor: >-
+        Here's your own song with a swing knob on it. Turn it up and listen to your hats.
+
+        Swing only moves the off sixteenths: the "e" and the "a" in "one e and a". The beats and the "ands"
+        stay exactly where they are, so your kick and clap don't move. At about 50 percent the off notes land
+        a third of the way along, a triplet feel. House producers often sit somewhere between 10 and 30
+        percent. Push it to the top for a heavy shuffle.
+
+        Pick the amount that makes you want to move.
+      straight: >-
+        Swing delays only the off sixteenths. Kick, clap and eighths stay put. Around 50 percent is a triplet
+        feel, house usually sits lower. Set the amount for your song.
+      eli5: >-
+        Turn the swing knob and listen to your song. More swing makes the in-between tss sounds later and
+        bouncier. Your boom and clap stay right where they are. Stop when it makes you want to dance.
+    hint: If your hats are only on the eighths, swing won't move them. It needs sixteenths to bite.
+
+  - kind: say
+    title: why swing works
+    say:
+      mentor: >-
+        People don't play exactly on a grid. A drummer leans on some notes and lags others, and our ears hear
+        that as feel. Swing is a simple way to get some of that back into programmed music.
+
+        Swing in drum machines goes back to Roger Linn's machines and the Akai MPC, the tool behind a lot of
+        hip hop and house. Producers still talk about "MPC swing" as a sound of its own.
+      straight: >-
+        Real players never sit exactly on the grid. Swing puts a little of that feel back. The MPC made it
+        famous in hip hop and house.
+      eli5: >-
+        When people play drums, they're never perfectly exact, and that wobble feels good. Swing adds a
+        little wobble on purpose.
+    deeper:
+      - title: swing in tracks you know
+        say: >-
+          Listen to almost any J Dilla beat for heavy, loose swing, or to UK garage, where swung hats and
+          shuffled snares are the whole sound. A lot of deep house has gentle swing you only notice when it's
+          gone.
+
+  - kind: ask
+    q: Which notes does swing move?
+    options: ["the off sixteenths, the e and the a", "every note", "only the kick", "the first beat of every bar"]
+    answer: 0
+    why: Swing pushes the off sixteenths late. The beats and the ands stay put.
+    whyWrong:
+      1: If every note moved the same amount, nothing would sound different.
+      2: The kick on the beat doesn't move.
+      3: Beat one stays exactly where it is.
+
+  - kind: ask
+    q: Your hats are only on the eighths. You turn swing up. What happens?
+    options: ["nothing changes, swing needs sixteenths", "the hats get louder", "the hats move early", "the tempo speeds up"]
+    answer: 0
+    why: Eighths are on the beat or the and, which swing leaves alone. Add sixteenths to hear it.
+    whyWrong:
+      1: Swing changes timing, not volume.
+      2: Swing only ever pushes notes late.
+      3: Tempo stays the same.
+
+  - kind: ask
+    q: About how much swing gives a triplet feel?
+    options: ["50 percent", "0 percent", "5 percent", "100 percent"]
+    answer: 0
+    why: At around 50 percent the off notes land a third of the way along, like a triplet.
+    whyWrong:
+      1: Zero is straight, no swing at all.
+      2: 5 percent is a hint you can barely hear.
+      3: The knob tops out before that.
+
+  - kind: ask
+    q: Why does swing make a beat feel more human?
+    options: ["real players don't sit exactly on the grid", "it makes the beat louder", "it adds a new instrument", "it slows the song down"]
+    answer: 0
+    why: People lean on and lag notes. Swing puts back some of that feel.
+    whyWrong:
+      1: Swing changes timing only.
+      2: Nothing new is added, only moved.
+      3: The tempo is the same.
+
+  - kind: keep
+    next: >-
+      Next: what sound actually is, and the first notes of your melody, played over your beat.

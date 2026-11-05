@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminPageClient } from "@/components/AdminPageClient";
 
 export const metadata: Metadata = {
-  title: "Admin",
+  title: "admin",
   robots: { index: false, follow: false },
 };
 

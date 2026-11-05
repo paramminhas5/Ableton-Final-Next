@@ -1,0 +1,105 @@
+slug: cpu-audio-setup
+world: producer
+number: 290
+title: cpu and audio setup
+minutes: 5
+song:
+  changes: hats.hats
+  why: the gap between tapping a pad and hearing it decides whether playing your hats feels tight
+learn: >-
+  Buffer size, the trade between a quick response and a safe one, and your hats played in to feel it.
+youCan:
+  - say what latency and buffer size are
+  - choose a buffer for recording and for mixing
+  - find the buffer setting in Live
+steps:
+  - kind: hear
+    clip: hats-offbeat
+    say:
+      mentor: >-
+        When you tap a pad, the sound takes a moment to come out. The computer works on audio in small chunks,
+        and the size of each chunk is the buffer size. That moment between tap and sound is called latency.
+      straight: >-
+        The computer works on audio in chunks, the buffer. The delay between playing and hearing is latency.
+      eli5: >-
+        When you tap, the computer needs a tiny moment before you hear the sound. That moment is called
+        latency.
+
+  - kind: say
+    title: quick or safe
+    say:
+      mentor: >-
+        A small buffer means short latency: the sound comes right as you hit, which is what you want when
+        recording. But the computer has less time for each chunk, and if it can't keep up you get clicks and
+        pops.
+
+        A big buffer gives the computer room to breathe, so no clicks, but you can feel a lag when you play.
+        So producers often record with a small buffer, around 64 to 256 samples, and mix with a bigger one,
+        around 512 to 1024.
+      straight: >-
+        Small buffer: quick but risks clicks, good for recording (64 to 256 samples). Big buffer: safe but
+        laggy, good for mixing (512 to 1024).
+      eli5: >-
+        A small buffer is fast but can crackle. A big buffer never crackles but feels a bit slow.
+    deeper:
+      - title: the maths
+        say: >-
+          Latency is the buffer size divided by the sample rate. 512 samples at 44.1 khz is about 11.6 ms.
+      - title: in live
+        say: >-
+          Buffer size is in Preferences, under Audio. Watch Live's CPU meter: it's the short spikes to the
+          top, not the average, that cause clicks.
+      - title: freeze heavy tracks
+        say: >-
+          Freeze a heavy track to render it to audio for now and free up the computer. Flatten makes it
+          permanent, so save a copy of your set first.
+
+  - kind: play
+    layer: hats
+    surface: pads
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Play some hats into your song. Press rec, wait out the count-in, and tap along between the kicks.
+        Notice how quickly the sound answers your finger. If it ever feels like the sound trails behind your
+        tap, that's what a big buffer feels like.
+
+        Keep the take if it grooves, or skip and keep your hats as they were.
+      straight: >-
+        Record four or more hats. Feel how fast the sound answers your tap. Keep it or skip.
+      eli5: >-
+        Press rec and tap the hats. Listen to how fast the sound comes when you tap.
+
+  - kind: ask
+    q: What is latency?
+    options: ["the gap between playing and hearing", "how loud a sound is", "a kind of reverb", "the tempo"]
+    answer: 0
+    why: Tap, then a tiny wait, then sound.
+    whyWrong:
+      1: That's level.
+      2: Reverb is space.
+      3: Tempo is the song's speed.
+
+  - kind: ask
+    q: What does a small buffer give you?
+    options: ["a quick response, but more risk of clicks", "no clicks, but a lag", "a louder sound", "better eq"]
+    answer: 0
+    why: Less waiting, less time for the computer.
+    whyWrong:
+      1: That's a big buffer.
+      2: The buffer doesn't change level.
+      3: The buffer doesn't change tone.
+
+  - kind: ask
+    q: When do producers usually use a bigger buffer?
+    options: ["when mixing", "when recording", "never", "only for drums"]
+    answer: 0
+    why: No playing in, so a little lag doesn't matter and the computer gets more time.
+    whyWrong:
+      1: Recording wants a small buffer, so it feels quick.
+      2: A bigger buffer is the usual cure for clicks.
+      3: The buffer is for the whole set.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

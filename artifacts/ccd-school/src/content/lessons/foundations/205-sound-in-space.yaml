@@ -1,0 +1,124 @@
+slug: sound-in-space
+world: foundations
+number: 205
+title: sound in space
+minutes: 5
+song:
+  changes: lead.lead
+  why: reverb and level together decide whether your lead sits right in your ear or across the room
+learn: >-
+  Why every room sounds different, what reverb is, and how near or far your lead sits in your song.
+youCan:
+  - say what reverb is
+  - name decay, pre-delay and dry and wet
+  - place your lead near or far with reverb and level
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Picture this note played in a small tiled bathroom, then in a huge cathedral. Same note, but you can
+        already hear how different they'd be: one splashy and short, one ringing for seconds.
+
+        That difference is the room. When sound leaves a speaker, some of it reaches your ears directly. The
+        rest bounces off walls, floor and ceiling and arrives a moment later, a little softer.
+      straight: >-
+        A sound reaches you directly, then again as reflections off every surface, slightly later and softer.
+        Small tiled rooms sound splashy, big halls ring for seconds.
+      eli5: >-
+        Imagine singing this note in a bathroom, then in a giant church. In the church it rings and rings.
+        That's because the sound bounces off the walls and comes back to you.
+
+  - kind: say
+    title: reflections add up
+    say:
+      mentor: >-
+        Hundreds of those reflections blur together into one smooth tail. That tail is called reverb. Your
+        brain uses it to work out how big a room is and how far away the sound is, which is why a sound with
+        no reverb at all can feel flat, like it's inside your head.
+
+        Three words you'll see on every reverb. Decay is how long the tail lasts. Pre-delay is the short gap
+        before the tail starts. Dry and wet is the balance between the original sound and the reverb.
+      straight: >-
+        Reverb is many reflections blurred into a tail. Decay is how long it lasts, pre-delay the gap before
+        it starts, dry and wet the balance of original and effect.
+      eli5: >-
+        All those bounces mix into one long ring called reverb. It tells your ears how big the room is.
+    deeper:
+      - title: decay and rt60
+        say: >-
+          Rooms are measured by RT60, the time it takes the reverb to fall by 60 dB. A bedroom is around 0.3
+          seconds, a concert hall 1.5 to 2.5, a cathedral 4 or more.
+      - title: pre-delay
+        say: >-
+          Twenty to forty milliseconds of pre-delay lets the dry sound land first and the room follow behind
+          it, so a vocal or lead stays upfront while still sounding like it's in a space.
+      - title: in live
+        say: >-
+          A send carries a copy of a track to a return track, a shared effect lane. Put one reverb on a return
+          and send several tracks to it: it uses less of the computer, and everything sounds like it's in the
+          same room.
+
+  - kind: shape
+    layer: lead
+    knobs: [send, level]
+    say:
+      mentor: >-
+        Here's your song with two knobs on your lead. Send is how much of your lead goes to the reverb. Level
+        is how loud the lead is.
+
+        Close sounds are louder, with more direct sound and less reverb. Far sounds are quieter and mostly
+        tail. So move them together: send up and level down pushes your lead to the back of the room. Send
+        down and level up brings it right into your ear. Somewhere in between is usually where a lead lives.
+        Leave it where it sounds right in your song.
+      straight: >-
+        Send: how much lead goes to the reverb. Level: how loud it is. Near is louder and dry, far is quieter
+        and wet. Move both together and set the distance.
+      eli5: >-
+        Turn send up and level down: your tune walks far away across the room. Turn send down and level up:
+        it comes right up close. Stop where you like it.
+
+  - kind: ask
+    q: What is reverb?
+    options: ["reflections off surfaces, blurred into a tail", "a sound speeding up", "a change of pitch", "a kind of distortion"]
+    answer: 0
+    why: Reverb is the blur of many reflections arriving just after the direct sound.
+    whyWrong:
+      1: Reflections don't change the speed.
+      2: The pitch stays the same.
+      3: Distortion changes the shape of the wave. Reverb adds reflections.
+
+  - kind: ask
+    q: How do you push your lead further back?
+    options: ["more reverb and a lower level", "more reverb and a higher level", "a higher pitch", "a faster tempo"]
+    answer: 0
+    why: Far sounds are quieter and mostly tail, so turn both knobs that way.
+    whyWrong:
+      1: Louder pulls it forward again.
+      2: Pitch doesn't change distance.
+      3: Tempo doesn't change distance.
+
+  - kind: ask
+    q: Pre-delay is
+    options: ["the gap before the reverb tail starts", "how loud the reverb is", "how long the tail lasts", "how wide the reverb is"]
+    answer: 0
+    why: It's the short wait before the tail, which keeps the dry sound clear.
+    whyWrong:
+      1: That's the dry and wet balance.
+      2: That's decay.
+      3: Width is a separate setting.
+
+  - kind: ask
+    more: true
+    q: RT60 measures
+    options: ["how long a reverb takes to fall by 60 dB", "the temperature of a room", "reflections at 60 degrees", "the highest note a room can hold"]
+    answer: 0
+    why: It's the standard way to say how live or dead a room is.
+    whyWrong:
+      1: Nothing to do with heat.
+      2: Angles aren't part of it.
+      3: It measures time, not notes.
+
+  - kind: keep
+    next: >-
+      Back to the sound path. Next: frequency and pitch, and a jump of an octave in your melody.

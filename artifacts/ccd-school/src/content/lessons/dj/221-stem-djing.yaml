@@ -1,0 +1,92 @@
+slug: stem-djing
+world: dj
+number: 221
+title: stem djing
+minutes: 5
+song:
+  changes: drums.clap
+  why: splitting tracks into parts lets your song and another track share one groove
+learn: >-
+  What stems are, mixing parts of tracks instead of whole tracks, and a rough version of it with the eq on
+  your song.
+youCan:
+  - say what a stem is
+  - say why stems are never perfectly clean
+  - split two tracks by frequency with the eq
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two whole tracks. Normally a dj mixes them whole. Stems change that. Software splits a track into its
+        parts, such as drums, bass, melody and vocals, and gives each part its own level. Then you mix parts,
+        not tracks.
+      straight: >-
+        Stems are the separate parts of a track, like drums, bass, melody and vocals. Stem djing mixes parts,
+        not whole tracks.
+      eli5: >-
+        A computer can pull a song apart into drums, bass, tune and singing. Then you can mix just the parts
+        you want.
+
+  - kind: say
+    title: what stems make possible
+    say:
+      mentor: >-
+        Keep the drums of both tracks running while you swap the bass and the melody. Or run your song's drums
+        under another track's vocal. The beat never breaks.
+
+        The split is done by machine learning, and it isn't perfect. On busy tracks a bit of one part leaks
+        into another, so a drums only stem can still carry a ghost of the bass.
+      straight: >-
+        Keep both drums while swapping bass and melody, or put one track's drums under another's vocal.
+        Machine learning does the split, and parts can leak.
+      eli5: >-
+        You can keep the drums going while swapping the rest. The computer isn't perfect, so bits sometimes
+        sneak into the wrong part.
+
+  - kind: mix
+    goal: stems
+    bank: space-bass
+    say:
+      mentor: >-
+        Stems split a track into its parts. Deck b's parts are drums, hats and bass, each with its own button. Take deck b's drums out and bring its fader up.
+        
+        Now you've got deck b's bass line playing under your song's drums: two tracks combined part by part, which no eq can do as cleanly. Try taking the hats out too, or the bass instead.
+      straight: >-
+        Deck b's drums, hats and bass are separate. Take its drums out and bring it up: its bass under your drums.
+      eli5: >-
+        Each part of the song has its own button. Turn the drums off on one song.
+
+  - kind: ask
+    q: What is a stem?
+    options: ["one part of a track, like the drums or the vocal", "the whole track", "a cue point", "a playlist"]
+    answer: 0
+    why: A separated part you can control on its own.
+    whyWrong:
+      1: A stem is a piece of the track.
+      2: Cue points mark positions.
+      3: Playlists hold whole tracks.
+
+  - kind: ask
+    q: Why might a stem not be perfectly clean?
+    options: ["the machine learning split leaks between parts", "stems are always perfect", "the usb is too slow", "the key is wrong"]
+    answer: 0
+    why: Busy productions are hard to pull apart perfectly.
+    whyWrong:
+      1: Leaks are normal.
+      2: Drive speed doesn't affect the split.
+      3: Key has nothing to do with it.
+
+  - kind: ask
+    q: How is the eq different from stems?
+    options: ["it splits by frequency, not by instrument", "it's exactly the same", "it splits by tempo", "it splits by key"]
+    answer: 0
+    why: The low knob takes everything low, kick and bass together.
+    whyWrong:
+      1: Stems separate instruments, the eq separates frequencies.
+      2: Tempo isn't involved.
+      3: Key isn't involved.
+
+  - kind: keep
+    next: >-
+      Back to the song path: preparing a set.

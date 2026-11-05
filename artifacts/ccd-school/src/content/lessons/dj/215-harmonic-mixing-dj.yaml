@@ -1,0 +1,96 @@
+slug: harmonic-mixing-dj
+world: dj
+number: 215
+title: harmonic mixing in practice
+minutes: 5
+song:
+  changes: drums.clap
+  why: a key that fits lets your song sing into the next track, and one that fights turns the blend sour
+learn: >-
+  Using the Camelot wheel on real choices: two keys that fit your song, one that clashes, and when a clash
+  is the point.
+youCan:
+  - find keys that fit your song
+  - hear a key clash
+  - say what one step clockwise does
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two tracks in keys that fit. Their notes sit together, so the blend sounds like one piece of music.
+        Pick a key that fights and the same blend turns sour, even with perfect beats. Harmonic mixing is
+        choosing the next track so that doesn't happen.
+      straight: >-
+        Fitting keys blend into one sound. Clashing keys sound sour, even with matched beats.
+      eli5: >-
+        Some songs sound nice together and some sound yucky together, even when the beats match.
+
+  - kind: say
+    title: moves on the wheel
+    say:
+      mentor: >-
+        On the Camelot wheel, the same number with the other letter is the relative major or minor: the same
+        notes, a different mood. One step round with the same letter is a fifth away, a smooth move. One step
+        clockwise, up a number, gives a small lift in energy that the crowd feels without knowing why.
+
+        It's a tool, not a law. Sometimes a clash at the right moment is exactly the jolt a set needs.
+      straight: >-
+        Same number, other letter: same notes, different mood. One step with the same letter: smooth. One step
+        clockwise: a small lift. Break the rules when the moment wants it.
+      eli5: >-
+        Same number: very friendly. Next number: friendly too, and going up feels a bit more exciting.
+    deeper:
+      - title: key shift on the deck
+        say: >-
+          Cdjs can also move a track's key in small steps without changing its tempo, using master tempo and
+          a semitone shift. That's the next lesson.
+
+  - kind: mix
+    goal: key
+    say:
+      mentor: >-
+        Your song's key code is on deck a. Tap through the bank and find two tracks that fit: the screen says
+        fits.
+
+        Then find one that clashes and listen to it against your song. Hear the sourness? End on one that
+        fits.
+      straight: >-
+        Find two bank tracks that fit your song's key and one that clashes. Listen to each. Finish on one that
+        fits.
+      eli5: >-
+        Find two songs the screen says fit, and one it says clash. Listen. Then pick one that fits.
+
+  - kind: ask
+    q: Your song is 8A. Which key gives a small lift?
+    options: ["9A", "7A", "8A", "3B"]
+    answer: 0
+    why: One step clockwise with the same letter.
+    whyWrong:
+      1: That fits, but it's a step the other way.
+      2: That's the same key, no lift.
+      3: That's too far round the wheel.
+
+  - kind: ask
+    q: What do 8A and 8B have in common?
+    options: ["the same notes, one minor and one major", "the same bpm", "nothing", "the same artist"]
+    answer: 0
+    why: Relative minor and major share their notes.
+    whyWrong:
+      1: Codes are about key, not tempo.
+      2: They're as close as keys get.
+      3: The code says nothing about who made it.
+
+  - kind: ask
+    q: Should you always follow the wheel?
+    options: ["no, sometimes a clash is the moment", "yes, always", "only for vocals", "only at the start of a set"]
+    answer: 0
+    why: It's a tool. A deliberate clash can be the jolt a set needs.
+    whyWrong:
+      1: Rules are there to understand, then sometimes break.
+      2: It's about all the notes, not just vocals.
+      3: It applies all night.
+
+  - kind: keep
+    next: >-
+      Back to the song path: cue points and loops.

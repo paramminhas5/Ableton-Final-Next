@@ -1,0 +1,93 @@
+slug: effects-deep-dj
+world: dj
+number: 220
+title: effects, deep
+minutes: 5
+song:
+  changes: drums.clap
+  why: an echo out of your song carries its last beat across into the next track
+learn: >-
+  Choosing effects on purpose: echo size, the reverb wash, flanger and phaser, and an echo out from your
+  song into the next track.
+youCan:
+  - do an echo out of your song
+  - say how echo size changes the feel
+  - describe a reverb wash
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Kick and clap. Imagine that last clap repeating, quieter each time, as the next track comes in. That's
+        echo used on purpose. Going deeper with effects doesn't mean using more of them. It means choosing
+        each one for what it does to the moment.
+      straight: >-
+        Deeper effects work is choosing each effect for the moment, not using more.
+      eli5: >-
+        Imagine the last clap repeating and getting quieter. Djs choose effects like that on purpose.
+
+  - kind: say
+    title: choosing an effect
+    say:
+      mentor: >-
+        Echo size matters. A half beat echo flutters fast. A one bar echo leaves long gaps between repeats.
+
+        A reverb wash turns the reverb's feedback up so it swells, then cuts the dry track (the track without
+        the effect), leaving only the cloud. A flanger sweeps like a jet plane, strong on hats and snares. A
+        phaser moves more slowly and adds depth to pads.
+
+        The hardest skill is not using them. One effect at the right moment is a memory. Effects on every
+        blend are noise.
+      straight: >-
+        Half beat echo flutters, one bar echo leaves gaps. Reverb wash: feedback up, dry track cut. Flanger:
+        jet plane sweep. Phaser: slower depth. Use them rarely.
+      eli5: >-
+        Short echoes flutter fast, long echoes wait between repeats. Some effects swoosh like a plane. Use
+        them only sometimes.
+
+  - kind: mix
+    goal: echo
+    say:
+      mentor: >-
+        Both decks are playing and matched, with the crossfader on your song. Turn deck a's echo up and let
+        your song's last beats start to repeat.
+
+        Then crossfade to b while the echo rings. Your song echoes away under the new track.
+      straight: >-
+        Echo a up, then crossfade to b while the echo rings.
+      eli5: >-
+        Turn up the echo on your song. Then slide the big slider over to b.
+
+  - kind: ask
+    q: What changes between a half beat echo and a one bar echo?
+    options: ["how fast the repeats come", "the key", "the tempo of the track", "nothing"]
+    answer: 0
+    why: Shorter size, faster repeats.
+    whyWrong:
+      1: Echo doesn't change key.
+      2: The track's tempo stays put.
+      3: They feel very different.
+
+  - kind: ask
+    q: What is a reverb wash?
+    options: ["the reverb swells up, then the dry track is cut", "a short reverb with no tail", "reverb on the new track only", "a kind of eq"]
+    answer: 0
+    why: Only the reverb cloud is left, fading away.
+    whyWrong:
+      1: A wash is all tail.
+      2: It's on the outgoing track.
+      3: Eq shapes frequencies.
+
+  - kind: ask
+    q: What's the advanced skill with effects?
+    options: ["knowing when not to use them", "using one on every blend", "using as many as possible at once", "only using presets"]
+    answer: 0
+    why: Restraint makes the moments count.
+    whyWrong:
+      1: Then they stop meaning anything.
+      2: More isn't better.
+      3: Presets are fine. Choosing is the skill.
+
+  - kind: keep
+    next: >-
+      Back to the song path: preparing a set.

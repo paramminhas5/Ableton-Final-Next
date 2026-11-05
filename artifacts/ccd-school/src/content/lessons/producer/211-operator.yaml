@@ -1,0 +1,110 @@
+slug: operator
+world: producer
+number: 211
+title: operator
+minutes: 5
+song:
+  changes: lead.lead
+  why: more than one oscillator on every note, set in a ratio to each other, is what gives a lead its edge
+learn: >-
+  How Live's Operator builds sound by letting oscillators shape each other, why the ratio between them
+  matters, and stacking oscillators on your own lead.
+youCan:
+  - say what fm synthesis is in one line
+  - say what a carrier and a modulator are
+  - stack and spread your lead's oscillators
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        The note a at 220 hz, then the a above it at 440. Twice as fast, so the ratio between them is two to
+        one. Your ear hears that as the same note, higher. Ratios like this are the secret of a synth called
+        Operator.
+
+        Operator is an fm synth. Fm stands for frequency modulation: one oscillator wobbles another one's
+        frequency so fast that you don't hear a wobble at all. You hear a brand new tone, brighter and richer
+        than either wave alone.
+      straight: >-
+        220 hz then 440 hz, a two to one ratio, one octave. Operator is an fm synth: one oscillator bends
+        another's frequency very fast, which makes a new, richer tone.
+      eli5: >-
+        Low a, then high a, exactly twice as fast. Operator is a synth where one wave shakes another wave super
+        fast, and that makes a whole new sound.
+
+  - kind: say
+    title: carriers and modulators
+    say:
+      mentor: >-
+        In Operator each oscillator is called an operator, and there are four, named a, b, c and d. An operator
+        you hear is a carrier. An operator that only bends another one is a modulator. The modulator doesn't
+        change the note you hear. It changes the colour.
+
+        That's why Operator does bells, glassy keys and tight, punchy bass so well. Start from plain sine
+        waves, let one bend another, and suddenly there's a whole stack of harmonics, the extra higher tones
+        that give a sound its character.
+      straight: >-
+        Four operators, a to d. Carriers are heard; modulators bend a carrier's frequency. That changes the
+        colour, not the note. Great for bells, keys and bass.
+      eli5: >-
+        Operator has four little wave makers. Some you hear. Others just shake the ones you hear, which changes
+        the sound but not the note.
+    deeper:
+      - title: the ratio knob
+        say: >-
+          Each operator has a coarse and fine frequency, set as a ratio to the note you play. A modulator at a
+          whole-number ratio like 1 or 2 gives musical, harmonic tones. Odd ratios give metallic, bell-like ones.
+          Change a modulator's ratio and the timbre changes dramatically while the pitch stays where it is.
+          Turn up the modulator's level and the tone gets brighter and more metallic.
+      - title: algorithms and feedback
+        say: >-
+          An algorithm decides which operators modulate which, and which ones reach your speakers. Operator a
+          also has a feedback control that bends it with itself: a little turns its sine towards a saw, and
+          pushed high it turns to noise.
+
+  - kind: shape
+    layer: lead
+    knobs: [fm, ratio, wave, env]
+    say:
+      mentor: >-
+        Operator is Live's fm synth, and your lead can now do the same trick. Your song is playing. Start with fm at zero: that's a normal oscillator. Turn fm up and a modulator starts bending its pitch far too fast to hear as movement, so you hear tone instead.
+        
+        ratio is Operator's coarse control: the modulator's frequency as a multiple of the carrier. 1 and 2 stay warm, 3 and up go bell-like and metallic. wave picks what the carrier would be without fm, env lets the fm amount fall after the attack. Find a setting where your lead cuts through without harshness and keep it.
+      straight: >-
+        Your lead is an fm synth now. fm is the amount, ratio is the modulator's multiple of the note. 1 and 2 are warm, higher is metallic. Keep what cuts through.
+      eli5: >-
+        This is like Operator in Live. One sound shakes another. Low ratio is soft, high ratio is like a bell.
+
+  - kind: ask
+    q: What does fm stand for?
+    options: ["frequency modulation", "fast melody", "filter mix", "full mono"]
+    answer: 0
+    why: Frequency modulation, one oscillator bending another's frequency.
+    whyWrong:
+      1: It's about how sound is made, not melody.
+      2: Fm doesn't involve the filter.
+      3: Mono is about how many notes play at once.
+
+  - kind: ask
+    q: In Operator, what's a modulator?
+    options: ["an operator that bends another one", "the operator you hear", "the volume knob", "an echo effect"]
+    answer: 0
+    why: A modulator shapes a carrier's tone. The carrier is the one you actually hear.
+    whyWrong:
+      1: The one you hear is the carrier.
+      2: Volume is the carrier's level.
+      3: Echo is a separate effect.
+
+  - kind: ask
+    q: You change a modulator's ratio. What changes?
+    options: ["the timbre, not the note", "the note you hear", "the tempo", "nothing"]
+    answer: 0
+    why: The ratio changes which harmonics appear, so the colour changes while the pitch stays.
+    whyWrong:
+      1: The carrier sets the note.
+      2: Tempo is the whole song's speed.
+      3: Ratio changes are some of the biggest tone changes in fm.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, make room for your kick and bass.

@@ -2,7 +2,7 @@
  * Parameter maths and display, mirroring engine/src/params.rs exactly
  * (tests/engine-params.test.ts checks these against values Rust computed).
  */
-import { FADER_MAX_DB, FADER_MIN_DB, FADER_UNITY, type ParamSpec } from "./params.gen";
+import { FADER_MAX_DB, FADER_MIN_DB, FADER_UNITY, GLUE_RATIOS, type ParamSpec } from "./params.gen";
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
 
@@ -43,13 +43,39 @@ export function fromValue(spec: Pick<ParamSpec, "min" | "max" | "curve">, v: num
   }
 }
 
+/** The fm ratio knob's steps (modulator over carrier), as in engine/src/params.rs. */
+export const FM_RATIOS = [0.5, 1, 2, 3, 4, 5, 6, 7, 8];
+
+/** Which of three words a three-step knob is on (the engine's `step3`). */
+const STEP3 = (n: number, words: [string, string, string]) => words[n < 0.34 ? 0 : n < 0.67 ? 1 : 2];
+
 const round = (v: number, d = 0) => {
   const p = 10 ** d;
   return Math.round(v * p) / p;
 };
 
 /** What the screen shows when you touch a control: "-3 db", "pan l 20", "1.2 khz". */
-export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit">, n: number): string {
+export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> & { key?: string }, n: number): string {
+  // Stepped knobs show what they choose, not a number.
+  // Filter character: our name first, what it is second (engine 2 item 7).
+  if (spec.key === "character" || spec.key === "lpkind") return n < 0.34 ? "warm · ladder" : n < 0.67 ? "scream · 2-pole drive" : "smooth · 2-pole";
+  if (spec.key === "lp" && n > 0.995) return "open";
+  if (spec.key === "lfoto") return n < 0.34 ? "to the filter" : n < 0.67 ? "to the pitch" : "to the volume";
+  if (spec.key === "ratio") return `ratio ${FM_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (FM_RATIOS.length - 1))]}`;
+  if (spec.key === "glueratio") return `${GLUE_RATIOS[Math.round(Math.min(1, Math.max(0, n)) * (GLUE_RATIOS.length - 1))]}:1`;
+  if (spec.key === "sidechain" && n < 0.01) return "hears it all";
+  if (spec.key === "shape") return STEP3(n, ["round", "tight", "hard"]);
+  if (spec.key === "character") return STEP3(n, ["warm", "scream", "smooth"]);
+  if (spec.key === "space") return n < 0.5 ? "hall" : "plate";
+  if (spec.key === "echotype") return STEP3(n, ["clean", "tape", "analogue"]);
+  if (spec.key === "osc") return ["classic", "table", "feedback", "phase"][Math.round(Math.min(1, Math.max(0, n)) * 3)];
+  if (spec.key === "voice") return ["synth", "pluck", "mallet", "keys"][Math.round(Math.min(1, Math.max(0, n)) * 3)];
+  if (spec.key === "shapeblip") return STEP3(n, ["blip", "bell", "metal"]);
+  if (spec.key === "shapewood") return STEP3(n, ["wood", "bell", "metal"]);
+  if (spec.key === "color") {
+    const c = Math.round((n * 2 - 1) * 100);
+    return c === 0 ? "centre" : c < 0 ? `dark ${-c}` : `bright ${c}`;
+  }
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {
@@ -70,7 +96,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit">,
       return p === 0 ? "centre" : p < 0 ? `pan l ${-p}` : `pan r ${p}`;
     }
     case "pct":
-      return `${round(n * 100)}`;
+      return `${round(n * 100)}%`;
     case "none": {
       const c = round(v * 100);
       return c === 0 ? "0" : `${c > 0 ? "+" : ""}${c}`;

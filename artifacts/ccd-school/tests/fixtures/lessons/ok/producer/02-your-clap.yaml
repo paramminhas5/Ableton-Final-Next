@@ -1,0 +1,15 @@
+slug: your-clap
+world: producer
+number: 2
+title: your clap
+minutes: 6
+song:
+  adds: drums.clap
+  why: the clap marks the backbeat
+learn: You will add a clap on 2 and 4.
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say: Kick and clap together.
+  - kind: keep
+    next: Next we add hats.

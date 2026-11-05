@@ -1,0 +1,105 @@
+slug: push3-standalone
+world: producer
+number: 305
+title: push 3 standalone
+minutes: 5
+song:
+  changes: drums.kick
+  why: a song laid out as sections you can bring in and out is a song you can perform, with or without a laptop
+learn: >-
+  What it means for Push 3 to run Live with no laptop, and laying your song out as sections you could launch
+  one after another on stage.
+youCan:
+  - say what Push 3 Standalone does that a normal controller doesn't
+  - say how projects move between Push and a computer
+  - lay your song out as sections to perform
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A groove like this, played out of a club system. Usually there's a laptop behind it, running Live, with
+        a controller plugged in. Push 3 Standalone takes the laptop away. The computer is inside the box.
+      straight: >-
+        Normally a laptop runs Live and a controller plays it. Push 3 Standalone has the computer built in.
+      eli5: >-
+        Usually you need a laptop to play music like this. Push 3 Standalone has a little computer inside, so
+        you don't.
+
+  - kind: say
+    title: live in a box
+    say:
+      mentor: >-
+        Push 3 Standalone runs Live's audio engine on the hardware itself, with a built-in audio interface for
+        sound in and out. You can start a song, add instruments, record and play a whole set on it. Max for
+        Live devices run on it too.
+
+        Projects are saved on Push and open in Live on your computer just as they are, the same set format,
+        no converting. Start on the couch, finish at the desk, play it out on Push.
+      straight: >-
+        Push 3 Standalone runs Live's engine inside, with its own audio interface. Projects open on your
+        computer as they are, same format.
+      eli5: >-
+        Push 3 Standalone is a whole music studio in one box. You can make a song on it, then open the same
+        song on your computer later.
+    deeper:
+      - title: before a gig
+        say: >-
+          Samples have to be on Push's own drive, so copy them over before you go. Push's processor is good but
+          not endless, so test a heavy set before the show and freeze the hungriest tracks, the same as you
+          would on a laptop.
+      - title: in controller mode
+        say: >-
+          Plug Push 3 into a computer and it can work as a normal Push controller instead, playing the Live
+          on your laptop.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        To play a song out, you need it in pieces you can bring in one after another. On Push those pieces are
+        scenes, rows of clips you launch together. Here they're your sections.
+
+        Rows are your parts, columns are sections. Tap a cell to switch that part off or on there. Make an
+        intro that's thin, a drop where everything plays, a break that takes something away. Play it through
+        and shape it until it works as a set.
+      straight: >-
+        Performing means launching sections one after another, scenes on Push. Rows are parts, columns are
+        sections. Tap cells to switch parts off or on, then play it through.
+      eli5: >-
+        Tap the squares to turn sounds on and off in each part of your song. Press play and listen to it go
+        from quiet to big and back.
+
+  - kind: ask
+    q: What does Push 3 Standalone not need?
+    options: ["a laptop", "power", "pads", "sounds"]
+    answer: 0
+    why: Live runs on the hardware itself.
+    whyWrong:
+      1: It still needs power.
+      2: The pads are how you play it.
+      3: You still need sounds to play.
+
+  - kind: ask
+    q: How does a project get from Push 3 to Live on your computer?
+    options: ["it opens as it is, same set format", "you export an mp3 and import it", "it has to be rebuilt by hand", "it can't move between them"]
+    answer: 0
+    why: Same format on both, so no converting.
+    whyWrong:
+      1: That would lose all your parts and devices.
+      2: Nothing needs rebuilding.
+      3: Moving between them is the point.
+
+  - kind: ask
+    q: On Push, what do you call a row of clips you launch together?
+    options: ["a scene", "a preset", "a mapping", "a buffer"]
+    answer: 0
+    why: Scenes are how a song becomes sections you can play one after another.
+    whyWrong:
+      1: A preset is a saved sound.
+      2: A mapping ties a knob to a control.
+      3: The buffer is an audio setting.
+
+  - kind: keep
+    next: >-
+      Your song is in sections you could perform. Back to your song path, or on to tempo following.

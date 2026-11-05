@@ -11,8 +11,8 @@ import { ensureAudio, playCorrect, playWrong } from "@/lib/audio";
 import { track } from "@/lib/analytics";
 import { useProgress } from "@/lib/progress";
 import {
-  GYM_DRILLS, MAX_LEVEL, SESSION_SECONDS, advance, makeCompressionQuestion, makeEqQuestion, makeGrooveQuestion, mulberry32, summarize,
-  type AttackSetting, type CompressionQuestion, type EqQuestion, type GrooveKind, type GrooveQuestion, type GymDrill, type GymQuestion, type SessionResult,
+  GYM_DRILLS, MAX_LEVEL, SESSION_SECONDS, advance, makeCompressionQuestion, makeEqQuestion, makeGrooveQuestion, mulberry32, summarize, pickSource, pickTranspose, bandName,
+  type AttackSetting, type CompressionQuestion, type EqQuestion, type GrooveKind, type GrooveQuestion, type GymDrill, type GymQuestion, type GymSource, type SessionResult,
 } from "@/lib/gym/engine";
 import { ABPlayer, REAL_BPM, loadRealKit, renderMatchedPair } from "@/lib/gym/render";
 import { freshSaved, loadGym, saveGym, type GymSaved } from "@/lib/gym/store";
@@ -20,13 +20,19 @@ import { canUsePass, recordSession, takeFreePass, weekStatus } from "@/lib/gym/w
 import { GoPill, Icon, Key, Screen, Silk } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
 
+/** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
+const TAUGHT_BY: Record<GymDrill, { slugs: string[]; first: string; title: string }> = {
+  eq: { slugs: ["eq-place", "eq-eight", "eq-mixing-dj"], first: "eq-place", title: "eq: a place for everything" },
+  compression: { slugs: ["glue", "compressor", "glue-compressor"], first: "glue", title: "glue: compression and loudness" },
+  groove: { slugs: [], first: "groove-feel", title: "groove and swing" },
+};
 const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove" };
 const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?" };
 const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF" };
 const BARS_BEFORE_ANSWER = 8;
 const fmtHz = (hz: number) => (hz >= 1000 ? `${hz / 1000} khz` : `${hz} hz`);
 const fmtClock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
-const BAND = (hz: number) => (hz < 200 ? "low" : hz < 800 ? "low mid" : hz < 3000 ? "mid" : hz < 9000 ? "high mid" : "high");
+const BAND = bandName;
 
 type Phase = "idle" | "loading" | "listening" | "feedback" | "done";
 
@@ -86,7 +92,9 @@ export function GymPageClient() {
   const [summary, setSummary] = useState<ReturnType<typeof summarize> | null>(null);
   const [error, setError] = useState("");
   const [count, setCount] = useState(0);
-  const { missionsNeedingReview } = useProgress();
+  const { missionsNeedingReview, progress } = useProgress();
+  const open = (d: GymDrill) => !TAUGHT_BY[d].slugs.length || TAUGHT_BY[d].slugs.some(sl => !!progress.completedMissions[sl]);
+  const openDrills = GYM_DRILLS.filter(open);
 
   const player = useRef<ABPlayer | null>(null);
   const token = useRef(0);
@@ -96,6 +104,7 @@ export function GymPageClient() {
   const order = useRef<GymDrill[]>(GYM_DRILLS);
   const drillIdx = useRef(0);
   const lastGroove = useRef<GrooveKind | undefined>(undefined);
+  const lastSource = useRef<GymSource | undefined>(undefined);
   const savedRef = useRef(saved);
   savedRef.current = saved;
   const rng = useMemo(() => mulberry32(Date.now() & 0xffffffff), []);
@@ -117,7 +126,7 @@ export function GymPageClient() {
   const now = new Date();
   const week = weekStatus(saved.week, now);
   // Today's pick: the skill you have trained least.
-  const today = [...GYM_DRILLS].sort((a, b) => saved.levels[a].level - saved.levels[b].level)[0];
+  const today = [...GYM_DRILLS.filter(d => !TAUGHT_BY[d].slugs.length || TAUGHT_BY[d].slugs.some(sl => !!progress.completedMissions[sl]))].sort((a, b) => saved.levels[a].level - saved.levels[b].level)[0];
 
   useEffect(() => {
     if (phase !== "listening" && phase !== "feedback" && phase !== "loading") return;
@@ -150,17 +159,25 @@ export function GymPageClient() {
     try {
       let question: GymQuestion;
       let pair;
+      // a different sound and key every round, never the same source twice running
+      const roundBase = async () => {
+        const source = pickSource(rng, lastSource.current);
+        lastSource.current = source;
+        if (source === "real") {
+          const kit = await loadRealKit();
+          if (kit) return { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) };
+        }
+        return { bpm: 100 + Math.floor(rng() * 5) * 8, source: source === "real" ? "full" as const : source, transpose: pickTranspose(rng) };
+      };
       if (drill === "eq") {
         const e = makeEqQuestion(level, rng);
         question = e;
-        const kit = await loadRealKit();
-        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
+        const base = await roundBase();
         pair = await renderMatchedPair(base, { ...base, eq: { hz: e.answerHz, db: e.boostDb, q: e.q } });
       } else if (drill === "compression") {
         const k = makeCompressionQuestion(level, rng);
         question = k;
-        const kit = await loadRealKit();
-        const base = kit ? { bpm: REAL_BPM, kit, segment: Math.floor(rng() * 4) } : { bpm: 112 };
+        const base = await roundBase();
         pair = await renderMatchedPair(base, { ...base, comp: k.compressed ? { thresholdDb: k.thresholdDb, ratio: k.ratio, attack: k.attack } : undefined });
       } else {
         const g = makeGrooveQuestion(level, rng, lastGroove.current);
@@ -192,7 +209,7 @@ export function GymPageClient() {
     const ok = await ensureAudio();
     if (!ok) { setError("tap again to allow sound."); return; }
     results.current = [];
-    order.current = first ? [first, ...GYM_DRILLS.filter(d => d !== first)] : GYM_DRILLS;
+    order.current = first ? [first, ...openDrills.filter(d => d !== first)] : openDrills;
     drillIdx.current = 0;
     startedAt.current = Date.now();
     setElapsed(0);
@@ -263,8 +280,10 @@ export function GymPageClient() {
   // ── home ──────────────────────────────────────────────────────────────────
   if (phase === "idle" || phase === "done") {
     const pads: { id: string; label: string; pic: string; c: string; tag?: string; onClick?: () => void; href?: string }[] = [
-      ...GYM_DRILLS.map(d => ({ id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) })),
-      { id: "review", label: "review", pic: "review", c: "#FF4F9A", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
+      ...GYM_DRILLS.map(d => open(d)
+        ? { id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) }
+        : { id: d, label: `${NAME[d]}: opens after ${TAUGHT_BY[d].title}`, pic: d, c: "#8A8A8E", tag: "lesson first", href: `/learn/${TAUGHT_BY[d].first}` }),
+      { id: "review", label: "review", pic: "review", c: "#FFB35C", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },
     ];
@@ -282,7 +301,7 @@ export function GymPageClient() {
             <div className="ls-title" aria-live="polite">{summary.counts ? `session done. ${summary.correct} of ${summary.answered} right.` : `${summary.correct} of ${summary.answered}. answer five to count.`}</div>
           ) : null}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
-            {GYM_DRILLS.map(d => (
+            {openDrills.map(d => (
               <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13, color: "var(--disp-ink)" }}>
                 <span style={{ width: 118 }}>{NAME[d]}</span>
                 <Bars level={saved.levels[d].level} c={COLOR[d]} />
@@ -296,7 +315,12 @@ export function GymPageClient() {
           </div>
         </Screen>
 
-        <Silk label="drills" right="tap one to start" />
+        <div className="m1-g" style={{ marginTop: 14 }}>
+          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start 5 minutes"}</GoPill>
+        </div>
+        <p className="m1-t11" style={{ textAlign: "center", margin: "10px 0 6px" }}>headphones help. speakers work too.</p>
+
+        <Silk label="drills" right="or pick one" />
         <div className="ls-pads">
           {pads.map(p => {
             const inner = (
@@ -320,10 +344,6 @@ export function GymPageClient() {
             <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>busy week? use this week&apos;s free pass.</span>
           </button>
         )}
-        <div className="m1-g" style={{ marginTop: 14 }}>
-          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start 5 minutes"}</GoPill>
-        </div>
-        <p className="m1-t11" style={{ textAlign: "center", marginTop: 10 }}>headphones help. speakers work too.</p>
       </main>
     );
   }
@@ -383,7 +403,7 @@ export function GymPageClient() {
             const isPick = pick === o.id;
             const cls = !feedback ? (isPick ? "is-lit" : "") : isAns ? (feedback.correct ? "is-lit is-right" : "is-ring") : isPick ? "is-lit is-wrong" : "is-dim";
             return (
-              <button key={o.id} type="button" className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties}
+              <button key={o.id} type="button" className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties}
                 disabled={!!feedback || locked || phase !== "listening"} onClick={() => setPick(o.id)} aria-pressed={isPick}>
                 <small>{o.small ?? ""}</small><span>{o.label}</span>
               </button>

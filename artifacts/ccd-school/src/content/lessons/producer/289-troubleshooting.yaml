@@ -1,0 +1,105 @@
+slug: troubleshooting
+world: producer
+number: 289
+title: troubleshooting
+minutes: 5
+song:
+  changes: drums.kick
+  why: switching parts off one at a time is how you find the one causing a problem
+learn: >-
+  How to track down a problem, the usual suspects in Live, and your song checked part by part.
+youCan:
+  - find a problem by switching things off one at a time
+  - say what usually causes crackles
+  - know where Live's audio settings are
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Sooner or later something goes wrong: no sound, crackles, a controller that won't respond. The fix is
+        usually simple once you know where to look. The trick is to find which piece is at fault before you
+        start changing things.
+      straight: >-
+        No sound, crackles, a dead controller. Find which piece is at fault before changing anything.
+      eli5: >-
+        When something goes wrong, first find out which bit is broken. Then fix just that bit.
+
+  - kind: say
+    title: the usual suspects
+    say:
+      mentor: >-
+        No sound: check the audio device, the master fader and where the output is going.
+
+        Crackles and pops: the computer can't keep up. The buffer is the chunk of sound the computer works on
+        at a time. Raise the buffer size to give it more time, or lighten the load.
+
+        A controller doing nothing: check it's switched on in Live's midi settings.
+      straight: >-
+        No sound: device, master fader, output. Crackles: raise the buffer size, the chunk the computer works
+        on at once. Dead controller: check the midi settings.
+      eli5: >-
+        If there's no sound, check the volume and the speakers. If it crackles, the computer is too busy, so
+        give it more time.
+    deeper:
+      - title: where to look in live
+        say: >-
+          Preferences, then Audio, holds the audio device, buffer size and sample rate. Live's CPU meter shows
+          how hard the computer is working.
+      - title: freeze
+        say: >-
+          Right-click a heavy track and choose Freeze. Live renders it to audio so it stops working it out as
+          it plays, which frees up the computer. Flatten makes that permanent.
+      - title: midi controllers
+        say: >-
+          In the Link, Tempo and MIDI preferences, switch on Track for your controller's input port.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as sections. Nothing's wrong with it, so practise the method. Pick a section and
+        switch parts off one at a time, listening each time.
+
+        If something in your song ever sounds off, this is how you'd find it: whatever you switch off that
+        takes the problem with it is the culprit.
+      straight: >-
+        Switch parts off one at a time in a section and listen. That's how you find what's causing a
+        problem.
+      eli5: >-
+        Turn off one sound at a time and listen. If the problem goes away, you found it.
+
+  - kind: ask
+    q: What's the first step in fixing a problem?
+    options: ["find which piece is at fault", "change every setting", "reinstall everything", "turn it up"]
+    answer: 0
+    why: Then you only fix what's broken.
+    whyWrong:
+      1: Changing everything makes it harder to find.
+      2: That's a last resort.
+      3: Louder doesn't fix anything.
+
+  - kind: ask
+    q: Crackles and pops usually mean what?
+    options: ["the computer can't keep up", "the song is too quiet", "the kick is out of tune", "the reverb is too long"]
+    answer: 0
+    why: Give it more time with a bigger buffer, or lighten the load.
+    whyWrong:
+      1: Quiet songs don't crackle.
+      2: Tuning doesn't crackle.
+      3: A long reverb sounds smooth.
+
+  - kind: ask
+    more: true
+    q: What does freezing a track do?
+    options: ["renders it to audio so the computer works less", "deletes it", "mutes it", "makes it louder"]
+    answer: 0
+    why: The computer plays the render instead of working it out live.
+    whyWrong:
+      1: The track stays.
+      2: It still plays.
+      3: Level doesn't change.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

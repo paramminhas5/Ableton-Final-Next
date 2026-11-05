@@ -1,0 +1,66 @@
+slug: glue
+world: producer
+number: 16
+title: glue, compression and loudness
+minutes: 6
+song:
+  changes: drums.kick
+  why: a little bus compression makes your parts sound like one record instead of separate sounds
+learn: >-
+  The glue compressor on the master, the limiter after it, and how loud is loud enough.
+youCan:
+  - say what a bus compressor does
+  - add glue to your mix by ear
+  - say what a limiter is for
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Mastering engineers talk about glue: when every part of a track breathes together like one record.
+        Most of that comes from a gentle compressor across the whole mix. It turns the loudest moments down a
+        touch, so everything moves as one. After it, a limiter catches any peaks so the song never clips.
+      straight: >-
+        Glue is a compressor across the whole mix: it pulls the parts together. A limiter after it stops
+        clipping.
+      eli5: >-
+        Glue makes all your sounds feel like one band playing together. A limiter stops it ever getting too
+        loud and crackly.
+
+  - kind: tempo
+    set: glue
+    say:
+      mentor: >-
+        Your whole song. Turn glue up and listen to how the drums and bass start to pump and lock together.
+        Too much and it sounds squashed and tired. Out sets how hard the mix hits the limiter: louder, but push
+        it too far and the punch goes. Find the point where it sounds like a finished record.
+      straight: >-
+        Glue up until the mix locks together, before it sounds squashed. Out sets loudness into the limiter;
+        too much loses punch.
+      eli5: >-
+        Turn glue up until everything feels tight. Then turn out up until it's nice and loud, but not
+        crunchy.
+
+  - kind: ask
+    q: What does a glue compressor on the master do?
+    options: ["pulls the parts together so they move as one", "adds echo", "changes the tempo", "removes the bass"]
+    answer: 0
+    why: Gentle compression across the mix makes it breathe together.
+    whyWrong:
+      1: That's a delay.
+      2: Compression doesn't touch tempo.
+      3: It treats everything.
+
+  - kind: ask
+    q: What is a limiter for?
+    options: ["stopping the mix from clipping", "adding width", "tuning the kick", "making the drums swing"]
+    answer: 0
+    why: It catches peaks so nothing goes over the top.
+    whyWrong:
+      1: Width is detune, pan or stereo effects.
+      2: Tuning is on the kick.
+      3: Swing is timing.
+
+  - kind: keep
+    next: >-
+      Next: sections. Your loop becomes a song.

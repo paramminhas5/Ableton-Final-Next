@@ -13,6 +13,7 @@ async function migrate() {
   await pool.query(readFileSync(join(__dirname, "migrate-world-class.sql"), "utf8"));
   await pool.query(readFileSync(join(__dirname, "migrate-razorpay.sql"), "utf8"));
   await pool.query(readFileSync(join(__dirname, "migrate-gym.sql"), "utf8"));
+  await pool.query(readFileSync(join(__dirname, "migrate-roles.sql"), "utf8"));
   console.log("Migrations complete.");
   await pool.end();
 }

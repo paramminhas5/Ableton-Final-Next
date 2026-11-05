@@ -1,0 +1,106 @@
+slug: clips
+world: producer
+number: 209
+title: clips, midi vs audio
+minutes: 5
+song:
+  changes: hats.hats
+  why: your parts are midi, so they follow any tempo you pick without a single note going out of time
+learn: >-
+  The two kinds of clip, midi and audio, what each holds, and why midi parts follow a tempo change for free.
+youCan:
+  - say what a midi clip holds and what an audio clip holds
+  - say why audio needs warping to change speed
+  - change your song's tempo and hear your parts follow
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Kick, clap, hats. In a DAW each part lives in a clip, and a clip comes in two kinds. A midi clip holds
+        notes, instructions for an instrument. An audio clip holds a recording, the sound itself, like a
+        vocal or a drum loop someone recorded.
+
+        Your song so far is all midi. Every part is a list of notes that an instrument plays.
+      straight: >-
+        Two kinds of clip. Midi holds notes for an instrument. Audio holds a recording. Your song so far is
+        all midi.
+      eli5: >-
+        A clip is a box for music. A midi box holds a list of notes. An audio box holds a real recording. Your
+        song is made of note lists.
+
+  - kind: say
+    title: why it matters
+    say:
+      mentor: >-
+        Because a midi clip is just notes, you can change almost anything after you've played it. Swap the
+        instrument, move a note, change the speed. The instrument simply plays the new instructions.
+
+        An audio clip is the sound itself, so changing its speed means stretching the recording. Live does
+        this with warping, which squeezes or stretches audio to fit the tempo, a bit like stretching a photo.
+        It works well, but push it far and you'll hear it.
+      straight: >-
+        Midi is notes, so you can change instrument, notes or speed freely. Audio is sound, so changing speed
+        means stretching it, called warping.
+      eli5: >-
+        A note list is easy to change: new sound, new speed, no problem. A recording has to be stretched to
+        change speed, and stretching too much sounds funny.
+    deeper:
+      - title: clips in live
+        say: >-
+          Click a clip and the detail view at the bottom shows what's inside: a piano roll for midi, a waveform
+          for audio. Audio clips have warp settings and a choice of warp mode. Midi clips have no warp mode,
+          because notes don't need stretching. Drag a sample onto a track and Live warps it to the song's tempo
+          automatically.
+      - title: length and loop
+        say: >-
+          A clip has a length and a loop brace, the section that repeats. A one bar clip can loop for 32 bars
+          without being copied 32 times. Mixing up the clip's length and its loop length is a classic way to
+          lose half your pattern.
+
+  - kind: tempo
+    set: sample
+    choices: [warp]
+    say:
+      mentor: >-
+        A midi clip is instructions. An audio clip is a recording, and this is one: a drum loop recorded at 120 bpm. Tap 128 and listen with warp off. It still plays at 120, so it drifts against the tempo like a dj mix gone wrong.
+        
+        Switch to repitch and it speeds up to fit, and goes higher in pitch too, the way a record does. Switch to beats and it's cut into sixteenths and each one lands on the grid: the pitch stays, the timing follows. That's warping, and it's what Live does to every audio clip you drop in.
+      straight: >-
+        A recorded loop at 120 bpm against other tempos. warp off drifts, repitch speeds it up and raises the pitch, beats cuts it to the grid. That's warping.
+      eli5: >-
+        This is a recording. It doesn't know the tempo. Warping teaches it to follow.
+
+  - kind: ask
+    q: What does a midi clip hold?
+    options: ["notes for an instrument to play", "a recording of sound", "the song's tempo", "the reverb"]
+    answer: 0
+    why: Midi is notes, when to play, which pitch, how hard. An instrument turns them into sound.
+    whyWrong:
+      1: That's an audio clip.
+      2: Tempo is set for the whole song.
+      3: Reverb is an effect, not a clip.
+
+  - kind: ask
+    q: What's warping for?
+    options: ["stretching audio to fit the tempo", "adding notes to midi", "making midi louder", "deleting a clip"]
+    answer: 0
+    why: Warping squeezes or stretches a recording so it plays at your song's speed.
+    whyWrong:
+      1: Midi notes are added in the piano roll.
+      2: Midi clips have no warp mode.
+      3: Warping keeps the clip and reshapes its timing.
+
+  - kind: ask
+    q: You double the tempo. Which clip follows without being stretched?
+    options: ["a midi clip", "an audio clip", "neither", "both need stretching"]
+    answer: 0
+    why: Midi is instructions, so the notes simply play faster. Audio has to be warped.
+    whyWrong:
+      1: Audio is the sound itself, so it has to be stretched.
+      2: Midi follows on its own.
+      3: Only audio needs stretching.
+
+  - kind: keep
+    next: >-
+      Back to your song: path 2 starts with your first bass line.

@@ -1,0 +1,88 @@
+slug: pentatonic-scales
+world: foundations
+number: 15
+title: the pentatonic hook
+minutes: 6
+song:
+  changes: lead.lead
+  why: five notes with no clashes make it easy to play a hook that always fits
+learn: >-
+  The five-note scale behind countless hooks and solos, and a hook of your own played on it.
+youCan:
+  - say what a pentatonic scale is
+  - find the five notes on your keys
+  - play a hook using only those five
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Some of the catchiest melodies ever use only five notes. Take a minor scale, drop the two notes most
+        likely to clash, and you get the minor pentatonic. It's in blues, rock solos, African and Asian folk
+        music, and a lot of dance hooks, because nothing in it can sound wrong over the chords.
+      straight: >-
+        The minor pentatonic: a minor scale minus the two notes most likely to clash. Five notes, no wrong
+        ones, used everywhere.
+      eli5: >-
+        Take your seven notes and leave out two. The five that are left all get along perfectly. That's
+        called a pentatonic scale.
+
+  - kind: say
+    title: finding the five
+    say:
+      mentor: >-
+        On your keys, the minor pentatonic is keys one, three, four, five and seven, counting from the first.
+        Skip two and six. In a minor that's a, c, d, e and g. Try it: run up those five and down again, and
+        hear how open and singable it is.
+      straight: >-
+        Keys 1, 3, 4, 5, 7 of your minor scale. Skip 2 and 6.
+      eli5: >-
+        Use keys one, three, four, five and seven. Skip key two and key six.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 3}
+    say:
+      mentor: >-
+        Make a hook on those five. Press rec and play a short phrase using only keys one, three, four, five and
+        seven. Keep it simple: hooks are short, rhythmic and repeat. Record it until you'd want to hear it again.
+      straight: >-
+        Record a short hook using only keys 1, 3, 4, 5 and 7.
+      eli5: >-
+        Press rec and play a little tune using only keys one, three, four, five and seven.
+    hint: Short and repeated beats long and complicated.
+
+  - kind: ask
+    q: How many notes are in a pentatonic scale?
+    options: ["five", "seven", "twelve", "three"]
+    answer: 0
+    why: Penta means five.
+    whyWrong:
+      1: Seven is a full major or minor scale.
+      2: Twelve is every note.
+      3: Three notes is a chord.
+
+  - kind: ask
+    q: Why is the pentatonic so easy to play hooks on?
+    options: ["the notes that clash most are left out", "it's louder", "it only has high notes", "it's faster"]
+    answer: 0
+    why: Dropping the two clashiest notes leaves five that always fit.
+    whyWrong:
+      1: It's about which notes, not volume.
+      2: It covers every octave.
+      3: Scales don't set the tempo.
+
+  - kind: ask
+    q: Which keys of your minor scale make the minor pentatonic?
+    options: ["one, three, four, five, seven", "one to five", "two, four, six", "all seven"]
+    answer: 0
+    why: Leave out two and six.
+    whyWrong:
+      1: Close, but it skips two and includes seven.
+      2: Those are some of the ones you leave out.
+      3: That's the full scale.
+
+  - kind: keep
+    next: >-
+      Next: chords. Three notes at once, and the harmony under your melody.

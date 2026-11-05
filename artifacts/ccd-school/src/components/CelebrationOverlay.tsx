@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { playFanfare } from "@/lib/audio";
 import { useProgress } from "@/lib/progress";
 import { RANKS } from "@/lib/ranks";
+import { WORLD_NAME, WORLD_RANKS } from "@/lib/worldRanks";
+import type { CurWorld } from "@/content/curriculum";
 import { TrophyShareModal } from "@/components/TrophyShareModal";
 import { GoPill, Icon, Key } from "@/components/m1/controls";
 import { SevenSeg } from "@/components/m1/SevenSeg";
@@ -14,7 +16,7 @@ import { RankMark, SegBar } from "@/components/m1/parts";
 import "@/components/m1/lesson.css";
 
 export type CelebrationEvent =
-  | { kind: "rank-up"; rankName: string; rankEmoji?: string }
+  | { kind: "rank-up"; rankName: string; rankEmoji?: string; world?: CurWorld }
   | { kind: "streak"; days: number }
   | { kind: "shield-earned"; streakDays: number }
   | { kind: "path-trophy"; trophyName: string; pathTitle: string }
@@ -57,7 +59,7 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
       <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 300, display: "flex", flexDirection: "column" }}>
         <div className="ls-meta"><span>streak</span><span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: shield ? "var(--led-mint)" : undefined }}>{shield ? <><Icon name="shield" small />shield ready</> : null}</span></div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, padding: "10px 0" }}>
-          <Lcd n={n} color="var(--led-go)" digits={Math.max(2, String(days).length)} />
+          <Lcd n={n} color="var(--led-mint)" digits={Math.max(2, String(days).length)} />
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 24, fontWeight: 300, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>days in a row</div>
             <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6, maxWidth: 260 }}>{shield ? "miss a day and the shield keeps it going." : "a lesson a day keeps it lit."}</div>
@@ -71,7 +73,7 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
           const now = i === today;
           return (
             <span key={i} className="m1-m" style={{ height: 56, pointerEvents: "none" }}>
-              <span className="m1-dot is-on" style={{ ["--c" as string]: lit ? "var(--led-go)" : "var(--ledoff)", opacity: lit ? 1 : 0.5 } as React.CSSProperties} />
+              <span className="m1-dot is-on" style={{ ["--c" as string]: lit ? "var(--led-mint)" : "var(--ledoff)", opacity: lit ? 1 : 0.5 } as React.CSSProperties} />
               <span className={`m1-cap ${now ? "is-blk" : ""}`} style={{ width: "62%", marginTop: -6, fontSize: 13 }}>{d}</span>
             </span>
           );
@@ -90,19 +92,21 @@ function StreakBody({ days, shield }: { days: number; shield: boolean }) {
   );
 }
 
-function RankBody({ name }: { name: string }) {
-  const idx = Math.max(0, RANKS.findIndex(r => r.name === name));
-  const r = RANKS[idx];
+function RankBody({ name, world }: { name: string; world?: CurWorld }) {
+  // World ranks (src/lib/worldRanks.ts); the old xp ladder only for events from before them.
+  const ladder = world ? WORLD_RANKS[world] : RANKS.map(r => ({ slug: r.slug, name: r.name, line: r.tagline }));
+  const idx = Math.max(0, ladder.findIndex(r => r.name.toLowerCase() === name.toLowerCase()));
+  const r = ladder[idx];
   return (
     <div className="m1-scr"><div className="m1-glass" style={{ padding: 16, minHeight: 360, display: "flex", flexDirection: "column" }}>
-      <div className="ls-meta"><span>rank up</span><span>{idx + 1} of {RANKS.length}</span></div>
+      <div className="ls-meta"><span>{world ? `${WORLD_NAME[world]} rank up` : "rank up"}</span><span>{idx + 1} of {ladder.length}</span></div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, color: "var(--disp-ink)" }}>
-        <RankMark idx={idx} size={120} />
+        <RankMark idx={Math.min(idx, RANKS.length - 1)} size={120} />
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 30, fontWeight: 300, letterSpacing: "-.02em" }}>{name.toLowerCase()}</div>
-          <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.tagline.toLowerCase()}</div>
+          <div style={{ fontSize: 14, color: "var(--disp-sub)", marginTop: 6 }}>{r?.line.toLowerCase()}</div>
         </div>
-        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / RANKS.length} color="var(--led-go)" n={24} height={6} label={`rank ${idx + 1} of ${RANKS.length}`} /></div>
+        <div style={{ width: "100%", display: "flex" }}><SegBar value={(idx + 1) / ladder.length} color="var(--led-mint)" n={ladder.length} height={6} label={`rank ${idx + 1} of ${ladder.length}`} /></div>
       </div>
     </div></div>
   );
@@ -114,7 +118,7 @@ function TrophyBody({ label, title, sub }: { label: string; title: string; sub?:
       <div className="ls-meta"><span>{label}</span><span /></div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
         <div style={{ display: "flex", gap: 4 }} aria-hidden>
-          {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 14, borderRadius: 3, background: i % 4 === 0 ? "var(--led-go)" : "var(--led-mint)", opacity: i % 2 ? 0.6 : 1, boxShadow: "0 0 6px currentColor" }} />)}
+          {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 14, borderRadius: 3, background: i % 4 === 0 ? "var(--led-mint)" : "var(--led-mint)", opacity: i % 2 ? 0.6 : 1, boxShadow: "0 0 6px currentColor" }} />)}
         </div>
         <div style={{ fontSize: 34, fontWeight: 300, letterSpacing: "-.03em", lineHeight: 1.05, color: "var(--disp-ink)", textWrap: "balance" as never }}>{title.toLowerCase()}</div>
         {sub && <div style={{ fontSize: 14, color: "var(--disp-sub)" }}>{sub}</div>}
@@ -166,12 +170,14 @@ export function CelebrationOverlay({ event, onDone }: Props) {
     : event.kind === "ccd-master" ? { name: "ccd master", kind: "master" as const } : null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Moment" className="ls"
+    <div role="dialog" aria-modal="true" aria-label="Moment"
       style={{ position: "fixed", inset: 0, zIndex: 300, overflowY: "auto", background: "linear-gradient(180deg,var(--deck),var(--deck2))", opacity: visible ? 1 : 0, transition: "opacity .3s" }}>
+      {/* The backdrop covers the whole screen, so the page behind (and its go key) never shows beside the sheet. */}
+      <div className="ls">
       <div className="ls-top"><button type="button" className="ls-x" aria-label="Close" onClick={onDone}><Icon name="close" /></button><span style={{ flex: 1 }} /></div>
       <div className="ls-col">
         {event.kind === "streak" && <StreakBody days={event.days} shield={progress.streakShield} />}
-        {event.kind === "rank-up" && <RankBody name={event.rankName} />}
+        {event.kind === "rank-up" && <RankBody name={event.rankName} world={event.world} />}
         {event.kind === "path-trophy" && <TrophyBody label="path done" title={event.pathTitle} sub="every lesson on this path is done" />}
         {event.kind === "chapter-trophy" && <TrophyBody label="chapter done" title={event.chapterTitle} sub="on to the next chapter" />}
         {event.kind === "world-trophy" && <TrophyBody label="world done" title={event.worldName} sub="your track from this world is ready to send to live" />}
@@ -188,6 +194,7 @@ export function CelebrationOverlay({ event, onDone }: Props) {
           worldName={event.kind === "world-trophy" ? event.worldName : undefined}
           xp={progress.xp} streakDays={progress.streakDays} onClose={() => setShowShare(false)} />
       )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,95 @@
+slug: noise
+world: foundations
+number: 11
+title: noise, the odd friend
+minutes: 5
+song:
+  changes: hats.hats
+  why: your hats are noise, and shaping the noise changes how your whole groove feels
+learn: >-
+  What noise is, why every hat, clap and cymbal is made of it, and shaping your hats.
+youCan:
+  - say what noise is and how it differs from a note
+  - hear that hats and claps are short bursts of noise
+  - shape your hats with decay and tune
+steps:
+  - kind: hear
+    clip: hats-offbeat
+    say:
+      mentor: >-
+        Listen to the hats between the kicks. Try to hum their note. You can't, because there isn't one.
+        Hats are noise: every frequency at once, all jumbled, with no repeating shape. That's the hiss you
+        hear from an untuned radio, and it's the raw material of hats, claps, cymbals and snares.
+      straight: >-
+        Hats have no note. They're noise: all frequencies at once with no repeating pattern. Hats, claps,
+        snares and cymbals are all shaped noise.
+      eli5: >-
+        Try to sing along with the tss sound. You can't, because it has no note. It's noise, like the shhh of
+        a waterfall. Hats and claps are made of noise.
+
+  - kind: say
+    title: shaped noise
+    say:
+      mentor: >-
+        A hat is a tiny burst of noise with the low end filtered away, so only the bright sizzle is left. A
+        short burst is a closed hat. Let it ring and it's an open hat. A clap is several bursts very close
+        together, like a few people clapping at once.
+
+        So when you shape a hat, you're shaping noise: how long it lasts and how bright it is.
+      straight: >-
+        Closed hat: a short burst of bright noise. Open hat: a longer one. Clap: a few bursts in a row. Shaping
+        them means changing length and brightness.
+      eli5: >-
+        A short shhh is a closed hat. A long shhhhh is an open hat. A clap is a few quick shh-shh-shh at once.
+    deeper:
+      - title: noise in synths
+        say: >-
+          Synths have a noise source too. Mixed in a little, it adds breath to a pad. Swept up with a filter,
+          it becomes the riser you hear before a drop. You'll build one in the producer world.
+
+  - kind: shape
+    layer: hats
+    knobs: [decay, tune]
+    say:
+      mentor: >-
+        Here's your groove with your hats on two knobs. Decay sets how long each burst rings: short is tight
+        and crisp, long starts to sound like an open hat. Tune moves the noise brighter or darker. Find hats
+        that sit nicely between your kicks.
+      straight: >-
+        Decay: how long each hat rings. Tune: brighter or darker. Shape your hats.
+      eli5: >-
+        Decay makes your tss short or long. Tune makes it brighter or darker. Play until it sounds good.
+
+  - kind: ask
+    q: Why can't you hum the note of a hi hat?
+    options: ["it's noise, it has no single pitch", "it's too quiet", "it's too fast", "it's out of tune"]
+    answer: 0
+    why: Noise has every frequency at once and no repeating shape, so there's no note to hum.
+    whyWrong:
+      1: You can't hum it even when it's loud.
+      2: Speed isn't the reason. A single hat has no pitch.
+      3: To be out of tune it would need a note in the first place.
+
+  - kind: ask
+    q: What makes an open hat different from a closed one?
+    options: ["it rings for longer", "it has a note", "it's played on the kick", "it uses a different tempo"]
+    answer: 0
+    why: Same bright noise, left to ring longer.
+    whyWrong:
+      1: Both are noise, neither has a note.
+      2: It's a separate sound from the kick.
+      3: The tempo is the song's, not the hat's.
+
+  - kind: ask
+    q: What is a clap made of?
+    options: ["a few quick bursts of noise", "a low sine wave", "a recorded melody", "silence"]
+    answer: 0
+    why: A few bursts very close together, like a handful of people clapping.
+    whyWrong:
+      1: A sine is a pure tone, the opposite of noise.
+      2: A clap has no melody.
+      3: You'd hear nothing.
+
+  - kind: keep
+    next: >-
+      Next: samples and loops, and a real recorded sound in your song.

@@ -1,0 +1,50 @@
+slug: set-structure-dj
+world: dj
+number: 13
+title: the energy arc
+minutes: 6
+song:
+  changes: drums.clap
+  why: a set that goes somewhere keeps a room for hours
+learn: >-
+  How djs shape a set: warm up, build, peak, and come down, and ordering tracks by tempo and energy.
+youCan:
+  - order tracks into a warm up, build and peak
+  - say why the first hour is lower energy
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A set isn't a playlist of your favourite bangers. It's a journey: a warm up that lets people arrive,
+        a build, a peak, and sometimes a come down. Djs often creep the tempo up a few bpm across a night
+        and save the biggest tracks for the peak.
+      straight: >-
+        A set goes warm up, build, peak. Tempo and energy rise across the night.
+      eli5: >-
+        A dj set starts gentle, gets bigger and bigger, then has a huge moment.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Look at the bank's tempos: 126 up to 135. In your head, put them in order for a set that builds.
+        Then blend from your song into the one you'd play next.
+      straight: >-
+        Order the bank by tempo for a set that builds, then blend into your next pick.
+      eli5: >-
+        Put the bank songs from slowest to fastest in your head, then mix into the next one.
+
+  - kind: ask
+    q: Why is a warm up set usually lower energy?
+    options: ["people are still arriving and settling in", "the speakers are cold", "djs are tired", "it's the rule"]
+    answer: 0
+    why: You build the room before you peak.
+    whyWrong:
+      1: Speakers don't need warming.
+      2: It's a choice for the crowd.
+      3: It's craft, not a rule.
+
+  - kind: keep
+    next: >-
+      Next: effects in performance.

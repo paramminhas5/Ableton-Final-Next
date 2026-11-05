@@ -9,7 +9,7 @@ import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { MISSIONS } from "@/content/missions";
 import { getMissionContext } from "@/lib/missionContext";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks } from "@/lib/worldRanks";
 import { GoPill, Icon, Screen, Silk, WORLD_LED } from "@/components/m1/controls";
 import { SevenSeg } from "@/components/m1/SevenSeg";
 import { ListRow, PageHead, RankMark, Readout, SegBar } from "@/components/m1/parts";
@@ -19,7 +19,7 @@ const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS
 export function DailyPageClient() {
   const { progress, missionsNeedingReview } = useProgress();
   const completed = progress.completedMissions;
-  const { current: rank, idx } = rankFor(progress.xp);
+  const { current: rank, idx } = allWorldRanks(progress.completedMissions)[0];
 
   const allDoneSlugs = Object.keys(completed).filter(s => completed[s]);
   const lastSlug = allDoneSlugs[allDoneSlugs.length - 1];
@@ -31,7 +31,7 @@ export function DailyPageClient() {
         return ns && !completed[ns] ? ns : null;
       })()
     : null;
-  const todaySlug = nextSlug ?? (allDoneSlugs.length === 0 ? "what-is-sound" : null);
+  const todaySlug = nextSlug ?? (allDoneSlugs.length === 0 ? "tempo-bpm" : null);
   const today = todaySlug ? ALL_MISSIONS.find(m => m.slug === todaySlug) : null;
   const todayWorld = (today?.world ?? "fundamentals") as "fundamentals" | "dj" | "producer";
 
@@ -47,12 +47,12 @@ export function DailyPageClient() {
         <div className="ls-meta"><span>daily goal</span><span>{done ? "done" : `${DAILY_GOAL_XP - progress.dailyXp} xp to go`}</span></div>
         <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 14 }}>
           <span className="ls-lcd" style={{ marginTop: 0 }}>
-            <SevenSeg text={String(Math.min(progress.dailyXp, 999))} color={done ? "var(--led-mint)" : "var(--led-go)"} digits={3} height={40} />
+            <SevenSeg text={String(Math.min(progress.dailyXp, 999))} color={done ? "var(--led-mint)" : "var(--led-mint)"} digits={3} height={40} />
           </span>
           <span style={{ color: "var(--disp-sub)", fontSize: 14 }}>of {DAILY_GOAL_XP} xp</span>
         </div>
         <div style={{ marginTop: 16, display: "flex" }}>
-          <SegBar value={pct} color={done ? "var(--led-mint)" : "var(--led-go)"} label={`daily goal ${Math.round(pct * 100)} percent`} />
+          <SegBar value={pct} color={done ? "var(--led-mint)" : "var(--led-mint)"} label={`daily goal ${Math.round(pct * 100)} percent`} />
         </div>
         <div className="ls-meta" style={{ marginTop: 14, justifyContent: "flex-start", gap: 16, alignItems: "center" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><Icon name="flame" small />{progress.streakDays} day streak</span>

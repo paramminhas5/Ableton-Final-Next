@@ -17,6 +17,9 @@ import {
   DRUM_PAD_NOTES,
   DRUM_PAD_PARAMS,
   DRUM_RACK_PARAMS,
+  DRUM_PAD2_BASE,
+  DRUM_PAD2_PARAMS,
+  DRUM_PAD2_STRIDE,
   FX_NAMES,
   FX_NOTE_BASE,
   SAMPLER_NOTE_BASE,
@@ -28,7 +31,7 @@ import {
   type ParamSpec,
 } from "@/engine";
 import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
-import { velocity } from "@/lib/touch";
+import { velocityAt } from "@/lib/touch";
 import { keyRow, noteName, padGrid, pitchClass, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
 import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
@@ -48,17 +51,29 @@ import {
   type LayerV2,
   type Surface,
   hasTrackV2,
+  effectivePad,
   type TrackV2,
+  type NoteEvent,
 } from "@/lib/track2";
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
+import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
-import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
+import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
-import { useEngineTrack } from "./useEngineTrack";
+import { swung, useEngineTrack } from "./useEngineTrack";
+import { lockSchedule, setLock, dueBetween, valuesAt, type Change } from "@/lib/plock";
+import { arranged } from "@/lib/arrange";
+import { captureTake, trimPlayed, type Played } from "@/lib/capture";
+import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
+import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { bind, PIC } from "@/lib/paramColor";
+import { toValue } from "@/engine";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
-const KNOB_CAPS = [null, CAP.grey, CAP.navy, CAP.grey] as const;
+// Caps stay neutral: the ring around each knob carries the colour of the line it moves.
+const KNOB_CAPS = [CAP.navy, CAP.grey, CAP.navy, CAP.grey] as const;
 const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 const DRUM_KEY_LABELS = ["kick", "snare", "clap", "rim", "hat", "open", "shaker", "ride"];
 const MUTE_C = "#F3C14F";
@@ -66,17 +81,31 @@ const SOLO_C = "#7D96FF";
 const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Touched = { label: string; text: string } | null;
+type LockAt = { note: number | null; step: number } | null;
 type Mode = "play" | "mix";
 const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 
 
 /** The knobs for this bank: four specs and their wire indices. `shift` is the second page of the sound bank. */
 function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; index: number }[] {
+  // The fx bank's second page is the part's filter: cutoff, resonance and character (warm, scream, smooth).
+  if (bank === "fx") return LAYER_PARAMS.filter(p => p.bank === "fx").slice(shift ? 4 : 0, shift ? 7 : 4).map(spec => ({ spec, index: spec.index }));
   if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
-    if (shift) return DRUM_RACK_PARAMS.map(spec => ({ spec, index: spec.index }));
-    return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + l.pad * DRUM_PAD_PARAMS.length + k }));
+    if (shift) {
+      // The pad's second page: its shape where it has one (the kick's body, the perc pads' bell and
+      // metal), then its tone and noise layers.
+      const pad = effectivePad(l);
+      const shapeKey = pad === 0 ? "shape" : pad === 12 ? "shapeblip" : pad === 13 ? "shapewood" : null;
+      const page = DRUM_PAD2_PARAMS.flatMap((spec, k) => {
+        if (spec.key === "shape" && !shapeKey) return [];
+        const s = (spec.key === "shape" ? { ...spec, key: shapeKey, label: pad === 0 ? "body" : "sound" } : spec) as ParamSpec;
+        return [{ spec: s, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + k }];
+      });
+      return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...page];
+    }
+    return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
   const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];
   return table.filter(p => p.bank === (shift ? "shift" : "sound")).map(spec => ({ spec, index: spec.index }));
@@ -91,6 +120,8 @@ export function Studio() {
   const [touched, setTouched] = useState<Touched>(null);
   const [adding, setAdding] = useState(false);
   const [songsOpen, setSongsOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [sureReset, setSureReset] = useState<string | null>(null);
   const [songs, setSongs] = useState<SongIndex | null>(null);
   const [shift, setShift] = useState(false);
   const [rate, setRate] = useState(1);
@@ -98,6 +129,18 @@ export function Studio() {
   const [snap, setSnap] = useState<Snap>("1/16");
   const [pos, setPos] = useState<{ beat: number; flags: number }>({ beat: 0, flags: 0 });
   const [hits, setHits] = useState<Record<string, number>>({});
+  const [rings, setRings] = useState<Rings>({});
+  // Hold a step, turn a knob: the held step (and its lane, on drums) takes the knob's value as a lock.
+  const [lockAt, setLockAt] = useState<LockAt>(null);
+  // Capture: what you played while not recording, kept for a few bars; the capture key makes it a take.
+  const played = useRef<Played[]>([]);
+  const [playedN, setPlayedN] = useState(0);
+  const [pending, setPending] = useState<{ layerId: string; events: NoteEvent[] } | null>(null);
+  // Fill and randomise: the notes before the dice, so the amount grows and shrinks the same fill.
+  const dice = useRef<{ layerId: string; base: NoteEvent[]; result: string } | null>(null);
+  const [diceAmt, setDiceAmt] = useState(0);
+  const [diceSeed, setDiceSeed] = useState(1);
+  const lastDice = useRef(0);
   const [held, setHeldUi] = useState<Set<number>>(new Set());
   const lastNote = useRef(33);
   const recHeld = useRef<Held>(new Map());
@@ -122,6 +165,8 @@ export function Studio() {
       return;
     }
     update(() => starterTrack(), false);
+    // Named for what it is, so "my track" never claims a loop you didn't make.
+    try { const i = readSongs(); setSongs(renameSong(i.active, "starter loop")); window.dispatchEvent(new Event("ccd:song")); } catch { /* ignore */ }
     autoplay.current = true;
     setTouched({ label: "your loop", text: "tap a pad" });
   }, [update]);
@@ -149,8 +194,10 @@ export function Studio() {
   );
 
   // ── engine events: recording, the playhead, lights ───────────────────────
-  const flash = useCallback((key: string) => {
-    setHits(h => ({ ...h, [key]: Date.now() }));
+  const flash = useCallback((key: string, v = 0.85) => {
+    const t = Date.now();
+    setHits(h => ({ ...h, [key]: t }));
+    setRings(r => ({ ...r, [key]: { t: t + Math.random(), v } }));
     setTimeout(() => setHits(h => {
       const n = { ...h };
       if (Date.now() - (n[key] ?? 0) >= 200) delete n[key];
@@ -164,15 +211,28 @@ export function Studio() {
       for (const e of evs) {
         if (e.kind === OUT.pos) {
           setPos(p => (p.beat === e.beat && p.flags === e.flags ? p : { beat: e.beat, flags: e.flags }));
+          tickLocks(e.beat, e.flags);
           continue;
         }
         const layer = t.layers[e.layer];
         if (!layer) continue;
+        if ((e.kind === OUT.playedOn || e.kind === OUT.playedOff) && !(e.flags & (FLAG.recording | FLAG.countIn))) {
+          const now = performance.now();
+          const looping = !!(e.flags & FLAG.playing);
+          if (e.kind === OUT.playedOn) {
+            const roll = !!(e.flags & FLAG.repeat);
+            played.current = trimPlayed([...played.current, { layerId: layer.id, note: e.note, vel: e.vel, tOn: now, tOff: roll ? now + 90 : null, bOn: looping ? e.beat : null, bOff: null }], now, (60000 / t.bpm) * 4 * 8);
+          } else {
+            const open = [...played.current].reverse().find(p => p.layerId === layer.id && p.note === e.note && p.tOff === null);
+            if (open) { open.tOff = now; open.bOff = looping && open.bOn !== null ? e.beat : null; }
+          }
+          setPlayedN(played.current.length);
+        }
         if (e.kind === OUT.seqOn) {
-          flash(`${layer.id}:${e.note}`);
+          flash(`${layer.id}:${e.note}`, e.vel);
           continue;
         }
-        if (e.kind === OUT.playedOn && e.flags & FLAG.repeat) flash(`${layer.id}:${e.note}`);
+        if (e.kind === OUT.playedOn && e.flags & FLAG.repeat) flash(`${layer.id}:${e.note}`, e.vel);
         const rec = !!(e.flags & FLAG.recording);
         if (e.kind === OUT.playedOn && rec && e.flags & FLAG.repeat) {
           // A roll hit has no note off: it is a short hit on the beat it landed.
@@ -196,7 +256,43 @@ export function Studio() {
         }
       }
     });
-  }, [engine, flash, snap, update]);
+  }, [engine, flash, snap, update]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── parameter locks: the engine plays one value per layer, so we send each lock at its step ──
+  const locks = useRef<{ sched: { layer: number; changes: Change[]; base: (i: number) => number }[]; loop: number; bpm: number; until: number | null }>({ sched: [], loop: 4, bpm: 120, until: null });
+  useEffect(() => {
+    const t = arranged(track);
+    const anySolo = t.layers.some(l => l.solo);
+    locks.current.sched = t.layers.map((l, i) => {
+      if (!l.events.some(e => e.p) || (anySolo ? !l.solo : l.mute)) return null;
+      const base = (idx: number) => paramOf(l, idx);
+      return { layer: i, base, changes: lockSchedule(swung(l.events, t.swing ?? 0), base, TYPE[l.type].engine === "drums") };
+    }).filter((x): x is { layer: number; changes: Change[]; base: (i: number) => number } => !!x && x.changes.length > 0);
+    locks.current.loop = t.loop;
+    locks.current.bpm = t.bpm;
+  }, [track]);
+  function tickLocks(beat: number, flags: number) {
+    const L = locks.current;
+    const on = !!(flags & FLAG.playing) && !(flags & FLAG.countIn);
+    if (!on || !L.sched.length) {
+      if (L.until !== null) { for (const s of L.sched) for (const c of s.changes) engine.param(s.layer, c.index, s.base(c.index)); L.until = null; }
+      return;
+    }
+    const loop = L.loop, mod = (x: number) => ((x % loop) + loop) % loop;
+    const b = mod(beat), msPerBeat = 60000 / L.bpm, ahead = 80 / msPerBeat;
+    if (L.until === null || mod(L.until - b) > loop / 2) {
+      for (const s of L.sched) valuesAt(s.changes, b, loop).forEach((v, idx) => engine.param(s.layer, idx, v));
+      L.until = b;
+    }
+    const to = mod(b + ahead);
+    for (const s of L.sched) {
+      for (const d of dueBetween(s.changes, L.until, to, loop)) {
+        const wait = mod(d.change.beat - b) * msPerBeat - 4;
+        window.setTimeout(() => engine.param(s.layer, d.change.index, d.change.value), Math.max(0, wait));
+      }
+    }
+    L.until = to;
+  }
 
   useEffect(() => {
     if (!recording && !countIn) takeOpen.current = false;
@@ -208,14 +304,14 @@ export function Studio() {
     e.preventDefault();
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
     start();
-    const vel = velocity(e);
+    const vel = velocityAt(e);
     engine.noteOn(selIndex, note, vel, e.timeStamp);
     if (!drumLike) lastNote.current = note;
     setHeldUi(h => new Set(h).add(note));
-    flash(`${sel.id}:${note}`);
+    flash(`${sel.id}:${note}`, vel);
     if (drumLike) {
       const pad = DRUM_PAD_NOTES.indexOf(note as (typeof DRUM_PAD_NOTES)[number]);
-      if (pad >= 0 && pad !== sel.pad) patchSel(l => ({ ...l, pad }), false);
+      if (pad >= 0 && pad !== effectivePad(sel)) patchSel(l => ({ ...l, pad }), false);
     }
   };
   const up = (note: number, e: PointerEvent<HTMLElement>) => {
@@ -251,10 +347,25 @@ export function Studio() {
 
   // ── shaping ───────────────────────────────────────────────────────────────
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
+  const selPadNote = sel && drumLike ? DRUM_PAD_NOTES[effectivePad(sel)] : -1;
+  const clock = useNoteClock(engine, selIndex, { bpm: track.bpm, loop: track.loop, events: sel?.events ?? [] }, drumLike ? (n => n === selPadNote) : undefined);
+  const lockMatch = (at: NonNullable<LockAt>) => (e: { note: number; start: number }) => Math.abs(e.start - at.step * grid) < grid / 2 && (at.note === null || e.note === at.note);
+  const lockedValue = (index: number) => {
+    if (!lockAt || !sel) return undefined;
+    const ev = sel.events.find(lockMatch(lockAt));
+    return ev?.p?.[index];
+  };
   const setParam = (index: number, spec: ParamSpec, v: number) => {
+    start(); // a knob turned before any tap must still be heard
     const now = Date.now();
     const undoable = now - lastParamEdit.current > 800; // one drag is one undo step
     lastParamEdit.current = now;
+    if (lockAt && sel) {
+      patchSel(l => ({ ...l, events: setLock(l.events, lockMatch(lockAt), index, v) }), undoable);
+      engine.param(selIndex, index, v);
+      setTouched({ label: `step ${lockAt.step + 1} · ${spec.label}`, text: display(spec, v) });
+      return;
+    }
     patchSel(l => {
       const next = { ...l, params: { ...l.params, [index]: v } };
       // Turning duck up with nowhere to duck from: duck under the drums' kick.
@@ -266,6 +377,65 @@ export function Studio() {
     }, undoable);
     setTouched({ label: spec.label, text: display(spec, v) });
   };
+
+  const diceable = !!sel && (sel.type === "drums" || sel.type === "hats" || sel.type === "bass" || sel.type === "lead");
+  const rollDice = (amt: number, seed: number) => {
+    if (!sel || !diceable) return;
+    let d = dice.current;
+    if (!d || d.layerId !== sel.id || d.result !== JSON.stringify(sel.events)) d = dice.current = { layerId: sel.id, base: sel.events, result: "" };
+    const lanes = (sel.type === "hats" ? DRUM_LANES.hats : DRUM_LANES.drums).slice(0, 4);
+    const root = sel.type === "bass" ? bassRoot(track) : (track.root ?? 45) + 12;
+    const ev = sel.type === "drums" || sel.type === "hats"
+      ? fillDrums(d.base, lanes, track.loop, grid, amt, seed)
+      : fillMelody(d.base, { loop: track.loop, step: grid, root: track.root ?? 45, scale: track.scale === "major" ? "major" : "minor", amount: amt, seed, lo: root, hi: root + 19 });
+    d.result = JSON.stringify(ev);
+    const now = Date.now();
+    const undoable = now - lastDice.current > 800;
+    lastDice.current = now;
+    patchSel(l => ({ ...l, events: ev }), undoable);
+    setDiceAmt(amt);
+    setDiceSeed(seed);
+    setTouched({ label: sel.type === "drums" || sel.type === "hats" ? "fill" : "notes", text: `${Math.round(amt * 100)}%` });
+  };
+  useEffect(() => { setDiceAmt(0); dice.current = null; }, [selId]);
+  const diceRow = diceable && !lockAt ? <Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" /> : null;
+
+  const canCapture = !!sel && !recording && !countIn && playedN > 0 && played.current.some(p => p.layerId === sel.id);
+  const capture = () => {
+    if (!sel) return;
+    const events = captureTake(played.current, sel.id, { loop: track.loop, bpm: track.bpm, snap, swing: track.swing, now: performance.now() });
+    if (!events.length) return;
+    played.current = played.current.filter(p => p.layerId !== sel.id);
+    setPlayedN(played.current.length);
+    setPending({ layerId: sel.id, events });
+  };
+  const keepCapture = () => {
+    if (!pending) return;
+    const o = { loop: track.loop, snap, strength: 1, swing: track.swing };
+    update(t => ({ ...t, layers: t.layers.map(l => (l.id === pending.layerId ? { ...l, events: pending.events.reduce((acc, ev) => overdub(acc, ev, o), l.events) } : l)) }));
+    setPending(null);
+    setTouched({ label: "captured", text: "kept" });
+  };
+
+  /** Hold a step: it lights, and knob turns lock to it. An empty step gets its note first. */
+  const holdStep = (note: number | null, step: number, len: number) => {
+    if (!sel) return;
+    const at = { note, step };
+    if (!sel.events.some(lockMatch(at))) {
+      const n = note ?? lastNote.current;
+      patchSel(l => ({ ...l, events: toggleStep(l.events, n, step, grid, len) }));
+    }
+    setLockAt(at);
+    const k = bankKnobs(sel, bank, shift)[0];
+    setTouched({ label: `step ${step + 1} held`, text: k ? "turn a knob" : "" });
+  };
+  const clearLocks = () => {
+    if (!lockAt) return;
+    const m = lockMatch(lockAt);
+    patchSel(l => ({ ...l, events: l.events.map(e => { if (!m(e) || !e.p) return e; const { p: _p, ...rest } = e; return rest; }) })); // eslint-disable-line @typescript-eslint/no-unused-vars
+    setTouched({ label: `step ${lockAt.step + 1}`, text: "unlocked" });
+  };
+  useEffect(() => { setLockAt(null); }, [selId, sel?.surface]);
 
   const addLayer = (t: LayerV2["type"]) => {
     if (track.layers.length >= MAX_LAYERS) return;
@@ -308,7 +478,7 @@ export function Studio() {
     const s = sel.surface;
     if (s === "own") return ownHint[type?.own ?? ""] ?? "";
     if (drumLike) {
-      if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[sel.pad]} selected`;
+      if (s === "pads") return `16 sounds · ${DRUM_PAD_NAMES[effectivePad(sel)]} selected`;
       if (s === "keys") return "one sound per key";
       if (s === "steps") return `a lane per sound · steps ${pageNow * 8 + 1} to ${pageNow * 8 + 8}`;
     } else if (sel.type === "sample") {
@@ -406,8 +576,8 @@ export function Studio() {
             ))}
           </div>
           <span style={{ flex: 1 }} />
-          <button type="button" className="st-tag" style={{ maxWidth: 74, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: "16px" }}
-            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
+          <button type="button" className="st-tag" style={{ maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", display: "block", lineHeight: "16px" }}
+            aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           {mode === "mix" ? (
             <span className="st-tag" style={{ cursor: "default" }}>{NOTE_NAMES[track.root % 12]} {track.scale}</span>
@@ -443,7 +613,9 @@ export function Studio() {
         ) : (
         <>
         <Screen className="st-scr" height={96}>
-          {sel && type ? (
+          {sel && type && pending && pending.layerId === sel.id ? (
+            <CapturePreview track={track} layer={sel} events={pending.events} onKeep={keepCapture} onDrop={() => setPending(null)} />
+          ) : sel && type ? (
             <>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
                 <div style={{ minWidth: 0, flex: 1 }}>
@@ -455,7 +627,11 @@ export function Studio() {
                   </div>
                   {bank === "mix" && ducking && duckSrc && !live ? null : (
                     <div className="st-ss" style={{ marginTop: 6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
+                      {canCapture ? (
+                        <button type="button" className="st-capkey" onClick={capture} aria-label={`Capture what you just played on ${type.label}`}>
+                          <i aria-hidden />capture what you played
+                        </button>
+                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : playing ? `playing · beat ${status}` : hint}
                     </div>
                   )}
                 </div>
@@ -475,7 +651,24 @@ export function Studio() {
           )}
         </Screen>
 
-        {songsOpen ? (
+        {resetOpen ? (
+          <div className="st-main">
+            <Silk label="start over" right="undo brings it back" />
+            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+              {([
+                ["layer", sel ? `clear ${TYPE[sel.type].label ?? sel.type} notes` : "clear this layer", !!sel, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => (l.id === sel?.id ? { ...l, events: [] } : l)) })],
+                ["notes", "clear every layer's notes, keep the sounds", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => ({ ...l, events: [] })) })],
+                ["sounds", "reset every knob to its start, keep the notes", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => ({ ...l, params: {}, mute: false, solo: false })) })],
+                ["all", "empty song, start from nothing", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: [], added: [] })],
+              ] as [string, string, boolean, (t: TrackV2) => TrackV2][]).map(([id, label, ok, fn]) => (
+                <button key={id} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }} disabled={!ok}
+                  onClick={() => { if (sureReset === id) { update(fn); setSureReset(null); setResetOpen(false); } else setSureReset(id); }}>
+                  {sureReset === id ? "tap again to confirm" : label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : songsOpen ? (
           <div className="st-main"><SongsPanel songs={songs} onChange={refreshSongs} /></div>
         ) : adding ? (
           <div className="st-main"><AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} /></div>
@@ -508,23 +701,25 @@ export function Studio() {
             {sel.surface === "own" && ctx && sel.type === "hats" && <RollsSurface ctx={ctx} rate={rate} setRate={setRate} />}
             {sel.surface === "own" && ctx && sel.type === "fx" && <RiserSurface ctx={ctx} />}
             {sel.surface === "own" && sel.type === "sample" && <SampleLoader layer={sel} onPatch={patchSel} onPreview={slot => { start(); engine.noteOn(selIndex, SAMPLER_NOTE_BASE + slot, 0.9); window.setTimeout(() => engine.noteOff(selIndex, SAMPLER_NOTE_BASE + slot), 600); }} />}
-            {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
+            {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && drumLike && (
-              <DrumPads layer={sel} hits={hits} noteHandlers={noteHandlers} />
+              <DrumPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />
             )}
-            {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
+            {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && !drumLike && sel.type !== "fx" && sel.type !== "sample" && (
-              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} noteHandlers={noteHandlers} />
+              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} rings={rings} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "keys" && sel.type !== "fx" && (
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
+                onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
+                onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
 
@@ -537,16 +732,16 @@ export function Studio() {
                   <button key={b} type="button" role="radio" aria-checked={bank === b}
                     onClick={() => {
                       // Tap sound again for its second page.
-                      setShift(b === "sound" && bank === "sound" ? !shift : false);
+                      setShift((b === "sound" || b === "fx") && bank === b ? !shift : false);
                       setBank(b);
                       setTouched(null);
-                    }}>{b === "sound" && shift ? "sound 2" : b}</button>
+                    }}>{b === "sound" && shift ? "sound 2" : b === "fx" && bank === "fx" && shift ? "filter" : b}</button>
                 ))}
               </div>
               <button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
-                aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>m</button>
+                aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>mute</button>
               <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}
-                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>s</button>
+                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>solo</button>
             </div>
             {bank === "sound" && !shift ? (
               <div className="st-preset">
@@ -555,10 +750,12 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
+            {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} /> : null}
             <div className="m1-g st-knobs">
               {knobs.map(({ spec, index }, i) => (
                 <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
-                  value={paramOf(sel, index)} defaultValue={spec.default}
+                  {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lfoto" ? 3 : undefined}
+                  value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
                   onChange={v => setParam(index, spec, v)} />
               ))}
             </div>
@@ -582,10 +779,66 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
-        <Key label="to live" onClick={() => downloadTrackV2Midi(track)} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+          <Icon name="reset" />
+        </Key>
+        <Key label="to live" onClick={() => downloadTrackV2Midi(arranged(track))} disabled={!track.layers.length} ariaLabel="Export to Ableton Live as MIDI">
+          <Icon name="out" />
+        </Key>
+        <Key label={shift ? "loud wav" : "wav"} onClick={() => void downloadWav(track, shift)} disabled={!track.layers.length}
+          ariaLabel={shift ? "Save the song as a loud wav for club play (-9 LUFS)" : "Save the song as a wav at streaming loudness (-14 LUFS)"}>
           <Icon name="out" />
         </Key>
       </div>
+    </div>
+  );
+}
+
+/** A captured take as ghost notes over the loop, until you keep it or drop it. */
+function CapturePreview({ track, layer, events, onKeep, onDrop }: { track: TrackV2; layer: LayerV2; events: NoteEvent[]; onKeep: () => void; onDrop: () => void }) {
+  const c = TYPE[layer.type].color;
+  const notes = [...new Set(events.map(e => e.note))].sort((a, b) => b - a);
+  const W = 300, H = 26, rh = H / Math.max(1, Math.min(8, notes.length));
+  const row = (n: number) => Math.min(7, notes.indexOf(n));
+  return (
+    <div className="st-capview">
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span className="st-ss" style={{ color: "var(--ink)" }}>captured · {events.length} note{events.length === 1 ? "" : "s"}</span>
+        <span style={{ flex: 1 }} />
+        <button type="button" className="st-chip st-capbtn" onClick={onDrop}>drop</button>
+        <button type="button" className="st-chip st-capbtn is-keep" onClick={onKeep}>keep it</button>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" width="100%" height={H} role="img" aria-label={`${events.length} captured notes, not kept yet`} style={{ display: "block", marginTop: 6 }}>
+        {Array.from({ length: track.loop + 1 }, (_, b) => <path key={b} d={`M${(b / track.loop) * W} 0V${H}`} stroke="rgba(255,255,255,.12)" />)}
+        {events.map((e, i) => (
+          <rect key={i} x={(e.start / track.loop) * W + 0.5} y={row(e.note) * rh + 1} width={Math.max(3, (e.len / track.loop) * W - 1)} height={Math.max(3, rh - 2)} rx={1.5}
+            fill={c} fillOpacity={0.18 + 0.3 * e.vel} stroke={c} strokeDasharray="3 2" vectorEffect="non-scaling-stroke" />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/** The pictures for the knobs on this page: the envelope (attack, decay, release) and the filter (cutoff, res, env). */
+function StudioPics({ layer, keys, clock }: { layer: LayerV2; keys: string[]; clock: NoteClock }) {
+  const engine = TYPE[layer.type].engine;
+  const params = layer.params;
+  const pad = effectivePad(layer);
+  const env = ampEnv(engine, params, pad);
+  const showEnv = !!env && (engine === "drums" ? keys.includes("decay") : keys.some(k => k === "attack" || k === "release" || k === "decay"));
+  const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];
+  const spec = (key: string) => table.find(p => p.key === key);
+  const cut = spec("cutoff"), res = spec("res"), amt = spec("env");
+  const chr = table.find(p => CHARACTER_KEYS.includes(p.key));
+  const showFilter = !!cut && !!res && keys.some(k => k === "cutoff" || k === "res" || k === "env" || CHARACTER_KEYS.includes(k));
+  if (!showEnv && !showFilter) return null;
+  const n = (s: ParamSpec | undefined) => (s ? paramOf(layer, s.index) : 0);
+  return (
+    <div className="st-pics">
+      {showFilter && cut && res ? (
+        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))} />
+      ) : null}
+      {showEnv && env ? <EnvView env={env} clock={clock} color={PIC.env} label={engine === "drums" ? DRUM_PAD_NAMES[pad] : "envelope"} /> : null}
     </div>
   );
 }
@@ -623,9 +876,12 @@ function DuckGraph({ track, layer, src }: { track: TrackV2; layer: LayerV2; src:
 // ── surfaces ────────────────────────────────────────────────────────────────
 
 type NoteHandlers = (note: number) => Record<string, (e: never) => void>;
+type Rings = Record<string, { t: number; v: number }>;
+/** The hit ring for one pad, remounted on every hit so its flash replays. */
+const ringOf = (rings: Rings, key: string) => (rings[key] ? <PadRing key={rings[key].t} v={rings[key].v} /> : null);
 
 /** 16-pad drum rack, kick bottom left. Resting pads glow faintly; a hit ripples out. */
-function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   // Screen order: top row first. Pad index p sits at row 3 - floor(p/4).
   const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
@@ -645,10 +901,12 @@ function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<
       {order.map(p => {
         const note = DRUM_PAD_NOTES[p];
         const d = ripple(p);
-        const cls = d === 0 || (p === layer.pad && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
+        const cls = d === 0 || (p === effectivePad(layer) && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
         return (
           <button key={p} type="button" className={`st-sp ${cls}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={DRUM_PAD_NAMES[p]} {...noteHandlers(note)}>
+            <i className="pad-vel" />
             <span className="st-lb">{DRUM_PAD_NAMES[p]}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}
@@ -657,7 +915,7 @@ function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<
 }
 
 /** Scale grid: only notes in key, rows a fourth apart, roots glow. */
-function ScalePads({ layer, root, scale, held, hits, noteHandlers }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const notes = padGrid(root, scale);
   return (
@@ -669,7 +927,9 @@ function ScalePads({ layer, root, scale, held, hits, noteHandlers }: { layer: La
         return (
           <button key={i} type="button" className={`st-sp ${on ? "is-lit" : isRoot ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
             aria-label={`Note ${name}${isRoot ? ", root" : ""}`} {...noteHandlers(n)}>
+            <i className="pad-vel" />
             <span className="st-lb" style={{ fontSize: 15 }}>{name.replace(/-?\d+$/, "")}<span style={{ fontSize: 10, opacity: 0.6 }}>{name.match(/-?\d+$/)?.[0]}</span></span>
+            {ringOf(rings, `${layer.id}:${n}`)}
           </button>
         );
       })}
@@ -704,12 +964,14 @@ function Keys({ drum, held, hits, layerId, noteHandlers }: { drum: boolean; held
 const FX_LANES = [36, 38, 39, 41];
 
 /** Back, forward and the bars. A page is what fits on screen; a bar is four beats. */
-function PageBar({ page, pages, setPage, bars, setBars, perPage, grid }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number }) {
+function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: { page: number; pages: number; setPage: (p: number) => void; bars: number; setBars: (n: number) => void; perPage: number; grid: number; dice?: React.ReactNode }) {
   const perBar = 4 / grid;
   const from = page * perPage + 1;
   const to = (page + 1) * perPage;
   const bar = Math.floor((page * perPage) / perBar) + 1;
   return (
+    <>
+    {dice ? <div className="st-dicerow">{dice}</div> : null}
     <div className="st-pages" style={{ alignItems: "center", gap: 6 }}>
       <button type="button" className="st-tag" aria-label="Previous steps" disabled={page === 0} onClick={() => setPage(page - 1)}>‹</button>
       <span className="st-ss" style={{ minWidth: 88, textAlign: "center" }}>{bars > 1 ? `bar ${bar} · ` : ""}{from}-{to}</span>
@@ -720,13 +982,46 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid }: { page:
         <button key={n} type="button" className={`st-tag ${bars === n ? "is-on" : ""}`} aria-pressed={bars === n} aria-label={`${n} bar${n > 1 ? "s" : ""}`} onClick={() => setBars(n)}>{n}</button>
       ))}
     </div>
+    </>
   );
 }
 
-type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void };
+type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void;
+  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode };
+
+/** A step you can tap (on or off) or hold (lock knobs to it). Shift+Enter holds from the keyboard. */
+function useStepPress(onTap: () => void, onHold: () => void, held: boolean, onRelease: () => void) {
+  const t = useRef(0);
+  const fired = useRef(false);
+  return {
+    onPointerDown: () => { fired.current = false; window.clearTimeout(t.current); t.current = window.setTimeout(() => { fired.current = true; onHold(); }, 380); },
+    onPointerUp: () => window.clearTimeout(t.current),
+    onPointerLeave: () => window.clearTimeout(t.current),
+    onPointerCancel: () => window.clearTimeout(t.current),
+    onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
+    onClick: () => { if (fired.current) { fired.current = false; return; } if (held) { onRelease(); return; } onTap(); },
+    onKeyDown: (e: React.KeyboardEvent) => { if (e.key === "Enter" && e.shiftKey) { e.preventDefault(); if (held) onRelease(); else onHold(); } if (e.key === "Escape" && held) onRelease(); },
+  };
+}
+
+/** While a step is held: what to do, and a way to clear its locks or let go. Replaces the page bar. */
+function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>; layer: LayerV2; grid: number; onClear: () => void; onDone: () => void }) {
+  const ev = layer.events.find(e => Math.abs(e.start - at.step * grid) < grid / 2 && (at.note === null || e.note === at.note));
+  const n = ev?.p ? Object.keys(ev.p).length : 0;
+  return (
+    <div className="st-pages st-lockbar" role="status">
+      <span className="st-lockdot" aria-hidden />
+      <span className="st-ss" style={{ color: "var(--ink)" }}>step {at.step + 1} held</span>
+      <span className="st-ss">{n ? `${n} knob${n > 1 ? "s" : ""} locked` : "turn a knob to lock it here"}</span>
+      <span style={{ flex: 1 }} />
+      {n ? <button type="button" className="st-tag" onClick={onClear}>clear</button> : null}
+      <button type="button" className="st-tag is-on" onClick={onDone}>done</button>
+    </div>
+  );
+}
 
 /** A lane per sound, 8 steps a page. The playing step glows. */
-function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle }: StepsProps & { onToggle: (note: number, step: number) => void }) {
+function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
   const smp = layer.type === "sample";
@@ -740,32 +1035,45 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
     <>
       <div className="st-tray" style={{ gridTemplateColumns: "44px repeat(8,1fr)", gridTemplateRows: `repeat(${lanes.length},1fr)` }}>
         {lanes.map((note, li) => (
-          <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} />
+          <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} />
         ))}
       </div>
-      <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} />
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} />}
     </>
   );
 }
 
-function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle }: { name: string; note: number; layer: LayerV2; page: number; playStep: number; color: string; grid: number; onToggle: (note: number, step: number) => void }) {
+/** One step: tap to switch it, hold to lock knobs to it. A step with locks shows a second colour. */
+function StepBtn({ cls, color, label, pressed, locked, held, onTap, onHold, onRelease, children }: { cls: string; color: string; label: string; pressed: boolean; locked: boolean; held: boolean; onTap: () => void; onHold: () => void; onRelease: () => void; children?: React.ReactNode }) {
+  const press = useStepPress(onTap, onHold, held, onRelease);
+  return (
+    <button type="button" className={`st-sp ${cls} ${locked ? "is-lock" : ""} ${held ? "is-held" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
+      aria-label={`${label}${locked ? ", locked knobs" : ""}${held ? ", held" : ""}`} aria-pressed={pressed} aria-keyshortcuts="Shift+Enter" {...press}>
+      {children}
+    </button>
+  );
+}
+
+function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle, lockAt, onHold, onRelease }: { name: string; note: number; layer: LayerV2; page: number; playStep: number; color: string; grid: number; onToggle: (note: number, step: number) => void; lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void }) {
   return (
     <>
       <div className="st-lane">{name}</div>
       {Array.from({ length: 8 }, (_, k) => {
         const step = page * 8 + k;
-        const on = layer.events.some(e => e.note === note && Math.abs(e.start - step * grid) < grid / 2);
+        const ev = layer.events.find(e => e.note === note && Math.abs(e.start - step * grid) < grid / 2);
+        const on = !!ev;
         const here = step === playStep;
         return (
-          <button key={k} type="button" className={`st-sp ${on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: color } as CSSProperties}
-            aria-label={`${name} step ${step + 1} ${on ? "on" : "off"}`} aria-pressed={on} onClick={() => onToggle(note, step)} />
+          <StepBtn key={k} cls={on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={color} label={`${name} step ${step + 1} ${on ? "on" : "off"}`} pressed={on}
+            locked={!!ev?.p} held={!!lockAt && lockAt.step === step && lockAt.note === note}
+            onTap={() => onToggle(note, step)} onHold={() => onHold(note, step)} onRelease={onRelease} />
         );
       })}
     </>
   );
 }
 
-function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle }: StepsProps & { onToggle: (step: number) => void }) {
+function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (step: number) => void }) {
   const c = TYPE[layer.type].color;
   return (
     <>
@@ -775,21 +1083,21 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
           const ev = layer.events.find(e => Math.abs(e.start - s * grid) < grid / 2);
           const here = s === playStep;
           return (
-            <button key={k} type="button" className={`st-sp ${ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
-              aria-label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} aria-pressed={!!ev} onClick={() => onToggle(s)}>
+            <StepBtn key={k} cls={ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={c} label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} pressed={!!ev}
+              locked={!!ev?.p} held={!!lockAt && lockAt.step === s} onTap={() => onToggle(s)} onHold={() => onHold(null, s)} onRelease={onRelease}>
               <span className="st-lv">{s + 1}</span>
               {ev ? <span className="st-lb">{noteName(ev.note)}</span> : null}
-            </button>
+            </StepBtn>
           );
         })}
       </div>
-      <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} />
+      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} />}
     </>
   );
 }
 
 /** 16 slots as pads. A slot with a sound lights on a hit; an empty one is dim. */
-function SamplePads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function SamplePads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
   return (
@@ -802,6 +1110,7 @@ function SamplePads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Recor
           <button key={k} type="button" className={`st-sp ${lit ? "is-lit" : name ? "is-rest" : "is-dim"}`} style={{ ["--c" as string]: c } as CSSProperties}
             aria-label={name ? `slot ${k + 1}, ${name}` : `slot ${k + 1}, empty`} {...noteHandlers(note)}>
             <span className="st-lb">{name ? name.slice(0, 8) : k + 1}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}
@@ -863,7 +1172,7 @@ function SampleLoader({ layer, onPatch, onPreview }: { layer: LayerV2; onPatch: 
 }
 
 /** The eight fx sounds as pads, bottom-left first. */
-function FxPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function FxPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const order = [4, 5, 6, 7, 0, 1, 2, 3];
   return (
@@ -874,6 +1183,7 @@ function FxPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<st
         return (
           <button key={k} type="button" className={`st-sp ${lit ? "is-lit" : "is-rest"}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={FX_NAMES[k]} {...noteHandlers(note)}>
             <span className="st-lb">{FX_NAMES[k]}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}

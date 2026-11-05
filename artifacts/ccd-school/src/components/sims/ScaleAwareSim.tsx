@@ -72,7 +72,7 @@ export function ScaleAwareSim() {
 
       <div className="grid md:grid-cols-2 gap-3">
         <Notes title="Raw notes (random)" pitches={SEED} />
-        <Notes title={aware ? "Folded to scale" : "Off — raw passes through"} pitches={aware ? folded : SEED} accent />
+        <Notes title={aware ? "Folded to scale" : "Off: raw passes through"} pitches={aware ? folded : SEED} accent />
       </div>
 
       <p className="font-mono text-[11px] uppercase opacity-70">

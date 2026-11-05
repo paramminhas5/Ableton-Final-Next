@@ -1,0 +1,108 @@
+slug: synth-effects
+world: producer
+number: 248
+title: synth effects
+minutes: 5
+song:
+  changes: lead.lead
+  why: an echo on your lead fills the gaps between notes and makes the melody feel bigger
+learn: >-
+  The effects that finish a synth sound, why their order matters, and an echo on your own lead.
+youCan:
+  - say what echo, reverb, chorus and saturation each add
+  - say why effect order changes the sound
+  - set an echo on your lead that fills the gaps without clutter
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One synth note, dry. Dry means no effects at all, just the raw voice. It's honest, but it can sound a
+        little bare, like someone singing in a cupboard.
+
+        Effects are the last part of building a synth sound. They don't change which notes play. They change
+        the space around them, the width, the edge. A lot of the sounds you love in records are a plain synth
+        with great effects after it.
+      straight: >-
+        A dry synth note, no effects. Effects finish a sound: space, width, edge. They don't change the notes.
+      eli5: >-
+        This note has nothing added. Effects are like putting the sound in a big room, or giving it an echo,
+        or making it fuzzy.
+
+  - kind: say
+    title: four effects, and their order
+    say:
+      mentor: >-
+        Echo, also called delay, plays your sound back again a moment later, often in time with the beat, so a
+        short melody fills the bar. Reverb adds the sound of a room. Chorus doubles the sound with tiny shifts
+        in pitch and timing for width and warmth. Saturation adds harmonics and edge.
+
+        Order matters. Distortion before reverb is a crunchy synth in a room. Reverb before distortion distorts
+        the room too, and it turns to mush. The usual order is the synth itself, then drive, then echo, then
+        reverb.
+      straight: >-
+        Echo repeats the sound in time. Reverb adds a room. Chorus adds width. Saturation adds edge. Order
+        changes the result: drive before reverb stays clear, reverb before drive gets muddy.
+      eli5: >-
+        Echo says it again, again, again. Reverb puts it in a big room. Chorus makes it wider. Drive makes it
+        fuzzy. And the order you add them changes the sound.
+    deeper:
+      - title: in live
+        say: >-
+          Echo is Live's delay with character, including a mode that copies the warmth of tape delay. Reverb
+          and Hybrid Reverb add space, Chorus-Ensemble adds width, Saturator adds edge. Devices run left to
+          right on a track, so the order you see is the order the sound goes through them.
+      - title: sends
+        say: >-
+          Reverb usually lives on a return track. Each part sends some of itself there, so every part shares
+          the same room and the mix holds together.
+
+  - kind: shape
+    layer: lead
+    knobs: [echo, send, drive]
+    say:
+      mentor: >-
+        Your song is playing. Turn echo up on your lead and listen to each note come back a moment later,
+        filling the space before the next one. A little is lush. Too much and the repeats crowd the melody.
+
+        Send pushes some of your lead into the reverb room. Drive adds edge before the echo. Try them in small
+        amounts. Keep the version where your lead sounds finished and still clear.
+      straight: >-
+        Echo repeats your lead in the gaps. Send adds reverb. Drive adds edge. Small amounts. Keep the clearest,
+        fullest version.
+      eli5: >-
+        Turn echo up and hear your tune repeat. Add a bit of send for a big room. Stop before it gets messy.
+
+  - kind: ask
+    q: What does an echo, or delay, do?
+    options: ["plays the sound back again a moment later", "adds the sound of a room", "makes it fuzzy", "changes the notes"]
+    answer: 0
+    why: Repeats, often in time with the beat.
+    whyWrong:
+      1: That's reverb.
+      2: That's distortion or saturation.
+      3: Effects don't change which notes play.
+
+  - kind: ask
+    q: Why does effect order matter?
+    options: ["each effect works on what came before it", "it doesn't matter", "only the last effect is heard", "the first effect is always muted"]
+    answer: 0
+    why: Reverb then distortion distorts the reverb too. Distortion then reverb keeps it clearer.
+    whyWrong:
+      1: Swap two effects and you'll hear the difference.
+      2: Every effect in the chain is heard.
+      3: Nothing is muted.
+
+  - kind: ask
+    q: Which effect adds width with tiny shifts in pitch and timing?
+    options: ["chorus", "echo", "saturation", "eq"]
+    answer: 0
+    why: Chorus doubles the sound with small shifts, so it spreads wider.
+    whyWrong:
+      1: Echo repeats the sound later.
+      2: Saturation adds harmonics.
+      3: An eq changes tone, not width.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try granulator iii to turn sound into a cloud.

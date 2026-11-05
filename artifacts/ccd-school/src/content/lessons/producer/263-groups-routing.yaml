@@ -1,0 +1,113 @@
+slug: groups-routing
+world: producer
+number: 263
+title: groups and routing
+minutes: 5
+song:
+  changes: drums.kick
+  why: shaping your whole drum kit at once makes the drums sound like one instrument
+learn: >-
+  What a group is, where a part's sound goes next, and your drum kit shaped as one.
+youCan:
+  - say what a group and a bus are
+  - shape several parts at once
+  - group tracks in Live
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Your kick and clap are separate sounds, but they live together in your drum kit and come out through
+        one channel. That's a group: several parts added together into one strip, so one fader or one eq moves
+        them all at once.
+
+        Producers group drums, synths and vocals, so a mix with forty parts can be handled as five or six.
+      straight: >-
+        A group adds several parts into one strip. One fader or eq then moves them all together.
+      eli5: >-
+        A group is like a box with lots of sounds inside. Turn the box's knob and every sound inside changes
+        together.
+
+  - kind: say
+    title: routing
+    say:
+      mentor: >-
+        Routing is where each part's sound goes next. By default every part flows straight to the master.
+        Point a few parts into a group instead and the group becomes a little mix of its own, called a bus:
+        one channel carrying several parts, before everything reaches the master.
+
+        That's why you can compress your whole kit together, so every hit squeezes as one.
+      straight: >-
+        Routing decides where a sound goes next. Send parts to a group and it becomes a bus, a channel
+        carrying several parts mixed together.
+      eli5: >-
+        Every sound goes somewhere next, like a road. You can send lots of sounds down the same road, then
+        change them all at once.
+    deeper:
+      - title: groups in live
+        say: >-
+          Select tracks and press Cmd+G on a Mac or Ctrl+G on Windows to group them. The group track is a real
+          audio bus with its own devices, mixer strip, sends and automation. Groups can sit inside other
+          groups.
+      - title: audio to and audio from
+        say: >-
+          Each track has Audio To and Audio From menus. A track's output can go to the master, a group or
+          another track's input. Resampling, in Audio From, records Live's master output onto an audio track.
+      - title: glue on the group
+        say: >-
+          A common move is a Glue Compressor on the drum group, so every drum is compressed together.
+
+  - kind: shape
+    layer: drums
+    knobs: [low, mid, high, drive]
+    say:
+      mentor: >-
+        A group is several tracks through one channel. Your kick and clap share this channel: turn low, mid, high and drive and both move. Your song is playing.
+      straight: >-
+        Kick and clap through one channel.
+      eli5: >-
+        The drums all go through one channel.
+  - kind: shape
+    layer: hats
+    knobs: [high, level, drive]
+    say:
+      mentor: >-
+        Your hats are the other member of the drum group. Match the drive you gave the kick and clap so the group sounds like one kit, then set their level in it. In Live you'd make one group track and put all three inside.
+      straight: >-
+        Hats join the group: match the drive, set the level.
+      eli5: >-
+        Hats join the drums. Make them sound like one kit.
+
+  - kind: ask
+    q: What is a group?
+    options: ["several parts added together into one strip", "a list of songs", "a kind of reverb", "one part copied many times"]
+    answer: 0
+    why: One strip for several parts, so they can be shaped together.
+    whyWrong:
+      1: Groups hold parts inside one song.
+      2: Reverb is an effect. A group can hold effects.
+      3: The parts inside stay different.
+
+  - kind: ask
+    q: What is a bus?
+    options: ["a channel carrying several parts mixed together", "a type of synth", "the tempo setting", "a drum pattern"]
+    answer: 0
+    why: A group is a bus. So is the master.
+    whyWrong:
+      1: A bus carries sound, it doesn't make it.
+      2: Tempo is the speed of the song.
+      3: Patterns are notes. A bus is where sound flows.
+
+  - kind: ask
+    q: Why group your drums?
+    options: ["to shape them all at once, like one instrument", "to make them play faster", "to delete the clap", "groups make drums mono"]
+    answer: 0
+    why: One move on the group changes every drum inside it.
+    whyWrong:
+      1: Grouping doesn't touch timing.
+      2: Every part in the group stays.
+      3: Grouping doesn't change stereo.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, eq, a place for everything.

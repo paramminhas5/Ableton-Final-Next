@@ -1,0 +1,63 @@
+slug: song-structure
+world: foundations
+number: 20
+title: tension, release and structure
+minutes: 7
+song:
+  changes: drums.kick
+  why: a song is a loop that changes over time
+learn: >-
+  How songs build and release tension, the sections of a dance track, and your loop arranged into a song.
+youCan:
+  - say what tension and release mean in music
+  - name an intro, build, drop and break
+  - arrange your loop into sections
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Music works by building tension and releasing it. A chord that wants to go home, a drum roll before a
+        change, the drums dropping out so their return feels huge. Dance music does this with arrangement:
+        the same loop, with parts taken away and brought back.
+      straight: >-
+        Tension builds, release pays it off. Dance tracks do it by taking parts away and bringing them back.
+      eli5: >-
+        Songs make you wait for something, then give it to you. That waiting feeling is tension. Getting it
+        is release.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your loop laid out as a song: intro, build, drop, break, drop. Each row is one of your parts.
+        Tap a square to switch a part off or on in that section, and tap fill for a drum roll at the end.
+        Play it through. You've just made a song.
+      straight: >-
+        Your loop as sections. Tap squares to switch parts off or on; tap fill for a roll.
+      eli5: >-
+        Tap squares to turn sounds on and off in each part. Press play and hear your whole song.
+
+  - kind: ask
+    q: What is a breakdown?
+    options: ["a section with the drums taken out", "the loudest part", "a mistake", "the first bar"]
+    answer: 0
+    why: Drums out, so their return is a big release.
+    whyWrong:
+      1: That's the drop.
+      2: It's on purpose.
+      3: That's the start of the intro.
+
+  - kind: ask
+    q: In music, what is release?
+    options: ["the payoff after tension", "how loud the song is", "the song's release date", "the end of a note"]
+    answer: 0
+    why: Tension builds, release resolves it.
+    whyWrong:
+      1: Loudness is separate.
+      2: Different meaning of the word.
+      3: That's a synth's release knob, a different idea.
+
+  - kind: keep
+    next: >-
+      Next: the producer world. Make every part of your song sound its best.

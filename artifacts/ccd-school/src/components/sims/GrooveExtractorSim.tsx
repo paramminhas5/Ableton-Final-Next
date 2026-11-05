@@ -59,7 +59,7 @@ export function GrooveExtractorSim() {
       </div>
 
       <Lane title="SOURCE (sampled break)" notes={SOURCE.map((n) => ({ step: n.step, vel: n.vel }))} accent="bg-sun" />
-      <Lane title="TARGET — STIFF MIDI" notes={TARGET} accent="bg-bone" />
+      <Lane title="TARGET: STIFF MIDI" notes={TARGET} accent="bg-bone" />
       <Lane title="TARGET + GROOVE APPLIED" notes={grooved} accent="bg-acid" highlight />
 
       <p className="font-mono text-[11px] uppercase opacity-70">

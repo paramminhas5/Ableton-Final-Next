@@ -1,0 +1,125 @@
+slug: what-is-rhythm
+world: foundations
+number: 201
+title: what is rhythm?
+minutes: 5
+song:
+  changes: drums.kick
+  why: moving one kick off the beat shows you what the pulse is doing for your song
+learn: >-
+  The difference between the pulse and the rhythm on top of it, and what happens to your beat when one kick
+  leaves the pulse.
+youCan:
+  - say the difference between pulse and rhythm
+  - hear when a kick has moved off the beat
+  - keep a kick off the beat, or put it back
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Tap your foot to this. Your foot finds the kick straight away, because it never changes: one, two,
+        three, four. That steady tick is the pulse.
+
+        The clap doesn't land on every tick. It lands on two of them. Where the sounds land, and where they
+        don't, is the rhythm. The pulse stays put and the rhythm is everything you choose to put on top of it.
+      straight: >-
+        The pulse is the steady tick your foot finds. Rhythm is the pattern of sounds placed over it, some on
+        the ticks, some between them. The pulse stays, the rhythm varies.
+      eli5: >-
+        Tap your foot. Your foot follows the boom, boom, boom, like a clock. That's the pulse. The clap only
+        joins in sometimes. Where the sounds land is called rhythm.
+
+  - kind: say
+    title: one sound has no rhythm
+    say:
+      mentor: >-
+        A single hit on its own has no rhythm. Play a second one a moment later and suddenly there's a gap
+        between them, and your brain starts measuring it. Repeat it and you've got a pattern in time. That's
+        all rhythm is: when things happen, and when they don't.
+
+        Here's the cool part. Most dance music is recognised by its rhythm long before its melody. A four on
+        the floor kick tells you it's house before a single note plays.
+      straight: >-
+        One hit has no rhythm. Two hits at different times start one. Rhythm is when sounds happen and when
+        they don't. Dance styles are recognised by their rhythm first.
+      eli5: >-
+        One boom on its own isn't a rhythm. Two booms with a gap between them start one. Rhythm is about when
+        sounds happen.
+    deeper:
+      - title: pulse, metre and accent
+        say: >-
+          The pulse is the steady beat. Metre is how those beats group into bars that repeat, like four beats
+          in a bar of 4/4 or three in a waltz. Accents are the beats that get extra weight, and they are a big
+          part of what gives a groove its feel.
+      - title: in live
+        say: >-
+          The tempo box sits in the Control Bar at the top of Live. Turn on the Metronome to hear the pulse
+          while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm.
+
+  - kind: play
+    layer: drums
+    surface: pads
+    snap: true
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now break your own beat on purpose. Press rec, wait out the count-in, and tap the kick four times:
+        three right on the beat, and one on an "and", exactly halfway between two beats. Snap is on, so that
+        one lands dead in the middle.
+
+        While you record, your old kick keeps time underneath. At the end you'll hear your song with the moved
+        kick and without it. Listen for the stumble: your body expected the pulse and got something else. Some
+        people love that push, some want it back on the beat. Keep whichever feels like your song.
+      straight: >-
+        Record four kicks: three on the beat, one on an "and" between beats. Snap is on. At the end, compare
+        your song with the moved kick and without it, and keep one.
+      eli5: >-
+        Press rec, wait for four ticks, then tap the kick four times. Put three on the ticks and one in
+        between two ticks. Listen to how it trips. Then you can keep it or put it back.
+    hint: Say "one, two and three, four" and tap the kick on the "and".
+
+  - kind: ask
+    q: What is the pulse?
+    options: ["the steady beat your foot taps to", "the loudest sound in the song", "the melody", "how fast the song is"]
+    answer: 0
+    why: The pulse is the steady beat underneath, the one you tap along to.
+    whyWrong:
+      1: Loud or quiet, the pulse is about steady timing.
+      2: The melody sits on top of the pulse.
+      3: That's the tempo, the speed of the pulse. The pulse is the beat itself.
+
+  - kind: ask
+    q: Rhythm is mostly about
+    options: ["when sounds happen", "which notes are played", "how loud sounds are", "which key the song is in"]
+    answer: 0
+    why: Rhythm is the pattern of when sounds happen and when they don't.
+    whyWrong:
+      1: Which notes is melody and harmony.
+      2: How loud is amplitude.
+      3: Keys are about notes, not time.
+
+  - kind: ask
+    q: You move one kick onto an "and". What stays the same?
+    options: ["the pulse", "the rhythm", "where every kick lands", "nothing at all"]
+    answer: 0
+    why: The pulse keeps ticking at the same speed. Only the pattern on top changed.
+    whyWrong:
+      1: The rhythm is exactly what you changed.
+      2: One kick moved.
+      3: The pulse and the tempo stay put.
+
+  - kind: ask
+    more: true
+    q: What is metre?
+    options: ["how beats group into repeating bars", "the speed of a track", "the pitch of the bass", "the length of a song"]
+    answer: 0
+    why: Metre is how the beats group, four to a bar in 4/4, three in 3/4.
+    whyWrong:
+      1: Speed is tempo.
+      2: Pitch is about notes, not time.
+      3: Length is counted in bars, but metre is how each bar is grouped.
+
+  - kind: keep
+    next: >-
+      Back to the pulse path. Next: bars and counting, and a clap on two and four.

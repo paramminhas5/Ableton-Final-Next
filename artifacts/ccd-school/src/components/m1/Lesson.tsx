@@ -25,11 +25,16 @@ import { offerFor, useTrack } from "@/lib/track";
 import { lessonSteps, readTake, saveTake, takeType, type Take } from "@/lib/lessonTake";
 import { minutesFor, missionImage, missionLearns, missionUses, worldDone, worldOf, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { RANKS, rankFor } from "@/lib/ranks";
-import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
+import { GoPill, Icon, Key, Screen, Silk, Switch, WORLD_LED } from "./controls";
+import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import { GlassDiagram, GlassVisual, VISUAL_TAG, Chain } from "./GlassVisual";
 import { TryIt } from "./TryIt";
+import { FileLesson } from "./FileLesson";
 import { AddToTrack } from "./AddToTrack";
+import { EarStep, FreshStart, HearStep, SayStep, ShapeStep, songHasMusic, startsFresh } from "./LessonSteps";
+import { newSong } from "@/lib/songs";
+import { usePrefs } from "@/lib/prefs";
 import { SevenSeg } from "./SevenSeg";
 import "./lesson.css";
 
@@ -51,7 +56,9 @@ const seedOf = (s: string) => Array.from(s).reduce((h, c) => (h * 31 + c.charCod
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9.\-+# ]/g, "").replace(/\s+/g, " ").trim();
 
 // ── chrome ──────────────────────────────────────────────────────────────────
-function Top({ back, total, now, accent, hearts }: { back: string; total: number; now: number; accent: string; hearts: number | null }) {
+function Top({ back, total, now, accent, hearts, tune }: { back: string; total: number; now: number; accent: string; hearts: number | null; tune?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const [prefs, setPrefs] = usePrefs();
   return (
     <div className="ls-top">
       <Link href={back} className="ls-x" aria-label="Close lesson"><Icon name="close" /></Link>
@@ -62,38 +69,23 @@ function Top({ back, total, now, accent, hearts }: { back: string; total: number
         <span className="ls-hearts" role="img" aria-label={`${hearts} of ${MAX_HEARTS} hearts`}>
           {Array.from({ length: MAX_HEARTS }, (_, i) => <i key={i} className={i < hearts ? "is-on" : ""} />)}
         </span>
-      ) : <span className="m1-tag">free</span>}
+      ) : tune ? null : <span className="m1-tag">free</span>}
+
+      {open && (
+        <div className="ls-sheet" onClick={() => setOpen(false)}>
+          <div role="dialog" aria-label="Voice and level" onClick={e => e.stopPropagation()}>
+            <Silk label="voice" right="who is teaching" />
+            <Switch label="Voice" value={prefs.voice} onChange={id => setPrefs({ voice: id as typeof prefs.voice })} options={[{ id: "mentor", label: "mentor" }, { id: "straight", label: "straight" }, { id: "eli5", label: "eli5" }]} />
+            <Silk label="level" right="how far we go" />
+            <Switch label="Level" value={prefs.level} onChange={id => setPrefs({ level: id as typeof prefs.level })} options={[{ id: "gentle", label: "gentle" }, { id: "standard", label: "standard" }, { id: "hard", label: "hard" }]} />
+            <p className="ls-sub" style={{ margin: 0 }}>mentor and eli5 explain the deeper bits as you go. straight keeps it short. your place is kept.</p>
+            <GoPill onClick={() => setOpen(false)} ariaLabel="Done">done</GoPill>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-function Bottom({ left, go }: { left?: { label: string; icon: string; onClick?: () => void; href?: string; disabled?: boolean; aria?: string }; go: { label: ReactNode; onClick?: () => void; href?: string; disabled?: boolean; aria?: string } }) {
-  return (
-    <div className="ls-bottom">
-      <div className="m1-g">
-        {left ? (
-          <Key label={left.label} onClick={left.onClick} href={left.href} disabled={left.disabled} ariaLabel={left.aria ?? left.label}><Icon name={left.icon} /></Key>
-        ) : null}
-        <GoPill onClick={go.onClick} href={go.href} disabled={go.disabled} style={{ gridColumn: left ? "span 3" : "1 / -1" }} ariaLabel={go.aria}>{go.label}</GoPill>
-      </div>
-    </div>
-  );
-}
-
-function Meta({ left, right, color }: { left: ReactNode; right?: ReactNode; color?: string }) {
-  return <div className="ls-meta"><span style={color ? { color } : undefined}>{left}</span>{right ? <span>{right}</span> : null}</div>;
-}
-
-const useEnter = (fn: (() => void) | null) => {
-  useEffect(() => {
-    if (!fn) return;
-    const h = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); fn(); }
-    };
-    window.addEventListener("keydown", h);
-    return () => window.removeEventListener("keydown", h);
-  }, [fn]);
-};
 
 // ── hook ────────────────────────────────────────────────────────────────────
 const TOOL_ICON = (tool: string) => /pad|answer|cue|grid|clip/.test(tool) ? "pads" : /key|roll|piano/.test(tool) ? "keys" : /fader|mixer|level|meter/.test(tool) ? "studio" : "knob";
@@ -104,6 +96,30 @@ function HookStep({ mission, screen, world, index, accent, back, onNext }: { mis
   const learns = missionLearns(mission.slug);
   const uses = missionUses(mission.slug);
   useEnter(onNext);
+  const ff = mission.fromFile;
+  if (ff) {
+    return (
+      <div className="ls-col">
+        <Screen>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
+          <Meta left={`${WORLD_LABEL[world]} ${String(index).padStart(2, "0")} · ${ff.minutes} min · +${mission.xp} xp`} />
+          <div className="ls-title is-big">{mission.title.toLowerCase()}</div>
+          <p className="ls-big">{ff.learn}</p>
+          <div className="ls-pulse" aria-hidden><i /><i /><i /><i /></div>
+        </Screen>
+        <Silk label="you'll learn" right={`${ff.items.length} things`} />
+        <ol className="ls-items">{ff.items.map((l, i) => <li key={i}><b>{String(i + 1).padStart(2, "0")}</b>{l.toLowerCase()}</li>)}</ol>
+        {startsFresh(mission) && <><Silk label="your song" /><FreshStart /></>}
+        <Silk label="adds to your song" right={ff.why ? undefined : undefined} />
+        <Screen>
+          <Meta left={<span style={{ color: accent }}>+ {offer.kind} · the line you play</span>} right="fills in as you play" />
+          <div style={{ marginTop: 10 }}><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: true }} /></div>
+        </Screen>
+        <Bottom left={{ label: "later", icon: "back", href: back, aria: "Not now, back to the world" }} go={{ label: <><Icon name="play" small />let&apos;s go</>, onClick: onNext, aria: "Start the lesson" }} />
+      </div>
+    );
+  }
   return (
     <div className="ls-col">
       <Screen>
@@ -243,7 +259,7 @@ function Pads({ options, picked, answer, phase, onPick, label }: { options: stri
       {options.map((o, i) => {
         const cls = phase === "pick" ? (picked === i ? "is-lit" : "") : i === answer ? (phase === "right" ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
         return (
-          <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={phase !== "pick"} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => onPick(i)}>
+          <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={phase !== "pick"} className={`ls-pad ${cls}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => onPick(i)}>
             <small>{String.fromCharCode(97 + i)}</small>
             <span>{o}</span>
           </button>
@@ -340,7 +356,7 @@ function ListenStep({ screen, ...p }: AskProps & { screen: Extract<LessonScreen,
       <Silk label="transport" />
       <div className="m1-g">
         <Key label="play" led={playing ? "var(--led-mint)" : null} onClick={play} ariaLabel="Play the sound"><Icon name="play" /></Key>
-        <Key label="loop" led={loop ? "var(--led-go)" : null} ariaPressed={loop} onClick={() => setLoop(l => !l)} ariaLabel="Loop the sound"><Icon name="loop" /></Key>
+        <Key label="loop" led={loop ? "var(--led-mint)" : null} ariaPressed={loop} onClick={() => setLoop(l => !l)} ariaLabel="Loop the sound"><Icon name="loop" /></Key>
         <span /><span />
       </div>
       <Silk label="pick one" right={heard ? "tap one, it lights up" : "listen first"} />
@@ -420,7 +436,7 @@ function TypeStep({ screen, ...p }: AskProps & { screen: Extract<LessonScreen, {
   );
 }
 
-const PAIR_COLORS = ["var(--led-mint)", "var(--led-cobalt)", "var(--led-lilac)", "#F3C14F", "var(--led-go)"];
+const PAIR_COLORS = ["var(--led-mint)", "var(--led-cobalt)", "var(--led-lilac)", "#F3C14F", "var(--led-mint)"];
 
 function OrderStep({ screen, seed, ...p }: AskProps & { screen: Extract<LessonScreen, { kind: "sequence" }>; seed: number }) {
   const items = useMemo(() => {
@@ -558,7 +574,7 @@ function Gauge({ at, total }: { at: number; total: number }) {
     <svg viewBox={`0 0 ${W} 170`} width="100%" aria-hidden style={{ display: "block", marginTop: 6 }}>
       {Array.from({ length: total }, (_, i) => {
         const q = ang(i), on = i === at;
-        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#FF4F9A" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #FF4F9A)" } : undefined} />;
+        return <path key={i} d={`M${cx + (r - (on ? 16 : 10)) * Math.cos(q)} ${cy + (r - (on ? 16 : 10)) * Math.sin(q)}L${cx + r * Math.cos(q)} ${cy + r * Math.sin(q)}`} stroke={on ? "#4FE3B6" : i < at ? "#8A8A90" : "#3A3A3F"} strokeWidth={on ? 3 : 2} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 4px #4FE3B6)" } : undefined} />;
       })}
       <path d={`M${cx} ${cy}L${cx + (r - 22) * Math.cos(na)} ${cy + (r - 22) * Math.sin(na)}`} stroke="#F3F2EF" strokeWidth={2.2} strokeLinecap="round" />
       <circle cx={cx} cy={cy} r={6} fill="#F3F2EF" />
@@ -639,7 +655,7 @@ function DoneStep({ mission, screen, xp, take, accent, nextHref, backHref, isLog
                 : <Key label={k.playing ? "stop" : "hear"} onClick={k.hear} ariaPressed={k.playing} ariaLabel={k.playing ? "Stop" : "Hear it in your track"}><Icon name={k.playing ? "stop" : "hear"} /></Key>}
               {k.added
                 ? <GoPill onClick={() => { onLeave(); router.push(nextHref); }} style={{ gridColumn: "span 3" }}>{nextHref === backHref ? "back to the world" : "next lesson"}<Icon name="play" small /></GoPill>
-                : <GoPill onClick={k.add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my track</GoPill>}
+                : <GoPill onClick={k.add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my song</GoPill>}
             </div>
           </div>
         </>
@@ -681,14 +697,14 @@ function HeartsOut({ back, onFree, onPractice }: { back: string; onFree: () => v
       </Screen>
       <Silk label="keep going" />
       <div className="ls-pads">
-        <button type="button" className="ls-pad is-big is-glowpad" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={onPractice}>
+        <button type="button" className="ls-pad is-big is-glowpad" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={onPractice}>
           <small>2 min · earn one back</small><span>practice</span>
         </button>
         <button type="button" className="ls-pad is-big" onClick={onFree}>
           <small>no hearts, no gates</small><span>free mode</span>
         </button>
       </div>
-      <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} /><span>your track and your progress are safe. nothing resets.</span></div>
+      <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span>your track and your progress are safe. nothing resets.</span></div>
       {progress.gems >= 20 && (
         <button type="button" className="ls-panel is-link" onClick={() => { if (spendGems(20)) refillHeart(); }}>
           <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>spend 20 gems for a heart now · you have {progress.gems}</span>
@@ -716,7 +732,7 @@ function HeartsIntro({ onDone }: { onDone: () => void }) {
 }
 
 // ── the player ──────────────────────────────────────────────────────────────
-type Props = { mission: Mission; nextSlug?: string; isReview?: boolean; missionIndex?: number; missionTotal?: number; onComplete: () => void };
+type Props = { mission: Mission; nextSlug?: string; nextTitle?: string; isReview?: boolean; missionIndex?: number; missionTotal?: number; onComplete: () => void };
 
 class Boundary extends Component<{ children: ReactNode; slug: string }, { error: Error | null }> {
   state = { error: null as Error | null };
@@ -734,6 +750,8 @@ class Boundary extends Component<{ children: ReactNode; slug: string }, { error:
 }
 
 export function M1Lesson(props: Props) {
+  // Lessons written as files have their own player (design/process.md). Reviews still use the old one.
+  if (props.mission.fromFile && !props.isReview) return <Boundary slug={props.mission.slug}><FileLesson mission={props.mission} nextSlug={props.nextSlug} nextTitle={props.nextTitle} onComplete={props.onComplete} /></Boundary>;
   return <Boundary slug={props.mission.slug}><Player {...props} /></Boundary>;
 }
 
@@ -742,6 +760,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   const { progress, completeMission, reviewMission, loseHeart, refillHeart } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
   const { user } = useAuth();
+  const [prefs] = usePrefs();
   // Hearts belong to flow mode. A review never costs one.
   const flow = learnMode === "flow" && !isReview;
   const alreadyDone = !!progress.completedMissions[mission.slug];
@@ -842,7 +861,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   };
 
   // Labels like "concept · 2 of 7" count the steps of that kind.
-  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match" };
+  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", ear: "ear round" };
   const meta = (() => {
     if (!cur) return "";
     if (ASK.has(cur.kind)) {
@@ -881,7 +900,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   } else if (out && flow) body = <HeartsOut back={back} onFree={() => { setLearnMode("classic"); setOut(false); }} onPractice={() => setPractice({ at: Math.max(0, asks.findIndex(a => steps.indexOf(a) >= idx)), right: 0 })} />;
   else if (!cur) body = null;
   else switch (cur.kind) {
-    case "hook": body = <HookStep mission={mission} screen={cur} world={world} index={missionIndex} accent={accent} back={back} onNext={next} />; break;
+    case "hook": body = <HookStep mission={mission} screen={cur} world={world} index={missionIndex} accent={accent} back={back} onNext={() => { if (startsFresh(mission) && songHasMusic()) newSong("my first song"); next(); }} />; break;
     case "concept": body = <ConceptStep screen={cur} meta={meta} accent={accent} onNext={next} />; break;
     case "diagram": body = <DiagramStep screen={cur} meta={meta} accent={accent} onNext={next} />; break;
     case "interact": body = <SimStep screen={cur} meta={meta} onNext={next} />; break;
@@ -890,9 +909,14 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
     case "type-answer": body = <TypeStep screen={cur} {...ask} />; break;
     case "sequence": body = <OrderStep screen={cur} seed={seed + idx} {...ask} />; break;
     case "match": body = <MatchStep screen={cur} seed={seed + idx} {...ask} />; break;
+    case "say": body = <SayStep screen={cur} meta={meta} onNext={next} />; break;
+    case "hear": body = <HearStep screen={cur} meta={meta} onNext={next} />; break;
+    case "shape": body = <ShapeStep mission={mission} screen={cur} meta={meta} accent={accent} onNext={next} />; break;
+    case "ear": body = <EarStep screen={cur} meta={meta} level="standard" onNext={next} />; break;
+    case "play":
     case "tryit":
-      body = <TryIt type={ttype} initial={take?.type === ttype ? take.events : undefined}
-        title={`play your ${ttype === "drums" ? "beat" : ttype === "hats" ? "hats" : ttype === "chords" ? "chords" : ttype === "bass" ? "bass line" : "lead line"}`}
+      body = <TryIt type={ttype} coach={cur.kind === "play" ? { body: cur.body, hint: cur.hint, goal: cur.goal } : undefined} initial={take?.type === ttype ? take.events : undefined}
+        title={cur.kind === "play" ? "play it in" : `play your ${ttype === "drums" ? "beat" : ttype === "hats" ? "hats" : ttype === "chords" ? "chords" : ttype === "bass" ? "bass line" : "lead line"}`}
         onUse={t => { setTake(t); saveTake(mission.slug, t); next(); }}
         onSkip={() => { setTake(null); saveTake(mission.slug, null); next(); }} />;
       break;
@@ -905,7 +929,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
 
   return (
     <div className="ls" data-world={world} data-steps={steps.map(s => s.kind).join(",")} data-step={idx}>
-      <Top back={back} total={steps.length} now={idx} accent={accent} hearts={flow ? progress.hearts : null} />
+      <Top back={back} total={steps.length} now={idx} accent={accent} hearts={flow ? progress.hearts : null} tune={!!mission.fromFile} />
       <div className="ls-stage" key={practice ? `p${practice.at}` : out ? "out" : idx}>{body}</div>
       {intro && cur?.kind === "hook" && <HeartsIntro onDone={() => { setIntro(false); try { localStorage.setItem(HEARTS_SEEN, "1"); } catch { /* ignore */ } }} />}
     </div>

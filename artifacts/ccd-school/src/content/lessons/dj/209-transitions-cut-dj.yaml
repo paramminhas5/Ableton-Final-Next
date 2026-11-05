@@ -1,0 +1,95 @@
+slug: transitions-cut-dj
+world: dj
+number: 209
+title: the cut and the power transition
+minutes: 5
+song:
+  changes: drums.clap
+  why: a cut on the one turns the end of your song into a moment instead of a fade
+learn: >-
+  The cut on the first beat of a phrase, the tricks that dress it up, and why confidence is the difference
+  between a cut and a train wreck.
+youCan:
+  - cut from your song to another track on the one
+  - say what makes a cut land
+  - name two ways to dress up a cut
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Kick, clap, kick, clap. Now imagine the whole track swapping for a new one in a single instant, right
+        on a kick. No fade, no overlap. That's the cut.
+
+        Done on the first beat of a phrase, it sounds like a decision. Done anywhere else, it sounds like a
+        mistake.
+      straight: >-
+        A cut swaps tracks instantly, no overlap. On the first beat of a phrase it sounds planned. Anywhere
+        else it sounds wrong.
+      eli5: >-
+        A cut is when one song stops and the next starts right away, exactly on a boom.
+
+  - kind: say
+    title: dressing up a cut
+    say:
+      mentor: >-
+        Djs often build up to a cut. An echo out puts echo on the old track so its last beat repeats and
+        fades into the new one. A reverb wash drowns the old track in reverb, then it's gone. A white noise
+        riser, a whoosh that climbs for a few bars, builds tension before the cut lands.
+
+        The difference between a train wreck and a power cut is intention. A jarring cut played with
+        confidence often lands better than a perfect blend played nervously.
+      straight: >-
+        Dress up a cut with an echo out, a reverb wash, or a white noise riser. A confident cut beats a
+        nervous blend.
+      eli5: >-
+        You can make a cut extra exciting with an echo or a rising whoosh first. Do it like you mean it.
+
+  - kind: mix
+    goal: cut
+    say:
+      mentor: >-
+        Deck b is matched to your song, and the crossfader is on your song. Watch the phrase counter on the
+        screen. As it comes round to bar 1, slam the crossfader from a to b in one quick move. Your song is
+        gone and the new track hits on the one.
+
+        If it lands mid bar, slide back to a and wait for the next phrase.
+      straight: >-
+        Watch the phrase counter. On bar 1, snap the crossfader from a to b in one quick move.
+      eli5: >-
+        Watch the counter. When it says bar 1, whip the big slider from a to b as fast as you can.
+    hint: Count the last bar out loud. Four, three, two, one, cut.
+
+  - kind: ask
+    q: Where does a cut land best?
+    options: ["on the first beat of a new phrase", "halfway through a bar", "in the middle of a vocal", "anywhere, as long as it's fast"]
+    answer: 0
+    why: On the one of a phrase, the change lines up with the music.
+    whyWrong:
+      1: Mid bar sounds like a slip.
+      2: Chopping a vocal sounds like a mistake.
+      3: Speed matters, but timing matters more.
+
+  - kind: ask
+    q: What is an echo out?
+    options: ["echo on the old track so its last beat repeats and fades", "echo on the new track", "turning the music off", "a slow crossfade"]
+    answer: 0
+    why: The echo carries the old track across the gap.
+    whyWrong:
+      1: It's the outgoing track that echoes.
+      2: The music keeps going.
+      3: A slow crossfade is a blend.
+
+  - kind: ask
+    q: What separates a power cut from a train wreck?
+    options: ["intention and confidence", "louder speakers", "the genre", "the length of the track"]
+    answer: 0
+    why: A train wreck is an accident. A power cut is a choice.
+    whyWrong:
+      1: Volume doesn't make it intentional.
+      2: Cuts work in any genre.
+      3: Length has nothing to do with it.
+
+  - kind: keep
+    next: >-
+      Back to the song path: picking tracks for your set.

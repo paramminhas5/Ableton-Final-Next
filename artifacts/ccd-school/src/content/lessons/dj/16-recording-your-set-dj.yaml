@@ -1,0 +1,52 @@
+slug: recording-your-set-dj
+world: dj
+number: 16
+title: recording your set
+minutes: 6
+song:
+  changes: drums.clap
+  why: a recording is how promoters and friends hear what you do
+learn: >-
+  Recording a mix, what to listen for when you play it back, and sending it to a promoter.
+youCan:
+  - record a short mix
+  - listen back and fix one thing
+steps:
+  - kind: say
+    title: record everything
+    say:
+      mentor: >-
+        Every working dj records their sets, even at home. Listening back is the fastest way to improve:
+        you'll hear a drift you missed, a blend that went on too long. A short, clean recording of your best
+        blends is also how promoters decide who to book, CCD included.
+      straight: >-
+        Record your sets, listen back, fix one thing. A short clean mix is how promoters book you.
+      eli5: >-
+        Record your mixes and listen back. You'll hear what to fix.
+
+  - kind: mix
+    goal: record
+    bank: operator
+    say:
+      mentor: >-
+        Recording your set is how you learn from it. Press record mix, then do a short blend: bring deck b up, swap the bass, crossfade. Press stop recording.
+        
+        A download link appears: that's your mix, exactly as it sounded. Listen back later and you'll hear things you missed while you were playing: a transition that came in early, a level that jumped.
+      straight: >-
+        Press record mix, do a blend, press stop. Download your mix and listen back.
+      eli5: >-
+        Press record, mix, press stop. Now you can listen to what you did.
+
+  - kind: ask
+    q: Why record practice sets?
+    options: ["listening back shows what to fix", "it makes them louder", "it's required", "it changes the key"]
+    answer: 0
+    why: You hear mistakes you missed while playing.
+    whyWrong:
+      1: Recording doesn't change volume.
+      2: It's a habit, not a rule.
+      3: Key is untouched.
+
+  - kind: keep
+    next: >-
+      Next: from dj to artist, playing your own track in your set.

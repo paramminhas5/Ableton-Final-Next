@@ -123,11 +123,13 @@ describe("lesson steps", () => {
   it("puts try it right before what you learned, in every lesson", () => {
     for (const m of ALL) {
       const steps = lessonSteps(m.screens ?? []);
-      const at = steps.findIndex(s => s.kind === "tryit");
+      // A lesson file's own play step is its try-it, and sits where the lesson puts it.
+      const own = steps.some(s => s.kind === "play");
+      const at = steps.findIndex(s => s.kind === (own ? "play" : "tryit"));
       expect(at, m.slug).toBeGreaterThan(0);
-      expect(steps.filter(s => s.kind === "tryit"), m.slug).toHaveLength(1);
+      expect(steps.filter(s => s.kind === "tryit"), m.slug).toHaveLength(own ? 0 : 1);
       const sum = steps.findIndex(s => s.kind === "summary");
-      if (sum >= 0) expect(at, m.slug).toBe(sum - 1);
+      if (sum >= 0 && !own) expect(at, m.slug).toBe(sum - 1);
       expect(steps[0].kind, m.slug).toBe("hook");
     }
   });

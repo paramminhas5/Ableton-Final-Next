@@ -6,7 +6,7 @@ import { CAT_SRC } from "./shell";
 
 export function Footer() {
   const p = usePathname() ?? "/";
-  if (p.startsWith("/studio") || p.startsWith("/dj") || p === "/login" || /^\/(learn|mission)\/[^/]+/.test(p)) return null;
+  if (p === "/" || p === "/dashboard" || p.startsWith("/studio") || p.startsWith("/dj") || p === "/login" || /^\/(learn|mission)\/[^/]+/.test(p)) return null;
   return (
     <footer className="m1-page" style={{ paddingTop: 28, paddingBottom: 132, width: "100%" }}>
       <div className="m1-silk" aria-hidden><i className="l" /><span>cats can dance</span><i className="r" /></div>

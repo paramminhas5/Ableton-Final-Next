@@ -1,0 +1,111 @@
+slug: session-view
+world: producer
+number: 208
+title: session view
+minutes: 5
+song:
+  changes: drums.kick
+  why: switching parts on and off section by section is how a loop starts to become a song
+learn: >-
+  Your song as a grid of clips: which parts play together, switched on and off by section, and how Live's
+  session view does it with clips and scenes.
+youCan:
+  - say what a clip and a scene are in session view
+  - switch parts of your song on and off by section
+  - say why only one clip plays per track at a time
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        One groove, then another, then both together. Same tempo, so they lock. Hear how each one is fine on
+        its own, but the moment they play together it feels like a song.
+
+        That's the idea behind Live's session view: your music is a grid of short loops called clips, and you
+        decide which ones play together, and when.
+      straight: >-
+        Two grooves alone, then together. Session view is a grid of loops, clips, that you start and stop in
+        any combination.
+      eli5: >-
+        One beat, another beat, then both at once. Session view is a grid of little loops you can start and
+        stop whenever you want.
+
+  - kind: say
+    title: clips and scenes
+    say:
+      mentor: >-
+        In session view, each track is a column. Each box in the column holds a clip, a loop of notes or
+        sound. Press a clip's play button and it loops. Press a different clip on the same track and the first
+        one stops: each track plays one clip at a time, the way one drummer can only play one pattern at a
+        time.
+
+        Rows across the grid are called scenes. Press a scene's button and every clip in that row starts
+        together. A scene for the intro, one for the drop, and you've got a song you can play live.
+      straight: >-
+        Tracks are columns, clips sit in boxes. One clip plays per track at a time. A scene is a row: launch it
+        and the whole row plays together.
+      eli5: >-
+        Each sound gets a column of boxes. Each box is a loop. Press one and it plays. A row of boxes is a
+        scene, and pressing it starts the whole row at once.
+    deeper:
+      - title: launching on the bar
+        say: >-
+          Clips don't start the instant you click. Live waits for the next bar by default, set by global
+          quantisation in the control bar, so everything lands in time. Set it to none and clips start
+          immediately, which is easy to get wrong when playing live.
+      - title: launch modes
+        say: >-
+          Each clip has a launch mode. Trigger starts it on a click. Gate plays it only while you hold the
+          button. Toggle turns it on and off with each click. Repeat keeps retriggering it while held. Scenes
+          can also carry a tempo and time signature, so launching a scene can change the song's speed.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song as a grid. Your parts run down the side, your sections run across. Each box is one
+        part in one section, on or off. It's the same idea as session view turned on its side: in Live, tracks
+        go across the top and scenes go down.
+
+        Make the first section drums only: switch your lead off there. Then let everything play in the next
+        one. Press play and hear the song build.
+      straight: >-
+        Parts down the side, sections across. Switch parts on and off. Try drums alone in the first section,
+        then everything.
+      eli5: >-
+        Each row is a sound, each column is a part of your song. Tap boxes to turn sounds on and off. Try just
+        the drums first, then everything together.
+
+  - kind: ask
+    q: What does pressing a scene do?
+    options: ["starts every clip in that row", "stops the whole song", "starts one clip", "records a new clip"]
+    answer: 0
+    why: A scene is a row of clips, and launching it starts them all together.
+    whyWrong:
+      1: Stopping has its own buttons.
+      2: One clip is one box, not a scene.
+      3: Recording is a different button.
+
+  - kind: ask
+    q: You launch a second clip on the same track. What happens to the first?
+    options: ["it stops", "they both play", "it gets louder", "it gets deleted"]
+    answer: 0
+    why: Each track plays one clip at a time, so the new one takes over.
+    whyWrong:
+      1: Only one clip per track can play.
+      2: Its level doesn't change, it stops.
+      3: The clip stays in its box, ready to launch again.
+
+  - kind: ask
+    q: By default, when does a clip you click actually start?
+    options: ["at the start of the next bar", "the instant you click", "after the song ends", "only when you press record"]
+    answer: 0
+    why: Global quantisation waits for the next bar by default, so clips land in time.
+    whyWrong:
+      1: Only if quantisation is set to none.
+      2: Clips start while the song plays.
+      3: Launching and recording are separate.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, what's inside a clip, notes or sound.

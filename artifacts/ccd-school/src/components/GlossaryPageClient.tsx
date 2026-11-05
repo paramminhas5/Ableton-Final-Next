@@ -5,7 +5,7 @@ import { Silk, Icon } from "@/components/m1/controls";
 import { Chips, RefPage, SearchField } from "@/components/m1/parts";
 import { TERMS, slugTerm, type GlossaryTerm as Term } from "@/content/glossary";
 
-const CATS: Term["cat"][] = ["Workflow", "Devices", "Audio", "MIDI", "Performance", "Live 12", "Files"];
+const CATS: Term["cat"][] = ["Rhythm", "Workflow", "Devices", "Audio", "MIDI", "Performance", "Live 12", "Files"];
 
 // P2 #27: Map key glossary terms to their most relevant mission slug
 const TERM_MISSION_MAP: Record<string, string> = {
@@ -56,7 +56,7 @@ export function GlossaryPageClient() {
     const el = document.getElementById(hash);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.style.boxShadow = "inset 0 0 0 2px var(--led-go)";
+      el.style.boxShadow = "inset 0 0 0 2px var(--led-mint)";
       setTimeout(() => { el.style.boxShadow = ""; }, 1800);
     }
   }, []);

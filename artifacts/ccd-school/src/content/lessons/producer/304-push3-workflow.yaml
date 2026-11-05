@@ -1,0 +1,108 @@
+slug: push3-workflow
+world: producer
+number: 304
+title: push 3 workflow
+minutes: 5
+song:
+  changes: lead.lead
+  why: a melody played in on in-key pads keeps your hands moving and your eyes off the screen
+learn: >-
+  How Push 3 lets you make a whole track without the mouse, and playing your lead in on pads that only hold
+  notes in your song's key.
+youCan:
+  - say how Push's pads change with the track you pick
+  - name the drum and melodic step sequencer layouts
+  - play a lead line in on in-key pads
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Low note, high note. On a piano keyboard there are black and white keys between them, and plenty of
+        those would sound wrong in your song. Push lays its pads out differently: only the notes in your key,
+        in a grid, so every pad you touch fits.
+
+        That idea is a big part of why people make whole tracks on Push without touching the mouse.
+      straight: >-
+        Push's melodic pads only hold notes in your key, so every pad fits. It's built so you can make a whole
+        track without the mouse.
+      eli5: >-
+        A low note and a high note. Push has a grid of squares where every square plays a note that fits your
+        song, so you can't hit a wrong one.
+
+  - kind: say
+    title: the whole track from one box
+    say:
+      mentor: >-
+        Push 3 follows whatever you've selected in Live. Pick a drum track and the pads become drum pads. Pick
+        a synth and they become notes in your scale. The knobs, called encoders, always control the device
+        you've got selected, and the screen shows what they're doing.
+
+        From there you can add tracks, browse for sounds, play, record into clips and launch scenes, all from
+        the hardware.
+      straight: >-
+        Push 3 mirrors your selection in Live. Drum track, drum pads. Synth, in-scale notes. Encoders control
+        the selected device. You can add, browse, play and record from Push.
+      eli5: >-
+        Push copies what you pick on the computer. Drums, and the squares become drums. A synth, and they
+        become notes. The knobs change the sound you picked.
+    deeper:
+      - title: step sequencing on push
+        say: >-
+          In drum mode, 16 pads are your drum sounds and the other 48 become a step sequencer for whichever
+          pad you've picked. There's also a 64 pad mode where the whole grid is a step sequencer for a melody.
+      - title: per-finger expression
+        say: >-
+          Push 3's pads support mpe, which means each finger can bend, slide and press its own note. There's
+          a deeper lesson on mpe further down this path.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 8}
+    say:
+      mentor: >-
+        These keys are your lead, and like Push's melodic mode they only hold notes in your song's key. The
+        first and last are the home note. Press rec, wait out the count-in, and play eight notes. Don't think
+        too hard. Start on the home note, wander, and come back to it. Every key fits, so nothing can go badly
+        wrong.
+      straight: >-
+        In-key notes for your lead, like Push's melodic mode. Press rec, wait for the count-in, play eight
+        notes. Start and end on the home note, first or last.
+      eli5: >-
+        Every key here fits your song. Press rec, wait for four ticks, then tap eight keys. Try starting on the
+        first one.
+
+  - kind: ask
+    q: On a synth track, what are Push's pads laid out in?
+    options: ["your song's scale", "every note, like a piano", "drum sounds", "random notes"]
+    answer: 0
+    why: Melodic mode shows only the notes in your key.
+    whyWrong:
+      1: A piano has every note. Push's melodic mode leaves the out-of-key ones off.
+      2: That's what you get on a drum track.
+      3: The layout is fixed to your scale.
+
+  - kind: ask
+    q: What do Push's encoders control?
+    options: ["the device you've got selected", "only the master volume", "only the tempo", "nothing until you map them"]
+    answer: 0
+    why: They follow your selection, so they're always on the device in front of you.
+    whyWrong:
+      1: They follow whatever's selected.
+      2: They do more than tempo.
+      3: Push sets them up for you.
+
+  - kind: ask
+    q: You select a drum track in Live. What happens on Push?
+    options: ["the pads become drum pads", "nothing until you press save", "the pads switch off", "the pads stay as notes in your scale"]
+    answer: 0
+    why: Push follows your selection, so a drum track gets drum pads.
+    whyWrong:
+      1: It changes straight away.
+      2: The pads stay live.
+      3: That's what you get on a synth track.
+
+  - kind: keep
+    next: >-
+      Your lead line is in. Back to your song path, or on to Push 3 standalone.

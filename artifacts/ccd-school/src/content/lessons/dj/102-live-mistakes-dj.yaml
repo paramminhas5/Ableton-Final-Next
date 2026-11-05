@@ -1,0 +1,49 @@
+slug: live-mistakes-dj
+world: dj
+number: 102
+title: bonus, handling mistakes
+minutes: 6
+song:
+  changes: drums.clap
+  why: everyone trainwrecks; the pros fix it before the room notices
+learn: >-
+  What to do when two tracks drift apart mid blend, and staying calm.
+youCan:
+  - fix a drifting blend fast
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        A trainwreck is when two tracks drift apart and the kicks gallop. It happens to everyone. The fix:
+        pull the new track down fast, fix the tempo in your headphones, bring it back in on the next phrase.
+        The crowd forgives a quick fix. They notice a long mess.
+      straight: >-
+        Trainwreck: kicks gallop. Pull the new track out, fix it, bring it back on the next phrase.
+      eli5: >-
+        When songs go out of time, take one away fast, fix it, try again.
+
+  - kind: mix
+    goal: match
+    bank: sandman
+    say:
+      mentor: >-
+        Deck b is off. Fix it fast: match the tempo until the lights flash together.
+      straight: >-
+        Match deck b fast.
+      eli5: >-
+        Fix the speed of deck b.
+
+  - kind: ask
+    q: Two tracks start galloping mid blend. First move?
+    options: ["pull the new track down", "turn everything up", "stop the music", "keep going"]
+    answer: 0
+    why: Get the clash out of the room, then fix it.
+    whyWrong:
+      1: Louder makes it worse.
+      2: Silence is worse.
+      3: It only gets messier.
+
+  - kind: keep
+    next: >-
+      Back to the set: recording your set.

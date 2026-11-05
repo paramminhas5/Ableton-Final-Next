@@ -92,7 +92,7 @@ export function UpgradePageClient() {
   if (isPro) {
     return (
       <RefPage title="pro" back="/dashboard" meta="ccd.school pro" intro="you are already on pro. every lesson is open.">
-        <div style={{ marginTop: 16 }}><GoPill href="/missions">start learning</GoPill></div>
+        <div style={{ marginTop: 16 }}><GoPill href="/worlds">start learning</GoPill></div>
       </RefPage>
     );
   }

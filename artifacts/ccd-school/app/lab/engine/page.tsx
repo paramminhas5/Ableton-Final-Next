@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { EngineLab } from "@/components/lab/EngineLab";
 
 export const metadata: Metadata = {
-  title: "Engine lab",
+  title: "engine lab",
   robots: { index: false, follow: false },
 };
 

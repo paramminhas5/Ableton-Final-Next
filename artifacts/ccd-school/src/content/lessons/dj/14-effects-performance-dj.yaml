@@ -1,0 +1,50 @@
+slug: effects-performance-dj
+world: dj
+number: 14
+title: effects in performance
+minutes: 6
+song:
+  changes: drums.clap
+  why: an echo out turns an ending into a moment
+learn: >-
+  Echo and filter on the mixer, and the echo out: letting the last beat of a track ring away.
+youCan:
+  - do an echo out
+  - use effects with restraint
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Mixers have effects: echo, filter, reverb. The classic move is the echo out: turn the echo up on the
+        outgoing track and cut its fader, so the last hit repeats and fades while the new track carries on.
+        Used once in a while it's a moment. Used every mix it's noise.
+      straight: >-
+        Echo out: echo up on the old track, fader down, let it ring.
+      eli5: >-
+        Turn on the echo, then pull the song down. The last sound echoes away.
+
+  - kind: mix
+    goal: echo
+    say:
+      mentor: >-
+        Both decks are playing and matched. Turn deck a's echo up, then pull deck a's fader down (or
+        crossfade to b). Listen to your song echo away under the new track.
+      straight: >-
+        Echo a up, then fader a down.
+      eli5: >-
+        Turn up echo on deck a, then slide deck a down.
+
+  - kind: ask
+    q: What is an echo out?
+    options: ["echo on the old track as its fader comes down", "turning the music off", "a very loud drop", "changing the key"]
+    answer: 0
+    why: The last beat repeats and fades as the new track takes over.
+    whyWrong:
+      1: The music keeps going.
+      2: It's a soft ending.
+      3: Key isn't involved.
+
+  - kind: keep
+    next: >-
+      Next: preparing a set.

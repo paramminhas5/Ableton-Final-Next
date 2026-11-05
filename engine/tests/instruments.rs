@@ -290,3 +290,63 @@ fn sampler_layer_plays_loaded_sample() {
     let (l2, _) = render(&e, 12_000);
     assert!(peak(&l2) < 0.5);
 }
+
+/// The kick's decay knob must change how long the kick rings: a short kick is gone well before
+/// the next beat at 120 bpm, a long one still hums through it (process.md: a knob we show must
+/// audibly do something).
+#[test]
+fn kick_decay_changes_the_tail() {
+    let decay_index = INSTRUMENT_BASE + 1; // pad 0 (kick), decay is pad param 1
+    let tail_ms = |decay: f32| -> f32 {
+        let e = live(1, DRUMS);
+        set(&e, DRUMS, decay_index, decay);
+        send(&e, cmd::NOTE_ON, DRUMS, 36, 1.0, 0.0, 0.0);
+        let (l, _) = render(&e, (SR * 2.0) as usize);
+        let p = peak(&l);
+        assert!(p > 0.05, "kick made no sound at decay {decay}");
+        // last 5 ms window still above -40 dB of the peak
+        let win = (SR * 0.005) as usize;
+        let mut last = 0;
+        for (i, w) in l.chunks(win).enumerate() {
+            if peak(w) > p * 0.01 { last = i; }
+        }
+        (last * win) as f32 / SR * 1000.0
+    };
+    let short = tail_ms(0.12);
+    let mid = tail_ms(0.5);
+    let long = tail_ms(0.9);
+    eprintln!("kick tail at -40 dB: short {short:.0} ms, mid {mid:.0} ms, long {long:.0} ms");
+    assert!(short < 250.0, "short kick rings too long: {short} ms");
+    assert!(long > short * 2.5, "decay barely changes the tail: {short} vs {long} ms");
+    assert!(mid > short && mid < long, "decay is not monotonic: {short} {mid} {long}");
+}
+
+/// The same check through the sequencer at 120 bpm, the way a lesson loop plays it: between
+/// beats (250 to 480 ms after each kick) a short kick is near silent and a long one still hums.
+#[test]
+fn kick_decay_is_audible_in_a_loop() {
+    let decay_index = INSTRUMENT_BASE + 1;
+    let gap_rms = |decay: f32| -> f32 {
+        let e = live(1, DRUMS);
+        set(&e, DRUMS, decay_index, decay);
+        send(&e, cmd::TEMPO, 0, 0, 0.0, 120.0, 0.0);
+        send(&e, cmd::EV_CLEAR, DRUMS, 0, 0.0, 0.0, 0.0);
+        for b in 0..4 { send(&e, cmd::EV_ADD, DRUMS, 36, 1.0, b as f64, 0.25); }
+        send(&e, cmd::EV_COMMIT, DRUMS, 0, 0.0, 0.0, 0.0);
+        send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
+        let (l, _) = render(&e, (SR * 2.0) as usize);
+        let beat = (SR * 0.5) as usize;
+        let mut acc = 0.0f32; let mut n = 0;
+        for b in 1..4 {
+            let from = b * beat + (SR * 0.25) as usize;
+            let to = b * beat + (SR * 0.48) as usize;
+            let r = rms(&l[from..to]);
+            acc += r * r; n += 1;
+        }
+        (acc / n as f32).sqrt()
+    };
+    let short = gap_rms(0.12);
+    let long = gap_rms(0.9);
+    eprintln!("between-beat rms: short {:.1} dB, long {:.1} dB", db(short), db(long));
+    assert!(db(long) - db(short) > 12.0, "decay makes too little difference between beats: short {} dB, long {} dB", db(short), db(long));
+}

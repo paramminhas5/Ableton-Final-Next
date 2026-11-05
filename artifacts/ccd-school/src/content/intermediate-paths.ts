@@ -26,7 +26,7 @@ export const INTERMEDIATE_FUNDAMENTALS: IntermediateAbletonSection = {
   tagline: "What everyone should know, even if you don't have Ableton yet.",
   color: "bg-acid",
   description:
-    "Live's core concepts explained clearly. Session view, tracks, clips, MIDI vs audio, the browser, and the mixer. You can follow along conceptually — but if you have Ableton open, even better.",
+    "Live's core concepts explained clearly. Session view, tracks, clips, MIDI vs audio, the browser, and the mixer. You can follow along conceptually: but if you have Ableton open, even better.",
   requiresAbleton: false,
   missionSlugs: [
     "what-is-live",
@@ -100,7 +100,7 @@ export const INTERMEDIATE_ABLETON_SECTIONS: IntermediateAbletonSection[] = [
     tagline: "Take your loop and build a full track.",
     color: "bg-hot",
     description:
-      "Arrangement view, automation, finishing a track. The path most producers never actually finish — until now.",
+      "Arrangement view, automation, finishing a track. The path most producers never actually finish: until now.",
     requiresAbleton: true,
     missionSlugs: [
       "arrangement-view",

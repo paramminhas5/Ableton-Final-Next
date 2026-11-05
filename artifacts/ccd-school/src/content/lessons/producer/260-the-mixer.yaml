@@ -1,0 +1,112 @@
+slug: the-mixer
+world: producer
+number: 260
+title: the mixer in live
+minutes: 5
+song:
+  changes: chords.chords
+  why: how loud your chords are and where they sit left to right is a mixer decision
+learn: >-
+  What a mixer is, the fader and pan on every part, and your chords placed on the stage by ear.
+youCan:
+  - say what a fader, pan, solo and mute do
+  - place your chords with level and pan
+  - find the mixer in Live
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Every part of your song runs through a mixer on its way to your ears. Picture the desk at the back of
+        a club: one channel strip per musician, each with a fader for how loud and a pan knob for where it
+        sits, from left to right. All the strips add up into one master, and that's what comes out of the
+        speakers.
+
+        Producers call that left to right picture the stage. Kick and bass stand in the middle, other parts
+        step a little to the sides.
+      straight: >-
+        A mixer has one strip per part. The fader sets how loud, pan sets left or right. Every strip adds up
+        into the master.
+      eli5: >-
+        A mixer is a big desk with a slider for every sound. Slide it up and that sound gets louder. Turn the
+        pan knob and the sound moves left or right.
+
+  - kind: say
+    title: solo and mute
+    say:
+      mentor: >-
+        Two buttons sit on every strip. Mute silences that part. Solo does the opposite: it plays that part
+        alone and silences everything else, so you can hear exactly what one part is doing.
+
+        Solo is great for checking, but don't set levels with it. A part always sounds different on its own
+        than it does inside the whole song.
+      straight: >-
+        Mute silences one part. Solo plays one part alone. Check with solo, set levels with everything
+        playing.
+      eli5: >-
+        Mute makes one sound go quiet. Solo makes all the other sounds go quiet, so you only hear one.
+    deeper:
+      - title: the mixer in live
+        say: >-
+          In Session view, each track's mixer sits at the bottom of its column: volume, pan, sends, mute,
+          solo and a level meter. Every track ends up in the Master track, the sum of everything. Volume runs
+          from minus infinity up to +6 dB, and pan from 50 left to 50 right.
+      - title: cue
+        say: >-
+          Cue lets you pre-listen to a track on headphones before anyone else hears it. For it to work, the
+          Cue Out has to be set to a different output from the Master Out.
+      - title: headroom
+        say: >-
+          Pushing every fader up leaves no room at the top. Many engineers leave 3 to 6 dB of headroom on the
+          master, turning tracks down rather than up.
+
+  - kind: shape
+    layer: chords
+    knobs: [level, pan]
+    say:
+      mentor: >-
+        Here's your song with a channel strip on your chords. Bring the level down until the chords nearly
+        vanish, then up until they fill the space behind your lead. Then pan them a little to one side and
+        listen to the middle open up for your kick and bass.
+
+        There's no right spot. Leave them where your song feels balanced.
+      straight: >-
+        Chords level: down until they nearly vanish, up until they fill the space. Pan a little off centre.
+        Stop where it feels balanced.
+      eli5: >-
+        Make your chords quieter, then louder, until they sound just right. Then turn pan to move them a
+        little to one side.
+
+  - kind: ask
+    q: What does solo do?
+    options: ["plays that part alone", "mutes that part", "records that part", "makes that part louder"]
+    answer: 0
+    why: Solo silences everything else so you hear one part on its own.
+    whyWrong:
+      1: That's mute.
+      2: Getting ready to record is the arm button.
+      3: Loudness is the fader.
+
+  - kind: ask
+    q: Why not set levels while a part is soloed?
+    options: ["a part sounds different alone than in the whole song", "solo turns the volume down", "faders don't move in solo", "solo changes the pan"]
+    answer: 0
+    why: Levels are about parts against each other, so set them with everything playing.
+    whyWrong:
+      1: Solo doesn't change the part's volume.
+      2: Faders still work.
+      3: Pan stays where it is.
+
+  - kind: ask
+    q: Where do all the strips end up?
+    options: ["the master", "the first track", "the reverb", "the cue"]
+    answer: 0
+    why: The master is the sum of every strip, the sound that leaves the speakers.
+    whyWrong:
+      1: The first track is just one part.
+      2: Only what you send goes to the reverb.
+      3: Cue is a separate pre-listen output.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, eq, a place for everything.

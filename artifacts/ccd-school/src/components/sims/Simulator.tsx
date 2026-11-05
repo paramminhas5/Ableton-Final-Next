@@ -85,7 +85,7 @@ class SimErrorBoundary extends Component<
             <div>
               <div className="font-display text-xl mb-1">Sim took a nap </div>
               <div className="font-mono text-xs opacity-70 leading-relaxed">
-                This interactive exercise couldn&apos;t load. You can retry or skip it — the quiz still works fine.
+                This interactive exercise couldn&apos;t load. You can retry or skip it: the quiz still works fine.
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@ function SimInner({ type, preset }: { type: SimType; preset?: Record<string, unk
     default:
       return (
         <div className="brutal-border bg-bone p-6 font-mono text-xs uppercase">
-          No simulator for this screen — read &amp; quiz only.
+          No simulator for this screen: read &amp; quiz only.
         </div>
       );
   }

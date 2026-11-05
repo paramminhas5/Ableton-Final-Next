@@ -264,7 +264,11 @@ console.log("\nJ2 Some experience: build a Set stage by stage");
 console.log("\nJ5 Free limits and hearts");
 {
   const hearts = (n, gems = 0) => seedProgress({ hearts: n, gems });
-  const noExplainer = async (ctx) => ctx.addInitScript(() => { try { sessionStorage.setItem("ccd.hearts_explained", "1"); } catch {} });
+  const noExplainer = async (ctx) => {
+    await ctx.addInitScript(() => { try { sessionStorage.setItem("ccd.hearts_explained", "1"); } catch {} });
+    // gating is off by default; this journey tests the paid-mode limits
+    await ctx.route("**/api/gating", (r) => r.fulfill({ json: { mode: "paid" } }));
+  };
   // first three lessons of a path are free, the fourth is Pro
   let { ctx, p, errs } = await fresh(hearts(5));
   await noExplainer(ctx);

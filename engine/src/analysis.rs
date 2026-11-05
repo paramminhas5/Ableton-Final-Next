@@ -31,7 +31,7 @@ pub mod fix {
 
 /// A biquad, transposed direct form II. For the K-weighting filters.
 #[derive(Clone, Copy, Default)]
-struct Biquad {
+pub(crate) struct Biquad {
     b: [f32; 3],
     a: [f32; 2],
     z: [f32; 2],
@@ -41,8 +41,11 @@ impl Biquad {
     fn new(b: [f64; 3], a: [f64; 3]) -> Self {
         Biquad { b: [(b[0] / a[0]) as f32, (b[1] / a[0]) as f32, (b[2] / a[0]) as f32], a: [(a[1] / a[0]) as f32, (a[2] / a[0]) as f32], z: [0.0; 2] }
     }
+    pub(crate) fn reset(&mut self) {
+        self.z = [0.0; 2];
+    }
     #[inline]
-    fn tick(&mut self, x: f32) -> f32 {
+    pub(crate) fn tick(&mut self, x: f32) -> f32 {
         let y = self.b[0] * x + self.z[0];
         self.z[0] = crate::dsp::flush_denormal(self.b[1] * x - self.a[0] * y + self.z[1]);
         self.z[1] = crate::dsp::flush_denormal(self.b[2] * x - self.a[1] * y);
@@ -52,15 +55,18 @@ impl Biquad {
 
 /// ITU-R BS.1770 K-weighting: a +4 dB high shelf from about 1.7 kHz, then a high pass
 /// at 38 Hz. Built from the analogue prototypes (after Brecht De Man's derivation),
-/// which reproduce the standard's 48 kHz coefficients exactly and hold at any rate.
-fn k_weighting(sr: f32) -> [Biquad; 2] {
+/// which reproduce the standard's 48 kHz coefficients and hold at any rate.
+pub(crate) fn k_weighting(sr: f32) -> [Biquad; 2] {
     let fs = sr as f64;
     let vh = 10f64.powf(3.999_843_853_973_347 / 20.0);
     let vb = vh.powf(0.499_666_774_154_541_6);
     let (k, q) = ((std::f64::consts::PI * 1_681.974_450_955_533 / fs).tan(), 0.707_175_236_955_419_6);
     let shelf = Biquad::new([vh + vb * k / q + k * k, 2.0 * (k * k - vh), vh - vb * k / q + k * k], [1.0 + k / q + k * k, 2.0 * (k * k - 1.0), 1.0 - k / q + k * k]);
     let (k, q) = ((std::f64::consts::PI * 38.135_470_876_024_44 / fs).tan(), 0.500_327_037_323_877_3);
-    let hp = Biquad::new([1.0, -2.0, 1.0], [1.0 + k / q + k * k, 2.0 * (k * k - 1.0), 1.0 - k / q + k * k]);
+    // The standard's high pass has a numerator of exactly 1, -2, 1 after normalising by a0 (its
+    // printed coefficients); dividing 1, -2, 1 by a0 as well would read 0.04 dB low (engine 2, item 6).
+    let a0 = 1.0 + k / q + k * k;
+    let hp = Biquad::new([a0, -2.0 * a0, a0], [a0, 2.0 * (k * k - 1.0), 1.0 - k / q + k * k]);
     [shelf, hp]
 }
 

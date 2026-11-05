@@ -5,6 +5,7 @@
 //!
 //! Order: sum -> trim -> glue -> out fader -> limiter -> out.
 
+use crate::dsp::filter::Svf;
 use crate::dsp::smooth::Smooth;
 use crate::dsp::tau_coef;
 use crate::params::{db_to_gain, fader_gain, FADER_UNITY};
@@ -108,11 +109,19 @@ impl Default for TruePeak {
     }
 }
 
-/// Bus compressor. Feed-forward, stereo-linked, soft knee. The release follows the
-/// music: short hits let go fast, sustained compression lets go slowly, the way an
-/// auto-release bus compressor behaves.
+/// Bus compressor in the manner of the classic console bus compressors. Feed-forward, stereo-linked,
+/// soft knee, with a choice of three ratios (2, 4 and 10 to 1). The release follows the music: short
+/// hits let go fast, sustained compression lets go slowly (auto release, two envelopes). The detector
+/// listens through a steep high-pass (the sidechain cut), so the kick's low end does not pull the whole mix
+/// down on every beat, and a mix knob blends the compressed bus with the dry one (parallel compression).
 pub struct Glue {
     amount: f32,
+    ratio: f32,
+    sr: f32,
+    sc_hz: f32,
+    hp_l: [Svf; 2],
+    hp_r: [Svf; 2],
+    mix: Smooth,
     ms: f32,
     ms_coef: f32,
     fast: f32,
@@ -125,10 +134,26 @@ pub struct Glue {
     pub gr_db: f32,
 }
 
+/// The ratios the ratio switch steps through.
+pub const GLUE_RATIOS: [f32; 3] = [2.0, 4.0, 10.0];
+pub fn glue_ratio(n: f32) -> f32 {
+    GLUE_RATIOS[(n.clamp(0.0, 1.0) * 2.0).round() as usize]
+}
+/// The sidechain cut is off at the bottom of its knob.
+pub const SC_OFF_HZ: f32 = 21.0;
+
 impl Glue {
     pub fn new(sr: f32) -> Self {
+        let mut mix = Smooth::new(1.0);
+        mix.set_time(15.0, sr);
         Glue {
             amount: 0.0,
+            ratio: 2.0,
+            sr,
+            sc_hz: 20.0,
+            hp_l: [Svf::default(); 2],
+            hp_r: [Svf::default(); 2],
+            mix,
             ms: 0.0,
             ms_coef: tau_coef(0.005, sr),
             fast: 0.0,
@@ -145,13 +170,38 @@ impl Glue {
         self.amount = a.clamp(0.0, 1.0);
     }
 
+    pub fn set_ratio(&mut self, r: f32) {
+        self.ratio = r.max(1.0);
+    }
+
+    /// High-pass on what the compressor listens to, Hz. At or under `SC_OFF_HZ` it hears everything.
+    pub fn set_sidechain(&mut self, hz: f32) {
+        self.sc_hz = hz;
+        if hz > SC_OFF_HZ {
+            // Fourth-order Butterworth (24 dB per octave): a kick's 50 Hz body reaches the detector
+            // about 20 dB down from a 90 Hz cut, while a chord at 200 Hz and up is heard in full.
+            for (k, q) in [0.541_196_1, 1.306_563].into_iter().enumerate() {
+                self.hp_l[k].set(hz, q, self.sr);
+                self.hp_r[k].set(hz, q, self.sr);
+            }
+        }
+    }
+
+    /// 0 dry, 1 all compressed.
+    pub fn set_mix(&mut self, m: f32, jump: bool) {
+        if jump { self.mix.reset(m.clamp(0.0, 1.0)) } else { self.mix.set(m.clamp(0.0, 1.0)) }
+    }
+
+    fn slope(&self) -> f32 {
+        1.0 - 1.0 / self.ratio
+    }
+
     /// Static curve: gain reduction in dB for a level in dB.
     pub fn curve(&self, level_db: f32) -> f32 {
         let t = -2.0 - 16.0 * self.amount;
-        let ratio = 2.0 + 2.0 * self.amount;
         let knee = 8.0;
         let over = level_db - t;
-        let s = 1.0 - 1.0 / ratio;
+        let s = self.slope();
         if 2.0 * over <= -knee {
             0.0
         } else if 2.0 * over >= knee {
@@ -161,11 +211,25 @@ impl Glue {
         }
     }
 
-    /// Gain to apply to this sample.
+    /// Make-up gain, dB: the knob's old make-up at its old 2.5:1, scaled with the ratio so the bus
+    /// stays at about the same level whichever ratio you pick.
+    pub fn makeup_db(&self) -> f32 {
+        self.amount * 2.5 * self.slope() / 0.6
+    }
+
+    /// Gain to apply to this sample (the mix knob already folded in).
     #[inline]
     pub fn tick(&mut self, l: f32, r: f32) -> f32 {
-        let x = (l * l).max(r * r);
+        let (dl, dr) = if self.sc_hz > SC_OFF_HZ {
+            let a = self.hp_l[0].tick(l).hp;
+            let b = self.hp_r[0].tick(r).hp;
+            (self.hp_l[1].tick(a).hp, self.hp_r[1].tick(b).hp)
+        } else {
+            (l, r)
+        };
+        let x = (dl * dl).max(dr * dr);
         self.ms = x + (self.ms - x) * self.ms_coef;
+        let mix = self.mix.next();
         if self.amount < 0.001 && self.fast < 0.01 && self.slow < 0.01 {
             self.gr_db = 0.0;
             return 1.0;
@@ -178,8 +242,8 @@ impl Glue {
         let c = if target > self.slow { self.sa } else { self.sr_ };
         self.slow = target + (self.slow - target) * c;
         self.gr_db = self.fast.max(self.slow);
-        let makeup = self.amount * 2.5;
-        db_to_gain(makeup - self.gr_db)
+        let wet = db_to_gain(self.makeup_db() - self.gr_db);
+        1.0 + (wet - 1.0) * mix
     }
 }
 
@@ -275,20 +339,32 @@ impl Limiter {
 
 pub const M_OUT: usize = 0;
 pub const M_GLUE: usize = 1;
+pub const M_RATIO: usize = 2;
+pub const M_SIDECHAIN: usize = 3;
+pub const M_GLUE_MIX: usize = 4;
+/// The shared reverb (engine 2, item 9): hall or plate, and its time. The engine applies these to
+/// the return; the master only keeps their values.
+pub const M_SPACE: usize = 5;
+pub const M_VERB_TIME: usize = 6;
+/// The shared echo (item 11): clean, tape or analogue, and its feedback.
+pub const M_ECHO_TYPE: usize = 7;
+pub const M_REPEATS: usize = 8;
+/// Room for master params (compare snapshots hold this many).
+pub const MASTER_SLOTS: usize = 16;
 
 pub struct Master {
     pub glue: Glue,
     pub limiter: Limiter,
     out: Smooth,
     /// Normalised values, by `MASTER_PARAMS` index.
-    pub params: [f32; 4],
+    pub params: [f32; MASTER_SLOTS],
 }
 
 impl Master {
     pub fn new(sr: f32) -> Self {
         let mut out = Smooth::new(fader_gain(FADER_UNITY));
         out.set_time(15.0, sr);
-        let mut m = Master { glue: Glue::new(sr), limiter: Limiter::new(sr), out, params: [0.0; 4] };
+        let mut m = Master { glue: Glue::new(sr), limiter: Limiter::new(sr), out, params: [0.0; MASTER_SLOTS] };
         for (i, s) in crate::params::MASTER_PARAMS.iter().enumerate() {
             m.set_param(i, s.default, true);
         }
@@ -307,6 +383,9 @@ impl Master {
                 if jump { self.out.reset(g) } else { self.out.set(g) }
             }
             M_GLUE => self.glue.set_amount(n),
+            M_RATIO => self.glue.set_ratio(glue_ratio(n)),
+            M_SIDECHAIN => self.glue.set_sidechain(crate::params::MASTER_PARAMS[M_SIDECHAIN].to_value(n)),
+            M_GLUE_MIX => self.glue.set_mix(n, jump),
             _ => {}
         }
     }

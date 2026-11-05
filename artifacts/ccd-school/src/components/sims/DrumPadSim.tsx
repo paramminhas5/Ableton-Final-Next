@@ -236,7 +236,7 @@ export function DrumPadSim() {
         ))}
       </div>
 
-      {/* Step grid — pointer events work on mouse + touch + stylus */}
+      {/* Step grid: pointer events work on mouse + touch + stylus */}
       <div className="space-y-1">
         {labels.map((l, r) => (
           <div key={l} className="flex gap-1 items-center">
@@ -277,7 +277,7 @@ export function DrumPadSim() {
         </div>
       </div>
 
-      {/* Drum Rack pads — pointer events for mobile */}
+      {/* Drum Rack pads: pointer events for mobile */}
       <div>
         <h4 className="font-display text-xl mb-2">DRUM RACK PADS</h4>
         <div className="grid grid-cols-4 gap-2">
@@ -299,7 +299,7 @@ export function DrumPadSim() {
 
       <div className="brutal-border bg-ink text-bone p-3 font-mono text-[10px] uppercase opacity-80 leading-relaxed">
         TIP: In Ableton, the Drum Rack maps each pad to a MIDI note. Steps 1–4 = Beat 1, steps 5–8 =
-        Beat 2, and so on. The highlighted step is the playhead — audio is scheduled{" "}
+        Beat 2, and so on. The highlighted step is the playhead: audio is scheduled{" "}
         <span className="text-acid">{LOOK_AHEAD * 1000}ms ahead</span> of the clock for glitch-free
         timing.
       </div>

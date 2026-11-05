@@ -1,0 +1,106 @@
+slug: synth-oscillators
+world: producer
+number: 205
+title: oscillators, the sound source
+minutes: 5
+song:
+  changes: lead.lead
+  why: the wave your lead starts from sets its whole character, before any other knob gets a say
+learn: >-
+  The oscillator, the part of a synth that makes the raw sound, the classic wave shapes, and picking one
+  for your lead.
+youCan:
+  - say what an oscillator does
+  - name the four classic wave shapes and how they sound
+  - pick a wave for your lead by ear
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        One note, three times: a soft wave, a saw and a square. Same pitch, same loudness, three different
+        characters. The soft one is round, the saw is bright and buzzy, the square is hollow, a bit like a
+        clarinet.
+
+        The part of a synth that makes these raw waves is called the oscillator. It's where every synth sound
+        starts. Everything after it, filters and envelopes, only shapes what the oscillator gives it.
+      straight: >-
+        Soft wave, saw, square. Same note, different shapes. The oscillator makes the raw wave; everything
+        else shapes it.
+      eli5: >-
+        Three sounds, same note, different shapes. The oscillator is the part of a synth that makes the wave.
+        Round sounds soft, saw sounds buzzy, square sounds hollow.
+
+  - kind: say
+    title: four classic shapes
+    say:
+      mentor: >-
+        Nearly every synth offers the same four shapes. A sine is the smoothest, pure and plain. A triangle is
+        a little brighter but still soft. A square is hollow. A saw, short for sawtooth, is the brightest and
+        the most used, because it has the most going on for a filter to carve.
+
+        That's why most bass and lead sounds start from a saw, and clean subs, the deep bass you feel more than
+        hear, start from a sine.
+      straight: >-
+        Sine is pure, triangle soft, square hollow, saw bright. Most basses and leads start on a saw; subs on a
+        sine.
+      eli5: >-
+        Sine is smooth. Triangle is gentle. Square is hollow. Saw is buzzy and bright. Lots of synth sounds
+        start with a saw.
+    deeper:
+      - title: oscillators in live
+        say: >-
+          Live's synths all start here. Analog and Drift give each oscillator a shape to pick. Wavetable goes
+          further and sweeps through a whole table of shapes, so the wave can morph while a note plays. A square
+          wave often has a pulse width control too, which squeezes the wave thinner and gives that classic
+          70s sound.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave]
+    say:
+      mentor: >-
+        Here's your song, with one knob on your lead's oscillator. Wave slides from saw at one end to square
+        at the other, with blends in between.
+
+        Turn it slowly while your melody plays. Saw is bright and forward. Square is hollower and a little
+        more retro. Somewhere in between is a mix of both. Keep the one that suits your song.
+      straight: >-
+        Your lead's oscillator. Wave goes from saw to square. Saw is bright, square is hollow. Keep one.
+      eli5: >-
+        This knob changes the shape of your tune's wave, from buzzy saw to hollow square. Pick the one you
+        like.
+
+  - kind: ask
+    q: What does an oscillator do?
+    options: ["makes the raw wave a synth starts from", "makes notes fade out", "adds echo", "sets the tempo"]
+    answer: 0
+    why: The oscillator makes the sound. The rest of the synth shapes it.
+    whyWrong:
+      1: That's the envelope's job.
+      2: Echo is an effect added later.
+      3: Tempo belongs to the whole song.
+
+  - kind: ask
+    q: Which shape is the brightest and most used for leads and bass?
+    options: ["saw", "sine", "triangle", "square"]
+    answer: 0
+    why: The saw has the most going on, so it's bright and there's lots for a filter to shape.
+    whyWrong:
+      1: A sine is the smoothest and plainest.
+      2: A triangle is soft.
+      3: A square is hollow, less bright than a saw.
+
+  - kind: ask
+    q: You want a clean, deep sub bass. Which shape would you start from?
+    options: ["sine", "saw", "square", "noise"]
+    answer: 0
+    why: A sine is pure, so it gives weight without anything else fighting in the mix.
+    whyWrong:
+      1: A saw is too bright and busy for a clean sub.
+      2: A square adds hollow overtones on top.
+      3: Noise has no pitch at all.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, pitch and loudness, the two things every note has.

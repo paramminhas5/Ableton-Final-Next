@@ -14,6 +14,9 @@ import {
   CHORD_PARAMS,
   DRUM_RACK_BASE,
   DRUM_RACK_PARAMS,
+  DRUM_PAD2_BASE,
+  DRUM_PAD2_PARAMS,
+  DRUM_PAD2_STRIDE,
   FX_PARAMS,
   SAMPLER_PARAMS,
   LEAD_PARAMS,
@@ -24,6 +27,7 @@ import {
   MASTER_PARAMS,
   type InstrumentName,
 } from "../engine/params.gen";
+import { cleanLocks } from "./plock";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
@@ -33,7 +37,8 @@ export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "
 export type Surface = "steps" | "keys" | "pads" | "own";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
-export type NoteEvent = { note: number; vel: number; start: number; len: number };
+/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts). */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number> };
 
 export type LayerV2 = {
   id: string;
@@ -57,6 +62,8 @@ export type LayerV2 = {
   euclid?: Record<number, { hits: number; rot: number }>;
   /** Sampler layers: the name of the sample in each of the 16 slots (the audio lives in this browser). */
   samples?: Record<number, string>;
+  /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
+  arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
 };
 
 export type TrackV2 = {
@@ -72,6 +79,10 @@ export type TrackV2 = {
   layers: LayerV2[];
   /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
   master?: Record<number, number>;
+  /** The arrangement, when the song has one (src/lib/arrange.ts). */
+  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
+  /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
+  cues?: { slug: string; name: string; bar: number }[];
   added: string[];
   updatedAt: number;
 };
@@ -79,7 +90,7 @@ export type TrackV2 = {
 export const TYPE: Record<LayerType, { label: string; color: string; engine: InstrumentName; own: string; surfaces: Surface[] }> = {
   drums: { label: "drums", color: "#4FE3B6", engine: "drums", own: "circle", surfaces: ["steps", "keys", "pads"] },
   hats: { label: "hats", color: "#F3C14F", engine: "drums", own: "rolls", surfaces: ["steps", "keys", "pads"] },
-  bass: { label: "bass", color: "#FF4F9A", engine: "bass", own: "glide", surfaces: ["steps", "keys", "pads"] },
+  bass: { label: "bass", color: "#5CC8FF", engine: "bass", own: "glide", surfaces: ["steps", "keys", "pads"] },
   chords: { label: "chords", color: "#B89CFF", engine: "chords", own: "chord pads", surfaces: ["steps", "keys", "pads"] },
   lead: { label: "lead", color: "#7D96FF", engine: "lead", own: "xy", surfaces: ["steps", "keys", "pads"] },
   fx: { label: "fx", color: "#E9E9E6", engine: "fx", own: "riser", surfaces: ["steps", "pads"] },
@@ -111,6 +122,7 @@ export function paramOf(l: LayerV2, index: number): number {
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
     const i = index - INSTRUMENT_BASE;
+    if (i >= DRUM_PAD2_BASE) return DRUM_PAD2_PARAMS[(i - DRUM_PAD2_BASE) % DRUM_PAD2_STRIDE]?.default ?? 0;
     if (i >= DRUM_RACK_BASE) return DRUM_RACK_PARAMS[i - DRUM_RACK_BASE]?.default ?? 0;
     return DRUM_PAD_PARAMS[i % DRUM_PAD_PARAMS.length]?.default ?? 0;
   }
@@ -128,7 +140,7 @@ export const INSTRUMENT_TABLES: Partial<Record<InstrumentName, readonly { index:
 
 /** How many wire params the engine takes for an instrument (layer params excluded). */
 export function instrumentParamCount(engine: InstrumentName): number {
-  if (engine === "drums") return DRUM_RACK_BASE + DRUM_RACK_PARAMS.length;
+  if (engine === "drums") return DRUM_PAD2_BASE + DRUM_PAD_NOTES.length * DRUM_PAD2_STRIDE;
   return INSTRUMENT_TABLES[engine]?.length ?? 0;
 }
 
@@ -270,13 +282,15 @@ export function toV1View(t: TrackV2): V1Track {
     const duck = paramOf(l, L["mix.duck"]) > 0 && !!l.duck.src;
     if (l.type === "drums") {
       for (const kind of ["kick", "clap", "perc"] as LayerKind[]) {
-        const evs = l.events.filter(e => e.note === PATTERN_LANE[kind]);
+        // The backbeat lane draws snares as well as claps; anything else in the kit draws as percussion.
+        const evs = l.events.filter(e => (kind === "clap" ? e.note === 38 || e.note === 39 : kind === "perc" ? e.note !== 36 && e.note !== 38 && e.note !== 39 : e.note === PATTERN_LANE[kind]));
         if (!evs.length && kind !== "kick") continue;
         layers.push({ id: `${l.id}:${kind}`, kind, steps: stepsOf(evs), notes: Array(16).fill(36), params: [0.5, 0.5, 0.2, level(l)], mute: l.mute, from: l.from, world: l.world, variant: l.variant });
       }
       continue;
     }
-    const kind: LayerKind = l.type === "fx" ? "perc" : (l.type as LayerKind);
+    // The song strip has no lane of its own for fx or samples: they show as percussion.
+    const kind: LayerKind = l.type === "fx" || l.type === "sample" ? "perc" : (l.type as LayerKind);
     layers.push({
       id: l.id,
       kind,
@@ -343,7 +357,7 @@ export function readTrackV2(): TrackV2 {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const t = JSON.parse(raw) as TrackV2;
-      if (t && t.v === 2) return t;
+      if (t && t.v === 2) return Array.isArray(t.layers) ? cleanLocks(t) : t;
     }
     const v1 = localStorage.getItem(V1_KEY);
     if (v1) {
@@ -438,4 +452,9 @@ export function useTrackV2() {
   }, []);
 
   return { track, update, undo, redo, canUndo: past.length > 0, canRedo: future.length > 0 };
+}
+
+/** A hats layer plays the closed hat (pad 4), never the kick that pad 0 would give it. */
+export function effectivePad(l: Pick<LayerV2, "type" | "pad">): number {
+  return l.type === "hats" && l.pad === 0 ? 4 : l.pad;
 }

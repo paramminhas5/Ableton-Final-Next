@@ -1,0 +1,93 @@
+slug: loop-function-dj
+world: dj
+number: 210
+title: loops and loop rolls
+minutes: 5
+song:
+  changes: drums.clap
+  why: a loop holds part of your song in place, so you can take as long as you need over the blend
+learn: >-
+  What a loop on a deck does, loop rolls, and stretching a long blend over your own song.
+youCan:
+  - say what a loop on a deck does
+  - tell a loop from a loop roll
+  - take a long blend over your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Four bars, then round again. That repeat is a loop. On a dj deck, the loop button grabs a piece of the
+        playing track, say four bars, and plays it round and round until you let go. The track can't run out
+        on you.
+      straight: >-
+        A loop on a deck repeats a section, like four bars, until you let go.
+      eli5: >-
+        A loop plays the same little bit of a song again and again, until you say stop.
+
+  - kind: say
+    title: why loop
+    say:
+      mentor: >-
+        A loop buys time. Loop four bars of a breakdown and the crowd hears the tension stretch out while you
+        get the next track ready.
+
+        A loop roll is a short loop you hold down for a stutter. Let go and the track carries on from where it
+        would have been if it had kept playing, as if nothing happened.
+      straight: >-
+        Loops buy time: loop a breakdown while you prepare the next track. A loop roll stutters while held,
+        then jumps back to where the track would have been.
+      eli5: >-
+        Looping gives you more time to get ready. A loop roll makes a stutter sound, then the song carries on.
+    deeper:
+      - title: loop controls
+        say: >-
+          On cdjs and in rekordbox, loops come in sizes from one beat up to 16 bars. You can set the start and
+          end yourself with loop in and loop out, and halve or double a loop while it plays.
+
+  - kind: mix
+    goal: loop
+    bank: operator
+    say:
+      mentor: >-
+        A loop holds part of a track and repeats it, so you can stretch an intro while you set up the next one. Deck b is playing. Tap loop 4 and deck b repeats the bar it's in, again and again, perfectly in time.
+        
+        Bring deck b's fader up and ride the loop under your song. Try loop 1 for a tight stutter, loop 8 for a whole phrase. Tap the lit loop again to let the track play on.
+      straight: >-
+        Tap a loop length and deck b repeats that stretch in time. Bring it up under your song, tap again to release.
+      eli5: >-
+        The loop button makes a bit of the song play over and over.
+
+  - kind: ask
+    q: What does a loop on a deck do?
+    options: ["repeats a section until you let go", "speeds the track up", "changes the key", "sets the volume"]
+    answer: 0
+    why: It holds a piece of the track, round and round.
+    whyWrong:
+      1: Speed is the tempo fader.
+      2: Key stays the same.
+      3: Volume is the channel fader.
+
+  - kind: ask
+    q: You let go of a loop roll. Where does the track carry on from?
+    options: ["where it would have been if it had kept playing", "the start of the loop", "the start of the track", "it stops"]
+    answer: 0
+    why: The track keeps time underneath, so it drops back in exactly in place.
+    whyWrong:
+      1: That's a normal loop you exit.
+      2: It doesn't jump back to the beginning.
+      3: It keeps playing.
+
+  - kind: ask
+    q: Why loop a breakdown?
+    options: ["to buy time while you get the next track ready", "to make it louder", "to change its key", "to end the set"]
+    answer: 0
+    why: The crowd hears tension and you get time.
+    whyWrong:
+      1: Looping doesn't change volume.
+      2: Key stays the same.
+      3: It keeps the set going.
+
+  - kind: keep
+    next: >-
+      Back to the song path: picking tracks for your set.

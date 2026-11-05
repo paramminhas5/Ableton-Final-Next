@@ -1,0 +1,198 @@
+slug: frequency-pitch
+world: foundations
+number: 6
+title: frequency and pitch
+minutes: 7
+song:
+  changes: lead.lead
+  why: a tune for your song, played on keys that now have names
+learn: >-
+  Why a high note is high, what a note's name means, and the one rule that makes an octave: twice the
+  speed, same name. Then a short tune of your own.
+youCan:
+  - say what frequency is and what hertz counts
+  - name the notes a to g and find the same note an octave up
+  - explain why an octave sounds like the same note, higher
+  - play a tune using low and high versions of the same note
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        Tap a, then tap the one above it. The second note sounds like the same note, just higher. That
+        is not an accident. It is the one rule that pitch is built on.
+
+        A note is the air wiggling back and forth. How fast it wiggles is its frequency, counted in
+        hertz: wiggles per second. The first a wiggles 220 times a second. The second one wiggles 440
+        times a second, exactly twice as fast. Look at the picture: twice as many waves fit in the same
+        window. Double the speed and you get the same note again, one octave up.
+      straight: >-
+        Tap both. The second is the first one, an octave up.
+
+        Pitch is frequency: how many times a second the air moves back and forth, measured in hertz.
+        This a is 220 hz. The a above it is 440 hz, double. Doubling the frequency gives you the same
+        note name one octave higher, which is why the picture shows twice as many waves.
+      eli5: >-
+        Tap the first button, then the second. Hear how the second one is the same but higher? Like a
+        grown up and a kid singing the same thing.
+
+        Sound is air wiggling. Fast wiggles make high notes, slow wiggles make low notes. The first note
+        wiggles 220 times every second. The second one wiggles 440 times, that is two times faster. Two
+        times faster always gives you the same note, just higher up.
+    deeper:
+      - title: what hertz means
+        say: >-
+          One hertz is one wiggle per second. It is named after Heinrich Hertz, who studied waves in the
+          1880s. People can hear from about 20 hz, a deep rumble, up to about 20,000 hz, a thin whistle.
+          Most of music sits between 30 hz and 5,000 hz.
+      - title: the kick and the bass are low frequencies
+        say: >-
+          Your kick's body hums at around 50 hz. A bass line lives between about 40 hz and 200 hz. That is
+          why they are the sounds you feel in your chest: slow, big pushes of air.
+
+  - kind: say
+    title: notes have names
+    say:
+      mentor: >-
+        Musicians do not say "440 hertz". They say a. Every pitch has a letter name: a, b, c, d, e, f, g.
+        After g the names start again at a, one octave up. So the a at 440 hz and the a at 220 hz share a
+        name because one is exactly double the other.
+
+        The keys you are about to play are labelled with these names. The first key and the last key are
+        both a, an octave apart. The ones between are the notes that fit nicely with a, which is why
+        anything you play on them sounds like it belongs together.
+      straight: >-
+        Pitches get letter names, a to g, then the letters repeat an octave higher. Two notes with the
+        same name are a doubling apart: 110, 220, 440, 880 are all a.
+
+        The keys in this lesson are labelled. First and last are both a, one octave apart, and the six
+        in between are from a scale that fits with a. More on scales in a later lesson.
+      eli5: >-
+        Notes have names, like people. The names are letters: a, b, c, d, e, f, g. After g you get a again,
+        just higher. So a low a and a high a are a bit like a big cat and a kitten with the same name.
+
+        The keys you are going to press have their names written on them. The first key is a. The last key
+        is also a, but higher.
+    deeper:
+      - title: why 440
+        say: >-
+          Orchestras tune to the a at 440 hz. That has been the agreed standard since the 1950s, so a piano
+          in Bengaluru and one in Berlin play the same a. Before that, a drifted between about 415 and
+          460 hz depending on the city.
+      - title: the notes in between
+        say: >-
+          Between one a and the next there are actually twelve steps, not seven. The five extra ones are
+          the black keys on a piano: a sharp, c sharp, d sharp, f sharp, g sharp. You will meet them when
+          scales come up. For now the seven letters are enough.
+      - title: bpm and hz are not the same
+        say: >-
+          Your song runs at 120 bpm, beats per minute: two beats a second. The low a is 220 hz, wiggles per
+          second. Different things, both measured as how often something happens.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now use the octave in your song. This tune replaces the notes you played in the last lesson.
+
+        Press rec and let the four clicks go by. Play the first key, a. Then the last key, the a an octave
+        up. Then two more keys you like. Listen for the jump between the two a's: same note, higher.
+      straight: >-
+        Record a short tune for your song. It replaces last lesson's notes.
+
+        Rec, wait out the count-in, play the low a (first key), the high a (last key), then any two more.
+        At least four notes.
+      eli5: >-
+        Your turn. This tune goes into your song.
+
+        Press rec, wait for four clicks. Press the first key. Press the last key. Those are both a, low and
+        high. Then press two more keys you like.
+
+  - kind: ask
+    q: A higher note means the air is wiggling
+    options: ["faster", "slower", "harder", "for longer"]
+    answer: 0
+    why: Pitch is frequency. More wiggles a second, higher note. The a above went from 220 to 440 a second.
+    whyWrong:
+      1: Slower wiggles make lower notes. The high a wiggled twice as fast as the low one.
+      2: How hard the air is pushed is loudness, not pitch. That was the last lesson.
+      3: How long a note lasts does not change its pitch. The a was high from the first instant.
+
+  - kind: ask
+    q: What does hertz count?
+    options: ["wiggles per second", "beats per minute", "bars in a song", "notes in a scale"]
+    answer: 0
+    why: Hertz is wiggles per second. The low a wiggles 220 times a second, so it is 220 hz.
+    whyWrong:
+      1: Beats per minute is bpm, the speed of the beat. Hertz is the speed of the wiggle.
+      2: Bars are groups of four beats. Nothing to do with how fast the air moves.
+      3: A scale is a set of notes. Hertz measures one note's frequency.
+
+  - kind: ask
+    q: An octave up means the frequency
+    options: ["doubles", "goes up by 100", "halves", "stays the same"]
+    answer: 0
+    why: Double the frequency, same note name, one octave up. 220 becomes 440.
+    whyWrong:
+      1: It is not a fixed amount. 220 goes to 440, 440 goes to 880. Each octave doubles.
+      2: Halving the frequency takes you an octave down.
+      3: If nothing changed you would hear the same pitch.
+
+  - kind: ask
+    q: The low a was 220 hz. What is the a above it?
+    options: ["440 hz", "330 hz", "240 hz", "880 hz"]
+    answer: 0
+    why: Double 220 and you get 440. That is the a orchestras tune to.
+    whyWrong:
+      1: 330 is one and a half times, which gives you a different note, not an a.
+      2: 240 is only a little higher, close enough to sound like an out of tune a.
+      3: 880 is two octaves up. Doubling twice.
+
+  - kind: ask
+    q: How many letter names do notes have before they repeat?
+    options: ["seven", "eight", "twelve", "four"]
+    answer: 0
+    why: Seven letters, a to g, then a again one octave higher.
+    whyWrong:
+      1: Eight is the number of keys in this lesson, because the last one is a again.
+      2: There are twelve steps in an octave, counting the in between notes, but only seven letters.
+      3: Four is the beats in a bar. Notes use seven letters.
+
+  - kind: ask
+    more: true
+    q: Two notes an octave apart sound
+    options: ["like the same note, one higher", "completely different", "out of tune", "equally loud"]
+    answer: 0
+    why: Because one is exactly double the other, your ear hears them as the same note at two heights.
+    whyWrong:
+      1: They share a name for a reason. The high a is the low a going twice as fast.
+      2: An octave is the most in tune two different notes can be.
+      3: Loudness is a separate thing. You can play an octave soft or hard.
+
+  - kind: ask
+    more: true
+    q: Which of these is a low frequency sound?
+    options: ["a kick drum's body", "a hi hat", "a whistle", "birdsong"]
+    answer: 0
+    why: The kick's body hums at around 50 hz, slow big pushes of air you feel in your chest.
+    whyWrong:
+      1: Hi hats are mostly high frequencies, thousands of hertz, which is why they sound bright.
+      2: A whistle is a few thousand hertz, fast wiggles.
+      3: Birds sing high, usually well above 2,000 hz.
+
+  - kind: ask
+    more: true
+    q: Why do the keys in this lesson all sound good together?
+    options: ["they are from one scale that fits with a", "they are all the same note", "they are all octaves", "they are played quietly"]
+    answer: 0
+    why: The keys are picked from a scale built around a. Scales get their own lesson later.
+    whyWrong:
+      1: They are different notes. Only the first and last share a name.
+      2: Only the first and last keys are an octave apart.
+      3: Volume has nothing to do with whether notes fit.
+
+  - kind: keep
+    next: >-
+      Next: amplitude and volume. The same tune played soft, then hard, and why a song needs both.

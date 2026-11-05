@@ -1,0 +1,106 @@
+slug: sound-similarity
+world: producer
+number: 312
+title: sound similarity search
+minutes: 5
+song:
+  changes: drums.kick
+  why: swapping your drums for ones with a different texture changes the whole feel without touching the pattern
+learn: >-
+  How Live 12 finds sounds by what they sound like instead of what they're called, and trying your own beat
+  on a different kit.
+youCan:
+  - say what sound similarity search compares
+  - say what makes its results better or worse
+  - choose your song's kit by ear
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A kick, a clap, some hats. Now imagine hunting for a kick a bit like that one in a library of
+        thousands, named things like kick_final_v2. The names tell you almost nothing. You'd have to listen to
+        every one.
+
+        Live 12 can do the listening for you.
+      straight: >-
+        Finding a sound like this one by file name is slow, because names say little about the sound. Live 12
+        can search by sound instead.
+      eli5: >-
+        Imagine looking for a boom like this one in a giant box of thousands of sounds. The names don't help.
+        Live 12 can listen for you.
+
+  - kind: say
+    title: search by ear
+    say:
+      mentor: >-
+        Sound similarity search is new in Live 12. Pick a sample in the browser, ask for similar ones, and Live
+        compares the audio itself, how bright it is, how punchy, its character, and lists the samples in your
+        library that sound closest.
+
+        It's a score, not a perfect match, so preview what comes back. And it can only find what's in your own
+        library, so the more you have, the more it can find.
+      straight: >-
+        Live 12 compares the audio, not the name, and lists the closest samples in your library. Results are a
+        score, so preview them.
+      eli5: >-
+        Pick a sound, and Live finds others that sound a bit like it, by listening, not by reading the name.
+    deeper:
+      - title: what helps and what doesn't
+        say: >-
+          Very short samples give it less to listen to, so results get looser. A sample drowned in reverb
+          confuses it, because the tail takes over. Heavily distorted or pitched sounds can come back with
+          surprises.
+      - title: narrowing it down
+        say: >-
+          Combine it with the browser's filters and categories to keep only, say, kicks, and surf outward from
+          one sound you love to ones you'd never have found by name.
+
+  - kind: tempo
+    set: kit
+    say:
+      mentor: >-
+        Here's your own drum pattern on two kits. Switch between them and listen: the synth kit is clean and
+        smooth, the recorded one carries the grit and room of real hits. Same pattern, same idea, two
+        different textures, which is exactly the kind of swap similarity search is for.
+
+        Keep the one that feels right for your song.
+      straight: >-
+        Your pattern on the synth kit and the recorded kit. Same notes, different texture. Keep the one that
+        fits.
+      eli5: >-
+        Same beat, two drum kits. Tap synth, then recorded. Which one do you like?
+
+  - kind: ask
+    q: What does sound similarity search compare?
+    options: ["what the audio sounds like", "the file names", "the file sizes", "the date you saved them"]
+    answer: 0
+    why: It listens to the sound, not the label.
+    whyWrong:
+      1: Names are what it gets you away from.
+      2: Size says nothing about the sound.
+      3: Dates say nothing about the sound.
+
+  - kind: ask
+    q: Where does it look for similar sounds?
+    options: ["in your own library", "on the whole internet", "in other people's songs", "only in Live's drum kits"]
+    answer: 0
+    why: It can only find what's in your library.
+    whyWrong:
+      1: It searches your library, not the web.
+      2: Only your own library.
+      3: Any sample in your library, not just kits.
+
+  - kind: ask
+    q: Why preview what it finds?
+    options: ["similar is a score, not a perfect match", "the results are always wrong", "previewing saves them", "it only finds one result"]
+    answer: 0
+    why: Close isn't the same as right for your song.
+    whyWrong:
+      1: Often they're great. Just not guaranteed.
+      2: Previewing is just listening.
+      3: It gives you a list.
+
+  - kind: keep
+    next: >-
+      Your kit is chosen. Back to your song path, or on to mpe and tuning.

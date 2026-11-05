@@ -1,0 +1,59 @@
+/* Instrument pictures (Pictures.tsx): drawn on deep glass, the line in its knobs' colour. */
+.pic{position:relative;width:100%;min-width:0;height:64px;overflow:hidden;transition:opacity .25s}
+.pic svg{display:block}
+.pic.is-dim{opacity:.35}
+.pic-grid{stroke:rgba(255,255,255,.09);stroke-width:1;fill:none}
+.pic-txt{fill:rgba(255,255,255,.42);font-size:9px;font-weight:600;letter-spacing:.04em;font-family:inherit}
+.pic-line{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 70%,transparent))}
+.pic-dot{fill:#fff;filter:drop-shadow(0 0 5px var(--c)) drop-shadow(0 0 2px var(--c))}
+
+/* studio: the pictures sit in a small glass well above the knobs */
+.st-pics{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;flex:none;margin-top:8px;padding:6px 10px;border-radius:12px;background:#050506;box-shadow:0 0 0 2px #000,inset 0 0 0 1px rgba(255,255,255,.05),inset 0 6px 14px rgba(0,0,0,.6)}
+
+.st-pics .pic{height:40px}
+.st-pics{padding:4px 10px}
+@media (min-width:900px) and (min-height:560px){
+  .st-pics{grid-auto-flow:row;gap:6px;padding:8px 12px}
+  .st-pics .pic{height:78px}
+}
+
+/* lesson shape step: the pictures fill the screen under the meta line */
+.ls-pics{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:14px;margin-top:10px}
+.ls-pics .pic{height:92px}
+@media (max-width:520px){.ls-pics .pic{height:76px}}
+
+/* knob value ring (controls.tsx Ring): an led arc in the colour of the line the knob moves */
+.m1-ring{pointer-events:none;overflow:visible}
+.m1-ring-bed{fill:none;stroke:var(--ledoff,#2a2a2e);stroke-width:2.6;stroke-linecap:round;opacity:.9}
+.m1-ring-arc{fill:none;stroke:var(--c);stroke-width:2.6;stroke-linecap:round;filter:drop-shadow(0 0 3px color-mix(in srgb,var(--c) 75%,transparent))}
+.m1-ring-tip{fill:#fff;filter:drop-shadow(0 0 3px var(--c))}
+/* dark until used: an idle knob's cap greys a touch so the lit ones lead the eye */
+.m1-m.is-unlit{opacity:.42;filter:saturate(.4);transition:opacity .25s,filter .25s}
+.m1-m.is-unlit:hover,.m1-m.is-unlit:focus-within{opacity:.8}
+.m1-m.is-spot{box-shadow:0 0 0 2px color-mix(in srgb,var(--led-mint) 70%,transparent),0 0 22px -4px var(--led-mint)}
+.m1-m.is-idle .m1-kc{filter:saturate(.25) brightness(.92)}
+.m1-m.is-idle > .m1-ml{color:var(--sub)!important}
+.m1-m.is-idle > .m1-kv{opacity:.55}
+
+/* pads: a ring flashes out on every hit, brighter and wider the harder the hit (PadRing in controls.tsx) */
+.pad-ring{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c,#fff) 85%,#fff),0 0 calc(6px + 14px * var(--v,.85)) color-mix(in srgb,var(--c,#fff) 70%,transparent);opacity:calc(.35 + .65 * var(--v,.85));animation:pad-ring .42s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes pad-ring{0%{transform:scale(.94)}60%{opacity:calc(.25 + .5 * var(--v,.85))}100%{transform:scale(1.035);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pad-ring{animation-duration:.2s}}
+/* a quiet engraving at the pad's top edge: hit up here for loud */
+.pad-vel{position:absolute;top:6px;left:50%;width:22%;height:2px;margin-left:-11%;border-radius:1px;background:currentColor;opacity:.16;pointer-events:none}
+.ls-key .pad-ring{inset:-4px;border-radius:13px;box-shadow:0 0 0 2px color-mix(in srgb,var(--c,#fff) 60%,#fff),0 0 calc(8px + 16px * var(--v,.85)) var(--c,#fff)}
+.st-sp .pad-ring{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),inset 0 0 calc(8px + 18px * var(--v,.85)) color-mix(in srgb,var(--c,#fff) 80%,#fff)}
+
+/* fill and randomise (Dice in controls.tsx) */
+.m1-dice{display:flex;align-items:center;gap:8px;flex:none;min-height:34px}
+.m1-dice-l{font-size:11px;font-weight:600;color:var(--print);text-shadow:0 1px 0 var(--ehi),0 -1px 0 var(--elo)}
+.m1-dice-v{font-size:11px;font-weight:500;color:var(--sub);min-width:30px;font-variant-numeric:tabular-nums}
+.m1-dice-k{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:9px;border:0;font:inherit;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;min-height:0;min-width:0;background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
+.m1-dice-k:active{transform:translateY(1px)}
+.m1-dice-k svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}
+.m1-dice-k svg circle{fill:currentColor;stroke:none}
+
+/* the lesson lights one control: other pads dim until the goal is met */
+.ls-key.is-unlit{opacity:.38;filter:saturate(.3);transition:opacity .25s}
+.ls-key.is-unlit:hover,.ls-key.is-unlit:focus-visible{opacity:.7}
+.ti-clean{margin:6px 0 0;font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px;flex-wrap:wrap}

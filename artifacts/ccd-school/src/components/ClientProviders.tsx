@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
@@ -12,7 +13,7 @@ import type { GatingMode } from "@/lib/gating";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
 import { useCelebration } from "@/lib/useCelebration";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
-import { ModeBar } from "@/components/m1/shell";
+import { BeatSync, ModeBar } from "@/components/m1/shell";
 import { InstallPromptBanner } from "@/components/InstallPromptBanner";
 
 
@@ -142,17 +143,18 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
               <GatingLoader>
                 <AnalyticsProvider>
                   <ThemeInit />
+                  <BeatSync />
                   <CloudSyncEffect />
                   <ServerEventQueue />
                   <CelebrationLayer />
                   {children}
-                  {/* Mobile phone UI — hidden on desktop via CSS */}
+                  {/* Mobile phone UI: hidden on desktop via CSS */}
                   <ModeBar />
                   <InstallPromptBanner />
                   {/* Desktop UI */}
                   <MasterTransportBar />
                   <CommandPalette />
-                  {/* Easter eggs — Konami code, idle cat, secret clicks */}
+                  {/* Easter eggs: Konami code, idle cat, secret clicks */}
                   {/* Easter eggs retired: nothing appears unless you touch something */}
                 </AnalyticsProvider>
               </GatingLoader>
@@ -166,5 +168,10 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
 
 function CelebrationLayer() {
   const { celebrationEvent, dismissCelebration } = useCelebration();
+  const path = usePathname() ?? "";
+  // Inside a lesson the done screen shows your rank and trophies first; the big moment waits until you
+  // leave the lesson, so it never covers the screen you just earned.
+  const inLesson = /^\/learn\/(?!world\/)[^/]+$/.test(path);
+  if (inLesson) return null;
   return <CelebrationOverlay event={celebrationEvent} onDone={dismissCelebration} />;
 }

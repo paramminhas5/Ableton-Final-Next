@@ -1,0 +1,103 @@
+slug: comping
+world: producer
+number: 281
+title: comping
+minutes: 5
+song:
+  changes: bass.bass
+  why: a bass line built from your best playing is better than any single pass
+learn: >-
+  What comping is, how the best pieces of each take become one, and a new take of your bass.
+youCan:
+  - say what comping is
+  - say why the joins get crossfades
+  - record a bass take and choose whether to keep it
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Say you play your bass line four times. The first take has a great start, the third has the best
+        ending. Comping, short for compiling, means building one finished take from the best pieces of each.
+        The result is better than any single pass you played.
+      straight: >-
+        Comping builds one take from the best pieces of several.
+      eli5: >-
+        You play something a few times, then glue the best bits together into one great version.
+
+  - kind: say
+    title: how a comp works
+    say:
+      mentor: >-
+        With every take lined up underneath, you pick the bits you want, bar by bar or phrase by phrase.
+        They're copied up into the main lane, called the comp, and the same stretch of every other take goes
+        quiet.
+
+        The joins get crossfades: one take fades out as the next fades in, very quickly, so you don't hear a
+        click where they meet.
+      straight: >-
+        Pick bits from each take. They're copied up to the comp. Crossfades hide the joins.
+      eli5: >-
+        You choose the best bits and they get joined up. The joins fade into each other so you can't hear a
+        click.
+    deeper:
+      - title: comping in live
+        say: >-
+          With take lanes showing, drag across the part of a take you want. It moves up to the main lane, and
+          the same stretch on the other lanes is muted. Clear the comp and the takes are all still there.
+      - title: by ear
+        say: >-
+          Comp by listening, not by looking at the waveform.
+      - title: clicks at a join
+        say: >-
+          If you hear a click where two takes meet, make the fade there longer.
+      - title: consolidate
+        say: >-
+          When you're happy, consolidate the comp into one clip before you export.
+
+  - kind: tempo
+    set: comp
+    layer: bass
+    say:
+      mentor: >-
+        Take lanes keep every pass you record. Play your bass and keep the take, then do it again, up to three times. Each take sits in its own lane.
+        
+        Then comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.
+      straight: >-
+        Record up to three takes of your bass. Then, for each quarter of the loop, pick the take that was best. Keep the comp.
+      eli5: >-
+        Play it three times. Then build the best version from the best bits.
+
+  - kind: ask
+    q: What is comping?
+    options: ["building one take from the best pieces of several", "compressing the bass", "copying a song", "a kind of swing"]
+    answer: 0
+    why: Short for compiling, the best bits of every take in one.
+    whyWrong:
+      1: That's a compressor.
+      2: It's your own takes, not someone's song.
+      3: Swing is timing.
+
+  - kind: ask
+    q: Why do the joins in a comp get crossfades?
+    options: ["so you don't hear a click where takes meet", "to make it louder", "to add reverb", "to change the key"]
+    answer: 0
+    why: A quick fade smooths the switch from one take to the next.
+    whyWrong:
+      1: Level stays the same.
+      2: A crossfade adds no space.
+      3: The notes don't change.
+
+  - kind: ask
+    q: Should you comp by eye or by ear?
+    options: ["by ear", "by eye, from the waveform", "by counting notes", "it doesn't matter"]
+    answer: 0
+    why: What matters is how it sounds.
+    whyWrong:
+      1: A waveform can look fine and sound wrong.
+      2: More notes isn't better.
+      3: Listening gives far better comps.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, the breakdown and the drop.

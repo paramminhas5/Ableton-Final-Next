@@ -92,7 +92,7 @@ export function MidiVsAudioSim() {
         <div className="brutal-border bg-hot text-bone p-4 brutal-shadow-sm">
           <div className="font-mono text-xs uppercase">AUDIO CLIP</div>
           <div className="font-display text-2xl">RECORDED WAVEFORM</div>
-          <div className="font-mono text-xs mt-2 opacity-90">Stores: a sample. Pitch is baked in. Transpose & stretch are post-process — you can hear artifacts.</div>
+          <div className="font-mono text-xs mt-2 opacity-90">Stores: a sample. Pitch is baked in. Transpose & stretch are post-process: you can hear artifacts.</div>
           <Waveform stretch={stretch} />
           <button onClick={playAudio} className={`brutal-border w-full mt-3 px-3 py-2 font-display text-lg brutal-press ${playing === "audio" ? "bg-acid text-ink" : "bg-bone text-ink"}`}>
             {playing === "audio" ? "■ STOP" : "▶ PLAY AUDIO"}
@@ -117,7 +117,7 @@ export function MidiVsAudioSim() {
       </div>
 
       <div className="brutal-border bg-bone p-4 font-mono text-xs uppercase">
-        <strong>TRY THIS:</strong> change the MIDI instrument — same notes, totally different timbre. Then transpose the audio clip — hear the artefacts? That's why MIDI is editable forever and audio isn't.
+        <strong>TRY THIS:</strong> change the MIDI instrument, same notes, totally different timbre. Then transpose the audio clip, hear the artefacts? That's why MIDI is editable forever and audio isn't.
       </div>
     </div>
   );

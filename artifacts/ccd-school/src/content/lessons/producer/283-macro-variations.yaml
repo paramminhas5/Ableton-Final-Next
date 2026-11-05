@@ -1,0 +1,84 @@
+slug: macro-variations
+world: producer
+number: 283
+title: macro variations
+minutes: 5
+song:
+  changes: drums.kick
+  why: two versions of your drop give your song a second big moment
+learn: >-
+  Macro variations, saved snapshots of a rack's knobs, and two versions of your drop in your song.
+youCan:
+  - say what a macro variation saves
+  - say what happens to settings a variation doesn't cover
+  - build two different drops
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Once a sound has macros, you'll find settings you love: a dark version for the break, a bright one
+        for the drop. A macro variation is a saved snapshot of every macro knob on a rack. Store one, change
+        the knobs, store another, and you can jump between whole sounds in one click.
+      straight: >-
+        A macro variation saves every macro on a rack. Store a few and jump between them in one click.
+      eli5: >-
+        A variation is like taking a photo of where all your big knobs are, so you can go back to it in one
+        tap.
+
+  - kind: say
+    title: snapshots
+    say:
+      mentor: >-
+        A variation only remembers the macros. Anything you haven't mapped to a macro stays where it is when
+        you switch.
+
+        Many producers use them for sections: one variation per part of the song, so going from the break to
+        the drop changes a whole sound at once.
+      straight: >-
+        Variations only store macros. Unmapped settings don't change. Use one per section.
+      eli5: >-
+        It only remembers the big knobs. Everything else stays the same.
+    deeper:
+      - title: variations in live
+        say: >-
+          Macro Variations live in the rack, next to the macros. Set the macros, store a new variation, change
+          them, store another. Click a variation to recall it. You can map switching to a controller, so one
+          pad recalls one section.
+
+  - kind: tempo
+    set: macro
+    layer: lead
+    say:
+      mentor: >-
+        Macro variations are snapshots of all your macros. Set the big knob low, dark and dry, and save it as a. Turn it high, bright with movement, and save it as b.
+        
+        Now tap a, tap b, in time with the song. That's what Live's variations do: store a whole rack state and recall it with one click, which is how one lead becomes a verse sound and a drop sound. Keep whichever state you want your lead to sit in.
+      straight: >-
+        Save the macro low as a and high as b, then jump between them. That's a variation. Keep the state you want.
+      eli5: >-
+        Save two settings. Flip between them. Two sounds from one lead.
+
+  - kind: ask
+    q: What is a macro variation?
+    options: ["a saved snapshot of a rack's macro knobs", "a new song", "a drum fill", "a type of eq"]
+    answer: 0
+    why: Store it, then recall every macro in one click.
+    whyWrong:
+      1: It lives inside one rack.
+      2: Fills are notes.
+      3: Eq is an effect.
+
+  - kind: ask
+    q: You switch variations. What happens to settings not mapped to a macro?
+    options: ["they stay where they are", "they reset to zero", "they get louder", "they're deleted"]
+    answer: 0
+    why: A variation only remembers the macros.
+    whyWrong:
+      1: Nothing resets.
+      2: Level doesn't change.
+      3: Nothing is deleted.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, finish and export.

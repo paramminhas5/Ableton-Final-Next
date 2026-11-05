@@ -1,0 +1,94 @@
+slug: loop-performance-dj
+world: dj
+number: 217
+title: performance looping and hot cues
+minutes: 5
+song:
+  changes: drums.clap
+  why: a hot cue lets you jump straight to your song's best moment, landing on the one
+learn: >-
+  Hot cues as performance buttons, loop halving to build tension, and landing a jump right on the one.
+youCan:
+  - say what a hot cue does
+  - say how halving a loop builds tension
+  - bring a part in on bar one of a phrase
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A phrase going round. Now picture a button that jumps the track straight to its drop, mid song, on the
+        beat. That's a hot cue: a saved spot in a track that playback jumps to the instant you press it. Djs
+        use them to rearrange tracks live, while the crowd dances.
+      straight: >-
+        A hot cue is a saved spot in a track you can jump to instantly. Djs use them to rearrange tracks live.
+      eli5: >-
+        A hot cue is a button that jumps the song straight to a part you saved, like the best bit.
+
+  - kind: say
+    title: tricks with cues and loops
+    say:
+      mentor: >-
+        Hot cue jumping: hop between sections to build a new arrangement on the fly. Loop halving: loop four
+        bars, then two, then one, then a single beat. Each halving repeats faster, the tension climbs, then
+        you let go into the drop. Cue juggling: flick between two cues quickly for a rhythmic stutter.
+
+        All of it feels easy on its own and hard under pressure. Practise until your hands do it without you.
+      straight: >-
+        Jump between hot cues to rearrange a track. Halve a loop again and again to build tension. Flick
+        between two cues for a stutter. Practise before you try it live.
+      eli5: >-
+        Jump around a song with the cue buttons. Make a loop shorter and shorter to make it exciting, then let
+        go.
+    deeper:
+      - title: the slicer
+        say: >-
+          Some decks have a slicer, which cuts a loop into segments and plays them back in sequence, ready
+          for you to rearrange.
+
+  - kind: mix
+    goal: cue
+    bank: morals
+    say:
+      mentor: >-
+        Hot cues are bookmarks in a track. Deck b has four: the intro, where the hats come in, the break and the drop. Tap one and deck b jumps there instantly, in time.
+        
+        Play with them: jump to the break, then to the drop right on the one. That's how djs remix live, jumping between parts of a track. Tap at least two.
+      straight: >-
+        Four hot cues on deck b: intro, hats in, break, drop. Tap them to jump, in time. Try two.
+      eli5: >-
+        Each button jumps to a different part of the song.
+
+  - kind: ask
+    q: What is a hot cue?
+    options: ["a saved spot you can jump to instantly", "a hotter sounding eq", "a loop that never ends", "a type of effect"]
+    answer: 0
+    why: Press it and the track jumps there.
+    whyWrong:
+      1: It's about position, not sound.
+      2: That's a loop.
+      3: Effects change the sound.
+
+  - kind: ask
+    q: What does halving a loop again and again do?
+    options: ["builds tension as it repeats faster", "slows the track down", "changes the key", "ends the track"]
+    answer: 0
+    why: Four bars, two, one, a beat. The urgency climbs.
+    whyWrong:
+      1: The tempo stays the same.
+      2: Key isn't touched.
+      3: You let go and it carries on.
+
+  - kind: ask
+    q: What is cue juggling?
+    options: ["flicking between two cues for a stutter", "setting cues quickly", "a crossfader trick", "swapping usb drives"]
+    answer: 0
+    why: Back and forth between two saved spots makes a rhythm.
+    whyWrong:
+      1: It's about playing them, not setting them.
+      2: It's done on the cue buttons.
+      3: Nothing to do with drives.
+
+  - kind: keep
+    next: >-
+      Back to the song path: reading waveforms.

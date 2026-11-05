@@ -67,6 +67,24 @@ export class Engine {
   repeatOff(layer: number, note: number) {
     this.s(CMD.repeat, layer, note, 0, 0);
   }
+  /** Web only: the context and the bus everything plays through (null before start or off the web). */
+  audio() {
+    return this.host.audio?.() ?? null;
+  }
+  /** Record what you hear (engine plus anything on the bus) until the returned stop is called. */
+  recordOutput(): { stop: () => Promise<Blob> } | null {
+    const a = this.audio();
+    if (!a || typeof MediaRecorder === "undefined") return null;
+    const dest = a.ctx.createMediaStreamDestination();
+    a.out.connect(dest);
+    const rec = new MediaRecorder(dest.stream);
+    const parts: Blob[] = [];
+    rec.ondataavailable = e => { if (e.data.size) parts.push(e.data); };
+    rec.start();
+    return {
+      stop: () => new Promise<Blob>(res => { rec.onstop = () => { a.out.disconnect(dest); res(new Blob(parts, { type: rec.mimeType })); }; rec.stop(); }),
+    };
+  }
   play() {
     this.s(CMD.play);
   }
@@ -83,6 +101,10 @@ export class Engine {
   tempo(bpm: number) {
     this.s(CMD.tempo, 0, 0, 0, bpm);
     this.host.setTempo?.(bpm);
+  }
+  /** 0 to 0.75: how late the off-beat 16ths land */
+  swing(amount: number) {
+    this.s(CMD.swing, 0, 0, 0, amount);
   }
   loop(beats: number) {
     this.s(CMD.loop, 0, 0, 0, beats);

@@ -1,0 +1,107 @@
+slug: sends-returns
+world: producer
+number: 266
+title: sends and returns
+minutes: 5
+song:
+  changes: chords.chords
+  why: sending your chords into a shared reverb puts them in the same room as your other parts
+learn: >-
+  What a send and a return are, why one shared reverb glues a mix, and how much of your chords to send.
+youCan:
+  - say what a send and a return are
+  - set how much of a part goes to the reverb
+  - make a return track in Live
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Picture a band playing in one hall. Everyone shares the same room, and that shared space is a big
+        part of why they sound like one band. Mixes copy this with one reverb that every part can feed into,
+        a little or a lot.
+      straight: >-
+        One shared reverb puts every part in the same room, which helps them sound like one record.
+      eli5: >-
+        If all your sounds play in the same big room, they sound like they belong together.
+
+  - kind: say
+    title: sends and returns
+    say:
+      mentor: >-
+        A return is a channel that holds an effect, usually a reverb or a delay, and nothing else. A send is
+        a knob on each part that decides how much of that part gets copied over to the return. The dry part
+        keeps playing as it was, and the return adds the room underneath.
+
+        So with one reverb you can give the lead a lot, the chords some and the kick none. By default a send
+        comes after the fader, so turning a part down turns its reverb down too.
+      straight: >-
+        A return holds a shared effect. Each part's send sets how much goes to it. The dry part stays. Sends
+        follow the fader by default.
+      eli5: >-
+        There's one echo room. Each sound has a knob that says how much of it goes into the room.
+    deeper:
+      - title: returns in live
+        say: >-
+          Cmd+Alt+T on a Mac or Ctrl+Alt+T on Windows makes a return track. Put a Reverb on it, and every
+          track gets a send knob for it.
+      - title: pre and post
+        say: >-
+          Sends are post-fader by default, so the send follows the track's fader. Switch one to pre-fader and
+          it ignores the fader, handy when you want the reverb to keep going while the dry track is turned
+          down.
+      - title: why share
+        say: >-
+          One reverb on a return uses far less processing power than a reverb on every track, and it puts
+          every part in the same room. Returns can even send to other returns.
+
+  - kind: shape
+    layer: chords
+    knobs: [send]
+    say:
+      mentor: >-
+        Here's your song. Send feeds your chords into the reverb, the same way a send feeds a return in Live.
+        Turn it up and the chords move back into the room, behind your lead. Turn it down and they come close
+        and dry.
+
+        Chords and pads often get more reverb than drums. Find the amount where they sit behind your lead
+        without going blurry.
+      straight: >-
+        Send sets how much of your chords goes to the reverb. Up moves them back, down brings them close. Stop
+        before they blur.
+      eli5: >-
+        Turn send up and your chords sound further away, in a big room. Stop before they get blurry.
+
+  - kind: ask
+    q: What does a send do?
+    options: ["copies some of a part to a return", "deletes the dry sound", "changes the tempo", "mutes the part"]
+    answer: 0
+    why: The dry part stays. A copy goes to the shared effect.
+    whyWrong:
+      1: The dry sound keeps playing.
+      2: Sends don't touch tempo.
+      3: The part still plays.
+
+  - kind: ask
+    q: Why share one reverb across parts?
+    options: ["it puts every part in one room and uses less power", "it makes the song faster", "you can only have one effect", "it makes the drums louder"]
+    answer: 0
+    why: One room glues the mix, and one reverb is lighter than many.
+    whyWrong:
+      1: Tempo doesn't change.
+      2: You can have lots of effects.
+      3: It's about space, not level.
+
+  - kind: ask
+    q: By default, you turn a part's fader down. What happens to its reverb?
+    options: ["it goes down too", "it gets louder", "it stays exactly the same", "it switches off"]
+    answer: 0
+    why: Sends come after the fader by default, so they follow it.
+    whyWrong:
+      1: Less part, less reverb.
+      2: That's a pre-fader send.
+      3: It follows the fader down, it doesn't stop.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, glue, compression and loudness.

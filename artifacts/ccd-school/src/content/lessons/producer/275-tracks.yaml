@@ -1,0 +1,104 @@
+slug: tracks
+world: producer
+number: 275
+title: tracks
+minutes: 5
+song:
+  changes: drums.kick
+  why: switching parts on and off is the quickest way to hear what each one adds
+learn: >-
+  What a track is, the kinds Live has, and your parts muted section by section.
+youCan:
+  - say what mute, solo and arm do
+  - name the kinds of track
+  - mute parts in sections of your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Every part of your song lives on its own track: a lane with its own sound, its own fader and its own
+        buttons. Kick, clap, hats, bass, lead, chords.
+
+        Three buttons you'll use all the time: mute silences a track, solo plays it alone, and arm gets it
+        ready to record.
+      straight: >-
+        Each part is a track. Mute silences it, solo plays it alone, arm gets it ready to record.
+      eli5: >-
+        Every sound has its own row, called a track. Each track has buttons to make it quiet, play it alone,
+        or get it ready to record.
+
+  - kind: say
+    title: kinds of track
+    say:
+      mentor: >-
+        Not every track is the same. A midi track holds notes and needs an instrument to make a sound. An
+        audio track holds recorded sound, like a sample or a vocal. A return holds a shared effect, a group
+        holds other tracks, and the master is where everything ends up.
+
+        Pick the right kind for the job: audio goes on audio tracks, notes go on midi tracks.
+      straight: >-
+        Midi tracks: notes plus an instrument. Audio tracks: recorded sound. Returns: shared effects. Groups:
+        other tracks. Master: the sum.
+      eli5: >-
+        Some tracks hold notes, some hold recordings. One special track, the master, holds everything.
+    deeper:
+      - title: new tracks in live
+        say: >-
+          Cmd+T on a Mac or Ctrl+T on Windows makes a new audio track. Add Shift for a new midi track. A new
+          midi track stays silent until you give it an instrument.
+      - title: groups
+        say: >-
+          Select tracks and press Cmd+G or Ctrl+G to put them in a group with one fader. Groups have their own
+          automation.
+      - title: colours
+        say: >-
+          Colour tracks by job, drums one colour and synths another, so a big set stays easy to read.
+
+  - kind: arrange
+    goal: sections
+    say:
+      mentor: >-
+        Here's your song with every track as a row. Tap a cell to mute that track in that section. Mute your
+        bass in the intro and your lead in the break. Play it through and hear how each part coming back
+        lifts the next section.
+      straight: >-
+        Tap a cell to mute a track in a section. Mute the bass in the intro, the lead in the break, then play
+        it.
+      eli5: >-
+        Tap the squares to make sounds quiet in some parts of your song. Press play and listen to them come
+        back.
+
+  - kind: ask
+    q: What does arm do?
+    options: ["gets a track ready to record", "mutes it", "plays it alone", "deletes it"]
+    answer: 0
+    why: Arm a track, press record, and it records.
+    whyWrong:
+      1: That's mute.
+      2: That's solo.
+      3: Arm never deletes anything.
+
+  - kind: ask
+    q: Where do notes go?
+    options: ["a midi track, with an instrument", "an audio track", "the master", "a return"]
+    answer: 0
+    why: Midi tracks hold notes, and the instrument turns them into sound.
+    whyWrong:
+      1: Audio tracks hold recorded sound.
+      2: The master adds everything up.
+      3: Returns hold shared effects.
+
+  - kind: ask
+    q: What does a return track hold?
+    options: ["a shared effect", "the drums", "notes", "the song's tempo"]
+    answer: 0
+    why: Usually a reverb or delay that many tracks send to.
+    whyWrong:
+      1: Drums go on their own tracks.
+      2: Notes go on midi tracks.
+      3: Tempo belongs to the whole set.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, variation and fills.

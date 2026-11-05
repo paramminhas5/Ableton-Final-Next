@@ -1,0 +1,110 @@
+slug: drum-rack
+world: producer
+number: 203
+title: the drum rack in live
+minutes: 5
+song:
+  changes: drums.kick
+  why: each drum is its own pad with its own controls, so you can reshape your kick without touching anything else
+learn: >-
+  How a drum kit becomes a rack of pads, one sound per pad, each with its own controls, and how Live's Drum
+  Rack does the same.
+youCan:
+  - say what a pad in a drum rack is
+  - change one drum without touching the others
+  - say what a choke group does
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        A kick and a clap. On a drum machine each of those is its own pad: hit one pad, you get the kick, hit
+        another, you get the clap. Your drums here work the same way. Every drum in your song sits on its own
+        pad.
+
+        That's handy, because a pad isn't just a button. It's a whole little instrument with its own knobs.
+      straight: >-
+        Kick and clap, each on its own pad. A pad is a small instrument with its own knobs.
+      eli5: >-
+        The boom and the clap each have their own button, called a pad. Each pad has its own knobs too.
+
+  - kind: shape
+    layer: drums
+    knobs: [tune, decay, drive]
+    say:
+      mentor: >-
+        Here's your song with the knobs for one pad: your kick. Tune moves its pitch up or down. Decay is how
+        long it rings: short and tight, or long and boomy. Drive pushes it into a gentle distortion so it
+        sounds harder and grittier.
+
+        Every other pad stays exactly as it was. That's the whole point of a rack: each pad is shaped on its
+        own, so when your clap and hats arrive, this kick won't change under them. Keep the kick you like
+        best.
+      straight: >-
+        One pad's knobs: your kick. Tune is pitch, decay is length, drive is grit. Other pads aren't touched.
+        Keep the kick you like.
+      eli5: >-
+        These knobs only change your boom. Tune makes it higher or lower, decay makes it shorter or longer,
+        drive makes it crunchy. Other pads don't change. Keep the boom you like.
+
+  - kind: say
+    title: live's drum rack
+    say:
+      mentor: >-
+        Live's version is called Drum Rack. It shows sixteen pads at a time in a four by four grid, and it can
+        hold up to 128. Drag any sample onto a pad and that pad plays it. Each pad answers to one midi note,
+        so a kick pattern is just that note repeated.
+
+        Like your kick here, each pad has its own volume, pan, mute and solo, and its own chain of devices. A
+        device is anything that makes or changes sound, like an equaliser or a reverb. So you can put
+        something on the kick alone and leave the snare clean.
+      straight: >-
+        Live's Drum Rack: 16 pads visible, up to 128. Drop a sample on a pad, it plays from one midi note. Each
+        pad has its own volume, pan, mute, solo and devices.
+      eli5: >-
+        Live has a drum box called Drum Rack with sixteen pads you can see. Drop any sound on a pad and it
+        plays. Each pad can have its own effects.
+    deeper:
+      - title: choke groups
+        say: >-
+          Put two pads in the same choke group and one cuts the other off. The classic use is hats: an open hat
+          rings on, and the closed hat silences it the moment it hits, just like a drummer closing the pedal.
+      - title: what's inside a pad
+        say: >-
+          Drag a sample onto a pad and Live builds a chain for it, usually holding a Simpler, Live's simple
+          sampler, playing that one-shot. A pad can hold any instrument and any effects, even another Drum
+          Rack. Drop an EQ Eight on the kick's chain and only the kick is equalised.
+
+  - kind: ask
+    q: In a drum rack, what does one pad usually hold?
+    options: ["one drum sound", "the whole kit", "a full song", "the tempo"]
+    answer: 0
+    why: One sound per pad, so each drum can be played and shaped on its own.
+    whyWrong:
+      1: The rack is the whole kit. A pad is one piece of it.
+      2: A pad plays one hit.
+      3: Tempo belongs to the whole song.
+
+  - kind: ask
+    q: You turn up drive on your kick pad. What happens to a clap on another pad?
+    options: ["nothing, it has its own pad", "it gets distorted too", "it gets quieter", "it changes pitch"]
+    answer: 0
+    why: Each pad has its own controls. Changing the kick leaves every other pad alone.
+    whyWrong:
+      1: Drive on one pad only touches that pad.
+      2: Its level is set on its own pad.
+      3: Tune is a separate knob on each pad.
+
+  - kind: ask
+    q: Why put an open hat and a closed hat in the same choke group?
+    options: ["so the closed hat cuts the open one off", "so they play at the same time", "so they share one volume", "so the open hat rings longer"]
+    answer: 0
+    why: A choke group lets one pad silence another, like a drummer closing the hi-hat.
+    whyWrong:
+      1: Choking stops one, it doesn't stack them.
+      2: Each pad still has its own volume.
+      3: It makes the open hat stop sooner, not later.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, add your first synth sound.

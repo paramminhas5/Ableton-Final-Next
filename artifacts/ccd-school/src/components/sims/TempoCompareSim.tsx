@@ -186,8 +186,8 @@ export function TempoCompareSim() {
           </div>
           <div className="font-mono text-[10px] opacity-70 mt-1">
             {Math.abs(realA - realB) <= 10
-              ? "Close tempos — harder to hear. Listen to the kick attack rate."
-              : "Large difference — easier at this gap. Closer gaps train the real skill."}
+              ? "Close tempos: harder to hear. Listen to the kick attack rate."
+              : "Large difference: easier at this gap. Closer gaps train the real skill."}
           </div>
           <button
             onClick={next}

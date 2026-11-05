@@ -35,6 +35,8 @@ interface Props {
    *  When provided, the caller is responsible for routing and setting onboardingDone.
    *  When omitted (standalone /placement page), PlacementTest routes itself. */
   onComplete?: (firstMissionSlug: string) => void;
+  /** Straight into the questions (onboarding's "i know my way around" already said what this is). */
+  startNow?: boolean;
 }
 
 const WORLD_LABELS: Record<string, string> = {
@@ -44,8 +46,8 @@ const WORLD_LABELS: Record<string, string> = {
 };
 
 
-export function PlacementTest({ world, onSkip, onComplete }: Props) {
-  const [phase, setPhase] = useState<Phase>("intro");
+export function PlacementTest({ world, onSkip, onComplete, startNow }: Props) {
+  const [phase, setPhase] = useState<Phase>(startNow ? "quiz" : "intro");
   const [qIdx, setQIdx] = useState(0);
   const [pickPhase, setPickPhase] = useState<PickPhase>("picking");
   const [picked, setPicked] = useState<number | null>(null);
@@ -108,7 +110,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
   // intro
   if (phase === "intro") {
     return (
-      <div className="ls">
+      <div className="ls is-placement">
         <div className="ls-top"><Link href="/worlds" className="ls-x" aria-label="Close"><Icon name="close" /></Link><span style={{ flex: 1 }} /></div>
         <div className="ls-col">
           <Screen>
@@ -124,7 +126,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
           ))}
         </div>
         {bottom(<>
-          <button type="button" className="m1-m" onClick={onSkip} aria-label="Skip the test"><span className="m1-cap" style={{ width: "56%", marginTop: -12 }}><Icon name="back" /></span><span className="m1-ml">skip</span></button>
+          <button type="button" className="m1-m" onClick={onSkip} aria-label="Skip the test"><span className="m1-cap" style={{ width: "56%", marginTop: -12 }}><Icon name="close" /></span><span className="m1-ml">skip</span></button>
           <GoPill onClick={() => setPhase("quiz")} style={{ gridColumn: "span 3" }}>start test</GoPill>
         </>)}
       </div>
@@ -136,7 +138,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
     const answered = pickPhase === "answered";
     const right = !!answers[current.id];
     return (
-      <div className="ls">
+      <div className="ls is-placement">
         <div className="ls-top">
           <button type="button" className="ls-x" aria-label="Close the test" onClick={onSkip}><Icon name="close" /></button>
           <div className="ls-seg" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={qIdx} aria-label={`Question ${qIdx + 1} of ${total}`} style={{ ["--c" as string]: led } as CSSProperties}>
@@ -158,7 +160,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
               const cls = !answered ? (picked === i ? "is-lit" : "") : i === current.answer ? (right ? "is-lit is-right" : "is-ring") : picked === i ? "is-lit is-wrong" : "is-dim";
               return (
                 <button key={i} type="button" role="radio" aria-checked={picked === i} disabled={answered} className={`ls-pad ${cls}`}
-                  style={{ ["--c" as string]: "var(--led-go)" } as CSSProperties} onClick={() => handlePick(i)}>
+                  style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => handlePick(i)}>
                   <small>{String.fromCharCode(97 + i)}</small><span>{o}</span>
                 </button>
               );
@@ -183,7 +185,7 @@ export function PlacementTest({ world, onSkip, onComplete }: Props) {
     const names: Record<number, string> = { 1: "beginner", 2: "intermediate", 3: "advanced" };
     const line = chapter === 1 ? "start from the top. the foundations matter." : chapter === 2 ? "you know the basics. skip the intro." : "you know your stuff. jump to the advanced lessons.";
     return (
-      <div className="ls">
+      <div className="ls is-placement">
         <div className="ls-top"><button type="button" className="ls-x" aria-label="Close" onClick={onSkip}><Icon name="close" /></button><span style={{ flex: 1 }} /></div>
         <div className="ls-col">
           <Screen>

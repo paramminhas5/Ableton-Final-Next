@@ -197,11 +197,12 @@ impl Default for Interpolator2x {
 pub struct Drive {
     up: Interpolator2x,
     down: Decimator2x,
+    shape: super::Adaa,
 }
 
 impl Drive {
     pub const fn new() -> Self {
-        Drive { up: Interpolator2x::new(), down: Decimator2x::new() }
+        Drive { up: Interpolator2x::new(), down: Decimator2x::new(), shape: super::Adaa::new() }
     }
 
     /// `amount` 0..1.
@@ -213,9 +214,11 @@ impl Drive {
         }
         let gain = 1.0 + amount * amount * 24.0;
         // Level-matched: turning drive up adds harmonics, not volume.
-        let makeup = 0.25 / super::soft_clip(gain * 0.25);
-        let a = super::soft_clip(a * gain) * makeup;
-        let b = super::soft_clip(b * gain) * makeup;
+        let makeup = 0.25 / super::sat(gain * 0.25);
+        // Anti-aliased: on top of the 2x oversampling, so the harmonics drive adds above the
+        // band fold back far quieter (measured in tests/sound.rs).
+        let a = self.shape.process(a * gain) * makeup;
+        let b = self.shape.process(b * gain) * makeup;
         self.down.process(a, b)
     }
 }

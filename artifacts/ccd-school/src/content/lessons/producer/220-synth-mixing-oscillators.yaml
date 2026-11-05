@@ -1,0 +1,109 @@
+slug: synth-mixing-oscillators
+world: producer
+number: 220
+title: mixing oscillators
+minutes: 5
+song:
+  changes: lead.lead
+  why: blending two wave shapes and spreading copies apart makes your lead bigger without adding a single effect
+learn: >-
+  The four classic ways to layer oscillators, and blending and spreading the oscillators in your own lead.
+youCan:
+  - name the four classic oscillator layering moves
+  - say why two perfectly in-tune copies only sound louder
+  - blend and detune your lead's oscillators by ear
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A soft wave, a saw, a square. Each one is a single oscillator. Most synths give you two or three and let
+        you mix them, and that's the quickest way to a bigger, more interesting sound, before you touch a
+        filter or an effect.
+
+        One oscillator is a singer. Two or three, mixed well, are a band.
+      straight: >-
+        Each of these is one oscillator. Most synths have two or three you can mix. Layering is the fastest way
+        to a bigger sound.
+      eli5: >-
+        Each sound here is one wave maker. Synths usually have two or three you can mix together, which makes
+        a bigger sound.
+
+  - kind: say
+    title: four ways to layer
+    say:
+      mentor: >-
+        There are four classic moves. Same shape, a few cents apart: the copies drift in and out of step, which
+        sounds fat and moving. Different shapes together, like saw and square: a mixed colour neither has on
+        its own. One an octave below: weight underneath. One an octave above: sparkle on top.
+
+        Here's the catch with the first one. Two copies perfectly in tune don't sound fatter, they just sound
+        louder. The detune is what makes the width.
+      straight: >-
+        Four moves: detune the same shape (fat), mix two shapes (new colour), add an octave below (weight), add
+        an octave above (sparkle). In-tune copies only sound louder.
+      eli5: >-
+        You can mix two of the same wave a tiny bit apart, two different waves, or add one lower or higher.
+        Each makes the sound bigger in a different way.
+    deeper:
+      - title: mixing oscillators in live
+        say: >-
+          Analog, Drift and Wavetable all have more than one oscillator with its own level, so you can try every
+          move here. A good starting recipe for a lead is a saw, a second saw an octave up, and a sine an octave
+          down, then pull each level so the total doesn't clip going into the filter.
+      - title: too much of a good thing
+        say: >-
+          Detune of more than about 20 cents on chords starts to beat against the chord's own intervals and
+          sounds out of tune. Three oscillators all at full level in the same octave make a patch lose focus.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, detune]
+    say:
+      mentor: >-
+        Here's your song. Your lead already has three oscillators per note, so you can try two of the moves.
+        Wave mixes two shapes inside every oscillator: saw at one end, square at the other, and a blend of the
+        two in between. Set it somewhere in the middle and listen for a colour neither end has.
+
+        Detune is the other move: it spreads the three copies apart by a few cents. At zero they're in tune and
+        just sound like one. Turn it up and the lead widens and moves. Keep the mix you like.
+      straight: >-
+        Wave blends saw and square in each oscillator. Detune spreads the three copies a few cents apart. Keep
+        the mix you like.
+      eli5: >-
+        Wave mixes two shapes together. Detune spreads the three waves apart so your tune sounds wide. Pick the
+        one you like.
+
+  - kind: ask
+    q: Two oscillators, same shape, perfectly in tune. How do they sound together?
+    options: ["like one louder oscillator", "fat and wide", "like a chord", "out of tune"]
+    answer: 0
+    why: With no detune they move exactly together, so they just add up to a louder copy.
+    whyWrong:
+      1: Width needs a few cents of detune.
+      2: Same note twice isn't a chord.
+      3: They're perfectly in tune.
+
+  - kind: ask
+    q: You add an oscillator one octave below. What does it give the sound?
+    options: ["weight", "sparkle", "echo", "a faster tempo"]
+    answer: 0
+    why: An octave below fills in underneath, adding weight.
+    whyWrong:
+      1: Sparkle comes from an octave above.
+      2: Echo is an effect.
+      3: Oscillators don't change tempo.
+
+  - kind: ask
+    q: Why might a heavily detuned pad sound out of tune on chords?
+    options: ["the detune beats against the chord's intervals", "detune changes the key", "detune makes it quieter", "detune removes the bass"]
+    answer: 0
+    why: Past about 20 cents the copies clash with the notes of the chord and it starts to sound sour.
+    whyWrong:
+      1: The key stays the same.
+      2: Detune adds width, not quietness.
+      3: The low end stays.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, chords on top.

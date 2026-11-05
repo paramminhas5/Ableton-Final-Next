@@ -28,28 +28,10 @@ export function ccdHref(path: string): string {
 
 /** The rest of the CCD world, as seen from School. */
 export const CCD_LINKS: CcdLink[] = [
-  {
-    key: "events",
-    label: "Events",
-    blurb: "Come to a night. Hear what you are learning on a real system.",
-    href: ccdHref("/events"),
-  },
-  {
-    key: "playlists",
-    label: "Playlists",
-    blurb: "Sets and selections to study by ear.",
-    href: ccdHref("/playlists"),
-  },
-  {
-    key: "videos",
-    label: "Videos",
-    blurb: "Filmed sets. Watch how the mix is actually done.",
-    href: ccdHref("/videos"),
-  },
-  {
-    key: "artists",
-    label: "For artists",
-    blurb: "Made something? Get it in front of the CCD crowd.",
-    href: ccdHref("/for-artists"),
-  },
+  { key: "home", label: "Cats Can Dance", blurb: "The whole thing: music, nights, artists.", href: ccdHref("/") },
+  { key: "events", label: "Events", blurb: "Come to a night. Hear what you are learning on a real system.", href: ccdHref("/events") },
+  { key: "artists", label: "Artists", blurb: "The artists CCD plays and books.", href: ccdHref("/artists") },
+  { key: "book", label: "Book an artist", blurb: "Bring a CCD artist to your night.", href: ccdHref("/book") },
+  { key: "shop", label: "Shop", blurb: "Merch and things for your cat.", href: ccdHref("/shop") },
+  { key: "playlists", label: "Playlists", blurb: "Sets and selections to study by ear.", href: ccdHref("/playlists") },
 ];

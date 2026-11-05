@@ -19,6 +19,10 @@ export interface RenderOpts {
   kit?: RealKit;
   /** which two-bar slice (0..3) of the piano loop to play */
   segment?: number;
+  /** which part to play; undefined is the full synth loop */
+  source?: "full" | "drums" | "bass" | "pad" | "hats";
+  /** semitones, moves the synth loop to another key */
+  transpose?: number;
 }
 
 /** Real recorded one-shots and a piano loop, used for the EQ and compression drills. */
@@ -143,7 +147,7 @@ function bassNote(c: OfflineCtx, out: AudioNode, t: number, hz: number, len: num
   o.stop(t + len + 0.02);
 }
 
-function pad(c: OfflineCtx, out: AudioNode, t: number, len: number) {
+function pad(c: OfflineCtx, out: AudioNode, t: number, len: number, ratio = 1) {
   // Am7 stab held for the bar: gives the mid and high band something to hide in.
   const lp = c.createBiquadFilter();
   lp.type = "lowpass";
@@ -156,7 +160,7 @@ function pad(c: OfflineCtx, out: AudioNode, t: number, len: number) {
   for (const hz of [220, 261.63, 329.63, 392]) {
     const o = c.createOscillator();
     o.type = "sawtooth";
-    o.frequency.value = hz;
+    o.frequency.value = hz * ratio;
     o.connect(lp);
     o.start(t);
     o.stop(t + len + 0.02);
@@ -220,23 +224,31 @@ export async function renderLoop(opts: RenderOpts): Promise<AudioBuffer> {
     }
     return c.startRendering();
   }
-  const bassHz = [55, 55, 65.41, 49];
+  const src = opts.source ?? "full";
+  const ratio = Math.pow(2, (opts.transpose ?? 0) / 12);
+  const bassHz = [55, 55, 65.41, 49].map(h => h * ratio);
+  const withBass = src === "full" || src === "bass";
+  const withPad = src === "full" || src === "pad";
+  const withHats = src === "full" || src === "hats" || src === "drums";
+  const withDrums = src === "full" || src === "drums";
   for (let bar = 0; bar < bars; bar++) {
     const t0 = bar * 4 * beat;
-    pad(c, bus, t0, 4 * beat);
+    if (withPad) pad(c, bus, t0, 4 * beat, ratio);
     for (let s = 0; s < 8; s++) {
       // s = eighth-note index within the bar; odd eighths are the off-beats
       const t = t0 + s * eighth + (s % 2 === 1 ? shift : 0);
-      hat(c, bus, t, noise, s % 2 === 1 ? 1 : 0.7);
-      if (s % 2 === 1 || s === 0 || s === 4) {
+      if (withHats) hat(c, bus, t, noise, s % 2 === 1 ? 1 : 0.7);
+      if (withBass && (s % 2 === 1 || s === 0 || s === 4)) {
         bassNote(c, bus, t, bassHz[(bar + (s >> 1)) % bassHz.length], eighth * 0.9);
       }
     }
-    kick(c, bus, t0);
-    kick(c, bus, t0 + 2 * beat);
-    kick(c, bus, t0 + 2.5 * beat + shift);
-    snare(c, bus, t0 + beat, noise);
-    snare(c, bus, t0 + 3 * beat, noise);
+    if (withDrums) {
+      kick(c, bus, t0);
+      kick(c, bus, t0 + 2 * beat);
+      kick(c, bus, t0 + 2.5 * beat + shift);
+      snare(c, bus, t0 + beat, noise);
+      snare(c, bus, t0 + 3 * beat, noise);
+    }
   }
   return c.startRendering();
 }

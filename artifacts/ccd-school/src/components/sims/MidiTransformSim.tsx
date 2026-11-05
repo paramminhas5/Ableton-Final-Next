@@ -100,7 +100,7 @@ export function MidiTransformSim() {
         <button onClick={() => setSeed(transformed)} className="brutal-border bg-hot text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">COMMIT</button>
       </div>
       <p className="font-mono text-[11px] uppercase opacity-70">
-        ▸ Commit is destructive in real Live too — duplicate your clip first if you want a safe before/after.
+        ▸ Commit is destructive in real Live too: duplicate your clip first if you want a safe before/after.
       </p>
     </div>
   );

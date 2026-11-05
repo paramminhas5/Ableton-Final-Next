@@ -1,0 +1,103 @@
+slug: genre-bpm-reference
+world: dj
+number: 208
+title: genres and bpm
+minutes: 5
+song:
+  changes: drums.clap
+  why: your song's bpm decides which genres it can sit next to in a set
+learn: >-
+  The tempo ranges of the main dance genres, what half-time feel is, and where your song and the bank
+  tracks sit.
+youCan:
+  - give the bpm range of house, techno and drum and bass
+  - say what half-time feel is
+  - place your song in a genre by its bpm
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        This groove runs at 124 bpm, right in house territory. Every dance genre lives in its own tempo
+        range, and knowing those ranges tells you which tracks can share a set without being stretched out of
+        shape.
+      straight: >-
+        This is 124 bpm, house tempo. Each genre has a tempo range. Knowing them tells you what mixes with
+        what.
+      eli5: >-
+        This beat goes at 124 booms a minute. That's the speed of house music. Every kind of dance music has
+        its own speed.
+
+  - kind: say
+    title: the ranges
+    say:
+      mentor: >-
+        House sits around 120 to 130 bpm, with deep house a little slower (about 118 to 126) and tech house a
+        little faster (about 126 to 132). Techno runs about 130 to 145, trance 128 to 145, drum and bass 160
+        to 180. Hip-hop is slower, around 70 to 100, and afrobeats about 90 to 110.
+
+        The closer two tracks are in bpm, the less you have to stretch one to match the other. Big stretches
+        change how a track sounds, so djs often stay inside one range.
+      straight: >-
+        House 120 to 130. Techno 130 to 145. Trance 128 to 145. Drum and bass 160 to 180. Hip-hop 70 to 100.
+        Afrobeats 90 to 110. Close tempos mix with less stretching.
+      eli5: >-
+        House is medium fast. Techno is a bit faster. Drum and bass is very fast. Hip-hop is slower. Songs
+        with close speeds are easiest to mix.
+    deeper:
+      - title: half-time feel
+        say: >-
+          Some genres sit at one tempo and feel like another. Dubstep runs around 140 bpm, but its kick and
+          snare land as if it were 70. Trap is listed at 130 to 150 with the same feel. That's half-time: the
+          counter says one number, your body hears half.
+
+  - kind: mix
+    goal: free
+    say:
+      mentor: >-
+        Deck a shows your song's bpm. Which range is it in?
+
+        Now look at the bank chips below, each with its own bpm. Warm up at 126 is house. Smooth at 128 and
+        long roller at 130 sit right on the line between house and techno. Tool, skywalker and space bass at
+        131 and the fast one at 135 lean into techno. Tap through them. Deck b plays each one stretched to
+        your song's tempo, so you hear how it would sit next to yours.
+      straight: >-
+        Find your song's range from its bpm. Then tap through the bank: 126 is house, 128 to 130 is the
+        border, 131 and 135 lean techno. Each plays at your tempo on deck b.
+      eli5: >-
+        Look at your song's speed number. Then tap the other songs and look at theirs. Which ones are close
+        to yours?
+
+  - kind: ask
+    q: Roughly what bpm is house music?
+    options: ["120 to 130", "70 to 100", "160 to 180", "over 200"]
+    answer: 0
+    why: House sits around 120 to 130.
+    whyWrong:
+      1: That's hip-hop.
+      2: That's drum and bass.
+      3: That's faster than any genre here.
+
+  - kind: ask
+    q: What is half-time feel?
+    options: ["the groove feels half as fast as the bpm", "the track plays at half volume", "half the track is missing", "the tempo halves every bar"]
+    answer: 0
+    why: The bpm is high but the kick and snare land like a slower tempo.
+    whyWrong:
+      1: It's about feel, not volume.
+      2: The whole track is there.
+      3: The tempo stays steady.
+
+  - kind: ask
+    q: Why do djs often stay inside one genre's range?
+    options: ["less stretching to match tempos", "it's a rule", "software can't read other tempos", "other genres have no bpm"]
+    answer: 0
+    why: Close tempos mean small moves on the tempo fader and tracks that still sound like themselves.
+    whyWrong:
+      1: It's a habit, not a rule.
+      2: Software reads any tempo.
+      3: Every genre has a tempo.
+
+  - kind: keep
+    next: >-
+      Back to the song path: eq mixing. The bass swap.

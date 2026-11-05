@@ -109,9 +109,9 @@ describe("layer types play their own instruments", () => {
     expect(paramOf(newLayerV2("chords"), CHORD_PARAMS[0].index)).toBe(CHORD_PARAMS[0].default);
     expect(paramOf(newLayerV2("lead"), LEAD_PARAMS[4].index)).toBe(LEAD_PARAMS[4].default);
     expect(paramOf(newLayerV2("fx"), FX_PARAMS[5].index)).toBe(FX_PARAMS[5].default);
-    expect(instrumentParamCount("chords")).toBe(8);
+    expect(instrumentParamCount("chords")).toBe(21); // 8, then lfo rate, lfo, lfo to, fm, ratio, f decay, f release, character, filter drive, voice, ring, bright, osc
     expect(instrumentParamCount("fx")).toBe(6);
-    expect(instrumentParamCount("drums")).toBe(65);
+    expect(instrumentParamCount("drums")).toBe(208); // 16 pads x 4, 16 rack slots, then 16 pads x 8 on the second page
     const t = emptyTrackV2();
     expect(gridOf(t)).toBe(0.25);
     expect(gridOf({ ...t, grid: 0.125 })).toBe(0.125);
@@ -140,5 +140,14 @@ describe("first visit starter", () => {
     expect(t.layers.map(l => l.type)).toEqual(["drums", "bass"]);
     expect(t.layers[0].surface).toBe("pads");
     expect(t.layers.every(l => l.events.length > 3 && l.events.every(e => e.start >= 0 && e.start < t.loop))).toBe(true);
+  });
+});
+
+import { effectivePad } from "../src/lib/track2";
+describe("effectivePad", () => {
+  it("a hats layer defaults to the closed hat, not the kick", () => {
+    expect(effectivePad({ type: "hats", pad: 0 })).toBe(4);
+    expect(effectivePad({ type: "hats", pad: 5 })).toBe(5);
+    expect(effectivePad({ type: "drums", pad: 0 })).toBe(0);
   });
 });

@@ -95,7 +95,7 @@ export function BuildPageClient() {
     <RefPage title="build a set" back="/atlas" meta="live" right={`${done.length} of ${BUILD_STAGES.length} stages`}
       intro={<>do each stage in live, save, and upload the .als here. your real set is checked. nothing is stored and your file is never changed. new to live? start with <a style={{ textDecoration: "underline" }} href="/setup">setup</a>.</>}>
       <div role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Build progress" style={{ marginTop: 14 }}>
-        <SegBar value={done.length / BUILD_STAGES.length} color="var(--led-go)" />
+        <SegBar value={done.length / BUILD_STAGES.length} color="var(--led-mint)" />
       </div>
 
       <div className="ls-panel" style={{ flexDirection: "column", alignItems: "center", gap: 10, textAlign: "center", marginTop: 14, padding: 20 }}
@@ -124,9 +124,9 @@ export function BuildPageClient() {
           const r = results[st.id];
           const locked = !ok && !isCurrent;
           return (
-            <li key={st.id} className="ls-panel" style={{ flexDirection: "column", gap: 8, marginTop: 8, opacity: locked ? 0.55 : 1, ...(isCurrent ? { boxShadow: "inset 0 0 0 1.5px var(--led-go)" } : {}) }}>
+            <li key={st.id} className="ls-panel" style={{ flexDirection: "column", gap: 8, marginTop: 8, opacity: locked ? 0.55 : 1, ...(isCurrent ? { boxShadow: "inset 0 0 0 1.5px var(--led-mint)" } : {}) }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
-                <span className="ls-led" style={{ ["--c" as string]: ok ? "var(--led-mint)" : isCurrent ? "var(--led-go)" : "var(--ledoff)", marginTop: 0 }} />
+                <span className="ls-led" style={{ ["--c" as string]: ok ? "var(--led-mint)" : isCurrent ? "var(--led-mint)" : "var(--ledoff)", marginTop: 0 }} />
                 <h2 style={{ flex: 1, fontSize: 16, fontWeight: 500, margin: 0 }}>{i + 1}. {st.title.toLowerCase()}</h2>
                 <span className="m1-t11">{ok ? "done" : `${st.xp} xp`}</span>
               </div>

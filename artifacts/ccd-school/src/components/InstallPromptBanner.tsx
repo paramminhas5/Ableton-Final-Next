@@ -203,7 +203,7 @@ export function InstallPromptBanner() {
             <div>
               <div className="font-display text-2xl leading-tight">Add to your<br />Home Screen</div>
               <p className="font-mono text-xs opacity-70 mt-1">
-                Works like a real app — no App Store needed.
+                Works like a real app: no App Store needed.
               </p>
             </div>
 
@@ -239,7 +239,7 @@ export function InstallPromptBanner() {
                 3
               </div>
               <div>
-                <div className="font-mono text-sm font-bold">Tap "Add" — done!</div>
+                <div className="font-mono text-sm font-bold">Tap "Add": done!</div>
                 <div className="font-mono text-xs opacity-70 mt-0.5 leading-relaxed">
                   CCD.SCHOOL will appear on your Home Screen like any app.
                 </div>

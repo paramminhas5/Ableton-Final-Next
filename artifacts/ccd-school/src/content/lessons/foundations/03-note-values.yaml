@@ -1,0 +1,148 @@
+slug: note-values
+world: foundations
+number: 3
+title: subdivision
+minutes: 7
+song:
+  adds: hats.hats
+  why: hats fill the space between your kicks, and how finely you split the beat sets how busy the groove feels
+learn: >-
+  Splitting the beat into halves and quarters, eighths and sixteenths, and a hat pattern in your song that
+  uses them. This is also where snap comes in.
+youCan:
+  - hear the difference between quarters, eighths and sixteenths
+  - play hats on the eighths or sixteenths with snap on
+  - say what snap does and when to turn it off
+steps:
+  - kind: hear
+    clip: subdivisions
+    say:
+      mentor: >-
+        Tap through the three. Same kick each time, but the hats split each beat differently.
+
+        Quarters: one hat per beat, right on the kick. Eighths: two per beat, one on the kick and one exactly
+        halfway to the next. Sixteenths: four per beat, a fast tick-tick-tick-tick. Listen to how the groove
+        gets busier and faster-feeling while the tempo stays exactly the same.
+      straight: >-
+        Three ways to split the beat with a hi hat: quarters (one per beat), eighths (two), sixteenths
+        (four). The tempo never changes, only how finely the beat is cut.
+      eli5: >-
+        Tap a, b and c. The boom stays the same. The tiny tss sound changes. One tss per boom, then two, then
+        four really quick ones. More tss makes it feel busier, but the song isn't going any faster.
+
+  - kind: say
+    title: halves and quarters of a beat
+    say:
+      mentor: >-
+        Musicians call these note values. A quarter note is one beat. An eighth note is half a beat. A
+        sixteenth is a quarter of a beat. The names come from how many fit in a bar: four quarters, eight
+        eighths, sixteen sixteenths.
+
+        People count eighths as "one and two and three and four and", and sixteenths as "one e and a, two e
+        and a". Say it out loud over the sixteenths and you'll hear it lock in.
+      straight: >-
+        Quarter note: one beat. Eighth: half a beat. Sixteenth: a quarter of a beat. Count eighths as "one and
+        two and", sixteenths as "one e and a".
+      eli5: >-
+        Grown-up musicians give these names. One tss per boom is a quarter note. Two per boom is an eighth
+        note. Four per boom is a sixteenth note. You can count the fast ones as "one e and a, two e and a".
+    deeper:
+      - title: why the names are fractions
+        say: >-
+          A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, in eight and you get
+          eighths, in sixteen and you get sixteenths. Sheet music draws each one differently, but in a
+          producer's grid they're just the lines getting closer together.
+
+  - kind: play
+    layer: hats
+    surface: pads
+    snap: true
+    goal: {notes: 1}
+    say:
+      mentor: >-
+        Now put hats in your song. Hats on the eighths between your kicks are the classic house sound.
+
+        This time you get help: snap. Snap moves every hit to the nearest line on the grid, so a hat that's a
+        hair early still lands exactly on the eighth. It's set to eighths. Tap the snap key to change it to
+        sixteenths or turn it off and hear the difference.
+
+        Press rec, wait out the count-in, and tap the hat between the kicks: on every "and".
+      straight: >-
+        Record hats over your beat. Snap is on, set to eighths, so every hit lands on the nearest eighth. Tap
+        the snap key to try sixteenths or off. Rec, count-in, then tap the hat on every "and".
+      eli5: >-
+        Your turn to add the tss. A helper called snap is switched on: it nudges every tap onto the nearest
+        line, so it always sounds neat. Press rec, wait for four ticks, then tap the hat in between the booms.
+    hint: Say "one and two and" and tap on every "and".
+
+  - kind: say
+    title: snap
+    say:
+      mentor: >-
+        That's snap, also called quantise. Almost every music program has it. It's brilliant for drums that
+        need to be tight, like hats and kicks in a club track.
+
+        But it's not always what you want. A little looseness is what makes a groove feel human. Producers
+        often play something in, snap it, then nudge a few hits back off the grid on purpose. You'll do that
+        in the swing lesson next.
+      straight: >-
+        Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; turn it off or loosen it
+        when you want a human feel.
+      eli5: >-
+        Snap is like a magnet that pulls your taps onto the lines. Great for neat drums. Sometimes you want a
+        bit of wobble so it feels more alive, and then you switch the magnet off.
+
+  - kind: ask
+    q: How many sixteenth notes fit in one beat?
+    options: ["four", "two", "sixteen", "eight"]
+    answer: 0
+    why: A sixteenth is a quarter of a beat, so four fit in one beat and sixteen in a bar.
+    whyWrong:
+      1: Two per beat is eighths.
+      2: Sixteen fit in a whole bar of four beats.
+      3: Eight per beat would be thirty-second notes.
+
+  - kind: ask
+    q: You switch your hats from eighths to sixteenths. What happens to the tempo?
+    options: ["it stays the same", "it doubles", "it halves", "it goes up a little"]
+    answer: 0
+    why: The pulse doesn't change. The beat is just cut into smaller pieces, so it feels busier.
+    whyWrong:
+      1: The kick keeps the same speed. Only the hats get busier.
+      2: Nothing slows down. There are just more hats in each beat.
+      3: Tempo only changes when you turn the tempo knob.
+
+  - kind: ask
+    q: What does snap do to a hit that's slightly early?
+    options: ["moves it to the nearest grid line", "deletes it", "makes it louder", "moves it to the start of the bar"]
+    answer: 0
+    why: Snap pulls each hit onto the nearest line of the grid it's set to.
+    whyWrong:
+      1: Snap never removes notes.
+      2: It moves notes in time, it doesn't touch their volume.
+      3: Only to the nearest line, not all the way back to one.
+
+  - kind: ask
+    q: How do musicians count eighth notes?
+    options: ["one and two and three and four and", "one e and a", "one two three four", "one two, one two"]
+    answer: 0
+    why: Each beat plus an "and" halfway through.
+    whyWrong:
+      1: One e and a is sixteenths, four per beat.
+      2: That's quarters, one per beat.
+      3: That's counting in twos, not eighths.
+
+  - kind: ask
+    more: true
+    q: Why might a producer turn snap off?
+    options: ["to keep a looser, more human feel", "to make the song faster", "because snap only works on kicks", "to make the hats louder"]
+    answer: 0
+    why: Perfectly gridded drums can sound stiff. A few hits off the grid feel played by a person.
+    whyWrong:
+      1: Snap has nothing to do with tempo.
+      2: Snap works on any notes.
+      3: Snap moves timing, not volume.
+
+  - kind: keep
+    next: >-
+      Next: groove and swing. Push every other sixteenth a little late and your hats start to bounce.

@@ -1,0 +1,108 @@
+slug: exporting
+world: producer
+number: 285
+title: exporting from live
+minutes: 5
+song:
+  changes: drums.kick
+  why: an export is the moment your song becomes a file anyone can play
+learn: >-
+  What exporting is, audio files, stems and midi, and your song named and exported.
+youCan:
+  - say the difference between an audio and a midi export
+  - choose a format for a master and for sharing
+  - export your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Exporting turns your song into a file that lives outside the program. There are two main kinds. An
+        audio export is the finished sound, a file anyone can play. A midi export is the notes, which another
+        program can play on its own instruments.
+      straight: >-
+        Exporting makes a file of your song. Audio is the finished sound. Midi is the notes.
+      eli5: >-
+        Exporting turns your song into a file you can send to anyone.
+
+  - kind: say
+    title: formats
+    say:
+      mentor: >-
+        Wav and aiff are full quality, so keep one as your master copy. Mp3 is smaller and fine for sharing,
+        but it throws a little detail away, so it shouldn't be your master.
+
+        Stems are each part, or group of parts, exported as its own audio file. They're for collaborators,
+        remixers and mastering engineers.
+      straight: >-
+        Wav or aiff for your master, mp3 for sharing. Stems are each part as its own audio file.
+      eli5: >-
+        Keep a best-quality copy of your song, and a smaller one to share. You can also save each sound on
+        its own.
+    deeper:
+      - title: export in live
+        say: >-
+          Choose Export Audio/Video from the File menu, or press Cmd+Shift+R on a Mac or Ctrl+Shift+R on
+          Windows. Pick what to render, the master or individual tracks, the format (WAV, AIFF, FLAC or MP3),
+          the sample rate and the bit depth.
+      - title: set the range
+        say: >-
+          Live renders the length you've selected, so set it to cover the whole song. Forget, and you'll get
+          only part of it.
+      - title: stems in live
+        say: >-
+          Render All Individual Tracks to export every track as its own file.
+      - title: hardware
+        say: >-
+          If hardware synths are part of your song, turn on real-time rendering so Live plays them while it
+          exports.
+      - title: headroom
+        say: >-
+          For a streaming master, many engineers leave about 1 dB of headroom rather than pushing the peak
+          right up to the top.
+
+  - kind: arrange
+    goal: export
+    say:
+      mentor: >-
+        Here's your finished song. Give it a name, play it through once more, and download the midi: the
+        notes of every part, ready to drop into Live, where each part lands on its own track and plays on
+        Live's instruments.
+      straight: >-
+        Name it, play it through, download the midi, open it in Live.
+      eli5: >-
+        Type a name for your song, then tap download.
+
+  - kind: ask
+    q: Which file should you keep as your master copy?
+    options: ["wav", "mp3", "a screenshot", "the midi only"]
+    answer: 0
+    why: Full quality. Make smaller copies from it.
+    whyWrong:
+      1: Mp3 throws a little detail away.
+      2: A picture isn't sound.
+      3: Midi is notes, not the finished sound.
+
+  - kind: ask
+    q: What are stems?
+    options: ["each part exported as its own audio file", "the song's notes", "a kind of reverb", "the tempo map"]
+    answer: 0
+    why: Drums, bass, lead and so on, each in its own file.
+    whyWrong:
+      1: That's midi.
+      2: Reverb is an effect.
+      3: Stems are sound files.
+
+  - kind: ask
+    q: What does a midi export hold?
+    options: ["the notes of every part", "the finished sound", "only the drums", "the artwork"]
+    answer: 0
+    why: Which notes, when, how long and how hard.
+    whyWrong:
+      1: That's an audio export.
+      2: It holds every part.
+      3: It's music data only.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, the dj world. Play your own song out.

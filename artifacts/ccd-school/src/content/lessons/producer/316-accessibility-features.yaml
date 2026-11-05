@@ -1,0 +1,108 @@
+slug: accessibility-features
+world: producer
+number: 316
+title: accessibility in live
+minutes: 5
+song:
+  changes: lead.lead
+  why: setting your lead's level and tone by keyboard alone shows your song never needs a mouse
+learn: >-
+  What Live 12 added so more people can make music in it, and shaping your own lead using only the keyboard.
+youCan:
+  - name the accessibility features Live 12 added
+  - say what key map mode does
+  - shape a part of your song without a mouse
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        A kick, steady as a heartbeat. You don't need to see it to feel it. Music has always been something you
+        do by ear and by hand, but software has often assumed you can see a screen perfectly and steer a mouse
+        precisely.
+
+        Live 12 changed a lot of that.
+      straight: >-
+        Music is ears and hands. Software often assumes perfect sight and a mouse. Live 12 changed a lot of
+        that.
+      eli5: >-
+        You can feel this beat without looking at anything. Live 12 makes it easier to make music even if you
+        can't see the screen well or use a mouse.
+
+  - kind: say
+    title: live for more people
+    say:
+      mentor: >-
+        Live 12 added support for screen readers, the software that reads what's on screen out loud, so the
+        names and values of controls can be spoken. It added high contrast themes that make controls easier to
+        tell apart, and much more of Live can now be moved around and changed from the keyboard.
+
+        These help everyone. High contrast is easier in a bright room, and keyboard control is often faster
+        and more precise than dragging.
+      straight: >-
+        Live 12 added screen reader support, high contrast themes and wider keyboard navigation. They help
+        everyone, not only people who need them.
+      eli5: >-
+        Live 12 can read controls out loud, can make the screen easier to see, and can be used with just the
+        keyboard. That helps lots of people.
+    deeper:
+      - title: key map mode
+        say: >-
+          Cmd or ctrl and k turns on key map mode. Click a control, press a key, and that key now works it. Map
+          your clips, scenes and on or off switches to keys and you can run a whole set from the keyboard.
+      - title: this app too
+        say: >-
+          Here, enter moves you on to the next step, and when there's a question, the number keys pick an
+          answer. Tab gets you to any knob.
+
+  - kind: shape
+    layer: lead
+    knobs: [level, cutoff]
+    say:
+      mentor: >-
+        Here's your song with your lead. Try it without the mouse. Press tab until a knob is selected, then use
+        the arrow keys: up or right turns it up, down or left turns it down. Hold shift for bigger steps. Home
+        and end jump to the bottom and the top.
+
+        Set your lead's level so it sits where you want it against the beat, then use cutoff to brighten or
+        darken it. All by keyboard.
+      straight: >-
+        Your lead, by keyboard. Tab to a knob, arrows to turn it, shift for bigger steps, home and end for the
+        ends. Set level, then cutoff.
+      eli5: >-
+        Press tab to pick a knob. Press the arrow keys to turn it up and down. Set how loud your tune is, then
+        how bright.
+
+  - kind: ask
+    q: What does a screen reader do?
+    options: ["reads what's on screen out loud", "makes the screen brighter", "records your voice", "zooms in on the mixer"]
+    answer: 0
+    why: It speaks control names and values, so you don't need to see them.
+    whyWrong:
+      1: That's closer to a high contrast theme.
+      2: It speaks, it doesn't record.
+      3: It reads aloud rather than zooming.
+
+  - kind: ask
+    q: Who do accessibility features help?
+    options: ["everyone, including people who don't strictly need them", "only blind users", "only beginners", "only people with controllers"]
+    answer: 0
+    why: Keyboard control and high contrast speed things up for lots of people.
+    whyWrong:
+      1: They're vital for some and handy for everyone.
+      2: Experienced producers use them too.
+      3: They work without any controller.
+
+  - kind: ask
+    q: On a knob here, what does holding shift with an arrow key do?
+    options: ["turns it in bigger steps", "resets it", "mutes the part", "turns it the other way"]
+    answer: 0
+    why: Shift makes each press move further.
+    whyWrong:
+      1: Home and end jump to the ends. Nothing resets.
+      2: It changes the knob, not mute.
+      3: The arrow sets the direction.
+
+  - kind: keep
+    next: >-
+      That's the end of live, properly. Back to your song path, or over to the dj world.

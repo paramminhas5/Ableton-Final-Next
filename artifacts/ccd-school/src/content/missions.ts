@@ -1,3 +1,4 @@
+import { fileMissions } from "./lessons/adapt";
 import type { Mission } from "./types";
 import { FOUNDATIONS_MISSIONS } from "./missions-foundations";
 import { DJ_WORLD_MISSIONS } from "./missions-dj";
@@ -31,10 +32,10 @@ const w1: Mission[] = [
       {
         kind: "list",
         items: [
-          "Session View — clip grid, perfect for ideas, loops, live sets.",
-          "Arrangement View — timeline, perfect for full songs.",
-          "Devices — instruments and effects, all built in.",
-          "Browser — your library of sounds, presets and projects.",
+          "Session View: clip grid, perfect for ideas, loops, live sets.",
+          "Arrangement View: timeline, perfect for full songs.",
+          "Devices: instruments and effects, all built in.",
+          "Browser: your library of sounds, presets and projects.",
         ],
       },
       {
@@ -50,7 +51,7 @@ const w1: Mission[] = [
         options: ["Mix & Edit", "Session & Arrangement", "Track & Master", "Studio & Live"],
         answer: 1,
         explain:
-          "Session and Arrangement are Live's two core views — Session for jamming, Arrangement for timeline editing.",
+          "Session and Arrangement are Live's two core views: Session for jamming, Arrangement for timeline editing.",
         hint: "Think about how DJs vs film composers work differently.",
       },
       {
@@ -66,7 +67,7 @@ const w1: Mission[] = [
         options: ["Destructive", "Non-destructive", "Read-only", "MIDI-only"],
         answer: 1,
         explain:
-          "Non-destructive means your original audio file is never altered — edits are just instructions Live reads at playback.",
+          "Non-destructive means your original audio file is never altered: edits are just instructions Live reads at playback.",
         hint: "Would you want Live to permanently change your audio files?",
       },
     ],
@@ -84,11 +85,11 @@ const w1: Mission[] = [
       {
         kind: "list",
         items: [
-          "Control Bar — tempo, transport, metronome, quantization.",
-          "Browser — left sidebar with sounds, samples, packs.",
-          "Main View — Session grid or Arrangement timeline.",
-          "Detail View — clip & device editor, opens at the bottom.",
-          "Info View — hover anything, read what it does.",
+          "Control Bar: tempo, transport, metronome, quantization.",
+          "Browser: left sidebar with sounds, samples, packs.",
+          "Main View: Session grid or Arrangement timeline.",
+          "Detail View: clip & device editor, opens at the bottom.",
+          "Info View: hover anything, read what it does.",
         ],
       },
       {
@@ -104,7 +105,7 @@ const w1: Mission[] = [
         options: ["Spacebar", "Tab", "Enter", "Shift"],
         answer: 1,
         explain:
-          "Tab is Live's fastest workflow shortcut — you'll hit it hundreds of times per session toggling views.",
+          "Tab is Live's fastest workflow shortcut: you'll hit it hundreds of times per session toggling views.",
         hint: "It's the same key you use to switch browser tabs.",
       },
       {
@@ -112,7 +113,7 @@ const w1: Mission[] = [
         options: ["Browser", "Detail View", "Control Bar", "Mixer"],
         answer: 2,
         explain:
-          "The Control Bar at the top controls BPM, time signature, and transport — your session's master clock.",
+          "The Control Bar at the top controls BPM, time signature, and transport: your session's master clock.",
         hint: "Where do you look when you need to know how fast your track is?",
       },
       {
@@ -120,7 +121,7 @@ const w1: Mission[] = [
         options: ["Control Bar", "Browser", "Detail View", "Info View"],
         answer: 2,
         explain:
-          "The Detail View (bottom) shows either the Clip or Device view depending on what's selected — notes live in Clip view.",
+          "The Detail View (bottom) shows either the Clip or Device view depending on what's selected: notes live in Clip view.",
         hint: "It's the bottom panel that expands when you double-click a MIDI clip.",
       },
     ],
@@ -140,17 +141,17 @@ const w1: Mission[] = [
       {
         kind: "list",
         items: [
-          "Sounds — instrument presets you can drag onto tracks.",
-          "Drums — drum kits and one-shots.",
-          "Samples — your own audio files.",
-          "Packs — Ableton's official sound libraries.",
-          "Categories — Live's tagging system (since Live 12).",
+          "Sounds: instrument presets you can drag onto tracks.",
+          "Drums: drum kits and one-shots.",
+          "Samples: your own audio files.",
+          "Packs: Ableton's official sound libraries.",
+          "Categories: Live's tagging system (since Live 12).",
         ],
       },
       {
         kind: "callout",
         tone: "key",
-        text: "Live 12 added Sound Similarity Search — pick a sample and Live finds others that sound like it.",
+        text: "Live 12 added Sound Similarity Search: pick a sample and Live finds others that sound like it.",
       },
     ],
     sim: { type: "browser-tour" },
@@ -160,7 +161,7 @@ const w1: Mission[] = [
         options: ["File name", "Sound", "Date", "Size"],
         answer: 1,
         explain:
-          "Similarity Search (Live 12) analyzes audio content — timbre, rhythm, tone — not filenames, making it genuinely useful.",
+          "Similarity Search (Live 12) analyzes audio content, timbre, rhythm, tone, not filenames, making it genuinely useful.",
         hint: "Think about what's actually IN the sound, not what it's called.",
       },
       {
@@ -168,8 +169,8 @@ const w1: Mission[] = [
         options: ["A track", "Only Session", "Only Arrangement", "The Control Bar"],
         answer: 0,
         explain:
-          "You can drag from the Browser to any track in Session or Arrangement — it's the primary way to audition and place sounds.",
-        hint: "Both views accept drops — pick the one that's NOT just one.",
+          "You can drag from the Browser to any track in Session or Arrangement: it's the primary way to audition and place sounds.",
+        hint: "Both views accept drops: pick the one that's NOT just one.",
       },
       {
         q: "Categories were added in…",
@@ -196,11 +197,11 @@ const w1: Mission[] = [
       {
         kind: "list",
         items: [
-          "Audio — driver, sample rate, buffer size (lower = less latency, more CPU).",
-          "Link/Tempo/MIDI — controllers and Ableton Link.",
-          "File/Folder — auto-save, plugin folders, max undo.",
-          "Library — where Packs install.",
-          "Theme — light, dark, high-contrast.",
+          "Audio: driver, sample rate, buffer size (lower = less latency, more CPU).",
+          "Link/Tempo/MIDI: controllers and Ableton Link.",
+          "File/Folder: auto-save, plugin folders, max undo.",
+          "Library: where Packs install.",
+          "Theme: light, dark, high-contrast.",
         ],
       },
       {
@@ -217,14 +218,14 @@ const w1: Mission[] = [
         answer: 1,
         explain:
           "Lower buffer = faster response between input and output, but the CPU must work harder to fill smaller chunks in time.",
-        hint: "Buffer size trades latency against CPU load — which is more CPU?",
+        hint: "Buffer size trades latency against CPU load: which is more CPU?",
       },
       {
         q: "Open Preferences with…",
         options: ["Cmd/Ctrl + ,", "Cmd/Ctrl + P", "F5", "Tab"],
         answer: 0,
         explain:
-          "Cmd/Ctrl + , (comma) opens Preferences in almost every macOS/Windows app — Live follows the same convention.",
+          "Cmd/Ctrl + , (comma) opens Preferences in almost every macOS/Windows app: Live follows the same convention.",
         hint: "It's the universal OS shortcut for preferences/settings.",
       },
       {
@@ -232,7 +233,7 @@ const w1: Mission[] = [
         options: ["Audio tab", "File/Folder + Plug-Ins tab", "Theme tab", "Library tab"],
         answer: 1,
         explain:
-          "Live scans for VST/AU plugins from paths you specify in Preferences > File Folder > Plug-Ins — always check here first.",
+          "Live scans for VST/AU plugins from paths you specify in Preferences > File Folder > Plug-Ins: always check here first.",
         hint: "Where would you tell Live where to look for plugin files?",
       },
     ],
@@ -254,7 +255,7 @@ const w1: Mission[] = [
         items: [
           "Always 'Collect All and Save' before sharing a project.",
           "Live Pack (.alp) bundles a project for distribution.",
-          "Auto-save runs in the background — turn it on.",
+          "Auto-save runs in the background: turn it on.",
           "Export Audio/Video renders your finished track.",
         ],
       },
@@ -271,7 +272,7 @@ const w1: Mission[] = [
         options: [".alp", ".als", ".adv", ".asd"],
         answer: 1,
         explain:
-          ".als is Ableton Live Set — your actual project file. Know this extension to spot projects in Finder/Explorer.",
+          ".als is Ableton Live Set: your actual project file. Know this extension to spot projects in Finder/Explorer.",
         hint: "ALS = Ableton Live Set. What would the abbreviation be?",
       },
       {
@@ -287,8 +288,8 @@ const w1: Mission[] = [
         options: ["Live Sets", "Live Packs", "Audio", "Presets"],
         answer: 1,
         explain:
-          "Live Packs (.alp) bundle sounds, presets, or entire instrument packs — installed through Live's browser.",
-        hint: "ALP = Ableton Live Pack — a bundled collection, not a single project.",
+          "Live Packs (.alp) bundle sounds, presets, or entire instrument packs: installed through Live's browser.",
+        hint: "ALP = Ableton Live Pack: a bundled collection, not a single project.",
       },
     ],
   },
@@ -320,7 +321,7 @@ const w2: Mission[] = [
       {
         kind: "callout",
         tone: "key",
-        text: "Set Global Quantize to 1 Bar — clips will sync musically no matter when you click.",
+        text: "Set Global Quantize to 1 Bar: clips will sync musically no matter when you click.",
       },
     ],
     sim: { type: "session-grid" },
@@ -330,7 +331,7 @@ const w2: Mission[] = [
         options: ["A column of clips", "A row of clips", "A single clip", "A track"],
         answer: 1,
         explain:
-          "A scene is a horizontal row of clips across all tracks — launching a scene starts that row simultaneously.",
+          "A scene is a horizontal row of clips across all tracks: launching a scene starts that row simultaneously.",
         hint: "Think about whether it's organized by column or row.",
       },
       {
@@ -339,14 +340,14 @@ const w2: Mission[] = [
         answer: 1,
         explain:
           "1 Bar quantize means every clip waits for the next bar line to start, keeping everything in perfect musical sync.",
-        hint: "Quantize means 'snap to grid' — which grid boundary is 1 Bar?",
+        hint: "Quantize means 'snap to grid': which grid boundary is 1 Bar?",
       },
       {
         q: "Each track plays…",
         options: ["All clips at once", "One clip at a time", "Two clips", "Whatever you select"],
         answer: 1,
         explain:
-          "Each track has one clip slot active at a time — this is what makes Session View a non-linear launcher, not a mixer.",
+          "Each track has one clip slot active at a time: this is what makes Session View a non-linear launcher, not a mixer.",
         hint: "If two clips played simultaneously on one track, what would happen?",
       },
     ],
@@ -380,8 +381,8 @@ const w2: Mission[] = [
         options: ["Loop markers", "Section bookmarks", "Automation points", "Clips"],
         answer: 1,
         explain:
-          "Locators are named bookmarks in Arrangement View — right-click the scrubber to add them, great for song sections.",
-        hint: "They 'locate' you to a specific point — like a bookmark in a song.",
+          "Locators are named bookmarks in Arrangement View: right-click the scrubber to add them, great for song sections.",
+        hint: "They 'locate' you to a specific point: like a bookmark in a song.",
       },
       {
         q: "Recording Session into Arrangement happens when…",
@@ -396,7 +397,7 @@ const w2: Mission[] = [
         options: ["Moved & resized", "Only moved", "Only resized", "Neither"],
         answer: 0,
         explain:
-          "Arrangement clips are fully flexible — drag to move, drag edges to resize, right-click to loop or reverse.",
+          "Arrangement clips are fully flexible: drag to move, drag edges to resize, right-click to loop or reverse.",
         hint: "Unlike a DAW that's read-only, Live clips are fully editable.",
       },
     ],
@@ -405,7 +406,7 @@ const w2: Mission[] = [
     slug: "clips",
     world: "two-views",
     number: 3,
-    title: "Clips 101 — MIDI vs Audio",
+    title: "Clips 101: MIDI vs Audio",
     tagline: "Two clip types. Wildly different powers.",
     xp: 70,
     explainer: [
@@ -415,11 +416,11 @@ const w2: Mission[] = [
       },
       {
         kind: "para",
-        text: "A MIDI clip stores instructions: 'play C4 at velocity 100 for half a beat'. The track's instrument creates the actual sound at playback. You can change the instrument, transpose every note, slow it down, or rewrite the melody — all without losing fidelity, because nothing has been rendered yet.",
+        text: "A MIDI clip stores instructions: 'play C4 at velocity 100 for half a beat'. The track's instrument creates the actual sound at playback. You can change the instrument, transpose every note, slow it down, or rewrite the melody: all without losing fidelity, because nothing has been rendered yet.",
       },
       {
         kind: "para",
-        text: "An audio clip stores a recorded waveform — a long list of amplitude samples (44,100 numbers per second at CD quality). The pitch and timing are baked into the file. You can still transpose, stretch and warp it, but those are processes that re-interpret the existing samples — push them too far and you'll hear artefacts.",
+        text: "An audio clip stores a recorded waveform, a long list of amplitude samples (44,100 numbers per second at CD quality). The pitch and timing are baked into the file. You can still transpose, stretch and warp it, but those are processes that re-interpret the existing samples, push them too far and you'll hear artefacts.",
       },
       {
         kind: "callout",
@@ -438,7 +439,7 @@ const w2: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "In the simulator below: change the MIDI instrument and the same melody becomes a saw bass, a sine pad, or a square lead instantly. Try the same on the audio clip — you can only stretch and detune the recording you have.",
+        text: "In the simulator below: change the MIDI instrument and the same melody becomes a saw bass, a sine pad, or a square lead instantly. Try the same on the audio clip: you can only stretch and detune the recording you have.",
       },
       {
         kind: "link",
@@ -471,21 +472,21 @@ const w2: Mission[] = [
         ],
         answer: 1,
         explain:
-          "MIDI is never 'baked' — it renders through the instrument in real-time, so you can swap instruments or edit notes forever.",
+          "MIDI is never 'baked': it renders through the instrument in real-time, so you can swap instruments or edit notes forever.",
         hint: "What would happen if MIDI was rendered to audio on save?",
       },
       {
         q: "Audio clip transpose is…",
         options: [
           "Free, lossless",
-          "A re-pitch process — extreme values cause artefacts",
+          "A re-pitch process: extreme values cause artefacts",
           "Impossible",
           "MIDI-only",
         ],
         answer: 1,
         explain:
-          "Transposing audio re-pitches via stretching algorithms — go too far (>6–8 semitones) and time-stretch artifacts appear.",
-        hint: "It's adjusting pitch — what processing does that require on audio?",
+          "Transposing audio re-pitches via stretching algorithms: go too far (>6–8 semitones) and time-stretch artifacts appear.",
+        hint: "It's adjusting pitch: what processing does that require on audio?",
       },
     ],
   },
@@ -500,11 +501,11 @@ const w2: Mission[] = [
       {
         kind: "list",
         items: [
-          "Audio Track — records & plays audio.",
-          "MIDI Track — holds MIDI clips, hosts an instrument.",
-          "Return Track — destination for sends (reverb, delay).",
-          "Group Track — folder for routing many tracks together.",
-          "Master Track — the final output.",
+          "Audio Track: records & plays audio.",
+          "MIDI Track: holds MIDI clips, hosts an instrument.",
+          "Return Track: destination for sends (reverb, delay).",
+          "Group Track: folder for routing many tracks together.",
+          "Master Track: the final output.",
         ],
       },
     ],
@@ -515,23 +516,23 @@ const w2: Mission[] = [
         options: ["Group", "Return", "Master", "MIDI"],
         answer: 1,
         explain:
-          "Return tracks receive signal from sends — they're designed for shared effects like reverb used by multiple tracks.",
-        hint: "Signal flows TO return tracks — what do you call the destination?",
+          "Return tracks receive signal from sends: they're designed for shared effects like reverb used by multiple tracks.",
+        hint: "Signal flows TO return tracks: what do you call the destination?",
       },
       {
         q: "An instrument lives on a…",
         options: ["Audio", "MIDI", "Return", "Master"],
         answer: 1,
         explain:
-          "MIDI tracks host instruments (Wavetable, Operator, Simpler etc.) — they output MIDI data that instruments convert to audio.",
-        hint: "An instrument needs MIDI notes to trigger — what track carries MIDI?",
+          "MIDI tracks host instruments (Wavetable, Operator, Simpler etc.): they output MIDI data that instruments convert to audio.",
+        hint: "An instrument needs MIDI notes to trigger: what track carries MIDI?",
       },
       {
         q: "Group tracks are like…",
         options: ["Folders", "Plugins", "Sends", "Clips"],
         answer: 0,
         explain:
-          "Group tracks wrap multiple tracks into a bus, like a folder — great for drums, backing vox, or any stem group.",
+          "Group tracks wrap multiple tracks into a bus, like a folder: great for drums, backing vox, or any stem group.",
         hint: "What organizational metaphor do most apps use for nested items?",
       },
     ],
@@ -547,7 +548,7 @@ const w2: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "A scene fires a whole row. Follow Actions tell each clip what to do when it ends — jump to next, loop, play random.",
+        text: "A scene fires a whole row. Follow Actions tell each clip what to do when it ends: jump to next, loop, play random.",
       },
       {
         kind: "list",
@@ -565,7 +566,7 @@ const w2: Mission[] = [
         options: ["When a clip ends", "When you click", "On bar 1", "On record"],
         answer: 0,
         explain:
-          "Follow Actions trigger automatically when a clip reaches its end or a set duration — perfect for generative, evolving sequences.",
+          "Follow Actions trigger automatically when a clip reaches its end or a set duration: perfect for generative, evolving sequences.",
         hint: "What condition makes Follow Actions fire?",
       },
       {
@@ -573,8 +574,8 @@ const w2: Mission[] = [
         options: ["Tempo", "Sample rate", "Buffer", "Theme"],
         answer: 0,
         explain:
-          "Launching a scene can override the project's current BPM — useful for songs with tempo changes or DJ sets.",
-        hint: "Scenes are rows — what master parameter might change per section?",
+          "Launching a scene can override the project's current BPM: useful for songs with tempo changes or DJ sets.",
+        hint: "Scenes are rows: what master parameter might change per section?",
       },
       {
         q: "Which is NOT a Follow Action?",
@@ -582,7 +583,7 @@ const w2: Mission[] = [
         answer: 2,
         explain:
           "Reverse is a clip/warp operation, not a Follow Action. Valid actions include Again, Next, Previous, Any, Other, Stop.",
-        hint: "Think about what Follow Actions actually do — they trigger clips or scenes, not audio transforms.",
+        hint: "Think about what Follow Actions actually do: they trigger clips or scenes, not audio transforms.",
       },
     ],
   },
@@ -624,7 +625,7 @@ const w3: Mission[] = [
         options: ["Browser", "Pencil mode", "Bar count", "Bypass"],
         answer: 1,
         explain:
-          "B key toggles pencil/draw mode in the Piano Roll — essential for switching between drawing and selecting notes.",
+          "B key toggles pencil/draw mode in the Piano Roll: essential for switching between drawing and selecting notes.",
         hint: "It's a single key that looks like a writing instrument.",
       },
       {
@@ -632,8 +633,8 @@ const w3: Mission[] = [
         options: ["Pitch", "Length", "How hard", "Quantize"],
         answer: 2,
         explain:
-          "Velocity determines how hard a note is hit — in MIDI it maps 0–127, and instruments often use it to change timbre.",
-        hint: "Think about dynamics on a real instrument — what determines softness vs loudness?",
+          "Velocity determines how hard a note is hit: in MIDI it maps 0–127, and instruments often use it to change timbre.",
+        hint: "Think about dynamics on a real instrument: what determines softness vs loudness?",
       },
       {
         q: "Live 12 generative MIDI is in…",
@@ -641,7 +642,7 @@ const w3: Mission[] = [
         answer: 2,
         explain:
           "Live 12's Note Transformations (Strum, Pitch Shift, etc.) are generative MIDI tools built directly into the Piano Roll.",
-        hint: "Live 12 added a whole new set of MIDI tools — where do you find them?",
+        hint: "Live 12 added a whole new set of MIDI tools: where do you find them?",
       },
     ],
   },
@@ -655,7 +656,7 @@ const w3: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Audio clips reference a sample file. They can be transposed, reversed, looped, sliced, and warped — all without touching the original.",
+        text: "Audio clips reference a sample file. They can be transposed, reversed, looped, sliced, and warped: all without touching the original.",
       },
       {
         kind: "list",
@@ -674,7 +675,7 @@ const w3: Mission[] = [
         options: ["Destructive", "Non-destructive", "Disabled", "MIDI-only"],
         answer: 1,
         explain:
-          "Editing audio clips in Live never touches the source file — all changes are stored as clip instructions, always reversible.",
+          "Editing audio clips in Live never touches the source file: all changes are stored as clip instructions, always reversible.",
         hint: "Would it be safe if cutting a clip also cut the file on disk?",
       },
       {
@@ -682,7 +683,7 @@ const w3: Mission[] = [
         options: ["Hz", "Cents", "Semitones", "Bars"],
         answer: 2,
         explain:
-          "Semitones are the standard musical pitch unit — 12 semitones = 1 octave. A +7 transpose moves up a perfect fifth.",
+          "Semitones are the standard musical pitch unit: 12 semitones = 1 octave. A +7 transpose moves up a perfect fifth.",
         hint: "What's the standard musical unit for pitch intervals?",
       },
       {
@@ -690,8 +691,8 @@ const w3: Mission[] = [
         options: ["Hz", "Cents", "Semitones", "Bars"],
         answer: 1,
         explain:
-          "Cents are hundredths of a semitone — 100 cents = 1 semitone. Used for fine tuning and detuning effects.",
-        hint: "One hundredth of something — what's the musical unit it subdivides?",
+          "Cents are hundredths of a semitone: 100 cents = 1 semitone. Used for fine tuning and detuning effects.",
+        hint: "One hundredth of something: what's the musical unit it subdivides?",
       },
     ],
   },
@@ -711,11 +712,11 @@ const w3: Mission[] = [
       {
         kind: "list",
         items: [
-          "Beats — drums and percussive material.",
-          "Tones — melodic mono material.",
-          "Texture — pads, ambience.",
-          "Re-Pitch — old-school speed up/down (pitch follows).",
-          "Complex / Complex Pro — full mixes (CPU heavy).",
+          "Beats: drums and percussive material.",
+          "Tones: melodic mono material.",
+          "Texture: pads, ambience.",
+          "Re-Pitch: old-school speed up/down (pitch follows).",
+          "Complex / Complex Pro: full mixes (CPU heavy).",
         ],
       },
       {
@@ -731,7 +732,7 @@ const w3: Mission[] = [
         options: ["Beats", "Tones", "Re-Pitch", "Complex Pro"],
         answer: 3,
         explain:
-          "Complex Pro uses a phase vocoder to independently time-stretch and pitch-shift — best for full mixes and vocals.",
+          "Complex Pro uses a phase vocoder to independently time-stretch and pitch-shift: best for full mixes and vocals.",
         hint: "Which mode is described as the highest-quality but most CPU-intensive?",
       },
       {
@@ -739,7 +740,7 @@ const w3: Mission[] = [
         options: ["Pitch only", "Time without pitch", "Both equally", "Volume"],
         answer: 1,
         explain:
-          "Warping moves audio in time independently from pitch — a DJ can slow a track to match BPM without chipmunking vocals.",
+          "Warping moves audio in time independently from pitch: a DJ can slow a track to match BPM without chipmunking vocals.",
         hint: "Warp = time. What does it NOT change?",
       },
       {
@@ -747,7 +748,7 @@ const w3: Mission[] = [
         options: ["A vocoder", "A tape machine", "A reverb", "A limiter"],
         answer: 1,
         explain:
-          "Re-Pitch changes playback speed AND pitch together, just like playing a record faster or slower — pure analog behavior.",
+          "Re-Pitch changes playback speed AND pitch together, just like playing a record faster or slower: pure analog behavior.",
         hint: "What happens when you speed up a tape or vinyl record?",
       },
     ],
@@ -772,7 +773,7 @@ const w3: Mission[] = [
       {
         kind: "callout",
         tone: "warn",
-        text: "Always check input level — peak around -12 to -6 dB, never clip into the red.",
+        text: "Always check input level: peak around -12 to -6 dB, never clip into the red.",
       },
     ],
     sim: { type: "mixer", preset: { record: true } },
@@ -782,8 +783,8 @@ const w3: Mission[] = [
         options: ["Solo it", "Record it", "Mute it", "Group it"],
         answer: 1,
         explain:
-          "Track arming (the red circle) tells Live which track to record onto — only armed tracks capture incoming audio.",
-        hint: "You have to 'arm' something before it's ready — like a camera shutter.",
+          "Track arming (the red circle) tells Live which track to record onto: only armed tracks capture incoming audio.",
+        hint: "You have to 'arm' something before it's ready: like a camera shutter.",
       },
       {
         q: "Monitor 'Auto' means…",
@@ -795,15 +796,15 @@ const w3: Mission[] = [
         ],
         answer: 2,
         explain:
-          "Monitor Auto passes input through when armed but not playing — so you hear yourself recording without hearing playback doubled.",
-        hint: "Auto = smart — it monitors when it needs to, and stops when it doesn't.",
+          "Monitor Auto passes input through when armed but not playing: so you hear yourself recording without hearing playback doubled.",
+        hint: "Auto = smart: it monitors when it needs to, and stops when it doesn't.",
       },
       {
         q: "Healthy input level is around…",
         options: ["0 dB", "-12 to -6 dB", "+6 dB", "-40 dB"],
         answer: 1,
         explain:
-          "-12 to -6 dBFS gives headroom for peaks without clipping — always leave space, especially before adding effects.",
+          "-12 to -6 dBFS gives headroom for peaks without clipping: always leave space, especially before adding effects.",
         hint: "0 dBFS is the ceiling. Where should your average level peak?",
       },
     ],
@@ -845,7 +846,7 @@ const w3: Mission[] = [
         options: ["Audio only", "MIDI only", "Both", "Returns"],
         answer: 2,
         explain:
-          "Take Lanes work for both audio clips and MIDI clips — you can comp between any mix of takes in both formats.",
+          "Take Lanes work for both audio clips and MIDI clips: you can comp between any mix of takes in both formats.",
         hint: "Is there a reason it would only work for one type?",
       },
       {
@@ -853,7 +854,7 @@ const w3: Mission[] = [
         options: ["A scene", "A take lane", "A device", "A locator"],
         answer: 1,
         explain:
-          "Each loop pass records a new take lane below — you can keep recording indefinitely and choose the best sections.",
+          "Each loop pass records a new take lane below: you can keep recording indefinitely and choose the best sections.",
         hint: "What happens to the previous recording when you loop back around?",
       },
     ],
@@ -875,7 +876,7 @@ const w3: Mission[] = [
         items: [
           "Slice by warp markers, beats, or transients.",
           "Each slice maps to a MIDI note.",
-          "Re-trigger, re-order, glitch — instant remix.",
+          "Re-trigger, re-order, glitch: instant remix.",
         ],
       },
     ],
@@ -886,7 +887,7 @@ const w3: Mission[] = [
         options: ["Sampler", "Drum Rack", "Wavetable", "Operator"],
         answer: 1,
         explain:
-          "Slicing to a Drum Rack maps each slice to a pad/note — you can then trigger, rearrange, and process each slice independently.",
+          "Slicing to a Drum Rack maps each slice to a pad/note: you can then trigger, rearrange, and process each slice independently.",
         hint: "Where do the individual slices go after being created?",
       },
       {
@@ -899,16 +900,16 @@ const w3: Mission[] = [
         ],
         answer: 2,
         explain:
-          "You can slice by audio transients, fixed beat divisions, or existing warp markers — each serves a different workflow.",
-        hint: "There are three methods — think audio events, rhythmic grids, and existing markers.",
+          "You can slice by audio transients, fixed beat divisions, or existing warp markers: each serves a different workflow.",
+        hint: "There are three methods: think audio events, rhythmic grids, and existing markers.",
       },
       {
         q: "Each slice is triggered by…",
         options: ["A scene", "A MIDI note", "A macro", "A send"],
         answer: 1,
         explain:
-          "Each slice maps to a MIDI note starting at C1 — Play a MIDI note to trigger that slice, enabling remixing and chopping.",
-        hint: "MIDI notes trigger sounds in a Drum Rack — same principle here.",
+          "Each slice maps to a MIDI note starting at C1: Play a MIDI note to trigger that slice, enabling remixing and chopping.",
+        hint: "MIDI notes trigger sounds in a Drum Rack: same principle here.",
       },
     ],
   },
@@ -926,12 +927,12 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Operator — FM synth, deep & metallic.",
-          "Wavetable — modern wavetable, the workhorse.",
-          "Drift — analog-style mono/poly synth (Live 11+).",
-          "Sampler / Simpler — play your own audio as instruments.",
-          "Drum Rack — kit container.",
-          "Meld (Live 12) — MPE-first dual-engine synth.",
+          "Operator: FM synth, deep & metallic.",
+          "Wavetable: modern wavetable, the workhorse.",
+          "Drift: analog-style mono/poly synth (Live 11+).",
+          "Sampler / Simpler: play your own audio as instruments.",
+          "Drum Rack: kit container.",
+          "Meld (Live 12): MPE-first dual-engine synth.",
         ],
       },
     ],
@@ -942,7 +943,7 @@ const w4: Mission[] = [
         options: ["FM", "Subtractive", "MPE dual-engine", "Granular"],
         answer: 2,
         explain:
-          "Meld (Live 12) is a dual-engine synth built for MPE — its two engines can be morphed and shaped with expressive controllers.",
+          "Meld (Live 12) is a dual-engine synth built for MPE: its two engines can be morphed and shaped with expressive controllers.",
         hint: "The name contains a clue about blending two things together.",
       },
       {
@@ -950,7 +951,7 @@ const w4: Mission[] = [
         options: ["Subtractive", "FM", "Wavetable", "Granular"],
         answer: 1,
         explain:
-          "Operator uses Frequency Modulation (FM) synthesis — oscillators modulate each other's frequency to create complex timbres.",
+          "Operator uses Frequency Modulation (FM) synthesis: oscillators modulate each other's frequency to create complex timbres.",
         hint: "What does FM stand for in the most famous FM synths?",
       },
       {
@@ -974,7 +975,7 @@ const w4: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Drum Rack is a container — each pad hosts a Simpler (or any device chain) on its own MIDI note.",
+        text: "Drum Rack is a container: each pad hosts a Simpler (or any device chain) on its own MIDI note.",
       },
       {
         kind: "list",
@@ -993,7 +994,7 @@ const w4: Mission[] = [
         options: ["Reverb", "Hi-hats", "Bass", "Master"],
         answer: 1,
         explain:
-          "Choke groups make hi-hats cut each other off — when an open hat is playing and a closed hat hits, the open hat stops.",
+          "Choke groups make hi-hats cut each other off: when an open hat is playing and a closed hat hits, the open hat stops.",
         hint: "What musical relationship exists between open and closed hi-hats?",
       },
       {
@@ -1001,16 +1002,16 @@ const w4: Mission[] = [
         options: ["A track", "A chain (often a Simpler)", "A scene", "A clip"],
         answer: 1,
         explain:
-          "Each Drum Rack pad holds a chain — typically a Simpler with a sample, plus effects — all self-contained per hit.",
-        hint: "A chain can hold any instruments and effects — what's the container called?",
+          "Each Drum Rack pad holds a chain, typically a Simpler with a sample, plus effects, all self-contained per hit.",
+        hint: "A chain can hold any instruments and effects: what's the container called?",
       },
       {
         q: "Drum Rack pads map to…",
         options: ["Audio inputs", "MIDI notes", "Sends", "Macros"],
         answer: 1,
         explain:
-          "Each Drum Rack pad is mapped to a specific MIDI note — C1=pad 1, C#1=pad 2, and so on up the keyboard.",
-        hint: "Pads need something to trigger them — what protocol does that?",
+          "Each Drum Rack pad is mapped to a specific MIDI note: C1=pad 1, C#1=pad 2, and so on up the keyboard.",
+        hint: "Pads need something to trigger them: what protocol does that?",
       },
     ],
   },
@@ -1027,7 +1028,7 @@ const w4: Mission[] = [
         items: [
           "Two oscillators scan through wavetables.",
           "Sub osc, noise, two filters, two envelopes, two LFOs.",
-          "Modulation matrix at the bottom — drag any source to any destination.",
+          "Modulation matrix at the bottom: drag any source to any destination.",
           "Unison modes for huge stacks.",
         ],
       },
@@ -1039,7 +1040,7 @@ const w4: Mission[] = [
         options: ["Top", "Bottom", "Side", "Hidden"],
         answer: 1,
         explain:
-          "Wavetable's modulation matrix is at the bottom of the device — drag from any source to any destination to patch modulation.",
+          "Wavetable's modulation matrix is at the bottom of the device: drag from any source to any destination to patch modulation.",
         hint: "Look at the bottom section of Wavetable's UI.",
       },
       {
@@ -1055,7 +1056,7 @@ const w4: Mission[] = [
         options: ["Single voice", "Layered detuned voices", "Reverb", "Distortion"],
         answer: 1,
         explain:
-          "Unison stacks multiple copies of a voice at slightly different pitches — creates the thick, chorus-like quality of many pads.",
+          "Unison stacks multiple copies of a voice at slightly different pitches: creates the thick, chorus-like quality of many pads.",
         hint: "What does stacking detuned copies of a sound create?",
       },
     ],
@@ -1089,7 +1090,7 @@ const w4: Mission[] = [
         options: ["2", "4", "6", "8"],
         answer: 1,
         explain:
-          "Operator has 4 operators arranged in various algorithms — each can be a carrier (outputting sound) or modulator (coloring it).",
+          "Operator has 4 operators arranged in various algorithms: each can be a carrier (outputting sound) or modulator (coloring it).",
         hint: "'Four-operator FM' is how classic FM synths like the DX7 are described.",
       },
       {
@@ -1097,7 +1098,7 @@ const w4: Mission[] = [
         options: ["Modulate", "Output sound", "Both", "Neither"],
         answer: 1,
         explain:
-          "Carriers are the operators whose output reaches your ears — modulators feed into carriers to add harmonics and character.",
+          "Carriers are the operators whose output reaches your ears: modulators feed into carriers to add harmonics and character.",
         hint: "In FM, which operator type actually creates audible output?",
       },
       {
@@ -1105,7 +1106,7 @@ const w4: Mission[] = [
         options: ["Quieter", "More harmonics", "Less harmonics", "Lower pitch"],
         answer: 1,
         explain:
-          "Modulator level controls how much one operator modulates another's frequency — higher levels = more sidebands = more harmonics.",
+          "Modulator level controls how much one operator modulates another's frequency: higher levels = more sidebands = more harmonics.",
         hint: "More modulation = more complexity. What does that sound like?",
       },
     ],
@@ -1121,8 +1122,8 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Simpler — one sample, three modes: Classic, One-Shot, Slice.",
-          "Sampler — full multi-sample instrument with zones, key/velocity mapping.",
+          "Simpler: one sample, three modes: Classic, One-Shot, Slice.",
+          "Sampler: full multi-sample instrument with zones, key/velocity mapping.",
           "Drag any audio onto a MIDI track to auto-create a Simpler.",
         ],
       },
@@ -1134,7 +1135,7 @@ const w4: Mission[] = [
         options: ["Loop, Pad, Drum", "Classic, One-Shot, Slice", "FM, AM, PM", "A, B, C"],
         answer: 1,
         explain:
-          "Classic for looping samples, One-Shot for non-looping (drums), Slice for chopping — each is optimized for its use case.",
+          "Classic for looping samples, One-Shot for non-looping (drums), Slice for chopping: each is optimized for its use case.",
         hint: "Three modes for three different sample playback scenarios.",
       },
       {
@@ -1142,7 +1143,7 @@ const w4: Mission[] = [
         options: ["Simpler", "Sampler", "Operator", "Drift"],
         answer: 1,
         explain:
-          "Sampler handles multi-sampled instruments with key zones, velocity layers, and round-robin — complex instrument design.",
+          "Sampler handles multi-sampled instruments with key zones, velocity layers, and round-robin: complex instrument design.",
         hint: "When you need different samples across the keyboard, which device handles that?",
       },
       {
@@ -1151,7 +1152,7 @@ const w4: Mission[] = [
         answer: 1,
         explain:
           "Dragging audio directly to a MIDI track automatically creates a Simpler with that sample loaded and ready to play.",
-        hint: "The simpler way to load a sample — what's Live's basic sampler called?",
+        hint: "The simpler way to load a sample: what's Live's basic sampler called?",
       },
     ],
   },
@@ -1190,7 +1191,7 @@ const w4: Mission[] = [
         options: ["4", "6", "8", "10"],
         answer: 2,
         explain:
-          "EQ Eight's 8 bands give you full-spectrum sculpting — bell, shelf, high/low-pass filters all independently configurable.",
+          "EQ Eight's 8 bands give you full-spectrum sculpting: bell, shelf, high/low-pass filters all independently configurable.",
         hint: "The device name contains the number of available filter bands.",
       },
       {
@@ -1198,7 +1199,7 @@ const w4: Mission[] = [
         options: ["High shelf", "Low shelf", "High-pass", "Notch"],
         answer: 2,
         explain:
-          "A high-pass filter removes everything BELOW the cutoff — perfect for eliminating low-end rumble, HVAC noise, or proximity effect.",
+          "A high-pass filter removes everything BELOW the cutoff: perfect for eliminating low-end rumble, HVAC noise, or proximity effect.",
         hint: "If it 'passes' high frequencies, what does it remove?",
       },
       {
@@ -1206,7 +1207,7 @@ const w4: Mission[] = [
         options: ["Boost first", "Cut first", "Only boost", "Only shelf"],
         answer: 1,
         explain:
-          "Subtractive EQ means cutting frequencies you don't want rather than boosting — cuts sound more natural and transparent.",
+          "Subtractive EQ means cutting frequencies you don't want rather than boosting: cuts sound more natural and transparent.",
         hint: "Subtract = remove. What are you removing in subtractive EQ?",
       },
     ],
@@ -1223,12 +1224,12 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Threshold — level above which compression kicks in.",
-          "Ratio — how much it squashes.",
-          "Attack — how fast it clamps.",
-          "Release — how fast it lets go.",
-          "Knee — soft vs hard transition.",
-          "Makeup — bring level back up.",
+          "Threshold: level above which compression kicks in.",
+          "Ratio: how much it squashes.",
+          "Attack: how fast it clamps.",
+          "Release: how fast it lets go.",
+          "Knee: soft vs hard transition.",
+          "Makeup: bring level back up.",
         ],
       },
       {
@@ -1244,8 +1245,8 @@ const w4: Mission[] = [
         options: ["Bass", "Transients", "Reverb", "Pitch"],
         answer: 1,
         explain:
-          "Slow attack lets transients through before compression kicks in — essential for drum punch and percussive snap.",
-        hint: "Attack is how fast compression responds — what happens to fast sounds if it's slow?",
+          "Slow attack lets transients through before compression kicks in: essential for drum punch and percussive snap.",
+        hint: "Attack is how fast compression responds: what happens to fast sounds if it's slow?",
       },
       {
         q: "Ratio of 4:1 means…",
@@ -1253,14 +1254,14 @@ const w4: Mission[] = [
         answer: 0,
         explain:
           "4:1 ratio: for every 4dB above threshold, only 1dB passes through. More ratio = more squash.",
-        hint: "The ratio describes input dB vs output dB — 4 in, how many out?",
+        hint: "The ratio describes input dB vs output dB: 4 in, how many out?",
       },
       {
         q: "Makeup gain compensates for…",
         options: ["Pitch", "Lost level", "Latency", "Width"],
         answer: 1,
         explain:
-          "Compression reduces peak levels — makeup gain restores the apparent loudness so the signal doesn't feel 'deflated'.",
+          "Compression reduces peak levels: makeup gain restores the apparent loudness so the signal doesn't feel 'deflated'.",
         hint: "After compression makes things quieter, what do you need to add back?",
       },
     ],
@@ -1276,10 +1277,10 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Reverb — space simulation; size, decay, dry/wet.",
+          "Reverb: space simulation; size, decay, dry/wet.",
           "Hybrid Reverb (Live 11+) blends convolution with algorithmic.",
-          "Delay — echoes synced to tempo.",
-          "Echo — analog-flavored delay with character.",
+          "Delay: echoes synced to tempo.",
+          "Echo: analog-flavored delay with character.",
           "Always put reverb/delay on a Return for sharing across tracks.",
         ],
       },
@@ -1292,14 +1293,14 @@ const w4: Mission[] = [
         answer: 2,
         explain:
           "Hybrid Reverb (Live 11) blends convolution (real-space IRs) with algorithmic reverb for unprecedented space control.",
-        hint: "It combines two reverb types — which major version introduced it?",
+        hint: "It combines two reverb types: which major version introduced it?",
       },
       {
         q: "Reverbs are best placed on…",
         options: ["Each track", "Master", "Returns", "Group"],
         answer: 2,
         explain:
-          "Reverb on returns means one reverb instance processes many tracks via sends — saves CPU and creates cohesive 'glue'.",
+          "Reverb on returns means one reverb instance processes many tracks via sends: saves CPU and creates cohesive 'glue'.",
         hint: "What's the most CPU-efficient way to share one effect across all tracks?",
       },
       {
@@ -1307,7 +1308,7 @@ const w4: Mission[] = [
         options: ["A reverb", "Analog-flavored delay", "A limiter", "A vocoder"],
         answer: 1,
         explain:
-          "Echo is Live's multi-mode delay with character — analogue warmth mode mimics tape delay with saturation and filtering.",
+          "Echo is Live's multi-mode delay with character: analogue warmth mode mimics tape delay with saturation and filtering.",
         hint: "Is it a reverb or a delay device?",
       },
     ],
@@ -1323,9 +1324,9 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Saturator — soft to hard saturation curves.",
+          "Saturator: soft to hard saturation curves.",
           "Drive controls how hard you push the curve.",
-          "Pedal, Overdrive, Roar (Live 12) — flavored distortions.",
+          "Pedal, Overdrive, Roar (Live 12): flavored distortions.",
           "Roar adds multi-band processing & feedback paths.",
         ],
       },
@@ -1345,16 +1346,16 @@ const w4: Mission[] = [
         options: ["Pitch", "How hard you hit the curve", "Reverb size", "Pan"],
         answer: 1,
         explain:
-          "Drive pushes the signal harder into Saturator's waveshaping curve — more drive = more harmonics = thicker, grittier tone.",
-        hint: "Driving something harder into a curve — what happens to the signal?",
+          "Drive pushes the signal harder into Saturator's waveshaping curve: more drive = more harmonics = thicker, grittier tone.",
+        hint: "Driving something harder into a curve: what happens to the signal?",
       },
       {
         q: "Roar is a…",
         options: ["Reverb", "Multi-band distortion", "Compressor", "Synth"],
         answer: 1,
         explain:
-          "Roar is multiband distortion — it splits the signal into bands, distorts each independently, then recombines for precise control.",
-        hint: "Multi + distortion — it does saturation in multiple frequency bands.",
+          "Roar is multiband distortion: it splits the signal into bands, distorts each independently, then recombines for precise control.",
+        hint: "Multi + distortion: it does saturation in multiple frequency bands.",
       },
     ],
   },
@@ -1369,11 +1370,11 @@ const w4: Mission[] = [
       {
         kind: "list",
         items: [
-          "Arpeggiator — turn chords into runs.",
-          "Chord — stack intervals on each note.",
-          "Scale — force notes into a scale.",
-          "Note Echo — note repeats.",
-          "Random / Velocity — humanise or chaos.",
+          "Arpeggiator: turn chords into runs.",
+          "Chord: stack intervals on each note.",
+          "Scale: force notes into a scale.",
+          "Note Echo: note repeats.",
+          "Random / Velocity: humanise or chaos.",
         ],
       },
     ],
@@ -1384,7 +1385,7 @@ const w4: Mission[] = [
         options: ["Chord", "Scale", "Random", "Velocity"],
         answer: 1,
         explain:
-          "The Scale MIDI device forces all incoming notes to the nearest note in a chosen scale — eliminates wrong notes instantly.",
+          "The Scale MIDI device forces all incoming notes to the nearest note in a chosen scale: eliminates wrong notes instantly.",
         hint: "Which device literally constrains notes to a musical scale?",
       },
       {
@@ -1392,15 +1393,15 @@ const w4: Mission[] = [
         options: ["Pads", "Runs", "Reverb", "Bass"],
         answer: 1,
         explain:
-          "Arpeggiator takes held chords and plays them as sequential notes — rate, direction, and pattern are fully configurable.",
-        hint: "Arpeggio = chord notes played sequentially — what device does that?",
+          "Arpeggiator takes held chords and plays them as sequential notes: rate, direction, and pattern are fully configurable.",
+        hint: "Arpeggio = chord notes played sequentially: what device does that?",
       },
       {
         q: "MIDI effects sit…",
         options: ["After instrument", "Before instrument", "On Master", "On Return"],
         answer: 1,
         explain:
-          "MIDI effects transform note data before it reaches the instrument — they're always in the device chain before the synth.",
+          "MIDI effects transform note data before it reaches the instrument: they're always in the device chain before the synth.",
         hint: "MIDI data flows: MIDI FX → Instrument → Audio FX. Where are MIDI effects?",
       },
     ],
@@ -1435,8 +1436,8 @@ const w4: Mission[] = [
         options: ["8", "12", "16", "32"],
         answer: 2,
         explain:
-          "Live 11 expanded Instrument Racks to 16 macros — more than enough for deep preset customization without menu-diving.",
-        hint: "It's the maximum, not the default — think about how many a full rack can have.",
+          "Live 11 expanded Instrument Racks to 16 macros: more than enough for deep preset customization without menu-diving.",
+        hint: "It's the maximum, not the default: think about how many a full rack can have.",
       },
       {
         q: "Macro Variations are…",
@@ -1444,14 +1445,14 @@ const w4: Mission[] = [
         answer: 1,
         explain:
           "Macro Variations (Live 12) snapshot your macro values so you can instantly switch between different sound 'states' of a patch.",
-        hint: "Variations suggests multiple saved states — what do macros control?",
+        hint: "Variations suggests multiple saved states: what do macros control?",
       },
       {
         q: "Chain Selector splits…",
         options: ["MIDI notes only", "Velocity, key or chain zones", "Audio only", "Returns"],
         answer: 1,
         explain:
-          "Chain Selector splits chains by key range, velocity range, or chain zone — enabling splits, layers, and velocity-switching.",
+          "Chain Selector splits chains by key range, velocity range, or chain zone: enabling splits, layers, and velocity-switching.",
         hint: "What three dimensions can determine which chain plays?",
       },
     ],
@@ -1470,11 +1471,11 @@ const w5: Mission[] = [
       {
         kind: "list",
         items: [
-          "Volume fader — track level (don't ride hot).",
-          "Pan — stereo placement.",
-          "Mute / Solo — isolate or silence.",
-          "Cue — pre-listen for DJ-style monitoring.",
-          "Crossfader A/B — DJ blend across tracks.",
+          "Volume fader: track level (don't ride hot).",
+          "Pan: stereo placement.",
+          "Mute / Solo: isolate or silence.",
+          "Cue: pre-listen for DJ-style monitoring.",
+          "Crossfader A/B: DJ blend across tracks.",
         ],
       },
     ],
@@ -1485,7 +1486,7 @@ const w5: Mission[] = [
         options: ["Mutes others", "Mutes it", "Records it", "Groups it"],
         answer: 0,
         explain:
-          "Solo mutes all other tracks temporarily — useful for checking individual elements without stopping the mix.",
+          "Solo mutes all other tracks temporarily: useful for checking individual elements without stopping the mix.",
         hint: "If you solo one track, what happens to the others?",
       },
       {
@@ -1493,8 +1494,8 @@ const w5: Mission[] = [
         options: ["EQ", "DJ-style A/B blend", "Reverb", "Pitch"],
         answer: 1,
         explain:
-          "The Crossfader blends between tracks assigned to A or B — perfect for DJ mixes and live performance transitions.",
-        hint: "It fades between two sides — what are those sides called?",
+          "The Crossfader blends between tracks assigned to A or B: perfect for DJ mixes and live performance transitions.",
+        hint: "It fades between two sides: what are those sides called?",
       },
       {
         q: "Cue lets you…",
@@ -1502,7 +1503,7 @@ const w5: Mission[] = [
         answer: 0,
         explain:
           "Cue output sends pre-fader signal to your headphones for previewing the next track before bringing it in on master.",
-        hint: "It lets you hear something before the audience does — what's that called?",
+        hint: "It lets you hear something before the audience does: what's that called?",
       },
     ],
   },
@@ -1522,7 +1523,7 @@ const w5: Mission[] = [
       {
         kind: "list",
         items: [
-          "Cmd/Ctrl + Alt + T — create Return Track.",
+          "Cmd/Ctrl + Alt + T: create Return Track.",
           "Each track gets a Send knob per Return.",
           "Pre/Post toggle: Pre = send before fader, Post = after.",
         ],
@@ -1535,7 +1536,7 @@ const w5: Mission[] = [
         options: ["Pan", "Volume fader", "Solo", "Mute"],
         answer: 1,
         explain:
-          "Pre-fader sends don't change when you move the volume fader — the send level is independent of track volume.",
+          "Pre-fader sends don't change when you move the volume fader: the send level is independent of track volume.",
         hint: "Pre = before the fader. What does 'before' mean for fader changes?",
       },
       {
@@ -1543,8 +1544,8 @@ const w5: Mission[] = [
         options: ["MIDI", "Sends", "Inputs", "Scenes"],
         answer: 1,
         explain:
-          "Returns are the destination for send signals — they host shared effects and output to the master, not directly to tracks.",
-        hint: "Sends go somewhere — where do they go?",
+          "Returns are the destination for send signals: they host shared effects and output to the master, not directly to tracks.",
+        hint: "Sends go somewhere: where do they go?",
       },
       {
         q: "Why use a return reverb?",
@@ -1552,7 +1553,7 @@ const w5: Mission[] = [
         answer: 1,
         explain:
           "One reverb on a return shared by 20 tracks uses 1/20th the CPU vs 20 separate reverbs, and glues the mix together.",
-        hint: "Efficiency and mixing cohesion — what's the benefit of sharing an effect?",
+        hint: "Efficiency and mixing cohesion: what's the benefit of sharing an effect?",
       },
     ],
   },
@@ -1568,7 +1569,7 @@ const w5: Mission[] = [
         kind: "list",
         items: [
           "Cmd/Ctrl + G groups tracks.",
-          "Group is a real audio bus — process it.",
+          "Group is a real audio bus: process it.",
           "Track In/Out lets you route any track anywhere.",
           "Audio From: external input, another track, Resampling.",
         ],
@@ -1581,7 +1582,7 @@ const w5: Mission[] = [
         options: ["Folders only", "Real audio buses", "Returns", "MIDI"],
         answer: 1,
         explain:
-          "Group tracks are real audio buses that sum their children — you can add effects, automate, and compress the entire group.",
+          "Group tracks are real audio buses that sum their children: you can add effects, automate, and compress the entire group.",
         hint: "Unlike just folders, Group tracks actually process audio. What makes them a bus?",
       },
       {
@@ -1589,7 +1590,7 @@ const w5: Mission[] = [
         options: ["A scene", "An audio track input", "A return", "A clip"],
         answer: 1,
         explain:
-          "Resampling routes master output back to an audio track input — use it to capture your mix, effects chain, or live performance.",
+          "Resampling routes master output back to an audio track input: use it to capture your mix, effects chain, or live performance.",
         hint: "Where does the signal come from in Resampling mode?",
       },
       {
@@ -1597,7 +1598,7 @@ const w5: Mission[] = [
         options: ["Saves", "Groups", "Quantizes", "Records"],
         answer: 1,
         explain:
-          "Cmd/Ctrl + G groups selected tracks into a new Group track — faster than right-clicking for the context menu option.",
+          "Cmd/Ctrl + G groups selected tracks into a new Group track: faster than right-clicking for the context menu option.",
         hint: "G = Group. What's the keyboard modifier on Mac/PC?",
       },
     ],
@@ -1632,15 +1633,15 @@ const w5: Mission[] = [
         options: ["B", "A", "S", "M"],
         answer: 1,
         explain:
-          "Pressing A shows all automation lanes in Arrangement View — you can then see and edit every automated parameter.",
-        hint: "A single letter shortcut — which letter stands for Automation?",
+          "Pressing A shows all automation lanes in Arrangement View: you can then see and edit every automated parameter.",
+        hint: "A single letter shortcut: which letter stands for Automation?",
       },
       {
         q: "Clip-only automation lives in…",
         options: ["Mixer", "Clip Envelopes", "Master", "Returns"],
         answer: 1,
         explain:
-          "Clip envelopes store automation that loops with the clip — they travel with the clip if you move it, unlike track automation.",
+          "Clip envelopes store automation that loops with the clip: they travel with the clip if you move it, unlike track automation.",
         hint: "If automation is 'in the clip', where does it live?",
       },
       {
@@ -1648,8 +1649,8 @@ const w5: Mission[] = [
         options: ["Live 9", "Live 10", "Live 11", "Live 12"],
         answer: 2,
         explain:
-          "Curved automation (Live 11) lets you draw Bezier-style curves between points — much more organic than stepped or linear.",
-        hint: "It's the most recent addition to automation — check the version.",
+          "Curved automation (Live 11) lets you draw Bezier-style curves between points: much more organic than stepped or linear.",
+        hint: "It's the most recent addition to automation: check the version.",
       },
     ],
   },
@@ -1663,7 +1664,7 @@ const w5: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Modulation in Live 12 is offset-based — it nudges a parameter relative to its current value, on top of automation.",
+        text: "Modulation in Live 12 is offset-based: it nudges a parameter relative to its current value, on top of automation.",
       },
       {
         kind: "list",
@@ -1681,15 +1682,15 @@ const w5: Mission[] = [
         options: ["Absolute", "Offset-based", "MIDI-only", "Disabled"],
         answer: 1,
         explain:
-          "Live 12 modulation is offset-based — it adds to existing automation values rather than replacing them, so both coexist.",
-        hint: "Offset means adding on top — how does it interact with automation?",
+          "Live 12 modulation is offset-based: it adds to existing automation values rather than replacing them, so both coexist.",
+        hint: "Offset means adding on top: how does it interact with automation?",
       },
       {
         q: "Modulation stacks with…",
         options: ["Nothing", "Automation", "Sends only", "Solo"],
         answer: 1,
         explain:
-          "Modulation stacks with automation — both can exist simultaneously on the same parameter, giving you layered control.",
+          "Modulation stacks with automation: both can exist simultaneously on the same parameter, giving you layered control.",
         hint: "Do they conflict, or do they add together?",
       },
       {
@@ -1697,7 +1698,7 @@ const w5: Mission[] = [
         options: ["Live 10", "Live 11", "Live 12", "Live 8"],
         answer: 2,
         explain:
-          "Modulation lanes are a Live 12 feature — they let clips carry their own LFO-style modulation without using MIDI or automation.",
+          "Modulation lanes are a Live 12 feature: they let clips carry their own LFO-style modulation without using MIDI or automation.",
         hint: "The most recently listed version added them.",
       },
     ],
@@ -1732,8 +1733,8 @@ const w5: Mission[] = [
         options: ["The kick", "The track being compressed", "The reverb", "Master"],
         answer: 1,
         explain:
-          "Sidechain compression ducks (reduces volume of) whatever track the compressor is on — triggered by the sidechain input.",
-        hint: "Which track gets ducked — the compressor's track or the sidechain source?",
+          "Sidechain compression ducks (reduces volume of) whatever track the compressor is on: triggered by the sidechain input.",
+        hint: "Which track gets ducked: the compressor's track or the sidechain source?",
       },
       {
         q: "Classic pump uses…",
@@ -1745,7 +1746,7 @@ const w5: Mission[] = [
         ],
         answer: 1,
         explain:
-          "Fast attack grabs transients immediately, medium release lets the signal breathe back before the next kick — the classic EDM pump.",
+          "Fast attack grabs transients immediately, medium release lets the signal breathe back before the next kick: the classic EDM pump.",
         hint: "Classic pump: how fast does it clamp, and how fast does it let go?",
       },
       {
@@ -1753,8 +1754,8 @@ const w5: Mission[] = [
         options: ["EQ", "Compressor", "Reverb", "Saturator"],
         answer: 1,
         explain:
-          "The sidechain input selector lives inside the Compressor device panel — expand it to choose the trigger source track.",
-        hint: "It's inside the device itself — on which device specifically?",
+          "The sidechain input selector lives inside the Compressor device panel: expand it to choose the trigger source track.",
+        hint: "It's inside the device itself: on which device specifically?",
       },
     ],
   },
@@ -1783,8 +1784,8 @@ const w5: Mission[] = [
         options: ["Intro", "Standard", "Suite", "Lite"],
         answer: 2,
         explain:
-          "Max for Live ships exclusively with Live Suite — the top-tier license required for M4L devices and many advanced features.",
-        hint: "M4L is a premium feature — which version of Live includes it?",
+          "Max for Live ships exclusively with Live Suite: the top-tier license required for M4L devices and many advanced features.",
+        hint: "M4L is a premium feature: which version of Live includes it?",
       },
       {
         q: "Envelope Follower is…",
@@ -1792,14 +1793,14 @@ const w5: Mission[] = [
         answer: 1,
         explain:
           "Envelope Follower is an M4L device that tracks the amplitude of audio and outputs it as modulation signal.",
-        hint: "What does an 'envelope follower' do — follow what?",
+        hint: "What does an 'envelope follower' do: follow what?",
       },
       {
         q: "Max is…",
         options: ["Audio editor", "Visual programming env", "Mastering tool", "DJ app"],
         answer: 1,
         explain:
-          "Max is a visual programming environment from Cycling '74 — you connect objects with patch cables to create custom devices.",
+          "Max is a visual programming environment from Cycling '74: you connect objects with patch cables to create custom devices.",
         hint: "Is Max text-based or visual/node-based programming?",
       },
     ],
@@ -1818,7 +1819,7 @@ const w6: Mission[] = [
       {
         kind: "list",
         items: [
-          "Push 3 — hardware instrument, can run Live standalone.",
+          "Push 3: hardware instrument, can run Live standalone.",
           "Auto-mapping for popular controllers.",
           "User Remote Scripts for custom mapping.",
         ],
@@ -1831,24 +1832,24 @@ const w6: Mission[] = [
         options: ["Only with computer", "Standalone", "MIDI only", "Audio only"],
         answer: 1,
         explain:
-          "Push 3 Standalone contains Live's audio engine on the device itself — no laptop needed for performance or production.",
-        hint: "Standalone means it runs independently — without what?",
+          "Push 3 Standalone contains Live's audio engine on the device itself: no laptop needed for performance or production.",
+        hint: "Standalone means it runs independently: without what?",
       },
       {
         q: "Custom mapping uses…",
         options: ["Macros", "Remote Scripts", "Sends", "Cue"],
         answer: 1,
         explain:
-          "Custom MIDI mapping to Push uses Remote Scripts — Python scripts that define exactly how Live responds to Push's controls.",
-        hint: "Remote Scripts are the mechanism — what language are they written in? (trick: the question asks the technology name)",
+          "Custom MIDI mapping to Push uses Remote Scripts: Python scripts that define exactly how Live responds to Push's controls.",
+        hint: "Remote Scripts are the mechanism: what language are they written in? (trick: the question asks the technology name)",
       },
       {
         q: "Push is…",
         options: ["A plugin", "Hardware", "A scene", "A clip"],
         answer: 1,
         explain:
-          "Push is dedicated hardware made by Ableton — not software, not a plugin, but a physical controller and standalone device.",
-        hint: "Push exists in the physical world — what category does that put it in?",
+          "Push is dedicated hardware made by Ableton: not software, not a plugin, but a physical controller and standalone device.",
+        hint: "Push exists in the physical world: what category does that put it in?",
       },
     ],
   },
@@ -1868,7 +1869,7 @@ const w6: Mission[] = [
       {
         kind: "list",
         items: [
-          "Cmd/Ctrl + K — Key Map mode (laptop keys).",
+          "Cmd/Ctrl + K: Key Map mode (laptop keys).",
           "Mappings are per Live Set.",
           "Right-click a mapping to invert range.",
         ],
@@ -1881,24 +1882,24 @@ const w6: Mission[] = [
         options: ["Cmd/Ctrl + M", "Cmd/Ctrl + K", "Cmd/Ctrl + L", "Cmd/Ctrl + J"],
         answer: 0,
         explain:
-          "Cmd/Ctrl + M enters MIDI Map mode — click any parameter then move a hardware control to assign it.",
-        hint: "M for MIDI — what key modifier comes before it on Mac/PC?",
+          "Cmd/Ctrl + M enters MIDI Map mode: click any parameter then move a hardware control to assign it.",
+        hint: "M for MIDI: what key modifier comes before it on Mac/PC?",
       },
       {
         q: "Key Map shortcut…",
         options: ["Cmd/Ctrl + M", "Cmd/Ctrl + K", "Cmd/Ctrl + L", "Cmd/Ctrl + J"],
         answer: 1,
         explain:
-          "Cmd/Ctrl + K enters Key Map mode — assign any computer keyboard key to any Live parameter or button.",
-        hint: "K for Key Map — what's the modifier?",
+          "Cmd/Ctrl + K enters Key Map mode: assign any computer keyboard key to any Live parameter or button.",
+        hint: "K for Key Map: what's the modifier?",
       },
       {
         q: "Mappings save…",
         options: ["Globally", "Per Live Set", "Per Pack", "Per scene"],
         answer: 1,
         explain:
-          "MIDI and key mappings save with the Live Set (.als) — they don't transfer between projects automatically.",
-        hint: "Mappings are project-specific — where do they live?",
+          "MIDI and key mappings save with the Live Set (.als): they don't transfer between projects automatically.",
+        hint: "Mappings are project-specific: where do they live?",
       },
     ],
   },
@@ -1930,7 +1931,7 @@ const w6: Mission[] = [
         options: ["Live 9", "Live 10", "Live 11", "Live 12"],
         answer: 2,
         explain:
-          "Tempo Follower (Live 11) analyzes incoming audio in real-time and adjusts Live's BPM to match — great for live band sync.",
+          "Tempo Follower (Live 11) analyzes incoming audio in real-time and adjusts Live's BPM to match: great for live band sync.",
         hint: "Which version added real-time audio tempo analysis?",
       },
       {
@@ -1938,7 +1939,7 @@ const w6: Mission[] = [
         options: ["MIDI clock", "Audio input", "Scene tempo", "Cue"],
         answer: 1,
         explain:
-          "Tempo Follower listens to the audio input signal to extract the current BPM — it needs audio, not MIDI.",
+          "Tempo Follower listens to the audio input signal to extract the current BPM: it needs audio, not MIDI.",
         hint: "What type of input does it analyze to extract tempo?",
       },
       {
@@ -1975,8 +1976,8 @@ const w6: Mission[] = [
         options: ["AC-coupled", "DC-coupled", "USB-only", "MIDI-only"],
         answer: 1,
         explain:
-          "CV (Control Voltage) is DC audio — standard audio interfaces block it. DC-coupled interfaces pass CV voltages correctly.",
-        hint: "CV is DC voltage — what interface characteristic allows DC to pass?",
+          "CV (Control Voltage) is DC audio: standard audio interfaces block it. DC-coupled interfaces pass CV voltages correctly.",
+        hint: "CV is DC voltage: what interface characteristic allows DC to pass?",
       },
       {
         q: "CV Tools talk to…",
@@ -1984,7 +1985,7 @@ const w6: Mission[] = [
         answer: 1,
         explain:
           "CV Tools converts Live's MIDI/automation into CV signals that control modular synth parameters over analog voltage.",
-        hint: "Modular synths speak CV — CV Tools bridges what two worlds?",
+        hint: "Modular synths speak CV: CV Tools bridges what two worlds?",
       },
       {
         q: "CV In…",
@@ -1992,7 +1993,7 @@ const w6: Mission[] = [
         answer: 1,
         explain:
           "CV In receives incoming CV signals from modular gear and converts them to MIDI or modulation inside Live.",
-        hint: "In receives, Out sends — which direction is CV In?",
+        hint: "In receives, Out sends: which direction is CV In?",
       },
     ],
   },
@@ -2006,7 +2007,7 @@ const w6: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Link keeps multiple devices on the same beat over a local network — no cables, no master clock.",
+        text: "Link keeps multiple devices on the same beat over a local network: no cables, no master clock.",
       },
       {
         kind: "list",
@@ -2024,23 +2025,23 @@ const w6: Mission[] = [
         options: ["MIDI cable", "Wi-Fi/LAN", "Audio cable", "USB only"],
         answer: 1,
         explain:
-          "Link synchronizes tempo and phase across apps and devices on the same Wi-Fi or Ethernet network — no MIDI cable needed.",
-        hint: "Modern sync without MIDI — what network technology does it use?",
+          "Link synchronizes tempo and phase across apps and devices on the same Wi-Fi or Ethernet network: no MIDI cable needed.",
+        hint: "Modern sync without MIDI: what network technology does it use?",
       },
       {
         q: "Link tempo control is…",
         options: ["Single master", "Anyone can change", "Locked", "Read-only"],
         answer: 1,
         explain:
-          "Ableton Link is fully peer-to-peer — any device in the session can change the tempo and all others follow.",
-        hint: "There's no master or slave — who controls the tempo?",
+          "Ableton Link is fully peer-to-peer: any device in the session can change the tempo and all others follow.",
+        hint: "There's no master or slave: who controls the tempo?",
       },
       {
         q: "Link is…",
         options: ["Paid plugin", "Free, built-in", "Hardware only", "iOS only"],
         answer: 1,
         explain:
-          "Link is completely free and built into Live, Push, and hundreds of third-party apps — no subscription or add-on required.",
+          "Link is completely free and built into Live, Push, and hundreds of third-party apps: no subscription or add-on required.",
         hint: "Is Link a paid extension or included out of the box?",
       },
     ],
@@ -2063,7 +2064,7 @@ const w6: Mission[] = [
         items: [
           "Render as Loop renders just the loop.",
           "WAV 24-bit / 44.1 kHz for distribution; 32-bit float for mastering hand-off.",
-          "Normalize off — leave headroom.",
+          "Normalize off: leave headroom.",
           "Render Each Track separately for stems.",
         ],
       },
@@ -2075,7 +2076,7 @@ const w6: Mission[] = [
         options: ["MP3", "WAV 16-bit", "WAV 24-bit / 32-bit float", "FLAC"],
         answer: 2,
         explain:
-          "Mastering engineers need maximum headroom — 24-bit or 32-bit float WAV at full sample rate preserves all dynamic information.",
+          "Mastering engineers need maximum headroom: 24-bit or 32-bit float WAV at full sample rate preserves all dynamic information.",
         hint: "What format gives a mastering engineer the most to work with?",
       },
       {
@@ -2083,15 +2084,15 @@ const w6: Mission[] = [
         options: ["Render Master", "Render Each Track", "Render Loop", "Render MIDI"],
         answer: 1,
         explain:
-          "Render Each Track exports individual stems — great for remixing, collaborating, or sending to a mixing engineer.",
-        hint: "Stems are separate — what export option gives you each track alone?",
+          "Render Each Track exports individual stems: great for remixing, collaborating, or sending to a mixing engineer.",
+        hint: "Stems are separate: what export option gives you each track alone?",
       },
       {
         q: "Export shortcut…",
         options: ["Cmd/Ctrl + R", "Cmd/Ctrl + Shift + R", "Cmd/Ctrl + E", "F12"],
         answer: 1,
         explain:
-          "Cmd/Ctrl + Shift + R opens the Export Audio dialog — memorize this if you export often.",
+          "Cmd/Ctrl + Shift + R opens the Export Audio dialog: memorize this if you export often.",
         hint: "R = Render/Export. What modifier combination triggers it?",
       },
     ],
@@ -2121,7 +2122,7 @@ const w6: Mission[] = [
         options: ["RAM for CPU", "CPU for disk", "Disk for RAM", "Quality for size"],
         answer: 1,
         explain:
-          "Freeze renders a track temporarily to an audio file, bypassing CPU-intensive devices — saves CPU at cost of edit flexibility.",
+          "Freeze renders a track temporarily to an audio file, bypassing CPU-intensive devices: saves CPU at cost of edit flexibility.",
         hint: "What are you giving up when you freeze a track?",
       },
       {
@@ -2129,7 +2130,7 @@ const w6: Mission[] = [
         options: ["Renders to audio in place", "Deletes a track", "Exports stems", "Locks tempo"],
         answer: 0,
         explain:
-          "Bounce in Place permanently renders a track including all its devices to a new audio clip — frees those devices entirely.",
+          "Bounce in Place permanently renders a track including all its devices to a new audio clip: frees those devices entirely.",
         hint: "Bounce = render permanently. What does 'in place' mean here?",
       },
       {
@@ -2137,7 +2138,7 @@ const w6: Mission[] = [
         options: ["Default Live Set", "Tempo only", "Theme", "Plugin folder"],
         answer: 0,
         explain:
-          "Templates are saved Live Sets that open as your starting point — set up with your preferred routing, devices, and preferences.",
+          "Templates are saved Live Sets that open as your starting point: set up with your preferred routing, devices, and preferences.",
         hint: "What do you open at the start of every session?",
       },
     ],
@@ -2167,7 +2168,7 @@ const w6: Mission[] = [
         options: ["Lower buffer", "Raise buffer / freeze", "Add reverb", "Solo"],
         answer: 1,
         explain:
-          "Buffer size determines how many samples are processed at once — larger buffer = more time to calculate = less CPU strain.",
+          "Buffer size determines how many samples are processed at once: larger buffer = more time to calculate = less CPU strain.",
         hint: "What's the first thing to try when you hear clicks and pops?",
       },
       {
@@ -2175,7 +2176,7 @@ const w6: Mission[] = [
         options: ["Trash", "Project's Backup folder", "Library root", "Master track"],
         answer: 1,
         explain:
-          "Live auto-saves to a Backup folder inside the project — if your session crashes, look there for recovery files.",
+          "Live auto-saves to a Backup folder inside the project: if your session crashes, look there for recovery files.",
         hint: "Where does Live save emergency backup copies?",
       },
       {
@@ -2183,8 +2184,8 @@ const w6: Mission[] = [
         options: ["Re-scan in Preferences", "Reinstall Live", "New project", "Disable MIDI"],
         answer: 0,
         explain:
-          "When plugins disappear, Live needs to re-scan your plugin folders — go to Preferences > Plug-Ins and rescan.",
-        hint: "Plugins are found by scanning — what do you need to trigger?",
+          "When plugins disappear, Live needs to re-scan your plugin folders: go to Preferences > Plug-Ins and rescan.",
+        hint: "Plugins are found by scanning: what do you need to trigger?",
       },
     ],
   },
@@ -2196,7 +2197,7 @@ const wExtra: Mission[] = [
     world: "first-contact",
     number: 6,
     title: "Capture MIDI",
-    tagline: "The take you didn't record — recovered.",
+    tagline: "The take you didn't record: recovered.",
     xp: 60,
     badge: { slug: "time-traveller", name: "Time Traveller" },
     explainer: [
@@ -2215,7 +2216,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "key",
-        text: "If you ever say 'wait, that was good' — you almost certainly already have it.",
+        text: "If you ever say 'wait, that was good': you almost certainly already have it.",
       },
     ],
     sim: { type: "piano-roll" },
@@ -2225,7 +2226,7 @@ const wExtra: Mission[] = [
         options: ["True", "False"],
         answer: 1,
         explain:
-          "Capture MIDI works WITHOUT record armed — it retroactively captures what you just played even if you weren't recording.",
+          "Capture MIDI works WITHOUT record armed: it retroactively captures what you just played even if you weren't recording.",
         hint: "Does Capture require you to be in record mode first?",
       },
       {
@@ -2233,7 +2234,7 @@ const wExtra: Mission[] = [
         options: ["Audio", "MIDI you just played", "Automation only"],
         answer: 1,
         explain:
-          "Capture MIDI captures the MIDI notes you just played on any connected controller — your last few bars of playing.",
+          "Capture MIDI captures the MIDI notes you just played on any connected controller: your last few bars of playing.",
         hint: "What musical content does Capture recover?",
       },
       {
@@ -2241,7 +2242,7 @@ const wExtra: Mission[] = [
         options: ["A new track", "The armed MIDI track", "The Master"],
         answer: 1,
         explain:
-          "Captured clips land on the armed (or selected) MIDI track — exactly where you'd expect to continue working.",
+          "Captured clips land on the armed (or selected) MIDI track: exactly where you'd expect to continue working.",
         hint: "Which track receives the captured clip?",
       },
     ],
@@ -2263,7 +2264,7 @@ const wExtra: Mission[] = [
         kind: "list",
         items: [
           "Right-click a track header → Show Take Lanes.",
-          "Loop a section, hit Record — each pass lands on a new lane.",
+          "Loop a section, hit Record: each pass lands on a new lane.",
           "Drag across the parts you like; they appear on the top lane (the comp).",
           "Works for both Audio and MIDI.",
         ],
@@ -2271,7 +2272,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "Comping is the secret behind 'how did they sing that perfectly?' — they didn't, in one go.",
+        text: "Comping is the secret behind 'how did they sing that perfectly?': they didn't, in one go.",
       },
     ],
     sim: { type: "arrangement" },
@@ -2282,22 +2283,22 @@ const wExtra: Mission[] = [
         answer: 2,
         explain:
           "Take Lanes are a Live 11 feature for non-destructive comping of multiple recorded passes of audio or MIDI.",
-        hint: "Take Lanes record multiple passes — which version introduced them?",
+        hint: "Take Lanes record multiple passes: which version introduced them?",
       },
       {
         q: "The comp lives on…",
         options: ["A return", "The main (top) lane", "The Master"],
         answer: 1,
         explain:
-          "The comp lane is always the top lane — it's where you piece together the best sections from all the take lanes below.",
-        hint: "The final edit sits at the top — what's it called?",
+          "The comp lane is always the top lane: it's where you piece together the best sections from all the take lanes below.",
+        hint: "The final edit sits at the top: what's it called?",
       },
       {
         q: "Take Lanes work for…",
         options: ["Audio only", "MIDI only", "Audio and MIDI"],
         answer: 2,
         explain:
-          "Take Lanes and comping work identically for audio and MIDI — record multiple passes and comp between them.",
+          "Take Lanes and comping work identically for audio and MIDI: record multiple passes and comp between them.",
         hint: "Is there a reason it would only work for one type?",
       },
     ],
@@ -2319,7 +2320,7 @@ const wExtra: Mission[] = [
         kind: "list",
         items: [
           "Plug in an MPE controller (Push 3, Seaboard, LinnStrument).",
-          "Live 12 added Tuning Systems — load a Scala (.scl) file to play in just intonation, 24-EDO, etc.",
+          "Live 12 added Tuning Systems: load a Scala (.scl) file to play in just intonation, 24-EDO, etc.",
           "Tuning is global per Set; every device that supports it follows.",
         ],
       },
@@ -2336,15 +2337,15 @@ const wExtra: Mission[] = [
         options: ["MIDI Polyphonic Expression", "Multi Patch Editor", "Mod Performance Engine"],
         answer: 0,
         explain:
-          "MPE allows each note to carry its own pitch bend, pressure, and slide data — enabling truly expressive polyphonic performance.",
-        hint: "MPE = MIDI Polyphonic Expression — what does Polyphonic mean?",
+          "MPE allows each note to carry its own pitch bend, pressure, and slide data: enabling truly expressive polyphonic performance.",
+        hint: "MPE = MIDI Polyphonic Expression: what does Polyphonic mean?",
       },
       {
         q: "Tuning Systems arrived in…",
         options: ["Live 10", "Live 11", "Live 12"],
         answer: 2,
         explain:
-          "Tuning Systems (Live 12) let you use alternative scales and temperaments — microtonal, just intonation, historic tunings.",
+          "Tuning Systems (Live 12) let you use alternative scales and temperaments: microtonal, just intonation, historic tunings.",
         hint: "Which is the most recent version in the list?",
       },
       {
@@ -2352,8 +2353,8 @@ const wExtra: Mission[] = [
         options: ["A sample", "A Scala tuning file", "A preset"],
         answer: 1,
         explain:
-          ".scl files are the Scala format for defining alternative tuning systems — thousands are freely available online.",
-        hint: "Scala is a historical tool for microtonality — what does its file format end in?",
+          ".scl files are the Scala format for defining alternative tuning systems: thousands are freely available online.",
+        hint: "Scala is a historical tool for microtonality: what does its file format end in?",
       },
     ],
   },
@@ -2373,7 +2374,7 @@ const wExtra: Mission[] = [
       {
         kind: "list",
         items: [
-          "Engines: classic, noise, FM, formant, additive — pick one per voice.",
+          "Engines: classic, noise, FM, formant, additive: pick one per voice.",
           "Built-in modulation matrix with macro destinations.",
           "Designed to feel expressive on Push 3 and other MPE controllers.",
         ],
@@ -2399,15 +2400,15 @@ const wExtra: Mission[] = [
         options: ["1", "2", "4"],
         answer: 1,
         explain:
-          "Meld has two independent synthesis engines that can be blended, mixed, or morphed — the name reflects this duality.",
-        hint: "Meld implies fusion — how many things can you fuse?",
+          "Meld has two independent synthesis engines that can be blended, mixed, or morphed: the name reflects this duality.",
+        hint: "Meld implies fusion: how many things can you fuse?",
       },
       {
         q: "Meld is designed for…",
         options: ["MPE expression", "Drum sampling", "Mastering"],
         answer: 0,
         explain:
-          "Meld's MPE design means each note responds to pressure, slide, and pitch independently — expressive per-finger control.",
+          "Meld's MPE design means each note responds to pressure, slide, and pitch independently: expressive per-finger control.",
         hint: "Meld was built for which expressive MIDI protocol?",
       },
     ],
@@ -2423,12 +2424,12 @@ const wExtra: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Drum Sampler (Live 12) replaces Simpler on each pad of the new Drum Rack. Multi-sample, velocity layers, pitch envelope, drive — built for one-shot drums, not loops.",
+        text: "Drum Sampler (Live 12) replaces Simpler on each pad of the new Drum Rack. Multi-sample, velocity layers, pitch envelope, drive: built for one-shot drums, not loops.",
       },
       {
         kind: "list",
         items: [
-          "Drag a folder of velocity layers — Drum Sampler maps them automatically.",
+          "Drag a folder of velocity layers: Drum Sampler maps them automatically.",
           "Per-pad pitch envelope, filter, drive, compression in one device.",
           "Round-robin so repeated hits don't sound like a machine gun.",
         ],
@@ -2436,7 +2437,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "If you'd been stacking Saturator + EQ + Simpler on every pad — Drum Sampler is that, in one.",
+        text: "If you'd been stacking Saturator + EQ + Simpler on every pad: Drum Sampler is that, in one.",
       },
     ],
     sim: { type: "drum-pad" },
@@ -2462,7 +2463,7 @@ const wExtra: Mission[] = [
         options: ["Machine-gun repeats", "Pitch drift", "Latency"],
         answer: 0,
         explain:
-          "Round-robin cycles through multiple samples of the same hit — prevents the robotic 'machine gun' effect of identical repeats.",
+          "Round-robin cycles through multiple samples of the same hit: prevents the robotic 'machine gun' effect of identical repeats.",
         hint: "What problem does playing the same sample repeatedly cause?",
       },
     ],
@@ -2484,14 +2485,14 @@ const wExtra: Mission[] = [
         kind: "list",
         items: [
           "Convolution side: real halls, plates, springs, custom IRs.",
-          "Algorithmic side: Quartz, Shimmer, Tides, Ghost — modern character.",
+          "Algorithmic side: Quartz, Shimmer, Tides, Ghost: modern character.",
           "Crossfade them with one knob.",
         ],
       },
       {
         kind: "callout",
         tone: "key",
-        text: "Use convolution for realism, algorithmic for movement — blend for both.",
+        text: "Use convolution for realism, algorithmic for movement: blend for both.",
       },
     ],
     sim: { type: "send-return" },
@@ -2509,15 +2510,15 @@ const wExtra: Mission[] = [
         options: ["Recorded impulse responses", "Sine waves", "FM"],
         answer: 0,
         explain:
-          "Convolution reverb uses recordings of actual acoustic spaces — fire a gunshot in a cathedral, capture the decay, use it as your reverb.",
-        hint: "Convolution uses recorded real-world spaces — how?",
+          "Convolution reverb uses recordings of actual acoustic spaces: fire a gunshot in a cathedral, capture the decay, use it as your reverb.",
+        hint: "Convolution uses recorded real-world spaces: how?",
       },
       {
         q: "Best place to insert?",
         options: ["Return track", "Master input", "MIDI clip"],
         answer: 0,
         explain:
-          "Returns are the correct place for reverb — one shared reverb for many tracks saves CPU and makes the mix feel like one space.",
+          "Returns are the correct place for reverb: one shared reverb for many tracks saves CPU and makes the mix feel like one space.",
         hint: "Where should shared effects like reverb go for efficiency?",
       },
     ],
@@ -2546,7 +2547,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "Use the multiband mode to saturate only the highs of a vocal — adds air without crunching the body.",
+        text: "Use the multiband mode to saturate only the highs of a vocal: adds air without crunching the body.",
       },
     ],
     sim: { type: "knob-trainer" },
@@ -2556,16 +2557,16 @@ const wExtra: Mission[] = [
         options: ["3", "7", "13"],
         answer: 2,
         explain:
-          "Roar offers 13 distortion algorithms including Tube, Diode, Wavefolder, Bit Crush, and Digital Clip — each with a distinct harmonic character.",
-        hint: "More than you'd expect — think of all the flavours of distortion.",
+          "Roar offers 13 distortion algorithms including Tube, Diode, Wavefolder, Bit Crush, and Digital Clip: each with a distinct harmonic character.",
+        hint: "More than you'd expect: think of all the flavours of distortion.",
       },
       {
         q: "Max bands?",
         options: ["1", "2", "3"],
         answer: 2,
         explain:
-          "Roar supports up to 3 independent frequency bands — low, mid, and high — each with its own saturation characteristics.",
-        hint: "Think: low, mid, high — how many bands is that?",
+          "Roar supports up to 3 independent frequency bands, low, mid, and high, each with its own saturation characteristics.",
+        hint: "Think: low, mid, high: how many bands is that?",
       },
       {
         q: "Roar shipped in…",
@@ -2573,7 +2574,7 @@ const wExtra: Mission[] = [
         answer: 1,
         explain:
           "Roar was introduced with Live 12 as part of Ableton's new creative effects suite alongside Meld and other devices.",
-        hint: "New devices come with new versions — which is newest here?",
+        hint: "New devices come with new versions: which is newest here?",
       },
     ],
   },
@@ -2588,13 +2589,13 @@ const wExtra: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Glue is Live's emulation of the classic SSL G-bus compressor — fast attack, musical release, designed for the master bus or a drum bus.",
+        text: "Glue is Live's emulation of the classic SSL G-bus compressor: fast attack, musical release, designed for the master bus or a drum bus.",
       },
       {
         kind: "list",
         items: [
           "Threshold low (1–3 dB gain reduction) is enough.",
-          "Attack 10ms, Release Auto, Ratio 4 — start there.",
+          "Attack 10ms, Release Auto, Ratio 4: start there.",
           "Built-in soft clipper at the output.",
         ],
       },
@@ -2611,24 +2612,24 @@ const wExtra: Mission[] = [
         options: ["1176", "SSL G-bus", "LA-2A"],
         answer: 1,
         explain:
-          "Glue Compressor emulates the classic SSL G-series bus compressor — the industry standard for mix bus glue and cohesion.",
-        hint: "Glue has a vintage analog model — which iconic console's compressor does it emulate?",
+          "Glue Compressor emulates the classic SSL G-series bus compressor: the industry standard for mix bus glue and cohesion.",
+        hint: "Glue has a vintage analog model: which iconic console's compressor does it emulate?",
       },
       {
         q: "Typical bus GR?",
         options: ["1–3 dB", "10 dB", "20 dB"],
         answer: 0,
         explain:
-          "1–3dB of gain reduction on a mix bus adds cohesion without squashing dynamics — this is 'glue', not limiting.",
-        hint: "Bus compression is subtle — how much gain reduction creates cohesion?",
+          "1–3dB of gain reduction on a mix bus adds cohesion without squashing dynamics: this is 'glue', not limiting.",
+        hint: "Bus compression is subtle: how much gain reduction creates cohesion?",
       },
       {
         q: "Output stage has…",
         options: ["Soft clipper", "Reverb", "Limiter"],
         answer: 0,
         explain:
-          "Glue's output stage has a built-in soft clipper — this gently limits peaks that would otherwise clip the master output.",
-        hint: "The output stage has a safety feature — what does a soft clipper do?",
+          "Glue's output stage has a built-in soft clipper: this gently limits peaks that would otherwise clip the master output.",
+        hint: "The output stage has a safety feature: what does a soft clipper do?",
       },
     ],
   },
@@ -2666,15 +2667,15 @@ const wExtra: Mission[] = [
         options: ["Brick-wall compressor", "Reverb", "EQ"],
         answer: 0,
         explain:
-          "A limiter is a compressor with an extreme ratio (often ∞:1) — nothing passes above the threshold, creating a hard ceiling.",
-        hint: "It's a type of compressor — but with a ratio that bricks the ceiling.",
+          "A limiter is a compressor with an extreme ratio (often ∞:1): nothing passes above the threshold, creating a hard ceiling.",
+        hint: "It's a type of compressor: but with a ratio that bricks the ceiling.",
       },
       {
         q: "Streaming-safe ceiling?",
         options: ["-1 dBTP", "0 dB", "+3 dB"],
         answer: 0,
         explain:
-          "Streaming platforms (Spotify, Apple Music) normalize to around -14 LUFS — a true-peak ceiling of -1 dBTP prevents inter-sample distortion.",
+          "Streaming platforms (Spotify, Apple Music) normalize to around -14 LUFS: a true-peak ceiling of -1 dBTP prevents inter-sample distortion.",
         hint: "What ceiling prevents distortion after streaming platform processing?",
       },
       {
@@ -2682,7 +2683,7 @@ const wExtra: Mission[] = [
         options: ["Inter-sample clipping", "Pitch drift", "Latency"],
         answer: 0,
         explain:
-          "Inter-sample peaks can exceed 0dBFS after D/A conversion even if the digital file shows no clip — true peak catches these.",
+          "Inter-sample peaks can exceed 0dBFS after D/A conversion even if the digital file shows no clip: true peak catches these.",
         hint: "What kind of clipping happens between digital samples during conversion?",
       },
     ],
@@ -2692,7 +2693,7 @@ const wExtra: Mission[] = [
     world: "midi-audio",
     number: 8,
     title: "Warp Modes Deep Dive",
-    tagline: "Beats, Tones, Texture, Re-Pitch, Complex, Complex Pro — when each wins.",
+    tagline: "Beats, Tones, Texture, Re-Pitch, Complex, Complex Pro: when each wins.",
     xp: 80,
     badge: { slug: "warp-wizard", name: "Warp Wizard" },
     explainer: [
@@ -2703,11 +2704,11 @@ const wExtra: Mission[] = [
       {
         kind: "list",
         items: [
-          "Beats — drums, percussive loops. Locks to transients.",
-          "Tones — pitched mono (vocals, bass).",
-          "Texture — slow harmonic material (pads, ambient).",
-          "Re-Pitch — no stretch; speed AND pitch shift together (vinyl-style).",
-          "Complex / Complex Pro — full mixes, vocals; CPU-heavy but cleanest.",
+          "Beats: drums, percussive loops. Locks to transients.",
+          "Tones: pitched mono (vocals, bass).",
+          "Texture: slow harmonic material (pads, ambient).",
+          "Re-Pitch: no stretch; speed AND pitch shift together (vinyl-style).",
+          "Complex / Complex Pro: full mixes, vocals; CPU-heavy but cleanest.",
         ],
       },
       {
@@ -2723,15 +2724,15 @@ const wExtra: Mission[] = [
         options: ["Beats", "Tones", "Texture"],
         answer: 0,
         explain:
-          "Beats mode is optimized for rhythmic material — it slices at transients and warps each slice independently, preserving drum hits.",
-        hint: "Drums have strong transient hits — which mode is designed for that?",
+          "Beats mode is optimized for rhythmic material: it slices at transients and warps each slice independently, preserving drum hits.",
+        hint: "Drums have strong transient hits: which mode is designed for that?",
       },
       {
         q: "Vinyl-style speed+pitch shift?",
         options: ["Re-Pitch", "Complex Pro", "Beats"],
         answer: 0,
         explain:
-          "Re-Pitch changes pitch and speed together like a record — slowing down 50% makes it an octave lower, perfect for vinyl effects.",
+          "Re-Pitch changes pitch and speed together like a record: slowing down 50% makes it an octave lower, perfect for vinyl effects.",
         hint: "What playback medium changes pitch when you change speed?",
       },
       {
@@ -2739,7 +2740,7 @@ const wExtra: Mission[] = [
         options: ["Complex Pro", "Beats", "Re-Pitch"],
         answer: 0,
         explain:
-          "Complex Pro uses a phase vocoder to separate pitch from time — the cleanest algorithm for vocals, full mixes, and pads.",
+          "Complex Pro uses a phase vocoder to separate pitch from time: the cleanest algorithm for vocals, full mixes, and pads.",
         hint: "Which mode is highest quality and most CPU-intensive?",
       },
     ],
@@ -2755,12 +2756,12 @@ const wExtra: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Link is wireless tempo and beat-phase sync over local network. No master, no slave — every peer is equal.",
+        text: "Link is wireless tempo and beat-phase sync over local network. No master, no slave: every peer is equal.",
       },
       {
         kind: "list",
         items: [
-          "Click the LINK button next to the metronome — same WiFi peers see each other.",
+          "Click the LINK button next to the metronome: same WiFi peers see each other.",
           "Tempo changes propagate live; downbeat phase stays locked.",
           "Optional Start Stop sync makes transports follow each other.",
         ],
@@ -2768,7 +2769,7 @@ const wExtra: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "Two laptops on a phone hotspot is enough to jam — no audio cables needed.",
+        text: "Two laptops on a phone hotspot is enough to jam: no audio cables needed.",
       },
     ],
     sim: { type: "session-grid" },
@@ -2778,15 +2779,15 @@ const wExtra: Mission[] = [
         options: ["Local network", "MIDI cable", "Audio cable"],
         answer: 0,
         explain:
-          "Link uses your local Wi-Fi or Ethernet network — no MIDI, no special cables, just network discovery.",
+          "Link uses your local Wi-Fi or Ethernet network: no MIDI, no special cables, just network discovery.",
         hint: "What wireless infrastructure does Link rely on?",
       },
       {
         q: "Master/slave model?",
-        options: ["Yes", "No — peer-to-peer"],
+        options: ["Yes", "No: peer-to-peer"],
         answer: 1,
         explain:
-          "Link has no master or slave — every connected device is equal. Any device can move the tempo and all others follow.",
+          "Link has no master or slave: every connected device is equal. Any device can move the tempo and all others follow.",
         hint: "Is there a hierarchy in Link sessions?",
       },
       {
@@ -2794,8 +2795,8 @@ const wExtra: Mission[] = [
         options: ["Optional add-on to Link", "Always on", "Separate protocol"],
         answer: 0,
         explain:
-          "Start/Stop sync is an optional add-on to Link that also syncs transport start and stop — it's disabled by default.",
-        hint: "Tempo sync is built-in — transport sync is what?",
+          "Start/Stop sync is an optional add-on to Link that also syncs transport start and stop: it's disabled by default.",
+        hint: "Tempo sync is built-in: transport sync is what?",
       },
     ],
   },
@@ -2815,16 +2816,16 @@ const wExtra: Mission[] = [
       {
         kind: "list",
         items: [
-          "Melodic mode — pads tuned to the chosen scale; wrong notes are physically absent.",
-          "Drum mode — bottom-left 4×4 = pads, rest = step sequencer for the selected pad.",
-          "Note mode + 64 pads — full melodic step sequencer.",
+          "Melodic mode: pads tuned to the chosen scale; wrong notes are physically absent.",
+          "Drum mode: bottom-left 4×4 = pads, rest = step sequencer for the selected pad.",
+          "Note mode + 64 pads: full melodic step sequencer.",
           "Standalone runs Live's engine inside Push for laptop-free shows.",
         ],
       },
       {
         kind: "callout",
         tone: "key",
-        text: "Push isn't a controller — it's the same Live, with a body.",
+        text: "Push isn't a controller: it's the same Live, with a body.",
       },
     ],
     sim: { type: "drum-pad" },
@@ -2834,7 +2835,7 @@ const wExtra: Mission[] = [
         options: ["Live's engine internally", "Only MIDI", "Only audio"],
         answer: 0,
         explain:
-          "Push 3 Standalone has Live's audio engine running directly on the hardware — no computer needed for studio or stage.",
+          "Push 3 Standalone has Live's audio engine running directly on the hardware: no computer needed for studio or stage.",
         hint: "Standalone = self-contained. What does it run independently of?",
       },
       {
@@ -2842,7 +2843,7 @@ const wExtra: Mission[] = [
         options: ["Out-of-scale notes", "Drums", "Velocity"],
         answer: 0,
         explain:
-          "Melodic mode on Push 3 highlights in-scale pads and dims out-of-scale ones — impossible notes don't trigger, only musical ones do.",
+          "Melodic mode on Push 3 highlights in-scale pads and dims out-of-scale ones: impossible notes don't trigger, only musical ones do.",
         hint: "What happens to notes outside the scale in melodic mode?",
       },
       {
@@ -2851,7 +2852,7 @@ const wExtra: Mission[] = [
         answer: 0,
         explain:
           "In drum mode on Push 3, 32 pads trigger drums and 16 pads (top) become step sequencer steps per kit piece.",
-        hint: "Push 3 has 64 total pads — how many are dedicated to the sequencer?",
+        hint: "Push 3 has 64 total pads: how many are dedicated to the sequencer?",
       },
     ],
   },
@@ -2860,7 +2861,7 @@ const wExtra: Mission[] = [
     world: "performance",
     number: 11,
     title: "Macro Variations",
-    tagline: "Snapshot, recall, morph — patches that perform.",
+    tagline: "Snapshot, recall, morph: patches that perform.",
     xp: 70,
     badge: { slug: "morpher", name: "Morpher" },
     explainer: [
@@ -2871,15 +2872,15 @@ const wExtra: Mission[] = [
       {
         kind: "list",
         items: [
-          "Set the macros, hit New Variation — that's snapshot 1.",
-          "Tweak macros, save again — snapshot 2.",
+          "Set the macros, hit New Variation: that's snapshot 1.",
+          "Tweak macros, save again: snapshot 2.",
           "Click between them: instant recall. Drag the morph slider: smooth blend.",
         ],
       },
       {
         kind: "callout",
         tone: "tip",
-        text: "Build intro / verse / drop variations on a single Rack — one click changes the song's whole sound.",
+        text: "Build intro / verse / drop variations on a single Rack: one click changes the song's whole sound.",
       },
     ],
     sim: { type: "knob-trainer" },
@@ -2889,7 +2890,7 @@ const wExtra: Mission[] = [
         options: ["Macro values", "Audio clips", "Tempo"],
         answer: 0,
         explain:
-          "Macro Variations snapshot all 16 macro knob positions — recall different tonal states or morph between them in Live 12.",
+          "Macro Variations snapshot all 16 macro knob positions: recall different tonal states or morph between them in Live 12.",
         hint: "Variations = saved states. What do they save?",
       },
       {
@@ -2897,7 +2898,7 @@ const wExtra: Mission[] = [
         options: ["8", "16", "32"],
         answer: 1,
         explain:
-          "Live 11 expanded Instrument Racks to 16 macros — enough to expose any parameter from any device in the chain.",
+          "Live 11 expanded Instrument Racks to 16 macros: enough to expose any parameter from any device in the chain.",
         hint: "It's the maximum count added in a specific version.",
       },
       {
@@ -2905,8 +2906,8 @@ const wExtra: Mission[] = [
         options: ["Smooth interpolation", "Step-only", "Random"],
         answer: 0,
         explain:
-          "Live 12 adds smooth morphing between Variations — click between snapshots and the macros glide to their new values.",
-        hint: "Morphing means smoothly transitioning — what do you move between?",
+          "Live 12 adds smooth morphing between Variations: click between snapshots and the macros glide to their new values.",
+        hint: "Morphing means smoothly transitioning: what do you move between?",
       },
     ],
   },
@@ -2920,7 +2921,7 @@ const w7: Mission[] = [
     slug: "sampler-deep",
     world: "midi-instruments",
     number: 1,
-    title: "Sampler — Deep",
+    title: "Sampler: Deep",
     tagline: "Multisamples, zones, modulation. Sampler ≠ Simpler.",
     xp: 70,
     badge: { slug: "zone-lord", name: "Zone Lord" },
@@ -2932,7 +2933,7 @@ const w7: Mission[] = [
       {
         kind: "list",
         items: [
-          "Zone Editor — drop samples across keys/velocity/select.",
+          "Zone Editor: drop samples across keys/velocity/select.",
           "Pitch / Filter / Amp envelopes with modulation matrix.",
           "LFOs, MIDI sources (aftertouch, mod wheel, MPE).",
           "Slice + Drum Rack are the fastest ways to populate it.",
@@ -2951,7 +2952,7 @@ const w7: Mission[] = [
         options: ["Sampler is multisample", "They are identical", "Simpler is multisample"],
         answer: 0,
         explain:
-          "Sampler handles multi-sampled instruments with full key/velocity mapping zones — Simpler loads a single sample.",
+          "Sampler handles multi-sampled instruments with full key/velocity mapping zones: Simpler loads a single sample.",
         hint: "Multi = many samples. Which device handles multiple samples mapped across keys?",
       },
       {
@@ -2967,7 +2968,7 @@ const w7: Mission[] = [
         options: ["Yes", "No"],
         answer: 0,
         explain:
-          "Sampler supports MPE — each note can receive independent pitch bend, pressure, and slide, making it fully expressive.",
+          "Sampler supports MPE: each note can receive independent pitch bend, pressure, and slide, making it fully expressive.",
         hint: "MPE = polyphonic expression. Does Sampler support it?",
       },
     ],
@@ -2996,7 +2997,7 @@ const w7: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "Start with the Init preset and twist Drift up — instant analog character.",
+        text: "Start with the Init preset and twist Drift up: instant analog character.",
       },
     ],
     sim: { type: "synth-playground" },
@@ -3006,15 +3007,15 @@ const w7: Mission[] = [
         options: ["Two model options", "One only", "Six options"],
         answer: 0,
         explain:
-          "Drift's filter has two models — a classic ladder filter and an SEM-style state-variable filter, each with different character.",
-        hint: "Two different filter circuit designs — how many options?",
+          "Drift's filter has two models: a classic ladder filter and an SEM-style state-variable filter, each with different character.",
+        hint: "Two different filter circuit designs: how many options?",
       },
       {
         q: "Drift parameter adds…",
         options: ["Analog-style instability", "Reverb", "Distortion"],
         answer: 0,
         explain:
-          "The Drift parameter adds random micro-variations to pitch and timing — simulating the instability of vintage analog oscillators.",
+          "The Drift parameter adds random micro-variations to pitch and timing: simulating the instability of vintage analog oscillators.",
         hint: "What do real analog synths do that digital ones typically don't?",
       },
       {
@@ -3022,7 +3023,7 @@ const w7: Mission[] = [
         options: ["Subtractive", "Wavetable", "Granular"],
         answer: 0,
         explain:
-          "Drift is a subtractive synth — it starts with harmonically rich oscillators and uses filters to sculpt the tone.",
+          "Drift is a subtractive synth: it starts with harmonically rich oscillators and uses filters to sculpt the tone.",
         hint: "Subtractive = filter harmonics away. What synthesis type is that?",
       },
     ],
@@ -3061,7 +3062,7 @@ const w7: Mission[] = [
         options: ["Overlapping grains", "One-shots", "Loops only"],
         answer: 0,
         explain:
-          "Granulator splits a sample into tiny overlapping grains and plays them back — the basis of granular synthesis and time-stretching.",
+          "Granulator splits a sample into tiny overlapping grains and plays them back: the basis of granular synthesis and time-stretching.",
         hint: "Gran = grain. What does granular synthesis split samples into?",
       },
       {
@@ -3069,7 +3070,7 @@ const w7: Mission[] = [
         options: ["More glitch / texture", "Cleaner pitch"],
         answer: 0,
         explain:
-          "Small grain size creates more texture and glitch artifacts — larger grains sound more recognizable and smooth.",
+          "Small grain size creates more texture and glitch artifacts: larger grains sound more recognizable and smooth.",
         hint: "Smaller = less recognizable sample content, more sonic texture.",
       },
       {
@@ -3077,7 +3078,7 @@ const w7: Mission[] = [
         options: ["Read head in sample", "Tempo", "Filter cutoff"],
         answer: 0,
         explain:
-          "The Position parameter moves the read head through the sample — scan it to continuously morph through different timbres.",
+          "The Position parameter moves the read head through the sample: scan it to continuously morph through different timbres.",
         hint: "Where in the sample is the read head positioned?",
       },
     ],
@@ -3098,16 +3099,16 @@ const w7: Mission[] = [
       {
         kind: "list",
         items: [
-          "Collision — mallets, marimbas, bells. Excite a resonator.",
-          "Tension — bowed and plucked strings.",
-          "Electric — electric pianos (Rhodes / Wurli style).",
-          "Analog — two-osc virtual analog synth.",
+          "Collision: mallets, marimbas, bells. Excite a resonator.",
+          "Tension: bowed and plucked strings.",
+          "Electric: electric pianos (Rhodes / Wurli style).",
+          "Analog: two-osc virtual analog synth.",
         ],
       },
       {
         kind: "callout",
         tone: "tip",
-        text: "Modelling instruments respond to velocity and aftertouch with real expression — they reward MPE controllers.",
+        text: "Modelling instruments respond to velocity and aftertouch with real expression: they reward MPE controllers.",
       },
     ],
     sim: { type: "synth-playground" },
@@ -3117,7 +3118,7 @@ const w7: Mission[] = [
         options: ["Strings", "Drums", "Tape"],
         answer: 0,
         explain:
-          "Tension models the physics of vibrating strings — string length, stiffness, pickup position, and damping are all physical parameters.",
+          "Tension models the physics of vibrating strings: string length, stiffness, pickup position, and damping are all physical parameters.",
         hint: "What physical object does Tension's model simulate?",
       },
       {
@@ -3125,7 +3126,7 @@ const w7: Mission[] = [
         options: ["EPs (Rhodes/Wurli)", "Brass", "Vocals"],
         answer: 0,
         explain:
-          "Electric models the mechanics of electric pianos — tines, hammers, pickups, and the characteristic bell tone of Rhodes/Wurlitzer.",
+          "Electric models the mechanics of electric pianos: tines, hammers, pickups, and the characteristic bell tone of Rhodes/Wurlitzer.",
         hint: "Which keyboard instruments are modeled in Electric?",
       },
       {
@@ -3133,7 +3134,7 @@ const w7: Mission[] = [
         options: ["Resonator", "Filter bank", "Sample"],
         answer: 0,
         explain:
-          "Collision excites a resonator (mallet, plate, string, etc.) with a noise burst — the physical modeling then determines the tone.",
+          "Collision excites a resonator (mallet, plate, string, etc.) with a noise burst: the physical modeling then determines the tone.",
         hint: "Collision = impact triggering resonance. What does the impact excite?",
       },
     ],
@@ -3154,15 +3155,15 @@ const w7: Mission[] = [
       {
         kind: "list",
         items: [
-          "Bass — sub, mid, growl, sub-bass.",
-          "Poli — pads, plucks, keys, leads.",
-          "Macro layout per preset is bespoke — read the labels.",
+          "Bass: sub, mid, growl, sub-bass.",
+          "Poli: pads, plucks, keys, leads.",
+          "Macro layout per preset is bespoke: read the labels.",
         ],
       },
       {
         kind: "callout",
         tone: "tip",
-        text: "Great for sketching — drop in, find the sound, then deepen with Wavetable or Operator if needed.",
+        text: "Great for sketching: drop in, find the sound, then deepen with Wavetable or Operator if needed.",
       },
     ],
     sim: { type: "knob-trainer" },
@@ -3172,15 +3173,15 @@ const w7: Mission[] = [
         options: ["Preset-first instruments", "Effects", "Samplers"],
         answer: 0,
         explain:
-          "Bass and Poli are preset-based instruments with curated sounds and dedicated macro controls — designed for instant playability.",
-        hint: "They prioritize presets over deep editing — what does that make them?",
+          "Bass and Poli are preset-based instruments with curated sounds and dedicated macro controls: designed for instant playability.",
+        hint: "They prioritize presets over deep editing: what does that make them?",
       },
       {
         q: "Macros per preset are…",
         options: ["Bespoke per patch", "Always the same"],
         answer: 0,
         explain:
-          "Each Bass or Poli patch has its own bespoke macro assignments — the 8 macros control the most musical parameters for that specific sound.",
+          "Each Bass or Poli patch has its own bespoke macro assignments: the 8 macros control the most musical parameters for that specific sound.",
         hint: "Are the macros the same for every patch, or specific to each?",
       },
       {
@@ -3188,7 +3189,7 @@ const w7: Mission[] = [
         options: ["Pads / plucks / keys", "Kick drums"],
         answer: 0,
         explain:
-          "Poli is optimized for polyphonic playing — pads, plucks, keys, and chords are its sweet spot with rich preset options.",
+          "Poli is optimized for polyphonic playing: pads, plucks, keys, and chords are its sweet spot with rich preset options.",
         hint: "Poli = polyphonic. What types of sounds suit a polyphonic preset instrument?",
       },
     ],
@@ -3228,7 +3229,7 @@ const w7: Mission[] = [
         options: ["All chains at once", "One at a time"],
         answer: 0,
         explain:
-          "Layered Instrument Racks play all chains simultaneously — perfect for fat layered sounds like strings + pad + bass octave.",
+          "Layered Instrument Racks play all chains simultaneously: perfect for fat layered sounds like strings + pad + bass octave.",
         hint: "If chains are layered, do they all play at once?",
       },
       {
@@ -3236,7 +3237,7 @@ const w7: Mission[] = [
         options: ["Key", "Velocity only", "Time"],
         answer: 0,
         explain:
-          "Split zones divide the keyboard by key range — different chains respond to different octaves of the same keyboard.",
+          "Split zones divide the keyboard by key range: different chains respond to different octaves of the same keyboard.",
         hint: "Split = divide. What dimension are you dividing?",
       },
       {
@@ -3265,12 +3266,12 @@ const w7: Mission[] = [
       {
         kind: "list",
         items: [
-          "Arpeggiator — hold a chord, hear a pattern.",
-          "Chord — turn one note into a chord.",
-          "Scale — force notes into a chosen scale.",
-          "Random / Velocity / Pitch — humanise or transpose.",
-          "Note Echo — MIDI delay, retrigger notes in time.",
-          "MIDI Effect Rack — chain them, expose macros.",
+          "Arpeggiator: hold a chord, hear a pattern.",
+          "Chord: turn one note into a chord.",
+          "Scale: force notes into a chosen scale.",
+          "Random / Velocity / Pitch: humanise or transpose.",
+          "Note Echo: MIDI delay, retrigger notes in time.",
+          "MIDI Effect Rack: chain them, expose macros.",
         ],
       },
       {
@@ -3286,7 +3287,7 @@ const w7: Mission[] = [
         options: ["Before the instrument", "After it", "On the master"],
         answer: 0,
         explain:
-          "MIDI effects process note data before it reaches the instrument — the instrument receives the transformed notes, not the originals.",
+          "MIDI effects process note data before it reaches the instrument: the instrument receives the transformed notes, not the originals.",
         hint: "Signal chain: MIDI → MIDI FX → Instrument. Where in the chain are MIDI effects?",
       },
       {
@@ -3294,16 +3295,16 @@ const w7: Mission[] = [
         options: ["A chosen scale", "A chord", "C major only"],
         answer: 0,
         explain:
-          "The Scale device transposes incoming notes to the nearest note in the chosen scale — quantizes pitch to a musical key.",
-        hint: "It forces notes into something — what does it force them into?",
+          "The Scale device transposes incoming notes to the nearest note in the chosen scale: quantizes pitch to a musical key.",
+        hint: "It forces notes into something: what does it force them into?",
       },
       {
         q: "Note Echo is essentially…",
         options: ["A MIDI delay", "Audio delay"],
         answer: 0,
         explain:
-          "Note Echo is a MIDI delay — it creates repeating note echoes at a set interval, triggering the instrument multiple times.",
-        hint: "Echo = repeat. But for MIDI notes — what type of device is it?",
+          "Note Echo is a MIDI delay: it creates repeating note echoes at a set interval, triggering the instrument multiple times.",
+        hint: "Echo = repeat. But for MIDI notes: what type of device is it?",
       },
     ],
   },
@@ -3323,15 +3324,15 @@ const w7: Mission[] = [
       {
         kind: "list",
         items: [
-          "MIDI To — pick the hardware's port/channel.",
-          "Audio From — pick the input it returns on.",
-          "Hardware Latency — compensate for converter delay.",
+          "MIDI To: pick the hardware's port/channel.",
+          "Audio From: pick the input it returns on.",
+          "Hardware Latency: compensate for converter delay.",
         ],
       },
       {
         kind: "callout",
         tone: "warn",
-        text: "Set Hardware Latency or your synth will arrive late on bounce — Live can't auto-detect it.",
+        text: "Set Hardware Latency or your synth will arrive late on bounce: Live can't auto-detect it.",
       },
     ],
     sim: { type: "routing-puzzle" },
@@ -3341,8 +3342,8 @@ const w7: Mission[] = [
         options: ["MIDI out + audio in", "MIDI both ways"],
         answer: 0,
         explain:
-          "External Instrument sends MIDI out to your hardware synth and returns its audio back into Live — all in one device.",
-        hint: "It handles both directions — what goes out and what comes back?",
+          "External Instrument sends MIDI out to your hardware synth and returns its audio back into Live: all in one device.",
+        hint: "It handles both directions: what goes out and what comes back?",
       },
       {
         q: "Hardware Latency must be…",
@@ -3350,15 +3351,15 @@ const w7: Mission[] = [
         answer: 0,
         explain:
           "Hardware latency must be manually set in External Instrument to compensate for the round-trip audio delay through your interface.",
-        hint: "Hardware introduces delay — what do you need to do with that value?",
+        hint: "Hardware introduces delay: what do you need to do with that value?",
       },
       {
         q: "Sits on a…",
         options: ["MIDI track", "Audio track"],
         answer: 0,
         explain:
-          "External Instrument goes on a MIDI track — it bridges the gap between Live's MIDI routing and external hardware audio return.",
-        hint: "MIDI goes to hardware, audio comes back — what track type carries MIDI out?",
+          "External Instrument goes on a MIDI track: it bridges the gap between Live's MIDI routing and external hardware audio return.",
+        hint: "MIDI goes to hardware, audio comes back: what track type carries MIDI out?",
       },
     ],
   },
@@ -3402,7 +3403,7 @@ const w8: Mission[] = [
         options: ["4", "2", "8"],
         answer: 0,
         explain:
-          "Stem Splitter (Live 12) separates audio into 4 stems: drums, bass, melody, and other — all processed locally on your machine.",
+          "Stem Splitter (Live 12) separates audio into 4 stems: drums, bass, melody, and other: all processed locally on your machine.",
         hint: "How many stems does it split into?",
       },
       {
@@ -3410,7 +3411,7 @@ const w8: Mission[] = [
         options: ["Locally in Live", "On Ableton's servers"],
         answer: 0,
         explain:
-          "Stem Splitter runs Live's built-in AI separation engine locally — no cloud upload, no subscription, processes in real-time.",
+          "Stem Splitter runs Live's built-in AI separation engine locally: no cloud upload, no subscription, processes in real-time.",
         hint: "Does it need internet or process on your computer?",
       },
       {
@@ -3439,18 +3440,18 @@ const w8: Mission[] = [
       {
         kind: "list",
         items: [
-          "Connect — fill gaps between notes (great for melodies).",
-          "Arpeggiate — fan a chord across time.",
-          "Strum — slight stagger, like a guitar.",
-          "Recombine — shuffle pitches/rhythms creatively.",
-          "Ornament — adds grace notes.",
+          "Connect: fill gaps between notes (great for melodies).",
+          "Arpeggiate: fan a chord across time.",
+          "Strum: slight stagger, like a guitar.",
+          "Recombine: shuffle pitches/rhythms creatively.",
+          "Ornament: adds grace notes.",
           "Quantize, Velocity Shape, Time Warp all live here too.",
         ],
       },
       {
         kind: "callout",
         tone: "tip",
-        text: "Transformations are destructive on commit — duplicate the clip first if you want a safe before/after.",
+        text: "Transformations are destructive on commit: duplicate the clip first if you want a safe before/after.",
       },
     ],
     sim: { type: "midi-transform" },
@@ -3460,15 +3461,15 @@ const w8: Mission[] = [
         options: ["Clip notes", "Audio only"],
         answer: 0,
         explain:
-          "Note Transformations (Live 12) operate on the MIDI notes inside a clip — strum, pitch-shift, arpeggiate, and more.",
-        hint: "They transform what's inside the clip — what data is in a MIDI clip?",
+          "Note Transformations (Live 12) operate on the MIDI notes inside a clip: strum, pitch-shift, arpeggiate, and more.",
+        hint: "They transform what's inside the clip: what data is in a MIDI clip?",
       },
       {
         q: "Strum is essentially…",
         options: ["A small time offset across a chord", "A reverb"],
         answer: 0,
         explain:
-          "Strum offsets the start time of each note in a chord slightly — mimicking how a guitarist strums strings one after another.",
+          "Strum offsets the start time of each note in a chord slightly: mimicking how a guitarist strums strings one after another.",
         hint: "What does a guitarist do that makes a chord sound non-simultaneous?",
       },
       {
@@ -3477,7 +3478,7 @@ const w8: Mission[] = [
         answer: 0,
         explain:
           "Live 12 ships with several built-in Note Transformations including Strum, Pitch Shift, and more accessible from the Piano Roll.",
-        hint: "Live 12 introduced them — and includes several by default.",
+        hint: "Live 12 introduced them: and includes several by default.",
       },
     ],
   },
@@ -3516,16 +3517,16 @@ const w8: Mission[] = [
         options: ["Project-wide (with overrides)", "Per clip only", "Per note"],
         answer: 0,
         explain:
-          "Scale awareness is set project-wide so all instruments, Push, and MIDI effects know the key — with per-clip overrides available.",
-        hint: "One setting affects the whole project — where is scale set?",
+          "Scale awareness is set project-wide so all instruments, Push, and MIDI effects know the key: with per-clip overrides available.",
+        hint: "One setting affects the whole project: where is scale set?",
       },
       {
         q: "Push 3 with scale on…",
         options: ["Hides out-of-scale pads", "Plays drums only"],
         answer: 0,
         explain:
-          "Push 3 with scale mode highlights playable in-scale pads and suppresses out-of-scale ones — every pad is a musical note.",
-        hint: "Scale mode guides the player — what happens to out-of-scale pads?",
+          "Push 3 with scale mode highlights playable in-scale pads and suppresses out-of-scale ones: every pad is a musical note.",
+        hint: "Scale mode guides the player: what happens to out-of-scale pads?",
       },
       {
         q: "Live 12 adds…",
@@ -3533,7 +3534,7 @@ const w8: Mission[] = [
         answer: 0,
         explain:
           "Live 12 introduced global scale settings, scale-aware MIDI transforms, and Push 3 scale integration for a coherent workflow.",
-        hint: "The most recent version added the most features — which is it?",
+        hint: "The most recent version added the most features: which is it?",
       },
     ],
   },
@@ -3571,15 +3572,15 @@ const w8: Mission[] = [
         options: ["Audio content", "File names", "BPM only"],
         answer: 0,
         explain:
-          "Similarity Search (Live 12) analyzes audio characteristics — timbre, rhythm, key — and finds perceptually similar samples.",
-        hint: "It compares sounds by listening — what is it comparing?",
+          "Similarity Search (Live 12) analyzes audio characteristics, timbre, rhythm, key, and finds perceptually similar samples.",
+        hint: "It compares sounds by listening: what is it comparing?",
       },
       {
         q: "It works on…",
         options: ["Library samples", "Only stems"],
         answer: 0,
         explain:
-          "Similarity Search works on your Ableton library samples — it can't search external drives unless they're added to the browser.",
+          "Similarity Search works on your Ableton library samples: it can't search external drives unless they're added to the browser.",
         hint: "Where are the samples it searches?",
       },
       {
@@ -3588,7 +3589,7 @@ const w8: Mission[] = [
         answer: 0,
         explain:
           "Combine Similarity Search with tag filters (Kicks, BPM range, key) for highly targeted sound discovery without endless browsing.",
-        hint: "Tags narrow results further — what else can you filter by?",
+        hint: "Tags narrow results further: what else can you filter by?",
       },
     ],
   },
@@ -3627,15 +3628,15 @@ const w8: Mission[] = [
         options: ["Each pass as a row", "Only the final take"],
         answer: 0,
         explain:
-          "Each recording loop creates a new take lane — a row showing that full pass — so you can see all takes stacked below the comp.",
-        hint: "Multiple takes = multiple rows — what are those rows called?",
+          "Each recording loop creates a new take lane, a row showing that full pass, so you can see all takes stacked below the comp.",
+        hint: "Multiple takes = multiple rows: what are those rows called?",
       },
       {
         q: "Comping crossfades are…",
         options: ["Automatic by default", "Manual only"],
         answer: 0,
         explain:
-          "Live automatically crossfades between comp regions — you don't need to manually fade; clicks at edits are handled automatically.",
+          "Live automatically crossfades between comp regions: you don't need to manually fade; clicks at edits are handled automatically.",
         hint: "Are crossfades at comp boundaries manual or automatic?",
       },
       {
@@ -3643,7 +3644,7 @@ const w8: Mission[] = [
         options: ["Any recorded source", "Vocals only"],
         answer: 0,
         explain:
-          "Comping works on any recorded material — audio stems, MIDI performances, overdubs — whatever was recorded in Take Lanes.",
+          "Comping works on any recorded material, audio stems, MIDI performances, overdubs, whatever was recorded in Take Lanes.",
         hint: "Is there a limitation on what type of recorded content you can comp?",
       },
     ],
@@ -3683,7 +3684,7 @@ const w8: Mission[] = [
         options: ["Timing + velocity feel", "Pitch", "Reverb"],
         answer: 0,
         explain:
-          "Groove Pool extracts the timing and velocity feel from a reference clip — apply it to make other clips groove the same way.",
+          "Groove Pool extracts the timing and velocity feel from a reference clip: apply it to make other clips groove the same way.",
         hint: "What two musical qualities does Groove Pool extract?",
       },
       {
@@ -3699,7 +3700,7 @@ const w8: Mission[] = [
         options: ["Permanent on the clip", "Reset"],
         answer: 0,
         explain:
-          "Commit bakes the groove permanently into the clip's note timing — after commit, the groove is in the MIDI data, not a reference.",
+          "Commit bakes the groove permanently into the clip's note timing: after commit, the groove is in the MIDI data, not a reference.",
         hint: "Commit = make permanent. What happens to the groove file reference?",
       },
     ],
@@ -3715,7 +3716,7 @@ const w8: Mission[] = [
     explainer: [
       {
         kind: "lead",
-        text: "Select multiple tracks and link them — splits, moves and edits in one apply to all of them in lockstep. The classic 'edit drum stems together' workflow.",
+        text: "Select multiple tracks and link them: splits, moves and edits in one apply to all of them in lockstep. The classic 'edit drum stems together' workflow.",
       },
       {
         kind: "list",
@@ -3728,7 +3729,7 @@ const w8: Mission[] = [
       {
         kind: "callout",
         tone: "tip",
-        text: "Link your kick / snare / OH stems before doing edits — they'll always stay in phase.",
+        text: "Link your kick / snare / OH stems before doing edits: they'll always stay in phase.",
       },
     ],
     sim: { type: "arrangement" },
@@ -3738,8 +3739,8 @@ const w8: Mission[] = [
         options: ["Same edits across multiple tracks", "Pinning a track"],
         answer: 0,
         explain:
-          "Linked track editing lets you apply identical edits (split, trim, paste) across multiple tracks simultaneously — perfect for stems.",
-        hint: "Linked means synchronized — what do the same edits apply to?",
+          "Linked track editing lets you apply identical edits (split, trim, paste) across multiple tracks simultaneously: perfect for stems.",
+        hint: "Linked means synchronized: what do the same edits apply to?",
       },
       {
         q: "Useful for…",
@@ -3754,7 +3755,7 @@ const w8: Mission[] = [
         options: ["Toggleable", "Permanent"],
         answer: 0,
         explain:
-          "Linked track editing can be toggled on or off per-track pair — hold Option/Alt and click to link or unlink tracks.",
+          "Linked track editing can be toggled on or off per-track pair: hold Option/Alt and click to link or unlink tracks.",
         hint: "Can you turn linking on and off?",
       },
     ],
@@ -3794,14 +3795,14 @@ const w8: Mission[] = [
         answer: 0,
         explain:
           "Push 3 Standalone can connect to your computer via USB-C (it appears as a network drive) or Wi-Fi for project transfer and Live integration.",
-        hint: "Two wireless/wired options — one cable, one wireless.",
+        hint: "Two wireless/wired options: one cable, one wireless.",
       },
       {
         q: "Projects move between Push and Live…",
         options: ["Without conversion", "Through export only"],
         answer: 0,
         explain:
-          "Push 3 Standalone projects open directly in Live on your computer and vice versa — they're the same file format with no conversion.",
+          "Push 3 Standalone projects open directly in Live on your computer and vice versa: they're the same file format with no conversion.",
         hint: "Is a conversion step needed to move between Push 3 and Live?",
       },
       {
@@ -3809,7 +3810,7 @@ const w8: Mission[] = [
         options: ["No", "Yes"],
         answer: 0,
         explain:
-          "Push 3 Standalone is entirely self-contained — battery or USB power, built-in audio interface, no laptop required at any point.",
+          "Push 3 Standalone is entirely self-contained: battery or USB power, built-in audio interface, no laptop required at any point.",
         hint: "Standalone = self-sufficient. What external device doesn't it need?",
       },
     ],
@@ -3830,16 +3831,16 @@ const w8: Mission[] = [
       {
         kind: "list",
         items: [
-          "Buffer size — bigger = more CPU headroom, more latency.",
-          "Freeze — render a track's output to disk temporarily.",
-          "Flatten — bake the freeze in, free up devices.",
-          "Multichannel — route external in/outs once, reuse everywhere.",
+          "Buffer size: bigger = more CPU headroom, more latency.",
+          "Freeze: render a track's output to disk temporarily.",
+          "Flatten: bake the freeze in, free up devices.",
+          "Multichannel: route external in/outs once, reuse everywhere.",
         ],
       },
       {
         kind: "callout",
         tone: "warn",
-        text: "Freeze + Flatten is destructive on the track's devices — make a duplicate first if you might revisit.",
+        text: "Freeze + Flatten is destructive on the track's devices: make a duplicate first if you might revisit.",
       },
     ],
     sim: { type: "buffer-sim" },
@@ -3850,22 +3851,22 @@ const w8: Mission[] = [
         answer: 0,
         explain:
           "Larger buffer = more samples processed per chunk = more time for the CPU = less crackling, but more delay between input and output.",
-        hint: "Buffer size trades between two things — what are they?",
+        hint: "Buffer size trades between two things: what are they?",
       },
       {
         q: "Flatten is…",
         options: ["Destructive on devices", "Non-destructive"],
         answer: 0,
         explain:
-          "Flatten permanently renders a frozen track and removes its devices — you can't unfreeze or edit the original devices after.",
-        hint: "Flatten is permanent — what does it remove from the track?",
+          "Flatten permanently renders a frozen track and removes its devices: you can't unfreeze or edit the original devices after.",
+        hint: "Flatten is permanent: what does it remove from the track?",
       },
       {
         q: "Freeze writes to…",
         options: ["A temp audio file", "RAM only"],
         answer: 0,
         explain:
-          "Freeze writes a temporary audio render to disk — Live reads from this file instead of recalculating devices in real-time.",
+          "Freeze writes a temporary audio render to disk: Live reads from this file instead of recalculating devices in real-time.",
         hint: "What kind of file does Freeze create?",
       },
     ],
@@ -3904,8 +3905,8 @@ const w8: Mission[] = [
         options: ["Tooltips aloud", "Audio files"],
         answer: 0,
         explain:
-          "Speak Help (Live 12 accessibility feature) reads tooltip text aloud using the system screen reader — enabled in Preferences.",
-        hint: "It reads something aloud — what does it read?",
+          "Speak Help (Live 12 accessibility feature) reads tooltip text aloud using the system screen reader: enabled in Preferences.",
+        hint: "It reads something aloud: what does it read?",
       },
       {
         q: "High-contrast mode in Live 12 helps…",
@@ -3920,7 +3921,7 @@ const w8: Mission[] = [
         options: ["Everyone", "Only blind users"],
         answer: 0,
         explain:
-          "Accessibility features benefit everyone — keyboard shortcuts, high contrast, and screen reader support help all users work faster.",
+          "Accessibility features benefit everyone: keyboard shortcuts, high contrast, and screen reader support help all users work faster.",
         hint: "Are accessibility features only for users with disabilities?",
       },
     ],
@@ -3943,12 +3944,13 @@ const allProducerMissions: Mission[] = [
 // so the 18 authored synth screen sets in missions-producer-screens.ts go live.
 const allSynthMissions: Mission[] = SYNTHS_MISSIONS.map(withProducerScreens);
 
+// A lesson file replaces the old mission with the same slug (same place in paths, same progress key).
+const FILE_MISSIONS = fileMissions();
+const FROM_FILE = new Set(FILE_MISSIONS.map((m) => m.slug));
 export const MISSIONS: Mission[] = [
-  ...FOUNDATIONS_MISSIONS,
-  ...DJ_WORLD_MISSIONS,
-  ...allSynthMissions,
-  ...allProducerMissions,
-].map((m) => (Object.hasOwn(FLAGSHIP_SCREENS, m.slug) ? { ...m, screens: FLAGSHIP_SCREENS[m.slug] } : m));
+  ...FILE_MISSIONS,
+  ...[...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...allSynthMissions, ...allProducerMissions].filter((m) => !FROM_FILE.has(m.slug)),
+].map((m) => (!m.fromFile && Object.hasOwn(FLAGSHIP_SCREENS, m.slug) ? { ...m, screens: FLAGSHIP_SCREENS[m.slug] } : m));
 
 export const missionsByWorld = (world: string) =>
   MISSIONS.filter((m) => m.world === world).sort((a, b) => a.number - b.number);

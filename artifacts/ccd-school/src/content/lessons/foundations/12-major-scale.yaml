@@ -1,0 +1,113 @@
+slug: major-scale
+world: foundations
+number: 12
+title: scales, major and minor
+minutes: 7
+song:
+  changes: lead.lead
+  why: the scale is the set of notes your whole song draws from, and it sets the mood before anything else
+learn: >-
+  What a scale is, how major and minor feel different, and the scale your song will use from now on.
+youCan:
+  - say what a scale is
+  - hear the difference between major and minor
+  - set your song's scale
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        The keys you've been playing aren't all twelve notes. They're seven of them, picked so they fit
+        together. That set of notes is called a scale, and it's why nothing you played sounded wrong.
+
+        Your song has been in a minor scale. Next you'll hear what happens when you switch it.
+      straight: >-
+        The keys you've used are a scale: seven of the twelve notes, chosen to fit together. Your song has
+        been in minor.
+      eli5: >-
+        Here's a secret: the keys you've played aren't all the notes there are. They're a team of seven that
+        always sound nice together. That team is called a scale.
+
+  - kind: tempo
+    set: scale
+    choices: [minor, major]
+    say:
+      mentor: >-
+        Here's your own song. Tap major, then minor, and listen to your melody. The notes move to their place
+        in the new scale, so the tune keeps its shape, but the mood flips.
+
+        Minor tends to sound darker, moodier, a bit serious. Major sounds brighter and happier. Most house and
+        techno lives in minor, but plenty of feel-good disco and pop house is major. Pick the one that feels
+        like your song.
+      straight: >-
+        Switch your song between minor and major. Same shape of melody, different mood: minor is darker,
+        major brighter. Pick one.
+      eli5: >-
+        Tap major, then minor. Your tune keeps its shape but changes feeling. Minor sounds a bit moody. Major
+        sounds happy and sunny. Pick the one you like.
+
+  - kind: say
+    title: steps and half steps
+    say:
+      mentor: >-
+        The difference is in the gaps. A scale climbs in steps: some are whole steps, two keys apart, some are
+        half steps, the very next key. Major goes whole, whole, half, whole, whole, whole, half. Minor moves
+        two of those half steps to different places, and that one change is the whole mood.
+
+        Look at the keys in the picture: the lit ones are your scale.
+      straight: >-
+        Scales are patterns of whole steps (two keys) and half steps (one key). Major: whole whole half whole
+        whole whole half. Minor puts the half steps elsewhere.
+      eli5: >-
+        A scale is like stairs with big steps and little steps. Major and minor put the little steps in
+        different places, and that's what makes one happy and one moody.
+    deeper:
+      - title: relative major and minor
+        say: >-
+          A minor and C major use exactly the same seven notes. They just start from a different home note.
+          That's why switching a song from a minor to C major can feel subtle: the home changes, not the
+          notes.
+
+  - kind: ask
+    q: What is a scale?
+    options: ["a set of notes chosen to fit together", "how loud a song is", "the speed of the song", "a type of drum"]
+    answer: 0
+    why: A scale is the set of notes a song draws from, usually seven of the twelve.
+    whyWrong:
+      1: Loudness is amplitude.
+      2: Speed is tempo.
+      3: Drums are rhythm, not notes.
+
+  - kind: ask
+    q: How does minor usually sound compared with major?
+    options: ["darker, moodier", "faster", "louder", "higher"]
+    answer: 0
+    why: Minor tends to sound darker; major brighter.
+    whyWrong:
+      1: Scale doesn't change tempo.
+      2: Scale doesn't change volume.
+      3: Both can be played at any height.
+
+  - kind: ask
+    q: How many notes are in a major or minor scale?
+    options: ["seven", "twelve", "five", "eight"]
+    answer: 0
+    why: Seven, then it starts again an octave up.
+    whyWrong:
+      1: Twelve is every note, the whole keyboard pattern.
+      2: Five is a pentatonic scale, coming up soon.
+      3: The eighth note is the first one again, an octave up.
+
+  - kind: ask
+    q: What is a half step?
+    options: ["the very next key", "two keys apart", "half a beat", "half the volume"]
+    answer: 0
+    why: The smallest step on a keyboard, the very next key.
+    whyWrong:
+      1: Two keys apart is a whole step.
+      2: Half a beat is an eighth note, that's rhythm.
+      3: That's loudness.
+
+  - kind: keep
+    next: >-
+      Next: intervals, the distance between two notes, and a two-note phrase in your melody.

@@ -1,0 +1,68 @@
+slug: samples-loops
+world: foundations
+number: 19
+title: samples and loops
+minutes: 6
+song:
+  changes: drums.kick
+  why: recorded sounds bring a real room and real hits into your song
+learn: >-
+  What a sample is, how loops are built from them, and real recorded drums playing your own beat.
+youCan:
+  - say what a sample and a loop are
+  - hear the difference between a synth and a recorded drum
+  - put recorded drums in your song
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A sample is a recording you play back as an instrument: a single drum hit, a vocal, a chord from an old
+        record. A loop is a sample that repeats, usually a bar or two long. Hip hop was built on loops cut from
+        funk and soul records, and house producers sample constantly.
+      straight: >-
+        A sample is a recording used as an instrument. A loop is a sample that repeats.
+      eli5: >-
+        A sample is a recorded sound you can play like an instrument. A loop is a sample that goes round and
+        round.
+    deeper:
+      - title: sampling and permission
+        say: >-
+          Using a few seconds of someone else's record still needs permission if you release it. Lots of
+          producers record their own sounds or use sample packs that come cleared. The drums here were
+          recorded for CCD School and are free to use.
+
+  - kind: tempo
+    set: kit
+    say:
+      mentor: >-
+        Here's your beat. The drums so far have been made by the engine. Switch to recorded and the same
+        pattern plays on real recorded hits: a kick, a clap, a hat and a snare. Listen to the texture.
+      straight: >-
+        Your beat on synth drums or recorded samples. Pick one.
+      eli5: >-
+        Same beat, made by the computer or played on real recorded drums. Which sounds better to you?
+
+  - kind: ask
+    q: What is a sample?
+    options: ["a recording used as an instrument", "a short melody", "a type of synth wave", "a drum machine"]
+    answer: 0
+    why: Any recording you play back as an instrument.
+    whyWrong:
+      1: A melody can be sampled, but a sample is any recording.
+      2: Waves are synthesis.
+      3: A drum machine may play samples, but it isn't one.
+
+  - kind: ask
+    q: What is a loop?
+    options: ["a sample that repeats", "a single drum hit", "a song's chorus", "a type of reverb"]
+    answer: 0
+    why: A bar or two of audio that plays round and round.
+    whyWrong:
+      1: A single hit is a one-shot.
+      2: A chorus is a section.
+      3: Reverb is space.
+
+  - kind: keep
+    next: >-
+      Next: tension, release and structure. Your loop becomes a song.

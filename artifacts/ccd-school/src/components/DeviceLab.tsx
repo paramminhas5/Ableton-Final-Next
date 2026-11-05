@@ -220,7 +220,7 @@ export function DeviceLab({
             {bypassed && <div className="font-mono text-xs text-hot">▸ BYPASSED · YOU ARE HEARING THE RAW SOURCE</div>}
           </div>
 
-          {/* Sticky focused-param explainer — always visible above the knobs */}
+          {/* Sticky focused-param explainer: always visible above the knobs */}
           <div className="brutal-border bg-acid text-ink p-3 sticky top-2 z-10">
             <div className="font-mono text-[10px] uppercase opacity-70">▸ HOVER A KNOB</div>
             <div className="font-mono text-sm font-bold">{focused ? focused.label : "Pick a knob to see what it does"}</div>
@@ -255,7 +255,7 @@ export function DeviceLab({
 
           {presets && presets.length > 0 && (
             <div>
-              <div className="font-mono text-xs uppercase mb-2">PRESETS — TAP TO HEAR</div>
+              <div className="font-mono text-xs uppercase mb-2">PRESETS: TAP TO HEAR</div>
               <div className="flex flex-wrap gap-2">
                 {presets.map((p) => (
                   <button
@@ -305,7 +305,7 @@ export function DeviceLab({
         </div>
       </div>
 
-      {/* Signal flow — collapsed by default at the bottom */}
+      {/* Signal flow: collapsed by default at the bottom */}
       <SignalFlowSVG flow={signalFlow} defaultOpen={false} />
     </div>
   );
@@ -379,7 +379,7 @@ function ParamControl({
         className="w-full"
       />
       <div className="font-mono text-xs text-center">
-        {Number.isFinite(v) ? v.toFixed(param.step && param.step < 1 ? 2 : 0) : "—"} {param.unit ?? ""}
+        {Number.isFinite(v) ? v.toFixed(param.step && param.step < 1 ? 2 : 0) : "-"} {param.unit ?? ""}
       </div>
     </div>
     </TooltipTrigger>
@@ -402,12 +402,12 @@ function describeChanges(slug: string | undefined, vals: Record<string, number |
   switch (slug) {
     case "eq": {
       const lo = num(vals.low), mi = num(vals.mid), hi = num(vals.hi);
-      if (lo > 1) out.push(`Lows boosted +${lo.toFixed(0)} dB — more weight & body`);
-      if (lo < -1) out.push(`Lows cut ${lo.toFixed(0)} dB — tighter, less boom`);
-      if (mi > 1) out.push(`Mids boosted +${mi.toFixed(0)} dB at ${num(vals.midFreq,1000)} Hz — more presence`);
-      if (mi < -1) out.push(`Mids cut ${mi.toFixed(0)} dB at ${num(vals.midFreq,1000)} Hz — carved away`);
-      if (hi > 1) out.push(`Highs +${hi.toFixed(0)} dB — air & sparkle`);
-      if (hi < -1) out.push(`Highs ${hi.toFixed(0)} dB — darker, smoother`);
+      if (lo > 1) out.push(`Lows boosted +${lo.toFixed(0)} dB: more weight & body`);
+      if (lo < -1) out.push(`Lows cut ${lo.toFixed(0)} dB: tighter, less boom`);
+      if (mi > 1) out.push(`Mids boosted +${mi.toFixed(0)} dB at ${num(vals.midFreq,1000)} Hz: more presence`);
+      if (mi < -1) out.push(`Mids cut ${mi.toFixed(0)} dB at ${num(vals.midFreq,1000)} Hz: carved away`);
+      if (hi > 1) out.push(`Highs +${hi.toFixed(0)} dB: air & sparkle`);
+      if (hi < -1) out.push(`Highs ${hi.toFixed(0)} dB: darker, smoother`);
       break;
     }
     case "compressor":
@@ -418,13 +418,13 @@ function describeChanges(slug: string | undefined, vals: Record<string, number |
       break;
     }
     case "limiter": {
-      out.push(`Ceiling ${num(vals.ceiling,-1).toFixed(1)} dB — nothing escapes`);
+      out.push(`Ceiling ${num(vals.ceiling,-1).toFixed(1)} dB: nothing escapes`);
       out.push(`Input pushed ×${num(vals.gain,1).toFixed(2)}`);
       break;
     }
     case "saturator": {
       const d = num(vals.drive,0);
-      out.push(`Drive ${d >= 0 ? "+" : ""}${d.toFixed(1)} dB — adds harmonics (${vals.type ?? "analog"})`);
+      out.push(`Drive ${d >= 0 ? "+" : ""}${d.toFixed(1)} dB: adds harmonics (${vals.type ?? "analog"})`);
       break;
     }
     case "reverb": {
@@ -457,6 +457,6 @@ function describeChanges(slug: string | undefined, vals: Record<string, number |
       });
     }
   }
-  if (out.length === 0) out.push("Defaults — toggle A/B or load a preset to hear the device.");
+  if (out.length === 0) out.push("Defaults: toggle A/B or load a preset to hear the device.");
   return out;
 }

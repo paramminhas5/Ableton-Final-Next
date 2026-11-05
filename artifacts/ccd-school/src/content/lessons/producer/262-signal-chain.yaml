@@ -1,0 +1,108 @@
+slug: signal-chain
+world: producer
+number: 262
+title: the signal chain
+minutes: 5
+song:
+  changes: lead.lead
+  why: the order your lead's sound passes through things changes how it comes out
+learn: >-
+  What a signal chain is, why the order of effects matters, and your lead's chain from voice to reverb.
+youCan:
+  - say what a signal chain is
+  - say why the order of effects matters
+  - shape your lead one stage at a time
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        A sound in a music program travels like water through pipes. It starts at the voice, the synth making
+        the note, then flows through each effect in turn: a filter, some drive, a reverb. That path is called
+        the signal chain, and every stage works on whatever the stage before it handed over.
+      straight: >-
+        The signal chain is the path a sound takes: the voice, then each effect in order. Each stage changes
+        what the last one made.
+      eli5: >-
+        Your sound goes on a little trip through one machine, then the next. Each machine changes it a bit.
+
+  - kind: say
+    title: order matters
+    say:
+      mentor: >-
+        Swap two stages and you get a different sound. An eq after a distortion shapes the gritty new sound
+        the distortion made. Put it before, and the distortion roughs up whatever the eq left.
+
+        Reverb usually goes near the end. Put a compressor after a reverb and it squeezes the reverb tail
+        too, so the whole thing pumps.
+      straight: >-
+        Order changes the sound. Eq after distortion shapes the grit; before, it shapes what gets distorted.
+        A compressor after a reverb makes the tail pump.
+      eli5: >-
+        If you change which machine comes first, the sound comes out different. Echo usually goes last.
+    deeper:
+      - title: chains in live
+        say: >-
+          Every track has a device chain. Sound flows through the devices from left to right, so the device
+          on the left works first. Drag a device to a new spot and you change the order.
+      - title: a common order
+        say: >-
+          A common starting order is: an eq to cut problems, then dynamics like compression, then an eq to
+          boost, then saturation, then modulation, then time effects like delay and reverb. It's a habit, not
+          a rule.
+      - title: bypass
+        say: >-
+          Switch each device off and on to check it's earning its place. If you can't hear a difference, you
+          may not need it.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff, drive, send]
+    say:
+      mentor: >-
+        Here's your lead's chain, in order. Wave is the voice itself. Cutoff is the filter right after it.
+        Drive roughs it up. Send passes a copy to the reverb at the end.
+
+        Move them one at a time, from the first to the last, and listen to each stage change what came
+        before it. Keep the chain that makes your lead sound most like yours.
+      straight: >-
+        Your lead's chain: wave (voice), cutoff (filter), drive, send (reverb). Set them in order, one at a
+        time.
+      eli5: >-
+        These four knobs are your lead's trip. Turn them one at a time, left to right, and hear each one
+        change the sound.
+
+  - kind: ask
+    q: What is a signal chain?
+    options: ["the path a sound takes through each stage in order", "a list of your song's parts", "the cable to your speakers", "a kind of reverb"]
+    answer: 0
+    why: Voice first, then each effect in turn, each working on what the last handed over.
+    whyWrong:
+      1: Parts are tracks. The chain is inside one track.
+      2: It's about effects, not cables.
+      3: Reverb is one stage in a chain.
+
+  - kind: ask
+    q: Why does the order of effects matter?
+    options: ["each stage works on what the last one handed it", "effects only work first in line", "the last effect is always loudest", "order only matters for drums"]
+    answer: 0
+    why: Change the order and each stage gets a different sound to work on.
+    whyWrong:
+      1: Every stage in the chain works.
+      2: Order isn't about loudness.
+      3: It matters on any part.
+
+  - kind: ask
+    more: true
+    q: In Live, which way does sound flow through a track's devices?
+    options: ["left to right", "right to left", "bottom to top", "all at once"]
+    answer: 0
+    why: The device on the left works first.
+    whyWrong:
+      1: It's the other way round.
+      2: The device chain runs across, not up.
+      3: Each device works in turn.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, eq, a place for everything.

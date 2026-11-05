@@ -247,7 +247,7 @@ export const SENDS_RETURNS_FLOW: SignalFlowDiagram = {
 
 export const SIDECHAIN_FLOW: SignalFlowDiagram = {
   title: 'Sidechain Compression',
-  description: 'Kick drum controls compressor on bass track — bass ducks when kick plays.',
+  description: 'Kick drum controls compressor on bass track: bass ducks when kick plays.',
   nodes: [
     { id: 'kick', label: 'KICK', type: 'track', x: 50, y: 100, color: '#ff6b35' },
     { id: 'bass', label: 'BASS', type: 'track', x: 50, y: 300, color: '#ff6b35' },

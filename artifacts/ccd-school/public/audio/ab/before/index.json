@@ -1,0 +1,21 @@
+[
+  {"id": "kick", "what": "the kick, four to the bar", "rms_db": -20.05, "peak": 0.5152},
+  {"id": "snare", "what": "the snare on 2 and 4", "rms_db": -29.09, "peak": 0.7105},
+  {"id": "clap", "what": "the clap on 2 and 4", "rms_db": -33.83, "peak": 0.4396},
+  {"id": "hats", "what": "closed hats, sixteenths, open on the offbeat", "rms_db": -32.18, "peak": 0.2523},
+  {"id": "kit", "what": "the whole kit with some drive on the kick", "rms_db": -22.18, "peak": 0.6523},
+  {"id": "bass", "what": "a rolling bass with the filter envelope working", "rms_db": -20.64, "peak": 0.5792},
+  {"id": "lead", "what": "a detuned lead, held then played", "rms_db": -23.97, "peak": 0.2511},
+  {"id": "pad", "what": "a chord pad, slow attack, octave voicing", "rms_db": -19.66, "peak": 0.3921},
+  {"id": "reverb", "what": "one clap into the reverb", "rms_db": -36.05, "peak": 0.4311},
+  {"id": "echo", "what": "one lead note into the echo", "rms_db": -34.76, "peak": 0.1593},
+  {"id": "drive", "what": "the bass with the drive up", "rms_db": -14.34, "peak": 0.2823},
+  {"id": "sketch", "what": "the whole song, four bars", "rms_db": -16.78, "peak": 0.7716},
+  {"id": "glued", "what": "the whole song with the glue pushed hard", "rms_db": -18.19, "peak": 0.6828},
+  {"id": "kicks", "what": "the kick's three bodies, two hits each", "rms_db": -21.3, "peak": 0.5065},
+  {"id": "scream", "what": "the rolling bass through the scream filter, driven", "rms_db": -21.02, "peak": 0.5856},
+  {"id": "smooth", "what": "the rolling bass through the smooth filter", "rms_db": -21.02, "peak": 0.5856},
+  {"id": "snares", "what": "one snare three ways: fat body, tight snap, long rattle", "rms_db": -27.7, "peak": 0.5897},
+  {"id": "perc", "what": "a bell and a metal bar over hats that change a little every hit", "rms_db": -26.19, "peak": 0.5264},
+  {"id": "plate", "what": "one clap into the plate reverb", "rms_db": -36.05, "peak": 0.4311}
+]

@@ -1,0 +1,110 @@
+slug: cv-tools
+world: producer
+number: 309
+title: cv tools
+minutes: 5
+song:
+  changes: bass.bass
+  why: a bass whose filter opens on every note is the sound a modular synth makes when Live is playing it
+learn: >-
+  What control voltage is, how Live's CV Tools let your song play a modular synth, and the classic modular
+  move on your own bass: an envelope opening the filter on every note.
+youCan:
+  - say what cv is and what pitch and gate do
+  - name the main CV Tools devices
+  - shape your bass the way a modular voice would
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        One synth note, starting and stopping. In a modular synth, a rack of separate boxes joined with patch
+        cables, that start and stop is a voltage. One wire says how high the note is, another says when it's
+        on. It's called control voltage, cv for short, and it's the language modular gear speaks.
+      straight: >-
+        A note on and off. Modular synths control that with voltages on cables, called cv: one for pitch, one
+        for on and off.
+      eli5: >-
+        In some synths made of lots of little boxes, electricity on a wire tells the sound what note to play
+        and when to start and stop.
+
+  - kind: say
+    title: live speaking cv
+    say:
+      mentor: >-
+        CV Tools is a free pack of Max for Live devices that lets Live talk to a modular. CV Instrument turns
+        the notes on a midi track into two signals: pitch, usually one volt for every octave, and a gate,
+        which is on while the note is held and off when it ends. The gate is what starts the modular's
+        envelopes.
+
+        The signals go out of your audio interface like sound. That only works with an interface whose
+        outputs are dc coupled, which means they can hold a steady voltage. Most normal ones block it.
+      straight: >-
+        CV Tools is a free Max for Live pack. CV Instrument turns midi notes into pitch (usually one volt per
+        octave) and gate (on while held). It needs a dc coupled audio interface.
+      eli5: >-
+        CV Tools lets Live send notes to a modular synth as electricity. One signal says which note, another
+        says when it starts and stops.
+    deeper:
+      - title: the other devices
+        say: >-
+          CV LFO and the other cv modulators send movement out to the modular. CV Triggers sends clock and
+          reset pulses to hardware sequencers. CV In works the other way, reading a voltage from the modular so
+          it can move controls inside Live.
+      - title: calibrate first
+        say: >-
+          Run the calibration on CV Instrument against your oscillator. Skip it and notes drift out of tune as
+          you go up the keyboard. A few vintage synths use a different pitch standard, hertz per volt, so check
+          before you patch.
+
+  - kind: shape
+    layer: bass
+    knobs: [cutoff, env, res]
+    say:
+      mentor: >-
+        Here's your song, with your bass. On a modular, the gate from Live would fire an envelope, and that
+        envelope would open the filter on every note. That's what env does here: it sets how far each note
+        opens the filter before it closes again.
+
+        Pull cutoff down so the bass starts dark, then bring env up and hear every note bark open. Res sharpens
+        the edge. That squelch is the sound of so many modular basslines.
+      straight: >-
+        Your bass. Env is how far each note opens the filter, the job a gate and envelope do on a modular.
+        Cutoff down, env up, res for bite.
+      eli5: >-
+        Turn cutoff down so the bass sounds dark. Turn env up and every note opens up bright for a moment. Res
+        makes it squelchy.
+
+  - kind: ask
+    q: What is cv?
+    options: ["control voltage, how modular synths send values on cables", "a type of audio file", "a midi controller", "a reverb setting"]
+    answer: 0
+    why: A voltage on a wire carries pitch, gate or movement.
+    whyWrong:
+      1: It's a signal, not a file.
+      2: It's what a modular understands, not a controller.
+      3: It's not an effect.
+
+  - kind: ask
+    q: What does a gate signal do?
+    options: ["stays on while a note is held and starts envelopes", "sets how high the note is", "changes the tempo", "turns the reverb up"]
+    answer: 0
+    why: Gate is on and off. Pitch is the other signal.
+    whyWrong:
+      1: That's the pitch signal.
+      2: Gate is per note, not tempo.
+      3: Nothing to do with reverb.
+
+  - kind: ask
+    q: Why does CV Tools need a dc coupled audio interface?
+    options: ["it can hold a steady voltage, which most interfaces block", "it's louder", "it has more inputs", "it records in higher quality"]
+    answer: 0
+    why: Cv needs steady voltages to get out of the interface.
+    whyWrong:
+      1: Volume isn't the issue.
+      2: Number of inputs doesn't matter.
+      3: Quality isn't the issue either.
+
+  - kind: keep
+    next: >-
+      Your bass opens on every note. Back to your song path, or on to external instruments.

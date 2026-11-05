@@ -4,6 +4,7 @@
  * line up with Live's Drum Rack pads. Note events are exported exactly as recorded.
  */
 import { TYPE, type TrackV2 } from "./track2";
+import { withArps } from "./arp";
 
 const PPQ = 480;
 const vlq = (n: number) => {
@@ -16,6 +17,7 @@ const u16 = (n: number) => [(n >> 8) & 255, n & 255];
 const chunk = (type: string, data: number[]) => [...type.split("").map(c => c.charCodeAt(0)), ...u32(data.length), ...data];
 
 export function trackV2ToMidi(t: TrackV2, repeats = 4): Uint8Array {
+  t = withArps(t);
   const mpq = Math.round(60_000_000 / t.bpm);
   const tracks: number[][] = [[0, 0xff, 0x51, 0x03, (mpq >> 16) & 255, (mpq >> 8) & 255, mpq & 255, 0, 0xff, 0x58, 0x04, 4, 2, 24, 8, 0, 0xff, 0x2f, 0x00]];
   t.layers.forEach((l, li) => {

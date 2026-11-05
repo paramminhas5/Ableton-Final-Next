@@ -1,0 +1,79 @@
+slug: first-bass
+world: producer
+number: 5
+title: your first bass line
+minutes: 7
+song:
+  adds: bass.bass
+  why: the bass carries the weight and the harmony at the bottom of your track
+learn: >-
+  Bass notes on the keys, a bass line that grooves with your kick, and shaping it with cutoff and decay.
+youCan:
+  - play a bass line into your song
+  - place bass notes between the kicks so they groove
+  - shape the bass with cutoff and decay
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Low and high, the same note. Your bass lives down at the low end, where you feel it as much as hear
+        it. In dance music the bass usually plays short notes between the kicks rather than on top of them, so
+        the two take turns: kick, bass, kick, bass.
+      straight: >-
+        The bass lives low. In dance music it often plays between the kicks so the two take turns.
+      eli5: >-
+        Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom
+        and the bass take turns.
+
+  - kind: play
+    layer: bass
+    surface: keys
+    goal: {notes: 2}
+    say:
+      mentor: >-
+        Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a
+        few short notes in the gaps between kicks. Start on the first key, your song's home note, and try one
+        or two others. Short and simple beats long and busy.
+      straight: >-
+        Record a bass line in the gaps between kicks. Start on the first key, add one or two others, keep the
+        notes short.
+      eli5: >-
+        Press rec, wait for four ticks. Play short bass notes in between the booms. Start with the first key.
+
+  - kind: shape
+    layer: bass
+    knobs: [cutoff, decay]
+    say:
+      mentor: >-
+        Shape it in your loop. Cutoff is the filter: low for a warm, round bass, higher for a buzzy one that
+        cuts through on small speakers. Decay sets how long each note lasts: short and plucky, or long and
+        rolling.
+      straight: >-
+        Cutoff: warm and round when low, buzzy when high. Decay: plucky when short, rolling when long.
+      eli5: >-
+        Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like.
+
+  - kind: ask
+    q: Where does a dance music bass often sit?
+    options: ["between the kicks", "on top of every kick", "only on beat one", "high up with the hats"]
+    answer: 0
+    why: Between the kicks, so they take turns and don't pile up.
+    whyWrong:
+      1: On top of the kick they fight for the same space.
+      2: Once a bar is very sparse.
+      3: Bass lives low.
+
+  - kind: ask
+    q: You want a bass that still cuts through on phone speakers. What do you try?
+    options: ["open the cutoff a bit", "close the cutoff fully", "turn decay to zero", "slow the tempo"]
+    answer: 0
+    why: Phone speakers can't play deep lows; brighter harmonics let the bass come through.
+    whyWrong:
+      1: A very dark bass disappears on small speakers.
+      2: You'd barely hear it.
+      3: Tempo doesn't help.
+
+  - kind: keep
+    next: >-
+      Next: make room. Your kick and bass both live down low, and you'll stop them fighting.

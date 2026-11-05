@@ -1,0 +1,105 @@
+slug: audio-clips
+world: producer
+number: 236
+title: audio clips
+minutes: 5
+song:
+  changes: drums.kick
+  why: the pitch, length and gain of a sound decide how it sits in your song
+learn: >-
+  What an audio clip is, what you can change without touching the original file, and pitch, length and gain
+  on your own kick.
+youCan:
+  - say what an audio clip is
+  - say what transpose and detune measure
+  - set pitch, length and gain on a sound by ear
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A full beat: kick, clap, hats. In Live, a beat like this can live in two kinds of clip. A midi clip
+        holds notes, instructions for an instrument. An audio clip holds a recording, the actual sound.
+
+        You can bend an audio clip a lot: play it higher, cut where it starts and ends, turn it up or down,
+        flip it backwards. And the original file on your computer never changes. Live just remembers your
+        edits.
+      straight: >-
+        A midi clip holds notes. An audio clip holds a recording. You can change an audio clip's pitch, start,
+        end and gain without changing the original file.
+      eli5: >-
+        Some clips are notes, some are recordings. You can make a recording higher, shorter or quieter, and the
+        real recording stays safe.
+
+  - kind: say
+    title: pitch in semitones and cents
+    say:
+      mentor: >-
+        Transpose moves a clip's pitch in semitones. A semitone is the smallest step on a piano, one key to the
+        very next. Twelve of them make an octave.
+
+        Detune is the fine version, in cents. A cent is a hundredth of a semitone, so it's for tiny nudges,
+        like tuning a sample so it sits right with your bass.
+      straight: >-
+        Transpose is in semitones, one piano key each, twelve to an octave. Detune is in cents, a hundredth of
+        a semitone, for fine tuning.
+      eli5: >-
+        Transpose moves the sound up or down one piano key at a time. Detune moves it just a tiny bit, for
+        when it's almost right.
+    deeper:
+      - title: the clip view in live
+        say: >-
+          Click an audio clip to open it in the detail view at the bottom of the screen. There you'll find
+          Gain, Transpose, Detune, the start and end markers, loop settings and the Warp switch. Reverse,
+          Crop and Consolidate are in the clip's right-click menu. Transpose covers 48 semitones up or down.
+      - title: warp, in one line
+        say: >-
+          With Warp on, an audio clip follows your song's tempo. With it off, the clip plays at its original
+          speed. The warping lesson goes into this.
+
+  - kind: tempo
+    set: sample
+    choices: [hit]
+    say:
+      mentor: >-
+        An audio clip has three controls you always reach for: where it starts, how it's pitched, and how loud it is. Your sample is here. start moves the start marker into the sound. tune is the clip's transpose. The level is on the song's channel fader, which you set in the mixing lessons.
+        
+        Try start a little way in to tighten a hit, tune down a few semitones for weight. In Live these live in the clip view: start and end markers, transpose and gain.
+      straight: >-
+        start, tune and (on the fader) gain: the three audio clip controls. Tighten the start, tune for weight.
+      eli5: >-
+        Where it starts, how high it is, how loud it is. That's an audio clip.
+
+  - kind: ask
+    q: What's the difference between an audio clip and a midi clip?
+    options: ["audio holds a recording, midi holds notes", "audio is always louder", "midi can't be edited", "they are the same"]
+    answer: 0
+    why: An audio clip is sound itself. A midi clip is instructions that an instrument turns into sound.
+    whyWrong:
+      1: Loudness depends on the sound, not the clip type.
+      2: Midi is very easy to edit.
+      3: They hold different things.
+
+  - kind: ask
+    q: You transpose a clip by 12 semitones. How far did it move?
+    options: ["an octave", "one piano key", "a hundredth of a key", "half an octave"]
+    answer: 0
+    why: Twelve semitones make one octave.
+    whyWrong:
+      1: One key is one semitone.
+      2: That's a cent.
+      3: Half an octave is six semitones.
+
+  - kind: ask
+    q: You edit an audio clip's start, gain and pitch. What happens to the file on your computer?
+    options: ["nothing, Live keeps the edits separately", "it is overwritten", "it is deleted", "it is converted to midi"]
+    answer: 0
+    why: Clip edits are non-destructive. The original recording stays untouched.
+    whyWrong:
+      1: Live never overwrites the source for clip edits.
+      2: The file stays where it is.
+      3: Audio stays audio.
+
+  - kind: keep
+    next: >-
+      Back to your song path, or try recording audio to capture your own sounds.

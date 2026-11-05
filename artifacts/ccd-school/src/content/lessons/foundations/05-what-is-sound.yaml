@@ -1,0 +1,188 @@
+slug: what-is-sound
+world: foundations
+number: 5
+title: what is sound?
+minutes: 7
+song:
+  adds: lead.lead
+  why: your first sound in your song, a few notes you play yourself
+learn: >-
+  What sound actually is, the three things every sound has, and the first few notes of your own song.
+youCan:
+  - explain sound as air being pushed and pulled
+  - tell pitch from loudness
+  - hear how the shape of a wave changes its colour
+  - play your first notes into your song
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Everything you will ever hear, a kick, a voice, a whole song, is the same thing underneath: air being
+        pushed and pulled.
+
+        Watch the picture while the note plays. The speaker cone moves out and in, fast. Moving out, it shoves
+        the air in front of it together. Moving in, it leaves the air spread thin. Those bunched and thin
+        patches roll through the room to your ear, and your ear turns them into sound.
+      straight: >-
+        All sound works the same way: something moves back and forth and pushes the air around it.
+
+        In the picture, the speaker moves out and in. Out squeezes the air, in lets it spread. Those squeezed
+        and spread patches travel to your ear, which hears them as sound.
+      eli5: >-
+        Hear that hum? Watch the speaker on the left. It wiggles out and in, really fast.
+
+        Each wiggle pushes the air, like ripples when you drop a stone in water. The ripples travel across
+        the room into your ear, and that is what you hear. Sound is just wiggling air.
+    deeper:
+      - title: how fast sound travels
+        say: >-
+          Those pressure patches move at about 343 metres every second in air. That is why you see lightning
+          before you hear thunder: light is far faster.
+
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Every sound has three things. The first is pitch. Tap low, then high.
+
+        One full push and pull of the air is called a cycle. Pitch is how many cycles happen every second.
+        The low note pushes the air about 110 times a second, the high one about 440. Look at the wave: more
+        cycles packed in means a higher note. We count cycles per second in hertz, written Hz.
+      straight: >-
+        Thing one: pitch. Low, then high.
+
+        Pitch is how many push and pull cycles happen per second, measured in hertz (Hz). Here the low note is
+        about 110 Hz and the high one about 440 Hz. More cycles in the picture, higher note.
+      eli5: >-
+        Every sound has three things. Number one is pitch. Tap low, then tap high.
+
+        A low note wiggles the air slowly. A high note wiggles it fast. In the picture the high one has lots
+        of wiggles packed close together. More wiggles every second, higher note.
+    deeper:
+      - title: what people can hear
+        say: >-
+          From about 20 cycles a second, a rumble you feel more than hear, up to about 20,000, a faint hiss.
+          A kick drum sits around 50. The A a band tunes to is 440.
+
+  - kind: hear
+    clip: synth-loud
+    say:
+      mentor: >-
+        The second thing is loudness. Tap quiet, then loud.
+
+        Same note, same pitch. What changes is how hard the air is pushed. The picture shows it as how tall
+        the wave is: a small push makes a short wave and a quiet sound, a big push makes a tall wave and a
+        loud one. Pitch is how often, loudness is how hard.
+      straight: >-
+        Thing two: loudness. Quiet, then loud.
+
+        The pitch stays the same. The size of the push changes, which shows as the height of the wave. How
+        often is pitch, how hard is loudness.
+      eli5: >-
+        Number two is loudness. Tap quiet, then tap loud.
+
+        It is the same note. The loud one just pushes the air harder, so the wave in the picture is taller.
+        Gentle push, quiet. Big push, loud.
+
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        The third thing is the shape of the wave, and this is what makes a piano sound different from a
+        guitar playing the same note. Tap soft, saw and square.
+
+        All three have the same pitch and loudness. Only the shape changes. The round wave sounds pure and
+        gentle. The saw, a slope then a sudden drop, sounds bright and buzzy. The square sounds hollow, a bit
+        like an old video game. People call this the colour, or timbre, of a sound.
+      straight: >-
+        Thing three: the shape of the wave, also called timbre or tone colour. Switch between soft, saw and
+        square.
+
+        Same pitch, same loudness, different shape: pure, bright and buzzy, hollow. That is why two
+        instruments playing the same note still sound different.
+      eli5: >-
+        Number three is the shape of the wiggle. Tap soft, saw and square.
+
+        Same note, same loudness, but they sound different. The soft one hums. The saw buzzes like a bee. The
+        square sounds like an old video game. That shape is why a piano and a guitar never sound the same.
+    deeper:
+      - title: why the shape changes the sound
+        say: >-
+          A smooth wave is just the one pitch. Sharp corners and sudden jumps add lots of extra, higher pitches
+          on top, quietly. Your ear hears that mix as brightness or buzz.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Now make some sound of your own. These are the first notes of your song, and every lesson after this
+        adds something to it.
+
+        Press rec, let the four clicks go by, then play any four or more keys. Every key here fits with the
+        others, so nothing you press can sound wrong. Listen to the pitch go up as you move right.
+      straight: >-
+        Your first notes, recorded into your song. Press rec, wait out the count-in, then play at least four
+        keys. They are all from one scale, so they all work together.
+      eli5: >-
+        Your turn to make sound! Whatever you play goes into your song.
+
+        Press rec, wait for four clicks, then press some keys. Any keys. They all sound nice together. Keys on
+        the right are higher, keys on the left are lower.
+
+  - kind: ask
+    q: What is sound?
+    options: ["air being pushed and pulled", "electricity in the speaker", "light from the screen", "a kind of heat"]
+    answer: 0
+    why: Something moves back and forth and pushes the air. Those pressure changes reach your ear as sound.
+    whyWrong:
+      1: Electricity drives the speaker, but what you hear is the air the speaker moves.
+      2: Light is a different thing. Sound travels through air.
+      3: Sound is movement of air, not heat.
+
+  - kind: ask
+    q: The high note had more wiggles packed into the picture. What does that mean?
+    options: ["the air moves back and forth faster", "it is louder", "it is a different shape", "it lasts longer"]
+    answer: 0
+    why: More cycles every second means faster vibration, and that is a higher pitch.
+    whyWrong:
+      1: Loudness is how hard the air is pushed, not how often.
+      2: Both notes were the same soft shape. Only the speed changed.
+      3: Both lasted the same time.
+
+  - kind: ask
+    q: What changed between the quiet note and the loud note?
+    options: ["how hard the air was pushed", "how fast the air moved back and forth", "the shape of the wave", "nothing"]
+    answer: 0
+    why: Same pitch, bigger push. A taller wave is a louder sound.
+    whyWrong:
+      1: That would change the pitch. Both notes were the same pitch.
+      2: Both were the same soft shape.
+      3: Tap them again. The loud one pushes the air much harder.
+
+  - kind: ask
+    q: A piano and a guitar play the same note. Why do they still sound different?
+    options: ["the shape of their waves is different", "one is always louder", "they are at different pitches", "they are not really different"]
+    answer: 0
+    why: Same pitch, different wave shape. That shape is the sound's colour, or timbre.
+    whyWrong:
+      1: Play them at the same loudness and they still sound different.
+      2: The question says same note, so the pitch is the same.
+      3: You heard soft, saw and square sound different on the same note.
+
+  - kind: ask
+    more: true
+    q: Which three things does every sound have?
+    options: ["pitch, loudness and shape", "speed, colour and length", "bass, middle and top", "notes, beats and bars"]
+    answer: 0
+    why: How often the air moves (pitch), how hard (loudness) and the shape of each cycle (timbre).
+    whyWrong:
+      1: Close in spirit, but the three are pitch, loudness and wave shape.
+      2: Those are parts of the pitch range.
+      3: Those are about rhythm and music, not about a single sound.
+
+  - kind: keep
+    next: >-
+      Next: frequency and pitch, up close. How notes are named and why some sound good together.

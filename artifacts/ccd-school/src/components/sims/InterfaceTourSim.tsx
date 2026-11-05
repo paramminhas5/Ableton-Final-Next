@@ -5,7 +5,7 @@ const HOTSPOTS = [
   { x: 8, y: 12, w: 84, h: 8, label: "CONTROL BAR", desc: "Tempo, transport, metronome, quantization, MIDI/Key map." },
   { x: 8, y: 22, w: 18, h: 60, label: "BROWSER", desc: "Sounds, drums, samples, packs, your library." },
   { x: 27, y: 22, w: 65, h: 38, label: "MAIN VIEW", desc: "Session grid or Arrangement timeline (Tab to switch)." },
-  { x: 27, y: 61, w: 65, h: 21, label: "DETAIL VIEW", desc: "Clip & device editor — opens at the bottom." },
+  { x: 27, y: 61, w: 65, h: 21, label: "DETAIL VIEW", desc: "Clip & device editor: opens at the bottom." },
   { x: 27, y: 83, w: 65, h: 6, label: "MIXER STRIP", desc: "Faders, sends, IO." },
   { x: 8, y: 83, w: 18, h: 6, label: "INFO VIEW", desc: "Hover anything in Live, read what it does here." },
 ];

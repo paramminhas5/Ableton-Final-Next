@@ -1,0 +1,110 @@
+slug: tempo-following
+world: producer
+number: 306
+title: tempo following
+minutes: 5
+song:
+  changes: drums.kick
+  why: when your song follows a live drummer, it speeds up and settles with the room instead of fighting it
+learn: >-
+  How Live can listen to a drummer and follow their tempo, and hearing your own song move with a player who
+  drifts.
+youCan:
+  - say what Tempo Follower listens to
+  - say what kind of sound it follows best
+  - hear your song at the speeds a live drummer might push it to
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        A kick, perfectly steady. A machine never drifts. A human drummer does, a little faster when the room
+        gets excited, a little slower in a breakdown. That's part of why a band feels alive.
+
+        Normally the band has to follow Live's click. Live can also do it the other way round, and follow the
+        drummer.
+      straight: >-
+        Machines keep perfect time, drummers drift. Usually the band follows Live. Live can also follow the
+        drummer.
+      eli5: >-
+        A computer keeps a perfectly even beat. A real drummer speeds up and slows down a tiny bit. Live can
+        listen to the drummer and follow along.
+
+  - kind: say
+    title: tempo follower
+    say:
+      mentor: >-
+        Tempo Follower arrived in Live 11. It listens to an audio input, usually a mic on the kick drum, works
+        out the tempo from the hits, and keeps changing Live's tempo to match. Every loop, every synced effect,
+        every clip in your set rides along with the person playing.
+
+        It follows clear, punchy hits best. A kick or a click works well. Soft pads or long sustained sounds
+        give it nothing to lock onto, and sparse or busy syncopated playing can make it wander.
+      straight: >-
+        Tempo Follower (Live 11) listens to an audio input, works out the tempo and moves Live's tempo to
+        match. Clear hits like a kick work best. Pads and sparse playing make it wander.
+      eli5: >-
+        Tempo Follower listens to a real drum and makes your song go the same speed as the drummer. It works
+        best with a loud, clear kick.
+    deeper:
+      - title: switching it on
+        say: >-
+          Pick the input it listens to in preferences, in the link, tempo and midi tab. Then turn it on in the
+          control bar at the top of Live. Turn it off again when you go back to programmed parts, or your tempo
+          will keep following whatever comes in.
+      - title: sudden changes
+        say: >-
+          A big jump in tempo takes a few bars to settle while it catches up. Feed it a clean kick mic rather
+          than the whole band and it tracks more steadily.
+
+  - kind: tempo
+    set: tempo
+    marks: [120, 124, 128, 130]
+    say:
+      mentor: >-
+        Here's your song. Imagine a drummer playing along with it. They start at your tempo, then the crowd
+        gets going and they push. Turn the knob up a few bpm and listen to your whole song follow, just as it
+        would with Tempo Follower on. Then bring it back down for the breakdown.
+
+        When you're done, leave it at the tempo your song feels best at.
+      straight: >-
+        Your song, following an imaginary drummer. Push the tempo up a few bpm, bring it back, then leave it
+        where it feels best.
+      eli5: >-
+        Pretend a drummer is speeding up. Turn the knob up a little and your song follows. Then turn it back
+        and pick the speed you like best.
+    hint: Small moves, two or three bpm, are what a real drummer drifts by.
+
+  - kind: ask
+    q: What does Tempo Follower listen to?
+    options: ["an audio input, like a kick drum mic", "midi notes from a keyboard", "the master volume", "your mouse clicks"]
+    answer: 0
+    why: It hears the hits and works out the tempo from them.
+    whyWrong:
+      1: It listens to audio, not midi notes.
+      2: It needs a rhythm, not a level.
+      3: It's listening to a performer.
+
+  - kind: ask
+    q: Which sound would Tempo Follower follow best?
+    options: ["a clear, punchy kick", "a soft pad", "a long held string note", "silence"]
+    answer: 0
+    why: Sharp hits give it something clear to measure.
+    whyWrong:
+      1: A pad has no clear hits.
+      2: Held notes don't mark the beat.
+      3: There's nothing to hear.
+
+  - kind: ask
+    q: Which Live version added Tempo Follower?
+    options: ["Live 11", "Live 9", "Live 10", "Live 12"]
+    answer: 0
+    why: It arrived in Live 11.
+    whyWrong:
+      1: Too early.
+      2: One version too early.
+      3: It was already there by Live 12.
+
+  - kind: keep
+    next: >-
+      Your song's tempo is set. Back to your song path, or on to Ableton Link.

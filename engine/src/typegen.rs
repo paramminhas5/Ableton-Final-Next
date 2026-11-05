@@ -76,6 +76,15 @@ pub fn typescript() -> String {
     o.push_str("] as const satisfies readonly ParamSpec[];\n");
     writeln!(o, "export const DRUM_RACK_BASE = {DRUM_RACK_BASE};\n").unwrap();
 
+    o.push_str("/** Per pad, second page. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. */\n");
+    o.push_str("export const DRUM_PAD2_PARAMS = [\n");
+    for (i, s) in DRUM_PAD2_PARAMS.iter().enumerate() {
+        writeln!(o, "  {},", spec_ts("drums.pad", s, i)).unwrap();
+    }
+    o.push_str("] as const satisfies readonly ParamSpec[];\n");
+    writeln!(o, "export const DRUM_PAD2_BASE = {DRUM_PAD2_BASE};").unwrap();
+    writeln!(o, "export const DRUM_PAD2_STRIDE = {DRUM_PAD2_STRIDE};\n").unwrap();
+
     for (name, group, table) in [("CHORD_PARAMS", "chords", CHORD_PARAMS), ("LEAD_PARAMS", "lead", LEAD_PARAMS), ("FX_PARAMS", "fx", FX_PARAMS), ("SAMPLER_PARAMS", "sampler", SAMPLER_PARAMS)] {
         writeln!(o, "export const {name} = [").unwrap();
         for (i, s) in table.iter().enumerate() {
@@ -112,11 +121,12 @@ pub fn typescript() -> String {
     o.push_str("export type BassParamId = `${(typeof BASS_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type DrumPadParamId = `${(typeof DRUM_PAD_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type DrumRackParamId = `${(typeof DRUM_RACK_PARAMS)[number][\"id\"]}`;\n");
+    o.push_str("export type DrumPad2ParamId = `${(typeof DRUM_PAD2_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type ChordParamId = `${(typeof CHORD_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type LeadParamId = `${(typeof LEAD_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type FxParamId = `${(typeof FX_PARAMS)[number][\"id\"]}`;\n");
     o.push_str("export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number][\"id\"]}`;\n");
-    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;\n\n");
+    o.push_str("export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | DrumPad2ParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;\n\n");
 
     writeln!(
         o,
@@ -128,8 +138,8 @@ pub fn typescript() -> String {
     .unwrap();
     writeln!(
         o,
-        "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {}, meter: {}, bands: {}, clash: {}, masterMeter: {} }} as const;",
-        out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON, out::METER, out::BANDS, out::CLASH, out::MASTER_METER
+        "export const OUT = {{ playedOn: {}, playedOff: {}, pos: {}, seqOn: {}, meter: {}, bands: {}, clash: {}, masterMeter: {}, loudness: {} }} as const;",
+        out::PLAYED_ON, out::PLAYED_OFF, out::POS, out::SEQ_ON, out::METER, out::BANDS, out::CLASH, out::MASTER_METER, out::LOUDNESS
     )
     .unwrap();
     writeln!(o, "/** Clash fixes, as packed in a CLASH event's flags. */").unwrap();
@@ -139,6 +149,12 @@ pub fn typescript() -> String {
     writeln!(o, "/** Fixed delay through the engine, in samples (2x stages and the limiter's look-ahead). */").unwrap();
     writeln!(o, "export const LATENCY_SAMPLES = {};", crate::engine::LATENCY).unwrap();
     writeln!(o, "export const CEILING_DB = {};", fmt(crate::master::CEILING_DB)).unwrap();
+    writeln!(o, "/** Export loudness, integrated LUFS: streaming (the default) and loud, for club play. */").unwrap();
+    writeln!(o, "export const EXPORT_LUFS = {};", fmt(crate::loudness::EXPORT_LUFS)).unwrap();
+    writeln!(o, "export const EXPORT_LOUD_LUFS = {};", fmt(crate::loudness::EXPORT_LOUD_LUFS)).unwrap();
+    let ratios: Vec<String> = crate::master::GLUE_RATIOS.iter().map(|r| fmt(*r)).collect();
+    writeln!(o, "/** The glue's ratio switch steps. */").unwrap();
+    writeln!(o, "export const GLUE_RATIOS = [{}] as const;", ratios.join(", ")).unwrap();
     writeln!(o, "export const MIX_PARAMS = {};", crate::engine::MIX_PARAMS).unwrap();
     writeln!(o, "export const FLAG = {{ playing: {}, countIn: {}, recording: {}, link: {}, repeat: {} }} as const;", out::F_PLAYING, out::F_COUNT_IN, out::F_RECORDING, out::F_LINK, out::F_REPEAT).unwrap();
     writeln!(o, "export const OUT_EVENT_BYTES = {};\n", std::mem::size_of::<crate::engine::OutEv>()).unwrap();

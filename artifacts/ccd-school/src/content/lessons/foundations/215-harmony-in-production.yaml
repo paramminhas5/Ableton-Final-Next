@@ -1,0 +1,123 @@
+slug: harmony-in-production
+world: foundations
+number: 215
+title: harmony in production
+minutes: 5
+song:
+  changes: chords.chords
+  why: the same chords as a long pad or a short stab give your song a totally different energy
+learn: >-
+  How chords are used in a real track, pads and stabs, keeping the low end clean, and your chords shaped into
+  the one your song needs.
+youCan:
+  - say the difference between a pad and a stab
+  - shape your chords long or short
+  - say why chords stay out of the low end
+steps:
+  - kind: hear
+    clip: short-vs-long-kick
+    say:
+      mentor: >-
+        Tap short, then long. Same kick, same pattern, but one is a punch and the other is a swell. Chords
+        work exactly the same way.
+
+        In a real track, how long your chords ring matters as much as which chords they are. That's the
+        difference between a chord on a piano and a chord in a mix.
+      straight: >-
+        Same kick short then long, punch versus swell. Chords in a track work the same way: their length
+        changes the energy as much as the notes do.
+      eli5: >-
+        Tap a, then b. The same boom, short then long. Chords can be short or long too, and it changes the
+        whole feeling.
+
+  - kind: say
+    title: pads and stabs
+    say:
+      mentor: >-
+        A pad is a long, sustained chord sound, a soft bed of harmony underneath everything. A stab is a
+        short, punchy chord hit, the sound of so much house, disco and funk.
+
+        Same chords either way. A pad makes your song feel wide and floating. Stabs make it bounce and leave
+        room for the drums. Lots of tracks use pads in a breakdown and stabs in the drop.
+      straight: >-
+        Pad: long, sustained chords, a bed under everything. Stab: short, punchy chord hits, house and disco.
+        Same notes, different energy.
+      eli5: >-
+        A pad is a long, soft chord like a cloud. A stab is a quick chord like a clap. Same notes, different
+        feeling.
+    deeper:
+      - title: keep the low end clean
+        say: >-
+          Notes close together sound muddy when they're low. Two notes a third apart in the bass range rumble
+          into each other. Let the bass carry one low note and keep the body of the chord in the middle.
+      - title: voicing
+        say: >-
+          Voicing is how a chord's notes are spread out. Close voicing packs them tight and thick, open voicing
+          spreads them across octaves, wide and airy. The same chord can feel intimate or huge.
+      - title: in live
+        say: >-
+          The Chord midi effect turns single notes into chords. The Arpeggiator plays a held chord one note at
+          a time. Put either one before the instrument in the device chain.
+
+  - kind: shape
+    layer: chords
+    knobs: [release, attack]
+    say:
+      mentor: >-
+        Here's your song with two knobs on your chords. Release sets how long each chord keeps ringing after
+        it ends. Attack sets how quickly it fades in.
+
+        For a pad, turn attack up a little and release right up: the chords swell in and melt into each other.
+        For stabs, attack all the way down and release short: each chord becomes a tight hit. Listen to how
+        much room stabs leave for your kick. Set it where your song wants to be.
+      straight: >-
+        Attack: how fast chords fade in. Release: how long they ring. Pad is slow attack, long release. Stab is
+        fast attack, short release. Pick one.
+      eli5: >-
+        Turn both knobs up and your chords become a soft cloud. Turn them down and they become short hits. Pick
+        the one you like.
+
+  - kind: ask
+    q: A pad is
+    options: ["a long sustained chord sound", "a short chord hit", "a drum sound", "a type of compressor"]
+    answer: 0
+    why: A pad is a long bed of harmony under the rest of the song.
+    whyWrong:
+      1: That's a stab.
+      2: Here a pad is a chord sound, not a drum pad.
+      3: Compressors control level.
+
+  - kind: ask
+    q: To turn your chords into stabs you
+    options: ["shorten the release and the attack", "lengthen the release", "add reverb", "raise the tempo"]
+    answer: 0
+    why: Fast in, quick out, and each chord becomes a hit.
+    whyWrong:
+      1: Longer release makes it more of a pad.
+      2: Reverb makes chords ring longer.
+      3: Tempo changes everything's speed, not chord length.
+
+  - kind: ask
+    q: Why keep chord notes out of the low end?
+    options: ["low notes close together sound muddy", "low notes are out of key", "chords can't play low", "it makes the song faster"]
+    answer: 0
+    why: Leave the low notes to the bass and keep the chords in the middle.
+    whyWrong:
+      1: Low notes can be in key and still muddy.
+      2: They can, it just sounds thick.
+      3: Speed doesn't change.
+
+  - kind: ask
+    more: true
+    q: What does Live's Chord effect do?
+    options: ["turns single notes into chords", "adds reverb", "plays chord notes one at a time", "finds the song's key"]
+    answer: 0
+    why: Play one note and it adds the other notes of a chord.
+    whyWrong:
+      1: Reverb is an audio effect.
+      2: That's the Arpeggiator.
+      3: It doesn't detect keys.
+
+  - kind: keep
+    next: >-
+      Back to the harmony path. Next: structure, and your loop turned into a song.

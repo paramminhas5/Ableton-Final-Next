@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Worlds } from "@/components/m1/Worlds";
 
 export const metadata: Metadata = {
-  title: "Worlds — CCD.SCHOOL",
+  title: "worlds",
   description:
     "Three worlds: Fundamentals, DJ World and Producer. Choose your learning path.",
   openGraph: {
     title: "Worlds | CCD.SCHOOL",
-    description: "Fundamentals → DJ World → Producer. 153 missions. 15 chapters. 32 paths.",
+    description: "Basics, producer and dj: 198 lessons in 16 paths, all building one song of your own.",
   },
 };
 

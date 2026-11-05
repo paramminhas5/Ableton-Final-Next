@@ -13,8 +13,8 @@ import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
 
 const GROUP_COLOR: Record<AtlasGroup, string> = {
-  instrument: "#FF4F9A", midi: "#7D96FF", eq: "#4FE3B6", dynamics: "#B89CFF", space: "#7D96FF", drive: "#F3C14F",
-  mod: "#4FE3B6", creative: "#FF4F9A", utility: "#E9E9E6", rack: "#B89CFF", max: "#F3C14F",
+  instrument: "#5CC8FF", midi: "#7D96FF", eq: "#4FE3B6", dynamics: "#B89CFF", space: "#7D96FF", drive: "#F3C14F",
+  mod: "#4FE3B6", creative: "#FFB35C", utility: "#E9E9E6", rack: "#B89CFF", max: "#F3C14F",
 };
 
 function GroupPic({ g }: { g: AtlasGroup }) {
@@ -89,7 +89,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
           <span style={{ color: "var(--disp-sub)" }}><Icon name="search" /></span>
           <span className="sr-only">Search the library</span>
           <input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="search: reverb, bass, sidechain"
-            style={{ flex: 1, background: "none", border: 0, outline: "none", color: "var(--disp-ink)", font: "400 24px/1.2 Outfit, system-ui", caretColor: "var(--led-go)", minWidth: 0 }} />
+            style={{ flex: 1, background: "none", border: 0, outline: "none", color: "var(--disp-ink)", font: "400 24px/1.2 Outfit, system-ui", caretColor: "var(--led-mint)", minWidth: 0 }} />
         </label>
         <div className="ls-meta" style={{ marginTop: 14, justifyContent: "flex-start", gap: 16 }} aria-live="polite">
           <span style={{ color: tab === "devices" ? "var(--disp-ink)" : undefined }}>{devices.length} devices</span>
@@ -130,7 +130,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
                       <span style={{ display: "block", fontSize: 13, fontWeight: 500, lineHeight: 1.35, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: isOpen ? "normal" : "nowrap" }}>{d.reach.toLowerCase().replace(/\.$/, "")}</span>
                       <span className="m1-t11" style={{ display: "block", marginTop: 2 }}>{u ? `learned in ${u.title.toLowerCase()}` : first ? `learn it in ${first.title.toLowerCase()}` : ATLAS_GROUPS.find(g => g.id === d.group)?.label.toLowerCase()}</span>
                     </span>
-                    <span className="ls-led" style={{ ["--c" as string]: u ? "var(--led-go)" : "var(--ledoff)", background: u ? undefined : "#2A2A2E", boxShadow: u ? undefined : "inset 0 1px 1px rgba(0,0,0,.4)" } as CSSProperties} aria-label={u ? "used" : "not used yet"} />
+                    <span className="ls-led" style={{ ["--c" as string]: u ? "var(--led-mint)" : "var(--ledoff)", background: u ? undefined : "#2A2A2E", boxShadow: u ? undefined : "inset 0 1px 1px rgba(0,0,0,.4)" } as CSSProperties} aria-label={u ? "used" : "not used yet"} />
                   </button>
                   {isOpen && (
                     <div style={{ padding: "0 16px 14px 84px", fontSize: 14, lineHeight: 1.5 }}>

@@ -1,0 +1,111 @@
+slug: effects-overview
+world: producer
+number: 265
+title: effects overview
+minutes: 5
+song:
+  changes: lead.lead
+  why: one effect from each family on your lead shows you what each family is for
+learn: >-
+  The main families of effects, the problem each one solves, and one of each on your lead.
+youCan:
+  - name the main families of effects
+  - pick a family for a problem
+  - try eq, drive, echo and reverb on your lead
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        There are thousands of effects, but almost all of them belong to a handful of families. Learn the
+        families and you can reach for the right tool fast, instead of guessing.
+
+        This plain synth note is a blank page. Every family would change it in its own way.
+      straight: >-
+        Thousands of effects, a handful of families. Know the families and you know which tool to reach for.
+      eli5: >-
+        There are lots of effects, but they come in a few families, like a family of cats and a family of
+        dogs.
+
+  - kind: say
+    title: the families
+    say:
+      mentor: >-
+        Eq shapes tone by frequency. Dynamics, like compressors and limiters, control loud and quiet. Time
+        effects, reverb and echo, put a sound in a space. Saturation, or drive, adds grit and warmth by
+        roughing up the wave. Modulation, like chorus and phaser, makes a sound move by wobbling it with a
+        slow wave called an lfo. Utility tools do plain jobs like gain and stereo width.
+
+        Each family fixes a different problem. Too dull is an eq job. Jumping between loud and quiet is a
+        dynamics job.
+      straight: >-
+        Eq: tone. Dynamics: loud and quiet. Time: reverb and echo. Saturation: grit. Modulation: movement.
+        Utility: gain and width. Match the family to the problem.
+      eli5: >-
+        Eq changes the tone. Dynamics change loud and quiet. Reverb and echo add space. Drive adds crunch.
+        Pick the one that fixes your problem.
+    deeper:
+      - title: the families in live
+        say: >-
+          Live's own devices cover every family: EQ Eight for eq, Compressor, Glue Compressor and Limiter for
+          dynamics, Reverb, Hybrid Reverb and Delay for time, Saturator for drive, and Utility for gain and
+          width.
+      - title: fewer is better
+        say: >-
+          Learn one effect in each family well before collecting more. The effects that come with your music
+          program are often plenty. Switch each one off and on, and if you can't hear it helping, take it
+          out.
+      - title: insert or send
+        say: >-
+          Reverb and delay usually go on a send that many parts share. It uses less processing power and puts
+          everything in the same space.
+
+  - kind: shape
+    layer: lead
+    knobs: [high, drive, echo, send]
+    say:
+      mentor: >-
+        One effect from each family on your lead. High is eq: a little brighter or darker. Drive is
+        saturation: grit. Echo and send are time: repeats, and a room.
+
+        Try each one on its own first, then together. Keep only the ones that make your lead better, and set
+        the rest back to where they were.
+      straight: >-
+        High is eq, drive is saturation, echo and send are time effects. Try each alone, then together. Keep
+        what helps.
+      eli5: >-
+        Try each knob on your tune, one at a time. Keep the ones that make it sound better.
+
+  - kind: ask
+    q: Which family is reverb in?
+    options: ["time effects", "eq", "dynamics", "saturation"]
+    answer: 0
+    why: Reverb and echo put a sound in a space.
+    whyWrong:
+      1: Eq shapes tone by frequency.
+      2: Dynamics control loud and quiet.
+      3: Saturation adds grit.
+
+  - kind: ask
+    q: A part jumps between loud and quiet too much. Which family helps?
+    options: ["dynamics", "time effects", "modulation", "eq"]
+    answer: 0
+    why: A compressor evens out loud and quiet.
+    whyWrong:
+      1: Reverb and echo add space, not control.
+      2: Modulation adds movement.
+      3: Eq is about tone, not loudness over time.
+
+  - kind: ask
+    q: What does drive do?
+    options: ["adds grit and warmth by roughing up the wave", "puts the sound in a room", "removes the lows", "makes it repeat"]
+    answer: 0
+    why: Drive is saturation, the grit family.
+    whyWrong:
+      1: That's reverb.
+      2: That's a low cut.
+      3: That's echo.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, space, reverb and echo.

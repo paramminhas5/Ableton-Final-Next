@@ -109,9 +109,9 @@ export function SendReturnSim() {
         ))}
       </div>
       <div className="brutal-border bg-volt text-bone p-3 font-mono text-xs uppercase">
-        ⤴ RETURN A — REVERB · One device, three tracks share it.
+        ⤴ RETURN A: REVERB · One device, three tracks share it.
       </div>
-      <p className="font-mono text-xs uppercase opacity-70">▶ Push a track's send up to drown it in the same reverb. Cleaner than putting Reverb on every track — and one knob changes the whole space.</p>
+      <p className="font-mono text-xs uppercase opacity-70">▶ Push a track's send up to drown it in the same reverb. Cleaner than putting Reverb on every track: and one knob changes the whole space.</p>
     </div>
   );
 }

@@ -20,7 +20,7 @@ const SCENARIOS: Record<Scenario, { label: string; recBuf: number; why: string }
   tracking: {
     label: "Recording (live input)",
     recBuf: 128,
-    why: "You need to hear yourself as you record. Low latency (<8ms) is essential — high latency makes playing impossible.",
+    why: "You need to hear yourself as you record. Low latency (<8ms) is essential: high latency makes playing impossible.",
   },
   mixing: {
     label: "Mixing (no live input)",
@@ -30,7 +30,7 @@ const SCENARIOS: Record<Scenario, { label: string; recBuf: number; why: string }
   mastering: {
     label: "Mastering / export",
     recBuf: 2048,
-    why: "Maximum buffer gives maximum CPU headroom. You're listening critically, not performing — latency is irrelevant.",
+    why: "Maximum buffer gives maximum CPU headroom. You're listening critically, not performing: latency is irrelevant.",
   },
 };
 
@@ -126,7 +126,7 @@ export function BufferSim() {
           <div className="font-display text-4xl mt-1">{latency}ms</div>
           <div className="font-mono text-[9px] opacity-70 mt-1">
             {latency < 8
-              ? "Excellent — play live"
+              ? "Excellent: play live"
               : latency < 15
                 ? "Good"
                 : latency < 30

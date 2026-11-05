@@ -1,0 +1,124 @@
+slug: limiter-truepeak
+world: producer
+number: 270
+title: limiter and true peak
+minutes: 5
+song:
+  changes: drums.kick
+  why: a limiter lets your song get loud without ever clipping
+learn: >-
+  What a limiter does, gain and ceiling, true peaks, and how loud your song can go before it loses punch.
+youCan:
+  - say what a limiter and clipping are
+  - say what a true peak is
+  - push your song loud without losing the kick
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A limiter is the last thing on almost every master. It's a hard ceiling: nothing gets past it. You
+        push your song up into it, and it flattens any peak that would go over, so the song gets louder
+        without clipping.
+
+        Clipping is what happens when a sound goes past the top of what can be played. The top of the wave
+        gets cut off flat, and you hear crackle and crunch.
+      straight: >-
+        A limiter is a ceiling nothing can pass. Push the song into it to get louder without clipping, the
+        crunch of a wave cut off flat.
+      eli5: >-
+        A limiter is like a low ceiling. The song can get loud, but it can never bump its head and crackle.
+
+  - kind: say
+    title: ceiling and true peak
+    say:
+      mentor: >-
+        A limiter has two main controls. Gain pushes your song up into it. Ceiling sets the highest level
+        anything can reach.
+
+        There's a sneaky problem. A digital file stores the wave as dots, called samples. Between the dots,
+        the real wave can swing a little higher than any of them, and those in-between peaks, called true
+        peaks, can still clip when the file plays. Streaming formats like mp3 add a few more. That's why many
+        engineers set the ceiling to -1 dB true peak for streaming.
+      straight: >-
+        Gain pushes in, ceiling is the limit. True peaks hide between samples and can still clip, so streaming
+        masters often use a -1 dB true peak ceiling.
+      eli5: >-
+        Sometimes the wave sneaks a tiny bit higher between the dots the computer saves. So you leave a small
+        gap under the ceiling, just in case.
+    deeper:
+      - title: limiter in live
+        say: >-
+          Live's Limiter has Gain, Ceiling and a lookahead setting, which lets it see a peak coming a few
+          milliseconds early and turn down smoothly. Its True Peak option catches the peaks between samples.
+      - title: two stages
+        say: >-
+          A common chain is a Glue Compressor on the master, then the Limiter last, so the loudness work is
+          split and neither has to work too hard.
+      - title: fix the mix first
+        say: >-
+          A limiter is polish. If a mix sounds wrong, fix the parts. Pushing a limiter harder won't.
+      - title: louder fools you
+        say: >-
+          When you compare with the limiter on and off, match the loudness. Louder almost always sounds better
+          at first, even when it's squashing the punch out.
+
+  - kind: tempo
+    set: glue
+    say:
+      mentor: >-
+        Your whole song. Out sets how hard your song hits the limiter. Turn it up and the song gets louder
+        while the limiter stops it clipping.
+
+        Push further and listen to the kick: it starts to lose its punch, flattened against the ceiling. Find
+        the loudest point where the kick still hits.
+      straight: >-
+        Out sets how hard the song hits the limiter. Turn up until the kick starts losing punch, then back
+        off.
+      eli5: >-
+        Turn out up to make your song louder. If the boom starts to sound flat, turn it back down a little.
+
+  - kind: ask
+    q: What does a limiter do?
+    options: ["stops anything going past a set ceiling", "adds reverb", "changes the key", "makes the song quieter"]
+    answer: 0
+    why: It's a hard ceiling. Nothing gets over it.
+    whyWrong:
+      1: Reverb is a time effect.
+      2: Key is about notes.
+      3: It's usually used to make songs louder.
+
+  - kind: ask
+    q: What is clipping?
+    options: ["a sound going past the top, cut off flat and crunchy", "a short sample", "a kind of swing", "an eq band"]
+    answer: 0
+    why: The top of the wave gets chopped off, and you hear it.
+    whyWrong:
+      1: A sample is different.
+      2: Swing is timing.
+      3: Eq is tone.
+
+  - kind: ask
+    q: Why set a ceiling around -1 dB true peak for streaming?
+    options: ["it leaves room for peaks between samples and from streaming formats", "streaming services ban loud songs", "it makes the song longer", "true peak means the quietest point"]
+    answer: 0
+    why: Those hidden peaks can still clip, so you leave a little space.
+    whyWrong:
+      1: Loud songs are allowed.
+      2: Length doesn't change.
+      3: It's the highest point, between samples.
+
+  - kind: ask
+    more: true
+    q: Pushing a limiter too hard does what?
+    options: ["squashes the punch out of the kick", "makes the song quieter", "removes the bass", "adds echo"]
+    answer: 0
+    why: The kick's peaks get flattened against the ceiling.
+    whyWrong:
+      1: It gets louder, not quieter.
+      2: The bass stays, it just gets squashed too.
+      3: A limiter adds no echo.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, sections. Your loop becomes a song.

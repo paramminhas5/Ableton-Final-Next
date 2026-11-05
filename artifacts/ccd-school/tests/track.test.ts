@@ -54,10 +54,10 @@ describe("your track", () => {
 });
 
 describe("worlds as sequencers", () => {
-  it("lists every world's lessons in order with real missions", () => {
+  it("lists every world's song lessons in order with real missions", () => {
     for (const w of ["fundamentals", "dj", "producer"] as const) {
       const steps = worldSteps(w);
-      expect(steps.length).toBeGreaterThan(16);
+      expect(steps.length).toBeGreaterThan(1);
       for (const s of steps) expect(missionAny(s.slug)).toBeTruthy();
     }
   });
@@ -86,5 +86,17 @@ describe("lesson tools in context", () => {
   it("reads what you will learn from the lesson summary", () => {
     const withLearns = worldSteps("fundamentals").filter(s => missionLearns(s.slug).length > 0).length;
     expect(withLearns).toBeGreaterThan(10);
+  });
+});
+
+describe("offerFor does not match words inside other words", () => {
+  const t = emptyTrack();
+  it("what-is-sound does not offer hats", () => {
+    for (const slug of ["what-is-sound", "what-is-djing", "what-is-live"]) {
+      expect(offerFor(t, { slug, title: slug.replace(/-/g, " ") }).kind).not.toBe("hats");
+    }
+  });
+  it("a real hats lesson still offers hats", () => {
+    expect(offerFor(t, { slug: "hi-hats", title: "Hi-hats and swing" }).kind).toBe("hats");
   });
 });

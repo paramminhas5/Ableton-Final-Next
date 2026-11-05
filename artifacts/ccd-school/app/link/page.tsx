@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LinkPageClient } from "@/components/LinkPageClient";
 
 export const metadata: Metadata = {
-  title: "Connect Ableton Live — CCD.SCHOOL",
+  title: "connect ableton live",
   description: "Upload your Live Set and get feedback on your own project, checked against real mixing habits. Your file is read in memory and never stored.",
 };
 

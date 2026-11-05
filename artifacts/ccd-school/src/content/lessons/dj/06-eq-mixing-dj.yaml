@@ -1,0 +1,61 @@
+slug: eq-mixing-dj
+world: dj
+number: 6
+title: eq mixing
+minutes: 6
+song:
+  changes: drums.clap
+  why: only one bass at a time keeps a blend clean
+learn: >-
+  The low, mid and high knobs on a mixer, and the bass swap: the move that keeps two tracks from
+  turning to mud.
+youCan:
+  - use the low eq to swap basses
+  - hear mud when two basses overlap
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Tap both, in time. Two kicks and two bass lines stacked up: the low end gets thick and muddy. The
+        fix every dj uses is the eq on the mixer, three knobs per channel for low, mid and high.
+      straight: >-
+        Two tracks together: the lows pile up. The mixer eq fixes that.
+      eli5: >-
+        Both songs together get a bit muddy down low. The mixer knobs fix it.
+
+  - kind: mix
+    goal: swap
+    say:
+      mentor: >-
+        Deck b is matched. Bring its fader up and listen to the low end get muddy. Now turn deck a's low
+        knob down and keep deck b's low up. Suddenly it's clean: one kick, one bass, and the rest of both
+        tracks still playing. That's the bass swap.
+      straight: >-
+        Fader b up, low a down, low b up. One bass at a time.
+      eli5: >-
+        Push deck b up, then turn deck a's low knob down. Now only one bass plays.
+
+  - kind: ask
+    q: What does the low knob on a mixer channel do?
+    options: ["turns that track's bass up or down", "changes the key", "changes the tempo", "starts the track"]
+    answer: 0
+    why: It's an eq for the low end of that channel.
+    whyWrong:
+      1: Key stays the same.
+      2: Tempo is the pitch fader.
+      3: The play button starts it.
+
+  - kind: ask
+    q: In a bass swap, what happens?
+    options: ["one track's low goes down as the other's comes up", "both basses go up", "both tracks stop", "the crossfader moves"]
+    answer: 0
+    why: Only one bass at a time.
+    whyWrong:
+      1: That's the mud you're avoiding.
+      2: The music keeps going.
+      3: The crossfader can stay put.
+
+  - kind: keep
+    next: >-
+      Next: cue and headphones, getting the next track ready in private.

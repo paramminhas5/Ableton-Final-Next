@@ -5,6 +5,7 @@
  * arrow keys, double-tap to reset), pads light up. Knobs and faders never print numbers;
  * they report what you touched through `onTouch` so the screen can show it.
  */
+import "./pictures.css";
 import Link from "next/link";
 import { useCallback, useRef, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
 
@@ -29,7 +30,7 @@ export const CAP = {
 export const WORLD_LED: Record<"fundamentals" | "dj" | "producer", string> = {
   fundamentals: LED.mint,
   dj: LED.cobalt,
-  producer: LED.go,
+  producer: LED.lilac,
 };
 
 // ── icons: one set, 24 grid, 1.6 stroke, round ends ─────────────────────
@@ -43,6 +44,8 @@ const P: Record<string, ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
   back: <path d="m14.5 6-6 6 6 6" />,
   close: <path d="M6 6l12 12M18 6 6 18" />,
+  edit: <><path d="M5 19h3.5L18 9.5 14.5 6 5 15.5z" /><path d="M13 7.5 16.5 11" /></>,
+  reset: <><path d="M4.5 12a7.5 7.5 0 1 0 2.4-5.5" /><path d="M4 4v4.5h4.5" /></>,
   out: <><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 14v6h14v-6" /></>,
   check: <path d="m5 12.5 4.5 4.5L19 7" />,
   lock: <><rect x="6" y="11" width="12" height="9" rx="2" /><path d="M9 11V8.5a3 3 0 0 1 6 0V11" /></>,
@@ -54,6 +57,7 @@ const P: Record<string, ReactNode> = {
   search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></>,
   user: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20a7 7 0 0 1 14 0" /></>,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  settings: <><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></>,
   loop: <><path d="M5 11V9a3 3 0 0 1 3-3h10" /><path d="m15 3 3 3-3 3" /><path d="M19 13v2a3 3 0 0 1-3 3H6" /><path d="m9 21-3-3 3-3" /></>,
   flame: <path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.3 1.2 1 1.9 1.7 2.2C10.5 8 11 5.5 12 3z" />,
   shield: <path d="M12 3.5 5.5 6v5.5c0 4 2.7 7 6.5 9 3.8-2 6.5-5 6.5-9V6z" />,
@@ -95,6 +99,9 @@ export function Screen({ children, height, style, className }: { children: React
 
 // ── keys ────────────────────────────────────────────────────────────────
 type KeyProps = {
+  onPointerDown?: () => void;
+  onPointerUp?: () => void;
+  onPointerLeave?: () => void;
   children?: ReactNode;
   label?: string;
   cap?: "" | "blk" | "go";
@@ -111,7 +118,7 @@ type KeyProps = {
   className?: string;
 };
 
-export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, ariaPressed, ariaCurrent, disabled, wide, capStyle, style, className }: KeyProps) {
+export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, ariaPressed, ariaCurrent, disabled, wide, capStyle, style, className, onPointerDown, onPointerUp, onPointerLeave }: KeyProps) {
   const inner = (
     <>
       {led ? <span className="m1-dot is-on" style={{ ["--c" as string]: led }} /> : null}
@@ -125,13 +132,19 @@ export function Key({ children, label, cap = "", led, href, onClick, ariaLabel, 
     return <Link href={href} className={cls} style={style} aria-label={aria} aria-current={ariaCurrent ? "page" : undefined}>{inner}</Link>;
   }
   return (
-    <button type="button" className={cls} style={style} aria-label={aria} aria-pressed={ariaPressed} disabled={disabled} onClick={onClick}>
+    <button type="button" className={cls} style={style} aria-label={aria} aria-pressed={ariaPressed} disabled={disabled} onClick={onClick} onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerLeave={onPointerLeave}>
       {inner}
     </button>
   );
 }
 
 /** Wide key with a pill cap, for the one main action on a screen. */
+/** A go key that can't go yet says what's missing, in a smaller face so a whole clause fits. */
+export function NotYet({ why }: { why: string }) {
+  const short = why.split(/[.:(]/)[0].trim();
+  return <span style={{ fontSize: short.length > 24 ? 12.5 : 14, lineHeight: 1.15, textAlign: "center", whiteSpace: "normal", padding: "0 6px" }}>{short}</span>;
+}
+
 export function GoPill({ children, href, onClick, ariaLabel, style, disabled }: { children: ReactNode; href?: string; onClick?: () => void; ariaLabel?: string; style?: CSSProperties; disabled?: boolean }) {
   const cap = <span className="m1-cap is-go is-pill" style={{ width: "90%", height: "58%", gap: 8, fontSize: 16, fontWeight: 500, marginTop: -12 }}>{children}</span>;
   if (href && !disabled) return <Link href={href} className="m1-m is-wide" style={style} aria-label={ariaLabel}>{cap}</Link>;
@@ -144,12 +157,32 @@ export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, heig
   return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
 }
 
+/** Fill and randomise: one amount (a short fader) and one key that rolls the dice. */
+export function Dice({ amount, onAmount, onRoll, label = "fill", width = 84 }: { amount: number; onAmount: (v: number) => void; onRoll: () => void; label?: string; width?: number }) {
+  return (
+    <div className="m1-dice">
+      <span className="m1-dice-l" aria-hidden>{label}</span>
+      <Fader horizontal width={width} value={amount} onChange={onAmount} label={label} defaultValue={0} valueText={`${Math.round(amount * 100)}%`} />
+      <span className="m1-dice-v" aria-hidden>{Math.round(amount * 100)}%</span>
+      <button type="button" className="m1-dice-k" onClick={onRoll} aria-label="roll">
+        <svg viewBox="0 0 24 24" aria-hidden><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="9" cy="9" r="1.4" /><circle cx="15" cy="15" r="1.4" /><circle cx="15" cy="9" r="1.4" /><circle cx="9" cy="15" r="1.4" /></svg>
+        roll
+      </button>
+    </div>
+  );
+}
+
+/** A ring that flashes out from a pad on every hit. Give it a new `key` per hit; `v` is the velocity, 0..1. */
+export function PadRing({ v = 0.85 }: { v?: number }) {
+  return <i className="pad-ring" aria-hidden style={{ ["--v" as string]: v.toFixed(2) } as CSSProperties} />;
+}
+
 export function Dash({ color, on = true, style }: { color?: string; on?: boolean; style?: CSSProperties }) {
   return <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: color, ...style } as CSSProperties} />;
 }
 
 // ── shared drag behaviour for knobs and faders ──────────────────────────
-function useDrag(value: number, onChange: ((v: number) => void) | undefined, range = 180, defaultValue?: number) {
+function useDrag(value: number, onChange: ((v: number) => void) | undefined, range = 180, defaultValue?: number, detents?: number) {
   const start = useRef<{ y: number; v: number } | null>(null);
   const lastTap = useRef(0);
   const clamp = (v: number) => Math.max(0, Math.min(1, v));
@@ -168,21 +201,36 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
   const onPointerUp = useCallback(() => { start.current = null; }, []);
   const onKeyDown = useCallback((e: KeyboardEvent<HTMLElement>) => {
     if (!onChange) return;
-    const step = e.shiftKey ? 0.1 : 0.02;
+    const step = detents && detents > 1 ? 1 / (detents - 1) : e.shiftKey ? 0.1 : 0.02;
     if (e.key === "ArrowUp" || e.key === "ArrowRight") { e.preventDefault(); onChange(clamp(value + step)); }
     if (e.key === "ArrowDown" || e.key === "ArrowLeft") { e.preventDefault(); onChange(clamp(value - step)); }
+    if (e.key === "PageUp") { e.preventDefault(); onChange(clamp(value + Math.max(step, 0.1))); }
+    if (e.key === "PageDown") { e.preventDefault(); onChange(clamp(value - Math.max(step, 0.1))); }
     if (e.key === "Home") onChange(0);
     if (e.key === "End") onChange(1);
-  }, [onChange, value]);
+  }, [onChange, value, detents]);
   const onWheel = useCallback((e: React.WheelEvent<HTMLElement>) => {
     if (!onChange) return;
+    if (detents && detents > 1) { if (Math.abs(e.deltaY) > 4) onChange(clamp(value - Math.sign(e.deltaY) / (detents - 1))); return; }
     onChange(clamp(value - e.deltaY / 800));
-  }, [onChange, value]);
+  }, [onChange, value, detents]);
   return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onKeyDown, onWheel };
 }
 
-function Scale({ size }: { size: number }) {
+function Scale({ size, steps, at = -1 }: { size: number; steps?: number; at?: number }) {
   const c = size / 2, r0 = size / 2 - 7, r1 = size / 2 - 2;
+  // A stepped knob gets one line per step, and the current one lit.
+  if (steps && steps > 1 && steps <= 48) {
+    return (
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }} aria-hidden>
+        {Array.from({ length: steps }, (_, i) => {
+          const a = ((135 + (i * 270) / (steps - 1)) * Math.PI) / 180;
+          const on = i === at;
+          return <path key={i} d={`M${c + (on ? r0 - 3 : r0) * Math.cos(a)} ${c + (on ? r0 - 3 : r0) * Math.sin(a)}L${c + r1 * Math.cos(a)} ${c + r1 * Math.sin(a)}`} strokeWidth={on ? 2.4 : 1.2} opacity={on ? 1 : 0.55} strokeLinecap="round" style={{ stroke: on ? "var(--led-mint)" : "var(--print)" }} />;
+        })}
+      </svg>
+    );
+  }
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ position: "absolute", inset: 0 }} aria-hidden>
       {Array.from({ length: 11 }, (_, i) => {
@@ -206,12 +254,55 @@ type KnobProps = {
   bare?: boolean;
   height?: number;
   style?: CSSProperties;
+  /** number of click stops: arrow keys, wheel and drag move one stop at a time */
+  detents?: number;
+  /** A click (no drag) steps the knob on by one, wrapping round. */
+  onStep?: () => void;
+  /** The value in words ("1.2 kHz", "40%"), shown under the label and read out by screen readers. */
+  readout?: string;
+  /** The colour of the line this knob moves on the screen: drawn as a lit ring from rest to the value. */
+  ring?: string;
+  /** Doing nothing at this value (an amount at zero, a centred eq): the ring and led stay dark. */
+  idle?: boolean;
+  /** Where the ring starts: 0 for amounts, 0.5 for centred knobs (pan, eq, tune). */
+  ringFrom?: number;
+  /** The lesson is about another control: this one dims (but still works). */
+  dim?: boolean;
+  /** The lesson is about this control: it gets a soft halo. */
+  spot?: boolean;
 };
 
+/** The value ring: an led arc in the colour of what the knob moves, from rest to the value. Dark when idle. */
+function Ring({ size, value, color, from = 0, idle }: { size: number; value: number; color: string; from?: number; idle?: boolean }) {
+  const c = size / 2, r = size / 2 - 3.5;
+  const ang = (n: number) => ((135 + 270 * Math.max(0, Math.min(1, n))) * Math.PI) / 180;
+  const pt = (n: number) => `${(c + r * Math.cos(ang(n))).toFixed(2)} ${(c + r * Math.sin(ang(n))).toFixed(2)}`;
+  const arc = (a: number, b: number) => { const lo = Math.min(a, b), hi = Math.max(a, b); return `M${pt(lo)}A${r} ${r} 0 ${(hi - lo) * 270 > 180 ? 1 : 0} 1 ${pt(hi)}`; };
+  const lit = !idle && Math.abs(value - from) > 0.004;
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={`m1-ring ${lit ? "is-lit" : ""}`} style={{ position: "absolute", inset: 0, ["--c" as string]: color } as CSSProperties} aria-hidden>
+      <path d={arc(0, 1)} className="m1-ring-bed" />
+      {lit && <path d={arc(from, value)} className="m1-ring-arc" />}
+      {lit && <circle cx={c + r * Math.cos(ang(value))} cy={c + r * Math.sin(ang(value))} r={2.2} className="m1-ring-tip" />}
+    </svg>
+  );
+}
+
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
-  const drag = useDrag(value, onChange ? set : undefined, 180, defaultValue);
+  const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
+  const press = useRef<{ x: number; y: number; t: number } | null>(null);
+  const drag = onStep ? {
+    ...drag0,
+    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => { press.current = { x: e.clientX, y: e.clientY, t: e.timeStamp }; drag0.onPointerDown?.(e as never); },
+    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => {
+      const p = press.current; press.current = null;
+      drag0.onPointerUp?.();
+      if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) < 5 && e.timeStamp - p.t < 400) onStep();
+    },
+  } : drag0;
+  const at = detents && detents > 1 ? Math.round(value * (detents - 1)) : -1;
   const well = size + 18;
   const rot = -135 + 270 * value;
   const knob = (
@@ -223,10 +314,12 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
+      aria-valuetext={readout}
       {...drag}
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
-      {size >= 46 && <Scale size={well + 14} />}
+      {size >= 46 && !ring && <Scale size={well + 14} steps={detents} at={at} />}
+      {ring ? <Ring size={well + 14} value={value} color={ring} from={ringFrom} idle={idle} /> : null}
       <div className="m1-well" style={{ width: well, height: well }}>
         <div className="m1-kb" style={{ width: size, height: size, marginTop: -4 }}>
           <div className="m1-kc" style={{ ["--c" as string]: color, width: size * 0.68, height: size * 0.68 } as CSSProperties}>
@@ -237,11 +330,13 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
     </div>
   );
   if (bare) return knob;
+  const ledC = ring ?? led;
   return (
-    <div className="m1-m is-wide" style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
-      {led ? <Dash color={led} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
+    <div className={`m1-m is-wide ${dim ? "is-unlit" : ""} ${spot ? "is-spot" : ""} ${ring && idle ? "is-idle" : ""}`} style={{ height: height ?? undefined, aspectRatio: height ? "auto" : 1, flexDirection: "column", ...style }}>
+      {ledC ? <Dash color={ledC} on={ring ? !idle : true} style={{ position: "absolute", top: 9, left: "50%", marginLeft: -9 }} /> : null}
       <div style={{ marginTop: -12 }}>{knob}</div>
       <span className="m1-ml is-on" style={{ color: "var(--ink)" }}>{label}</span>
+      {readout ? <span className="m1-kv" aria-hidden>{readout}</span> : null}
     </div>
   );
 }
@@ -271,7 +366,7 @@ export function Fader({ value, onChange, onTouch, label, led, height = 140, widt
   if (horizontal) {
     const w = width;
     return (
-      <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)}
+      <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-valuetext={valueText}
         {...drag}
         onPointerMove={(e) => {
           if (!onChange || !(e.buttons & 1)) return;

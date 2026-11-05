@@ -1,0 +1,51 @@
+slug: fills
+world: producer
+number: 18
+title: variation and fills
+minutes: 5
+song:
+  changes: drums.kick
+  why: a fill signals that something is about to change
+learn: >-
+  What a fill is, where it goes, and fills at the ends of your sections.
+youCan:
+  - say what a fill does
+  - place fills at section ends
+  - hear how a fill sets up a change
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        A drummer playing the same beat for four minutes still tells you when something's coming: a roll on
+        the snare at the end of a section. That's a fill. In dance music it might be a snare roll, the kick
+        dropping out for a beat, or a burst of hats. Whatever it is, it says: change ahead.
+      straight: >-
+        A fill is a short variation, often the last beat or bar of a section, that signals a change.
+      eli5: >-
+        A fill is a little drum roll at the end of a part that says, get ready, something new is coming!
+
+  - kind: arrange
+    goal: fills
+    say:
+      mentor: >-
+        Your arrangement has a fill row. Tap fill on a section and its last beat drops the kick for a quick
+        snare roll. Put fills before the drop and the break and listen to how they lead you in.
+      straight: >-
+        Tap fill on sections that lead into a change. The last beat becomes a snare roll.
+      eli5: >-
+        Tap fill on the part before the drop. Listen to the drum roll.
+
+  - kind: ask
+    q: What does a fill tell the listener?
+    options: ["a change is coming", "the song is over", "the tempo is changing", "nothing at all"]
+    answer: 0
+    why: It's a signal that the next section is about to start.
+    whyWrong:
+      1: It leads into something.
+      2: Tempo stays the same.
+      3: It's one of the clearest signals in music.
+
+  - kind: keep
+    next: >-
+      Next: the breakdown and the drop, the biggest moment in your track.

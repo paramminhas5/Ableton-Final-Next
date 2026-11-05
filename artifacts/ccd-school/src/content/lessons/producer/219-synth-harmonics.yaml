@@ -1,0 +1,114 @@
+slug: synth-harmonics
+world: producer
+number: 219
+title: harmonics and overtones
+minutes: 5
+song:
+  changes: lead.lead
+  why: adding and removing your lead's harmonics is what makes it bright, hollow or soft
+learn: >-
+  How every rich sound is a stack of pure tones, which harmonics each wave has, and adding and removing them
+  on your lead.
+youCan:
+  - say what the fundamental and the harmonics are
+  - say which harmonics a saw and a square have
+  - add and remove harmonics on your lead
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        The note a at 220 hz, then the a an octave up at 440. Twice the speed. Here's the surprise: that
+        higher a is already hiding inside the low one, quietly. So is a note at three times the speed, and four
+        times, and so on up.
+
+        The note you hear is the lowest, strongest tone, called the fundamental. The quieter tones above it, at
+        2, 3, 4 times its frequency, are its harmonics, also called overtones.
+      straight: >-
+        440 is twice 220. Every note has a fundamental, the note you hear, plus quieter harmonics at 2, 3, 4
+        times its frequency.
+      eli5: >-
+        Every note is secretly lots of notes stacked up. The loudest, lowest one is the note you hear. The
+        quiet ones on top are called harmonics.
+
+  - kind: say
+    title: each wave's recipe
+    say:
+      mentor: >-
+        Play a saw at 110 hz and you're really hearing a stack: 110, then quieter tones at 220, 330, 440, 550
+        and on up, each one softer than the last. A saw has every harmonic, which is why it's so bright.
+
+        A square has only the odd ones: 110, 330, 550 and so on. With the even ones missing it sounds hollow.
+        A sine has no harmonics at all, just the fundamental, so it's the purest sound there is.
+
+        A filter is really a harmonic remover. A low-pass takes away the top harmonics first, and the
+        fundamental is the last to go.
+      straight: >-
+        Saw has every harmonic, so it's bright. Square has odd ones only, so it's hollow. Sine has none. A
+        low-pass removes the top harmonics first.
+      eli5: >-
+        A saw has all the hidden notes, so it's bright. A square has only some, so it sounds hollow. A filter
+        takes away the top hidden notes and makes the sound darker.
+    deeper:
+      - title: the numbers
+        say: >-
+          In a saw, the harmonics get quieter in step: the 2nd is half as strong, the 3rd a third, and so on. A
+          square's odd harmonics fall the same way. A triangle also has only odd harmonics, but they fade much
+          faster, which is why it sounds so soft. Bells and metallic fm sounds have overtones that aren't whole
+          number multiples, which is what makes them sound pitched but strange.
+      - title: seeing them in live
+        say: >-
+          Put Live's Spectrum device on your synth track. A sine shows one peak. Switch to a saw and a staircase
+          of peaks appears. Close a low-pass filter and watch the top steps vanish first.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff]
+    say:
+      mentor: >-
+        Here's your song. Wave on saw gives your lead every harmonic. Turn it towards square and the even ones
+        drop out, so it goes hollow. That's removing harmonics by changing the wave.
+
+        Cutoff removes them from the top down. Close it slowly and hear the brightest ones disappear first,
+        until only the fundamental and a few low harmonics are left, soft and round. Keep the recipe that suits
+        your song.
+      straight: >-
+        Wave: saw has every harmonic, square drops the even ones. Cutoff removes harmonics from the top down.
+        Keep a recipe.
+      eli5: >-
+        Wave on saw has all the hidden notes. Turn it to square and some go away. Cutoff takes away the top
+        ones. Pick the sound you like.
+
+  - kind: ask
+    q: What's the fundamental?
+    options: ["the lowest, strongest tone, the note you hear", "the loudest harmonic on top", "the beat of the song", "the quietest overtone"]
+    answer: 0
+    why: The fundamental is the base tone you hear as the note. The harmonics sit above it.
+    whyWrong:
+      1: Harmonics sit above the fundamental and are quieter.
+      2: The beat is rhythm, not a tone.
+      3: The fundamental is the strongest, not the quietest.
+
+  - kind: ask
+    q: A note is at 100 hz. Where is its second harmonic?
+    options: ["200 hz", "100 hz", "150 hz", "50 hz"]
+    answer: 0
+    why: The second harmonic is twice the fundamental, 200 hz, one octave up.
+    whyWrong:
+      1: That's the fundamental itself.
+      2: Harmonics are whole number multiples.
+      3: Harmonics are above the fundamental, not below.
+
+  - kind: ask
+    q: Why does a square sound hollow next to a saw?
+    options: ["it only has the odd harmonics", "it has no harmonics", "it's quieter", "it's an octave lower"]
+    answer: 0
+    why: The even harmonics are missing, and that gap sounds hollow.
+    whyWrong:
+      1: That's a sine.
+      2: Loudness isn't the difference.
+      3: They can be the same pitch.
+
+  - kind: keep
+    next: >-
+      Back to your song: next, mixing oscillators together.

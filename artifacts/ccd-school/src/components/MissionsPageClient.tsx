@@ -24,7 +24,7 @@ const WORLD_MISSIONS: Record<WorldTab, typeof MISSIONS> = {
   dj:           DJ_WORLD_MISSIONS,
   producer:     MISSIONS,
 };
-const WORLDS = ["fundamentals", "dj", "producer"] as const;
+const WORLDS = ["fundamentals", "producer", "dj"] as const;
 
 export function MissionsPageClient() {
   const { progress }  = useProgress();
@@ -111,7 +111,7 @@ export function MissionsPageClient() {
                         {flowLocked || locked ? <Icon name="lock" small /> : <span className="m1-t11">{(mission as { xp?: number }).xp ?? 40} xp</span>}
                       </>
                     );
-                    const led = isDone ? "var(--led-mint)" : flowLocked || locked ? "var(--ledoff)" : "var(--led-go)";
+                    const led = isDone ? "var(--led-mint)" : flowLocked || locked ? "var(--ledoff)" : "var(--led-mint)";
                     return flowLocked
                       ? <ListRow key={mission.slug} led={led} title={mission.title} sub={mission.tagline} right={right} style={{ opacity: 0.55 }} />
                       : <ListRow key={mission.slug} href={`/learn/${mission.slug}`} led={led} title={mission.title} sub={mission.tagline} right={right} style={locked ? { opacity: 0.55 } : undefined} />;

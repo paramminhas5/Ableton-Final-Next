@@ -1,0 +1,109 @@
+slug: beatmatching-manual
+world: dj
+number: 204
+title: manual beatmatching
+minutes: 5
+song:
+  changes: drums.clap
+  why: matching by ear means you can lock any track to your song, on any gear
+learn: >-
+  Matching a track to your song with the pitch fader and your ears only. No sync, no numbers.
+youCan:
+  - hear whether a track is faster or slower than yours
+  - fix it with the pitch fader
+  - hear when two kicks lock together
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves, then together. When both play, listen to the kicks: one clean thud per beat. When two
+        tracks are slightly apart you hear two thuds close together, a flutter, then a gallop.
+
+        Manual beatmatching is fixing that with your hands and ears, without the sync button. It's the oldest
+        skill in djing, and the one that trains your ear most.
+      straight: >-
+        Locked kicks make one thud. Slightly off, they flutter, then gallop. Manual beatmatching fixes that by
+        ear, no sync.
+      eli5: >-
+        When two songs are lined up, their booms happen together. When they're not, the booms go
+        ba-boom ba-boom. You fix it by listening.
+
+  - kind: say
+    title: faster or slower
+    say:
+      mentor: >-
+        The pitch fader on a deck changes its speed. On our mixer it's deck b's tempo fader. If deck b runs
+        faster than your song, its kicks pull ahead, so bring the fader down. If it's slower, its kicks fall
+        behind, so push it up.
+
+        The hard part is telling which. Listen to the kicks, not the melody. They're the clock.
+      straight: >-
+        Deck b ahead: tempo fader down. Deck b behind: tempo fader up. Listen to the kicks.
+      eli5: >-
+        If the other song is too fast, slide its speed slider down. Too slow, slide it up. Listen to the
+        booms.
+    deeper:
+      - title: the jog wheel
+        say: >-
+          On cdjs and controllers you also have the jog wheel. Nudging it pushes the track ahead or holds it
+          back for a moment without changing its bpm. You use it when two tracks run at the same speed but
+          their beats don't land together.
+      - title: in your headphones
+        say: >-
+          In a booth you do all of this in your headphones before the crowd hears anything. Cue the incoming
+          track, press play, listen for whether it's faster or slower, adjust, then watch for drift once it
+          locks. Only then does it go out to the room.
+
+  - kind: mix
+    goal: match
+    bank: warm-up
+    say:
+      mentor: >-
+        Deck b is the bank track warm up, running at its own speed. Don't look at the numbers this time. Close
+        your eyes if it helps.
+
+        Listen to the kicks. Is deck b ahead or behind? Move its tempo fader in small steps. When the gallop
+        slows and the kicks sit on top of each other, you've matched it by ear. Then open your eyes and check
+        the screen.
+      straight: >-
+        Ignore the numbers. Listen: is deck b ahead or behind? Small moves on its tempo fader until the kicks
+        lock, then check the screen.
+      eli5: >-
+        Don't look. Just listen to the booms and move deck b's speed slider a little at a time, until the
+        booms happen together.
+    hint: If the gallop gets faster, you went the wrong way.
+
+  - kind: ask
+    q: Deck b is running faster than your song. What do you do?
+    options: ["lower its pitch fader", "raise its pitch fader", "turn its low knob down", "move the crossfader"]
+    answer: 0
+    why: Too fast, slow it down. The kicks stop pulling ahead.
+    whyWrong:
+      1: That makes it even faster.
+      2: The low knob changes bass, not speed.
+      3: The crossfader picks what you hear, not how fast it plays.
+
+  - kind: ask
+    q: What does the jog wheel do when beatmatching?
+    options: ["nudges the beat ahead or back without changing the bpm", "changes the key", "sets a cue point", "turns the bass down"]
+    answer: 0
+    why: A nudge lines the beats up once the speeds already match.
+    whyWrong:
+      1: Key isn't touched by a nudge.
+      2: Cue points are a separate button.
+      3: That's the eq.
+
+  - kind: ask
+    q: What should you listen to while matching?
+    options: ["the kicks", "the melody", "the reverb", "the vocal"]
+    answer: 0
+    why: Kicks are the steadiest part of a track, the clock you line up.
+    whyWrong:
+      1: Melodies move around too much.
+      2: Reverb smears the timing.
+      3: Vocals don't sit on every beat.
+
+  - kind: keep
+    next: >-
+      Back to the song path: your first blend.

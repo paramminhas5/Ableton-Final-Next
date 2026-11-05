@@ -85,7 +85,7 @@ export function BPMTapSim() {
         <div className="font-mono text-[10px] uppercase opacity-70">Target BPM</div>
         <div className="font-display text-6xl">{targetBpm}</div>
         <div className="font-mono text-xs opacity-70 mt-1">
-          Tap along to the kick. Live's Tempo Follower does this — but with your band.
+          Tap along to the kick. Live's Tempo Follower does this: but with your band.
         </div>
       </div>
 
@@ -113,14 +113,14 @@ export function BPMTapSim() {
             {accuracy === "great"
               ? `Perfect! Off by ${Math.abs(tappedBpm - targetBpm)} BPM`
               : accuracy === "close"
-                ? `Close — off by ${Math.abs(tappedBpm - targetBpm)} BPM`
-                : `Off by ${Math.abs(tappedBpm - targetBpm)} BPM — keep tapping`}
+                ? `Close: off by ${Math.abs(tappedBpm - targetBpm)} BPM`
+                : `Off by ${Math.abs(tappedBpm - targetBpm)} BPM: keep tapping`}
           </div>
         </div>
       )}
 
       <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-70 leading-relaxed">
-        Tempo Follower in Live does this automatically — it listens to an audio input (drummer, DJ)
+        Tempo Follower in Live does this automatically: it listens to an audio input (drummer, DJ)
         and adjusts Live's BPM to match in real time.
       </div>
     </div>

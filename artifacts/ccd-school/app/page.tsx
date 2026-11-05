@@ -4,13 +4,13 @@ import { HomeClient } from "@/components/HomeClient";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "CCD.SCHOOL — Learn Music Production & DJing",
+  title: { absolute: "ccd school, learn music production and djing" },
   description:
-    "The most structured music education on the internet. 153 missions across 3 worlds — Fundamentals, DJ and Producer. Every concept sourced from real manuals.",
+    "Learn music by making it. 198 lessons across basics, producing and djing, each one adding to a song of your own. Every fact checked against the real manuals.",
   openGraph: {
-    title: "CCD.SCHOOL — Learn Music Production & DJing",
+    title: "CCD.SCHOOL | learn music production and djing",
     description:
-      "153 missions. Fundamentals, DJ World, Producer. Gamified, source-verified. No fluff.",
+      "198 lessons that build one song of your own: basics, producing and djing.",
   },
 };
 

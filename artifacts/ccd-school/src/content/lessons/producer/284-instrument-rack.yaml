@@ -1,0 +1,103 @@
+slug: instrument-rack
+world: producer
+number: 284
+title: instrument rack
+minutes: 5
+song:
+  changes: lead.lead
+  why: two voices stacked on your lead make it thicker and wider than one
+learn: >-
+  What an instrument rack is, layers and splits, and your lead thickened with a second voice.
+youCan:
+  - say what layering and splitting are
+  - say what key and velocity zones do
+  - stack two voices on your lead
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        An instrument rack holds several instruments on one track. Play a note and every instrument inside
+        plays it together. That's layering: a soft pad under a sharp lead, two synths stacked into one bigger
+        sound.
+      straight: >-
+        An instrument rack holds several instruments on one track. Layering plays them all at once.
+      eli5: >-
+        An instrument rack is like two or three instruments playing the same note at the same time.
+
+  - kind: say
+    title: layers and splits
+    say:
+      mentor: >-
+        Each instrument in a rack sits on its own chain, a row with its own instrument and effects. Chains
+        can all play at once, which is a layer. Or each can answer only part of the keyboard, which is a
+        split: low keys play a bass, high keys play chords.
+
+        Chains can also answer only soft or only hard hits, so a gentle touch plays one sound and a hard one
+        plays another.
+      straight: >-
+        Each instrument is a chain. All at once is a layer. Different keys for each is a split. Chains can
+        also answer soft or hard hits.
+      eli5: >-
+        You can play all the instruments together, or give each one its own part of the keyboard.
+    deeper:
+      - title: zones in live
+        say: >-
+          Every chain in an Instrument Rack has a key zone, the notes it answers, and a velocity zone, the hit
+          strengths it answers. A chain selector lets a macro choose which chains play, so one knob can move
+          from one sound to another.
+      - title: watch the overlap
+        say: >-
+          Two chains playing the same notes both use processing power, and can clash. Overlap zones on
+          purpose, not by accident.
+      - title: glue the layers
+        say: >-
+          A compressor after the rack helps layered chains sound like one instrument.
+
+  - kind: shape
+    layer: lead
+    knobs: [fm, wave, detune, lfo]
+    say:
+      mentor: >-
+        An instrument rack layers instruments so one note plays several. Your lead is a layer of two already: a wave oscillator and an fm voice. Turn fm up to half and you hear both at once, the warm wave under the glassy fm.
+        
+        detune widens the wave layer, lfo gives the whole stack movement. That's a rack: two instruments, one note, one set of macros. Keep the blend.
+      straight: >-
+        Two voices on one note: wave and fm. Blend them with fm, widen with detune. That's a rack.
+      eli5: >-
+        Two sounds play every time you press one key.
+
+  - kind: ask
+    q: What does an instrument rack let you do?
+    options: ["play several instruments from one track", "record vocals", "change the tempo", "export stems"]
+    answer: 0
+    why: Several chains, one track.
+    whyWrong:
+      1: Recording is a track's job.
+      2: Tempo is the song's speed.
+      3: Exporting happens from the File menu.
+
+  - kind: ask
+    q: What is a split?
+    options: ["chains answering different parts of the keyboard", "two songs at once", "a cut in the audio", "a drum fill"]
+    answer: 0
+    why: Low keys play one sound, high keys another.
+    whyWrong:
+      1: It's one instrument track.
+      2: Nothing gets cut.
+      3: Fills are notes in a pattern.
+
+  - kind: ask
+    more: true
+    q: What does a velocity zone decide?
+    options: ["which hit strengths a chain answers", "the song's speed", "the pan", "the reverb size"]
+    answer: 0
+    why: Soft hits can play one chain, hard hits another.
+    whyWrong:
+      1: Velocity is how hard, not how fast the song is.
+      2: Pan is left and right.
+      3: Reverb is a separate effect.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, finish and export.

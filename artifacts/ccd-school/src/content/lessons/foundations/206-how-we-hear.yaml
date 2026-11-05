@@ -1,0 +1,123 @@
+slug: how-we-hear
+world: foundations
+number: 206
+title: how we hear
+minutes: 5
+song:
+  changes: bass.bass
+  why: a kick and a bass in the same low range hide each other, and ducking lets your ears hear both
+learn: >-
+  How your ears hear, why they aren't fair to every sound, and masking: your bass and your kick hiding each
+  other, with and without a duck.
+youCan:
+  - say what masking is
+  - say why mixes sound different at different volumes
+  - duck your bass so your kick comes through
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Sound reaches your eardrum, which pushes three tiny bones, which push fluid inside a spiral called the
+        cochlea. Different spots along that spiral react to different pitches, and your brain turns the
+        pattern into what you hear.
+
+        The surprise is that your ears aren't fair. They hear the middle, roughly 2 to 5 khz where speech
+        sits, best of all. Deep bass and very high sounds need more energy to seem just as loud.
+      straight: >-
+        Your ear sorts sound by pitch in the cochlea. It hears best around 2 to 5 khz, where speech is. Deep
+        bass and very high sounds need more energy to seem as loud.
+      eli5: >-
+        Inside your ear is a tiny curly snail shape called the cochlea. Different parts of it hear different
+        notes. Your ears hear talking voices best, and very deep booms not as well.
+
+  - kind: say
+    title: loud hides quiet
+    say:
+      mentor: >-
+        Here's the one that matters most in a mix. A loud sound makes quieter sounds near the same pitch hard
+        or impossible to hear. That's called masking.
+
+        Your kick and your bass both live down low. When they hit at the same moment, the louder one masks the
+        other, and the two smear into one thick boom. You don't hear a kick and a bass, you hear mud.
+      straight: >-
+        Masking is a loud sound hiding quieter sounds near the same pitch. Kick and bass share the low end, so
+        when they hit together they hide each other and turn to mud.
+      eli5: >-
+        When a loud sound and a quiet sound are close in pitch, the loud one covers up the quiet one. The boom
+        and the bass are both deep, so they cover each other up.
+    deeper:
+      - title: quiet hides the bass
+        say: >-
+          At low volume we lose bass and treble faster than the middle, so turning a track up makes it sound
+          fuller even though only the level changed. That's why a mix judged at one volume can fool you.
+          Moderate listening levels give the truest balance.
+      - title: protect your ears
+        say: >-
+          Hearing damage from loud sound is permanent. A common guideline is about 85 dB for up to eight
+          hours, and every 3 dB louder halves the safe time. Clubs and headphones can go well above that, so
+          take breaks and wear earplugs at gigs.
+
+  - kind: shape
+    layer: bass
+    knobs: [duck]
+    say:
+      mentor: >-
+        Here's your song with a bass under your kick. If your song doesn't have a bass yet, one is dropped in
+        for this lesson.
+
+        With duck at zero, listen to the low end: kick and bass hit together and blur. Now turn duck up. Every
+        time the kick hits, the bass dips out of the way for a moment and swells back. The kick's thump
+        suddenly comes through, and the bass is clearer between the kicks too. Nothing got louder. You just
+        stopped one sound hiding the other.
+      straight: >-
+        Your song with a bass (dropped in if you have none). Duck at zero: kick and bass mask each other. Turn
+        it up: the bass dips on every kick and both come through.
+      eli5: >-
+        Turn the duck knob up. Now the bass goes quiet for a moment every time the boom hits, so they take
+        turns. You can hear both of them now.
+
+  - kind: ask
+    q: Masking means
+    options: ["a loud sound hides quieter sounds near its pitch", "a filter removes a frequency", "a sound is played backwards", "a sound gets extra harmonics"]
+    answer: 0
+    why: The loud sound covers the quiet one, especially when they're close in pitch.
+    whyWrong:
+      1: That's a filter. Masking happens in your ears.
+      2: That's reversing.
+      3: That's saturation or distortion.
+
+  - kind: ask
+    q: Why do your kick and bass mask each other?
+    options: ["they both live in the low end", "the bass is out of tune", "the kick is too quiet", "they're in different keys"]
+    answer: 0
+    why: Same range, same moment, and one hides the other.
+    whyWrong:
+      1: Tuning isn't the cause. Even in tune they share the low end.
+      2: A quiet kick gets masked even more.
+      3: Kicks aren't really in a key. The problem is the shared range.
+
+  - kind: ask
+    q: Your ears are most sensitive around
+    options: ["2 to 5 khz", "50 hz", "above 15 khz", "every pitch equally"]
+    answer: 0
+    why: The middle, where speech sits, is what we hear best.
+    whyWrong:
+      1: Deep bass needs more energy to seem as loud.
+      2: Very high sounds need more energy too.
+      3: Ears aren't flat. That's the whole point.
+
+  - kind: ask
+    more: true
+    q: Turn a track up and it sounds fuller. Why?
+    options: ["at low volume we lose bass and treble first", "turning up adds new notes", "the tempo changes", "the speakers change the mix"]
+    answer: 0
+    why: Our ears lose the lows and highs faster as things get quieter, so louder sounds fuller.
+    whyWrong:
+      1: Same notes, just louder.
+      2: Volume doesn't touch tempo.
+      3: Same speakers. It's your ears.
+
+  - kind: keep
+    next: >-
+      Back to the sound path. Next: timbre, and a filter to change your melody's colour.

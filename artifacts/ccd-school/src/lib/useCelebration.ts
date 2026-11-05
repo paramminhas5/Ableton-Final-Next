@@ -7,12 +7,17 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { rankFor } from "@/lib/ranks";
+import { rankUpFrom } from "@/lib/worldRanks";
+import { curPathOf } from "@/content/curriculum";
 import { CHAPTERS } from "@/content/chapters";
-import { pathsByWorld } from "@/content/paths";
+import { pathsByWorld, type LearningPath } from "@/content/paths";
+
+/** A path is finished when its song lessons are (deeper lessons and bonus rounds are extra). */
+const spine = (p: LearningPath) => (p.songSlugs.length ? p.songSlugs : p.missionSlugs);
 import type { CelebrationEvent } from "@/components/CelebrationOverlay";
 
 const SEEN_KEY = "ccd.celebrations.v1";
+const PENDING_KEY = "ccd.celebrations.pending";
 
 function getSeenSet(): Set<string> {
   if (typeof localStorage === "undefined") return new Set();
@@ -29,7 +34,16 @@ function markSeen(id: string) {
 
 export function useCelebration() {
   const { progress } = useProgress();
-  const [event, setEvent] = useState<CelebrationEvent | null>(null);
+  const [event, setEventState] = useState<CelebrationEvent | null>(null);
+  // A moment earned inside a lesson waits until you leave it (ClientProviders), and survives a reload or a
+  // typed url on the way: it is kept in storage until it has been shown and dismissed.
+  const setEvent = (e: CelebrationEvent | null) => {
+    setEventState(e);
+    try { if (e) localStorage.setItem(PENDING_KEY, JSON.stringify(e)); else localStorage.removeItem(PENDING_KEY); } catch { /* storage blocked */ }
+  };
+  useEffect(() => {
+    try { const raw = localStorage.getItem(PENDING_KEY); if (raw) setEventState(JSON.parse(raw) as CelebrationEvent); } catch { /* none */ }
+  }, []);
   const prevXp = useRef(progress.xp);
   const prevStreak = useRef(progress.streakDays);
   const prevShield = useRef(progress.streakShield);
@@ -48,18 +62,21 @@ export function useCelebration() {
     }
     const seen = getSeenSet();
 
-    // ── Rank-up ──────────────────────────────────────────────────────────────
-    if (progress.xp > prevXp.current) {
-      const { current: oldRank } = rankFor(prevXp.current);
-      const { current: newRank } = rankFor(progress.xp);
-      if (newRank.slug !== oldRank.slug) {
-        const celebId = `rank-${newRank.slug}`;
-        if (!seen.has(celebId)) {
-          markSeen(celebId);
-          setEvent({ kind: "rank-up", rankName: newRank.name });
-          prevXp.current = progress.xp;
-          return;
-        }
+    // ── Rank-up, per world: the lesson you just finished moves its own world's rank ─────────
+    {
+      const fresh = Object.keys(progress.completedMissions).filter(s => progress.completedMissions[s] && !prevMissions.current[s]);
+      for (const slug of fresh) {
+        const world = curPathOf(slug)?.world;
+        if (!world) continue;
+        const up = rankUpFrom(world, prevMissions.current, progress.completedMissions);
+        if (!up) continue;
+        const celebId = `rank-${world}-${up.current.slug}`;
+        if (seen.has(celebId)) continue;
+        markSeen(celebId);
+        setEvent({ kind: "rank-up", rankName: up.current.name, world });
+        prevXp.current = progress.xp;
+        prevMissions.current = { ...progress.completedMissions };
+        return;
       }
       prevXp.current = progress.xp;
     }
@@ -108,8 +125,8 @@ export function useCelebration() {
         const paths = pathsByWorld(world);
         for (const path of paths) {
           // Path trophy
-          const allDone = path.missionSlugs.every(s => !!completed[s]);
-          const wasDone = path.missionSlugs.every(s => !!prevCompleted[s]);
+          const allDone = spine(path).every(s => !!completed[s]);
+          const wasDone = spine(path).every(s => !!prevCompleted[s]);
           if (allDone && !wasDone) {
             const celebId = `path-${path.slug}`;
             if (!seen.has(celebId)) {
@@ -125,7 +142,7 @@ export function useCelebration() {
         const chapters = CHAPTERS.filter(c => c.world === world);
         for (const ch of chapters) {
           const chPaths = paths.filter(p => p.chapter === ch.slug);
-          const chSlugs = chPaths.flatMap(p => p.missionSlugs);
+          const chSlugs = chPaths.flatMap(p => spine(p));
           const allDone = chSlugs.every(s => !!completed[s]);
           const wasDone = chSlugs.every(s => !!prevCompleted[s]);
           if (allDone && !wasDone && chSlugs.length > 0) {
@@ -140,7 +157,7 @@ export function useCelebration() {
         }
 
         // World trophy
-        const worldSlugs = paths.flatMap(p => p.missionSlugs);
+        const worldSlugs = paths.flatMap(p => spine(p));
         const allWorldDone = worldSlugs.every(s => !!completed[s]);
         const wasWorldDone = worldSlugs.every(s => !!prevCompleted[s]);
         if (allWorldDone && !wasWorldDone && worldSlugs.length > 0) {
@@ -156,11 +173,11 @@ export function useCelebration() {
 
       // CCD Master — all 3 worlds done
       const allMasterDone = (["fundamentals","dj","producer"] as const).every(w => {
-        const wSlugs = pathsByWorld(w).flatMap(p => p.missionSlugs);
+        const wSlugs = pathsByWorld(w).flatMap(p => spine(p));
         return wSlugs.every(s => !!completed[s]);
       });
       const wasMasterDone = (["fundamentals","dj","producer"] as const).every(w => {
-        const wSlugs = pathsByWorld(w).flatMap(p => p.missionSlugs);
+        const wSlugs = pathsByWorld(w).flatMap(p => spine(p));
         return wSlugs.every(s => !!prevCompleted[s]);
       });
       if (allMasterDone && !wasMasterDone) {

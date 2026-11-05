@@ -1,0 +1,65 @@
+slug: your-first-mix
+world: dj
+number: 4
+title: your first blend
+minutes: 8
+song:
+  changes: drums.clap
+  why: this is the moment you mix your own song like a dj
+learn: >-
+  A full blend: bring a track in under yours, swap the bass, and hand over to it, all on your own song.
+youCan:
+  - bring a second track in under yours
+  - swap the bass with the low eq
+  - finish a blend with the crossfader or fader
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        This is the move at the heart of djing. Two tracks, matched, playing together, and you slowly hand the
+        room from one to the other. The trick is the bass: two bass lines at once turn to mud, so you swap them.
+      straight: >-
+        A blend hands over from one track to the next. Only one bass at a time, so you swap them with the eq.
+      eli5: >-
+        Now the big one: start with your song, sneak the other song in, swap their basses, and let your song
+        fade away.
+
+  - kind: mix
+    goal: blend
+    say:
+      mentor: >-
+        Your song is on deck a, playing out loud. Deck b is matched and waiting with its fader down.
+
+        One: bring deck b's fader up. Hear both tracks? Two: turn deck a's low knob down, so only deck b's bass
+        is left. That's the bass swap. Three: crossfade over to b, or pull deck a's fader down. You've just
+        mixed out of your own song.
+      straight: >-
+        Bring deck b's fader up, cut deck a's low, then crossfade to b or pull a down.
+      eli5: >-
+        Push deck b's slider up. Turn deck a's low knob down. Then slide over to b.
+    hint: Do it slowly. A blend usually takes 16 or 32 bars.
+
+  - kind: ask
+    q: Why do djs swap the bass instead of playing both?
+    options: ["two bass lines together turn to mud", "the bass is too quiet", "only one deck can have bass", "it changes the tempo"]
+    answer: 0
+    why: Two low ends stack up into a muddy blur.
+    whyWrong:
+      1: It's about clashing, not level.
+      2: Both decks can, it just sounds bad together.
+      3: Eq doesn't touch tempo.
+
+  - kind: ask
+    q: What's the first move of a blend?
+    options: ["bring the new track's fader up", "kill both basses", "stop the old track", "change the key"]
+    answer: 0
+    why: First you get the new track in, quietly, under the old one.
+    whyWrong:
+      1: You'd lose all the low end.
+      2: Then it's a cut, not a blend.
+      3: Key is chosen when you pick the track.
+
+  - kind: keep
+    next: >-
+      Next: phrasing. When to bring the next track in so it lands on the one.

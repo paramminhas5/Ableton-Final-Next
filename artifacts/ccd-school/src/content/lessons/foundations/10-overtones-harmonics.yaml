@@ -1,0 +1,98 @@
+slug: overtones-harmonics
+world: foundations
+number: 10
+title: harmonics up close
+minutes: 6
+song:
+  changes: lead.lead
+  why: notes that share harmonics fit together, and the fifth is the first one hiding inside every note
+learn: >-
+  The harmonic series, why some pairs of notes fit together, and a fifth played into your melody.
+youCan:
+  - say what the harmonic series is
+  - explain why octaves and fifths sound smooth
+  - play a fifth on the keys
+steps:
+  - kind: hear
+    clip: octave
+    say:
+      mentor: >-
+        Remember the octave: same note, twice as fast. That's the first harmonic above any note. The next one
+        is three times as fast, and if you bring that down an octave you get a note called the fifth. Tap
+        through these two and keep the octave in your ear.
+
+        Every note you've played already has its octave and its fifth quietly ringing inside it. That's why
+        those two always sound at home next to it.
+      straight: >-
+        Harmonics come at 2, 3, 4 and more times a note's frequency. Twice is the octave. Three times, an
+        octave down, is the fifth. That's why both sound smooth with the note.
+      eli5: >-
+        Every note has quiet helper notes hiding inside it. The first helper is the same note higher up, the
+        octave. The next one is called the fifth. Notes sound good together when they share helpers.
+
+  - kind: say
+    title: the harmonic series
+    say:
+      mentor: >-
+        Line up the harmonics of a low a: a, then a an octave up, then e, then a again, then c sharp, then e,
+        and on and on, getting closer together as they go. That's the harmonic series, and a lot of music
+        theory comes out of it.
+
+        Notes near the start of the series, the octave and the fifth, sound smooth and stable together.
+        Notes further up sound more colourful and tense. You'll use both later.
+      straight: >-
+        The harmonic series of a: a, a, e, a, c sharp, e and up. Early ones (octave, fifth) sound stable
+        together; later ones sound more colourful.
+      eli5: >-
+        The helper notes come in a line, each one higher and closer to the last. The first few, the octave and
+        the fifth, make the smoothest friends for your note.
+
+  - kind: play
+    layer: lead
+    surface: keys
+    goal: {notes: 2}
+    say:
+      mentor: >-
+        Now play a fifth into your melody. On these keys, the fifth above the first key is five keys along,
+        counting the first one as one. Press rec, wait out the count-in, and play the first key then the
+        fifth, then anything else you like. Listen to how settled those two sound together.
+      straight: >-
+        Record a phrase with a fifth: first key, then five keys along (counting the first as one), then
+        anything you like.
+      eli5: >-
+        Press rec, wait for four ticks. Press the first key. Then count five keys along, one, two, three,
+        four, five, and press that one. They're best friends. Then play whatever you like.
+
+  - kind: ask
+    q: What is the first harmonic above a note?
+    options: ["the octave, twice the frequency", "the fifth", "the note below", "a random pitch"]
+    answer: 0
+    why: Twice the frequency, the same note an octave up.
+    whyWrong:
+      1: The fifth comes from the next one, three times the frequency.
+      2: Harmonics are always above the note.
+      3: They follow a fixed pattern, whole number multiples.
+
+  - kind: ask
+    q: Why does a fifth sound smooth with its root note?
+    options: ["it's already a harmonic inside the note", "it's the same pitch", "it's louder", "it's always in tune with everything"]
+    answer: 0
+    why: The fifth rings quietly inside every note, so the two share a lot.
+    whyWrong:
+      1: It's a different pitch, just a very friendly one.
+      2: Loudness has nothing to do with it.
+      3: It fits its own root note, not every note.
+
+  - kind: ask
+    q: On a keyboard scale, how far is the fifth from the note you start on?
+    options: ["five keys along, counting the first", "two keys along", "twelve keys along", "the very next key"]
+    answer: 0
+    why: Count the start as one, then two, three, four, five.
+    whyWrong:
+      1: Two along is a third, a different interval.
+      2: Twelve semitones is the octave.
+      3: The next key is a step.
+
+  - kind: keep
+    next: >-
+      Next: noise. Hats and claps have no pitch at all, and that's exactly why they work.

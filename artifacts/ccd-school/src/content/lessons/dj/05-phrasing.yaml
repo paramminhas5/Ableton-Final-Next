@@ -1,0 +1,63 @@
+slug: phrasing
+world: dj
+number: 5
+title: phrasing, count in eights
+minutes: 6
+song:
+  changes: drums.clap
+  why: a track that comes in on the one of a phrase sounds planned; one that comes in anywhere sounds like a mistake
+learn: >-
+  Dance music moves in phrases of eight bars. Bring the next track in on bar one of a phrase and the
+  blend sounds like part of the music.
+youCan:
+  - count bars in phrases of eight
+  - bring a track in on the one of a phrase
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Count the bars: one, two, three, all the way to eight, then back to one. Dance tracks change every
+        8, 16 or 32 bars: a new hat, the bass dropping out, a riser. Those blocks are phrases, and djs count
+        them without thinking.
+      straight: >-
+        Dance tracks change every 8, 16 or 32 bars. Those blocks are phrases.
+      eli5: >-
+        Count the bars up to eight, then start again. Songs change at the start of each group of eight.
+
+  - kind: mix
+    goal: phrase
+    say:
+      mentor: >-
+        Watch the phrase counter on the screen: bar 1 of 8 up to 8 of 8. Deck b is matched and waiting with
+        its fader down. Bring it up exactly as the counter goes back to bar one. If you bring it in mid
+        phrase, pull it down and try again on the next one.
+      straight: >-
+        Bring deck b's fader up right as the phrase counter returns to bar 1.
+      eli5: >-
+        Watch the counter. When it says bar 1, push deck b's slider up.
+    hint: Count down the last bar, four, three, two, one, go.
+
+  - kind: ask
+    q: How long is a typical phrase in dance music?
+    options: ["eight bars", "one beat", "three bars", "a whole song"]
+    answer: 0
+    why: Eight bars, often grouped into 16 and 32.
+    whyWrong:
+      1: A beat is much shorter.
+      2: Dance music groups in fours and eights.
+      3: A song has many phrases.
+
+  - kind: ask
+    q: Why bring a track in on bar one of a phrase?
+    options: ["the change lines up with the music, so it sounds planned", "it's louder there", "the tempo is slower", "it saves battery"]
+    answer: 0
+    why: Changes in the music happen on phrase starts, so your blend lands with them.
+    whyWrong:
+      1: Volume isn't the reason.
+      2: Tempo is the same everywhere.
+      3: Nothing to do with power.
+
+  - kind: keep
+    next: >-
+      Next: eq mixing, the bass swap on its own.

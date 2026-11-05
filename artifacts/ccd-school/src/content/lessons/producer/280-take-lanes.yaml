@@ -1,0 +1,84 @@
+slug: take-lanes
+world: producer
+number: 280
+title: take lanes
+minutes: 5
+song:
+  changes: drums.clap
+  why: recording a part a few times and keeping the best pass is how most great performances are made
+learn: >-
+  What a take is, how take lanes keep every pass, and your clap recorded as takes until one feels right.
+youCan:
+  - say what a take is
+  - say what take lanes keep
+  - record a part as takes and keep the best
+steps:
+  - kind: hear
+    clip: kick-and-clap
+    say:
+      mentor: >-
+        Most great recorded performances aren't one perfect pass. They're the same part played again and
+        again, with the best moments kept. Each pass is called a take.
+
+        Pros don't play it perfectly. They play it a few times and choose.
+      straight: >-
+        A take is one recorded pass. Great performances are usually several takes, with the best one kept.
+      eli5: >-
+        A take is one try at playing something. You can have lots of tries and keep the best one.
+
+  - kind: say
+    title: take lanes
+    say:
+      mentor: >-
+        Take lanes are extra rows under a track. Each time you loop-record, the new pass lands on its own
+        row and the old ones stay underneath. Nothing gets thrown away, so you can listen back and choose,
+        today or tomorrow.
+      straight: >-
+        Take lanes put each recorded pass on its own row under the track. Nothing is deleted.
+      eli5: >-
+        Every try gets its own row, and none of them get thrown away.
+    deeper:
+      - title: take lanes in live
+        say: >-
+          Right-click a track's header and choose Show Take Lanes. Loop a section and record: every pass round
+          the loop lands on a new lane. They work for audio and midi, and arrived in Live 11.
+      - title: name them
+        say: >-
+          Name your lanes as you go, so future you knows which take was which.
+
+  - kind: tempo
+    set: comp
+    layer: drums
+    say:
+      mentor: >-
+        Take lanes keep every pass you record. Play your drums and keep the take, then do it again, up to three times. Each take sits in its own lane.
+        
+        Then comp: the loop is split into four pieces, and for each piece you tap the lane whose playing was best. The light bar shows which piece is playing. Build a part from the best quarter of each take. In Live, this is take lanes and the comping tool, and it works exactly like this. Keep the comp.
+      straight: >-
+        Record up to three takes of your drums. Then, for each quarter of the loop, pick the take that was best. Keep the comp.
+      eli5: >-
+        Play it three times. Then build the best version from the best bits.
+
+  - kind: ask
+    q: What is a take?
+    options: ["one recorded pass of a part", "a kind of eq", "a drum pattern", "the master track"]
+    answer: 0
+    why: Play it once, that's a take. Play it again, that's another.
+    whyWrong:
+      1: Eq is tone.
+      2: A take can be a pattern, but it's about one recorded pass.
+      3: The master adds everything up.
+
+  - kind: ask
+    q: What happens to old takes in take lanes?
+    options: ["they stay on their own rows underneath", "they're deleted", "they're all mixed together", "they get louder"]
+    answer: 0
+    why: Every pass is kept, so you can choose later.
+    whyWrong:
+      1: Nothing is thrown away.
+      2: Each take stays separate.
+      3: Their level doesn't change.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, the breakdown and the drop.

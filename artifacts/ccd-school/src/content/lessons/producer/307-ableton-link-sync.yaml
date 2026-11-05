@@ -1,0 +1,108 @@
+slug: ableton-link-sync
+world: producer
+number: 307
+title: ableton link in practice
+minutes: 5
+song:
+  changes: drums.kick
+  why: a tempo you share with another app or a friend's setup lets your song lock in with theirs, no cables
+learn: >-
+  Getting Live in time with another app or device over wifi, the bits that trip people up, and choosing the
+  tempo your song brings to a jam.
+youCan:
+  - turn on Link and join another device on the same network
+  - say what start stop sync adds
+  - spot the network problems that stop Link working
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two grooves at the same tempo, first one, then the other, then both together. When they line up like
+        that they sound like one track. When they don't, it falls apart into a mess of flams.
+
+        Getting two setups lined up used to mean midi cables and one machine in charge. Ableton Link does it
+        over wifi.
+      straight: >-
+        Two grooves, same tempo, then together in time. Ableton Link keeps separate apps and devices in time
+        over wifi.
+      eli5: >-
+        Two beats playing at the same speed, then together. They fit like one song. Link helps two computers
+        or apps play together like that, without cables.
+
+  - kind: say
+    title: joining in
+    say:
+      mentor: >-
+        Click the link button in Live's control bar. Open another app that supports Link on the same wifi
+        network, another laptop running Live, an iPad app, a drum machine, and switch Link on there too. They
+        find each other on their own, and Live shows how many others have joined.
+
+        Now change the tempo on either one and the other follows. Nobody's in charge. Every device is equal,
+        so anyone can move the tempo and anyone can leave without stopping the rest.
+      straight: >-
+        Click link in the control bar, switch Link on in another app on the same wifi. They find each other.
+        Any device can change the tempo and the rest follow.
+      eli5: >-
+        Press the link button, then turn on link in another app on the same wifi. Now they play at the same
+        speed. Change the speed on one and the other changes too.
+    deeper:
+      - title: start stop sync
+        say: >-
+          Link shares tempo and the beat by default, but not play and stop. Turn on start stop sync and
+          pressing play on one device starts the others too. Leave it off if each player wants to drop in on
+          their own.
+      - title: when they can't find each other
+        say: >-
+          Everyone has to be on the same network. Guest wifi that keeps devices apart, firewalls and vpns can
+          all hide peers from each other. For shows, a phone hotspot or your own router is steadier than
+          public wifi.
+
+  - kind: tempo
+    set: tempo
+    marks: [120, 124, 128, 130]
+    say:
+      mentor: >-
+        Here's your song. Imagine a friend's laptop has just joined over Link at 124 and they nudge it to 128.
+        Your song goes with them. Try a few speeds and hear how your song feels at each one.
+
+        Then pick the tempo you'd bring to the jam, the one you'd set before anyone else joins.
+      straight: >-
+        Your song at the tempos a Link jam might move through. Try a few, then pick the one you'd start at.
+      eli5: >-
+        Pretend a friend is changing the speed from their computer. Try a few speeds, then pick the one you
+        like best.
+
+  - kind: ask
+    q: What does Link use to keep devices in time?
+    options: ["the local wifi or wired network", "a midi cable", "a usb cable between them", "an audio click track"]
+    answer: 0
+    why: Devices on the same network find each other. No cables.
+    whyWrong:
+      1: No cables needed.
+      2: No cables needed.
+      3: It shares tempo over the network, not through sound.
+
+  - kind: ask
+    q: Who's in charge of the tempo in a Link session?
+    options: ["nobody, any device can change it", "the first device that joined", "only Live", "only the fastest computer"]
+    answer: 0
+    why: Every peer is equal, and the others follow any change.
+    whyWrong:
+      1: There's no leader.
+      2: Other apps can move it too.
+      3: Speed of the computer doesn't matter.
+
+  - kind: ask
+    q: Two laptops have Link on but can't see each other. What's a likely cause?
+    options: ["they're not on the same network", "the tempo is too fast", "one has a different kick", "the songs are in different keys"]
+    answer: 0
+    why: Guest wifi, firewalls and vpns can keep peers apart.
+    whyWrong:
+      1: Tempo doesn't stop them finding each other.
+      2: The sounds don't matter to Link.
+      3: Link doesn't deal with keys.
+
+  - kind: keep
+    next: >-
+      Your song's tempo is set. Back to your song path, or on to how Link works.

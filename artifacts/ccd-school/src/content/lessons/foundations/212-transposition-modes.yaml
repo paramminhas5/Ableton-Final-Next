@@ -1,0 +1,120 @@
+slug: transposition-modes
+world: foundations
+number: 212
+title: transposition and modes
+minutes: 6
+song:
+  changes: lead.lead
+  why: a mode keeps your home note and changes the mood around it, so your song can go brighter or darker in one tap
+learn: >-
+  Moving a whole melody to a new key without changing its shape, what modes are, and your song heard in three
+  modes on the same home note.
+youCan:
+  - say what transposing does
+  - say what a mode is
+  - pick a mode for your song by ear
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        Tap low, then high. Same sound, moved up. Now picture doing that to a whole melody: every note moves up
+        by exactly the same amount. The tune keeps its shape perfectly, it just sits higher. That's
+        transposing.
+
+        A song that's too high for a singer gets transposed down. A track that feels a bit flat can go up. The
+        shape you wrote is safe either way.
+      straight: >-
+        Transposing moves every note by the same amount. The distances between notes stay identical, so the
+        melody keeps its shape, only higher or lower.
+      eli5: >-
+        Tap a, then b. Same sound, higher. If you move every note of a tune up the same amount, it's the same
+        tune, just higher. That's called transposing.
+
+  - kind: say
+    title: same notes, new home
+    say:
+      mentor: >-
+        Modes are a different trick. Take the white keys of c major, but treat d as home instead of c. Same
+        seven notes, yet it sounds mysterious and a bit jazzy instead of bright. That's d dorian.
+
+        Each of the seven notes can be home, and each gives a mode with its own mood, because the pattern of
+        big and small steps shifts around the new home. Ionian is the proper name for major, aeolian for
+        natural minor. Dorian sits between them: darker than major, brighter than natural minor.
+      straight: >-
+        A mode is the same set of notes with a different home. C major's notes with d as home is d dorian.
+        Ionian is major, aeolian is natural minor, dorian sits between them.
+      eli5: >-
+        Use the same notes but pick a different one to be home, and the whole song feels different. Each
+        choice of home has a name, called a mode.
+    deeper:
+      - title: all seven modes
+        say: >-
+          Ionian, major, bright. Dorian, minor with a brighter sixth, funk and soul. Phrygian, dark with a
+          Spanish flavour. Lydian, dreamy and floating from its raised fourth, all over film scores. Mixolydian,
+          major with a lowered seventh, blues rock. Aeolian, natural minor. Locrian, very tense and rarely used.
+      - title: in live
+        say: >-
+          In the piano roll, select notes and press the up or down arrow to move them a semitone, or hold Shift
+          with the arrow to move them an octave. Audio clips have a Transpose control in the Clip View.
+      - title: the key change lift
+        say: >-
+          Moving a whole song up for its last chorus is called a modulation. Going up by a semitone or a tone
+          right before the final chorus is a classic pop lift.
+
+  - kind: tempo
+    set: key
+    say:
+      mentor: >-
+        Transposition moves the whole song up or down without changing a single interval, so it still sounds like your song, just higher or lower. Your song is playing. Turn shift and hear every melodic part move together while the drums stay put.
+        
+        Up two semitones is a classic lift. Down five is a different mood entirely, darker and heavier. The key name updates as you turn. A singer might need it in a different key; a dj might want it to fit the next track. Keep the key where your song feels best.
+      straight: >-
+        shift moves every melodic part together, in semitones. The drums stay. Keep the key that feels best.
+      eli5: >-
+        Turn the knob and the whole song goes higher or lower, like singing the same tune in a higher voice.
+
+  - kind: ask
+    q: Transposing a melody up 5 semitones moves
+    options: ["every note up 5 semitones", "only the first note", "the tempo up 5 bpm", "the volume up 5 dB"]
+    answer: 0
+    why: Every note moves the same amount, so the shape stays.
+    whyWrong:
+      1: Moving one note changes the melody's shape.
+      2: Transposing is about pitch, not speed.
+      3: Transposing is about pitch, not volume.
+
+  - kind: ask
+    q: A mode is
+    options: ["the same notes with a different home", "a faster version of a scale", "a scale with more notes", "a type of chord"]
+    answer: 0
+    why: Pick a different note as home and the same notes take on a new mood.
+    whyWrong:
+      1: Speed isn't part of it.
+      2: The modes of major all use seven notes.
+      3: Chords are built from a mode's notes, but a mode is a scale.
+
+  - kind: ask
+    q: D dorian uses the notes of which major scale?
+    options: ["c major", "d major", "g major", "a major"]
+    answer: 0
+    why: Dorian starts on the second note. D is the second note of c major, so it's the white keys.
+    whyWrong:
+      1: D major has f sharp and c sharp. D dorian has neither.
+      2: G major has an f sharp. D dorian doesn't.
+      3: A major has three sharps.
+
+  - kind: ask
+    more: true
+    q: Which mode is major with a lowered seventh?
+    options: ["mixolydian", "lydian", "dorian", "phrygian"]
+    answer: 0
+    why: Mixolydian, the sound of a lot of blues rock.
+    whyWrong:
+      1: Lydian raises the fourth.
+      2: Dorian is minor with a raised sixth.
+      3: Phrygian is a dark minor sound.
+
+  - kind: keep
+    next: >-
+      Melody done. Next path: harmony, starting with chords in your song.

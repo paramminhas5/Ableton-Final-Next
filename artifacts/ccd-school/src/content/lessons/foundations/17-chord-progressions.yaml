@@ -1,0 +1,95 @@
+slug: chord-progressions
+world: foundations
+number: 17
+title: chord progressions
+minutes: 7
+song:
+  changes: chords.chords
+  why: chords that move in a good order carry the listener through the song
+learn: >-
+  How chords move from one to the next, the progressions behind countless songs, and four chords in your
+  song.
+youCan:
+  - say what a chord progression is
+  - play a four chord progression
+  - hear which chord feels like home
+steps:
+  - kind: hear
+    clip: synth-pitch
+    say:
+      mentor: >-
+        A chord progression is just chords in an order. Some orders feel like a journey: away from home and
+        back again. Four chords, round and round, is the backbone of a huge amount of pop and dance music.
+      straight: >-
+        A progression is a sequence of chords. Four chords looping is the backbone of most pop and dance
+        tracks.
+      eli5: >-
+        Chords in a row make a progression, like a little journey. Most songs use four chords going round and
+        round.
+
+  - kind: say
+    title: home and away
+    say:
+      mentor: >-
+        Your i chord is home. Every other chord pulls a little away from it, and the progression feels
+        satisfying when it comes back. In minor, a classic is i, VI, III, VII: home, then three steps that
+        each feel like they're heading somewhere, then home again on the loop.
+
+        You've heard it in countless tracks. Once you know it, you'll hear it everywhere.
+      straight: >-
+        i is home. Others pull away. In minor, i VI III VII is a classic four chord loop.
+      eli5: >-
+        The first chord is home. The others go on an adventure. Then the loop brings you home again. Try i,
+        VI, III, VII.
+    deeper:
+      - title: four chords everywhere
+        say: >-
+          The same four chords, in major or minor order, sit under an enormous number of hits. Producers
+          don't worry about that: the sound, rhythm and melody on top are what make a track yours.
+
+  - kind: play
+    layer: chords
+    surface: pads
+    goal: {notes: 4}
+    say:
+      mentor: >-
+        Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and
+        VII, or any order you like. Listen for which one makes you want to go back to i.
+      straight: >-
+        Record four chords, one per beat, starting on i. Try i VI III VII or your own order.
+      eli5: >-
+        Press rec. Play four chord pads, one on each tick. Start with i, then try VI, III and VII.
+
+  - kind: ask
+    q: What is a chord progression?
+    options: ["chords played in an order", "a scale", "a single loud chord", "a drum fill"]
+    answer: 0
+    why: A sequence of chords, often looped.
+    whyWrong:
+      1: A scale is single notes.
+      2: One chord isn't a progression.
+      3: Fills are drums.
+
+  - kind: ask
+    q: In your scale, which chord feels like home?
+    options: ["i, the first chord", "VII", "the loudest one", "whichever is last"]
+    answer: 0
+    why: The chord built on the first note of the scale is home.
+    whyWrong:
+      1: VII pulls back toward i.
+      2: Loudness doesn't decide home.
+      3: It's about the note it's built on.
+
+  - kind: ask
+    q: How many chords are in a lot of pop and dance loops?
+    options: ["four", "one", "twelve", "twenty"]
+    answer: 0
+    why: Four chords, round and round, is the most common loop.
+    whyWrong:
+      1: One chord can work, but it's not a progression.
+      2: Twelve would be very busy.
+      3: That's a lot for a loop.
+
+  - kind: keep
+    next: >-
+      Next: bass follows the chords. Root notes under your progression.

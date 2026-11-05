@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { useProgress } from "@/lib/progress";
-import { RANKS, rankFor } from "@/lib/ranks";
+import { allWorldRanks, WORLD_NAME, WORLD_RANKS } from "@/lib/worldRanks";
 import { MISSIONS } from "@/content/missions";
 import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
 import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
@@ -58,7 +58,8 @@ export function ProfilePageClient() {
   const [shared, setShared] = useState(false);
   useEffect(() => setSound(uiSoundsOn()), []);
 
-  const { current: rank, next, progress: pct, idx } = rankFor(progress.xp);
+  const top = allWorldRanks(progress.completedMissions)[0];
+  const { current: rank, next, progress: pct, idx } = top;
   const lessons = ALL.filter(m => !!progress.completedMissions[m.slug]).length;
   const handle = user?.name ?? user?.email?.split("@")[0] ?? null;
   const lit = Math.round(pct * 16);
@@ -81,13 +82,16 @@ export function ProfilePageClient() {
   };
 
   return (
-    <main className="m1-page" style={{ paddingTop: 4 }}>
+    <main className="m1-page pf" style={{ paddingTop: 4 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, height: 56 }}>
         <Key href="/dashboard" ariaLabel="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
         <h1 style={{ flex: 1, fontSize: 22, fontWeight: 500, letterSpacing: "-.02em", margin: 0 }}>you</h1>
+        <Key href="/settings" ariaLabel="Settings" style={{ width: 44, height: 44 }}><svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg></Key>
         <Key onClick={share} ariaLabel={shared ? "Link copied" : "Share your profile"} style={{ width: 44, height: 44 }}><Icon name="out" /></Key>
       </div>
 
+      <div className="pf-cols">
+      <div className="pf-col">
       <Screen>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <span style={{ width: 64, height: 64, borderRadius: "50%", background: "#141416", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "inset 0 0 0 1px rgba(255,255,255,.08)" }}>
@@ -96,14 +100,14 @@ export function ProfilePageClient() {
           </span>
           <div>
             <div style={{ fontSize: 22, fontWeight: 400, color: "var(--disp-ink)", letterSpacing: "-.02em" }}>{(user?.name ?? "you").toLowerCase()}</div>
-            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4 }}>{rank.name.toLowerCase()} · rank {idx + 1} of {RANKS.length}{isPro ? " · pro" : ""}</div>
+            <div className="m1-ss" style={{ color: "var(--disp-ink)", marginTop: 4 }}>{rank.name} · {WORLD_NAME[top.world]} rank {idx + 1} of {top.total}{isPro ? " · pro" : ""}</div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 18 }}>
           <span style={{ display: "flex", gap: 3, flex: 1 }} role="img" aria-label={`${Math.round(pct * 100)} percent to the next rank`}>
-            {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-go)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-go)" : undefined }} />)}
+            {Array.from({ length: 16 }, (_, i) => <i key={i} style={{ flex: 1, height: 9, borderRadius: 2, background: i < lit ? "var(--led-mint)" : "#232326", boxShadow: i < lit ? "0 0 5px var(--led-mint)" : undefined }} />)}
           </span>
-          <span className="m1-ss">{next ? `${next.minXp - progress.xp} to rank ${idx + 2}` : "top rank"}</span>
+          <span className="m1-ss">{next ? `next: ${next.name}` : "top rank"}</span>
         </div>
         {shared && <div className="m1-ss" style={{ marginTop: 8, color: "var(--led-mint)" }}>link copied</div>}
       </Screen>
@@ -115,12 +119,14 @@ export function ProfilePageClient() {
         <Readout value={track.layers.length} label="layers" color="var(--led-lilac)" />
       </div>
 
+      </div>
+      <div className="pf-col">
       <Silk label="settings" />
       <Row led="var(--ledoff)" label="look">
         <Switch label="Look" value={mode === "system" ? "auto" : mode} onChange={id => { setMode((id === "auto" ? "system" : id) as Mode); }}
           options={[{ id: "light", label: "light" }, { id: "dark", label: "dark" }, { id: "auto", label: "auto" }]} />
       </Row>
-      <Row led="var(--led-go)" label="learning">
+      <Row led="var(--led-mint)" label="learning">
         <Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
           options={[{ id: "flow", label: "flow" }, { id: "free", label: "free" }]} />
       </Row>
@@ -147,25 +153,32 @@ export function ProfilePageClient() {
         })}
       </div>
 
-      <Silk label="ranks" right={`${progress.xp} xp`} />
-      <ol className="ls-learn" style={{ padding: "0 4px" }}>
-        {RANKS.map((r, i) => (
-          <li key={r.slug} style={{ alignItems: "center", opacity: i > idx ? 0.55 : 1 }}>
-            <span className="ls-led" style={{ ["--c" as string]: i <= idx ? "var(--led-go)" : "var(--ledoff)", boxShadow: i <= idx ? undefined : "none", background: i <= idx ? undefined : "var(--ledoff)" } as CSSProperties} />
-            <span style={{ flex: 1, fontWeight: i === idx ? 600 : 400 }}>{r.name.toLowerCase()}</span>
-            <span className="m1-t11">{i === idx ? "you are here" : `${r.minXp} xp`}</span>
-          </li>
-        ))}
-      </ol>
+      </div>
+      <div className="pf-col">
+      {/* One ladder per world: a dj lesson moves your dj rank, not your producer one. */}
+      {allWorldRanks(progress.completedMissions).map(w => (
+        <div key={w.world}>
+          <Silk label={`${WORLD_NAME[w.world]} ranks`} right={`${Math.floor(w.share * 100)}% of the world`} />
+          <ol className="ls-learn" style={{ padding: "0 4px" }}>
+            {WORLD_RANKS[w.world].map((r, i) => (
+              <li key={r.slug} style={{ alignItems: "center", opacity: i > w.idx ? 0.55 : 1 }}>
+                <span className="ls-led" style={{ ["--c" as string]: i <= w.idx ? "var(--led-mint)" : "var(--ledoff)", boxShadow: i <= w.idx ? undefined : "none", background: i <= w.idx ? undefined : "var(--ledoff)" } as CSSProperties} />
+                <span style={{ flex: 1, fontWeight: i === w.idx ? 600 : 400 }}>{r.name}</span>
+                <span className="m1-t11">{i === w.idx ? "you are here" : r.line}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
 
       <Silk label="account" />
       <div className="ls-pads">
         {user ? (
-          <Link href={handle ? `/u/${encodeURIComponent(handle)}` : "/profile"} className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+          <Link href={handle ? `/u/${encodeURIComponent(handle)}` : "/profile"} className="ls-pad is-glowpad" style={{ ["--c" as string]: "var(--led-mint)", minHeight: 96 } as CSSProperties}>
             <small>public page</small><span>see your profile</span>
           </Link>
         ) : (
-          <Link href="/login" className="ls-pad is-lit" style={{ ["--c" as string]: "var(--led-go)", minHeight: 96 } as CSSProperties}>
+          <Link href="/login" className="ls-pad is-lit" style={{ ["--c" as string]: "var(--led-mint)", minHeight: 96 } as CSSProperties}>
             <small>sign in</small><span>save to cloud</span>
           </Link>
         )}
@@ -197,6 +210,8 @@ export function ProfilePageClient() {
           <GoPill onClick={() => signOut()} style={{ gridColumn: "1 / -1" }}>sign out</GoPill>
         </div>
       )}
+      </div>
+      </div>
     </main>
   );
 }

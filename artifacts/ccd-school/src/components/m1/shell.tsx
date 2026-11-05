@@ -2,7 +2,8 @@
 /** Model 1 shell: header, mode bar, world dial, the track as lanes on the screen. */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { FLAG, OUT, getEngine } from "@/engine";
 import { Icon, LED } from "./controls";
 import type { Layer, Track } from "@/lib/track";
 import { KIND } from "@/lib/track";
@@ -10,12 +11,42 @@ import { KIND } from "@/lib/track";
 export const CAT_SRC = "/brand/ccd-cat.png";
 
 export function CatMark({ size = 26 }: { size?: number }) {
+  // Tap the cat and it spins (fix 15).
+  const [spin, setSpin] = useState(0);
   return (
-    <span aria-hidden style={{ width: size, height: size, borderRadius: "50%", background: "#0B0B0C", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 0 var(--hi), inset 0 1px 2px rgba(255,255,255,.15)", flex: "none" }}>
+    <span aria-hidden onPointerDown={() => setSpin(n => n + 1)} style={{ width: size, height: size, borderRadius: "50%", background: "#0B0B0C", display: "inline-flex", alignItems: "center", justifyContent: "center", boxShadow: "0 1px 0 var(--hi), inset 0 1px 2px rgba(255,255,255,.15)", flex: "none", cursor: "pointer" }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={CAT_SRC} alt="" style={{ width: size * 0.8 }} />
+      <img key={spin} src={CAT_SRC} alt="" className={spin ? "m1-spin" : ""} style={{ width: size * 0.8 }} />
     </span>
   );
+}
+
+/**
+ * The cat moves with the beat, or not at all (process.md). While the engine plays, <html> gets
+ * `ccd-playing` and `--beat-ms` (one beat at the tempo that is playing); `.m1-dancing` sways on it.
+ */
+export function BeatSync() {
+  useEffect(() => {
+    const root = document.documentElement;
+    let last: { beat: number; t: number } | null = null;
+    let ms = 500;
+    const off = getEngine().on(evs => {
+      for (const e of evs) {
+        if (e.kind !== OUT.pos) continue;
+        const playing = !!(e.flags & FLAG.playing);
+        if (!playing) { if (root.classList.contains("ccd-playing")) root.classList.remove("ccd-playing"); last = null; continue; }
+        const t = performance.now();
+        if (last && e.beat > last.beat + 0.25) {
+          const est = (t - last.t) / (e.beat - last.beat);
+          if (est > 200 && est < 2000) { ms = ms * 0.7 + est * 0.3; root.style.setProperty("--beat-ms", `${Math.round(ms)}ms`); }
+          last = { beat: e.beat, t };
+        } else if (!last || e.beat < last.beat) last = { beat: e.beat, t };
+        if (!root.classList.contains("ccd-playing")) root.classList.add("ccd-playing");
+      }
+    });
+    return () => { off(); root.classList.remove("ccd-playing"); };
+  }, []);
+  return null;
 }
 
 export function WeekDots({ days }: { days: number }) {
@@ -36,14 +67,14 @@ export const MODES = [
   { id: "library", label: "library", href: "/atlas", match: (p: string) => ["/atlas", "/devices", "/device", "/glossary", "/plugins", "/signal-flow", "/wiki", "/shortcuts"].some(x => p.startsWith(x)) },
 ] as const;
 
-const HIDE = [/^\/studio/, /^\/lab\//, /^\/learn\/[^/]+/, /^\/mission\/[^/]+/, /^\/placement/, /^\/onboarding/, /^\/login/];
+const HIDE = [/^\/$/, /^\/studio/, /^\/lab\//, /^\/learn\/[^/]+/, /^\/mission\/[^/]+/, /^\/placement/, /^\/onboarding/, /^\/login/];
 
 /** Four mode keys. The one you are in has a black cap and its light on. */
 export function ModeBar() {
   const pathname = usePathname() ?? "/";
   if (HIDE.some(r => r.test(pathname))) return null;
   return (
-    <nav aria-label="Modes" className="m1-g" style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(16px + env(safe-area-inset-bottom, 0px))", zIndex: 40, maxWidth: 408, margin: "0 auto" }}>
+    <nav aria-label="Modes" className="m1-g m1-modebar" style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(16px + env(safe-area-inset-bottom, 0px))", zIndex: 40, maxWidth: 408, margin: "0 auto", padding: "10px 8px 0", borderRadius: 18, background: "var(--deck2)", boxShadow: "0 -14px 18px -4px var(--deck2)" }}>
       {MODES.map(m => {
         const on = m.match(pathname);
         return (
@@ -133,11 +164,10 @@ export function Lanes({ track, next, sel, solo, onLane, width = 338, playhead = 
         const y = top + i * (lh + gap);
         const dim = (!!solo && solo !== r.id) || r.muted;
         const isSel = sel === r.id;
-        const tc = isSel || r.ghost ? r.color : dim ? "#55555A" : "#A6A6AC";
         return (
           <g key={r.id} onClick={onLane && !r.ghost ? () => onLane(r.id) : undefined} style={{ cursor: onLane && !r.ghost ? "pointer" : undefined }}>
             <rect x={0} y={y - 4} width={width} height={lh + 8} fill="transparent" />
-            <text x={0} y={y + lh - 1} fontFamily="Outfit" fontSize={12} fontWeight={500} fill={tc}>{r.name}</text>
+            <text x={0} y={y + lh - 1} fontFamily="Outfit" fontSize={12} fontWeight={isSel ? 600 : 500} style={{ fill: isSel || r.ghost ? r.color : dim ? "#55555A" : "var(--print, #A6A6AC)" }}>{r.name}</text>
             <rect x={x0} y={y} width={x1 - x0} height={lh} rx={2} fill="#141416" />
             {r.ghost ? (
               <rect x={x0 + 1} y={y + 0.5} width={x1 - x0 - 2} height={lh - 1} rx={2} fill="none" stroke={r.color} strokeWidth={1} strokeDasharray="3 3" />

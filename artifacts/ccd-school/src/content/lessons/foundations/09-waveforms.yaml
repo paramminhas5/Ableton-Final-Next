@@ -1,0 +1,115 @@
+slug: waveforms
+world: foundations
+number: 9
+title: waveforms
+minutes: 6
+song:
+  changes: lead.lead
+  why: the wave you start from sets the whole character of your melody
+learn: >-
+  The four classic waves every synth starts from, what each is used for, and the one you pick for your
+  melody.
+youCan:
+  - name the sine, triangle, saw and square waves
+  - say what each one is good for
+  - pick a wave for your melody by ear
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Every synth sound starts life as a simple repeating shape. There are four classics, and you've heard
+        three of them already. Tap through them again and really listen to the character.
+
+        The round one is close to a sine: pure, soft, almost no harmonics. The saw ramps up and drops: bright,
+        buzzy, full of harmonics. The square jumps between two levels: hollow and reedy, the sound of old
+        video games.
+      straight: >-
+        The classic synth waves: sine (pure, soft), saw (bright, buzzy), square (hollow, reedy). The round one
+        here is close to a sine.
+      eli5: >-
+        Synths start from simple shapes. A smooth round one sounds soft and gentle. A pointy saw sounds
+        buzzy. A blocky square sounds like an old video game. Tap them and listen.
+
+  - kind: say
+    title: what each wave is for
+    say:
+      mentor: >-
+        Sine: sub bass and soft tones. It's so pure that it's mostly felt, which is why 808 basses are close
+        to sines. Triangle: a slightly brighter sine, sweet and flute-like. Saw: the workhorse of dance music,
+        for leads, basses and big chords, because there's so much to filter. Square: hollow, woody tones and
+        chiptune. Squash it into a thin pulse and it gets nasal and buzzy.
+
+        Producers pick the wave first and then shape it, the way a painter picks a colour before the brush.
+      straight: >-
+        Sine: sub bass, soft tones. Triangle: sweet, flute-like. Saw: leads, basses, chords, the most used.
+        Square: hollow, chiptune. Pick the wave, then shape it.
+      eli5: >-
+        Smooth waves are good for deep, soft bass. Buzzy saws are great for big exciting leads. Square waves
+        sound like game music. Pick the one that sounds like what you want.
+    deeper:
+      - title: the triangle
+        say: >-
+          A triangle ramps up and down in straight lines. It has a few harmonics, much fewer than a saw, so it
+          sits between a sine and a square. Your synth here morphs from saw to square; the soft setting is a
+          saw with the filter closed right down, which gets close to a sine.
+
+  - kind: shape
+    layer: lead
+    knobs: [wave, cutoff]
+    say:
+      mentor: >-
+        Pick the wave for your melody. Turn wave from saw to square and listen to your own tune change
+        character, then use cutoff to round it off. For something soft and sine-like, close the cutoff right
+        down. For a bright lead, open it up.
+      straight: >-
+        Choose your melody's wave: saw to square, then round it off with cutoff. Low cutoff gets you close to
+        a sine.
+      eli5: >-
+        Turn the wave knob to change the shape of your tune's sound. Then turn cutoff to make it softer or
+        brighter. Keep the one you like.
+
+  - kind: ask
+    q: Which wave is best for a deep, soft sub bass?
+    options: ["sine", "saw", "square", "noise"]
+    answer: 0
+    why: A sine is pure, with almost no harmonics, so it's mostly felt as a deep rumble.
+    whyWrong:
+      1: A saw is bright and buzzy, more for leads and mid basses.
+      2: A square is hollow and reedy.
+      3: Noise has no pitch at all.
+
+  - kind: ask
+    q: Why is the saw so popular in dance music?
+    options: ["it's full of harmonics, so there's lots to filter", "it's the quietest wave", "it has no harmonics", "it only plays low notes"]
+    answer: 0
+    why: All those harmonics give you plenty to shape with a filter.
+    whyWrong:
+      1: Waves can be any volume.
+      2: That's the sine.
+      3: Any wave can play any note.
+
+  - kind: ask
+    q: What does a square wave sound like?
+    options: ["hollow and reedy, like old video games", "pure and soft", "a kick drum", "a crowd cheering"]
+    answer: 0
+    why: Hollow and reedy, the chiptune sound.
+    whyWrong:
+      1: That's a sine.
+      2: A kick is a drum, not a wave shape.
+      3: That's noise more than a wave.
+
+  - kind: ask
+    more: true
+    q: How can you get close to a sine on this synth?
+    options: ["a saw with the cutoff closed right down", "the square with cutoff open", "turn the level up", "play higher notes"]
+    answer: 0
+    why: Closing the filter removes the harmonics, leaving something close to the pure note.
+    whyWrong:
+      1: That's the brightest, buzziest setting.
+      2: Level changes loudness, not shape.
+      3: Pitch doesn't change the wave's shape.
+
+  - kind: keep
+    next: >-
+      Next: harmonics up close, and a second note a fifth above your melody.

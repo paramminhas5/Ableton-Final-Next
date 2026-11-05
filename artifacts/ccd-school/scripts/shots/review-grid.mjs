@@ -1,0 +1,23 @@
+import { chromium } from "playwright";
+const OUT = "/tmp/claude-0/-home-claude/14482081-5c9f-509e-afde-b9b4be190bf9/scratchpad/review1/shots/touch";
+const [W, H] = (process.argv[2] ?? "390x844").split("x").map(Number);
+const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
+const p = await (await b.newContext({ viewport: { width: W, height: H } })).newPage();
+await p.goto(`http://localhost:3100/learn/midi-piano-roll`, { waitUntil: "load" }); await p.waitForSelector(".fl"); await p.waitForTimeout(1200);
+const go = p.locator(".ls-bottom .m1-g > :last-child").first();
+for (let i = 0; i < 2; i++) { await go.click(); await p.waitForTimeout(700); }
+await p.waitForTimeout(800);
+await p.screenshot({ path: `${OUT}/grid-${W}-0.png` });
+const info = await p.evaluate(() => { const r = document.querySelector(".gr-roll"); const n = document.querySelector(".gr-cell.is-note"); const rb = r.getBoundingClientRect(), nb = n.getBoundingClientRect(); return { rb: rb.toJSON(), nb: nb.toJSON(), st: r.scrollTop, sl: r.scrollLeft, sw: r.scrollWidth, cw: r.clientWidth }; });
+console.log(JSON.stringify(info));
+await p.evaluate(() => document.querySelector(".gr-cell.is-note").scrollIntoView({ block: "center" }));
+await p.waitForTimeout(500);
+await p.screenshot({ path: `${OUT}/grid-${W}-1-scrolled.png` });
+const nb = await p.evaluate(() => document.querySelector(".gr-cell.is-note").getBoundingClientRect().toJSON());
+await p.mouse.click(nb.x + nb.width / 2, nb.y + nb.height / 2); await p.waitForTimeout(600);
+await p.screenshot({ path: `${OUT}/grid-${W}-2-picked.png` });
+await p.screenshot({ path: `${OUT}/grid-${W}-2-picked-full.png`, fullPage: true });
+await p.mouse.click(nb.x + nb.width / 2 + 2 * nb.width, nb.y + nb.height / 2 - nb.height * 2); await p.waitForTimeout(600);
+await p.screenshot({ path: `${OUT}/grid-${W}-3-added.png` });
+console.log(await p.evaluate(() => document.querySelector(".fl").innerText.replace(/\s+/g, " ").slice(0, 500)));
+await b.close();

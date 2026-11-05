@@ -45,25 +45,25 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     xp: 30,
     badge: { slug: "first-wave", name: "First Wave" },
     simple: [
-      "Sound is invisible. You can't see it, but you can feel it. When something moves back and forth very fast — like a guitar string or a speaker — it pushes the air around it. Those little pushes travel through the air like ripples in a pond.",
-      "When those ripples reach your ear, your eardrum jiggles too, and your brain says: 'Hey, I hear something!' That's literally all sound is — air moving in a pattern.",
-      "If the air moves fast and lots of times per second, you hear a high sound — like a bird. If it moves slower, you hear a low sound — like a big drum. Scientists call how many times per second a sound vibrates its frequency.",
+      "Sound is invisible. You can't see it, but you can feel it. When something moves back and forth very fast, like a guitar string or a speaker, it pushes the air around it. Those little pushes travel through the air like ripples in a pond.",
+      "When those ripples reach your ear, your eardrum jiggles too, and your brain says: 'Hey, I hear something!' That's literally all sound is: air moving in a pattern.",
+      "If the air moves fast and lots of times per second, you hear a high sound, like a bird. If it moves slower, you hear a low sound, like a big drum. Scientists call how many times per second a sound vibrates its frequency.",
     ],
     analogy:
-      "Imagine dropping a pebble into still water. You see rings spreading out from the centre. Sound is the same — but instead of water rings, it's invisible air rings. Your ear is waiting at the edge of the pond.",
+      "Imagine dropping a pebble into still water. You see rings spreading out from the centre. Sound is the same: but instead of water rings, it's invisible air rings. Your ear is waiting at the edge of the pond.",
     deeper: [
       "Frequency is measured in Hertz (Hz). A human can hear roughly 20 Hz (very low bass rumble) to 20,000 Hz (super-high squeak). Most music lives between 80 Hz and 10,000 Hz.",
       "The loudness of a sound is called its amplitude. Louder sounds have bigger waves. In audio production, amplitude is measured in decibels (dB). 0 dB is roughly the quietest sound a human can hear; a rock concert is around 110 dB.",
-      "Digital audio captures these waves as numbers, thousands of times per second. The industry standard is 44,100 measurements per second (44.1 kHz) — that's how a CD stores sound.",
+      "Digital audio captures these waves as numbers, thousands of times per second. The industry standard is 44,100 measurements per second (44.1 kHz): that's how a CD stores sound.",
     ],
     sources: [
-      { label: "Wikipedia — Sound", url: "https://en.wikipedia.org/wiki/Sound" },
+      { label: "Wikipedia: Sound", url: "https://en.wikipedia.org/wiki/Sound" },
       {
-        label: "Britannica — Sound Wave",
+        label: "Britannica: Sound Wave",
         url: "https://www.britannica.com/science/sound-physics",
       },
       {
-        label: "Ableton Learning Music — Frequencies",
+        label: "Ableton Learning Music: Frequencies",
         url: "https://learningmusic.ableton.com",
       },
     ],
@@ -74,7 +74,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 1,
         explain:
           "Sound is vibrating air. When something shakes, it pushes air molecules, which push the next ones, forming a wave that reaches your ear.",
-        hint: "Think of dropping a pebble in a pond — what spreads out?",
+        hint: "Think of dropping a pebble in a pond: what spreads out?",
       },
       {
         q: "A high-pitched sound has a…",
@@ -94,7 +94,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["How fast it travels", "How high the pitch is", "How loud it is", "How long it lasts"],
         answer: 2,
         explain:
-          "Amplitude is the size of the sound wave — bigger wave, louder sound. Decibels (dB) measure amplitude.",
+          "Amplitude is the size of the sound wave: bigger wave, louder sound. Decibels (dB) measure amplitude.",
         hint: "Bigger ripples in the pond = stronger sound.",
       },
     ],
@@ -109,28 +109,28 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     xp: 30,
     badge: { slug: "keeper-of-time", name: "Keeper of Time" },
     simple: [
-      "Rhythm is when sounds happen at regular times — like clapping along to a song. The beat is the steady pulse underneath all music, like a clock going tick-tick-tick-tick.",
+      "Rhythm is when sounds happen at regular times: like clapping along to a song. The beat is the steady pulse underneath all music, like a clock going tick-tick-tick-tick.",
       "Tempo is just how fast or slow that heartbeat goes. A lullaby has a slow tempo. A dance track has a fast tempo.",
-      "Producers and DJs measure tempo in BPM — Beats Per Minute. 60 BPM means exactly one beat every second. 120 BPM (the most common dance music speed) means two beats every second.",
+      "Producers and DJs measure tempo in BPM: Beats Per Minute. 60 BPM means exactly one beat every second. 120 BPM (the most common dance music speed) means two beats every second.",
     ],
     analogy:
       "Tempo is like your walking speed. A slow stroll is 60–80 BPM. A brisk walk is 100–110 BPM. Running is 140+ BPM. Most hip-hop walks (80–100 BPM). Most house music runs (120–130 BPM).",
     deeper: [
       "Music is organised into bars (also called measures). In standard 4/4 time, there are 4 beats per bar. Most pop and electronic music uses 4/4. A bar marker in your DAW shows you exactly where you are in the song.",
       "The downbeat (beat 1) feels strong and grounded. The backbeat (beats 2 and 4) is where you typically clap along to pop and rock. Knowing where beat 1 is helps you line up samples, loops and transitions perfectly.",
-      "DJs match the BPMs of two tracks before mixing them together — otherwise the rhythms clash and it sounds chaotic. This process is called beatmatching, and it's the foundation of DJing.",
+      "DJs match the BPMs of two tracks before mixing them together: otherwise the rhythms clash and it sounds chaotic. This process is called beatmatching, and it's the foundation of DJing.",
     ],
     sources: [
       {
-        label: "Wikipedia — Tempo",
+        label: "Wikipedia: Tempo",
         url: "https://en.wikipedia.org/wiki/Tempo",
       },
       {
-        label: "Ableton Learning Music — Rhythm",
+        label: "Ableton Learning Music: Rhythm",
         url: "https://learningmusic.ableton.com/make-beats/make-beats.html",
       },
       {
-        label: "MusicTheory.net — Rhythm",
+        label: "MusicTheory.net: Rhythm",
         url: "https://www.musictheory.net/lessons/13",
       },
     ],
@@ -140,7 +140,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["Bass Per Measure", "Beats Per Minute", "Bar Pulse Marker", "Beat Phase Mode"],
         answer: 1,
         explain: "BPM = Beats Per Minute. It's the universal speed unit in music production and DJing.",
-        hint: "Think of a heart monitor — how many heartbeats per minute?",
+        hint: "Think of a heart monitor: how many heartbeats per minute?",
       },
       {
         q: "How many beats are in a standard 4/4 bar?",
@@ -171,20 +171,20 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     simple: [
       "A melody is a sequence of single musical notes played one after the other that forms a recognisable tune. It's what you hum, whistle or sing along to. If you're humming a song right now, that's the melody.",
       "Notes go up and down in pitch. High notes feel bright and exciting. Low notes feel deep and calm. The way notes go up, down, hold, or jump is what gives a melody its character.",
-      "Almost every song has one — the main vocal line, a piano riff, a synth lead. Even a simple three-note hook is a melody.",
+      "Almost every song has one: the main vocal line, a piano riff, a synth lead. Even a simple three-note hook is a melody.",
     ],
     analogy:
       "A melody is like a conversation. Each note is a word, and together they tell a little story. Some melodies are questions that feel unfinished; some are answers that feel resolved.",
     deeper: [
       "Notes are named using letters: A B C D E F G (and then it repeats). On a piano keyboard, C is the white key just to the left of a group of two black keys. Middle C (C4) is roughly the centre of a standard keyboard.",
       "The distance between two notes is called an interval. Small jumps (like C to D) sound smooth and stepwise. Big jumps (like C to G) sound dramatic. Great melodies often mix small steps with the occasional leap.",
-      "When you record a melody into a DAW, you typically use MIDI — which stores which note, when it starts, how long it lasts, and how hard it was played. This lets you edit every note without re-recording.",
+      "When you record a melody into a DAW, you typically use MIDI: which stores which note, when it starts, how long it lasts, and how hard it was played. This lets you edit every note without re-recording.",
     ],
     sources: [
-      { label: "Wikipedia — Melody", url: "https://en.wikipedia.org/wiki/Melody" },
-      { label: "MusicTheory.net — Notes", url: "https://www.musictheory.net/lessons/10" },
+      { label: "Wikipedia: Melody", url: "https://en.wikipedia.org/wiki/Melody" },
+      { label: "MusicTheory.net: Notes", url: "https://www.musictheory.net/lessons/10" },
       {
-        label: "Ableton Learning Music — Notes & Scales",
+        label: "Ableton Learning Music: Notes & Scales",
         url: "https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html",
       },
     ],
@@ -198,7 +198,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
           "The loudness of a track",
         ],
         answer: 1,
-        explain: "Melody = single notes in sequence that form a recognisable tune — the part you hum.",
+        explain: "Melody = single notes in sequence that form a recognisable tune: the part you hum.",
         hint: "What do you whistle when you think of your favourite song?",
       },
       {
@@ -213,7 +213,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["Audio recordings", "MIDI data", "Video clips", "Text files"],
         answer: 1,
         explain:
-          "MIDI stores note information (pitch, timing, length, velocity) — not sound itself. This means you can edit, transpose or change instrument at any time.",
+          "MIDI stores note information (pitch, timing, length, velocity): not sound itself. This means you can edit, transpose or change instrument at any time.",
         hint: "MIDI is like sheet music that the computer can read.",
       },
     ],
@@ -227,25 +227,25 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     tagline: "Notes that sound beautiful together.",
     xp: 30,
     simple: [
-      "When you play two or more notes at the same time and they sound good together, that's harmony. The most common way to make harmony is with a chord — three or more notes played simultaneously.",
+      "When you play two or more notes at the same time and they sound good together, that's harmony. The most common way to make harmony is with a chord: three or more notes played simultaneously.",
       "Chords give songs their mood. A major chord (like C major) sounds happy and bright. A minor chord (like A minor) sounds sad or mysterious. Most pop songs switch between a small number of chords.",
-      "The chord progression is the order those chords go in. Lots of famous songs use the same four chords — you can write thousands of songs with just C, G, Am, F.",
+      "The chord progression is the order those chords go in. Lots of famous songs use the same four chords: you can write thousands of songs with just C, G, Am, F.",
     ],
     analogy:
-      "Melody is like one person talking. Harmony is like a choir — many voices working together to create something richer than any single voice alone.",
+      "Melody is like one person talking. Harmony is like a choir: many voices working together to create something richer than any single voice alone.",
     deeper: [
       "A major triad is built by stacking a root note, then skipping two white keys, then skipping two more: C-E-G. A minor triad uses a slightly different spacing: A-C-E. That one-key difference changes the entire emotional feel.",
       "Keys give songs a home base. A song 'in C major' tends to use the 7 notes of the C major scale (all the white keys on a piano) and feels like it belongs on C. When a song 'changes key' it's called modulation.",
-      "In electronic music, chords are often played by synth pads or sampled instruments. You don't need to know music theory to make chords — your DAW's piano roll lets you click and drag notes into place.",
+      "In electronic music, chords are often played by synth pads or sampled instruments. You don't need to know music theory to make chords: your DAW's piano roll lets you click and drag notes into place.",
     ],
     sources: [
-      { label: "Wikipedia — Chord (music)", url: "https://en.wikipedia.org/wiki/Chord_(music)" },
+      { label: "Wikipedia: Chord (music)", url: "https://en.wikipedia.org/wiki/Chord_(music)" },
       {
-        label: "Ableton Learning Music — Chords",
+        label: "Ableton Learning Music: Chords",
         url: "https://learningmusic.ableton.com/chords/chords.html",
       },
       {
-        label: "MusicTheory.net — Triads",
+        label: "MusicTheory.net: Triads",
         url: "https://www.musictheory.net/lessons/40",
       },
     ],
@@ -268,7 +268,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 1,
         explain:
           "Major = bright, happy, uplifting. Minor = dark, sad, mysterious. This is one of the most powerful tools in music.",
-        hint: "Think of 'Happy Birthday' — is it major or minor?",
+        hint: "Think of 'Happy Birthday': is it major or minor?",
       },
       {
         q: "A chord progression is…",
@@ -295,24 +295,24 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     xp: 40,
     badge: { slug: "studio-unlocked", name: "Studio Unlocked" },
     simple: [
-      "A DAW stands for Digital Audio Workstation. It's software on your computer that lets you record, arrange, edit and mix music. Think of it as an entire recording studio — microphones, mixing desk, instruments, effects — all squeezed into your laptop.",
+      "A DAW stands for Digital Audio Workstation. It's software on your computer that lets you record, arrange, edit and mix music. Think of it as an entire recording studio, microphones, mixing desk, instruments, effects, all squeezed into your laptop.",
       "Before DAWs existed, musicians had to book expensive studios with enormous rooms full of physical equipment. Now you can make a professional-sounding track in your bedroom for free (or almost free).",
       "Popular DAWs include Ableton Live (great for electronic music and performance), FL Studio (popular with hip-hop and trap producers), GarageBand (free on Mac, perfect for beginners), and Logic Pro (professional, Mac-only).",
     ],
     analogy:
-      "Imagine a LEGO set for music. A DAW gives you all the pieces — drums, synths, recording tools, effects — and you snap them together however you want. No glue, no mess, and you can always undo.",
+      "Imagine a LEGO set for music. A DAW gives you all the pieces, drums, synths, recording tools, effects, and you snap them together however you want. No glue, no mess, and you can always undo.",
     deeper: [
-      "Inside a DAW, you work on a Project file that saves everything: every track, every note, every effect setting. Projects are stored on your computer's hard drive — not the audio files themselves, but references to them.",
+      "Inside a DAW, you work on a Project file that saves everything: every track, every note, every effect setting. Projects are stored on your computer's hard drive: not the audio files themselves, but references to them.",
       "Most DAWs have two main views: a timeline (for arranging a song start-to-finish) and some kind of clip or loop launcher (for jamming with loops live). Ableton Live uniquely excels at both.",
       "DAWs process audio using your computer's CPU (processor) and RAM (memory). More tracks and effects require more processing power. Audio interfaces connect real instruments and microphones to your DAW, converting electrical signals to digital data.",
     ],
     sources: [
       {
-        label: "Wikipedia — Digital Audio Workstation",
+        label: "Wikipedia: Digital Audio Workstation",
         url: "https://en.wikipedia.org/wiki/Digital_audio_workstation",
       },
       {
-        label: "SoundOnSound — What is a DAW?",
+        label: "SoundOnSound: What is a DAW?",
         url: "https://www.soundonsound.com/techniques/introduction-daws",
       },
     ],
@@ -327,7 +327,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 0,
         explain:
-          "Digital Audio Workstation — software that records, edits, arranges and mixes music all in one place.",
+          "Digital Audio Workstation: software that records, edits, arranges and mixes music all in one place.",
         hint: "Think: it's a workstation (like a studio desk) that works with digital audio.",
       },
       {
@@ -335,7 +335,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["Ableton Live", "FL Studio", "GarageBand", "Spotify"],
         answer: 3,
         explain:
-          "Spotify is a music streaming platform — you listen to finished music on it. DAWs are for creating and producing music.",
+          "Spotify is a music streaming platform: you listen to finished music on it. DAWs are for creating and producing music.",
         hint: "Which one do you use to listen to music, not make it?",
       },
       {
@@ -348,7 +348,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 1,
         explain:
-          "Professional recording required expensive studio space with physical equipment. DAWs democratised music production — now anyone with a laptop can produce.",
+          "Professional recording required expensive studio space with physical equipment. DAWs democratised music production: now anyone with a laptop can produce.",
         hint: "Think big rooms, expensive mixing desks, lots of gear.",
       },
     ],
@@ -362,9 +362,9 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     tagline: "Every instrument gets its own lane.",
     xp: 30,
     simple: [
-      "In a DAW, a track is one lane in your song. Imagine you're making a painting with lots of layers of paint — each layer is a track. One track for the drums. One for the bass. One for the main melody. One for the vocals.",
+      "In a DAW, a track is one lane in your song. Imagine you're making a painting with lots of layers of paint: each layer is a track. One track for the drums. One for the bass. One for the main melody. One for the vocals.",
       "Because each instrument lives on its own track, you can control them separately. Turn up the drums. Turn down the bass. Mute the vocals. Change the order. Move them around. It's completely flexible.",
-      "When all the tracks play together, you hear the complete song. When you mix a song, you balance those tracks so everything sounds good together — not too loud, not too quiet.",
+      "When all the tracks play together, you hear the complete song. When you mix a song, you balance those tracks so everything sounds good together: not too loud, not too quiet.",
     ],
     analogy:
       "A track is like one musician in a band. The final mix is what you hear when the whole band plays together. Separate musicians = separate tracks; everyone together = the mix.",
@@ -375,11 +375,11 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     ],
     sources: [
       {
-        label: "Wikipedia — Multitrack Recording",
+        label: "Wikipedia: Multitrack Recording",
         url: "https://en.wikipedia.org/wiki/Multitrack_recording",
       },
       {
-        label: "Ableton Live Manual — Tracks",
+        label: "Ableton Live Manual: Tracks",
         url: "https://www.ableton.com/en/manual/live-concepts/#tracks",
       },
     ],
@@ -394,7 +394,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 1,
         explain:
-          "Each track holds one 'part' — drums, bass, melody, vocals. Multiple tracks layer together to make the full song.",
+          "Each track holds one 'part': drums, bass, melody, vocals. Multiple tracks layer together to make the full song.",
         hint: "Think of a band: each musician needs their own 'space' to be heard.",
       },
       {
@@ -410,7 +410,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["Audio track", "MIDI track", "Return track", "Group track"],
         answer: 1,
         explain:
-          "MIDI tracks store note information — which note, when, how hard. An instrument plugin converts that data into sound.",
+          "MIDI tracks store note information: which note, when, how hard. An instrument plugin converts that data into sound.",
         hint: "MIDI is like digital sheet music. It's instructions, not sound itself.",
       },
     ],
@@ -425,24 +425,24 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     xp: 40,
     badge: { slug: "signal-decoded", name: "Signal Decoded" },
     simple: [
-      "Audio is a recording of actual sound — like a voice memo, an MP3, or a sample. When you listen to audio, you're hearing the actual sound waves that were captured.",
-      "MIDI is not sound. MIDI is instructions — like a player piano roll. It says 'play note C4 at time 0, hold it for 1 second, with 80% force.' Your software instrument reads those instructions and plays the sound.",
-      "MIDI is incredibly flexible. You can change the instrument, change the key, fix wrong notes, change the speed — all without re-recording anything. Audio is harder to edit but captures real performance nuance.",
+      "Audio is a recording of actual sound: like a voice memo, an MP3, or a sample. When you listen to audio, you're hearing the actual sound waves that were captured.",
+      "MIDI is not sound. MIDI is instructions: like a player piano roll. It says 'play note C4 at time 0, hold it for 1 second, with 80% force.' Your software instrument reads those instructions and plays the sound.",
+      "MIDI is incredibly flexible. You can change the instrument, change the key, fix wrong notes, change the speed: all without re-recording anything. Audio is harder to edit but captures real performance nuance.",
     ],
     analogy:
-      "Audio is like a photograph of a concert — it captures exactly what happened. MIDI is like sheet music — it tells a musician (your computer's instrument) what to play, and you can give the same sheet music to any musician (instrument) for a different sound.",
+      "Audio is like a photograph of a concert, it captures exactly what happened. MIDI is like sheet music, it tells a musician (your computer's instrument) what to play, and you can give the same sheet music to any musician (instrument) for a different sound.",
     deeper: [
       "MIDI stands for Musical Instrument Digital Interface. It was invented in 1983 so different electronic instruments could talk to each other. A MIDI message includes: note number (0–127), velocity (how hard, 0–127), channel (1–16), and timing.",
-      "MIDI velocity maps to loudness. Velocity 127 = maximum force (fortissimo). Velocity 1 = barely touched (pianissimo). This makes MIDI performances sound human — real musicians don't hit every note with the same force.",
-      "When you export a finished track from a DAW, you're exporting audio (usually WAV or MP3). MIDI by itself is unplayable on most devices — it needs an instrument to interpret it.",
+      "MIDI velocity maps to loudness. Velocity 127 = maximum force (fortissimo). Velocity 1 = barely touched (pianissimo). This makes MIDI performances sound human: real musicians don't hit every note with the same force.",
+      "When you export a finished track from a DAW, you're exporting audio (usually WAV or MP3). MIDI by itself is unplayable on most devices: it needs an instrument to interpret it.",
     ],
     sources: [
       {
-        label: "Wikipedia — MIDI",
+        label: "Wikipedia: MIDI",
         url: "https://en.wikipedia.org/wiki/MIDI",
       },
       {
-        label: "SoundOnSound — MIDI Explained",
+        label: "SoundOnSound: MIDI Explained",
         url: "https://www.soundonsound.com/techniques/synths-for-beginners-part-9",
       },
     ],
@@ -453,7 +453,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 1,
         explain:
           "Audio = actual captured sound waves. MP3, WAV, AIFF are all audio formats containing recorded audio.",
-        hint: "Play an MP3 — you hear real sound, not instructions.",
+        hint: "Play an MP3: you hear real sound, not instructions.",
       },
       {
         q: "MIDI velocity controls…",
@@ -461,7 +461,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 1,
         explain:
           "Velocity is the 'force' of a MIDI note. Higher velocity = louder/harder. Lower = softer. It simulates how hard a musician hits a key or drum.",
-        hint: "Hit a piano key softly vs hard — MIDI captures that difference.",
+        hint: "Hit a piano key softly vs hard: MIDI captures that difference.",
       },
       {
         q: "Why is MIDI more flexible than audio?",
@@ -473,7 +473,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 1,
         explain:
-          "MIDI is just data. Change the instrument plugin and the same MIDI plays on a totally different sound. Edit wrong notes, transpose the key — no re-recording needed.",
+          "MIDI is just data. Change the instrument plugin and the same MIDI plays on a totally different sound. Edit wrong notes, transpose the key: no re-recording needed.",
         hint: "If you change the instrument, the 'sheet music' stays the same but the sound changes.",
       },
     ],
@@ -487,24 +487,24 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     tagline: "Borrowing sounds to make new ones.",
     xp: 30,
     simple: [
-      "A sample is a short piece of recorded audio — a drum hit, a piano chord, a clap, a vocal phrase. Producers collect thousands of samples and use them as building blocks for new music.",
-      "A loop is a sample that's designed to repeat perfectly — like a 4-bar drum beat that keeps cycling. When a loop is perfectly synced to your tempo, you can layer dozens of loops together and they'll all lock in rhythmically.",
+      "A sample is a short piece of recorded audio: a drum hit, a piano chord, a clap, a vocal phrase. Producers collect thousands of samples and use them as building blocks for new music.",
+      "A loop is a sample that's designed to repeat perfectly: like a 4-bar drum beat that keeps cycling. When a loop is perfectly synced to your tempo, you can layer dozens of loops together and they'll all lock in rhythmically.",
       "Sampling has been central to hip-hop since the 1970s, and to electronic dance music since the 1980s. Many iconic tracks are built entirely from samples of older recordings.",
     ],
     analogy:
-      "Think of samples like LEGO bricks. Someone already made the individual bricks (drum hits, bass lines, chord stabs). You collect them and build something new — your own creation, made from pieces others created.",
+      "Think of samples like LEGO bricks. Someone already made the individual bricks (drum hits, bass lines, chord stabs). You collect them and build something new: your own creation, made from pieces others created.",
     deeper: [
       "One-shot samples are single sounds that play once: a snare hit, a hi-hat, a bass pluck. Looping samples are longer audio clips designed to loop seamlessly. Audio warp algorithms let DAWs stretch or compress loops to match your project tempo without changing pitch.",
-      "Sample packs are collections of related sounds sold or given away by producers. They often contain drums, bass loops, melodic loops, FX, and one-shots — all in a consistent key and BPM so they work together.",
+      "Sample packs are collections of related sounds sold or given away by producers. They often contain drums, bass loops, melodic loops, FX, and one-shots: all in a consistent key and BPM so they work together.",
       "Copyright and sampling: using another artist's recorded music without permission can be a legal issue. Sample packs marked 'royalty-free' are cleared for commercial use. Original recordings from albums may require clearance from rights holders.",
     ],
     sources: [
       {
-        label: "Wikipedia — Sampling (music)",
+        label: "Wikipedia: Sampling (music)",
         url: "https://en.wikipedia.org/wiki/Sampling_(music)",
       },
       {
-        label: "Ableton Live Manual — Working with Samples",
+        label: "Ableton Live Manual: Working with Samples",
         url: "https://www.ableton.com/en/manual/working-with-samples/",
       },
     ],
@@ -519,8 +519,8 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 0,
         explain:
-          "A sample is any piece of recorded audio — a drum hit, a vocal phrase, a guitar riff — used as a building block in a new production.",
-        hint: "Think: a 'sample' of chocolate — a small piece you take from something.",
+          "A sample is any piece of recorded audio, a drum hit, a vocal phrase, a guitar riff, used as a building block in a new production.",
+        hint: "Think: a 'sample' of chocolate: a small piece you take from something.",
       },
       {
         q: "A loop is designed to…",
@@ -532,7 +532,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 1,
         explain:
-          "A loop starts and ends at exactly the right point so it can repeat endlessly without clicking or glitching — forming a seamless rhythm or musical phrase.",
+          "A loop starts and ends at exactly the right point so it can repeat endlessly without clicking or glitching: forming a seamless rhythm or musical phrase.",
         hint: "Loops keep going and going and going…",
       },
       {
@@ -545,7 +545,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         ],
         answer: 1,
         explain:
-          "Warping time-stretches audio so a 120 BPM drum loop can play at your project's 95 BPM — same pitch, different speed. This is fundamental to modern production.",
+          "Warping time-stretches audio so a 120 BPM drum loop can play at your project's 95 BPM: same pitch, different speed. This is fundamental to modern production.",
         hint: "Warp = bend time. The pitch stays the same but the speed changes.",
       },
     ],
@@ -559,24 +559,24 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     tagline: "Balancing everything so it all fits.",
     xp: 30,
     simple: [
-      "Mixing is adjusting all the tracks in a song so they sound good together. Imagine everyone in a band is playing at the same time — if the drummer is too loud, you can't hear the singer. The mixer's job is to balance everyone.",
+      "Mixing is adjusting all the tracks in a song so they sound good together. Imagine everyone in a band is playing at the same time: if the drummer is too loud, you can't hear the singer. The mixer's job is to balance everyone.",
       "The main tools are volume (how loud each track is), panning (whether it sounds like it's coming from the left or right), EQ (cutting or boosting certain frequencies) and effects like reverb (which makes sounds feel like they're in a big room).",
-      "A good mix sounds balanced — every instrument can be heard clearly, the vocals sit on top, and the whole thing feels cohesive. A bad mix sounds muddy, harsh, or like everything is fighting for space.",
+      "A good mix sounds balanced: every instrument can be heard clearly, the vocals sit on top, and the whole thing feels cohesive. A bad mix sounds muddy, harsh, or like everything is fighting for space.",
     ],
     analogy:
       "Mixing is like being a director for a school play. The stars (vocals, main melody) need to be heard clearly at the front. The supporting cast (rhythm, pads) sit behind them. The set (effects, atmosphere) fills the background.",
     deeper: [
       "EQ (equaliser) is one of the most powerful mixing tools. It lets you boost or cut specific frequency ranges. Cut the low rumble from vocals. Boost the mid-range presence of a guitar. Roll off the high frequencies on a dark pad.",
-      "Compression reduces the dynamic range of a sound — making loud parts quieter and quiet parts louder. A well-compressed drum kit sits tight and punchy in the mix; over-compressed audio sounds lifeless and flat.",
-      "Mastering is the final step after mixing — preparing the finished stereo mix for distribution. A mastering engineer makes the track sound great on all speakers (earbuds, car stereos, club systems) and matches its loudness to commercial standards.",
+      "Compression reduces the dynamic range of a sound: making loud parts quieter and quiet parts louder. A well-compressed drum kit sits tight and punchy in the mix; over-compressed audio sounds lifeless and flat.",
+      "Mastering is the final step after mixing: preparing the finished stereo mix for distribution. A mastering engineer makes the track sound great on all speakers (earbuds, car stereos, club systems) and matches its loudness to commercial standards.",
     ],
     sources: [
       {
-        label: "Wikipedia — Audio Mixing",
+        label: "Wikipedia: Audio Mixing",
         url: "https://en.wikipedia.org/wiki/Audio_mixing",
       },
       {
-        label: "SoundOnSound — Mixing Essentials",
+        label: "SoundOnSound: Mixing Essentials",
         url: "https://www.soundonsound.com/techniques/mixing-essentials",
       },
     ],
@@ -618,7 +618,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 1,
         explain:
           "An audio compressor reduces the difference between the loudest and quietest parts, creating a tighter, more controlled sound.",
-        hint: "It 'squeezes' the dynamic range — not the file size.",
+        hint: "It 'squeezes' the dynamic range: not the file size.",
       },
     ],
   },
@@ -632,24 +632,24 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
     xp: 30,
     badge: { slug: "world-mapped", name: "World Mapped" },
     simple: [
-      "A genre is a style of music with recognisable characteristics — tempo, instruments, energy, mood. Genre is a shortcut that helps listeners find music they like and helps producers know what conventions to follow (or break).",
-      "Electronic dance music (EDM) is a huge family of genres — house, techno, drum & bass, dubstep, ambient, and hundreds of subgenres. Hip-hop, pop, jazz, classical, rock — all different genres, all with different rules and histories.",
-      "As a producer or DJ, knowing your genres means knowing what BPM to produce at, what sounds are typical, what the audience expects — and where you can surprise them.",
+      "A genre is a style of music with recognisable characteristics: tempo, instruments, energy, mood. Genre is a shortcut that helps listeners find music they like and helps producers know what conventions to follow (or break).",
+      "Electronic dance music (EDM) is a huge family of genres, house, techno, drum & bass, dubstep, ambient, and hundreds of subgenres. Hip-hop, pop, jazz, classical, rock, all different genres, all with different rules and histories.",
+      "As a producer or DJ, knowing your genres means knowing what BPM to produce at, what sounds are typical, what the audience expects: and where you can surprise them.",
     ],
     analogy:
-      "Genres are like cuisines. 'Italian food' tells you a lot immediately — pasta, olive oil, garlic. 'House music' tells you just as much — 4/4 kick, soulful vocals, 125 BPM. You know roughly what you're getting before the first bite (or bar).",
+      "Genres are like cuisines. 'Italian food' tells you a lot immediately, pasta, olive oil, garlic. 'House music' tells you just as much, 4/4 kick, soulful vocals, 125 BPM. You know roughly what you're getting before the first bite (or bar).",
     deeper: [
       "Key genre BPMs: Hip-hop 70–100 BPM · House 120–130 BPM · Techno 130–145 BPM · Drum & Bass 160–180 BPM · Ambient 60–90 BPM · Pop 100–130 BPM · Trap 130–170 BPM (but uses half-time, so it feels slower).",
       "Subgenres often emerged when producers pushed the sonic or structural limits of a genre. Deep house slowed down and deepened classic house. Minimal techno stripped techno down to almost nothing. Understanding the lineage helps you make informed creative choices.",
-      "You don't have to stay in one genre. Many of the most exciting modern tracks blend elements from multiple genres — a trap hi-hat pattern over a house chord progression at 140 BPM. Genre is a tool, not a cage.",
+      "You don't have to stay in one genre. Many of the most exciting modern tracks blend elements from multiple genres: a trap hi-hat pattern over a house chord progression at 140 BPM. Genre is a tool, not a cage.",
     ],
     sources: [
       {
-        label: "Wikipedia — Electronic Dance Music",
+        label: "Wikipedia: Electronic Dance Music",
         url: "https://en.wikipedia.org/wiki/Electronic_dance_music",
       },
       {
-        label: "Wikipedia — Music Genre",
+        label: "Wikipedia: Music Genre",
         url: "https://en.wikipedia.org/wiki/Music_genre",
       },
     ],
@@ -672,8 +672,8 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         options: ["60–80 BPM", "90–110 BPM", "120–130 BPM", "160–180 BPM"],
         answer: 2,
         explain:
-          "House music — from Chicago, 1980s — typically runs 120–130 BPM, built around a four-on-the-floor kick drum pattern.",
-        hint: "House is a dance floor genre — what tempo makes you want to move?",
+          "House music, from Chicago, 1980s, typically runs 120–130 BPM, built around a four-on-the-floor kick drum pattern.",
+        hint: "House is a dance floor genre: what tempo makes you want to move?",
       },
       {
         q: "Which statement about genre is true?",
@@ -686,7 +686,7 @@ export const BEGINNER_MISSIONS: BeginnerMission[] = [
         answer: 2,
         explain:
           "Genre is a map, not a prison. The best producers understand genre conventions deeply so they know exactly which rules to follow and which to break creatively.",
-        hint: "Rules are made to be understood — then occasionally broken.",
+        hint: "Rules are made to be understood: then occasionally broken.",
       },
     ],
   },

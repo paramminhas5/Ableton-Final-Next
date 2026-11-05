@@ -1,0 +1,130 @@
+slug: timbre-tone
+world: foundations
+number: 8
+title: timbre and tone colour
+minutes: 7
+song:
+  changes: lead.lead
+  why: the same melody can sound soft and round or bright and buzzy, and the filter is how you choose
+learn: >-
+  Why a piano and a synth playing the same note sound different, what harmonics are, and a filter on your
+  melody to change its colour.
+youCan:
+  - say what timbre is
+  - explain a bright sound as one with lots of harmonics
+  - use a low pass filter to make your melody darker or brighter
+steps:
+  - kind: hear
+    clip: synth-shapes
+    say:
+      mentor: >-
+        Tap through soft, saw and square. Same note, same loudness, three completely different characters.
+        That character is called timbre, said "tam-ber", or tone colour. It's how you can tell a piano from a
+        guitar even when they play the same note.
+
+        Look at the shapes. The smooth wave sounds round and pure. The sharp corners of the saw and the
+        square are what make them bright and buzzy.
+      straight: >-
+        Same pitch, same loudness, three timbres. Timbre (tone colour) is what makes instruments sound
+        different on the same note. Sharp corners in the wave mean a brighter, buzzier sound.
+      eli5: >-
+        Tap a, b and c. Same note each time, but they sound totally different: one is smooth like a flute, one
+        is buzzy like a bee, one sounds like an old video game. That difference is called timbre.
+
+  - kind: say
+    title: harmonics
+    say:
+      mentor: >-
+        Here's the cool part. A buzzy sound isn't one pitch. It's the note you hear plus a stack of quieter,
+        higher pitches riding on top of it, at two times, three times, four times the frequency and up.
+        Those are called harmonics.
+
+        A pure, round wave has almost none. A saw has loads. Your ear blends them into one sound, and the mix
+        of harmonics is the timbre. Sharp corners in the picture are what all those extra harmonics look like.
+      straight: >-
+        A bright sound is the main note plus harmonics: quieter pitches at 2, 3, 4 times the frequency and up.
+        A round wave has few, a saw has many. The mix of harmonics is the timbre.
+      eli5: >-
+        Secret: a buzzy sound is really lots of sounds at once. There's the main note, plus a bunch of quiet
+        higher notes hiding on top. They're called harmonics. Smooth sounds have hardly any. Buzzy ones have
+        tons.
+    deeper:
+      - title: why octaves and fifths sound good
+        say: >-
+          The first harmonics are twice and three times the note. Twice is the octave. Three times, brought
+          down an octave, is the fifth. That's part of why those two intervals sound so at home together: they
+          are already hiding inside a single note.
+
+  - kind: shape
+    layer: lead
+    knobs: [cutoff, wave]
+    say:
+      mentor: >-
+        Now change your own melody's colour. The cutoff knob is a filter: it lets the low part of the sound
+        through and cuts the high harmonics. Turn it down and your melody gets darker and rounder, like
+        hearing music through a wall. Turn it up and all the brightness comes back.
+
+        The wave knob picks the starting shape. Try a buzzy wave with the cutoff halfway: that's a classic
+        synth sound.
+      straight: >-
+        Cutoff is a low pass filter: down removes high harmonics (darker), up lets them back (brighter). Wave
+        picks the starting shape. Set your melody's colour.
+      eli5: >-
+        The cutoff knob is like a blanket over the speaker. Turn it down and the sound gets muffled and soft.
+        Turn it up and it gets bright and clear again. The wave knob changes the shape. Play until you like
+        how your tune sounds.
+
+  - kind: ask
+    q: A piano and a synth play the same note at the same volume. Why do they sound different?
+    options: ["different timbre, a different mix of harmonics", "different pitch", "different tempo", "different amplitude"]
+    answer: 0
+    why: Same note and loudness, different harmonics. That's timbre.
+    whyWrong:
+      1: Same note means same pitch.
+      2: Tempo is the speed of the beat, not one note.
+      3: Same volume means the same amplitude.
+
+  - kind: ask
+    q: What are harmonics?
+    options: ["quieter, higher pitches on top of the main note", "the notes of a chord", "echoes of the sound", "the beats in a bar"]
+    answer: 0
+    why: Pitches at two, three, four times the frequency and up, blended into one sound.
+    whyWrong:
+      1: Chords are separate notes you play. Harmonics hide inside a single note.
+      2: An echo is a delayed copy. Harmonics happen at the same moment.
+      3: Beats are about rhythm.
+
+  - kind: ask
+    q: You turn the cutoff down on your melody. What happens?
+    options: ["it gets darker, the high harmonics are cut", "it gets higher in pitch", "it gets faster", "it gets brighter"]
+    answer: 0
+    why: A low pass filter keeps the lows and cuts the highs, so the sound gets rounder and darker.
+    whyWrong:
+      1: The note stays the same. Only its colour changes.
+      2: Filters don't touch the timing.
+      3: Turning it up brings brightness back.
+
+  - kind: ask
+    q: Which wave has the most harmonics?
+    options: ["the saw", "the soft, round wave", "they all have the same", "none of them have any"]
+    answer: 0
+    why: The saw's sharp drop is made of loads of harmonics, which is why it sounds the buzziest.
+    whyWrong:
+      1: The round wave is nearly pure, with very few harmonics.
+      2: That's why they sound so different.
+      3: Everything except a pure sine has some.
+
+  - kind: ask
+    more: true
+    q: Why is it called a low pass filter?
+    options: ["it lets the low part pass and cuts the highs", "it makes the sound low in volume", "it only works on bass", "it passes the sound to a lower octave"]
+    answer: 0
+    why: Lows pass through, highs above the cutoff are cut.
+    whyWrong:
+      1: It changes colour, not overall volume.
+      2: It works on any sound.
+      3: The pitch stays the same.
+
+  - kind: keep
+    next: >-
+      Next: waveforms. Sine, triangle, saw and square side by side, and the one that suits your melody.

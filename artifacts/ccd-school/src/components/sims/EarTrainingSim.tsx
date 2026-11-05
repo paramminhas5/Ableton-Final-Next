@@ -1,6 +1,7 @@
 "use client";
 // Ear Training Sim — SoundGym/ToneGym-inspired musical drills.
 // Drills: Interval · Chord Quality · Scale Recognition · Note In Scale · EQ Cut · Reverb
+import { DRILL_ALIASES, drillFor, type DrillType } from "@/lib/drillAliases";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getCtx, midiToFreq } from "@/lib/audio";
 
@@ -39,73 +40,72 @@ function playNote(
 }
 
 // ─── Drill configs ───────────────────────────────────────────────────────────
-type DrillType = "interval" | "chord" | "scale" | "note-in-scale" | "eq-cut" | "reverb";
 
 const INTERVALS = [
-  { name: "Minor 2nd", semis: 1, desc: "Half step — dissonant clash (Jaws theme)" },
-  { name: "Major 2nd", semis: 2, desc: "Whole step — stepwise melody movement" },
-  { name: "Minor 3rd", semis: 3, desc: "Minor chord root — sad, introspective" },
-  { name: "Major 3rd", semis: 4, desc: "Major chord root — bright, happy" },
+  { name: "Minor 2nd", semis: 1, desc: "Half step: dissonant clash (Jaws theme)" },
+  { name: "Major 2nd", semis: 2, desc: "Whole step: stepwise melody movement" },
+  { name: "Minor 3rd", semis: 3, desc: "Minor chord root: sad, introspective" },
+  { name: "Major 3rd", semis: 4, desc: "Major chord root: bright, happy" },
   { name: "Perfect 4th", semis: 5, desc: "Strong, open (Here Comes the Bride)" },
-  { name: "Tritone", semis: 6, desc: "Most dissonant — The Simpsons theme" },
-  { name: "Perfect 5th", semis: 7, desc: "Power chord — stable, strong" },
+  { name: "Tritone", semis: 6, desc: "Most dissonant: The Simpsons theme" },
+  { name: "Perfect 5th", semis: 7, desc: "Power chord: stable, strong" },
   { name: "Minor 6th", semis: 8, desc: "Romantic, yearning" },
-  { name: "Major 6th", semis: 9, desc: "Sweet — My Bonnie Lies Over the Ocean" },
-  { name: "Minor 7th", semis: 10, desc: "Bluesy, unresolved — wants to move" },
-  { name: "Major 7th", semis: 11, desc: "Jazzy tension — nearly at the octave" },
-  { name: "Octave", semis: 12, desc: "Same note, double the frequency — pure" },
+  { name: "Major 6th", semis: 9, desc: "Sweet: My Bonnie Lies Over the Ocean" },
+  { name: "Minor 7th", semis: 10, desc: "Bluesy, unresolved: wants to move" },
+  { name: "Major 7th", semis: 11, desc: "Jazzy tension: nearly at the octave" },
+  { name: "Octave", semis: 12, desc: "Same note, double the frequency: pure" },
 ];
 
 const CHORD_TYPES = [
-  { name: "Major", intervals: [0, 4, 7], desc: "Bright, happy — I chord in major key" },
-  { name: "Minor", intervals: [0, 3, 7], desc: "Dark, sad — natural in minor keys" },
+  { name: "Major", intervals: [0, 4, 7], desc: "Bright, happy: I chord in major key" },
+  { name: "Minor", intervals: [0, 3, 7], desc: "Dark, sad: natural in minor keys" },
   {
     name: "Dominant 7th",
     intervals: [0, 4, 7, 10],
-    desc: "Bluesy tension — wants to resolve down a 5th",
+    desc: "Bluesy tension: wants to resolve down a 5th",
   },
-  { name: "Minor 7th", intervals: [0, 3, 7, 10], desc: "Smooth, jazzy — common in R&B, soul" },
-  { name: "Major 7th", intervals: [0, 4, 7, 11], desc: "Dreamy, sophisticated — bossa nova, jazz" },
+  { name: "Minor 7th", intervals: [0, 3, 7, 10], desc: "Smooth, jazzy: common in R&B, soul" },
+  { name: "Major 7th", intervals: [0, 4, 7, 11], desc: "Dreamy, sophisticated: bossa nova, jazz" },
   {
     name: "Diminished",
     intervals: [0, 3, 6],
-    desc: "Tense, unstable — passing chord, horror stings",
+    desc: "Tense, unstable: passing chord, horror stings",
   },
-  { name: "Augmented", intervals: [0, 4, 8], desc: "Surreal, floating — no clear tonal centre" },
-  { name: "Sus4", intervals: [0, 5, 7], desc: "Suspended — unstable, wants to resolve to major" },
+  { name: "Augmented", intervals: [0, 4, 8], desc: "Surreal, floating: no clear tonal centre" },
+  { name: "Sus4", intervals: [0, 5, 7], desc: "Suspended: unstable, wants to resolve to major" },
 ];
 
 const SCALE_TYPES = [
-  { name: "Major", steps: [2, 2, 1, 2, 2, 2, 1], desc: "Bright, happy — most common in pop/rock" },
+  { name: "Major", steps: [2, 2, 1, 2, 2, 2, 1], desc: "Bright, happy: most common in pop/rock" },
   {
     name: "Natural Minor",
     steps: [2, 1, 2, 2, 1, 2, 2],
-    desc: "Dark — foundation of minor keys, rock, metal",
+    desc: "Dark: foundation of minor keys, rock, metal",
   },
   {
     name: "Dorian",
     steps: [2, 1, 2, 2, 2, 1, 2],
-    desc: "Minor but brighter — jazz, funk, Daft Punk",
+    desc: "Minor but brighter: jazz, funk, Daft Punk",
   },
   {
     name: "Phrygian",
     steps: [1, 2, 2, 2, 1, 2, 2],
-    desc: "Exotic, dark — flamenco, metal, Arabic music",
+    desc: "Exotic, dark: flamenco, metal, Arabic music",
   },
   {
     name: "Lydian",
     steps: [2, 2, 2, 1, 2, 2, 1],
-    desc: "Dreamy, magical — film scores (The Simpsons)",
+    desc: "Dreamy, magical: film scores (The Simpsons)",
   },
   {
     name: "Mixolydian",
     steps: [2, 2, 1, 2, 2, 1, 2],
-    desc: "Major but flat 7th — rock, blues, folk",
+    desc: "Major but flat 7th: rock, blues, folk",
   },
   {
     name: "Pentatonic Minor",
     steps: [3, 2, 2, 3, 2],
-    desc: "5-note — blues, rock solos, world music",
+    desc: "5-note: blues, rock solos, world music",
   },
 ];
 
@@ -211,19 +211,19 @@ const DRILLS: DrillConfig[] = [
     type: "interval",
     label: "Interval Recognition",
     emoji: "",
-    description: "Two notes — name the interval. Foundation of all harmonic hearing.",
+    description: "Two notes: name the interval. Foundation of all harmonic hearing.",
   },
   {
     type: "chord",
     label: "Chord Quality",
     emoji: "",
-    description: "One chord — major, minor, 7th or more. The harmonic DNA of every song.",
+    description: "One chord: major, minor, 7th or more. The harmonic DNA of every song.",
   },
   {
     type: "scale",
     label: "Scale Recognition",
     emoji: "",
-    description: "8 notes — identify the mode. Know what scale a sample is in.",
+    description: "8 notes: identify the mode. Know what scale a sample is in.",
   },
   {
     type: "note-in-scale",
@@ -369,32 +369,32 @@ function getExplain(type: DrillType, target: string): string {
       return SCALE_TYPES.find((s) => s.name === target)?.desc ?? "";
     case "note-in-scale":
       return target.includes("diatonic")
-        ? "It sits inside the scale — consonant, fits naturally."
-        : "Outside the scale — creates chromatic tension or colour.";
+        ? "It sits inside the scale: consonant, fits naturally."
+        : "Outside the scale: creates chromatic tension or colour.";
     case "eq-cut": {
       const v = parseFloat(target);
       return v <= 200
-        ? "Low-end — warmth, bass fundamentals, muddiness."
+        ? "Low-end: warmth, bass fundamentals, muddiness."
         : v <= 800
-          ? "Low-mids — boxy buildup, often cut for clarity."
+          ? "Low-mids: boxy buildup, often cut for clarity."
           : v <= 2500
-            ? "Mids — presence, where most instruments live."
-            : "High-end — air, brightness, sibilance.";
+            ? "Mids: presence, where most instruments live."
+            : "High-end: air, brightness, sibilance.";
     }
     case "reverb": {
       const v = parseFloat(target);
       return v <= 0.5
-        ? "Short room — tight, close-miked feel."
+        ? "Short room: tight, close-miked feel."
         : v <= 2
-          ? "Medium hall — natural ambience."
-          : "Long decay — cathedral, pads, FX tails.";
+          ? "Medium hall: natural ambience."
+          : "Long decay: cathedral, pads, FX tails.";
     }
   }
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> }) {
-  const defaultType = (preset?.mode as DrillType) ?? "interval";
+  const defaultType = drillFor(preset?.mode);
   const [activeDrill, setActiveDrill] = useState<DrillType | null>(null);
   const [round, setRound] = useState<Round | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
@@ -427,7 +427,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
   };
 
   const pick = (choice: string) => {
-    if (!round?.played || revealed) return; // must play first
+    if (!round || revealed) return;
     setPicked(choice);
     const correct = choice === round.target;
     setRevealed(true);
@@ -474,7 +474,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
     );
   }
 
-  const drill = DRILLS.find((d) => d.type === activeDrill)!;
+  const drill = DRILLS.find((d) => d.type === activeDrill) ?? DRILLS[0];
   const correct = revealed ? picked === round?.target : null;
 
   // ── Active drill ────────────────────────────────────────────────────────
@@ -507,7 +507,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
         </div>
       )}
 
-      {/* Play button — must play before picking */}
+      {/* Play button: must play before picking */}
       <button
         onClick={play}
         disabled={isPlaying}
@@ -516,7 +516,7 @@ export function EarTrainingSim({ preset }: { preset?: Record<string, unknown> })
         {isPlaying ? "▶ PLAYING..." : round?.played ? "▶ PLAY AGAIN" : "▶ PLAY"}
       </button>
 
-      {/* Options — only interactive AFTER playing */}
+      {/* Options: only interactive AFTER playing */}
       <div className="grid sm:grid-cols-2 gap-2">
         {round?.choices.map((ch) => {
           const isPicked = picked === ch;

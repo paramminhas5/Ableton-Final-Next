@@ -1,0 +1,29 @@
+slug: play-it-live
+world: producer
+number: 102
+title: bonus, play it
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; this is about where it goes next
+learn: >-
+  Controllers and sync.
+youCan:
+  - know where to look in Live for this
+steps:
+  - kind: say
+    title: controllers and sync
+    say: >-
+      A controller is a box of pads, knobs and faders that plays Live. Map a knob to your lead's cutoff and it turns when you turn it. Ableton Link keeps apps and devices on the same tempo over wifi, so you can jam with friends or play alongside a drum machine.
+  - kind: ask
+    q: Where would you go next in Live to try this?
+    options: ["the deeper lessons in this path", "nowhere, Live can't do it", "a different program", "the dj world"]
+    answer: 0
+    why: Each deeper lesson here walks through one part of it, on your own song.
+    whyWrong:
+      1: Live can do all of it.
+      2: It's all inside Live.
+      3: This path is about Live itself.
+  - kind: keep
+    next: >-
+      Pick a deeper lesson below, or head to the dj world.

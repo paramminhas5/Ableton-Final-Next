@@ -51,7 +51,7 @@ export function ListRow({ led = "var(--ledoff)", title, sub, right, href, onClic
 }
 
 /** Sixteen small blocks that fill from the left. */
-export function SegBar({ value, color = "var(--led-go)", label, n = 16, height = 9 }: { value: number; color?: string; label?: string; n?: number; height?: number }) {
+export function SegBar({ value, color = "var(--led-mint)", label, n = 16, height = 9 }: { value: number; color?: string; label?: string; n?: number; height?: number }) {
   const lit = Math.round(Math.max(0, Math.min(1, value)) * n);
   return (
     <span style={{ display: "flex", gap: 3, flex: 1 }} role="img" aria-label={label ?? `${Math.round(value * 100)} percent`}>
@@ -68,7 +68,7 @@ export function RankMark({ idx, total = 12, size = 40 }: { idx: number; total?: 
       {Array.from({ length: total }, (_, i) => {
         const a = (-90 + (360 / total) * i) * (Math.PI / 180);
         const on = i <= idx;
-        return <path key={i} d={`M${c + (r - 5) * Math.cos(a)} ${c + (r - 5) * Math.sin(a)}L${c + r * Math.cos(a)} ${c + r * Math.sin(a)}`} stroke={on ? "var(--led-go)" : "var(--ledoff)"} strokeWidth={2.4} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 2px var(--led-go))" } : undefined} />;
+        return <path key={i} d={`M${c + (r - 5) * Math.cos(a)} ${c + (r - 5) * Math.sin(a)}L${c + r * Math.cos(a)} ${c + r * Math.sin(a)}`} stroke={on ? "var(--led-mint)" : "var(--ledoff)"} strokeWidth={2.4} strokeLinecap="round" style={on ? { filter: "drop-shadow(0 0 2px var(--led-mint))" } : undefined} />;
       })}
       <text x={c} y={c + 4} textAnchor="middle" fontFamily="Outfit" fontSize={size * 0.3} fontWeight={500} fill="currentColor">{idx + 1}</text>
     </svg>

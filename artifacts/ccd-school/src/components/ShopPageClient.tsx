@@ -24,7 +24,7 @@ export function ShopPageClient() {
     { id: "hearts", icon: "heart", led: "var(--led-red)", title: "heart refill", desc: `all ${MAX_HEARTS} hearts back now, no waiting.`, cost: 100,
       off: progress.hearts >= MAX_HEARTS ? "full" : undefined,
       action: () => { if (pay(100)) { refillHeart(); say("hearts are full", true); } } },
-    { id: "boost", icon: "bolt", led: "var(--led-go)", title: "2x xp for an hour", desc: "double xp for the next 60 minutes. good before a long session.", cost: 150,
+    { id: "boost", icon: "bolt", led: "var(--led-mint)", title: "2x xp for an hour", desc: "double xp for the next 60 minutes. good before a long session.", cost: 150,
       action: () => { if (pay(150)) { try { localStorage.setItem("ccd.xpboost", String(Date.now() + 3_600_000)); } catch { /* private mode */ } say("2x xp for 60 minutes", true); } } },
     { id: "theme", icon: "sun", led: "var(--led-cobalt)", title: "bonus theme", desc: "a second screen colour for your profile.", cost: 300,
       action: () => { if (pay(300)) say("theme unlocked, find it on you", true); } },

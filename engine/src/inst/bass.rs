@@ -5,7 +5,7 @@
 //! all the way up.
 
 use crate::dsp::env::Adsr;
-use crate::dsp::filter::{Ladder, OnePoleHp};
+use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
 use crate::dsp::osc::{BlepOsc, Sine};
 use crate::dsp::oversample::{BassDecimator, BASS_DECIM_DELAY, DRIVE_DELAY};
 use crate::dsp::smooth::Smooth;
@@ -27,7 +27,9 @@ pub struct Bass {
     fenv: Adsr,
     osc: BlepOsc,
     sub: Sine,
-    ladder: Ladder,
+    filt: CharFilter,
+    fdrive: FilterDrive,
+    fdrive_amt: Smooth,
     dc: OnePoleHp,
     dec: BassDecimator,
     rng: Rng,
@@ -64,7 +66,9 @@ impl Bass {
             fenv: Adsr::new(os),
             osc: BlepOsc::new(),
             sub: Sine::default(),
-            ladder: Ladder::default(),
+            filt: CharFilter::default(),
+            fdrive: FilterDrive::default(),
+            fdrive_amt: Smooth::new(0.0),
             dc: OnePoleHp::default(),
             dec: BassDecimator::new(),
             rng: Rng::new(0xBA55),
@@ -83,7 +87,7 @@ impl Bass {
             pdc_pos: 0,
         };
         b.dc.set(18.0, sr);
-        for s in [&mut b.cutoff, &mut b.res, &mut b.env_amt, &mut b.wave, &mut b.sub_lvl] {
+        for s in [&mut b.cutoff, &mut b.res, &mut b.env_amt, &mut b.wave, &mut b.sub_lvl, &mut b.fdrive_amt] {
             s.set_time(8.0, os);
         }
         for (i, spec) in BASS_PARAMS.iter().enumerate() {
@@ -94,6 +98,7 @@ impl Bass {
         b.env_amt.reset(b.env_amt.target);
         b.wave.reset(b.wave.target);
         b.sub_lvl.reset(b.sub_lvl.target);
+        b.fdrive_amt.reset(b.fdrive_amt.target);
         b.update_envs();
         b
     }
@@ -112,6 +117,8 @@ impl Bass {
             B_WAVE => self.wave.set(v),
             B_SUB => self.sub_lvl.set(v),
             B_DRIFT => self.drift_amt = v,
+            B_CHAR => self.filt.set_mode(step3(v)),
+            B_FDRIVE => self.fdrive_amt.set(v),
             _ => {}
         }
     }
@@ -199,8 +206,10 @@ impl Bass {
         let env_oct = self.env_amt.next() * 6.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (p - 45.0) / 12.0 * 0.5;
         let fc = (self.cutoff.next() * (env_oct + key_oct).exp2()).clamp(20.0, self.os * 0.45);
-        self.ladder.set(fc, self.res.next(), self.os);
-        let y = self.ladder.tick(osc * 0.55);
+        self.filt.set(fc, self.res.next(), self.os);
+        let d = self.fdrive_amt.next();
+        let x = self.fdrive.pre(osc * 0.55, d);
+        let y = self.fdrive.post(self.filt.tick(x), d);
         y * amp * (0.35 + 0.65 * self.vel)
     }
 

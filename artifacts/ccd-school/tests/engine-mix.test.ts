@@ -14,6 +14,7 @@ describe("mix readings", () => {
     const frame = r.feed([
       ev(OUT.meter, 2, 7000, 1, -12, -24, 0.6),
       ev(OUT.clash, 0, 1, clashFlags, 0.7, 0.55, 0.48),
+      ev(OUT.loudness, MASTER_LAYER, 0, 0, -9, -10.5, -11.2),
       ev(OUT.masterMeter, MASTER_LAYER, 150, 1 | (1 << 8), -1.2, -9, 2.5),
     ]);
     expect(frame).not.toBeNull();
@@ -21,7 +22,7 @@ describe("mix readings", () => {
     expect(frame!.layers[2]).toMatchObject({ centreHz: 7000, pan: 0.6 });
     expect(frame!.layers[1]).toBeNull();
     expect(frame!.clashes).toEqual([{ target: 0, other: 1, group: "low", band: 0, severity: 0.7, fix: "duck", value: 0.55, fix2: "eq", value2: 0.48 }]);
-    expect(frame!.master).toEqual({ truePeakDb: -1.2, lufs: -9, glueGrDb: 2.5, limiterGrDb: 1.5, comparing: true });
+    expect(frame!.master).toEqual({ truePeakDb: -1.2, lufs: -9, shortTerm: -10.5, integrated: -11.2, glueGrDb: 2.5, limiterGrDb: 1.5, comparing: true });
     // The next frame starts with no clashes.
     const next = r.feed([ev(OUT.masterMeter, MASTER_LAYER, 0, 0, -3, -10, 0)]);
     expect(next!.clashes).toEqual([]);

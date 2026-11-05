@@ -2,7 +2,7 @@
    Ported from the canvas classes with an st- prefix. Tokens come from globals.css. */
 
 .st-root{position:relative;height:100dvh;max-width:440px;margin:0 auto;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;color:var(--ink)}
-.st-body{position:absolute;left:16px;right:16px;top:calc(10px + env(safe-area-inset-top,0px));bottom:calc(128px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
+.st-body{position:absolute;left:16px;right:16px;top:calc(10px + env(safe-area-inset-top,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
 .st-head{display:flex;align-items:center;gap:12px;height:38px;flex:none}
 .st-tag{display:inline-flex;align-items:center;border:1px solid var(--tag);border-radius:5px;padding:0 6px;height:18px;font-size:11px;font-weight:500;color:var(--sub);background:none;font-family:inherit;min-height:0;min-width:0;cursor:pointer}
 .st-mode{display:flex;height:34px;width:150px;border-radius:17px;background:var(--well);box-shadow:inset 0 3px 6px var(--shA),0 1px 0 var(--hi);padding:3px;box-sizing:border-box}
@@ -12,7 +12,7 @@
 
 /* layer slots */
 .st-slots{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;flex:none;margin-top:8px}
-.st-slot{height:50px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
+.st-slot{height:44px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
 .st-slot.is-on{color:var(--ink);font-weight:600}
 .st-slot .m1-dash{width:16px}
 .st-plus{color:var(--sub)}
@@ -22,7 +22,8 @@
 
 /* screen */
 .st-scr{margin-top:10px;flex:none}
-.st-scr .m1-glass{padding:14px 18px!important}
+.st-scr .m1-glass{padding:12px 16px!important;height:78px!important}
+@media (min-width:900px) and (min-height:560px){.st-scr .m1-glass{padding:14px 18px!important;height:96px!important}}
 .st-big{font-weight:300;letter-spacing:-.035em;line-height:1;text-shadow:0 0 14px rgba(255,255,255,.16)}
 .st-ss{color:#9A9AA0;font-size:11px;font-weight:500}
 .st-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;border:1px solid currentColor;font-size:11px;font-weight:500}
@@ -81,11 +82,11 @@
 .st-bank{display:flex;height:30px;border-radius:15px;background:var(--well);box-shadow:inset 0 3px 6px var(--shA),0 1px 0 var(--hi);padding:3px;box-sizing:border-box;flex:1}
 .st-bank button{flex:1;display:flex;align-items:center;justify-content:center;font:inherit;font-size:12px;font-weight:500;color:var(--sub);border-radius:12px;border:0;background:none;padding:0;min-height:0;min-width:0;cursor:pointer}
 .st-bank button[aria-checked="true"]{color:var(--ink);background:linear-gradient(180deg,var(--c1),var(--c0));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--cs1),0 2px 0 var(--cs2),0 4px 5px -1px var(--shA)}
-.st-ms{width:34px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+.st-ms{width:auto;padding:0 8px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
 .st-knobs{margin-top:8px;flex:none}
 
 /* transport */
-.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:2fr 1fr 1fr 1fr}
+.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:1.6fr repeat(5,minmax(0,1fr))}
 
 /* fourth surfaces */
 .st-lanes{position:relative;overflow:hidden}
@@ -143,3 +144,18 @@
   .st-mixwrap{grid-column:2/4;grid-row:2/4;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
   .st-transport{left:50%;right:auto;width:min(520px,calc(100% - 64px));transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px))}
 }
+
+/* parameter locks: a locked step shows a second colour, the held step glows mint */
+.st-sp.is-lock{background:linear-gradient(135deg,transparent 0 58%,color-mix(in srgb,var(--led-lilac) 92%,#fff) 58%),linear-gradient(180deg,color-mix(in srgb,var(--c) 80%,#fff),var(--c) 55%,color-mix(in srgb,var(--c) 88%,#000))}
+.st-sp.is-lock.is-lit{background:linear-gradient(135deg,transparent 0 58%,#fff 58%),radial-gradient(78% 72% at 50% 50%,color-mix(in srgb,var(--c) 34%,#fff) 0,var(--c) 56%,color-mix(in srgb,var(--c) 80%,#000) 100%)}
+.st-sp.is-held{outline:2px solid var(--led-mint);outline-offset:-2px;box-shadow:0 0 0 3px color-mix(in srgb,var(--led-mint) 35%,transparent),0 0 16px color-mix(in srgb,var(--led-mint) 60%,transparent);animation:st-held 1.1s ease-in-out infinite}
+@keyframes st-held{50%{box-shadow:0 0 0 3px color-mix(in srgb,var(--led-mint) 15%,transparent),0 0 6px color-mix(in srgb,var(--led-mint) 30%,transparent)}}
+.st-lockbar{align-items:center;gap:8px;min-height:22px}
+.st-lockdot{width:8px;height:8px;border-radius:2px;background:var(--led-lilac);box-shadow:0 0 6px var(--led-lilac);transform:rotate(45deg)}
+
+/* capture: the key appears once you have played something; the take shows as ghost notes until kept */
+.st-capkey{display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 10px 0 8px;border-radius:11px;border:1px solid color-mix(in srgb,var(--led-mint) 70%,transparent);background:color-mix(in srgb,var(--led-mint) 12%,transparent);color:#E9E9E6;font:inherit;font-size:11px;font-weight:600;cursor:pointer;min-height:0;min-width:0}
+.st-capkey i{width:7px;height:7px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 6px var(--led-mint);animation:st-held 1.4s ease-in-out infinite}
+.st-capbtn{background:none;color:#C9CBD1;cursor:pointer;font-family:inherit;height:24px;min-height:0;min-width:0}
+.st-capbtn.is-keep{color:#141416;background:var(--led-mint);border-color:var(--led-mint);font-weight:600}
+.st-dicerow{display:flex;justify-content:flex-start;margin-top:6px;flex:none}

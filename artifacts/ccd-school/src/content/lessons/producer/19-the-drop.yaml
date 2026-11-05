@@ -1,0 +1,52 @@
+slug: the-drop
+world: producer
+number: 19
+title: the breakdown and the drop
+minutes: 6
+song:
+  changes: drums.kick
+  why: taking the drums away makes their return the biggest moment in the track
+learn: >-
+  Why a breakdown makes a drop hit, and the drop in your own arrangement.
+youCan:
+  - build a breakdown by removing the drums
+  - bring everything back for a drop
+  - hear tension and release
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        The moment a room screams is almost never a new sound. It's an old one coming back. Take the kick out
+        for 8 or 16 bars, let the melody and pads float, build with a riser, then slam the kick back in. The
+        absence is what makes the return feel huge.
+      straight: >-
+        Breakdown: drums out. Drop: drums back. The gap is what makes the drop hit.
+      eli5: >-
+        Take the boom away for a while. Everyone waits. Then BOOM, it comes back, and everyone jumps.
+
+  - kind: arrange
+    goal: drop
+    say:
+      mentor: >-
+        Take the drums out of one section and bring them back in the next. Add a riser and a fill before the
+        drop if you like. Play it through and feel it land.
+      straight: >-
+        Switch drums off in one section and on in the next. Riser and fill optional.
+      eli5: >-
+        Turn off the drums in one part, then turn them back on in the next part. Press play and wait for the
+        drop.
+
+  - kind: ask
+    q: Why does a drop feel big?
+    options: ["the drums were missing just before", "it's always louder", "it's a different tempo", "a new song starts"]
+    answer: 0
+    why: Contrast. After the break, the drums return with full force.
+    whyWrong:
+      1: It's usually the same level; it just feels bigger.
+      2: The tempo stays.
+      3: It's the same song.
+
+  - kind: keep
+    next: >-
+      Next: finish and export. Name it, take it to Live, send it to CCD.

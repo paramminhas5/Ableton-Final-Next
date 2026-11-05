@@ -1,0 +1,92 @@
+slug: dj-equipment
+world: dj
+number: 2
+title: the gear
+minutes: 7
+song:
+  changes: drums.clap
+  why: you'll mix your own song against other tracks, so first you learn the desk
+learn: >-
+  Two decks and a mixer: what the channel faders, the low eq and the crossfader do, with your song on one
+  deck and a track from the bank on the other.
+youCan:
+  - say what each part of a dj setup does
+  - move between two tracks with the crossfader
+  - turn a track's low end down with its eq
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        A dj plays two tracks at once and moves between them so the music never stops. That's all the gear is
+        for: two decks to play the tracks, and a mixer in the middle to blend them. Tap through track a, track
+        b and both in time to hear what a blend sounds like.
+      straight: >-
+        Two decks play two tracks; the mixer blends them. Tap through to hear each, then both together.
+      eli5: >-
+        A dj has two music players and a mixer in the middle. They play two songs and slide from one to the
+        other so the dancing never stops.
+
+  - kind: mix
+    goal: crossfade
+    say:
+      mentor: >-
+        This is your desk. Deck a is your own song. Deck b is a track from the bank; pick a different one
+        below if you like. Each deck has a channel fader, how loud it is, and a low knob, which turns its
+        bass up or down.
+
+        The wide slider in the middle is the crossfader. All the way left you only hear deck a, all the way
+        right only deck b, in the middle both. Slide it all the way to b, then all the way back to a.
+      straight: >-
+        Deck a: your song. Deck b: a bank track. Channel faders set each deck's level, low knobs its bass.
+        The crossfader blends between them: slide it fully to b, then back to a.
+      eli5: >-
+        Your song is on deck a. Another song is on deck b. The big sideways slider picks which one you hear.
+        Slide it all the way to b, then all the way back to a.
+
+  - kind: say
+    title: headphones and cue
+    say:
+      mentor: >-
+        One piece of gear you can't see here: headphones. On a real mixer each deck has a cue button that
+        sends it to your headphones only, so you can hear and line up the next track before the crowd does.
+        It's the most important habit in djing, and you'll use it once you play on real gear.
+      straight: >-
+        Real mixers have a cue button per deck that sends it to your headphones only, so you prepare the next
+        track without the crowd hearing.
+      eli5: >-
+        Djs wear headphones so they can listen to the next song secretly before everyone else hears it.
+
+  - kind: ask
+    q: What does the crossfader do?
+    options: ["blends between deck a and deck b", "changes the tempo", "turns the bass down", "records the mix"]
+    answer: 0
+    why: Left is deck a, right is deck b, the middle is both.
+    whyWrong:
+      1: That's the tempo fader.
+      2: That's the low eq knob.
+      3: Recording is separate.
+
+  - kind: ask
+    q: What is a channel fader for?
+    options: ["how loud one deck is", "how fast one deck plays", "which deck you hear in headphones", "the key of the track"]
+    answer: 0
+    why: Each deck has its own volume fader.
+    whyWrong:
+      1: That's tempo.
+      2: That's cue.
+      3: Key is a property of the track.
+
+  - kind: ask
+    q: Why do djs use headphones?
+    options: ["to hear the next track before the crowd does", "to block out the crowd", "because the speakers are too quiet", "to record the set"]
+    answer: 0
+    why: Cue lets you line up the next track in private.
+    whyWrong:
+      1: They want to hear the room too.
+      2: The room is loud enough.
+      3: Recording is done from the mixer.
+
+  - kind: keep
+    next: >-
+      Next: tempo and bpm. Two tracks at different speeds, and matching them by ear.

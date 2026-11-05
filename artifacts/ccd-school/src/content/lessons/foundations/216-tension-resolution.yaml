@@ -1,0 +1,117 @@
+slug: tension-resolution
+world: foundations
+number: 216
+title: tension and resolution
+minutes: 5
+song:
+  changes: fx.riser
+  why: a riser winds the tension up before your drop, so the drop lands harder
+learn: >-
+  Why tension makes release feel good, how chords and arrangement both build it, and a riser into the drop of
+  your song.
+youCan:
+  - say what tension and resolution are
+  - say why V pulls to I
+  - place a riser before your drop
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Imagine this loop with the kick taken away for eight bars, a sweep rising and rising over the top. Then
+        the kick slams back in. That moment, the drop, is the best feeling in dance music, and it only works
+        because of the waiting before it.
+
+        The waiting is tension: anything that makes you expect something. The arrival is resolution.
+      straight: >-
+        Tension is anything that sets up an expectation. Resolution is the release when it's met. A drop is
+        the biggest example in dance music.
+      eli5: >-
+        Waiting for something exciting is tension. When it finally happens, that's resolution. The drop in a
+        dance song is the big happy moment after the wait.
+
+  - kind: say
+    title: the pull towards home
+    say:
+      mentor: >-
+        Chords do this too. Some feel settled and some feel like a question. The V chord, built on the fifth
+        note, asks, and the I chord, home, answers. Hear V then I and the phrase feels finished.
+
+        Inside that pull is the leading tone, the seventh note of the scale, sitting just one semitone under
+        home. It leans so hard towards home that your ear almost demands it moves up.
+      straight: >-
+        The V chord asks, the I chord answers. The leading tone, the seventh note, sits a semitone below home
+        and pulls up to it.
+      eli5: >-
+        Some chords sound like a question and one chord sounds like the answer. The answer chord is home.
+    deeper:
+      - title: why v7 pulls so hard
+        say: >-
+          In G7, the notes b and f sit a tritone apart, the most unstable interval. That pair wants to
+          resolve, b up to c and f down to e, and both land inside c major, the home chord.
+      - title: the deceptive cadence
+        say: >-
+          Set up V and then go to vi instead of I. The pull happens but the landing isn't where you expected,
+          which keeps the listener leaning in.
+
+  - kind: arrange
+    goal: risers
+    say:
+      mentor: >-
+        Producers build tension with risers, filters that close, a kick taken away and rising pitch or noise.
+        The drop is the release, where the kick returns and the full groove lands.
+
+        Here's your song in sections, with a riser row at the bottom. A riser is a sweep that climbs in pitch
+        and brightness over a few bars. Turn it on in the section right before your drop and play it through.
+        Listen for the moment it cuts off and the drop hits. One per drop is plenty.
+      straight: >-
+        Your song in sections. Turn the riser on in the section before your drop, then play it through. The
+        riser builds, the drop releases.
+      eli5: >-
+        Find the part just before the drop and tap its riser. Press play. Whoosh, higher and higher, then
+        boom!
+
+  - kind: ask
+    q: Where does a riser usually go?
+    options: ["the bars just before a drop", "the first beat of the drop", "the middle of the intro", "after the song ends"]
+    answer: 0
+    why: It builds over the last bars before the drop and cuts off as the drop lands.
+    whyWrong:
+      1: On the drop it gets in the way of the release.
+      2: It needs something to build towards.
+      3: There's nothing left to build to.
+
+  - kind: ask
+    q: The strongest pull towards home is
+    options: ["V to I", "IV to I", "ii to I", "vi to I"]
+    answer: 0
+    why: V asks, I answers. It's the classic resolution.
+    whyWrong:
+      1: The IV chord moves home gently, with less pull.
+      2: The ii chord usually leads to V first.
+      3: The vi chord has little pull towards home.
+
+  - kind: ask
+    q: The leading tone sits
+    options: ["a semitone below home", "a fifth above home", "an octave above home", "on the fourth note"]
+    answer: 0
+    why: It's the seventh note, one semitone under home, and it pulls up to it.
+    whyWrong:
+      1: That's the fifth, the root of the V chord.
+      2: That's home again.
+      3: The fourth isn't next to home.
+
+  - kind: ask
+    more: true
+    q: In a deceptive cadence, V goes to
+    options: ["vi", "I", "IV", "ii"]
+    answer: 0
+    why: The ear expects I and gets vi instead.
+    whyWrong:
+      1: That's the normal resolution.
+      2: The deceptive move is to vi, not IV.
+      3: The ii chord usually comes before V, not after.
+
+  - kind: keep
+    next: >-
+      Basics is nearly done. Try the bonus round, listen like a producer, or head to the producer world.

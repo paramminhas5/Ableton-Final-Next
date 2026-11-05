@@ -295,8 +295,8 @@ export function KnobTrainerSim({ preset }: { preset?: Record<string, unknown> })
               Target was <strong>{meta.format(target)}</strong>. You guessed{" "}
               <strong>{meta.format(val)}</strong>.
               {hit
-                ? " Within tolerance — your ear is calibrated."
-                : ` Off by ${meta.format(Math.abs(val - target))} — try again.`}
+                ? " Within tolerance: your ear is calibrated."
+                : ` Off by ${meta.format(Math.abs(val - target))}: try again.`}
             </div>
           </div>
           <button

@@ -1,0 +1,95 @@
+slug: crate-digging
+world: dj
+number: 211
+title: crate digging
+minutes: 5
+song:
+  changes: drums.clap
+  why: the track after your song has to fit its key and its energy, and finding it is the dj's real job
+learn: >-
+  Where djs find music, and digging through the bank for a track that fits your song's key and energy.
+youCan:
+  - name places djs find new music
+  - pick a track that fits your song's key
+  - judge whether a track's energy suits yours
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two different grooves that sit well together. Finding tracks like that is crate digging. The name
+        comes from flipping through crates of records in shops, and now it means any hunting for music,
+        anywhere.
+
+        It's the part of djing nobody sees, and it's what makes your sets sound like yours.
+      straight: >-
+        Crate digging is hunting for music. The name comes from flipping through record crates in shops.
+      eli5: >-
+        Djs spend lots of time looking for great songs. They call it crate digging, because records used to
+        be kept in crates.
+
+  - kind: say
+    title: where to dig
+    say:
+      mentor: >-
+        Record shops, charity shops and markets for vinyl. Online stores like Beatport, Bandcamp, Juno and
+        Traxsource. Mixes and radio shows, where other djs reveal what they're playing. Labels: if you love
+        four releases from a label, check the fifth. And the charts djs publish of what they're playing each
+        month.
+
+        The prize is a track nobody else has. Playing it at the right moment is something only you can do.
+      straight: >-
+        Dig in shops, online stores (Beatport, Bandcamp, Juno, Traxsource), other djs' mixes and radio shows,
+        labels you trust, and djs' charts. Tracks nobody else has are the prize.
+      eli5: >-
+        Djs look in record shops, online shops, and other djs' mixes. The best find is a song nobody else
+        has.
+
+  - kind: mix
+    goal: key
+    say:
+      mentor: >-
+        Your song is on deck a. Dig through the bank below for the track that comes after it, and check two
+        things.
+
+        Key: the screen tells you when a deck b track fits your song. Energy: listen. Does it feel like a
+        step up, a step down, or the same? Pick the one that fits your key and feels right after your song.
+      straight: >-
+        Find your song's next track in the bank. It has to fit the key (the screen says fits) and feel right
+        for energy.
+      eli5: >-
+        Tap through the other songs. Find one the screen says fits, and that feels good after your song.
+
+  - kind: ask
+    q: What is crate digging?
+    options: ["actively hunting for new music", "storing records in boxes", "deleting old tracks", "sorting your library by name"]
+    answer: 0
+    why: Searching everywhere for the tracks that make your sets.
+    whyWrong:
+      1: That's where the name comes from, not what it means.
+      2: That's tidying, not digging.
+      3: That's organising.
+
+  - kind: ask
+    q: Why follow labels you already like?
+    options: ["their next release is likely to suit your sound too", "labels pay djs", "labels give away music", "labels decide who gets booked"]
+    answer: 0
+    why: Labels have a sound. Trust the ones you love.
+    whyWrong:
+      1: That's not why djs follow them.
+      2: Music still costs money.
+      3: Promoters book djs.
+
+  - kind: ask
+    q: Why is a track nobody else has worth so much?
+    options: ["it makes moments only you can deliver", "it sounds technically better", "clubs require it", "it only impresses other djs"]
+    answer: 0
+    why: Nobody else can play that moment.
+    whyWrong:
+      1: Rare doesn't mean better quality.
+      2: No club asks for it.
+      3: Crowds feel it too.
+
+  - kind: keep
+    next: >-
+      Back to the song path: key and harmonic mixing.

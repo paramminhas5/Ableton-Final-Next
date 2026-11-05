@@ -1,0 +1,66 @@
+slug: space
+world: producer
+number: 15
+title: space, reverb and echo
+minutes: 6
+song:
+  changes: lead.lead
+  why: a little reverb and echo puts your lead in a room instead of right in your ear
+learn: >-
+  Reverb and echo, sends, and how much space to give your lead.
+youCan:
+  - say the difference between reverb and echo
+  - send your lead to reverb and echo
+  - hear near and far in a mix
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        Reverb is the sound of a room: thousands of tiny reflections blurring into a tail. Echo, or delay, is a
+        clear repeat of the sound. Dry sounds feel close, right in your ear. More reverb pushes them further
+        back. Producers use that to give a mix depth: kick and bass up front and dry, pads and leads a little
+        further back.
+      straight: >-
+        Reverb: a room's blur of reflections. Echo: clear repeats. More of either pushes a sound further back.
+      eli5: >-
+        Reverb makes a sound feel like it's in a big room. Echo makes it repeat, echo, echo. More of either
+        makes it feel further away.
+
+  - kind: shape
+    layer: lead
+    knobs: [send, echo]
+    say:
+      mentor: >-
+        Your lead with two sends. Send goes to the reverb, echo to the echo. A send means a copy of your lead
+        goes to the effect while the dry lead stays as it is, so you blend in just as much space as you want.
+        Start low. A little is usually plenty.
+      straight: >-
+        Send: how much lead goes to reverb. Echo: how much to the echo. The dry sound stays; you blend in
+        space. Start low.
+      eli5: >-
+        Send adds a big-room sound. Echo adds repeats. A little bit is usually enough.
+
+  - kind: ask
+    q: What's the difference between reverb and echo?
+    options: ["reverb is a blur of reflections, echo is clear repeats", "they're the same", "echo is louder", "reverb only works on drums"]
+    answer: 0
+    why: Reverb smears, echo repeats.
+    whyWrong:
+      1: They sound very different.
+      2: Loudness isn't the difference.
+      3: Reverb works on anything.
+
+  - kind: ask
+    q: More reverb on a part makes it sound?
+    options: ["further away", "closer", "faster", "higher"]
+    answer: 0
+    why: Wet sounds sit back; dry sounds sit up front.
+    whyWrong:
+      1: Dry is close.
+      2: Tempo is unchanged.
+      3: Pitch is unchanged.
+
+  - kind: keep
+    next: >-
+      Next: glue. The mix as one sound, loud and clean.

@@ -12,7 +12,7 @@ export const SCREENS_WHAT_IS_SOUND: LessonScreen[] = [
     kind: "hook",
     emoji: "",
     headline: "Everything you hear is a wave",
-    subtext: "Sound is pressure moving through air — nothing more.",
+    subtext: "Sound is pressure moving through air: nothing more.",
   },
   {
     kind: "concept",
@@ -31,7 +31,7 @@ export const SCREENS_WHAT_IS_SOUND: LessonScreen[] = [
   {
     kind: "interact",
     sim: "waveform-visualizer",
-    prompt: "Tap a waveform — see the shape and hear the sound",
+    prompt: "Tap a waveform: see the shape and hear the sound",
   },
   {
     kind: "quiz",
@@ -65,7 +65,7 @@ export const SCREENS_WHAT_IS_SOUND: LessonScreen[] = [
 
 
 export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Frequency is the number behind every pitch", subtext: "440 Hz is the A above middle C — that's 440 vibrations per second." },
+  { kind: "hook", emoji: "", headline: "Frequency is the number behind every pitch", subtext: "440 Hz is the A above middle C: that's 440 vibrations per second." },
   {
     kind: "concept",
     title: "Frequency = pitch",
@@ -87,7 +87,7 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
     audioType: "frequency-bar",
     options: ["Sub-bass (20–60 Hz)", "Bass (60–250 Hz)", "Midrange (250–4k Hz)", "Treble (4k–20k Hz)"],
     answer: 2,
-    explain: "The frequency sweep covers the full hearing range. Midrange (250 Hz–4 kHz) is the most audible region — where voices and most instruments live.",
+    explain: "The frequency sweep covers the full hearing range. Midrange (250 Hz–4 kHz) is the most audible region: where voices and most instruments live.",
   },
   {
     kind: "quiz",
@@ -110,11 +110,11 @@ export const SCREENS_FREQUENCY_PITCH: LessonScreen[] = [
 
 
 export const SCREENS_AMPLITUDE_VOLUME: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Volume is measured in decibels", subtext: "0 dBFS is the digital ceiling — cross it and you get distortion." },
+  { kind: "hook", emoji: "", headline: "Volume is measured in decibels", subtext: "0 dBFS is the digital ceiling: cross it and you get distortion." },
   {
     kind: "concept",
     title: "Amplitude & dBFS",
-    body: "Amplitude is the height of a wave — how much the air (or signal) moves. In digital audio we measure amplitude in dBFS (decibels Full Scale). 0 dBFS = maximum before clipping.",
+    body: "Amplitude is the height of a wave: how much the air (or signal) moves. In digital audio we measure amplitude in dBFS (decibels Full Scale). 0 dBFS = maximum before clipping.",
     keyFact: "0 dBFS = clip. Aim for peaks at −6 dBFS.",
     visual: "amplitude-dial",
   },
@@ -125,7 +125,7 @@ export const SCREENS_AMPLITUDE_VOLUME: LessonScreen[] = [
     keyFact: "+6 dB ≈ twice as loud. −20 dB is very quiet.",
     visual: "headroom-meter",
   },
-  { kind: "interact", sim: "decibel-meter", prompt: "Drag the fader — hear volume change, watch the meter" },
+  { kind: "interact", sim: "decibel-meter", prompt: "Drag the fader: hear volume change, watch the meter" },
   {
     kind: "type-answer",
     q: "At what dBFS level should your loudest peaks sit during a mix? (Write the number, e.g. −6)",
@@ -136,22 +136,22 @@ export const SCREENS_AMPLITUDE_VOLUME: LessonScreen[] = [
   {
     kind: "quiz",
     q: "What happens when a digital signal exceeds 0 dBFS?",
-    options: ["It becomes quieter", "It clips — creating harsh distortion", "It reverbs automatically", "Nothing changes"],
+    options: ["It becomes quieter", "It clips: creating harsh distortion", "It reverbs automatically", "Nothing changes"],
     answer: 1,
     explain: "Digital clipping is hard and ugly. When the signal hits the ceiling (0 dBFS), the tops of the waveform get cut flat, creating harsh harmonic distortion.",
   },
   {
     kind: "summary",
-    learned: ["Amplitude = wave height = perceived loudness", "0 dBFS = digital ceiling — stay below it", "Aim for peaks at −6 dBFS while mixing"],
+    learned: ["Amplitude = wave height = perceived loudness", "0 dBFS = digital ceiling: stay below it", "Aim for peaks at −6 dBFS while mixing"],
   },
 ];
 
 export const SCREENS_TIMBRE_TONE: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Same note, totally different sound", subtext: "A piano and guitar both play C4 — but sound nothing alike. That's timbre." },
+  { kind: "hook", emoji: "", headline: "Same note, totally different sound", subtext: "A piano and guitar both play C4: but sound nothing alike. That's timbre." },
   {
     kind: "concept",
     title: "What is timbre?",
-    body: "Timbre (TAM-ber) is the tonal colour of a sound — what makes a violin different from a flute at the same pitch and volume. It's defined by harmonic content and the shape of the attack.",
+    body: "Timbre (TAM-ber) is the tonal colour of a sound: what makes a violin different from a flute at the same pitch and volume. It's defined by harmonic content and the shape of the attack.",
     keyFact: "Timbre = which harmonics are present + how loud each is.",
     visual: "waveform-compare",
   },
@@ -162,32 +162,32 @@ export const SCREENS_TIMBRE_TONE: LessonScreen[] = [
     keyFact: "More harmonics = brighter. Fewer harmonics = purer.",
     visual: "waveform",
   },
-  { kind: "interact", sim: "waveform-visualizer", prompt: "Switch waveforms — hear how timbre changes" },
+  { kind: "interact", sim: "waveform-visualizer", prompt: "Switch waveforms: hear how timbre changes" },
   {
     kind: "audio-id",
     prompt: "Which waveform shape are you hearing?",
     audioType: "waveform-compare",
     options: ["Sine wave (pure, smooth)", "Square wave (hollow, buzzy)", "Sawtooth wave (bright, full)", "Triangle wave (soft, mellow)"],
     answer: 2,
-    explain: "The sawtooth contains all harmonics at every integer multiple — that's what creates its buzzy, full sound. It's the classic wave for leads and basses before filtering.",
+    explain: "The sawtooth contains all harmonics at every integer multiple: that's what creates its buzzy, full sound. It's the classic wave for leads and basses before filtering.",
   },
   {
     kind: "quiz",
     q: "Two instruments play the same note at the same volume. What makes them sound different?",
-    options: ["Tempo", "Timbre — different harmonic content", "The room size", "The microphone used"],
+    options: ["Tempo", "Timbre: different harmonic content", "The room size", "The microphone used"],
     answer: 1,
     explain: "Timbre is determined by the mix of harmonics and the amplitude envelope (attack, decay, sustain, release). Same pitch, different harmonic recipe = different timbre.",
   },
   {
     kind: "summary",
-    learned: ["Timbre = tonal colour — what makes sounds distinct", "Harmonics (overtones) shape timbre", "Sine = pure (no harmonics). Saw = bright (all harmonics)"],
+    learned: ["Timbre = tonal colour: what makes sounds distinct", "Harmonics (overtones) shape timbre", "Sine = pure (no harmonics). Saw = bright (all harmonics)"],
   },
 ];
 
 
 // Path 2 — Perception
 export const SCREENS_WAVEFORMS: LessonScreen[] = [
-  { kind: "hook", emoji: "〰", headline: "4 shapes make every synth sound", subtext: "Sine, square, sawtooth, triangle — these are the building blocks." },
+  { kind: "hook", emoji: "〰", headline: "4 shapes make every synth sound", subtext: "Sine, square, sawtooth, triangle: these are the building blocks." },
   {
     kind: "concept",
     title: "The 4 fundamental waves",
@@ -195,23 +195,23 @@ export const SCREENS_WAVEFORMS: LessonScreen[] = [
     keyFact: "Pick a wave → shape it with filters and envelopes → get any sound.",
     visual: "waveform-compare",
   },
-  { kind: "interact", sim: "waveform-visualizer", prompt: "Tap each wave — see the shape, hear the character" },
+  { kind: "interact", sim: "waveform-visualizer", prompt: "Tap each wave: see the shape, hear the character" },
   {
     kind: "match",
     prompt: "Match each waveform to its harmonic content",
     pairs: [
-      { left: "Sine", right: "No harmonics — pure fundamental only" },
+      { left: "Sine", right: "No harmonics: pure fundamental only" },
       { left: "Square", right: "Odd harmonics only (1, 3, 5…)" },
       { left: "Sawtooth", right: "All harmonics (1, 2, 3, 4…)" },
-      { left: "Triangle", right: "Weak odd harmonics — mellow" },
+      { left: "Triangle", right: "Weak odd harmonics: mellow" },
     ],
   },
   {
     kind: "quiz",
-    q: "Which waveform contains ONLY the fundamental frequency — no harmonics?",
+    q: "Which waveform contains ONLY the fundamental frequency: no harmonics?",
     options: ["Sawtooth", "Square", "Triangle", "Sine"],
     answer: 3,
-    explain: "The sine wave is the purest sound in nature — one single frequency, no overtones. Everything else is a combination of sine waves at different frequencies (Fourier theorem).",
+    explain: "The sine wave is the purest sound in nature: one single frequency, no overtones. Everything else is a combination of sine waves at different frequencies (Fourier theorem).",
   },
   {
     kind: "summary",
@@ -224,7 +224,7 @@ export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
   {
     kind: "concept",
     title: "Reverb & reflection",
-    body: "When sound hits a wall, it reflects back. Hundreds of reflections arriving at slightly different times create reverb — the sense of space. Longer room = longer reverb tail.",
+    body: "When sound hits a wall, it reflects back. Hundreds of reflections arriving at slightly different times create reverb: the sense of space. Longer room = longer reverb tail.",
     keyFact: "Reverb time (RT60) = how long a sound takes to fade 60 dB.",
     visual: "signal-chain",
   },
@@ -257,15 +257,15 @@ export const SCREENS_SOUND_IN_SPACE: LessonScreen[] = [
 
 
 export const SCREENS_OVERTONES_HARMONICS: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and you hear C — plus hidden frequencies above it." },
+  { kind: "hook", emoji: "", headline: "One note contains many frequencies", subtext: "Hit middle C on a piano and you hear C: plus hidden frequencies above it." },
   {
     kind: "concept",
     title: "The harmonic series",
-    body: "When you play a note, you hear the fundamental plus harmonics at 2x, 3x, 4x the fundamental frequency. These harmonics are always present — their relative loudness defines the timbre.",
+    body: "When you play a note, you hear the fundamental plus harmonics at 2x, 3x, 4x the fundamental frequency. These harmonics are always present: their relative loudness defines the timbre.",
     keyFact: "Harmonic 2 = octave above. Harmonic 3 = octave + fifth.",
     visual: "frequency-bar",
   },
-  { kind: "interact", sim: "ear-training", prompt: "Listen — identify the instrument by its harmonic content", preset: { mode: "timbre" } },
+  { kind: "interact", sim: "ear-training", prompt: "Listen: identify the instrument by its harmonic content", preset: { mode: "timbre" } },
   {
     kind: "sequence",
     prompt: "Order the harmonics of a 100 Hz note from lowest to highest",
@@ -275,9 +275,9 @@ export const SCREENS_OVERTONES_HARMONICS: LessonScreen[] = [
   {
     kind: "quiz",
     q: "In synthesis, a filter removes harmonics. What does a low-pass filter do to brightness?",
-    options: ["Makes it brighter", "Has no effect on brightness", "Removes high harmonics — makes it darker", "Adds new harmonics"],
+    options: ["Makes it brighter", "Has no effect on brightness", "Removes high harmonics: makes it darker", "Adds new harmonics"],
     answer: 2,
-    explain: "A low-pass filter cuts frequencies above a cutoff point. Removing high harmonics makes a sound darker and warmer — the classic synth 'filter sweep' effect.",
+    explain: "A low-pass filter cuts frequencies above a cutoff point. Removing high harmonics makes a sound darker and warmer: the classic synth 'filter sweep' effect.",
   },
   {
     kind: "summary",
@@ -286,18 +286,18 @@ export const SCREENS_OVERTONES_HARMONICS: LessonScreen[] = [
 ];
 
 export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Your ears are not flat — they have opinions", subtext: "Loud low frequencies need much more power than loud high frequencies." },
+  { kind: "hook", emoji: "", headline: "Your ears are not flat: they have opinions", subtext: "Loud low frequencies need much more power than loud high frequencies." },
   {
     kind: "concept",
     title: "Equal-loudness contours",
     body: "Human hearing is most sensitive between 2–5 kHz (consonants in speech). At the same SPL, a 1 kHz tone sounds much quieter than a 3 kHz tone. This is why mix engineers use reference tracks.",
-    keyFact: "We're most sensitive at 2–5 kHz — the speech range.",
+    keyFact: "We're most sensitive at 2–5 kHz: the speech range.",
     visual: "eq-curve",
   },
   {
     kind: "concept",
     title: "Practical impact on mixing",
-    body: "At low listening volumes, bass and treble drop away faster than mids (Fletcher-Munson). Mix at a consistent moderate volume and check on multiple systems — your ears lie when fatigued.",
+    body: "At low listening volumes, bass and treble drop away faster than mids (Fletcher-Munson). Mix at a consistent moderate volume and check on multiple systems: your ears lie when fatigued.",
     keyFact: "Mix loud = bass-heavy result. Mix quiet = check mids.",
   },
   { kind: "interact", sim: "ear-training", prompt: "Which tone sounds louder? Trust your ears", preset: { mode: "loudness" } },
@@ -306,7 +306,7 @@ export const SCREENS_HOW_WE_HEAR: LessonScreen[] = [
     q: "Human hearing is most sensitive in which frequency range?",
     options: ["20–100 Hz", "2,000–5,000 Hz", "8,000–12,000 Hz", "100–200 Hz"],
     answer: 1,
-    explain: "The ear is tuned for the human voice. 2–5 kHz contains speech consonants — we evolved to hear this range very clearly. This is why harshness in mixes often lives at 3–4 kHz.",
+    explain: "The ear is tuned for the human voice. 2–5 kHz contains speech consonants: we evolved to hear this range very clearly. This is why harshness in mixes often lives at 3–4 kHz.",
   },
   {
     kind: "match",
@@ -335,11 +335,11 @@ export const SCREENS_WHAT_IS_RHYTHM: LessonScreen[] = [
   {
     kind: "concept",
     title: "Pulse & rhythm",
-    body: "The pulse (beat) is the steady underlying tick of music — what you tap your foot to. Rhythm is patterns of sounds laid on top of the pulse, some on the beat, some between.",
+    body: "The pulse (beat) is the steady underlying tick of music: what you tap your foot to. Rhythm is patterns of sounds laid on top of the pulse, some on the beat, some between.",
     keyFact: "Pulse = steady. Rhythm = pattern on top of the pulse.",
     visual: "bpm-grid",
   },
-  { kind: "interact", sim: "beat-builder", prompt: "Tap the pads — build a basic beat on the pulse" },
+  { kind: "interact", sim: "beat-builder", prompt: "Tap the pads: build a basic beat on the pulse" },
   {
     kind: "quiz",
     q: "What is the difference between beat and rhythm?",
@@ -350,13 +350,13 @@ export const SCREENS_WHAT_IS_RHYTHM: LessonScreen[] = [
       "Beat is for drums only; rhythm is for melodic instruments",
     ],
     answer: 1,
-    explain: "The beat is the metronomic backbone. Rhythm is what musicians play against it — syncopated notes, rests, accents. Great rhythm feels purposeful against the pulse.",
+    explain: "The beat is the metronomic backbone. Rhythm is what musicians play against it: syncopated notes, rests, accents. Great rhythm feels purposeful against the pulse.",
   },
   {
     kind: "type-answer",
     q: "In 4/4 time, beats 1 and 3 are 'strong' beats. What are beats 2 and 4 called?",
     acceptableAnswers: ["weak beats", "off-beats", "offbeats", "backbeats", "back beats"],
-    explain: "Beats 2 and 4 are the weak beats (also called backbeats). In rock and pop, the snare hits on these weak beats — creating the defining push-pull feel of popular music.",
+    explain: "Beats 2 and 4 are the weak beats (also called backbeats). In rock and pop, the snare hits on these weak beats: creating the defining push-pull feel of popular music.",
     hint: "Think about what the snare drum plays in most pop songs",
   },
   {
@@ -366,7 +366,7 @@ export const SCREENS_WHAT_IS_RHYTHM: LessonScreen[] = [
 ];
 
 export const SCREENS_TEMPO_BPM: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "BPM is the heartbeat of a track", subtext: "125 BPM house, 140 BPM techno, 90 BPM hip-hop — tempo sets the mood." },
+  { kind: "hook", emoji: "", headline: "BPM is the heartbeat of a track", subtext: "125 BPM house, 140 BPM techno, 90 BPM hip-hop: tempo sets the mood." },
   {
     kind: "concept",
     title: "BPM = Beats Per Minute",
@@ -374,7 +374,7 @@ export const SCREENS_TEMPO_BPM: LessonScreen[] = [
     keyFact: "BPM range by genre: Hip-hop 80–100, House 120–130, Techno 130–150, D&B 170–180.",
     visual: "bpm-grid",
   },
-  { kind: "interact", sim: "bpm-tap", prompt: "Tap the button in time — discover the BPM" },
+  { kind: "interact", sim: "bpm-tap", prompt: "Tap the button in time: discover the BPM" },
   {
     kind: "match",
     prompt: "Match each genre to its typical BPM range",
@@ -390,11 +390,11 @@ export const SCREENS_TEMPO_BPM: LessonScreen[] = [
     q: "A track at 140 BPM has how many beats per second?",
     options: ["1.4", "2.33", "14", "70"],
     answer: 1,
-    explain: "140 BPM ÷ 60 seconds = 2.33 beats per second. You can feel this — count 1-2-3 quickly in one second and you're close to 140 BPM.",
+    explain: "140 BPM ÷ 60 seconds = 2.33 beats per second. You can feel this: count 1-2-3 quickly in one second and you're close to 140 BPM.",
   },
   {
     kind: "summary",
-    learned: ["BPM = beats per minute — the tempo of a track", "Genre determines typical BPM range", "Tap tempo = fastest way to find the BPM of a track"],
+    learned: ["BPM = beats per minute: the tempo of a track", "Genre determines typical BPM range", "Tap tempo = fastest way to find the BPM of a track"],
   },
 ];
 
@@ -411,10 +411,10 @@ export const SCREENS_BARS_TIME_SIGNATURES: LessonScreen[] = [
   {
     kind: "concept",
     title: "Common time signatures",
-    body: "4/4 is standard for pop, rock, electronic. 3/4 is waltz (1-2-3). 6/8 feels like two groups of three. 5/4 is irregular — odd-feeling grooves.",
+    body: "4/4 is standard for pop, rock, electronic. 3/4 is waltz (1-2-3). 6/8 feels like two groups of three. 5/4 is irregular: odd-feeling grooves.",
     keyFact: "Pop music is almost always 4/4.",
   },
-  { kind: "interact", sim: "beat-builder", prompt: "Build a 4/4 drum beat — 4 kicks in a bar" },
+  { kind: "interact", sim: "beat-builder", prompt: "Build a 4/4 drum beat: 4 kicks in a bar" },
   {
     kind: "sequence",
     prompt: "Put these time signatures in order from fewest to most beats per bar",
@@ -439,7 +439,7 @@ export const SCREENS_GROOVE_FEEL: LessonScreen[] = [
   {
     kind: "concept",
     title: "What is groove?",
-    body: "Groove is the subtle timing variation that makes rhythm feel alive. Drum machines are perfect — humans are slightly ahead or behind the beat, and that imperfection is what makes you want to dance.",
+    body: "Groove is the subtle timing variation that makes rhythm feel alive. Drum machines are perfect: humans are slightly ahead or behind the beat, and that imperfection is what makes you want to dance.",
     keyFact: "Rushing the beat = excitement. Dragging = relaxed.",
     visual: "rhythm-dots",
   },
@@ -449,21 +449,21 @@ export const SCREENS_GROOVE_FEEL: LessonScreen[] = [
     body: "Swing delays every other 8th note slightly, turning a straight 1-and-2-and into a lopsided 1-(pause)-and feel. Jazz, funk and hip-hop are built on swing.",
     keyFact: "Swing = 50% straight → 67% swing ratio = triplet feel.",
   },
-  { kind: "interact", sim: "groove-extractor", prompt: "Hear straight vs swung — feel the difference" },
+  { kind: "interact", sim: "groove-extractor", prompt: "Hear straight vs swung: feel the difference" },
   {
     kind: "audio-id",
     prompt: "Is this groove straight or swung?",
     audioType: "bpm-grid",
     options: ["Straight 8ths (perfectly even)", "Swung (lopsided, jazzy)", "Triplet feel (3 against 2)", "Dotted rhythm"],
     answer: 0,
-    explain: "Straight 8th notes are perfectly even — each 'and' falls exactly halfway between beats. Swing delays these 'ands' to give a lopsided, jazzy feel. Most drum machines default to straight.",
+    explain: "Straight 8th notes are perfectly even: each 'and' falls exactly halfway between beats. Swing delays these 'ands' to give a lopsided, jazzy feel. Most drum machines default to straight.",
   },
   {
     kind: "quiz",
     q: "What does 'quantising' drums in a DAW do?",
     options: [
       "Adds swing to the pattern",
-      "Snaps notes to the nearest grid position — removes human timing variation",
+      "Snaps notes to the nearest grid position: removes human timing variation",
       "Changes the BPM",
       "Transposes the drum sounds to a different pitch",
     ],
@@ -472,7 +472,7 @@ export const SCREENS_GROOVE_FEEL: LessonScreen[] = [
   },
   {
     kind: "summary",
-    learned: ["Groove = subtle timing variation that makes rhythm feel alive", "Swing delays every other 8th note for a lopsided feel", "Full quantise removes groove — use partial quantise to preserve feel"],
+    learned: ["Groove = subtle timing variation that makes rhythm feel alive", "Swing delays every other 8th note for a lopsided feel", "Full quantise removes groove: use partial quantise to preserve feel"],
   },
 ];
 
@@ -487,19 +487,19 @@ export const SCREENS_SYNCOPATION: LessonScreen[] = [
     keyFact: "Funk bass lines live almost entirely on off-beats.",
     visual: "rhythm-dots",
   },
-  { kind: "interact", sim: "beat-builder", prompt: "Move the kick to beat 2.5 — feel the syncopation" },
+  { kind: "interact", sim: "beat-builder", prompt: "Move the kick to beat 2.5: feel the syncopation" },
   {
     kind: "quiz",
     q: "Syncopation means accenting…",
     options: ["Beat 1 only", "Beats 1 and 3", "The off-beats between main beats", "Every beat equally"],
     answer: 2,
-    explain: "Syncopation displaces rhythmic accent to the 'weak' parts of the bar — the 'ands', the 'e's and 'ah's. This rhythmic tension is the basis of funk, reggae, hip-hop and most dance music.",
+    explain: "Syncopation displaces rhythmic accent to the 'weak' parts of the bar: the 'ands', the 'e's and 'ah's. This rhythmic tension is the basis of funk, reggae, hip-hop and most dance music.",
   },
   {
     kind: "type-answer",
     q: "A note on the 'and' of beat 2 falls exactly halfway between beat 2 and beat 3. What is this position called? (two words)",
     acceptableAnswers: ["off beat", "off-beat", "offbeat", "the and", "upbeat", "up beat"],
-    explain: "The 'ands' (eighth note positions between beats) are called off-beats or upbeats. They are the rhythmic tension points — syncopation happens when you accent these instead of the main beats.",
+    explain: "The 'ands' (eighth note positions between beats) are called off-beats or upbeats. They are the rhythmic tension points: syncopation happens when you accent these instead of the main beats.",
     hint: "It's the opposite of 'on-beat'",
   },
   {
@@ -509,7 +509,7 @@ export const SCREENS_SYNCOPATION: LessonScreen[] = [
 ];
 
 export const SCREENS_POLYRHYTHM: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Two rhythms at once — and they cycle back", subtext: "Polyrhythm is when different subdivisions play simultaneously." },
+  { kind: "hook", emoji: "", headline: "Two rhythms at once: and they cycle back", subtext: "Polyrhythm is when different subdivisions play simultaneously." },
   {
     kind: "concept",
     title: "What is polyrhythm?",
@@ -523,7 +523,7 @@ export const SCREENS_POLYRHYTHM: LessonScreen[] = [
     body: "Afrobeat, Brazilian music and African drumming are built on polyrhythm. In electronic music, you create it by setting different pattern lengths (e.g. 8-step kick, 12-step hi-hat).",
     keyFact: "Different pattern lengths = automatic polyrhythm.",
   },
-  { kind: "interact", sim: "beat-builder", prompt: "Set kick every 4 steps, hi-hat every 3 steps — hear the pattern" },
+  { kind: "interact", sim: "beat-builder", prompt: "Set kick every 4 steps, hi-hat every 3 steps: hear the pattern" },
   {
     kind: "quiz",
     q: "In a 3-against-2 polyrhythm, the two parts align again after…",
@@ -556,7 +556,7 @@ export const SCREENS_NOTE_VALUES: LessonScreen[] = [
     keyFact: "16th notes are the standard grid in electronic music.",
     visual: "note-lengths",
   },
-  { kind: "interact", sim: "beat-builder", prompt: "Switch between 8th and 16th note grids — hear the difference" },
+  { kind: "interact", sim: "beat-builder", prompt: "Switch between 8th and 16th note grids: hear the difference" },
   {
     kind: "sequence",
     prompt: "Order these note values from longest to shortest",
@@ -588,7 +588,7 @@ export const SCREENS_RHYTHM_IN_PRODUCTION: LessonScreen[] = [
   {
     kind: "concept",
     title: "MIDI note length in production",
-    body: "In a piano roll, short notes (staccato) create punchy rhythms. Long notes sustain. Note length is as important as position — a 16th-note hi-hat feels very different to a quarter-note hi-hat.",
+    body: "In a piano roll, short notes (staccato) create punchy rhythms. Long notes sustain. Note length is as important as position: a 16th-note hi-hat feels very different to a quarter-note hi-hat.",
     keyFact: "Short = staccato/punchy. Long = sustained/smooth.",
   },
   { kind: "interact", sim: "beat-builder", prompt: "Build an 8-bar groove with kick, snare and hi-hat" },
@@ -628,7 +628,7 @@ export const SCREENS_RHYTHM_IN_PRODUCTION: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_NOTES_AND_OCTAVES: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "12 notes repeat across octaves forever", subtext: "C-D-E-F-G-A-B, then back to C — just one octave higher." },
+  { kind: "hook", emoji: "", headline: "12 notes repeat across octaves forever", subtext: "C-D-E-F-G-A-B, then back to C: just one octave higher." },
   {
     kind: "concept",
     title: "The 12 notes",
@@ -643,12 +643,12 @@ export const SCREENS_NOTES_AND_OCTAVES: LessonScreen[] = [
     keyFact: "Octave up = ×2 frequency. Octave down = ÷2.",
     visual: "piano-octave",
   },
-  { kind: "interact", sim: "note-explorer", prompt: "Tap notes on the keyboard — hear pitch change" },
+  { kind: "interact", sim: "note-explorer", prompt: "Tap notes on the keyboard: hear pitch change" },
   {
     kind: "type-answer",
     q: "How many semitones (half-steps) are in one octave?",
     acceptableAnswers: ["12", "twelve"],
-    explain: "One octave = 12 semitones. Count every key (white and black) from C to the next C on a piano — that's 12 steps. This is the same in every key.",
+    explain: "One octave = 12 semitones. Count every key (white and black) from C to the next C on a piano: that's 12 steps. This is the same in every key.",
   },
   {
     kind: "quiz",
@@ -664,15 +664,15 @@ export const SCREENS_NOTES_AND_OCTAVES: LessonScreen[] = [
 ];
 
 export const SCREENS_MAJOR_SCALE: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "The major scale sounds happy and bright", subtext: "7 notes, a specific pattern of steps — the foundation of Western music." },
+  { kind: "hook", emoji: "", headline: "The major scale sounds happy and bright", subtext: "7 notes, a specific pattern of steps: the foundation of Western music." },
   {
     kind: "concept",
     title: "The major scale pattern",
     body: "A major scale uses 7 of the 12 semitones, following the pattern: Whole-Whole-Half-Whole-Whole-Whole-Half steps (W W H W W W H). This pattern gives it its bright, 'happy' quality.",
-    keyFact: "C major: C D E F G A B C — all white keys.",
+    keyFact: "C major: C D E F G A B C: all white keys.",
     visual: "scale-steps",
   },
-  { kind: "interact", sim: "note-explorer", prompt: "Play C-D-E-F-G-A-B-C — hear the major scale" },
+  { kind: "interact", sim: "note-explorer", prompt: "Play C-D-E-F-G-A-B-C: hear the major scale" },
   {
     kind: "sequence",
     prompt: "Put the W/H steps of a major scale in order",
@@ -684,7 +684,7 @@ export const SCREENS_MAJOR_SCALE: LessonScreen[] = [
     q: "C major uses only the white keys on a piano. What is the 5th note of C major?",
     options: ["D", "E", "F", "G"],
     answer: 3,
-    explain: "C major: C(1) D(2) E(3) F(4) G(5) A(6) B(7). The 5th degree is G — also called the 'dominant'. It has a special relationship to the root.",
+    explain: "C major: C(1) D(2) E(3) F(4) G(5) A(6) B(7). The 5th degree is G: also called the 'dominant'. It has a special relationship to the root.",
   },
   {
     kind: "summary",
@@ -694,29 +694,29 @@ export const SCREENS_MAJOR_SCALE: LessonScreen[] = [
 
 
 export const SCREENS_MINOR_SCALE: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "The minor scale sounds dark and emotional", subtext: "Same 12 notes as major — just a different starting point and pattern." },
+  { kind: "hook", emoji: "", headline: "The minor scale sounds dark and emotional", subtext: "Same 12 notes as major: just a different starting point and pattern." },
   {
     kind: "concept",
     title: "Natural minor scale",
     body: "The natural minor scale pattern: W H W W H W W. Compared to major, the 3rd, 6th and 7th degrees are flattened by a semitone. This creates its characteristic sadness.",
-    keyFact: "A minor: A B C D E F G A — also all white keys.",
+    keyFact: "A minor: A B C D E F G A: also all white keys.",
     visual: "scale-steps",
   },
   {
     kind: "concept",
     title: "Relative major and minor",
-    body: "Every major scale has a 'relative minor' that uses the same notes but starts on the 6th degree. C major and A minor share all the same notes — only the tonic (home note) differs.",
+    body: "Every major scale has a 'relative minor' that uses the same notes but starts on the 6th degree. C major and A minor share all the same notes: only the tonic (home note) differs.",
     keyFact: "C major → relative minor = A minor (starts on 6th note).",
     visual: "piano",
   },
-  { kind: "interact", sim: "note-explorer", prompt: "Play A-B-C-D-E-F-G-A — hear the minor sound" },
+  { kind: "interact", sim: "note-explorer", prompt: "Play A-B-C-D-E-F-G-A: hear the minor sound" },
   {
     kind: "audio-id",
     prompt: "Does this scale sound major or minor?",
     audioType: "scale-steps",
     options: ["Major (bright, happy)", "Natural minor (dark, sad)", "Pentatonic (open, neutral)", "Chromatic (tense)"],
     answer: 0,
-    explain: "The major scale's W-W-H pattern gives it a bright, resolved quality. The flat 3rd in minor is the key ingredient of 'sadness' — just one semitone makes all the difference.",
+    explain: "The major scale's W-W-H pattern gives it a bright, resolved quality. The flat 3rd in minor is the key ingredient of 'sadness': just one semitone makes all the difference.",
   },
   {
     kind: "quiz",
@@ -728,7 +728,7 @@ export const SCREENS_MINOR_SCALE: LessonScreen[] = [
       "They sound identical",
     ],
     answer: 1,
-    explain: "Relative scales share the same key signature (same notes). C major and A minor both use C D E F G A B — but A minor treats A as home, giving a completely different emotional quality.",
+    explain: "Relative scales share the same key signature (same notes). C major and A minor both use C D E F G A B: but A minor treats A as home, giving a completely different emotional quality.",
   },
   {
     kind: "summary",
@@ -751,7 +751,7 @@ export const SCREENS_INTERVALS: LessonScreen[] = [
     body: "Consonant intervals (perfect 5th, major/minor 3rd, octave) sound stable and resolved. Dissonant intervals (minor 2nd, tritone, major 7th) sound tense and unresolved.",
     keyFact: "Tritone (6 semitones) = most dissonant interval.",
   },
-  { kind: "interact", sim: "ear-training", prompt: "Listen — identify the interval", preset: { mode: "intervals" } },
+  { kind: "interact", sim: "ear-training", prompt: "Listen: identify the interval", preset: { mode: "intervals" } },
   {
     kind: "match",
     prompt: "Match each interval to its semitone count",
@@ -765,9 +765,9 @@ export const SCREENS_INTERVALS: LessonScreen[] = [
   {
     kind: "quiz",
     q: "The tritone (diminished 5th) is known for…",
-    options: ["Sounding extremely stable and resolved", "Being used as the perfect cadence", "Maximum dissonance — the most tense interval", "Only appearing in major scales"],
+    options: ["Sounding extremely stable and resolved", "Being used as the perfect cadence", "Maximum dissonance: the most tense interval", "Only appearing in major scales"],
     answer: 2,
-    explain: "The tritone (6 semitones, e.g. C to F#) splits the octave exactly in half. It sounds intensely tense and unstable — medieval composers called it 'diabolus in musica' (the devil in music).",
+    explain: "The tritone (6 semitones, e.g. C to F#) splits the octave exactly in half. It sounds intensely tense and unstable: medieval composers called it 'diabolus in musica' (the devil in music).",
   },
   {
     kind: "summary",
@@ -782,15 +782,15 @@ export const SCREENS_PENTATONIC_SCALES: LessonScreen[] = [
   {
     kind: "concept",
     title: "The pentatonic scale",
-    body: "The major pentatonic removes the 4th and 7th degrees of the major scale — the two notes that create the most tension. What remains are 5 notes that sound universally consonant together.",
-    keyFact: "Major pentatonic: 1 2 3 5 6 — no tension notes.",
+    body: "The major pentatonic removes the 4th and 7th degrees of the major scale: the two notes that create the most tension. What remains are 5 notes that sound universally consonant together.",
+    keyFact: "Major pentatonic: 1 2 3 5 6: no tension notes.",
     visual: "piano",
   },
   {
     kind: "concept",
     title: "Why pentatonic works",
-    body: "Because there are no semitone clashes between these 5 notes, everything you play sounds good. Blues, folk, rock solos, world music — nearly every genre uses pentatonic as a starting point.",
-    keyFact: "C major pentatonic: C D E G A — no F, no B.",
+    body: "Because there are no semitone clashes between these 5 notes, everything you play sounds good. Blues, folk, rock solos, world music: nearly every genre uses pentatonic as a starting point.",
+    keyFact: "C major pentatonic: C D E G A: no F, no B.",
     visual: "scale-steps",
   },
   { kind: "interact", sim: "melody-shaper", prompt: "Play a melody using only pentatonic notes" },
@@ -798,24 +798,24 @@ export const SCREENS_PENTATONIC_SCALES: LessonScreen[] = [
     kind: "type-answer",
     q: "C major pentatonic removes the 4th (F) and 7th (B). Which 5 notes remain? (write them separated by spaces)",
     acceptableAnswers: ["C D E G A", "c d e g a", "C, D, E, G, A"],
-    explain: "C D E G A — these 5 notes have no semitone clashes between them. Every combination sounds consonant. That's why pentatonic is the universal 'safe' scale for improvisation.",
-    hint: "C major is C D E F G A B — remove F and B",
+    explain: "C D E G A: these 5 notes have no semitone clashes between them. Every combination sounds consonant. That's why pentatonic is the universal 'safe' scale for improvisation.",
+    hint: "C major is C D E F G A B: remove F and B",
   },
   {
     kind: "quiz",
     q: "Which two scale degrees are removed to create a major pentatonic?",
     options: ["1st and 5th", "3rd and 6th", "4th and 7th", "2nd and 6th"],
     answer: 2,
-    explain: "The 4th and 7th create semitone tension with other notes. Remove them and you're left with 5 'safe' notes that sound consonant together — the pentatonic scale.",
+    explain: "The 4th and 7th create semitone tension with other notes. Remove them and you're left with 5 'safe' notes that sound consonant together: the pentatonic scale.",
   },
   {
     kind: "summary",
-    learned: ["Pentatonic = 5-note scale with tension notes removed", "Major pentatonic: 1 2 3 5 6", "Works universally — all genres, all cultures use it"],
+    learned: ["Pentatonic = 5-note scale with tension notes removed", "Major pentatonic: 1 2 3 5 6", "Works universally: all genres, all cultures use it"],
   },
 ];
 
 export const SCREENS_MELODY_WRITING: LessonScreen[] = [
-  { kind: "hook", emoji: "✍", headline: "A great melody has a shape", subtext: "It rises, peaks, then falls — just like a sentence." },
+  { kind: "hook", emoji: "✍", headline: "A great melody has a shape", subtext: "It rises, peaks, then falls: just like a sentence." },
   {
     kind: "concept",
     title: "Melodic contour",
@@ -829,7 +829,7 @@ export const SCREENS_MELODY_WRITING: LessonScreen[] = [
     body: "Repetition (hear it again), contour (a distinctive shape), rhythmic identity (a signature rhythm), and a note that surprises then resolves. The gap in your ear is what makes you hum it back.",
     keyFact: "Repetition + one unexpected note = memorable hook.",
   },
-  { kind: "interact", sim: "melody-shaper", prompt: "Draw a melody — make it rise and fall" },
+  { kind: "interact", sim: "melody-shaper", prompt: "Draw a melody: make it rise and fall" },
   {
     kind: "sequence",
     prompt: "Put the elements of a great melodic hook in order of importance",
@@ -850,7 +850,7 @@ export const SCREENS_MELODY_WRITING: LessonScreen[] = [
 ];
 
 export const SCREENS_EAR_TRAINING: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Train your ear — hear what you couldn't before", subtext: "Recognising intervals and chords by ear is a learnable skill." },
+  { kind: "hook", emoji: "", headline: "Train your ear: hear what you couldn't before", subtext: "Recognising intervals and chords by ear is a learnable skill." },
   {
     kind: "concept",
     title: "Interval recognition",
@@ -858,7 +858,7 @@ export const SCREENS_EAR_TRAINING: LessonScreen[] = [
     keyFact: "Star Wars = perfect 5th. Happy Birthday = major 2nd.",
     visual: "piano",
   },
-  { kind: "interact", sim: "ear-training", prompt: "Identify the interval — listen carefully", preset: { mode: "intervals" } },
+  { kind: "interact", sim: "ear-training", prompt: "Identify the interval: listen carefully", preset: { mode: "intervals" } },
   {
     kind: "match",
     prompt: "Match each interval to its famous song mnemonic",
@@ -874,7 +874,7 @@ export const SCREENS_EAR_TRAINING: LessonScreen[] = [
     q: "Ear training is mainly useful for…",
     options: [
       "Making music louder",
-      "Recognising what you hear so you can reproduce it — transcribing, jamming, correcting pitch",
+      "Recognising what you hear so you can reproduce it: transcribing, jamming, correcting pitch",
       "Learning music theory faster",
       "Improving your typing speed in a DAW",
     ],
@@ -892,7 +892,7 @@ export const SCREENS_TRANSPOSITION_MODES: LessonScreen[] = [
   {
     kind: "concept",
     title: "Transposition",
-    body: "Transposing means moving every note in a melody or chord up or down by the same interval. The shape (intervals between notes) stays identical — only the key changes.",
+    body: "Transposing means moving every note in a melody or chord up or down by the same interval. The shape (intervals between notes) stays identical: only the key changes.",
     keyFact: "Transpose = shift all notes by same amount. Shape stays the same.",
     visual: "piano",
   },
@@ -902,15 +902,15 @@ export const SCREENS_TRANSPOSITION_MODES: LessonScreen[] = [
     body: "Modes are scales built by starting a major scale from different degrees. Ionian (1st) = major. Dorian (2nd) = minor with raised 6th (jazzy). Phrygian (3rd) = dark flamenco. Mixolydian (5th) = blues/rock.",
     keyFact: "Dorian = minor that sounds jazzy. Mixolydian = major that sounds bluesy.",
   },
-  { kind: "interact", sim: "note-explorer", prompt: "Start the C major scale on D — hear Dorian mode" },
+  { kind: "interact", sim: "note-explorer", prompt: "Start the C major scale on D: hear Dorian mode" },
   {
     kind: "match",
     prompt: "Match each mode to its character",
     pairs: [
-      { left: "Ionian (1st)", right: "Major scale — bright, happy" },
-      { left: "Dorian (2nd)", right: "Minor with raised 6th — jazzy, smooth" },
+      { left: "Ionian (1st)", right: "Major scale: bright, happy" },
+      { left: "Dorian (2nd)", right: "Minor with raised 6th: jazzy, smooth" },
       { left: "Phrygian (3rd)", right: "Dark, Spanish/flamenco feel" },
-      { left: "Mixolydian (5th)", right: "Major with flat 7th — bluesy, rock" },
+      { left: "Mixolydian (5th)", right: "Major with flat 7th: bluesy, rock" },
     ],
   },
   {
@@ -943,18 +943,18 @@ export const SCREENS_WHAT_ARE_CHORDS: LessonScreen[] = [
   {
     kind: "concept",
     title: "What is a chord?",
-    body: "A chord is three or more notes played simultaneously. The simplest chord is a triad: root + 3rd + 5th. These three notes create a harmonic colour — major = happy, minor = sad.",
+    body: "A chord is three or more notes played simultaneously. The simplest chord is a triad: root + 3rd + 5th. These three notes create a harmonic colour: major = happy, minor = sad.",
     keyFact: "Triad = root + 3rd + 5th. Everything else builds from this.",
     visual: "chord-stack",
   },
-  { kind: "interact", sim: "chord-stacker", prompt: "Stack root + 3rd + 5th — hear the chord" },
+  { kind: "interact", sim: "chord-stacker", prompt: "Stack root + 3rd + 5th: hear the chord" },
   {
     kind: "audio-id",
     prompt: "Is this chord major or minor?",
     audioType: "chord-stack",
     options: ["Major (bright, happy)", "Minor (dark, sad)", "Diminished (tense)", "Augmented (floating)"],
     answer: 0,
-    explain: "A major chord contains a major 3rd (4 semitones above root). That interval is the defining characteristic of brightness. When the 3rd is lowered one semitone, it becomes minor — sad.",
+    explain: "A major chord contains a major 3rd (4 semitones above root). That interval is the defining characteristic of brightness. When the 3rd is lowered one semitone, it becomes minor: sad.",
   },
   {
     kind: "quiz",
@@ -975,11 +975,11 @@ export const SCREENS_WHAT_ARE_CHORDS: LessonScreen[] = [
 ];
 
 export const SCREENS_CHORD_TYPES: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Major, minor, diminished, augmented — 4 essential chord colours", subtext: "Each has a different emotional fingerprint." },
+  { kind: "hook", emoji: "", headline: "Major, minor, diminished, augmented: 4 essential chord colours", subtext: "Each has a different emotional fingerprint." },
   {
     kind: "concept",
     title: "The 4 triads",
-    body: "Major (bright), Minor (dark), Diminished (tense/unsettled — two minor 3rds stacked), Augmented (dreamy/unresolved — two major 3rds stacked). These four cover most music you'll make.",
+    body: "Major (bright), Minor (dark), Diminished (tense/unsettled, two minor 3rds stacked), Augmented (dreamy/unresolved, two major 3rds stacked). These four cover most music you'll make.",
     keyFact: "Diminished = most tense. Augmented = unresolved floating.",
     visual: "chord-stack",
   },
@@ -989,7 +989,7 @@ export const SCREENS_CHORD_TYPES: LessonScreen[] = [
     body: "Add a 4th note (a 3rd above the 5th) and you get a 7th chord. Major 7 sounds lush/sophisticated. Dominant 7 sounds bluesy/tense. Minor 7 sounds smooth/jazzy.",
     keyFact: "Dominant 7 (V7) creates the strongest pull to resolve home.",
   },
-  { kind: "interact", sim: "chord-stacker", prompt: "Build different chord types — compare the feel" },
+  { kind: "interact", sim: "chord-stacker", prompt: "Build different chord types: compare the feel" },
   {
     kind: "match",
     prompt: "Match each chord type to its emotional character",
@@ -997,7 +997,7 @@ export const SCREENS_CHORD_TYPES: LessonScreen[] = [
       { left: "Major triad", right: "Bright, happy, resolved" },
       { left: "Minor triad", right: "Dark, sad, introspective" },
       { left: "Diminished triad", right: "Tense, unstable, wants to resolve" },
-      { left: "Dominant 7th", right: "Bluesy tension — pulls strongly to home" },
+      { left: "Dominant 7th", right: "Bluesy tension: pulls strongly to home" },
     ],
   },
   {
@@ -1005,7 +1005,7 @@ export const SCREENS_CHORD_TYPES: LessonScreen[] = [
     q: "A diminished triad is built from…",
     options: ["Two major 3rds", "A major 3rd + perfect 5th", "Two minor 3rds (root + b3 + b5)", "A perfect 4th + perfect 5th"],
     answer: 2,
-    explain: "Diminished = root + minor 3rd (3 semitones) + diminished 5th (6 semitones = tritone). This double-minor tension makes it sound extremely unstable — it demands resolution.",
+    explain: "Diminished = root + minor 3rd (3 semitones) + diminished 5th (6 semitones = tritone). This double-minor tension makes it sound extremely unstable: it demands resolution.",
   },
   {
     kind: "summary",
@@ -1023,7 +1023,7 @@ export const SCREENS_CHORD_PROGRESSIONS: LessonScreen[] = [
     keyFact: "I = home. V = tension. IV = lift. vi = sadness.",
     visual: "chord-stack",
   },
-  { kind: "interact", sim: "chord-progression", prompt: "Play the I-V-vi-IV progression — hear tension and resolution" },
+  { kind: "interact", sim: "chord-progression", prompt: "Play the I-V-vi-IV progression: hear tension and resolution" },
   {
     kind: "type-answer",
     q: "In C major, the I-V-vi-IV progression uses four specific chords. What are they? (write as: C G Am F)",
@@ -1045,7 +1045,7 @@ export const SCREENS_CHORD_PROGRESSIONS: LessonScreen[] = [
 ];
 
 export const SCREENS_KEYS_TONALITY: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "A key is a home base for your music", subtext: "Everything in the key orbits around the tonic — the home chord." },
+  { kind: "hook", emoji: "", headline: "A key is a home base for your music", subtext: "Everything in the key orbits around the tonic: the home chord." },
   {
     kind: "concept",
     title: "What is a key?",
@@ -1056,30 +1056,30 @@ export const SCREENS_KEYS_TONALITY: LessonScreen[] = [
   {
     kind: "concept",
     title: "Key in a DAW",
-    body: "In Ableton's Scale Awareness mode, you can lock the piano roll to a key. Notes outside the scale are hidden. This means every note you place sounds good — you're composing within a tonal framework.",
+    body: "In Ableton's Scale Awareness mode, you can lock the piano roll to a key. Notes outside the scale are hidden. This means every note you place sounds good: you're composing within a tonal framework.",
     keyFact: "DAW scale mode = guardrails that keep you in key.",
   },
-  { kind: "interact", sim: "note-explorer", prompt: "Stay in C major — hear how everything resolves to C" },
+  { kind: "interact", sim: "note-explorer", prompt: "Stay in C major: hear how everything resolves to C" },
   {
     kind: "quiz",
     q: "Why does music in a key 'want to resolve' to the tonic chord?",
     options: [
       "The tonic is always the loudest chord",
-      "Tonal gravity — other chords create tension that the tonic releases",
+      "Tonal gravity: other chords create tension that the tonic releases",
       "The tonic plays more often",
       "The tonic has more notes",
     ],
     answer: 1,
-    explain: "Tonal gravity is the pull toward home. The V chord is furthest from tonic — it creates maximum tension. The I chord resolves it. This tension-resolution cycle is the engine of all tonal music.",
+    explain: "Tonal gravity is the pull toward home. The V chord is furthest from tonic: it creates maximum tension. The I chord resolves it. This tension-resolution cycle is the engine of all tonal music.",
   },
   {
     kind: "match",
     prompt: "Match each chord's function in a key",
     pairs: [
-      { left: "I (tonic)", right: "Home — stable, resolved" },
-      { left: "IV (subdominant)", right: "Lift — away from home but gentle" },
-      { left: "V (dominant)", right: "Maximum tension — wants to go home" },
-      { left: "vi (relative minor)", right: "Emotional — dark colour in major key" },
+      { left: "I (tonic)", right: "Home: stable, resolved" },
+      { left: "IV (subdominant)", right: "Lift: away from home but gentle" },
+      { left: "V (dominant)", right: "Maximum tension: wants to go home" },
+      { left: "vi (relative minor)", right: "Emotional: dark colour in major key" },
     ],
   },
   {
@@ -1097,21 +1097,21 @@ export const SCREENS_TENSION_RESOLUTION: LessonScreen[] = [
     keyFact: "Delayed resolution = more emotional impact.",
     visual: "chord-stack",
   },
-  { kind: "interact", sim: "chord-progression", prompt: "Hear I→V — notice the tension. Then V→I — feel the release" },
+  { kind: "interact", sim: "chord-progression", prompt: "Hear I→V, notice the tension. Then V→I, feel the release" },
   {
     kind: "audio-id",
     prompt: "Does this chord progression feel resolved or unresolved at the end?",
     audioType: "chord-stack",
-    options: ["Resolved — ends on home chord", "Unresolved — ends on tension chord", "Neither — neutral ending", "Can't tell"],
+    options: ["Resolved: ends on home chord", "Unresolved: ends on tension chord", "Neither: neutral ending", "Can't tell"],
     answer: 0,
-    explain: "A progression ending on the I chord feels resolved — 'home'. Ending on V feels unresolved and open. This is why pop songs end on I and film composers use V for suspense.",
+    explain: "A progression ending on the I chord feels resolved: 'home'. Ending on V feels unresolved and open. This is why pop songs end on I and film composers use V for suspense.",
   },
   {
     kind: "quiz",
     q: "The cadence V→I is called a 'perfect authentic cadence' because…",
     options: [
       "Both chords are major",
-      "It creates the strongest sense of resolution — maximum tension to home",
+      "It creates the strongest sense of resolution: maximum tension to home",
       "It uses the most notes",
       "It only works in major keys",
     ],
@@ -1137,7 +1137,7 @@ export const SCREENS_HARMONY_IN_PRODUCTION: LessonScreen[] = [
   {
     kind: "concept",
     title: "Chord pads vs arpeggios",
-    body: "A pad plays all chord notes simultaneously — wide, sustained texture. An arpeggio plays chord notes one at a time in sequence — rhythmic, moving texture. Both from the same chord.",
+    body: "A pad plays all chord notes simultaneously, wide, sustained texture. An arpeggio plays chord notes one at a time in sequence, rhythmic, moving texture. Both from the same chord.",
     keyFact: "Pad = all at once. Arpeggio = notes in sequence.",
   },
   { kind: "interact", sim: "chord-stacker", prompt: "Play a chord as a pad, then spread it as an arpeggio" },
@@ -1157,9 +1157,9 @@ export const SCREENS_HARMONY_IN_PRODUCTION: LessonScreen[] = [
     kind: "match",
     prompt: "Match each chord texture to its production use",
     pairs: [
-      { left: "Close voicing", right: "Thick, dense — good for stabs and punchy chords" },
-      { left: "Open voicing", right: "Spacious — good for pads and ambient chords" },
-      { left: "Arpeggio", right: "Rhythmic movement — good for energy and drive" },
+      { left: "Close voicing", right: "Thick, dense: good for stabs and punchy chords" },
+      { left: "Open voicing", right: "Spacious: good for pads and ambient chords" },
+      { left: "Arpeggio", right: "Rhythmic movement: good for energy and drive" },
     ],
   },
   {
@@ -1169,12 +1169,12 @@ export const SCREENS_HARMONY_IN_PRODUCTION: LessonScreen[] = [
 ];
 
 export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Songs have architecture", subtext: "Verse, chorus, bridge — each section has a job." },
+  { kind: "hook", emoji: "", headline: "Songs have architecture", subtext: "Verse, chorus, bridge: each section has a job." },
   {
     kind: "concept",
     title: "Common song structures",
     body: "Pop/rock: Intro → Verse → Pre-chorus → Chorus → Verse → Chorus → Bridge → Chorus → Outro. Electronic: Intro → Build → Drop → Breakdown → Build → Drop → Outro. Both follow tension-release logic.",
-    keyFact: "The drop/chorus is the payload — everything else builds to it.",
+    keyFact: "The drop/chorus is the payload: everything else builds to it.",
     visual: "signal-chain",
   },
   {
@@ -1195,12 +1195,12 @@ export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
     q: "In electronic music, the 'drop' serves the same function as the 'chorus' in pop. What do both do?",
     options: [
       "Introduce the main melody for the first time",
-      "Deliver maximum energy — the moment the tension resolves into the most powerful section",
+      "Deliver maximum energy: the moment the tension resolves into the most powerful section",
       "Slow the track down for contrast",
       "Introduce a new key",
     ],
     answer: 1,
-    explain: "The drop/chorus is the emotional payoff. The build/verse exists to create anticipation. When the drop hits, all the tension that was built up releases at once — that's the dopamine hit.",
+    explain: "The drop/chorus is the emotional payoff. The build/verse exists to create anticipation. When the drop hits, all the tension that was built up releases at once: that's the dopamine hit.",
   },
   {
     kind: "summary",
@@ -1209,7 +1209,7 @@ export const SCREENS_SONG_STRUCTURE: LessonScreen[] = [
 ];
 
 export const SCREENS_LISTENING_ACTIVELY: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Producers listen differently to everyone else", subtext: "They hear layers, processes and decisions — not just songs." },
+  { kind: "hook", emoji: "", headline: "Producers listen differently to everyone else", subtext: "They hear layers, processes and decisions: not just songs." },
   {
     kind: "concept",
     title: "Analytical listening",
@@ -1256,11 +1256,11 @@ export const SCREENS_LISTENING_ACTIVELY: LessonScreen[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "A DAW is a recording studio on a laptop", subtext: "It replaces mixing desks, tape machines, racks of gear — all in software." },
+  { kind: "hook", emoji: "", headline: "A DAW is a recording studio on a laptop", subtext: "It replaces mixing desks, tape machines, racks of gear: all in software." },
   {
     kind: "concept",
     title: "What is a DAW?",
-    body: "A Digital Audio Workstation (DAW) is software that lets you record, arrange, edit and mix music. Ableton Live, Logic Pro, Pro Tools, FL Studio — all DAWs. Each has the same core functions, different workflows.",
+    body: "A Digital Audio Workstation (DAW) is software that lets you record, arrange, edit and mix music. Ableton Live, Logic Pro, Pro Tools, FL Studio: all DAWs. Each has the same core functions, different workflows.",
     keyFact: "DAW = recording + arranging + mixing + mastering in one app.",
     visual: "signal-chain",
   },
@@ -1271,12 +1271,12 @@ export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
     keyFact: "Track = one layer of sound. Mix = all tracks balanced together.",
     visual: "mixer-channel",
   },
-  { kind: "interact", sim: "interface-tour", prompt: "Explore the Ableton interface — find the mixer and arranger" },
+  { kind: "interact", sim: "interface-tour", prompt: "Explore the Ableton interface: find the mixer and arranger" },
   {
     kind: "match",
     prompt: "Match each DAW component to its job",
     pairs: [
-      { left: "Arrangement view", right: "Timeline — clips organised left to right in time" },
+      { left: "Arrangement view", right: "Timeline: clips organised left to right in time" },
       { left: "Mixer", right: "Volume faders, sends, and routing for all tracks" },
       { left: "Instrument", right: "Converts MIDI notes into audio sound" },
       { left: "Session view", right: "Non-linear clip launcher for live performance" },
@@ -1287,7 +1287,7 @@ export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
     q: "What replaced the physical mixing desk in modern music production?",
     options: ["A synthesiser", "The DAW's virtual mixer", "A sampler", "The audio interface"],
     answer: 1,
-    explain: "The DAW contains a virtual mixer with faders, sends, EQ and routing — replacing a physical mixing console that would cost tens of thousands of dollars.",
+    explain: "The DAW contains a virtual mixer with faders, sends, EQ and routing: replacing a physical mixing console that would cost tens of thousands of dollars.",
   },
   {
     kind: "summary",
@@ -1296,18 +1296,18 @@ export const SCREENS_DAW_EXPLAINED: LessonScreen[] = [
 ];
 
 export const SCREENS_MIDI_EXPLAINED: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "MIDI is instructions, not audio", subtext: "It tells an instrument WHAT to play — the instrument makes the sound." },
+  { kind: "hook", emoji: "", headline: "MIDI is instructions, not audio", subtext: "It tells an instrument WHAT to play: the instrument makes the sound." },
   {
     kind: "concept",
     title: "What is MIDI?",
-    body: "MIDI (Musical Instrument Digital Interface) is a protocol that sends note data: which note, how hard (velocity), when to start, when to stop. It contains zero audio — it's sheet music for computers.",
+    body: "MIDI (Musical Instrument Digital Interface) is a protocol that sends note data: which note, how hard (velocity), when to start, when to stop. It contains zero audio: it's sheet music for computers.",
     keyFact: "MIDI = instructions. Audio = the actual sound.",
     visual: "piano",
   },
   {
     kind: "concept",
     title: "MIDI vs Audio",
-    body: "MIDI can be edited after recording — change a wrong note, transpose to a new key, change the instrument entirely. Audio is the recorded waveform — you can't easily edit individual notes.",
+    body: "MIDI can be edited after recording, change a wrong note, transpose to a new key, change the instrument entirely. Audio is the recorded waveform, you can't easily edit individual notes.",
     keyFact: "MIDI: edit any note freely. Audio: stuck with what was recorded.",
     visual: "waveform",
   },
@@ -1316,7 +1316,7 @@ export const SCREENS_MIDI_EXPLAINED: LessonScreen[] = [
     kind: "type-answer",
     q: "What does MIDI stand for? (write the full name)",
     acceptableAnswers: ["Musical Instrument Digital Interface", "musical instrument digital interface"],
-    explain: "MIDI = Musical Instrument Digital Interface. Developed in 1983, it's been unchanged since — a testament to how fundamental and well-designed it was. Every keyboard, DAW, and synth still uses it.",
+    explain: "MIDI = Musical Instrument Digital Interface. Developed in 1983, it's been unchanged since: a testament to how fundamental and well-designed it was. Every keyboard, DAW, and synth still uses it.",
     hint: "It's 4 words: M___ I___ D___ I___",
   },
   {
@@ -1324,12 +1324,12 @@ export const SCREENS_MIDI_EXPLAINED: LessonScreen[] = [
     q: "You record a MIDI piano part and realise it's in the wrong key. What do you do?",
     options: [
       "Re-record the whole part",
-      "Select all MIDI notes and transpose them — no need to re-record",
+      "Select all MIDI notes and transpose them: no need to re-record",
       "Use pitch correction like Auto-Tune",
-      "Nothing — MIDI can't be transposed",
+      "Nothing: MIDI can't be transposed",
     ],
     answer: 1,
-    explain: "MIDI is just data — select all notes, transpose up or down by any amount, and the 'performance' instantly changes key. This is impossible with recorded audio (without pitch-shifting artefacts).",
+    explain: "MIDI is just data: select all notes, transpose up or down by any amount, and the 'performance' instantly changes key. This is impossible with recorded audio (without pitch-shifting artefacts).",
   },
   {
     kind: "summary",
@@ -1350,11 +1350,11 @@ export const SCREENS_DIGITAL_AUDIO: LessonScreen[] = [
   {
     kind: "concept",
     title: "Bit depth",
-    body: "Bit depth determines dynamic range — the difference between the quietest and loudest sounds. 16-bit = 96 dB range (CD). 24-bit = 144 dB range (studio). Always record at 24-bit.",
-    keyFact: "24-bit gives more headroom than 16-bit — always record at 24.",
+    body: "Bit depth determines dynamic range: the difference between the quietest and loudest sounds. 16-bit = 96 dB range (CD). 24-bit = 144 dB range (studio). Always record at 24-bit.",
+    keyFact: "24-bit gives more headroom than 16-bit: always record at 24.",
     visual: "headroom-meter",
   },
-  { kind: "interact", sim: "decibel-meter", prompt: "Observe signal level — dynamic range in action" },
+  { kind: "interact", sim: "decibel-meter", prompt: "Observe signal level: dynamic range in action" },
   {
     kind: "match",
     prompt: "Match each sample rate to its primary use",
@@ -1369,7 +1369,7 @@ export const SCREENS_DIGITAL_AUDIO: LessonScreen[] = [
     q: "Why is 24-bit recording better than 16-bit?",
     options: [
       "It plays louder",
-      "It provides greater dynamic range and lower noise floor — more headroom for quiet signals",
+      "It provides greater dynamic range and lower noise floor: more headroom for quiet signals",
       "It uses less storage space",
       "It has a higher sample rate",
     ],
@@ -1383,11 +1383,11 @@ export const SCREENS_DIGITAL_AUDIO: LessonScreen[] = [
 ];
 
 export const SCREENS_SAMPLES_LOOPS: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Samples are pieces of recorded audio you can reuse", subtext: "Most electronic music is built on samples — drum breaks, one-shots, loops." },
+  { kind: "hook", emoji: "", headline: "Samples are pieces of recorded audio you can reuse", subtext: "Most electronic music is built on samples: drum breaks, one-shots, loops." },
   {
     kind: "concept",
     title: "Samples vs loops",
-    body: "A sample is a recording of a sound — a single drum hit, a chord, a vocal phrase. A loop is a sample that repeats seamlessly. A one-shot is a sample that plays once and stops.",
+    body: "A sample is a recording of a sound: a single drum hit, a chord, a vocal phrase. A loop is a sample that repeats seamlessly. A one-shot is a sample that plays once and stops.",
     keyFact: "One-shot = plays once. Loop = repeats endlessly.",
     visual: "waveform-zoom",
   },
@@ -1414,9 +1414,9 @@ export const SCREENS_SAMPLES_LOOPS: LessonScreen[] = [
     kind: "match",
     prompt: "Match each sample type to how it's used",
     pairs: [
-      { left: "One-shot", right: "Single drum hit — triggered per step in a sequencer" },
-      { left: "Loop", right: "Repeating phrase — forms the backbone of a groove" },
-      { left: "Vocal chop", right: "Short vocal phrase — reordered rhythmically" },
+      { left: "One-shot", right: "Single drum hit: triggered per step in a sequencer" },
+      { left: "Loop", right: "Repeating phrase: forms the backbone of a groove" },
+      { left: "Vocal chop", right: "Short vocal phrase: reordered rhythmically" },
     ],
   },
   {
@@ -1431,7 +1431,7 @@ export const SCREENS_SIGNAL_CHAIN: LessonScreen[] = [
     kind: "concept",
     title: "The signal chain",
     body: "Signal chain: Sound source → Microphone/Instrument → Audio Interface → DAW → Effects → Mixer → Output (Speakers/Headphones). Every stage can add or remove something from the sound.",
-    keyFact: "Noise or distortion always enters at a specific stage — trace it back.",
+    keyFact: "Noise or distortion always enters at a specific stage: trace it back.",
     visual: "signal-chain",
   },
   { kind: "interact", sim: "signal-flow-builder", prompt: "Drag blocks into the correct signal chain order" },
@@ -1460,18 +1460,18 @@ export const SCREENS_SIGNAL_CHAIN: LessonScreen[] = [
 ];
 
 export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "4 effects you'll use on every track", subtext: "EQ, Compressor, Reverb, Delay — the essential mixing toolkit." },
+  { kind: "hook", emoji: "", headline: "4 effects you'll use on every track", subtext: "EQ, Compressor, Reverb, Delay: the essential mixing toolkit." },
   {
     kind: "concept",
     title: "EQ & Compression",
-    body: "EQ (equaliser) adjusts frequency balance — cut 200 Hz to remove muddiness, boost 10 kHz for air. Compressor controls dynamic range — reduces volume of loud peaks, letting you push overall level.",
+    body: "EQ (equaliser) adjusts frequency balance, cut 200 Hz to remove muddiness, boost 10 kHz for air. Compressor controls dynamic range, reduces volume of loud peaks, letting you push overall level.",
     keyFact: "EQ = tone shaping. Compressor = dynamic control.",
     visual: "eq-curve",
   },
   {
     kind: "concept",
     title: "Reverb & Delay",
-    body: "Reverb simulates acoustic space — small room to cathedral. Delay repeats the signal at a set time interval — eighth note delay on a guitar creates rhythmic texture. Both create depth and space.",
+    body: "Reverb simulates acoustic space, small room to cathedral. Delay repeats the signal at a set time interval, eighth note delay on a guitar creates rhythmic texture. Both create depth and space.",
     keyFact: "Reverb = space. Delay = rhythmic echo.",
     visual: "signal-chain",
   },
@@ -1480,18 +1480,18 @@ export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
     kind: "match",
     prompt: "Match each effect to what it does",
     pairs: [
-      { left: "EQ", right: "Adjusts frequency balance — cut or boost specific ranges" },
-      { left: "Compressor", right: "Reduces loud peaks — controls dynamic range" },
-      { left: "Reverb", right: "Simulates room space — adds depth and distance" },
-      { left: "Delay", right: "Creates timed repeats — adds rhythmic texture" },
+      { left: "EQ", right: "Adjusts frequency balance: cut or boost specific ranges" },
+      { left: "Compressor", right: "Reduces loud peaks: controls dynamic range" },
+      { left: "Reverb", right: "Simulates room space: adds depth and distance" },
+      { left: "Delay", right: "Creates timed repeats: adds rhythmic texture" },
     ],
   },
   {
     kind: "quiz",
     q: "You have a vocal that sounds muddy and too dense. Which effect do you reach for first?",
-    options: ["Reverb — to add space", "Compressor — to control dynamics", "EQ — cut the muddy frequencies (usually 200–400 Hz)", "Delay — to add rhythmic texture"],
+    options: ["Reverb: to add space", "Compressor: to control dynamics", "EQ: cut the muddy frequencies (usually 200–400 Hz)", "Delay: to add rhythmic texture"],
     answer: 2,
-    explain: "Muddiness lives at 200–400 Hz. A surgical EQ cut in that range cleans up the low-mid clutter. Always EQ before adding space effects (reverb/delay) — otherwise you're adding mud on top of mud.",
+    explain: "Muddiness lives at 200–400 Hz. A surgical EQ cut in that range cleans up the low-mid clutter. Always EQ before adding space effects (reverb/delay): otherwise you're adding mud on top of mud.",
   },
   {
     kind: "summary",
@@ -1500,11 +1500,11 @@ export const SCREENS_EFFECTS_OVERVIEW: LessonScreen[] = [
 ];
 
 export const SCREENS_MIXING_BASICS: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Mixing is balancing — everything has a place", subtext: "Volume, pan, EQ, effects — these four tools are mixing." },
+  { kind: "hook", emoji: "", headline: "Mixing is balancing: everything has a place", subtext: "Volume, pan, EQ, effects: these four tools are mixing." },
   {
     kind: "concept",
     title: "Volume & panning",
-    body: "Volume sets how loud each element is in the mix. Panning places it in the stereo field — left to right. Kick and bass are almost always centred. Wide panning creates space for other elements.",
+    body: "Volume sets how loud each element is in the mix. Panning places it in the stereo field: left to right. Kick and bass are almost always centred. Wide panning creates space for other elements.",
     keyFact: "Kick, bass, lead vocal: centre. Everything else: pan left or right.",
     visual: "stereo-field",
   },
@@ -1512,22 +1512,22 @@ export const SCREENS_MIXING_BASICS: LessonScreen[] = [
     kind: "concept",
     title: "Frequency layering",
     body: "Each instrument should occupy its own frequency range without crowding others. Bass in the low end. Guitars/pads in midrange. Cymbals/air in high end. EQ each track to give the others room.",
-    keyFact: "Cut each track where another one lives — create space.",
+    keyFact: "Cut each track where another one lives: create space.",
     visual: "mixer-channel",
   },
-  { kind: "interact", sim: "mixer", prompt: "Balance 4 tracks — adjust volume and pan" },
+  { kind: "interact", sim: "mixer", prompt: "Balance 4 tracks: adjust volume and pan" },
   {
     kind: "sequence",
     prompt: "Order these mix elements from lowest to highest frequency",
     items: ["Kick drum (sub/bass)", "Bass guitar/synth (low-mid)", "Guitars/pads (mid)", "Lead vocals (upper-mid)", "Cymbals/air (high)"],
-    explain: "Frequency layering: Kick→Bass→Guitars/Pads→Vocals→Cymbals. Each layer occupies a range. EQ each to avoid overlap — cut where another instrument is louder. This creates clarity.",
+    explain: "Frequency layering: Kick→Bass→Guitars/Pads→Vocals→Cymbals. Each layer occupies a range. EQ each to avoid overlap: cut where another instrument is louder. This creates clarity.",
   },
   {
     kind: "quiz",
     q: "Why are kick drum and bass guitar usually panned to centre?",
     options: [
       "They are the most important sounds",
-      "Low frequencies are non-directional and carry more energy — centred bass provides a stable mono-compatible foundation",
+      "Low frequencies are non-directional and carry more energy: centred bass provides a stable mono-compatible foundation",
       "It's a creative choice only",
       "DAWs automatically centre them",
     ],
@@ -1541,7 +1541,7 @@ export const SCREENS_MIXING_BASICS: LessonScreen[] = [
 ];
 
 export const SCREENS_MUSIC_TECH_INTEGRATION: LessonScreen[] = [
-  { kind: "hook", emoji: "", headline: "Everything connects — you're now a producer", subtext: "Sound physics + rhythm + harmony + technology = making music." },
+  { kind: "hook", emoji: "", headline: "Everything connects: you're now a producer", subtext: "Sound physics + rhythm + harmony + technology = making music." },
   {
     kind: "concept",
     title: "The complete picture",
@@ -1555,7 +1555,7 @@ export const SCREENS_MUSIC_TECH_INTEGRATION: LessonScreen[] = [
     body: "You have the vocabulary. Now: apply it. DJ World teaches you how to play other people's music brilliantly. Producer World teaches you how to make your own from scratch in Ableton Live 12.",
     keyFact: "Theory without application is just words. Make something.",
   },
-  { kind: "interact", sim: "mixer", prompt: "Build a full mix — kick, bass, chords and melody" },
+  { kind: "interact", sim: "mixer", prompt: "Build a full mix: kick, bass, chords and melody" },
   {
     kind: "sequence",
     prompt: "Order the Fundamentals chapters you've just completed",
@@ -1567,7 +1567,7 @@ export const SCREENS_MUSIC_TECH_INTEGRATION: LessonScreen[] = [
     q: "When you turn up the 'cutoff' on a low-pass filter, you are…",
     options: [
       "Increasing volume",
-      "Allowing more high frequencies through — making the sound brighter",
+      "Allowing more high frequencies through: making the sound brighter",
       "Adding reverb",
       "Compressing the signal",
     ],

@@ -11,13 +11,15 @@ import type { LayerKind, WorldKey } from "./track";
 import { scaleNote, type ScaleName } from "./theory";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LEAD_PARAMS, type ParamSpec } from "../engine/params.gen";
 import type { LessonScreen } from "../content/types";
+import { REAL_KIT_ID, withSynthKit } from "./realKit";
 
 export type Step = LessonScreen | { kind: "tryit" };
 
 /** A lesson's steps in order: its screens, with try it just before what you learned. */
 export function lessonSteps(screens: readonly LessonScreen[]): Step[] {
   const out: Step[] = [];
-  let tried = false;
+  // A lesson file's own play step is the try-it, so none is added again.
+  let tried = screens.some(s => s.kind === "play");
   for (const s of screens) {
     if (s.kind === "summary" && !tried) {
       out.push({ kind: "tryit" });
@@ -67,6 +69,12 @@ export function takeType(kind: LayerKind): LayerType {
 export type PlayPad = { label: string; notes: number[] };
 
 const DRUM_LABEL: Record<number, string> = { 36: "kick", 38: "snare", 39: "clap", 42: "hat", 37: "rim", 41: "low tom", 45: "mid tom", 48: "high tom", 46: "open hat", 70: "shaker", 51: "ride", 49: "crash" };
+/** The drums in a take, in words: "snare", "kick and clap". Null when none are named. */
+export function drumNames(notes: number[]): string | null {
+  const names = [...new Set(notes)].map(n => DRUM_LABEL[n]).filter(Boolean);
+  if (!names.length) return null;
+  return names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
 const NOTE = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 const ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii"];
 
@@ -103,6 +111,8 @@ export function playPads(type: LayerType, root: number, scale: ScaleName): PlayP
 export function applyTake(t: TrackV2, slug: string, take: Take, world?: WorldKey, params?: Record<number, number>): TrackV2 {
   if (t.added.includes(slug)) return t;
   const drumLike = take.type === "drums" || take.type === "hats";
+  // Shaped drums are heard on the synth kit (the recorded kit has no knobs).
+  if (drumLike && params && Object.keys(params).length && t.layers.some(l => l.id === REAL_KIT_ID)) t = withSynthKit(t);
   const events = take.events.map(e => ({ ...e })).sort((a, b) => a.start - b.start || a.note - b.note);
   const idx = t.layers.findIndex(l => l.type === take.type);
   let layers: LayerV2[];
@@ -128,6 +138,12 @@ export function applyTake(t: TrackV2, slug: string, take: Take, world?: WorldKey
 /** The track you play along to in try it: your track with the lesson's layer emptied (or added empty). */
 export function practiceTrack(t: TrackV2, type: LayerType): { track: TrackV2; index: number } {
   const idx = t.layers.findIndex(l => l.type === type);
+  // Drums: what's already in your drums keeps playing underneath, and you record into a layer of
+  // your own, so the clap goes in over your kick. applyTake merges it back in.
+  if (idx >= 0 && type === "drums" && t.layers.length < MAX_LAYERS) {
+    const layers = [...t.layers, { ...newLayerV2(type, "__take"), events: [] }];
+    return { track: { ...t, layers }, index: layers.length - 1 };
+  }
   if (idx >= 0) {
     const layers = t.layers.map((l, i) => (i === idx ? { ...l, events: [], mute: false, solo: false } : l));
     return { track: { ...t, layers }, index: idx };
@@ -162,4 +178,25 @@ export function readTake(slug: string): Take | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Turn a part's knobs in your song: merge `params` into every layer of `type`. A duck amount also
+ * points the duck at the kick, so "duck" means "under your kick" without another step.
+ */
+export function withParams(t: TrackV2, type: LayerType, params: Record<number, number>): TrackV2 {
+  if (!Object.keys(params).length) return t;
+  // The drum knobs live on the synth kit, so shaping drums or hats brings the synth kit back.
+  if ((type === "drums" || type === "hats") && t.layers.some(l => l.id === REAL_KIT_ID)) t = withSynthKit(t);
+  const kickLayer = t.layers.find(l => l.type === "drums" && l.events.some(e => e.note === 36));
+  const duckIdx = 11; // mix.duck in LAYER_PARAMS
+  return {
+    ...t,
+    layers: t.layers.map(l => {
+      if (l.type !== type) return l;
+      const next = { ...l, params: { ...l.params, ...params } };
+      if ((params[duckIdx] ?? 0) > 0 && kickLayer && l.id !== kickLayer.id) next.duck = { src: kickLayer.id, note: 36 };
+      return next;
+    }),
+  };
 }

@@ -1,114 +1,171 @@
 "use client";
 /**
- * A world as a 16-step sequencer. Each key is a lesson; done keys have their light on,
- * the next one is black, the rest wait. Banks page through the world 16 steps at a time.
- * The screen shows the step you pressed and what it adds to your track.
+ * One world, two ways to see it (design/curriculum.md):
+ * - song: the world as your song, one lane per part a song lesson gives you, lit when you've made it.
+ * - list: paths, and in the path you pick its song lessons with their deeper lessons and bonus rounds.
+ * Nothing is locked. Lessons still to be made show as "coming"; lessons not yet rebuilt as "old version".
  */
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { useProgress } from "@/lib/progress";
-import { useLearnMode } from "@/lib/mode";
-import { useTrack, offerFor, previewLayer } from "@/lib/track";
-import { audition } from "@/lib/track-engine";
-import { worldSteps, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { Dash, GoPill, Icon, Key, Pad, Screen, Silk, Switch, WORLD_LED } from "./controls";
+import { journey, missionAny, missionImage, minutesFor, nextStep, partOf, worldDone, WORLD_LABEL, type JourneyItem, type JourneyLesson, type WorldId } from "@/lib/worldOrder";
+import { GoPill, Icon, Screen, Silk, Switch, WORLD_LED } from "./controls";
+import { SongStrip } from "./FileLesson";
 import { DuoFilters } from "./Today";
+import "./lesson.css";
+
+const ABOUT: Record<WorldId, { line: string; then: string }> = {
+  fundamentals: { line: "a beat, notes, a scale, chords and a bass, and the ears to hear them. every lesson adds to your song.", then: "then: producer" },
+  producer: { line: "make your song sound good: your own kick, bass that makes room, a shaped synth, the mix and the drop.", then: "then: dj, playing your song out" },
+  dj: { line: "play your song out with other tracks: match, blend, read the room, record a set.", then: "the last step: a ccd night" },
+};
+
+type View = "song" | "list";
+const VIEW_KEY = "ccd.journey.view";
+
+function Tag({ it }: { it: JourneyItem }) {
+  if (!it.exists) return <em className="jv-tag is-coming">coming</em>;
+  if (!it.rebuilt) return <em className="jv-tag">old version</em>;
+  return null;
+}
 
 export function World({ world }: { world: WorldId }) {
   const { progress } = useProgress();
-  const { learnMode, setLearnMode } = useLearnMode();
-  const { track } = useTrack();
   const done = progress.completedMissions;
-  const steps = worldSteps(world);
-  const nextIdx = Math.max(0, steps.findIndex(s => !done[s.slug]));
-  const banks = Math.max(1, Math.ceil(steps.length / 16));
-  const [bank, setBank] = useState(Math.floor(nextIdx / 16));
-  const [pick, setPick] = useState(nextIdx);
-  useEffect(() => { setBank(Math.floor(nextIdx / 16)); setPick(nextIdx); }, [nextIdx]);
-
-  const flow = learnMode !== "classic";
-  const cur = steps[pick] ?? steps[0];
-  const mission = cur ? missionAny(cur.slug) : undefined;
-  const offer = useMemo(() => (mission ? offerFor(track, mission) : null), [track, mission]);
-  const locked = (i: number) => flow && i > nextIdx && !done[steps[i]?.slug];
-  const doneCount = steps.filter(s => done[s.slug]).length;
+  const paths = useMemo(() => journey(world, done), [world, done]);
+  const next = nextStep(world, done);
+  const count = worldDone(world, done);
+  const [view, setView] = useState<View>("song");
+  useEffect(() => { try { const v = localStorage.getItem(VIEW_KEY); if (v === "list" || v === "song") setView(v); } catch { /* default */ } }, []);
+  const pick = (v: View) => { setView(v); try { localStorage.setItem(VIEW_KEY, v); } catch { /* ignore */ } };
+  const [sel, setSel] = useState(0);
+  const [open, setOpen] = useState<string | null>(null);
+  useEffect(() => { const i = paths.findIndex(p => p.lessons.some(l => l.slug === next?.slug)); if (i >= 0) setSel(i); }, [next?.slug, paths]);
   const led = WORLD_LED[world];
+  const nm = next ? missionAny(next.slug) : undefined;
+  const path = paths[sel];
+  const toList = (pathIdx: number, slug: string) => { setSel(pathIdx); setOpen(slug); pick("list"); };
 
   return (
-    <div className="m1-page">
-      <header style={{ display: "flex", alignItems: "center", gap: 12, height: 48 }}>
-        <Link href="/dashboard" className="m1-m" aria-label="Back" style={{ width: 44 }}><Icon name="back" /></Link>
-        <div style={{ flex: 1, minWidth: 0 }}>
+    <div className="m1-page wv" style={{ ["--c" as string]: led } as CSSProperties}>
+      <header className="wd-head">
+        <Link href="/worlds" className="m1-m" aria-label="All worlds" style={{ width: 44, height: 44 }}><Icon name="back" /></Link>
+        <div style={{ flex: 1 }}>
           <div className="m1-t22">{WORLD_LABEL[world]}</div>
-          <div className="m1-t11">{doneCount} of {steps.length} done</div>
+          <div className="m1-t11">{paths.length} paths · {count.total} song lessons · {paths.reduce((n, p) => n + p.extraTotal, 0)} to go deeper</div>
         </div>
-        <Dash color={led} />
+        <div className="wd-mode jv-mode"><Switch label="How to see this world" value={view} onChange={id => pick(id as View)} options={[{ id: "song", label: "song" }, { id: "list", label: "list" }]} /></div>
       </header>
 
-      <div style={{ marginTop: 6 }}>
-        <Switch label="how you learn" value={flow ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
-          options={[{ id: "flow", label: "flow" }, { id: "free", label: "free" }]} />
-        <div className="m1-t11" style={{ marginTop: 6, textAlign: "center" }}>{flow ? "in order, one step opens the next" : "every step is open, go where you like"}</div>
-      </div>
-
-      {cur && mission && (
-        <Screen style={{ marginTop: 10 }}>
-          <div style={{ display: "flex", gap: 14, margin: -16, minHeight: 176 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={missionImage(cur.slug, world)} alt="" style={{ width: 132, objectFit: "cover", filter: `url(#duo-${world})` }} />
-            <div style={{ flex: 1, padding: "16px 16px 14px 0", display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 0 }}>
-              <span style={{ fontSize: 40, fontWeight: 200, lineHeight: 1 }}>{String(pick + 1).padStart(2, "0")}</span>
-              <div>
-                <div className="m1-t22" style={{ textTransform: "lowercase" }}>{mission.title}</div>
-                {offer && <div className="m1-ss" style={{ marginTop: 6, color: "var(--disp-ink)" }}>{offer.isNew ? `adds ${offer.kind} to your track` : `changes your ${offer.kind}`}</div>}
-                <div className="m1-ss" style={{ marginTop: 4 }}>{minutesFor(cur.slug)} min · {missionTools(cur.slug).join(" · ")}{done[cur.slug] ? " · done" : ""}</div>
-              </div>
+      <div className="wv-cols" data-view={view}>
+        <section className="wv-left">
+          <Screen>
+            {next && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={missionImage(next.slug, world)} alt="" className="wv-img" style={{ filter: `url(#duo-${world})` }} />
+            )}
+            <div className="m1-ss">{ABOUT[world].then}</div>
+            <p className="wv-about">{ABOUT[world].line}</p>
+            <div className="wd-bar"><i style={{ width: `${count.total ? (count.done / count.total) * 100 : 0}%` }} /><span>{count.done}/{count.total} parts</span></div>
+          </Screen>
+          {nm && next && (
+            <div className="wv-next">
+              <div className="m1-t11">next · adds {partOf(next.slug)} · {minutesFor(next.slug)} min</div>
+              <div className="m1-t22">{nm.title.toLowerCase()}</div>
+              <div style={{ height: 64, marginTop: 10 }}><GoPill href={`/learn/${next.slug}`} style={{ height: 64, width: "100%" }}>start <Icon name="play" small /></GoPill></div>
             </div>
-          </div>
-        </Screen>
-      )}
+          )}
+        </section>
 
-      <Silk label={(steps[bank * 16]?.pathTitle ?? "").toLowerCase()} right={`steps ${bank * 16 + 1}–${Math.min(steps.length, bank * 16 + 16)}`} />
-      <div className="m1-g">
-        {Array.from({ length: 16 }, (_, k) => {
-          const i = bank * 16 + k;
-          const s = steps[i];
-          if (!s) return <div key={k} className="m1-m is-dim" aria-hidden />;
-          const isDone = !!done[s.slug];
-          const isNext = i === nextIdx && !isDone;
-          if (locked(i)) {
-            return <div key={k} className="m1-m is-dim" aria-label={`Step ${i + 1}, locked`}><span className="m1-leg" style={{ fontSize: 22, color: "var(--sub)" }}>{i + 1}</span></div>;
-          }
-          return (
-            <Key key={k} cap={isNext ? "blk" : ""} led={isDone ? led : null} onClick={() => setPick(i)} ariaPressed={pick === i}
-              ariaLabel={`Step ${i + 1}, ${s.title}${isDone ? ", done" : isNext ? ", next" : ""}`}
-              capStyle={pick === i && !isNext ? { boxShadow: "0 0 0 2px var(--go), 0 3px 0 var(--cs2)" } : undefined}>
-              <span className="m1-leg" style={{ fontSize: 24, color: isDone || isNext ? undefined : "var(--sub)" }}>{i + 1}</span>
-            </Key>
-          );
-        })}
-      </div>
-
-      {banks > 1 && (
-        <>
-          <Silk label="bank" />
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(banks, 8)}, 1fr)`, gap: 6 }}>
-            {Array.from({ length: banks }, (_, b) => (
-              <Pad key={b} height={36} lit={b === bank ? led : null} ariaPressed={b === bank} onClick={() => setBank(b)} ariaLabel={`Bank ${b + 1}`}>{b + 1}</Pad>
+        {view === "song" ? (
+          <section className="jv-song" aria-label="Your song in this world">
+            <SongStrip />
+            {paths.map((p, pi) => (
+              <div key={p.slug} className="jv-sec">
+                <Silk label={`path ${p.number} · ${p.title}`} right={p.songTotal ? `${p.songDone}/${p.songTotal}` : "bonus"} />
+                <ol className="jv-lanes">
+                  {p.lessons.map(l => <Lane key={l.slug} l={l} isNext={l.slug === next?.slug} onExtras={() => toList(pi, l.slug)} />)}
+                </ol>
+              </div>
             ))}
-          </div>
-        </>
-      )}
+          </section>
+        ) : (
+          <>
+            <section className="wv-mid" aria-label="Paths">
+              <Silk label="paths" right={`${paths.length}`} />
+              <ul className="wv-paths" role="listbox" aria-label="Paths">
+                {paths.map((p, i) => {
+                  const tot = p.songTotal || p.lessons.length;
+                  const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
+                  return (
+                    <li key={p.slug}>
+                      <button type="button" role="option" aria-selected={i === sel} className={`wv-path ${i === sel ? "is-sel" : ""} ${dn === tot ? "is-done" : ""}`} onClick={() => setSel(i)}>
+                        <b>path {p.number}</b><span>{p.title}<small className="jv-sub">{p.songTotal ? `${p.songTotal} song · ${p.extraTotal} deeper` : "bonus and deeper"}</small></span><em>{dn}/{tot}</em>
+                        <i className="wv-meter" style={{ width: `${tot ? (dn / tot) * 100 : 0}%` }} />
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
 
-      <div className="m1-g" style={{ marginTop: 16 }}>
-        <Key label="preview" ariaLabel="Hear what this step adds" disabled={!offer} onClick={() => offer && audition(previewLayer(track, offer))}><Icon name="hear" /></Key>
-        {cur && (
-          <GoPill href={locked(pick) ? undefined : `/learn/${cur.slug}`} disabled={locked(pick)} style={{ gridColumn: "span 3" }} ariaLabel={`Start step ${pick + 1}`}>
-            <Icon name="play" />{done[cur.slug] ? "redo" : "start"} step {String(pick + 1).padStart(2, "0")}
-          </GoPill>
+            <section className="wv-right" aria-label={path ? `${path.title} lessons` : "Lessons"}>
+              <Silk label={path ? path.title : "lessons"} right={path ? (path.songTotal ? `${path.songDone} of ${path.songTotal} song lessons` : "bonus and deeper") : undefined} />
+              <ol className="wv-lessons" key={sel}>
+                {path?.lessons.map((l, i) => (
+                  <li key={l.slug} style={{ animationDelay: `${i * 50}ms` }}>
+                    <Row it={l} n={i + 1} isNext={l.slug === next?.slug} sub={l.kind === "song" ? `adds ${partOf(l.slug)}` : l.does} />
+                    {l.extras.length > 0 && (
+                      <details className="jv-extras" open={open === l.slug || undefined}>
+                        <summary>{l.extras.filter(e => e.kind === "deeper").length ? `go deeper · ${l.extras.length}` : `bonus · ${l.extras.length}`}</summary>
+                        <ol>
+                          {l.extras.map(e => <li key={e.slug}><Row it={e} sub={e.does} small /></li>)}
+                        </ol>
+                      </details>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </>
         )}
       </div>
       <DuoFilters />
     </div>
   );
+}
+
+function Lane({ l, isNext, onExtras }: { l: JourneyLesson; isNext: boolean; onExtras: () => void }) {
+  const cls = `jv-lane ${l.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${l.exists ? "" : "is-coming"} ${l.kind !== "song" ? "is-bonus" : ""}`;
+  const body = (
+    <>
+      <i className="jv-led" aria-hidden />
+      <span className="jv-part">{l.kind === "song" ? partOf(l.slug) : l.title.replace(/^bonus: /, "")}<small>{l.kind === "song" ? l.title : "bonus round"}</small></span>
+      <span className="jv-clip" aria-hidden>{Array.from({ length: 8 }, (_, i) => <b key={i} />)}</span>
+      <span className="jv-tagcell"><Tag it={l} /></span>
+    </>
+  );
+  return (
+    <li className="jv-row">
+      {l.exists
+        ? <Link href={`/learn/${l.slug}`} className={cls} aria-label={`${l.title}${l.done ? ", in your song" : isNext ? ", up next" : ""}`}>{body}</Link>
+        : <div className={cls} aria-label={`${l.title}, coming`}>{body}</div>}
+      {l.extras.length > 0
+        ? <button type="button" className="jv-more" onClick={onExtras} aria-label={`${l.extras.length} more on ${l.title}`}><b>+{l.extras.length}</b><small>deeper</small></button>
+        : <span className="jv-more is-none" aria-hidden />}
+    </li>
+  );
+}
+
+function Row({ it, n, isNext, sub, small }: { it: JourneyItem; n?: number; isNext?: boolean; sub?: string; small?: boolean }) {
+  const cls = `wv-lesson ${it.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${it.exists ? "" : "is-locked"} ${small ? "is-small" : ""}`;
+  const inner = (
+    <>
+      <b>{it.done ? <Icon name="check" small /> : small ? <span className={`jv-kind is-${it.kind}`}>{it.kind}</span> : String(n ?? 0).padStart(2, "0")}</b>
+      <span>{it.title.replace(/^bonus: /, "")}<small>{sub}{it.exists ? ` · ${minutesFor(it.slug)} min` : ""}{isNext ? " · up next" : ""}</small></span>
+      <Tag it={it} />
+      {it.exists && <Icon name="play" small />}
+    </>
+  );
+  return it.exists ? <Link href={`/learn/${it.slug}`} className={cls}>{inner}</Link> : <div className={cls} aria-disabled>{inner}</div>;
 }

@@ -7,7 +7,7 @@
 
 export type WorldSlug = "fundamentals" | "dj" | "producer";
 
-export const WORLD_ORDER: WorldSlug[] = ["fundamentals", "dj", "producer"];
+export const WORLD_ORDER: WorldSlug[] = ["fundamentals", "producer", "dj"];
 
 export interface WorldTheme {
   // Identity
@@ -75,7 +75,7 @@ export const WORLD_THEMES: Record<WorldSlug, WorldTheme> = {
     emoji: "",
     title: "Fundamentals",
     tagline: "The vocabulary of music",
-    description: "Sound, rhythm, melody, harmony and music technology. The foundation for everything — before you produce or DJ.",
+    description: "Sound, rhythm, melody, harmony and music technology. The foundation for everything, before you produce or DJ.",
 
     bg: "bg-bone",
     surface: "bg-bone",

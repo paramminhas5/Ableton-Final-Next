@@ -155,3 +155,25 @@ describe("EG-2 loudness matching", () => {
     expect(matchGain(sine(0.3), new Float32Array(100))).toBe(1);
   });
 });
+
+import { pickSource, pickTranspose, bandName, GYM_SOURCES, mulberry32 as mb } from "../src/lib/gym/engine";
+describe("ear gym variety", () => {
+  it("never repeats a source twice in a row and uses them all", () => {
+    const rng = mb(7);
+    let prev: ReturnType<typeof pickSource> | undefined;
+    const seen = new Set<string>();
+    for (let i = 0; i < 200; i++) {
+      const s = pickSource(rng, prev);
+      expect(s).not.toBe(prev);
+      seen.add(s);
+      prev = s;
+    }
+    expect(seen.size).toBe(GYM_SOURCES.length);
+  });
+  it("changes key and gives each band centre a distinct plain name", () => {
+    const rng = mb(3);
+    expect(new Set(Array.from({ length: 60 }, () => pickTranspose(rng))).size).toBeGreaterThan(6);
+    const names = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 12000, 16000].map(bandName);
+    expect(names).toEqual(["sub", "bass", "low mid", "mid", "upper mid", "presence", "bite", "sparkle", "air", "top"]);
+  });
+});

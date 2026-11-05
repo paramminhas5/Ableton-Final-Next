@@ -101,7 +101,7 @@ impl FxSynth {
             F_FILTER => self.filter = v,
             F_REVERB => {
                 self.reverb = v;
-                self.rev.set(1.2 + v * 3.2, 5_500.0);
+                self.rev.set(1.2 + v * 3.2);
             }
             F_BUILD => self.manual = v,
             F_TUNE => self.tune = v,

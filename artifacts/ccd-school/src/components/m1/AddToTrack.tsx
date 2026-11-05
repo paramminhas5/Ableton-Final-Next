@@ -15,6 +15,7 @@ import type { Mission } from "@/content/types";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
 import { useEngineTrack } from "./useEngineTrack";
+import { nameSongIfNew } from "@/lib/songs";
 
 /** The lesson's own pattern as a take, for when try it was skipped. */
 export function presetTake(mission: Mission): Take {
@@ -25,6 +26,8 @@ export function presetTake(mission: Mission): Take {
   return { type: takeType(offer.kind), events: one.layers[0]?.events ?? [] };
 }
 
+const NOUN: Record<string, string> = { drums: "a drum", hats: "hats", bass: "a bass line", chords: "chords", lead: "a lead line", fx: "an effect", sample: "a sample" };
+
 export type AddKeys = { added: boolean; playing: boolean; hear: () => void; add: () => void };
 
 export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Mission; xp: number; take: Take | null; accent?: string; keys?: (k: AddKeys) => ReactNode }) {
@@ -34,7 +37,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
   const already = !!base?.added.includes(slug);
   const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
   const knobs = shapeKnobs(line.type);
-  const [params, setParams] = useState<Record<number, number>>({});
+  const [params, setParams] = useState<Record<number, number>>(() => { try { return JSON.parse(sessionStorage.getItem(`ccd.shape.${slug}`) ?? "{}") as Record<number, number>; } catch { return {}; } });
   const [added, setAdded] = useState(false);
   const [touched, setTouched] = useState<string | null>(null);
   const [beat, setBeat] = useState(-1);
@@ -62,6 +65,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
     const now = readTrackV2();
     const next = applyTake(now, slug, line, world, params);
     writeTrackV2(next);
+    nameSongIfNew();
     setBase(next);
     setAdded(true);
   };
@@ -87,7 +91,9 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
         <div style={{ marginTop: 18 }}>
           {v1 && <Lanes track={v1} sel={selId} playhead={playhead} />}
         </div>
-        <div className="m1-ss" style={{ marginTop: 8 }}>{isIn ? "in your track" : "joins your track when you add it"}</div>
+        {isIn
+          ? <div className="m1-t22" style={{ marginTop: 12, color: "var(--disp-ink)" }}>great, you&apos;ve added {NOUN[line.type] ?? "a layer"} to your track.</div>
+          : <div className="m1-ss" style={{ marginTop: 8 }}>joins your track when you add it</div>}
       </Screen>
 
       {!isIn && (
@@ -95,8 +101,8 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
           <Silk label="shape it first" right="the screen shows values" />
           <div className="m1-g" style={{ gridTemplateColumns: "1fr 1fr" }}>
             {knobs.map((k, i) => (
-              <Knob key={k.index} label={k.spec.label} color={i === 0 ? CAP.go : CAP.navy} size={74} height={170} led={accent ?? "var(--led-go)"}
-                value={value(k)} defaultValue={k.spec.default}
+              <Knob key={k.index} label={k.spec.label} color={CAP.navy} size={74} height={170} led={accent ?? "var(--led-mint)"}
+                value={value(k)} defaultValue={k.spec.default} readout={display(k.spec, value(k))}
                 onChange={v => setParams(p => ({ ...p, [k.index]: v }))}
                 onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
             ))}
@@ -112,7 +118,7 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
           {isIn ? (
             <GoPill href="/studio" style={{ gridColumn: "span 3" }} ariaLabel="Open studio"><Icon name="studio" />open studio</GoPill>
           ) : (
-            <GoPill onClick={add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my track</GoPill>
+            <GoPill onClick={add} style={{ gridColumn: "span 3" }} ariaLabel="Add to my track"><Icon name="plus" />add to my song</GoPill>
           )}
         </div>
       )}

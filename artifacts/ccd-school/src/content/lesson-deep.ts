@@ -19,11 +19,11 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "A DAW is the program you record and mix music in. Most DAWs give you one timeline that runs left to right.",
         "Ableton Live gives you that timeline (Arrangement) AND a grid of clips you can trigger live (Session). Same song, two windows.",
-        "Nothing you do here destroys your audio file. Warping, slicing, reversing — your original sample on disk is untouched.",
+        "Nothing you do here destroys your audio file. Warping, slicing, reversing: your original sample on disk is untouched.",
       ],
       why: [
         "Jam ideas in Session, then drag the result into Arrangement to finish the song.",
-        "Switch views any time without stopping playback — the engine never resets.",
+        "Switch views any time without stopping playback: the engine never resets.",
         "Try anything. The original file is always safe.",
       ],
       analogy:
@@ -36,7 +36,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Every track type (Audio, MIDI, Return, Group, Master) exists in both views simultaneously and shares its devices, mixer state and automation.",
       ],
       edgeCases: [
-        "Saving a Set as .als does not embed samples — use File → Collect All and Save before moving the project.",
+        "Saving a Set as .als does not embed samples: use File → Collect All and Save before moving the project.",
         "Some destructive actions (Consolidate, Freeze→Flatten) DO bake edits into a new file in Samples/Processed.",
       ],
       engineerNotes: [
@@ -48,7 +48,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "One audio engine, two windows. Pressing Tab swaps the view; tracks, devices and clips remain identical underneath.",
     flow: "Browser → Track → Devices → Mixer → Master Out",
     walkthrough: [
-      { do: "Press Tab.", listen: "Playback continues — same engine, different window." },
+      { do: "Press Tab.", listen: "Playback continues: same engine, different window." },
       {
         do: "Drag a sample from the browser onto a track.",
         listen: "It loops at the project tempo automatically (warping).",
@@ -61,16 +61,16 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: [
       "Tempo never drifts when you Tab between views.",
       "Metronome stays locked regardless of view.",
-      "Clips loop seamlessly — that's warping doing its job.",
+      "Clips loop seamlessly: that's warping doing its job.",
     ],
     mistakes: [
       "Treating Session as a 'sketch' and Arrangement as the 'real' file. They're equal.",
       "Believing edits change the source file (they don't).",
-      "Saving .als and emailing it without Collect All — the samples won't follow.",
+      "Saving .als and emailing it without Collect All: the samples won't follow.",
     ],
     proMoves: [
       "Set a default template (File → Save Live Set As Template) with your favourite I/O and tracks.",
-      "Use Capture MIDI — Live records what you just played even if you forgot to hit Record.",
+      "Use Capture MIDI: Live records what you just played even if you forgot to hit Record.",
     ],
     quizEasy: [
       {
@@ -113,7 +113,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       },
     ],
     sources: [
-      src("Welcome to Live — concepts", "Live 12 Manual §1"),
+      src("Welcome to Live: concepts", "Live 12 Manual §1"),
       src("Live's Interface", "Live 12 Manual §3"),
     ],
   },
@@ -122,7 +122,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Eight regions. Learn them once, never get lost again.",
     beginner: {
       what: [
-        "Live's window has eight main regions: Browser (left), Main view (centre — Session or Arrangement), Detail view (bottom — clip or device editor), Transport (top), Help bar (very bottom), and the right-hand groove pool.",
+        "Live's window has eight main regions: Browser (left), Main view (centre, Session or Arrangement), Detail view (bottom, clip or device editor), Transport (top), Help bar (very bottom), and the right-hand groove pool.",
         "Most beginners only ever look at two: Main view and Detail view. That's normal.",
       ],
       why: [
@@ -135,11 +135,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "The interface is divided into Main View (Session/Arrangement), Detail View (Clip/Device), Browser, Info View, Help View, Groove Pool, Transport, and the I/O strips inside the mixer.",
-        "Every region can be hidden via the small triangles or the View menu — F11 toggles full-screen, Cmd/Ctrl+Alt+L locks the layout.",
+        "Every region can be hidden via the small triangles or the View menu: F11 toggles full-screen, Cmd/Ctrl+Alt+L locks the layout.",
       ],
       edgeCases: [
         "On small screens, hide the Browser and Info View; Detail View is the one you actually need.",
-        "Push 3 mirrors Detail View — the device shown on the controller is the device focused on screen.",
+        "Push 3 mirrors Detail View: the device shown on the controller is the device focused on screen.",
       ],
       engineerNotes: [
         "Cmd+Alt+L is essential for reclaimimg screen real estate on single-monitor setups by instantly clearing the Detail View.",
@@ -153,18 +153,18 @@ export const LESSONS: Record<string, LessonDeep> = {
     walkthrough: [
       {
         do: "Click the bottom-left triangle to hide the Browser.",
-        listen: "Main view widens — more room to work.",
+        listen: "Main view widens: more room to work.",
       },
       {
         do: "Click the bottom-right triangle to show Info View.",
-        listen: "Hover anything — a description appears.",
+        listen: "Hover anything: a description appears.",
       },
       { do: "Press Tab.", listen: "Main view swaps Session ↔ Arrangement." },
     ],
-    listenFor: ["Nothing — this lesson is visual."],
+    listenFor: ["Nothing: this lesson is visual."],
     mistakes: [
       "Working with every panel open on a 13\" laptop. Hide what you don't need.",
-      "Missing the Info View when stuck — it explains every control on hover.",
+      "Missing the Info View when stuck: it explains every control on hover.",
     ],
     proMoves: [
       "Cmd/Ctrl+Alt+L locks all panel sizes so you don't nudge them by accident.",
@@ -214,7 +214,7 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   browser: {
-    hook: "Sounds, samples, presets, your own files — all one drag away.",
+    hook: "Sounds, samples, presets, your own files: all one drag away.",
     beginner: {
       what: [
         "The Browser (left side) is your library. Sounds, Drums, Instruments, Audio Effects, MIDI Effects, Samples, and your own folders all live here.",
@@ -229,11 +229,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "The Browser is split into Collections (colour tags), Categories (Sounds, Drums, Instruments, etc.), Places (Packs, User Library, project folders, added paths), and search.",
-        "Hot-Swap mode (the orange ⇄ icon on a device or sample slot) ties Browser navigation directly to the slot — arrow keys audition replacements live.",
+        "Hot-Swap mode (the orange ⇄ icon on a device or sample slot) ties Browser navigation directly to the slot: arrow keys audition replacements live.",
       ],
       edgeCases: [
         "Live indexes added folders in the background; very large libraries can take minutes to appear in search.",
-        "Preview tab is post-fader — the level slider in the bottom-left controls audition volume only.",
+        "Preview tab is post-fader: the level slider in the bottom-left controls audition volume only.",
       ],
       engineerNotes: [
         "Hot-swap mode is the fastest way to audition textures in context without breaking the creative flow or losing device settings.",
@@ -260,8 +260,8 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Hot-swap auditions through the device, including its FX.",
     ],
     mistakes: [
-      "Forgetting to click the headphone icon — preview is muted.",
-      "Dragging a single hit onto a MIDI track (you want a Simpler instead — drag onto a MIDI track and Live offers it).",
+      "Forgetting to click the headphone icon: preview is muted.",
+      "Dragging a single hit onto a MIDI track (you want a Simpler instead: drag onto a MIDI track and Live offers it).",
     ],
     proMoves: [
       "Cmd/Ctrl+F focuses the Browser search instantly.",
@@ -331,10 +331,10 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Audio tab: pick driver (CoreAudio/ASIO), in/out config, buffer size (start 256 samples), sample rate. Lower buffer = lower latency = more CPU.",
         "Link/Tempo/MIDI: enable Control Surface for your controller and toggle Track / Sync / Remote on each MIDI port.",
-        "Record/Warp/Launch sets defaults for new clips — Default Warp Mode, Auto-Warp Long Samples, Quantize Recording.",
+        "Record/Warp/Launch sets defaults for new clips: Default Warp Mode, Auto-Warp Long Samples, Quantize Recording.",
       ],
       edgeCases: [
-        "On Apple Silicon, Rosetta-only plugins force Live into Rosetta mode — check About to confirm architecture.",
+        "On Apple Silicon, Rosetta-only plugins force Live into Rosetta mode: check About to confirm architecture.",
         "Two devices using the same MIDI port can cause feedback if both Track + Remote are enabled.",
       ],
       engineerNotes: [
@@ -344,7 +344,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
     },
     mechanism:
-      "Preferences are global — they persist across all projects unless overridden inside the .als (e.g. tempo, time signature).",
+      "Preferences are global: they persist across all projects unless overridden inside the .als (e.g. tempo, time signature).",
     flow: "User → Preferences → Live Engine → Project",
     walkthrough: [
       {
@@ -360,7 +360,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Test tone plays cleanly with no clicks or distortion."],
     mistakes: [
       "Buffer too low (32) = crackles. Too high (2048) = laggy keys.",
-      "Forgetting to enable Track on the MIDI input port — controller does nothing.",
+      "Forgetting to enable Track on the MIDI input port: controller does nothing.",
     ],
     proMoves: [
       "Save a template after configuring (File → Save Live Set As Template).",
@@ -410,14 +410,14 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   "files-projects": {
-    hook: "Live Sets, Projects, Packs — three layers that keep your work portable.",
+    hook: "Live Sets, Projects, Packs: three layers that keep your work portable.",
     beginner: {
       what: [
         "A Live Set is one .als file = your song. A Project is the folder around it that holds the .als plus its samples and presets. A Pack (.alp) is a bundle Ableton (or you) ship to share content.",
         "Always save a song into its own Project folder. File → Collect All and Save copies every used sample inside it so you can move the folder anywhere.",
       ],
       why: [
-        "Email a Project folder to a friend — they open it and everything works.",
+        "Email a Project folder to a friend: they open it and everything works.",
         "Lose nothing when you switch laptops or back up your drive.",
       ],
       analogy: "The .als is a recipe. The Project folder is the box of ingredients next to it.",
@@ -428,8 +428,8 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Collect All and Save offers granular control: collect from User Library, Factory Packs, Other Project Folders, separately. Use it before archiving.",
       ],
       edgeCases: [
-        "Renaming a Project folder in Finder is safe — Live re-resolves paths on next open.",
-        "Two .als files in the same Project share the Samples folder. Deleting one's clip can leave orphans — use 'Manage Project' to clean up.",
+        "Renaming a Project folder in Finder is safe: Live re-resolves paths on next open.",
+        "Two .als files in the same Project share the Samples folder. Deleting one's clip can leave orphans: use 'Manage Project' to clean up.",
       ],
       engineerNotes: [
         "Prioritize Collect All and Save before moving projects to prevent broken sample links when external drives aren't mounted.",
@@ -456,12 +456,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Status bar reports 'X files collected'."],
     mistakes: [
-      "Saving every song into one giant folder — paths break when you move things.",
+      "Saving every song into one giant folder: paths break when you move things.",
       "Forgetting Collect All before sending a project to a collaborator.",
     ],
     proMoves: [
       "Use 'Pack as Live Pack' to create a single .alp distributable.",
-      "Manage Project shows orphan samples — delete to slim the folder.",
+      "Manage Project shows orphan samples: delete to slim the folder.",
     ],
     quizEasy: [
       {
@@ -494,7 +494,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       },
       {
         q: "Renaming the Project folder in Finder…",
-        options: ["Is safe — Live re-resolves", "Breaks everything", "Loses warp data"],
+        options: ["Is safe: Live re-resolves", "Breaks everything", "Loses warp data"],
         answer: 0,
       },
       {
@@ -511,7 +511,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "A grid you play like an instrument. No timeline required.",
     beginner: {
       what: [
-        "Session View is a grid: tracks across the top, scenes down the side. Each cell holds a clip — a loop of audio or MIDI you can launch any time.",
+        "Session View is a grid: tracks across the top, scenes down the side. Each cell holds a clip: a loop of audio or MIDI you can launch any time.",
         "Press a clip's play triangle → it loops. Press another clip on the same track → the first stops, the second starts. Press a Scene → every clip on that row launches together.",
       ],
       why: [
@@ -523,10 +523,10 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Session View clips are launched according to their Launch Mode (Trigger, Gate, Toggle, Repeat) and Quantization (Global Quantize default 1 bar). Stop slots, follow actions, and Legato all live on the clip launch panel.",
-        "The Scene row at the right edge launches every column simultaneously — and can carry tempo and time-signature changes for the whole song.",
+        "The Scene row at the right edge launches every column simultaneously: and can carry tempo and time-signature changes for the whole song.",
       ],
       edgeCases: [
-        "If Global Quantize is None, clips launch instantly — useful for jamming, terrible for tight DJ sets.",
+        "If Global Quantize is None, clips launch instantly: useful for jamming, terrible for tight DJ sets.",
         "Follow Actions can chain clips into generative sequences without touching MIDI.",
       ],
       engineerNotes: [
@@ -550,7 +550,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Click the Scene row triangle.", listen: "All clips in that row launch together." },
     ],
     listenFor: [
-      "Launches snap to the bar — quantize is doing its job.",
+      "Launches snap to the bar: quantize is doing its job.",
       "Stop button (square) silences a track without killing the project.",
     ],
     mistakes: [
@@ -608,12 +608,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "The timeline. Where ideas become a finished song.",
     beginner: {
       what: [
-        "Arrangement View is the linear timeline — left to right, just like every other DAW. Clips, automation and edits live on tracks that play from start to finish.",
+        "Arrangement View is the linear timeline: left to right, just like every other DAW. Clips, automation and edits live on tracks that play from start to finish.",
         "You can record straight into Arrangement, or record what you jam in Session and the result lands here as audio/MIDI clips.",
       ],
       why: [
         "Build the actual song: intro, verse, chorus, drop, outro.",
-        "Edit precisely — chop, fade, automate every parameter to the millisecond.",
+        "Edit precisely: chop, fade, automate every parameter to the millisecond.",
       ],
       analogy: "Session is brainstorming on sticky notes. Arrangement is the final essay.",
     },
@@ -624,7 +624,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "If Arrangement is playing, Session clips override Arrangement playback for that track until you click 'Back to Arrangement' (orange triangle).",
-        "Consolidate (Cmd/Ctrl+J) bakes a selected range into a new audio clip — destructive in the sense it creates a new file but original clips remain.",
+        "Consolidate (Cmd/Ctrl+J) bakes a selected range into a new audio clip: destructive in the sense it creates a new file but original clips remain.",
       ],
       engineerNotes: [
         "Commit your Session performance to Arrangement early to escape the loop-itis trap and see the song's structural flaws.",
@@ -647,12 +647,12 @@ export const LESSONS: Record<string, LessonDeep> = {
       },
     ],
     listenFor: [
-      "Arrangement and Session can be at odds — orange triangle tells you so.",
+      "Arrangement and Session can be at odds: orange triangle tells you so.",
       "Loop brace lights orange when active.",
     ],
     mistakes: [
       "Forgetting Session clips override Arrangement until you click the orange triangle.",
-      "Recording without arming the track — nothing captured.",
+      "Recording without arming the track: nothing captured.",
     ],
     proMoves: [
       "Cmd/Ctrl+L toggles loop. Cmd/Ctrl+E splits clips at the playhead.",
@@ -714,11 +714,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Clip properties: Start, End, Loop start/length, Position, Pitch, Gain, Transpose, Warp on/off, Warp Mode, Sample/Notes editor, Envelopes (Clip and unlinked).",
-        "Clip envelopes let you draw modulation that's local to a clip — independent of track automation. Useful for variation per scene without duplicating tracks.",
+        "Clip envelopes let you draw modulation that's local to a clip: independent of track automation. Useful for variation per scene without duplicating tracks.",
       ],
       edgeCases: [
         "MIDI clips have no Warp Mode (they're notes, not audio).",
-        "Setting Loop length below the clip Length truncates playback — easy to miss.",
+        "Setting Loop length below the clip Length truncates playback: easy to miss.",
       ],
       engineerNotes: [
         "MIDI clips store polyphonic sequencing and CC data, while Audio clips utilize Warp engines to decouple pitch from time in the Sample Editor.",
@@ -796,14 +796,14 @@ export const LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Audio tracks hold recorded or imported sound. MIDI tracks hold notes that play an instrument. Return tracks receive sends (reverb, delay). Group tracks bundle other tracks. Master is the final output.",
-        "Pick the wrong type and nothing works — a sample on a MIDI track is silent.",
+        "Pick the wrong type and nothing works: a sample on a MIDI track is silent.",
       ],
       why: [
         "Right type = sound the first time.",
         "Groups and Returns keep your mix tidy when 30 tracks become 60.",
       ],
       analogy:
-        "Tracks are highway lanes. Trucks (audio), motorbikes (MIDI), exit ramps (returns) — they all need their own lane.",
+        "Tracks are highway lanes. Trucks (audio), motorbikes (MIDI), exit ramps (returns): they all need their own lane.",
     },
     advanced: {
       what: [
@@ -812,7 +812,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Dragging a sample onto an empty area creates an Audio track. Dragging an instrument creates a MIDI track.",
-        "Group tracks contain a hidden Master strip — automation on a Group affects all children.",
+        "Group tracks contain a hidden Master strip: automation on a Group affects all children.",
       ],
       engineerNotes: [
         "Use Return tracks for time-based effects to maintain phase coherence and control the wet/dry balance via a single fader.",
@@ -827,7 +827,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Cmd/Ctrl+T → new Audio track.", listen: "Empty stereo lane appears." },
       {
         do: "Cmd/Ctrl+Shift+T → new MIDI track.",
-        listen: "Lane appears with no instrument — silent until you add one.",
+        listen: "Lane appears with no instrument: silent until you add one.",
       },
       {
         do: "Select two tracks → Cmd/Ctrl+G.",
@@ -884,7 +884,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "A Scene launches a row. Follow Actions launch the future.",
     beginner: {
       what: [
-        "A Scene is a row of clips you launch together — perfect for sections like 'Verse 1' or 'Drop'.",
+        "A Scene is a row of clips you launch together: perfect for sections like 'Verse 1' or 'Drop'.",
         "Follow Actions tell a clip 'when you finish, jump here next'. Use them to chain clips into evolving patterns without touching MIDI.",
       ],
       why: [
@@ -896,7 +896,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Scenes can store tempo and time-signature changes — write '128 BPM 4/4' or '90 BPM 6/8' in the Scene name and Live obeys.",
+        "Scenes can store tempo and time-signature changes: write '128 BPM 4/4' or '90 BPM 6/8' in the Scene name and Live obeys.",
         "Follow Actions: Stop, Play Again, Previous, Next, First, Last, Any, Other, Jump. Two slots (A/B) with independent chance values let you build probabilistic chains.",
       ],
       edgeCases: [
@@ -925,12 +925,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Tempo change at the bar boundary on scene launch."],
     mistakes: [
-      "Naming a scene '120bpm' (no space) — Live ignores it.",
-      "Setting Follow Action time longer than clip Length — clip restarts before action fires.",
+      "Naming a scene '120bpm' (no space): Live ignores it.",
+      "Setting Follow Action time longer than clip Length: clip restarts before action fires.",
     ],
     proMoves: [
       "Combine Follow Actions with Legato to keep grooves continuous.",
-      "Scenes inherit colour from selected clips — colour-code sections.",
+      "Scenes inherit colour from selected clips: colour-code sections.",
     ],
     quizEasy: [
       {
@@ -984,12 +984,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Notes on a grid. The most powerful editor in Live.",
     beginner: {
       what: [
-        "MIDI is information about notes — pitch, length, velocity, position. The Piano Roll is where you draw, edit, and tweak them.",
+        "MIDI is information about notes: pitch, length, velocity, position. The Piano Roll is where you draw, edit, and tweak them.",
         "Double-click a MIDI clip → grid appears. Pencil tool draws notes; Selection tool moves and resizes them.",
       ],
       why: [
-        "Build a melody one note at a time — no instrument needed.",
-        "Fix a wrong note, change velocity, transpose — without re-recording.",
+        "Build a melody one note at a time: no instrument needed.",
+        "Fix a wrong note, change velocity, transpose: without re-recording.",
       ],
       analogy: "MIDI is sheet music. The Piano Roll is the music stand where you write it.",
     },
@@ -999,7 +999,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Velocity, Chance, Velocity Range and Note Probability give per-note humanisation. Stacked editing across multiple clips lets you edit several patterns at once.",
       ],
       edgeCases: [
-        "Notes shorter than one grid cell still trigger — useful for grace notes.",
+        "Notes shorter than one grid cell still trigger: useful for grace notes.",
         "Velocity 0 silences a note without removing it (still occupies its slot).",
       ],
       engineerNotes: [
@@ -1015,7 +1015,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         do: "Double-click a MIDI clip → press B → click the grid.",
         listen: "Note plays through the instrument.",
       },
-      { do: "Drag a note's right edge.", listen: "Length changes — sustain changes accordingly." },
+      { do: "Drag a note's right edge.", listen: "Length changes: sustain changes accordingly." },
       {
         do: "Click the bottom velocity bar and drag.",
         listen: "Note gets quieter or louder per hit.",
@@ -1025,7 +1025,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Velocity scales how hard the instrument is hit (most synths get brighter/louder).",
     ],
     mistakes: [
-      "Drawing notes outside the loop brace — they never play.",
+      "Drawing notes outside the loop brace: they never play.",
       "Forgetting to switch back to Selection tool after drawing.",
     ],
     proMoves: [
@@ -1071,15 +1071,15 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Recorded sound, ready to bend to your will.",
     beginner: {
       what: [
-        "An audio clip plays a sample (a recorded sound). You can chop it, fade it, transpose it, reverse it — without touching the file on disk.",
-        "Click an audio clip → Sample Box opens at the bottom. Gain, Pitch, Warp, Loop, Envelopes — all live there.",
+        "An audio clip plays a sample (a recorded sound). You can chop it, fade it, transpose it, reverse it: without touching the file on disk.",
+        "Click an audio clip → Sample Box opens at the bottom. Gain, Pitch, Warp, Loop, Envelopes: all live there.",
       ],
       why: [
         "Use any sample at any tempo, any pitch, any length.",
-        "Edit fearlessly — original file is safe.",
+        "Edit fearlessly: original file is safe.",
       ],
       analogy:
-        "Like Photoshop for sound. Layers, edits, transforms — the original photo is untouched.",
+        "Like Photoshop for sound. Layers, edits, transforms: the original photo is untouched.",
     },
     advanced: {
       what: [
@@ -1087,7 +1087,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Reverse, Crop, Consolidate (Cmd/Ctrl+J), Slice to MIDI all live in the right-click menu.",
       ],
       edgeCases: [
-        "Re-Pitch warp mode changes speed AND pitch together — like a vinyl pitch fader.",
+        "Re-Pitch warp mode changes speed AND pitch together: like a vinyl pitch fader.",
         "Complex Pro is highest quality but heaviest CPU; commit it via Freeze + Flatten.",
       ],
       engineerNotes: [
@@ -1104,12 +1104,12 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Switch Warp Mode to Re-Pitch.", listen: "Tempo and pitch move together." },
     ],
     listenFor: [
-      "Warp Mode changes the artefacts — Beats clicks at boundaries, Tones smears transients.",
+      "Warp Mode changes the artefacts: Beats clicks at boundaries, Tones smears transients.",
       "Re-Pitch sounds like a slowed/sped tape.",
     ],
     mistakes: [
-      "Warping a sample that doesn't need warping (a one-shot) — turn Warp off for cleaner playback.",
-      "Using Beats mode on melodic content — sounds chunky.",
+      "Warping a sample that doesn't need warping (a one-shot): turn Warp off for cleaner playback.",
+      "Using Beats mode on melodic content: sounds chunky.",
     ],
     proMoves: [
       "Right-click → Slice to New MIDI Track to chop transients into a Drum Rack.",
@@ -1162,7 +1162,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Live places Warp Markers on the waveform. Drag a marker → that beat lines up with the grid.",
       ],
       why: [
-        "Drop any sample at any tempo — it instantly fits.",
+        "Drop any sample at any tempo: it instantly fits.",
         "Mash up tracks at different BPMs without re-recording anything.",
       ],
       analogy: "Like rubber-banding a stretchy ruler so its inch marks line up with yours.",
@@ -1170,11 +1170,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Warping is real-time time-stretching driven by warp markers \u2014 anchor points pinned to the audio's transients that tell Live how the file's timeline maps onto Live's beat grid. Move a marker and the audio between it and its neighbours stretches/compresses to match.",
-        "Warp Modes choose the algorithm: Beats (transient-locked, best for drums and percussive material), Tones (pitched mono, good for vocals/bass), Texture (slow harmonic stuff), Re-Pitch (no stretch — playback speed and pitch change together, like vinyl), Complex (vocals + light music), Complex Pro (full mixes; CPU-heavy but the cleanest on stretched stems).",
+        "Warp Modes choose the algorithm: Beats (transient-locked, best for drums and percussive material), Tones (pitched mono, good for vocals/bass), Texture (slow harmonic stuff), Re-Pitch (no stretch: playback speed and pitch change together, like vinyl), Complex (vocals + light music), Complex Pro (full mixes; CPU-heavy but the cleanest on stretched stems).",
         "Auto-Warp tries to detect the file's tempo and place markers automatically; for clean loops it's nearly always right, for live recordings you usually need to nudge a few markers. Warp is non-destructive \u2014 the source file never changes, only the warp metadata in the .asd sidecar.",
       ],
       edgeCases: [
-        "Bad transient detection on smooth pads — switch to Tones or Complex.",
+        "Bad transient detection on smooth pads: switch to Tones or Complex.",
         "Re-Pitch ignores Warp Markers; it's a single global speed multiplier.",
       ],
       engineerNotes: [
@@ -1194,13 +1194,13 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Drag a Warp Marker on a kick to a downbeat.", listen: "That kick locks to the grid." },
       {
         do: "Switch Warp Mode Beats → Texture.",
-        listen: "Smoother but smearier — different artefacts.",
+        listen: "Smoother but smearier: different artefacts.",
       },
     ],
     listenFor: ["Transients stay sharp in Beats; smear in Texture; vinyl-pitch in Re-Pitch."],
     mistakes: [
-      "Trusting auto-warp on noisy live recordings — always check downbeats by ear.",
-      "Using Texture on drums — kicks sound mushy.",
+      "Trusting auto-warp on noisy live recordings: always check downbeats by ear.",
+      "Using Texture on drums: kicks sound mushy.",
     ],
     proMoves: [
       "Right-click marker → Warp From Here (Straight) for clean re-detection.",
@@ -1226,7 +1226,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         answer: 0,
       },
       {
-        q: "Texture mode is granular — best for…",
+        q: "Texture mode is granular: best for…",
         options: ["Pads and atmospheres", "Drums", "Vocals"],
         answer: 0,
       },
@@ -1249,7 +1249,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Set the buffer size low enough that monitoring feels instant (Preferences → Audio).",
       ],
       why: [
-        "Capture vocals, guitar, anything live — straight into your song.",
+        "Capture vocals, guitar, anything live: straight into your song.",
         "No latency = you can perform comfortably.",
       ],
       analogy: "Like a tape recorder, but the tape is infinite and rewindable.",
@@ -1262,7 +1262,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Monitor=In always passes input; Monitor=Auto only when armed and not playing back; Off mutes monitoring.",
-        "Direct monitoring on the interface bypasses Live's latency completely — usually preferred for vocals.",
+        "Direct monitoring on the interface bypasses Live's latency completely: usually preferred for vocals.",
       ],
       engineerNotes: [
         "Always set monitoring to Off when using an interface's direct monitoring to prevent phase cancellation and latency-induced timing errors.",
@@ -1275,12 +1275,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     flow: "Mic → Interface → Track Input → Devices → Disk + Master",
     walkthrough: [
       { do: "Set Audio From → Ext. In 1.", listen: "Meter shows level even before arming." },
-      { do: "Arm the track (red circle).", listen: "Monitor opens — you hear yourself with FX." },
+      { do: "Arm the track (red circle).", listen: "Monitor opens: you hear yourself with FX." },
       { do: "Hit Record → play.", listen: "Waveform appears as you record." },
     ],
     listenFor: ["Monitor delay should be under 10 ms at 256-sample buffer."],
     mistakes: [
-      "Forgetting to arm — nothing recorded.",
+      "Forgetting to arm: nothing recorded.",
       "Monitor=In during overdubs creates feedback if speakers are loud.",
     ],
     proMoves: [
@@ -1330,7 +1330,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Right-click an audio track → Show Take Lanes. Record several passes; highlight the winning regions; Live builds the comp.",
       ],
       why: ["Get a perfect vocal without one perfect take.", "Edit by ear instead of by waveform."],
-      analogy: "Like editing a video — pick the best shot from each take, stitch into one cut.",
+      analogy: "Like editing a video: pick the best shot from each take, stitch into one cut.",
     },
     advanced: {
       what: [
@@ -1339,7 +1339,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "It works for both audio and MIDI, which means the same workflow applies to vocals, guitars, MPE keyboard performances and drum-pad playing. The destructive 'pick the best take' workflow from older DAWs is unnecessary \u2014 the source lanes always remain editable.",
       ],
       edgeCases: [
-        "Take Lanes also work with MIDI — multiple performance passes can be comped.",
+        "Take Lanes also work with MIDI: multiple performance passes can be comped.",
         "Consolidate the comp before export to bake it into a single audio file.",
       ],
       engineerNotes: [
@@ -1359,13 +1359,13 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Highlight the winning region on Take 1.", listen: "It promotes to the main lane." },
       { do: "Repeat across takes.", listen: "Final comp plays as one seamless take." },
     ],
-    listenFor: ["Crossfades hide the joins — listen for any clicks (extend the fade if needed)."],
+    listenFor: ["Crossfades hide the joins: listen for any clicks (extend the fade if needed)."],
     mistakes: [
-      "Forgetting to enable Show Take Lanes — passes overwrite each other.",
+      "Forgetting to enable Show Take Lanes: passes overwrite each other.",
       "Comping by waveform instead of by ear.",
     ],
     proMoves: [
-      "Loop record continuously — every loop pass becomes a new take automatically.",
+      "Loop record continuously: every loop pass becomes a new take automatically.",
       "Consolidate the comp before final export.",
     ],
     quizEasy: [
@@ -1416,11 +1416,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Right-click an audio clip → Slice to New MIDI Track. Live cuts the sample at every transient and assigns each slice to a Drum Rack pad.",
-        "Now you can replay the loop in any order — make new beats from old breaks.",
+        "Now you can replay the loop in any order: make new beats from old breaks.",
       ],
       why: [
         "Re-arrange a break beat without re-recording.",
-        "Trigger any slice from MIDI — including Push pads.",
+        "Trigger any slice from MIDI: including Push pads.",
       ],
       analogy: "Like ripping a sandwich into bites and rebuilding it any way you like.",
     },
@@ -1428,7 +1428,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Slice to New MIDI Track analyses an audio clip's transients and chops it into one slice per transient. Live then drops those slices into a Drum Rack with an auto-generated MIDI clip that triggers each slice in order \u2014 you've effectively turned a loop into a kit.",
         "Slice modes vary by source: 'Transients' uses Live's onset detector (sensitivity is adjustable in the clip), 'Beat Divisions' slices on a fixed grid (1/16, 1/8 etc.) regardless of audio content, 'Regions' uses warp markers, and 'Manual' lets you place every slice by hand. Pick by source: drums = transients, melodic = beat divisions or manual.",
-        "Once sliced, the loop is a playable instrument — re-sequence slices for new patterns, swap individual pads, layer effects per slice, or use the generated MIDI as a rhythmic seed for new chord progressions.",
+        "Once sliced, the loop is a playable instrument: re-sequence slices for new patterns, swap individual pads, layer effects per slice, or use the generated MIDI as a rhythmic seed for new chord progressions.",
       ],
       edgeCases: [
         "Very dense source material → 100+ slices = unwieldy. Pre-cut by Beat or quantize transients first.",
@@ -1456,8 +1456,8 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Velocity → Volume scaling per slice (default).",
     ],
     mistakes: [
-      "Slicing a melodic loop by transient = clicky, weird boundaries — try by Beat instead.",
-      "Forgetting each slice is a Simpler — full envelopes available per pad.",
+      "Slicing a melodic loop by transient = clicky, weird boundaries: try by Beat instead.",
+      "Forgetting each slice is a Simpler: full envelopes available per pad.",
     ],
     proMoves: [
       "Drag slices to other Drum Racks to build hybrid kits.",
@@ -1529,10 +1529,10 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Live's built-in instrument lineup spans samplers (Simpler/Sampler/Drum Sampler), classic synthesis (Operator FM, Analog VA, Wavetable), drum tools (Drum Rack, Drum Synths), and Live 12 additions (Meld for MPE, Drift for analog-style, Granulator III for granular). Each lives under Categories \u2192 Instruments in the browser.",
         "The right pick depends on the role: sustained pads → Wavetable/Meld, plucks and bells → Operator, anything sample-based → Sampler/Simpler, drum kits → Drum Rack with Simpler chains, modular textures → Granulator III. Pros learn two or three deeply rather than dabbling in all of them.",
-        "Every native instrument supports macros, modulation and (most) MPE, so the workflow you learn on one transfers directly to the next — opening a saved Wavetable preset and knowing instantly how to map a macro feels the same as doing it on Operator or Meld.",
+        "Every native instrument supports macros, modulation and (most) MPE, so the workflow you learn on one transfers directly to the next: opening a saved Wavetable preset and knowing instantly how to map a macro feels the same as doing it on Operator or Meld.",
       ],
       edgeCases: [
-        "Simpler is single-zone; Sampler is multi-zone with key/velocity mapping — convert via right-click → Simpler↔Sampler.",
+        "Simpler is single-zone; Sampler is multi-zone with key/velocity mapping: convert via right-click → Simpler↔Sampler.",
         "Drum Rack pads can host any device chain, not just Simplers.",
       ],
       engineerNotes: [
@@ -1548,7 +1548,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         do: "Drop Wavetable onto a MIDI track and play.",
         listen: "Default preset = a clean digital saw.",
       },
-      { do: "Swap to Operator → Bass preset.", listen: "FM bass — tight, punchy." },
+      { do: "Swap to Operator → Bass preset.", listen: "FM bass: tight, punchy." },
       { do: "Drop Drum Rack → drag a sample onto a pad.", listen: "Pad fires that sample." },
     ],
     listenFor: [
@@ -1561,7 +1561,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Loading Sampler when Simpler is enough.",
     ],
     proMoves: [
-      "Hot-swap presets via the orange ⇄ — audition without committing.",
+      "Hot-swap presets via the orange ⇄: audition without committing.",
       "Combine instruments in an Instrument Rack with key splits.",
     ],
     quizEasy: [
@@ -1608,18 +1608,18 @@ export const LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Drum Rack is a container with up to 128 pads (you see 16 at a time). Drop any sample onto a pad → it plays from a MIDI note.",
-        "Each pad has its own volume, pan, mute, solo, and own device chain — full FX per pad.",
+        "Each pad has its own volume, pan, mute, solo, and own device chain: full FX per pad.",
       ],
       why: [
         "Build a custom kit in seconds.",
         "Process the kick separately from the snare without splitting tracks.",
       ],
       analogy:
-        "Like a hardware drum machine — each pad is a sound, fully tweakable, all in one rack.",
+        "Like a hardware drum machine: each pad is a sound, fully tweakable, all in one rack.",
     },
     advanced: {
       what: [
-        "Drum Rack is a specialised Instrument Rack with a 4×4 pad grid (16 visible at a time, 128 total). Each pad is a chain holding one device — usually Simpler with a one-shot — that responds to a single MIDI note. Drag any sample onto any pad and Live builds the chain for you.",
+        "Drum Rack is a specialised Instrument Rack with a 4×4 pad grid (16 visible at a time, 128 total). Each pad is a chain holding one device, usually Simpler with a one-shot, that responds to a single MIDI note. Drag any sample onto any pad and Live builds the chain for you.",
         "Beyond samples, pads can hold full instruments and effect chains. That's how Drum Buss-style processing per pad works: each pad is its own mini mixer with sends to the Drum Rack's internal Return chains, so you can have a kick-only compressor and a snare-only reverb without leaving the rack.",
         "Choke groups silence one pad when another in the same group fires (open vs closed hi-hat is the textbook case). Combined with per-pad MIDI in/out routing, Drum Rack scales from sample player to full Push-driven kit with parallel processing and creative routing built in.",
       ],
@@ -1649,7 +1649,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Forgetting to assign Choke Group on hi-hat pairs.",
     ],
     proMoves: [
-      "Drop a Drum Rack inside a Drum Rack pad — nested kits.",
+      "Drop a Drum Rack inside a Drum Rack pad: nested kits.",
       "Send each pad to a return for shared reverb.",
     ],
     quizEasy: [
@@ -1691,7 +1691,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Two oscillators. Hundreds of waveforms. Endless evolving textures.",
     beginner: {
       what: [
-        "Wavetable is a synth where each oscillator scans through a wavetable — a series of single-cycle waveforms morphed together.",
+        "Wavetable is a synth where each oscillator scans through a wavetable: a series of single-cycle waveforms morphed together.",
         "Move the Position knob → tone changes from one waveform to the next. Modulate it → things start to move.",
       ],
       why: [
@@ -1703,12 +1703,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "Wavetable is Live's flagship subtractive/wavetable hybrid. Each voice has two oscillators that scan through a 2D wavetable (a stack of single-cycle waveforms); moving the Position parameter sweeps from one waveform to the next, which is the source of Wavetable's signature evolving timbres. Sub osc, noise, FM and Classic/Modern unison modes round out the source stage.",
-        "After the oscillators come two filters (Clean / OSR / MS2 / SMP — the second is the same modelled filters with their own resonance characters) routed in serial or parallel, plus dedicated effect slots for chorus, reverb-style ambience, drive and EQ inside the device. Modulation is handled by 3 envelopes, 2 LFOs and per-voice MPE inputs hitting a generous mod matrix.",
-        "What makes it production-ready is how cleanly the macros expose the most musical destinations on the device front panel — load any preset and you can shape it dramatically without ever opening the matrix. Pros lean on it for both pads and basses because the same engine handles slow timbre morphs and tight FM growls.",
+        "After the oscillators come two filters (Clean / OSR / MS2 / SMP: the second is the same modelled filters with their own resonance characters) routed in serial or parallel, plus dedicated effect slots for chorus, reverb-style ambience, drive and EQ inside the device. Modulation is handled by 3 envelopes, 2 LFOs and per-voice MPE inputs hitting a generous mod matrix.",
+        "What makes it production-ready is how cleanly the macros expose the most musical destinations on the device front panel: load any preset and you can shape it dramatically without ever opening the matrix. Pros lean on it for both pads and basses because the same engine handles slow timbre morphs and tight FM growls.",
       ],
       edgeCases: [
-        "Unison spread CPU rises with voice count — keep an eye on CPU meter.",
-        "Effect modes change what Position does — FM mode treats Position as FM amount source.",
+        "Unison spread CPU rises with voice count: keep an eye on CPU meter.",
+        "Effect modes change what Position does: FM mode treats Position as FM amount source.",
       ],
       engineerNotes: [
         "Use the Matrix to map LFOs to oscillator position for organic, evolving movements that static subtractive synths can't replicate.",
@@ -1724,12 +1724,12 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Switch Effect to FM.", listen: "Tone gets metallic, bell-like." },
     ],
     listenFor: [
-      "Position morph adds a sweep — like a filter, but on the source.",
+      "Position morph adds a sweep: like a filter, but on the source.",
       "FM Effect mode adds harmonic complexity instantly.",
     ],
     mistakes: [
-      "Maxing Unison voices on a busy track — CPU spike.",
-      "Forgetting the mod matrix exists — most expressive part of the synth.",
+      "Maxing Unison voices on a busy track: CPU spike.",
+      "Forgetting the mod matrix exists: most expressive part of the synth.",
     ],
     proMoves: [
       "Modulate Position with the Mod Wheel for performable timbre.",
@@ -1775,27 +1775,27 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   operator: {
-    hook: "FM synthesis. Four operators. Bells, basses, brass — clean and digital.",
+    hook: "FM synthesis. Four operators. Bells, basses, brass: clean and digital.",
     beginner: {
       what: [
         "Operator is a 4-operator FM synth. FM = one oscillator modulates another's frequency, creating complex harmonics from simple sine waves.",
         "Drop it, pick a preset, play. Bass and bell sounds are what it does best.",
       ],
       why: [
-        "FM bass cuts through any mix — clean and tight.",
+        "FM bass cuts through any mix: clean and tight.",
         "Bells and metallic textures come effortlessly.",
       ],
       analogy:
-        "Like four tuning forks that hit each other — the result is a complex chord from simple parts.",
+        "Like four tuning forks that hit each other: the result is a complex chord from simple parts.",
     },
     advanced: {
       what: [
-        "Operator is a four-oscillator FM synth. Each oscillator is called an operator (A, B, C, D). When one operator is wired to modulate another's frequency, it doesn't change the pitch you hear — it bends the receiver's waveform thousands of times a second, producing new harmonics. That's why simple sine waves can become bell-like or brassy.",
+        "Operator is a four-oscillator FM synth. Each oscillator is called an operator (A, B, C, D). When one operator is wired to modulate another's frequency, it doesn't change the pitch you hear: it bends the receiver's waveform thousands of times a second, producing new harmonics. That's why simple sine waves can become bell-like or brassy.",
         "An algorithm decides who modulates whom and who actually reaches the speakers. Operators feeding the output are called carriers; operators feeding other operators are modulators. Operator ships eight algorithm layouts, plus a feedback loop on A that turns it from a sine into something approaching a saw, then noise as feedback climbs.",
-        "Each operator carries its own envelope, level, waveform and frequency ratio (the ratio of its frequency to the played note). Around them sit a global filter, an LFO, a pitch envelope and per-operator velocity scaling — all shared with the whole patch, so changes there affect every note.",
+        "Each operator carries its own envelope, level, waveform and frequency ratio (the ratio of its frequency to the played note). Around them sit a global filter, an LFO, a pitch envelope and per-operator velocity scaling: all shared with the whole patch, so changes there affect every note.",
       ],
       edgeCases: [
-        "FM ratios determine timbre, not pitch — small ratio shifts = huge tone changes.",
+        "FM ratios determine timbre, not pitch: small ratio shifts = huge tone changes.",
         "Feedback on A turns sine into saw → noise as it climbs.",
       ],
       engineerNotes: [
@@ -1810,11 +1810,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     walkthrough: [
       { do: "Load Operator → Bass preset.", listen: "Tight FM bass." },
       { do: "Increase B's level.", listen: "Tone gets more harmonic / metallic." },
-      { do: "Tweak B's coarse ratio.", listen: "Timbre changes dramatically — not pitch." },
+      { do: "Tweak B's coarse ratio.", listen: "Timbre changes dramatically: not pitch." },
     ],
     listenFor: ["Ratio changes shift timbre, not pitch."],
     mistakes: [
-      "Tuning operators by ear instead of by ratio — get inharmonic results unintentionally.",
+      "Tuning operators by ear instead of by ratio: get inharmonic results unintentionally.",
       "Pushing Feedback too high → noise.",
     ],
     proMoves: [
@@ -1871,13 +1871,13 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Simpler is a one-sample player with three modes. Classic loops the sample inside a normal ADSR envelope — best for sustained tones. 1-Shot ignores envelopes and note length entirely, playing the sample from start to finish — best for drum hits. Slicing chops the sample at warp markers or transients and maps each slice to a separate pad — best for breakbeats and chopped vocals.",
+        "Simpler is a one-sample player with three modes. Classic loops the sample inside a normal ADSR envelope, best for sustained tones. 1-Shot ignores envelopes and note length entirely, playing the sample from start to finish, best for drum hits. Slicing chops the sample at warp markers or transients and maps each slice to a separate pad, best for breakbeats and chopped vocals.",
         "Sampler is the multi-zone version: a single instrument can hold dozens of samples mapped to different key and velocity ranges, so a soft hit triggers one recording and a loud hit triggers another. That's how sampled grand pianos and orchestral libraries are built.",
-        "Sampler also exposes a full modulation matrix (three LFOs, multiple envelopes, MIDI sources) plus dedicated Pitch, Filter and MIDI tabs. You convert a Simpler into a Sampler at any time via right-click on the device header — a one-way upgrade that preserves the loaded sample.",
+        "Sampler also exposes a full modulation matrix (three LFOs, multiple envelopes, MIDI sources) plus dedicated Pitch, Filter and MIDI tabs. You convert a Simpler into a Sampler at any time via right-click on the device header: a one-way upgrade that preserves the loaded sample.",
       ],
       edgeCases: [
         "Convert Simpler → Sampler via right-click on header → 'Simpler → Sampler' (one-way).",
-        "Slicing mode in Simpler chops a sample into pads internally — alternative to Slice to New MIDI Track.",
+        "Slicing mode in Simpler chops a sample into pads internally: alternative to Slice to New MIDI Track.",
       ],
       engineerNotes: [
         "Use 1-Shot mode for drum one-shots to ensure the tail plays out fully without needing to hold the MIDI note down.",
@@ -1890,7 +1890,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     flow: "MIDI → Zone Lookup → Sample → Envelope/Filter → Out",
     walkthrough: [
       { do: "Drag a sample onto a MIDI track.", listen: "Simpler loads, Classic mode by default." },
-      { do: "Switch to 1-Shot.", listen: "No envelopes — useful for drum hits." },
+      { do: "Switch to 1-Shot.", listen: "No envelopes: useful for drum hits." },
       {
         do: "Right-click → Simpler → Sampler.",
         listen: "Same sound, full multi-zone editor now available.",
@@ -1902,7 +1902,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     mistakes: [
       "Using Simpler for grand piano (use Sampler for multi-zone).",
-      "Pitching down a sample more than an octave in Classic — sounds rough; switch to Warp on.",
+      "Pitching down a sample more than an octave in Classic: sounds rough; switch to Warp on.",
     ],
     proMoves: [
       "Sampler velocity zones let you blend soft and loud recordings naturally.",
@@ -1951,19 +1951,19 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Drag a band point → boost up, cut down. Hold Q to widen or narrow the slope.",
       ],
       why: [
-        "Carve space for vocals — cut where they sit on the kick.",
+        "Carve space for vocals: cut where they sit on the kick.",
         "Make muddy tracks tight by trimming low-mid build-up around 200–500 Hz.",
       ],
-      analogy: "Like spice on food — a little where it's missing, never everywhere.",
+      analogy: "Like spice on food: a little where it's missing, never everywhere.",
     },
     advanced: {
       what: [
-        "EQ Eight is eight independent filter bands chained in series. Each band can be set to a different shape — Low Cut and High Cut remove everything beyond a frequency, Shelves tilt a wide region up or down, Bells boost or cut a focused area, Notches surgically remove a single frequency. Together those shapes cover every common EQ task.",
-        "Each band has three controls: Frequency (where it works), Gain (how much boost or cut), and Q (how wide or narrow the action is). Narrow Q is surgical — perfect for hunting a resonance. Wide Q is musical — perfect for tone shaping. Steep cuts also introduce phase shift, which is why mastering engineers prefer gentle Q values whenever they can.",
-        "M/S (Mid/Side) mode splits the stereo signal into the centre (mono) and the sides (stereo difference) and lets you EQ them separately. That's how engineers keep low end punchy and mono while opening up high end on the sides for width — a technique impossible with normal stereo EQ.",
+        "EQ Eight is eight independent filter bands chained in series. Each band can be set to a different shape: Low Cut and High Cut remove everything beyond a frequency, Shelves tilt a wide region up or down, Bells boost or cut a focused area, Notches surgically remove a single frequency. Together those shapes cover every common EQ task.",
+        "Each band has three controls: Frequency (where it works), Gain (how much boost or cut), and Q (how wide or narrow the action is). Narrow Q is surgical, perfect for hunting a resonance. Wide Q is musical, perfect for tone shaping. Steep cuts also introduce phase shift, which is why mastering engineers prefer gentle Q values whenever they can.",
+        "M/S (Mid/Side) mode splits the stereo signal into the centre (mono) and the sides (stereo difference) and lets you EQ them separately. That's how engineers keep low end punchy and mono while opening up high end on the sides for width: a technique impossible with normal stereo EQ.",
       ],
       edgeCases: [
-        "Steep cuts (high Q) introduce phase shift — use M/S to keep low end mono while shaping sides.",
+        "Steep cuts (high Q) introduce phase shift: use M/S to keep low end mono while shaping sides.",
         "Boosting more than +6 dB usually means another track needs cutting instead.",
       ],
       engineerNotes: [
@@ -1989,7 +1989,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     mistakes: [
       "Boosting where you should cut.",
-      "Forgetting Q — narrow Q = surgical, wide Q = musical.",
+      "Forgetting Q: narrow Q = surgical, wide Q = musical.",
     ],
     proMoves: [
       "Use the spectrum to find resonant nodes; sweep a narrow boost to find them, then cut.",
@@ -2039,12 +2039,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "A compressor is an automatic volume knob that turns down loud parts of a signal so the difference between loud and quiet shrinks. Threshold sets the level where it starts working, Ratio sets how aggressively (a 4:1 ratio means anything 4 dB over the threshold only comes out 1 dB louder), and Makeup adds back the level lost so you actually hear a louder, more even sound rather than a quieter one.",
-        "Attack and Release control timing. A slow attack (say 30 ms) lets the initial transient — the click of a kick, the consonant of a vocal — slip through before clamping the body, which is how compressors add punch instead of removing it. Release decides how quickly the volume recovers; too fast sounds buzzy on bass, too slow makes the track pump unmusically.",
-        "Live's Compressor adds a sidechain section so a different signal can trigger the gain reduction (the kick-ducks-bass move), an EQ on that sidechain so you can ignore irrelevant frequencies, and Lookahead (0/1/10 ms) which lets the detector see peaks slightly before they arrive — useful on transient-heavy material.",
+        "Attack and Release control timing. A slow attack (say 30 ms) lets the initial transient, the click of a kick, the consonant of a vocal, slip through before clamping the body, which is how compressors add punch instead of removing it. Release decides how quickly the volume recovers; too fast sounds buzzy on bass, too slow makes the track pump unmusically.",
+        "Live's Compressor adds a sidechain section so a different signal can trigger the gain reduction (the kick-ducks-bass move), an EQ on that sidechain so you can ignore irrelevant frequencies, and Lookahead (0/1/10 ms) which lets the detector see peaks slightly before they arrive: useful on transient-heavy material.",
       ],
       edgeCases: [
-        "Slow attack lets transients through, then clamps the body — punch maker.",
-        "Auto Release uses program-dependent timing — usually transparent, sometimes pumps.",
+        "Slow attack lets transients through, then clamps the body: punch maker.",
+        "Auto Release uses program-dependent timing: usually transparent, sometimes pumps.",
       ],
       engineerNotes: [
         "Use a 30ms attack to let the initial transient through, preserving the 'knock' while controlling the body of the sound.",
@@ -2069,7 +2069,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Gain Reduction meter swings on loud peaks.", "Pumping = release too slow."],
     mistakes: [
       "Threshold too low + ratio too high = squashed lifeless.",
-      "Forgetting makeup — sounds quieter, not louder.",
+      "Forgetting makeup: sounds quieter, not louder.",
     ],
     proMoves: [
       "Drum bus: 4:1 ratio, 30 ms attack, fast release for punch.",
@@ -2118,8 +2118,8 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Space and echo. The two effects every record needs.",
     beginner: {
       what: [
-        "Reverb adds the sound of a room — small, big, plate, hall. Delay adds discrete echoes — slap, ping-pong, dub.",
-        "Use them on Return tracks (sends) so multiple tracks share the same space — the mix sounds glued.",
+        "Reverb adds the sound of a room, small, big, plate, hall. Delay adds discrete echoes, slap, ping-pong, dub.",
+        "Use them on Return tracks (sends) so multiple tracks share the same space: the mix sounds glued.",
       ],
       why: [
         "Reverb makes things feel like they're in the same room.",
@@ -2131,10 +2131,10 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Reverb is the simulated tail of a room. Live's Reverb device builds that tail from an input filter, a brief Predelay (the silence before reflections begin), an early-reflection diffusion network, and a longer decay tail with its own EQ. Hybrid Reverb extends this by blending an algorithmic engine with convolution \u2014 convolution applies a recorded impulse response of a real space, so you get authentic room/hall/plate character that algorithms can't replicate.",
         "Delay is discrete repetition rather than continuous tail. The Delay device runs an independent line per side, each with its own time (synced to grid or free in ms), feedback amount, and a high/low filter band on the feedback path so each repeat dulls or thins. Ping-Pong mode bounces taps L→R, and Freeze captures the current buffer so you can hold an echo while the source moves on.",
-        "In a session, both belong on Return tracks. Sending several sources into one shared reverb glues them into the same imaginary room; doing the same with delay creates a unified rhythmic depth across the mix. Inserting reverbs and delays per-track multiplies CPU and smears the stereo field — pros almost always send.",
+        "In a session, both belong on Return tracks. Sending several sources into one shared reverb glues them into the same imaginary room; doing the same with delay creates a unified rhythmic depth across the mix. Inserting reverbs and delays per-track multiplies CPU and smears the stereo field: pros almost always send.",
       ],
       edgeCases: [
-        "Predelay separates source from reverb — clarity without losing depth.",
+        "Predelay separates source from reverb: clarity without losing depth.",
         "Long reverb tails on every track = mud. Use sends.",
       ],
       engineerNotes: [
@@ -2155,12 +2155,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Predelay = clarity. Diffuse = warmth."],
     mistakes: [
-      "Insert reverbs on every track instead of returns — kills the mix.",
+      "Insert reverbs on every track instead of returns: kills the mix.",
       "100% feedback delay = runaway.",
     ],
     proMoves: [
-      "Sidechain a duck on the reverb return keyed to the dry vocal — vocal pops out, reverb fills the gaps.",
-      "EQ the reverb return — high-pass at 200 Hz for clarity.",
+      "Sidechain a duck on the reverb return keyed to the dry vocal: vocal pops out, reverb fills the gaps.",
+      "EQ the reverb return: high-pass at 200 Hz for clarity.",
     ],
     quizEasy: [
       { q: "Reverb adds…", options: ["A sense of space", "Pitch", "Tempo"], answer: 0 },
@@ -2205,11 +2205,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "A little harmonic dirt makes everything sound bigger.",
     beginner: {
       what: [
-        "Saturator adds harmonics — gentle warmth at low drive, biting distortion at high drive.",
+        "Saturator adds harmonics: gentle warmth at low drive, biting distortion at high drive.",
         "Use it on bass to add bite, on drums for grit, on the master bus for glue.",
       ],
       why: ["Thin sounds suddenly feel full.", "Adds presence without raising volume."],
-      analogy: "Like a tube amp — just enough drive feels expensive; too much sounds broken.",
+      analogy: "Like a tube amp: just enough drive feels expensive; too much sounds broken.",
     },
     advanced: {
       what: [
@@ -2218,8 +2218,8 @@ export const LESSONS: Record<string, LessonDeep> = {
         "When you put saturation on the master or a bus, you're adding harmonics that didn't exist in the source \u2014 those harmonics fill perceived gaps in the frequency spectrum, which is why a saturated bus sounds 'glued' even before any compressor touches it. Engineers reach for it as a tonal weapon, not just a distortion effect.",
       ],
       edgeCases: [
-        "DC offset can sneak in at extreme drive — use Soft Clip toggle to tame.",
-        "Saturator changes loudness perception massively — A/B with bypass.",
+        "DC offset can sneak in at extreme drive: use Soft Clip toggle to tame.",
+        "Saturator changes loudness perception massively: A/B with bypass.",
       ],
       engineerNotes: [
         "Use Saturator's Soft Sine mode on drum busses to shave off transient peaks and increase RMS without triggering compressor pumping.",
@@ -2235,13 +2235,13 @@ export const LESSONS: Record<string, LessonDeep> = {
         do: "Drop Saturator on bass. Type Analog Clip, Drive 6 dB.",
         listen: "Bass thickens, harmonics added.",
       },
-      { do: "Drive to 18 dB.", listen: "Audible distortion — overdriven amp." },
-      { do: "Switch to Sinoid Fold.", listen: "Folded harmonics — synthesizer-like grit." },
+      { do: "Drive to 18 dB.", listen: "Audible distortion: overdriven amp." },
+      { do: "Switch to Sinoid Fold.", listen: "Folded harmonics: synthesizer-like grit." },
     ],
     listenFor: ["Harmonics fill the gaps between fundamentals."],
     mistakes: [
       "Too much drive on a master = harsh and crushed.",
-      "Forgetting Wet/Dry — parallel saturation usually beats fully wet.",
+      "Forgetting Wet/Dry: parallel saturation usually beats fully wet.",
     ],
     proMoves: [
       "Saturator before EQ to harmonically tilt, then EQ to shape result.",
@@ -2305,12 +2305,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "MIDI effects sit before an instrument and rewrite the note stream on its way in. Because they operate on note data — pitch, velocity, length, timing — and not on audio, they cost almost nothing CPU-wise and can be stacked in series. The order matters: each device reshapes whatever the previous one output.",
+        "MIDI effects sit before an instrument and rewrite the note stream on its way in. Because they operate on note data, pitch, velocity, length, timing, and not on audio, they cost almost nothing CPU-wise and can be stacked in series. The order matters: each device reshapes whatever the previous one output.",
         "Live ships a small, deeply useful set: Arpeggiator (held notes become rhythmic patterns), Chord (each note becomes a stacked chord by added intervals), Scale (incoming notes snap to a chosen scale), Pitch (transpose), Random (probabilistic pitch jitter), Note Length (extend/shorten), Velocity (remap dynamics), MIDI Monitor (debug what's flowing through), and Expression Control (route any controller to any device parameter).",
         "Live 12 added a project-wide Scale system, so the Scale device \u2014 and many native instruments \u2014 automatically follow the Set's key. That's why a single-key change in the transport can retune an entire performance without touching the clips.",
       ],
       edgeCases: [
-        "Chain order matters — Scale before Arpeggiator gives different results than after.",
+        "Chain order matters: Scale before Arpeggiator gives different results than after.",
         "Arpeggiator timing follows clip groove if Groove is set.",
       ],
       engineerNotes: [
@@ -2331,7 +2331,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Chord device adds the intervals you set, no fewer, no more."],
     mistakes: [
-      "Putting MIDI FX after the instrument — they do nothing.",
+      "Putting MIDI FX after the instrument: they do nothing.",
       "Forgetting Scale device snaps EVERY note, including ones you wanted out of key.",
     ],
     proMoves: [
@@ -2404,12 +2404,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "A Rack is a wrapper that turns any number of devices into a single device. You can group instruments, MIDI effects or audio effects, and inside the Rack each Chain runs in parallel — Live mixes their outputs together. Chain Selectors let those chains respond to key zones, velocity zones, or a macro position, which is how multi-sampled instruments and velocity-switched drums are built.",
-        "Macros are sixteen knobs (since Live 11) that sit on the Rack's front panel. Right-click any device parameter inside the Rack and you can map it to a macro, then constrain the mapped range with its own Min and Max. Setting Max below Min inverts the mapping — perfect for one knob that opens a filter while closing a reverb at the same time.",
+        "A Rack is a wrapper that turns any number of devices into a single device. You can group instruments, MIDI effects or audio effects, and inside the Rack each Chain runs in parallel: Live mixes their outputs together. Chain Selectors let those chains respond to key zones, velocity zones, or a macro position, which is how multi-sampled instruments and velocity-switched drums are built.",
+        "Macros are sixteen knobs (since Live 11) that sit on the Rack's front panel. Right-click any device parameter inside the Rack and you can map it to a macro, then constrain the mapped range with its own Min and Max. Setting Max below Min inverts the mapping: perfect for one knob that opens a filter while closing a reverb at the same time.",
         "Macro Variations save snapshots of all sixteen macro values and let you recall them instantly, with smooth interpolation between snapshots if you want a morph. That's how performers build single-Rack 'patches' that move from intro to drop with one knob movement.",
       ],
       edgeCases: [
-        "Mapped range is set independently for each parameter (Min/Max) — invert by setting Max < Min.",
+        "Mapped range is set independently for each parameter (Min/Max): invert by setting Max < Min.",
         "Variations live per-rack and can crossfade smoothly when interpolated.",
       ],
       engineerNotes: [
@@ -2430,7 +2430,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Multiple parameters move in parallel from one knob."],
     mistakes: [
-      "Forgetting to set Min/Max ranges — every macro becomes 0–127.",
+      "Forgetting to set Min/Max ranges: every macro becomes 0–127.",
       "Mapping too many params to one macro = mush.",
     ],
     proMoves: [
@@ -2489,17 +2489,17 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Pan creates width; volume creates depth.",
       ],
       analogy:
-        "Like a desk at a venue — each musician on a fader, you move them louder or quieter relative to each other.",
+        "Like a desk at a venue: each musician on a fader, you move them louder or quieter relative to each other.",
     },
     advanced: {
       what: [
         "The Mixer is Live's summing engine: every audio and instrument track ends in a stereo channel strip with volume, pan, mute, solo, sends, and a level meter, and all those strips sum into the Master. The fader is post-fader for sends by default (so muting a track also kills its reverb), but you can flip an individual send pre-fader when you want the FX to keep ringing under a mute.",
         "Section-by-section, a strip is: input/output choice \u2192 device chain \u2192 sends \u2192 fader/pan \u2192 meter \u2192 master. Each section can be inspected and automated independently, which is what makes Live's mixer feel like both a console and a programmable instrument.",
-        "Headroom matters because Live mixes in 32-bit float internally — clipping the master is fine in the box but kills any analog gear you print to and exhausts plugin headroom in non-linear devices like Saturator and Limiter. Pros leave 3–6 dB of headroom on the master and use Utility for gain staging instead of pushing channel faders.",
+        "Headroom matters because Live mixes in 32-bit float internally: clipping the master is fine in the box but kills any analog gear you print to and exhausts plugin headroom in non-linear devices like Saturator and Limiter. Pros leave 3–6 dB of headroom on the master and use Utility for gain staging instead of pushing channel faders.",
       ],
       edgeCases: [
         "Cue Out routing must be different from Master Out for headphone preview to work.",
-        "Solo modes: 'Solo In Place' (default) vs 'Solo Cue' — set in Preferences → Record/Warp/Launch.",
+        "Solo modes: 'Solo In Place' (default) vs 'Solo Cue': set in Preferences → Record/Warp/Launch.",
       ],
       engineerNotes: [
         "Leave 6dB of headroom on the master to prevent non-linear plugins from losing their intended harmonic character and dynamic range.",
@@ -2517,11 +2517,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Pan widens; volume creates depth."],
     mistakes: [
-      "Pushing every fader up — no headroom.",
-      "Soloing during full-mix decisions — the mix sounds different in context.",
+      "Pushing every fader up: no headroom.",
+      "Soloing during full-mix decisions: the mix sounds different in context.",
     ],
     proMoves: [
-      "Mix at low volume (around 70 dB SPL) — your decisions translate better.",
+      "Mix at low volume (around 70 dB SPL): your decisions translate better.",
       "Use Group tracks to manage drums/synths/vox as bus mixes.",
     ],
     quizEasy: [
@@ -2570,7 +2570,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Pre-fader sends are still affected by mute (configurable in Preferences).",
-        "Return tracks can also send to other Returns — chain reverb → delay → reverb.",
+        "Return tracks can also send to other Returns: chain reverb → delay → reverb.",
       ],
       engineerNotes: [
         "Using one shared Reverb on a Return track 'glues' disparate samples into a single acoustic space for a more cohesive professional mix.",
@@ -2658,7 +2658,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "A Group track is a sub-mix: select tracks \u2192 Cmd/Ctrl-G \u2192 Live creates a parent track that receives the children's outputs, with its own devices, mixer strip, sends, and automation. Bouncing a group lane to a single audio file is one drag away when you want to commit a stem.",
         "Routing in Live is freeform: any track's output can be sent to the Master, to a Return, to a Group, to another track's input, or even to an external out. Audio To and Audio From menus on each track header expose the full graph, including pre/post mixer/devices tap points so you can siphon a signal mid-chain.",
-        "External Instrument and External Audio Effect devices wrap that flexibility into a single device — useful for hardware synths and outboard FX, since they handle round-trip latency compensation automatically when you set the right buffer.",
+        "External Instrument and External Audio Effect devices wrap that flexibility into a single device: useful for hardware synths and outboard FX, since they handle round-trip latency compensation automatically when you set the right buffer.",
       ],
       edgeCases: [
         "Routing 'Sends Only' makes a track contribute via its sends without going to Master.",
@@ -2684,7 +2684,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Group compression glues drums; individual hits remain visible."],
     mistakes: [
       "Forgetting Group has its own automation lane.",
-      "Routing into a track without arming/monitoring it — silence.",
+      "Routing into a track without arming/monitoring it: silence.",
     ],
     proMoves: [
       "Use 'Sends Only' for parallel processing without doubling the dry signal.",
@@ -2732,7 +2732,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Move any knob automatically. The mix becomes a performance.",
     beginner: {
       what: [
-        "Automation lets you draw any parameter's value over time. Volume swells, filter sweeps, pan moves — all written into the timeline.",
+        "Automation lets you draw any parameter's value over time. Volume swells, filter sweeps, pan moves: all written into the timeline.",
         "Press A in Arrangement to reveal automation lanes; click a parameter dropdown; draw a curve.",
       ],
       why: [
@@ -2749,7 +2749,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Automation overrides manual knob movement until you click 'Re-Enable Automation' (top-right pop-up) or stop playback.",
-        "Modulation lanes (separate from automation) add deviations on top — see next mission.",
+        "Modulation lanes (separate from automation) add deviations on top: see next mission.",
       ],
       engineerNotes: [
         "Use modulation instead of automation for filter sweeps to keep your base cutoff knob free for manual tweaks during a performance.",
@@ -2770,7 +2770,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Volume rises/falls precisely matching the curve."],
     mistakes: [
-      "Tweaking a knob and wondering why it snaps back — automation is overriding it.",
+      "Tweaking a knob and wondering why it snaps back: automation is overriding it.",
       "Forgetting to re-enable automation after recording an override.",
     ],
     proMoves: [
@@ -2825,7 +2825,7 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   "modulation-lanes": {
-    hook: "Like automation, but additive — the parameter's value is offset, not replaced.",
+    hook: "Like automation, but additive: the parameter's value is offset, not replaced.",
     beginner: {
       what: [
         "Modulation Lanes (Live 11+) sit alongside automation lanes. They add a deviation on top of the parameter's current value, instead of overwriting it.",
@@ -2846,7 +2846,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Total = parameter + modulation, clamped to parameter range.",
-        "Drawing modulation past the parameter's range = clipping at min/max — you hear a flatten effect.",
+        "Drawing modulation past the parameter's range = clipping at min/max: you hear a flatten effect.",
       ],
       engineerNotes: [
         "Modulation preserves your Macro's physical position so you can perform live tweaks without fighting the clip's automation data.",
@@ -2866,7 +2866,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Underlying parameter still responds to manual change."],
     mistakes: [
-      "Confusing modulation with automation — modulation doesn't fix the value.",
+      "Confusing modulation with automation: modulation doesn't fix the value.",
       "Drawing huge modulation values that clip at min/max.",
     ],
     proMoves: [
@@ -2924,7 +2924,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Open Compressor → enable Sidechain → set Audio From: Kick → set Threshold + Ratio. Bass pumps in time.",
       ],
       why: [
-        "Bass gets out of the way of the kick — both sound bigger.",
+        "Bass gets out of the way of the kick: both sound bigger.",
         "Same trick on pads/synths creates the iconic 'EDM pump'.",
       ],
       analogy:
@@ -2932,12 +2932,12 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Sidechaining means letting one signal control how a processor reacts to another. In Live's Compressor you switch the External Sidechain on and pick the trigger source (the kick) under Audio From. The compressor's detector now ignores the bass it sits on and watches the kick instead — every kick hit pulls the bass volume down, then it springs back when the kick stops.",
-        "The Sidechain EQ filters the trigger signal before the detector hears it. High-passing around 100 Hz means only the kick's beater click drives the compression, not its sub-tail. Without that filter, sustained sub from the kick would keep the bass ducked the whole bar — pump turns into smear.",
-        "Sidechain isn't just for kick-on-bass. Ducking a reverb return with the dry vocal opens space for the lyric and lets the tail breathe between phrases. With Max for Live's Envelope Follower you can sidechain almost any parameter — filter cutoff, delay feedback, macro position — to any audio source.",
+        "Sidechaining means letting one signal control how a processor reacts to another. In Live's Compressor you switch the External Sidechain on and pick the trigger source (the kick) under Audio From. The compressor's detector now ignores the bass it sits on and watches the kick instead: every kick hit pulls the bass volume down, then it springs back when the kick stops.",
+        "The Sidechain EQ filters the trigger signal before the detector hears it. High-passing around 100 Hz means only the kick's beater click drives the compression, not its sub-tail. Without that filter, sustained sub from the kick would keep the bass ducked the whole bar: pump turns into smear.",
+        "Sidechain isn't just for kick-on-bass. Ducking a reverb return with the dry vocal opens space for the lyric and lets the tail breathe between phrases. With Max for Live's Envelope Follower you can sidechain almost any parameter, filter cutoff, delay feedback, macro position, to any audio source.",
       ],
       edgeCases: [
-        "If Sidechain Audio From source is muted, gain reduction stops — bass gets loud unexpectedly.",
+        "If Sidechain Audio From source is muted, gain reduction stops: bass gets loud unexpectedly.",
         "Use the EQ filter to focus the sidechain on the kick's punch frequency only.",
       ],
       engineerNotes: [
@@ -2963,10 +2963,10 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Bass audibly ducks each kick hit, then recovers."],
     mistakes: [
       "Threshold too low → bass barely moves.",
-      "Forgetting to enable External Sidechain — compressor uses bass's own signal.",
+      "Forgetting to enable External Sidechain: compressor uses bass's own signal.",
     ],
     proMoves: [
-      "Sidechain reverb returns to the dry vocal — vocal pops, reverb breathes.",
+      "Sidechain reverb returns to the dry vocal: vocal pops, reverb breathes.",
       "Use M4L Envelope Follower for sidechaining non-compressor parameters (filter cutoff, etc.).",
     ],
     quizEasy: [
@@ -3034,7 +3034,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "M4L devices can be CPU-heavy if poorly written; check CPU meter.",
-        "Some M4L devices require Cycling '74 Max install — built-in 'Live' Edition is enough for most.",
+        "Some M4L devices require Cycling '74 Max install: built-in 'Live' Edition is enough for most.",
       ],
       engineerNotes: [
         "Use live.remote~ for sample-accurate modulation of parameters that avoids the CPU overhead of standard automation. ",
@@ -3062,7 +3062,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Loading too many M4L devices = CPU spikes.",
     ],
     proMoves: [
-      "Build a single-purpose utility (gate, MIDI repeat) and save as a Rack — performable.",
+      "Build a single-purpose utility (gate, MIDI repeat) and save as a Rack: performable.",
       "Use M4L's API to script project-wide changes.",
     ],
     quizEasy: [
@@ -3148,7 +3148,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Velocity-sensitive pads = expressive, not on/off."],
     mistakes: [
       "Forgetting to enable Track on the MIDI port for a non-Push controller.",
-      "Letting Push display and screen disagree — it always follows screen focus.",
+      "Letting Push display and screen disagree: it always follows screen focus.",
     ],
     proMoves: [
       "Save Push templates per project for instant recall.",
@@ -3201,7 +3201,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Map any knob to any parameter in seconds.",
     beginner: {
       what: [
-        "Cmd/Ctrl+M enters MIDI Map mode — every mappable parameter goes blue. Click one, move a hardware knob → mapped.",
+        "Cmd/Ctrl+M enters MIDI Map mode: every mappable parameter goes blue. Click one, move a hardware knob → mapped.",
         "Cmd/Ctrl+M again to exit. Now that hardware knob controls that parameter forever (per project, or via User Remote Scripts).",
       ],
       why: [
@@ -3212,13 +3212,13 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "MIDI Map mode (Cmd/Ctrl-M) shows every Live control as a coloured overlay. Click a control, send any CC or note from your hardware, and Live binds them — that mapping is saved with the Set. Key Map mode (Cmd/Ctrl-K) does the same for computer-keyboard keys, useful for laptops without controllers.",
-        "Each mapping has a Min/Max range and a Takeover Mode (None / Pickup / Value Scaling) that decides what happens when the hardware position and the on-screen value disagree. Pickup mode makes the parameter wait for the knob to cross its current value — no jumps when you switch presets.",
+        "MIDI Map mode (Cmd/Ctrl-M) shows every Live control as a coloured overlay. Click a control, send any CC or note from your hardware, and Live binds them: that mapping is saved with the Set. Key Map mode (Cmd/Ctrl-K) does the same for computer-keyboard keys, useful for laptops without controllers.",
+        "Each mapping has a Min/Max range and a Takeover Mode (None / Pickup / Value Scaling) that decides what happens when the hardware position and the on-screen value disagree. Pickup mode makes the parameter wait for the knob to cross its current value: no jumps when you switch presets.",
         "Mappings are device-relative on Racks: map a knob to Macro 1 once and any rack swap that exposes a 'Macro 1' inherits the mapping. That's the trick behind 'one controller, every patch' performance setups.",
       ],
       edgeCases: [
         "Two parameters mapped to the same CC = both move together.",
-        "Relative encoders need Mode=Relative ±64 (or matching mode) — Absolute will jump weirdly.",
+        "Relative encoders need Mode=Relative ±64 (or matching mode): Absolute will jump weirdly.",
       ],
       engineerNotes: [
         "Use Pickup Mode globally to prevent aggressive volume spikes and parameter jumps during live performance scene transitions.",
@@ -3236,7 +3236,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Mapped parameter responds smoothly across the knob's range."],
     mistakes: [
-      "Forgetting to exit Map mode (still blue) — can't play.",
+      "Forgetting to exit Map mode (still blue): can't play.",
       "Absolute mode on relative encoders → erratic behaviour.",
     ],
     proMoves: [
@@ -3296,7 +3296,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Tempo Follower listens to incoming audio (usually a drummer's overhead mic) and continually updates Live's master tempo to match. Internally it tracks transients and estimates BPM, then adjusts Live's clock so warped clips, MIDI sequences and effects all stay in time with the human in the room.",
         "It's an enabling technology more than a feature: once Live follows the band, every Session-launched loop, every effect tempo-sync and every Push step sequencer rides the same human pulse instead of forcing the band onto a click.",
-        "Practical tuning matters — the Sensitivity and Smoothing controls trade off responsiveness against jitter. Too sensitive, the tempo wanders on every snare hit; too smooth, it lags through tempo changes. Most rigs sit somewhere in the middle and use a clean kick or click feed as the source.",
+        "Practical tuning matters: the Sensitivity and Smoothing controls trade off responsiveness against jitter. Too sensitive, the tempo wanders on every snare hit; too smooth, it lags through tempo changes. Most rigs sit somewhere in the middle and use a clean kick or click feed as the source.",
       ],
       edgeCases: [
         "Sparse or syncopated input = unstable tracking.",
@@ -3321,7 +3321,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Tempo number nudges with the live source."],
     mistakes: [
-      "Using a noisy or syncopated source — tracking falls apart.",
+      "Using a noisy or syncopated source: tracking falls apart.",
       "Forgetting to disable when you go back to programmed material.",
     ],
     proMoves: [
@@ -3392,7 +3392,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Audio interface MUST have DC-coupled outputs for CV out to work correctly.",
-        "Latency depends on audio buffer — keep low for tight clocking.",
+        "Latency depends on audio buffer: keep low for tight clocking.",
       ],
       engineerNotes: [
         "Always run the calibration routine on the CV Instrument device to compensate for non-linearities in your interface's analog circuitry.",
@@ -3412,7 +3412,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Tight tempo sync and accurate pitch tracking after calibration."],
     mistakes: [
-      "Using AC-coupled outputs — DC drifts; modular won't track.",
+      "Using AC-coupled outputs: DC drifts; modular won't track.",
       "Skipping calibration → out-of-tune notes.",
     ],
     proMoves: [
@@ -3481,13 +3481,13 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Link is a beat-synchronisation protocol over local network. Every Link-enabled app on the same WiFi (or wired LAN) sees a shared tempo and beat grid; start one device and the others fall into phase, change tempo on one and the rest follow. There is no master/slave — every peer is equal.",
+        "Link is a beat-synchronisation protocol over local network. Every Link-enabled app on the same WiFi (or wired LAN) sees a shared tempo and beat grid; start one device and the others fall into phase, change tempo on one and the rest follow. There is no master/slave: every peer is equal.",
         "Inside Live the Link button lives next to the metronome. Once enabled, your Set's tempo, downbeat phase and Start Stop sync (optional) become part of the shared session. Multiple Lives, iOS apps (Koala, Loopy, AUM), Reason, Maschine, Traktor \u2014 anything that supports Link \u2014 joins the same musical clock.",
         "Because it's network-time-protocol-based rather than MIDI-clock-based, jitter is far lower than MIDI sync over USB hubs, and it's resilient to one peer hiccuping. It's how laptop DJ-and-producer collabs work without anyone running cable.",
       ],
       edgeCases: [
-        "Firewalls/VPNs can block Link discovery — peers won't see each other.",
-        "Tempo changes ramp smoothly, not instantly — a peer changing tempo nudges the group.",
+        "Firewalls/VPNs can block Link discovery: peers won't see each other.",
+        "Tempo changes ramp smoothly, not instantly: a peer changing tempo nudges the group.",
       ],
       engineerNotes: [
         "Choose Link over MIDI clock to eliminate jitter and latency compensation headaches inherent in old serial-based sync protocols.",
@@ -3505,8 +3505,8 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Counter shows number of connected peers."],
     mistakes: [
-      "Using a guest network that isolates clients — Link can't see peers.",
-      "Forgetting Start Stop Sync — tempo locks but transport doesn't.",
+      "Using a guest network that isolates clients: Link can't see peers.",
+      "Forgetting Start Stop Sync: tempo locks but transport doesn't.",
     ],
     proMoves: [
       "Use Link with iPad sequencers for hybrid setups.",
@@ -3571,7 +3571,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "Dither when going from 32-bit float to 16-bit. Skip dither between same bit depths.",
-        "Loop range or selection sets render bounds — accidentally short selection = clipped render.",
+        "Loop range or selection sets render bounds: accidentally short selection = clipped render.",
       ],
       engineerNotes: [
         "Always use 'Render as Loop' for electronic patterns to ensure reverb and delay tails wrap seamlessly back to the start.",
@@ -3592,8 +3592,8 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Status bar shows render progress and elapsed time."],
     mistakes: [
-      "Forgetting to set the export range — renders only the loop brace.",
-      "Exporting MP3 as your master — keep WAV/AIFF as the master.",
+      "Forgetting to set the export range: renders only the loop brace.",
+      "Exporting MP3 as your master: keep WAV/AIFF as the master.",
     ],
     proMoves: [
       "Export stems for collaboration: All Individual Tracks at 24-bit WAV.",
@@ -3651,11 +3651,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     advanced: {
       what: [
         "File → Save Live Set As Template stores your default starting layout (tracks, sends, devices, view).",
-        "File → Manage Files → Manage Project lists missing samples, unused samples, plugin info — clean up before archiving.",
+        "File → Manage Files → Manage Project lists missing samples, unused samples, plugin info: clean up before archiving.",
       ],
       edgeCases: [
         "Auto-save uses Crash Recovery (Preferences → File/Folder); not a substitute for File → Save.",
-        "Live keeps backups inside the Project's Backup folder — useful when you wreck a session.",
+        "Live keeps backups inside the Project's Backup folder: useful when you wreck a session.",
       ],
       engineerNotes: [
         "Templates eliminate decision fatigue by pre-routing utility tracks and favorite meters before the creative process begins.",
@@ -3673,8 +3673,8 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Status: 'X files collected'."],
     mistakes: [
-      "Saving multiple songs into one folder — sample path conflicts later.",
-      "Forgetting Crash Recovery isn't a save — it's only a one-time recovery.",
+      "Saving multiple songs into one folder: sample path conflicts later.",
+      "Forgetting Crash Recovery isn't a save: it's only a one-time recovery.",
     ],
     proMoves: [
       "Save a Template after configuring your default tracks/sends.",
@@ -3727,7 +3727,7 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   troubleshooting: {
-    hook: "When Live misbehaves, the fix is usually obvious — once you know where to look.",
+    hook: "When Live misbehaves, the fix is usually obvious: once you know where to look.",
     beginner: {
       what: [
         "No sound? Check audio device + master fader + Cue out routing.",
@@ -3738,7 +3738,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Most issues take 30 seconds to fix once you know the trick.",
         "Save hours of forum-searching with a clear checklist.",
       ],
-      analogy: "Like rebooting your router — fixes 90% of the issues, 90% of the time.",
+      analogy: "Like rebooting your router: fixes 90% of the issues, 90% of the time.",
     },
     advanced: {
       what: [
@@ -3777,7 +3777,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Freeze (right-click track → Freeze) before Flatten to lock down CPU-heavy chains.",
-      "Bundle a Crash Report when filing tickets — Ableton support fixes faster.",
+      "Bundle a Crash Report when filing tickets: Ableton support fixes faster.",
     ],
     quizEasy: [
       {
@@ -3786,7 +3786,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         answer: 0,
       },
       {
-        q: "Controller silent — check what?",
+        q: "Controller silent: check what?",
         options: ["Track on MIDI input port", "Master fader", "Cue out"],
         answer: 0,
       },
@@ -3799,12 +3799,12 @@ export const LESSONS: Record<string, LessonDeep> = {
         answer: 0,
       },
       {
-        q: "Project won't open — try…",
+        q: "Project won't open: try…",
         options: ["Open from Backup folder", "Reinstall Live", "Update macOS"],
         answer: 0,
       },
       {
-        q: "Plugin missing — relink via…",
+        q: "Plugin missing: relink via…",
         options: ["Right-click → Show Plug-In Folder", "File → Save", "Browser → Refresh"],
         answer: 0,
       },
@@ -3849,12 +3849,12 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Captured clips are normal MIDI clips: they keep velocity, channel, MPE expression, and any controller messages. You can quantize, transpose or split them like anything else.",
       ],
       edgeCases: [
-        "Capture only sees notes that reached an armed MIDI track — instruments on disarmed tracks pass through but aren't buffered.",
+        "Capture only sees notes that reached an armed MIDI track: instruments on disarmed tracks pass through but aren't buffered.",
         "External MIDI clock sync can override Capture's tempo guess; in that case Live uses the incoming clock instead.",
       ],
       engineerNotes: [
         "Producers often arm a 'sketch' track at the start of every session and leave it armed all day; Capture turns it into a permanent take pool.",
-        "Capture pairs beautifully with Take Lanes — capture the idea, then loop-record passes underneath it for refinement.",
+        "Capture pairs beautifully with Take Lanes: capture the idea, then loop-record passes underneath it for refinement.",
       ],
     },
     mechanism:
@@ -3863,7 +3863,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     walkthrough: [
       {
         do: "Arm a MIDI track with any instrument and noodle for 20 seconds without pressing Record.",
-        listen: "Nothing visible — but Live is buffering.",
+        listen: "Nothing visible: but Live is buffering.",
       },
       {
         do: "Hit the Capture button (top-left, camera icon).",
@@ -3876,7 +3876,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "MPE expression preserved on captured clips.",
     ],
     mistakes: [
-      "Forgetting to arm a track — no buffer, no capture.",
+      "Forgetting to arm a track: no buffer, no capture.",
       "Hitting Capture mid-take and getting only the partial buffer.",
     ],
     proMoves: [
@@ -3931,16 +3931,16 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Nothing is ever deleted: muted regions stay in the lanes underneath so you can change your mind tomorrow.",
       ],
       why: [
-        "Vocals, guitar solos, drum fills — instantly studio-grade.",
+        "Vocals, guitar solos, drum fills: instantly studio-grade.",
         "Lets you commit to a comfortable performance instead of straining for one perfect take.",
-        "Same workflow for MIDI — comp the best fills out of five passes.",
+        "Same workflow for MIDI: comp the best fills out of five passes.",
       ],
       analogy: "Like recording five voicemails and texting your friend the highlights only.",
     },
     advanced: {
       what: [
         "Take Lanes (introduced Live 11) attach as child rows to a single track lane. Each loop-record pass writes to a new lane while the previous take is preserved un-muted on its own lane.",
-        "Selecting a region on any lane copies that region up to the parent lane and mutes the corresponding region on every other lane — that's the comp. It's non-destructive: clear the comp and the original lanes return.",
+        "Selecting a region on any lane copies that region up to the parent lane and mutes the corresponding region on every other lane: that's the comp. It's non-destructive: clear the comp and the original lanes return.",
         "Lanes share the track's devices and routing; you're comping pre-effects audio (or MIDI), so any plugin chain remains a single processing path.",
       ],
       edgeCases: [
@@ -3949,7 +3949,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Linked-Track Editing lets you comp several tracks (e.g. multi-mic drums) in lockstep.",
       ],
       engineerNotes: [
-        "Always loop-record into Take Lanes rather than over the previous take — you keep an undo history that survives even after you save and close.",
+        "Always loop-record into Take Lanes rather than over the previous take: you keep an undo history that survives even after you save and close.",
         "Name lanes ('soft pass', 'belt pass', 'whisper') before you record so the comp UI stays readable two days later.",
       ],
     },
@@ -3976,11 +3976,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     mistakes: [
       "Recording over the previous take instead of looping into a new lane.",
-      "Comping micro-slices on MIDI — work in phrases, not single notes.",
+      "Comping micro-slices on MIDI: work in phrases, not single notes.",
     ],
     proMoves: [
       "Pair with Linked-Track Editing to comp drum mics together.",
-      "Name every lane immediately — future-you needs it.",
+      "Name every lane immediately: future-you needs it.",
     ],
     quizEasy: [
       { q: "Take Lanes were introduced in…", options: ["Live 9", "Live 11", "Live 12"], answer: 1 },
@@ -4030,7 +4030,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       what: [
         "Normal MIDI sends one pitch-bend wheel for the whole keyboard, so if you bend one note, every note bends. MPE (MIDI Polyphonic Expression) gives every note its own bend, slide, and pressure channel.",
         "On an MPE controller (Push 3 pads, Roli Seaboard, LinnStrument) you can press harder on one note and only that note gets brighter, or slide one finger and only that note's pitch glides.",
-        "Tuning Systems (Live 12) let the whole project play in something other than the standard 12-notes-per-octave system — load a Scala file and you can play just intonation, 24-EDO, historical temperaments, or your own custom scale.",
+        "Tuning Systems (Live 12) let the whole project play in something other than the standard 12-notes-per-octave system: load a Scala file and you can play just intonation, 24-EDO, historical temperaments, or your own custom scale.",
       ],
       why: [
         "Vocal-style vibrato and slides on a synth, per finger.",
@@ -4048,12 +4048,12 @@ export const LESSONS: Record<string, LessonDeep> = {
       ],
       edgeCases: [
         "MPE data is stored in the MIDI clip; non-MPE devices ignore the extra channels but pass them through to anything chained after.",
-        "Tuning Systems retune via internal pitch-bend on each note — devices that don't support pitch-bend (rare) won't follow the tuning.",
+        "Tuning Systems retune via internal pitch-bend on each note: devices that don't support pitch-bend (rare) won't follow the tuning.",
         "Drum Rack pads in MPE mode let you bend a single hi-hat without affecting the kick.",
       ],
       engineerNotes: [
         "Record MPE performances at full controller resolution; you can always quantize / strip later, but you can never re-add expression that wasn't captured.",
-        "When swapping a non-MPE synth for an MPE synth, re-record the part — translating note-only data to expressive data after the fact rarely sounds convincing.",
+        "When swapping a non-MPE synth for an MPE synth, re-record the part: translating note-only data to expressive data after the fact rarely sounds convincing.",
       ],
     },
     mechanism:
@@ -4079,7 +4079,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     mistakes: [
       "Using a non-MPE synth and wondering why the bends are global.",
-      "Forgetting to enable MPE per device — most ship MPE-off by default.",
+      "Forgetting to enable MPE per device: most ship MPE-off by default.",
     ],
     proMoves: [
       "Combine MPE pressure → filter cutoff for breath-controller-style expression.",
@@ -4124,17 +4124,17 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Two synth engines, MPE-first, designed to feel alive under your fingers.",
     beginner: {
       what: [
-        "Meld is a synthesiser that came with Live 12. It has two sound engines stacked together so every note plays both at once — that's why pads and leads from Meld already sound thick out of the box.",
+        "Meld is a synthesiser that came with Live 12. It has two sound engines stacked together so every note plays both at once: that's why pads and leads from Meld already sound thick out of the box.",
         "Each engine can be a different type: classic analog-style, FM, additive, formant (vowel-y), or noise. Mixing two unlike engines is what gives Meld its character.",
         "It was built around MPE, so on a Push 3 (or any expressive controller) every finger controls its own brightness, slide and bend.",
       ],
       why: [
         "Big evolving pads with no extra layering.",
         "Expressive leads that respond to touch, not just velocity.",
-        "Designed to make sound design exploratory — twist the macros and stumble into ideas.",
+        "Designed to make sound design exploratory: twist the macros and stumble into ideas.",
       ],
       analogy:
-        "Two singers harmonising — together they sound bigger and more interesting than either alone.",
+        "Two singers harmonising: together they sound bigger and more interesting than either alone.",
     },
     advanced: {
       what: [
@@ -4143,8 +4143,8 @@ export const LESSONS: Record<string, LessonDeep> = {
         "The modulation matrix exposes all major destinations to per-note pressure, slide, velocity, two LFOs and two envelopes, with quick macro mapping from the device header for performance use.",
       ],
       edgeCases: [
-        "Detuning Engine A and B by a few cents instantly fattens unison patches; large detune values make Meld sound like two synths fighting — useful sparingly.",
-        "MPE behaviour is opt-in per device — make sure the MPE switch in Meld's header is on before you record expressive performances.",
+        "Detuning Engine A and B by a few cents instantly fattens unison patches; large detune values make Meld sound like two synths fighting: useful sparingly.",
+        "MPE behaviour is opt-in per device: make sure the MPE switch in Meld's header is on before you record expressive performances.",
       ],
       engineerNotes: [
         "Treat Meld as a sound-design instrument first: load a preset, hit randomize on a destination, keep what surprises you.",
@@ -4216,7 +4216,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "One device per pad, replacing the old Simpler-plus-stack workflow.",
     beginner: {
       what: [
-        "Drum Sampler is the new default device on each Drum Rack pad in Live 12. It plays one-shot drum samples and adds the shaping you used to chain after Simpler — pitch envelope, drive, filter, compression — all in one panel.",
+        "Drum Sampler is the new default device on each Drum Rack pad in Live 12. It plays one-shot drum samples and adds the shaping you used to chain after Simpler, pitch envelope, drive, filter, compression, all in one panel.",
         "Drag a folder of velocity layers in and it maps them automatically: soft hits land on low layers, hard hits on high. Round-robin variation cycles between samples on repeated hits so a 16th-note hat doesn't sound like a machine gun.",
       ],
       why: [
@@ -4224,20 +4224,20 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Realistic kits with velocity layers and round-robin out of the box.",
       ],
       analogy:
-        "Like upgrading from a single-shot snare cap to a multi-mic kit — same instrument, way more life.",
+        "Like upgrading from a single-shot snare cap to a multi-mic kit: same instrument, way more life.",
     },
     advanced: {
       what: [
         "Drum Sampler is a one-shot focused sampler with up to 16 velocity layers per pad and round-robin cycling. Each layer holds its own sample and can be auditioned/replaced independently from the Sample tab.",
-        "Built-in shaping covers pitch envelope (fast attack/decay common to electronic kicks), filter with envelope, drive, and a final compressor — the chain Live producers used to assemble manually with Auto Filter, Saturator and Compressor after Simpler.",
+        "Built-in shaping covers pitch envelope (fast attack/decay common to electronic kicks), filter with envelope, drive, and a final compressor: the chain Live producers used to assemble manually with Auto Filter, Saturator and Compressor after Simpler.",
         "It still lives inside Drum Rack, so you keep all the Rack benefits (choke groups, per-pad sends, MPE pads on Push 3) while gaining a far better default per-pad sound.",
       ],
       edgeCases: [
-        "Round-robin disables when only one sample is loaded — load several variations to hear the variation.",
+        "Round-robin disables when only one sample is loaded: load several variations to hear the variation.",
         "Pitch envelope set too long can detune the start of the hit; for kicks, a 30–80 ms decay is usually right.",
       ],
       engineerNotes: [
-        "Use multi-velocity sample folders from packs — Drum Sampler maps them in one drag.",
+        "Use multi-velocity sample folders from packs: Drum Sampler maps them in one drag.",
         "For acoustic kits, pair Drum Sampler velocity layers with a parallel Glue Compressor on the rack output.",
       ],
     },
@@ -4298,25 +4298,25 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Convolution realism + algorithmic motion in one device.",
     beginner: {
       what: [
-        "Hybrid Reverb runs two reverbs at once — a convolution engine that plays back recordings of real spaces, and an algorithmic engine that builds tails mathematically — and lets you crossfade between them.",
-        "Convolution sounds real (because it is — actual halls, plates, springs); algorithmic sounds modern and lush (Quartz, Shimmer, Tides, Ghost). Blending the two is the cheat code for spaces that feel real and big at the same time.",
+        "Hybrid Reverb runs two reverbs at once, a convolution engine that plays back recordings of real spaces, and an algorithmic engine that builds tails mathematically, and lets you crossfade between them.",
+        "Convolution sounds real (because it is: actual halls, plates, springs); algorithmic sounds modern and lush (Quartz, Shimmer, Tides, Ghost). Blending the two is the cheat code for spaces that feel real and big at the same time.",
       ],
       why: [
         "One device covers room, hall, plate, spring, AND modern shimmer.",
         "Crossfade gives you a 'realism dial'.",
       ],
       analogy:
-        "Like photographing a real room then painting motion on top — convolution = the photo, algorithmic = the brushwork.",
+        "Like photographing a real room then painting motion on top: convolution = the photo, algorithmic = the brushwork.",
     },
     advanced: {
       what: [
-        "Hybrid Reverb runs a convolution engine and an algorithmic engine in parallel inside one device. The Convolution side loads impulse responses (IRs) — recordings of real or modelled spaces — and applies their frequency/decay character to incoming audio. The Algorithmic side runs one of four modern tail engines (Quartz, Shimmer, Tides, Ghost), each with its own modulation and decay character.",
+        "Hybrid Reverb runs a convolution engine and an algorithmic engine in parallel inside one device. The Convolution side loads impulse responses (IRs), recordings of real or modelled spaces, and applies their frequency/decay character to incoming audio. The Algorithmic side runs one of four modern tail engines (Quartz, Shimmer, Tides, Ghost), each with its own modulation and decay character.",
         "A single Mix slider crossfades between the two engines, with shared input/output EQ, predelay and dry/wet on top. Freeze captures the current tail and holds it indefinitely; Vintage mode tames the high end for a tape-era feel.",
         "Pros use the blend to get cinematic depth without the muddy buildup of two separate reverbs in series. Convolution provides the believable early-reflection signature; algorithmic adds the long, modulated tail underneath.",
       ],
       edgeCases: [
-        "Convolution IRs vary wildly in length — long IRs cost CPU; freeze if you only need the tail character, not real-time response.",
-        "Predelay too short bleeds the source into the wet — 20–40 ms keeps the source clear.",
+        "Convolution IRs vary wildly in length: long IRs cost CPU; freeze if you only need the tail character, not real-time response.",
+        "Predelay too short bleeds the source into the wet: 20–40 ms keeps the source clear.",
       ],
       engineerNotes: [
         "On a vocal: 80% convolution plate + 20% Shimmer = breath that sounds real but lifts.",
@@ -4342,11 +4342,11 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Algorithmic motion on the long tail.",
     ],
     mistakes: [
-      "Long convolution IRs on every track — CPU melts.",
-      "Skipping predelay — source disappears into wet.",
+      "Long convolution IRs on every track: CPU melts.",
+      "Skipping predelay: source disappears into wet.",
     ],
     proMoves: [
-      "Sidechain the wet to the dry vocal — reverb ducks under the words.",
+      "Sidechain the wet to the dry vocal: reverb ducks under the words.",
       "Freeze a perfect tail and use it as a pad.",
     ],
     quizEasy: [
@@ -4381,18 +4381,18 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   roar: {
-    hook: "Multiband, modulated saturation — Live 12's tonal Swiss Army knife.",
+    hook: "Multiband, modulated saturation: Live 12's tonal Swiss Army knife.",
     beginner: {
       what: [
         "Roar is a saturator with up to three stages of distortion. You can run them one after another, in parallel, or split your signal into 2–3 frequency bands and saturate each band differently.",
-        "It also has its own LFO and envelope follower built in — modulation that changes the saturation amount over time, without leaving the device.",
+        "It also has its own LFO and envelope follower built in: modulation that changes the saturation amount over time, without leaving the device.",
       ],
       why: [
         "One device covers warmth, grit, fuzz, bit-crush, wavefolding.",
         "Multiband mode means you can roughen the highs without crunching the lows.",
       ],
       analogy:
-        "Like a guitar pedalboard you can configure as series, parallel, or split-by-frequency — all in one box.",
+        "Like a guitar pedalboard you can configure as series, parallel, or split-by-frequency: all in one box.",
     },
     advanced: {
       what: [
@@ -4401,12 +4401,12 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Feedback creates self-oscillation when pushed; the Tone EQ inside the feedback loop turns Roar into a synth-style noise generator if you want it to be one.",
       ],
       edgeCases: [
-        "Multiband crossovers introduce phase shifts — A/B against bypass on tonal material.",
+        "Multiband crossovers introduce phase shifts: A/B against bypass on tonal material.",
         "Feedback above ~70% with low Tone cutoff produces self-oscillation; back off when you don't want it.",
       ],
       engineerNotes: [
-        "On a vocal: multiband, only the top band saturated with Tube + 20% mix — adds air, leaves body alone.",
-        "On a bass: serial Tube → Wavefolder, drive both modestly — fundamental fattens, harmonics extend up.",
+        "On a vocal: multiband, only the top band saturated with Tube + 20% mix: adds air, leaves body alone.",
+        "On a bass: serial Tube → Wavefolder, drive both modestly: fundamental fattens, harmonics extend up.",
       ],
     },
     mechanism:
@@ -4431,8 +4431,8 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Per-band character changes.",
     ],
     mistakes: [
-      "Cranking drive on every stage — sound implodes.",
-      "Forgetting Mix knob — wet 100% by default.",
+      "Cranking drive on every stage: sound implodes.",
+      "Forgetting Mix knob: wet 100% by default.",
     ],
     proMoves: [
       "Use the modulation matrix to make saturation react to playing dynamics.",
@@ -4465,7 +4465,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "The bus compressor that makes a mix sound like one record, not many tracks.",
     beginner: {
       what: [
-        "Glue Compressor is Live's emulation of the SSL G-bus compressor — the unit on the master bus of countless hit records. On a drum bus or master, 1–3 dB of gain reduction is enough to make everything feel like one cohesive thing.",
+        "Glue Compressor is Live's emulation of the SSL G-bus compressor: the unit on the master bus of countless hit records. On a drum bus or master, 1–3 dB of gain reduction is enough to make everything feel like one cohesive thing.",
         "It's a stereo VCA design with fast attack, musical auto-release, and a soft clipper at the output. Plug it in, set Threshold for 1–3 dB GR, and you're done.",
       ],
       why: [
@@ -4473,20 +4473,20 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Adds punch and density without obvious 'compressed' character.",
       ],
       analogy:
-        "Like the glue holding the mix together — invisible if it's working, obvious if it's missing.",
+        "Like the glue holding the mix together: invisible if it's working, obvious if it's missing.",
     },
     advanced: {
       what: [
         "Glue is a VCA-style stereo bus compressor modelled on the SSL G master compressor. Its character comes from a fast linear attack curve, a program-dependent auto-release that times itself to the source's envelope, and a soft-clipping output stage that catches transient peaks before the limiter sees them.",
-        "Standard bus settings — Ratio 4:1, Attack 10 ms, Release Auto, Threshold for 1–3 dB GR — produce 'glue' (cohesion across the bus) without obvious compression artifacts. Pushing harder (5+ dB GR with fast attack) gives the pumped, hyped sound on EDM masters.",
-        "The internal sidechain HPF (60 Hz / 90 Hz / 120 Hz) prevents kick fundamentals from triggering excessive GR on the master bus — essential when the kick is loud and you don't want the whole mix ducking on every beat.",
+        "Standard bus settings, Ratio 4:1, Attack 10 ms, Release Auto, Threshold for 1–3 dB GR, produce 'glue' (cohesion across the bus) without obvious compression artifacts. Pushing harder (5+ dB GR with fast attack) gives the pumped, hyped sound on EDM masters.",
+        "The internal sidechain HPF (60 Hz / 90 Hz / 120 Hz) prevents kick fundamentals from triggering excessive GR on the master bus: essential when the kick is loud and you don't want the whole mix ducking on every beat.",
       ],
       edgeCases: [
-        "Auto-release tracks the source — slow material gets long releases, drums get fast — so 'one setting' often works for a whole mix.",
+        "Auto-release tracks the source, slow material gets long releases, drums get fast, so 'one setting' often works for a whole mix.",
         "Soft clipper engages above 0 dB; if your source is hot enough to clip, that's where Glue's iconic crunch comes from.",
       ],
       engineerNotes: [
-        "Mix INTO the Glue, don't add it last — your gain staging changes once Glue's on the bus.",
+        "Mix INTO the Glue, don't add it last: your gain staging changes once Glue's on the bus.",
         "On the drum bus: 4 dB GR, attack 30 ms (lets transients through), gives modern drum punch.",
       ],
     },
@@ -4501,14 +4501,14 @@ export const LESSONS: Record<string, LessonDeep> = {
       { do: "Switch SC HPF to 90 Hz.", listen: "Kick stops triggering excess GR." },
       { do: "Add 3 dB makeup.", listen: "Mix loudness up without limiter pumping." },
     ],
-    listenFor: ["Cohesion — tracks 'lock together'.", "Soft transient catch on peaks."],
+    listenFor: ["Cohesion: tracks 'lock together'.", "Soft transient catch on peaks."],
     mistakes: [
-      "Pushing 6+ dB GR on the master — pumping artifacts.",
+      "Pushing 6+ dB GR on the master: pumping artifacts.",
       "Skipping SC HPF on bass-heavy material.",
     ],
     proMoves: [
       "Use Glue on the drum bus AND the master, light on each.",
-      "A/B with bypass — if you can't hear the difference, GR is too low.",
+      "A/B with bypass: if you can't hear the difference, GR is too low.",
     ],
     quizEasy: [
       { q: "Glue emulates…", options: ["SSL G-bus", "1176"], answer: 0 },
@@ -4534,24 +4534,24 @@ export const LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "A Limiter is a hard ceiling: nothing crosses it. You set a Ceiling (the max output level) and a Gain (how much to push the input up), and the Limiter clamps anything that would exceed the ceiling.",
-        "On a master, the Limiter's job is loudness control without clipping. Keep ceiling around -1 dBTP for streaming services — that leaves headroom for codec encoding artifacts.",
+        "On a master, the Limiter's job is loudness control without clipping. Keep ceiling around -1 dBTP for streaming services: that leaves headroom for codec encoding artifacts.",
       ],
       why: [
         "Final loudness for streaming/release.",
         "Catches peaks that would clip your converter.",
       ],
       analogy:
-        "Like a height limiter at a parking garage — anything taller than the bar gets squashed flat.",
+        "Like a height limiter at a parking garage: anything taller than the bar gets squashed flat.",
     },
     advanced: {
       what: [
         "Limiter is a brick-wall, look-ahead, peak-limiting device. Look-ahead (0/1.5/3 ms) lets the compressor 'see' transients before they arrive, so it can ramp gain reduction smoothly instead of clipping. Stereo Linking (None/Left/Right) controls whether one channel's peak triggers the other.",
-        "Ceiling sets the absolute output peak; Gain pushes the input up into the ceiling. Auto release is program-dependent. The True Peak option detects inter-sample peaks — peaks that don't exist as sample values but appear when the DAC reconstructs the analog waveform between samples; these can clip even when sample peaks read 0 dBFS.",
+        "Ceiling sets the absolute output peak; Gain pushes the input up into the ceiling. Auto release is program-dependent. The True Peak option detects inter-sample peaks: peaks that don't exist as sample values but appear when the DAC reconstructs the analog waveform between samples; these can clip even when sample peaks read 0 dBFS.",
         "Streaming codecs (MP3/AAC/Opus) introduce additional peak overshoot during encoding. Mastering to -1 dBTP (true peak) leaves headroom for that overshoot; mastering to 0 dBFS guarantees codec clipping artifacts on aggressive material.",
       ],
       edgeCases: [
         "More than 3–4 dB of limiting on a full mix produces audible pumping on bass-heavy material.",
-        "True Peak detection adds CPU cost and a small additional latency — use it on the master only.",
+        "True Peak detection adds CPU cost and a small additional latency: use it on the master only.",
       ],
       engineerNotes: [
         "Mix into the Limiter at low GR (1–2 dB) to set loudness target without squashing dynamics.",
@@ -4567,7 +4567,7 @@ export const LESSONS: Record<string, LessonDeep> = {
         listen: "Master sounds the same; ceiling protected.",
       },
       { do: "Push Gain +3 dB.", listen: "Mix loudens; tiny GR on transient peaks." },
-      { do: "Push Gain +6 dB.", listen: "Pumping on kick/bass — too much." },
+      { do: "Push Gain +6 dB.", listen: "Pumping on kick/bass: too much." },
     ],
     listenFor: ["Transparent peak control at low GR.", "Pumping/breathing as GR increases."],
     mistakes: [
@@ -4575,8 +4575,8 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Ignoring True Peak then blaming the codec.",
     ],
     proMoves: [
-      "Two stages: Glue on master, then Limiter — split the loudness work.",
-      "A/B at matched loudness with bypass — louder always sounds 'better' until you match levels.",
+      "Two stages: Glue on master, then Limiter: split the loudness work.",
+      "A/B at matched loudness with bypass: louder always sounds 'better' until you match levels.",
     ],
     quizEasy: [
       { q: "Limiter is a…", options: ["Brick-wall compressor", "Reverb"], answer: 0 },
@@ -4605,26 +4605,26 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Pick the wrong Warp Mode and your loop sounds mushy. Pick the right one and it sounds like the master.",
     beginner: {
       what: [
-        "Live's Warp Modes are different time-stretch algorithms. Each is tuned for a different kind of audio — drums, vocals, pads, full mixes. Picking the right one is the difference between a clean stretch and a smeared mess.",
+        "Live's Warp Modes are different time-stretch algorithms. Each is tuned for a different kind of audio: drums, vocals, pads, full mixes. Picking the right one is the difference between a clean stretch and a smeared mess.",
         "The shortcut: drums → Beats. Vocals/bass → Tones (or Complex Pro for clean vocals). Pads/ambient → Texture. Full mixes → Complex Pro. DJ-style speed-and-pitch-together → Re-Pitch.",
       ],
       why: ["Loops stretch cleanly to your tempo.", "Vocals don't get robotic when slowed down."],
-      analogy: "Like choosing the right blade for the right material — a wood saw won't cut metal.",
+      analogy: "Like choosing the right blade for the right material: a wood saw won't cut metal.",
     },
     advanced: {
       what: [
-        "Beats mode chops the audio at transients and crossfades between segments — no pitch shift, just slice-and-fit. It's transparent on percussive material, but pitched content gets stuttery because the algorithm doesn't try to preserve continuous pitch.",
-        "Tones uses pitch-synchronous overlap-add (PSOLA) — it tracks the source's fundamental and stretches by relocating individual pitch periods. Excellent on monophonic pitched material (solo vocal, bass) where the pitch is well-defined.",
-        "Texture and Complex / Complex Pro use phase vocoder algorithms (FFT-based). They preserve harmonic content over time at the cost of transient sharpness. Complex Pro is the cleanest for full mixes, with formant-correction options that prevent the 'chipmunk' effect when transposing vocals. Re-Pitch alone is non-warping — it just plays the file back at a different speed, like vinyl pitch control.",
+        "Beats mode chops the audio at transients and crossfades between segments: no pitch shift, just slice-and-fit. It's transparent on percussive material, but pitched content gets stuttery because the algorithm doesn't try to preserve continuous pitch.",
+        "Tones uses pitch-synchronous overlap-add (PSOLA): it tracks the source's fundamental and stretches by relocating individual pitch periods. Excellent on monophonic pitched material (solo vocal, bass) where the pitch is well-defined.",
+        "Texture and Complex / Complex Pro use phase vocoder algorithms (FFT-based). They preserve harmonic content over time at the cost of transient sharpness. Complex Pro is the cleanest for full mixes, with formant-correction options that prevent the 'chipmunk' effect when transposing vocals. Re-Pitch alone is non-warping: it just plays the file back at a different speed, like vinyl pitch control.",
       ],
       edgeCases: [
-        "Beats mode on melodic material produces audible stutters at every transient — switch to Tones or Complex.",
-        "Complex Pro on percussive material softens transients — switch to Beats.",
+        "Beats mode on melodic material produces audible stutters at every transient: switch to Tones or Complex.",
+        "Complex Pro on percussive material softens transients: switch to Beats.",
         "Re-Pitch ignores Live's tempo: a 100 BPM loop dragged into a 120 BPM Set will play at 120 BPM and shift pitch up.",
       ],
       engineerNotes: [
         "For DJ-style 'pitch the whole stem to the new key', Complex Pro with formant-correct on; for analogue vinyl-style time-stretch, Re-Pitch.",
-        "Always preview at the destination tempo, not the source — a great-sounding source can fall apart when stretched 20%.",
+        "Always preview at the destination tempo, not the source: a great-sounding source can fall apart when stretched 20%.",
       ],
     },
     mechanism: "Audio + warp markers → chosen algorithm → time/pitch decoupled output.",
@@ -4639,7 +4639,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Formant character on stretched vocals.",
     ],
     mistakes: [
-      "Defaulting to Complex Pro for everything — CPU and softness.",
+      "Defaulting to Complex Pro for everything: CPU and softness.",
       "Forgetting Re-Pitch shifts pitch with speed.",
     ],
     proMoves: [
@@ -4660,7 +4660,7 @@ export const LESSONS: Record<string, LessonDeep> = {
       },
       {
         q: "Re-Pitch behaviour?",
-        options: ["No stretch — speed and pitch shift together", "Time-stretch only"],
+        options: ["No stretch: speed and pitch shift together", "Time-stretch only"],
         answer: 0,
       },
       {
@@ -4682,23 +4682,23 @@ export const LESSONS: Record<string, LessonDeep> = {
     beginner: {
       what: [
         "Ableton Link is a network protocol that keeps every Link-enabled app on the same WiFi in tempo sync. Click Link in Live, click Link in another Live (or an iOS app, or Maschine, or Reason), and they share tempo + downbeat phase.",
-        "There's no leader — every peer is equal. Anyone can change tempo and the rest follow. Anyone can leave or join without disrupting the others.",
+        "There's no leader: every peer is equal. Anyone can change tempo and the rest follow. Anyone can leave or join without disrupting the others.",
       ],
       why: [
         "Two laptops jamming on a phone hotspot, no cables.",
         "Sync iPad apps to Live without MIDI.",
       ],
       analogy:
-        "Like a band where everyone hears the same click in their head — nobody's the conductor.",
+        "Like a band where everyone hears the same click in their head: nobody's the conductor.",
     },
     advanced: {
       what: [
         "Link is a peer-to-peer protocol that synchronises tempo, beat phase, and (optionally) start/stop transport across applications on a local network. It uses NTP-style clock estimation to compensate for network jitter, so latency is far lower than MIDI clock over USB hubs.",
-        "Joining is automatic — any Link-enabled app on the same subnet sees existing peers. Tempo changes propagate live; the protocol maintains beat-phase coherence so peers stay aligned at the bar level, not just BPM.",
-        "Start Stop sync is opt-in per peer (Live's Link toggle has a Start Stop sync sub-setting). Without it, transports run independently while sharing tempo — useful when one performer wants to drop in/out without restarting the whole rig.",
+        "Joining is automatic: any Link-enabled app on the same subnet sees existing peers. Tempo changes propagate live; the protocol maintains beat-phase coherence so peers stay aligned at the bar level, not just BPM.",
+        "Start Stop sync is opt-in per peer (Live's Link toggle has a Start Stop sync sub-setting). Without it, transports run independently while sharing tempo: useful when one performer wants to drop in/out without restarting the whole rig.",
       ],
       edgeCases: [
-        "Different subnets (different VLANs) won't see each other — everyone needs to be on the same WiFi/router.",
+        "Different subnets (different VLANs) won't see each other: everyone needs to be on the same WiFi/router.",
         "iPad apps in airplane mode with Link enabled can sync if WiFi is on independently of cellular.",
       ],
       engineerNotes: [
@@ -4708,7 +4708,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     mechanism:
       "Each peer broadcasts tempo + beat-phase estimates → consensus algorithm → shared timeline.",
-    flow: "Peer A ↔ WiFi ↔ Peer B ↔ Peer C — shared tempo + downbeat",
+    flow: "Peer A ↔ WiFi ↔ Peer B ↔ Peer C: shared tempo + downbeat",
     walkthrough: [
       {
         do: "Enable Link in Live. Open another Link-enabled app on the same WiFi.",
@@ -4719,16 +4719,16 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["Tempo lock across devices.", "Phase lock at the bar level."],
     mistakes: [
-      "Different subnets — Link can't see across.",
+      "Different subnets: Link can't see across.",
       "Forgetting Start Stop sync is separate from tempo sync.",
     ],
     proMoves: [
       "Use Link with iPad granular apps as live texture sources.",
-      "Hotspot for shows — public WiFi will jitter.",
+      "Hotspot for shows: public WiFi will jitter.",
     ],
     quizEasy: [
       { q: "Link uses…", options: ["Local network", "MIDI cable"], answer: 0 },
-      { q: "Master/slave?", options: ["No — peer-to-peer", "Yes"], answer: 0 },
+      { q: "Master/slave?", options: ["No: peer-to-peer", "Yes"], answer: 0 },
       { q: "Start Stop sync is…", options: ["Optional add-on", "Always on"], answer: 0 },
     ],
     quizHard: [
@@ -4754,29 +4754,29 @@ export const LESSONS: Record<string, LessonDeep> = {
   },
 
   "push3-workflow": {
-    hook: "Pads, screens, encoders — and Standalone runs Live inside the box.",
+    hook: "Pads, screens, encoders: and Standalone runs Live inside the box.",
     beginner: {
       what: [
-        "Push 3 is Ableton's flagship hardware. 64 RGB pads, two displays, encoders, an audio interface — and the Standalone version has a built-in computer running Live, so the laptop can stay home.",
+        "Push 3 is Ableton's flagship hardware. 64 RGB pads, two displays, encoders, an audio interface: and the Standalone version has a built-in computer running Live, so the laptop can stay home.",
         "The pads change layout based on what you're doing: scale-aware melodic pads (no wrong notes), drum pads with a built-in step sequencer, or 64-pad melodic step sequencer for full pattern editing.",
       ],
       why: ["Make a track without the mouse.", "Standalone means laptop-free shows."],
       analogy:
-        "Like Live grew a body — same software, plus pads and screens that mirror what's under your cursor.",
+        "Like Live grew a body: same software, plus pads and screens that mirror what's under your cursor.",
     },
     advanced: {
       what: [
-        "Push 3 is a deeply integrated controller: pads, encoders and screens always reflect the device under Live's cursor, so workflow is identical between mouse and Push. Pad layout adapts contextually — Melodic mode tunes the grid to the project scale, Drum mode dedicates 16 pads to a Drum Rack and 48 to a step sequencer for the selected pad, 64-pad mode turns the whole grid into a melodic step sequencer.",
+        "Push 3 is a deeply integrated controller: pads, encoders and screens always reflect the device under Live's cursor, so workflow is identical between mouse and Push. Pad layout adapts contextually: Melodic mode tunes the grid to the project scale, Drum mode dedicates 16 pads to a Drum Rack and 48 to a step sequencer for the selected pad, 64-pad mode turns the whole grid into a melodic step sequencer.",
         "Standalone units run Live's playback engine inside the controller's internal computer; you author on the laptop, sync the project, then unplug for the show. The audio interface is class-compliant and latency is competitive with desktop interfaces.",
-        "Push 3 is MPE-native — every pad has per-finger pressure, slide and pitch-bend, which Wavetable, Meld, Sampler, Operator and Drum Rack all consume natively.",
+        "Push 3 is MPE-native: every pad has per-finger pressure, slide and pitch-bend, which Wavetable, Meld, Sampler, Operator and Drum Rack all consume natively.",
       ],
       edgeCases: [
-        "Standalone projects must be authored as 'Push-compatible' — third-party plugins not whitelisted for Push 3 won't run on the device.",
-        "Pad pressure calibration matters — recalibrate after firmware updates if expression feels off.",
+        "Standalone projects must be authored as 'Push-compatible': third-party plugins not whitelisted for Push 3 won't run on the device.",
+        "Pad pressure calibration matters: recalibrate after firmware updates if expression feels off.",
       ],
       engineerNotes: [
-        "Build performance Sets around Macro Variations + Drum Rack + Melodic mode — that's Push's sweet spot.",
-        "Use the second screen for sample browsing while playing — keeps the music going while you audition.",
+        "Build performance Sets around Macro Variations + Drum Rack + Melodic mode: that's Push's sweet spot.",
+        "Use the second screen for sample browsing while playing: keeps the music going while you audition.",
       ],
     },
     mechanism: "Pads/encoders → MIDI/MPE → mirrors selected device → screens reflect device state.",
@@ -4792,7 +4792,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     listenFor: ["Pad layout matches selected device.", "Encoders mirror the cursor's parameter."],
     mistakes: [
       "Expecting non-whitelisted plugins to run on Standalone.",
-      "Mouse-and-Push hybrid workflow — pick one to stay flowing.",
+      "Mouse-and-Push hybrid workflow: pick one to stay flowing.",
     ],
     proMoves: [
       "Macro Variations on Push = one-encoder song morph.",
@@ -4833,7 +4833,7 @@ export const LESSONS: Record<string, LessonDeep> = {
     hook: "Snapshot the macro state. Recall in one click. Morph in between.",
     beginner: {
       what: [
-        "A Macro Variation is a saved snapshot of all 16 macro values on a Rack. Build a sound, hit New Variation — that's snapshot 1. Tweak the macros, save again — snapshot 2. Click between them to instantly recall the whole macro state.",
+        "A Macro Variation is a saved snapshot of all 16 macro values on a Rack. Build a sound, hit New Variation, that's snapshot 1. Tweak the macros, save again, snapshot 2. Click between them to instantly recall the whole macro state.",
         "Live 12 added smooth interpolation: instead of jumping between snapshots, you can drag a slider that morphs all 16 macros in parallel from one variation to the next.",
       ],
       why: [
@@ -4841,16 +4841,16 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Build performance morphs that fade smoothly.",
       ],
       analogy:
-        "Like preset snapshots on a synth — except they include every macro you've assigned, not just the panel.",
+        "Like preset snapshots on a synth: except they include every macro you've assigned, not just the panel.",
     },
     advanced: {
       what: [
         "Macro Variations live in the Rack header next to the macro array. Each variation captures the current values of all 16 macros (or 8 / 4, depending on the rack's macro count) plus their associated mapping ranges. Recall is sample-accurate; you can MIDI-map variation switching to a controller.",
         "Live 12's smooth-interpolation morph slider crossfades between two adjacent variations over time, with linear or curved interpolation. Combined with Live's automation, you can record a morph as a single envelope that drives all the underlying mappings.",
-        "Because macros sit at the top of the modulation chain, a variation effectively snapshots an entire patch — every parameter the macros touch moves together. Architects of performance Sets build whole song sections from a single Rack with a handful of variations.",
+        "Because macros sit at the top of the modulation chain, a variation effectively snapshots an entire patch: every parameter the macros touch moves together. Architects of performance Sets build whole song sections from a single Rack with a handful of variations.",
       ],
       edgeCases: [
-        "Variations don't capture device parameters that aren't macro-mapped — if you want it to morph, map it to a macro first.",
+        "Variations don't capture device parameters that aren't macro-mapped: if you want it to morph, map it to a macro first.",
         "Smooth morph only interpolates between adjacent variations; non-adjacent jumps step.",
       ],
       engineerNotes: [
@@ -4868,11 +4868,11 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     listenFor: ["All mapped parameters move together.", "Smooth morph vs. instant recall."],
     mistakes: [
-      "Forgetting to map parameters to macros — variations won't touch them.",
+      "Forgetting to map parameters to macros: variations won't touch them.",
       "Trying to morph between non-adjacent variations.",
     ],
     proMoves: [
-      "MIDI-map variation slots to controller pads — one pad = one section.",
+      "MIDI-map variation slots to controller pads: one pad = one section.",
       "Automate the morph slider for hands-free song progression.",
     ],
     quizEasy: [
@@ -4905,32 +4905,32 @@ export const LESSONS: Record<string, LessonDeep> = {
   "sampler-deep": {
     hook: "Simpler loads one sample. Sampler loads a whole instrument.",
     definition: [
-      "Sampler is Live's full-featured sampler — it maps different samples across keyboard zones, velocity layers, and round-robin positions. Use it when one sample isn't enough for a realistic instrument.",
+      "Sampler is Live's full-featured sampler: it maps different samples across keyboard zones, velocity layers, and round-robin positions. Use it when one sample isn't enough for a realistic instrument.",
     ],
     beginner: {
       what: [
-        "Sampler is like Simpler's older sibling. Where Simpler loads one audio file and lets you play it, Sampler lets you load dozens of samples and assign each one to a specific key range and velocity range — so a piano sounds different at C2 vs C5, and a soft press sounds different from a hard one.",
+        "Sampler is like Simpler's older sibling. Where Simpler loads one audio file and lets you play it, Sampler lets you load dozens of samples and assign each one to a specific key range and velocity range: so a piano sounds different at C2 vs C5, and a soft press sounds different from a hard one.",
       ],
       why: [
-        "Real instruments don't sound the same at every pitch — a violin bowed at the bottom of its range sounds nothing like one at the top. Sampler lets you replicate that by loading multiple recordings.",
+        "Real instruments don't sound the same at every pitch: a violin bowed at the bottom of its range sounds nothing like one at the top. Sampler lets you replicate that by loading multiple recordings.",
         "Velocity layers make soft vs loud playing feel alive and dynamic rather than just quieter.",
-        "Round-robin prevents the 'machine gun' effect — Sampler cycles through multiple recordings of the same note so repeated hits never sound identical.",
+        "Round-robin prevents the 'machine gun' effect: Sampler cycles through multiple recordings of the same note so repeated hits never sound identical.",
       ],
       analogy:
         "Sampler is like a filing cabinet full of recordings. You tell it: 'play this recording for keys C2–E3, this one for F3–B4, and when they press hard, use this louder version'.",
     },
     advanced: {
       what: [
-        "Sampler's zones are defined by key range (start/end note), velocity range (0–127), and selector (sequential, random, all). Each zone hosts an independent sample with its own amplitude envelope, filter, LFO, and modulation routing. Sampler also supports MPE — per-note pressure, slide, and pitch are fully routable.",
+        "Sampler's zones are defined by key range (start/end note), velocity range (0–127), and selector (sequential, random, all). Each zone hosts an independent sample with its own amplitude envelope, filter, LFO, and modulation routing. Sampler also supports MPE: per-note pressure, slide, and pitch are fully routable.",
       ],
       edgeCases: [
-        "Overlapping key zones play simultaneously — useful for layering but can cause phase issues",
+        "Overlapping key zones play simultaneously: useful for layering but can cause phase issues",
         "High polyphony + long samples = heavy RAM use; freeze the track if sessions bog down",
         "Sample start can be modulated by velocity for transient control without separate layers",
       ],
       engineerNotes: [
         "Use Simpler when you have one sample and want speed. Switch to Sampler the moment you need multiple samples mapped across pitch or velocity.",
-        "Load one zone first, duplicate it, adjust the key range — faster than building from scratch.",
+        "Load one zone first, duplicate it, adjust the key range: faster than building from scratch.",
         "MPE + Sampler is the cleanest way to add per-note expression to any sample library in Live.",
       ],
     },
@@ -4940,13 +4940,13 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Map velocity 0–80 to a 'room mic' sample and 81–127 to a 'close mic' for instant depth",
-      "Modulate sample start by velocity — high velocity starts later in the transient for more snap",
+      "Modulate sample start by velocity: high velocity starts later in the transient for more snap",
       "Use 'All' selector to layer all zones simultaneously for massive textural pads",
     ],
     mistakes: [
-      "Using Sampler for single-sample work — Simpler loads faster and has warp",
-      "Forgetting to set crossfade at zone boundaries — you'll hear a click at the switch point",
-      "Loading 24-bit 96kHz samples unnecessarily — 16-bit 44.1kHz is transparent and half the RAM",
+      "Using Sampler for single-sample work: Simpler loads faster and has warp",
+      "Forgetting to set crossfade at zone boundaries: you'll hear a click at the switch point",
+      "Loading 24-bit 96kHz samples unnecessarily: 16-bit 44.1kHz is transparent and half the RAM",
     ],
   },
 
@@ -4957,23 +4957,23 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     beginner: {
       what: [
-        "Drift is a straightforward synth: oscillators make the sound, a filter shapes it, an envelope controls how it evolves over time. What makes it special is the Drift knob — it adds tiny random variations to pitch and timing that make it feel alive, like a real analog synth that's slightly imperfect in a musical way.",
+        "Drift is a straightforward synth: oscillators make the sound, a filter shapes it, an envelope controls how it evolves over time. What makes it special is the Drift knob: it adds tiny random variations to pitch and timing that make it feel alive, like a real analog synth that's slightly imperfect in a musical way.",
       ],
       why: [
-        "Digital synths are perfectly in tune, every note, every time — which sounds sterile. Drift adds controlled imperfection so chords breathe and beats feel human.",
-        "The ladder and SEM filters are modeled on classic hardware — they have a warmth that's hard to replicate with EQ.",
+        "Digital synths are perfectly in tune, every note, every time: which sounds sterile. Drift adds controlled imperfection so chords breathe and beats feel human.",
+        "The ladder and SEM filters are modeled on classic hardware: they have a warmth that's hard to replicate with EQ.",
       ],
       analogy:
-        "Drift is like a well-maintained vintage synth — it mostly stays in tune, but there's enough randomness to feel alive rather than robotic.",
+        "Drift is like a well-maintained vintage synth: it mostly stays in tune, but there's enough randomness to feel alive rather than robotic.",
     },
     advanced: {
       what: [
-        "Drift offers two oscillators (with sub) and two filter models: a 4-pole ladder (Moog-style, punchy resonance) and a 2-pole state-variable (SEM-style, smoother). The Drift engine applies correlated noise to pitch, filter, and amplitude — all three drift together like hardware would. The rate and depth of drift are independently controllable.",
+        "Drift offers two oscillators (with sub) and two filter models: a 4-pole ladder (Moog-style, punchy resonance) and a 2-pole state-variable (SEM-style, smoother). The Drift engine applies correlated noise to pitch, filter, and amplitude: all three drift together like hardware would. The rate and depth of drift are independently controllable.",
       ],
       edgeCases: [
-        "High Drift at high polyphony creates micro-detuning that thickens chords naturally — similar to chorus but more organic",
-        "The ladder filter self-oscillates at max resonance — a free sine-wave oscillator",
-        "Drift's envelopes go negative — pull attack below zero for an immediate transient then ramp",
+        "High Drift at high polyphony creates micro-detuning that thickens chords naturally: similar to chorus but more organic",
+        "The ladder filter self-oscillates at max resonance: a free sine-wave oscillator",
+        "Drift's envelopes go negative: pull attack below zero for an immediate transient then ramp",
       ],
       engineerNotes: [
         "Use Drift for bass, leads, and pads where warmth matters more than precision",
@@ -4987,45 +4987,45 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Detune osc 2 by +7 cents and set to triangle for instant vintage pad thickness",
-      "Route the LFO to Filter Cutoff at low rate — the breathing modulation is subtle but critical",
+      "Route the LFO to Filter Cutoff at low rate: the breathing modulation is subtle but critical",
       "Use Drift's built-in unison mode for instant supersaw without a dedicated device",
     ],
     mistakes: [
-      "Setting Drift too high on bass sounds — bass needs to sit in tune; use Drift < 20% for bass",
-      "Ignoring the sub oscillator — it's a free sine an octave down that can replace a separate bass layer",
+      "Setting Drift too high on bass sounds: bass needs to sit in tune; use Drift < 20% for bass",
+      "Ignoring the sub oscillator: it's a free sine an octave down that can replace a separate bass layer",
     ],
   },
 
   "granulator-iii": {
     hook: "What if sound was sand? Granulator makes it.",
     definition: [
-      "Granulator III is a Max for Live granular synthesizer that slices any audio file into tiny grains and reassembles them — enabling extreme time-stretching, texture creation, and sounds that bear no resemblance to the original.",
+      "Granulator III is a Max for Live granular synthesizer that slices any audio file into tiny grains and reassembles them: enabling extreme time-stretching, texture creation, and sounds that bear no resemblance to the original.",
     ],
     beginner: {
       what: [
-        "Granulator takes a sample and cuts it into tiny pieces called grains — each about 10–500ms long. It plays thousands of these overlapping grains simultaneously, which lets you stretch time without changing pitch, freeze audio into drones, or scatter grains randomly to create dense textures that sound nothing like the source.",
+        "Granulator takes a sample and cuts it into tiny pieces called grains: each about 10–500ms long. It plays thousands of these overlapping grains simultaneously, which lets you stretch time without changing pitch, freeze audio into drones, or scatter grains randomly to create dense textures that sound nothing like the source.",
       ],
       why: [
         "It's the tool for creating evolving atmospheric pads and textures that no conventional synth can make.",
-        "You can take a drum hit and turn it into a 30-second drone — the source material becomes a starting point, not the end result.",
-        "Granular time-stretching sounds completely different from warp modes — more abstract, more 'stretched'.",
+        "You can take a drum hit and turn it into a 30-second drone: the source material becomes a starting point, not the end result.",
+        "Granular time-stretching sounds completely different from warp modes: more abstract, more 'stretched'.",
       ],
       analogy:
-        "Imagine taking a photograph, cutting it into thousands of tiny squares, and spreading them slightly — you can still recognize the image, but it shimmers and floats in a way the original never did.",
+        "Imagine taking a photograph, cutting it into thousands of tiny squares, and spreading them slightly: you can still recognize the image, but it shimmers and floats in a way the original never did.",
     },
     advanced: {
       what: [
-        "Key parameters: Position (playhead in the sample), Spray (randomizes position per grain), Size (grain duration), Density (grains per second), Pitch (transposition), Random (pitch randomization per grain). Envelope shapes each grain's amplitude curve. Multiple playheads can scrub the sample at different rates — creating harmonic interference between versions of the same audio.",
+        "Key parameters: Position (playhead in the sample), Spray (randomizes position per grain), Size (grain duration), Density (grains per second), Pitch (transposition), Random (pitch randomization per grain). Envelope shapes each grain's amplitude curve. Multiple playheads can scrub the sample at different rates: creating harmonic interference between versions of the same audio.",
       ],
       edgeCases: [
-        "Very small grains (< 20ms) become pitched due to the periodicity of repeated short windows — a granular oscillator",
+        "Very small grains (< 20ms) become pitched due to the periodicity of repeated short windows: a granular oscillator",
         "High Spray + high Density creates white-noise-like textures regardless of source material",
         "Position modulated by a slow LFO creates automatic morph through the sample's timbral content",
       ],
       engineerNotes: [
         "Load drumbreaks or spoken word for the most interesting timbral material to granulate",
-        "Automate Position at 0.001 Hz — the texture evolves over minutes without repeating",
-        "Granulator III supports MPE — map pressure to Spray for expressive per-note density control",
+        "Automate Position at 0.001 Hz: the texture evolves over minutes without repeating",
+        "Granulator III supports MPE: map pressure to Spray for expressive per-note density control",
       ],
     },
     listenFor: [
@@ -5033,27 +5033,27 @@ export const LESSONS: Record<string, LessonDeep> = {
       "How Spray at 0 sounds 'frozen' vs Spray at 100% sounds 'scattered'",
     ],
     proMoves: [
-      "Use a vocal sample as source — granulation strips intelligibility and leaves pure vowel texture",
+      "Use a vocal sample as source: granulation strips intelligibility and leaves pure vowel texture",
       "Send granulated audio through a convolution reverb using the same source as the IR",
       "Layer two Granulators on the same sample at different positions and sizes for phasing clouds",
     ],
     mistakes: [
-      "Using short samples — longer samples give Position room to explore meaningfully",
-      "Maxing Density without watching CPU — granular synthesis is expensive; freeze when done",
+      "Using short samples: longer samples give Position room to explore meaningfully",
+      "Maxing Density without watching CPU: granular synthesis is expensive; freeze when done",
     ],
   },
 
   "collision-tension-electric": {
-    hook: "Physics-based synthesis — the mallet hits the string, the bow drags, the tine rings.",
+    hook: "Physics-based synthesis: the mallet hits the string, the bow drags, the tine rings.",
     definition: [
-      "Collision, Tension, and Electric are physical modeling instruments. Rather than oscillators, they simulate the real-world physics of struck, bowed, and plucked objects — mallets, membranes, strings, and piano tines.",
+      "Collision, Tension, and Electric are physical modeling instruments. Rather than oscillators, they simulate the real-world physics of struck, bowed, and plucked objects: mallets, membranes, strings, and piano tines.",
     ],
     beginner: {
       what: [
         "Physical modeling means the synth calculates how a real object would vibrate rather than playing back a recording or generating a waveform. Collision models percussion (mallets hitting objects), Tension models strings (guitar, harp, bowed instruments), Electric models electric piano tines (Rhodes, Wurlitzer). The result sounds acoustic because it behaves acoustically.",
       ],
       why: [
-        "They respond to velocity, modulation, and MPE in ways sampled instruments can't — playing harder changes the character of the sound, not just the volume.",
+        "They respond to velocity, modulation, and MPE in ways sampled instruments can't: playing harder changes the character of the sound, not just the volume.",
         "No sample library can capture every combination of mallet hardness, string tension, and damping. Physical models can.",
       ],
       analogy:
@@ -5064,14 +5064,14 @@ export const LESSONS: Record<string, LessonDeep> = {
         "Collision: Mallet section controls hardness, noise, and initial displacement; Resonator section models the object being struck (membrane, tube, plate, string). Tension: excitation type (pluck, bow, strike) feeds into a physical string model with stiffness, damping, pickup position. Electric: tine + fork model, pickup proximity, damper noise, amp character.",
       ],
       edgeCases: [
-        "High string stiffness in Tension creates inharmonic 'piano-like' overtones — the upper partials go sharp",
+        "High string stiffness in Tension creates inharmonic 'piano-like' overtones: the upper partials go sharp",
         "Collision with very low noise in the mallet and high resonance becomes a pitched bell",
-        "Electric's pickup position controls even/odd harmonic content — close = brighter, far = mellower",
+        "Electric's pickup position controls even/odd harmonic content: close = brighter, far = mellower",
       ],
       engineerNotes: [
-        "Map MPE pressure to mallet noise in Collision — bowing pressure becomes expressive",
+        "Map MPE pressure to mallet noise in Collision: bowing pressure becomes expressive",
         "Automate Tension's bow position for a cello-like vibrato effect without a separate LFO",
-        "Layer Electric with Simpler (Rhodes sample) and blend 30/70 — the model adds dynamics the sample lacks",
+        "Layer Electric with Simpler (Rhodes sample) and blend 30/70: the model adds dynamics the sample lacks",
       ],
     },
     listenFor: [
@@ -5084,39 +5084,39 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Electric tine volume automation during a note = the classic Rhodes swell technique",
     ],
     mistakes: [
-      "Treating these like subtractive synths — their parameters describe physical properties, not audio ones",
-      "Low polyphony on physical models — they're CPU-heavy; limit voices aggressively",
+      "Treating these like subtractive synths: their parameters describe physical properties, not audio ones",
+      "Low polyphony on physical models: they're CPU-heavy; limit voices aggressively",
     ],
   },
 
   "bass-poli": {
     hook: "Great presets, eight knobs, instant results. That's Bass & Poli.",
     definition: [
-      "Bass and Poli are Live 12 instruments built for immediate playability — curated preset instruments with 8 bespoke macro knobs per patch, optimized for bass sounds and polyphonic pads/keys respectively.",
+      "Bass and Poli are Live 12 instruments built for immediate playability: curated preset instruments with 8 bespoke macro knobs per patch, optimized for bass sounds and polyphonic pads/keys respectively.",
     ],
     beginner: {
       what: [
-        "Bass and Poli are plug-and-play instruments. Load a preset, play some notes, twist the 8 knobs. Each preset has its own custom macro assignments — the knobs control the most useful parameters for that specific sound. You don't need to understand synthesis to get great results; the presets are professionally designed and the knobs are already mapped to the interesting controls.",
+        "Bass and Poli are plug-and-play instruments. Load a preset, play some notes, twist the 8 knobs. Each preset has its own custom macro assignments: the knobs control the most useful parameters for that specific sound. You don't need to understand synthesis to get great results; the presets are professionally designed and the knobs are already mapped to the interesting controls.",
       ],
       why: [
         "Sometimes you need a great bass tone in 10 seconds, not an hour of synthesis deep-dive.",
-        "The macro assignments are curated per-preset by sound designers — you're always turning the right knob.",
+        "The macro assignments are curated per-preset by sound designers: you're always turning the right knob.",
       ],
       analogy:
-        "Bass and Poli are like a great restaurant with a curated menu — you don't choose every ingredient, but every dish is designed to work.",
+        "Bass and Poli are like a great restaurant with a curated menu: you don't choose every ingredient, but every dish is designed to work.",
     },
     advanced: {
       what: [
-        "Under the hood, Bass and Poli are Instrument Racks containing combinations of Wavetable, Operator, Simpler, and effects chains — each preset hand-built by Ableton's sound design team. The 8 macros are remapped per preset to expose the most musical controls. Macro Variations (Live 12) let you snapshot 8 different 'states' of the same preset and morph between them.",
+        "Under the hood, Bass and Poli are Instrument Racks containing combinations of Wavetable, Operator, Simpler, and effects chains: each preset hand-built by Ableton's sound design team. The 8 macros are remapped per preset to expose the most musical controls. Macro Variations (Live 12) let you snapshot 8 different 'states' of the same preset and morph between them.",
       ],
       edgeCases: [
-        "The underlying rack is fully editable — unfold the chain to see and modify the actual devices",
+        "The underlying rack is fully editable: unfold the chain to see and modify the actual devices",
         "Macro Variations can interpolate between states when morphing is enabled in Live 12",
       ],
       engineerNotes: [
-        "Use Bass for sub-bass, bass synths, and bass guitars — its presets are tuned for low-end clarity",
-        "Poli excels for pads, keys, plucks, and chord textures — polyphonic and harmonically rich by design",
-        "Save custom macro states as Variations before leaving a session — you lose them on close otherwise",
+        "Use Bass for sub-bass, bass synths, and bass guitars: its presets are tuned for low-end clarity",
+        "Poli excels for pads, keys, plucks, and chord textures: polyphonic and harmonically rich by design",
+        "Save custom macro states as Variations before leaving a session: you lose them on close otherwise",
       ],
     },
     listenFor: [
@@ -5124,46 +5124,46 @@ export const LESSONS: Record<string, LessonDeep> = {
       "The difference in low-end weight between Bass presets vs Poli presets pitched down",
     ],
     proMoves: [
-      "Create a Macro Variation for verse sound and one for chorus — one click changes the whole vibe",
+      "Create a Macro Variation for verse sound and one for chorus: one click changes the whole vibe",
       "Route the Macro Variation selector to a MIDI controller for live switching",
-      "Unfold Bass and add a Saturator before the output — instantly thickens the low-mids",
+      "Unfold Bass and add a Saturator before the output: instantly thickens the low-mids",
     ],
     mistakes: [
-      "Thinking you can't edit Bass/Poli — unfolding the rack reveals the full synthesis chain",
-      "Ignoring Macro Variations — they're the entire point of having presets with 8 macros",
+      "Thinking you can't edit Bass/Poli: unfolding the rack reveals the full synthesis chain",
+      "Ignoring Macro Variations: they're the entire point of having presets with 8 macros",
     ],
   },
 
   "instrument-rack": {
     hook: "Stack instruments. Split the keyboard. Layer a string pad under your lead. All at once.",
     definition: [
-      "An Instrument Rack is a container that holds multiple instrument chains — each chain has its own instrument, effects, and MIDI range. Chains can play simultaneously (layered), or on different parts of the keyboard (split).",
+      "An Instrument Rack is a container that holds multiple instrument chains: each chain has its own instrument, effects, and MIDI range. Chains can play simultaneously (layered), or on different parts of the keyboard (split).",
     ],
     beginner: {
       what: [
-        "An Instrument Rack lets you combine multiple instruments into one. You can layer a pad underneath a piano so both play whenever you press a key. Or split the keyboard so your left hand plays bass (Wavetable) while your right plays chords (Poli) — all on one track. Up to 16 macro knobs control parameters across all chains simultaneously.",
+        "An Instrument Rack lets you combine multiple instruments into one. You can layer a pad underneath a piano so both play whenever you press a key. Or split the keyboard so your left hand plays bass (Wavetable) while your right plays chords (Poli): all on one track. Up to 16 macro knobs control parameters across all chains simultaneously.",
       ],
       why: [
-        "Professional synth sounds are almost always layered — the 'single patch' that sounds huge is usually 3-4 instruments summed together.",
+        "Professional synth sounds are almost always layered: the 'single patch' that sounds huge is usually 3-4 instruments summed together.",
         "Keyboard splits let one MIDI controller drive a complete live performance setup from a single track.",
         "Macros let you control multiple parameters across multiple instruments with one knob.",
       ],
       analogy:
-        "An Instrument Rack is like an orchestra section — many players, one conductor (the macro knobs), all reading from the same score (the MIDI notes you play).",
+        "An Instrument Rack is like an orchestra section: many players, one conductor (the macro knobs), all reading from the same score (the MIDI notes you play).",
     },
     advanced: {
       what: [
-        "Each chain in an Instrument Rack has an independent key zone (which MIDI notes trigger it), velocity zone (which velocities trigger it), and chain selector range (controlled by a macro for dynamic switching/crossfading). Chains can be muted, soloed, and hot-swapped without stopping playback. The Chain Selector enables crossfading between chains — morph from one sound to another with a single knob.",
+        "Each chain in an Instrument Rack has an independent key zone (which MIDI notes trigger it), velocity zone (which velocities trigger it), and chain selector range (controlled by a macro for dynamic switching/crossfading). Chains can be muted, soloed, and hot-swapped without stopping playback. The Chain Selector enables crossfading between chains: morph from one sound to another with a single knob.",
       ],
       edgeCases: [
-        "MIDI effects placed before the Rack affect all chains — place MIDI FX inside individual chains for per-chain behavior",
+        "MIDI effects placed before the Rack affect all chains: place MIDI FX inside individual chains for per-chain behavior",
         "Chain Selector crossfade range: overlap zones so chains fade between each other rather than cutting",
-        "16 macros in Live 11+ — earlier versions had 8",
+        "16 macros in Live 11+: earlier versions had 8",
       ],
       engineerNotes: [
-        "Use velocity zones to layer a string 'attack' sample at high velocity and a pad at low — the attack becomes an accent rather than a separate part",
+        "Use velocity zones to layer a string 'attack' sample at high velocity and a pad at low: the attack becomes an accent rather than a separate part",
         "Randomize chain selector from an LFO for probabilistic sound variation on every note",
-        "Name chains and macros descriptively before saving — it's unreadable 6 months later otherwise",
+        "Name chains and macros descriptively before saving: it's unreadable 6 months later otherwise",
       ],
     },
     listenFor: [
@@ -5172,139 +5172,139 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Layer Drift (analog warmth) + Operator (FM precision) + reverb return for modern lead sounds",
-      "Create a 4-chain rack, map Chain Selector to Macro 1, set overlapping zones — one knob morphs through 4 sounds",
+      "Create a 4-chain rack, map Chain Selector to Macro 1, set overlapping zones: one knob morphs through 4 sounds",
       "Put a compressor on the Rack output to glue layered chains together",
     ],
     mistakes: [
-      "Forgetting each chain's MIDI FX are independent — put Scale before the Rack, not inside chains, if you want it global",
-      "Overlapping key zones accidentally — two chains playing the same notes both consume CPU and can phase",
+      "Forgetting each chain's MIDI FX are independent: put Scale before the Rack, not inside chains, if you want it global",
+      "Overlapping key zones accidentally: two chains playing the same notes both consume CPU and can phase",
     ],
   },
 
   "midi-effects-tour": {
     hook: "Before the note reaches the synth, you can transform it completely.",
     definition: [
-      "MIDI effects sit between your MIDI input and the instrument in the device chain. They process note data — pitch, timing, velocity, duration — before any sound is made.",
+      "MIDI effects sit between your MIDI input and the instrument in the device chain. They process note data, pitch, timing, velocity, duration, before any sound is made.",
     ],
     beginner: {
       what: [
-        "MIDI effects transform notes before they reach the instrument. Arpeggiator takes held chords and plays them as sequences. Scale locks every note to a musical key — no wrong notes. Chord adds extra notes above or below what you play. Random generates notes you'd never choose yourself. Note Echo creates MIDI delays — repeated note triggers after the original. They're all non-destructive and can be combined in any order.",
+        "MIDI effects transform notes before they reach the instrument. Arpeggiator takes held chords and plays them as sequences. Scale locks every note to a musical key, no wrong notes. Chord adds extra notes above or below what you play. Random generates notes you'd never choose yourself. Note Echo creates MIDI delays, repeated note triggers after the original. They're all non-destructive and can be combined in any order.",
       ],
       why: [
-        "Scale is the fastest way to play 'in key' without knowing music theory — every pad of Push, every key on the keyboard becomes musical.",
+        "Scale is the fastest way to play 'in key' without knowing music theory: every pad of Push, every key on the keyboard becomes musical.",
         "Arpeggiator turns held chords into sequences without programming a single note.",
         "Random + Chord creates generative melodic content that sounds intentional but is algorithmically produced.",
       ],
       analogy:
-        "MIDI effects are like autocorrect for music — they intercept what you play and improve or transform it before the synth ever hears it.",
+        "MIDI effects are like autocorrect for music: they intercept what you play and improve or transform it before the synth ever hears it.",
     },
     advanced: {
       what: [
-        "Signal flow: MIDI Input → MIDI Effects chain → Instrument → Audio Effects → Output. Multiple MIDI effects chain sequentially — Scale quantizes pitch, then Arpeggiator sequences those quantized pitches, then Chord adds harmony to each arpeggiated note. Note Echo is a true MIDI delay — it re-triggers the instrument rather than delaying audio, so each echo goes through the full instrument chain with fresh envelopes.",
+        "Signal flow: MIDI Input → MIDI Effects chain → Instrument → Audio Effects → Output. Multiple MIDI effects chain sequentially, Scale quantizes pitch, then Arpeggiator sequences those quantized pitches, then Chord adds harmony to each arpeggiated note. Note Echo is a true MIDI delay, it re-triggers the instrument rather than delaying audio, so each echo goes through the full instrument chain with fresh envelopes.",
       ],
       edgeCases: [
-        "MIDI effects only affect the track they're on — they don't process MIDI from other tracks",
+        "MIDI effects only affect the track they're on: they don't process MIDI from other tracks",
         "Random's Chance parameter: 100% = always randomize, 0% = never. Use 20-40% for spice without chaos",
-        "Arpeggiator's Hold mode latches notes — keep adding and removing notes while it runs",
+        "Arpeggiator's Hold mode latches notes: keep adding and removing notes while it runs",
       ],
       engineerNotes: [
         "Stack Scale → Chord → Arpeggiator for instant generative melodic patterns from one held chord",
         "Use Note Echo with a dotted-eighth delay time for the classic rhythmic echo effect",
-        "Pitch effect transposes incoming MIDI — use it to detune a chain in an Instrument Rack without retuning the instrument itself",
+        "Pitch effect transposes incoming MIDI: use it to detune a chain in an Instrument Rack without retuning the instrument itself",
       ],
     },
     listenFor: [
-      "How Chord adds notes above vs below your played note — the interval character changes the entire harmonic feel",
+      "How Chord adds notes above vs below your played note: the interval character changes the entire harmonic feel",
       "The rhythmic difference between audio delay and MIDI Note Echo on the same instrument",
     ],
     proMoves: [
       "Arpeggiator in Random mode + high-rate + Scale locked = instant generative arpeggio that always sounds musical",
-      "Note Echo with 3 echoes, each getting quieter — 'ghost note' feel on drum MIDI",
+      "Note Echo with 3 echoes, each getting quieter: 'ghost note' feel on drum MIDI",
       "Velocity MIDI effect before a synth to compress the dynamic range of your playing",
     ],
     mistakes: [
-      "Expecting MIDI effects to work on audio tracks — they only process MIDI note data",
-      "Putting MIDI effects after the instrument — the signal is audio at that point, not MIDI",
+      "Expecting MIDI effects to work on audio tracks: they only process MIDI note data",
+      "Putting MIDI effects after the instrument: the signal is audio at that point, not MIDI",
     ],
   },
 
   "external-instrument": {
     hook: "Your hardware synth is a plugin now.",
     definition: [
-      "External Instrument sends MIDI out of Live to a hardware synth, receives the audio back in, and presents the whole thing as a single device on a MIDI track — latency-compensated, automatable, and ready to process with Live's effects.",
+      "External Instrument sends MIDI out of Live to a hardware synth, receives the audio back in, and presents the whole thing as a single device on a MIDI track: latency-compensated, automatable, and ready to process with Live's effects.",
     ],
     beginner: {
       what: [
-        "External Instrument is a bridge between Live and your hardware gear. It sends MIDI notes from a MIDI track out through your interface to a synthesizer (or drum machine, or effects box), then brings the audio back in through the same interface. From Live's perspective, it's just another instrument — you can record it, automate its parameters via MIDI CC, and run its audio through Live's effects.",
+        "External Instrument is a bridge between Live and your hardware gear. It sends MIDI notes from a MIDI track out through your interface to a synthesizer (or drum machine, or effects box), then brings the audio back in through the same interface. From Live's perspective, it's just another instrument: you can record it, automate its parameters via MIDI CC, and run its audio through Live's effects.",
       ],
       why: [
-        "Hardware synths have character that's hard to replicate in software — putting them inside Live's workflow makes them first-class citizens rather than a separate rig.",
-        "Latency compensation means the hardware's audio arrives back in sync with everything else in your session — no manual delay adjustments.",
+        "Hardware synths have character that's hard to replicate in software: putting them inside Live's workflow makes them first-class citizens rather than a separate rig.",
+        "Latency compensation means the hardware's audio arrives back in sync with everything else in your session: no manual delay adjustments.",
         "You can record multiple MIDI performances and commit to audio when you're happy.",
       ],
       analogy:
-        "External Instrument is a phone call to your hardware — Live speaks MIDI, the hardware speaks audio back, and External Instrument is the connection.",
+        "External Instrument is a phone call to your hardware: Live speaks MIDI, the hardware speaks audio back, and External Instrument is the connection.",
     },
     advanced: {
       what: [
         "External Instrument outputs MIDI on a specified port/channel and returns audio on a specified input channel. The Hardware Latency knob compensates for the round-trip delay (measure it with Live's delay compensation tool or by recording a click and aligning it manually). MIDI CC automation in the clip's envelope editor controls hardware parameters over the same MIDI channel.",
       ],
       edgeCases: [
-        "USB MIDI interfaces add less latency than DIN MIDI (5-pin) — prefer USB for time-sensitive setups",
-        "Some hardware responds to all MIDI channels (Omni mode) — set the hardware to a specific channel to avoid cross-talk",
-        "Hardware Latency must be set per-interface — measure once, write it down",
+        "USB MIDI interfaces add less latency than DIN MIDI (5-pin): prefer USB for time-sensitive setups",
+        "Some hardware responds to all MIDI channels (Omni mode): set the hardware to a specific channel to avoid cross-talk",
+        "Hardware Latency must be set per-interface: measure once, write it down",
       ],
       engineerNotes: [
         "Use a second External Instrument on the same hardware on a different MIDI channel for multi-timbral gear",
-        "Record the hardware's audio to a new audio track when you've committed — frees the MIDI track to control something else",
+        "Record the hardware's audio to a new audio track when you've committed: frees the MIDI track to control something else",
         "Send MIDI CC from clip envelopes rather than automation lanes for hardware parameter recording that travels with clips",
       ],
     },
     proMoves: [
-      "Route hardware audio through Live's effects chain for the best of both worlds — analog character, digital processing",
+      "Route hardware audio through Live's effects chain for the best of both worlds: analog character, digital processing",
       "Use Multiple External Instruments to drive different channels of a multi-timbral synth from one Live session",
       "Record hardware MIDI output back into Live with a separate MIDI track for generative hardware sequences",
     ],
     mistakes: [
-      "Forgetting to set Hardware Latency — your hardware will sound early or late relative to software instruments",
-      "Using audio interface inputs already in use for monitoring — External Instrument needs dedicated input channels",
+      "Forgetting to set Hardware Latency: your hardware will sound early or late relative to software instruments",
+      "Using audio interface inputs already in use for monitoring: External Instrument needs dedicated input channels",
     ],
   },
 
   "stem-separation": {
     hook: "Any song. Four stems. In seconds. On your machine.",
     definition: [
-      "Stem Separation (Live 12) analyzes a mixed audio file and separates it into four stems — drums, bass, melody, and other — all processed locally using Ableton's built-in AI model.",
+      "Stem Separation (Live 12) analyzes a mixed audio file and separates it into four stems, drums, bass, melody, and other, all processed locally using Ableton's built-in AI model.",
     ],
     beginner: {
       what: [
-        "Drop any mixed audio clip into Live, right-click it, and choose Separate Stems. Live analyzes the mix using an AI model running on your computer (no internet required) and creates four separate audio clips: drums, bass, melody, and everything else. You can then process each element independently — EQ the bass, add reverb to the melody, or sample the drums into a Drum Rack.",
+        "Drop any mixed audio clip into Live, right-click it, and choose Separate Stems. Live analyzes the mix using an AI model running on your computer (no internet required) and creates four separate audio clips: drums, bass, melody, and everything else. You can then process each element independently: EQ the bass, add reverb to the melody, or sample the drums into a Drum Rack.",
       ],
       why: [
-        "Sample any song without needing the original stems — extract a bassline, isolate a vocal, grab a drum groove.",
-        "Fix a mix where elements were baked together — boost the bass on a stem without affecting the drums.",
+        "Sample any song without needing the original stems: extract a bassline, isolate a vocal, grab a drum groove.",
+        "Fix a mix where elements were baked together: boost the bass on a stem without affecting the drums.",
         "Creative remixing: use the melody stem as a granular source in Granulator III.",
       ],
       analogy:
-        "Stem Separation is like reverse engineering a meal — you can figure out what ingredients were used and separate them back out, more or less.",
+        "Stem Separation is like reverse engineering a meal: you can figure out what ingredients were used and separate them back out, more or less.",
     },
     advanced: {
       what: [
-        "Live 12's separation model is a local neural network (no cloud processing). Output quality depends on source complexity — clearly separated arrangements (sparse electronic music) separate well; dense arrangements (full orchestral) are harder. Each stem is output as a new audio clip in the Arrangement, time-locked to the original. Artifacts are most audible at stem boundaries, particularly on leaky bass frequencies in the drums stem.",
+        "Live 12's separation model is a local neural network (no cloud processing). Output quality depends on source complexity: clearly separated arrangements (sparse electronic music) separate well; dense arrangements (full orchestral) are harder. Each stem is output as a new audio clip in the Arrangement, time-locked to the original. Artifacts are most audible at stem boundaries, particularly on leaky bass frequencies in the drums stem.",
       ],
       edgeCases: [
-        "'Other' stem catches anything that isn't drums, bass, or melody — often includes harmony, pads, FX",
-        "Mono sources separate more cleanly than stereo — stems from mono mixes have fewer artifacts",
+        "'Other' stem catches anything that isn't drums, bass, or melody: often includes harmony, pads, FX",
+        "Mono sources separate more cleanly than stereo: stems from mono mixes have fewer artifacts",
         "Artifacts are most audible in quiet passages where one stem 'bleeds' into another",
       ],
       engineerNotes: [
-        "Use drums stem as a reference for groove extraction in Groove Pool — pull the swing of any track",
+        "Use drums stem as a reference for groove extraction in Groove Pool: pull the swing of any track",
         "Layer the melody stem with a synthesized version for instant hybrid sounds",
         "The bass stem is often your cleanest source for sub-bass resampling without kick interference",
       ],
     },
     listenFor: [
-      "Bleed between stems in complex arrangements — the drums stem will have some bass, the bass stem some kick",
+      "Bleed between stems in complex arrangements: the drums stem will have some bass, the bass stem some kick",
       "How separation quality varies with source material density",
     ],
     proMoves: [
@@ -5313,35 +5313,35 @@ export const LESSONS: Record<string, LessonDeep> = {
       "Use stem separation on vintage records to extract basslines uncontaminated by mid-range instruments",
     ],
     mistakes: [
-      "Expecting perfect separation — stems always have some bleed; treat them as starting points not final outputs",
-      "Trying to separate already heavily processed/limited masters — headroom matters for the AI model",
+      "Expecting perfect separation: stems always have some bleed; treat them as starting points not final outputs",
+      "Trying to separate already heavily processed/limited masters: headroom matters for the AI model",
     ],
   },
 
   "midi-transforms": {
     hook: "Live 12 puts a studio of MIDI tools directly inside the Piano Roll.",
     definition: [
-      "MIDI Transformations are built-in operations in Live 12's Piano Roll that generate, modify, and reorder notes — strum chords, pitch shift patterns, arpeggiate, recombine rhythms, and add ornaments without leaving the clip.",
+      "MIDI Transformations are built-in operations in Live 12's Piano Roll that generate, modify, and reorder notes: strum chords, pitch shift patterns, arpeggiate, recombine rhythms, and add ornaments without leaving the clip.",
     ],
     beginner: {
       what: [
         "MIDI Transformations are tools that appear in the Piano Roll when you select notes. Instead of editing notes by hand, you choose a transformation and Live does the work. Strum makes a chord sound like it's being strummed on a guitar. Pitch Shift moves notes up or down in scale steps. Arpeggiate turns held chords into sequences. Recombine shuffles rhythm and pitch separately. Ornament adds grace notes and trills.",
       ],
       why: [
-        "Writing a realistic guitar strum by hand requires precise timing offsets for each note — Strum does it in one click.",
-        "Recombine lets you break the link between which rhythm uses which pitch — generate unexpected melodic variations from existing material.",
+        "Writing a realistic guitar strum by hand requires precise timing offsets for each note: Strum does it in one click.",
+        "Recombine lets you break the link between which rhythm uses which pitch: generate unexpected melodic variations from existing material.",
       ],
       analogy:
-        "MIDI Transformations are like Photoshop filters for notes — you apply one and the selected notes transform according to musical rules.",
+        "MIDI Transformations are like Photoshop filters for notes: you apply one and the selected notes transform according to musical rules.",
     },
     advanced: {
       what: [
-        "Each transformation is non-destructive until you commit it — you preview the result and can adjust parameters before applying. Strum: offset direction (up/down), time per string, velocity curve. Recombine: rhythm and pitch sources can each be the selection, clipboard, or random — mix and match. Ornament: grace note style, trill interval, speed. All transformations respect the project's scale setting when they generate pitches.",
+        "Each transformation is non-destructive until you commit it, you preview the result and can adjust parameters before applying. Strum: offset direction (up/down), time per string, velocity curve. Recombine: rhythm and pitch sources can each be the selection, clipboard, or random, mix and match. Ornament: grace note style, trill interval, speed. All transformations respect the project's scale setting when they generate pitches.",
       ],
       edgeCases: [
-        "Transformations work on the current selection — select specific notes to apply to a subset of a pattern",
-        "Recombine with random pitch source generates different results each time — use it as a starting point and commit when interesting",
-        "Strum direction affects perceived harmonic 'voicing' — down strums emphasize bass, up strums emphasize melody",
+        "Transformations work on the current selection: select specific notes to apply to a subset of a pattern",
+        "Recombine with random pitch source generates different results each time: use it as a starting point and commit when interesting",
+        "Strum direction affects perceived harmonic 'voicing': down strums emphasize bass, up strums emphasize melody",
       ],
       engineerNotes: [
         "Strum + slow rate on full chords = realistic fingerpicked guitar simulation from sustained MIDI chords",
@@ -5355,96 +5355,96 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     proMoves: [
       "Strum at 8ms per step + downward direction + velocity curve falling = realistic acoustic guitar chord",
-      "Apply Arpeggiate, then manually edit the resulting notes — use it as a grid, not a finished product",
+      "Apply Arpeggiate, then manually edit the resulting notes: use it as a grid, not a finished product",
       "Recombine with clipboard rhythm source: copy a drum groove's rhythm, paste as pitch source for a melodic pattern",
     ],
     mistakes: [
-      "Committing transformations before previewing all parameter options — always explore first",
-      "Applying Strum to monophonic lines — it only makes musical sense on chords of 2+ simultaneous notes",
+      "Committing transformations before previewing all parameter options: always explore first",
+      "Applying Strum to monophonic lines: it only makes musical sense on chords of 2+ simultaneous notes",
     ],
   },
 
   "scale-awareness": {
     hook: "Set the key once. Every instrument, Push, and MIDI tool speaks the same language.",
     definition: [
-      "Scale Awareness (Live 12) is a project-wide key and scale setting that MIDI devices, Push, and MIDI Transformations all respect — setting it once keeps everything in key automatically.",
+      "Scale Awareness (Live 12) is a project-wide key and scale setting that MIDI devices, Push, and MIDI Transformations all respect: setting it once keeps everything in key automatically.",
     ],
     beginner: {
       what: [
         "At the top of Live's interface in Live 12, you can set a root note and scale (C Major, F# Minor, D Dorian, etc.). Once set, the Scale MIDI device automatically filters notes to that scale, Push 3's pads highlight in-key notes, and MIDI Transformations generate pitches within the scale. You set it once; everything follows.",
       ],
       why: [
-        "Playing a wrong note is impossible when every tool respects the scale — great for live performance and fast sketching.",
+        "Playing a wrong note is impossible when every tool respects the scale: great for live performance and fast sketching.",
         "Chord generators and arpeggiators that use scale steps sound musical automatically rather than generating intervals that clash.",
       ],
       analogy:
-        "Scale Awareness is like setting the speed limit for your whole session — every driver (every device) knows the rules without being individually instructed.",
+        "Scale Awareness is like setting the speed limit for your whole session: every driver (every device) knows the rules without being individually instructed.",
     },
     advanced: {
       what: [
         "The scale setting is stored per Live Set and can be overridden per-clip (Live 12 introduces clip-level scale metadata). The Scale MIDI device reads the project scale setting and updates automatically when it changes. Push 3 in Melodic mode highlights in-scale pads and suppresses out-of-scale notes. MIDI Transformations that generate pitches (Arpeggiate, Ornament, Recombine with random pitch) all use the project scale as their pitch pool.",
       ],
       edgeCases: [
-        "Clip-level scale override: useful for modal interchange — a clip in the relative minor within a major key project",
-        "Scale device with 'Fold' mode: compresses the keyboard so every key plays an in-scale note — no gaps",
-        "Chromatic scale = scale awareness off functionally — all notes pass",
+        "Clip-level scale override: useful for modal interchange: a clip in the relative minor within a major key project",
+        "Scale device with 'Fold' mode: compresses the keyboard so every key plays an in-scale note: no gaps",
+        "Chromatic scale = scale awareness off functionally: all notes pass",
       ],
       engineerNotes: [
-        "Change the project scale mid-song to create an instant modal shift — automation on root note creates key changes",
-        "Use Fold mode on the Scale device for Ableton Push keyboard playing — every pad is musical",
-        "Set scale awareness at the start of every session, even if you know the key — it keeps tools consistent",
+        "Change the project scale mid-song to create an instant modal shift: automation on root note creates key changes",
+        "Use Fold mode on the Scale device for Ableton Push keyboard playing: every pad is musical",
+        "Set scale awareness at the start of every session, even if you know the key: it keeps tools consistent",
       ],
     },
     proMoves: [
-      "Automate Root Note to shift key by a perfect fourth at the bridge — instant harmonic lift",
+      "Automate Root Note to shift key by a perfect fourth at the bridge: instant harmonic lift",
       "Stack Scale device + Chord device: all chords generated will be diatonic to your project key",
       "Use an unconventional scale (Phrygian, Lydian) as the project scale for instant exotic character",
     ],
     mistakes: [
-      "Forgetting to update the scale setting when you modulate — the devices keep filtering to the old key",
-      "Setting Scale device to restrict notes before a chord device — the chord device needs chromatic input to function correctly",
+      "Forgetting to update the scale setting when you modulate: the devices keep filtering to the old key",
+      "Setting Scale device to restrict notes before a chord device: the chord device needs chromatic input to function correctly",
     ],
   },
 
   "sound-similarity": {
     hook: "Stop scrolling. Start listening. Similarity Search finds sounds that sound like sounds.",
     definition: [
-      "Sound Similarity Search (Live 12) analyzes the audio content of a selected sample and finds perceptually similar samples in your library — searching by timbre, rhythm, and tone rather than filename or tag.",
+      "Sound Similarity Search (Live 12) analyzes the audio content of a selected sample and finds perceptually similar samples in your library: searching by timbre, rhythm, and tone rather than filename or tag.",
     ],
     beginner: {
       what: [
-        "Right-click any sample in your browser or a clip and choose 'Find Similar Sounds'. Live analyzes the audio — its brightness, rhythm, density, character — and returns a list of samples from your Ableton library that sound similar. It's searching by ear, not by name. A dark, slow bass pad returns other dark slow pads even if they have nothing in common in their file names.",
+        "Right-click any sample in your browser or a clip and choose 'Find Similar Sounds'. Live analyzes the audio, its brightness, rhythm, density, character, and returns a list of samples from your Ableton library that sound similar. It's searching by ear, not by name. A dark, slow bass pad returns other dark slow pads even if they have nothing in common in their file names.",
       ],
       why: [
-        "Finding sounds by name is slow and unreliable — 'warm-analog-bass-001.wav' tells you nothing about whether it fits your track.",
-        "Similarity Search surfaces sounds you'd never find by browsing — it's stumbling on the right thing without the random walk.",
+        "Finding sounds by name is slow and unreliable: 'warm-analog-bass-001.wav' tells you nothing about whether it fits your track.",
+        "Similarity Search surfaces sounds you'd never find by browsing: it's stumbling on the right thing without the random walk.",
       ],
       analogy:
-        "Similarity Search is like Shazam for your sample library — you hum a song and it finds the match, except here you hold up a sample and it finds its sonic cousins.",
+        "Similarity Search is like Shazam for your sample library: you hum a song and it finds the match, except here you hold up a sample and it finds its sonic cousins.",
     },
     advanced: {
       what: [
-        "Live 12's similarity model analyzes spectral centroid, onset density, tonal vs percussive content, and broad frequency distribution. Results are ranked by perceptual similarity score. Combine similarity search with tag filters (by type, BPM range, or key) to narrow results further. The search runs entirely locally — no audio leaves your machine. Only samples in your configured Ableton library locations are searched.",
+        "Live 12's similarity model analyzes spectral centroid, onset density, tonal vs percussive content, and broad frequency distribution. Results are ranked by perceptual similarity score. Combine similarity search with tag filters (by type, BPM range, or key) to narrow results further. The search runs entirely locally: no audio leaves your machine. Only samples in your configured Ableton library locations are searched.",
       ],
       edgeCases: [
-        "Very short samples (< 500ms) return less accurate results — the model needs enough audio to analyze",
+        "Very short samples (< 500ms) return less accurate results: the model needs enough audio to analyze",
         "Highly processed sounds (heavy distortion, extreme pitch shifting) may return unexpected results",
-        "Results depend on library size — small libraries return fewer and potentially less relevant matches",
+        "Results depend on library size: small libraries return fewer and potentially less relevant matches",
       ],
       engineerNotes: [
         "Use similarity search on your own recordings to find library sounds that complement them tonally",
-        "Search from a reference track sample to find library sounds with similar sonic character — instant A/R without guessing",
+        "Search from a reference track sample to find library sounds with similar sonic character: instant A/R without guessing",
         "Combine with Groove extraction: find a rhythmically similar sample, extract its groove, apply to your pattern",
       ],
     },
     proMoves: [
-      "Drag a reference mix element into a blank slot, search similar, replace it with a library sound that fits — fast sound design by reference",
-      "Use the found samples as a curated palette — save them to a project folder before closing",
+      "Drag a reference mix element into a blank slot, search similar, replace it with a library sound that fits: fast sound design by reference",
+      "Use the found samples as a curated palette: save them to a project folder before closing",
       "Search from a granulated sample to find 'source material cousins' for layering",
     ],
     mistakes: [
-      "Expecting 100% accuracy — similarity is a score, not a match; preview everything before committing",
-      "Searching from a sample with heavy reverb — the reverb tail dominates the analysis and confuses results",
+      "Expecting 100% accuracy: similarity is a score, not a match; preview everything before committing",
+      "Searching from a sample with heavy reverb: the reverb tail dominates the analysis and confuses results",
     ],
   },
 
@@ -5455,10 +5455,10 @@ export const LESSONS: Record<string, LessonDeep> = {
     ],
     beginner: {
       what: [
-        "Record a loop as many times as you want — each loop creates a new lane below the main clip showing that full recording. Then switch to comping mode and click any moment in any lane to include it in the final 'comp' at the top. You can mix and match: the first phrase from take 3, the second from take 7, the ending from take 1. Live crossfades the boundaries automatically. Nothing is deleted — every take remains in its lane.",
+        "Record a loop as many times as you want, each loop creates a new lane below the main clip showing that full recording. Then switch to comping mode and click any moment in any lane to include it in the final 'comp' at the top. You can mix and match: the first phrase from take 3, the second from take 7, the ending from take 1. Live crossfades the boundaries automatically. Nothing is deleted, every take remains in its lane.",
       ],
       why: [
-        "No single take is perfect — comping lets you assemble perfection from real performances.",
+        "No single take is perfect: comping lets you assemble perfection from real performances.",
         "It's faster than re-recording until you nail it, and more authentic than quantizing everything to a grid.",
       ],
       analogy:
@@ -5466,238 +5466,238 @@ export const LESSONS: Record<string, LessonDeep> = {
     },
     advanced: {
       what: [
-        "Take Lanes work for both audio and MIDI. The comp lane is always the top track — it shows the assembled result. Each take lane sits below and shows the full recording color-coded to indicate which sections are active in the comp. Loop recording automatically creates new take lanes. Manual recording also creates lanes if take lanes are enabled. Crossfade length at comp boundaries is adjustable — tighter for transient-rich material, looser for legato.",
+        "Take Lanes work for both audio and MIDI. The comp lane is always the top track, it shows the assembled result. Each take lane sits below and shows the full recording color-coded to indicate which sections are active in the comp. Loop recording automatically creates new take lanes. Manual recording also creates lanes if take lanes are enabled. Crossfade length at comp boundaries is adjustable, tighter for transient-rich material, looser for legato.",
       ],
       edgeCases: [
-        "MIDI comping lets you pick the best bars from multiple MIDI performances — combine timing precision from take 2 with note choices from take 5",
-        "Flatten comp bakes the selected regions into one clip and discards the lanes — only do this when you're truly finished",
-        "Take lanes expand the track height significantly — collapse them when not comping to reclaim visual space",
+        "MIDI comping lets you pick the best bars from multiple MIDI performances: combine timing precision from take 2 with note choices from take 5",
+        "Flatten comp bakes the selected regions into one clip and discards the lanes: only do this when you're truly finished",
+        "Take lanes expand the track height significantly: collapse them when not comping to reclaim visual space",
       ],
       engineerNotes: [
-        "Record 3-5 takes at minimum before comping — you need enough material to find real variation",
+        "Record 3-5 takes at minimum before comping: you need enough material to find real variation",
         "Mark punch-in/out points to re-record only the problem section without disturbing the rest",
         "Export the comp for the client first, keep the session with lanes in case revisions are needed",
       ],
     },
     proMoves: [
-      "Record 8 takes, identify the best 2-3 by ear, then comp only within those — reduces decision fatigue",
+      "Record 8 takes, identify the best 2-3 by ear, then comp only within those: reduces decision fatigue",
       "Use MIDI comping on piano/guitar chord performances: pick the best voicings measure by measure",
-      "Comp vocals in sections: verse, pre-chorus, chorus separately — different sections need different energy levels",
+      "Comp vocals in sections: verse, pre-chorus, chorus separately: different sections need different energy levels",
     ],
     mistakes: [
-      "Flattening the comp before the session is signed off — lanes are your safety net, never delete them early",
-      "Comping during the performance session — get all takes first, then comp fresh ears the next day",
+      "Flattening the comp before the session is signed off: lanes are your safety net, never delete them early",
+      "Comping during the performance session: get all takes first, then comp fresh ears the next day",
     ],
   },
 
   "groove-pool": {
     hook: "Make your loop swing like that loop.",
     definition: [
-      "The Groove Pool extracts the timing and velocity 'feel' from any audio or MIDI clip and lets you apply it to other clips — transferring the groove of one loop to any pattern in your session.",
+      "The Groove Pool extracts the timing and velocity 'feel' from any audio or MIDI clip and lets you apply it to other clips: transferring the groove of one loop to any pattern in your session.",
     ],
     beginner: {
       what: [
-        "Every great loop has a feel — notes land slightly early or late compared to the grid, velocities vary in a musical pattern. Groove Pool captures this. Drag any clip to the Groove Pool, and Live creates a groove file from its timing and velocity characteristics. Then drag that groove file onto any other clip and that clip now swings with the same feel. A quantized drum machine pattern can groove like a live jazz drummer.",
+        "Every great loop has a feel: notes land slightly early or late compared to the grid, velocities vary in a musical pattern. Groove Pool captures this. Drag any clip to the Groove Pool, and Live creates a groove file from its timing and velocity characteristics. Then drag that groove file onto any other clip and that clip now swings with the same feel. A quantized drum machine pattern can groove like a live jazz drummer.",
       ],
       why: [
-        "Groove is what makes beats feel human rather than mechanical — it's the micro-timing that separates a great feel from a stiff grid.",
+        "Groove is what makes beats feel human rather than mechanical: it's the micro-timing that separates a great feel from a stiff grid.",
         "Making all elements of a track share the same groove glues them together in a way that no amount of EQ or compression can achieve.",
       ],
       analogy:
-        "Groove Pool is like capturing someone's handwriting style and teaching it to another pen — the letters look different but the hand feels the same.",
+        "Groove Pool is like capturing someone's handwriting style and teaching it to another pen: the letters look different but the hand feels the same.",
     },
     advanced: {
       what: [
-        "Grooves are stored as .agr files. Key parameters: Base (which note value the groove is quantized around), Quantize (how much grid-snapping before groove is applied), Timing (how strongly the groove shifts note timing — 0% = no effect, 100% = full groove timing), Velocity (how strongly groove affects note velocity), Random (adds per-note randomization on top of the groove). Commit bakes groove timing into MIDI note positions, creating a new clip with fixed timing — no longer referencing the groove file.",
+        "Grooves are stored as .agr files. Key parameters: Base (which note value the groove is quantized around), Quantize (how much grid-snapping before groove is applied), Timing (how strongly the groove shifts note timing, 0% = no effect, 100% = full groove timing), Velocity (how strongly groove affects note velocity), Random (adds per-note randomization on top of the groove). Commit bakes groove timing into MIDI note positions, creating a new clip with fixed timing, no longer referencing the groove file.",
       ],
       edgeCases: [
-        "High Timing + high Quantize creates a 'swung but tight' feel — useful for electronic music that needs groove without sloppiness",
-        "Groove applied to audio clips works via clip warping — each warp marker is shifted according to the groove template",
+        "High Timing + high Quantize creates a 'swung but tight' feel: useful for electronic music that needs groove without sloppiness",
+        "Groove applied to audio clips works via clip warping: each warp marker is shifted according to the groove template",
         "Groove from a 4/4 loop applied to a 3/4 pattern creates polyrhythmic timing that can be musical or a mess",
       ],
       engineerNotes: [
-        "Extract groove from the main element (kick pattern, bass loop) then apply to everything else — unifies the session feel",
-        "Vary Timing across tracks: drums at 100%, bass at 80%, keys at 50% — groove tightens toward the rhythm section",
-        "Build a library of .agr groove files from your favorite loops — apply any feel to any project",
+        "Extract groove from the main element (kick pattern, bass loop) then apply to everything else: unifies the session feel",
+        "Vary Timing across tracks: drums at 100%, bass at 80%, keys at 50%: groove tightens toward the rhythm section",
+        "Build a library of .agr groove files from your favorite loops: apply any feel to any project",
       ],
     },
     proMoves: [
-      "Extract groove from a vinyl recording — the pitch wobble and timing imprecision becomes a groove that makes digital drums sound like they're on tape",
+      "Extract groove from a vinyl recording: the pitch wobble and timing imprecision becomes a groove that makes digital drums sound like they're on tape",
       "Apply groove at 30% to a quantized pattern for subtle humanization that's invisible to the ear but felt",
-      "Use Random parameter at 5-10% on drums — every loop sounds slightly different without losing the core groove",
+      "Use Random parameter at 5-10% on drums: every loop sounds slightly different without losing the core groove",
     ],
     mistakes: [
-      "Committing groove before the session is finalized — once committed, the groove is baked and the template is detached",
-      "Applying the same groove at 100% to every element — everything sounds the same and the groove loses its purpose",
+      "Committing groove before the session is finalized: once committed, the groove is baked and the template is detached",
+      "Applying the same groove at 100% to every element: everything sounds the same and the groove loses its purpose",
     ],
   },
 
   "linked-track-editing": {
     hook: "Edit 8 drum mics at once. One cut. All tracks.",
     definition: [
-      "Linked-Track Editing lets you apply identical edits — splits, trims, nudges — across multiple selected tracks simultaneously, keeping multi-track recordings in perfect alignment.",
+      "Linked-Track Editing lets you apply identical edits, splits, trims, nudges, across multiple selected tracks simultaneously, keeping multi-track recordings in perfect alignment.",
     ],
     beginner: {
       what: [
-        "When you record a drum kit with 8 microphones, every mic captures the same performance from a different position. If you want to cut a section, you need to make the exact same cut on all 8 tracks — otherwise the drums fall out of sync. Linked-Track Editing does this automatically. Select the tracks you want to link, enable linking, and any edit you make on one track happens on all of them at the same time.",
+        "When you record a drum kit with 8 microphones, every mic captures the same performance from a different position. If you want to cut a section, you need to make the exact same cut on all 8 tracks: otherwise the drums fall out of sync. Linked-Track Editing does this automatically. Select the tracks you want to link, enable linking, and any edit you make on one track happens on all of them at the same time.",
       ],
       why: [
-        "Multi-mic recordings, stems, and layered performances all need to stay in sync — linked editing is the only way to do that without manually duplicating every edit.",
-        "It's also useful for linked automation — editing the length of a clip automatically adjusts all linked automation.",
+        "Multi-mic recordings, stems, and layered performances all need to stay in sync: linked editing is the only way to do that without manually duplicating every edit.",
+        "It's also useful for linked automation: editing the length of a clip automatically adjusts all linked automation.",
       ],
       analogy:
-        "Linked editing is like editing a multi-layer document where all layers move together — pull one corner and all layers resize.",
+        "Linked editing is like editing a multi-layer document where all layers move together: pull one corner and all layers resize.",
     },
     advanced: {
       what: [
-        "Select tracks by clicking their headers (Cmd/Ctrl + click for multi-select). Toggle linked editing per track pair by holding Option/Alt and clicking to link/unlink. Linked tracks share: split points, trim handles, clip length adjustments, and nudge operations. They don't automatically share: clip volume, fade settings, or clip content — only structural editing operations. Useful for: drum stems, multi-mic recordings, layered synth stacks that must stay aligned.",
+        "Select tracks by clicking their headers (Cmd/Ctrl + click for multi-select). Toggle linked editing per track pair by holding Option/Alt and clicking to link/unlink. Linked tracks share: split points, trim handles, clip length adjustments, and nudge operations. They don't automatically share: clip volume, fade settings, or clip content: only structural editing operations. Useful for: drum stems, multi-mic recordings, layered synth stacks that must stay aligned.",
       ],
       edgeCases: [
-        "Mixed clip lengths in linked tracks: edits apply proportionally if clips have different start points — offset linking handles this",
-        "Unlinking a track pair mid-session leaves both tracks independently editable going forward — re-link manually",
-        "Linked editing works in Arrangement View only — Session View clips are independent",
+        "Mixed clip lengths in linked tracks: edits apply proportionally if clips have different start points: offset linking handles this",
+        "Unlinking a track pair mid-session leaves both tracks independently editable going forward: re-link manually",
+        "Linked editing works in Arrangement View only: Session View clips are independent",
       ],
       engineerNotes: [
-        "Link drum tracks before any editing session — undo doesn't always re-link if you forget",
-        "Don't link tracks with genuinely independent timing (e.g., a lead vocal and a background pad) — you'll move things that shouldn't move",
-        "Link stems received from a mixer for mastering sessions — any time-align edit keeps all stems together",
+        "Link drum tracks before any editing session: undo doesn't always re-link if you forget",
+        "Don't link tracks with genuinely independent timing (e.g., a lead vocal and a background pad): you'll move things that shouldn't move",
+        "Link stems received from a mixer for mastering sessions: any time-align edit keeps all stems together",
       ],
     },
     proMoves: [
-      "Link all drum tracks + bus track — editing the bus also edits all individual mics simultaneously",
+      "Link all drum tracks + bus track: editing the bus also edits all individual mics simultaneously",
       "Use linked editing to tighten a drum performance: split at every beat, nudge the late hits earlier, all mics move together",
       "Record a piano with two mics (stereo pair), link them, comp performances knowing both channels always match",
     ],
     mistakes: [
-      "Linking tracks that have intentional timing offsets (e.g., delay throws) — linking destroys the offset relationship",
-      "Forgetting tracks are linked when doing creative edits — check linked status before any structural edit",
+      "Linking tracks that have intentional timing offsets (e.g., delay throws): linking destroys the offset relationship",
+      "Forgetting tracks are linked when doing creative edits: check linked status before any structural edit",
     ],
   },
 
   "push3-standalone": {
     hook: "No laptop. No cables. Just Push.",
     definition: [
-      "Push 3 Standalone contains a full computer running Live's audio engine inside the hardware — no laptop required for composing, performing, or recording.",
+      "Push 3 Standalone contains a full computer running Live's audio engine inside the hardware: no laptop required for composing, performing, or recording.",
     ],
     beginner: {
       what: [
-        "Push 3 Standalone is a complete music production studio in a box. It has Live's full audio engine running on a chip inside the unit, a built-in audio interface, a screen showing the session, and all of Push 3's pads and controls. You can create a session from scratch, add instruments, record audio from the built-in or external inputs, and perform a set — all without a laptop. Projects are saved to an internal drive and open on your computer exactly as they are on Push.",
+        "Push 3 Standalone is a complete music production studio in a box. It has Live's full audio engine running on a chip inside the unit, a built-in audio interface, a screen showing the session, and all of Push 3's pads and controls. You can create a session from scratch, add instruments, record audio from the built-in or external inputs, and perform a set: all without a laptop. Projects are saved to an internal drive and open on your computer exactly as they are on Push.",
       ],
       why: [
-        "For live performance, no laptop means one less thing to go wrong — and no fan noise audible to the audience.",
-        "For production, Push Standalone works anywhere: studio, tour bus, couch — no need to set up a computer.",
-        "Push 3 projects open in Live on your computer — the workflow is completely continuous.",
+        "For live performance, no laptop means one less thing to go wrong: and no fan noise audible to the audience.",
+        "For production, Push Standalone works anywhere: studio, tour bus, couch: no need to set up a computer.",
+        "Push 3 projects open in Live on your computer: the workflow is completely continuous.",
       ],
       analogy:
-        "Push 3 Standalone is like an iPad that runs the full desktop version of the app — not a lite version, the real thing.",
+        "Push 3 Standalone is like an iPad that runs the full desktop version of the app: not a lite version, the real thing.",
     },
     advanced: {
       what: [
-        "Push 3 Standalone runs Live's audio engine on an Intel Core i3 (base) or i7 (high-spec) embedded module. It supports the full Live device library including Max for Live. Audio I/O: 2 in / 2 out (high-spec: CV I/O for modular). Projects are stored on an internal NVMe drive, accessible via USB when connected to a computer. In Controller mode (connected to a laptop), Push 3 acts as a standard Push controller — standalone mode switches off. MPE is fully supported both standalone and as a controller.",
+        "Push 3 Standalone runs Live's audio engine on an Intel Core i3 (base) or i7 (high-spec) embedded module. It supports the full Live device library including Max for Live. Audio I/O: 2 in / 2 out (high-spec: CV I/O for modular). Projects are stored on an internal NVMe drive, accessible via USB when connected to a computer. In Controller mode (connected to a laptop), Push 3 acts as a standard Push controller: standalone mode switches off. MPE is fully supported both standalone and as a controller.",
       ],
       edgeCases: [
-        "CPU-intensive projects may need freezing on Push's lower-spec processor — same workflow as on a laptop",
-        "External drives not supported standalone — all samples must be on the internal drive (importable via USB)",
-        "USB-C connection: charging, data sync, and controller mode use the same port — can't charge while in data sync mode on some hubs",
+        "CPU-intensive projects may need freezing on Push's lower-spec processor: same workflow as on a laptop",
+        "External drives not supported standalone: all samples must be on the internal drive (importable via USB)",
+        "USB-C connection: charging, data sync, and controller mode use the same port: can't charge while in data sync mode on some hubs",
       ],
       engineerNotes: [
-        "Prepare sessions on laptop, copy to Push internal drive for performance — test CPU before the gig",
-        "Use Push's built-in audio interface for recording in standalone — quality is sufficient for demos and sketching",
-        "Max for Live devices run standalone — important for live sets built around M4L devices",
+        "Prepare sessions on laptop, copy to Push internal drive for performance: test CPU before the gig",
+        "Use Push's built-in audio interface for recording in standalone: quality is sufficient for demos and sketching",
+        "Max for Live devices run standalone: important for live sets built around M4L devices",
       ],
     },
     proMoves: [
       "Start a session on Push Standalone during soundcheck, open it in Live at the hotel, finish it, return to Push for the show",
-      "Use standalone mode for field recording + sampling sessions — grab a loop, build on it, finish at the studio",
-      "Map Push's hardware controls to key parameters before a show — muscle memory on hardware is faster than mouse-hunting in Live",
+      "Use standalone mode for field recording + sampling sessions: grab a loop, build on it, finish at the studio",
+      "Map Push's hardware controls to key parameters before a show: muscle memory on hardware is faster than mouse-hunting in Live",
     ],
     mistakes: [
-      "Loading a session with many heavy plugins without testing CPU first — Push's processor is capable but not infinite",
-      "Not importing samples to the internal drive before going standalone — missing samples = no sound at the gig",
+      "Loading a session with many heavy plugins without testing CPU first: Push's processor is capable but not infinite",
+      "Not importing samples to the internal drive before going standalone: missing samples = no sound at the gig",
     ],
   },
 
   "cpu-audio-setup": {
     hook: "Clicks and pops are your interface telling you it's overwhelmed. Here's how to fix it.",
     definition: [
-      "Audio setup and CPU management covers buffer size, sample rate, freeze, flatten, and multichannel routing — the technical foundation that determines whether your session runs cleanly.",
+      "Audio setup and CPU management covers buffer size, sample rate, freeze, flatten, and multichannel routing: the technical foundation that determines whether your session runs cleanly.",
     ],
     beginner: {
       what: [
         "When you hear clicks and pops in your session, it means your computer can't process audio fast enough. The main control is Buffer Size (in Preferences → Audio). Higher buffer = more time to process = no clicks, but more latency between playing a key and hearing the sound. For recording, use a small buffer (64-256 samples). For mixing, use a larger buffer (512-1024 samples). Freeze tracks to temporarily render heavy plugins and free CPU.",
       ],
       why: [
-        "Understanding buffer size is the single most useful technical skill for a producer — it's the first thing to fix when something sounds wrong.",
-        "Freeze/flatten keeps sessions running on underpowered machines — critical for working with dense sound design.",
+        "Understanding buffer size is the single most useful technical skill for a producer: it's the first thing to fix when something sounds wrong.",
+        "Freeze/flatten keeps sessions running on underpowered machines: critical for working with dense sound design.",
       ],
       analogy:
-        "Buffer size is like the size of a delivery truck — a bigger truck carries more cargo per trip, but takes longer to load and unload.",
+        "Buffer size is like the size of a delivery truck: a bigger truck carries more cargo per trip, but takes longer to load and unload.",
     },
     advanced: {
       what: [
-        "Buffer size sets the number of samples processed per block. Latency = buffer size / sample rate (e.g., 512 samples at 44.1kHz = 11.6ms round-trip). CPU spikes (not average usage) cause clicks — use Live's CPU meter and watch for the bar hitting 100% momentarily. Freeze writes a temporary audio render to disk; flatten permanently renders and removes the device chain. Multicore CPU support: Live distributes tracks across cores — a 16-track session uses ~4-8 cores depending on the device complexity per track.",
+        "Buffer size sets the number of samples processed per block. Latency = buffer size / sample rate (e.g., 512 samples at 44.1kHz = 11.6ms round-trip). CPU spikes (not average usage) cause clicks, use Live's CPU meter and watch for the bar hitting 100% momentarily. Freeze writes a temporary audio render to disk; flatten permanently renders and removes the device chain. Multicore CPU support: Live distributes tracks across cores, a 16-track session uses ~4-8 cores depending on the device complexity per track.",
       ],
       edgeCases: [
-        "Plugin delay compensation (PDC) adds latency equal to the plugin's lookahead — can cause timing issues on live monitoring paths",
-        "Sample rate above 44.1kHz doubles CPU and disk usage — 48kHz for video, 44.1kHz for music; 96kHz rarely justified",
-        "Flatten removes the original devices permanently — always keep a pre-flatten version of the session saved",
+        "Plugin delay compensation (PDC) adds latency equal to the plugin's lookahead: can cause timing issues on live monitoring paths",
+        "Sample rate above 44.1kHz doubles CPU and disk usage: 48kHz for video, 44.1kHz for music; 96kHz rarely justified",
+        "Flatten removes the original devices permanently: always keep a pre-flatten version of the session saved",
       ],
       engineerNotes: [
-        "Set buffer to 64-128 for tracking, 512-1024 for mixing — switch in Preferences, no session restart needed",
-        "Watch the disk stream indicator (next to CPU) — it going red means drive speed is the bottleneck, not CPU",
-        "If a specific plugin spikes CPU, freeze just that track — don't freeze the whole session unnecessarily",
+        "Set buffer to 64-128 for tracking, 512-1024 for mixing: switch in Preferences, no session restart needed",
+        "Watch the disk stream indicator (next to CPU): it going red means drive speed is the bottleneck, not CPU",
+        "If a specific plugin spikes CPU, freeze just that track: don't freeze the whole session unnecessarily",
       ],
     },
     proMoves: [
       "Use 'Aggregate Device' on Mac to combine two audio interfaces for more I/O without a new interface",
       "Freeze the most complex tracks at session start so CPU headroom is available for the mix bus chain",
-      "Export audio with the buffer at maximum for the fastest render — it only affects real-time monitoring, not render speed",
+      "Export audio with the buffer at maximum for the fastest render: it only affects real-time monitoring, not render speed",
     ],
     mistakes: [
-      "Leaving buffer at 64 samples during a dense mixing session — you'll fight dropouts the whole time",
-      "Flattening without saving a pre-flatten session version — you lose the original devices permanently",
+      "Leaving buffer at 64 samples during a dense mixing session: you'll fight dropouts the whole time",
+      "Flattening without saving a pre-flatten session version: you lose the original devices permanently",
     ],
   },
 
   "accessibility-features": {
     hook: "Ableton Live 12 is the first version of Live built for accessibility from the ground up.",
     definition: [
-      "Live 12 introduces screen reader support (Speak Help), high-contrast display mode, improved keyboard navigation, and comprehensive accessibility settings — making Live usable for producers with visual or motor impairments.",
+      "Live 12 introduces screen reader support (Speak Help), high-contrast display mode, improved keyboard navigation, and comprehensive accessibility settings: making Live usable for producers with visual or motor impairments.",
     ],
     beginner: {
       what: [
         "Speak Help reads parameter values and control names aloud using your system's screen reader when you hover over controls. High-contrast mode increases visual differentiation between UI elements. Full keyboard navigation lets you control all of Live's parameters without a mouse. These features are enabled in Preferences → Look/Feel → Accessibility.",
       ],
       why: [
-        "Music production shouldn't require perfect vision or motor control — these features open Live to a wider range of producers.",
-        "Keyboard navigation shortcuts benefit all users — knowing you can tab through parameters is useful even without screen reader needs.",
+        "Music production shouldn't require perfect vision or motor control: these features open Live to a wider range of producers.",
+        "Keyboard navigation shortcuts benefit all users: knowing you can tab through parameters is useful even without screen reader needs.",
       ],
       analogy:
-        "Accessibility features are like ramps at a building — they're required for some, but convenient for everyone.",
+        "Accessibility features are like ramps at a building: they're required for some, but convenient for everyone.",
     },
     advanced: {
       what: [
-        "Speak Help integrates with VoiceOver (macOS) and NARRATOR (Windows) — it reads parameter names, current values, and control types on focus. Tab/Shift-Tab navigates the device chain. Arrow keys adjust parameter values. Space bar triggers transport. Full keyboard mapping is documented in Live's Accessibility Guide. High-contrast mode uses a separate CSS-like theme with higher luminance ratios for all UI elements.",
+        "Speak Help integrates with VoiceOver (macOS) and NARRATOR (Windows): it reads parameter names, current values, and control types on focus. Tab/Shift-Tab navigates the device chain. Arrow keys adjust parameter values. Space bar triggers transport. Full keyboard mapping is documented in Live's Accessibility Guide. High-contrast mode uses a separate CSS-like theme with higher luminance ratios for all UI elements.",
       ],
       edgeCases: [
-        "Screen readers may struggle with real-time parameter updates — use automation to set values rather than real-time adjustment when using screen readers",
-        "Some third-party Max for Live devices may not be fully accessible — accessibility is the device author's responsibility",
-        "Keyboard navigation focus can get lost in complex device chains — use Tab to re-establish focus",
+        "Screen readers may struggle with real-time parameter updates: use automation to set values rather than real-time adjustment when using screen readers",
+        "Some third-party Max for Live devices may not be fully accessible: accessibility is the device author's responsibility",
+        "Keyboard navigation focus can get lost in complex device chains: use Tab to re-establish focus",
       ],
       engineerNotes: [
-        "Even without accessibility needs, keyboard navigation is faster than mouse for precise parameter entry — learn Tab + arrow key workflow",
+        "Even without accessibility needs, keyboard navigation is faster than mouse for precise parameter entry: learn Tab + arrow key workflow",
         "High-contrast mode is useful in bright studio environments regardless of visual needs",
-        "Test your Live sessions with Speak Help on briefly — it reveals undescribed parameters and labels that should be improved",
+        "Test your Live sessions with Speak Help on briefly: it reveals undescribed parameters and labels that should be improved",
       ],
     },
     proMoves: [
-      "Use keyboard navigation for parameter automation recording — Tab to the parameter, record-enable, adjust with arrow keys for perfectly controlled automation",
+      "Use keyboard navigation for parameter automation recording: Tab to the parameter, record-enable, adjust with arrow keys for perfectly controlled automation",
       "Combine keyboard navigation with MIDI mapping for a fully hardware-controlled workflow with no mouse required",
-      "Speak Help + a MIDI controller = eyes-free production session — useful for learning device parameters by ear",
+      "Speak Help + a MIDI controller = eyes-free production session: useful for learning device parameters by ear",
     ],
     mistakes: [
-      "Assuming accessibility features only matter for users with disabilities — keyboard navigation and contrast settings benefit everyone",
-      "Disabling Speak Help immediately if it's unfamiliar — give it 10 minutes, it's a useful tool for learning new devices",
+      "Assuming accessibility features only matter for users with disabilities: keyboard navigation and contrast settings benefit everyone",
+      "Disabling Speak Help immediately if it's unfamiliar: give it 10 minutes, it's a useful tool for learning new devices",
     ],
   },
 };

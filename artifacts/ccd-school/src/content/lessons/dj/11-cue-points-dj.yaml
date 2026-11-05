@@ -1,0 +1,50 @@
+slug: cue-points-dj
+world: dj
+number: 11
+title: cue points and loops
+minutes: 6
+song:
+  changes: drums.clap
+  why: a cue on the one lets you start the next track exactly where you want
+learn: >-
+  Cue points mark where a track should start. Loops hold a section so you can stretch a blend.
+youCan:
+  - say what a cue point is
+  - start a track on the one of a phrase
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        A cue point is a marker you set on a track, usually on the first kick of a phrase. Press play from
+        it and the track starts exactly there, on the one. Loops do the opposite job: hold four bars round
+        and round, so you have time to finish a blend.
+      straight: >-
+        Cue: a marker where the track starts. Loop: repeat a section to buy time.
+      eli5: >-
+        A cue point is a bookmark in a song. A loop plays the same bit over and over.
+
+  - kind: mix
+    goal: phrase
+    say:
+      mentor: >-
+        Deck b is cued to its first kick. Bring it in on bar one of your song's phrase so the two ones land
+        together.
+      straight: >-
+        Bring deck b in on bar one of the phrase.
+      eli5: >-
+        Push deck b up when the counter says bar 1.
+
+  - kind: ask
+    q: Where do djs usually set a cue point?
+    options: ["on the first kick of a phrase", "in the middle of a breakdown", "on the last note", "anywhere random"]
+    answer: 0
+    why: On the one, so the track starts on time.
+    whyWrong:
+      1: A breakdown is a hard place to start.
+      2: The end won't help you start.
+      3: It has to line up.
+
+  - kind: keep
+    next: >-
+      Next: reading waveforms.

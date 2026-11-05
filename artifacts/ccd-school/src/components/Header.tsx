@@ -22,7 +22,7 @@ import { worldDone as worldDoneOf } from "@/lib/worldOrder";
 import { CatMark, WeekDots } from "@/components/m1/shell";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
-import { rankFor } from "@/lib/ranks";
+import { allWorldRanks, WORLD_NAME } from "@/lib/worldRanks";
 import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
@@ -37,7 +37,6 @@ const PRIMARY_NAV = [
   { to: "/worlds",    label: "Worlds"   },
   { to: "/wiki",      label: "Wiki"     },
   { to: "/learn",     label: "Paths"    },
-  { to: "/missions",  label: "Missions" },
   { to: "/dashboard", label: "Progress" },
 ] as const;
 
@@ -224,7 +223,8 @@ interface XpStreakPopoverProps {
 
 function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds, onClose }: XpStreakPopoverProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { current: rank, next, progress: rankPct, idx: rankIdx } = rankFor(progress.xp);
+  const top = allWorldRanks(progress.completedMissions)[0];
+  const { current: rank, next, progress: rankPct, idx: rankIdx } = top;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -234,7 +234,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
     return () => document.removeEventListener("mousedown", handler);
   }, [onClose]);
 
-  const xpToNext = next ? next.minXp - progress.xp : 0;
+
 
   return (
     <div ref={ref}
@@ -244,13 +244,13 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
         <RankMark idx={rankIdx} size={34} />
         <div className="flex-1">
           <p className="font-display text-base">{rank.name}</p>
-          <p className="font-mono text-xs opacity-70 uppercase">{rank.tagline}</p>
+          <p className="font-mono text-xs opacity-70">{WORLD_NAME[top.world]} · {rank.line}</p>
         </div>
       </div>
       <div className="px-4 py-3 border-b-4 border-ink">
         <div className="flex justify-between items-baseline mb-2">
-          <span className="font-mono text-xs uppercase opacity-70">XP to next rank</span>
-          <span className="font-mono text-xs tabular-nums">{xpToNext > 0 ? `${xpToNext} left` : "MAX"}</span>
+          <span className="font-mono text-xs opacity-70">next rank</span>
+          <span className="font-mono text-xs tabular-nums">{next ? next.name : "top"}</span>
         </div>
         <div className="w-full bg-ink/10 h-2 overflow-hidden border-2 border-ink">
           <div className="bg-acid h-full transition-all" style={{ width: `${rankPct * 100}%` }} />
@@ -270,7 +270,7 @@ function XpStreakPopover({ progress, dailyGoalPct, dailyGoalDone, heartRefillSec
           <p className="font-display text-lg inline-flex items-center gap-1"><Icon name="gem" small /> {progress.gems}</p>
         </div>
       </div>
-      {/* Hearts row — moved from header desktop strip */}
+      {/* Hearts row: moved from header desktop strip */}
       <div className="px-4 py-3 border-b-4 border-ink flex items-center gap-3">
         <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
         <div>
@@ -399,7 +399,7 @@ function ModeTogglePill({ compact = false }: { compact?: boolean }) {
     <div className="relative">
       <button
         onClick={toggle}
-        title={isFlow ? "FLOW MODE — click to switch to Free" : "FREE MODE — click to switch to Flow"}
+        title={isFlow ? "FLOW MODE: click to switch to Free" : "FREE MODE: click to switch to Flow"}
         aria-label={isFlow ? "Currently Flow Mode. Switch to Free Mode" : "Currently Free Mode. Switch to Flow Mode"}
         className={`brutal-border px-3 py-1.5 font-display text-sm brutal-press transition-all flex items-center gap-2 ccd-btn-hover ccd-jitter ccd-glow-pulse
           ${isFlow ? "bg-acid text-ink hover:bg-sun" : "bg-bone text-ink hover:bg-acid"}`}
@@ -479,9 +479,9 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
     { href: "/shortcuts", label: "shortcuts", icon: <M1Icon name="keys" /> },
     { href: "/setup", label: "setup", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M9 3v6M15 3v6M6 9h12v3a6 6 0 0 1-12 0zM12 18v3" /></svg> },
     { href: "/upgrade", label: "pro", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="m12 4 2.4 5 5.6.8-4 3.9.9 5.6L12 16.6 7.1 19.3l.9-5.6-4-3.9 5.6-.8z" /></svg> },
-    { href: "/profile", label: "settings", icon: <M1Icon name="user" /> },
+    { href: "/settings", label: "settings", icon: <svg viewBox="0 0 24 24" className="m1-ico" aria-hidden><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg> },
   ];
-  const worlds = (["fundamentals", "dj", "producer"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
+  const worlds = (["fundamentals", "producer", "dj"] as const).map(w => ({ w, ...worldDoneOf(w, progress.completedMissions) }));
   return (
     <div role="dialog" aria-modal="true" aria-label="Menu" className="m1-face" style={{ position: "fixed", inset: 0, zIndex: 70, overflowY: "auto" }}>
       <div className="m1-page" style={{ paddingBottom: 32 }}>
@@ -503,7 +503,7 @@ function MobileDrawer({ open, onClose, onSearch }: MobileDrawerProps) {
         <M1Silk label="go to" right={due ? `the lit one has ${due} due` : undefined} />
         <div className="m1-g">
           {keys.map(k => (
-            <M1Key key={k.href} href={k.href} label={k.label} led={k.lit ? "var(--led-go)" : null} ariaLabel={k.label}>{k.icon}</M1Key>
+            <M1Key key={k.href} href={k.href} label={k.label} led={k.lit ? "var(--led-mint)" : null} ariaLabel={k.label}>{k.icon}</M1Key>
           ))}
         </div>
         <M1Silk label="worlds" />

@@ -110,7 +110,7 @@ export function GranularSim() {
     <div className="space-y-4">
       <div className="brutal-border bg-ink text-bone p-3">
         <div className="font-mono text-[10px] uppercase opacity-70">
-          Granulator III — Core Parameters
+          Granulator III: Core Parameters
         </div>
         <div className="font-display text-2xl mt-1">GRANULAR ENGINE</div>
       </div>
@@ -124,7 +124,7 @@ export function GranularSim() {
 
       <div className="space-y-3 brutal-border p-4 bg-card">
         <Knob
-          label="Position — where in the sample"
+          label="Position: where in the sample"
           value={position}
           min={0}
           max={1}
@@ -132,7 +132,7 @@ export function GranularSim() {
           onChange={setPosition}
         />
         <Knob
-          label="Spray — random scatter"
+          label="Spray: random scatter"
           value={spray}
           min={0}
           max={1}
@@ -149,7 +149,7 @@ export function GranularSim() {
           onChange={setSize}
         />
         <Knob
-          label="Density — grains/sec"
+          label="Density: grains/sec"
           value={density}
           min={2}
           max={40}
@@ -160,7 +160,7 @@ export function GranularSim() {
       </div>
 
       <div className="brutal-border bg-bone p-3 font-mono text-[10px] uppercase opacity-70 leading-relaxed">
-        TIP: Set Position to 0% and automate it slowly to 100% — the texture evolves without
+        TIP: Set Position to 0% and automate it slowly to 100%: the texture evolves without
         repeating. High Spray + small Size = clouds. Low Spray + large Size = transparent
         time-stretch.
       </div>

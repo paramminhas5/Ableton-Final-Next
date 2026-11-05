@@ -1,0 +1,98 @@
+slug: sync-function
+world: dj
+number: 205
+title: the sync button
+minutes: 5
+song:
+  changes: drums.clap
+  why: sync locks a track to your song and frees your hands, as long as the beat grid is right
+learn: >-
+  What sync does, what it needs to work, and what you hear the moment it's off.
+youCan:
+  - say what sync matches
+  - hear a deck drift once sync is off
+  - say when not to trust sync
+steps:
+  - kind: hear
+    clip: two-tracks
+    say:
+      mentor: >-
+        Two tracks, locked. On modern decks one button can do this for you: sync. It matches the incoming
+        deck's speed to the playing one and lines up where the beats land, which djs call the phase.
+
+        Most working djs use it, and that's fine. This lesson is about what it's actually doing, so you know
+        when it's wrong.
+      straight: >-
+        Sync matches the incoming deck's tempo and beat position (phase) to the playing deck. Most djs use it.
+        Know what it does so you can tell when it's wrong.
+      eli5: >-
+        Some dj players have a button that makes two songs go at the same speed for you. It's called sync.
+
+  - kind: say
+    title: the master deck and the grid
+    say:
+      mentor: >-
+        With sync, one deck is the master, the tempo everything else follows. Any deck you sync locks to it.
+
+        Sync gets its information from the beat grid, the beat markers your software placed when it analysed
+        the track. If a grid is off, sync locks the two tracks at exactly the same speed with the beats in
+        the wrong place. The numbers say matched. Your ears say mess.
+      straight: >-
+        One deck is the master, the others sync to it. Sync reads the beat grid. A wrong grid means the right
+        speed with the beats in the wrong place.
+      eli5: >-
+        One player is the boss and the other copies its speed. It uses beat markers to do it. If the markers
+        are wrong, the booms still don't line up.
+    deeper:
+      - title: when to use it
+        say: >-
+          Sync is great when your hands are busy: working the eq through a long blend, or riding effects.
+          Skip it on tracks with a wrong or missing beat grid, and when you're playing loose with the tempo on
+          purpose.
+
+  - kind: mix
+    goal: sync
+    bank: operator
+    say:
+      mentor: >-
+        Deck b is a different tempo from your song, and you can hear them drift. Press sync b. One press and deck b's tempo matches deck a, and the beat lights flash together.
+        
+        Now nudge deck b's tempo fader a little and hear the drift come back, then press sync again to pull it home. That's all sync does: it matches the tempo for you. It doesn't choose the track, find the phrase or ride the eq. Those are still yours.
+      straight: >-
+        Press sync b and deck b matches your tempo. Nudge the fader to hear drift, press sync again to fix it.
+      eli5: >-
+        One button makes both songs go the same speed.
+
+  - kind: ask
+    q: What does sync match?
+    options: ["the tempo and the beat position of the two decks", "the key", "the volume", "the eq"]
+    answer: 0
+    why: Speed and phase, so the beats land together.
+    whyWrong:
+      1: Key is a separate thing.
+      2: Volume is the channel fader.
+      3: Eq is yours to set.
+
+  - kind: ask
+    q: A track's beat grid is wrong. What does sync do?
+    options: ["matches the speed but puts the beats in the wrong place", "fixes the grid", "refuses to play", "changes the key"]
+    answer: 0
+    why: Sync follows the grid, so a wrong grid means a wrong lock.
+    whyWrong:
+      1: Fixing the grid is your job.
+      2: It plays, just in the wrong place.
+      3: Key isn't involved.
+
+  - kind: ask
+    q: When is sync most useful?
+    options: ["when your hands are busy on eq or effects", "when the grid is wrong", "when a track has no grid", "never"]
+    answer: 0
+    why: It handles the tempo so you can do the rest.
+    whyWrong:
+      1: A wrong grid means a wrong sync.
+      2: No grid, nothing to lock to.
+      3: Most working djs use it.
+
+  - kind: keep
+    next: >-
+      Back to the song path: your first blend.

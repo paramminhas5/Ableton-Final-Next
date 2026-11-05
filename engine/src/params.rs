@@ -181,6 +181,11 @@ pub const LAYER_PARAMS: &[ParamSpec] = &[
     p("mix.pan", "pan", Bank::Mix, -1.0, 1.0, 0.5, Unit::Pan, Curve::Lin, 15.0, CENTRE),
     p("mix.send", "send", Bank::Mix, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("mix.duck", "duck", Bank::Mix, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    // A filter on every part (a cloud session, 5 Nov): cutoff (fully open by default, so nothing changes
+    // until you turn it), resonance, and the three characters, so drums, samples and fx can teach filters too.
+    p("fx.lp", "filter", Bank::Fx, 40.0, 20000.0, 1.0, Unit::Hz, Curve::Exp, 15.0, NONE),
+    p("fx.lpres", "resonance", Bank::Fx, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("fx.lpkind", "character", Bank::Fx, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 
 pub const L_EQ_LOW: usize = 0;
@@ -195,6 +200,9 @@ pub const L_LEVEL: usize = 8;
 pub const L_PAN: usize = 9;
 pub const L_SEND: usize = 10;
 pub const L_DUCK: usize = 11;
+pub const L_LP: usize = 12;
+pub const L_LP_RES: usize = 13;
+pub const L_LP_KIND: usize = 14;
 
 // ── Master bus ───────────────────────────────────────────────────────────────
 // Sent with the MASTER command; index order is the wire format. Append only.
@@ -202,6 +210,17 @@ pub const L_DUCK: usize = 11;
 pub const MASTER_PARAMS: &[ParamSpec] = &[
     p("master.out", "out", Bank::Mix, 0.0, 1.0, FADER_UNITY, Unit::Db, Curve::Fader, 15.0, UNITY),
     p("master.glue", "glue", Bank::Mix, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 6): the glue's ratio switch (2, 4, 10 to 1), the high-pass on
+    // what it listens to (off at the bottom, 90 Hz by default) and a dry/compressed mix.
+    p("master.glueratio", "ratio", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.sidechain", "sidechain", Bank::Mix, 20.0, 300.0, 0.555, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("master.gluemix", "glue mix", Bank::Mix, 0.0, 1.0, 1.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    // Appended 5 Nov (engine 2, item 9): which reverb the send goes to (hall or plate) and how long it rings.
+    p("master.space", "space", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.verbtime", "verb time", Bank::Mix, 400.0, 8000.0, 0.598, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 11): the echo's style (clean, tape, analogue) and how many repeats.
+    p("master.echotype", "echo", Bank::Mix, 0.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.repeats", "repeats", Bank::Mix, 0.0, 0.9, 0.4667, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 
 /// Instrument params start here on the wire, after the layer block.
@@ -218,6 +237,9 @@ pub const BASS_PARAMS: &[ParamSpec] = &[
     p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("sub", "sub", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.2, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
 ];
 
 pub const B_CUTOFF: usize = 0;
@@ -228,6 +250,8 @@ pub const B_DECAY: usize = 4;
 pub const B_WAVE: usize = 5;
 pub const B_SUB: usize = 6;
 pub const B_DRIFT: usize = 7;
+pub const B_CHAR: usize = 8;
+pub const B_FDRIVE: usize = 9;
 
 // ── Drum rack: 16 pads, the sound bank shapes the selected pad ───────────────
 
@@ -247,6 +271,41 @@ pub const DRUM_RACK_PARAMS: &[ParamSpec] = &[
 pub const D_OPEN: usize = 0;
 /// Wire offset (from INSTRUMENT_BASE) of the first rack-wide drum param.
 pub const DRUM_RACK_BASE: usize = DRUM_PADS * 4;
+/// Slots kept for rack-wide drum params.
+pub const DRUM_RACK_SLOTS: usize = 16;
+
+/// Per pad, second page (engine 2): appended as its own block so the first four knobs keep their wire
+/// indices. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. The stride
+/// keeps room so knobs added later never move the ones a saved song holds.
+pub const DRUM_PAD2_PARAMS: &[ParamSpec] = &[
+    // Item 5, part three: the kick's body, round (the 808's sine), tight (rounded off, like a 909's)
+    // or hard (clipped almost square). Other pads ignore it.
+    p("shape", "body", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    // Item 8: every pad is a tone layer and a noise layer, each with its own envelope and filter.
+    // noise: the balance (tone alone at 0, noise alone at 1); snap: how long the noise layer rings;
+    // color: where its filter sits; sweep: how far the pitch falls; wobble: a pitch wobble on every
+    // hit; random: each hit a little different (pitch, level, length, color).
+    p("noise", "noise", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("snap", "snap", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("color", "color", Bank::Shift, -1.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, CENTRE),
+    p("sweep", "sweep", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("wobble", "wobble", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("random", "random", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+];
+pub const DP_SHAPE: usize = 0;
+pub const DP_NOISE: usize = 1;
+pub const DP_SNAP: usize = 2;
+pub const DP_COLOR: usize = 3;
+pub const DP_SWEEP: usize = 4;
+pub const DP_WOBBLE: usize = 5;
+pub const DP_RANDOM: usize = 6;
+pub const DRUM_PAD2_BASE: usize = DRUM_RACK_BASE + DRUM_RACK_SLOTS;
+pub const DRUM_PAD2_STRIDE: usize = 8;
+
+/// Which of three steps a stepped knob is on.
+pub fn step3(n: f32) -> u8 {
+    if n < 0.34 { 0 } else if n < 0.67 { 1 } else { 2 }
+}
 
 // ── Chords: polyphonic synth ─────────────────────────────────────────────────
 
@@ -259,6 +318,27 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     p("res", "res", Bank::Shift, 0.0, 1.0, 0.15, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 8.0, NONE),
     p("drift", "drift", Bank::Shift, 0.0, 1.0, 0.25, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 10.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.65, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("frel", "f release", Bank::Shift, 20.0, 4000.0, 0.45, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
+    // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
+    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
+    // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
+    // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
+    // knob and the filter envelope bend it from a cosine to a saw).
+    p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -268,6 +348,19 @@ pub const C_CUTOFF: usize = 4;
 pub const C_RES: usize = 5;
 pub const C_ENV: usize = 6;
 pub const C_DRIFT: usize = 7;
+pub const C_LFO_RATE: usize = 8;
+pub const C_LFO: usize = 9;
+pub const C_LFO_TO: usize = 10;
+pub const C_FM: usize = 11;
+pub const C_RATIO: usize = 12;
+pub const C_FDECAY: usize = 13;
+pub const C_FREL: usize = 14;
+pub const C_CHAR: usize = 15;
+pub const C_FDRIVE: usize = 16;
+pub const C_VOICE: usize = 17;
+pub const C_RING: usize = 18;
+pub const C_BRIGHT: usize = 19;
+pub const C_OSC: usize = 20;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -280,6 +373,27 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     p("wave", "wave", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 15.0, NONE),
     p("detune", "detune", Bank::Shift, 0.0, 1.0, 0.3, Unit::Pct, Curve::Lin, 15.0, NONE),
     p("env", "env", Bank::Shift, 0.0, 1.0, 0.35, Unit::Pct, Curve::Lin, 8.0, NONE),
+    // Appended 5 Nov: an lfo, a two-operator fm voice and a filter envelope of its own.
+    p("lforate", "lfo rate", Bank::Shift, 0.1, 10.0, 0.5, Unit::Hz, Curve::Exp, 0.0, NONE),
+    p("lfo", "lfo", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("lfoto", "lfo to", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fm", "fm", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    p("ratio", "ratio", Bank::Shift, 0.0, 1.0, 0.25, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdecay", "f decay", Bank::Shift, 30.0, 3000.0, 0.53, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("frel", "f release", Bank::Shift, 20.0, 3000.0, 0.4, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 7): the filter's character and the drive into it.
+    p("character", "character", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("fdrive", "filter drive", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 15.0, NONE),    // Appended 5 Nov (engine 2, item 10): what makes the sound. synth (the oscillators), or a tuned
+    // resonator: pluck (a string), mallet (a bar with a second resonator four times up), keys (two
+    // strings a hair apart, struck). ring: how long the resonator rings at middle c; bright: the strike.
+    p("voice", "voice", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("ring", "ring", Bank::Shift, 100.0, 8000.0, 0.68, Unit::Ms, Curve::Exp, 0.0, NONE),
+    p("bright", "bright", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 12): the oscillator. classic (saw to pulse on the wave knob),
+    // table (a band-limited wavetable, the wave knob sweeps its eight frames), feedback (fm feedback,
+    // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
+    // knob and the filter envelope bend it from a cosine to a saw).
+    p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -289,6 +403,40 @@ pub const LD_GLIDE: usize = 4;
 pub const LD_WAVE: usize = 5;
 pub const LD_DETUNE: usize = 6;
 pub const LD_ENV: usize = 7;
+pub const LD_LFO_RATE: usize = 8;
+pub const LD_LFO: usize = 9;
+pub const LD_LFO_TO: usize = 10;
+pub const LD_FM: usize = 11;
+pub const LD_RATIO: usize = 12;
+pub const LD_FDECAY: usize = 13;
+pub const LD_FREL: usize = 14;
+pub const LD_CHAR: usize = 15;
+pub const LD_FDRIVE: usize = 16;
+pub const LD_VOICE: usize = 17;
+pub const LD_RING: usize = 18;
+pub const LD_BRIGHT: usize = 19;
+pub const LD_OSC: usize = 20;
+
+/// The fm ratio knob steps through these (modulator frequency over carrier).
+pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
+pub fn fm_ratio(n: f32) -> f32 {
+    FM_RATIOS[((n.clamp(0.0, 1.0) * (FM_RATIOS.len() - 1) as f32).round()) as usize]
+}
+
+/// What makes a synth's sound: 0 the oscillators, 1 pluck, 2 mallet, 3 keys (engine 2, item 10).
+pub fn voice_model(n: f32) -> u8 {
+    (n.clamp(0.0, 1.0) * 3.0).round() as u8
+}
+
+/// Which oscillator: 0 classic, 1 table, 2 feedback, 3 phase (engine 2, item 12).
+pub fn osc_kind(n: f32) -> u8 {
+    (n.clamp(0.0, 1.0) * 3.0).round() as u8
+}
+
+/// Where the lfo goes: 0 the filter, 1 the pitch, 2 the volume.
+pub fn lfo_dest(n: f32) -> u8 {
+    if n < 0.34 { 0 } else if n < 0.67 { 1 } else { 2 }
+}
 
 // ── FX: noise, sweeps, impacts, riser ────────────────────────────────────────
 
@@ -384,7 +532,7 @@ impl Instrument {
     pub fn param_count(self) -> usize {
         match self {
             Instrument::None => 0,
-            Instrument::Drums => DRUM_RACK_BASE + DRUM_RACK_PARAMS.len(),
+            Instrument::Drums => DRUM_PAD2_BASE + DRUM_PADS * DRUM_PAD2_STRIDE,
             Instrument::Bass => BASS_PARAMS.len(),
             Instrument::Chords => CHORD_PARAMS.len(),
             Instrument::Lead => LEAD_PARAMS.len(),
@@ -404,8 +552,10 @@ impl Instrument {
             Instrument::Drums => {
                 if i < DRUM_RACK_BASE {
                     DRUM_PAD_PARAMS.get(i % DRUM_PAD_PARAMS.len())
-                } else {
+                } else if i < DRUM_PAD2_BASE {
                     DRUM_RACK_PARAMS.get(i - DRUM_RACK_BASE)
+                } else {
+                    DRUM_PAD2_PARAMS.get((i - DRUM_PAD2_BASE) % DRUM_PAD2_STRIDE)
                 }
             }
         }
@@ -413,7 +563,7 @@ impl Instrument {
 }
 
 /// Total param slots per layer.
-pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_RACK_BASE + 16;
+pub const MAX_PARAMS: usize = INSTRUMENT_BASE + DRUM_PAD2_BASE + DRUM_PADS * DRUM_PAD2_STRIDE;
 
 /// Look up any wire index for a layer of this instrument.
 pub fn spec_for(inst: Instrument, index: usize) -> Option<&'static ParamSpec> {
@@ -452,6 +602,7 @@ mod tests {
     fn layer_params_fit_before_instrument_block() {
         assert!(LAYER_PARAMS.len() <= INSTRUMENT_BASE);
         assert!(INSTRUMENT_BASE + Instrument::Drums.param_count() <= MAX_PARAMS);
+        assert!(DRUM_RACK_PARAMS.len() <= DRUM_RACK_SLOTS && DRUM_PAD2_PARAMS.len() <= DRUM_PAD2_STRIDE);
         for i in [Instrument::Bass, Instrument::Chords, Instrument::Lead, Instrument::Fx, Instrument::Sampler] {
             assert!(INSTRUMENT_BASE + i.param_count() <= MAX_PARAMS);
         }
@@ -459,7 +610,7 @@ mod tests {
 
     #[test]
     fn defaults_are_normalised() {
-        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(SAMPLER_PARAMS).chain(MASTER_PARAMS) {
+        for s in LAYER_PARAMS.iter().chain(BASS_PARAMS).chain(DRUM_PAD_PARAMS).chain(DRUM_RACK_PARAMS).chain(DRUM_PAD2_PARAMS).chain(CHORD_PARAMS).chain(LEAD_PARAMS).chain(FX_PARAMS).chain(SAMPLER_PARAMS).chain(MASTER_PARAMS) {
             assert!((0.0..=1.0).contains(&s.default), "{}", s.id);
             for d in s.detents {
                 assert!((0.0..=1.0).contains(d));

@@ -1,0 +1,26 @@
+import { chromium } from "playwright";
+const OUT = "/tmp/claude-0/-home-claude/14482081-5c9f-509e-afde-b9b4be190bf9/scratchpad/review1/shots";
+const [W, H] = (process.argv[2] ?? "390x844").split("x").map(Number);
+const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
+const p = await (await b.newContext({ viewport: { width: W, height: H } })).newPage();
+const errs = []; p.on("pageerror", e => errs.push(e.message)); p.on("response", r => { if (r.status() >= 400) errs.push(r.status() + " " + r.url()); });
+await p.goto("http://localhost:3100/sound", { waitUntil: "load" }); await p.waitForTimeout(2000);
+const plays = p.getByRole("button", { name: /play/i });
+console.log("plays", await plays.count(), await p.evaluate(() => [...document.querySelectorAll("button")].filter(b=>/play/.test(b.innerText)).slice(0,2).map(b=>b.outerHTML.slice(0,200))));
+await plays.first().click(); await p.waitForTimeout(1500);
+await p.screenshot({ path: `${OUT}/sound-${W}-playing.png` });
+console.log("audio", await p.evaluate(() => [...document.querySelectorAll("audio")].map(a => ({ src: a.currentSrc.slice(-60), paused: a.paused, t: a.currentTime, ready: a.readyState }))));
+await p.getByRole("button", { name: /^before$/ }).first().click().catch(e => console.log("before fail")); await p.waitForTimeout(1200);
+await p.screenshot({ path: `${OUT}/sound-${W}-before.png` });
+console.log("audio2", await p.evaluate(() => [...document.querySelectorAll("audio")].map(a => ({ src: a.currentSrc.slice(-60), paused: a.paused, t: a.currentTime }))));
+await p.getByRole("button", { name: /try it blind/ }).first().click(); await p.waitForTimeout(1000);
+await p.screenshot({ path: `${OUT}/sound-${W}-blind.png` });
+console.log(await p.evaluate(() => document.body.innerText.slice(0, 900)));
+const pl = p.getByRole("button", { name: /play/i }).first(); await pl.click().catch(()=>{}); await p.waitForTimeout(1000);
+await p.screenshot({ path: `${OUT}/sound-${W}-blind-play.png` });
+const btns = await p.evaluate(() => [...document.querySelectorAll("button")].filter(b => b.offsetParent).map(b => b.innerText.trim()).filter(Boolean).slice(0, 30));
+console.log("btns", btns);
+const pick = p.getByRole("button", { name: /^(a|x|this one|1)$/i }).first();
+if (await pick.count()) { await pick.click(); await p.waitForTimeout(800); await p.screenshot({ path: `${OUT}/sound-${W}-blind-answer.png` }); console.log(await p.evaluate(() => document.body.innerText.slice(0, 600))); }
+console.log("errs", errs);
+await b.close();

@@ -1,0 +1,127 @@
+slug: digital-audio
+world: foundations
+number: 207
+title: digital audio
+minutes: 5
+song:
+  changes: drums.kick
+  why: crushing your drums throws away detail on purpose, for a gritty lo-fi edge you can keep or not
+learn: >-
+  How sound becomes numbers, what sample rate and bit depth mean, and your drums crushed to fewer of both.
+youCan:
+  - say what sample rate and bit depth are
+  - say why 24 bit is used for recording
+  - crush your drums by ear
+steps:
+  - kind: hear
+    clip: kick-alone
+    say:
+      mentor: >-
+        This kick, playing on your phone right now, isn't stored as a wave. A computer can't hold a wave. It
+        holds measurements of one: thousands of them every second, each a single number saying how far the
+        speaker should be pushed at that instant.
+
+        Play those numbers back in order, fast enough, and the wave is rebuilt as sound. Each measurement is
+        called a sample.
+      straight: >-
+        Digital audio is a list of measurements of the wave, thousands a second. Each one is a sample. Play
+        them back in order and the sound is rebuilt.
+      eli5: >-
+        The computer can't keep a sound wave. It writes down lots and lots of numbers about it, super fast,
+        then reads them back to make the sound again.
+
+  - kind: say
+    title: how many, how precise
+    say:
+      mentor: >-
+        Two numbers decide the quality. Sample rate is how many measurements are taken each second. CD audio
+        uses 44,100 a second, written 44.1 khz. A sample rate can capture sounds up to just under half its
+        value, so 44.1 khz covers up to about 22 khz, a bit above what we can hear.
+
+        Bit depth is how precisely each measurement is written down. Each extra bit adds about 6 dB of range
+        between the quietest and loudest sound. 16 bit gives about 96 dB, 24 bit about 144 dB, which is why
+        people record at 24 bit: room to spare.
+      straight: >-
+        Sample rate: measurements per second (44.1 khz on CD), capturing up to about half that. Bit depth:
+        precision of each one, about 6 dB per bit. 16 bit is about 96 dB, 24 bit about 144 dB.
+      eli5: >-
+        Two things matter: how many numbers a second, and how exact each number is. More of both, the closer
+        the copy is to the real sound.
+    deeper:
+      - title: buffer size
+        say: >-
+          The buffer is a short block of audio the computer works on at once. A small buffer means low delay
+          between pressing a key and hearing it, called latency, but a heavier load on the computer. A large
+          buffer is safer but you hear the delay. Small for recording, large for mixing.
+      - title: wav and mp3
+        say: >-
+          A wav file keeps every sample, full quality and large. An mp3 throws some detail away to make the
+          file smaller. Record and produce at 24 bit, then export 16 bit wav or a 320 kbps mp3 to share.
+      - title: in live
+        say: >-
+          Live's Redux device does what crush does on purpose. Its bit depth control cuts the number of
+          volume steps, and its downsample control shaves off high detail the way a lower sample rate would.
+
+  - kind: shape
+    layer: drums
+    knobs: [crush]
+    say:
+      mentor: >-
+        Here's your song with a crush knob on your drums. If you swapped in recorded drums, this is your
+        sample getting crushed.
+
+        Crush lowers both numbers at once: fewer measurements each second, and fewer steps for each one. A
+        little turns your drums grainy and dusty. All the way up there are only a few bits left, and you'll
+        hear a hiss and a fizz ride along with every hit. That's the sound of detail being thrown away. Some
+        tracks want it, some don't. Keep it where your song sounds best, even at zero.
+      straight: >-
+        Crush cuts sample rate and bit depth together on your drums. A little is grainy, a lot is fizzy and
+        hissy. Set it by ear, zero included.
+      eli5: >-
+        Turn crush up and your drums sound fuzzy and crunchy, like an old video game. Turn it down and they're
+        clean again. Pick the one you like.
+
+  - kind: ask
+    q: What is sample rate?
+    options: ["how many measurements are taken each second", "how many tracks play at once", "the tempo of the song", "how loud the file is"]
+    answer: 0
+    why: It's measurements per second. 44.1 khz is 44,100 of them.
+    whyWrong:
+      1: That's about the program, not the audio.
+      2: Tempo is beats per minute.
+      3: Loudness is in the numbers, not the rate.
+
+  - kind: ask
+    q: 44.1 khz can capture sounds up to about
+    options: ["22 khz", "44 khz", "88 khz", "4 khz"]
+    answer: 0
+    why: Just under half the sample rate, a little above the top of human hearing.
+    whyWrong:
+      1: It needs two measurements per wiggle, so half that.
+      2: That would need a much higher rate.
+      3: Much higher than that.
+
+  - kind: ask
+    q: What does more bit depth give you?
+    options: ["more range between quiet and loud", "a higher pitch", "a faster tempo", "a brighter sound"]
+    answer: 0
+    why: About 6 dB more range for every extra bit, so less noise under quiet sounds.
+    whyWrong:
+      1: Pitch comes from the sound, not the format.
+      2: Tempo isn't part of it.
+      3: Brightness comes from the sound itself, not the bit depth.
+
+  - kind: ask
+    more: true
+    q: Why record at 24 bit instead of 16?
+    options: ["more headroom, about 144 dB of range", "smaller files", "less work for the computer", "it plays faster"]
+    answer: 0
+    why: The extra range leaves room to edit and process without bringing up noise.
+    whyWrong:
+      1: 24 bit files are bigger.
+      2: More bits means more data, not less.
+      3: Speed doesn't change.
+
+  - kind: keep
+    next: >-
+      Back to waves and the studio. Next path: melody, starting with your song's scale.

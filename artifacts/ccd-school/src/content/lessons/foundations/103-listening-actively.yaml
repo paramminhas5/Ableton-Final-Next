@@ -1,0 +1,41 @@
+slug: listening-actively
+world: foundations
+number: 103
+title: bonus, listen like a producer
+minutes: 4
+song:
+  changes: lead.lead
+  why: nothing changes in your song here; you're learning to hear it like a producer
+learn: >-
+  How producers listen: one part at a time, then the whole, then the journey.
+youCan:
+  - listen to one part of a track at a time
+  - describe a track's structure by ear
+steps:
+  - kind: say
+    title: three ways to listen
+    say:
+      mentor: >-
+        Producers listen in layers. First pick one part and follow only it for the whole track: just the hats,
+        say. Then listen to the whole, and ask what's loudest, what's in front, what's far away. Then listen to
+        the journey: when do things come in and go out, where's the drop, how long is the break.
+
+        Try it on your own song in the studio, then on a track you love.
+      straight: >-
+        Listen to one part, then the balance, then the structure. Your song first, then a track you love.
+      eli5: >-
+        Pick one sound and only listen to that. Then listen to everything. Then listen for when things change.
+
+  - kind: ask
+    q: What's a good first way to listen like a producer?
+    options: ["follow one part through the whole track", "only listen to the drop", "turn it up as loud as possible", "skip the intro"]
+    answer: 0
+    why: Following one part teaches you what each part is doing.
+    whyWrong:
+      1: You'd miss the build that makes it work.
+      2: Loud hides detail.
+      3: The intro tells you a lot.
+
+  - kind: keep
+    next: >-
+      The producer world is next: make every part of your song sound its best.

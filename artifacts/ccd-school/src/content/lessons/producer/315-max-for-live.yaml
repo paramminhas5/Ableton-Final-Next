@@ -1,0 +1,104 @@
+slug: max-for-live
+world: producer
+number: 315
+title: max for live
+minutes: 5
+song:
+  changes: lead.lead
+  why: a filter that moves on its own every note gives your lead motion without you touching anything
+learn: >-
+  What Max for Live is, the devices you'll actually use from it, and giving your lead the kind of automatic
+  movement those devices are famous for.
+youCan:
+  - say what Max for Live is and which edition of Live has it
+  - name a few Max for Live devices and what they do
+  - give your lead filter movement that plays itself
+steps:
+  - kind: hear
+    clip: synth-note
+    say:
+      mentor: >-
+        A note that just sits there. Now picture its filter opening and closing on its own, in time, while you
+        do something else. Live can't always do every move you can imagine out of the box, so it lets you
+        build new devices for it. That's Max for Live.
+      straight: >-
+        A static note. Max for Live lets you add devices that do things Live doesn't, like moving a filter on
+        its own.
+      eli5: >-
+        This note stays the same. Max for Live lets people build new gadgets for Live, like one that makes the
+        sound move by itself.
+
+  - kind: say
+    title: build your own devices
+    say:
+      mentor: >-
+        Max for Live comes with Live Suite. It's a visual programming tool from Cycling '74: instead of typing
+        code, you connect small boxes, called objects, with patch cables. A device made this way sits in Live
+        like any other, with its own knobs you can automate and map.
+
+        Most people never build one. They use the ones that ship with Live, like LFO, which wobbles any control
+        you point it at, and Envelope Follower, which turns how loud a sound is into movement. Open a device in
+        edit mode and you see the patch inside.
+      straight: >-
+        Max for Live comes with Suite. You build devices by wiring objects with patch cables. Most people use
+        ready-made ones: LFO wobbles any control, Envelope Follower turns loudness into movement.
+      eli5: >-
+        Max for Live lets you build new sound gadgets by joining boxes with lines. Most people just use the
+        ones that come with Live, like LFO, which wiggles a knob for you.
+    deeper:
+      - title: mapping an lfo
+        say: >-
+          Drop LFO on a track, press its map button, and click the control you want it to move, like a filter's
+          cutoff. The filter now sweeps on its own. Envelope Follower mapped to a delay's feedback makes the
+          echoes swell when the sound gets louder.
+      - title: careful with cpu
+        say: >-
+          A badly built device can eat your computer's power, so watch the cpu meter when you load lots of
+          them. Hundreds more are shared free online as .amxd files, and they load like presets.
+
+  - kind: shape
+    layer: lead
+    knobs: [lfo, lforate, lfoto, cutoff]
+    say:
+      mentor: >-
+        Max for Live's most-used device is the LFO, a modulator you point at any knob in the set. Your lead has an lfo built in, so this is the same idea. Turn lfo up and point lfo to at the filter, then the pitch, then the volume.
+        
+        Rate slow is a drift, fast is a shake. In Live you'd drop the LFO device on a track and click map, then the knob you want. Keep a movement that suits your lead.
+      straight: >-
+        An lfo you point at any knob, like Max for Live's LFO. Choose the target and rate. Keep it.
+      eli5: >-
+        A wobble you can aim at any knob. Aim it, set the speed, keep it.
+
+  - kind: ask
+    q: Which edition of Live comes with Max for Live?
+    options: ["Suite", "Intro", "Standard", "Lite"]
+    answer: 0
+    why: Max for Live is part of Live Suite.
+    whyWrong:
+      1: Intro doesn't include it.
+      2: Standard doesn't include it.
+      3: Lite doesn't include it.
+
+  - kind: ask
+    q: How do you build a Max for Live device?
+    options: ["connect objects with patch cables", "write it in a text file", "record it from a microphone", "drag in an mp3"]
+    answer: 0
+    why: Max is visual, boxes joined with cables.
+    whyWrong:
+      1: No typing needed.
+      2: It's a device, not a recording.
+      3: An mp3 is audio, not a device.
+
+  - kind: ask
+    q: What does the LFO device do?
+    options: ["moves any control you point it at, over and over", "records your song", "makes the tempo follow a drummer", "turns audio into midi"]
+    answer: 0
+    why: It wobbles a control on its own, like a filter's cutoff.
+    whyWrong:
+      1: It moves controls, it doesn't record.
+      2: That's Tempo Follower.
+      3: It makes movement, not notes.
+
+  - kind: keep
+    next: >-
+      Your lead moves on its own. Back to your song path, or on to accessibility in Live.

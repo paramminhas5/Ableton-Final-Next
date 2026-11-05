@@ -37,7 +37,7 @@ export const KIND: Record<LayerKind, { label: string; knobs: [string, string, st
   hats:   { label: "hats",   knobs: ["tone", "decay", "swing", "level"],  color: "#4FE3B6",   defaults: [0.7, 0.25, 0.0, 0.55] },
   clap:   { label: "clap",   knobs: ["tone", "decay", "space", "level"],  color: "#4FE3B6",   defaults: [0.5, 0.4, 0.3, 0.6] },
   perc:   { label: "perc",   knobs: ["tune", "decay", "pan", "level"],    color: "#4FE3B6",   defaults: [0.6, 0.2, 0.5, 0.45] },
-  bass:   { label: "bass",   knobs: ["cutoff", "res", "glide", "level"],  color: "#FF4F9A",     defaults: [0.4, 0.3, 0.0, 0.75] },
+  bass:   { label: "bass",   knobs: ["cutoff", "res", "glide", "level"],  color: "#5CC8FF",     defaults: [0.4, 0.3, 0.0, 0.75] },
   lead:   { label: "lead",   knobs: ["cutoff", "res", "echo", "level"],   color: "#7D96FF", defaults: [0.6, 0.25, 0.3, 0.5] },
   chords: { label: "chords", knobs: ["cutoff", "attack", "space", "level"], color: "#B89CFF", defaults: [0.5, 0.1, 0.35, 0.5] },
   pad:    { label: "pad",    knobs: ["cutoff", "attack", "space", "level"], color: "#B89CFF", defaults: [0.35, 0.6, 0.6, 0.45] },
@@ -82,12 +82,12 @@ export function emptyTrack(): Track {
 
 const RULES: [RegExp, LayerKind][] = [
   [/kick|four.on|808|low end|sub\b/i, "kick"],
-  [/hat|hi-hat|swing|groove|shuffle|16th/i, "hats"],
+  [/\bhi-?hats?\b|\bhats?\b|swing|groove|shuffle|16th/i, "hats"],
   [/clap|snare|backbeat/i, "clap"],
   [/perc|shaker|polyrhythm|syncopat|fill/i, "perc"],
   [/bass|poli|glide|portamento|octave/i, "bass"],
-  [/chord|harmony|progression|triad|seventh|voicing|key\b|keys|scale|mode/i, "chords"],
-  [/pad|reverb|space|ambien|texture|wavetable|drift|granular/i, "pad"],
+  [/chord|harmony|progression|triad|seventh|voicing|\bkey\b|\bkeys\b|scale|\bmodes?\b/i, "chords"],
+  [/\bpads?\b|reverb|space|ambien|texture|wavetable|drift|granular/i, "pad"],
   [/melod|lead|arp|synth|oscillat|filter|envelope|lfo|operator|wave/i, "lead"],
   [/rhythm|beat|tempo|bpm|drum|loop|pattern|step|sequenc|metronome|time sig/i, "kick"],
 ];
@@ -96,10 +96,10 @@ const ORDER: LayerKind[] = ["kick", "hats", "bass", "chords", "clap", "lead", "p
 export type Offer = { kind: LayerKind; isNew: boolean; layerId?: string; what: string };
 
 /** What finishing this lesson would add. Pure: does not change the track. */
-export function offerFor(track: Track, mission: { slug: string; title: string; tagline?: string; number?: number }): Offer {
+export function offerFor(track: Track, mission: { slug: string; title: string; tagline?: string; number?: number; fromFile?: { adds: { kind: string } } }): Offer {
   const text = `${mission.slug} ${mission.title} ${mission.tagline ?? ""}`;
-  let kind: LayerKind | null = null;
-  for (const [re, k] of RULES) if (re.test(text)) { kind = k; break; }
+  let kind: LayerKind | null = (mission.fromFile?.adds.kind as LayerKind | undefined) ?? null;
+  if (!kind) for (const [re, k] of RULES) if (re.test(text)) { kind = k; break; }
   if (!kind) {
     const missing = ORDER.find(k => !track.layers.some(l => l.kind === k));
     kind = missing ?? ORDER[(mission.number ?? 0) % ORDER.length];

@@ -1,0 +1,127 @@
+slug: mixing-basics
+world: producer
+number: 261
+title: mixing basics
+minutes: 5
+song:
+  changes: hats.hats
+  why: levels, then tone, then space, in that order, is how a pile of parts turns into a mix
+learn: >-
+  The order most mixes follow, levels then eq then dynamics then space, worked through on your hats.
+youCan:
+  - say the usual order of a mix
+  - set a part's level before touching its tone
+  - check a mix on more than one speaker
+steps:
+  - kind: hear
+    clip: four-on-the-floor
+    say:
+      mentor: >-
+        Mixing means taking every part of your song and making them sit together as one record that sounds
+        good anywhere: a phone, a car, a club. It sounds like a huge job, but most mixes follow the same
+        order. Levels first, then eq, then dynamics, then space.
+
+        The order matters because each step builds on the one before. Eq fixes clashes between parts, but you
+        can only hear a clash once the levels are roughly right.
+      straight: >-
+        Mixing follows an order: levels, eq, dynamics, space. Each step builds on the last.
+      eli5: >-
+        Mixing is making all your sounds fit together. You do it in steps: how loud first, then the tone,
+        then the echoes.
+
+  - kind: say
+    title: the order
+    say:
+      mentor: >-
+        Levels: with faders only, get a rough balance. Most of a good mix is already here.
+
+        Eq: cut the clashes, like a lead fighting the bass down low. Dynamics: how much a part jumps between
+        loud and quiet. A compressor evens that out. Space: reverb and echo give the mix depth, some parts
+        close, some further back.
+      straight: >-
+        Levels with faders. Eq to cut clashes. Dynamics, how much a part jumps between loud and quiet, with a
+        compressor. Then reverb and echo for depth.
+      eli5: >-
+        First make each sound the right loudness. Then fix sounds that bump into each other. Then add a
+        little echo so some sounds feel far away.
+    deeper:
+      - title: reference tracks
+        say: >-
+          Compare your mix with a released track you love. Match their loudness first: the louder of two
+          mixes nearly always sounds better, even when it isn't.
+      - title: more than one speaker
+        say: >-
+          A good mix translates, meaning it sounds balanced on any system. Check on at least three: speakers,
+          headphones and a phone. Mixes made only on headphones often come out wider than they should.
+      - title: the mono check
+        say: >-
+          Now and then, switch the master to mono. Anything that vanishes has a phase problem, and it will
+          vanish on mono systems too.
+      - title: breaks
+        say: >-
+          Take a break every 45 to 60 minutes. Tired ears make bad decisions.
+
+  - kind: shape
+    layer: hats
+    knobs: [level, high, send]
+    say:
+      mentor: >-
+        Mixing is placing every part. Start with your hats: level for how loud, high for how bright, send for how far away. Your song is playing.
+      straight: >-
+        Hats first: level, high and send.
+      eli5: >-
+        Make the hats the right loudness, brightness and distance.
+  - kind: shape
+    layer: bass
+    knobs: [level, low, duck]
+    say:
+      mentor: >-
+        Now your bass, the same way. Level against the kick, low for weight, and duck so it steps aside each time the kick hits. Both parts keep their settings when you add.
+      straight: >-
+        Now the bass: level, low and duck under the kick.
+      eli5: >-
+        Now the bass. Make it fit under the kick.
+  - kind: shape
+    layer: lead
+    knobs: [level, pan, send]
+    say:
+      mentor: >-
+        And your lead: level so it leads without shouting, pan it a little off centre, send for air. Three parts placed, and that's a mix.
+      straight: >-
+        Now the lead: level, pan and send. Three parts placed.
+      eli5: >-
+        Now the lead. Loudness, left or right, and space.
+
+  - kind: ask
+    q: What usually comes first in a mix?
+    options: ["setting the levels", "adding reverb", "compressing everything", "boosting the highs"]
+    answer: 0
+    why: Get the balance roughly right with faders, then everything else is easier to hear.
+    whyWrong:
+      1: Space comes last, once the parts sit together.
+      2: Dynamics come after levels and eq.
+      3: You can only judge tone once levels are set.
+
+  - kind: ask
+    q: In mixing, what does dynamics mean?
+    options: ["how much a part jumps between loud and quiet", "how fast the song is", "where a part sits left or right", "how much reverb a part has"]
+    answer: 0
+    why: Dynamics is the range between loud and quiet. A compressor evens it out.
+    whyWrong:
+      1: That's tempo.
+      2: That's pan.
+      3: That's space.
+
+  - kind: ask
+    q: Why match loudness before comparing your mix with a released track?
+    options: ["the louder one nearly always sounds better", "quiet mixes can't be compared", "it makes your mix louder for good", "released tracks are always quiet"]
+    answer: 0
+    why: Louder fools the ear. Match it and you hear the real differences.
+    whyWrong:
+      1: You can compare anything once levels match.
+      2: It's only for comparing.
+      3: Released tracks are usually loud.
+
+  - kind: keep
+    next: >-
+      Back to your song: next on the path, eq, a place for everything.
