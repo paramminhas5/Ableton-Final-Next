@@ -25,11 +25,14 @@ Engine param ids and wire indices did not change, only labels, so every saved so
 | live mixer | https://www.ableton.com/en/manual/mixing/ (Send) |
 | surge xt | https://surge-synthesizer.github.io/manual-xt (Classic osc, Shape; LFO Rate, Amplitude) |
 | tb-303 | https://rolandcloud.com/getmedia/b3e2da28-1951-467e-bd79-7aae34481570/TB-303-Manual-E.pdf |
-| tr-808 | https://www.manualslib.com/manual/1294765/Roland-Tr-808.html?page=6 (snare "snappy") |
+| tr-808 | https://support.roland.com/hc/en-us/articles/201963539-TR-808-Technical-Specifications (Roland's own page: BD level, tone, decay; SD level, tone, snappy; toms level, tuning; OH level, decay; CY level, tone, decay) |
 | elektron | https://cdn.www.elektron.se/media/downloads/digitakt/Digitakt_Quick_Guide_ENG_220928.pdf (parameter locks) |
 | valhalla delay | https://valhalladsp.com/2019/04/16/valhalladelay-the-mode-control (Tape, BBD, Digital) |
 | casio cz | https://en.wikipedia.org/wiki/Casio_CZ_synthesizers (phase distortion, DCW) |
 | rekordbox | https://cdn.rekordbox.com/files/20250907160902/CDJ_XDJ_Control_Mapping_en_CDJ-3000X.pdf (HOT CUE, BEAT SYNC, KEY SHIFT, KEY SYNC, BEAT LOOP) |
+| rekordbox manual | https://cdn.rekordbox.com/files/20260706162433/rekordbox7.2.16_manual_EN.pdf ([CROSSFADER Curve] p. 145; Using the STEMS function, VOCAL, INST, BASS, DRUMS, and TRACK SEPARATION, p. 212; Using BEAT FX, [ECHO], FX LEVEL/DEPTH, p. 182) |
+| vital | https://github.com/mtytel/vital (GPL, read for names only: knob labels in src/interface/editor_sections/*_section.cpp, parameter names in src/common/synth_parameters.cpp, menus in src/interface/look_and_feel/synth_strings.h) |
+| serum 2 | https://xferrecords.com/web-manual/serum-2/using-pitch-controls (OCT, SEM, FIN, CRS) and .../controlling-the-main-output-volume (MAIN) |
 
 ## Renamed
 
@@ -101,35 +104,35 @@ Shown as a fold-out under every shape step ("same control elsewhere"), under the
 
 | our name | elsewhere |
 | --- | --- |
-| cutoff | live auto filter: freq · live drift: freq · tb-303: cut off freq |
-| res | live auto filter: res · live drift: res · tb-303: resonance |
+| cutoff | live auto filter: freq · live drift: freq · tb-303: cut off freq · vital filter: cutoff |
+| res | live auto filter: res · live drift: res · tb-303: resonance · vital filter: resonance |
 | env | tb-303: env mod |
-| circuit | live auto filter: circuit (svf, dfm, ms2, prd) · live wavetable: circuit (clean, osr, ms2, smp, prd) |
-| drive (filter) | live auto filter: drive · live wavetable: drive |
+| circuit | live auto filter: circuit (svf, dfm, ms2, prd) · live wavetable: circuit (clean, osr, ms2, smp, prd) · vital filter: model (analog, ladder, diode and more) |
+| drive (filter) | live auto filter: drive · live wavetable: drive · vital filter: drive |
 | f decay | tb-303: decay |
-| shape (osc) | live drift: shape · surge xt classic: shape · live wavetable: wave position · tb-303: waveform (saw or square) |
+| shape (osc) | live drift: shape · surge xt classic: shape · live wavetable: wave position · vital osc: wave frame · tb-303: waveform (saw or square) |
 | osc | surge xt: classic, wavetable (osc types) · live operator: feedback · casio cz: phase distortion, its amount is dcw |
-| sub | live wavetable: sub |
+| sub | live wavetable: sub · vital: sub level |
 | drift | live drift: drift |
-| detune | live wavetable: unison amount · live drift: unison strength |
+| detune | live wavetable: unison amount · live drift: unison strength · vital osc: unison detune |
 | spread | live operator: spread |
-| glide | live drift: glide · live wavetable: glide · tb-303: slide |
+| glide | live drift: glide · live wavetable: glide · vital: glide (portamento time) · tb-303: slide |
 | fm | live wavetable: fm amt · live ds fm: amnt |
 | ratio | live operator: coarse · live wavetable: fm tune |
 | lfo | live auto filter: lfo amt · surge xt: amplitude |
-| lfo rate | live auto filter: rate · surge xt: rate |
+| lfo rate | live auto filter: rate · surge xt: rate · vital lfo: frequency |
 | exciter | live tension: exciter type (plectrum, hammer) · live collision: mallet |
 | decay (resonator) | live collision: resonator decay |
 | stiffness | live collision: mallet stiffness · live tension: stiffness |
-| low, mid, high | live eq three: low, mid, high |
+| low, mid, high | live eq three: low, mid, high · vital eq: low gain, band gain, high gain |
 | low cut | live eq eight: low cut |
-| drive (part) | live saturator: drive · live ds kick: drive |
-| crush | live redux: bits and rate |
+| drive (part) | live saturator: drive · live ds kick: drive · vital distortion: drive |
+| crush | live redux: bits and rate · vital distortion: type bit crush, down sample |
 | send | live mixer: send (to a return track with a reverb) |
 | echo | live mixer: send (to a return track with a delay) |
-| tune | live ds snare: tune · live ds kick: pitch · live drum sampler: transpose |
-| decay (drums, bass) | live ds kick: decay · tb-303: decay |
-| shape (kick) | live saturator: curve type (soft sine, hard curve, digital clip) · live ds kick: drive |
+| tune | live ds snare: tune · live ds kick: pitch · live drum sampler: transpose · tr-808 toms: tuning · serum 2 osc: sem (semitone) |
+| decay (drums, bass) | live ds kick: decay · tr-808 bass drum: decay · tb-303: decay |
+| shape (kick) | live saturator: curve type (soft sine, hard curve, digital clip) · live ds kick: drive · vital distortion: type (soft clip, hard clip) |
 | type (perc) | live: ds fm, ds clang · live ds clang: clave switch |
 | noise | live drum sampler: noise amount · tr-808 snare: snappy |
 | noise decay | live collision noise: d (decay) |
@@ -143,20 +146,24 @@ Shown as a fold-out under every shape step ("same control elsewhere"), under the
 | sidechain | live glue compressor: sidechain eq |
 | dry/wet | live glue compressor: dry/wet |
 | algorithm | live hybrid reverb: algorithm |
-| decay (master) | live reverb: decay · live hybrid reverb: decay |
+| decay (master) | live reverb: decay · live hybrid reverb: decay · vital reverb: time |
 | echo (master) | valhalla delay: mode (tape, bbd, digital) |
-| feedback | live echo: feedback · live delay: feedback |
+| feedback | live echo: feedback · live delay: feedback · vital delay: feedback |
+| out (master) | serum 2: main |
 | p-lock | elektron: parameter lock |
 | density | live 12 rhythm generator: density · live 12 seed generator: density |
 | capture | live: capture midi |
-| macro | live racks: macro variations |
+| macro | live racks: macro variations · vital: macro 1 to 4 |
 | warp | live warp modes: beats, re-pitch |
 | swing | live: global groove amount |
 | cue, loop, sync, key (dj) | rekordbox: hot cue, beat loop, beat sync, key shift and key sync |
+| curve (dj) | rekordbox: crossfader curve |
+| stems (dj) | rekordbox: stems (vocal, inst, bass, drums), its track separation |
+| echo a (dj) | rekordbox beat fx: echo, its amount is fx level/depth |
 
 ## Not verified
 
-- Serum 2 and Vital: their manuals were not reachable from here, so no Serum or Vital names are listed. Add them only after checking a manual.
-- TR-808 front-panel knob names (the service notes name "snappy" by circuit, not the panel's TONE).
+- Serum 2: only its web manual's basics are online (xferrecords.com/web-manual/serum-2); the full manual ships inside the plugin and its PDF is not on xferrecords.com. So only SEM and MAIN are listed. The "What's New" PDF names features, not knobs.
+- Vital's names come from its source code (the labels its screens draw), not a printed manual. Vital's knobs on the filter graph (cutoff, resonance) carry no printed label; their names are the parameter names.
+- TR-808 TONE (bass drum, snare, cymbal) has no single control of ours that does the same, so it is not listed.
 - The Glue Compressor's ratio values (2, 4, 10) are what we built; the manual text does not list them.
-- rekordbox crossfader curve, stems and beat fx echo names are not in the control mapping checked, so the dj "curve", "stems" and "echo a" controls have no elsewhere line yet.

@@ -23,11 +23,23 @@ export const SOURCES = {
   liveRacks: "https://www.ableton.com/en/manual/instrument-drum-and-effect-racks/",
   surge: "https://surge-synthesizer.github.io/manual-xt",
   tb303: "https://rolandcloud.com/getmedia/b3e2da28-1951-467e-bd79-7aae34481570/TB-303-Manual-E.pdf",
-  tr808: "https://www.manualslib.com/manual/1294765/Roland-Tr-808.html?page=6",
+  // Roland's own TR-808 page: the panel's knobs per voice (BD level, tone, decay; SD level, tone, snappy;
+  // toms level, tuning; OH level, decay; CY level, tone, decay).
+  tr808: "https://support.roland.com/hc/en-us/articles/201963539-TR-808-Technical-Specifications",
   elektron: "https://cdn.www.elektron.se/media/downloads/digitakt/Digitakt_Quick_Guide_ENG_220928.pdf",
   valhalla: "https://valhalladsp.com/2019/04/16/valhalladelay-the-mode-control",
   cz: "https://en.wikipedia.org/wiki/Casio_CZ_synthesizers",
   rekordbox: "https://cdn.rekordbox.com/files/20250907160902/CDJ_XDJ_Control_Mapping_en_CDJ-3000X.pdf",
+  // rekordbox 7.2.16 manual: [CROSSFADER Curve] (p. 145 and the mixer preferences), "Using the STEMS
+  // function" (p. 212, the track separation function), "Using BEAT FX" with [ECHO] and FX LEVEL/DEPTH (p. 182).
+  rekordboxManual: "https://cdn.rekordbox.com/files/20260706162433/rekordbox7.2.16_manual_EN.pdf",
+  // Vital's own source (GPL; read for the names only, no code taken): the knob labels its screens draw
+  // (src/interface/editor_sections/*_section.cpp), the parameter names (src/common/synth_parameters.cpp)
+  // and the menu names (src/interface/look_and_feel/synth_strings.h).
+  vital: "https://github.com/mtytel/vital",
+  // Serum 2's web manual: "Using Pitch Controls" (OCT, SEM, FIN, CRS) and "Controlling the Main Output
+  // Volume" (the MAIN knob). The rest of the manual is not online, so no other Serum names are listed.
+  serum: "https://xferrecords.com/web-manual/serum-2/using-pitch-controls",
 } as const;
 
 /** One place the same control lives: the instrument, and the name printed on it there. */
@@ -49,11 +61,13 @@ export type Control = {
  */
 export const CONTROLS: Record<string, Control> = {
   // ── the filter ──
-  cutoff: { label: "cutoff", elsewhere: [["live auto filter", "freq"], ["live drift", "freq"], ["tb-303", "cut off freq"]] },
-  res: { label: "res", elsewhere: [["live auto filter", "res"], ["live drift", "res"], ["tb-303", "resonance"]] },
+  // vital: filter parameters "Cutoff", "Resonance", "Drive", "Key Track"; "Model" picks analog, dirty, ladder,
+  // digital, diode, formant, comb or phaser (synth_parameters.cpp, synth_strings.h kFilterModelNames).
+  cutoff: { label: "cutoff", elsewhere: [["live auto filter", "freq"], ["live drift", "freq"], ["tb-303", "cut off freq"], ["vital filter", "cutoff"]] },
+  res: { label: "res", elsewhere: [["live auto filter", "res"], ["live drift", "res"], ["tb-303", "resonance"], ["vital filter", "resonance"]] },
   env: { label: "env", elsewhere: [["tb-303", "env mod"]] },
-  character: { label: "circuit", was: ["character"], elsewhere: [["live auto filter", "circuit (svf, dfm, ms2, prd)"], ["live wavetable", "circuit (clean, osr, ms2, smp, prd)"]] },
-  fdrive: { label: "drive", was: ["filter drive"], elsewhere: [["live auto filter", "drive"], ["live wavetable", "drive"]] },
+  character: { label: "circuit", was: ["character"], elsewhere: [["live auto filter", "circuit (svf, dfm, ms2, prd)"], ["live wavetable", "circuit (clean, osr, ms2, smp, prd)"], ["vital filter", "model (analog, ladder, diode and more)"]] },
+  fdrive: { label: "drive", was: ["filter drive"], elsewhere: [["live auto filter", "drive"], ["live wavetable", "drive"], ["vital filter", "drive"]] },
   fdecay: { label: "f decay", elsewhere: [["tb-303", "decay"]] },
   lp: { label: "cutoff", was: ["filter"], elsewhere: [["live auto filter", "freq"]] },
   filter: { label: "cutoff", was: ["filter"], elsewhere: [["live auto filter", "freq"]] },
@@ -61,17 +75,20 @@ export const CONTROLS: Record<string, Control> = {
   lpkind: { label: "circuit", was: ["character"], elsewhere: [["live auto filter", "circuit (svf, dfm, ms2, prd)"]] },
 
   // ── the oscillator ──
-  wave: { label: "shape", was: ["wave"], elsewhere: [["live drift", "shape"], ["surge xt classic", "shape"], ["live wavetable", "wave position"], ["tb-303", "waveform (saw or square)"]] },
+  // vital: the wavetable position is "Wave Frame"; the unison knob is "Unison Detune" (synth_parameters.cpp).
+  wave: { label: "shape", was: ["wave"], elsewhere: [["live drift", "shape"], ["surge xt classic", "shape"], ["live wavetable", "wave position"], ["vital osc", "wave frame"], ["tb-303", "waveform (saw or square)"]] },
   osc: { label: "osc", elsewhere: [["surge xt", "classic, wavetable (osc types)"], ["live operator", "feedback"], ["casio cz", "phase distortion, its amount is dcw"]] },
-  sub: { label: "sub", elsewhere: [["live wavetable", "sub"]] },
+  sub: { label: "sub", elsewhere: [["live wavetable", "sub"], ["vital", "sub level"]] },
   drift: { label: "drift", elsewhere: [["live drift", "drift"]] },
-  detune: { label: "detune", elsewhere: [["live wavetable", "unison amount"], ["live drift", "unison strength"]] },
+  detune: { label: "detune", elsewhere: [["live wavetable", "unison amount"], ["live drift", "unison strength"], ["vital osc", "unison detune"]] },
   spread: { label: "spread", elsewhere: [["live operator", "spread"]] },
-  glide: { label: "glide", elsewhere: [["live drift", "glide"], ["live wavetable", "glide"], ["tb-303", "slide"]] },
+  // vital: the knob is printed GLIDE (portamento_section.cpp); its parameter is "Portamento Time".
+  glide: { label: "glide", elsewhere: [["live drift", "glide"], ["live wavetable", "glide"], ["vital", "glide (portamento time)"], ["tb-303", "slide"]] },
   fm: { label: "fm", elsewhere: [["live wavetable", "fm amt"], ["live ds fm", "amnt"]] },
   ratio: { label: "ratio", elsewhere: [["live operator", "coarse"], ["live wavetable", "fm tune"]] },
   lfo: { label: "lfo", elsewhere: [["live auto filter", "lfo amt"], ["surge xt", "amplitude"]] },
-  lforate: { label: "lfo rate", elsewhere: [["live auto filter", "rate"], ["surge xt", "rate"]] },
+  // vital: an lfo's rate is printed FREQUENCY (lfo_section.cpp).
+  lforate: { label: "lfo rate", elsewhere: [["live auto filter", "rate"], ["surge xt", "rate"], ["vital lfo", "frequency"]] },
 
   // ── the resonator voices ──
   voice: { label: "exciter", was: ["voice"], elsewhere: [["live tension", "exciter type (plectrum, hammer)"], ["live collision", "mallet"]] },
@@ -79,19 +96,24 @@ export const CONTROLS: Record<string, Control> = {
   bright: { label: "stiffness", was: ["bright"], elsewhere: [["live collision", "mallet stiffness"], ["live tension", "stiffness"]] },
 
   // ── every part: eq, fx, mix ──
-  low: { label: "low", elsewhere: [["live eq three", "low"]] },
-  mid: { label: "mid", elsewhere: [["live eq three", "mid"]] },
-  high: { label: "high", elsewhere: [["live eq three", "high"]] },
+  // vital: the eq's bands are "EQ Low Gain", "EQ Band Gain", "EQ High Gain" (synth_parameters.cpp).
+  low: { label: "low", elsewhere: [["live eq three", "low"], ["vital eq", "low gain"]] },
+  mid: { label: "mid", elsewhere: [["live eq three", "mid"], ["vital eq", "band gain"]] },
+  high: { label: "high", elsewhere: [["live eq three", "high"], ["vital eq", "high gain"]] },
   cut: { label: "low cut", elsewhere: [["live eq eight", "low cut"]] },
-  drive: { label: "drive", elsewhere: [["live saturator", "drive"], ["live ds kick", "drive"]] },
-  crush: { label: "crush", elsewhere: [["live redux", "bits and rate"]] },
+  // vital: the distortion effect's knobs are DRIVE and MIX, its TYPE soft clip, hard clip, linear fold,
+  // sine fold, bit crush, down sample (distortion_section.cpp, synth_strings.h kDistortionTypeNames).
+  drive: { label: "drive", elsewhere: [["live saturator", "drive"], ["live ds kick", "drive"], ["vital distortion", "drive"]] },
+  crush: { label: "crush", elsewhere: [["live redux", "bits and rate"], ["vital distortion", "type: bit crush, down sample"]] },
   send: { label: "send", elsewhere: [["live mixer", "send (to a return track with a reverb)"]] },
   echo: { label: "echo", elsewhere: [["live mixer", "send (to a return track with a delay)"]] },
 
   // ── drums ──
-  tune: { label: "tune", elsewhere: [["live ds snare", "tune"], ["live ds kick", "pitch"], ["live drum sampler", "transpose"]] },
-  decay: { label: "decay", elsewhere: [["live ds kick", "decay"], ["tb-303", "decay"]] },
-  shape: { label: "shape", was: ["body"], elsewhere: [["live saturator", "curve type (soft sine, hard curve, digital clip)"], ["live ds kick", "drive"]] },
+  // tr-808 (Roland's page): the toms' knob is TUNING, the bass drum's and cymbal's DECAY.
+  // serum 2: an oscillator's semitones are SEM (its web manual, using pitch controls).
+  tune: { label: "tune", elsewhere: [["live ds snare", "tune"], ["live ds kick", "pitch"], ["live drum sampler", "transpose"], ["tr-808 toms", "tuning"], ["serum 2 osc", "sem (semitone)"]] },
+  decay: { label: "decay", elsewhere: [["live ds kick", "decay"], ["tr-808 bass drum", "decay"], ["tb-303", "decay"]] },
+  shape: { label: "shape", was: ["body"], elsewhere: [["live saturator", "curve type (soft sine, hard curve, digital clip)"], ["live ds kick", "drive"], ["vital distortion", "type (soft clip, hard clip)"]] },
   shapeblip: { label: "type", was: ["sound"], elsewhere: [["live", "ds fm, ds clang (each its own drum)"]] },
   shapewood: { label: "type", was: ["sound"], elsewhere: [["live ds clang", "clave switch"]] },
   noise: { label: "noise", elsewhere: [["live drum sampler", "noise amount"], ["tr-808 snare", "snappy"]] },
@@ -110,15 +132,18 @@ export const CONTROLS: Record<string, Control> = {
   sidechain: { label: "sidechain", elsewhere: [["live glue compressor", "sidechain eq"]] },
   gluemix: { label: "dry/wet", was: ["glue mix"], elsewhere: [["live glue compressor", "dry/wet"]] },
   space: { label: "algorithm", was: ["space"], elsewhere: [["live hybrid reverb", "algorithm"]] },
-  verbtime: { label: "decay", was: ["verb time"], elsewhere: [["live reverb", "decay"], ["live hybrid reverb", "decay"]] },
+  // vital: the reverb's decay knob is printed TIME, the delay's FEEDBACK (reverb_section.cpp, delay_section.cpp).
+  verbtime: { label: "decay", was: ["verb time"], elsewhere: [["live reverb", "decay"], ["live hybrid reverb", "decay"], ["vital reverb", "time"]] },
   echotype: { label: "echo", elsewhere: [["valhalla delay", "mode (tape, bbd, digital)"]] },
-  repeats: { label: "feedback", was: ["repeats"], elsewhere: [["live echo", "feedback"], ["live delay", "feedback"]] },
+  repeats: { label: "feedback", was: ["repeats"], elsewhere: [["live echo", "feedback"], ["live delay", "feedback"], ["vital delay", "feedback"]] },
+  // serum 2: the main output knob is MAIN (its web manual, controlling the main output volume).
+  out: { label: "out", elsewhere: [["serum 2", "main"]] },
 
   // ── studio tools that are not params ──
   plock: { label: "p-lock", was: ["lock", "locked"], elsewhere: [["elektron", "parameter lock"]] },
   density: { label: "density", was: ["fill"], elsewhere: [["live 12 rhythm generator", "density"], ["live 12 seed generator", "density"]] },
   capture: { label: "capture", elsewhere: [["live", "capture midi"]] },
-  macro: { label: "macro", elsewhere: [["live racks", "macro variations"]] },
+  macro: { label: "macro", elsewhere: [["live racks", "macro variations"], ["vital", "macro 1 to 4"]] },
   warp: { label: "warp", was: ["repitch"], elsewhere: [["live warp modes", "beats, re-pitch"]] },
   swing: { label: "swing", elsewhere: [["live", "global groove amount"]] },
 
@@ -127,6 +152,11 @@ export const CONTROLS: Record<string, Control> = {
   loop: { label: "loop", elsewhere: [["rekordbox", "beat loop"]] },
   sync: { label: "sync", elsewhere: [["rekordbox", "beat sync"]] },
   key: { label: "key", elsewhere: [["rekordbox", "key shift, key sync"]] },
+  // rekordbox 7.2.16 manual (rekordboxManual): the crossfader curve setting, the stems (track separation)
+  // function, and beat fx's echo with its fx level/depth knob.
+  curve: { label: "curve", elsewhere: [["rekordbox", "crossfader curve"]] },
+  stems: { label: "stems", elsewhere: [["rekordbox", "stems (vocal, inst, bass, drums), its track separation"]] },
+  djecho: { label: "echo", elsewhere: [["rekordbox beat fx", "echo, its amount is fx level/depth"]] },
 };
 
 /** Names for a stepped knob's positions: what the screen shows when you turn it. */

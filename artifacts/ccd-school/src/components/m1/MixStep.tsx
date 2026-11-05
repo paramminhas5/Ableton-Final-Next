@@ -270,8 +270,14 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           {songCues.map(c => <button key={c.slug} type="button" className={`ls-chip ${cueA === c.bar ? "is-on" : ""}`} aria-pressed={cueA === c.bar} aria-label={`deck a from your cue ${c.name}, bar ${c.bar}`} onClick={() => setCueA(c.bar)}>a · {c.name}<small>bar {c.bar}</small></button>)}
         </div>}
         {songCues.length > 0 && !(mine.sections?.length) ? <p className="fl-pro">your song's cues: {songCues.map(c => `${c.name}, bar ${c.bar} of the phrase`).join(" · ")}. arrange your song and deck a can jump to them.</p> : null}
-        <SameElsewhere keys={[...(shows("sync") ? ["sync"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key"] : [])]}
-          labels={[...(shows("sync") ? ["sync b"] : []), ...(shows("cues") ? ["cue"] : []), ...(shows("loops") ? ["loop"] : []), ...(shows("key") ? ["key b"] : [])]} />
+        {(() => {
+          // The dj tools this screen shows, and what rekordbox calls each (src/lib/controlNames.ts).
+          const echo = screen.goal === "echo" || screen.goal === "free";
+          const rows: [boolean, string, string][] = [[shows("sync"), "sync", "sync b"], [shows("cues"), "cue", "cue"], [shows("loops"), "loop", "loop"], [shows("key"), "key", "key b"],
+            [shows("stems"), "stems", "stems"], [shows("curve"), "curve", "curve"], [echo, "djecho", "echo a"]];
+          const on = rows.filter(r => r[0]);
+          return <SameElsewhere keys={on.map(r => r[1])} labels={on.map(r => r[2])} />;
+        })()}
         <div className="fl-marks mx-tools" role="group" aria-label="Deck tools">
           {shows("sync") && <button type="button" className={`ls-chip ${synced ? "is-on" : ""}`} aria-pressed={synced} onClick={sync}>sync b</button>}
           {shows("cues") && CUES.map((c, i) => <button key={c.name} type="button" className="ls-chip" aria-label={`cue ${i + 1} ${c.name}`} onClick={() => jump(c.at)}>cue {i + 1}<small>{c.name}</small></button>)}

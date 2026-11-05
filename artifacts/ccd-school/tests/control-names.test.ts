@@ -62,6 +62,37 @@ describe("control names (Param, 5 Nov: no invented names)", () => {
     }
     expect(elsewhereLine("cutoff")).toBe("live auto filter: freq · live drift: freq · tb-303: cut off freq");
   });
+
+  it("vital, serum 2, rekordbox and tr-808 names are the ones their sources print (no guessed names)", () => {
+    const at = (key: string, where: string) => CONTROLS[key].elsewhere.find(([w]) => w === where)?.[1];
+    // Vital's own screens and parameter list (github.com/mtytel/vital)
+    expect(at("cutoff", "vital filter")).toBe("cutoff");
+    expect(at("res", "vital filter")).toBe("resonance");
+    expect(at("fdrive", "vital filter")).toBe("drive");
+    expect(at("detune", "vital osc")).toBe("unison detune");
+    expect(at("wave", "vital osc")).toBe("wave frame");
+    expect(at("glide", "vital")).toBe("glide (portamento time)");
+    expect(at("lforate", "vital lfo")).toBe("frequency");
+    expect(at("verbtime", "vital reverb")).toBe("time");
+    expect(at("repeats", "vital delay")).toBe("feedback");
+    expect(at("shape", "vital distortion")).toBe("type (soft clip, hard clip)");
+    // Serum 2's web manual: SEM and MAIN only
+    expect(at("tune", "serum 2 osc")).toBe("sem (semitone)");
+    expect(at("out", "serum 2")).toBe("main");
+    expect(Object.values(CONTROLS).flatMap(c => c.elsewhere).filter(([w]) => w.startsWith("serum")).length).toBe(2);
+    // rekordbox 7.2.16 manual
+    expect(elsewhereLine("curve")).toBe("rekordbox: crossfader curve");
+    expect(elsewhereLine("stems")).toMatch(/^rekordbox: stems .*track separation$/);
+    expect(elsewhereLine("djecho")).toBe("rekordbox beat fx: echo, its amount is fx level/depth");
+    // Roland's TR-808 page: snare SNAPPY, toms TUNING, bass drum DECAY
+    expect(at("noise", "tr-808 snare")).toBe("snappy");
+    expect(at("tune", "tr-808 toms")).toBe("tuning");
+    expect(at("decay", "tr-808 bass drum")).toBe("decay");
+  });
+
+  it("the studio's two-name line still starts with live's names", () => {
+    for (const k of ["cutoff", "res", "drive", "detune", "glide", "tune", "decay"]) expect(elsewhereLine(k, 2)!.startsWith("live"), k).toBe(true);
+  });
 });
 
 describe("saved songs from before the rename", () => {
