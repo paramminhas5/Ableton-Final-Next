@@ -4,7 +4,8 @@
  * octaves around your part; columns are sixteenth steps. Phone-safe editing, after Ableton Note:
  * tap an empty square to add a note, tap a note to pick it, hold a note to add it to the picked ones,
  * drag the handle on a picked note's right edge sideways for length and up or down for velocity, and
- * use the strip for nudge, transpose, quantise and the rest. Plays as you edit.
+ * use the strip for nudge, transpose, quantise and the rest. Plays as you edit. On a phone, two fingers
+ * pinch sideways to zoom time and up and down to zoom pitch (src/lib/pinch.ts); one finger still edits.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { readTrackV2, writeTrackV2, type LayerType, type NoteEvent } from "@/lib/track2";
@@ -14,6 +15,7 @@ import { humanize, strum, velocityShape } from "@/lib/transform";
 import { fillMelody, newSeed } from "@/lib/dice";
 import { Meta } from "./LessonParts";
 import { Frame, useLoop, withPart, type StepProps } from "./ToolSteps";
+import { PITCH_ZOOM, TIME_ZOOM, anchorScroll, pinchAxis, pinchZoom, zoomLabel, type PinchAxis } from "@/lib/pinch";
 
 const BLACK = new Set([1, 3, 6, 8, 10]);
 const STEP = 0.25;
@@ -61,6 +63,63 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
     setFc([r, c]);
     (roll.current?.querySelector(`[data-rc="${r}-${c}"]`) as HTMLElement | null)?.focus();
   };
+  // Pinch zoom (phones): two fingers sideways zoom time, up and down zoom pitch. Touch events, not pointer
+  // events, so one finger keeps the browser's own scrolling and only a two-finger gesture is taken over.
+  const [zx, setZx] = useState(1);
+  const [zy, setZy] = useState(1);
+  const [pinchAx, setPinchAx] = useState<PinchAxis | null>(null);
+  const zoomRef = useRef({ zx: 1, zy: 1 });
+  zoomRef.current = { zx, zy };
+  const pinchEnd = useRef(0);
+  useEffect(() => {
+    const el = roll.current;
+    if (!el) return;
+    let g: { axis: PinchAxis; d0: number; z0: number; s0: number; anchor: number } | null = null;
+    const two = (t: TouchList) => { const a = t[0], b = t[1]; return { dx: b.clientX - a.clientX, dy: b.clientY - a.clientY, mx: (a.clientX + b.clientX) / 2, my: (a.clientY + b.clientY) / 2 }; };
+    const start = (e: TouchEvent) => {
+      if (e.touches.length !== 2) return;
+      e.preventDefault();
+      window.clearTimeout(holdT.current);
+      const f = two(e.touches), r = el.getBoundingClientRect();
+      const axis = pinchAxis(f.dx, f.dy);
+      g = axis === "time"
+        ? { axis, d0: f.dx, z0: zoomRef.current.zx, s0: el.scrollLeft, anchor: f.mx - r.left }
+        : { axis, d0: f.dy, z0: zoomRef.current.zy, s0: el.scrollTop, anchor: f.my - r.top };
+      setPinchAx(axis);
+    };
+    const move = (e: TouchEvent) => {
+      if (!g || e.touches.length < 2) return;
+      e.preventDefault();
+      const f = two(e.touches);
+      const z = pinchZoom(g.z0, g.d0, g.axis === "time" ? f.dx : f.dy, g.axis === "time" ? TIME_ZOOM : PITCH_ZOOM);
+      const to = anchorScroll(g.s0, g.anchor, g.z0, z);
+      if (g.axis === "time") { setZx(z); requestAnimationFrame(() => { el.scrollLeft = to; }); }
+      else { setZy(z); requestAnimationFrame(() => { el.scrollTop = to; }); }
+    };
+    const end = (e: TouchEvent) => { if (g && e.touches.length < 2) { g = null; pinchEnd.current = Date.now(); setPinchAx(null); } };
+    // Safari's own pinch gesture would zoom the page instead.
+    const gesture = (e: Event) => e.preventDefault();
+    el.addEventListener("touchstart", start, { passive: false });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end);
+    el.addEventListener("touchcancel", end);
+    el.addEventListener("gesturestart", gesture);
+    return () => {
+      el.removeEventListener("touchstart", start);
+      el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", end);
+      el.removeEventListener("touchcancel", end);
+      el.removeEventListener("gesturestart", gesture);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // A trackpad pinch arrives as a ctrl-wheel: it zooms time.
+  const onRollWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    setZx(z => Math.round(Math.max(TIME_ZOOM.min, Math.min(TIME_ZOOM.max, z * Math.exp(-e.deltaY / 200))) * 100) / 100);
+  };
+  const zoomed = zoomLabel(zx, zy);
+  const resetZoom = () => { setZx(1); setZy(1); if (roll.current) roll.current.scrollLeft = 0; };
   const playCol = playing ? Math.floor((((beat % loop) + loop) % loop) / STEP) : -1;
   const at = (note: number, col: number) => evs.findIndex(e => e.note === note && e.start <= col * STEP + 1e-6 && e.start + e.len > col * STEP + 1e-6);
   // Undo for every edit in the roll.
@@ -87,6 +146,8 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
   const held = useRef(false);
   const tap = (note: number, col: number) => {
     if (held.current) { held.current = false; return; }
+    // The fingers of a pinch lifting are not taps.
+    if (pinchAx || Date.now() - pinchEnd.current < 350) return;
     const i = at(note, col);
     if (i >= 0) { setSel(i === sel && picked.size === 1 ? null : i); return; }
     const vel = sel !== null && evs[sel] ? evs[sel].vel : 0.8;
@@ -188,8 +249,9 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
       note={base.added ? `your song has no ${type} yet, so here are a few notes to edit. keep adds them.` : null}
       inst={<>
         <Screen>
-          <Meta left={`note grid · ${keyName(root, scale)}`} right={drag ? drag.text : many ? `${picked.size} notes picked` : s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
-          <div ref={roll} className="gr-roll" role="grid" onKeyDown={onRollKey} aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols } as CSSProperties}>
+          <Meta left={`note grid · ${keyName(root, scale)}`} right={pinchAx ? (zoomed ?? `${pinchAx} 1x`) : drag ? drag.text : many ? `${picked.size} notes picked` : s ? `${NOTE_NAMES[s.note % 12]}${Math.floor(s.note / 12) - 1} · ${Math.max(1, Math.round(s.len / STEP))} step${Math.round(s.len / STEP) > 1 ? "s" : ""} long · velocity ${Math.round(s.vel * 127)}` : playing ? "tap a square to add a note" : "press play"} />
+          <div ref={roll} className="gr-roll" role="grid" onKeyDown={onRollKey} onWheel={onRollWheel} aria-label={`Note grid for your ${type}`} style={{ ["--c" as string]: accent, ["--cols" as string]: cols, ["--zy" as string]: zy } as CSSProperties}>
+            <div className="gr-inner" role="presentation" style={{ width: `${zx * 100}%` }}>
             {rows.map((n, ri) => (
               <div key={n} role="row" className={`gr-row ${BLACK.has(n % 12) ? "is-black" : ""} ${inScale(n, root, scale) ? "" : "is-out"} ${pitchClass(n) === pitchClass(root) ? "is-root" : ""}`}>
                 {/* A keyboard down the side: black keys dark, every C and every root named. */}
@@ -213,7 +275,9 @@ export function GridStep({ screen, accent, onNext, tail }: StepProps) {
                 })}
               </div>
             ))}
+            </div>
           </div>
+          {zoomed && !pinchAx ? <button type="button" className="gr-zoom" onClick={resetZoom} aria-label={`Reset the zoom (${zoomed})`}>{zoomed} · reset</button> : null}
         </Screen>
         <div className="gr-tools" role="toolbar" aria-label={many ? "Edit the picked notes" : "Edit the picked note"}>
           {s ? tools.map(([l, a, f]) => <button key={l} type="button" className="ls-chip" aria-label={a} title={a} onClick={f}>{l}</button>) : <span className="gr-tip">tap a square to add a note. tap a note to pick it, hold more to pick several. drag a picked note&apos;s edge: sideways for length, up or down for velocity</span>}
