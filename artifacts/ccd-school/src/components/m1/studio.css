@@ -2,7 +2,7 @@
    Ported from the canvas classes with an st- prefix. Tokens come from globals.css. */
 
 .st-root{position:relative;height:100dvh;max-width:440px;margin:0 auto;overflow:hidden;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;color:var(--ink)}
-.st-body{position:absolute;left:16px;right:16px;top:calc(10px + env(safe-area-inset-top,0px));bottom:calc(128px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
+.st-body{position:absolute;left:16px;right:16px;top:calc(10px + env(safe-area-inset-top,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column}
 .st-head{display:flex;align-items:center;gap:12px;height:38px;flex:none}
 .st-tag{display:inline-flex;align-items:center;border:1px solid var(--tag);border-radius:5px;padding:0 6px;height:18px;font-size:11px;font-weight:500;color:var(--sub);background:none;font-family:inherit;min-height:0;min-width:0;cursor:pointer}
 .st-mode{display:flex;height:34px;width:150px;border-radius:17px;background:var(--well);box-shadow:inset 0 3px 6px var(--shA),0 1px 0 var(--hi);padding:3px;box-sizing:border-box}
@@ -12,7 +12,7 @@
 
 /* layer slots */
 .st-slots{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;flex:none;margin-top:8px}
-.st-slot{height:50px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
+.st-slot{height:44px;border-radius:11px;flex-direction:column;justify-content:center;gap:6px;font-size:10px;font-weight:500;color:var(--sub);padding:0;aspect-ratio:auto!important;cursor:pointer}
 .st-slot.is-on{color:var(--ink);font-weight:600}
 .st-slot .m1-dash{width:16px}
 .st-plus{color:var(--sub)}
@@ -22,7 +22,8 @@
 
 /* screen */
 .st-scr{margin-top:10px;flex:none}
-.st-scr .m1-glass{padding:14px 18px!important}
+.st-scr .m1-glass{padding:12px 16px!important;height:78px!important}
+@media (min-width:900px) and (min-height:560px){.st-scr .m1-glass{padding:14px 18px!important;height:96px!important}}
 .st-big{font-weight:300;letter-spacing:-.035em;line-height:1;text-shadow:0 0 14px rgba(255,255,255,.16)}
 .st-ss{color:#9A9AA0;font-size:11px;font-weight:500}
 .st-chip{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:10px;border:1px solid currentColor;font-size:11px;font-weight:500}
@@ -85,7 +86,7 @@
 .st-knobs{margin-top:8px;flex:none}
 
 /* transport */
-.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:2fr repeat(4,1fr)}
+.st-transport{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom,0px));grid-template-columns:1.6fr repeat(5,minmax(0,1fr))}
 
 /* fourth surfaces */
 .st-lanes{position:relative;overflow:hidden}

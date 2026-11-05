@@ -11,8 +11,8 @@ import { pressNote, releaseNote, overdub, type Held } from "@/lib/recorder";
 import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
 import { newLayerV2, readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { NOTE_NAMES, type Snap } from "@/lib/theory";
-import { velocity } from "@/lib/touch";
-import { GoPill, Icon, Key, Screen, Silk } from "./controls";
+import { velocityAt } from "@/lib/touch";
+import { GoPill, Icon, Key, PadRing, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
@@ -53,6 +53,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const [nudge, setNudge] = useState(false);
   const [held, setHeld] = useState<Set<number>>(new Set());
   const [lit, setLit] = useState<Record<number, number>>({});
+  // A ring flashes out of a pad on every hit, yours or the loop's: keyed per hit so it replays.
+  const [rings, setRings] = useState<Record<number, { t: number; v: number }>>({});
+  const ring = useCallback((pad: number, v: number) => { if (pad >= 0) setRings(r => ({ ...r, [pad]: { t: performance.now() + Math.random(), v } })); }, []);
   const history = useRef<NoteEvent[][]>([]);
   const takeOpen = useRef(false);
   const recHeld = useRef<Held>(new Map());
@@ -60,6 +63,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   sessionRef.current = session;
 
   const pads = useMemo(() => playPads(type, session.root, session.scale === "major" ? "major" : "minor"), [type, session.root, session.scale]);
+  const padsRef = useRef(pads);
+  padsRef.current = pads;
   const events = session.layers[idx]?.events ?? [];
   const drumLike = type === "drums" || type === "hats";
   const playing = !!(pos.flags & FLAG.playing);
@@ -83,6 +88,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         if (e.layer !== idx) continue;
         if (e.kind === OUT.seqOn) {
           setLit(l => ({ ...l, [e.note]: Date.now() }));
+          ring(padsRef.current.findIndex(p => p.notes[0] === e.note), e.vel);
           continue;
         }
         const rec = !!(e.flags & FLAG.recording);
@@ -98,7 +104,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         }
       }
     });
-  }, [engine, idx, snap, setEvents]);
+  }, [engine, idx, snap, setEvents, ring]);
 
   useEffect(() => {
     if (!recording && !countIn) takeOpen.current = false;
@@ -124,9 +130,10 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     e.preventDefault();
     try { (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId); } catch { /* no active pointer (synthetic events) */ }
     start();
-    const vel = velocity(e);
+    const vel = velocityAt(e);
     for (const n of pads[pad].notes) engine.noteOn(idx, n, vel, e.timeStamp);
     setHeld(h => new Set(h).add(pad));
+    ring(pad, vel);
   };
   // Enter or Space plays a pad too, so a keyboard can do every play-in.
   const keyDown = (pad: number, e: KeyboardEvent<HTMLElement>) => {
@@ -135,6 +142,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     start();
     for (const n of pads[pad].notes) engine.noteOn(idx, n, 0.85, e.timeStamp);
     setHeld(h => new Set(h).add(pad));
+    ring(pad, 0.85);
   };
   const keyUp = (pad: number, e: KeyboardEvent<HTMLElement>) => {
     if (e.key !== "Enter" && e.key !== " ") return;
@@ -324,7 +332,9 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
               onPointerDown={e => down(i, e)} onPointerUp={e => up(i, e)} onPointerCancel={e => up(i, e)} onPointerLeave={e => { if (e.buttons) up(i, e); }}
               onKeyDown={e => keyDown(i, e)} onKeyUp={e => keyUp(i, e)}
               onContextMenu={e => e.preventDefault()}>
+              {drumLike || type === "chords" ? <i className="pad-vel" /> : null}
               <span>{p.label}</span>
+              {rings[i] ? <PadRing key={rings[i].t} v={rings[i].v} /> : null}
             </button>
           );
         })}

@@ -31,7 +31,7 @@ import {
   type ParamSpec,
 } from "@/engine";
 import { pressNote, releaseNote, overdub, toggleStep, type Held } from "@/lib/recorder";
-import { velocity } from "@/lib/touch";
+import { velocityAt } from "@/lib/touch";
 import { keyRow, noteName, padGrid, pitchClass, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
 import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
@@ -57,7 +57,7 @@ import {
 import { downloadTrackV2Midi } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
-import { CAP, Icon, Key, Knob, Screen, Silk } from "./controls";
+import { CAP, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
 import { useEngineTrack } from "./useEngineTrack";
@@ -121,6 +121,7 @@ export function Studio() {
   const [snap, setSnap] = useState<Snap>("1/16");
   const [pos, setPos] = useState<{ beat: number; flags: number }>({ beat: 0, flags: 0 });
   const [hits, setHits] = useState<Record<string, number>>({});
+  const [rings, setRings] = useState<Rings>({});
   const [held, setHeldUi] = useState<Set<number>>(new Set());
   const lastNote = useRef(33);
   const recHeld = useRef<Held>(new Map());
@@ -174,8 +175,10 @@ export function Studio() {
   );
 
   // ── engine events: recording, the playhead, lights ───────────────────────
-  const flash = useCallback((key: string) => {
-    setHits(h => ({ ...h, [key]: Date.now() }));
+  const flash = useCallback((key: string, v = 0.85) => {
+    const t = Date.now();
+    setHits(h => ({ ...h, [key]: t }));
+    setRings(r => ({ ...r, [key]: { t: t + Math.random(), v } }));
     setTimeout(() => setHits(h => {
       const n = { ...h };
       if (Date.now() - (n[key] ?? 0) >= 200) delete n[key];
@@ -194,10 +197,10 @@ export function Studio() {
         const layer = t.layers[e.layer];
         if (!layer) continue;
         if (e.kind === OUT.seqOn) {
-          flash(`${layer.id}:${e.note}`);
+          flash(`${layer.id}:${e.note}`, e.vel);
           continue;
         }
-        if (e.kind === OUT.playedOn && e.flags & FLAG.repeat) flash(`${layer.id}:${e.note}`);
+        if (e.kind === OUT.playedOn && e.flags & FLAG.repeat) flash(`${layer.id}:${e.note}`, e.vel);
         const rec = !!(e.flags & FLAG.recording);
         if (e.kind === OUT.playedOn && rec && e.flags & FLAG.repeat) {
           // A roll hit has no note off: it is a short hit on the beat it landed.
@@ -233,11 +236,11 @@ export function Studio() {
     e.preventDefault();
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
     start();
-    const vel = velocity(e);
+    const vel = velocityAt(e);
     engine.noteOn(selIndex, note, vel, e.timeStamp);
     if (!drumLike) lastNote.current = note;
     setHeldUi(h => new Set(h).add(note));
-    flash(`${sel.id}:${note}`);
+    flash(`${sel.id}:${note}`, vel);
     if (drumLike) {
       const pad = DRUM_PAD_NOTES.indexOf(note as (typeof DRUM_PAD_NOTES)[number]);
       if (pad >= 0 && pad !== effectivePad(sel)) patchSel(l => ({ ...l, pad }), false);
@@ -553,13 +556,13 @@ export function Studio() {
             {sel.surface === "own" && ctx && sel.type === "hats" && <RollsSurface ctx={ctx} rate={rate} setRate={setRate} />}
             {sel.surface === "own" && ctx && sel.type === "fx" && <RiserSurface ctx={ctx} />}
             {sel.surface === "own" && sel.type === "sample" && <SampleLoader layer={sel} onPatch={patchSel} onPreview={slot => { start(); engine.noteOn(selIndex, SAMPLER_NOTE_BASE + slot, 0.9); window.setTimeout(() => engine.noteOff(selIndex, SAMPLER_NOTE_BASE + slot), 600); }} />}
-            {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
+            {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && drumLike && (
-              <DrumPads layer={sel} hits={hits} noteHandlers={noteHandlers} />
+              <DrumPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />
             )}
-            {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} noteHandlers={noteHandlers} />}
+            {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && !drumLike && sel.type !== "fx" && sel.type !== "sample" && (
-              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} noteHandlers={noteHandlers} />
+              <ScalePads layer={sel} root={sel.type === "bass" ? bassRoot(track) : 45 + ((track.root % 12) - 9)} scale={scaleOf(track)} held={held} hits={hits} rings={rings} noteHandlers={noteHandlers} />
             )}
             {sel.surface === "keys" && sel.type !== "fx" && (
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} />
@@ -701,9 +704,12 @@ function DuckGraph({ track, layer, src }: { track: TrackV2; layer: LayerV2; src:
 // ── surfaces ────────────────────────────────────────────────────────────────
 
 type NoteHandlers = (note: number) => Record<string, (e: never) => void>;
+type Rings = Record<string, { t: number; v: number }>;
+/** The hit ring for one pad, remounted on every hit so its flash replays. */
+const ringOf = (rings: Rings, key: string) => (rings[key] ? <PadRing key={rings[key].t} v={rings[key].v} /> : null);
 
 /** 16-pad drum rack, kick bottom left. Resting pads glow faintly; a hit ripples out. */
-function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   // Screen order: top row first. Pad index p sits at row 3 - floor(p/4).
   const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
@@ -726,7 +732,9 @@ function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<
         const cls = d === 0 || (p === effectivePad(layer) && !hitPads.length) ? "is-lit" : d === 1 ? "is-rip1" : d === 2 ? "is-rip2" : "is-rest";
         return (
           <button key={p} type="button" className={`st-sp ${cls}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={DRUM_PAD_NAMES[p]} {...noteHandlers(note)}>
+            <i className="pad-vel" />
             <span className="st-lb">{DRUM_PAD_NAMES[p]}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}
@@ -735,7 +743,7 @@ function DrumPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<
 }
 
 /** Scale grid: only notes in key, rows a fourth apart, roots glow. */
-function ScalePads({ layer, root, scale, held, hits, noteHandlers }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers }: { layer: LayerV2; root: number; scale: ScaleName; held: Set<number>; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const notes = padGrid(root, scale);
   return (
@@ -747,7 +755,9 @@ function ScalePads({ layer, root, scale, held, hits, noteHandlers }: { layer: La
         return (
           <button key={i} type="button" className={`st-sp ${on ? "is-lit" : isRoot ? "is-dim" : ""}`} style={{ ["--c" as string]: c } as CSSProperties}
             aria-label={`Note ${name}${isRoot ? ", root" : ""}`} {...noteHandlers(n)}>
+            <i className="pad-vel" />
             <span className="st-lb" style={{ fontSize: 15 }}>{name.replace(/-?\d+$/, "")}<span style={{ fontSize: 10, opacity: 0.6 }}>{name.match(/-?\d+$/)?.[0]}</span></span>
+            {ringOf(rings, `${layer.id}:${n}`)}
           </button>
         );
       })}
@@ -867,7 +877,7 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
 }
 
 /** 16 slots as pads. A slot with a sound lights on a hit; an empty one is dim. */
-function SamplePads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function SamplePads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
   return (
@@ -880,6 +890,7 @@ function SamplePads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Recor
           <button key={k} type="button" className={`st-sp ${lit ? "is-lit" : name ? "is-rest" : "is-dim"}`} style={{ ["--c" as string]: c } as CSSProperties}
             aria-label={name ? `slot ${k + 1}, ${name}` : `slot ${k + 1}, empty`} {...noteHandlers(note)}>
             <span className="st-lb">{name ? name.slice(0, 8) : k + 1}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}
@@ -941,7 +952,7 @@ function SampleLoader({ layer, onPatch, onPreview }: { layer: LayerV2; onPatch: 
 }
 
 /** The eight fx sounds as pads, bottom-left first. */
-function FxPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; noteHandlers: NoteHandlers }) {
+function FxPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
   const c = TYPE[layer.type].color;
   const order = [4, 5, 6, 7, 0, 1, 2, 3];
   return (
@@ -952,6 +963,7 @@ function FxPads({ layer, hits, noteHandlers }: { layer: LayerV2; hits: Record<st
         return (
           <button key={k} type="button" className={`st-sp ${lit ? "is-lit" : "is-rest"}`} style={{ ["--c" as string]: c } as CSSProperties} aria-label={FX_NAMES[k]} {...noteHandlers(note)}>
             <span className="st-lb">{FX_NAMES[k]}</span>
+            {ringOf(rings, `${layer.id}:${note}`)}
           </button>
         );
       })}

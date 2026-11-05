@@ -10,7 +10,8 @@
 /* studio: the pictures sit in a small glass well above the knobs */
 .st-pics{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px;flex:none;margin-top:8px;padding:6px 10px;border-radius:12px;background:#050506;box-shadow:0 0 0 2px #000,inset 0 0 0 1px rgba(255,255,255,.05),inset 0 6px 14px rgba(0,0,0,.6)}
 
-.st-pics .pic{height:50px}
+.st-pics .pic{height:40px}
+.st-pics{padding:4px 10px}
 @media (min-width:900px) and (min-height:560px){
   .st-pics{grid-auto-flow:row;gap:6px;padding:8px 12px}
   .st-pics .pic{height:78px}
@@ -33,3 +34,12 @@
 .m1-m.is-idle .m1-kc{filter:saturate(.25) brightness(.92)}
 .m1-m.is-idle > .m1-ml{color:var(--sub)!important}
 .m1-m.is-idle > .m1-kv{opacity:.55}
+
+/* pads: a ring flashes out on every hit, brighter and wider the harder the hit (PadRing in controls.tsx) */
+.pad-ring{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c,#fff) 85%,#fff),0 0 calc(6px + 14px * var(--v,.85)) color-mix(in srgb,var(--c,#fff) 70%,transparent);opacity:calc(.35 + .65 * var(--v,.85));animation:pad-ring .42s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes pad-ring{0%{transform:scale(.94)}60%{opacity:calc(.25 + .5 * var(--v,.85))}100%{transform:scale(1.035);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pad-ring{animation-duration:.2s}}
+/* a quiet engraving at the pad's top edge: hit up here for loud */
+.pad-vel{position:absolute;top:6px;left:50%;width:22%;height:2px;margin-left:-11%;border-radius:1px;background:currentColor;opacity:.16;pointer-events:none}
+.ls-key .pad-ring{inset:-4px;border-radius:13px;box-shadow:0 0 0 2px color-mix(in srgb,var(--c,#fff) 60%,#fff),0 0 calc(8px + 16px * var(--v,.85)) var(--c,#fff)}
+.st-sp .pad-ring{box-shadow:inset 0 0 0 3px rgba(255,255,255,.9),inset 0 0 calc(8px + 18px * var(--v,.85)) color-mix(in srgb,var(--c,#fff) 80%,#fff)}

@@ -151,6 +151,11 @@ export function Pad({ children, lit, onClick, href, ariaLabel, ariaPressed, heig
   return <button type="button" className={`m1-pd ${lit ? "is-lit" : ""}`} style={st} onClick={onClick} aria-label={ariaLabel} aria-pressed={ariaPressed}>{children}</button>;
 }
 
+/** A ring that flashes out from a pad on every hit. Give it a new `key` per hit; `v` is the velocity, 0..1. */
+export function PadRing({ v = 0.85 }: { v?: number }) {
+  return <i className="pad-ring" aria-hidden style={{ ["--v" as string]: v.toFixed(2) } as CSSProperties} />;
+}
+
 export function Dash({ color, on = true, style }: { color?: string; on?: boolean; style?: CSSProperties }) {
   return <span className={`m1-dash ${on ? "is-on" : ""}`} style={{ ["--c" as string]: color, ...style } as CSSProperties} />;
 }

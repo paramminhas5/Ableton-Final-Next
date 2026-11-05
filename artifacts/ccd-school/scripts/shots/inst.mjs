@@ -75,6 +75,14 @@ const SCENES = {
     await shot("hit");
     await up?.();
   },
+  "tryit-pads": async (p, shot) => {
+    if (!(await toLesson(p, "hats", "play"))) throw new Error("no play step");
+    const pad = p.locator(".ls-tray .ls-key").first();
+    await pad.scrollIntoViewIfNeeded();
+    const up = await hold(p, pad, 70, 0.12);
+    await shot("hit");
+    await up?.();
+  },
   "shape-amp": async (p, shot) => {
     if (!(await toLesson(p, "synth-amp-envelope", "shape"))) throw new Error("no shape step");
     await p.waitForTimeout(1500);
