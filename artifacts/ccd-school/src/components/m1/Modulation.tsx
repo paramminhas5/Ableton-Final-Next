@@ -115,7 +115,7 @@ export function ModOverlay({ src, ring, knob, onAssign, onAmount, onRemove }: {
         if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); onRemove(); }
       }}>
       <span className="m1-modamt-v">{pct > 0 && signed ? "+" : ""}{pct}%</span>
-      <span className="m1-modamt-l">{SRC_LABEL[src]}</span>
+      <span className="m1-modamt-l">{knob}</span>
     </div>
   );
 }
