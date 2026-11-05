@@ -61,6 +61,10 @@ pub struct Pad {
     amp: Decay,
     pitch_env: Decay,
     noise_env: Decay,
+    /// Kick: the 808's 6 ms attack bump, a fast extra rise in pitch on top of the main sweep.
+    bump_env: Decay,
+    /// Kick: the slow pitch "sigh" over the tail as the bridged-T circuit rings down.
+    sigh_env: Decay,
     osc: Sine,
     osc2: Sine,
     metal: [BlepOsc; 6],
@@ -91,6 +95,8 @@ impl Pad {
             amp: Decay::new(),
             pitch_env: Decay::new(),
             noise_env: Decay::new(),
+            bump_env: Decay::new(),
+            sigh_env: Decay::new(),
             osc: Sine::default(),
             osc2: Sine::default(),
             metal: [BlepOsc::new(); 6],
@@ -209,6 +215,8 @@ impl Pad {
             Model::Kick => {
                 self.pitch_env.trigger(0.11, sr, 0.0002);
                 self.noise_env.trigger(0.012, sr, 0.0002);
+                self.bump_env.trigger(0.006 * 3.0, sr, 0.0001);
+                self.sigh_env.trigger((len * 1.2).max(0.3), sr, 0.0002);
                 self.osc.phase = 0.0;
             }
             Model::Tom(_) => {
@@ -251,10 +259,17 @@ impl Pad {
         self.t = self.t.saturating_add(1);
         let y = match self.model {
             Model::Kick => {
+                // Engine 2, item 5 (part one), after the published analysis of the 808 bass drum:
+                // a 6 ms bump on top of the main sweep makes the attack punch, and the pitch keeps
+                // sighing down up to 10% as the tail rings out instead of sitting dead still.
                 let pe = self.pitch_env.next();
-                let f = 48.0 * r * (1.0 + 4.5 * pe * pe + 1.2 * pe);
+                let bump = self.bump_env.next();
+                let sigh = 1.0 - 0.1 * (1.0 - self.sigh_env.next());
+                let f = 50.0 * r * (1.0 + 4.5 * pe * pe + 1.2 * pe + 1.6 * bump) * sigh;
                 let body = self.osc.next(f / sr);
-                let click = self.hp.tick(self.rng.bipolar()) * self.noise_env.next() * (0.25 + 0.35 * v);
+                // The click is a shaped pulse (a 1 ms raised cosine) with a little noise on it, not a burst of hiss.
+                let pulse = if tsec < 0.001 { 0.5 - 0.5 * (tsec * 2_000.0 * core::f32::consts::PI).cos() } else { 0.0 };
+                let click = (pulse * 0.55 + self.hp.tick(self.rng.bipolar()) * self.noise_env.next() * 0.4) * (0.25 + 0.35 * v);
                 (body * 1.05 + click) * a
             }
             Model::Tom(i) => {

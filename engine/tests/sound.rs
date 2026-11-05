@@ -147,3 +147,50 @@ fn supersaw_opens_up_without_jumping_in_level() {
     }
     assert!(last > 0.3, "full detune should spread energy off the fundamental: {last:.3}");
 }
+
+/// The kick as it was before engine 2 item 5: one pitch sweep and a burst of high-passed noise.
+/// Rebuilt here from its formula (body only, the click is under 12 ms) so every run measures both.
+fn old_kick(n: usize) -> Vec<f32> {
+    let sr = SR as f64;
+    let k60 = |s: f64| (-6.907_755 / (s * sr)).exp();
+    let (cp, ca) = (k60(0.11), k60(0.45 * 4.0f64.powf(1.0)));
+    let (mut pe, mut a, mut ph) = (1.0f64, 1.0f64, 0.0f64);
+    (0..n).map(|_| {
+        let f = 48.0 * (1.0 + 4.5 * pe * pe + 1.2 * pe);
+        let y = (ph * std::f64::consts::TAU).sin() * 1.05 * a;
+        ph = (ph + f / sr).fract();
+        pe *= cp;
+        a *= ca;
+        y as f32
+    }).collect()
+}
+
+/// Mean pitch between two times, from the zero crossings of the body.
+fn pitch_between(y: &[f32], t0: f32, t1: f32) -> f32 {
+    let (a, b) = ((t0 * SR) as usize, (t1 * SR) as usize);
+    let ups: Vec<f32> = (a.max(1)..b).filter(|&i| y[i - 1] < 0.0 && y[i] >= 0.0).map(|i| {
+        let fr = -y[i - 1] / (y[i] - y[i - 1]);
+        (i - 1) as f32 + fr
+    }).collect();
+    if ups.len() < 2 { return 0.0; }
+    (ups.len() - 1) as f32 * SR / (ups[ups.len() - 1] - ups[0])
+}
+
+#[test]
+fn kick_has_an_attack_bump_and_a_sigh() {
+    let new = hit(Model::Kick, (SR * 0.9) as usize);
+    let old = old_kick(new.len());
+    // The sigh: how far the pitch falls from early in the tail to late in it.
+    let sigh = |y: &[f32]| 1.0 - pitch_between(y, 0.45, 0.8) / pitch_between(y, 0.12, 0.3);
+    let (sn, so) = (sigh(&new), sigh(&old));
+    // The bump: the first cycle's pitch over the pitch 25 to 45 ms in.
+    let bump = |y: &[f32]| pitch_between(y, 0.0, 0.012) / pitch_between(y, 0.04, 0.1);
+    let (bn, bo) = (bump(&new), bump(&old));
+    // Loudness of the first 100 ms stays where the old pad was (-6.2 dB, measured on the pad before
+    // this change), so the a/b isn't won by level.
+    let (ln, lo) = (db(rms(&new[..(SR * 0.1) as usize])), -6.2f32);
+    println!("kick sigh {:.1}% (old {:.1}%), attack {:.2}x the body pitch (old {:.2}x), first 100 ms {ln:.1} dB (old {lo:.1} dB)", sn * 100.0, so * 100.0, bn, bo);
+    assert!(sn > 0.03 && so < 0.01, "the tail should sigh down: new {sn:.3}, old {so:.3}");
+    assert!(bn > bo * 1.05, "the attack should start higher: new {bn:.2}, old {bo:.2}");
+    assert!((ln - lo).abs() < 1.5, "level moved: {ln:.1} vs {lo:.1} dB");
+}

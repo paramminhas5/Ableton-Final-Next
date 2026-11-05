@@ -7,16 +7,20 @@ export type Stripe = { gold: boolean; at: number };
 export type Stripes = Record<string, Stripe>;
 export type Trophy = { id: string; name: string; line: string; icon: string };
 
+import { curPathOf } from "../content/curriculum";
+
 const KEY = "ccd.stripes.v1";
+/** Has any lesson in this world been done? Worlds come from the curriculum, never from a lesson's name. */
+const doneIn = (d: Record<string, unknown>, world: string) => Object.keys(d).some(slug => !!d[slug] && curPathOf(slug)?.world === world);
 export const STRIPES_EVENT = "ccd:stripes";
 
 export const TROPHIES: (Trophy & { test: (s: Stripes, done: Record<string, unknown>) => boolean })[] = [
   { id: "first-sound", name: "first sound", line: "made your first sound", icon: "note", test: (_, d) => !!d["what-is-sound"] || !!d["synth-what-is-sound"] },
   { id: "first-kick", name: "heartbeat", line: "put a kick in your song", icon: "flame", test: (_, d) => !!d["your-kick"] || !!d["tempo-bpm"] },
-  { id: "first-mix", name: "first blend", line: "finished your first dj lesson", icon: "loop", test: (_, d) => !!d["what-is-djing"] },
+  { id: "first-mix", name: "first blend", line: "blended one track into another", icon: "loop", test: (_, d) => !!d["your-first-mix"] },
   { id: "stripes-3", name: "three stripes", line: "earned three stripes", icon: "bolt", test: s => Object.keys(s).length >= 3 },
   { id: "gold-1", name: "clean sheet", line: "a gold stripe, every answer right first time", icon: "gem", test: s => Object.values(s).some(x => x.gold) },
-  { id: "all-worlds", name: "three worlds", line: "a lesson done in basics, producer and dj", icon: "globe", test: (_, d) => (!!d["tempo-bpm"] || !!d["what-is-sound"] || !!d["synth-what-is-sound"]) && !!d["your-kick"] && !!d["what-is-djing"] },
+  { id: "all-worlds", name: "three worlds", line: "a lesson done in basics, producer and dj", icon: "globe", test: (_, d) => doneIn(d, "fundamentals") && doneIn(d, "producer") && doneIn(d, "dj") },
 ];
 
 export function trophiesFor(s: Stripes, done: Record<string, unknown>): (Trophy & { won: boolean })[] {

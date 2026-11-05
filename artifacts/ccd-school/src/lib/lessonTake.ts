@@ -69,6 +69,12 @@ export function takeType(kind: LayerKind): LayerType {
 export type PlayPad = { label: string; notes: number[] };
 
 const DRUM_LABEL: Record<number, string> = { 36: "kick", 38: "snare", 39: "clap", 42: "hat", 37: "rim", 41: "low tom", 45: "mid tom", 48: "high tom", 46: "open hat", 70: "shaker", 51: "ride", 49: "crash" };
+/** The drums in a take, in words: "snare", "kick and clap". Null when none are named. */
+export function drumNames(notes: number[]): string | null {
+  const names = [...new Set(notes)].map(n => DRUM_LABEL[n]).filter(Boolean);
+  if (!names.length) return null;
+  return names.length === 1 ? names[0] : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
 const NOTE = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 const ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii"];
 

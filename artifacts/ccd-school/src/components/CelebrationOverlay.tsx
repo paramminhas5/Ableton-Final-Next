@@ -166,8 +166,10 @@ export function CelebrationOverlay({ event, onDone }: Props) {
     : event.kind === "ccd-master" ? { name: "ccd master", kind: "master" as const } : null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Moment" className="ls"
+    <div role="dialog" aria-modal="true" aria-label="Moment"
       style={{ position: "fixed", inset: 0, zIndex: 300, overflowY: "auto", background: "linear-gradient(180deg,var(--deck),var(--deck2))", opacity: visible ? 1 : 0, transition: "opacity .3s" }}>
+      {/* The backdrop covers the whole screen, so the page behind (and its go key) never shows beside the sheet. */}
+      <div className="ls">
       <div className="ls-top"><button type="button" className="ls-x" aria-label="Close" onClick={onDone}><Icon name="close" /></button><span style={{ flex: 1 }} /></div>
       <div className="ls-col">
         {event.kind === "streak" && <StreakBody days={event.days} shield={progress.streakShield} />}
@@ -188,6 +190,7 @@ export function CelebrationOverlay({ event, onDone }: Props) {
           worldName={event.kind === "world-trophy" ? event.worldName : undefined}
           xp={progress.xp} streakDays={progress.streakDays} onClose={() => setShowShare(false)} />
       )}
+      </div>
     </div>
   );
 }

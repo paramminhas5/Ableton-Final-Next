@@ -187,7 +187,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
             </Screen>
             <div className="wl-row">
               <button type="button" className="ls-chip" onClick={() => { if (playing) engine.stop(); else play(); }}>{playing ? "stop" : "play my song"}</button>
-              {parts < 4 && <button type="button" className="ls-chip is-go" onClick={() => { setParts(p => p + 1); play(); }}>add {["", "a clap", "hats", "a synth line"][parts]}</button>}
+              {parts < 4 && <button type="button" className="ls-chip" onClick={() => { setParts(p => p + 1); play(); }}>add {["", "a clap", "hats", "a synth line"][parts]}</button>}
             </div>
             <div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>next: practice</GoPill></div>
           </Part>

@@ -39,6 +39,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
   const fill = (si: number) => setSecs(s => s.map((x, i) => (i === si ? { ...x, fill: !x.fill } : x)));
   const rise = (si: number) => setSecs(s => s.map((x, i) => (i === si ? { ...x, riser: !x.riser } : x)));
   const drums = parts.filter(l => l.type === "drums").map(l => l.id);
+  const onlyDrums = parts.length > 0 && parts.every(l => l.type === "drums");
   const met = screen.goal === "export" ? true
     : screen.goal === "fills" ? secs.some(s => s.fill)
     : screen.goal === "risers" ? secs.some(s => s.riser)
@@ -96,6 +97,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
       <div className="fl-text">
         {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
+        {onlyDrums && (screen.goal === "drop" || screen.goal === "risers") ? <div className="ls-hint">your song is only drums so far, so a break with the drums out is silence. tap riser on it so the break builds. once you add a lead or chords, they float there.</div> : null}
         {say ? <div className="ls-hint" role="status">{say}</div> : null}
         {tail}
       </div>

@@ -12,7 +12,7 @@ import { useProgress } from "@/lib/progress";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import { getMissionContext } from "@/lib/missionContext";
 import { track } from "@/lib/analytics";
-import { applyTake, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
+import { applyTake, drumNames, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { nameSongIfNew, readSongs, newSong, renameSong } from "@/lib/songs";
@@ -240,7 +240,10 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const line = useMemo(() => (take?.events.length ? take : presetTake(mission)), [take, mission]);
   const params = useMemo(() => readShape(slug), [slug]);
   // A lesson with nothing to play in (swing, tempo) changes the song in its own step; adding just keeps it.
-  const keepOnly = useMemo(() => !(mission.screens ?? []).some(s => s.kind === "play") && songHasMusic(), [mission.screens]);
+  // A shape lesson on a part your song doesn't have yet adds the lesson's line with the sound you made,
+  // rather than "keeping" knobs on nothing.
+  const missingPart = useMemo(() => !changeNoun(mission.screens ?? []) && !readTrackV2().layers.some(l => l.type === line.type && l.events.length), [mission.screens, line.type]);
+  const keepOnly = useMemo(() => !(mission.screens ?? []).some(s => s.kind === "play") && songHasMusic() && !missingPart, [mission.screens, missingPart]);
   const world = worldOf(slug) ?? undefined;
   const already = !!base?.added.includes(slug);
   const [added, setAdded] = useState(false);
@@ -277,12 +280,14 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
   const v1 = preview ? toV1View(preview) : null;
   const loop = preview?.loop ?? 4;
   const playhead = playing ? Math.floor(((((beat % loop) + loop) % loop) / loop) * 16) : -1;
-  const part = mission.fromFile?.adds.part || "part";
+  // Name drums by what you actually played: a snare take is "your snare", not the lesson's clap.
+  const played = take?.events.length && line.type === "drums" ? drumNames(take.events.map(e => e.note)) : null;
+  const part = played || mission.fromFile?.adds.part || "part";
   // A lesson that changed your song in its own step (an arrangement, an arp) keeps that, not a part.
   const noun = keepOnly ? changeNoun(mission.screens ?? []) ?? `${part} sound` : null;
   const what = noun ?? part;
   // "your chords are in", "your bass is in".
-  const is = /s$/.test(what) && !/(ss|bass)$/.test(what) ? "are" : "is";
+  const is = (/s$/.test(what) && !/(ss|bass)$/.test(what)) || / and /.test(what) ? "are" : "is";
   useEnter(isIn ? onNext : add);
   return (
     <div className="ls-col">
@@ -299,7 +304,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
       <p className="ls-read">
         {isIn
           ? `this is your song now. ${noun ? "every lesson from here builds on it." : `every lesson from here adds something on top of ${/s$/.test(part) && !/(ss|bass)$/.test(part) ? "these" : "this"} ${part}.`} ${hasQuestions ? "next: earn your stripe, a quick test of what you just learnt. or skip it and keep building." : ""}`
-          : noun ? `this is your song with your ${what}. keep it and it stays.` : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
+          : noun ? `this is your song with your ${what}. keep it and it stays.` : missingPart && !take?.events.length ? `your song has no ${part} yet, so this adds the lesson's ${part} line with the sound you made. add it and it stays.` : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
       </p>
       {isIn && hasQuestions && <button type="button" className="ls-skip" onClick={onSkipQuestions}>skip the challenge</button>}
       </div>

@@ -171,7 +171,7 @@ export function Today() {
         <div style={{ marginTop: 20 }}>
           <Lanes track={track} next={offer && offer.isNew ? offer : null} playhead={playing ? step : -1} />
         </div>
-        {layers > 0 && <Link href="/studio" className="ls-chip" style={{ marginTop: 12, display: "inline-flex", color: "var(--disp-ink)" }}>open it in the studio</Link>}
+        {layers > 0 && <Link href="/studio" className="ls-chip" style={{ marginTop: 12, display: "inline-flex", color: "var(--disp-ink)", background: "transparent", borderColor: "currentColor" }}>open it in the studio</Link>}
         {offer && mission && (
           <div className="m1-ss" style={{ marginTop: 8 }}>
             {offer.isNew ? `${offer.kind} joins after ` : `${offer.kind} changes after `}
@@ -187,7 +187,7 @@ export function Today() {
           <img src={missionImage(cur.slug, world)} alt="" className="td-pop" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
           <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
             <div className="m1-eng" style={{ fontSize: 11, fontWeight: 500 }}>{isDone ? "go again" : cur.slug === next?.slug ? "up next" : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
-            <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{isDone ? "play it again" : "start this lesson"}</div>
+            <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{mission.title.toLowerCase()}</div>
             <div className="m1-t11" style={{ marginTop: 4 }}>{minutesFor(cur.slug)} min · {missionTools(cur.slug).join(" · ")}</div>
           </div>
           <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>

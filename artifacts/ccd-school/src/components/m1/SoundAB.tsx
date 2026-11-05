@@ -138,7 +138,7 @@ export function SoundAB() {
           );
         })}
       </div>
-      <p className="ls-sub ab-foot">how it&apos;s made: each clip is the same notes played through our engine, saved without compression and set to the same loudness. &ldquo;then&rdquo; is the engine as it was on 5 november 2026.ldquo;then&ldquo;then&rdquo; is the engine as it was on 5 november 2026.rdquo; is the engine before its last upgrade, &ldquo;then&rdquo; is the engine as it was on 5 november 2026.ldquo;now&ldquo;then&rdquo; is the engine as it was on 5 november 2026.rdquo; is what you hear in every lesson today.</p>
+      <p className="ls-sub ab-foot">how it&apos;s made: each clip is the same notes played through our engine, saved without compression and set to the same loudness. &ldquo;then&rdquo; is the engine as it was on 5 november 2026, &ldquo;now&rdquo; is what you hear in every lesson today.</p>
     </RefPage>
   );
 }
