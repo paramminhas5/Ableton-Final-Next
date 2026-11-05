@@ -28,6 +28,7 @@ const CUE: Record<MixGoal, { name: string; at: "first" | "last" }> = {
   curve: { name: "sharp cut", at: "last" },
   file: { name: "next track", at: "last" },
   record: { name: "recorded mix", at: "first" },
+  punch: { name: "punch-in effects", at: "last" },
 };
 
 /** Bars in the song: the arrangement when there is one, otherwise the loop. */

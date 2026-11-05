@@ -14,6 +14,7 @@ use crate::params::*;
 use crate::ring::Ring;
 use crate::seq::{fire_range, plays, NoteEv, Pattern, MAX_OFFS};
 use crate::strip::Strip;
+use crate::punch::Punch;
 
 pub const MAX_LAYERS: usize = 8;
 pub const MAX_BLOCK: usize = 4096;
@@ -87,6 +88,9 @@ pub mod cmd {
     /// The scope: keep the last SCOPE_LEN samples of part `a` (0..MAX_LAYERS), of the master
     /// (SCOPE_MASTER), or of nothing (anything else). Read with `ccd_scope` between blocks.
     pub const SCOPE: u32 = 27;
+    /// Punch-in effect (punch.rs): hold effect `a` (REPEAT, FILTER, TAPE_STOP, THROW) at amount `x`
+    /// (0..1); a = OFF lets go. Sending the same effect again moves its amount.
+    pub const PUNCH: u32 = 43;
 }
 
 /// Samples the scope keeps: 43 ms at 48 kHz, enough for a 2048-point spectrum.
@@ -537,6 +541,8 @@ pub struct Core {
     /// Free-running beat clock for note repeat while the transport is stopped.
     rep_clock: f64,
     pub master: Master,
+    /// Punch-in effects on the whole mix, before the master (so the limiter still guards them).
+    pub punch: Punch,
     pub analyse: bool,
     pub meters: Vec<LayerMeter>,
     /// The master's loudness, to BS.1770 / EBU R 128.
@@ -666,6 +672,7 @@ impl Core {
             fired: Vec::with_capacity(256),
             rep_clock: 0.0,
             master: Master::new(sr),
+            punch: Punch::new(sr),
             analyse: false,
             meters: (0..MAX_LAYERS).map(|_| LayerMeter::new(sr)).collect(),
             loud: Loudness::new(sr),
@@ -922,6 +929,10 @@ impl Core {
             }
             cmd::CHANCE_SEED => self.tr.seed = c.a,
             cmd::FILL => self.tr.fill = c.a != 0,
+            cmd::PUNCH => {
+                let bps = self.tr.tempo / 60.0;
+                self.punch.set(c.a.min(255) as u8, c.x, bps);
+            }
             cmd::EV_COMMIT => {
                 let lb = if self.tr.state == State::Playing { self.tr.lpos } else { 0.0 };
                 let l = &mut self.layers[li];
@@ -1199,11 +1210,15 @@ impl Core {
             if self.analyse {
                 self.clash.tick(&self.meters, live);
             }
+            // A reverb throw sends what the parts play into the reverb while its key is held.
+            verb_in += self.punch.throw_send(ml, mr);
             let (el, er) = self.echo.tick(echo_in);
             let (vl, vr) = self.verb.tick(verb_in + (el + er) * 0.15);
             let c = if self.click.env.is_active() { self.click.osc.next(self.click.hz / self.sr) * self.click.env.next() * 0.35 } else { 0.0 };
             ml += el + vl + c;
             mr += er + vr + c;
+            // Punch-in effects: exactly the mix when no key is held.
+            let (ml, mr) = self.punch.tick(ml, mr);
             let (ol, or) = self.master.tick(ml, mr);
             self.out_l[i] = ol;
             self.out_r[i] = or;

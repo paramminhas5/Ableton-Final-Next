@@ -53,7 +53,7 @@ export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
 /** `set: swing` turns the same step into the song's swing knob (marks are 0 to 0.75). */
 export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro"; choices?: string[]; layer?: string; hint?: VoiceText; levels?: Level[] };
 /** Two decks and a mixer. Deck a plays your song, deck b a bank track. `goal` is what has to happen before go. */
-export type MixGoal = "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record";
+export type MixGoal = "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record" | "punch";
 export type RawMix = { kind: "mix"; say: VoiceText; goal: MixGoal; bank?: string; hint?: VoiceText; levels?: Level[] };
 /** Your song as sections: switch parts on and off per section, add fills, or export it. */
 export type ArrangeGoal = "sections" | "drop" | "fills" | "risers" | "export";

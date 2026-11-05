@@ -34,7 +34,7 @@ export function knobsFor(layer: LayerType): string[] {
 export const TEMPO_SETS = ["tempo", "swing", "scale", "glue", "kit", "arp", "key", "grid", "mic", "comp", "sample", "macro"];
 
 /** What a `mix` step asks for on the two decks. */
-export const MIX_GOALS = ["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free", "sync", "cue", "loop", "stems", "shift", "curve", "file", "record"];
+export const MIX_GOALS = ["crossfade", "match", "blend", "swap", "key", "cut", "phrase", "echo", "free", "sync", "cue", "loop", "stems", "shift", "curve", "file", "record", "punch"];
 
 const EM_DASH = /—/;
 const EMOJI = /\p{Extended_Pictographic}/u;

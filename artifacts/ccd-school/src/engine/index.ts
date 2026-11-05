@@ -62,6 +62,11 @@ export class Engine {
   chanceSeed(seed: number) {
     this.s(CMD.chanceSeed, 0, seed >>> 0);
   }
+  /** Punch-in effect on the whole mix (PUNCH.repeat, filter, tapeStop, throw) at `amount` 0..1, while held;
+   * PUNCH.off lets go and the mix fades back to exactly dry. Send again to move the amount. */
+  punch(mode: number, amount = 0.5) {
+    this.s(CMD.punch, 0, mode, amount);
+  }
   /** The fill key: steps with the fill condition play while it is held (Elektron's fill). */
   fill(on: boolean) {
     this.s(CMD.fill, 0, on ? 1 : 0);
