@@ -74,6 +74,8 @@ import { ModChips, ModOverlay } from "./Modulation";
 import { fromValue, toValue } from "@/engine";
 import { chordAt, chordEvents, chordName, chordNotes as chordMidi, inChord, romanOf, withChordTrack, type Chord } from "@/lib/chords";
 import { ChordTrackEditor } from "./ChordTrack";
+import { PlayerSurface } from "./PlayerSurface";
+import { applyPlayer } from "@/lib/players";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
 // Caps stay neutral: the ring around each knob carries the colour of the line it moves.
@@ -470,6 +472,7 @@ export function Studio() {
     setAdding(false);
   };
 
+  const playerKind = sel?.type === "drums" ? "drummer" as const : sel?.type === "bass" ? "bass" as const : null;
   // The chord track's chord under the playhead (bar 1 when stopped): its notes light on the surfaces.
   const chordNow = chordAt(track.chords, playing ? pos.beat : 0, track.loop);
   const melodicSel = !!sel && (sel.type === "bass" || sel.type === "chords" || sel.type === "lead");
@@ -704,7 +707,7 @@ export function Studio() {
           <>
             <div className="st-main">
             <Silk label={`1 · play ${TYPE[sel.type].label} on`} right="pick how" />
-            <div className="st-pick" style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1},1fr)` }}>
+            <div className="st-pick" style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0)},1fr)` }}>
               {(TYPE[sel.type].surfaces).map(s => (
                 <button key={s} type="button" className={`m1-m is-wide st-vk ${sel.surface === s ? "is-on" : ""}`} aria-pressed={sel.surface === s}
                   onClick={() => chooseSurface(s)}>
@@ -720,8 +723,20 @@ export function Studio() {
                 }}>
                 <span className={`m1-dot ${sel.surface === "own" ? "is-on" : ""}`} style={{ ["--c" as string]: TYPE[sel.type].color } as CSSProperties} />{TYPE[sel.type].own.replace("chord pads", "chords")}
               </button>
+              {playerKind ? (
+                <button type="button" className={`m1-m is-wide st-vk ${sel.surface === "player" ? "is-on" : ""}`} aria-pressed={sel.surface === "player"} onClick={() => chooseSurface("player")}>
+                  <span className={`m1-dot ${sel.surface === "player" ? "is-on" : ""}`} style={{ ["--c" as string]: TYPE[sel.type].color } as CSSProperties} />{playerKind === "drummer" ? "drummer" : "bass player"}
+                </button>
+              ) : null}
             </div>
             <div style={{ height: 8, flex: "none" }} />
+            {sel.surface === "player" && playerKind && (
+              <PlayerSurface key={sel.id} kind={playerKind} settings={sel.player} color={TYPE[sel.type].color}
+                onApply={(p, first) => { start(); update(t => applyPlayer(t, playerKind, sel.id, p), first); setTouched({ label: `${playerKind === "drummer" ? "drummer" : "bass player"} · complexity, intensity`, text: `${Math.round(p.complexity * 100)} · ${Math.round(p.intensity * 100)}` }); }}
+                note={<>{`writes notes into your ${TYPE[sel.type].label}${playerKind === "drummer" && track.layers.some(l => l.type === "hats") ? " and hats" : ""}. undo brings yours back`}
+                  {track.sections?.length ? ". softer in an intro or break, harder in a drop" : ""}
+                  {playerKind === "bass" ? (track.chords?.some(Boolean) ? ". follows the chord track" : `. no chord track: plays ${keyName(track.root, scaleOf(track))}'s root`) : ""}</>} />
+            )}
             {sel.surface === "own" && ctx && sel.type === "bass" && <GlideSurface ctx={ctx} />}
             {sel.surface === "own" && ctx && sel.type === "drums" && <CircleSurface ctx={ctx} />}
             {sel.surface === "own" && ctx && sel.type === "chords" && <ChordSurface ctx={ctx} />}

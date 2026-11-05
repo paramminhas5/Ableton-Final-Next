@@ -7,7 +7,9 @@ import { newLayerV2, type LayerV2, type NoteEvent, type TrackV2 } from "./track2
 import { FX_RISER_NOTE as RISER } from "../engine/params.gen";
 import { withArps } from "./arp";
 
-export type Section = { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean };
+/** `notes`: this section's own loop for some parts, by layer id (written by commit or a session player).
+ * A part without its own notes here plays the layer's events, as every section did before. */
+export type Section = { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean; notes?: Record<string, NoteEvent[]> };
 
 export const CLASSIC = (t: TrackV2): Section[] => {
   const id = (type: string) => t.layers.filter(l => l.type === type).map(l => l.id);
@@ -53,14 +55,17 @@ export function arranged(t: TrackV2): TrackV2 {
   let at = 0;
   const out = new Map<string, NoteEvent[]>(t.layers.map(l => [l.id, []]));
   const firstDrums = t.layers.find(l => l.type === "drums");
-  for (const s of secs) {
+  const editing = (t as TrackV2 & { at?: number }).at;
+  secs.forEach((s, si) => {
     const beats = s.bars * 4;
     const fillFrom = s.fill ? at + beats - 1 : Infinity;
     for (const l of t.layers) {
       if (s.off.includes(l.id)) continue;
       const evs = out.get(l.id)!;
+      // The section you are editing plays the part as it is now; others play their own copy if they have one.
+      const src = si === editing ? l.events : (s.notes?.[l.id] ?? l.events);
       for (let k = 0; k * L < beats; k++) {
-        for (const e of l.events) {
+        for (const e of src) {
           const start = at + k * L + e.start;
           if (start >= at + beats) continue;
           // The last beat of a section with a fill drops the kick to make room for the roll.
@@ -74,7 +79,7 @@ export function arranged(t: TrackV2): TrackV2 {
       [0, 0.25, 0.5, 0.75].forEach((o, i) => evs.push({ note: SNARE, vel: 0.5 + i * 0.15, start: at + beats - 1 + o, len: 0.12 }));
     }
     at += beats;
-  }
+  });
   const layers: LayerV2[] = t.layers.map(l => ({ ...l, events: out.get(l.id)! }));
   // Risers: a noise sweep over the last two bars of a section, on an fx layer of its own.
   if (secs.some(s => s.riser) && layers.length < 8 && !layers.some(l => l.type === "fx")) {
@@ -91,4 +96,28 @@ export function sectionAt(secs: Section[], beat: number): number {
   let at = 0;
   for (let i = 0; i < secs.length; i++) { at += secs[i].bars * 4; if (beat < at) return i; }
   return secs.length - 1;
+}
+
+/**
+ * Move the studio to section `k`: the parts you were editing are kept as that section's own notes, and the
+ * parts load section k's notes (a part section k has none for keeps what it has, and section k gets a copy
+ * the next time you move away). One song, many sections, each with its own loop. Pure.
+ */
+export function goSection(t: TrackV2, k: number): TrackV2 {
+  const secs = t.sections;
+  if (!secs?.length || k < 0 || k >= secs.length) return t;
+  const cur = t.at;
+  const now = Object.fromEntries(t.layers.map(l => [l.id, l.events]));
+  // The first move: every section keeps the loop they all shared, unless it already has its own.
+  const sections = secs.map((s, i) => (cur === undefined ? { ...s, notes: { ...now, ...(s.notes ?? {}) } } : i === cur ? { ...s, notes: { ...(s.notes ?? {}), ...now } } : s));
+  const target = sections[k];
+  const layers = t.layers.map(l => (target.notes?.[l.id] ? { ...l, events: target.notes[l.id] } : l));
+  return { ...t, sections, layers, at: k };
+}
+
+/** The section the studio edits, when the song has sections and has been moved into one. */
+export function sectionNow(t: TrackV2): { index: number; section: Section } | null {
+  const secs = t.sections;
+  if (!secs?.length || t.at === undefined || t.at < 0 || t.at >= secs.length) return null;
+  return { index: t.at, section: secs[t.at] };
 }

@@ -36,7 +36,8 @@ export const LOOP_BEATS = 4;
 export const STEP_BEATS = 0.25;
 
 export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "sample";
-export type Surface = "steps" | "keys" | "pads" | "own";
+/** "player": a session player writes the part (drums and bass, src/lib/players.ts). */
+export type Surface = "steps" | "keys" | "pads" | "own" | "player";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
 /** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts). */
@@ -64,6 +65,8 @@ export type LayerV2 = {
   euclid?: Record<number, { hits: number; rot: number }>;
   /** Sampler layers: the name of the sample in each of the 16 slots (the audio lives in this browser). */
   samples?: Record<number, string>;
+  /** A session player's settings on this part (src/lib/players.ts), kept so its screen opens where you left it. */
+  player?: { complexity: number; intensity: number; fill: number; swing: number; seed: number };
   /** Arpeggiator on this part (src/lib/arp.ts); off when missing. */
   arp?: { mode: "up" | "down" | "updown"; rate: 2 | 4; oct: 1 | 2 };
   /** Modulation routes (src/lib/modulation.ts): a source onto a knob by an amount. None when missing. */
@@ -85,7 +88,9 @@ export type TrackV2 = {
   /** Master bus, normalised, by MASTER_PARAMS index. Missing = default. */
   master?: Record<number, number>;
   /** The arrangement, when the song has one (src/lib/arrange.ts). */
-  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean }[];
+  sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean; notes?: Record<string, NoteEvent[]> }[];
+  /** The section the studio is editing (its parts' events are that section's loop). Missing: the loop all sections share. */
+  at?: number;
   /** The chord track (Logic's Chord Track): one chord per bar of the loop, null for a bar without one. */
   chords?: (Chord | null)[];
   /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */

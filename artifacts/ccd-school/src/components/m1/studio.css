@@ -196,3 +196,10 @@
 .st-roots .st-tag,.st-scales .st-tag,.st-keyfoot .st-tag,.st-keytabs .st-tag{position:relative}
 .st-roots .st-tag::after,.st-scales .st-tag::after,.st-keyfoot .st-tag::after,.st-keytabs .st-tag::after{content:"";position:absolute;inset:-7px -3px}
 .st-keyfoot .st-tag{height:30px}
+/* session players (Logic's Drummer and Bass Player): the xy pad, fill and swing */
+.st-player{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px}
+.st-playerxy{flex:1;min-height:150px;display:block}
+.st-xy-r{left:auto!important;right:12px}
+.st-puck{opacity:.9}
+.st-playerrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
+.st-playernote{flex:none;line-height:1.35;white-space:normal}
