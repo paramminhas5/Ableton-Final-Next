@@ -183,7 +183,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
         {/* Skip-to-content for keyboard / screen-reader users */}
-        <a href="#main-content" className="skip-link">Skip to content</a>
+        <a href="#main-content" className="skip-link">skip to content</a>
 
         <ClientProviders>
           <div className="min-h-screen flex flex-col text-ink">
