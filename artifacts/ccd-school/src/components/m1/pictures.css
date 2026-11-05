@@ -5,6 +5,11 @@
 .pic-grid{stroke:rgba(255,255,255,.09);stroke-width:1;fill:none}
 .pic-txt{fill:rgba(255,255,255,.42);font-size:9px;font-weight:600;letter-spacing:.04em;font-family:inherit}
 .pic-line{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 70%,transparent))}
+/* a picture you can drag: no page scroll under the finger, and a ring on each corner you can grab */
+.pic.is-drag{touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none}
+.pic.is-dragging{cursor:grabbing}
+.pic-handle{fill:color-mix(in srgb,var(--c) 22%,transparent);stroke:var(--c);stroke-width:1.6;transition:r .12s}
+.pic-handle.is-on{fill:color-mix(in srgb,var(--c) 45%,transparent);filter:drop-shadow(0 0 5px var(--c))}
 .pic-dot{fill:#fff;filter:drop-shadow(0 0 5px var(--c)) drop-shadow(0 0 2px var(--c))}
 
 /* studio: the pictures sit in a small glass well above the knobs */

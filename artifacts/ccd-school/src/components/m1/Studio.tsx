@@ -67,9 +67,9 @@ import { lockSchedule, setLock, dueBetween, valuesAt, type Change } from "@/lib/
 import { arranged } from "@/lib/arrange";
 import { captureTake, trimPlayed, type Played } from "@/lib/capture";
 import { EnvView, FilterView, useNoteClock, type NoteClock } from "./Pictures";
-import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC } from "@/lib/paramColor";
-import { toValue } from "@/engine";
+import { fromValue, toValue } from "@/engine";
 
 const BANKS: Bank[] = ["sound", "eq", "fx", "mix"];
 // Caps stay neutral: the ring around each knob carries the colour of the line it moves.
@@ -750,7 +750,7 @@ export function Studio() {
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : null}
-            {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} /> : null}
+            {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
             <div className="m1-g st-knobs">
               {knobs.map(({ spec, index }, i) => (
                 <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color}
@@ -820,7 +820,7 @@ function CapturePreview({ track, layer, events, onKeep, onDrop }: { track: Track
 }
 
 /** The pictures for the knobs on this page: the envelope (attack, decay, release) and the filter (cutoff, res, env). */
-function StudioPics({ layer, keys, clock }: { layer: LayerV2; keys: string[]; clock: NoteClock }) {
+function StudioPics({ layer, keys, clock, onParam }: { layer: LayerV2; keys: string[]; clock: NoteClock; onParam?: (index: number, spec: ParamSpec, v: number) => void }) {
   const engine = TYPE[layer.type].engine;
   const params = layer.params;
   const pad = effectivePad(layer);
@@ -833,12 +833,17 @@ function StudioPics({ layer, keys, clock }: { layer: LayerV2; keys: string[]; cl
   const showFilter = !!cut && !!res && keys.some(k => k === "cutoff" || k === "res" || k === "env" || CHARACTER_KEYS.includes(k));
   if (!showEnv && !showFilter) return null;
   const n = (s: ParamSpec | undefined) => (s ? paramOf(layer, s.index) : 0);
+  // Drag on the pictures: the knee is cutoff and resonance, the envelope's corners its times. The knobs follow.
+  const specAt = (index: number, key: string) => table.find(p => p.index === index) ?? (engine === "drums" ? ({ ...DRUM_PAD_PARAMS[1], index } as unknown as ParamSpec) : undefined) ?? table.find(p => p.key === key);
+  const hs = envHandles(engine, params, pad);
+  const envSet = (h?: { index: number; key: string; toN: (s: number) => number }) => (h && onParam ? (s: number) => { const sp = specAt(h.index, h.key); if (sp) onParam(h.index, sp, h.toN(s)); } : undefined);
   return (
     <div className="st-pics">
       {showFilter && cut && res ? (
-        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))} />
+        <FilterView cutoff={toValue(cut, n(cut))} res={toValue(res, n(res))} amount={n(amt)} fenv={filterEnv(engine, params)} clock={clock} color={PIC.filter} character={chr ? characterOf(n(chr)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], paramOf(layer, 3))}
+          onCutoff={onParam ? hz => onParam(cut.index, cut, fromValue(cut, hz)) : undefined} onRes={onParam ? r => onParam(res.index, res, fromValue(res, r)) : undefined} />
       ) : null}
-      {showEnv && env ? <EnvView env={env} clock={clock} color={PIC.env} label={engine === "drums" ? DRUM_PAD_NAMES[pad] : "envelope"} /> : null}
+      {showEnv && env ? <EnvView env={env} clock={clock} color={PIC.env} label={engine === "drums" ? DRUM_PAD_NAMES[pad] : "envelope"} drag={{ a: envSet(hs.a), d: envSet(hs.d), r: envSet(hs.r) }} /> : null}
     </div>
   );
 }

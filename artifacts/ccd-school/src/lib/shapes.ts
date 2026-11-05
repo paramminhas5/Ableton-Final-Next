@@ -4,7 +4,7 @@
  * instrument sets) and engine/src/dsp/filter.rs (the ladder). Pure, so it is tested.
  */
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_BASE, INSTRUMENT_BASE, LEAD_PARAMS } from "../engine/params.gen";
-import { toValue } from "../engine/format";
+import { fromValue, toValue } from "../engine/format";
 
 /** An envelope in seconds. `kind` "decay" is the drums' one-shot: it falls 60 db over `d`, no sustain, no release. */
 export type Env = { a: number; d: number; s: number; r: number; kind: "adsr" | "decay" };
@@ -197,3 +197,34 @@ export function lowCutDb(f: number, fc: number): number {
   const w = f / fc;
   return 20 * Math.log10(w / Math.hypot(1, w));
 }
+
+// ── drag on the picture ──────────────────────────────────────────────────────
+
+/** A handle on a picture: the knob it moves (wire index) and how a time in seconds becomes that knob's value. */
+export type EnvHandle = { index: number; key: string; toN: (seconds: number) => number };
+
+/**
+ * Which envelope corners can be dragged on an instrument, and the knob each one turns: the attack peak
+ * (attack), the decay corner (decay, on the bass), the release end (release). A drum pad's whole hit is
+ * its decay. Mirrors `ampEnv`, so a handle dragged to a time lands the knob on that time.
+ */
+export function envHandles(engine: string, params: Record<number, number>, pad = 0): { a?: EnvHandle; d?: EnvHandle; r?: EnvHandle } {
+  const ms = (spec: { index: number; min: number; max: number; curve: "lin" | "exp" | "fader"; key?: string }, k = 1): EnvHandle => ({ index: spec.index, key: spec.key ?? "", toN: s => fromValue(spec, (s * 1000) / k) });
+  if (engine === "lead" || engine === "chords") {
+    const t = engine === "lead" ? LEAD_PARAMS : CHORD_PARAMS;
+    return { a: ms({ ...P(t, "attack"), key: "attack" }), r: ms({ ...P(t, "release"), key: "release" }) };
+  }
+  if (engine === "bass") return { d: ms({ ...P(BASS_PARAMS, "decay"), key: "decay" }, 1.6) };
+  if (engine === "drums") {
+    const open = pad === 4 ? 1 + (params[INSTRUMENT_BASE + DRUM_RACK_BASE] ?? 0) * 9 : 1;
+    const base = (DRUM_BASE_LEN[pad] ?? 0.3) * open;
+    const index = INSTRUMENT_BASE + pad * DRUM_PAD_PARAMS.length + 1;
+    return { d: { index, key: "decay", toN: s => Math.max(0, Math.min(1, 0.5 + Math.log(Math.max(1e-4, s) / base) / Math.log(4) / 2)) } };
+  }
+  return {};
+}
+
+/** Drag on the filter picture: a horizontal move of `dx` (share of the width) and the cutoff it lands on (the axis spans 1000x). */
+export const dragCutoff = (hz0: number, dx: number) => hz0 * Math.pow(1000, dx);
+/** Drag on an envelope corner: half the picture's width is four times longer or shorter. */
+export const dragTime = (s0: number, dx: number) => Math.max(0.0005, s0 * Math.pow(4, dx * 2));

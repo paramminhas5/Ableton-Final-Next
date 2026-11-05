@@ -5,7 +5,7 @@
  * Same Model 1 parts as the rest of the player.
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { FLAG, OUT, display, toValue } from "@/engine";
+import { FLAG, OUT, display, fromValue, toValue } from "@/engine";
 import { proName, type ProTool } from "@/lib/proNames";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
@@ -26,7 +26,7 @@ import { Gloss } from "./Gloss";
 import { TOOL_STEPS } from "./tools";
 import { AirWave, LfoView, SynthChain, WaveShape } from "./LessonVisuals";
 import { EnvView, FilterView, useNoteClock } from "./Pictures";
-import { ampEnv, CHARACTER_KEYS, characterOf, filterEnv } from "@/lib/shapes";
+import { ampEnv, CHARACTER_KEYS, characterOf, envHandles, filterEnv } from "@/lib/shapes";
 import { bind, PIC, picOf } from "@/lib/paramColor";
 import { TYPE } from "@/lib/track2";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
@@ -251,6 +251,12 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
   const [turned, setTurned] = useState<Set<string>>(() => new Set());
   const spotKey = dialKnobs.length > 1 ? dialKnobs.find(k => !turned.has(k.spec.key))?.spec.key : undefined;
   const picLit = (group: string) => !spotKey || picOf(spotKey) === group || (group === "filter" && picOf(spotKey) === "eq");
+  // Drag on the pictures, for the knobs this lesson names: the filter's knee, the envelope's corners.
+  const turn = (index: number, key: string, v: number) => { setParams(p => ({ ...p, [index]: v })); if (!turned.has(key)) setTurned(t => new Set(t).add(key)); const k = dialKnobs.find(x => x.index === index); if (k) setTouched(`${k.spec.label} ${display(k.spec, v)}`); };
+  const named = (sp?: ParamSpec) => (sp && dialKnobs.some(k => k.index === sp.index) ? sp : undefined);
+  const dragCut = named(fc), dragRes = named(fr);
+  const hs = envHandles(inst, lp, hatPad ? 4 : 0);
+  const envSet = (h?: { index: number; key: string; toN: (s: number) => number }) => (h && dialKnobs.some(k => k.index === h.index) ? (s: number) => turn(h.index, h.key, h.toN(s)) : undefined);
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -260,8 +266,9 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
         {isKick ? <KickShape decay={val("decay")} tune={val("tune")} />
           : (envPic || filterPic) && !lfoK ? (
             <div className="ls-pics">
-              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)} /> : null}
-              {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} /> : null}
+              {filterPic && fc && fr ? <FilterView lit={picLit("filter")} cutoff={toValue(fc, nOf(fc))} res={toValue(fr, nOf(fr))} amount={nOf(fe)} fenv={filterEnv(inst, lp)} clock={clock} color={PIC.filter} character={fch ? characterOf(nOf(fch)) : "warm"} lowCut={toValue(LAYER_PARAMS[3], lp[3] ?? 0)}
+                onCutoff={dragCut ? hz => turn(dragCut.index, dragCut.key, fromValue(dragCut, hz)) : undefined} onRes={dragRes ? r => turn(dragRes.index, dragRes.key, fromValue(dragRes, r)) : undefined} /> : null}
+              {envPic ? <EnvView lit={picLit("env")} env={envPic} clock={clock} color={PIC.env} drag={{ a: envSet(hs.a), d: envSet(hs.d), r: envSet(hs.r) }} /> : null}
             </div>
           )
           : lfoK ? <LfoView rate={toValue(lfoK.spec, params[lfoK.index] ?? lfoK.spec.default)} depth={val("lfo")} to={LFO_TO[lfoTo]} playing={playing} />
