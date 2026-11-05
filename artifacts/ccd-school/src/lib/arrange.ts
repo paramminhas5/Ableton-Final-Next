@@ -56,6 +56,9 @@ export function arranged(t: TrackV2): TrackV2 {
   const out = new Map<string, NoteEvent[]>(t.layers.map(l => [l.id, []]));
   const firstDrums = t.layers.find(l => l.type === "drums");
   const editing = (t as TrackV2 & { at?: number }).at;
+  // Chance and trig conditions count plays of the part's loop, not of the whole song: each copy says which
+  // play it is (`it`), and `reps` how many plays one pass of the song holds.
+  const playsOf = new Map<string, number>();
   secs.forEach((s, si) => {
     const beats = s.bars * 4;
     const fillFrom = s.fill ? at + beats - 1 : Infinity;
@@ -64,15 +67,18 @@ export function arranged(t: TrackV2): TrackV2 {
       const evs = out.get(l.id)!;
       // The section you are editing plays the part as it is now; others play their own copy if they have one.
       const src = si === editing ? l.events : (s.notes?.[l.id] ?? l.events);
-      for (let k = 0; k * L < beats; k++) {
+      const before = playsOf.get(l.id) ?? 0;
+      let k = 0;
+      for (; k * L < beats; k++) {
         for (const e of src) {
           const start = at + k * L + e.start;
           if (start >= at + beats) continue;
           // The last beat of a section with a fill drops the kick to make room for the roll.
           if (start >= fillFrom && l.type === "drums" && e.note === KICK) continue;
-          evs.push({ ...e, start });
+          evs.push(e.cond || (e.chance ?? 1) < 1 ? { ...e, start, it: before + k } : { ...e, start });
         }
       }
+      playsOf.set(l.id, before + k);
     }
     if (s.fill && firstDrums) {
       const evs = out.get(firstDrums.id)!;
@@ -80,7 +86,10 @@ export function arranged(t: TrackV2): TrackV2 {
     }
     at += beats;
   });
-  const layers: LayerV2[] = t.layers.map(l => ({ ...l, events: out.get(l.id)! }));
+  const layers: LayerV2[] = t.layers.map(l => {
+    const reps = playsOf.get(l.id) ?? 1;
+    return { ...l, events: out.get(l.id)!.map(e => (e.it !== undefined ? { ...e, reps } : e)) };
+  });
   // Risers: a noise sweep over the last two bars of a section, on an fx layer of its own.
   if (secs.some(s => s.riser) && layers.length < 8 && !layers.some(l => l.type === "fx")) {
     let a = 0;

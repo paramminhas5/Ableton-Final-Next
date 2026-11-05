@@ -172,7 +172,7 @@ export type FxParamId = `${(typeof FX_PARAMS)[number]["id"]}`;
 export type SamplerParamId = `${(typeof SAMPLER_PARAMS)[number]["id"]}`;
 export type ParamId = LayerParamId | BassParamId | DrumPadParamId | DrumRackParamId | DrumPad2ParamId | ChordParamId | LeadParamId | FxParamId | SamplerParamId;
 
-export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24, mod: 25, trim: 26 } as const;
+export const CMD = { noteOn: 1, noteOff: 2, param: 3, instrument: 4, tempo: 5, loop: 6, play: 7, stop: 8, record: 9, recordOff: 10, evClear: 11, evAdd: 12, evCommit: 13, duck: 14, metronome: 15, allOff: 16, locate: 17, swing: 18, linkOff: 19, master: 20, snapshot: 21, compare: 22, analyse: 23, repeat: 24, mod: 25, trim: 26, evCond: 40, chanceSeed: 41, fill: 42 } as const;
 export const OUT = { playedOn: 1, playedOff: 2, pos: 3, seqOn: 4, meter: 5, bands: 6, clash: 7, masterMeter: 8, loudness: 9 } as const;
 /** Clash fixes, as packed in a CLASH event's flags. */
 export const FIX = { duck: 0, eq: 1, pan: 2, none: 3 } as const;

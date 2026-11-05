@@ -12,7 +12,7 @@ use crate::master::{Master, TruePeak, MASTER_DELAY};
 use crate::inst::{Bass, DrumRack, FxSynth, Lead, Poly, Sampler};
 use crate::params::*;
 use crate::ring::Ring;
-use crate::seq::{fire_range, NoteEv, Pattern, MAX_OFFS};
+use crate::seq::{fire_range, plays, NoteEv, Pattern, MAX_OFFS};
 use crate::strip::Strip;
 
 pub const MAX_LAYERS: usize = 8;
@@ -76,6 +76,14 @@ pub mod cmd {
     /// A/B level match: trim the layer by `x` dB after its strip, sends included (glides over 20 ms). Not a knob and not
     /// saved: 0 dB takes it off, and the layer is then exactly as it was.
     pub const TRIM: u32 = 26;
+    /// Chance and trig condition for the event the last EV_ADD on this layer put in: condition `a`
+    /// (seq::cond), chance `x` (0..1), and for an arranged song which play of the part's loop it is (`y`)
+    /// and how many plays the engine's loop holds (`z`).
+    pub const EV_COND: u32 = 40;
+    /// The song's seed for chance (`a`), so the same song plays the same chances.
+    pub const CHANCE_SEED: u32 = 41;
+    /// The fill key (Elektron): a = 1 held, 0 let go. Events with the fill condition play while it is held.
+    pub const FILL: u32 = 42;
 }
 
 pub mod out {
@@ -166,6 +174,12 @@ pub struct Transport {
     pub lpos: f64,
     pub link: bool,
     pub metronome: bool,
+    /// How many times the loop has come round since play started (trig conditions and chance read it).
+    pub pass: u32,
+    /// The fill key is held.
+    pub fill: bool,
+    /// The song's seed for chance.
+    pub seed: u32,
 }
 
 impl Transport {
@@ -624,6 +638,9 @@ impl Core {
                 lpos: 0.0,
                 link: false,
                 metronome: false,
+                pass: 0,
+                fill: false,
+                seed: 1,
             },
             layers: (0..MAX_LAYERS).map(|_| Layer::new(sr)).collect(),
             echo,
@@ -745,6 +762,7 @@ impl Core {
         }
         tr.count_in = count_in_beats > 0.0;
         tr.state = State::Armed;
+        tr.pass = 0;
         for l in self.layers.iter_mut() {
             l.cursor = 0;
         }
@@ -872,9 +890,19 @@ impl Core {
             cmd::RECORD_OFF => self.tr.recording = false,
             cmd::EV_CLEAR => self.layers[li].staging.clear(),
             cmd::EV_ADD => {
-                let ev = NoteEv { start: c.y.max(0.0), len: c.z.max(1.0 / 64.0), note: c.a as u8, vel: c.x };
+                let ev = NoteEv::new(c.y.max(0.0), c.z.max(1.0 / 64.0), c.a as u8, c.x);
                 self.layers[li].staging.insert(ev);
             }
+            cmd::EV_COND => {
+                if let Some(e) = self.layers[li].staging.last_mut() {
+                    e.cond = c.a.min(255) as u8;
+                    e.chance = c.x.clamp(0.0, 1.0);
+                    e.it = c.y.max(0.0) as u32;
+                    e.reps = (c.z.max(1.0) as u32).max(1);
+                }
+            }
+            cmd::CHANCE_SEED => self.tr.seed = c.a,
+            cmd::FILL => self.tr.fill = c.a != 0,
             cmd::EV_COMMIT => {
                 let lb = if self.tr.state == State::Playing { self.tr.lpos } else { 0.0 };
                 let l = &mut self.layers[li];
@@ -1001,6 +1029,7 @@ impl Core {
                 tr.state = State::Playing;
                 tr.count_in = false;
                 tr.lpos = 0.0;
+                tr.pass = 0;
                 for l in self.layers.iter_mut() {
                     l.cursor = 0;
                 }
@@ -1050,6 +1079,7 @@ impl Core {
                 let to = from + bps;
                 let song = self.tr.beat + ahead;
                 let len = self.tr.loop_len;
+                let (pass, fill, seed) = (self.tr.pass, self.tr.fill, self.tr.seed);
                 for li in 0..MAX_LAYERS {
                     self.fired.clear();
                     {
@@ -1060,8 +1090,12 @@ impl Core {
                         let mut cursor = l.cursor;
                         let fired = &mut self.fired;
                         fire_range(&l.live, &mut cursor, from, to, len, |e, off| {
-                            if fired.len() < fired.capacity() {
-                                fired.push((e.note, e.vel, off, e.len));
+                            // Chance and trig conditions: an event past the loop end is on the next pass.
+                            let p = if e.start < from { pass.wrapping_add(1) } else { pass };
+                            if (e.cond == 0 && e.chance >= 1.0) || plays(e, p.wrapping_mul(e.reps).wrapping_add(e.it), fill, seed) {
+                                if fired.len() < fired.capacity() {
+                                    fired.push((e.note, e.vel, off, e.len));
+                                }
                             }
                         });
                         self.layers[li].cursor = cursor;
@@ -1155,6 +1189,7 @@ impl Core {
                     self.tr.lpos += bps;
                     if self.tr.lpos >= self.tr.loop_len {
                         self.tr.lpos -= self.tr.loop_len;
+                        self.tr.pass = self.tr.pass.wrapping_add(1);
                     }
                 }
             }

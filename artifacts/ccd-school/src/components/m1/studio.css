@@ -203,3 +203,13 @@
 .st-puck{opacity:.9}
 .st-playerrow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
 .st-playernote{flex:none;line-height:1.35;white-space:normal}
+/* chance and trig conditions: the tag on a step, the row under a held step, the fill key */
+.st-ctag{position:absolute;right:3px;bottom:2px;font-size:9px;font-weight:600;line-height:1;padding:2px 3px;border-radius:4px;background:rgba(0,0,0,.55);color:#F4F3F0;pointer-events:none;font-variant-numeric:tabular-nums}
+.st-chancerow{display:flex;align-items:center;gap:8px;flex:none;margin-top:6px}
+.st-conds{display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.st-conds .st-tag{height:28px;font-size:12px;position:relative}
+.st-conds .st-tag::after{content:"";position:absolute;inset:-8px -3px}
+.st-conds .st-tag.is-on{color:var(--ink);border-color:var(--led-mint);background:color-mix(in srgb,var(--led-mint) 16%,transparent)}
+.st-fillkey{flex:none;min-width:56px;height:44px;border-radius:12px;border:1px solid var(--tag);background:var(--well);color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer;touch-action:none}
+.st-fillkey.is-on{background:var(--led-mint);border-color:var(--led-mint);color:#141416;box-shadow:0 0 12px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.st-dicerow{gap:10px;align-items:center}

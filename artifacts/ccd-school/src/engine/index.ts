@@ -12,7 +12,12 @@ export * from "./format";
 export * from "./mix";
 export type { EngineEvent, EngineHost, HostInfo } from "./host";
 
-export type NoteEvent = { note: number; vel: number; start: number; len: number };
+/** `chance` 0..1 and `cond` (a trig condition: "1:2", "fill"...) decide in the engine whether a note plays
+ * each time round; `it` and `reps` say which play of the part's loop it is in an arranged song. */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; chance?: number; cond?: string; it?: number; reps?: number };
+
+/** Trig conditions in the engine's wire order (engine/src/seq.rs, cond). */
+const COND_CODE: Record<string, number> = { "1:2": 1, "2:2": 2, "1:4": 3, "2:4": 4, "3:4": 5, "4:4": 6, fill: 7, "not fill": 8 };
 
 /** Wire index of a param, by id. Drum pad params need the pad. */
 export function paramIndex(id: string, pad = 0): number {
@@ -45,8 +50,21 @@ export class Engine {
   /** Replace a layer's events. Swapped in atomically on the audio thread. */
   pattern(layer: number, events: NoteEvent[]) {
     this.s(CMD.evClear, layer);
-    for (const e of events) this.s(CMD.evAdd, layer, e.note, e.vel, e.start, e.len);
+    for (const e of events) {
+      this.s(CMD.evAdd, layer, e.note, e.vel, e.start, e.len);
+      const cond = e.cond ? (COND_CODE[e.cond] ?? 0) : 0;
+      const chance = e.chance ?? 1;
+      if (cond || chance < 1) this.s(CMD.evCond, layer, cond, chance, e.it ?? 0, e.reps ?? 1);
+    }
     this.s(CMD.evCommit, layer);
+  }
+  /** The song's seed for chance: the same seed plays the same chances. */
+  chanceSeed(seed: number) {
+    this.s(CMD.chanceSeed, 0, seed >>> 0);
+  }
+  /** The fill key: steps with the fill condition play while it is held (Elektron's fill). */
+  fill(on: boolean) {
+    this.s(CMD.fill, 0, on ? 1 : 0);
   }
   noteOn(layer: number, note: number, vel: number, at?: number) {
     this.host.note(true, layer, note, vel, at);

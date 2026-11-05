@@ -16,7 +16,7 @@ const DUCK = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 
 type Sent = { inst: string; events: string; duck: string; params: Map<number, number>; mods?: string };
 
-type Last = { bpm: number; loop: number; swing?: number; master?: number[]; samples?: Set<string> };
+type Last = { bpm: number; loop: number; swing?: number; seed?: number; master?: number[]; samples?: Set<string> };
 
 export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: Last) {
   // An arranged song plays as one long timeline of its sections.
@@ -38,6 +38,10 @@ export function syncEngine(engine: Engine, song: TrackV2, sent: Sent[], last: La
   if (last.swing !== t.swing) {
     engine.swing(t.swing ?? 0);
     last.swing = t.swing;
+  }
+  if (last.seed !== (t.seed ?? 1)) {
+    engine.chanceSeed(t.seed ?? 1);
+    last.seed = t.seed ?? 1;
   }
   if (last.loop !== t.loop) {
     engine.loop(t.loop);

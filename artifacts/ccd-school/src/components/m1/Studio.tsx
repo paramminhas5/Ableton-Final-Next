@@ -75,6 +75,7 @@ import { ABKey, useAB } from "./AB";
 import { fromValue, toValue } from "@/engine";
 import { chordAt, chordEvents, chordName, chordNotes as chordMidi, inChord, romanOf, withChordTrack, type Chord } from "@/lib/chords";
 import { ChordTrackEditor } from "./ChordTrack";
+import { CONDS, hasFillSteps, setChance, setCond, stepTag, type Cond } from "@/lib/chance";
 import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
 
@@ -424,6 +425,45 @@ export function Studio() {
   useEffect(() => { setDiceAmt(0); dice.current = null; }, [selId]);
   const diceRow = diceable && !lockAt ? <Dice amount={diceAmt} onAmount={v => rollDice(v, diceSeed)} onRoll={() => rollDice(diceAmt || 0.35, newSeed())} label="fill" /> : null;
 
+  // Chance (Live 12) and trig conditions (Elektron), set like a lock: hold a step, turn chance, pick a condition.
+  const lastChance = useRef(0);
+  const heldEv = lockAt && sel ? sel.events.find(lockMatch(lockAt)) : undefined;
+  const setStepChance = (v: number) => {
+    if (!lockAt) return;
+    const now = Date.now();
+    const undoable = now - lastChance.current > 800;
+    lastChance.current = now;
+    patchSel(l => ({ ...l, events: setChance(l.events, lockMatch(lockAt), v) }), undoable);
+    setTouched({ label: `step ${lockAt.step + 1} · chance`, text: `${Math.round(v * 100)}%` });
+  };
+  const setStepCond = (c: Cond | null) => {
+    if (!lockAt) return;
+    patchSel(l => ({ ...l, events: setCond(l.events, lockMatch(lockAt), c) }));
+    setTouched({ label: `step ${lockAt.step + 1} · trig condition`, text: c ?? "off" });
+  };
+  const chanceRow = lockAt && sel && heldEv ? (
+    <div className="st-chancerow">
+      <Knob label="chance" size={22} color={CAP.grey} value={heldEv.chance ?? 1} defaultValue={1} readout={`${Math.round((heldEv.chance ?? 1) * 100)}%`} onChange={setStepChance} style={{ width: 56, height: 56, aspectRatio: "auto", flex: "none" }} />
+      <div className="st-conds" role="radiogroup" aria-label="Trig condition">
+        {CONDS.map(c => {
+          const on = (heldEv.cond ?? "") === c;
+          return <button key={c || "off"} type="button" role="radio" aria-checked={on} className={`st-tag ${on ? "is-on" : ""}`} onClick={() => setStepCond(c || null)}>{c || "off"}</button>;
+        })}
+      </div>
+    </div>
+  ) : null;
+  // The fill key: steps with the fill condition play while it is held.
+  const [fillHeld, setFillHeld] = useState(false);
+  const holdFill = (on: boolean) => { if (on) start(); engine.fill(on); setFillHeld(on); if (on) setTouched({ label: "fill", text: "held" }); };
+  const fillKey = hasFillSteps(track.layers) && !lockAt ? (
+    <button type="button" className={`st-fillkey ${fillHeld ? "is-on" : ""}`} aria-pressed={fillHeld} aria-label="Fill: hold to play the fill steps"
+      onPointerDown={e => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* synthetic */ } holdFill(true); }}
+      onPointerUp={() => holdFill(false)} onPointerCancel={() => holdFill(false)} onContextMenu={e => e.preventDefault()}
+      onKeyDown={e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); holdFill(true); } }}
+      onKeyUp={e => { if (e.key === " " || e.key === "Enter") holdFill(false); }}>fill</button>
+  ) : null;
+  const stepsExtra = diceRow || fillKey ? <>{diceRow}{fillKey}</> : null;
+
   const canCapture = !!sel && !recording && !countIn && playedN > 0 && played.current.some(p => p.layerId === sel.id);
   const capture = () => {
     if (!sel) return;
@@ -759,12 +799,12 @@ export function Studio() {
               <Keys drum={drumLike} held={held} hits={hits} layerId={sel.id} noteHandlers={noteHandlers} root={track.root} scale={scaleOf(track)} chord={chordNow} />
             )}
             {sel.surface === "steps" && laneLike && (
-              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
+              <DrumSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow}
                 onHold={(note, step) => holdStep(note, step, Math.min(0.2, grid))} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={(note, step) => patchSel(l => ({ ...l, events: toggleStep(l.events, note, step, grid, Math.min(0.2, grid)) }))} />
             )}
             {sel.surface === "steps" && !laneLike && (
-              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={diceRow}
+              <MelodicSteps layer={sel} page={pageNow} pages={stepPages} setPage={setPage} playStep={playStep} grid={grid} bars={bars} setBars={setBars} lockAt={lockAt} dice={stepsExtra} lockRow={chanceRow}
                 onHold={(_, step) => holdStep(null, step, grid)} onRelease={() => setLockAt(null)} onClearLocks={clearLocks}
                 onToggle={step => patchSel(l => ({ ...l, events: toggleStep(l.events, l.events.some(e => Math.abs(e.start - step * grid) < grid / 2) ? null : lastNote.current, step, grid, grid) }))} />
             )}
@@ -1067,7 +1107,7 @@ function PageBar({ page, pages, setPage, bars, setBars, perPage, grid, dice }: {
 }
 
 type StepsProps = { layer: LayerV2; page: number; pages: number; setPage: (p: number) => void; playStep: number; grid: number; bars: number; setBars: (n: number) => void;
-  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode };
+  lockAt: LockAt; onHold: (note: number | null, step: number) => void; onRelease: () => void; onClearLocks: () => void; dice?: React.ReactNode; lockRow?: React.ReactNode };
 
 /** A step you can tap (on or off) or hold (lock knobs to it). Shift+Enter holds from the keyboard. */
 function useStepPress(onTap: () => void, onHold: () => void, held: boolean, onRelease: () => void) {
@@ -1101,7 +1141,7 @@ function LockBar({ at, layer, grid, onClear, onDone }: { at: NonNullable<LockAt>
 }
 
 /** A lane per sound, 8 steps a page. The playing step glows. */
-function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (note: number, step: number) => void }) {
+function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow }: StepsProps & { onToggle: (note: number, step: number) => void }) {
   const c = TYPE[layer.type].color;
   const fx = layer.type === "fx";
   const smp = layer.type === "sample";
@@ -1118,7 +1158,7 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
           <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} />
         ))}
       </div>
-      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} />}
+      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={8} grid={grid} dice={dice} />}
     </>
   );
 }
@@ -1144,16 +1184,18 @@ function LaneRow({ name, note, layer, page, playStep, color, grid, onToggle, loc
         const on = !!ev;
         const here = step === playStep;
         return (
-          <StepBtn key={k} cls={on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={color} label={`${name} step ${step + 1} ${on ? "on" : "off"}`} pressed={on}
+          <StepBtn key={k} cls={on ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={color} label={`${name} step ${step + 1} ${on ? "on" : "off"}${stepTag(ev) ? `, plays ${stepTag(ev)}` : ""}`} pressed={on}
             locked={!!ev?.p} held={!!lockAt && lockAt.step === step && lockAt.note === note}
-            onTap={() => onToggle(note, step)} onHold={() => onHold(note, step)} onRelease={onRelease} />
+            onTap={() => onToggle(note, step)} onHold={() => onHold(note, step)} onRelease={onRelease}>
+            {stepTag(ev) ? <span className="st-ctag">{stepTag(ev)}</span> : null}
+          </StepBtn>
         );
       })}
     </>
   );
 }
 
-function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice }: StepsProps & { onToggle: (step: number) => void }) {
+function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars, onToggle, lockAt, onHold, onRelease, onClearLocks, dice, lockRow }: StepsProps & { onToggle: (step: number) => void }) {
   const c = TYPE[layer.type].color;
   return (
     <>
@@ -1163,15 +1205,16 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
           const ev = layer.events.find(e => Math.abs(e.start - s * grid) < grid / 2);
           const here = s === playStep;
           return (
-            <StepBtn key={k} cls={ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={c} label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}`} pressed={!!ev}
+            <StepBtn key={k} cls={ev ? (here ? "is-lit" : "is-on") : here ? "is-dim" : ""} color={c} label={`Step ${s + 1} ${ev ? `on, ${noteName(ev.note)}` : "off"}${stepTag(ev) ? `, plays ${stepTag(ev)}` : ""}`} pressed={!!ev}
               locked={!!ev?.p} held={!!lockAt && lockAt.step === s} onTap={() => onToggle(s)} onHold={() => onHold(null, s)} onRelease={onRelease}>
               <span className="st-lv">{s + 1}</span>
               {ev ? <span className="st-lb">{noteName(ev.note)}</span> : null}
+              {stepTag(ev) ? <span className="st-ctag">{stepTag(ev)}</span> : null}
             </StepBtn>
           );
         })}
       </div>
-      {lockAt ? <LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} /> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} />}
+      {lockAt ? <><LockBar at={lockAt} layer={layer} grid={grid} onClear={onClearLocks} onDone={onRelease} />{lockRow}</> : <PageBar page={page} pages={pages} setPage={setPage} bars={bars} setBars={setBars} perPage={16} grid={grid} dice={dice} />}
     </>
   );
 }

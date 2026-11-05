@@ -130,10 +130,10 @@ pub fn typescript() -> String {
 
     writeln!(
         o,
-        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {}, repeat: {}, mod: {}, trim: {} }} as const;",
+        "export const CMD = {{ noteOn: {}, noteOff: {}, param: {}, instrument: {}, tempo: {}, loop: {}, play: {}, stop: {}, record: {}, recordOff: {}, evClear: {}, evAdd: {}, evCommit: {}, duck: {}, metronome: {}, allOff: {}, locate: {}, swing: {}, linkOff: {}, master: {}, snapshot: {}, compare: {}, analyse: {}, repeat: {}, mod: {}, trim: {}, evCond: {}, chanceSeed: {}, fill: {} }} as const;",
         cmd::NOTE_ON, cmd::NOTE_OFF, cmd::PARAM, cmd::INSTRUMENT, cmd::TEMPO, cmd::LOOP, cmd::PLAY, cmd::STOP, cmd::RECORD, cmd::RECORD_OFF,
         cmd::EV_CLEAR, cmd::EV_ADD, cmd::EV_COMMIT, cmd::DUCK, cmd::METRONOME, cmd::ALL_OFF, cmd::LOCATE, cmd::SWING, cmd::LINK_OFF,
-        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE, cmd::REPEAT, cmd::MOD, cmd::TRIM
+        cmd::MASTER, cmd::SNAPSHOT, cmd::COMPARE, cmd::ANALYSE, cmd::REPEAT, cmd::MOD, cmd::TRIM, cmd::EV_COND, cmd::CHANCE_SEED, cmd::FILL
     )
     .unwrap();
     writeln!(

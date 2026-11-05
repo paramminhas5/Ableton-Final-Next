@@ -30,6 +30,7 @@ import {
 import { cleanLocks } from "./plock";
 import { asScale, type ScaleName } from "./theory";
 import { cleanChords, type Chord } from "./chords";
+import { cleanChance, type Cond } from "./chance";
 
 export const MAX_LAYERS = 8;
 export const LOOP_BEATS = 4;
@@ -40,8 +41,10 @@ export type LayerType = "drums" | "hats" | "bass" | "chords" | "lead" | "fx" | "
 export type Surface = "steps" | "keys" | "pads" | "own" | "player";
 export type Bank = "sound" | "eq" | "fx" | "mix";
 
-/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts). */
-export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number> };
+/** `p`: parameter locks, normalised values by wire index that this note plays with (src/lib/plock.ts).
+ * `chance` (Live 12, 0..1, missing plays every time) and `cond` (Elektron's trig condition) decide in the
+ * engine whether it plays each time round (src/lib/chance.ts). `it` and `reps` are only set by `arranged`. */
+export type NoteEvent = { note: number; vel: number; start: number; len: number; p?: Record<number, number>; chance?: number; cond?: Cond; it?: number; reps?: number };
 
 export type LayerV2 = {
   id: string;
@@ -91,6 +94,8 @@ export type TrackV2 = {
   sections?: { name: string; bars: number; off: string[]; fill?: boolean; riser?: boolean; notes?: Record<string, NoteEvent[]> }[];
   /** The section the studio is editing (its parts' events are that section's loop). Missing: the loop all sections share. */
   at?: number;
+  /** The seed chance plays with (src/lib/chance.ts). Missing: 1. */
+  seed?: number;
   /** The chord track (Logic's Chord Track): one chord per bar of the loop, null for a bar without one. */
   chords?: (Chord | null)[];
   /** DJ cues the dj lessons marked on the song (src/lib/cues.ts). They do not change the sound. */
@@ -372,7 +377,7 @@ export function readTrackV2(): TrackV2 {
       if (t && t.v === 2) {
         if (t.scale !== undefined && asScale(t.scale) !== t.scale) t.scale = asScale(t.scale);
         if (t.chords !== undefined) t.chords = cleanChords(t.chords);
-        return Array.isArray(t.layers) ? cleanLocks(t) : t;
+        return Array.isArray(t.layers) ? cleanChance(cleanLocks(t)) : t;
       }
     }
     const v1 = localStorage.getItem(V1_KEY);
