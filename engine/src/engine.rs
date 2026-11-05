@@ -468,7 +468,7 @@ impl Core {
     pub fn new(sr: f32) -> Self {
         let mut echo = Echo::new(sr);
         echo.set_tempo(120.0);
-        Core {
+        let mut core = Core {
             sr,
             tr: Transport {
                 sr: sr as f64,
@@ -507,7 +507,12 @@ impl Core {
             last_meter: 0,
             snap: Snapshot { valid: false, layers: [[0.0; MIX_PARAMS]; MAX_LAYERS], duck: [(-1, -1); MAX_LAYERS], master: [0.0; crate::master::MASTER_SLOTS] },
             comparing: false,
+        };
+        // The master's defaults reach the shared returns too (the echo's style, the reverb's kind and time).
+        for (i, spec) in MASTER_PARAMS.iter().enumerate() {
+            core.set_master(i, spec.default, true);
         }
+        core
     }
 
     fn snapshot(&mut self) {
@@ -550,6 +555,8 @@ impl Core {
         match i {
             crate::master::M_SPACE => self.verb.set_kind(if n < 0.5 { crate::fx::HALL } else { crate::fx::PLATE }),
             crate::master::M_VERB_TIME => self.verb.set(spec.to_value(n) * 0.001),
+            crate::master::M_ECHO_TYPE => self.echo.set_kind(step3(n)),
+            crate::master::M_REPEATS => self.echo.feedback = spec.to_value(n),
             _ => {}
         }
     }

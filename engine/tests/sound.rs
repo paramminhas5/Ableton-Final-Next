@@ -1098,3 +1098,115 @@ fn mallet_has_two_resonators_and_voices_sit_at_the_synths_level() {
         assert!(y.iter().all(|v| v.is_finite() && v.abs() < 2.0));
     }
 }
+
+// ── Engine 2, item 11: tape and analogue echo ────────────────────────────────────────────────────
+// The clean style is the echo exactly as it was before engine 2 (its code path is unchanged), so it
+// is the "before" in each measurement.
+
+use ccd_engine::fx::{Echo, ECHO_BBD, ECHO_CLEAN, ECHO_TAPE};
+
+const ECHOES: [(u8, &str); 3] = [(ECHO_CLEAN, "clean (before)"), (ECHO_TAPE, "tape"), (ECHO_BBD, "analogue")];
+
+fn echo_at(kind: u8, bpm: f32, fb: f32) -> Echo {
+    let mut e = Echo::new(SR);
+    e.set_kind(kind);
+    e.set_tempo(bpm);
+    e.feedback = fb;
+    // Let the time settle on the tempo.
+    for _ in 0..(SR * 4.0) as usize {
+        e.tick(0.0);
+    }
+    e
+}
+
+#[test]
+fn echo_wow_and_flutter_scale_with_the_delay_time() {
+    // Peak-to-peak wander of the delay over 8 s, in samples and as a pitch wobble in cents, at three
+    // delay times (dotted eighths at 300, 120 and 60 bpm: 150, 375 and 750 ms).
+    for (kind, name) in [(ECHO_TAPE, "tape"), (ECHO_BBD, "analogue")] {
+        let mut shares = vec![];
+        for bpm in [300.0f32, 120.0, 60.0] {
+            let mut e = echo_at(kind, bpm, 0.0);
+            let t = 60.0 / bpm * 0.75;
+            let dev: Vec<f32> = (0..(SR * 8.0) as usize).map(|_| { e.tick(0.0); e.dev }).collect();
+            let (lo, hi) = dev.iter().fold((f32::MAX, f32::MIN), |(a, b), v| (a.min(*v), b.max(*v)));
+            let pp = (hi - lo) * t * SR;
+            // Pitch: the rate of change of the delay, in cents.
+            let rate = dev.windows(2).map(|w| ((w[1] - w[0]) * t * SR).abs()).fold(0.0f32, f32::max);
+            let cents = 1200.0 * (1.0 + rate).log2();
+            println!("{name}, delay {:.0} ms: the delay wanders {pp:.1} samples peak to peak ({:.3}% of it), pitch up to {cents:.1} cents", t * 1000.0, (hi - lo) * 100.0);
+            shares.push(pp / (t * SR));
+        }
+        let (a, b) = (shares.iter().cloned().fold(f32::MAX, f32::min), shares.iter().cloned().fold(0.0f32, f32::max));
+        assert!(b / a < 1.25, "{name}: depth should be a fixed share of the delay time: {shares:?}");
+        assert!(a > 0.001, "{name}: there should be a wander: {shares:?}");
+    }
+}
+
+#[test]
+fn echo_repeats_darken_saturate_and_duck() {
+    // HF loss per repeat: 50 ms of white noise in, then each repeat's energy over 4 kHz against
+    // 300 Hz to 1 kHz, repeat by repeat.
+    let t = (SR * 0.375) as usize;
+    let band = |y: &[f32], lo: f32, hi: f32| {
+        let mut a = ccd_engine::dsp::filter::Svf::default();
+        let mut b = ccd_engine::dsp::filter::Svf::default();
+        a.set(lo, 0.707, SR);
+        b.set(hi, 0.707, SR);
+        let v: Vec<f32> = y.iter().map(|x| { let h = a.tick(*x).hp; b.tick(h).lp }).collect();
+        db(rms(&v))
+    };
+    let mut slopes = vec![];
+    for (kind, name) in ECHOES {
+        let mut e = echo_at(kind, 120.0, 0.6);
+        let mut rng = ccd_engine::dsp::Rng::new(5);
+        let n = (SR * 0.05) as usize;
+        let out: Vec<f32> = (0..t * 5).map(|i| e.tick(if i < n { rng.bipolar() * 0.05 } else { 0.0 }).0).collect();
+        // Repeats land on the left at 1, 3, 5... times the delay (ping-pong); take 1 and 3.
+        let tilt = |k: usize| { let w = &out[k * t..k * t + n + 2_000]; band(w, 4_000.0, 20_000.0) - band(w, 300.0, 1_000.0) };
+        let per = (tilt(3) - tilt(1)) / 2.0;
+        println!("{name}: the top falls {:.1} dB against the middle on every repeat", -per);
+        slopes.push(per);
+    }
+    // Tape darkens about as fast as the old echo did (it was modelled on tape) and adds the rest below;
+    // the analogue repeats darken faster.
+    assert!(slopes[1] < slopes[0] + 0.5 && slopes[2] < slopes[0] - 1.0, "repeats should darken: {slopes:?}");
+    // Saturation: a loud 200 Hz tone's first repeat, the third harmonic against the tone.
+    let mut thd = vec![];
+    for (kind, name) in ECHOES {
+        let mut e = echo_at(kind, 120.0, 0.0);
+        let x = sine(200.0, t * 2, 0.9);
+        let out: Vec<f32> = x.iter().map(|v| e.tick(*v).0).collect();
+        let w = &out[t + 4_096..t + 4_096 + 8_192];
+        let s = spectrum(w);
+        let bin = |hz: f32| (hz / SR * 8_192.0).round() as usize;
+        let pk = |hz: f32| (bin(hz) - 2..=bin(hz) + 2).map(|i| s[i]).fold(0.0f32, f32::max);
+        let h3 = db(pk(600.0) / pk(200.0));
+        println!("{name}: a loud tone's first repeat carries its third harmonic at {h3:.1} dB");
+        thd.push(h3);
+    }
+    assert!(thd[1] > thd[0] + 20.0 && thd[2] > thd[0] + 20.0, "tape and analogue repeats should saturate: {thd:?}");
+    // Ducking: the repeats of a phrase while the next phrase plays into the echo, against the same
+    // repeats in a gap.
+    for (kind, name) in ECHOES {
+        let mut e = echo_at(kind, 120.0, 0.5);
+        let x = sine(330.0, t * 4, 0.3);
+        let (mut during, mut after) = (vec![], vec![]);
+        for i in 0..t * 6 {
+            let inp = if i < t * 4 { x[i] } else { 0.0 };
+            let (a, _) = e.tick(inp);
+            if i >= t * 3 && i < t * 4 {
+                during.push(a);
+            } else if i >= t * 4 + 2_000 && i < t * 5 {
+                after.push(a);
+            }
+        }
+        let dip = db(rms(&during)) - db(rms(&after));
+        println!("{name}: repeats while you play sit {dip:.1} dB against the repeats in the gap");
+        if kind == ECHO_CLEAN {
+            assert!(dip > -1.0);
+        } else {
+            assert!(dip < -4.0, "{name} should duck: {dip:.1}");
+        }
+    }
+}

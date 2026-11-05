@@ -346,6 +346,9 @@ pub const M_GLUE_MIX: usize = 4;
 /// the return; the master only keeps their values.
 pub const M_SPACE: usize = 5;
 pub const M_VERB_TIME: usize = 6;
+/// The shared echo (item 11): clean, tape or analogue, and its feedback.
+pub const M_ECHO_TYPE: usize = 7;
+pub const M_REPEATS: usize = 8;
 /// Room for master params (compare snapshots hold this many).
 pub const MASTER_SLOTS: usize = 16;
 

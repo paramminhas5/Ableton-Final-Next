@@ -44,7 +44,19 @@ impl Line {
     }
 }
 
-/// Dotted-eighth ping-pong, darkened on each repeat like a tape echo.
+/// The echo's three styles (engine 2, item 11).
+pub const ECHO_CLEAN: u8 = 0;
+pub const ECHO_TAPE: u8 = 1;
+pub const ECHO_BBD: u8 = 2;
+
+/// Dotted-eighth ping-pong on the shared return. Clean is the echo as it was before engine 2 (each
+/// repeat through a one-pole low-pass, nothing else). Tape and analogue are the hardware it imitated:
+/// - tape: the delay drifts with the tape's speed (wow, a slow wander, and flutter, a fast shimmer),
+///   by a share of the delay time, as a real tape's speed error is; every repeat goes back through the
+///   record head, so it saturates and loses top and bottom.
+/// - analogue (bucket brigade): darker repeats (two poles, the chip's anti-alias filters), a gentler
+///   clock wobble, also a share of the delay time.
+/// Both duck: the repeats dip while you play into them and come up in the gaps.
 pub struct Echo {
     l: Line,
     r: Line,
@@ -55,7 +67,38 @@ pub struct Echo {
     lp_r: OnePoleLp,
     hp: OnePoleHp,
     pub feedback: f32,
+    kind: u8,
+    lp2_l: OnePoleLp,
+    lp2_r: OnePoleLp,
+    hpf_l: OnePoleHp,
+    hpf_r: OnePoleHp,
+    sat_in: crate::dsp::Adaa,
+    sat_l: crate::dsp::Adaa,
+    sat_r: crate::dsp::Adaa,
+    wow: f32,
+    flutter: f32,
+    drift: f32,
+    drift_target: f32,
+    drift_count: u32,
+    rng: crate::dsp::Rng,
+    duck_env: f32,
+    duck_att: f32,
+    duck_rel: f32,
+    /// The delay's deviation from its set time right now, as a share of it (for tests and drawing).
+    pub dev: f32,
+    /// The repeats' gain from ducking right now.
+    pub duck: f32,
 }
+
+/// Tape: wow (0.55 Hz) and flutter (6.5 Hz) depth as a share of the delay time, and the random wander.
+const WOW: f32 = 0.001_2;
+const FLUTTER: f32 = 0.000_1;
+const WANDER: f32 = 0.000_8;
+/// Bucket brigade: the clock's triangle wobble.
+const BBD_WOBBLE: f32 = 0.001_5;
+/// Ducking: how far the repeats dip (0.65 is about -9 dB) and the send level that dips them fully.
+const DUCK_DEPTH: f32 = 0.65;
+const DUCK_FULL: f32 = 0.2;
 
 impl Echo {
     pub fn new(sr: f32) -> Self {
@@ -70,6 +113,25 @@ impl Echo {
             lp_r: OnePoleLp::default(),
             hp: OnePoleHp::default(),
             feedback: 0.42,
+            kind: ECHO_CLEAN,
+            lp2_l: OnePoleLp::default(),
+            lp2_r: OnePoleLp::default(),
+            hpf_l: OnePoleHp::default(),
+            hpf_r: OnePoleHp::default(),
+            sat_in: crate::dsp::Adaa::new(),
+            sat_l: crate::dsp::Adaa::new(),
+            sat_r: crate::dsp::Adaa::new(),
+            wow: 0.0,
+            flutter: 0.0,
+            drift: 0.0,
+            drift_target: 0.0,
+            drift_count: 0,
+            rng: crate::dsp::Rng::new(0x7A9E),
+            duck_env: 0.0,
+            duck_att: crate::dsp::tau_coef(0.005, sr),
+            duck_rel: crate::dsp::tau_coef(0.25, sr),
+            dev: 0.0,
+            duck: 1.0,
         };
         e.lp_l.set(3_200.0, sr);
         e.lp_r.set(3_200.0, sr);
@@ -82,16 +144,80 @@ impl Echo {
         self.target = (60.0 / bpm.max(20.0) * beats * self.sr).min(self.sr * 2.4);
     }
 
+    /// Clean, tape or analogue.
+    pub fn set_kind(&mut self, k: u8) {
+        if k == self.kind {
+            return;
+        }
+        self.kind = k;
+        let sr = self.sr;
+        let (lp, lp2, hp) = match k {
+            ECHO_TAPE => (3_000.0, 7_000.0, 110.0),
+            ECHO_BBD => (2_900.0, 2_900.0, 160.0),
+            _ => (3_200.0, 20_000.0, 20.0),
+        };
+        for f in [&mut self.lp_l, &mut self.lp_r] {
+            f.set(lp, sr);
+        }
+        for f in [&mut self.lp2_l, &mut self.lp2_r] {
+            f.set(lp2, sr);
+        }
+        for f in [&mut self.hpf_l, &mut self.hpf_r] {
+            f.set(hp, sr);
+        }
+    }
+
+    pub fn kind(&self) -> u8 {
+        self.kind
+    }
+
     #[inline]
     pub fn tick(&mut self, input: f32) -> (f32, f32) {
         self.time += (self.target - self.time) * 0.0002;
-        let a = self.l.read(self.time);
-        let b = self.r.read(self.time);
+        if self.kind == ECHO_CLEAN {
+            let a = self.l.read(self.time);
+            let b = self.r.read(self.time);
+            let x = self.hp.tick(input);
+            // Ping-pong: input enters left, each side feeds the other.
+            self.l.write(flush_denormal(x + self.lp_r.tick(b) * self.feedback));
+            self.r.write(flush_denormal(self.lp_l.tick(a) * self.feedback));
+            return (a, b);
+        }
+        // The delay's wander, as a share of the delay time.
+        let sr = self.sr;
+        self.dev = if self.kind == ECHO_TAPE {
+            self.wow = (self.wow + 0.55 / sr).fract();
+            self.flutter = (self.flutter + 6.5 / sr).fract();
+            if self.drift_count == 0 {
+                self.drift_count = (sr * 0.3) as u32;
+                self.drift_target = self.rng.bipolar() * WANDER;
+            }
+            self.drift_count -= 1;
+            self.drift += (self.drift_target - self.drift) * (1.0 / (sr * 0.4));
+            WOW * crate::dsp::sin_cycle(self.wow) + FLUTTER * crate::dsp::sin_cycle(self.flutter) + self.drift
+        } else {
+            self.wow = (self.wow + 0.4 / sr).fract();
+            BBD_WOBBLE * (4.0 * (self.wow - 0.5).abs() - 1.0)
+        };
+        let d = self.time * (1.0 + self.dev);
+        let a = self.l.read(d);
+        let b = self.r.read(d);
+        // Ducking follows what goes in.
         let x = self.hp.tick(input);
-        // Ping-pong: input enters left, each side feeds the other.
-        self.l.write(flush_denormal(x + self.lp_r.tick(b) * self.feedback));
-        self.r.write(flush_denormal(self.lp_l.tick(a) * self.feedback));
-        (a, b)
+        let lvl = x.abs();
+        let c = if lvl > self.duck_env { self.duck_att } else { self.duck_rel };
+        self.duck_env = lvl + (self.duck_env - lvl) * c;
+        self.duck = 1.0 - DUCK_DEPTH * (self.duck_env / DUCK_FULL).min(1.0);
+        // The record head: a soft saturation going in, and on every repeat on its way back.
+        let drive = if self.kind == ECHO_TAPE { 1.8 } else { 1.3 };
+        let x = self.sat_in.process(x * drive) / drive;
+        let rep_r = self.lp2_r.tick(self.lp_r.tick(self.hpf_r.tick(b)));
+        let rep_l = self.lp2_l.tick(self.lp_l.tick(self.hpf_l.tick(a)));
+        let rep_r = self.sat_r.process(rep_r * drive) / drive;
+        let rep_l = self.sat_l.process(rep_l * drive) / drive;
+        self.l.write(flush_denormal(x + rep_r * self.feedback));
+        self.r.write(flush_denormal(rep_l * self.feedback));
+        (a * self.duck, b * self.duck)
     }
 }
 

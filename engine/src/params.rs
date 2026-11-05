@@ -210,6 +210,9 @@ pub const MASTER_PARAMS: &[ParamSpec] = &[
     // Appended 5 Nov (engine 2, item 9): which reverb the send goes to (hall or plate) and how long it rings.
     p("master.space", "space", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("master.verbtime", "verb time", Bank::Mix, 400.0, 8000.0, 0.598, Unit::Ms, Curve::Exp, 0.0, NONE),
+    // Appended 5 Nov (engine 2, item 11): the echo's style (clean, tape, analogue) and how many repeats.
+    p("master.echotype", "echo", Bank::Mix, 0.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.repeats", "repeats", Bank::Mix, 0.0, 0.9, 0.4667, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 
 /// Instrument params start here on the wire, after the layer block.
