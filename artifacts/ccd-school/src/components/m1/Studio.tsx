@@ -942,7 +942,7 @@ export function Studio() {
                 return (
                   <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color} title={elsewhereLine(spec.key) ?? undefined}
                     {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lpkind" || spec.key === "lfoto" ? 3 : undefined}
-                    value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default}
+                    value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default} tipValue={bigText(spec, lockedValue(index) ?? paramOf(sel, index))}
                     mods={rs.map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
                     modTo={takes ? index : undefined} drop={dropOver === index && takes}
                     overlay={modEdit && takes ? (

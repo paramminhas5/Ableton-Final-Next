@@ -7,7 +7,9 @@
  */
 import "./pictures.css";
 import Link from "next/link";
-import { useCallback, useRef, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
+import { useCallback, useRef, useState, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
+import { createPortal } from "react-dom";
+import { fingerTipPlace, fingerTipWidth } from "@/lib/fingerTip";
 
 export const LED = {
   mint: "var(--led-mint)",
@@ -217,6 +219,42 @@ function useDrag(value: number, onChange: ((v: number) => void) | undefined, ran
   return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onKeyDown, onWheel };
 }
 
+// ── touch to reveal: the value beside the finger ─────────────────────────
+/**
+ * Koala and the OP-1 field show what you're turning just above your finger, because the finger hides the
+ * control's own label. A touch drag on a knob, a fader or a picture shows its name and value there; a mouse
+ * keeps the label under the control (it hides nothing). `down`, `move` and `up` go on the control's own
+ * pointer handlers; only the finger that pressed it moves the tip.
+ */
+export function useFingerTip() {
+  const [at, setAt] = useState<{ x: number; y: number } | null>(null);
+  const id = useRef<number | null>(null);
+  const down = useCallback((e: { pointerType: string; pointerId: number; clientX: number; clientY: number }) => {
+    if (e.pointerType !== "touch") return;
+    id.current = e.pointerId;
+    setAt({ x: e.clientX, y: e.clientY });
+  }, []);
+  const move = useCallback((e: { pointerId: number; clientX: number; clientY: number }) => {
+    if (id.current !== e.pointerId) return;
+    setAt({ x: e.clientX, y: e.clientY });
+  }, []);
+  const up = useCallback((e?: { pointerId: number }) => {
+    if (e && id.current !== e.pointerId) return;
+    id.current = null;
+    setAt(null);
+  }, []);
+  return { at, down, move, up };
+}
+
+export function FingerTip({ at, label, value }: { at: { x: number; y: number } | null; label: string; value: string }) {
+  if (!at || typeof document === "undefined") return null;
+  const { left, top } = fingerTipPlace(at.x, at.y, window.innerWidth, fingerTipWidth(label, value));
+  return createPortal(
+    <div className="m1-ftip" aria-hidden style={{ left, top }}><small>{label}</small><b>{value}</b></div>,
+    document.body,
+  );
+}
+
 function Scale({ size, steps, at = -1 }: { size: number; steps?: number; at?: number }) {
   const c = size / 2, r0 = size / 2 - 7, r1 = size / 2 - 2;
   // A stepped knob gets one line per step, and the current one lit.
@@ -262,6 +300,8 @@ type KnobProps = {
   onStep?: () => void;
   /** The value in words ("1.2 kHz", "40%"), shown under the label and read out by screen readers. */
   readout?: string;
+  /** The value in words for the tip beside a finger, when the knob shows no readout of its own. */
+  tipValue?: string;
   /** The colour of the line this knob moves on the screen: drawn as a lit ring from rest to the value. */
   ring?: string;
   /** Doing nothing at this value (an amount at zero, a centred eq): the ring and led stay dark. */
@@ -311,7 +351,7 @@ function Ring({ size, value, color, from = 0, idle, mods }: { size: number; valu
 }
 
 /** Knurled knob in a well. Drag up or down, scroll, or use arrow keys. Double-tap to reset. */
-export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title }: KnobProps) {
+export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, size = 46, defaultValue, bare, height, style, detents, onStep, readout, tipValue, ring, idle, ringFrom, dim, spot, mods, modTo, drop, overlay, title }: KnobProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
   const drag0 = useDrag(value, onChange ? set : undefined, detents && detents > 1 ? Math.min(600, Math.max(70, 56 * (detents - 1))) : 180, defaultValue, detents);
   const press = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -325,6 +365,14 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
     },
   } : drag0;
   const at = detents && detents > 1 ? Math.round(value * (detents - 1)) : -1;
+  const tip = useFingerTip();
+  const touch = onChange ? {
+    ...drag,
+    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => { drag.onPointerDown?.(e as never); tip.down(e); },
+    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => { drag.onPointerMove?.(e as never); tip.move(e); },
+    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => { drag.onPointerUp?.(e as never); tip.up(e); },
+    onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => { drag.onPointerCancel?.(); tip.up(e); },
+  } : drag;
   const well = size + 18;
   const rot = -135 + 270 * value;
   const knob = (
@@ -338,9 +386,10 @@ export function Knob({ value, onChange, onTouch, label, color = CAP.grey, led, s
       aria-valuemax={100}
       aria-valuenow={Math.round(value * 100)}
       aria-valuetext={readout}
-      {...drag}
+      {...touch}
       style={{ position: "relative", width: well + 14, height: well + 14, display: "flex", alignItems: "center", justifyContent: "center" }}
     >
+      <FingerTip at={tip.at} label={label} value={readout ?? tipValue ?? `${Math.round(value * 100)}%`} />
       {size >= 46 && !ring && <Scale size={well + 14} steps={detents} at={at} />}
       {ring ? <Ring size={well + 14} value={value} color={ring} from={ringFrom} idle={idle} mods={mods} /> : null}
       <div className="m1-well" style={{ width: well, height: well }}>
@@ -386,18 +435,29 @@ type FaderProps = {
 /** Fader with printed ticks. Drag, scroll, or arrow keys. Double-tap snaps to 0 dB (75%). */
 export function Fader({ value, onChange, onTouch, label, led, height = 140, width = 44, horizontal, defaultValue = 0.75, unity, capWidth, valueText }: FaderProps) {
   const set = useCallback((v: number) => { onChange?.(v); onTouch?.(label, v); }, [onChange, onTouch, label]);
-  const drag = useDrag(value, onChange ? set : undefined, horizontal ? -160 : height - 40, defaultValue);
+  const drag0 = useDrag(value, onChange ? set : undefined, horizontal ? -160 : height - 40, defaultValue);
+  const tip = useFingerTip();
+  const drag = onChange ? {
+    ...drag0,
+    onPointerDown: (e: React.PointerEvent<HTMLElement>) => { drag0.onPointerDown(e); tip.down(e); },
+    onPointerMove: (e: React.PointerEvent<HTMLElement>) => { drag0.onPointerMove(e); tip.move(e); },
+    onPointerUp: (e: React.PointerEvent<HTMLElement>) => { drag0.onPointerUp(); tip.up(e); },
+    onPointerCancel: (e: React.PointerEvent<HTMLElement>) => { drag0.onPointerCancel(); tip.up(e); },
+  } : drag0;
+  const ftip = <FingerTip at={tip.at} label={label} value={valueText ?? `${Math.round(value * 100)}%`} />;
   if (horizontal) {
     const w = width;
     return (
       <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-valuetext={valueText}
         {...drag}
         onPointerMove={(e) => {
+          tip.move(e);
           if (!onChange || !(e.buttons & 1)) return;
           const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
           set(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)));
         }}
         style={{ position: "relative", width: w, height: 30 }}>
+        {ftip}
         {Array.from({ length: 9 }, (_, i) => <i key={i} style={{ position: "absolute", top: -4, left: (i * w) / 8, width: 1, height: i % 4 === 0 ? 6 : 4, background: "var(--tick)" }} />)}
         <div className="m1-fslot" style={{ top: 12, left: 0, right: 0, width: "auto", height: 6, marginLeft: 0 }} />
         <div className="m1-fcap" style={{ top: 2, left: `${value * 100}%`, width: 26, height: 26, marginLeft: -13, background: "repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 3px,rgba(0,0,0,.10) 3px 4px),linear-gradient(180deg,var(--c1),var(--c0))" }}>
@@ -412,6 +472,7 @@ export function Fader({ value, onChange, onTouch, label, led, height = 140, widt
   return (
     <div className="m1-fader" role="slider" tabIndex={0} aria-label={label} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-valuetext={valueText} {...drag}
       style={{ position: "relative", width, height }}>
+      {ftip}
       {led ? <Dash color={led} style={{ position: "absolute", top: -14, left: "50%", marginLeft: -9 }} /> : null}
       {Array.from({ length: 9 }, (_, j) => {
         const w = j === 0 || j === 2 || j === 8 ? 8 : 5;

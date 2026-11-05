@@ -301,6 +301,10 @@ a.m1-m:active, button.m1-m:active { transform: translateY(3px); box-shadow: var(
 .m1-leg { font-weight: 200; line-height: 1; font-variant-numeric: tabular-nums; }
 .m1-ml, .m1-eng { color: var(--print); text-shadow: 0 1px 0 var(--ehi), 0 -1px 0 var(--elo); }
 .m1-ml { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 11px; font-weight: 500; line-height: 1; pointer-events: none; }
+/* touch to reveal: the value just above the finger while a touch drags a control (controls.tsx FingerTip) */
+.m1-ftip { position: fixed; z-index: 1000; transform: translate(-50%, -100%); pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 12px 7px; border-radius: 12px; background: radial-gradient(120% 90% at 50% 0%, #141416, #050506); color: var(--disp-ink, #E9E9E6); box-shadow: 0 0 0 1.5px #000, inset 0 0 0 1px rgba(255,255,255,.08), 0 8px 22px rgba(0,0,0,.35); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.m1-ftip small { font-size: 10.5px; font-weight: 500; line-height: 1; color: #9A9AA0; }
+.m1-ftip b { font-size: 17px; font-weight: 400; letter-spacing: -.02em; line-height: 1.05; }
 .m1-kv { position: absolute; left: 0; right: 0; bottom: 21px; text-align: center; font-size: 10px; line-height: 1; color: var(--print); font-variant-numeric: tabular-nums; pointer-events: none; }
 .m1-ml.is-on { color: var(--ink); font-weight: 600; }
 

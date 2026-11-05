@@ -8,6 +8,7 @@
 import "./pictures.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { OUT, type Engine } from "@/engine";
+import { FingerTip, useFingerTip } from "./controls";
 import { dragCutoff, dragTime, envDot, envLayout, envPath, envTail, envCutoff, filterDb, lowCutDb, freqX, levelAt, xFreq, type Env, type FilterCharacter } from "@/lib/shapes";
 
 /** When the last note on a layer started and stopped, in performance.now() ms. */
@@ -98,7 +99,9 @@ function useLive(clock: NoteClock | undefined, tailS: number): number {
 function usePicDrag<T>(begin: ((x: number, y: number) => T | null) | null, move: (at: T, dx: number, dy: number) => void) {
   const st = useRef<{ x: number; y: number; w: number; h: number; at: T } | null>(null);
   const [active, setActive] = useState(false);
-  if (!begin) return { active: false, handlers: {} };
+  // A finger hides what it drags: the value goes just above it (controls.tsx FingerTip).
+  const tip = useFingerTip();
+  if (!begin) return { active: false, handlers: {}, tip: null };
   const handlers = {
     onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
       if (e.button > 0) return;
@@ -109,17 +112,19 @@ function usePicDrag<T>(begin: ((x: number, y: number) => T | null) | null, move:
       try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* an old browser, or the pointer has gone */ }
       st.current = { x: e.clientX, y: e.clientY, w: Math.max(1, r.width), h: Math.max(1, r.height), at };
       setActive(true);
+      tip.down(e);
     },
     onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
       const d = st.current;
       if (!d) return;
       e.preventDefault();
       move(d.at, (e.clientX - d.x) / d.w, (d.y - e.clientY) / d.h);
+      tip.move(e);
     },
-    onPointerUp: () => { st.current = null; setActive(false); },
-    onPointerCancel: () => { st.current = null; setActive(false); },
+    onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => { st.current = null; setActive(false); tip.up(e); },
+    onPointerCancel: (e: React.PointerEvent<HTMLDivElement>) => { st.current = null; setActive(false); tip.up(e); },
   };
-  return { active, handlers };
+  return { active, handlers, tip: tip.at };
 }
 
 const fmtS = (s: number) => (s >= 1 ? `${(Math.round(s * 100) / 100).toString()} s` : `${Math.max(1, Math.round(s * 1000))} ms`);
@@ -177,6 +182,7 @@ export function EnvView({ env, color, clock, height, lit = true, label = "envelo
       {marks.map(m => (m.w * W > 12 ? <text key={`t${m.k}`} x={(m.x + m.w / 2) * W} y={9} textAnchor="middle" className="pic-txt">{m.k}</text> : null))}
       {handles.map(h => <circle key={`h${h.k}`} cx={h.x * W} cy={y(h.y)} r={grabbed === h.k ? 7 : 5} className={`pic-handle ${grabbed === h.k ? "is-on" : ""}`} />)}
     </svg>
+    {grabbed ? <FingerTip at={pd.tip} label={grabbed === "a" ? "attack" : grabbed === "r" ? "release" : "decay"} value={fmtS(grabbed === "a" ? env.a : grabbed === "r" ? env.r : env.d)} /> : null}
     </div>
   );
 }
@@ -230,6 +236,7 @@ export function FilterView({ cutoff, res, color, clock, fenv, amount = 0, charac
       {onCutoff || onRes ? <circle cx={sx} cy={sy} r={pd.active ? 8 : 6} className={`pic-handle ${pd.active ? "is-on" : ""}`} /> : null}
       <circle cx={kx} cy={ky} r={4} className="pic-dot" />
     </svg>
+    <FingerTip at={pd.tip} label={onRes ? "cutoff · res" : "cutoff"} value={onRes ? `${hz(cutoff)} · ${Math.round(res * 100)}%` : hz(cutoff)} />
     </div>
   );
 }
