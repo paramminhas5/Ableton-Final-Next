@@ -186,7 +186,7 @@ export function EnvView({ env, color, clock, height, lit = true, label = "envelo
  * filter envelope opening it on each note when the env knob is up. `character` draws engine item 7's
  * slopes once that param exists.
  */
-export function FilterView({ cutoff, res, color, clock, fenv, amount = 0, character = "warm", height, lit = true, lowCut = 20, onCutoff, onRes }: {
+export function FilterView({ cutoff, res, color, clock, fenv, amount = 0, character = "prd", height, lit = true, lowCut = 20, onCutoff, onRes }: {
   cutoff: number; res: number; lowCut?: number; color: string; clock?: NoteClock; fenv?: { env: Env; octaves: number } | null; amount?: number; character?: FilterCharacter; height?: number; lit?: boolean;
   /** Drag the knee: left and right is the cutoff (Hz), up and down the resonance (0..1). */
   onCutoff?: (hz: number) => void; onRes?: (res: number) => void;
@@ -217,7 +217,7 @@ export function FilterView({ cutoff, res, color, clock, fenv, amount = 0, charac
   return (
     <div ref={box} className={`pic ${lit ? "" : "is-dim"} ${onCutoff || onRes ? "is-drag" : ""} ${pd.active ? "is-dragging" : ""}`} style={{ ["--c" as string]: color, ...(height ? { height } : null) } as React.CSSProperties} {...pd.handlers}>
     <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
-      aria-label={`filter: lets through what is under ${hz(cutoff)}${res > 0.5 ? ", with a ringing peak" : res > 0.2 ? ", with a small peak" : ""}${character !== "warm" ? `, ${character}` : ""}`}>
+      aria-label={`filter: lets through what is under ${hz(cutoff)}${res > 0.5 ? ", with a ringing peak" : res > 0.2 ? ", with a small peak" : ""}${character !== "prd" ? `, ${character} circuit` : ""}`}>
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={color} stopOpacity=".3" /><stop offset="1" stopColor={color} stopOpacity="0" /></linearGradient>
       </defs>

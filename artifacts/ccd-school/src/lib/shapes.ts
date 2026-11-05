@@ -147,24 +147,28 @@ export const envTail = (e: Env) => (e.kind === "decay" ? e.d : e.r);
 
 // ── the filter ───────────────────────────────────────────────────────────────
 
-/** Filter characters a learner sees: the engine's `character` knob in thirds (params.rs step3). */
-export type FilterCharacter = "warm" | "scream" | "smooth";
+/**
+ * Filter circuits, by Live's names (controlNames.ts): the engine's `character` knob in thirds (params.rs
+ * step3). prd is the 4-pole ladder, ms2 the Korg35 Sallen-Key 2-pole with its clipper, svf the 2-pole
+ * state-variable filter.
+ */
+export type FilterCharacter = "prd" | "ms2" | "svf";
 
 /** Keys engine item 7 may give its filter character param; the first one present is read. */
 export const CHARACTER_KEYS = ["character", "ftype", "filter_type", "ftyp", "model"];
-/** A stepped character knob, 0..1, to its name (warm, scream, smooth in thirds). */
-export const characterOf = (n: number | undefined): FilterCharacter => (n === undefined ? "warm" : n < 0.34 ? "warm" : n < 0.67 ? "scream" : "smooth");
+/** A stepped circuit knob, 0..1, to its circuit (prd, ms2, svf in thirds). */
+export const characterOf = (n: number | undefined): FilterCharacter => (n === undefined ? "prd" : n < 0.34 ? "prd" : n < 0.67 ? "ms2" : "svf");
 
 /**
  * Magnitude of the engine's ladder at `f` Hz, cutoff `fc`, resonance `res` 0..1, in db. The linear
  * part of filter.rs's Ladder (analog prototype, before saturation): four one-pole stages in a loop
  * with feedback k = 4.1 * r * max(sqrt r, r) and the bass given back by 1 + 0.55 k.
- * The other two characters (scream, smooth) are the linear parts of filter.rs's Ms20 and SEM Svf.
+ * The other two circuits (ms2, svf) are the linear parts of filter.rs's Ms20 and SEM Svf.
  */
-export function filterDb(f: number, fc: number, res: number, character: FilterCharacter = "warm"): number {
+export function filterDb(f: number, fc: number, res: number, character: FilterCharacter = "prd"): number {
   const w = f / Math.max(1, fc);
   const r = Math.max(0, Math.min(1, res));
-  if (character === "warm") {
+  if (character === "prd") {
     const k = 4.1 * r * Math.max(Math.sqrt(r), r);
     const comp = 1 + 0.55 * k;
     // (1 + jw)^4 + k
@@ -174,11 +178,11 @@ export function filterDb(f: number, fc: number, res: number, character: FilterCh
     const re4 = re2 * re2 - im2 * im2 + k, im4 = 2 * re2 * im2;
     return 20 * Math.log10(comp / Math.max(1e-9, Math.hypot(re4, im4)));
   }
-  // Both 2-pole characters are 1 / (1 - w^2 + j d w), from filter.rs (engine item 7):
-  // scream is the Korg35 loop, d = 2 - 2.05 r (it self-oscillates at the top, drawn just short of it);
-  // smooth is the SEM state-variable filter, d = 1 / (0.55 + 9 r^2). Output gains as the engine's.
-  const d = character === "scream" ? Math.max(0.035, 2 - 2.05 * r) : 1 / (0.55 + 9 * r * r);
-  const gain = character === "scream" ? 0.794 : 0.668;
+  // Both 2-pole circuits are 1 / (1 - w^2 + j d w), from filter.rs (engine item 7):
+  // ms2 is the Korg35 loop, d = 2 - 2.05 r (it self-oscillates at the top, drawn just short of it);
+  // svf is the SEM state-variable filter, d = 1 / (0.55 + 9 r^2). Output gains as the engine's.
+  const d = character === "ms2" ? Math.max(0.035, 2 - 2.05 * r) : 1 / (0.55 + 9 * r * r);
+  const gain = character === "ms2" ? 0.794 : 0.668;
   return 20 * Math.log10(gain / Math.max(1e-9, Math.hypot(1 - w * w, d * w)));
 }
 

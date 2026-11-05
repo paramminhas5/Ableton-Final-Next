@@ -60,17 +60,17 @@ describe("filter curve, as the ladder in filter.rs", () => {
   });
 });
 
-describe("filter characters, as engine item 7 built them", () => {
-  it("scream and smooth keep their bass and fall 12 db an octave", () => {
-    for (const c of ["scream", "smooth"] as const) {
+describe("filter circuits, as engine item 7 built them", () => {
+  it("ms2 and svf keep their bass and fall 12 db an octave", () => {
+    for (const c of ["ms2", "svf"] as const) {
       expect(filterDb(20, 1000, 0.8, c)).toBeGreaterThan(-4);
       const d = filterDb(8000, 1000, 0, c) - filterDb(16000, 1000, 0, c);
       expect(d).toBeGreaterThan(10);
       expect(d).toBeLessThan(13);
     }
   });
-  it("scream peaks far higher than smooth at full resonance", () => {
-    expect(filterDb(1000, 1000, 1, "scream")).toBeGreaterThan(filterDb(1000, 1000, 1, "smooth") + 10);
+  it("ms2 peaks far higher than svf at full resonance", () => {
+    expect(filterDb(1000, 1000, 1, "ms2")).toBeGreaterThan(filterDb(1000, 1000, 1, "svf") + 10);
   });
 });
 
