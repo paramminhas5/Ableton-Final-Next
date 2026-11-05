@@ -240,7 +240,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
           <DeckWave label="deck a" bands={deckA === "file" ? fileA.bands : bandsA} loading={deckA !== "file" && !bandsA} beat={playing ? beat : -1} lowDb={(lowA - 0.5) * 30} phrases={PHRASES_A}
             badge={{ text: deckA === "file" ? "a" : mineKey, fits: null }} />
           <DeckWave label="deck b" bands={bFile ? fileB.bands : bandsB} beat={bFile ? (playing ? (beat * bBpm) / base : -1) : trackBeatB} lowDb={(lowB - 0.5) * 30} phrases={bFile ? PHRASES_A : PHRASES_B}
-            badge={bFile ? undefined : { text: bKey, fits }} />
+            badge={bFile ? undefined : { text: bKey, fits }} cues={bFile ? undefined : CUES.map(c => ({ beat: c.at, name: c.name }))} loop={!bFile && loopLen ? { start: loopAt, len: loopLen } : null} />
           {recState !== "off" && <div className="fl-airlabels"><span>{recState === "on" ? "recording your mix" : "mix recorded"}</span>{recUrl ? <a href={recUrl} download="my-mix.webm">download it</a> : null}</div>}
           <div className={`mx-goal ${met ? "is-met" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: met ? "var(--led-mint)" : "var(--led-mint)" } as CSSProperties} />{met ? "done. press next when you're ready" : why}</div>
           {(screen.goal === "phrase" || screen.goal === "cut") && playing ? <div className="fl-airlabels"><span>phrase bar {Math.floor((((beat % 32) + 32) % 32) / 4) + 1} of 8</span><span>beat {beatA + 1}</span></div> : null}

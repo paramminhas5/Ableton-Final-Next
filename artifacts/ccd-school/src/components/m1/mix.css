@@ -93,4 +93,23 @@
 .dw-bars{position:relative;height:12px}
 .dw-bars span{position:absolute;top:1px;padding-left:3px;font-size:9px;font-weight:500;color:rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
 @media (max-width:720px){.dw-wave svg{height:30px}}
+/* the zoomed deck view (DeckZoom) */
+.dz{position:relative;height:56px;margin-bottom:4px;border-radius:4px;overflow:hidden;background:#030304}
+.dz svg{display:block}
+.dz-bar path{stroke:rgba(255,255,255,.34);stroke-width:1}
+.dz-phr path{stroke:rgba(255,255,255,.7);stroke-width:1.5}
+.dz-bar text,.dz-phr text{font-size:9px;font-weight:600;fill:rgba(255,255,255,.75);font-variant-numeric:tabular-nums}
+.dz-beat{stroke:rgba(255,255,255,.45);stroke-width:1}
+.dz-cue path{fill:var(--led-mint)}
+.dz-cue .dz-cue-l{fill:none;stroke:var(--led-mint);stroke-opacity:.55;stroke-width:1}
+.dz-cue text{font-size:9px;font-weight:600;fill:var(--led-mint)}
+.dz-loop rect{fill:rgba(243,193,79,.16)}
+.dz-loop path{stroke:#F3C14F;stroke-width:1.5}
+.dz-played{fill:rgba(3,3,4,.32)}
+.dz-head{stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 3px #fff)}
+@media (max-width:720px){
+  .dz{height:44px}
+  .dw.has-zoom .dw-wave svg{height:14px}
+  .dw.has-zoom .dw-bars{display:none}
+}
 @media (max-width:720px){.mx-master .mx-oknobs{grid-template-columns:repeat(3,1fr);align-content:start;row-gap:6px;padding:2px 0}}
