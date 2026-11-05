@@ -227,3 +227,10 @@
 .st-sp.st-past{opacity:.12;pointer-events:none}
 .st-dicerow{flex-wrap:wrap}
 .st-main .st-secrow{margin:0 0 2px;min-height:28px}
+.st-pick .st-vk{min-width:0;white-space:nowrap;overflow:hidden}
+.st-pick.is-5{gap:5px}
+.st-pick.is-5 .st-vk{font-size:12px;gap:4px;padding:0 3px}
+@media (max-width:430px){.st-pick.is-5 .st-vk .m1-dot{display:none}}
+.st-main .st-player{overflow:hidden}
+.st-main .st-playerxy{min-height:96px}
+.st-main .st-playernote{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

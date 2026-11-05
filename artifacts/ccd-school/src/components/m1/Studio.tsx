@@ -826,7 +826,7 @@ export function Studio() {
                 <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into the next section and go there"
                   onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "committed", text: `now in ${next.sections![next.at!].name}` }); }}>commit</button>
               </div>
-            <div className="st-pick" style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0)},1fr)` }}>
+            <div className={`st-pick ${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0) > 4 ? "is-5" : ""}`} style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0)},minmax(0,1fr))` }}>
               {(TYPE[sel.type].surfaces).map(s => (
                 <button key={s} type="button" className={`m1-m is-wide st-vk ${sel.surface === s ? "is-on" : ""}`} aria-pressed={sel.surface === s}
                   onClick={() => chooseSurface(s)}>
