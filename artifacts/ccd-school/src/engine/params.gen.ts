@@ -57,6 +57,12 @@ export const DRUM_RACK_BASE = 64;
 /** Per pad, second page. Wire index = INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + index. */
 export const DRUM_PAD2_PARAMS = [
   { id: "drums.pad.shape", key: "shape", label: "body", bank: "shift", index: 0, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.noise", key: "noise", label: "noise", bank: "shift", index: 1, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.snap", key: "snap", label: "snap", bank: "shift", index: 2, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.color", key: "color", label: "color", bank: "shift", index: 3, min: -1, max: 1, default: 0.5, unit: "none", curve: "lin", smoothMs: 0, detents: [0.5] },
+  { id: "drums.pad.sweep", key: "sweep", label: "sweep", bank: "shift", index: 4, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.wobble", key: "wobble", label: "wobble", bank: "shift", index: 5, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "drums.pad.random", key: "random", label: "random", bank: "shift", index: 6, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 export const DRUM_PAD2_BASE = 80;
 export const DRUM_PAD2_STRIDE = 8;

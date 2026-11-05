@@ -63,6 +63,12 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   if (spec.key === "sidechain" && n < 0.01) return "hears it all";
   if (spec.key === "shape") return STEP3(n, ["round", "tight", "hard"]);
   if (spec.key === "character") return STEP3(n, ["warm", "scream", "smooth"]);
+  if (spec.key === "shapeblip") return STEP3(n, ["blip", "bell", "metal"]);
+  if (spec.key === "shapewood") return STEP3(n, ["wood", "bell", "metal"]);
+  if (spec.key === "color") {
+    const c = Math.round((n * 2 - 1) * 100);
+    return c === 0 ? "centre" : c < 0 ? `dark ${-c}` : `bright ${c}`;
+  }
   const v = toValue(spec, n);
   switch (spec.unit) {
     case "db": {

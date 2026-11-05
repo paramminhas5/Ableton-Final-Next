@@ -85,7 +85,18 @@ function bankKnobs(l: LayerV2, bank: Bank, shift = false): { spec: ParamSpec; in
   if (bank !== "sound") return LAYER_PARAMS.filter(p => p.bank === bank).slice(0, 4).map(spec => ({ spec, index: spec.index }));
   const engine = TYPE[l.type].engine;
   if (engine === "drums") {
-    if (shift) return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...DRUM_PAD2_PARAMS.map((spec, k) => ({ spec: spec as ParamSpec, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + effectivePad(l) * DRUM_PAD2_STRIDE + k }))];
+    if (shift) {
+      // The pad's second page: its shape where it has one (the kick's body, the perc pads' bell and
+      // metal), then its tone and noise layers.
+      const pad = effectivePad(l);
+      const shapeKey = pad === 0 ? "shape" : pad === 12 ? "shapeblip" : pad === 13 ? "shapewood" : null;
+      const page = DRUM_PAD2_PARAMS.flatMap((spec, k) => {
+        if (spec.key === "shape" && !shapeKey) return [];
+        const s = (spec.key === "shape" ? { ...spec, key: shapeKey, label: pad === 0 ? "body" : "sound" } : spec) as ParamSpec;
+        return [{ spec: s, index: INSTRUMENT_BASE + DRUM_PAD2_BASE + pad * DRUM_PAD2_STRIDE + k }];
+      });
+      return [...DRUM_RACK_PARAMS.map(spec => ({ spec: spec as ParamSpec, index: spec.index as number })), ...page];
+    }
     return DRUM_PAD_PARAMS.map((spec, k) => ({ spec, index: INSTRUMENT_BASE + effectivePad(l) * DRUM_PAD_PARAMS.length + k }));
   }
   const table = (INSTRUMENT_TABLES[engine] ?? []) as unknown as ParamSpec[];

@@ -622,3 +622,170 @@ fn three_characters_sit_at_about_the_same_loudness() {
         assert!((lv - warm).abs() < 1.5, "{name}: {lv:.1} vs warm {warm:.1}");
     }
 }
+
+// ── Engine 2, item 8: drum voices with a tone layer and a noise layer ────────────────────────────
+
+fn pad_hit(model: Model, set: impl Fn(&mut Pad), secs: f32, seed: u32) -> Vec<f32> {
+    let mut p = Pad::new(model, SR, seed);
+    set(&mut p);
+    p.trigger(0.9);
+    (0..(SR * secs) as usize).map(|_| p.tick()).collect()
+}
+
+/// Energy share in a band, from a spectrum of the first 8192 samples (170 ms), dB.
+fn band_db(y: &[f32], lo: f32, hi: f32) -> f32 {
+    let s = spectrum(&y[..8_192]);
+    let bin = SR / 8_192.0;
+    let (mut inb, mut all) = (0.0f64, 0.0f64);
+    for (i, m) in s.iter().enumerate() {
+        let f = i as f32 * bin;
+        let e = (*m as f64).powi(2);
+        all += e;
+        if f >= lo && f < hi {
+            inb += e;
+        }
+    }
+    10.0 * (inb / all.max(1e-30)).max(1e-12).log10() as f32
+}
+
+/// Time for the noise layer (everything over 2.5 kHz) to fall 30 dB under its peak, ms.
+fn noise_fall_ms(y: &[f32]) -> f32 {
+    let mut hp = ccd_engine::dsp::filter::Svf::default();
+    hp.set(2_500.0, 0.707, SR);
+    let h: Vec<f32> = y.iter().map(|v| hp.tick(*v).hp.abs()).collect();
+    let w = (SR * 0.005) as usize;
+    let env: Vec<f32> = h.chunks(w).map(|c| c.iter().cloned().fold(0.0, f32::max)).collect();
+    let peak = env.iter().cloned().fold(0.0, f32::max);
+    let k = env.iter().rposition(|v| *v > peak * 0.0316).unwrap_or(0);
+    (k + 1) as f32 * 5.0
+}
+
+/// Energy-weighted centre of the spectrum between 1 and 12 kHz, Hz.
+fn centre_hz(y: &[f32]) -> f32 {
+    let s = spectrum(&y[..8_192]);
+    let bin = SR / 8_192.0;
+    let (mut num, mut den) = (0.0f64, 0.0f64);
+    for (i, m) in s.iter().enumerate() {
+        let f = i as f32 * bin;
+        if f > 1_000.0 && f < 12_000.0 {
+            let e = (*m as f64).powi(2);
+            num += e * (f as f64).ln();
+            den += e;
+        }
+    }
+    (num / den).exp() as f32
+}
+
+#[test]
+fn snare_has_a_body_and_a_snap_each_with_its_own_envelope_and_filter() {
+    let snare = |noise: f32, snap: f32, color: f32| pad_hit(Model::Snare, |p| { p.noise = noise; p.snap = snap; p.color = color; }, 0.6, 11);
+    // Layers: the body is the low end (under 400 Hz), the snap the top (over 2.5 kHz).
+    for (noise, name) in [(0.0f32, "body only"), (0.5, "as designed"), (1.0, "snap only")] {
+        let y = snare(noise, 0.5, 0.0);
+        let (lo, hi) = (band_db(&y, 100.0, 400.0), band_db(&y, 2_500.0, 20_000.0));
+        println!("snare, {name}: body band {lo:.1} dB, snap band {hi:.1} dB of the whole");
+        if noise == 0.0 {
+            assert!(hi < -40.0, "no snap with the noise layer off: {hi:.1}");
+        }
+        if noise == 1.0 {
+            assert!(lo < -25.0, "no body with the tone layer off: {lo:.1}");
+        }
+    }
+    // The snap's own envelope.
+    let (short, long) = (noise_fall_ms(&snare(0.5, 0.15, 0.0)), noise_fall_ms(&snare(0.5, 0.85, 0.0)));
+    println!("snare snap: noise falls 30 dB in {short:.0} ms at snap 0.15, {long:.0} ms at snap 0.85");
+    assert!(long > short * 2.5);
+    // The snap's own filter.
+    let (dark, bright) = (centre_hz(&snare(1.0, 0.5, -0.6)), centre_hz(&snare(1.0, 0.5, 0.6)));
+    println!("snare color: noise centred at {dark:.0} Hz at -0.6, {bright:.0} Hz at +0.6");
+    assert!(bright > dark * 2.0, "color should move the noise over an octave: {dark:.0} -> {bright:.0}");
+}
+
+fn pitch_track(y: &[f32], t0: f32, t1: f32, win: f32) -> Vec<f32> {
+    let mut v = Vec::new();
+    let mut t = t0;
+    while t + win <= t1 {
+        v.push(pitch_between(y, t, t + win));
+        t += win;
+    }
+    v
+}
+
+#[test]
+fn drum_pitch_sweeps_wobbles_and_varies_per_hit() {
+    // Sweep: a tom's pitch in its first 20 ms against 150 to 250 ms in.
+    let tom = |set: &dyn Fn(&mut Pad), seed: u32| pad_hit(Model::Tom(1), |p| set(p), 0.5, seed);
+    let drop = |y: &[f32]| pitch_between(y, 0.003, 0.023) / pitch_between(y, 0.15, 0.25);
+    let mut last = 0.0;
+    for sw in [0.0f32, 0.5, 1.0] {
+        let d = drop(&tom(&|p| p.sweep = sw, 1));
+        println!("tom sweep {sw}: starts {d:.2}x its settled pitch");
+        assert!(d > last);
+        last = d;
+    }
+    assert!(last > 1.3);
+    // Wobble: how far the pitch swings over 100 to 400 ms (no sweep), in cents.
+    let swing = |y: &[f32]| {
+        let p = pitch_track(y, 0.1, 0.4, 0.03);
+        let (lo, hi) = p.iter().fold((f32::MAX, 0.0f32), |(a, b), v| (a.min(*v), b.max(*v)));
+        1200.0 * (hi / lo).log2()
+    };
+    let (still, wobbly) = (swing(&tom(&|p| p.sweep = 0.0, 1)), swing(&tom(&|p| { p.sweep = 0.0; p.wobble = 1.0; }, 1)));
+    println!("tom wobble: pitch swings {still:.0} cents with wobble off, {wobbly:.0} cents at full");
+    assert!(still < 5.0 && wobbly > 40.0);
+    // Random: eight hits, the spread of their pitch and level.
+    let spread = |random: f32| {
+        let mut p = Pad::new(Model::Tom(1), SR, 3);
+        p.random = random;
+        p.sweep = 0.0;
+        let (mut ps, mut ls) = (vec![], vec![]);
+        for _ in 0..8 {
+            p.trigger(0.9);
+            let y: Vec<f32> = (0..(SR * 0.3) as usize).map(|_| p.tick()).collect();
+            ps.push(pitch_between(&y, 0.05, 0.25));
+            ls.push(db(rms(&y[..(SR * 0.05) as usize])));
+        }
+        let c = |v: &[f32]| v.iter().cloned().fold(f32::MIN, f32::max) - v.iter().cloned().fold(f32::MAX, f32::min);
+        (1200.0 * (ps.iter().cloned().fold(f32::MIN, f32::max) / ps.iter().cloned().fold(f32::MAX, f32::min)).log2(), c(&ls))
+    };
+    let ((p0, l0), (p1, l1)) = (spread(0.0), spread(1.0));
+    println!("tom random: eight hits spread {p0:.1} cents and {l0:.2} dB with random off, {p1:.0} cents and {l1:.1} dB at full");
+    // With random off, hits differ only where the second oscillator and the noise happen to be (what
+    // the zero-crossing measure picks up); with it up, by far more.
+    assert!(p0 < 10.0 && l0 < 0.5, "with random off hits should match: {p0:.1} cents, {l0:.2} dB");
+    assert!(p1 > p0 * 5.0 + 20.0 && l1 > l0 * 4.0 + 1.0, "with random up hits differ: {p1:.0} cents, {l1:.1} dB");
+}
+
+#[test]
+fn perc_pads_make_metal() {
+    // The perc pads' second and third shapes: an 808-style cowbell and a struck metal bar. Both are made
+    // of partials that are not whole multiples of a fundamental.
+    let peaks = |y: &[f32]| {
+        let s = spectrum(&y[..8_192]);
+        let bin = SR / 8_192.0;
+        let mut idx: Vec<usize> = (3..s.len() - 3).filter(|&i| s[i] > s[i - 1] && s[i] >= s[i + 1] && (i as f32 * bin) > 200.0).collect();
+        idx.sort_by(|a, b| s[*b].partial_cmp(&s[*a]).unwrap());
+        idx.truncate(3);
+        idx.sort();
+        idx.iter().map(|i| *i as f32 * bin).collect::<Vec<f32>>()
+    };
+    for (shape, name) in [(1u8, "bell"), (2, "metal")] {
+        let y = pad_hit(Model::Blip, |p| p.shape = shape, 0.5, 5);
+        let pk = peaks(&y);
+        let ratios: Vec<f32> = pk.iter().map(|f| f / pk[0]).collect();
+        let off = ratios.iter().map(|r| (r - r.round()).abs()).fold(0.0f32, f32::max);
+        println!("perc {name}: strongest partials {:?} Hz, ratios {:?}", pk.iter().map(|f| f.round()).collect::<Vec<_>>(), ratios.iter().map(|r| (r * 100.0).round() / 100.0).collect::<Vec<_>>());
+        assert!(off > 0.2, "{name} should be inharmonic: {ratios:?}");
+        assert!(y.iter().all(|v| v.is_finite()) && rms(&y[..4_800]) > 0.01);
+    }
+}
+
+#[test]
+fn every_pad_survives_every_layer_knob_at_its_ends() {
+    for model in ccd_engine::inst::drums::MODELS {
+        for &(noise, snap, color, sweep, wobble, random, shape) in &[(0.0f32, 0.0f32, -1.0f32, 0.0f32, 0.0f32, 0.0f32, 0u8), (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2), (0.5, 1.0, -1.0, 1.0, 1.0, 1.0, 1)] {
+            let y = pad_hit(model, |p| { p.noise = noise; p.snap = snap; p.color = color; p.sweep = sweep; p.wobble = wobble; p.random = random; p.shape = shape; p.tune = 12.0; }, 1.0, 9);
+            assert!(y.iter().all(|v| v.is_finite() && v.abs() < 2.0), "{model:?}");
+        }
+    }
+}

@@ -267,8 +267,24 @@ pub const DRUM_PAD2_PARAMS: &[ParamSpec] = &[
     // Item 5, part three: the kick's body, round (the 808's sine), tight (rounded off, like a 909's)
     // or hard (clipped almost square). Other pads ignore it.
     p("shape", "body", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    // Item 8: every pad is a tone layer and a noise layer, each with its own envelope and filter.
+    // noise: the balance (tone alone at 0, noise alone at 1); snap: how long the noise layer rings;
+    // color: where its filter sits; sweep: how far the pitch falls; wobble: a pitch wobble on every
+    // hit; random: each hit a little different (pitch, level, length, color).
+    p("noise", "noise", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("snap", "snap", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("color", "color", Bank::Shift, -1.0, 1.0, 0.5, Unit::None, Curve::Lin, 0.0, CENTRE),
+    p("sweep", "sweep", Bank::Shift, 0.0, 1.0, 0.5, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("wobble", "wobble", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
+    p("random", "random", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 0.0, NONE),
 ];
 pub const DP_SHAPE: usize = 0;
+pub const DP_NOISE: usize = 1;
+pub const DP_SNAP: usize = 2;
+pub const DP_COLOR: usize = 3;
+pub const DP_SWEEP: usize = 4;
+pub const DP_WOBBLE: usize = 5;
+pub const DP_RANDOM: usize = 6;
 pub const DRUM_PAD2_BASE: usize = DRUM_RACK_BASE + DRUM_RACK_SLOTS;
 pub const DRUM_PAD2_STRIDE: usize = 8;
 

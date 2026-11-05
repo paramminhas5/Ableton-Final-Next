@@ -14,5 +14,7 @@
   {"id": "glued", "what": "the whole song with the glue pushed hard", "rms_db": -16.17, "peak": 0.7414},
   {"id": "kicks", "what": "the kick's three bodies, two hits each", "rms_db": -19.97, "peak": 0.4682},
   {"id": "scream", "what": "the rolling bass through the scream filter, driven", "rms_db": -21.47, "peak": 0.3757},
-  {"id": "smooth", "what": "the rolling bass through the smooth filter", "rms_db": -22.2, "peak": 0.8538}
+  {"id": "smooth", "what": "the rolling bass through the smooth filter", "rms_db": -22.2, "peak": 0.8538},
+  {"id": "snares", "what": "one snare three ways: fat body, tight snap, long rattle", "rms_db": -27.44, "peak": 0.5701},
+  {"id": "perc", "what": "a bell and a metal bar over hats that change a little every hit", "rms_db": -25.57, "peak": 0.7184}
 ]

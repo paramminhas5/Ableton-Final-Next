@@ -96,6 +96,38 @@ fn clips() -> Vec<Clip> {
         }
         out.push(("kicks", "the kick's three bodies, two hits each", r.play(3.87)));
     }
+    // Item 8: one snare, three ways (a fat body, a tight bright snap, a long rattle), two hits each.
+    {
+        let mut r = R::new(124.0);
+        r.send(cmd::LOOP, 0, 0, 0.0, 8.0, 0.0);
+        // knob k of pad p's second page is PAD2 + p * 8 + k: noise 1, snap 2, color 3, sweep 4.
+        let snare = PAD2 + 8;
+        let ways: [&[(usize, f32)]; 3] = [&[(1, 0.3), (4, 0.85)], &[(1, 0.7), (2, 0.2), (3, 0.8)], &[(1, 0.6), (2, 0.9), (3, 0.4)]];
+        for (layer, set) in ways.iter().enumerate() {
+            let layer = layer as u32;
+            r.inst(layer, Instrument::Drums);
+            for (k, n) in set.iter() {
+                r.param(layer, snare + k, *n);
+            }
+            let b = layer as f64 * 2.0 + 1.0;
+            r.pattern(layer, &[(b, 38, 0.25, 0.9), (b + 0.75, 38, 0.25, 0.7)]);
+        }
+        out.push(("snares", "one snare three ways: fat body, tight snap, long rattle", r.play(3.87)));
+    }
+    // Item 8: metallic percussion (the perc pads as a bell and a metal bar) over hats that vary per hit.
+    {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Drums);
+        r.param(0, PAD2 + 12 * 8, 0.5); // perc 1: bell
+        r.param(0, PAD2 + 13 * 8, 1.0); // perc 2: metal
+        r.param(0, PAD2 + 13 * 8 + 5, 0.25); // a little wobble on the metal
+        r.param(0, PAD2 + 4 * 8 + 6, 0.45); // closed hat: random
+        let mut ev: Vec<(f64, u32, f64, f32)> = (0..16).map(|i| (i as f64 * 0.25, 42, 0.1, 0.5)).collect();
+        ev.extend([0.5, 1.5, 1.75, 2.5, 3.5].iter().map(|b| (*b, 60, 0.2, 0.8)));
+        ev.extend([(0.0, 61, 0.2, 0.9), (2.75, 61, 0.2, 0.7)]);
+        r.pattern(0, &ev);
+        out.push(("perc", "a bell and a metal bar over hats that change a little every hit", r.play(3.87)));
+    }
     {
         let mut r = R::new(124.0);
         r.inst(0, Instrument::Drums);
