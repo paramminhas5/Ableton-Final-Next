@@ -178,11 +178,13 @@ pub struct MinBlepOsc {
     sq: [f32; MB_LEN],
     at: usize,
     tab: &'static MinBlep,
+    /// The pulse's corrections are being kept (`next_saw` skips them, for a saw alone).
+    sq_live: bool,
 }
 
 impl MinBlepOsc {
     pub fn new() -> Self {
-        MinBlepOsc { phase: 0.0, pw: 0.5, saw: [0.0; MB_LEN], sq: [0.0; MB_LEN], at: 0, tab: MinBlep::get() }
+        MinBlepOsc { phase: 0.0, pw: 0.5, saw: [0.0; MB_LEN], sq: [0.0; MB_LEN], at: 0, tab: MinBlep::get(), sq_live: true }
     }
 
     /// Jump to a phase: the corrections still pending from before are dropped, as a reset oscillator's are.
@@ -205,9 +207,42 @@ impl MinBlepOsc {
         }
     }
 
+    /// The saw alone: the same samples as `next(dt).0`, without the pulse's work.
+    #[inline]
+    pub fn next_saw(&mut self, dt: f32) -> f32 {
+        let dt = dt.clamp(0.0, 0.49);
+        self.sq_live = false;
+        let t = self.phase;
+        let i = self.at;
+        let saw = 2.0 * t - 1.0 + self.saw[i] + (2.0 * self.tab.dc + 1.0) * dt;
+        self.saw[i] = 0.0;
+        self.at = if i + 1 >= MB_LEN { 0 } else { i + 1 };
+        let next = t + dt;
+        if next >= 1.0 && dt > 0.0 {
+            Self::add(&mut self.saw, self.at, self.tab, (next - 1.0) / dt, -2.0);
+        }
+        self.phase = if next >= 1.0 { next - 1.0 } else { next };
+        saw
+    }
+
+    /// The synths' wave knob: saw into pulse by `w` (pulse at 0.8). At 0 the pulse isn't worked out.
+    #[inline]
+    pub fn next_mix(&mut self, dt: f32, w: f32) -> f32 {
+        if w <= 0.0 {
+            return self.next_saw(dt);
+        }
+        let (saw, sq) = self.next(dt);
+        saw * (1.0 - w) + sq * w * 0.8
+    }
+
     /// Returns (saw, square) for this sample and advances. `dt` = freq / sample rate.
     #[inline]
     pub fn next(&mut self, dt: f32) -> (f32, f32) {
+        if !self.sq_live {
+            // The pulse was skipped: start its corrections afresh.
+            self.sq = [0.0; MB_LEN];
+            self.sq_live = true;
+        }
         let dt = dt.clamp(0.0, 0.49);
         let t = self.phase;
         let i = self.at;

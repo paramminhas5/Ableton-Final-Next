@@ -119,14 +119,13 @@ pub struct Ladder {
     g1: f32,
     k: f32,
     comp: f32,
-    /// The clip's last input and its antiderivative there.
+    /// The clip's last input.
     u1: f32,
-    big1: f32,
 }
 
 impl Default for Ladder {
     fn default() -> Self {
-        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0, big1: 0.0 }
+        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0 }
     }
 }
 
@@ -154,7 +153,6 @@ impl Ladder {
     pub fn reset(&mut self) {
         self.s = [0.0; 4];
         self.u1 = 0.0;
-        self.big1 = 0.0;
     }
 
     #[inline]
@@ -166,12 +164,12 @@ impl Ladder {
         let s_sum = g1 * g1 * g1 * self.s[0] * d + g1 * g1 * self.s[1] * d + g1 * self.s[2] * d + self.s[3] * d;
         // Solve the feedback loop, then saturate what goes in.
         let u = (x * self.comp - self.k * s_sum) / (1.0 + self.k * big_g);
-        let big = clip_residual_ad(u);
+        // When the input barely moves, the average over the step is the midpoint's value to within
+        // -110 dB, so the logs are only worked out on fast steps (high notes, edges): most samples skip them.
         let du = u - self.u1;
-        let r = if du.abs() > 1e-3 { (big - self.big1) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m };
+        let r = if du.abs() > 0.01 { (clip_residual_ad(u) - clip_residual_ad(self.u1)) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m };
         let mut y = u + r;
         self.u1 = u;
-        self.big1 = big;
         for st in self.s.iter_mut() {
             let v = (y - *st) * g1;
             let out = v + *st;

@@ -343,10 +343,10 @@ impl Voice {
         }
         let dt = f / os;
         let w = c.wave;
-        let mix = |(saw, sq): (f32, f32)| saw * (1.0 - w) + sq * w * 0.8;
+
         let fe = self.fenv.next();
         let main = if c.osc == 0 {
-            mix(self.osc[0].next(dt))
+            self.osc[0].next_mix(dt, w)
         } else {
             // Item 12: the wavetable, feedback fm or phase distortion, on their own phase.
             let ph = self.wt_ph;
@@ -365,7 +365,7 @@ impl Voice {
             let amt = jp_detune(x);
             let mut sides = 0.0;
             for (o, off) in self.side.iter_mut().zip(SIDE_OFFSETS) {
-                sides += mix(o.next(dt * (1.0 + amt * off)));
+                sides += o.next_mix(dt * (1.0 + amt * off), w);
             }
             stack = main * jp_centre(x) + sides * jp_side(x) * 0.42;
             // One-pole high-pass at the fundamental, as on the JP-8000, blended in as detune rises so
@@ -382,10 +382,10 @@ impl Voice {
         let w_fifth = smoothstep(0.7, 1.0, v) * 0.4;
         let mut s = stack * 0.75 + self.sub.next(dt * 0.5) * w_sub * 0.6;
         if w_oct > 0.001 {
-            s += self.osc[3].next(dt * 2.0).0 * w_oct * 0.5;
+            s += self.osc[3].next_saw(dt * 2.0) * w_oct * 0.5;
         }
         if w_fifth > 0.001 {
-            s += self.osc[4].next(dt * 1.5).0 * w_fifth * 0.5;
+            s += self.osc[4].next_saw(dt * 1.5) * w_fifth * 0.5;
         }
         // Two-operator fm, like Operator's simplest algorithm: a sine modulator bends a sine
         // carrier's phase. The filter envelope opens the index too, so it starts bright and settles.

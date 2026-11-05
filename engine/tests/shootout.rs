@@ -408,3 +408,81 @@ fn the_ladder_clip_aliases_less_and_keeps_its_shape() {
         assert!((pa - pb).abs() < 0.5, "res {res}: the shape should hold ({pa:.2} vs {pb:.2})");
     }
 }
+
+/// CPU of one voice and one effect, native, for the shootout's table (`--ignored`, best of five 10 s runs).
+#[test]
+#[ignore]
+fn cpu_per_voice() {
+    use ccd_engine::inst::bass::Bass;
+    use ccd_engine::inst::synth::Lead;
+    use ccd_engine::params::*;
+    let secs = 10.0f32;
+    let n = (SR * secs) as usize;
+    let time = |name: &str, f: &mut dyn FnMut() -> f32| {
+        let mut best = f64::MAX;
+        for _ in 0..5 {
+            let t = std::time::Instant::now();
+            let mut acc = 0.0f32;
+            for _ in 0..n {
+                acc += f();
+            }
+            std::hint::black_box(acc);
+            best = best.min(t.elapsed().as_secs_f64());
+        }
+        println!("{name}: {:.2}%", best / secs as f64 * 100.0);
+    };
+    let lead = |detune: f32| {
+        let mut l = Lead::new(SR);
+        l.set_param(LD_DETUNE, LEAD_PARAMS[LD_DETUNE].to_value(detune));
+        l.note_on(60, 0.9);
+        l
+    };
+    let mut a = lead(0.0);
+    time("ours lead saw, 1 voice", &mut || a.tick());
+    let mut b = lead(0.6);
+    time("ours lead supersaw (7 saws), 1 note", &mut || b.tick());
+    let mut c = Bass::new(SR);
+    c.note_on(36, 0.9);
+    time("ours bass, 1 voice", &mut || c.tick());
+    let x = burst();
+    let mut h = ccd_engine::fx::Hall::new(SR);
+    let mut i = 0usize;
+    time("ours hall (stereo out)", &mut || { i += 1; let (l, r) = h.tick(x[i % x.len()]); l + r });
+    let mut p = ccd_engine::fx::Plate::new(SR);
+    time("ours plate (stereo out)", &mut || { i += 1; let (l, r) = p.tick(x[i % x.len()]); l + r });
+    let mut e = ccd_engine::fx::Echo::new(SR);
+    e.set_kind(ccd_engine::fx::ECHO_TAPE);
+    time("ours tape echo (stereo out)", &mut || { i += 1; let (l, r) = e.tick(x[i % x.len()]); l + r });
+}
+
+/// What the oscillator and ladder changes cost, each on its own (`--ignored`): ns per sample at 96 kHz.
+#[test]
+#[ignore]
+fn cpu_of_the_parts() {
+    use ccd_engine::dsp::filter::Ladder;
+    let n = 4_000_000usize;
+    let time = |name: &str, f: &mut dyn FnMut(usize) -> f32| {
+        let mut best = f64::MAX;
+        for _ in 0..5 {
+            let t = std::time::Instant::now();
+            let mut acc = 0.0f32;
+            for i in 0..n {
+                acc += f(i);
+            }
+            std::hint::black_box(acc);
+            best = best.min(t.elapsed().as_secs_f64());
+        }
+        println!("{name}: {:.2} ns a sample", best / n as f64 * 1e9);
+    };
+    let dt = 220.0 / 96_000.0;
+    let (mut a, mut b) = (BlepOsc::new(), MinBlepOsc::new());
+    time("polyblep osc", &mut |_| { let (s, q) = a.next(dt); s + q });
+    time("minblep osc", &mut |_| { let (s, q) = b.next(dt); s + q });
+    let mut o = MinBlepOsc::new();
+    let x: Vec<f32> = (0..96_000).map(|_| o.next(dt).0 * 0.375).collect();
+    let mut lb = BeforeLadder::new(2_000.0, 0.3, 96_000.0);
+    let mut la = Ladder::default();
+    la.set(2_000.0, 0.3, 96_000.0);
+    time("ladder before", &mut |i| lb.tick(x[i % x.len()]));
+    time("ladder after", &mut |i| la.tick(x[i % x.len()]));
+}

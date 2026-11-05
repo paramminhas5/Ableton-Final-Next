@@ -196,10 +196,10 @@ impl Bass {
         let p = self.pitch + self.drift;
         let f = note_hz(p);
         let dt = f / self.os;
-        let (saw, sq) = self.osc.next(dt);
         let w = self.wave.next();
+        let wave = self.osc.next_mix(dt, w);
         let sub = self.sub.next(dt * 0.5);
-        let osc = saw * (1.0 - w) + sq * w * 0.8 + sub * self.sub_lvl.next() * 0.9;
+        let osc = wave + sub * self.sub_lvl.next() * 0.9;
 
         let fe = self.fenv.next();
         let amp = self.amp.next();
