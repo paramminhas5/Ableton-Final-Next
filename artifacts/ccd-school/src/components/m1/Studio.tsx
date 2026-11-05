@@ -1,5 +1,4 @@
 "use client";
-import { arranged } from "@/lib/arrange";
 /**
  * Studio (canvas "Model 1 · final"). Two modes: play and mix. Mix lives in Mix.tsx.
  *
