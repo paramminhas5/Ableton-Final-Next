@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { arpEvents, arpOrder, transposed, withArps } from "../src/lib/arp";
+import { arpEvents, arpSteps, arpOrder, transposed, withArps } from "../src/lib/arp";
 import { newLayerV2, type TrackV2 } from "../src/lib/track2";
 
 const chord = (start: number, len: number, notes: number[]) => notes.map(note => ({ start, len, note, vel: 0.8 }));
@@ -28,6 +28,32 @@ describe("arpeggiator", () => {
     expect(withArps(once)).toBe(once);
     expect(once.layers[0].events.length).toBe(16);
     expect(t.layers[0].events.length).toBe(3);
+  });
+});
+
+describe("the arp screen's steps (arpSteps)", () => {
+  it("shows what the arp plays, step by step, held chord or not", () => {
+    const cells = arpSteps(chord(0, 2, [57, 60, 64]), { mode: "up", rate: 4, oct: 1 }, 4, 0, 4);
+    expect(cells.length).toBe(16);
+    expect(cells.slice(0, 5).map(c => c.note)).toEqual([57, 60, 64, 57, 60]);
+    expect(cells.slice(8).every(c => !c.held && c.note === null)).toBe(true);
+    expect(cells.every(c => !c.varied)).toBe(true);
+  });
+  it("with vary, every cell is a note the engine plays, rests are empty, moved notes are marked", () => {
+    const evs = chord(0, 4, [57, 60, 64]);
+    const arp = { mode: "up" as const, rate: 4 as const, oct: 1 as const, rand: 0.8, seed: 7 };
+    const played = arpEvents(evs, arp, 4);
+    const cells = arpSteps(evs, arp, 4, 0, 4);
+    expect(cells.filter(c => c.note !== null).map(c => [c.start, c.note])).toEqual(played.map(e => [e.start, e.note]));
+    expect(cells.some(c => c.held && c.note === null)).toBe(true); // a rest
+    expect(cells.some(c => c.varied)).toBe(true);
+    const plain = arpEvents(evs, { ...arp, rand: 0 }, 4);
+    for (const c of cells.filter(x => x.varied)) expect(plain.find(e => e.start === c.start)!.note).not.toBe(c.note);
+  });
+  it("a window of one bar of a longer loop", () => {
+    const cells = arpSteps(chord(0, 8, [57, 60, 64]), { mode: "down", rate: 2, oct: 1 }, 8, 4, 8);
+    expect(cells.map(c => c.start)).toEqual([4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5]);
+    expect(cells[0].note).toBe(arpEvents(chord(0, 8, [57, 60, 64]), { mode: "down", rate: 2, oct: 1 }, 8)[8].note);
   });
 });
 

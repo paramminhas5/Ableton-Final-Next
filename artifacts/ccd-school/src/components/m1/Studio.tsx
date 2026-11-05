@@ -80,6 +80,7 @@ import { CONDS, hasFillSteps, setChance, setCond, stepTag, type Cond } from "@/l
 import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
 import { elsewhereLine, knobLabel, stepName } from "@/lib/controlNames";
+import { ElsewhereLine } from "./Elsewhere";
 import { commitLoop, goSection, sectionNow } from "@/lib/arrange";
 import { partLen, swingOf } from "@/lib/partLength";
 
@@ -757,7 +758,7 @@ export function Studio() {
                         <button type="button" className="st-capkey" onClick={capture} aria-label={`Capture what you just played on ${type.label}`}>
                           <i aria-hidden />capture what you played
                         </button>
-                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : elsewhere ? <span className="st-else">{elsewhere}</span> : playing ? `playing · beat ${status}` : hint}
+                      ) : countIn ? `count in · ${Math.max(1, Math.ceil(-pos.beat))}` : recording ? `recording · ${status.replace("rec · ", "beat ")} · snap ${snap}` : elsewhere && touched?.key ? <ElsewhereLine ctl={touched.key} /> : playing ? `playing · beat ${status}` : hint}
                     </div>
                   )}
                 </div>

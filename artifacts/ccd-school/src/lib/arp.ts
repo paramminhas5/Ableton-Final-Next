@@ -56,6 +56,29 @@ export function arpEvents(events: NoteEvent[], arp: Arp | undefined, loop: numbe
   return out;
 }
 
+/**
+ * One cell per arp step from `from` to `to` (beats): what the arpeggiator really plays there, read from
+ * `arpEvents` so the screen and the engine can't disagree. `note` is null on a rest (variation dropped the
+ * step) and on a step with nothing held (`held` false). `varied`: variation moved this note (another note
+ * of the chord, or up an octave) from where the plain pattern would be.
+ */
+export type ArpCell = { start: number; note: number | null; vel: number; held: boolean; varied: boolean };
+export function arpSteps(events: NoteEvent[], arp: Arp, loop: number, from: number, to: number): ArpCell[] {
+  const step = 1 / arp.rate;
+  const played = arpEvents(events, arp, loop);
+  const plain = arp.rand ? arpEvents(events, { ...arp, rand: 0 }, loop) : played;
+  const at = (list: NoteEvent[], s: number) => list.find(e => Math.abs(e.start - s) < 1e-3);
+  const out: ArpCell[] = [];
+  for (let i = Math.ceil(from / step - 1e-6); i * step < Math.min(to, loop) - 1e-6; i++) {
+    const s = Math.round(i * step * 1000) / 1000 + 0;
+    const held = events.some(e => e.start <= s + 1e-6 && e.start + Math.max(e.len, step) > s + 1e-6);
+    const e = at(played, s);
+    const p = at(plain, s);
+    out.push({ start: s, note: e ? e.note : null, vel: e ? e.vel : 0, held, varied: !!e && !!p && e.note !== p.note });
+  }
+  return out;
+}
+
 /** The song with every layer's arpeggiator expanded (what the engine plays and the midi file holds). */
 export function withArps(t: TrackV2): TrackV2 {
   if (!t.layers.some(l => l.arp)) return t;

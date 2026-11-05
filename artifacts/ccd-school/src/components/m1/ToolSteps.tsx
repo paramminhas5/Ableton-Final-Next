@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from
 import { BASS_PARAMS, CHORD_PARAMS, FLAG, LAYER_PARAMS, LEAD_PARAMS, OUT } from "@/engine";
 import type { LessonScreen } from "@/content/types";
 import { readTrackV2, writeTrackV2, newLayerV2, type LayerType, type TrackV2 } from "@/lib/track2";
-import { ARP_LABEL, ARP_MODES, arpOrder, transposed, type Arp, type ArpMode } from "@/lib/arp";
+import { ARP_LABEL, ARP_MODES, arpSteps, transposed, type Arp, type ArpMode } from "@/lib/arp";
 import { asScale, NOTE_NAMES } from "@/lib/theory";
 import { chordNotes as chordMidi, progression } from "@/lib/chords";
 import { CAP, Dice, GoPill, Icon, Key, Knob, NotYet, Screen } from "./controls";
@@ -93,13 +93,19 @@ export function ArpStep({ screen, accent, onNext, tail }: StepProps) {
   const [rand, setRand] = useState(0);
   const [seed, setSeed] = useState(1);
   const arp: Arp | undefined = mode === "off" ? undefined : { mode, rate, oct, ...(rand > 0 ? { rand: Math.round(rand * 100) / 100, seed } : {}) };
-  const shown = useMemo(() => ({ ...base.track, layers: base.track.layers.map(l => (l.type === type ? { ...l, arp } : l)) }), [base, type, mode, rate, oct]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Variation is part of what plays: a new amount or a new roll changes the song you hear.
+  const shown = useMemo(() => ({ ...base.track, layers: base.track.layers.map(l => (l.type === type ? { ...l, arp } : l)) }), [base, type, mode, rate, oct, rand, seed]); // eslint-disable-line react-hooks/exhaustive-deps
   const { beat, playing, toggle } = useLoop(shown);
   const part = base.track.layers.find(l => l.type === type);
-  // The chord under the playhead and the order the arp walks it.
-  const now = playing && part ? part.events.filter(e => { const b = ((beat % (shown.loop || 4)) + (shown.loop || 4)) % (shown.loop || 4); return e.start <= b && e.start + e.len > b; }) : [];
-  const order = arp && now.length ? arpOrder(now.map(e => e.note), arp.mode, arp.oct) : [];
-  const step = arp ? Math.floor((((beat % 1) + 1) % 1) * arp.rate) : -1;
+  // The bar under the playhead, step by step, as the arp really plays it (vary included), from the same
+  // expansion the engine gets (src/lib/arp.ts arpSteps). Stopped, it shows the first bar.
+  const loop = shown.loop || 4;
+  const at = playing ? ((beat % loop) + loop) % loop : -1;
+  const bar = at >= 0 ? Math.floor(at / 4) * 4 : 0;
+  const cells = arp && part ? arpSteps(part.events, arp, loop, bar, bar + 4) : [];
+  const held = !arp && part ? [...new Set(part.events.filter(e => e.start <= Math.max(0, at) && e.start + e.len > Math.max(0, at)).map(e => e.note))].sort((a, b) => a - b) : [];
+  const lit = arp && at >= 0 ? cells.findIndex(c => at >= c.start - 1e-6 && at < c.start + 1 / arp.rate - 1e-6) : -1;
+  const nn = (n: number) => NOTE_NAMES[((n % 12) + 12) % 12];
   const keep = () => {
     const t = readTrackV2();
     const has = t.layers.some(l => l.type === type && l.events.length);
@@ -114,9 +120,21 @@ export function ArpStep({ screen, accent, onNext, tail }: StepProps) {
       inst={<>
         <Screen>
           <Meta left="arpeggiator" right={playing ? (mode === "off" ? "off: your chords as played" : `${ARP_LABEL[mode as ArpMode]}, 1/${rate * 4}`) : "press play"} />
-          <div className="ar-arp" aria-label="The notes the arpeggiator plays, in order" style={{ ["--c" as string]: accent } as CSSProperties}>
-            {(order.length ? order : [0, 1, 2]).map((n, i) => <i key={i} className={order.length && step >= 0 && i === (Math.floor(beat * (arp?.rate ?? 1)) % order.length) ? "is-on" : ""}>{order.length ? NOTE_NAMES[((n % 12) + 12) % 12] : ""}</i>)}
-          </div>
+          {arp ? (
+            <div className={`ar-arp is-steps ${cells.length > 8 ? "is-16" : ""}`} role="img" style={{ ["--c" as string]: accent } as CSSProperties}
+              aria-label={`The notes the arpeggiator plays${bar ? ` in bar ${bar / 4 + 1}` : ""}: ${cells.map(c => (c.note === null ? (c.held ? "rest" : "none") : `${nn(c.note)}${Math.floor(c.note / 12) - 1}`)).join(", ")}`}>
+              {cells.map((c, i) => (
+                <i key={c.start} className={`${i === lit ? "is-on" : ""} ${c.note === null ? (c.held ? "is-rest" : "is-none") : ""} ${c.varied ? "is-vary" : ""}`} style={{ ["--v" as string]: c.vel.toFixed(2) } as CSSProperties}>
+                  {c.note === null ? null : <><b>{nn(c.note)}</b><small>{Math.floor(c.note / 12) - 1}</small></>}
+                </i>
+              ))}
+            </div>
+          ) : (
+            <div className="ar-arp" aria-label="Off: the chord as you played it" style={{ ["--c" as string]: accent } as CSSProperties}>
+              {(held.length ? held : [0, 1, 2]).map((n, i) => <i key={i} className={held.length ? "is-on" : ""}>{held.length ? nn(n) : ""}</i>)}
+            </div>
+          )}
+          {arp && rand > 0 ? <div className="ar-key" aria-hidden style={{ ["--c" as string]: accent } as CSSProperties}><span><i className="is-vary" />moved by vary</span><span><i className="is-rest" />rest</span></div> : null}
         </Screen>
         <Chips label="Arpeggiator direction" accent={accent} items={["off", ...ARP_MODES] as (ArpMode | "off")[]} value={mode} onPick={setMode} name={m => (m === "off" ? "off" : ARP_LABEL[m as ArpMode])} />
         <Chips label="Arpeggiator rate" accent={accent} items={[2, 4] as (2 | 4)[]} value={rate} onPick={setRate} name={r => `1/${r * 4}`} />
