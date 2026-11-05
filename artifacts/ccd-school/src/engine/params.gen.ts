@@ -132,6 +132,8 @@ export const MASTER_PARAMS = [
   { id: "master.glueratio", key: "glueratio", label: "ratio", bank: "mix", index: 2, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
   { id: "master.sidechain", key: "sidechain", label: "sidechain", bank: "mix", index: 3, min: 20, max: 300, default: 0.555, unit: "hz", curve: "exp", smoothMs: 0, detents: [] },
   { id: "master.gluemix", key: "gluemix", label: "glue mix", bank: "mix", index: 4, min: 0, max: 1, default: 1, unit: "pct", curve: "lin", smoothMs: 15, detents: [] },
+  { id: "master.space", key: "space", label: "space", bank: "mix", index: 5, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "master.verbtime", key: "verbtime", label: "verb time", bank: "mix", index: 6, min: 400, max: 8000, default: 0.598, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const DRUM_PAD_NAMES = ["kick", "snare", "clap", "rim", "closed hat", "open hat", "shaker", "ride", "low tom", "mid tom", "high tom", "crash", "perc 1", "perc 2", "fx", "reverse"] as const;

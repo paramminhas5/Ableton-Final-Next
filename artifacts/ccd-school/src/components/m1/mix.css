@@ -54,6 +54,7 @@
 .mx-obody{display:flex;gap:10px;flex:1;min-height:0}
 .mx-ofader{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
 .mx-oknobs{flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:6px 0}
+.mx-master .mx-oknobs{display:grid;grid-template-columns:1fr 1fr;align-content:space-between;justify-items:center;row-gap:2px}
 .mx-knob{display:flex;flex-direction:column;align-items:center;gap:0}
 .mx-knob .m1-knob{margin:-6px 0 -4px}
 .mx-klabel{font-size:9px;font-weight:500}

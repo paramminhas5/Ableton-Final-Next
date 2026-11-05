@@ -185,6 +185,15 @@ fn clips() -> Vec<Clip> {
         r.param(0, L_SEND, 0.9);
         out.push(("reverb", "one clap into the reverb", r.play(3.5)));
     }
+    // Item 9: the same clap into the plate (master param 5, "space"; the old engine has only the hall).
+    {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Drums);
+        r.pattern(0, &[(0.0, 39, 0.25, 0.95)]);
+        r.param(0, L_SEND, 0.9);
+        r.send(cmd::MASTER, 0, 5, 1.0, 0.0, 0.0);
+        out.push(("plate", "one clap into the plate reverb", r.play(3.5)));
+    }
     {
         let mut r = R::new(124.0);
         r.inst(0, Instrument::Lead);

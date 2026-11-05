@@ -789,3 +789,197 @@ fn every_pad_survives_every_layer_knob_at_its_ends() {
         }
     }
 }
+
+// ── Engine 2, item 9: a smoother hall and a Dattorro plate ───────────────────────────────────────
+
+use ccd_engine::fx::{Hall, Plate};
+
+/// The hall as it was before item 9 (fixed line lengths, one-pole damping at 6.5 kHz, gains set for the
+/// reverb time at DC), rebuilt here so every run measures both.
+struct OldHall {
+    pre: Vec<f32>,
+    diff: Vec<Vec<f32>>,
+    lines: Vec<Vec<f32>>,
+    lens: [usize; 8],
+    gains: [f32; 8],
+    damp: [f32; 8],
+    dg: f32,
+    hp_s: f32,
+    hp_g: f32,
+    n: usize,
+}
+impl OldHall {
+    fn new() -> Self {
+        let ms = |m: f32| (m * 0.001 * SR) as usize;
+        let line_ms = [29.7f32, 37.1, 41.1, 43.7, 53.3, 59.9, 67.3, 73.1];
+        let lens: [usize; 8] = core::array::from_fn(|i| ms(line_ms[i] * 1.6));
+        let pw = |fc: f32| { let g = (std::f32::consts::PI * fc / SR).tan(); g / (1.0 + g) };
+        OldHall {
+            pre: vec![0.0; ms(120.0)],
+            diff: [4.7f32, 3.6, 12.7, 9.3].iter().map(|m| vec![0.0; ms(*m) + 1]).collect(),
+            lines: lens.iter().map(|l| vec![0.0; l + 1]).collect(),
+            lens,
+            gains: core::array::from_fn(|i| 10f32.powf(-3.0 * lens[i] as f32 / (2.4 * SR))),
+            damp: [0.0; 8],
+            dg: pw(6_500.0),
+            hp_s: 0.0,
+            hp_g: pw(220.0),
+            n: 0,
+        }
+    }
+    fn at(buf: &[f32], n: usize, d: usize) -> f32 {
+        let len = buf.len();
+        buf[(n + len - d.min(len - 1)) % len]
+    }
+    fn tick(&mut self, input: f32) -> (f32, f32) {
+        let n = self.n;
+        let v = (input - self.hp_s) * self.hp_g;
+        let lp = v + self.hp_s;
+        self.hp_s = lp + v;
+        let x = input - lp;
+        let pl = self.pre.len();
+        self.pre[n % pl] = x;
+        let mut d = Self::at(&self.pre, n, (0.018 * SR) as usize);
+        for (k, ms) in [4.7f32, 3.6, 12.7, 9.3].iter().enumerate() {
+            let len = (ms * 0.001 * SR) as usize;
+            let delayed = Self::at(&self.diff[k], n, len);
+            let w = d + delayed * 0.62;
+            let dl = self.diff[k].len();
+            self.diff[k][n % dl] = w;
+            d = delayed - w * 0.62;
+        }
+        let o: [f32; 8] = core::array::from_fn(|i| Self::at(&self.lines[i], n, self.lens[i]));
+        let mut h = o;
+        let mut step = 1;
+        while step < 8 {
+            let mut i = 0;
+            while i < 8 {
+                for j in i..i + step {
+                    let (a, b) = (h[j], h[j + step]);
+                    h[j] = a + b;
+                    h[j + step] = a - b;
+                }
+                i += step * 2;
+            }
+            step *= 2;
+        }
+        for i in 0..8 {
+            let v = (h[i] * 0.353_553_4 - self.damp[i]) * self.dg;
+            let lp = v + self.damp[i];
+            self.damp[i] = lp + v;
+            let ll = self.lines[i].len();
+            self.lines[i][n % ll] = lp * self.gains[i] + d * 0.35;
+        }
+        // Each line's ring buffer is written at n and read d back, so advance once for all.
+        self.n += 1;
+        ((o[0] + o[2] + o[4] + o[6]) * 0.35, (o[1] + o[3] + o[5] + o[7]) * 0.35)
+    }
+}
+
+/// An impulse response, stereo, `secs` long.
+fn ir(mut f: impl FnMut(f32) -> (f32, f32), secs: f32) -> (Vec<f32>, Vec<f32>) {
+    (0..(SR * secs) as usize).map(|i| f(if i == 0 { 1.0 } else { 0.0 })).unzip()
+}
+
+/// RT60 of a band from the Schroeder backward integral (T20: the slope from -5 to -25 dB, times 3), s.
+fn rt60_band(y: &[f32], hz: f32) -> f32 {
+    let mut bp = ccd_engine::dsp::filter::Svf::default();
+    bp.set(hz, 1.4, SR);
+    let b: Vec<f64> = y.iter().map(|v| bp.tick(*v).bp as f64).collect();
+    let mut edc = vec![0.0f64; b.len()];
+    let mut acc = 0.0;
+    for i in (0..b.len()).rev() {
+        acc += b[i] * b[i];
+        edc[i] = acc;
+    }
+    let top = edc[0];
+    let t = |db: f64| edc.iter().position(|e| 10.0 * (e / top).log10() < db).unwrap_or(b.len()) as f32 / SR;
+    (t(-25.0) - t(-5.0)) * 3.0
+}
+
+/// Time for the echo density to fill in (Abel and Huang's normalised echo density, 20 ms windows): the
+/// first window from which it stays over 0.9 for the next 100 ms, in ms.
+fn dense_after_ms(y: &[f32]) -> f32 {
+    let w = (SR * 0.02) as usize;
+    let ned: Vec<f32> = y.chunks(w).map(|c| {
+        let sd = (c.iter().map(|v| v * v).sum::<f32>() / c.len() as f32).sqrt();
+        c.iter().filter(|v| v.abs() > sd).count() as f32 / c.len() as f32 / 0.3173
+    }).collect();
+    (0..ned.len().saturating_sub(5)).find(|&i| ned[i..i + 5].iter().all(|v| *v > 0.9)).unwrap_or(ned.len()) as f32 * 20.0
+}
+
+/// How smooth the tail is: one long look at it (65536 samples from 150 ms, the decay taken out), the
+/// spectrum's flatness (geometric over arithmetic mean) from 500 Hz to 5 kHz, each bin against its
+/// neighbours (about 30 Hz either side). A mode that rings in place is a sharp peak and pulls it down;
+/// modes that drift are smeared and push it up.
+fn tail_flatness(y: &[f32], rt: f32) -> f32 {
+    let n = 65_536;
+    let a = (SR * 0.15) as usize;
+    let seg: Vec<f32> = (0..n).map(|i| y[a + i] * 10f32.powf(3.0 * i as f32 / (SR * rt))).collect();
+    let s: Vec<f64> = spectrum(&seg).iter().map(|m| (*m as f64).powi(2)).collect();
+    let bin = SR / n as f32;
+    let half = 40usize;
+    let rel: Vec<f64> = (0..s.len()).filter(|k| (*k as f32 * bin) >= 500.0 && (*k as f32 * bin) <= 5_000.0).map(|k| {
+        let m = s[k - half..=k + half].iter().sum::<f64>() / (2 * half + 1) as f64;
+        s[k] / m.max(1e-30)
+    }).collect();
+    let g = (rel.iter().map(|v| v.max(1e-30).ln()).sum::<f64>() / rel.len() as f64).exp();
+    (g / (rel.iter().sum::<f64>() / rel.len() as f64)) as f32
+}
+
+/// Correlation of left and right over the tail (0.1 to 1.5 s): 0 is fully wide, 1 is mono.
+fn lr_corr(l: &[f32], r: &[f32]) -> f32 {
+    let (a, b) = ((SR * 0.1) as usize, (SR * 1.5) as usize);
+    let (mut lr, mut ll, mut rr) = (0.0f64, 0.0f64, 0.0f64);
+    for i in a..b {
+        lr += (l[i] * r[i]) as f64;
+        ll += (l[i] * l[i]) as f64;
+        rr += (r[i] * r[i]) as f64;
+    }
+    (lr / (ll * rr).sqrt()) as f32
+}
+
+#[test]
+fn reverbs_decay_as_set_and_darker_at_the_top() {
+    let mut old = OldHall::new();
+    let mut hall = Hall::new(SR);
+    let mut plate = Plate::new(SR);
+    let irs = [("old hall", ir(|x| old.tick(x), 6.0)), ("hall", ir(|x| hall.tick(x), 6.0)), ("plate", ir(|x| plate.tick(x), 6.0))];
+    for (name, (l, _)) in &irs {
+        let rt: Vec<f32> = [250.0, 1_000.0, 4_000.0, 8_000.0].iter().map(|f| rt60_band(l, *f)).collect();
+        println!("{name}, set to 2.4 s: RT60 {:.2} s at 250 Hz, {:.2} s at 1 kHz, {:.2} s at 4 kHz, {:.2} s at 8 kHz", rt[0], rt[1], rt[2], rt[3]);
+        if *name != "old hall" {
+            assert!((rt[1] - 2.4).abs() < 2.4 * 0.2, "{name}: {:.2} s at 1 kHz", rt[1]);
+            assert!(rt[3] < rt[1] * 0.75, "{name} should be darker at the top: {:.2} vs {:.2}", rt[3], rt[1]);
+        }
+    }
+    // The time knob follows.
+    for rt in [1.0f32, 5.0] {
+        let mut h = Hall::new(SR);
+        h.set(rt);
+        let (l, _) = ir(|x| h.tick(x), rt * 2.5);
+        let got = rt60_band(&l, 1_000.0);
+        println!("hall set to {rt} s: {got:.2} s at 1 kHz");
+        assert!((got - rt).abs() < rt * 0.2);
+    }
+}
+
+#[test]
+fn reverb_tails_are_dense_smooth_and_wide() {
+    let mut old = OldHall::new();
+    let mut hall = Hall::new(SR);
+    let mut plate = Plate::new(SR);
+    let mut res = vec![];
+    for (name, (l, r)) in [("old hall", ir(|x| old.tick(x), 3.0)), ("hall", ir(|x| hall.tick(x), 3.0)), ("plate", ir(|x| plate.tick(x), 3.0))] {
+        let (dense, flat, corr) = (dense_after_ms(&l), tail_flatness(&l, rt60_band(&l, 1_000.0)), lr_corr(&l, &r));
+        let level = db(rms(&l[..(SR * 0.5) as usize]));
+        println!("{name}: echo density fills in after {dense:.0} ms; tail flatness {flat:.3}; left/right correlation {corr:+.3}; first 500 ms {level:.1} dB");
+        assert!(l.iter().chain(&r).all(|v| v.is_finite()));
+        res.push((dense, flat, corr, level));
+    }
+    let (old, hall, plate) = (res[0], res[1], res[2]);
+    assert!(hall.1 > old.1, "the modulated hall should have the smoother tail: {:.3} vs {:.3}", hall.1, old.1);
+    assert!(hall.2.abs() < 0.2 && plate.2.abs() < 0.2, "tails should be wide");
+    assert!((hall.3 - old.3).abs() < 1.5, "the hall should sit at the old level: {:.1} vs {:.1}", hall.3, old.3);
+    assert!((plate.3 - old.3).abs() < 2.0, "the plate should sit near it: {:.1} vs {:.1}", plate.3, old.3);
+}

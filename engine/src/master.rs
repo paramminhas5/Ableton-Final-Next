@@ -342,8 +342,12 @@ pub const M_GLUE: usize = 1;
 pub const M_RATIO: usize = 2;
 pub const M_SIDECHAIN: usize = 3;
 pub const M_GLUE_MIX: usize = 4;
+/// The shared reverb (engine 2, item 9): hall or plate, and its time. The engine applies these to
+/// the return; the master only keeps their values.
+pub const M_SPACE: usize = 5;
+pub const M_VERB_TIME: usize = 6;
 /// Room for master params (compare snapshots hold this many).
-pub const MASTER_SLOTS: usize = 8;
+pub const MASTER_SLOTS: usize = 16;
 
 pub struct Master {
     pub glue: Glue,

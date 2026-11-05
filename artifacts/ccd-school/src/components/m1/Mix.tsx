@@ -743,7 +743,7 @@ function Faders({ track, open, masterOpen, onOpen, onOpenMaster, setParam, setMa
             </div>
             <div className="mx-oknobs" style={{ justifyContent: "center" }}>
               <MixKnob label="glue" value={masterOf(track, 1)} spec={MASTER_PARAMS[1]} on onChange={v => setMaster(1, v)} />
-              {[2, 3, 4].map(i => <MixKnob key={i} label={MASTER_PARAMS[i].label} value={masterOf(track, i)} spec={MASTER_PARAMS[i]} onChange={v => setMaster(i, v)} />)}
+              {MASTER_PARAMS.map((p, i) => i < 2 ? null : <MixKnob key={i} label={p.label} value={masterOf(track, i)} spec={p} onChange={v => setMaster(i, v)} />)}
             </div>
           </div>
           <span className="mx-sname" style={{ fontSize: 9 }}>{readout(MASTER_PARAMS[0], out)}</span>

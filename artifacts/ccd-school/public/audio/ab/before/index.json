@@ -16,5 +16,6 @@
   {"id": "scream", "what": "the rolling bass through the scream filter, driven", "rms_db": -21.02, "peak": 0.5856},
   {"id": "smooth", "what": "the rolling bass through the smooth filter", "rms_db": -21.02, "peak": 0.5856},
   {"id": "snares", "what": "one snare three ways: fat body, tight snap, long rattle", "rms_db": -27.7, "peak": 0.5897},
-  {"id": "perc", "what": "a bell and a metal bar over hats that change a little every hit", "rms_db": -26.19, "peak": 0.5264}
+  {"id": "perc", "what": "a bell and a metal bar over hats that change a little every hit", "rms_db": -26.19, "peak": 0.5264},
+  {"id": "plate", "what": "one clap into the plate reverb", "rms_db": -36.05, "peak": 0.4311}
 ]

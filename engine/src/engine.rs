@@ -538,9 +538,20 @@ impl Core {
         let live = self.master.params;
         let vals = if on { self.snap.master } else { live };
         for (k, n) in vals.iter().enumerate().take(MASTER_PARAMS.len()) {
-            self.master.set_param(k, *n, false);
+            self.set_master(k, *n, false);
         }
         self.master.params = live;
+    }
+
+    /// A master param, and the shared returns it reaches (the reverb's kind and time).
+    fn set_master(&mut self, i: usize, n: f32, jump: bool) {
+        self.master.set_param(i, n, jump);
+        let Some(spec) = MASTER_PARAMS.get(i) else { return };
+        match i {
+            crate::master::M_SPACE => self.verb.set_kind(if n < 0.5 { crate::fx::HALL } else { crate::fx::PLATE }),
+            crate::master::M_VERB_TIME => self.verb.set(spec.to_value(n) * 0.001),
+            _ => {}
+        }
     }
 
     fn link_sync(&mut self, beat: f64, tempo: f64) {
@@ -616,7 +627,7 @@ impl Core {
                         self.master.params[i] = c.x.clamp(0.0, 1.0);
                     }
                 } else {
-                    self.master.set_param(i, c.x, false);
+                    self.set_master(i, c.x, false);
                 }
             }
             cmd::REPEAT => {

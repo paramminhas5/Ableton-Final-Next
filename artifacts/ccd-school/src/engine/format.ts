@@ -63,6 +63,7 @@ export function display(spec: Pick<ParamSpec, "min" | "max" | "curve" | "unit"> 
   if (spec.key === "sidechain" && n < 0.01) return "hears it all";
   if (spec.key === "shape") return STEP3(n, ["round", "tight", "hard"]);
   if (spec.key === "character") return STEP3(n, ["warm", "scream", "smooth"]);
+  if (spec.key === "space") return n < 0.5 ? "hall" : "plate";
   if (spec.key === "shapeblip") return STEP3(n, ["blip", "bell", "metal"]);
   if (spec.key === "shapewood") return STEP3(n, ["wood", "bell", "metal"]);
   if (spec.key === "color") {

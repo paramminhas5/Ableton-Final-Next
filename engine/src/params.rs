@@ -207,6 +207,9 @@ pub const MASTER_PARAMS: &[ParamSpec] = &[
     p("master.glueratio", "ratio", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
     p("master.sidechain", "sidechain", Bank::Mix, 20.0, 300.0, 0.555, Unit::Hz, Curve::Exp, 0.0, NONE),
     p("master.gluemix", "glue mix", Bank::Mix, 0.0, 1.0, 1.0, Unit::Pct, Curve::Lin, 15.0, NONE),
+    // Appended 5 Nov (engine 2, item 9): which reverb the send goes to (hall or plate) and how long it rings.
+    p("master.space", "space", Bank::Mix, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    p("master.verbtime", "verb time", Bank::Mix, 400.0, 8000.0, 0.598, Unit::Ms, Curve::Exp, 0.0, NONE),
 ];
 
 /// Instrument params start here on the wire, after the layer block.
