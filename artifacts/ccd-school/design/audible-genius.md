@@ -123,7 +123,7 @@ In build order. Each one keeps our rules: lowercase, Live's names, one pink go k
 ## Built 8 Nov, product agent
 
 - **Group challenges and bonus rounds** (`src/lib/worldChallenge.ts`, `WorldChallenge.tsx`, `/world/<world>/challenge`): at the end of each world, a match on three of the world's knobs on the learner's own part (moved out of place, brought back by ear) and a copy of one of their own parts (their bass line, melody or beat; the challenge's own pattern when the song doesn't have one), stars from the two rounds, then bonus rounds for more stars (a finer match at every 5%, a copy against the clock). Stars per world on all lessons and the world page.
-- **Remakes** (`Remakes.tsx`, `/gym/remakes`): famous kinds of sound ("a 90s acid line", "a supersaw like early trance"), each a patch we program in that style, matched by ear on notched knobs with stars; "keep it" puts the sound on the song's part. Reads a stand-in list (`src/lib/remakesStub.ts`) until the engine's `src/lib/remakes.ts` lands.
+- **Remakes** (`Remakes.tsx`, `/gym/remakes`): famous kinds of sound ("a 303-style acid line", "a supersaw like early trance"), the engine's eight patches made in those styles (`src/lib/remakes.ts`), matched by ear on notched knobs with stars; "keep it" puts the sound on the song's part.
 - **Placement by ear** (`/placement`): Syntorial's early lessons are easy for experienced users (one of its criticisms above); find your level places them by a timing take, a copy, ears and a match, and still builds their song.
 
 ## Sources
