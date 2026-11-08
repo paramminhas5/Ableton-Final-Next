@@ -7,7 +7,7 @@
 .pl-rows{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
 .pl-rows li{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);font-size:14px;color:var(--ink)}
 .pl-rows li .ls-led{margin-top:0;flex:none}
-.pl-rows b{font-weight:600;min-width:76px}
+.pl-rows>li>b{font-weight:600;min-width:76px}
 .pl-rows li>span:last-child{color:var(--print);margin-left:auto;text-align:right}
 .pl-last{color:var(--print)}
 .pl .ls-pads.is-one small{min-width:70px;font-size:15px;font-weight:600;color:var(--ink)}

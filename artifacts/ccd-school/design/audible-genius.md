@@ -120,6 +120,12 @@ In build order. Each one keeps our rules: lowercase, Live's names, one pink go k
 - **Imagine it first** (`src/lib/imagine.ts`, `src/components/m1/ImagineEar.tsx`, step `imagine`): the notes of a phrase on the copy grid, no sound, a silent playhead and count sweeping them at the song's tempo; hum it, then play two (gentle) or three phrases on your own sound and pick the one you saw; then it plays under the notes. The phrases it could be mistaken for are made from the shown one (its mirror, notes moved, a note moved in time; only one note away on hard) unless the lesson names them. In six lessons (writing a melody, intervals, chord progressions, bass follows the chords, your first bass line, syncopation), and an ear gym drill, "imagine it first", 8 levels on the copy drill's material (opens after writing a melody).
 - **Write your own, checked** (`src/lib/briefCheck.ts`, `goal.check` on a play step): what can be heard in the notes after each take, said in plain words, never a gate: in key, on the pentatonic keys, out of the kick's way, on two and four, filling the bar, ending home, moving, on the chord's notes, on the chords' roots, short, a motif that comes back. On seven briefs, including the last play-in of three paths (the pentatonic hook, chords on top, clap and snare) and bass follows the chords.
 
+## Built 8 Nov, product agent
+
+- **Group challenges and bonus rounds** (`src/lib/worldChallenge.ts`, `WorldChallenge.tsx`, `/world/<world>/challenge`): at the end of each world, a match on three of the world's knobs on the learner's own part (moved out of place, brought back by ear) and a copy of one of their own parts (their bass line, melody or beat; the challenge's own pattern when the song doesn't have one), stars from the two rounds, then bonus rounds for more stars (a finer match at every 5%, a copy against the clock). Stars per world on all lessons and the world page.
+- **Remakes** (`Remakes.tsx`, `/gym/remakes`): famous kinds of sound ("a 90s acid line", "a supersaw like early trance"), each a patch we program in that style, matched by ear on notched knobs with stars; "keep it" puts the sound on the song's part. Reads a stand-in list (`src/lib/remakesStub.ts`) until the engine's `src/lib/remakes.ts` lands.
+- **Placement by ear** (`/placement`): Syntorial's early lessons are easy for experienced users (one of its criticisms above); find your level places them by a timing take, a copy, ears and a match, and still builds their song.
+
 ## Sources
 
 1. [Syntorial, Wikipedia](https://en.wikipedia.org/wiki/Syntorial)

@@ -55,7 +55,7 @@ Built 8 Nov: copy by ear (Building Blocks' recreation challenges) in 15 lessons 
 18. **Resample.** Koala's resampling "to another pad with effects applied" (see `research-instrument-ui.md`). Build: bounce the loop onto a sampler pad.
 
 ### Everyone
-19. **Screen readers and a high contrast theme.** Live 12 made core workflows work with screen readers and added a high contrast theme ([Ableton](https://ableton.com/en/live/all-new-features)). Have: keyboard play, aria on knobs and pads. Build: a high contrast theme and a screen reader pass on the studio.
+19. **Screen readers and a high contrast theme.** Live 12 made core workflows work with screen readers and added a high contrast theme ([Ableton](https://ableton.com/en/live/all-new-features)). Have: keyboard play, aria on knobs and pads. Build: a high contrast theme and a screen reader pass on the studio. Built 8 Nov: a high contrast theme (settings, or the device's increase-contrast setting: darker text, solid edges on keys and panels, thicker focus rings); lessons have a heading, announce each step and move focus to it; the studio has a heading and announces playing, recording and count-in; axe (WCAG 2.1 AA) on the studio and lesson steps in both themes is clean (`scripts/shots/axe.mjs`).
 
 ## Build order
 

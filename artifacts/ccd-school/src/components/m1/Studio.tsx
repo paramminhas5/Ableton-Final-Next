@@ -688,6 +688,9 @@ export function Studio() {
 
   return (
     <div className="st-root" onPointerDownCapture={unlock}>
+      {/* For screen readers: a heading for the page, and the transport's state as it changes. */}
+      <h1 className="sr-only">studio: {mode === "mix" ? "mix" : "play"}</h1>
+      <div className="sr-only" aria-live="polite">{countIn ? "counting in" : recording ? "recording" : playing ? "playing" : "stopped"}</div>
       <div className="st-body">
         <div className="st-head">
           <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}>
