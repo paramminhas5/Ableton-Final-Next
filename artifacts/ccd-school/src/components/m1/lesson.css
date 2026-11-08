@@ -956,3 +956,19 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ms-k.is-off .ms-mark{color:var(--led-red)}
 .ms-k.is-ok .m1-knob-ring,.ms-k.is-ok svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--led-mint) 70%,transparent))}
 .ms-k.is-off svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--led-red) 70%,transparent))}
+
+/* questions answered by ear (AskEar.tsx): a play key per sound, lit while it plays */
+.ae-key{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;min-width:56px;padding:0 14px;border-radius:12px;border:0;font:inherit;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer;
+  background:linear-gradient(180deg,var(--padt),color-mix(in srgb,var(--padt) 88%,#000));box-shadow:inset 0 1.5px 0 var(--hi),0 1px 0 var(--pads),0 2px 0 var(--pads),0 4px 6px -2px var(--shA);transition:transform 50ms}
+.ae-key:active{transform:translateY(2px)}
+.ae-key svg{width:14px;height:14px}
+.ae-key.is-on{color:#141416;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.85) 0,rgba(255,255,255,.2) 34%,rgba(255,255,255,0) 66%),var(--led-mint);box-shadow:0 0 14px color-mix(in srgb,var(--led-mint) 55%,transparent)}
+.ae-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.ae-row.is-one{grid-template-columns:1fr}
+.ae-row .ae-key{color:var(--disp-ink,#F3F2EF);background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.ae-row .ae-key.is-on{color:#141416;background:var(--led-mint);box-shadow:0 0 14px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.fl-opts.is-ear{gap:8px}
+.ae-opt{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;align-items:stretch}
+.ae-opt .ae-key{min-height:52px}
+.ae-letter{display:inline-block;min-width:1.4em;margin-right:8px;font-weight:700;color:var(--sub)}
+.ae-blind{color:var(--sub);font-weight:500}

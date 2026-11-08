@@ -115,6 +115,9 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
           ...(s.whyWrong ? { whyWrong } : {}),
           ...hintOf(s.hint, o),
           ...(s.more ? { more: true } : {}),
+          ...(s.play !== undefined || s.sounds !== undefined
+            ? { ear: { ...(s.part ? { part: s.part } : {}), ...(s.with ? { with: s.with } : {}), ...(s.play !== undefined ? { play: Array.isArray(s.play) ? s.play : [s.play] } : {}), ...(s.sounds ? { sounds: order.map(j => s.sounds![j]) } : {}) } }
+            : {}),
         });
         break;
       }

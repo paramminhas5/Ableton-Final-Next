@@ -157,6 +157,8 @@ export type LessonScreen =
       whyWrong?: Record<number, string>;
       /** kept for "ask me more" rather than the main questions (lesson files) */
       more?: boolean;
+      /** answered by ear: sounds made from the learner's song (src/lib/askEar.ts) */
+      ear?: import("./lessons/schema").AskEar;
     }
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; clip?: string; deeper?: { title: string; body: string }[] }

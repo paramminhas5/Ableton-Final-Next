@@ -4,6 +4,7 @@ import type { LayerType } from "../../lib/track2";
 import { CLIP_IDS } from "./clips";
 import { SCALES } from "../../lib/theory";
 import { patternProblems, type CopyLayer } from "../../lib/copyEar";
+import { EAR_PARTS, earSoundProblems } from "../../lib/askEar";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -52,7 +53,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
-  ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels"],
+  ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels", "part", "with", "play", "sounds"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
 };
@@ -269,6 +270,23 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
             }
           }
           if (raw.more !== undefined && typeof raw.more !== "boolean") at(where, "more must be true or false");
+          // Answered by ear: a sound for the question, or one per option (src/lib/askEar.ts).
+          if (raw.part !== undefined && !(EAR_PARTS as readonly unknown[]).includes(raw.part)) at(where, `part "${String(raw.part)}" is not one of ${EAR_PARTS.join(", ")}`);
+          if (raw.with !== undefined && (!Array.isArray(raw.with) || !raw.with.length || raw.with.some(w => !(EAR_PARTS as readonly unknown[]).includes(w)))) at(where, `with must list parts from ${EAR_PARTS.join(", ")}`);
+          if ((raw.part !== undefined || raw.with !== undefined) && raw.play === undefined && raw.sounds === undefined) at(where, "part and with only mean something with play or sounds");
+          if (raw.play !== undefined) {
+            const ps = Array.isArray(raw.play) ? raw.play : [raw.play];
+            if (ps.length < 1 || ps.length > 2) at(where, "play is one sound, or two (a and b)");
+            ps.forEach((p, pi) => { for (const m of earSoundProblems(p, raw.part)) at(where, `play${ps.length > 1 ? ` ${String.fromCharCode(97 + pi)}` : ""}: ${m}`); });
+          }
+          if (raw.sounds !== undefined) {
+            if (!Array.isArray(raw.sounds) || !Array.isArray(opts) || raw.sounds.length !== opts.length) at(where, `sounds must list one sound per option (${Array.isArray(opts) ? opts.length : "?"})`);
+            else {
+              raw.sounds.forEach((p, pi) => { for (const m of earSoundProblems(p, raw.part)) at(where, `sound ${pi + 1} (${String(opts[pi])}): ${m}`); });
+              const keys = raw.sounds.map(p => JSON.stringify(p));
+              if (new Set(keys).size !== keys.length) at(where, "two options sound the same: every sound must differ");
+            }
+          }
           break;
         }
         case "ear": {

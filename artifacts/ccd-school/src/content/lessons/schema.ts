@@ -1,4 +1,5 @@
 import type { LayerType } from "../../lib/track2";
+import type { EarPart, EarSound } from "../../lib/askEar";
 
 export type Voice = "mentor" | "straight" | "eli5";
 export type Level = "gentle" | "standard" | "hard";
@@ -52,6 +53,14 @@ export type RawAsk = {
   /** Held back for "ask me more" instead of the main run. */
   more?: boolean;
   levels?: Level[];
+  /**
+   * Answered by ear (src/lib/askEar.ts): `part` plays on its own (with the `with` parts under it), `play` is a
+   * sound for the question (one, or two as a and b), `sounds` one per option, picked by listening.
+   */
+  part?: EarPart;
+  with?: EarPart[];
+  play?: EarSound | EarSound[];
+  sounds?: EarSound[];
 };
 export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceText; hint?: VoiceText; levels?: Level[] };
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
@@ -93,12 +102,15 @@ export type ResolvedStep =
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; level?: Level; say: string; hint?: string }
   | { kind: "copy"; layer: "drums" | "bass" | "chords" | "lead"; pattern: string | Record<string, string>; level: Level; say: string; hint?: string }
-  | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean }
+  | { kind: "ask"; q: string; options: string[]; answer: number; why: string; whyWrong?: Record<number, string>; hint?: string; more?: boolean; ear?: AskEar }
   | { kind: "ear"; drill: Drill; rounds: number; say?: string; hint?: string }
   | { kind: "tempo"; say: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: string }
   | { kind: "mix"; say: string; goal: MixGoal; bank?: string; hint?: string }
   | { kind: "arrange"; say: string; goal: ArrangeGoal; hint?: string }
   | { kind: "keep"; next: string };
+
+/** What a question answered by ear plays: `play` for the question, `sounds` one per option (in the shown order). */
+export type AskEar = { part?: EarPart; with?: EarPart[]; play?: EarSound[]; sounds?: EarSound[] };
 
 /** The lesson as stored in lessons.gen.json: raw text kept intact so the voice can change at runtime. */
 export type Lesson = RawLesson & { file: string };

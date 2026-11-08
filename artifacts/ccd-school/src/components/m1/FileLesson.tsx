@@ -36,6 +36,7 @@ import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
 import { MatchSoundStep } from "./MatchSound";
 import { CopyStep } from "./CopyEar";
+import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -365,6 +366,8 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
 }
 
 // ── questions: easy to hard, try again on a miss, more if you want them ────────
+// A question can be answered by ear (src/lib/askEar.ts): its sounds are your song with one thing changed,
+// and an option with a sound shows its letter until it's picked, so the ear decides, not the words.
 function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]; onDone: () => void; onScore: (firstTry: boolean) => void }) {
   const [list, setList] = useState(main);
   const [i, setI] = useState(0);
@@ -374,6 +377,11 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
   const q = list[i];
   const last = i >= list.length - 1;
   const more = bank.filter(b => !list.includes(b));
+  // Your song as it is now, the one every sound in these questions is made from.
+  const [song, setSong] = useState<TrackV2 | null>(null);
+  useEffect(() => setSong(readTrackV2()), []);
+  const ear = useEarSounds(q?.ear, song);
+  const byEar = !!q?.ear?.sounds?.length;
   const pick = (k: number) => {
     if (right || out.includes(k)) return;
     if (k === q.answer) {
@@ -387,33 +395,41 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
       playWrong();
     }
   };
-  const next = () => { setI(n => n + 1); setOut([]); setRight(false); setMissed(null); };
+  const next = () => { ear.stop(); setI(n => n + 1); setOut([]); setRight(false); setMissed(null); };
   const askMore = () => { setList(l => [...l, more[0]]); next(); };
+  // No headphones, or no idea: a question by ear can be passed over (it doesn't count as first try).
+  const skipOne = () => { if (last) { ear.stop(); onDone(); } else next(); };
   useEnter(right ? (last ? onDone : next) : null);
   if (!q) return null;
+  const letter = (k: number) => String.fromCharCode(97 + k);
   return (
     <div className="ls-col">
       <div className="fl-inst">
       <Screen>
         <div className="fl-stripes" aria-hidden>{list.map((_, k) => <i key={k} className={k < i || (k === i && right) ? "is-on" : ""} />)}</div>
-        <Meta left={`stripe challenge · ${i + 1} of ${list.length}`} right={right ? "right" : out.length ? "try again" : "tap one"} />
+        <Meta left={`stripe challenge · ${i + 1} of ${list.length}${q.ear ? " · by ear" : ""}`} right={right ? "right" : out.length ? "try again" : byEar ? "listen, then pick" : q.ear?.play ? "listen first" : "tap one"} />
         <div className="ls-title is-small"><Gloss>{q.q}</Gloss></div>
+        {q.ear ? <EarPlayRow s={ear} ear={q.ear} /> : null}
       </Screen>
-      <div className="fl-opts" role="radiogroup" aria-label="Answers">
+      <div className={`fl-opts ${byEar ? "is-ear" : ""}`} role="radiogroup" aria-label="Answers">
         {q.options.map((o, k) => {
           const cls = right && k === q.answer ? "is-right" : out.includes(k) ? "is-out" : "";
-          return <button key={k} type="button" role="radio" aria-checked={right && k === q.answer} disabled={right || out.includes(k)} className={`fl-opt ${cls}`} onClick={() => pick(k)}>{o}</button>;
+          const shown = !byEar || right || out.includes(k);
+          const btn = <button key={k} type="button" role="radio" aria-checked={right && k === q.answer} aria-label={byEar && !shown ? `Answer ${letter(k)}` : undefined} disabled={right || out.includes(k)} className={`fl-opt ${cls}`} onClick={() => pick(k)}>{byEar ? <><b className="ae-letter">{letter(k)}</b>{shown ? o : <span className="ae-blind">this one</span>}</> : o}</button>;
+          return byEar ? <div key={k} className="ae-opt"><EarKey s={ear} id={`o${k}`} label={letter(k)} aria={`sound ${letter(k)}`} />{btn}</div> : btn;
         })}
       </div>
       </div>
       <div className="fl-text">
-      {missed !== null && !right && <div className="fl-why is-wrong" role="status"><b>not quite.</b> <Gloss>{q.whyWrong?.[missed] ?? q.hint ?? "have another go."}</Gloss></div>}
+      {missed !== null && !right && <div className="fl-why is-wrong" role="status"><b>not quite.</b> <Gloss>{q.whyWrong?.[missed] ?? q.hint ?? (byEar ? "listen to each one again, then pick." : "have another go.")}</Gloss></div>}
       {right && <div className="fl-why is-right" role="status"><b>{out.length ? "got it." : "right."}</b> <Gloss>{q.explain}</Gloss></div>}
-      <button type="button" className="ls-skip" onClick={onDone}>skip the challenge</button>
+      {q.ear && !right && !out.length ? <div className="ls-hint">{byEar ? "press each letter to hear it on your song, as many times as you like. then pick the one that answers the question." : "press play to hear it on your song, then pick an answer."}</div> : null}
+      {q.ear && !right ? <button type="button" className="ls-skip" onClick={skipOne} aria-label="Skip this question">no sound here? skip this one</button> : null}
+      <button type="button" className="ls-skip" onClick={() => { ear.stop(); onDone(); }}>skip the challenge</button>
       </div>
       <Bottom
         left={right && last && more.length ? { label: "ask more", icon: "plus", onClick: askMore, aria: "Ask me another question" } : undefined}
-        go={!right ? { label: "pick an answer", disabled: true } : { label: last ? "finish" : "next question", onClick: last ? onDone : next }} />
+        go={!right ? { label: byEar ? "listen, then pick" : "pick an answer", disabled: true } : { label: last ? "finish" : "next question", onClick: last ? onDone : next }} />
     </div>
   );
 }
