@@ -96,6 +96,7 @@ export const CHORD_PARAMS = [
   { id: "chords.ring", key: "ring", label: "decay", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "chords.bright", key: "bright", label: "stiffness", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
   { id: "chords.osc", key: "osc", label: "osc", bank: "shift", index: 36, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "chords.width", key: "width", label: "width", bank: "shift", index: 37, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 20, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const LEAD_PARAMS = [
@@ -120,6 +121,7 @@ export const LEAD_PARAMS = [
   { id: "lead.ring", key: "ring", label: "decay", bank: "shift", index: 34, min: 100, max: 8000, default: 0.68, unit: "ms", curve: "exp", smoothMs: 0, detents: [] },
   { id: "lead.bright", key: "bright", label: "stiffness", bank: "shift", index: 35, min: 0, max: 1, default: 0.5, unit: "pct", curve: "lin", smoothMs: 0, detents: [] },
   { id: "lead.osc", key: "osc", label: "osc", bank: "shift", index: 36, min: 0, max: 1, default: 0, unit: "none", curve: "lin", smoothMs: 0, detents: [] },
+  { id: "lead.width", key: "width", label: "width", bank: "shift", index: 37, min: 0, max: 1, default: 0, unit: "pct", curve: "lin", smoothMs: 20, detents: [] },
 ] as const satisfies readonly ParamSpec[];
 
 export const FX_PARAMS = [

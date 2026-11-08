@@ -118,6 +118,13 @@ fn song() -> Engine {
         send(&e, cmd::PUNCH_COMMIT, 0, 0, 0.0, 0.0, 0.0);
         send(&e, cmd::MOD_WATCH, 0, 1, 0.0, 0.0, 0.0);
     }
+    // CCD_BENCH_WIDE=1: every chord and lead part at full width (8 Nov): the side saws' own filter per voice
+    // and the strip's second channel.
+    if std::env::var("CCD_BENCH_WIDE").is_ok() {
+        for l in [2u32, 3, 6, 7] {
+            send(&e, cmd::PARAM, l, (INSTRUMENT_BASE + 21) as u32, 1.0, 0.0, 0.0);
+        }
+    }
     send(&e, cmd::ANALYSE, 0, 1, 0.0, 0.0, 0.0);
     send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
     e

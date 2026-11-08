@@ -116,6 +116,7 @@ Shown as a fold-out under every shape step ("same control elsewhere"), under the
 | drift | live drift: drift |
 | detune | live wavetable: unison amount · live drift: unison strength · vital osc: unison detune |
 | spread | live operator: spread |
+| width | live utility: width · surge xt: width · vital osc: stereo spread |
 | glide | live drift: glide · live wavetable: glide · vital: glide (portamento time) · tb-303: slide |
 | fm | live wavetable: fm amt · live ds fm: amnt |
 | ratio | live operator: coarse · live wavetable: fm tune |

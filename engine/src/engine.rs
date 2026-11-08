@@ -718,6 +718,26 @@ impl Layer {
         }
     }
 
+    /// The instrument through its strip. A synth with its width up hands the strip two channels (mid plus
+    /// side on the left, mid less side on the right); everything else, and a synth at width 0, is mono.
+    #[inline]
+    fn render(&mut self) -> crate::strip::StripOut {
+        match self.inst {
+            Instrument::Chords if self.chords.stereo() => {
+                let (m, s) = self.chords.tick_ms();
+                self.strip.tick_stereo(m + s, m - s)
+            }
+            Instrument::Lead if self.lead.stereo() => {
+                let (m, s) = self.lead.tick_ms();
+                self.strip.tick_stereo(m + s, m - s)
+            }
+            _ => {
+                let x = self.tick();
+                self.strip.tick(x)
+            }
+        }
+    }
+
     #[inline]
     fn tick(&mut self) -> f32 {
         match self.inst {
@@ -1529,8 +1549,7 @@ impl Core {
                 if l.n_mods > 0 || l.watched {
                     l.mod_tick(comparing, &clk);
                 }
-                let x = l.tick();
-                let mut o = l.strip.tick(x);
+                let mut o = l.render();
                 if l.trim_on {
                     // After the strip, sends too: the whole part as you hear it.
                     let g = l.trim.next();

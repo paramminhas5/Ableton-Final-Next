@@ -382,6 +382,10 @@ pub const CHORD_PARAMS: &[ParamSpec] = &[
     // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
     // knob and the filter envelope bend it from a cosine to a saw).
     p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    // Appended 8 Nov (after the sound shootout): stereo width. The supersaw's side saws spread across the
+    // field (and on the chord synth each voice to its own side); mid/side, so the mono sum is unchanged.
+    // 0 by default: a part that never turns it up is mono and exactly as before (saved songs included).
+    p("width", "width", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 20.0, NONE),
 ];
 pub const C_VOICING: usize = 0;
 pub const C_SPREAD: usize = 1;
@@ -404,6 +408,7 @@ pub const C_VOICE: usize = 17;
 pub const C_RING: usize = 18;
 pub const C_BRIGHT: usize = 19;
 pub const C_OSC: usize = 20;
+pub const C_WIDTH: usize = 21;
 
 // ── Lead: mono synth with glide ──────────────────────────────────────────────
 
@@ -437,6 +442,10 @@ pub const LEAD_PARAMS: &[ParamSpec] = &[
     // the wave knob goes from sine through saw to noise), phase (casio cz phase distortion, the wave
     // knob and the filter envelope bend it from a cosine to a saw).
     p("osc", "osc", Bank::Shift, 0.0, 1.0, 0.0, Unit::None, Curve::Lin, 0.0, NONE),
+    // Appended 8 Nov (after the sound shootout): stereo width. The supersaw's side saws spread across the
+    // field (and on the chord synth each voice to its own side); mid/side, so the mono sum is unchanged.
+    // 0 by default: a part that never turns it up is mono and exactly as before (saved songs included).
+    p("width", "width", Bank::Shift, 0.0, 1.0, 0.0, Unit::Pct, Curve::Lin, 20.0, NONE),
 ];
 pub const LD_CUTOFF: usize = 0;
 pub const LD_RES: usize = 1;
@@ -459,6 +468,7 @@ pub const LD_VOICE: usize = 17;
 pub const LD_RING: usize = 18;
 pub const LD_BRIGHT: usize = 19;
 pub const LD_OSC: usize = 20;
+pub const LD_WIDTH: usize = 21;
 
 /// The fm ratio knob steps through these (modulator frequency over carrier).
 pub const FM_RATIOS: [f32; 9] = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];

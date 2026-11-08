@@ -21,7 +21,7 @@ const BY_KEY: Record<string, PicKey> = {
   drive: "tone", fdrive: "tone", crush: "tone", echo: "tone", tone: "tone", reverb: "tone", noise: "tone", build: "tone",
   wave: "osc", detune: "osc", fm: "osc", ratio: "osc", sub: "osc", tune: "osc", glide: "osc", voicing: "osc", spread: "osc", drift: "osc", open: "env", start: "osc", gate: "osc", keys: "osc", reverse: "osc", shape: "osc",
   low: "eq", mid: "eq", high: "eq", cut: "filter",
-  level: "mix", pan: "mix", send: "mix", duck: "mix", glue: "mix", out: "mix",
+  level: "mix", pan: "mix", send: "mix", duck: "mix", glue: "mix", out: "mix", width: "mix",
 };
 
 /** The picture a param belongs to, by its key ("cutoff" is the filter). */
@@ -38,7 +38,7 @@ export function isIdle(spec: { key: string; min: number; detents: readonly numbe
   if (spec.key === "lfoto" || spec.key === "ratio") return false;
   if (spec.detents.length && spec.detents.includes(0.5) && spec.min < 0) return Math.abs(n - 0.5) < 0.01;
   if (spec.key === "cut") return n <= 0.001;
-  if (spec.min === 0 && (spec.unit === "pct" || spec.unit === "none") && ["drive", "fdrive", "crush", "echo", "send", "duck", "lfo", "fm", "env", "build", "noise", "reverb", "detune", "sub", "drift", "glide", "spread", "open", "start", "gate", "keys", "reverse", "res"].includes(spec.key)) return n <= 0.001;
+  if (spec.min === 0 && (spec.unit === "pct" || spec.unit === "none") && ["drive", "fdrive", "crush", "echo", "send", "duck", "lfo", "fm", "env", "build", "noise", "reverb", "detune", "sub", "drift", "glide", "spread", "open", "start", "gate", "keys", "reverse", "res", "width"].includes(spec.key)) return n <= 0.001;
   if (spec.key === "glide") return n <= 0.001;
   return false;
 }

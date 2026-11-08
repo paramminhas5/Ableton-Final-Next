@@ -209,6 +209,29 @@ fn main() {
         r.notes(120.0, &[(0.0, 69, 0.9, 0.8), (1.0, 72, 0.4, 0.8), (1.5, 76, 0.4, 0.8), (2.0, 74, 1.4, 0.8)]);
         save("supersaw", &r.play(4.0, None));
     }
+    // 2b. The same supersaw at widths 0, 0.25, 0.5, 0.75 and 1 (8 Nov), against Surge's scene width and
+    // Vital's stereo spread at 0, 50 and 100% (the mono sum against each synth's own width 0).
+    if want("wide") {
+        for w in [0u32, 25, 50, 75, 100] {
+            let mut r = R::new(120.0, 64.0);
+            r.inst(Instrument::Lead);
+            r.ip(LD_DETUNE, 0.6);
+            r.ip(LD_CUTOFF, 1.0);
+            r.ip(LD_RES, 0.0);
+            r.ip(LD_ENV, 0.0);
+            r.ip(LD_GLIDE, 0.0);
+            r.ip(LD_RELEASE, 0.35);
+            r.ip(LD_WIDTH, w as f32 / 100.0);
+            r.notes(120.0, &[(0.0, 69, 0.9, 0.8), (1.0, 72, 0.4, 0.8), (1.5, 76, 0.4, 0.8), (2.0, 74, 1.4, 0.8)]);
+            save(&format!("wide_lead_w{w:03}"), &r.play(4.0, None));
+            // A chord on the chord synth (its default supersaw), same widths.
+            let mut r = R::new(120.0, 64.0);
+            r.inst(Instrument::Chords);
+            r.ip(C_WIDTH, w as f32 / 100.0);
+            r.notes(120.0, &[(0.0, 57, 1.8, 0.75), (0.0, 60, 1.8, 0.75), (0.0, 64, 1.8, 0.75), (2.0, 55, 1.6, 0.75), (2.0, 59, 1.6, 0.75), (2.0, 62, 1.6, 0.75)]);
+            save(&format!("wide_chords_w{w:03}"), &r.play(4.0, None));
+        }
+    }
 
     // 3. Filter sweeps: a saw at note 36 through each circuit, three resonances (and full), two drives.
     if want("filt") {

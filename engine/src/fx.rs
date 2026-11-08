@@ -471,11 +471,24 @@ impl Hall {
 /// Jon Dattorro's plate ("Effect Design, Part 1", J. Audio Eng. Soc., 1997): four input diffusers,
 /// then a figure-eight tank of two branches, each a modulated allpass, a delay, a damping low-pass, a
 /// second allpass and a delay, feeding each other. Delay lengths are the paper's at 29761 Hz, scaled to
-/// the engine's rate; the stereo outputs are the paper's taps. Bright, dense from the first instant.
+/// the engine's rate; the stereo outputs are the paper's taps.
+///
+/// The tank starts sparse: the shootout (design/sound-shootout.md) measured an echo density of 0.51 over
+/// the first 50 ms, not reaching 0.9 until 190 ms, against Dragonfly's plate at 0.87 and 35 ms. Round 2
+/// (8 Nov) does what worked for the hall, outside the tank so the tail is untouched (a first try that
+/// added taps inside the tank lost smoothness): an onset read off the diffused input, smeared by two more
+/// allpasses of its own, high-passed at 500 Hz (a plate's first instant is not boomy, and it keeps the low
+/// band's decay honest), forty taps a side at their own times over 150 ms, falling away as the tank fills.
 pub struct Plate {
     pre: Line,
     bw: f32,
     inap: [Line; 4],
+    /// The onset (8 Nov): its own two diffusers, its line and taps (left time, gain, right time, gain), and
+    /// its high-pass.
+    xap: [Line; P_XAP],
+    on: Line,
+    on_taps: [(usize, f32, usize, f32); P_ON_TAPS],
+    on_hp: OnePoleHp,
     ap1: [Line; 2],
     d1: [Line; 2],
     ap2: [Line; 2],
@@ -498,17 +511,46 @@ const P_D2: [f32; 2] = [3720.0, 3163.0];
 const P_EXCURSION: f32 = 16.0;
 /// Damping inside the tank (the paper's "damping" coefficient): highs die faster than lows.
 const P_DAMP: f32 = 0.45;
-const PLATE_OUT: f32 = 0.235;
+/// Output level: with the onset in, the plate sits within half a decibel of where it was on a chord and a
+/// snare through the same send (tests/gaps.rs).
+const PLATE_OUT: f32 = 0.184_6;
+/// The onset's own diffusers (samples at 29761 Hz, mutually prime) and their gain.
+const P_XAP: usize = 2;
+const P_XAP_LEN: [f32; P_XAP] = [105.0, 149.0];
+const P_XAP_G: f32 = 0.7;
+/// The onset: taps a side, over this long (ms), their times bunched towards the start (this power), their
+/// gains falling by this power of ten (12 dB) over the span, at this level against the tank, high-passed here.
+const P_ON_TAPS: usize = 40;
+const P_ON_MS: f32 = 150.0;
+const P_ON_POW: f32 = 1.2;
+const P_ON_FALL: f32 = 0.6;
+const P_ON_LEVEL: f32 = 0.7;
+const P_ON_HP: f32 = 500.0;
 
 impl Plate {
     pub fn new(sr: f32) -> Self {
         let k = sr / 29_761.0;
         let line = |n: f32, extra: f32| Line::new((n * k + extra) as usize + 4);
         let ex = P_EXCURSION * k;
+        let ms = |m: f32| (m * 0.001 * sr) as usize;
+        // The onset's tap times and gains: spread out, each side at its own times, alternating signs from a
+        // seeded hash (so the plate is the same every time), as the hall's early reflections are.
+        let on_taps = core::array::from_fn(|kk| {
+            let u = (kk as f32 + 0.5) / P_ON_TAPS as f32;
+            let h = |s: u32| { let mut x = (kk as u32 + 1).wrapping_mul(0x9E37_79B9) ^ s; x ^= x >> 13; x = x.wrapping_mul(0x5BD1_E995); x ^= x >> 15; (x & 0xFFFF) as f32 / 65_535.0 };
+            let tl = P_ON_MS * u.powf(P_ON_POW) * (0.85 + 0.3 * h(5));
+            let tr = P_ON_MS * u.powf(P_ON_POW) * (0.85 + 0.3 * h(17));
+            let g = |t: f32| 10f32.powf(-P_ON_FALL * t / P_ON_MS);
+            (ms(tl).max(1), g(tl) * if h(13) < 0.5 { 1.0 } else { -1.0 }, ms(tr).max(1), g(tr) * if h(29) < 0.5 { 1.0 } else { -1.0 })
+        });
         let mut p = Plate {
             pre: Line::new((0.05 * sr) as usize),
             bw: 0.0,
             inap: core::array::from_fn(|i| line(P_IN[i], 0.0)),
+            xap: core::array::from_fn(|i| line(P_XAP_LEN[i], 0.0)),
+            on: Line::new(ms(P_ON_MS * 1.2) + 2),
+            on_taps,
+            on_hp: { let mut h = OnePoleHp::default(); h.set(P_ON_HP, sr); h },
             ap1: core::array::from_fn(|i| line(P_AP1[i], ex)),
             d1: core::array::from_fn(|i| line(P_D1[i], 0.0)),
             ap2: core::array::from_fn(|i| line(P_AP2[i], 0.0)),
@@ -532,12 +574,13 @@ impl Plate {
     }
 
     pub fn clear(&mut self) {
-        for l in self.inap.iter_mut().chain(self.ap1.iter_mut()).chain(self.d1.iter_mut()).chain(self.ap2.iter_mut()).chain(self.d2.iter_mut()).chain(core::iter::once(&mut self.pre)) {
+        for l in self.inap.iter_mut().chain(self.xap.iter_mut()).chain(self.ap1.iter_mut()).chain(self.d1.iter_mut()).chain(self.ap2.iter_mut()).chain(self.d2.iter_mut()).chain([&mut self.pre, &mut self.on]) {
             l.clear();
         }
         self.damp_s = [0.0; 2];
         self.fb = [0.0; 2];
         self.bw = 0.0;
+        self.on_hp = { let mut h = OnePoleHp::default(); h.set(P_ON_HP, self.sr); h };
     }
 
     /// Allpass with delay `d` (fractional): v = x - g v[-d], y = g v + v[-d].
@@ -558,6 +601,18 @@ impl Plate {
         let mut x = self.bw;
         for (i, (l, g)) in self.inap.iter_mut().zip([0.75, 0.75, 0.625, 0.625]).enumerate() {
             x = Self::ap(l, x, P_IN[i] * k, g);
+        }
+        // The onset: the diffused input smeared again, high-passed, read at forty times a side.
+        let mut e = x;
+        for (i, l) in self.xap.iter_mut().enumerate() {
+            e = Self::ap(l, e, P_XAP_LEN[i] * k, P_XAP_G);
+        }
+        let e = self.on_hp.tick(e);
+        self.on.write(e);
+        let (mut ol, mut or) = (0.0f32, 0.0f32);
+        for &(tl, gl, tr, gr) in self.on_taps.iter() {
+            ol += self.on.read_int(tl) * gl;
+            or += self.on.read_int(tr) * gr;
         }
         self.lfo += self.lfo_inc;
         if self.lfo >= 1.0 {
@@ -583,7 +638,7 @@ impl Plate {
         let t = |line: &Line, n: f32| line.read_int((n * k) as usize);
         let l = t(&self.d1[1], 266.0) + t(&self.d1[1], 2974.0) - t(&self.ap2[1], 1913.0) + t(&self.d2[1], 1996.0) - t(&self.d1[0], 1990.0) - t(&self.ap2[0], 187.0) - t(&self.d2[0], 1066.0);
         let r = t(&self.d1[0], 353.0) + t(&self.d1[0], 3627.0) - t(&self.ap2[0], 1228.0) + t(&self.d2[0], 2673.0) - t(&self.d1[1], 2111.0) - t(&self.ap2[1], 335.0) - t(&self.d2[1], 121.0);
-        (l * PLATE_OUT, r * PLATE_OUT)
+        ((l + ol * P_ON_LEVEL) * PLATE_OUT, (r + or * P_ON_LEVEL) * PLATE_OUT)
     }
 }
 

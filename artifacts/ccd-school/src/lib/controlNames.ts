@@ -84,6 +84,10 @@ export const CONTROLS: Record<string, Control> = {
   drift: { label: "drift", elsewhere: [["live drift", "drift"]] },
   detune: { label: "detune", elsewhere: [["live wavetable", "unison amount"], ["live drift", "unison strength"], ["vital osc", "unison detune"]] },
   spread: { label: "spread", elsewhere: [["live operator", "spread"]] },
+  // Stereo width (8 Nov). Live 12's Utility prints "Width" (liveFx). Surge XT's scene parameter is "Width" and
+  // Vital's oscillator parameter "Stereo Spread": the names both plugins report to a host, read from them in the
+  // sound shootout (design/sound-shootout.md, round 2). "spread" was taken here by the chord synth's detune.
+  width: { label: "width", elsewhere: [["live utility", "width"], ["surge xt", "width"], ["vital osc", "stereo spread"]] },
   // vital: the knob is printed GLIDE (portamento_section.cpp); its parameter is "Portamento Time".
   glide: { label: "glide", elsewhere: [["live drift", "glide"], ["live wavetable", "glide"], ["vital", "glide (portamento time)"], ["tb-303", "slide"]] },
   fm: { label: "fm", elsewhere: [["live wavetable", "fm amt"], ["live ds fm", "amnt"]] },

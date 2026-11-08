@@ -8,6 +8,11 @@
 //! "voicing" is how the voice is stacked: 0 is three saws, then a sub octave comes in,
 //! then the octave above and the fifth, like pulling out the drawbars of an organ.
 //! "spread" is how far the three saws are detuned from each other (0 to 36 cents).
+//!
+//! "width" (8 Nov, after the sound shootout) spreads the supersaw's six side saws across the stereo field,
+//! and on the chord synth each voice a little to its own side. It is mid/side: the mid is the voice exactly as
+//! it was (so the mono sum is today's sound at any width, and the sub and the voicing partials stay centred),
+//! and the side, the panned saws' difference, runs through a filter of its own set like the mid's.
 
 use crate::dsp::env::{Adsr, Stage};
 use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
@@ -25,6 +30,16 @@ const STACK: usize = 16;
 /// The JP-8000 supersaw, measured by Adam Szabo ("How to Emulate the Super Saw", 2010): six side
 /// saws at these offsets (as fractions of the detune amount) around a centre saw.
 const SIDE_OFFSETS: [f32; 6] = [-0.110_023_13, -0.062_884_39, -0.019_523_56, 0.019_912_21, 0.062_165_38, 0.107_452_42];
+
+/// Width: where each side saw sits (times the width knob, held to -1..1, -1 hard left). Each side gets one
+/// far, one middle and one near saw, detuned both ways, so neither side is sharper; the far ones reach the
+/// edges first, so half width spreads them across the field and full width puts all six at the edges.
+const SIDE_PAN: [f32; 6] = [-1.6, 1.3, -1.0, 1.0, -1.3, 1.6];
+/// Width on the chord synth: each voice a little to its own side, as on polysynths with a pan per voice
+/// (the Oberheim OB-X has a pan pot on every voice board). Three notes land left, right and centre.
+const VOICE_PAN: [f32; CHORD_VOICES] = [-0.35, 0.35, 0.0, -0.18, 0.18, 0.0];
+/// Under this the width is off: no side signal is made.
+const WIDTH_OFF: f32 = 1e-6;
 
 /// Szabo's fit of the JP-8000 detune knob: gentle over most of its travel (the sweet spot), then
 /// steep. Our knob covers 0 to 0.92 of it, so full detune is a wide 70 cents, not a whole tone.
@@ -77,6 +92,21 @@ struct Ctl {
     bright: f32,
     /// Which oscillator (`osc_kind`).
     osc: u8,
+    /// Stereo width, 0..1 (0 is mono, exactly as before), and the stack's gain under it (`width_gain`).
+    width: f32,
+    wgain: f32,
+}
+
+/// The stack's gain at a width: mid/side adds the side's power to each speaker, so a wide stack would get
+/// louder as the knob goes up while its mono sum stayed put. Half of that is taken back, worked out from the
+/// mix law (the centre saw's level, the side saws' level and where they sit): at full width the stereo is
+/// about as much louder as the mono sum is quieter, each under a decibel.
+fn width_gain(spread: f32, width: f32) -> f32 {
+    let c = jp_centre(spread);
+    let g = jp_side(spread) * 0.42;
+    let p2: f32 = SIDE_PAN.iter().map(|k| (width * k).clamp(-1.0, 1.0).powi(2)).sum();
+    let ratio = g * g * p2 / (c * c + 6.0 * g * g);
+    1.0 / (1.0 + ratio).sqrt().sqrt()
 }
 
 /// Resonator voices: output gains that put each at about the level of the synth voice (tests/sound.rs).
@@ -151,6 +181,13 @@ struct Voice {
     wt_ph: f32,
     fbfm: FbFm,
     tables: &'static Tables,
+    /// Width (8 Nov): the side's own high-pass state, filter and drive, whether they hold anything, and this
+    /// voice's place in the field on the chord synth (0 on the lead).
+    hp_ss: f32,
+    filt_s: CharFilter,
+    fdrive_s: FilterDrive,
+    side_live: bool,
+    pan: f32,
 }
 
 impl Voice {
@@ -186,6 +223,11 @@ impl Voice {
             wt_ph: 0.0,
             fbfm: FbFm::default(),
             tables: Tables::get(),
+            hp_ss: 0.0,
+            filt_s: CharFilter::default(),
+            fdrive_s: FilterDrive::default(),
+            side_live: false,
+            pan: 0.0,
         }
     }
 
@@ -316,6 +358,12 @@ impl Voice {
             self.modp = 0.0;
             self.wt_ph = phase;
             self.fbfm.reset();
+            if self.side_live {
+                self.hp_ss = 0.0;
+                self.filt_s.reset();
+                self.fdrive_s.reset();
+                self.side_live = false;
+            }
         }
         self.amp.gate_on();
         self.fenv.gate_on();
@@ -328,9 +376,9 @@ impl Voice {
         self.fenv.gate_off();
     }
 
-    /// One oversampled sample.
+    /// One oversampled sample: (mid, side). The mid is the voice as it always was; the side is 0 at width 0.
     #[inline]
-    fn tick(&mut self, c: &Ctl, os: f32) -> f32 {
+    fn tick(&mut self, c: &Ctl, os: f32) -> (f32, f32) {
         self.pitch = self.target + (self.pitch - self.target) * self.glide_coef;
         let f = note_hz(self.pitch + self.drift + c.lfo_semi + self.card.semis);
         if c.model > 0 {
@@ -339,7 +387,8 @@ impl Voice {
             }
             let s = self.resonate(c, f, os);
             let fe = self.fenv.next();
-            return self.finish(s, fe, c, os);
+            let side = if c.width > WIDTH_OFF { s * self.pan * c.width } else { 0.0 };
+            return self.finish(s, side, fe, c, os);
         }
         let dt = f / os;
         let w = c.wave;
@@ -361,11 +410,18 @@ impl Voice {
         // The supersaw: centre saw plus six side saws on the JP-8000 curve and mix laws (classic only).
         let x = if c.osc == 0 { c.spread } else { 0.0 };
         let mut stack = main;
+        let mut side = 0.0;
         if x > 0.002 {
             let amt = jp_detune(x);
             let mut sides = 0.0;
-            for (o, off) in self.side.iter_mut().zip(SIDE_OFFSETS) {
-                sides += o.next_mix(dt * (1.0 + amt * off), w);
+            let wide = c.width > WIDTH_OFF;
+            let mut panned = 0.0;
+            for (i, (o, off)) in self.side.iter_mut().zip(SIDE_OFFSETS).enumerate() {
+                let v = o.next_mix(dt * (1.0 + amt * off), w);
+                sides += v;
+                if wide {
+                    panned += (c.width * SIDE_PAN[i]).clamp(-1.0, 1.0) * v;
+                }
             }
             stack = main * jp_centre(x) + sides * jp_side(x) * 0.42;
             // One-pole high-pass at the fundamental, as on the JP-8000, blended in as detune rises so
@@ -375,12 +431,21 @@ impl Voice {
             self.hp_s = flush_denormal(self.hp_s + (1.0 - a) * hp);
             let k = smoothstep(0.0, 0.35, x);
             stack = (stack + (hp - stack) * k) * (1.0 + 0.4 * k);
+            if wide {
+                // The side: the panned side saws, through the same high-pass and mix law as the stack.
+                let sv = panned * jp_side(x) * 0.42;
+                let hp = sv - self.hp_ss;
+                self.hp_ss = flush_denormal(self.hp_ss + (1.0 - a) * hp);
+                side = (sv + (hp - sv) * k) * (1.0 + 0.4 * k) * 0.75 * c.wgain;
+                stack *= c.wgain;
+            }
         }
         let v = c.voicing;
         let w_sub = smoothstep(0.0, 0.5, v) * 0.8;
         let w_oct = smoothstep(0.35, 0.85, v) * 0.5;
         let w_fifth = smoothstep(0.7, 1.0, v) * 0.4;
-        let mut s = stack * 0.75 + self.sub.next(dt * 0.5) * w_sub * 0.6;
+        let mut sub = self.sub.next(dt * 0.5) * w_sub * 0.6;
+        let mut s = stack * 0.75 + sub;
         if w_oct > 0.001 {
             s += self.osc[3].next_saw(dt * 2.0) * w_oct * 0.5;
         }
@@ -399,13 +464,20 @@ impl Voice {
             let carrier = (core::f32::consts::TAU * self.car + index * m).sin();
             let mix = (c.fm * 3.0).min(1.0);
             s = s * (1.0 - mix) + carrier * mix * 0.9;
+            side *= 1.0 - mix;
+            sub *= 1.0 - mix;
         }
-        self.finish(s, fe, c, os)
+        if self.pan != 0.0 && c.width > WIDTH_OFF {
+            // The chord voice's own place in the field: everything but its sub, which stays in the middle.
+            side += (s - sub) * self.pan * c.width;
+        }
+        self.finish(s, side, fe, c, os)
     }
 
     /// The filter, its drive and the amp: the same for every voice model. `fe` is the filter envelope now.
+    /// The side (width) goes through a filter and drive of its own, set the same way, and the same amp.
     #[inline]
-    fn finish(&mut self, s: f32, fe: f32, c: &Ctl, os: f32) -> f32 {
+    fn finish(&mut self, s: f32, side: f32, fe: f32, c: &Ctl, os: f32) -> (f32, f32) {
         let env_oct = c.env_amt * 5.0 * fe * (0.45 + 0.55 * self.vel);
         let key_oct = (self.pitch - 60.0) / 12.0 * 0.4;
         let fc = (c.cutoff * (env_oct + key_oct + c.lfo_oct + self.card.cut_oct).exp2()).clamp(30.0, os * 0.45);
@@ -413,7 +485,21 @@ impl Voice {
         self.filt.set(fc, c.res, os);
         let x = self.fdrive.pre(s * 0.5, c.fdrive);
         let y = self.fdrive.post(self.filt.tick(x), c.fdrive);
-        y * self.amp.next() * (0.4 + 0.6 * self.vel) * c.lfo_gain
+        let a = self.amp.next();
+        let m = y * a * (0.4 + 0.6 * self.vel) * c.lfo_gain;
+        if c.width <= WIDTH_OFF {
+            return (m, 0.0);
+        }
+        let mut sd = 0.0;
+        if side != 0.0 || self.side_live {
+            self.side_live = true;
+            self.filt_s.set_mode(c.character);
+            self.filt_s.set(fc, c.res, os);
+            let xs = self.fdrive_s.pre(side * 0.5, c.fdrive);
+            let ys = self.fdrive_s.post(self.filt_s.tick(xs), c.fdrive);
+            sd = ys * a * (0.4 + 0.6 * self.vel) * c.lfo_gain;
+        }
+        (m, sd)
     }
 }
 
@@ -428,6 +514,7 @@ struct Controls {
     lfo_amt: Smooth,
     fm: Smooth,
     fdrive: Smooth,
+    width: Smooth,
     character: u8,
     model: u8,
     ring: f32,
@@ -453,6 +540,7 @@ impl Controls {
             lfo_amt: Smooth::new(0.0),
             fm: Smooth::new(0.0),
             fdrive: Smooth::new(0.0),
+            width: Smooth::new(0.0),
             character: 0,
             model: 0,
             ring: 2.0,
@@ -464,14 +552,14 @@ impl Controls {
             ratio: 2.0,
             os,
         };
-        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave, &mut c.lfo_amt, &mut c.fm, &mut c.fdrive] {
+        for s in [&mut c.cutoff, &mut c.res, &mut c.env_amt, &mut c.voicing, &mut c.spread, &mut c.wave, &mut c.lfo_amt, &mut c.fm, &mut c.fdrive, &mut c.width] {
             s.set_time(10.0, os);
         }
         c
     }
 
     fn reset(&mut self) {
-        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave, &mut self.lfo_amt, &mut self.fm, &mut self.fdrive] {
+        for s in [&mut self.cutoff, &mut self.res, &mut self.env_amt, &mut self.voicing, &mut self.spread, &mut self.wave, &mut self.lfo_amt, &mut self.fm, &mut self.fdrive, &mut self.width] {
             s.reset(s.target);
         }
     }
@@ -479,6 +567,7 @@ impl Controls {
     #[inline]
     fn next(&mut self) -> Ctl {
         let spread = self.spread.next();
+        let width = if self.width.target == 0.0 && self.width.value < WIDTH_OFF { 0.0 } else { self.width.next() };
         let amt = self.lfo_amt.next();
         self.lfo_phase += self.lfo_rate / self.os;
         self.lfo_phase -= self.lfo_phase.floor();
@@ -506,6 +595,8 @@ impl Controls {
             voicing: self.voicing.next(),
             spread,
             wave: self.wave.next(),
+            width,
+            wgain: if width > WIDTH_OFF { width_gain(spread, width) } else { 1.0 },
         }
     }
 }
@@ -549,6 +640,10 @@ pub struct Poly {
     voices: [Voice; CHORD_VOICES],
     ctl: Controls,
     out: Out,
+    /// The side's own decimator and delay, and whether the part is stereo (width has been turned up and
+    /// something may still sound from it).
+    out_s: Out,
+    wide: bool,
     clock: u32,
     rng: Rng,
     drift_amt: f32,
@@ -565,9 +660,11 @@ impl Poly {
         let mut p = Poly {
             sr,
             os,
-            voices: core::array::from_fn(|i| Voice::new(os, i)),
+            voices: core::array::from_fn(|i| { let mut v = Voice::new(os, i); v.pan = VOICE_PAN[i]; v }),
             ctl: Controls::new(os),
             out: Out::new(sr),
+            out_s: Out::new(sr),
+            wide: false,
             clock: 0,
             rng: Rng::new(0xC40D),
             drift_amt: 0.25,
@@ -620,8 +717,20 @@ impl Poly {
             C_RING => self.ctl.ring = v * 0.001,
             C_BRIGHT => self.ctl.bright = v,
             C_OSC => self.ctl.osc = osc_kind(v),
+            C_WIDTH => {
+                if v > 0.0 && !self.wide {
+                    self.wide = true;
+                    self.out_s = Out::new(self.sr);
+                }
+                self.ctl.width.set(v);
+            }
             _ => {}
         }
+    }
+
+    /// The part is stereo: `tick_ms` may give a side. Mono parts (width never turned up) are exactly as before.
+    pub fn stereo(&self) -> bool {
+        self.wide
     }
 
     fn update_envs(&mut self) {
@@ -695,9 +804,20 @@ impl Poly {
 
     #[inline]
     pub fn tick(&mut self) -> f32 {
+        self.tick_ms().0
+    }
+
+    /// One sample, (mid, side). The side is 0 unless the part is stereo.
+    #[inline]
+    pub fn tick_ms(&mut self) -> (f32, f32) {
         if !self.is_active() {
+            if self.wide && self.ctl.width.target == 0.0 {
+                // Width back at 0 and nothing sounding: mono again, exactly the old path.
+                self.wide = false;
+            }
             // Keep the delay line moving so the tail of the last note is not cut.
-            return self.out.push(0.0, 0.0);
+            let side = if self.wide { self.out_s.push(0.0, 0.0) } else { 0.0 };
+            return (self.out.push(0.0, 0.0), side);
         }
         // Each voice drifts a few cents on its own, like analogue oscillators warming up.
         if self.drift_count == 0 {
@@ -712,18 +832,25 @@ impl Poly {
             v.drift += (v.drift_target - v.drift) * 0.0005;
         }
         let mut sum = [0.0f32; 2];
+        let mut side = [0.0f32; 2];
         for k in 0..2 {
             let c = self.ctl.next();
             let mut s = 0.0;
+            let mut d = 0.0;
             for v in self.voices.iter_mut() {
                 if v.active() {
-                    s += v.tick(&c, self.os);
+                    let (m, sd) = v.tick(&c, self.os);
+                    s += m;
+                    d += sd;
                 }
             }
             sum[k] = s;
+            side[k] = d;
         }
         // Six voices at full velocity would clip a strip; keep the headroom of one note.
-        self.out.push(sum[0] * 0.42, sum[1] * 0.42)
+        let mid = self.out.push(sum[0] * 0.42, sum[1] * 0.42);
+        let side = if self.wide { self.out_s.push(side[0] * 0.42, side[1] * 0.42) } else { 0.0 };
+        (mid, side)
     }
 }
 
@@ -737,6 +864,8 @@ pub struct Lead {
     held: usize,
     ctl: Controls,
     out: Out,
+    out_s: Out,
+    wide: bool,
     glide_ms: f32,
     release_s: f32,
     attack_s: f32,
@@ -758,6 +887,8 @@ impl Lead {
             held: 0,
             ctl: Controls::new(os),
             out: Out::new(sr),
+            out_s: Out::new(sr),
+            wide: false,
             glide_ms: 60.0,
             release_s: 0.3,
             attack_s: 0.005,
@@ -808,8 +939,20 @@ impl Lead {
             LD_RING => self.ctl.ring = v * 0.001,
             LD_BRIGHT => self.ctl.bright = v,
             LD_OSC => self.ctl.osc = osc_kind(v),
+            LD_WIDTH => {
+                if v > 0.0 && !self.wide {
+                    self.wide = true;
+                    self.out_s = Out::new(self.sr);
+                }
+                self.ctl.width.set(v);
+            }
             _ => {}
         }
+    }
+
+    /// The part is stereo: `tick_ms` may give a side. Mono parts (width never turned up) are exactly as before.
+    pub fn stereo(&self) -> bool {
+        self.wide
     }
 
     fn update_envs(&mut self) {
@@ -880,15 +1023,27 @@ impl Lead {
 
     #[inline]
     pub fn tick(&mut self) -> f32 {
+        self.tick_ms().0
+    }
+
+    /// One sample, (mid, side). The side is 0 unless the part is stereo.
+    #[inline]
+    pub fn tick_ms(&mut self) -> (f32, f32) {
         if !self.voice.active() {
-            return self.out.push(0.0, 0.0);
+            if self.wide && self.ctl.width.target == 0.0 {
+                self.wide = false;
+            }
+            let side = if self.wide { self.out_s.push(0.0, 0.0) } else { 0.0 };
+            return (self.out.push(0.0, 0.0), side);
         }
         let _ = self.sr;
         let c0 = self.ctl.next();
-        let a = self.voice.tick(&c0, self.os);
+        let (a, sa) = self.voice.tick(&c0, self.os);
         let c1 = self.ctl.next();
-        let b = self.voice.tick(&c1, self.os);
-        self.out.push(a * 0.6, b * 0.6)
+        let (b, sb) = self.voice.tick(&c1, self.os);
+        let mid = self.out.push(a * 0.6, b * 0.6);
+        let side = if self.wide { self.out_s.push(sa * 0.6, sb * 0.6) } else { 0.0 };
+        (mid, side)
     }
 }
 
