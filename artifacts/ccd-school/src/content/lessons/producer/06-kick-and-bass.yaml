@@ -68,7 +68,7 @@ steps:
     q: Hear your bass and kick, then with the bass ducked. What does ducking the bass do?
     part: bass
     with: ["kick"]
-    play: [{duck: 0, label: "no duck"}, {duck: 0.8, label: "ducked"}]
+    play: [{notes: "1 - - - 1 - - - 1 - - - 1 - - -", duck: 0, label: "no duck"}, {notes: "1 - - - 1 - - - 1 - - - 1 - - -", duck: 0.8, label: "ducked"}]
     options: ["dips the bass every time the kick hits", "deletes the bass", "makes the bass louder", "changes the bass notes"]
     answer: 0
     why: The bass gets out of the kick's way and swells back.

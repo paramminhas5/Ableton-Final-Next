@@ -10790,10 +10790,12 @@
           ],
           "play": [
             {
+              "notes": "1 - - - 1 - - - 1 - - - 1 - - -",
               "duck": 0,
               "label": "no duck"
             },
             {
+              "notes": "1 - - - 1 - - - 1 - - - 1 - - -",
               "duck": 0.8,
               "label": "ducked"
             }
@@ -11085,40 +11087,40 @@
         },
         {
           "kind": "ask",
-          "q": "Each of these turns one thing up. Which one turns your chords into a pad?",
+          "q": "Your chords as short stabs, and each of these turns one thing up. Which one turns them into a pad?",
           "part": "chords",
           "with": [
             "kick"
           ],
           "sounds": [
             {
+              "notes": ". 1+3+5 . . . 1+3+5 . . . 6,+1+3 . . . 6,+1+3 . .",
               "release": 0.9
             },
             {
+              "notes": ". 1+3+5 . . . 1+3+5 . . . 6,+1+3 . . . 6,+1+3 . .",
               "bpm": 140
             },
             {
-              "part": "kick",
-              "with": [
-                "chords"
-              ],
-              "decay": 0.9
+              "notes": ". 1+3+5 . . . 1+3+5 . . . 6,+1+3 . . . 6,+1+3 . .",
+              "cutoff": 0.95
             },
             {
+              "notes": ". 1+3+5 . . . 1+3+5 . . . 6,+1+3 . . . 6,+1+3 . .",
               "swing": 0.5
             }
           ],
           "options": [
             "release",
             "tempo",
-            "decay on the kick",
+            "cutoff",
             "swing"
           ],
           "answer": 0,
           "why": "Longer release lets each chord ring on.",
           "whyWrong": {
             "1": "Tempo is the whole song's speed.",
-            "2": "That's the kick.",
+            "2": "Cutoff makes each chord brighter, not longer.",
             "3": "Swing is timing."
           }
         },
@@ -11858,7 +11860,8 @@
             },
             {
               "master": {
-                "glue": 0.85
+                "glue": 0.9,
+                "glueratio": 0.5
               },
               "label": "glued"
             }
@@ -13851,7 +13854,8 @@
             },
             {
               "master": {
-                "glue": 0.9
+                "glue": 1,
+                "glueratio": 0.5
               },
               "label": "compressed"
             }
@@ -19441,7 +19445,8 @@
             },
             {
               "master": {
-                "glue": 0.85
+                "glue": 0.9,
+                "glueratio": 0.5
               },
               "label": "compressed"
             }

@@ -43,7 +43,7 @@ steps:
 
   - kind: ask
     q: Hear your song with no glue, then glued. What does a glue compressor on the master do?
-    play: [{master: {glue: 0}, label: "no glue"}, {master: {glue: 0.85}, label: "glued"}]
+    play: [{master: {glue: 0}, label: "no glue"}, {master: {glue: 0.9, glueratio: 0.5}, label: "glued"}]
     options: ["pulls the parts together so they move as one", "adds echo", "changes the tempo", "removes the bass"]
     answer: 0
     why: Gentle compression across the mix makes it breathe together.
