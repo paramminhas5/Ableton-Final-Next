@@ -100,7 +100,9 @@ steps:
       3: Harmonics are above the fundamental, not below.
 
   - kind: ask
-    q: Why does a square sound hollow next to a saw?
+    q: Hear a saw, then a square. Why does the square sound hollow next to the saw?
+    part: lead
+    play: [{wave: 0, cutoff: 1, label: "saw"}, {wave: 1, cutoff: 1, label: "square"}]
     options: ["it only has the odd harmonics", "it has no harmonics", "it's quieter", "it's an octave lower"]
     answer: 0
     why: The even harmonics are missing, and that gap sounds hollow.

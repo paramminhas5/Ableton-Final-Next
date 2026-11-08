@@ -79,7 +79,10 @@ steps:
       Cutoff changes how bright it is, decay how long each note lasts. Fix one at a time.
 
   - kind: ask
-    q: Where does a dance music bass often sit?
+    q: Which of these bass lines sits where a dance bass usually does?
+    part: bass
+    with: ["kick"]
+    sounds: [{notes: ". . 1 . . . 1 . . . 1 . . . 1 ."}, {notes: "1 . . . 1 . . . 1 . . . 1 . . ."}, {notes: "1 - - - . . . . . . . . . . . ."}, {notes: "1'' . 1'' . 1'' . 1'' . 1'' . 1'' . 1'' . 1'' ."}]
     options: ["between the kicks", "on top of every kick", "only on beat one", "high up with the hats"]
     answer: 0
     why: Between the kicks, so they take turns and don't pile up.
@@ -89,7 +92,9 @@ steps:
       3: Bass lives low.
 
   - kind: ask
-    q: You want a bass that still cuts through on phone speakers. What do you try?
+    q: Each of these changes your bass one way. Which one would still cut through on a phone speaker?
+    part: bass
+    sounds: [{cutoff: 0.65}, {cutoff: 0.02}, {decay: 0}, {bpm: 100}]
     options: ["open the cutoff a bit", "close the cutoff fully", "turn decay to zero", "slow the tempo"]
     answer: 0
     why: Phone speakers can't play deep lows; brighter harmonics let the bass come through.

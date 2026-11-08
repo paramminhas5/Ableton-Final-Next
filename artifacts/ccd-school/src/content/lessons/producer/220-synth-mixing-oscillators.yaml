@@ -85,7 +85,9 @@ steps:
       3: They're perfectly in tune.
 
   - kind: ask
-    q: You add an oscillator one octave below. What does it give the sound?
+    q: Hear a bass, then with an oscillator an octave below added. What does it give the sound?
+    part: bass
+    play: [{sub: 0, label: "one oscillator"}, {sub: 0.9, label: "octave below added"}]
     options: ["weight", "sparkle", "echo", "a faster tempo"]
     answer: 0
     why: An octave below fills in underneath, adding weight.

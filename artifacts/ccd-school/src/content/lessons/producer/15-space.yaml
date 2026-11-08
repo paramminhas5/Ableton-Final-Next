@@ -50,7 +50,9 @@ steps:
     hint: "More send puts the lead further back in the room."
 
   - kind: ask
-    q: What's the difference between reverb and echo?
+    q: Hear your lead with reverb, then with echo. What's the difference?
+    part: lead
+    play: [{send: 0.8, label: "reverb"}, {echo: 0.6, label: "echo"}]
     options: ["reverb is a blur of reflections, echo is clear repeats", "they're the same", "echo is louder", "reverb only works on drums"]
     answer: 0
     why: Reverb smears, echo repeats.
@@ -60,7 +62,10 @@ steps:
       3: Reverb works on anything.
 
   - kind: ask
-    q: More reverb on a part makes it sound?
+    q: Hear your lead dry, then with more reverb. How does it sound?
+    part: lead
+    with: ["drums"]
+    play: [{send: 0, label: "dry"}, {send: 0.8, label: "more reverb"}]
     options: ["further away", "closer", "faster", "higher"]
     answer: 0
     why: Wet sounds sit back; dry sounds sit up front.

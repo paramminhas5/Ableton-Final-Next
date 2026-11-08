@@ -75,7 +75,8 @@ steps:
         Turn glue up until your song starts to bounce, then turn it back down a little.
 
   - kind: ask
-    q: What does a compressor do?
+    q: Hear your song, then compressed. What does a compressor do?
+    play: [{master: {glue: 0}, label: "as it is"}, {master: {glue: 0.85}, label: "compressed"}]
     options: ["turns a sound down when it gets loud", "adds echo", "changes the pitch", "speeds up the song"]
     answer: 0
     why: Loud moments come down, then it lets go.
@@ -95,7 +96,8 @@ steps:
       3: Too much pumps and tires the ear.
 
   - kind: ask
-    q: What does too much glue sound like?
+    q: Hear your mix with far too much glue. What does it sound like?
+    play: {master: {glue: 1, glueratio: 1}}
     options: ["the whole mix pumps on every kick", "the song slows down", "the hats disappear", "it adds reverb"]
     answer: 0
     why: The compressor ducks everything each time the kick hits.

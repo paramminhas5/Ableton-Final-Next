@@ -67,7 +67,9 @@ steps:
       ring longer?
 
   - kind: ask
-    q: What does drive do to a kick?
+    q: Hear your kick, then with drive turned up. What does drive do?
+    part: kick
+    play: [{drive: 0, label: "clean"}, {drive: 0.8, label: "drive up"}]
     options: ["adds grit and harmonics so it cuts through", "makes it longer", "changes the tempo", "removes the click"]
     answer: 0
     why: Soft distortion adds harmonics, which help it come through on small speakers.

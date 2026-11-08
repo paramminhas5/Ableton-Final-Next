@@ -84,7 +84,9 @@ steps:
     hint: "Listen to the start of each note for attack, and the gap after it for release."
 
   - kind: ask
-    q: Which part of the envelope is how fast a note fades in?
+    q: Hear your lead with a short attack, then a long one. Which part of the envelope is how fast a note fades in?
+    part: lead
+    play: [{attack: 0, label: "short attack"}, {attack: 0.85, label: "long attack"}]
     options: ["attack", "decay", "sustain", "release"]
     answer: 0
     why: Attack is the rise from silence to full volume.
@@ -94,14 +96,14 @@ steps:
       3: Release is the fade after the note ends.
 
   - kind: ask
-    q: For a soft pad that swells in, what attack do you want?
-    options: ["long", "zero", "it doesn't matter", "the same as decay"]
+    q: Which of these is a soft pad that swells in?
+    part: chords
+    sounds: [{attack: 0.85, release: 0.8}, {attack: 0, release: 0.8}]
+    options: ["a long attack", "zero attack"]
     answer: 0
     why: A long attack makes each note swell in slowly.
     whyWrong:
       1: Zero snaps in, like a pluck.
-      2: Attack is most of what makes a swell.
-      3: Decay is a separate stage.
 
   - kind: ask
     q: What's the difference between decay and release?

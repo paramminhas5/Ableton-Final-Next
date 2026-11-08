@@ -86,7 +86,9 @@ steps:
     hint: "A wider, wobblier sound has more detune."
 
   - kind: ask
-    q: Why does detuning two oscillators make a sound wider?
+    q: Hear your lead with no detune, then detuned. Why does it sound wider?
+    part: lead
+    play: [{detune: 0, label: "no detune"}, {detune: 0.7, label: "detuned"}]
     options: ["their pitches drift in and out of line and shimmer", "it makes the note louder", "it adds a second melody", "it slows the song"]
     answer: 0
     why: Close pitches beat against each other, and you hear that movement as width.
@@ -106,7 +108,9 @@ steps:
       3: Reverb is an effect.
 
   - kind: ask
-    q: Your lead sounds wide but also a bit sour. What do you change?
+    q: Your lead is wide but a bit sour. Each of these tries one fix. Which one sounds sweet and still wide?
+    part: lead
+    sounds: [{detune: 0.4}, {detune: 1}, {detune: 0.85, bpm: 136}, {detune: 0.85, notes: "1 2 3 5 1' 5 3 2 1 2 3 5 1' 5 3 2"}]
     options: ["turn detune down a little", "turn detune up", "change the tempo", "add more notes"]
     answer: 0
     why: Too much detune tips from wide into out of tune. Back off.

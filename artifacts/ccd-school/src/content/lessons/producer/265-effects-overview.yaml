@@ -97,7 +97,9 @@ steps:
       3: Eq is about tone, not loudness over time.
 
   - kind: ask
-    q: What does drive do?
+    q: Hear your lead clean, then with drive. What does drive do?
+    part: lead
+    play: [{drive: 0, label: "clean"}, {drive: 0.8, label: "drive"}]
     options: ["adds grit and warmth by roughing up the wave", "puts the sound in a room", "removes the lows", "makes it repeat"]
     answer: 0
     why: Drive is saturation, the grit family.

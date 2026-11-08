@@ -76,7 +76,9 @@ steps:
           need. Your bass here is monophonic, and its glide knob slides between notes when they overlap.
 
   - kind: ask
-    q: What does a sub oscillator add to a bass?
+    q: Hear your bass with no sub, then with the sub up. What does a sub oscillator add?
+    part: bass
+    play: [{sub: 0, label: "no sub"}, {sub: 0.9, label: "sub up"}]
     options: ["weight, from a sine an octave below", "brightness on top", "echo", "a faster tempo"]
     answer: 0
     why: The sub plays a sine an octave under your notes, the deep weight you feel.
@@ -86,7 +88,9 @@ steps:
       3: Sound knobs don't touch tempo.
 
   - kind: ask
-    q: What does drift do to your bass?
+    q: Hear your bass with no drift, then with lots. What does drift do?
+    part: bass
+    play: [{drift: 0, label: "no drift"}, {drift: 1, label: "drift up"}]
     options: ["lets the pitch wander a few cents, like analogue", "makes it louder", "adds new notes", "cuts the low end"]
     answer: 0
     why: Drift is a slow, random pitch wobble of a few cents, the imperfection of an old analogue synth.

@@ -227,7 +227,9 @@ steps:
       3: Half a second is one beat. A bar is four of them.
 
   - kind: ask
-    q: You want a short, punchy kick. What do you change?
+    q: Each of these is your kick with one knob turned. Which one gives a short, punchy kick?
+    part: kick
+    sounds: [{decay: 0.12}, {decay: 0.9}, {tune: 0.85}, {tune: 0.15}]
     options: ["turn decay down", "turn decay up", "turn tune up", "turn tune down"]
     answer: 0
     why: Decay sets how long the body lasts. Less decay, shorter kick, more punch.
@@ -237,7 +239,9 @@ steps:
       3: Tune down makes it deeper, but it still rings just as long. Length is decay.
 
   - kind: ask
-    q: What is the short, sharp sound at the very start of a kick?
+    q: Listen to your kick on its own. What is the short, sharp sound at its very start?
+    part: kick
+    play: {}
     options: ["the click", "the body", "the decay", "the metronome"]
     answer: 0
     why: The click is the tiny tap at the start. The body is the low hum that comes right after it.
@@ -248,14 +252,15 @@ steps:
 
   - kind: ask
     more: true
-    q: Your kick sounds thin and too high. What do you turn?
-    options: ["tune down", "decay down", "tune up", "the click button"]
+    q: Your kick sounds thin and too high. Each of these turns one knob. Which one fixes it?
+    part: kick
+    sounds: [{tune: 0.2}, {decay: 0.15}, {tune: 0.85}]
+    options: ["tune down", "decay down", "tune up"]
     answer: 0
     why: Tune sets how low the body sits. Turning it down makes the kick deeper and fuller.
     whyWrong:
       1: Decay changes the length. The kick would still sound thin, just shorter.
       2: Tune up makes it even higher.
-      3: The click button turns the metronome on and off. It does not change your kick.
 
   - kind: ask
     more: true

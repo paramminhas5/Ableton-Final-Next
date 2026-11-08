@@ -80,7 +80,8 @@ steps:
         it is. Keep the boom that punches.
 
   - kind: ask
-    q: What does a compressor do?
+    q: Hear your song, then through a compressor working hard. What does a compressor do?
+    play: [{master: {glue: 0}, label: "as it is"}, {master: {glue: 0.9}, label: "compressed"}]
     options: ["turns down the loud parts automatically", "adds echo", "changes the pitch", "speeds up the tempo"]
     answer: 0
     why: It's an automatic volume knob that pulls the loud moments down.

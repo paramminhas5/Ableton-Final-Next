@@ -72,7 +72,9 @@ steps:
         darker with cutoff.
 
   - kind: ask
-    q: What does a drift control add?
+    q: Hear your chords with no drift, then with lots. What does a drift control add?
+    part: chords
+    play: [{drift: 0, label: "no drift"}, {drift: 1, label: "drift up"}]
     options: ["small random wander in pitch and timing", "a second melody", "reverb", "a faster tempo"]
     answer: 0
     why: It copies the slight instability of analog circuits.
@@ -92,7 +94,9 @@ steps:
       3: That's slicing.
 
   - kind: ask
-    q: Your chords sound a bit sour after turning drift up. What do you do?
+    q: Your chords sound sour with drift turned up. Each of these tries a fix. Which one sounds right?
+    part: chords
+    sounds: [{drift: 0.35}, {drift: 1}, {drift: 0.9, notes: "1+3+5 - 6,+1+3 - 4,+6,+1 - 5,+7,+2 - 1+3+5 - 6,+1+3 - 4,+6,+1 - 5,+7,+2 -"}, {drift: 0.9, bpm: 136}]
     options: ["turn drift down a little", "turn drift all the way up", "add more chords", "change the tempo"]
     answer: 0
     why: Past the warm spot, the wander starts to sound out of tune.

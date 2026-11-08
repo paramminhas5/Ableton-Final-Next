@@ -100,7 +100,9 @@ steps:
       3: That's a drum sound, not a ratio.
 
   - kind: ask
-    q: What happens when you turn the modulator up?
+    q: Hear your lead with the modulator down, then turned up. What happens?
+    part: lead
+    play: [{fm: 0, label: "modulator down"}, {fm: 0.8, label: "modulator up"}]
     options: ["more sidebands, a brighter, richer tone", "the sound gets quieter", "the pitch drops an octave", "nothing"]
     answer: 0
     why: More modulation creates more new frequencies around the note.

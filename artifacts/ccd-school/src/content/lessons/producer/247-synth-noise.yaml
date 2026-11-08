@@ -92,7 +92,9 @@ steps:
       3: A crowd is a recording, not noise in the synth sense.
 
   - kind: ask
-    q: How do you turn noise into a hat?
+    q: Which of these is noise shaped into a hat?
+    part: hat
+    sounds: [{decay: 0.12}, {decay: 0.95}, {decay: 0.95, bpm: 100}, {decay: 0.95, send: 0.8}]
     options: ["a fast attack and a short decay", "a slow attack and long release", "a lower tempo", "more reverb"]
     answer: 0
     why: A quick, short burst of noise is a hat.

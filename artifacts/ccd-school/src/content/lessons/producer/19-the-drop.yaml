@@ -38,7 +38,8 @@ steps:
         drop.
 
   - kind: ask
-    q: Why does a drop feel big?
+    q: Hear the breakdown, then the drop. Why does the drop feel big?
+    play: [{mute: ["drums", "hats"], label: "breakdown"}, {label: "drop"}]
     options: ["the drums were missing just before", "it's always louder", "it's a different tempo", "a new song starts"]
     answer: 0
     why: Contrast. After the break, the drums return with full force.

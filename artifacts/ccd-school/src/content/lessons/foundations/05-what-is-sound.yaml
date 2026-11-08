@@ -175,7 +175,7 @@ steps:
     whyWrong:
       1: Play them at the same loudness and they still sound different.
       2: The question says same note, so the pitch is the same.
-      3: You just heard it: the same notes in two different colours.
+      3: "You just heard it: the same notes in two different colours."
 
   - kind: ask
     more: true

@@ -67,7 +67,9 @@ steps:
     hint: "Listen to what is left after each chord stops."
 
   - kind: ask
-    q: What's a stab?
+    q: Hear your chords as stabs. What's a stab?
+    part: chords
+    play: {attack: 0.02, release: 0.08}
     options: ["a short, punchy chord", "a long soft chord", "a drum hit", "a type of reverb"]
     answer: 0
     why: Short and punchy, often on the offbeat.
@@ -77,7 +79,10 @@ steps:
       3: Reverb is space.
 
   - kind: ask
-    q: To turn your chords into a pad, which knob do you turn up?
+    q: Each of these turns one thing up. Which one turns your chords into a pad?
+    part: chords
+    with: ["kick"]
+    sounds: [{release: 0.9}, {bpm: 140}, {part: "kick", with: ["chords"], decay: 0.9}, {swing: 0.5}]
     options: ["release", "tempo", "decay on the kick", "swing"]
     answer: 0
     why: Longer release lets each chord ring on.

@@ -54,7 +54,10 @@ steps:
       3: Hats are set against the kick too.
 
   - kind: ask
-    q: Why keep the kick and bass in the middle?
+    q: Hear your bass in the middle, then panned hard to one side. Why keep the kick and bass in the middle?
+    part: bass
+    with: ["kick"]
+    play: [{pan: 0.5, label: "middle"}, {pan: 0.05, label: "panned left"}]
     options: ["they carry the low end, which should hit both speakers equally", "they're the quietest", "panning only works on drums", "it makes them faster"]
     answer: 0
     why: Low end in the middle stays solid on any speaker system.

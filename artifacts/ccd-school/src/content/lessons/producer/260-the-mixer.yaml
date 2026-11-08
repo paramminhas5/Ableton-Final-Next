@@ -78,7 +78,8 @@ steps:
         little to one side.
 
   - kind: ask
-    q: What does solo do?
+    q: Hear your song, then your chords soloed. What does solo do?
+    play: [{label: "the song"}, {part: "chords", label: "chords soloed"}]
     options: ["plays that part alone", "mutes that part", "records that part", "makes that part louder"]
     answer: 0
     why: Solo silences everything else so you hear one part on its own.
@@ -88,7 +89,8 @@ steps:
       3: Loudness is the fader.
 
   - kind: ask
-    q: Why not set levels while a part is soloed?
+    q: Hear your chords alone, then in the whole song. Why not set levels while a part is soloed?
+    play: [{part: "chords", label: "chords alone"}, {label: "in the song"}]
     options: ["a part sounds different alone than in the whole song", "solo turns the volume down", "faders don't move in solo", "solo changes the pan"]
     answer: 0
     why: Levels are about parts against each other, so set them with everything playing.

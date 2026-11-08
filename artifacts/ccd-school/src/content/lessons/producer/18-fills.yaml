@@ -56,7 +56,9 @@ steps:
         Pick a step. Make it play only sometimes. Your beat changes a little every time round.
 
   - kind: ask
-    q: What does a fill tell the listener?
+    q: Hear two bars with a fill at the end. What does the fill tell the listener?
+    part: drums
+    play: {notes: {kick: "x...x...x...x...x...x...x...xxxx", clap: "....x.......x.......x...x.x.xxxx"}}
     options: ["a change is coming", "the song is over", "the tempo is changing", "nothing at all"]
     answer: 0
     why: It's a signal that the next section is about to start.

@@ -82,24 +82,26 @@ steps:
       3: Tempo belongs to the whole song.
 
   - kind: ask
-    q: Which shape is the brightest and most used for leads and bass?
-    options: ["saw", "sine", "triangle", "square"]
+    q: Which of these is the brightest?
+    part: lead
+    sounds: [{wave: 0, cutoff: 1}, {wave: 0, cutoff: 0.04}, {wave: 1, cutoff: 1}]
+    options: ["saw", "sine-like", "square"]
     answer: 0
     why: The saw has the most going on, so it's bright and there's lots for a filter to shape.
     whyWrong:
       1: A sine is the smoothest and plainest.
-      2: A triangle is soft.
-      3: A square is hollow, less bright than a saw.
+      2: A square is hollow, less bright than a saw.
 
   - kind: ask
-    q: You want a clean, deep sub bass. Which shape would you start from?
-    options: ["sine", "saw", "square", "noise"]
+    q: You want a clean, deep sub bass. Which of these would you start from?
+    part: bass
+    sounds: [{wave: 0, cutoff: 0.03, sub: 0.8}, {wave: 0, cutoff: 0.8}, {wave: 1, cutoff: 0.8}]
+    options: ["sine-like", "saw", "square"]
     answer: 0
     why: A sine is pure, so it gives weight without anything else fighting in the mix.
     whyWrong:
       1: A saw is too bright and busy for a clean sub.
       2: A square adds hollow overtones on top.
-      3: Noise has no pitch at all.
 
   - kind: keep
     next: >-

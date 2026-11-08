@@ -72,7 +72,9 @@ steps:
         Stop where you like it.
 
   - kind: ask
-    q: Turning up a note's amplitude changes what?
+    q: Hear your lead, then with its amplitude turned up. What changed?
+    part: lead
+    play: [{level: 0.5, label: "as it is"}, {level: 0.85, label: "amplitude up"}]
     options: ["how loud it is", "how high it is", "how long it is", "which wave it uses"]
     answer: 0
     why: Amplitude is the size of the wave, which you hear as loudness. Pitch stays put.
@@ -92,7 +94,9 @@ steps:
       3: Ten times too many.
 
   - kind: ask
-    q: Why does detuning a few cents make your lead sound wider?
+    q: Hear your lead, then with a few cents of detune. Why does it sound wider?
+    part: lead
+    play: [{detune: 0, label: "no detune"}, {detune: 0.3, label: "a few cents"}]
     options: ["the copies rub against each other", "it makes the lead louder", "it plays a new note", "it adds echo"]
     answer: 0
     why: Copies a few cents apart drift in and out of step, and you hear that as width and movement.

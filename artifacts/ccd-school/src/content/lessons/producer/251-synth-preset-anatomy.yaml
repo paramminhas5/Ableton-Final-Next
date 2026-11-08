@@ -72,7 +72,9 @@ steps:
         best.
 
   - kind: ask
-    q: Slow attack, holding, slow release. What kind of preset is it?
+    q: "Hear this preset: slow attack, held, slow release. What kind of preset is it?"
+    part: chords
+    play: {attack: 0.8, release: 0.85}
     options: ["a pad", "a pluck", "a bass", "a kick"]
     answer: 0
     why: Fading in, holding and fading out is the pad shape.
@@ -92,7 +94,9 @@ steps:
       3: The name doesn't tell you how it works.
 
   - kind: ask
-    q: Which part of the chain mostly decides how bright a preset is?
+    q: Hear a preset with the filter low, then open. Which part of the chain mostly decides how bright a preset is?
+    part: lead
+    play: [{cutoff: 0.2, label: "filter low"}, {cutoff: 0.9, label: "filter open"}]
     options: ["the filter", "the amp envelope", "the tempo", "the pan"]
     answer: 0
     why: The filter cutoff lets more or fewer harmonics through.

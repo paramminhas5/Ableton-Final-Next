@@ -64,7 +64,9 @@ steps:
       Attack is the start of each note, release is the tail after it. Listen to one end at a time.
 
   - kind: ask
-    q: What does resonance do?
+    q: Hear your lead, then with resonance turned up. What does resonance do?
+    part: lead
+    play: [{res: 0, cutoff: 0.4, label: "no resonance"}, {res: 0.85, cutoff: 0.4, label: "resonance up"}]
     options: ["adds a ringing peak at the cutoff", "makes notes longer", "changes the tempo", "adds reverb"]
     answer: 0
     why: Resonance boosts the frequencies right at the cutoff, a ringing peak.
@@ -74,17 +76,19 @@ steps:
       3: Reverb is space, a different effect.
 
   - kind: ask
-    q: For a pluck, what attack do you want?
-    options: ["zero or very short", "very long", "it doesn't matter", "the same as release"]
+    q: Which of these sounds like a pluck?
+    part: lead
+    sounds: [{attack: 0, release: 0.2}, {attack: 0.9, release: 0.2}]
+    options: ["attack at zero or very short", "a very long attack"]
     answer: 0
     why: A pluck starts instantly.
     whyWrong:
       1: Long attack is a swell, a pad.
-      2: Attack is most of what makes a pluck.
-      3: Release is a separate choice.
 
   - kind: ask
-    q: What does the filter envelope do on each note?
+    q: Hear your lead with the filter envelope off, then turned up. What does it do on each note?
+    part: lead
+    play: [{env: 0, cutoff: 0.25, label: "env off"}, {env: 0.85, cutoff: 0.25, label: "env up"}]
     options: ["opens the filter and lets it close again", "changes the pitch", "repeats the note", "pans the sound"]
     answer: 0
     why: The filter opens then closes, so each note sparkles then darkens.

@@ -67,14 +67,16 @@ steps:
     hint: "Short and tight, or long and washy?"
 
   - kind: ask
-    q: Where does the classic house open hat land?
-    options: ["on the offbeat, halfway between the kicks", "on every kick", "only on beat one", "on two and four"]
+    q: Which of these is the classic house open hat?
+    part: open hat
+    with: ["kick"]
+    sounds: [{notes: "..x...x...x...x."}, {notes: "x...x...x...x..."}, {notes: "x..............."}]
+    options: ["on the offbeat, halfway between the kicks", "on every kick", "only on beat one"]
     answer: 0
     why: Halfway between the kicks, on every "and".
     whyWrong:
       1: On the kick it would just thicken the kick.
       2: Once a bar is too sparse for this sound.
-      3: Two and four is where the clap goes.
 
   - kind: ask
     q: What does snap do while you record?
@@ -87,7 +89,10 @@ steps:
       3: The tempo stays the same.
 
   - kind: ask
-    q: You want hats that sit back behind the kick. What do you try?
+    q: Each of these changes your hats one way. Which one sits back behind the kick?
+    part: hats
+    with: ["kick"]
+    sounds: [{decay: 0.2, tune: 0.3}, {decay: 0.85, tune: 0.8}, {notes: {hat: "xxxxxxxxxxxxxxxx"}}, {bpm: 136}]
     options: ["shorter decay and darker tune", "longer decay and brighter tune", "more hats", "a faster tempo"]
     answer: 0
     why: Short and dark hats are less in your face.

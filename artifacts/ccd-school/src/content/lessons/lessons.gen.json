@@ -4813,7 +4813,7 @@
           "why": "Same pitch, bigger push. A taller wave is a louder sound.",
           "whyWrong": {
             "1": "That would change the pitch. Both notes were the same pitch.",
-            "2": "Both were the same soft shape.",
+            "2": "The shape stayed the same. Only the size of the push changed.",
             "3": "Tap them again. The loud one pushes the air much harder."
           }
         },
@@ -4842,7 +4842,7 @@
           "whyWrong": {
             "1": "Play them at the same loudness and they still sound different.",
             "2": "The question says same note, so the pitch is the same.",
-            "3": "You heard soft, saw and square sound different on the same note."
+            "3": "You just heard it: the same notes in two different colours."
           }
         },
         {
@@ -5045,7 +5045,7 @@
           "answer": 0,
           "why": "Because one is exactly double the other, your ear hears them as the same note at two heights.",
           "whyWrong": {
-            "1": "They share a name for a reason. The high a is the low a going twice as fast.",
+            "1": "They share a name for a reason. The high one is the low one going twice as fast.",
             "2": "An octave is the most in tune two different notes can be.",
             "3": "Loudness is a separate thing. You can play an octave soft or hard."
           }
@@ -5543,8 +5543,8 @@
           ],
           "options": [
             "the sine-like one",
-            "saw",
-            "square"
+            "the saw",
+            "the square"
           ],
           "answer": 0,
           "why": "A sine is pure, with almost no harmonics, so it's mostly felt as a deep rumble.",
@@ -9690,7 +9690,22 @@
         },
         {
           "kind": "ask",
-          "q": "You want a short, punchy kick. What do you change?",
+          "q": "Each of these is your kick with one knob turned. Which one gives a short, punchy kick?",
+          "part": "kick",
+          "sounds": [
+            {
+              "decay": 0.12
+            },
+            {
+              "decay": 0.9
+            },
+            {
+              "tune": 0.85
+            },
+            {
+              "tune": 0.15
+            }
+          ],
           "options": [
             "turn decay down",
             "turn decay up",
@@ -9707,7 +9722,9 @@
         },
         {
           "kind": "ask",
-          "q": "What is the short, sharp sound at the very start of a kick?",
+          "q": "Listen to your kick on its own. What is the short, sharp sound at its very start?",
+          "part": "kick",
+          "play": {},
           "options": [
             "the click",
             "the body",
@@ -9725,19 +9742,29 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Your kick sounds thin and too high. What do you turn?",
+          "q": "Your kick sounds thin and too high. Each of these turns one knob. Which one fixes it?",
+          "part": "kick",
+          "sounds": [
+            {
+              "tune": 0.2
+            },
+            {
+              "decay": 0.15
+            },
+            {
+              "tune": 0.85
+            }
+          ],
           "options": [
             "tune down",
             "decay down",
-            "tune up",
-            "the click button"
+            "tune up"
           ],
           "answer": 0,
           "why": "Tune sets how low the body sits. Turning it down makes the kick deeper and fuller.",
           "whyWrong": {
             "1": "Decay changes the length. The kick would still sound thin, just shorter.",
-            "2": "Tune up makes it even higher.",
-            "3": "The click button turns the metronome on and off. It does not change your kick."
+            "2": "Tune up makes it even higher."
           }
         },
         {
@@ -9913,36 +9940,62 @@
         },
         {
           "kind": "ask",
-          "q": "Which wave sounds the smoothest and most pure?",
+          "q": "Which of these sounds the smoothest and most pure?",
+          "part": "lead",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 0.05
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.95
+            },
+            {
+              "wave": 1,
+              "cutoff": 0.95
+            }
+          ],
           "options": [
             "the soft, round one",
             "the saw",
-            "the square",
-            "they all sound the same"
+            "the square"
           ],
           "answer": 0,
           "why": "A round wave has no sharp corners, so there is nothing extra on top. It sounds pure.",
           "whyWrong": {
             "1": "The saw has a sudden drop, which makes it bright and buzzy.",
-            "2": "The square jumps up and down suddenly, which gives it that hollow, game-like sound.",
-            "3": "Same note, but the shapes sound clearly different. Go back and tap them again."
+            "2": "The square jumps up and down suddenly, which gives it that hollow, game-like sound."
           }
         },
         {
           "kind": "ask",
-          "q": "Your synth sounds too harsh. Which knob helps most?",
+          "q": "Each of these is your lead with one change. Which one sounds least harsh?",
+          "part": "lead",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 0.2
+            },
+            {
+              "wave": 0,
+              "cutoff": 1
+            },
+            {
+              "wave": 1,
+              "cutoff": 0.95
+            }
+          ],
           "options": [
             "turn cutoff down",
             "turn cutoff up",
-            "move wave to square",
-            "play higher notes"
+            "move wave to square"
           ],
           "answer": 0,
           "why": "Cutoff down smooths off the sharp edges of the wave, which is what makes it harsh.",
           "whyWrong": {
             "1": "Cutoff up keeps more of the sharp edges, so it gets even brighter.",
-            "2": "The square is still full of sharp jumps.",
-            "3": "Higher notes tend to sound even sharper."
+            "2": "The square is still full of sharp jumps."
           }
         },
         {
@@ -10058,19 +10111,32 @@
         },
         {
           "kind": "ask",
-          "q": "Where does the classic house open hat land?",
+          "q": "Which of these is the classic house open hat?",
+          "part": "open hat",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": "..x...x...x...x."
+            },
+            {
+              "notes": "x...x...x...x..."
+            },
+            {
+              "notes": "x..............."
+            }
+          ],
           "options": [
             "on the offbeat, halfway between the kicks",
             "on every kick",
-            "only on beat one",
-            "on two and four"
+            "only on beat one"
           ],
           "answer": 0,
           "why": "Halfway between the kicks, on every \"and\".",
           "whyWrong": {
             "1": "On the kick it would just thicken the kick.",
-            "2": "Once a bar is too sparse for this sound.",
-            "3": "Two and four is where the clap goes."
+            "2": "Once a bar is too sparse for this sound."
           }
         },
         {
@@ -10092,7 +10158,29 @@
         },
         {
           "kind": "ask",
-          "q": "You want hats that sit back behind the kick. What do you try?",
+          "q": "Each of these changes your hats one way. Which one sits back behind the kick?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "decay": 0.2,
+              "tune": 0.3
+            },
+            {
+              "decay": 0.85,
+              "tune": 0.8
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              }
+            },
+            {
+              "bpm": 136
+            }
+          ],
           "options": [
             "shorter decay and darker tune",
             "longer decay and brighter tune",
@@ -10182,24 +10270,39 @@
         },
         {
           "kind": "ask",
-          "q": "Where does the backbeat land?",
+          "q": "Which of these claps lands on the backbeat?",
+          "part": "clap",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": "....x.......x..."
+            },
+            {
+              "notes": "x.......x......."
+            },
+            {
+              "notes": "x...x...x...x..."
+            }
+          ],
           "options": [
             "two and four",
             "one and three",
-            "every beat",
-            "only on one"
+            "every beat"
           ],
           "answer": 0,
           "why": "Two and four, answering the kick.",
           "whyWrong": {
             "1": "One and three are the kick on its own.",
-            "2": "Every beat is the kick's job.",
-            "3": "One is the start of the bar."
+            "2": "Every beat is the kick's job."
           }
         },
         {
           "kind": "ask",
-          "q": "What gives a snare its sizzle?",
+          "q": "Listen to a snare on its own. What gives it that sizzle?",
+          "part": "snare",
+          "play": {},
           "options": [
             "metal wires under the drum that rattle",
             "the drummer's hands",
@@ -10318,7 +10421,25 @@
         },
         {
           "kind": "ask",
-          "q": "Where does a dance music bass often sit?",
+          "q": "Which of these bass lines sits where a dance bass usually does?",
+          "part": "bass",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": ". . 1 . . . 1 . . . 1 . . . 1 ."
+            },
+            {
+              "notes": "1 . . . 1 . . . 1 . . . 1 . . ."
+            },
+            {
+              "notes": "1 - - - . . . . . . . . . . . ."
+            },
+            {
+              "notes": "1'' . 1'' . 1'' . 1'' . 1'' . 1'' . 1'' . 1'' ."
+            }
+          ],
           "options": [
             "between the kicks",
             "on top of every kick",
@@ -10335,7 +10456,22 @@
         },
         {
           "kind": "ask",
-          "q": "You want a bass that still cuts through on phone speakers. What do you try?",
+          "q": "Each of these changes your bass one way. Which one would still cut through on a phone speaker?",
+          "part": "bass",
+          "sounds": [
+            {
+              "cutoff": 0.65
+            },
+            {
+              "cutoff": 0.02
+            },
+            {
+              "decay": 0
+            },
+            {
+              "bpm": 100
+            }
+          ],
           "options": [
             "open the cutoff a bit",
             "close the cutoff fully",
@@ -10405,7 +10541,12 @@
         },
         {
           "kind": "ask",
-          "q": "Why do kick and bass fight?",
+          "q": "Hear your kick and bass together. Why do they fight?",
+          "part": "bass",
+          "with": [
+            "kick"
+          ],
+          "play": {},
           "options": [
             "they both live in the low end",
             "they're the same sound",
@@ -10422,7 +10563,21 @@
         },
         {
           "kind": "ask",
-          "q": "What does ducking the bass do?",
+          "q": "Hear your bass and kick, then with the bass ducked. What does ducking the bass do?",
+          "part": "bass",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "duck": 0,
+              "label": "no duck"
+            },
+            {
+              "duck": 0.8,
+              "label": "ducked"
+            }
+          ],
           "options": [
             "dips the bass every time the kick hits",
             "deletes the bass",
@@ -10522,7 +10677,20 @@
         },
         {
           "kind": "ask",
-          "q": "What does resonance do?",
+          "q": "Hear your lead, then with resonance turned up. What does resonance do?",
+          "part": "lead",
+          "play": [
+            {
+              "res": 0,
+              "cutoff": 0.4,
+              "label": "no resonance"
+            },
+            {
+              "res": 0.85,
+              "cutoff": 0.4,
+              "label": "resonance up"
+            }
+          ],
           "options": [
             "adds a ringing peak at the cutoff",
             "makes notes longer",
@@ -10539,24 +10707,44 @@
         },
         {
           "kind": "ask",
-          "q": "For a pluck, what attack do you want?",
+          "q": "Which of these sounds like a pluck?",
+          "part": "lead",
+          "sounds": [
+            {
+              "attack": 0,
+              "release": 0.2
+            },
+            {
+              "attack": 0.9,
+              "release": 0.2
+            }
+          ],
           "options": [
-            "zero or very short",
-            "very long",
-            "it doesn't matter",
-            "the same as release"
+            "attack at zero or very short",
+            "a very long attack"
           ],
           "answer": 0,
           "why": "A pluck starts instantly.",
           "whyWrong": {
-            "1": "Long attack is a swell, a pad.",
-            "2": "Attack is most of what makes a pluck.",
-            "3": "Release is a separate choice."
+            "1": "Long attack is a swell, a pad."
           }
         },
         {
           "kind": "ask",
-          "q": "What does the filter envelope do on each note?",
+          "q": "Hear your lead with the filter envelope off, then turned up. What does it do on each note?",
+          "part": "lead",
+          "play": [
+            {
+              "env": 0,
+              "cutoff": 0.25,
+              "label": "env off"
+            },
+            {
+              "env": 0.85,
+              "cutoff": 0.25,
+              "label": "env up"
+            }
+          ],
           "options": [
             "opens the filter and lets it close again",
             "changes the pitch",
@@ -10651,7 +10839,12 @@
         },
         {
           "kind": "ask",
-          "q": "What's a stab?",
+          "q": "Hear your chords as stabs. What's a stab?",
+          "part": "chords",
+          "play": {
+            "attack": 0.02,
+            "release": 0.08
+          },
           "options": [
             "a short, punchy chord",
             "a long soft chord",
@@ -10668,7 +10861,29 @@
         },
         {
           "kind": "ask",
-          "q": "To turn your chords into a pad, which knob do you turn up?",
+          "q": "Each of these turns one thing up. Which one turns your chords into a pad?",
+          "part": "chords",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "release": 0.9
+            },
+            {
+              "bpm": 140
+            },
+            {
+              "part": "kick",
+              "with": [
+                "chords"
+              ],
+              "decay": 0.9
+            },
+            {
+              "swing": 0.5
+            }
+          ],
           "options": [
             "release",
             "tempo",
@@ -10751,7 +10966,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does drive do to a kick?",
+          "q": "Hear your kick, then with drive turned up. What does drive do?",
+          "part": "kick",
+          "play": [
+            {
+              "drive": 0,
+              "label": "clean"
+            },
+            {
+              "drive": 0.8,
+              "label": "drive up"
+            }
+          ],
           "options": [
             "adds grit and harmonics so it cuts through",
             "makes it longer",
@@ -10928,7 +11154,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does detune do?",
+          "q": "Hear your lead with no detune, then with lots. What does detune do?",
+          "part": "lead",
+          "play": [
+            {
+              "detune": 0,
+              "label": "no detune"
+            },
+            {
+              "detune": 0.8,
+              "label": "detune up"
+            }
+          ],
           "options": [
             "makes a sound thicker and wider",
             "changes the key",
@@ -10945,7 +11182,20 @@
         },
         {
           "kind": "ask",
-          "q": "What does glide do?",
+          "q": "Hear a line with no glide, then with glide turned up. What does glide do?",
+          "part": "lead",
+          "play": [
+            {
+              "glide": 0,
+              "notes": "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -",
+              "label": "no glide"
+            },
+            {
+              "glide": 0.8,
+              "notes": "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -",
+              "label": "glide up"
+            }
+          ],
           "options": [
             "slides between notes",
             "repeats notes",
@@ -11084,7 +11334,21 @@
         },
         {
           "kind": "ask",
-          "q": "Why keep the kick and bass in the middle?",
+          "q": "Hear your bass in the middle, then panned hard to one side. Why keep the kick and bass in the middle?",
+          "part": "bass",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "pan": 0.5,
+              "label": "middle"
+            },
+            {
+              "pan": 0.05,
+              "label": "panned left"
+            }
+          ],
           "options": [
             "they carry the low end, which should hit both speakers equally",
             "they're the quietest",
@@ -11166,7 +11430,25 @@
         },
         {
           "kind": "ask",
-          "q": "A sound is boxy. What might you try?",
+          "q": "Your lead with a boxy mid boost, and four fixes. Which one gets rid of the boxiness?",
+          "part": "lead",
+          "sounds": [
+            {
+              "mid": 0.35
+            },
+            {
+              "mid": 0.85,
+              "low": 0.95
+            },
+            {
+              "mid": 0.85,
+              "send": 0.7
+            },
+            {
+              "mid": 0.85,
+              "bpm": 140
+            }
+          ],
           "options": [
             "a small cut in the mids",
             "a big boost in the lows",
@@ -11241,7 +11523,18 @@
         },
         {
           "kind": "ask",
-          "q": "What's the difference between reverb and echo?",
+          "q": "Hear your lead with reverb, then with echo. What's the difference?",
+          "part": "lead",
+          "play": [
+            {
+              "send": 0.8,
+              "label": "reverb"
+            },
+            {
+              "echo": 0.6,
+              "label": "echo"
+            }
+          ],
           "options": [
             "reverb is a blur of reflections, echo is clear repeats",
             "they're the same",
@@ -11258,7 +11551,21 @@
         },
         {
           "kind": "ask",
-          "q": "More reverb on a part makes it sound?",
+          "q": "Hear your lead dry, then with more reverb. How does it sound?",
+          "part": "lead",
+          "with": [
+            "drums"
+          ],
+          "play": [
+            {
+              "send": 0,
+              "label": "dry"
+            },
+            {
+              "send": 0.8,
+              "label": "more reverb"
+            }
+          ],
           "options": [
             "further away",
             "closer",
@@ -11317,7 +11624,21 @@
         },
         {
           "kind": "ask",
-          "q": "What does a glue compressor on the master do?",
+          "q": "Hear your song with no glue, then glued. What does a glue compressor on the master do?",
+          "play": [
+            {
+              "master": {
+                "glue": 0
+              },
+              "label": "no glue"
+            },
+            {
+              "master": {
+                "glue": 0.85
+              },
+              "label": "glued"
+            }
+          ],
           "options": [
             "pulls the parts together so they move as one",
             "adds echo",
@@ -11479,7 +11800,14 @@
         },
         {
           "kind": "ask",
-          "q": "What does a fill tell the listener?",
+          "q": "Hear two bars with a fill at the end. What does the fill tell the listener?",
+          "part": "drums",
+          "play": {
+            "notes": {
+              "kick": "x...x...x...x...x...x...x...xxxx",
+              "clap": "....x.......x.......x...x.x.xxxx"
+            }
+          },
           "options": [
             "a change is coming",
             "the song is over",
@@ -11538,7 +11866,19 @@
         },
         {
           "kind": "ask",
-          "q": "Why does a drop feel big?",
+          "q": "Hear the breakdown, then the drop. Why does the drop feel big?",
+          "play": [
+            {
+              "mute": [
+                "drums",
+                "hats"
+              ],
+              "label": "breakdown"
+            },
+            {
+              "label": "drop"
+            }
+          ],
           "options": [
             "the drums were missing just before",
             "it's always louder",
@@ -12069,7 +12409,21 @@
         },
         {
           "kind": "ask",
-          "q": "You turn up drive on your kick pad. What happens to a clap on another pad?",
+          "q": "Hear your kick and clap, then with drive turned up on the kick pad. What happens to the clap?",
+          "part": "drums",
+          "play": [
+            {
+              "label": "as it is"
+            },
+            {
+              "part": "kick",
+              "with": [
+                "clap"
+              ],
+              "drive": 0.9,
+              "label": "kick drive up"
+            }
+          ],
           "options": [
             "nothing, it has its own pad",
             "it gets distorted too",
@@ -12292,36 +12646,63 @@
         },
         {
           "kind": "ask",
-          "q": "Which shape is the brightest and most used for leads and bass?",
+          "q": "Which of these is the brightest?",
+          "part": "lead",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 1
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.04
+            },
+            {
+              "wave": 1,
+              "cutoff": 1
+            }
+          ],
           "options": [
             "saw",
-            "sine",
-            "triangle",
+            "sine-like",
             "square"
           ],
           "answer": 0,
           "why": "The saw has the most going on, so it's bright and there's lots for a filter to shape.",
           "whyWrong": {
             "1": "A sine is the smoothest and plainest.",
-            "2": "A triangle is soft.",
-            "3": "A square is hollow, less bright than a saw."
+            "2": "A square is hollow, less bright than a saw."
           }
         },
         {
           "kind": "ask",
-          "q": "You want a clean, deep sub bass. Which shape would you start from?",
+          "q": "You want a clean, deep sub bass. Which of these would you start from?",
+          "part": "bass",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 0.03,
+              "sub": 0.8
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.8
+            },
+            {
+              "wave": 1,
+              "cutoff": 0.8
+            }
+          ],
           "options": [
-            "sine",
+            "sine-like",
             "saw",
-            "square",
-            "noise"
+            "square"
           ],
           "answer": 0,
           "why": "A sine is pure, so it gives weight without anything else fighting in the mix.",
           "whyWrong": {
             "1": "A saw is too bright and busy for a clean sub.",
-            "2": "A square adds hollow overtones on top.",
-            "3": "Noise has no pitch at all."
+            "2": "A square adds hollow overtones on top."
           }
         },
         {
@@ -12387,7 +12768,18 @@
         },
         {
           "kind": "ask",
-          "q": "Turning up a note's amplitude changes what?",
+          "q": "Hear your lead, then with its amplitude turned up. What changed?",
+          "part": "lead",
+          "play": [
+            {
+              "level": 0.5,
+              "label": "as it is"
+            },
+            {
+              "level": 0.85,
+              "label": "amplitude up"
+            }
+          ],
           "options": [
             "how loud it is",
             "how high it is",
@@ -12421,7 +12813,18 @@
         },
         {
           "kind": "ask",
-          "q": "Why does detuning a few cents make your lead sound wider?",
+          "q": "Hear your lead, then with a few cents of detune. Why does it sound wider?",
+          "part": "lead",
+          "play": [
+            {
+              "detune": 0,
+              "label": "no detune"
+            },
+            {
+              "detune": 0.3,
+              "label": "a few cents"
+            }
+          ],
           "options": [
             "the copies rub against each other",
             "it makes the lead louder",
@@ -12841,7 +13244,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does a sub oscillator add to a bass?",
+          "q": "Hear your bass with no sub, then with the sub up. What does a sub oscillator add?",
+          "part": "bass",
+          "play": [
+            {
+              "sub": 0,
+              "label": "no sub"
+            },
+            {
+              "sub": 0.9,
+              "label": "sub up"
+            }
+          ],
           "options": [
             "weight, from a sine an octave below",
             "brightness on top",
@@ -12858,7 +13272,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does drift do to your bass?",
+          "q": "Hear your bass with no drift, then with lots. What does drift do?",
+          "part": "bass",
+          "play": [
+            {
+              "drift": 0,
+              "label": "no drift"
+            },
+            {
+              "drift": 1,
+              "label": "drift up"
+            }
+          ],
           "options": [
             "lets the pitch wander a few cents, like analogue",
             "makes it louder",
@@ -12993,7 +13418,20 @@
         },
         {
           "kind": "ask",
-          "q": "You change a modulator's ratio. What changes?",
+          "q": "Hear your lead with fm, then with the modulator's ratio changed. What changes?",
+          "part": "lead",
+          "play": [
+            {
+              "fm": 0.5,
+              "ratio": 0.25,
+              "label": "one ratio"
+            },
+            {
+              "fm": 0.5,
+              "ratio": 0.75,
+              "label": "another ratio"
+            }
+          ],
           "options": [
             "the timbre, not the note",
             "the note you hear",
@@ -13191,7 +13629,21 @@
         },
         {
           "kind": "ask",
-          "q": "What does a compressor do?",
+          "q": "Hear your song, then through a compressor working hard. What does a compressor do?",
+          "play": [
+            {
+              "master": {
+                "glue": 0
+              },
+              "label": "as it is"
+            },
+            {
+              "master": {
+                "glue": 0.9
+              },
+              "label": "compressed"
+            }
+          ],
           "options": [
             "turns down the loud parts automatically",
             "adds echo",
@@ -13341,7 +13793,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does a low-pass filter do?",
+          "q": "Hear your lead, then through a low-pass filter set low. What does a low-pass filter do?",
+          "part": "lead",
+          "play": [
+            {
+              "cutoff": 0.95,
+              "label": "open"
+            },
+            {
+              "cutoff": 0.2,
+              "label": "low-pass"
+            }
+          ],
           "options": [
             "keeps the lows, cuts the highs",
             "keeps the highs, cuts the lows",
@@ -13358,7 +13821,20 @@
         },
         {
           "kind": "ask",
-          "q": "What does resonance do?",
+          "q": "Hear your lead, then with resonance turned up. What does resonance do?",
+          "part": "lead",
+          "play": [
+            {
+              "res": 0,
+              "cutoff": 0.4,
+              "label": "no resonance"
+            },
+            {
+              "res": 0.85,
+              "cutoff": 0.4,
+              "label": "resonance up"
+            }
+          ],
           "options": [
             "boosts a ringing peak at the cutoff",
             "moves the cutoff",
@@ -13375,7 +13851,21 @@
         },
         {
           "kind": "ask",
-          "q": "You want your lead to sound like it's coming through a small radio. Which filter?",
+          "q": "Which of these sounds like it's coming through a small radio?",
+          "part": "lead",
+          "sounds": [
+            {
+              "cut": 0.6,
+              "lp": 0.5
+            },
+            {
+              "lp": 0.4
+            },
+            {
+              "cut": 0.6
+            },
+            {}
+          ],
           "options": [
             "band-pass",
             "low-pass",
@@ -13471,7 +13961,18 @@
         },
         {
           "kind": "ask",
-          "q": "Which part of the envelope is how fast a note fades in?",
+          "q": "Hear your lead with a short attack, then a long one. Which part of the envelope is how fast a note fades in?",
+          "part": "lead",
+          "play": [
+            {
+              "attack": 0,
+              "label": "short attack"
+            },
+            {
+              "attack": 0.85,
+              "label": "long attack"
+            }
+          ],
           "options": [
             "attack",
             "decay",
@@ -13488,19 +13989,26 @@
         },
         {
           "kind": "ask",
-          "q": "For a soft pad that swells in, what attack do you want?",
+          "q": "Which of these is a soft pad that swells in?",
+          "part": "chords",
+          "sounds": [
+            {
+              "attack": 0.85,
+              "release": 0.8
+            },
+            {
+              "attack": 0,
+              "release": 0.8
+            }
+          ],
           "options": [
-            "long",
-            "zero",
-            "it doesn't matter",
-            "the same as decay"
+            "a long attack",
+            "zero attack"
           ],
           "answer": 0,
           "why": "A long attack makes each note swell in slowly.",
           "whyWrong": {
-            "1": "Zero snaps in, like a pluck.",
-            "2": "Attack is most of what makes a swell.",
-            "3": "Decay is a separate stage."
+            "1": "Zero snaps in, like a pluck."
           }
         },
         {
@@ -13602,7 +14110,20 @@
         },
         {
           "kind": "ask",
-          "q": "What does a filter envelope move on each note?",
+          "q": "Hear your lead with the filter envelope off, then on. What does it move on each note?",
+          "part": "lead",
+          "play": [
+            {
+              "env": 0,
+              "cutoff": 0.2,
+              "label": "env off"
+            },
+            {
+              "env": 0.85,
+              "cutoff": 0.2,
+              "label": "env on"
+            }
+          ],
           "options": [
             "the cutoff",
             "the volume",
@@ -13636,7 +14157,28 @@
         },
         {
           "kind": "ask",
-          "q": "Your filter envelope does nothing you can hear, even with lots of amount. What's the likely fix?",
+          "q": "Each of these is your lead with lots of envelope amount and one other change. In which one can you hear the envelope?",
+          "part": "lead",
+          "sounds": [
+            {
+              "env": 0.85,
+              "cutoff": 0.15
+            },
+            {
+              "env": 0.85,
+              "cutoff": 1
+            },
+            {
+              "env": 0.85,
+              "cutoff": 1,
+              "level": 0.95
+            },
+            {
+              "env": 0.85,
+              "cutoff": 1,
+              "bpm": 100
+            }
+          ],
           "options": [
             "lower the base cutoff",
             "raise the base cutoff",
@@ -13837,7 +14379,18 @@
         },
         {
           "kind": "ask",
-          "q": "What is timbre?",
+          "q": "The same notes at the same loudness, in two different sounds. What's the word for what changed?",
+          "part": "lead",
+          "play": [
+            {
+              "wave": 0,
+              "label": "one sound"
+            },
+            {
+              "wave": 1,
+              "label": "another"
+            }
+          ],
           "options": [
             "the colour or character of a sound",
             "how high a note is",
@@ -13871,19 +14424,31 @@
         },
         {
           "kind": "ask",
-          "q": "Your lead sounds dull. What's more likely to help than turning it up?",
+          "q": "Your lead sounds dull. Each of these tries one fix. Which one helps most?",
+          "part": "lead",
+          "sounds": [
+            {
+              "cutoff": 0.9
+            },
+            {
+              "cutoff": 0.2,
+              "bpm": 140
+            },
+            {
+              "cutoff": 0.2,
+              "notes": "1 2 3 5 1' 5 3 2 1 2 3 5 1' 5 3 2"
+            }
+          ],
           "options": [
             "change its timbre, say open the cutoff",
             "turn the tempo up",
-            "add more notes",
-            "turn the kick down"
+            "add more notes"
           ],
           "answer": 0,
-          "why": "A louder dull sound is still dull. Changing the colour is what brightens it.",
+          "why": "Changing the colour is what brightens it: open the cutoff and the highs come back. A louder dull sound is still dull.",
           "whyWrong": {
             "1": "Tempo doesn't change how a sound is coloured.",
-            "2": "More notes won't change the sound itself.",
-            "3": "That changes the balance, not the lead's colour."
+            "2": "More notes won't change the sound itself."
           }
         },
         {
@@ -13987,7 +14552,20 @@
         },
         {
           "kind": "ask",
-          "q": "Why does a square sound hollow next to a saw?",
+          "q": "Hear a saw, then a square. Why does the square sound hollow next to the saw?",
+          "part": "lead",
+          "play": [
+            {
+              "wave": 0,
+              "cutoff": 1,
+              "label": "saw"
+            },
+            {
+              "wave": 1,
+              "cutoff": 1,
+              "label": "square"
+            }
+          ],
           "options": [
             "it only has the odd harmonics",
             "it has no harmonics",
@@ -14086,7 +14664,18 @@
         },
         {
           "kind": "ask",
-          "q": "You add an oscillator one octave below. What does it give the sound?",
+          "q": "Hear a bass, then with an oscillator an octave below added. What does it give the sound?",
+          "part": "bass",
+          "play": [
+            {
+              "sub": 0,
+              "label": "one oscillator"
+            },
+            {
+              "sub": 0.9,
+              "label": "octave below added"
+            }
+          ],
           "options": [
             "weight",
             "sparkle",
@@ -14332,7 +14921,20 @@
         },
         {
           "kind": "ask",
-          "q": "Why set one scale for the whole song?",
+          "q": "Hear a line in the song's scale, then one with notes from outside it. Why set one scale for the whole song?",
+          "part": "lead",
+          "play": [
+            {
+              "scale": "minor",
+              "notes": "1 - 3 - 5 - 4 - 3 - 2 - 1 - . .",
+              "label": "in the scale"
+            },
+            {
+              "scale": "minor",
+              "notes": "1 - b2 - #4 - 5 - #6 - #7 - 1' - . .",
+              "label": "notes outside it"
+            }
+          ],
           "options": [
             "so every part stays in key",
             "so it plays faster",
@@ -14544,7 +15146,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does saturation add to a sound?",
+          "q": "Hear your kick clean, then saturated. What does saturation add?",
+          "part": "kick",
+          "play": [
+            {
+              "drive": 0,
+              "label": "clean"
+            },
+            {
+              "drive": 0.85,
+              "label": "saturated"
+            }
+          ],
           "options": [
             "harmonics, new higher notes on top",
             "reverb",
@@ -14561,7 +15174,19 @@
         },
         {
           "kind": "ask",
-          "q": "You turn drive up and the kick sounds better. What do you check?",
+          "q": "Hear your kick, then with drive turned up. It sounds better. What do you check?",
+          "part": "kick",
+          "play": [
+            {
+              "drive": 0,
+              "label": "as it was"
+            },
+            {
+              "drive": 0.7,
+              "level": 0.9,
+              "label": "drive up"
+            }
+          ],
           "options": [
             "that it isn't just louder",
             "that the tempo is right",
@@ -14695,7 +15320,18 @@
         },
         {
           "kind": "ask",
-          "q": "Your bass drive sounds great, but it's also much louder. What first?",
+          "q": "Hear your bass, then with drive turned up: it sounds great, but it's also louder. What first?",
+          "part": "bass",
+          "play": [
+            {
+              "fdrive": 0,
+              "label": "clean"
+            },
+            {
+              "fdrive": 0.9,
+              "label": "drive up"
+            }
+          ],
           "options": [
             "turn level down to match, then listen again",
             "turn drive up more",
@@ -15707,7 +16343,18 @@
         },
         {
           "kind": "ask",
-          "q": "Why does detuning two oscillators make a sound wider?",
+          "q": "Hear your lead with no detune, then detuned. Why does it sound wider?",
+          "part": "lead",
+          "play": [
+            {
+              "detune": 0,
+              "label": "no detune"
+            },
+            {
+              "detune": 0.7,
+              "label": "detuned"
+            }
+          ],
           "options": [
             "their pitches drift in and out of line and shimmer",
             "it makes the note louder",
@@ -15741,7 +16388,24 @@
         },
         {
           "kind": "ask",
-          "q": "Your lead sounds wide but also a bit sour. What do you change?",
+          "q": "Your lead is wide but a bit sour. Each of these tries one fix. Which one sounds sweet and still wide?",
+          "part": "lead",
+          "sounds": [
+            {
+              "detune": 0.4
+            },
+            {
+              "detune": 1
+            },
+            {
+              "detune": 0.85,
+              "bpm": 136
+            },
+            {
+              "detune": 0.85,
+              "notes": "1 2 3 5 1' 5 3 2 1 2 3 5 1' 5 3 2"
+            }
+          ],
           "options": [
             "turn detune down a little",
             "turn detune up",
@@ -15856,7 +16520,13 @@
         },
         {
           "kind": "ask",
-          "q": "An lfo moves your lead's pitch up and down. What do you hear?",
+          "q": "Hear an lfo move your lead's pitch up and down. What do you hear?",
+          "part": "lead",
+          "play": {
+            "lfo": 0.5,
+            "lfoto": 0.5,
+            "lforate": 0.82
+          },
           "options": [
             "vibrato",
             "tremolo",
@@ -15873,7 +16543,22 @@
         },
         {
           "kind": "ask",
-          "q": "What does the lfo's rate set?",
+          "q": "Hear the lfo on your lead's cutoff with the rate low, then high. What does the rate set?",
+          "part": "lead",
+          "play": [
+            {
+              "lfo": 0.6,
+              "lfoto": 0,
+              "lforate": 0.2,
+              "label": "rate low"
+            },
+            {
+              "lfo": 0.6,
+              "lfoto": 0,
+              "lforate": 0.8,
+              "label": "rate high"
+            }
+          ],
           "options": [
             "how fast it moves",
             "how far it moves",
@@ -16117,7 +16802,18 @@
         },
         {
           "kind": "ask",
-          "q": "What happens when you turn the modulator up?",
+          "q": "Hear your lead with the modulator down, then turned up. What happens?",
+          "part": "lead",
+          "play": [
+            {
+              "fm": 0,
+              "label": "modulator down"
+            },
+            {
+              "fm": 0.8,
+              "label": "modulator up"
+            }
+          ],
           "options": [
             "more sidebands, a brighter, richer tone",
             "the sound gets quieter",
@@ -16387,7 +17083,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does a drift control add?",
+          "q": "Hear your chords with no drift, then with lots. What does a drift control add?",
+          "part": "chords",
+          "play": [
+            {
+              "drift": 0,
+              "label": "no drift"
+            },
+            {
+              "drift": 1,
+              "label": "drift up"
+            }
+          ],
           "options": [
             "small random wander in pitch and timing",
             "a second melody",
@@ -16421,7 +17128,24 @@
         },
         {
           "kind": "ask",
-          "q": "Your chords sound a bit sour after turning drift up. What do you do?",
+          "q": "Your chords sound sour with drift turned up. Each of these tries a fix. Which one sounds right?",
+          "part": "chords",
+          "sounds": [
+            {
+              "drift": 0.35
+            },
+            {
+              "drift": 1
+            },
+            {
+              "drift": 0.9,
+              "notes": "1+3+5 - 6,+1+3 - 4,+6,+1 - 5,+7,+2 - 1+3+5 - 6,+1+3 - 4,+6,+1 - 5,+7,+2 -"
+            },
+            {
+              "drift": 0.9,
+              "bpm": 136
+            }
+          ],
           "options": [
             "turn drift down a little",
             "turn drift all the way up",
@@ -16522,7 +17246,24 @@
         },
         {
           "kind": "ask",
-          "q": "How do you turn noise into a hat?",
+          "q": "Which of these is noise shaped into a hat?",
+          "part": "hat",
+          "sounds": [
+            {
+              "decay": 0.12
+            },
+            {
+              "decay": 0.95
+            },
+            {
+              "decay": 0.95,
+              "bpm": 100
+            },
+            {
+              "decay": 0.95,
+              "send": 0.8
+            }
+          ],
           "options": [
             "a fast attack and a short decay",
             "a slow attack and long release",
@@ -16622,7 +17363,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does an echo, or delay, do?",
+          "q": "Hear your lead dry, then with an echo. What does an echo, or delay, do?",
+          "part": "lead",
+          "play": [
+            {
+              "echo": 0,
+              "label": "dry"
+            },
+            {
+              "echo": 0.6,
+              "label": "echo"
+            }
+          ],
           "options": [
             "plays the sound back again a moment later",
             "adds the sound of a room",
@@ -16963,7 +17715,12 @@
         },
         {
           "kind": "ask",
-          "q": "Slow attack, holding, slow release. What kind of preset is it?",
+          "q": "Hear this preset: slow attack, held, slow release. What kind of preset is it?",
+          "part": "chords",
+          "play": {
+            "attack": 0.8,
+            "release": 0.85
+          },
           "options": [
             "a pad",
             "a pluck",
@@ -16997,7 +17754,18 @@
         },
         {
           "kind": "ask",
-          "q": "Which part of the chain mostly decides how bright a preset is?",
+          "q": "Hear a preset with the filter low, then open. Which part of the chain mostly decides how bright a preset is?",
+          "part": "lead",
+          "play": [
+            {
+              "cutoff": 0.2,
+              "label": "filter low"
+            },
+            {
+              "cutoff": 0.9,
+              "label": "filter open"
+            }
+          ],
           "options": [
             "the filter",
             "the amp envelope",
@@ -17216,7 +17984,16 @@
         },
         {
           "kind": "ask",
-          "q": "What does solo do?",
+          "q": "Hear your song, then your chords soloed. What does solo do?",
+          "play": [
+            {
+              "label": "the song"
+            },
+            {
+              "part": "chords",
+              "label": "chords soloed"
+            }
+          ],
           "options": [
             "plays that part alone",
             "mutes that part",
@@ -17233,7 +18010,16 @@
         },
         {
           "kind": "ask",
-          "q": "Why not set levels while a part is soloed?",
+          "q": "Hear your chords alone, then in the whole song. Why not set levels while a part is soloed?",
+          "play": [
+            {
+              "part": "chords",
+              "label": "chords alone"
+            },
+            {
+              "label": "in the song"
+            }
+          ],
           "options": [
             "a part sounds different alone than in the whole song",
             "solo turns the volume down",
@@ -17403,7 +18189,21 @@
         },
         {
           "kind": "ask",
-          "q": "Why match loudness before comparing your mix with a released track?",
+          "q": "Hear your mix, then the same mix a little louder. Why match loudness before comparing your mix with a released track?",
+          "play": [
+            {
+              "master": {
+                "out": 0.6
+              },
+              "label": "your mix"
+            },
+            {
+              "master": {
+                "out": 0.8
+              },
+              "label": "a bit louder"
+            }
+          ],
           "options": [
             "the louder one nearly always sounds better",
             "quiet mixes can't be compared",
@@ -17920,7 +18720,18 @@
         },
         {
           "kind": "ask",
-          "q": "What does drive do?",
+          "q": "Hear your lead clean, then with drive. What does drive do?",
+          "part": "lead",
+          "play": [
+            {
+              "drive": 0,
+              "label": "clean"
+            },
+            {
+              "drive": 0.8,
+              "label": "drive"
+            }
+          ],
           "options": [
             "adds grit and warmth by roughing up the wave",
             "puts the sound in a room",
@@ -18039,7 +18850,20 @@
         },
         {
           "kind": "ask",
-          "q": "By default, you turn a part's fader down. What happens to its reverb?",
+          "q": "Hear your chords with reverb, then with the fader pulled down. What happens to the reverb?",
+          "part": "chords",
+          "play": [
+            {
+              "send": 0.7,
+              "level": 0.75,
+              "label": "fader up"
+            },
+            {
+              "send": 0.7,
+              "level": 0.3,
+              "label": "fader down"
+            }
+          ],
           "options": [
             "it goes down too",
             "it gets louder",
@@ -18138,7 +18962,18 @@
         },
         {
           "kind": "ask",
-          "q": "What's the difference between reverb and delay?",
+          "q": "Hear your clap with reverb, then with delay. What's the difference?",
+          "part": "clap",
+          "play": [
+            {
+              "send": 0.8,
+              "label": "reverb"
+            },
+            {
+              "echo": 0.7,
+              "label": "delay"
+            }
+          ],
           "options": [
             "reverb is a smeared room, delay is clear repeats",
             "delay is always louder",
@@ -18172,7 +19007,24 @@
         },
         {
           "kind": "ask",
-          "q": "What happens if you push delay feedback near the top?",
+          "q": "Hear your clap's delay with low feedback, then near the top. What happens?",
+          "part": "clap",
+          "play": [
+            {
+              "echo": 0.6,
+              "master": {
+                "repeats": 0.3
+              },
+              "label": "low feedback"
+            },
+            {
+              "echo": 0.6,
+              "master": {
+                "repeats": 1
+              },
+              "label": "near the top"
+            }
+          ],
           "options": [
             "the repeats pile up and can run away",
             "the delay stops",
@@ -18379,7 +19231,21 @@
         },
         {
           "kind": "ask",
-          "q": "What does a compressor do?",
+          "q": "Hear your song, then compressed. What does a compressor do?",
+          "play": [
+            {
+              "master": {
+                "glue": 0
+              },
+              "label": "as it is"
+            },
+            {
+              "master": {
+                "glue": 0.85
+              },
+              "label": "compressed"
+            }
+          ],
           "options": [
             "turns a sound down when it gets loud",
             "adds echo",
@@ -18413,7 +19279,13 @@
         },
         {
           "kind": "ask",
-          "q": "What does too much glue sound like?",
+          "q": "Hear your mix with far too much glue. What does it sound like?",
+          "play": {
+            "master": {
+              "glue": 1,
+              "glueratio": 1
+            }
+          },
           "options": [
             "the whole mix pumps on every kick",
             "the song slows down",
@@ -19641,7 +20513,27 @@
         },
         {
           "kind": "ask",
-          "q": "What does swing move?",
+          "q": "Hear your hats straight, then swung. What does swing move?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0,
+              "label": "straight"
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0.5,
+              "label": "swung"
+            }
+          ],
           "options": [
             "the off sixteenths, a little late",
             "every kick",
@@ -22559,7 +23451,20 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "What does glide do to your lead?",
+          "q": "Hear a line with no glide, then with glide. What does glide do to your lead?",
+          "part": "lead",
+          "play": [
+            {
+              "glide": 0,
+              "notes": "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -",
+              "label": "no glide"
+            },
+            {
+              "glide": 0.8,
+              "notes": "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -",
+              "label": "glide up"
+            }
+          ],
           "options": [
             "slides each note into the next",
             "makes it louder",

@@ -56,7 +56,9 @@ steps:
     hint: "It starts high and walks down to the root, then steps back up and comes home."
 
   - kind: ask
-    q: What does detune do?
+    q: Hear your lead with no detune, then with lots. What does detune do?
+    part: lead
+    play: [{detune: 0, label: "no detune"}, {detune: 0.8, label: "detune up"}]
     options: ["makes a sound thicker and wider", "changes the key", "slows the song", "makes it quieter"]
     answer: 0
     why: Slightly mistuned copies beat against each other and sound wide.
@@ -66,7 +68,9 @@ steps:
       3: Level is separate.
 
   - kind: ask
-    q: What does glide do?
+    q: Hear a line with no glide, then with glide turned up. What does glide do?
+    part: lead
+    play: [{glide: 0, notes: "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -", label: "no glide"}, {glide: 0.8, notes: "1 - 5 - 1' - 5 - 1 - 5 - 1' - 5 -", label: "glide up"}]
     options: ["slides between notes", "repeats notes", "adds reverb", "cuts the lows"]
     answer: 0
     why: Each note slides up or down into the next.

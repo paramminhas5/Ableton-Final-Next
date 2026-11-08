@@ -86,7 +86,9 @@ steps:
       3: Tempo belongs to the whole song.
 
   - kind: ask
-    q: You turn up drive on your kick pad. What happens to a clap on another pad?
+    q: Hear your kick and clap, then with drive turned up on the kick pad. What happens to the clap?
+    part: drums
+    play: [{label: "as it is"}, {part: "kick", with: ["clap"], drive: 0.9, label: "kick drive up"}]
     options: ["nothing, it has its own pad", "it gets distorted too", "it gets quieter", "it changes pitch"]
     answer: 0
     why: Each pad has its own controls. Changing the kick leaves every other pad alone.

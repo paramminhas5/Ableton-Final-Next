@@ -90,7 +90,9 @@ steps:
       3: Not a fade.
 
   - kind: ask
-    q: An lfo moves your lead's pitch up and down. What do you hear?
+    q: Hear an lfo move your lead's pitch up and down. What do you hear?
+    part: lead
+    play: {lfo: 0.5, lfoto: 0.5, lforate: 0.82}
     options: ["vibrato", "tremolo", "a wah", "reverb"]
     answer: 0
     why: Pitch wobbling up and down is vibrato.
@@ -100,7 +102,9 @@ steps:
       3: Reverb is space.
 
   - kind: ask
-    q: What does the lfo's rate set?
+    q: Hear the lfo on your lead's cutoff with the rate low, then high. What does the rate set?
+    part: lead
+    play: [{lfo: 0.6, lfoto: 0, lforate: 0.2, label: "rate low"}, {lfo: 0.6, lfoto: 0, lforate: 0.8, label: "rate high"}]
     options: ["how fast it moves", "how far it moves", "which knob it moves", "how loud the lead is"]
     answer: 0
     why: Rate is speed. Depth is how far.

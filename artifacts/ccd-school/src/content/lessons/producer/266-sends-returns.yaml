@@ -93,7 +93,9 @@ steps:
       3: It's about space, not level.
 
   - kind: ask
-    q: By default, you turn a part's fader down. What happens to its reverb?
+    q: Hear your chords with reverb, then with the fader pulled down. What happens to the reverb?
+    part: chords
+    play: [{send: 0.7, level: 0.75, label: "fader up"}, {send: 0.7, level: 0.3, label: "fader down"}]
     options: ["it goes down too", "it gets louder", "it stays exactly the same", "it switches off"]
     answer: 0
     why: Sends come after the fader by default, so they follow it.

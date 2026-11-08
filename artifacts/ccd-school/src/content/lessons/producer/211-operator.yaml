@@ -96,7 +96,9 @@ steps:
       3: Echo is a separate effect.
 
   - kind: ask
-    q: You change a modulator's ratio. What changes?
+    q: Hear your lead with fm, then with the modulator's ratio changed. What changes?
+    part: lead
+    play: [{fm: 0.5, ratio: 0.25, label: "one ratio"}, {fm: 0.5, ratio: 0.75, label: "another ratio"}]
     options: ["the timbre, not the note", "the note you hear", "the tempo", "nothing"]
     answer: 0
     why: The ratio changes which harmonics appear, so the colour changes while the pitch stays.

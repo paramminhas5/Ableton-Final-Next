@@ -76,7 +76,9 @@ steps:
         Pick the one you like.
 
   - kind: ask
-    q: What is timbre?
+    q: The same notes at the same loudness, in two different sounds. What's the word for what changed?
+    part: lead
+    play: [{wave: 0, label: "one sound"}, {wave: 1, label: "another"}]
     options: ["the colour or character of a sound", "how high a note is", "how loud a note is", "how fast the song is"]
     answer: 0
     why: Timbre is what's left when pitch and loudness are the same, the sound's colour.
@@ -96,14 +98,15 @@ steps:
       3: They're at the same volume.
 
   - kind: ask
-    q: Your lead sounds dull. What's more likely to help than turning it up?
-    options: ["change its timbre, say open the cutoff", "turn the tempo up", "add more notes", "turn the kick down"]
+    q: Your lead sounds dull. Each of these tries one fix. Which one helps most?
+    part: lead
+    sounds: [{cutoff: 0.9}, {cutoff: 0.2, bpm: 140}, {cutoff: 0.2, notes: "1 2 3 5 1' 5 3 2 1 2 3 5 1' 5 3 2"}]
+    options: ["change its timbre, say open the cutoff", "turn the tempo up", "add more notes"]
     answer: 0
-    why: A louder dull sound is still dull. Changing the colour is what brightens it.
+    why: "Changing the colour is what brightens it: open the cutoff and the highs come back. A louder dull sound is still dull."
     whyWrong:
       1: Tempo doesn't change how a sound is coloured.
       2: More notes won't change the sound itself.
-      3: That changes the balance, not the lead's colour.
 
   - kind: keep
     next: >-

@@ -88,7 +88,10 @@ steps:
       3: Recording is a different job.
 
   - kind: ask
-    q: What does swing move?
+    q: Hear your hats straight, then swung. What does swing move?
+    part: hats
+    with: ["kick"]
+    play: [{notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0, label: "straight"}, {notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0.5, label: "swung"}]
     options: ["the off sixteenths, a little late", "every kick", "the whole song faster", "only the bass"]
     answer: 0
     why: Kick and clap stay put. The notes in between move.

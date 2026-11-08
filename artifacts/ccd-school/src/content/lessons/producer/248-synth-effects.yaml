@@ -74,7 +74,9 @@ steps:
         Turn echo up and hear your tune repeat. Add a bit of send for a big room. Stop before it gets messy.
 
   - kind: ask
-    q: What does an echo, or delay, do?
+    q: Hear your lead dry, then with an echo. What does an echo, or delay, do?
+    part: lead
+    play: [{echo: 0, label: "dry"}, {echo: 0.6, label: "echo"}]
     options: ["plays the sound back again a moment later", "adds the sound of a room", "makes it fuzzy", "changes the notes"]
     answer: 0
     why: Repeats, often in time with the beat.

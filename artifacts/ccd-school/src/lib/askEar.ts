@@ -178,6 +178,11 @@ export function earTrack(song: TrackV2, sound: EarSound = {}, step: { part?: str
       const i = knobIndex(part, k);
       if (i !== undefined) l.params[i] = v;
     }
+    // Ducking needs something to duck under: the kick, when the part isn't already routed.
+    if (l && typeof sound.duck === "number" && sound.duck > 0 && !l.duck?.src) {
+      const drums = layers.find(x => x.type === "drums" && x.events.some(e => e.note === 36));
+      if (drums && drums !== l) l.duck = { src: drums.id, note: 36 };
+    }
   }
   // Only the part (and what plays under it), unless the sound is the whole song.
   const keep = (l: LayerV2): LayerV2 | null => {

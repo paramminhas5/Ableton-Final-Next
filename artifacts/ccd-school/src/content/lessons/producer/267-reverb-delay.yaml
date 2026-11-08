@@ -80,7 +80,9 @@ steps:
         Hats can go further away. Try it.
 
   - kind: ask
-    q: What's the difference between reverb and delay?
+    q: Hear your clap with reverb, then with delay. What's the difference?
+    part: clap
+    play: [{send: 0.8, label: "reverb"}, {echo: 0.7, label: "delay"}]
     options: ["reverb is a smeared room, delay is clear repeats", "delay is always louder", "reverb only works on drums", "they're the same effect"]
     answer: 0
     why: Reverb smears, delay repeats.
@@ -100,7 +102,9 @@ steps:
       3: The reverb still plays, just a moment later.
 
   - kind: ask
-    q: What happens if you push delay feedback near the top?
+    q: Hear your clap's delay with low feedback, then near the top. What happens?
+    part: clap
+    play: [{echo: 0.6, master: {repeats: 0.3}, label: "low feedback"}, {echo: 0.6, master: {repeats: 1}, label: "near the top"}]
     options: ["the repeats pile up and can run away", "the delay stops", "the reverb gets shorter", "the tempo changes"]
     answer: 0
     why: Each echo feeds the next, so they keep building.

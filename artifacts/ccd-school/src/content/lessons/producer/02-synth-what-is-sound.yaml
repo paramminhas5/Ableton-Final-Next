@@ -174,24 +174,26 @@ steps:
       3: Both notes lasted the same time.
 
   - kind: ask
-    q: Which wave sounds the smoothest and most pure?
-    options: ["the soft, round one", "the saw", "the square", "they all sound the same"]
+    q: Which of these sounds the smoothest and most pure?
+    part: lead
+    sounds: [{wave: 0, cutoff: 0.05}, {wave: 0, cutoff: 0.95}, {wave: 1, cutoff: 0.95}]
+    options: ["the soft, round one", "the saw", "the square"]
     answer: 0
     why: A round wave has no sharp corners, so there is nothing extra on top. It sounds pure.
     whyWrong:
       1: The saw has a sudden drop, which makes it bright and buzzy.
       2: The square jumps up and down suddenly, which gives it that hollow, game-like sound.
-      3: Same note, but the shapes sound clearly different. Go back and tap them again.
 
   - kind: ask
-    q: Your synth sounds too harsh. Which knob helps most?
-    options: ["turn cutoff down", "turn cutoff up", "move wave to square", "play higher notes"]
+    q: Each of these is your lead with one change. Which one sounds least harsh?
+    part: lead
+    sounds: [{wave: 0, cutoff: 0.2}, {wave: 0, cutoff: 1}, {wave: 1, cutoff: 0.95}]
+    options: ["turn cutoff down", "turn cutoff up", "move wave to square"]
     answer: 0
     why: Cutoff down smooths off the sharp edges of the wave, which is what makes it harsh.
     whyWrong:
       1: Cutoff up keeps more of the sharp edges, so it gets even brighter.
       2: The square is still full of sharp jumps.
-      3: Higher notes tend to sound even sharper.
 
   - kind: ask
     more: true

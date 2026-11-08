@@ -52,7 +52,9 @@ steps:
       3: Reverb lows get muddy fast.
 
   - kind: ask
-    q: A sound is boxy. What might you try?
+    q: Your lead with a boxy mid boost, and four fixes. Which one gets rid of the boxiness?
+    part: lead
+    sounds: [{mid: 0.35}, {mid: 0.85, low: 0.95}, {mid: 0.85, send: 0.7}, {mid: 0.85, bpm: 140}]
     options: ["a small cut in the mids", "a big boost in the lows", "more reverb", "faster tempo"]
     answer: 0
     why: Boxiness usually lives in the mids.

@@ -86,7 +86,9 @@ steps:
     hint: "Get the dark part right with cutoff, then add env until each note has the same bright blip."
 
   - kind: ask
-    q: What does a filter envelope move on each note?
+    q: Hear your lead with the filter envelope off, then on. What does it move on each note?
+    part: lead
+    play: [{env: 0, cutoff: 0.2, label: "env off"}, {env: 0.85, cutoff: 0.2, label: "env on"}]
     options: ["the cutoff", "the volume", "the pitch", "the tempo"]
     answer: 0
     why: It moves the cutoff, so the brightness opens and closes on each note.
@@ -106,7 +108,10 @@ steps:
       3: Length is the amp envelope too.
 
   - kind: ask
-    q: Your filter envelope does nothing you can hear, even with lots of amount. What's the likely fix?
+    q: Each of these is your lead with lots of envelope amount and one other change. In which one can you hear the
+      envelope?
+    part: lead
+    sounds: [{env: 0.85, cutoff: 0.15}, {env: 0.85, cutoff: 1}, {env: 0.85, cutoff: 1, level: 0.95}, {env: 0.85, cutoff: 1, bpm: 100}]
     options: ["lower the base cutoff", "raise the base cutoff", "turn the volume up", "slow the tempo"]
     answer: 0
     why: With the cutoff wide open there's nowhere higher to go. A darker base gives the envelope room.

@@ -98,7 +98,9 @@ steps:
       3: It adds harmonics rather than removing them.
 
   - kind: ask
-    q: Your bass drive sounds great, but it's also much louder. What first?
+    q: "Hear your bass, then with drive turned up: it sounds great, but it's also louder. What first?"
+    part: bass
+    play: [{fdrive: 0, label: "clean"}, {fdrive: 0.9, label: "drive up"}]
     options: ["turn level down to match, then listen again", "turn drive up more", "add reverb", "mute the kick"]
     answer: 0
     why: Louder always sounds better at first. Match it, then judge the drive itself.

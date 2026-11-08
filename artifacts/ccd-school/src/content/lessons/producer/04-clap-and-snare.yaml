@@ -70,17 +70,21 @@ steps:
           is several noise bursts with a tail, almost exactly what's under your pad here.
 
   - kind: ask
-    q: Where does the backbeat land?
-    options: ["two and four", "one and three", "every beat", "only on one"]
+    q: Which of these claps lands on the backbeat?
+    part: clap
+    with: ["kick"]
+    sounds: [{notes: "....x.......x..."}, {notes: "x.......x......."}, {notes: "x...x...x...x..."}]
+    options: ["two and four", "one and three", "every beat"]
     answer: 0
     why: Two and four, answering the kick.
     whyWrong:
       1: One and three are the kick on its own.
       2: Every beat is the kick's job.
-      3: One is the start of the bar.
 
   - kind: ask
-    q: What gives a snare its sizzle?
+    q: Listen to a snare on its own. What gives it that sizzle?
+    part: snare
+    play: {}
     options: ["metal wires under the drum that rattle", "the drummer's hands", "a filter", "the kick"]
     answer: 0
     why: The snare wires rattle against the bottom skin.

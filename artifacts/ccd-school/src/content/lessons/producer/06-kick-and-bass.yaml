@@ -52,7 +52,10 @@ steps:
     hint: "No note is on a beat. Two land halfway between beats, two just before the next kick."
 
   - kind: ask
-    q: Why do kick and bass fight?
+    q: Hear your kick and bass together. Why do they fight?
+    part: bass
+    with: ["kick"]
+    play: {}
     options: ["they both live in the low end", "they're the same sound", "the bass is always too quiet", "the kick is out of tune"]
     answer: 0
     why: Both sit below about 150 hz, so they pile up there.
@@ -62,7 +65,10 @@ steps:
       3: Tuning doesn't cause the overlap.
 
   - kind: ask
-    q: What does ducking the bass do?
+    q: Hear your bass and kick, then with the bass ducked. What does ducking the bass do?
+    part: bass
+    with: ["kick"]
+    play: [{duck: 0, label: "no duck"}, {duck: 0.8, label: "ducked"}]
     options: ["dips the bass every time the kick hits", "deletes the bass", "makes the bass louder", "changes the bass notes"]
     answer: 0
     why: The bass gets out of the kick's way and swells back.

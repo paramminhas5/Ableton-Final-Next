@@ -113,7 +113,9 @@ steps:
       3: That's space.
 
   - kind: ask
-    q: Why match loudness before comparing your mix with a released track?
+    q: Hear your mix, then the same mix a little louder. Why match loudness before comparing your mix with a
+      released track?
+    play: [{master: {out: 0.6}, label: "your mix"}, {master: {out: 0.8}, label: "a bit louder"}]
     options: ["the louder one nearly always sounds better", "quiet mixes can't be compared", "it makes your mix louder for good", "released tracks are always quiet"]
     answer: 0
     why: Louder fools the ear. Match it and you hear the real differences.
