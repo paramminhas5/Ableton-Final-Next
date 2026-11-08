@@ -68,7 +68,7 @@ const MORE_SECTIONS = [
       { to: "/profile",     label: "Profile & Trophies" },
       { to: "/leaderboard", label: "Leaderboard"        },
       { to: "/shop",        label: "Gem Shop"         },
-      { to: "/placement",   label: "Placement Test"     },
+      { to: "/placement",   label: "find your level"    },
     ],
     includeTheme: true,
   },

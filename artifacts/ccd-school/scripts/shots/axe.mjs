@@ -15,6 +15,8 @@ const pages = [
   { name: "welcome", path: "/" },
   { name: "all lessons", path: "/learn" },
   { name: "practice", path: "/gym" },
+  // This round's new screens (EXTRA=1): kept out of the default list so before and after compare the same pages.
+  ...(process.env.EXTRA ? [{ name: "find your level", path: "/placement" }, { name: "challenge", path: "/world/producer/challenge" }, { name: "remakes", path: "/gym/remakes" }, { name: "settings", path: "/settings" }, { name: "admin learning", path: "/admin/learning" }] : []),
 ];
 let total = 0, nodes = 0;
 const byRule = new Map();

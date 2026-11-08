@@ -108,7 +108,7 @@ function CopyRoundStep({ r, song, onDone, onSkip }: { r: CopyRound; song: TrackV
         <CopySides c={c} />
       </div>
       <div className="fl-text">
-        <p className="ls-read">{t.own ? `This is your own ${r.layer === "drums" ? "beat" : r.layer === "lead" ? "melody" : r.layer}, the first bar of it, hidden. Write it back by ear.` : `Your song has no ${r.layer === "drums" ? "beat" : r.layer === "lead" ? "melody" : r.layer} to copy yet, so this one is ours, in your song's key.`}{r.clock ? ` You have ${r.clock} seconds for three stars; it still counts after.` : ""}</p>
+        <p className="ls-read">{t.own ? `This is your own ${r.layer === "drums" ? "beat" : r.layer === "lead" ? "melody" : r.layer}, the first bar of it, hidden. Write it back by ear.` : `Your song has no ${r.layer === "drums" ? "beat" : r.layer === "lead" ? "melody" : r.layer} to copy yet, so this one is ours${r.layer === "drums" ? "" : ", in your song's key"}.`}{r.clock ? ` You have ${r.clock} seconds for three stars; it still counts after.` : ""}</p>
         <p className="ls-read wc-why">{r.line}.</p>
         {tip ? <div className="ls-hint" role="status">{tip}</div> : null}
         {c.done ? <p className="ls-read ms-done" role="status">every {r.layer === "drums" ? "hit" : "note"}, by ear.</p> : null}

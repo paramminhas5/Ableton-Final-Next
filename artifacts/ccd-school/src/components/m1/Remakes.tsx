@@ -111,7 +111,7 @@ export function Remakes() {
           <div className="ls-col">
             <div className="fl-inst">
               <Screen>
-                <Meta left="remakes" right={<Stars n={total} of={REMAKES.length * 3} />} />
+                <Meta left="remakes" right={`${REMAKES.length} sounds`} />
                 <div className="ls-title">{last ? (last.kept ? `${last.name} is in your song` : `${last.name}: matched`) : "make a sound like a famous one"}</div>
                 <p className="ls-sub">{last ? `${last.stars} ${last.stars === 1 ? "star" : "stars"}. pick another, or open the studio to hear it in your song.` : "each one is a patch we made in a well-known style, never a copy of a record. match it by ear, then keep it on your own part."}</p>
               </Screen>
