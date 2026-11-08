@@ -22,6 +22,8 @@ import { makeMatchQuestion, type MatchPart, type MatchQuestion } from "@/lib/gym
 import { GymMatch } from "./GymMatch";
 import { GymCopy } from "./GymCopy";
 import { makeCopyQuestion, type CopyQuestion } from "@/lib/copyEar";
+import { GymImagine } from "./GymImagine";
+import { makeImagineQuestion, type ImagineQuestion } from "@/lib/imagine";
 import "@/components/m1/lesson.css";
 
 /** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
@@ -32,11 +34,13 @@ const TAUGHT_BY: Record<GymDrill, { slugs: string[]; first: string; title: strin
   // Opens after any lesson with a match step (first-bass is the first).
   // Opens after any lesson with a copy step (your-kick is the first).
   copy: { slugs: ["your-kick", "what-is-rhythm", "clap-and-snare", "first-bass", "kick-and-bass", "chords-on-top", "lead-width", "major-scale", "intervals", "melody-writing", "what-are-chords", "chord-progressions", "bass-follows", "notes-and-octaves", "ear-higher-lower"], first: "your-kick", title: "your kick" },
+  // Opens after any lesson with an imagine step (writing a melody is the first in basics).
+  imagine: { slugs: ["melody-writing", "intervals", "chord-progressions", "bass-follows", "first-bass", "syncopation"], first: "melody-writing", title: "writing a melody" },
   match: { slugs: ["first-bass", "shape-your-synth", "kick-designer", "saturator-distortion", "warp-modes-deep", "collision-tension-electric"], first: "first-bass", title: "your first bass line" },
 };
-const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove", match: "match this sound", copy: "copy by ear" };
-const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?", match: "match this sound", copy: "copy by ear" };
-const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF", match: "#5CC8FF", copy: "#FFD24A" };
+const NAME: Record<GymDrill, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove", match: "match this sound", copy: "copy by ear", imagine: "imagine it first" };
+const PAD: Record<GymDrill, string> = { eq: "which band?", compression: "compressed?", groove: "faster or swung?", match: "match this sound", copy: "copy by ear", imagine: "imagine it first" };
+const COLOR: Record<GymDrill, string> = { eq: "#4FE3B6", compression: "#B89CFF", groove: "#7D96FF", match: "#5CC8FF", copy: "#FFD24A", imagine: "#FF8FD0" };
 const BARS_BEFORE_ANSWER = 8;
 const fmtHz = (hz: number) => (hz >= 1000 ? `${hz / 1000} khz` : `${hz} hz`);
 const fmtClock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -53,6 +57,7 @@ function Pic({ kind, c }: { kind: string; c: string }) {
     groove: <><circle cx="10" cy="18" r="3" fill={c} /><circle cx="22" cy="18" r="3" fill={c} /><circle cx="36" cy="18" r="3" fill={c} /><circle cx="48" cy="18" r="3" fill={c} opacity={0.5} /></>,
     match: <><path d="M4 18c5-11 9-11 14 0s9 11 14 0 9-11 14 0" {...s} opacity={0.45} /><path d="M10 18c5-10 9-10 14 0s9 10 14 0 9-10 14 0" {...s} /></>,
     copy: <>{[[8, 24], [16, 12], [24, 24], [32, 18], [40, 12], [48, 24]].map(([x, y]) => <rect key={x} x={x - 3} y={y - 3} width={6} height={6} rx={1.5} fill={c} />)}<path d="M4 30h48" {...s} opacity={0.35} /></>,
+    imagine: <><path d="M6 26c4-12 12-16 22-16s18 4 22 16" {...s} opacity={0.4} />{[[14, 20], [22, 14], [30, 17], [38, 12]].map(([x, y]) => <rect key={x} x={x - 3} y={y - 3} width={6} height={6} rx={1.5} fill={c} />)}</>,
     review: <><path d="M8 18a11 11 0 0 1 19-7.5M30 18a11 11 0 0 1-19 7.5" {...s} /><path d="m27 6 0 5-5 0M11 30l0-5 5 0" {...s} /></>,
     daily: <><circle cx="18" cy="18" r="11" {...s} /><path d="M18 11v7l5 3" {...s} /></>,
     train: <><path d="M6 22v-6M12 26v-14M18 20v-2M24 28v-18M30 22v-6M36 24v-10M42 20v-2M48 26v-14" {...s} /></>,
@@ -172,6 +177,14 @@ export function GymPageClient() {
       // Copy by ear plays on the engine too (GymCopy).
       if (drill === "copy") {
         setQ(makeCopyQuestion(level, rng));
+        setCount(c => c + 1);
+        shownAt.current = Date.now();
+        setPhase("listening");
+        return;
+      }
+      // Imagine it first plays on the engine too (GymImagine), from the copy drill's material.
+      if (drill === "imagine") {
+        setQ(makeImagineQuestion(level, rng));
         setCount(c => c + 1);
         shownAt.current = Date.now();
         setPhase("listening");
@@ -407,6 +420,15 @@ export function GymPageClient() {
         {top}
         <GymCopy key={count} q={q as CopyQuestion} level={saved.levels.copy.level} count={count} feedback={feedback} timeUp={timeUp}
           onAnswer={(ok, note, answer) => record("copy", ok, note, answer)} onEnd={finishSession} onNext={next} />
+      </div>
+    );
+  }
+  if (q?.drill === "imagine") {
+    return (
+      <div className="ls">
+        {top}
+        <GymImagine key={count} q={q as ImagineQuestion} level={saved.levels.imagine.level} count={count} feedback={feedback} timeUp={timeUp}
+          onAnswer={(ok, note, answer) => record("imagine", ok, note, answer)} onEnd={finishSession} onNext={next} />
       </div>
     );
   }

@@ -862,7 +862,7 @@ function Player({ mission, nextSlug, isReview, missionIndex = 1, onComplete }: P
   };
 
   // Labels like "concept · 2 of 7" count the steps of that kind.
-  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", matchsound: "match this sound", copy: "copy it by ear", ear: "ear round" };
+  const kindLabel: Record<string, string> = { concept: "concept", diagram: "diagram", interact: "try it", quiz: "question", "audio-id": "listen", "type-answer": "type it", sequence: "order", match: "match", say: "learn", hear: "listen", play: "play", shape: "shape", matchsound: "match this sound", copy: "copy it by ear", imagine: "imagine it first", ear: "ear round" };
   const meta = (() => {
     if (!cur) return "";
     if (ASK.has(cur.kind)) {

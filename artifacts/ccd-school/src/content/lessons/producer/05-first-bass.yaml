@@ -26,6 +26,19 @@ steps:
         Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom
         and the bass take turns.
 
+  - kind: imagine
+    layer: bass
+    pattern: ". . 1 - . . 5, - . . 1 - . . 1' -"
+    say:
+      mentor: >-
+        A bass line on the grid, no sound yet. Look at the gaps: the notes sit between the beats, where the kick
+        isn't. Hum it as the playhead passes, then play the lines and pick the one you saw.
+      straight: >-
+        Read the bass line, notice it sits between the beats, hum it, then pick the match.
+      eli5: >-
+        Look at the low notes. They come between the beats. Hum them, then pick the one that sounds like it.
+    hint: "Two notes are home, one dips below, the last jumps an octave up."
+
   - kind: copy
     layer: bass
     pattern: ". . 1 - . . 1 - . . 1' - . . 5 -"

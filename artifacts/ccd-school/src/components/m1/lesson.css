@@ -973,3 +973,10 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ae-letter{display:inline-block;min-width:1.4em;margin-right:8px;font-weight:700;color:var(--sub)}
 .ae-blind{color:var(--sub);font-weight:500}
 .ae-blind b{color:var(--ink);font-weight:700}
+
+/* imagine it first (ImagineEar.tsx): the notes, a silent count, then the phrases to pick from */
+.im-line{margin-top:8px;font-size:20px;font-weight:400;letter-spacing:-.01em;line-height:1.25;color:var(--disp-ink)}
+.im-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0 10px}
+.im-counts span{display:flex;align-items:center;justify-content:center;height:28px;border-radius:8px;font-size:13px;font-weight:600;color:var(--disp-sub);background:rgba(255,255,255,.05);transition:background 80ms,color 80ms}
+.im-counts span.is-on{color:#141416;background:var(--led-mint);box-shadow:0 0 10px color-mix(in srgb,var(--led-mint) 50%,transparent)}
+.im-tip{margin-top:10px;color:var(--ink);background:color-mix(in srgb,var(--led-mint) 8%,transparent);border-left:3px solid var(--led-mint)}

@@ -6147,6 +6147,17 @@
           }
         },
         {
+          "kind": "imagine",
+          "layer": "lead",
+          "pattern": "1 - - - 3 - - - 5 - - - 1' - - -",
+          "say": {
+            "mentor": "Four notes, no sound yet. Look at how far apart they are on the grid: small gaps are small steps, big gaps are leaps. Hum them as the playhead passes, then pick the phrase that matches. Seeing an interval and hearing it in your head is the skill.",
+            "straight": "Read the four notes and the gaps between them, hum them, then pick the matching phrase.",
+            "eli5": "Look at how far each note jumps. Little jump, little sound change. Big jump, big change. Hum them, then pick the one that sounds like that."
+          },
+          "hint": "Count the rows between notes. The last one is a big jump up: the same note, an octave higher."
+        },
+        {
           "kind": "copy",
           "layer": "lead",
           "pattern": "1 - - - 5 - - - 1 - - - 3 - - -",
@@ -6269,6 +6280,17 @@
             "straight": "Phrase one ends unfinished (a question), phrase two repeats it and lands on the home note (an answer).",
             "eli5": "A tune can ask a question and then answer it. The first part ends up in the air. The second part is nearly the same, but it comes home to the first key."
           }
+        },
+        {
+          "kind": "imagine",
+          "layer": "lead",
+          "pattern": "1 - 3 - 5 - 3 - 2 - 3 - 1 - . .",
+          "say": {
+            "mentor": "Before you hear anything, read it. This is a short phrase on the grid: higher rows are higher notes, and the playhead shows when each one lands. Hum it, out loud or in your head. Then play the phrases and pick the one you saw. Writers do this all the time: they hear a line in their head before they play it.",
+            "straight": "Read the notes, hum them, then pick which phrase matches what you saw. Hearing a line in your head first is how melodies get written.",
+            "eli5": "Look at the notes. Can you sing them in your head? Higher squares are higher notes. Then listen to the tunes and pick the one that matches."
+          },
+          "hint": "Follow the shape: does it climb, then come back down? Pick the one that moves the same way."
         },
         {
           "kind": "copy",
@@ -6644,6 +6666,17 @@
           ]
         },
         {
+          "kind": "imagine",
+          "layer": "chords",
+          "pattern": "1+3+5 - - - 4,+6,+1 - - - 6,+1+3 - - - 5,+7,+2 - - -",
+          "say": {
+            "mentor": "Four chords on the grid, no sound. Each stack is one chord; watch where the lowest note of each stack moves. Hear the first one in your head, then imagine the stack moving down, down again, then up a little. Then play the progressions and pick the one you saw.",
+            "straight": "Read the four chords, imagine them, then pick the matching progression. Watch the lowest note of each stack.",
+            "eli5": "Each stack of squares is one chord. Look at where the bottom square goes: down, down, up. Imagine it, then pick the one that sounds like that."
+          },
+          "hint": "Listen for the bottom note of each chord. Here it goes down, down again, then up."
+        },
+        {
           "kind": "copy",
           "layer": "chords",
           "pattern": "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - -",
@@ -6762,6 +6795,17 @@
             "straight": "Low notes define the chord. The simplest bass line plays the root, the note each chord is built on.",
             "eli5": "Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of each chord. That note is called the root."
           }
+        },
+        {
+          "kind": "imagine",
+          "layer": "bass",
+          "pattern": "1 - - - 4, - - - 6, - - - 5, - - -",
+          "say": {
+            "mentor": "Four bass notes on the grid, one on each beat, and no sound. Read where each note sits against the first: down, then up a little, then down one. Hum it low. Then play the lines and pick the one you saw.",
+            "straight": "Read the bass notes, hum them, then pick the line that matches.",
+            "eli5": "Four low notes. Look at whether each one goes up or down. Hum them deep, then pick the one that sounds the same."
+          },
+          "hint": "The first note is home. Follow each move from there: down, up, then one step down."
         },
         {
           "kind": "copy",
@@ -7388,6 +7432,20 @@
               "say": "Syncopation in popular music traces back to West African rhythm. Through blues, jazz, funk and soul it reached house and techno."
             }
           ]
+        },
+        {
+          "kind": "imagine",
+          "layer": "drums",
+          "pattern": {
+            "kick": "x..x..x...x.....",
+            "clap": "....x.......x..."
+          },
+          "say": {
+            "mentor": "A beat on the grid, no sound. The clap is on two and four, but the kick isn't on the beats: it lands in between, pushing ahead. Tap it on your leg as the playhead passes. Then play the beats and pick the one you saw.",
+            "straight": "Read the beat, tap it out, then pick the matching one. The kick is syncopated, off the beat.",
+            "eli5": "Look where the kicks are: not on the counts, but in between. Tap it on your knee, then pick the beat that sounds the same."
+          },
+          "hint": "Say the counts out loud, one e and a. The second kick comes before beat two."
         },
         {
           "kind": "play",
@@ -10449,6 +10507,17 @@
             "straight": "The bass lives low. In dance music it often plays between the kicks so the two take turns.",
             "eli5": "Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom and the bass take turns."
           }
+        },
+        {
+          "kind": "imagine",
+          "layer": "bass",
+          "pattern": ". . 1 - . . 5, - . . 1 - . . 1' -",
+          "say": {
+            "mentor": "A bass line on the grid, no sound yet. Look at the gaps: the notes sit between the beats, where the kick isn't. Hum it as the playhead passes, then play the lines and pick the one you saw.",
+            "straight": "Read the bass line, notice it sits between the beats, hum it, then pick the match.",
+            "eli5": "Look at the low notes. They come between the beats. Hum them, then pick the one that sounds like it."
+          },
+          "hint": "Two notes are home, one dips below, the last jumps an octave up."
         },
         {
           "kind": "copy",

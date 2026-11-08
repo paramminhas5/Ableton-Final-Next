@@ -169,6 +169,8 @@ export type LessonScreen =
   | { kind: "matchsound"; layer: string; knobs: string[]; target: Record<string, number>; level?: "gentle" | "standard" | "hard"; body: string; hint?: string }
   /** Copy by ear: a hidden pattern written on a grid (lesson files' `copy`, src/components/m1/CopyEar.tsx). */
   | { kind: "copy"; layer: string; pattern: string | Record<string, string>; level?: "gentle" | "standard" | "hard"; body: string; hint?: string }
+  /** Imagine it first: notes shown without sound, then picked by ear (lesson files' `imagine`, src/components/m1/ImagineEar.tsx). */
+  | { kind: "imagine"; layer: string; choices: (string | Record<string, string>)[]; answer: number; level?: "gentle" | "standard" | "hard"; body: string; hint?: string }
   | { kind: "arrange"; body: string; goal: "sections" | "drop" | "fills" | "risers" | "export"; hint?: string }
   | { kind: "mix"; body: string; goal: "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record" | "punch"; bank?: string; hint?: string }
   | { kind: "tempo"; body: string; marks: number[]; set: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: string }

@@ -122,7 +122,9 @@ export function useCopyOn({ song, layer, target, loop, level }: { song: TrackV2 
 export type Copy = ReturnType<typeof useCopyOn>;
 
 /** The grid: only the rows worth trying, a column per sixteenth, your notes marked after a check. */
-export function CopyGrid({ c, layer, accent, locked, reveal }: { c: Copy; layer: CopyLayer; accent?: string; locked?: boolean; reveal?: boolean }) {
+/** What the grid draws from: a copy screen's state, or any notes shown on it (the imagine step shows a phrase this way). */
+export type GridView = Pick<Copy, "loop" | "playing" | "beat" | "mine" | "target" | "hints" | "marks" | "rows" | "tap">;
+export function CopyGrid({ c, layer, accent, locked, reveal }: { c: GridView; layer: CopyLayer; accent?: string; locked?: boolean; reveal?: boolean }) {
   const cols = Math.round(c.loop / STEP);
   const now = c.playing ? Math.floor((((c.beat % c.loop) + c.loop) % c.loop) / STEP) : -1;
   const has = new Set(c.mine.map(e => keyOf(col(e.start), e.note)));

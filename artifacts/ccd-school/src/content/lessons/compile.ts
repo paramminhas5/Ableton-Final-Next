@@ -5,6 +5,7 @@ import { CLIP_IDS } from "./clips";
 import { SCALES } from "../../lib/theory";
 import { patternProblems, type CopyLayer } from "../../lib/copyEar";
 import { EAR_PARTS, earSoundProblems } from "../../lib/askEar";
+import { imagineProblems } from "../../lib/imagine";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -50,6 +51,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
   match: ["kind", "layer", "knobs", "target", "say", "hint", "levels"],
   copy: ["kind", "layer", "pattern", "say", "hint", "levels"],
+  imagine: ["kind", "layer", "pattern", "others", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
@@ -230,6 +232,13 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           // A hidden pattern to write on the grid by ear (src/lib/copyEar.ts reads and checks it).
           if (!["drums", "bass", "chords", "lead"].includes(String(raw.layer))) { at(where, "layer must be drums, bass, chords or lead"); break; }
           for (const p of patternProblems(raw.layer as CopyLayer, raw.pattern)) at(where, `pattern: ${p}`);
+          voice(where, "say", raw.say);
+          break;
+        }
+        case "imagine": {
+          // Notes shown without sound, then picked by ear from two or three (src/lib/imagine.ts).
+          if (!["drums", "bass", "chords", "lead"].includes(String(raw.layer))) { at(where, "layer must be drums, bass, chords or lead"); break; }
+          for (const p of imagineProblems(raw.layer as CopyLayer, raw.pattern, raw.others)) at(where, p);
           voice(where, "say", raw.say);
           break;
         }

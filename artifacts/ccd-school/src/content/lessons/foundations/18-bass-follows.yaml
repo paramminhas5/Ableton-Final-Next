@@ -27,6 +27,20 @@ steps:
         Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of
         each chord. That note is called the root.
 
+  - kind: imagine
+    layer: bass
+    pattern: "1 - - - 4, - - - 6, - - - 5, - - -"
+    say:
+      mentor: >-
+        Four bass notes on the grid, one on each beat, and no sound. Read where each note sits against the
+        first: down, then up a little, then down one. Hum it low. Then play the lines and pick the one you saw.
+      straight: >-
+        Read the bass notes, hum them, then pick the line that matches.
+      eli5: >-
+        Four low notes. Look at whether each one goes up or down. Hum them deep, then pick the one that sounds
+        the same.
+    hint: "The first note is home. Follow each move from there: down, up, then one step down."
+
   - kind: copy
     layer: bass
     pattern: "1 - - - 6, - - - 4, - - - 5, - - -"

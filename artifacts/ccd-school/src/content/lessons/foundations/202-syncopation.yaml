@@ -62,6 +62,21 @@ steps:
           Syncopation in popular music traces back to West African rhythm. Through blues, jazz, funk and
           soul it reached house and techno.
 
+  - kind: imagine
+    layer: drums
+    pattern: {kick: "x..x..x...x.....", clap: "....x.......x..."}
+    say:
+      mentor: >-
+        A beat on the grid, no sound. The clap is on two and four, but the kick isn't on the beats: it lands
+        in between, pushing ahead. Tap it on your leg as the playhead passes. Then play the beats and pick the
+        one you saw.
+      straight: >-
+        Read the beat, tap it out, then pick the matching one. The kick is syncopated, off the beat.
+      eli5: >-
+        Look where the kicks are: not on the counts, but in between. Tap it on your knee, then pick the beat
+        that sounds the same.
+    hint: "Say the counts out loud, one e and a. The second kick comes before beat two."
+
   - kind: play
     layer: hats
     surface: pads

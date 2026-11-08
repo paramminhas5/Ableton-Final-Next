@@ -37,6 +37,7 @@ import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShap
 import { MatchSoundStep } from "./MatchSound";
 import { CopyStep } from "./CopyEar";
 import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
+import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -63,6 +64,7 @@ const pageName = (p: Page | undefined): string => {
     case "shape": return "shape it";
     case "matchsound": return "match this sound";
     case "copy": return "copy it by ear";
+    case "imagine": return "imagine it first";
     case "arrange": return p.goal === "export" ? "finish it" : p.goal === "fills" ? "fills" : p.goal === "drop" ? "the drop" : "arrange it";
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
@@ -680,6 +682,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     case "matchsound": body = <MatchSoundStep mission={mission} screen={cur} onNext={next} tail={ways} />; break;
     // What you copy becomes this lesson's part (the add step puts it in your song); a play step after it starts from it.
     case "copy": body = <CopyStep mission={mission} screen={cur} onNext={next} tail={ways} onKeep={t => { copied.current = t; setTake(t); saveTake(mission.slug, t); }} />; break;
+    case "imagine": body = <ImagineStep screen={cur} onNext={next} tail={ways} />; break;
     case "arrange": body = <ArrangeStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "mix": body = <MixStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;

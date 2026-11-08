@@ -1,4 +1,5 @@
 /* Pure: no fs, no yaml. The browser bundle imports this file. */
+import { imagineChoices } from "../../lib/imagine";
 import type { Lesson, Level, RawAsk, RawStep, RawTry, ResolvedStep, ResolvedTry, Voice, VoiceText, Rounds } from "./schema";
 
 export type ResolveOpts = { voice: Voice; level: Level };
@@ -99,6 +100,12 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
       case "copy":
         out.push({ kind: "copy", layer: s.layer, pattern: s.pattern, level: o.level, say: voiceText(s.say, o.voice), ...hintOf(s.hint, o) });
         break;
+      case "imagine": {
+        // The phrases to pick from are fixed per lesson, step and level, so a revisit asks the same thing.
+        const { choices, answer } = imagineChoices(s.layer, s.pattern, o.level, seeded(`${lesson.slug}:imagine:${i}:${o.level}`), s.others);
+        out.push({ kind: "imagine", layer: s.layer, choices, answer, level: o.level, say: voiceText(s.say, o.voice), ...hintOf(s.hint, o) });
+        break;
+      }
       case "match":
         out.push({ kind: "match", layer: s.layer, knobs: s.knobs, target: s.target, level: o.level, say: voiceText(s.say, o.voice), ...hintOf(s.hint, o) });
         break;
