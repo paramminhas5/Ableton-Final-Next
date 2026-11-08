@@ -191,7 +191,7 @@ The filter alone (tests/gaps.rs): twice the rate -86.8 / -87.9 / -85.0 / -78.9, 
 
 ### CPU
 
-CPU_ROUND2
+`engine/tests/bench.rs` (the full eight-layer song: two chord parts playing six-note chords, two leads, all on the supersaw; 128-frame blocks, best of five; before and after run alternately three times on a quiet machine): before 24.9 / 25.3 / 24.5% of one core, after 27.0 / 26.8 / 27.0% (about 2 points, 8%: the lead's filter at twice the rate, second-order ADAA on the chord voices, the plate's onset is not in this song), and with all four synth parts at full width (`CCD_BENCH_WIDE=1`) 33.2 / 33.0 / 34.0% (width costs a second filter per voice and a second strip channel, only on parts that use it). One effect (`cpu_per_voice`, best of five): the plate 0.50% of a core before, 0.84% after (its forty taps; 1.12% before they skipped the divide); the hall 1.30%, unchanged. The ladder alone on a note 108 saw: 50.9 ns a sample before, 99.9 with second-order ADAA, 192.6 at twice the rate (each fast step works out one new antiderivative, the others carried from the step before: same numbers, the reference hash unchanged).
 
 ### Clips
 

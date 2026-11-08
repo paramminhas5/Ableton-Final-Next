@@ -128,11 +128,16 @@ pub struct Ladder {
     u1: f32,
     u2: f32,
     order2: bool,
+    /// Second-order ADAA's memory: the second antiderivative at the last input and the last divided
+    /// difference, so each fast step works out one new antiderivative instead of three (same numbers).
+    f2_1: f64,
+    d_1: f64,
+    memo: bool,
 }
 
 impl Default for Ladder {
     fn default() -> Self {
-        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0, u2: 0.0, order2: false }
+        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0, u2: 0.0, order2: false, f2_1: 0.0, d_1: 0.0, memo: false }
     }
 }
 
@@ -157,33 +162,6 @@ fn clip_residual_ad2(x: f64) -> f64 {
     if x < 0.0 { -v } else { v }
 }
 
-/// Second-order ADAA of the residual over the last three inputs: the residual's average under a triangle
-/// centred on the middle one (so a sample of delay on the residual only).
-#[inline]
-fn residual_adaa2(x0: f32, x1: f32, x2: f32) -> f32 {
-    // Slow steps: the triangle's average is the residual at the triangle's centre of mass to within -110 dB.
-    if (x0 - x1).abs() <= 0.01 && (x1 - x2).abs() <= 0.01 {
-        let m = 0.25 * (x0 + 2.0 * x1 + x2);
-        return super::soft_clip(m) - m;
-    }
-    let (a, b, c) = (x0 as f64, x1 as f64, x2 as f64);
-    let d1 = |p: f64, q: f64| if (p - q).abs() > 1e-4 { (clip_residual_ad2(p) - clip_residual_ad2(q)) / (p - q) } else { clip_residual_ad64(0.5 * (p + q)) };
-    let r = if (a - c).abs() > 1e-4 {
-        2.0 / (a - c) * (d1(a, b) - d1(b, c))
-    } else {
-        // x0 and x2 meet: the paper's fallback around their mean.
-        let m = 0.5 * (a + c);
-        let dl = m - b;
-        if dl.abs() > 1e-4 {
-            2.0 / dl * (clip_residual_ad64(m) + (clip_residual_ad2(b) - clip_residual_ad2(m)) / dl)
-        } else {
-            let q = 0.5 * (m + b);
-            super::soft_clip(q as f32) as f64 - q
-        }
-    };
-    r as f32
-}
-
 /// Antiderivative of what the soft clip takes from a straight line, clip(x) - x. The clip is
 /// x (27 + x^2) / (27 + 9 x^2) = x / 9 + 24 x / (9 x^2 + 27), whose antiderivative is
 /// x^2 / 18 + 4/3 ln(1 + x^2 / 3) (less its value at 0); past the clamp at 3 the clip is flat at 1.
@@ -193,6 +171,49 @@ fn clip_residual_ad(x: f32) -> f32 {
     let at = |v: f32| v * v / 18.0 + (4.0 / 3.0) * (v * v / 3.0).ln_1p();
     let f = if a <= 3.0 { at(a) } else { at(3.0) + (a - 3.0) };
     f - 0.5 * x * x
+}
+
+/// The divided difference of the second antiderivative between `p` (whose antiderivative is `fp`) and `q`.
+#[inline]
+fn d1_of(p: f64, fp: f64, q: f64, fq: f64) -> f64 {
+    if (p - q).abs() > 1e-4 { (fp - fq) / (p - q) } else { clip_residual_ad64(0.5 * (p + q)) }
+}
+
+impl Ladder {
+    /// Second-order ADAA of the residual over the last three inputs: the residual's average under a triangle
+    /// centred on the middle one (so a sample of delay on the residual only).
+    #[inline]
+    fn residual_adaa2(&mut self, x0: f32) -> f32 {
+        let (x1, x2) = (self.u1, self.u2);
+        // Slow steps: the triangle's average is the residual at the triangle's centre of mass to within -110 dB.
+        if (x0 - x1).abs() <= 0.01 && (x1 - x2).abs() <= 0.01 {
+            self.memo = false;
+            let m = 0.25 * (x0 + 2.0 * x1 + x2);
+            return super::soft_clip(m) - m;
+        }
+        let (a, b, c) = (x0 as f64, x1 as f64, x2 as f64);
+        let fa = clip_residual_ad2(a);
+        let fb = if self.memo { self.f2_1 } else { clip_residual_ad2(b) };
+        let dab = d1_of(a, fa, b, fb);
+        let dbc = if self.memo { self.d_1 } else { d1_of(b, fb, c, clip_residual_ad2(c)) };
+        self.f2_1 = fa;
+        self.d_1 = dab;
+        self.memo = true;
+        let r = if (a - c).abs() > 1e-4 {
+            2.0 / (a - c) * (dab - dbc)
+        } else {
+            // x0 and x2 meet: the paper's fallback around their mean.
+            let m = 0.5 * (a + c);
+            let dl = m - b;
+            if dl.abs() > 1e-4 {
+                2.0 / dl * (clip_residual_ad64(m) + (fb - clip_residual_ad2(m)) / dl)
+            } else {
+                let q = 0.5 * (m + b);
+                super::soft_clip(q as f32) as f64 - q
+            }
+        };
+        r as f32
+    }
 }
 
 impl Ladder {
@@ -209,6 +230,7 @@ impl Ladder {
         self.s = [0.0; 4];
         self.u1 = 0.0;
         self.u2 = 0.0;
+        self.memo = false;
     }
 
     #[inline]
@@ -223,7 +245,7 @@ impl Ladder {
         // When the input barely moves, the average over the step is the midpoint's value to within
         // -110 dB, so the logs are only worked out on fast steps (high notes, edges): most samples skip them.
         let r = if self.order2 {
-            residual_adaa2(u, self.u1, self.u2)
+            self.residual_adaa2(u)
         } else {
             let du = u - self.u1;
             if du.abs() > 0.01 { (clip_residual_ad(u) - clip_residual_ad(self.u1)) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m }

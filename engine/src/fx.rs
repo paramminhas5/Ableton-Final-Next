@@ -37,6 +37,13 @@ impl Line {
         let n = self.buf.len();
         self.buf[(self.pos + n - d.min(n - 1)) % n]
     }
+    /// `read_int` for a tap known to lie inside the line (d < len): the same sample, no divide.
+    #[inline]
+    fn read_tap(&self, d: usize) -> f32 {
+        let n = self.buf.len();
+        let i = self.pos + n - d;
+        self.buf[if i >= n { i - n } else { i }]
+    }
     fn clear(&mut self) {
         for v in self.buf.iter_mut() {
             *v = 0.0;
@@ -611,8 +618,8 @@ impl Plate {
         self.on.write(e);
         let (mut ol, mut or) = (0.0f32, 0.0f32);
         for &(tl, gl, tr, gr) in self.on_taps.iter() {
-            ol += self.on.read_int(tl) * gl;
-            or += self.on.read_int(tr) * gr;
+            ol += self.on.read_tap(tl) * gl;
+            or += self.on.read_tap(tr) * gr;
         }
         self.lfo += self.lfo_inc;
         if self.lfo >= 1.0 {
