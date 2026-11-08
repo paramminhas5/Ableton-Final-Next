@@ -9944,13 +9944,16 @@
           "part": "kick",
           "sounds": [
             {
-              "tune": 0.2
+              "tune": 0.25,
+              "decay": 0.3
             },
             {
-              "decay": 0.15
+              "tune": 0.8,
+              "decay": 0.12
             },
             {
-              "tune": 0.85
+              "tune": 0.95,
+              "decay": 0.3
             }
           ],
           "options": [

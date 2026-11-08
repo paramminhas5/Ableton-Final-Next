@@ -254,7 +254,7 @@ steps:
     more: true
     q: Your kick sounds thin and too high. Each of these turns one knob. Which one fixes it?
     part: kick
-    sounds: [{tune: 0.2}, {decay: 0.15}, {tune: 0.85}]
+    sounds: [{tune: 0.25, decay: 0.3}, {tune: 0.8, decay: 0.12}, {tune: 0.95, decay: 0.3}]
     options: ["tune down", "decay down", "tune up"]
     answer: 0
     why: Tune sets how low the body sits. Turning it down makes the kick deeper and fuller.
