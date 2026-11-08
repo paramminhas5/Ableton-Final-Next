@@ -112,6 +112,11 @@ impl EqBand {
 /// of the sound at note 108. Only what the clip takes away from a straight line (clip(u) - u) goes through
 /// first-order ADAA (its average over each step), so small signals pass with no added delay and the
 /// resonance is where it was; the distortion, where the aliasing comes from, is averaged.
+///
+/// Round 2 of the shootout (8 Nov): a synth voice's ladder can run second-order ADAA (Bilbao, Esqueda,
+/// Parker and Valimaki, "Antiderivative antialiasing for memoryless nonlinearities", IEEE SPL 2017) on the
+/// same residual, at twice the voice's rate (`CharFilter::set_oversampled`): at note 108 with the filter
+/// open, -67 dB off the harmonics before, -79 after (tests/gaps.rs).
 #[derive(Clone, Copy)]
 pub struct Ladder {
     s: [f32; 4],
@@ -119,14 +124,64 @@ pub struct Ladder {
     g1: f32,
     k: f32,
     comp: f32,
-    /// The clip's last input.
+    /// The clip's last two inputs, and whether the residual takes second-order ADAA.
     u1: f32,
+    u2: f32,
+    order2: bool,
 }
 
 impl Default for Ladder {
     fn default() -> Self {
-        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0 }
+        Ladder { s: [0.0; 4], g: 0.0, g1: 0.0, k: 0.0, comp: 1.0, u1: 0.0, u2: 0.0, order2: false }
     }
+}
+
+/// The same antiderivative in f64 (second-order ADAA divides differences of it).
+#[inline]
+fn clip_residual_ad64(x: f64) -> f64 {
+    let a = x.abs();
+    let at = |v: f64| v * v / 18.0 + (4.0 / 3.0) * (v * v / 3.0).ln_1p();
+    let f = if a <= 3.0 { at(a) } else { at(3.0) + (a - 3.0) };
+    f - 0.5 * x * x
+}
+
+/// The second antiderivative of clip(x) - x (odd): on |x| <= 3, -4 x^3 / 27 + 4/3 (x ln(1 + x^2/3) - 2x +
+/// 2 sqrt(3) atan(x / sqrt(3))); past 3 the first antiderivative is a quadratic, integrated on from there.
+#[inline]
+fn clip_residual_ad2(x: f64) -> f64 {
+    let a = x.abs();
+    let s3 = 1.732_050_807_568_877_2f64;
+    let g = |t: f64| -4.0 * t * t * t / 27.0 + (4.0 / 3.0) * (t * (t * t / 3.0).ln_1p() - 2.0 * t + 2.0 * s3 * (t / s3).atan());
+    let at3 = 0.5 + (4.0 / 3.0) * 4f64.ln();
+    let v = if a <= 3.0 { g(a) } else { g(3.0) + at3 * (a - 3.0) + 0.5 * (a - 3.0) * (a - 3.0) - (a * a * a - 27.0) / 6.0 };
+    if x < 0.0 { -v } else { v }
+}
+
+/// Second-order ADAA of the residual over the last three inputs: the residual's average under a triangle
+/// centred on the middle one (so a sample of delay on the residual only).
+#[inline]
+fn residual_adaa2(x0: f32, x1: f32, x2: f32) -> f32 {
+    // Slow steps: the triangle's average is the residual at the triangle's centre of mass to within -110 dB.
+    if (x0 - x1).abs() <= 0.01 && (x1 - x2).abs() <= 0.01 {
+        let m = 0.25 * (x0 + 2.0 * x1 + x2);
+        return super::soft_clip(m) - m;
+    }
+    let (a, b, c) = (x0 as f64, x1 as f64, x2 as f64);
+    let d1 = |p: f64, q: f64| if (p - q).abs() > 1e-4 { (clip_residual_ad2(p) - clip_residual_ad2(q)) / (p - q) } else { clip_residual_ad64(0.5 * (p + q)) };
+    let r = if (a - c).abs() > 1e-4 {
+        2.0 / (a - c) * (d1(a, b) - d1(b, c))
+    } else {
+        // x0 and x2 meet: the paper's fallback around their mean.
+        let m = 0.5 * (a + c);
+        let dl = m - b;
+        if dl.abs() > 1e-4 {
+            2.0 / dl * (clip_residual_ad64(m) + (clip_residual_ad2(b) - clip_residual_ad2(m)) / dl)
+        } else {
+            let q = 0.5 * (m + b);
+            super::soft_clip(q as f32) as f64 - q
+        }
+    };
+    r as f32
 }
 
 /// Antiderivative of what the soft clip takes from a straight line, clip(x) - x. The clip is
@@ -153,6 +208,7 @@ impl Ladder {
     pub fn reset(&mut self) {
         self.s = [0.0; 4];
         self.u1 = 0.0;
+        self.u2 = 0.0;
     }
 
     #[inline]
@@ -166,9 +222,14 @@ impl Ladder {
         let u = (x * self.comp - self.k * s_sum) / (1.0 + self.k * big_g);
         // When the input barely moves, the average over the step is the midpoint's value to within
         // -110 dB, so the logs are only worked out on fast steps (high notes, edges): most samples skip them.
-        let du = u - self.u1;
-        let r = if du.abs() > 0.01 { (clip_residual_ad(u) - clip_residual_ad(self.u1)) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m };
+        let r = if self.order2 {
+            residual_adaa2(u, self.u1, self.u2)
+        } else {
+            let du = u - self.u1;
+            if du.abs() > 0.01 { (clip_residual_ad(u) - clip_residual_ad(self.u1)) / du } else { let m = 0.5 * (u + self.u1); super::soft_clip(m) - m }
+        };
         let mut y = u + r;
+        self.u2 = self.u1;
         self.u1 = u;
         for st in self.s.iter_mut() {
             let v = (y - *st) * g1;
@@ -245,6 +306,11 @@ pub struct CharFilter {
     ladder: Ladder,
     ms20: Ms20,
     sem: Svf,
+    /// Round 2 (8 Nov): run at twice the rate it is given (a synth voice: 192 kHz), every circuit, so the
+    /// delay is the same whichever is picked; the ladder's clip then takes second-order ADAA.
+    os2: bool,
+    up: super::oversample::Interpolator2x,
+    dn: super::oversample::Decimator2x,
 }
 
 impl CharFilter {
@@ -261,14 +327,34 @@ impl CharFilter {
         self.mode
     }
 
+    /// Run at twice the rate `set` is given (see the struct). Its delay grows by `OS2_DELAY` samples at that rate.
+    pub fn set_oversampled(&mut self, on: bool) {
+        self.os2 = on;
+        self.ladder.order2 = on;
+    }
+
+    pub fn oversampled(&self) -> bool {
+        self.os2
+    }
+
+    /// Second-order ADAA on the ladder's clip, at the rate it is given.
+    pub fn set_adaa2(&mut self, on: bool) {
+        self.ladder.order2 = on;
+    }
+
     pub fn reset(&mut self) {
         self.ladder.reset();
         self.ms20.reset();
         self.sem.reset();
+        if self.os2 {
+            self.up = Default::default();
+            self.dn = Default::default();
+        }
     }
 
     #[inline]
     pub fn set(&mut self, fc: f32, res: f32, sr: f32) {
+        let sr = if self.os2 { sr * 2.0 } else { sr };
         match self.mode {
             SCREAM => self.ms20.set(fc, res, sr),
             SMOOTH => {
@@ -281,6 +367,16 @@ impl CharFilter {
 
     #[inline]
     pub fn tick(&mut self, x: f32) -> f32 {
+        if self.os2 {
+            let (a, b) = self.up.process(x);
+            let (ya, yb) = (self.tick1(a), self.tick1(b));
+            return self.dn.process(ya, yb);
+        }
+        self.tick1(x)
+    }
+
+    #[inline]
+    fn tick1(&mut self, x: f32) -> f32 {
         match self.mode {
             // Gains so the three sit at about the same loudness on a bass line (tests/sound.rs).
             SCREAM => self.ms20.tick(x) * MS20_GAIN,
@@ -290,6 +386,8 @@ impl CharFilter {
     }
 }
 
+/// What running at twice the rate adds to a filter's delay, in samples at the rate it is given.
+pub const OS2_DELAY: f64 = super::oversample::DRIVE_DELAY;
 const MS20_GAIN: f32 = 0.794;
 const SEM_GAIN: f32 = 0.668;
 

@@ -87,7 +87,7 @@
   "id": "plate-snare",
   "plugin": "dragonfly",
   "lufs": -21.0,
-  "after": false
+  "after": true
  },
  {
   "id": "plate-chord",

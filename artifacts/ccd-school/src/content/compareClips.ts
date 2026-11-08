@@ -9,8 +9,8 @@
 export type ComparePair = { id: string; name: string; what: string; theirs: string; after: boolean };
 
 export const COMPARE_PAIRS: ComparePair[] = [
-  { id: "supersaw-surge", name: "supersaw lead", what: "seven detuned saws, a four-note phrase", theirs: "surge xt", after: true },
-  { id: "supersaw-vital", name: "supersaw lead", what: "seven detuned saws, a four-note phrase", theirs: "vitalium", after: true },
+  { id: "supersaw-surge", name: "supersaw lead", what: "seven detuned saws, a four-note phrase, theirs and ours (now) at full width", theirs: "surge xt", after: true },
+  { id: "supersaw-vital", name: "supersaw lead", what: "seven detuned saws, a four-note phrase, theirs and ours (now) at full width", theirs: "vitalium", after: true },
   { id: "ladder-surge", name: "ladder sweep", what: "a low saw, the 4-pole ladder swept from 100 hz to 8 khz, resonance high", theirs: "surge xt (vintage ladder)", after: true },
   { id: "ladder-vital", name: "ladder sweep", what: "a low saw, the 4-pole ladder swept from 100 hz to 8 khz, resonance high", theirs: "vitalium (ladder)", after: true },
   { id: "ms2-k35", name: "ms2 sweep, driven", what: "the same sweep through the sallen-key 2-pole, resonance middle, driven", theirs: "surge xt (k35, heavy saturation)", after: true },
@@ -23,7 +23,7 @@ export const COMPARE_PAIRS: ComparePair[] = [
   { id: "kicktechno-geonkick", name: "techno kick", what: "two hits, shorter and driven", theirs: "geonkick", after: false },
   { id: "hall-snare", name: "hall on a snare", what: "one snare hit and its hall, 2.4 s", theirs: "dragonfly hall", after: true },
   { id: "hall-chord", name: "hall on a chord", what: "one chord and its hall, 2.4 s", theirs: "dragonfly hall", after: true },
-  { id: "plate-snare", name: "plate on a snare", what: "one snare hit and its plate, 2.4 s", theirs: "dragonfly plate", after: false },
+  { id: "plate-snare", name: "plate on a snare", what: "one snare hit and its plate, 2.4 s", theirs: "dragonfly plate", after: true },
   { id: "plate-chord", name: "plate on a chord", what: "one chord and its plate, 2.4 s", theirs: "dragonfly plate", after: true },
   { id: "tape-chow", name: "tape", what: "a chord pushed into tape: wow, flutter and saturation", theirs: "chow tape model", after: true },
 ];

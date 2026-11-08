@@ -416,3 +416,198 @@ fn the_plate_fills_in_fast_and_keeps_its_tail() {
         assert!((la - lb).abs() < 1.0, "{name}: the plate sits where it was: {la:.2} vs {lb:.2}");
     }
 }
+
+// ── 3. The ladder at the top of the keyboard ─────────────────────────────────────────────────────────
+
+/// Energy off the harmonics of `f0` against the energy on them, 30 Hz to 20 kHz, at rate `sr`, dB.
+fn off_harmonics_db(y: &[f32], f0: f32, sr: f32) -> f32 {
+    let n = 65_536;
+    let s = spectrum(&y[y.len() - n..]);
+    let (mut on, mut off) = (0.0f64, 0.0f64);
+    for (k, m) in s.iter().enumerate() {
+        let f = k as f32 * sr / n as f32;
+        if !(30.0..20_000.0).contains(&f) {
+            continue;
+        }
+        let h = (f / f0).round().max(1.0);
+        let e = (*m as f64).powi(2);
+        if (f - h * f0).abs() < 6.0 * sr / n as f32 { on += e } else { off += e }
+    }
+    10.0 * ((off / on) as f32).max(1e-15).log10()
+}
+
+#[test]
+fn the_ladder_aliases_less_at_the_top_and_keeps_its_peak() {
+    use ccd_engine::dsp::filter::{CharFilter, Ladder};
+    use ccd_engine::dsp::osc::MinBlepOsc;
+    let os = 96_000.0f32;
+    // The lead's filter (twice the voice's rate, second-order ADAA) and the chord synth's (second-order ADAA).
+    let new = || { let mut f = CharFilter::default(); f.set_oversampled(true); f };
+    let chord = || { let mut f = CharFilter::default(); f.set_adaa2(true); f };
+    // A clean (minBLEP) saw at the level the voice feeds its filter, the filter open as the voice sets it.
+    for (n, drive) in [(84u32, 1.0f32), (96, 1.0), (102, 1.0), (108, 1.0), (96, 3.0), (108, 3.0)] {
+        let f0 = 440.0 * 2f32.powf((n as f32 - 69.0) / 12.0);
+        let len = 65_536 + 4_096;
+        let mut o = MinBlepOsc::new();
+        let x: Vec<f32> = (0..len).map(|_| o.next(f0 / os).0 * 0.375 * drive).collect();
+        let fc = (16_000.0 * 2f32.powf((n as f32 - 60.0) / 12.0 * 0.4)).min(os * 0.45);
+        let mut b = Ladder::default();
+        b.set(fc, 0.0, os);
+        let mut a = new();
+        a.set(fc, 0.0, os);
+        let mut c = chord();
+        c.set(fc, 0.0, os);
+        let yb: Vec<f32> = x.iter().map(|v| b.tick(*v)).collect();
+        let ya: Vec<f32> = x.iter().map(|v| a.tick(*v)).collect();
+        let yc: Vec<f32> = x.iter().map(|v| c.tick(*v)).collect();
+        let (db_b, db_a, db_c) = (off_harmonics_db(&yb, f0, os), off_harmonics_db(&ya, f0, os), off_harmonics_db(&yc, f0, os));
+        println!("ladder open, note {n}{}: off the harmonics {db_b:.1} dB before, {db_a:.1} dB after at twice the rate (the lead, chord voices from note 79), {db_c:.1} dB with second-order ADAA alone (chord voices under 79)", if drive > 1.0 { ", 10 dB hotter" } else { "" });
+        assert!(db_a < db_b - 10.0, "note {n}: {db_a:.1} vs {db_b:.1}");
+        assert!(db_c < db_b - 2.5, "note {n}, chords: {db_c:.1} vs {db_b:.1}");
+        if n == 108 && drive == 1.0 {
+            assert!(db_a < -75.0, "note 108 under -75 dB: {db_a:.1}");
+        }
+    }
+    // Its shape: the peak against the bass on noise at three resonances, and where the peak sits at four
+    // cutoffs at resonance 0.9 (its tuning, left for Param's ear, must not move).
+    let noise = |n: usize| { let mut seed = 99u32; (0..n).map(|_| { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; (seed as f32 / u32::MAX as f32 - 0.5) * 0.2 }).collect::<Vec<f32>>() };
+    let x = noise(os as usize);
+    let band = |y: &[f32], lo: f32, hi: f32| {
+        let s = spectrum(&y[y.len() - 65_536..]);
+        let e: f64 = s.iter().enumerate().filter(|(k, _)| { let f = *k as f32 * os / 65_536.0; f >= lo && f < hi }).map(|(_, m)| (*m as f64).powi(2)).sum();
+        10.0 * e.log10() as f32
+    };
+    for res in [0.3f32, 0.6, 0.9] {
+        let mut b = Ladder::default();
+        b.set(1_000.0, res, os);
+        let mut a = new();
+        a.set(1_000.0, res, os);
+        let mut c = chord();
+        c.set(1_000.0, res, os);
+        let yb: Vec<f32> = x.iter().map(|v| b.tick(*v)).collect();
+        let ya: Vec<f32> = x.iter().map(|v| a.tick(*v)).collect();
+        let yc: Vec<f32> = x.iter().map(|v| c.tick(*v)).collect();
+        let pk = |y: &[f32]| band(y, 900.0, 1_100.0) - band(y, 100.0, 200.0);
+        let (pb, pa, pc) = (pk(&yb), pk(&ya), pk(&yc));
+        println!("ladder at 1 kHz, resonance {res}: peak over bass {pb:+.2} dB before, {pa:+.2} dB after at twice the rate, {pc:+.2} dB with second-order ADAA alone");
+        assert!((pa - pb).abs() < 0.5 && (pc - pb).abs() < 0.5, "res {res}: the peak within 0.5 dB ({pa:.2}, {pc:.2} vs {pb:.2})");
+    }
+    for fc in [500.0f32, 2_000.0, 6_000.0, 12_000.0] {
+        let peak_at = |y: &[f32]| {
+            let s = spectrum(&y[y.len() - 65_536..]);
+            let (lo, hi) = ((fc * 0.5 * 65_536.0 / os) as usize, (fc * 2.0 * 65_536.0 / os) as usize);
+            let k = (lo..hi).max_by(|a, b| s[*a].partial_cmp(&s[*b]).unwrap()).unwrap();
+            // parabolic interpolation on the log magnitude
+            let (l, c, r) = (s[k - 1].ln(), s[k].ln(), s[k + 1].ln());
+            (k as f32 + 0.5 * (l - r) / (l - 2.0 * c + r)) * os / 65_536.0
+        };
+        let mut b = Ladder::default();
+        b.set(fc, 0.9, os);
+        let mut a = new();
+        a.set(fc, 0.9, os);
+        let yb: Vec<f32> = x.iter().map(|v| b.tick(*v)).collect();
+        let ya: Vec<f32> = x.iter().map(|v| a.tick(*v)).collect();
+        let (fb, fa) = (peak_at(&yb), peak_at(&ya));
+        let cents = 1200.0 * (fa / fb).log2();
+        println!("ladder resonance 0.9 set to {fc} Hz: the peak at {fb:.0} Hz before, {fa:.0} Hz after ({cents:+.1} cents)");
+        assert!(cents.abs() < 15.0 || fc > 10_000.0, "{fc} Hz: the tuning moved {cents:+.1} cents");
+    }
+}
+
+/// What the ladder costs, before and after (`--ignored`): ns a sample at 96 kHz, a note 108 saw and a note 60 saw.
+#[test]
+#[ignore]
+fn cpu_of_the_ladder() {
+    use ccd_engine::dsp::filter::{CharFilter, Ladder};
+    use ccd_engine::dsp::osc::MinBlepOsc;
+    let n = 4_000_000usize;
+    for f0 in [4_186.0f32, 261.6] {
+        let mut o = MinBlepOsc::new();
+        let x: Vec<f32> = (0..96_000).map(|_| o.next(f0 / 96_000.0).0 * 0.375).collect();
+        let time = |f: &mut dyn FnMut(f32) -> f32| {
+            let mut best = f64::MAX;
+            for _ in 0..5 {
+                let t = std::time::Instant::now();
+                let mut acc = 0.0f32;
+                for i in 0..n {
+                    acc += f(x[i % x.len()]);
+                }
+                std::hint::black_box(acc);
+                best = best.min(t.elapsed().as_secs_f64());
+            }
+            best / n as f64 * 1e9
+        };
+        let mut b = Ladder::default();
+        b.set(12_000.0, 0.3, 96_000.0);
+        let mut a = CharFilter::default();
+        a.set_oversampled(true);
+        a.set(12_000.0, 0.3, 96_000.0);
+        let mut c = CharFilter::default();
+        c.set_adaa2(true);
+        c.set(12_000.0, 0.3, 96_000.0);
+        let (tb, ta, tc) = (time(&mut |v| b.tick(v)), time(&mut |v| a.tick(v)), time(&mut |v| c.tick(v)));
+        println!("ladder on a {f0} Hz saw: {tb:.1} ns a sample before, {ta:.1} after at twice the rate, {tc:.1} with second-order ADAA alone");
+    }
+}
+
+/// One lead note and a three-note chord, width 0 and 1, share of a core (`--ignored`).
+#[test]
+#[ignore]
+fn cpu_of_a_lead_note() {
+    use ccd_engine::inst::synth::{Lead, Poly};
+    let n = 480_000usize;
+    for w in [0.0f32, 1.0] {
+        let mut l = Lead::new(SR);
+        l.set_param(LD_DETUNE, 0.6);
+        l.set_param(LD_WIDTH, w);
+        l.note_on(60, 0.9);
+        let mut p = Poly::new(SR);
+        p.set_param(C_SPREAD, 0.6);
+        p.set_param(C_WIDTH, w);
+        for k in [57, 60, 64] { p.note_on(k, 0.9); }
+        let mut best = (f64::MAX, f64::MAX);
+        for _ in 0..5 {
+            let t = std::time::Instant::now();
+            let mut acc = 0.0f32;
+            for _ in 0..n { let (a, b) = l.tick_ms(); acc += a + b; }
+            std::hint::black_box(acc);
+            best.0 = best.0.min(t.elapsed().as_secs_f64());
+            let t = std::time::Instant::now();
+            for _ in 0..n { let (a, b) = p.tick_ms(); acc += a + b; }
+            std::hint::black_box(acc);
+            best.1 = best.1.min(t.elapsed().as_secs_f64());
+        }
+        println!("width {w}: lead supersaw note {:.2}% of a core, three-note chord {:.2}%", best.0 / (n as f64 / SR as f64) * 100.0, best.1 / (n as f64 / SR as f64) * 100.0);
+    }
+}
+
+/// Width sent at 0 to every chord and lead part of a song changes nothing, bit for bit (the song uses all six
+/// instruments, sends and a route, as leftovers.rs's reference does).
+#[test]
+fn width_at_zero_in_a_song_is_bit_identical() {
+    let song = |send_width: bool| {
+        let e = Engine::new(SR);
+        for (l, inst) in [1u32, 2, 3, 4, 5, 6].iter().enumerate() {
+            let l = l as u32;
+            send(&e, cmd::INSTRUMENT, l, *inst, 0.0, 0.0, 0.0);
+            send(&e, cmd::PARAM, l, L_SEND as u32, 0.3, 0.0, 0.0);
+            send(&e, cmd::PARAM, l, L_ECHO as u32, 0.2, 0.0, 0.0);
+            send(&e, cmd::PARAM, l, L_DRIVE as u32, 0.3, 0.0, 0.0);
+            if send_width && (*inst == 3 || *inst == 4) {
+                send(&e, cmd::PARAM, l, (INSTRUMENT_BASE + 21) as u32, 0.0, 0.0, 0.0);
+            }
+            send(&e, cmd::EV_CLEAR, l, 0, 0.0, 0.0, 0.0);
+            for s in 0..16u32 {
+                let note = match inst { 1 => DRUM_PAD_NOTES[(s % 8) as usize] as u32, 5 => 36 + s % 8, 6 => 36, _ => 40 + (s * 5) % 24 };
+                send(&e, cmd::EV_ADD, l, note, 0.9, s as f64 * 0.25, 0.3);
+            }
+            send(&e, cmd::EV_COMMIT, l, 0, 0.0, 0.0, 0.0);
+        }
+        send(&e, cmd::MOD, 3, 0, 0.3, L_PAN as f64, 0.0);
+        send(&e, cmd::PLAY, 0, 0, 0.0, 0.0, 0.0);
+        render(&e, 96_000)
+    };
+    let (a, b) = (song(false), song(true));
+    assert!(a.0.iter().chain(&a.1).all(|v| v.is_finite()));
+    assert!(a == b, "width at 0 is bit for bit the old sound");
+}

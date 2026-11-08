@@ -21,6 +21,8 @@ const CHORD_VOICE: usize = 33;
 const CHORD_BRIGHT: usize = 35;
 /// The lead's oscillator knob (INSTRUMENT_BASE + LD_OSC).
 const LEAD_OSC: usize = 36;
+/// The chord synth's and the lead's width (INSTRUMENT_BASE + C_WIDTH, + LD_WIDTH; 8 Nov).
+const WIDTH: usize = 37;
 
 struct R {
     e: Engine,
@@ -181,6 +183,23 @@ fn clips() -> Vec<Clip> {
         r.param(0, INSTRUMENT_BASE + C_RELEASE, 0.6);
         r.param(0, INSTRUMENT_BASE + C_VOICING, 0.6);
         out.push(("pad", "a chord pad, slow attack, octave voicing", r.play(5.8)));
+    }
+    // Round 2 of the shootout, after only (the old engine's synth voices were mono): supersaw chords and a lead
+    // with their width up.
+    {
+        let mut r = R::new(124.0);
+        r.inst(0, Instrument::Chords);
+        r.pattern(0, &[(0.0, 57, 1.9, 0.7), (0.0, 60, 1.9, 0.7), (0.0, 64, 1.9, 0.7), (2.0, 55, 1.9, 0.7), (2.0, 59, 1.9, 0.7), (2.0, 62, 1.9, 0.7)]);
+        r.param(0, INSTRUMENT_BASE + C_SPREAD, 0.6);
+        r.param(0, INSTRUMENT_BASE + C_RELEASE, 0.55);
+        r.param(0, WIDTH, 1.0);
+        r.param(0, L_LEVEL, 0.62);
+        r.inst(1, Instrument::Lead);
+        r.pattern(1, &[(0.0, 76, 0.9, 0.8), (1.0, 74, 0.45, 0.7), (1.5, 72, 0.45, 0.7), (2.0, 71, 1.9, 0.8)]);
+        r.param(1, INSTRUMENT_BASE + LD_DETUNE, 0.6);
+        r.param(1, WIDTH, 1.0);
+        r.param(1, L_LEVEL, 0.55);
+        out.push(("wide", "supersaw chords and a lead with their width up", r.play(3.87)));
     }
     // Item 10, after only (the old engine had no resonators): pluck, mallet and keys on the chord synth.
     for (name, what, model, bright, ev) in [

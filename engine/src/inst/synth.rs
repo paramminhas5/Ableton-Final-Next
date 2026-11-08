@@ -15,7 +15,7 @@
 //! and the side, the panned saws' difference, runs through a filter of its own set like the mid's.
 
 use crate::dsp::env::{Adsr, Stage};
-use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp};
+use crate::dsp::filter::{CharFilter, FilterDrive, OnePoleHp, OS2_DELAY};
 use crate::dsp::resonator::Comb;
 use crate::dsp::wavetable::{phase_distort, FbFm, Tables};
 use crate::dsp::osc::{MinBlepOsc as BlepOsc, Sine};
@@ -188,10 +188,21 @@ struct Voice {
     fdrive_s: FilterDrive,
     side_live: bool,
     pan: f32,
+    /// A chord voice: its filter runs at twice the rate only from `HIGH_NOTE` up.
+    hi_only: bool,
 }
 
+/// From this note up a chord voice's filter runs at twice the voice's rate (note 79, g above the treble staff:
+/// under it, second-order ADAA alone keeps the ladder under -77 dB off the harmonics with the filter open).
+const HIGH_NOTE: u8 = 79;
+
 impl Voice {
-    fn new(os: f32, slot: usize) -> Self {
+    /// `os2`: the filter runs at twice the voice's rate (the lead, always; a chord voice from `HIGH_NOTE` up,
+    /// chosen as each note starts, since twice costs about two thirds more per voice and only the top of the
+    /// keyboard needs it). Both take second-order ADAA on the ladder's clip (round 2 of the shootout, 8 Nov;
+    /// tests/gaps.rs).
+    fn new(os: f32, slot: usize, os2: bool) -> Self {
+        let filt = { let mut f = CharFilter::default(); if os2 { f.set_oversampled(true) } else { f.set_adaa2(true) } f };
         Voice {
             card: Card::of(slot),
             note: 0,
@@ -204,7 +215,7 @@ impl Voice {
             drift_target: 0.0,
             osc: [BlepOsc::new(); 5],
             sub: Sine::default(),
-            filt: CharFilter::default(),
+            filt,
             fdrive: FilterDrive::default(),
             amp: Adsr::new(os),
             fenv: Adsr::new(os),
@@ -224,10 +235,11 @@ impl Voice {
             fbfm: FbFm::default(),
             tables: Tables::get(),
             hp_ss: 0.0,
-            filt_s: CharFilter::default(),
+            filt_s: filt,
             fdrive_s: FilterDrive::default(),
             side_live: false,
             pan: 0.0,
+            hi_only: false,
         }
     }
 
@@ -336,6 +348,16 @@ impl Voice {
         self.glide_coef = 0.0;
         // Spread the starting phases so the saws do not add up into a spike.
         if !self.amp.is_active() {
+            if self.hi_only {
+                // A chord voice: twice the rate from HIGH_NOTE up (switched only while silent, so nothing jumps).
+                let want = note >= HIGH_NOTE;
+                if want != self.filt.oversampled() {
+                    for f in [&mut self.filt, &mut self.filt_s] {
+                        f.set_oversampled(want);
+                        f.set_adaa2(true);
+                    }
+                }
+            }
             for (i, o) in self.osc.iter_mut().enumerate() {
                 // Spread so the saws don't add up into a spike, then turned by where the oscillators are.
                 o.reset(([0.0, 0.31, 0.67, 0.12, 0.49][i] + phase).fract());
@@ -602,9 +624,12 @@ impl Controls {
 }
 
 /// Line the synth up with the drum rack: the voice's half-band plus this pad make up the
-/// same delay a drum pad's drive stage has.
-fn pdc_samples() -> usize {
-    (crate::engine::VOICE_LATENCY as f64 - DRIVE_DELAY - BASS_DECIM_DELAY) as usize
+/// same delay a drum pad's drive stage has. Since round 2 the lead's filter runs at twice the voice's rate,
+/// which adds 2.5 samples at 96 kHz; its pad was one sample, so it is now none and the lead sits a quarter
+/// of a sample (5 microseconds) behind the drums.
+fn pdc_samples(os2: bool) -> usize {
+    let extra = if os2 { OS2_DELAY / 2.0 } else { 0.0 };
+    (crate::engine::VOICE_LATENCY as f64 - DRIVE_DELAY - BASS_DECIM_DELAY - extra).round().max(0.0) as usize
 }
 
 struct Out {
@@ -616,10 +641,10 @@ struct Out {
 }
 
 impl Out {
-    fn new(sr: f32) -> Self {
+    fn new(sr: f32, os2: bool) -> Self {
         let mut dc = OnePoleHp::default();
         dc.set(18.0, sr);
-        Out { dec: BassDecimator::new(), dc, pdc: [0.0; 32], pos: 0, n: pdc_samples() }
+        Out { dec: BassDecimator::new(), dc, pdc: [0.0; 32], pos: 0, n: pdc_samples(os2) }
     }
 
     #[inline]
@@ -660,10 +685,10 @@ impl Poly {
         let mut p = Poly {
             sr,
             os,
-            voices: core::array::from_fn(|i| { let mut v = Voice::new(os, i); v.pan = VOICE_PAN[i]; v }),
+            voices: core::array::from_fn(|i| { let mut v = Voice::new(os, i, false); v.pan = VOICE_PAN[i]; v.hi_only = true; v }),
             ctl: Controls::new(os),
-            out: Out::new(sr),
-            out_s: Out::new(sr),
+            out: Out::new(sr, false),
+            out_s: Out::new(sr, false),
             wide: false,
             clock: 0,
             rng: Rng::new(0xC40D),
@@ -720,7 +745,7 @@ impl Poly {
             C_WIDTH => {
                 if v > 0.0 && !self.wide {
                     self.wide = true;
-                    self.out_s = Out::new(self.sr);
+                    self.out_s = Out::new(self.sr, false);
                 }
                 self.ctl.width.set(v);
             }
@@ -882,12 +907,12 @@ impl Lead {
             os,
             // One voice: it keeps its card's filter and envelope character but stays exactly in tune,
             // since there is no other voice for it to beat against.
-            voice: { let mut v = Voice::new(os, 0); v.card.semis = 0.0; v },
+            voice: { let mut v = Voice::new(os, 0, true); v.card.semis = 0.0; v },
             stack: [0; STACK],
             held: 0,
             ctl: Controls::new(os),
-            out: Out::new(sr),
-            out_s: Out::new(sr),
+            out: Out::new(sr, true),
+            out_s: Out::new(sr, true),
             wide: false,
             glide_ms: 60.0,
             release_s: 0.3,
@@ -942,7 +967,7 @@ impl Lead {
             LD_WIDTH => {
                 if v > 0.0 && !self.wide {
                     self.wide = true;
-                    self.out_s = Out::new(self.sr);
+                    self.out_s = Out::new(self.sr, true);
                 }
                 self.ctl.width.set(v);
             }

@@ -103,8 +103,10 @@ fn reference_render() -> (Vec<f32>, Vec<f32>) {
 /// Taken on a004aee (before the leftovers) with this same test: 0x61e9_2430_de04_fa4c. The sound shootout
 /// then changed the hall, the synths' saws and the ladder's clip on purpose (design/sound-shootout.md), so
 /// the reference is now that engine's render without the leftovers (98ca0db, this same test): the leftovers
-/// still change nothing when unused.
-const REFERENCE_HASH: u64 = 0xfee2_3838_7cdf_f77c;
+/// still change nothing when unused. Round 2 of the shootout (8 Nov, tests/gaps.rs): stereo width and the plate's
+/// onset left it at 0xfee2_3838_7cdf_f77c (8630394: unused, they change nothing); the synth voices' ladder then
+/// changed on purpose (second-order ADAA, the lead's filter at twice the voice's rate), so it is now that engine's.
+const REFERENCE_HASH: u64 = 0x02d7_c132_22bf_239c;
 
 #[test]
 fn unused_is_bit_identical_to_before() {
