@@ -14,7 +14,8 @@ import { emptyTrackV2, newLayerV2, readTrackV2, writeTrackV2, type LayerV2, type
 import { nameSongIfNew } from "@/lib/songs";
 import { REMAKES, type Remake } from "@/lib/remakesSource";
 import { keepRemake, patch, REMAKE_NOTCHES as NOTCHES } from "@/lib/remakesKeep";
-import { challengeKnob, matchRoundStars, type K } from "@/lib/worldChallenge";
+import { matchRoundStars, type K } from "@/lib/worldChallenge";
+import { remakeKnob } from "@/lib/remakes";
 import { GoPill, Icon, Key, Screen, Silk } from "./controls";
 import { Meta, useEnter } from "./LessonParts";
 import { MatchKnobs, MatchMeter, MatchSides, useMatch } from "./MatchSound";
@@ -28,16 +29,17 @@ const saveBest = (id: string, stars: number) => { const b = readBest(); b[id] = 
 const PART: Record<Remake["part"], string> = { bass: "bass", lead: "lead", chords: "chords", drums: "kick" };
 
 function RemakeMatch({ r, onDone, onBack }: { r: Remake; onDone: (stars: number, kept: boolean) => void; onBack: () => void }) {
-  const knobs = useMemo(() => r.knobs.map(k => challengeKnob(r.part, k)).filter((k): k is K => !!k), [r]);
+  const knobs = useMemo(() => r.knobs.map(k => remakeKnob(r.part, k)).filter((k): k is K => !!k), [r]);
   const full = useMemo(() => patch(r), [r]);
+  const begin = useMemo(() => patch(r, r.begin), [r]);
   const { song, part } = useMemo(() => {
     const l: LayerV2 = { ...newLayerV2(r.part, "__remake"), events: r.notes.map(e => ({ ...e })), params: { ...full } };
     return { song: { ...emptyTrackV2(), bpm: r.bpm, loop: 4, layers: [l] } as TrackV2, part: l };
   }, [r, full]);
   const target = useMemo(() => Object.fromEntries(knobs.map(k => [k.index, full[k.index] ?? notch(k.spec.default, NOTCHES)])) as Record<number, number>, [knobs, full]);
-  // The matched knobs start at the instrument's own defaults; if a default is the answer, a few notches away.
+  // The matched knobs start where the remake says (away from the answer); if one would start on it, a few notches away.
   const start = useMemo(() => Object.fromEntries(knobs.map(k => {
-    const d = notch(k.spec.default, NOTCHES), t = target[k.index];
+    const d = notch(begin[k.index] ?? k.spec.default, NOTCHES), t = target[k.index];
     return [k.index, Math.abs(d - t) > 1.5 / NOTCHES ? d : notch(t > 0.5 ? t - 3 / NOTCHES : t + 3 / NOTCHES, NOTCHES)];
   })) as Record<number, number>, [knobs, target]);
   const m = useMatch({ song, part, knobs, target, start, notches: NOTCHES });

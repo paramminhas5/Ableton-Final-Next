@@ -147,8 +147,9 @@ export function WorldChallenge({ world }: { world: WorldId }) {
   const cur = at >= 0 ? order[at] : null;
   const roundStars = (r: Round, bonus: boolean) => (bonus ? rec?.bonus[r.id] : rec?.rounds[r.id]) ?? 0;
   const thisTime = ch.main.every(r => got[r.id] !== undefined) ? mainStars(got[ch.main[0].id] ?? 0, got[ch.main[1].id] ?? 0) : null;
-  // From the summary, the go key plays the first bonus round not yet earned (or the first bonus round).
-  const goAt = at === -2 ? Math.max(order.findIndex(o => o.bonus), order.findIndex(o => o.bonus && !roundStars(o.r, true))) : 0;
+  // From the summary, the go key plays a main round still on no stars, then the first bonus round not yet earned (or the first bonus round).
+  const retry = order.findIndex(o => !o.bonus && !roundStars(o.r, false));
+  const goAt = at === -2 ? (retry >= 0 ? retry : Math.max(order.findIndex(o => o.bonus), order.findIndex(o => o.bonus && !roundStars(o.r, true)))) : 0;
   useEnter(at < 0 && song ? () => play(goAt) : null);
   if (!song) return <div className="ls fl wc" />;
   return (
@@ -183,7 +184,7 @@ export function WorldChallenge({ world }: { world: WorldId }) {
             </div>
             <div className="ls-bottom"><div className="m1-g">
               <Key label="world" href={`/world/${world}`} ariaLabel={`Back to ${WORLD_LABEL[world]}`}><Icon name="back" /></Key>
-              <GoPill onClick={() => play(goAt)} style={{ gridColumn: "span 3" }} ariaLabel={at === -2 ? "Play a bonus round" : "Start the challenge"}>{at === -2 ? "a bonus round" : rec?.main ? "play it again" : "start the challenge"}</GoPill>
+              <GoPill onClick={() => play(goAt)} style={{ gridColumn: "span 3" }} ariaLabel={at === -2 ? (retry >= 0 ? `Try ${order[retry].r.name} again` : "Play a bonus round") : "Start the challenge"}>{at === -2 ? (retry >= 0 ? `try ${order[retry].r.name} again` : "a bonus round") : rec?.main ? "play it again" : "start the challenge"}</GoPill>
             </div></div>
           </div>
         )}

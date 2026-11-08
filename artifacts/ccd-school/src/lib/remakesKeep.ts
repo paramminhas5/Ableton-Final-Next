@@ -1,16 +1,15 @@
 /** A remake's sound as knob values, and putting it into the learner's song (src/components/m1/Remakes.tsx). Pure, so it is tested. */
-import { notch } from "./matchScore";
-import { challengeKnob } from "./worldChallenge";
+import { remakeKnob } from "./remakes";
 import { MAX_LAYERS, newLayerV2, type TrackV2 } from "./track2";
 import type { Remake } from "./remakesSource";
 
 /** Remakes are matched on nine positions a knob. */
 export const REMAKE_NOTCHES = 8;
 
-/** The remake's patch on the part's own knobs, by wire index, on the notches. */
-export function patch(r: Remake): Record<number, number> {
+/** The remake's patch by wire index: the part's own knobs (both of the kick's pages) and the channel's. The lit knobs' values sit on the notches already. */
+export function patch(r: Remake, from: Record<string, number> = r.params): Record<number, number> {
   const out: Record<number, number> = {};
-  for (const [key, v] of Object.entries(r.params)) { const k = challengeKnob(r.part, key); if (k) out[k.index] = notch(v, REMAKE_NOTCHES); }
+  for (const [key, v] of Object.entries(from)) { const k = remakeKnob(r.part, key); if (k) out[k.index] = v; }
   return out;
 }
 
