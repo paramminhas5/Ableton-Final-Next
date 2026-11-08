@@ -163,7 +163,7 @@ export type LessonScreen =
   // ── new lesson file steps (src/content/lessons/*.yaml, see design/lesson-format.md) ──
   | { kind: "say"; title: string; body: string; clip?: string; deeper?: { title: string; body: string }[] }
   | { kind: "hear"; clip: string; body: string; deeper?: { title: string; body: string }[] }
-  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" }; body: string; hint?: string; snap?: boolean }
+  | { kind: "play"; layer: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: import("../lib/briefCheck").BriefCheck[] }; body: string; hint?: string; snap?: boolean }
   | { kind: "shape"; layer: string; knobs: string[]; body: string; hint?: string }
   /** Match this sound: a target from hidden settings of `knobs` on the learner's part, matched by ear (lesson files' `match`). */
   | { kind: "matchsound"; layer: string; knobs: string[]; target: Record<string, number>; level?: "gentle" | "standard" | "hard"; body: string; hint?: string }

@@ -36,7 +36,7 @@ steps:
   - kind: play
     layer: chords
     surface: pads
-    goal: {notes: 2}
+    goal: {notes: 2, check: [bar, moves]}
     say:
       mentor: >-
         Play chords into your song. For pads, play two long chords, one per half bar. For stabs, tap short

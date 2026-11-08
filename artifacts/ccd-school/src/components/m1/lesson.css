@@ -980,3 +980,11 @@ a.jv-lane:hover{transform:translateX(3px)}
 .im-counts span{display:flex;align-items:center;justify-content:center;height:28px;border-radius:8px;font-size:13px;font-weight:600;color:var(--disp-sub);background:rgba(255,255,255,.05);transition:background 80ms,color 80ms}
 .im-counts span.is-on{color:#141416;background:var(--led-mint);box-shadow:0 0 10px color-mix(in srgb,var(--led-mint) 50%,transparent)}
 .im-tip{margin-top:10px;color:var(--ink);background:color-mix(in srgb,var(--led-mint) 8%,transparent);border-left:3px solid var(--led-mint)}
+
+/* write your own, checked (TryIt, src/lib/briefCheck.ts): what it heard in the notes, never a gate */
+.ti-heard{margin-top:12px;padding:12px 14px;border-radius:12px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.ti-heard ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.ti-heard li{display:grid;grid-template-columns:18px 1fr;gap:6px;font-size:14px;line-height:1.4;color:var(--ink)}
+.ti-heard li b{font-weight:700}
+.ti-heard li.is-ok b{color:var(--led-mint)}
+.ti-heard li.is-note b{color:#F3C14F}

@@ -6,6 +6,7 @@ import { SCALES } from "../../lib/theory";
 import { patternProblems, type CopyLayer } from "../../lib/copyEar";
 import { EAR_PARTS, earSoundProblems } from "../../lib/askEar";
 import { imagineProblems } from "../../lib/imagine";
+import { BRIEF_CHECKS } from "../../lib/briefCheck";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -187,6 +188,11 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           if (songLayer && !songChanges && o.layer !== songLayer) at(w, `play layer "${o.layer}" must match song.adds layer "${songLayer}" (or use song.changes)`);
           if (!(SURFACES as readonly unknown[]).includes(o.surface)) at(w, `surface must be one of ${SURFACES.join(", ")}`);
           if (!isObj(o.goal) || !posInt(o.goal.notes) || (o.goal.note !== undefined && typeof o.goal.note !== "string") || (o.goal.on !== undefined && !["beat", "and", "backbeat", "between", "different"].includes(String(o.goal.on)))) at(w, "goal must look like {notes: <count>, note: <name>, on: beat|and|backbeat|between|different}");
+          else {
+            for (const k of Object.keys(o.goal)) if (!["notes", "note", "on", "check"].includes(k)) at(w, `goal has unknown field "${k}"`);
+            const ck = (o.goal as Obj).check;
+            if (ck !== undefined && (!Array.isArray(ck) || !ck.length || ck.some(c => !(BRIEF_CHECKS as readonly unknown[]).includes(c)))) at(w, `goal.check lists what to listen for in the notes: ${BRIEF_CHECKS.join(", ")}`);
+          }
         } else {
           const ks = o.knobs;
           if (!Array.isArray(ks) || ks.length < 1 || ks.length > 4) return at(w, "knobs must list one to four knobs");

@@ -27,7 +27,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
         screens.push({ kind: "say", title: s.title, body: s.say, ...(s.clip ? { clip: s.clip } : {}), deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) });
         learned.push(s.title);
         break;
-      case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note, ...(s.goal.on ? { on: s.goal.on } : {}) }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;
+      case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note, ...(s.goal.on ? { on: s.goal.on } : {}), ...(s.goal.check ? { check: s.goal.check } : {}) }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;
       case "shape": learned.push(`shaping it with ${s.knobs.join(" and ")}`); screens.push({ kind: "shape", layer: s.layer, knobs: s.knobs, body: s.say, hint: s.hint }); break;
       case "match": learned.push(`matching a sound by ear with ${s.knobs.join(" and ")}`); screens.push({ kind: "matchsound", layer: s.layer, knobs: s.knobs, target: s.target, level: s.level, body: s.say, hint: s.hint }); break;
       case "copy": learned.push(s.layer === "drums" ? "copying a drum pattern by ear" : s.layer === "chords" ? "copying chords by ear" : `copying a ${s.layer === "bass" ? "bass line" : "melody"} by ear`); screens.push({ kind: "copy", layer: s.layer, pattern: s.pattern, level: s.level, body: s.say, hint: s.hint }); break;

@@ -1,5 +1,6 @@
 import type { LayerType } from "../../lib/track2";
 import type { EarPart, EarSound } from "../../lib/askEar";
+import type { BriefCheck } from "../../lib/briefCheck";
 
 export type Voice = "mentor" | "straight" | "eli5";
 export type Level = "gentle" | "standard" | "hard";
@@ -20,7 +21,8 @@ export type StepKind = (typeof STEP_KINDS)[number];
 export type VoiceText = string | { mentor: string; straight?: string; eli5?: string };
 
 /** `on`: where the hits must land. "beat" on the beat, "and" halfway between beats, "backbeat" on two and four. For a tune: "between" counts only notes off the beat (in the gaps between kicks), "different" counts different chords, not presses. Missing: backbeat for a clap or snare, the beat for any other named drum. */
-export type PlayGoal = { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" };
+/** `check`: write your own, checked (src/lib/briefCheck.ts). What can be heard in the notes is said in plain words after each take; it never blocks. */
+export type PlayGoal = { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: BriefCheck[] };
 export type Rounds = number | { gentle: number; standard: number; hard: number };
 
 export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean };

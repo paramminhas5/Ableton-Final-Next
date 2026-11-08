@@ -13,6 +13,7 @@ import { practiceTrack, playPads, type Take } from "@/lib/lessonTake";
 import { newLayerV2, readTrackV2, TYPE, type LayerType, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { asScale, NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocityAt } from "@/lib/touch";
+import { briefChecks, type BriefCheck } from "@/lib/briefCheck";
 import { GoPill, Icon, Key, PadRing, Screen, Silk } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
@@ -21,8 +22,11 @@ const SNAPS: Snap[] = ["1/8", "1/16", "1/32", "off"];
 /** How far from a beat a guided hit can land and still count, in beats (75 ms at 120 bpm). */
 const TOL = 0.15;
 
+/** What each brief check listens for, in a few words, before anything is played. */
+const CHECK_WORD: Record<BriefCheck, string> = { key: "in key", pentatonic: "on the five pentatonic keys", kick: "out of the kick's way", backbeat: "on two and four", bar: "filling the bar", home: "ending home", moves: "moving between notes", chord: "on the chord's notes", roots: "on the chords' roots", short: "short notes", repeat: "a motif that comes back" };
+
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different" }; tail?: ReactNode; snap?: boolean };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: BriefCheck[] }; tail?: ReactNode; snap?: boolean };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -279,6 +283,8 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     // A chord is one press, not three notes: count when things start, not how many notes sound.
     : presses;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
+  // Write your own, checked: what can be heard in the notes, in words, once a take is down (never a gate).
+  const heard = useMemo(() => (coach?.goal.check?.length && events.length ? briefChecks(coach.goal.check, events, { ...session, layers: session.layers.filter((_, i) => i !== idx) }, session.loop) : []), [coach, events, session, idx]);
   // When a take ends: a steady lateness is the device, so take it out; otherwise count it as a miss.
   const wasTake = useRef(false);
   useEffect(() => {
@@ -467,6 +473,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           </div>
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>
           {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+          {heard.length && !recording && !countIn ? (
+            <div className="ti-heard" role="status" aria-label="What it heard in your notes">
+              <div className="fl-turnhead"><span>what it heard</span><span>{heard.filter(h => h.ok).length} of {heard.length}</span></div>
+              <ul>{heard.map(h => <li key={h.id} className={h.ok ? "is-ok" : "is-note"}><b aria-hidden>{h.ok ? "✓" : "→"}</b><span>{h.say}</span></li>)}</ul>
+            </div>
+          ) : coach.goal.check?.length && !events.length ? <div className="ls-hint">when you&apos;ve played it, this says what it heard: {coach.goal.check.map(c => CHECK_WORD[c]).join(", ")}. it&apos;s your part, so it never stops you.</div> : null}
           {coach.hint && !goalMet ? <div className="ls-hint"><Gloss>{coach.hint}</Gloss></div> : null}
           {pulse ? <div className="ls-hint">your song has no beat yet, so a kick plays along to help. it won&apos;t go into your song.</div> : null}
           {coach.tail}

@@ -6304,7 +6304,12 @@
           "layer": "lead",
           "surface": "keys",
           "goal": {
-            "notes": 3
+            "notes": 3,
+            "check": [
+              "repeat",
+              "home",
+              "key"
+            ]
           },
           "say": {
             "mentor": "Write it. Press rec and play a motif of three or four notes in the first half of the bar. In the second half, play it again, but change the last note so it lands on the first key. Record it as many times as you like until it sounds like a tune you'd hum.",
@@ -6425,7 +6430,12 @@
           "layer": "lead",
           "surface": "keys",
           "goal": {
-            "notes": 3
+            "notes": 3,
+            "check": [
+              "pentatonic",
+              "moves",
+              "repeat"
+            ]
           },
           "say": {
             "mentor": "Make a hook on those five. Press rec and play a short phrase using only keys one, three, four, five and seven. Keep it simple: hooks are short, rhythmic and repeat. Record it until you'd want to hear it again.",
@@ -6689,7 +6699,11 @@
           "surface": "pads",
           "goal": {
             "notes": 4,
-            "on": "different"
+            "on": "different",
+            "check": [
+              "bar",
+              "home"
+            ]
           },
           "say": {
             "mentor": "Play a four chord progression into your song, one chord on each beat. Start on i, then try VI, III and VII, or any order you like. Listen for which one makes you want to go back to i.",
@@ -6819,7 +6833,11 @@
           "layer": "bass",
           "surface": "keys",
           "goal": {
-            "notes": 2
+            "notes": 2,
+            "check": [
+              "roots",
+              "key"
+            ]
           },
           "say": {
             "mentor": "Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key one is the root of i, key six the root of VI, key three of III, key seven of VII. Press rec and play the roots in the same order as your chords, one per chord.",
@@ -10385,7 +10403,10 @@
           "surface": "pads",
           "goal": {
             "notes": 2,
-            "note": "snare"
+            "note": "snare",
+            "check": [
+              "backbeat"
+            ]
           },
           "say": {
             "mentor": "Put a snare in your song. Your kick keeps playing underneath. Press rec, wait out the count-in, and tap the snare on two and four. If your song already has a clap, they'll layer: a clap and snare together is a classic, fat backbeat.",
@@ -10532,7 +10553,12 @@
           "surface": "keys",
           "goal": {
             "notes": 2,
-            "on": "between"
+            "on": "between",
+            "check": [
+              "kick",
+              "short",
+              "moves"
+            ]
           },
           "say": {
             "mentor": "Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a few short notes in the gaps between kicks. Start on the first key, your song's home note, and try one or two others. Short and simple beats long and busy.",
@@ -10956,7 +10982,11 @@
           "layer": "chords",
           "surface": "pads",
           "goal": {
-            "notes": 2
+            "notes": 2,
+            "check": [
+              "bar",
+              "moves"
+            ]
           },
           "say": {
             "mentor": "Play chords into your song. For pads, play two long chords, one per half bar. For stabs, tap short chords on the offbeats, between the kicks. Start on i, the home chord.",

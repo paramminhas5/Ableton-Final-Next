@@ -49,7 +49,7 @@ steps:
   - kind: play
     layer: bass
     surface: keys
-    goal: {notes: 2, on: between}
+    goal: {notes: 2, on: between, check: [kick, short, moves]}
     say:
       mentor: >-
         Play a bass line into your song. Your kick plays along. Press rec, wait out the count-in, and play a

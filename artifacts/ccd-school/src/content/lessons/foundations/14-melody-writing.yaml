@@ -67,7 +67,7 @@ steps:
   - kind: play
     layer: lead
     surface: keys
-    goal: {notes: 3}
+    goal: {notes: 3, check: [repeat, home, key]}
     say:
       mentor: >-
         Write it. Press rec and play a motif of three or four notes in the first half of the bar. In the

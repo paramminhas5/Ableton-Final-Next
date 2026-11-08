@@ -51,7 +51,7 @@ steps:
   - kind: play
     layer: bass
     surface: keys
-    goal: {notes: 2}
+    goal: {notes: 2, check: [roots, key]}
     say:
       mentor: >-
         Play the root of each of your chords on the bass. The bass keys are low versions of your scale, so key

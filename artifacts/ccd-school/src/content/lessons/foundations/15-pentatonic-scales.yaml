@@ -42,7 +42,7 @@ steps:
   - kind: play
     layer: lead
     surface: keys
-    goal: {notes: 3}
+    goal: {notes: 3, check: [pentatonic, moves, repeat]}
     say:
       mentor: >-
         Make a hook on those five. Press rec and play a short phrase using only keys one, three, four, five and

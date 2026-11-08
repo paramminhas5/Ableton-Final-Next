@@ -38,7 +38,7 @@ steps:
   - kind: play
     layer: drums
     surface: pads
-    goal: {notes: 2, note: snare}
+    goal: {notes: 2, note: snare, check: [backbeat]}
     say:
       mentor: >-
         Put a snare in your song. Your kick keeps playing underneath. Press rec, wait out the count-in, and tap
