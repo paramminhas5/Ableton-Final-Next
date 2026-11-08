@@ -193,7 +193,9 @@ steps:
 
   - kind: ask
     more: true
-    q: Dubstep is 140 bpm but often feels like 70. Why?
+    q: Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?
+    part: drums
+    play: {bpm: 140, notes: {kick: "x.........x.....", clap: "........x......."}}
     options: ["the big drums hit on every other beat", "it's played slower in clubs", "the bass is out of time", "dubstep has no pulse"]
     answer: 0
     why: Half time. The pulse is still 140, but the heavy drums skip every other beat, so it feels half as fast.

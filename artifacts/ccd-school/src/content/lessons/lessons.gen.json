@@ -4159,7 +4159,15 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Dubstep is 140 bpm but often feels like 70. Why?",
+          "q": "Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?",
+          "part": "drums",
+          "play": {
+            "bpm": 140,
+            "notes": {
+              "kick": "x.........x.....",
+              "clap": "........x......."
+            }
+          },
           "options": [
             "the big drums hit on every other beat",
             "it's played slower in clubs",
@@ -4638,7 +4646,27 @@
         },
         {
           "kind": "ask",
-          "q": "Which notes does swing move?",
+          "q": "Hear sixteenth hats straight, then swung. Which notes does swing move?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0,
+              "label": "straight"
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0.5,
+              "label": "swung"
+            }
+          ],
           "options": [
             "the off sixteenths, the e and the a",
             "every note",
@@ -5781,7 +5809,18 @@
         },
         {
           "kind": "ask",
-          "q": "Why does a fifth sound smooth with its root note?",
+          "q": "Hear a note with its fifth, then with a note a half step under the fifth. Why does the fifth sound smooth with its root?",
+          "part": "chords",
+          "play": [
+            {
+              "notes": "1+5 - - - - - - - . . . . . . . .",
+              "label": "with its fifth"
+            },
+            {
+              "notes": "1+#4 - - - - - - - . . . . . . . .",
+              "label": "a half step lower"
+            }
+          ],
           "options": [
             "it's already a harmonic inside the note",
             "it's the same pitch",

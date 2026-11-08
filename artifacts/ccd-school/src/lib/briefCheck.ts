@@ -62,7 +62,7 @@ export function briefChecks(checks: readonly BriefCheck[], events: NoteEvent[], 
       case "kick": {
         if (!kicks.length) { out.push({ id, ok: true, say: "your song has no kick yet, so nothing to stay out of the way of" }); break; }
         const on = presses.filter(p => kicks.some(k => near(p[0].start % (loop || 4), k))).length;
-        out.push({ id, ok: on === 0, say: on === 0 ? "no note lands on a kick, so the two take turns" : `${on} of ${N} ${N === 1 ? "lands" : "land"} right on a kick. move ${on === 1 ? "it" : "them"} into the gaps and both will hit harder` });
+        out.push({ id, ok: on === 0, say: on === 0 ? "no note lands on a kick, so the two take turns" : `${on} of ${N} ${on === 1 ? "lands" : "land"} right on a kick. move ${on === 1 ? "it" : "them"} into the gaps and both will hit harder` });
         break;
       }
       case "backbeat": {

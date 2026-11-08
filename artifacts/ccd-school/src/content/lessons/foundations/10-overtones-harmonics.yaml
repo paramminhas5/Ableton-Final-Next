@@ -74,7 +74,10 @@ steps:
       3: They follow a fixed pattern, whole number multiples.
 
   - kind: ask
-    q: Why does a fifth sound smooth with its root note?
+    q: Hear a note with its fifth, then with a note a half step under the fifth. Why does the fifth sound smooth
+      with its root?
+    part: chords
+    play: [{notes: "1+5 - - - - - - - . . . . . . . .", label: "with its fifth"}, {notes: "1+#4 - - - - - - - . . . . . . . .", label: "a half step lower"}]
     options: ["it's already a harmonic inside the note", "it's the same pitch", "it's louder", "it's always in tune with everything"]
     answer: 0
     why: The fifth rings quietly inside every note, so the two share a lot.

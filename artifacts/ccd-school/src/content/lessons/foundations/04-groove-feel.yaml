@@ -70,7 +70,10 @@ steps:
           gone.
 
   - kind: ask
-    q: Which notes does swing move?
+    q: Hear sixteenth hats straight, then swung. Which notes does swing move?
+    part: hats
+    with: ["kick"]
+    play: [{notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0, label: "straight"}, {notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0.5, label: "swung"}]
     options: ["the off sixteenths, the e and the a", "every note", "only the kick", "the first beat of every bar"]
     answer: 0
     why: Swing pushes the off sixteenths late. The beats and the ands stay put.
