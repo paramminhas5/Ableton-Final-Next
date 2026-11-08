@@ -6,6 +6,8 @@
 import Link from "next/link";
 import { useEffect, useState, type CSSProperties } from "react";
 import { readPlacement, type PlaceResult } from "@/lib/placement";
+import { CHALLENGES, readChallenges, worldStars } from "@/lib/worldChallenge";
+import { Stars } from "./Stars";
 import { useProgress } from "@/lib/progress";
 import { journey, missionAny, missionImage, nextStep, partOf, worldDone, WORLD_IDS, type WorldId } from "@/lib/worldOrder";
 import { Icon, Silk, WORLD_LED } from "./controls";
@@ -25,6 +27,8 @@ const WORLD_INFO_NAME: Record<WorldId, string> = { fundamentals: "basics", produ
 export function Worlds() {
   const { progress } = useProgress();
   const [placed, setPlaced] = useState<PlaceResult | null>(null);
+  const [stars, setStars] = useState<ReturnType<typeof readChallenges>>({});
+  useEffect(() => setStars(readChallenges()), []);
   useEffect(() => { const r = readPlacement(); if (r && r.skipped.length) setPlaced(r); }, []);
   const done = progress.completedMissions;
   return (
@@ -82,6 +86,15 @@ export function Worlds() {
                   </li>
                 ))}
               </ul>
+              {(() => {
+                const st = worldStars(stars[w], w);
+                return (
+                  <Link href={`/world/${w}/challenge`} className="wc-card" aria-label={`${INFO[w].name} challenge: ${st.main} of 3 stars, bonus ${st.bonus} of ${st.bonusOf}`}>
+                    <span>end of world challenge<small>{st.main || st.bonus ? `bonus ${st.bonus} of ${st.bonusOf}` : `after ${CHALLENGES[w].afterTitle}`}</small></span>
+                    <Stars n={st.main} />
+                  </Link>
+                );
+              })()}
               <Link href={`/world/${INFO[w].slug}`} className="ls-chip wd-open">open {INFO[w].name}</Link>
             </section>
           );

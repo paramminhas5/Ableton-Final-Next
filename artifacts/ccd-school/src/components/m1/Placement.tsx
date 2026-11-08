@@ -26,6 +26,7 @@ import { Meta, useEnter } from "./LessonParts";
 import { CopyGrid, CopyMeter, CopySides, copyTip, useCopy } from "./CopyEar";
 import { MatchKnobs, MatchMeter, MatchSides, useMatch, type K } from "./MatchSound";
 import { useEngineTrack } from "./useEngineTrack";
+import { Stars } from "./Stars";
 import "./lesson.css";
 import "./placement.css";
 
@@ -307,9 +308,7 @@ function MatchStation({ onDone }: { onDone: (stars: 0 | 1 | 2 | 3) => void }) {
 }
 
 // ── the result ───────────────────────────────────────────────────────────────
-export function Stars({ n, of = 3 }: { n: number; of?: number }) {
-  return <span className="wc-stars" role="img" aria-label={`${n} of ${of} stars`}>{Array.from({ length: of }, (_, i) => <b key={i} className={i < n ? "is-on" : ""}>★</b>)}</span>;
-}
+
 function Result({ r, onPlace, onTop, again }: { r: PlaceResult; onPlace: () => void; onTop: () => void; again: () => void }) {
   const s = r.scores;
   const steps = worldSteps(r.world);

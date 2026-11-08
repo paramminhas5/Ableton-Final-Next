@@ -12,7 +12,10 @@ import { journey, missionAny, missionImage, minutesFor, nextStep, partOf, worldD
 import { GoPill, Icon, Screen, Silk, Switch, WORLD_LED } from "./controls";
 import { SongStrip } from "./FileLesson";
 import { DuoFilters } from "./Today";
+import { readChallenges } from "@/lib/worldChallenge";
+import { Stars } from "./Stars";
 import "./lesson.css";
+import "./placement.css";
 
 const ABOUT: Record<WorldId, { line: string; then: string }> = {
   fundamentals: { line: "a beat, notes, a scale, chords and a bass, and the ears to hear them. every lesson adds to your song.", then: "then: producer" },
@@ -36,6 +39,8 @@ export function World({ world }: { world: WorldId }) {
   const next = nextStep(world, done);
   const count = worldDone(world, done);
   const [view, setView] = useState<View>("song");
+  const [chStars, setChStars] = useState(0);
+  useEffect(() => setChStars(readChallenges()[world]?.main ?? 0), [world]);
   useEffect(() => { try { const v = localStorage.getItem(VIEW_KEY); if (v === "list" || v === "song") setView(v); } catch { /* default */ } }, []);
   const pick = (v: View) => { setView(v); try { localStorage.setItem(VIEW_KEY, v); } catch { /* ignore */ } };
   const [sel, setSel] = useState(0);
@@ -75,6 +80,9 @@ export function World({ world }: { world: WorldId }) {
               <div style={{ height: 64, marginTop: 10 }}><GoPill href={`/learn/${next.slug}`} style={{ height: 64, width: "100%" }}>start <Icon name="play" small /></GoPill></div>
             </div>
           )}
+          <Link href={`/world/${world}/challenge`} className="wc-card">
+            <span>end of world challenge<small>a match and a copy on your own song, for stars</small></span><Stars n={chStars} />
+          </Link>
         </section>
 
         {view === "song" ? (
