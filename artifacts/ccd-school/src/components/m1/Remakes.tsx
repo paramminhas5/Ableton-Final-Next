@@ -71,7 +71,7 @@ function RemakeMatch({ r, onDone, onBack }: { r: Remake; onDone: (stars: number,
       </div>
       <div className="fl-text">
         <p className="ls-read">{r.says.charAt(0).toUpperCase() + r.says.slice(1)}</p>
-        <p className="ls-read wc-why">Turn {knobs.map(k => k.spec.label).join(", ")} until yours sounds like it. A patch we made in this style, on our own {PART[r.part]}.</p>
+        <p className="ls-read wc-why">Turn {knobs.map(k => k.spec.label).join(", ").replace(/, ([^,]*)$/, " and $1")} until yours sounds like it. A patch we made in this style, on our own {PART[r.part]}.</p>
         {passed ? <p className="ls-read ms-done" role="status">that&apos;s the sound. keep it and your song&apos;s {PART[r.part]} gets it.</p> : null}
       </div>
       <div className="ls-bottom"><div className="m1-g">
