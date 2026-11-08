@@ -116,3 +116,27 @@ describe("asks answered by ear: the sounds", () => {
     expect(earLabel({ label: "before" }, 0, 2, true)).toBe("before");
   });
 });
+
+describe("asks answered by ear: in the lessons", () => {
+  it("reach the stripe challenge with a sound per option, and every sound renders a part that plays", async () => {
+    const { FILE_LESSONS, lessonToMission } = await import("../src/content/lessons/adapt");
+    let n = 0;
+    for (const l of FILE_LESSONS) {
+      const m = lessonToMission(l, { voice: "mentor", level: "standard" });
+      for (const s of m.screens ?? []) {
+        if (s.kind !== "quiz" || !s.ear) continue;
+        n++;
+        if (s.ear.sounds) expect(s.ear.sounds).toHaveLength(s.options.length);
+        const heard: string[] = [];
+        for (const snd of [...(s.ear.play ?? []), ...(s.ear.sounds ?? [])]) {
+          const t = earTrack(song(), snd, { part: s.ear.part, with: s.ear.with });
+          expect(t.layers.some((x) => x.events.length > 0), `${l.slug}: ${s.q}`).toBe(true);
+          heard.push(JSON.stringify([t.bpm, t.swing, t.loop, t.master, t.layers.map((x) => [x.type, x.params, x.events, x.duck])]));
+        }
+        // Two sounds that render the same would be a question nobody can answer by ear.
+        expect(new Set(heard).size, `${l.slug}: ${s.q}`).toBe(heard.length);
+      }
+    }
+    expect(n).toBeGreaterThanOrEqual(120);
+  });
+});
