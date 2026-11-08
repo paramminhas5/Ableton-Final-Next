@@ -107,7 +107,9 @@ steps:
       3: Keys are about notes, not time.
 
   - kind: ask
-    q: You move one kick onto an "and". What stays the same?
+    q: Hear the kick on every beat, then with one kick moved onto an "and". What stays the same?
+    part: drums
+    play: [{notes: {kick: "x...x...x...x...", clap: "....x.......x..."}, label: "every beat"}, {notes: {kick: "x...x...x.x.....", clap: "....x.......x..."}, label: "one moved"}]
     options: ["the pulse", "the rhythm", "where every kick lands", "nothing at all"]
     answer: 0
     why: The pulse keeps ticking at the same speed. Only the pattern on top changed.

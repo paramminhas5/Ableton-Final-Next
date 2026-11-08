@@ -118,14 +118,16 @@ steps:
       3: Three to a bar is a waltz, not a club track.
 
   - kind: ask
-    q: Which beats does the backbeat clap land on?
-    options: ["two and four", "one and three", "every beat", "only on one"]
+    q: Which of these is a backbeat clap? Count one, two, three, four along with the kick.
+    part: clap
+    with: ["kick"]
+    sounds: [{notes: "....x.......x..."}, {notes: "x.......x......."}, {notes: "x...x...x...x..."}]
+    options: ["two and four", "one and three", "every beat"]
     answer: 0
     why: Two and four. One and three are the kick on its own.
     whyWrong:
       1: One and three are where the kick sits alone. The clap answers it on two and four.
       2: Every beat is the kick's job. The clap is on every other one.
-      3: One is the start of the bar, where the kick lands.
 
   - kind: ask
     q: What does 4/4 mean?
@@ -149,7 +151,8 @@ steps:
 
   - kind: ask
     more: true
-    q: Why does adding a clap on two and four make the beat feel groovier?
+    q: Hear the kick on its own, then with the clap on two and four. Why does the second one feel groovier?
+    play: [{mute: ["clap"], label: "kick alone"}, {with: ["clap"], label: "with the clap"}]
     options: ["it pulls against the kick, so the beat goes down and up", "it makes the song faster", "it makes the kick louder", "it adds a melody"]
     answer: 0
     why: The kick says down, the clap says up. That back and forth is what makes you nod.

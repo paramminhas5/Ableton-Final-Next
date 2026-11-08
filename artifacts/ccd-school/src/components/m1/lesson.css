@@ -972,3 +972,4 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ae-opt .ae-key{min-height:52px}
 .ae-letter{display:inline-block;min-width:1.4em;margin-right:8px;font-weight:700;color:var(--sub)}
 .ae-blind{color:var(--sub);font-weight:500}
+.ae-blind b{color:var(--ink);font-weight:700}

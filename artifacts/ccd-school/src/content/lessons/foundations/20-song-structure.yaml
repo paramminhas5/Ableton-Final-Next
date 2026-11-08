@@ -39,7 +39,8 @@ steps:
         Tap squares to turn sounds on and off in each part. Press play and hear your whole song.
 
   - kind: ask
-    q: What is a breakdown?
+    q: Hear your song, then the same loop as a breakdown. What is a breakdown?
+    play: [{label: "full"}, {mute: ["drums", "hats"], label: "breakdown"}]
     options: ["a section with the drums taken out", "the loudest part", "a mistake", "the first bar"]
     answer: 0
     why: Drums out, so their return is a big release.

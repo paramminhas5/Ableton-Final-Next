@@ -153,24 +153,29 @@ steps:
       3: Both lasted the same time.
 
   - kind: ask
-    q: What changed between the quiet note and the loud note?
+    q: Hear your melody quiet, then loud. What changed?
+    part: lead
+    play: [{level: 0.45, label: "quiet"}, {level: 0.85, label: "loud"}]
     options: ["how hard the air was pushed", "how fast the air moved back and forth", "the shape of the wave", "nothing"]
     answer: 0
     why: Same pitch, bigger push. A taller wave is a louder sound.
     whyWrong:
       1: That would change the pitch. Both notes were the same pitch.
-      2: Both were the same soft shape.
+      2: The shape stayed the same. Only the size of the push changed.
       3: Tap them again. The loud one pushes the air much harder.
 
   - kind: ask
-    q: A piano and a guitar play the same note. Why do they still sound different?
+    q: "Your melody twice: the same notes at the same loudness, on two different waves. Why do they sound
+      different?"
+    part: lead
+    play: [{wave: 0, label: "one wave"}, {wave: 1, label: "another wave"}]
     options: ["the shape of their waves is different", "one is always louder", "they are at different pitches", "they are not really different"]
     answer: 0
     why: Same pitch, different wave shape. That shape is the sound's colour, or timbre.
     whyWrong:
       1: Play them at the same loudness and they still sound different.
       2: The question says same note, so the pitch is the same.
-      3: You heard soft, saw and square sound different on the same note.
+      3: You just heard it: the same notes in two different colours.
 
   - kind: ask
     more: true

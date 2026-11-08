@@ -74,7 +74,10 @@ steps:
       3: A scale is the set of notes; a motif is what you play with them.
 
   - kind: ask
-    q: What makes an answer phrase feel finished?
+    q: Hear an answer phrase that ends away from home, then one that lands on it. What makes the second feel
+      finished?
+    part: lead
+    play: [{notes: "3 - 2 - 1 - 2 - 3 - - - 2 - - -", label: "ends away"}, {notes: "3 - 2 - 1 - 2 - 3 - - - 1 - - -", label: "ends home"}]
     options: ["it lands on the home note, the first key", "it's louder", "it's faster", "it has more notes"]
     answer: 0
     why: Landing on the first note of the scale feels like coming home.
@@ -84,7 +87,10 @@ steps:
       3: It's where it lands, not how many notes.
 
   - kind: ask
-    q: Why repeat the motif with one change instead of something totally new?
+    q: Hear a motif, then the same motif with one note changed. Why repeat it with one change instead of something
+      totally new?
+    part: lead
+    play: {notes: "1 - 3 - 5 - 3 - . . . . . . . . 1 - 3 - 6 - 3 - . . . . . . . ."}
     options: ["repetition sticks, the change keeps it interesting", "it's quicker to play", "new notes are not allowed", "it makes the song longer"]
     answer: 0
     why: Your ear remembers what comes back and enjoys the small surprise.

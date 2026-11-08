@@ -83,7 +83,9 @@ steps:
     hint: Count "one and two and" and tap the open hat on an "and".
 
   - kind: ask
-    q: Syncopation means
+    q: "Hear a straight beat, then a syncopated one. Syncopation means:"
+    part: drums
+    play: [{notes: {kick: "x...x...x...x...", clap: "....x.......x...", hat: "x.x.x.x.x.x.x.x."}, label: "straight"}, {notes: {kick: "x..x..x...x..x..", clap: "....x.......x...", hat: "..x...x...x...x."}, label: "syncopated"}]
     options: ["accenting the offbeats and weak beats", "playing only on the main beats", "changing the time signature", "slowing the tempo down"]
     answer: 0
     why: Syncopation puts the accent where the beat is normally weak, between or off the strong beats.
@@ -114,7 +116,9 @@ steps:
 
   - kind: ask
     more: true
-    q: What happens if everything is syncopated and nothing marks the one?
+    q: Hear a beat where everything is off the beat and nothing marks the one. What happens?
+    part: drums
+    play: {notes: {kick: "...x..x....x..x.", clap: "..x.......x....."}}
     options: ["listeners lose the pulse", "the groove gets tighter", "the tempo doubles", "nothing changes"]
     answer: 0
     why: Syncopation needs a steady pulse to pull against. Without one, people lose their place.

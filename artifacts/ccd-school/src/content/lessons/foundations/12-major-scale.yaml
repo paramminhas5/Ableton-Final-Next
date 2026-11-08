@@ -86,7 +86,9 @@ steps:
       3: Drums are rhythm, not notes.
 
   - kind: ask
-    q: How does minor usually sound compared with major?
+    q: Hear a scale as major, then as minor, from the same home note. How does minor sound next to major?
+    part: lead
+    play: [{scale: "major", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "major"}, {scale: "minor", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "minor"}]
     options: ["darker, moodier", "faster", "louder", "higher"]
     answer: 0
     why: Minor tends to sound darker; major brighter.
@@ -106,7 +108,9 @@ steps:
       3: The eighth note is the first one again, an octave up.
 
   - kind: ask
-    q: What is a half step?
+    q: Hear a note and the note a half step above it, back and forth. What is a half step?
+    part: lead
+    play: {notes: "1 - - - b2 - - - 1 - - - b2 - - -"}
     options: ["the very next key", "two keys apart", "half a beat", "half the volume"]
     answer: 0
     why: The smallest step on a keyboard, the very next key.

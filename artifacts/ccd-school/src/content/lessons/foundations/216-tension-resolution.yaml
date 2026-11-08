@@ -82,7 +82,9 @@ steps:
       3: There's nothing left to build to.
 
   - kind: ask
-    q: The strongest pull towards home is
+    q: Which of these pulls home the hardest?
+    part: chords
+    sounds: [{scale: "major", notes: "5,+7,+2 - - - - - - - 1+3+5 - - - - - - -"}, {scale: "major", notes: "4,+6,+1 - - - - - - - 1+3+5 - - - - - - -"}, {scale: "major", notes: "2+4+6 - - - - - - - 1+3+5 - - - - - - -"}, {scale: "major", notes: "6,+1+3 - - - - - - - 1+3+5 - - - - - - -"}]
     options: ["V to I", "IV to I", "ii to I", "vi to I"]
     answer: 0
     why: V asks, I answers. It's the classic resolution.
@@ -92,7 +94,9 @@ steps:
       3: The vi chord has little pull towards home.
 
   - kind: ask
-    q: The leading tone sits
+    q: Hear the leading tone pull up to home. Where does it sit?
+    part: lead
+    play: {scale: "major", notes: "7, - - - - - - - 1 - - - - - - -"}
     options: ["a semitone below home", "a fifth above home", "an octave above home", "on the fourth note"]
     answer: 0
     why: It's the seventh note, one semitone under home, and it pulls up to it.
@@ -103,7 +107,9 @@ steps:
 
   - kind: ask
     more: true
-    q: In a deceptive cadence, V goes to
+    q: "Hear a deceptive cadence: V, then not the chord your ear expects. In a deceptive cadence, V goes to:"
+    part: chords
+    play: {scale: "major", notes: "5,+7,+2 - - - - - - - 6,+1+3 - - - - - - -"}
     options: ["vi", "I", "IV", "ii"]
     answer: 0
     why: The ear expects I and gets vi instead.

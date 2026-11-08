@@ -162,25 +162,27 @@ steps:
 
   - kind: ask
     more: true
-    q: Two notes an octave apart sound
+    q: Your lead plays a note, then the same note an octave up. How do they sound?
+    part: lead
+    play: {notes: "1 - - - . . . . 1' - - - . . . ."}
     options: ["like the same note, one higher", "completely different", "out of tune", "equally loud"]
     answer: 0
     why: Because one is exactly double the other, your ear hears them as the same note at two heights.
     whyWrong:
-      1: They share a name for a reason. The high a is the low a going twice as fast.
+      1: They share a name for a reason. The high one is the low one going twice as fast.
       2: An octave is the most in tune two different notes can be.
       3: Loudness is a separate thing. You can play an octave soft or hard.
 
   - kind: ask
     more: true
-    q: Which of these is a low frequency sound?
-    options: ["a kick drum's body", "a hi hat", "a whistle", "birdsong"]
+    q: Which of these is the lowest sound?
+    sounds: [{part: "kick"}, {part: "hat"}, {part: "lead", notes: "5' - 5' - . . 5' - 5' - . . . . . ."}]
+    options: ["a kick drum's body", "a hi hat", "a high lead note"]
     answer: 0
     why: The kick's body hums at around 50 hz, slow big pushes of air you feel in your chest.
     whyWrong:
-      1: Hi hats are mostly high frequencies, thousands of hertz, which is why they sound bright.
-      2: A whistle is a few thousand hertz, fast wiggles.
-      3: Birds sing high, usually well above 2,000 hz.
+      1: A hi hat is all high frequencies, a hiss up top.
+      2: A high note wiggles hundreds of times a second more than a kick's body.
 
   - kind: ask
     more: true

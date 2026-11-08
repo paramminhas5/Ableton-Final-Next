@@ -11,11 +11,13 @@
  *   sounds: [{cutoff: 0.15}, {cutoff: 0.85}]   # or one sound per option, in the same order: picked by ear
  *
  * A sound is a small map: knob keys of the part (0 to 1, as `match` targets), and `part`, `with`, `notes`
- * (a copy pattern, src/lib/copyEar.ts), `mute` (parts), `bpm`, `swing`, `master` ({glue: 0.8}), `label`.
+ * (a copy pattern, src/lib/copyEar.ts), `scale` (the Live scale its notes are read in, so one line can be heard
+ * major and then minor on the song's own root), `mute` (parts), `bpm`, `swing`, `master` ({glue: 0.8}), `label`.
  * Pure, so the compiler validates with it and the tests render with it.
  */
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_NOTES, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, MASTER_PARAMS } from "../engine/params.gen";
 import { DRUM_ROWS, HAT_NOTES, parsePattern, patternProblems, type CopyLayer } from "./copyEar";
+import { SCALES } from "./theory";
 import { newLayerV2, type LayerType, type LayerV2, type NoteEvent, type TrackV2 } from "./track2";
 
 /** The parts a sound can name: a layer, one drum of the rack, or the whole song. */
@@ -23,7 +25,7 @@ export const EAR_PARTS = ["song", "drums", "hats", "bass", "chords", "lead", "ki
 export type EarPart = (typeof EAR_PARTS)[number];
 /** A sound as written in the file. Keys other than the reserved ones are knobs of its part. */
 export type EarSound = Record<string, unknown>;
-export const EAR_RESERVED = ["part", "with", "notes", "mute", "bpm", "swing", "master", "label"] as const;
+export const EAR_RESERVED = ["part", "with", "notes", "scale", "mute", "bpm", "swing", "master", "label"] as const;
 
 const VOICE_NOTE: Partial<Record<EarPart, number>> = { kick: 36, snare: 38, clap: 39, rim: 37, hat: 42, "open hat": 46 };
 const isVoice = (p: EarPart) => VOICE_NOTE[p] !== undefined;
@@ -78,6 +80,8 @@ export function earSoundProblems(s: unknown, stepPart?: unknown): string[] {
   if (s.mute !== undefined && !partsList(s.mute)) out.push(`mute must list parts from ${EAR_PARTS.join(", ")}`);
   if (s.bpm !== undefined && (typeof s.bpm !== "number" || s.bpm < 60 || s.bpm > 180)) out.push("bpm must be a number from 60 to 180");
   if (s.swing !== undefined && (typeof s.swing !== "number" || s.swing < 0 || s.swing > 0.75)) out.push("swing must be a number from 0 to 0.75");
+  if (s.scale !== undefined && (typeof s.scale !== "string" || !(s.scale in SCALES))) out.push(`scale "${String(s.scale)}" is not one of Live's scales (src/lib/theory.ts)`);
+  if (s.scale !== undefined && s.notes === undefined) out.push("scale only changes the notes a sound writes, so it needs notes");
   if (s.label !== undefined && (typeof s.label !== "string" || !s.label.trim() || s.label.length > 18)) out.push("label must be a few words (18 characters at most)");
   if (s.master !== undefined) {
     if (!isObj(s.master)) out.push("master must map master knobs to values, like {glue: 0.8}");
@@ -142,6 +146,7 @@ export function earTrack(song: TrackV2, sound: EarSound = {}, step: { part?: str
   const part = (sound.part ?? step.part ?? "song") as EarPart;
   const withParts = ((sound.with ?? step.with ?? []) as EarPart[]).filter(p => p !== part);
   const root = song.root ?? 45, scale = song.scale;
+  const noteScale = typeof sound.scale === "string" ? sound.scale : scale;
   let loop = song.loop || 4;
   let layers: LayerV2[] = song.layers.map(l => ({ ...l, params: { ...l.params }, events: l.events.slice(), mute: false, solo: false }));
   // An empty song: a kick and a clap to hear things against.
@@ -159,7 +164,7 @@ export function earTrack(song: TrackV2, sound: EarSound = {}, step: { part?: str
   }
   // A different pattern for the part.
   if (sound.notes !== undefined && part !== "song") {
-    const n = notesFor(part, sound.notes, root, scale);
+    const n = notesFor(part, sound.notes, root, noteScale);
     if (n.loop > loop) { layers = layers.map(l => ({ ...l, events: tile(l.events, loop, n.loop) })); loop = n.loop; }
     const evs = tile(n.events, n.loop, loop);
     const l = layers.find(x => x.type === layerOf(part));

@@ -89,7 +89,9 @@ steps:
         quiet bit before it. That's called dynamics.
 
   - kind: ask
-    q: Two notes have the same pitch but one is louder. What's different?
+    q: Hear your melody, then the same melody louder. What's different?
+    part: lead
+    play: [{level: 0.5, label: "softer"}, {level: 0.85, label: "louder"}]
     options: ["amplitude, how hard the air is pushed", "frequency, how fast it wiggles", "the note name", "the tempo"]
     answer: 0
     why: Loudness is amplitude. Pitch stays the same because the speed of the wiggle hasn't changed.
@@ -119,7 +121,9 @@ steps:
       3: It's the height that changes.
 
   - kind: ask
-    q: Why does a drop feel bigger after a breakdown?
+    q: Hear your song with the drums out, like a breakdown, then with everything back in. Why does the drop feel
+      bigger after a breakdown?
+    play: [{mute: ["drums", "hats"], label: "breakdown"}, {label: "drop"}]
     options: ["the quiet part before makes the loud part stand out", "the tempo speeds up", "a drop is always 10 dB louder", "the melody changes key"]
     answer: 0
     why: That contrast is dynamics. Loud only feels loud next to quiet.

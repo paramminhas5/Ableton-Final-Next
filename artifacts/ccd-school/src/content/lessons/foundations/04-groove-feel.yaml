@@ -80,7 +80,10 @@ steps:
       3: Beat one stays exactly where it is.
 
   - kind: ask
-    q: Your hats are only on the eighths. You turn swing up. What happens?
+    q: Your hats on the eighths only, with no swing and then with swing turned up. What happens?
+    part: hats
+    with: ["kick"]
+    play: [{notes: {hat: "x.x.x.x.x.x.x.x."}, swing: 0, label: "no swing"}, {notes: {hat: "x.x.x.x.x.x.x.x."}, swing: 0.6, label: "swing up"}]
     options: ["nothing changes, swing needs sixteenths", "the hats get louder", "the hats move early", "the tempo speeds up"]
     answer: 0
     why: Eighths are on the beat or the and, which swing leaves alone. Add sixteenths to hear it.
@@ -90,14 +93,16 @@ steps:
       3: Tempo stays the same.
 
   - kind: ask
-    q: About how much swing gives a triplet feel?
-    options: ["50 percent", "0 percent", "5 percent", "100 percent"]
+    q: Which of these has a triplet feel?
+    part: hats
+    with: ["kick"]
+    sounds: [{notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0.5}, {notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0}, {notes: {hat: "xxxxxxxxxxxxxxxx"}, swing: 0.25}]
+    options: ["50 percent", "0 percent", "25 percent"]
     answer: 0
     why: At around 50 percent the off notes land a third of the way along, like a triplet.
     whyWrong:
-      1: Zero is straight, no swing at all.
-      2: 5 percent is a hint you can barely hear.
-      3: The knob tops out before that.
+      1: At 0 percent every sixteenth is dead straight.
+      2: 25 percent leans the off notes a little late, a lazy shuffle, but not yet a triplet.
 
   - kind: ask
     q: Why does swing make a beat feel more human?

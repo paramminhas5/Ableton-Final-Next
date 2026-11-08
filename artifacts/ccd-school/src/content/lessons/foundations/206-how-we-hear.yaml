@@ -78,7 +78,9 @@ steps:
         turns. You can hear both of them now.
 
   - kind: ask
-    q: Masking means
+    q: "Hear your bass alone, then with the kick. Listen to the low end where they overlap. Masking means:"
+    part: bass
+    play: [{label: "bass alone"}, {with: ["kick"], label: "with the kick"}]
     options: ["a loud sound hides quieter sounds near its pitch", "a filter removes a frequency", "a sound is played backwards", "a sound gets extra harmonics"]
     answer: 0
     why: The loud sound covers the quiet one, especially when they're close in pitch.
@@ -109,7 +111,8 @@ steps:
 
   - kind: ask
     more: true
-    q: Turn a track up and it sounds fuller. Why?
+    q: Hear your song quietly, then turned up. Why does it sound fuller turned up?
+    play: [{master: {out: 0.35}, label: "quiet"}, {master: {out: 0.75}, label: "turned up"}]
     options: ["at low volume we lose bass and treble first", "turning up adds new notes", "the tempo changes", "the speakers change the mix"]
     answer: 0
     why: Our ears lose the lows and highs faster as things get quieter, so louder sounds fuller.

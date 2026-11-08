@@ -95,7 +95,9 @@ steps:
       3: Beats are about rhythm.
 
   - kind: ask
-    q: You turn the cutoff down on your melody. What happens?
+    q: Hear your melody, then with the cutoff turned down. What happens?
+    part: lead
+    play: [{cutoff: 0.85, label: "open"}, {cutoff: 0.15, label: "cutoff down"}]
     options: ["it gets darker, the high harmonics are cut", "it gets higher in pitch", "it gets faster", "it gets brighter"]
     answer: 0
     why: A low pass filter keeps the lows and cuts the highs, so the sound gets rounder and darker.
@@ -105,14 +107,15 @@ steps:
       3: Turning it up brings brightness back.
 
   - kind: ask
-    q: Which wave has the most harmonics?
-    options: ["the saw", "the soft, round wave", "they all have the same", "none of them have any"]
+    q: Which of these has the most harmonics?
+    part: lead
+    sounds: [{wave: 0, cutoff: 1}, {wave: 0, cutoff: 0.05}, {wave: 1, cutoff: 1}]
+    options: ["the saw", "the soft, round wave", "the square"]
     answer: 0
     why: The saw's sharp drop is made of loads of harmonics, which is why it sounds the buzziest.
     whyWrong:
-      1: The round wave is nearly pure, with very few harmonics.
-      2: That's why they sound so different.
-      3: Everything except a pure sine has some.
+      1: "The soft, round one has almost none left: the filter took them away."
+      2: "The square is hollow: it has only every other harmonic, so fewer than the saw."
 
   - kind: ask
     more: true

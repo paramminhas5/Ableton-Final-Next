@@ -82,7 +82,10 @@ steps:
       3: Drums have no pitch to make chords.
 
   - kind: ask
-    q: What makes a chord major or minor?
+    q: Hear a major chord, then a minor chord on the same root. Only one note moved. What makes a chord major or
+      minor?
+    part: chords
+    play: [{scale: "major", notes: "1+3+5 - - - - - - - . . . . . . . .", label: "major"}, {scale: "minor", notes: "1+3+5 - - - - - - - . . . . . . . .", label: "minor"}]
     options: ["the middle note, the third", "how loud it is", "how long it's held", "the tempo"]
     answer: 0
     why: Move the third by one key and the chord flips between major and minor.

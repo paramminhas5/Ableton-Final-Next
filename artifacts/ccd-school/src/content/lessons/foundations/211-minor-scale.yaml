@@ -97,7 +97,9 @@ steps:
       3: Most notes are shared. Only three move.
 
   - kind: ask
-    q: Dorian is natural minor with
+    q: "Hear natural minor, then dorian, from the same home note. Dorian is natural minor with:"
+    part: lead
+    play: [{scale: "minor", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "natural minor"}, {scale: "dorian", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "dorian"}]
     options: ["a raised sixth", "a raised third", "a lowered fifth", "two extra notes"]
     answer: 0
     why: One note, the sixth, up a semitone. Minor with a lift.
@@ -118,7 +120,9 @@ steps:
 
   - kind: ask
     more: true
-    q: Harmonic minor raises which note?
+    q: Hear natural minor, then harmonic minor. Harmonic minor raises which note?
+    part: lead
+    play: [{scale: "minor", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "natural minor"}, {scale: "harmonic minor", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "harmonic minor"}]
     options: ["the seventh", "the third", "the fifth", "the home note"]
     answer: 0
     why: The raised seventh sits a semitone under home and pulls towards it.

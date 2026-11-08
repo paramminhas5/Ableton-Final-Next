@@ -99,7 +99,9 @@ steps:
       3: That's augmented.
 
   - kind: ask
-    q: What makes a diminished chord tense?
+    q: Hear a diminished chord move to home. What makes the diminished chord so tense?
+    part: chords
+    play: {scale: "minor", notes: "2+4+6 - - - - - - - 1+3+5 - - - - - - -"}
     options: ["it contains a tritone", "it has four notes", "it's played faster", "it uses a major third"]
     answer: 0
     why: Three plus three is six semitones, the tritone, the most unstable interval.
@@ -109,7 +111,9 @@ steps:
       3: Its bottom gap is a minor third, three semitones.
 
   - kind: ask
-    q: A sus chord replaces the middle note with
+    q: "Hear a chord, then the same chord as a sus 4. A sus chord replaces the middle note with:"
+    part: chords
+    play: [{notes: "1+3+5 - - - - - - - . . . . . . . .", label: "triad"}, {notes: "1+4+5 - - - - - - - . . . . . . . .", label: "sus 4"}]
     options: ["the second or the fourth", "the seventh", "an octave", "nothing at all"]
     answer: 0
     why: Suspended chords swap the third for a second or fourth, so they're neither major nor minor.

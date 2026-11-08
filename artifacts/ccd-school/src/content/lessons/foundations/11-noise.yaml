@@ -69,7 +69,9 @@ steps:
     hint: "Higher sounds smaller and sharper."
 
   - kind: ask
-    q: Why can't you hum the note of a hi hat?
+    q: Listen to your hi hat on its own. Why can't you hum its note?
+    part: hat
+    play: {}
     options: ["it's noise, it has no single pitch", "it's too quiet", "it's too fast", "it's out of tune"]
     answer: 0
     why: Noise has every frequency at once and no repeating shape, so there's no note to hum.
@@ -79,7 +81,8 @@ steps:
       3: To be out of tune it would need a note in the first place.
 
   - kind: ask
-    q: What makes an open hat different from a closed one?
+    q: Hear a closed hat, then an open one. What makes the open hat different?
+    play: [{part: "hat", label: "closed"}, {part: "open hat", label: "open"}]
     options: ["it rings for longer", "it has a note", "it's played on the kick", "it uses a different tempo"]
     answer: 0
     why: Same bright noise, left to ring longer.
@@ -89,7 +92,9 @@ steps:
       3: The tempo is the song's, not the hat's.
 
   - kind: ask
-    q: What is a clap made of?
+    q: Listen to your clap on its own. What is it made of?
+    part: clap
+    play: {}
     options: ["a few quick bursts of noise", "a low sine wave", "a recorded melody", "silence"]
     answer: 0
     why: A few bursts very close together, like a handful of people clapping.

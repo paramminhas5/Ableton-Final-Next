@@ -78,14 +78,15 @@ steps:
     hint: "A buzzier sound has more harmonics: turn shape further."
 
   - kind: ask
-    q: Which wave is best for a deep, soft sub bass?
-    options: ["sine", "saw", "square", "noise"]
+    q: Which of these would make the best deep, soft sub bass?
+    part: bass
+    sounds: [{wave: 0, cutoff: 0.03, sub: 0.8}, {wave: 0, cutoff: 0.8}, {wave: 1, cutoff: 0.8}]
+    options: ["the sine-like one", "the saw", "the square"]
     answer: 0
     why: A sine is pure, with almost no harmonics, so it's mostly felt as a deep rumble.
     whyWrong:
       1: A saw is bright and buzzy, more for leads and mid basses.
       2: A square is hollow and reedy.
-      3: Noise has no pitch at all.
 
   - kind: ask
     q: Why is the saw so popular in dance music?
@@ -98,7 +99,9 @@ steps:
       3: Any wave can play any note.
 
   - kind: ask
-    q: What does a square wave sound like?
+    q: This is your melody on a square wave. What does it sound like?
+    part: lead
+    play: {wave: 1, cutoff: 0.8}
     options: ["hollow and reedy, like old video games", "pure and soft", "a kick drum", "a crowd cheering"]
     answer: 0
     why: Hollow and reedy, the chiptune sound.
@@ -109,14 +112,15 @@ steps:
 
   - kind: ask
     more: true
-    q: How can you get close to a sine on this synth?
-    options: ["a saw with the cutoff closed right down", "the square with cutoff open", "turn the level up", "play higher notes"]
+    q: Which of these is closest to a sine on this synth?
+    part: lead
+    sounds: [{wave: 0, cutoff: 0.04}, {wave: 1, cutoff: 1}, {wave: 0, cutoff: 0.9, level: 0.95}]
+    options: ["a saw with the cutoff closed right down", "the square with cutoff open", "a saw with the level up"]
     answer: 0
     why: Closing the filter removes the harmonics, leaving something close to the pure note.
     whyWrong:
       1: That's the brightest, buzziest setting.
       2: Level changes loudness, not shape.
-      3: Pitch doesn't change the wave's shape.
 
   - kind: keep
     next: >-

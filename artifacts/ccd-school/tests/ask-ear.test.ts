@@ -12,7 +12,8 @@ const FIX = join(__dirname, "fixtures/lessons");
 const kickText = readFileSync(join(FIX, "ok/producer/01-your-kick.yaml"), "utf8");
 const FILE = "producer/01-your-kick.yaml";
 const askAt = (doc: { steps: { kind: string }[] }) => doc.steps.findIndex((s) => s.kind === "ask");
-function withAsk(fn: (ask: Record<string, unknown>) => void) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function withAsk(fn: (ask: any) => void) {
   const doc = parse(kickText);
   const i = askAt(doc);
   fn(doc.steps[i]);

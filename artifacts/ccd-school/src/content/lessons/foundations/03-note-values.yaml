@@ -93,7 +93,11 @@ steps:
         bit of wobble so it feels more alive, and then you switch the magnet off.
 
   - kind: ask
-    q: How many sixteenth notes fit in one beat?
+    q: "These are sixteenth hats over your kick. Count the hats from one kick to the next: how many sixteenths fit
+      in one beat?"
+    part: hats
+    with: ["kick"]
+    play: {notes: {hat: "xxxxxxxxxxxxxxxx"}}
     options: ["four", "two", "sixteen", "eight"]
     answer: 0
     why: A sixteenth is a quarter of a beat, so four fit in one beat and sixteen in a bar.
@@ -103,7 +107,10 @@ steps:
       3: Eight per beat would be thirty-second notes.
 
   - kind: ask
-    q: You switch your hats from eighths to sixteenths. What happens to the tempo?
+    q: Hear your hats as eighths, then as sixteenths. What happens to the tempo?
+    part: hats
+    with: ["kick"]
+    play: [{notes: {hat: "x.x.x.x.x.x.x.x."}, label: "eighths"}, {notes: {hat: "xxxxxxxxxxxxxxxx"}, label: "sixteenths"}]
     options: ["it stays the same", "it doubles", "it halves", "it goes up a little"]
     answer: 0
     why: The pulse doesn't change. The beat is just cut into smaller pieces, so it feels busier.

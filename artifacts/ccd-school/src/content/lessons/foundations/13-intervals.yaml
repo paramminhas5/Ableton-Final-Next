@@ -89,7 +89,9 @@ steps:
       3: Twelve half steps is an octave.
 
   - kind: ask
-    q: How do small intervals usually feel in a melody?
+    q: Hear a melody that moves in small steps, then one that leaps. How do the small steps feel?
+    part: lead
+    play: [{notes: "1 - 2 - 3 - 2 - 1 - 2 - 3 - - -", label: "small steps"}, {notes: "1 - 5 - 1' - 3 - 6, - 1' - 5 - - -", label: "big leaps"}]
     options: ["smooth, like walking", "dramatic, like leaping", "silent", "faster"]
     answer: 0
     why: Steps feel smooth. Big jumps feel dramatic.

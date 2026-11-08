@@ -3958,7 +3958,18 @@
         },
         {
           "kind": "ask",
-          "q": "You turn the tempo from 120 up to 140. What happens to your kick?",
+          "q": "Hear your kick at 120 bpm, then at 140. What happens to it?",
+          "part": "kick",
+          "play": [
+            {
+              "bpm": 120,
+              "label": "120 bpm"
+            },
+            {
+              "bpm": 140,
+              "label": "140 bpm"
+            }
+          ],
           "options": [
             "the kicks come closer together",
             "the kick gets louder",
@@ -3975,19 +3986,28 @@
         },
         {
           "kind": "ask",
-          "q": "Roughly what tempo does house music usually sit at?",
+          "q": "Which of these is at a house tempo?",
+          "sounds": [
+            {
+              "bpm": 124
+            },
+            {
+              "bpm": 70
+            },
+            {
+              "bpm": 175
+            }
+          ],
           "options": [
             "120 to 128 bpm",
             "60 to 80 bpm",
-            "170 to 180 bpm",
-            "200 bpm and up"
+            "170 to 180 bpm"
           ],
           "answer": 0,
           "why": "House usually sits between 120 and 128. Techno goes a little faster.",
           "whyWrong": {
             "1": "That's ballad speed, slower than most dance music.",
-            "2": "That's drum and bass territory.",
-            "3": "That's faster than almost any dance floor."
+            "2": "That's drum and bass territory."
           }
         },
         {
@@ -4010,19 +4030,29 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "At 60 bpm, how long is one beat?",
+          "q": "One of these is your kick at 60 bpm. Which one?",
+          "part": "kick",
+          "sounds": [
+            {
+              "bpm": 60
+            },
+            {
+              "bpm": 120
+            },
+            {
+              "bpm": 90
+            }
+          ],
           "options": [
-            "one second",
-            "half a second",
-            "two seconds",
-            "a tenth of a second"
+            "60 bpm, one beat every second",
+            "120 bpm, a beat every half second",
+            "90 bpm, three beats every two seconds"
           ],
           "answer": 0,
           "why": "60 beats in 60 seconds, so one beat every second.",
           "whyWrong": {
-            "1": "Half a second is a beat at 120 bpm.",
-            "2": "Two seconds a beat would be 30 bpm.",
-            "3": "That would be 600 bpm."
+            "1": "That's twice as fast: two kicks every second.",
+            "2": "Close, but the kicks come a little quicker than once a second."
           }
         },
         {
@@ -4168,19 +4198,32 @@
         },
         {
           "kind": "ask",
-          "q": "Which beats does the backbeat clap land on?",
+          "q": "Which of these is a backbeat clap? Count one, two, three, four along with the kick.",
+          "part": "clap",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": "....x.......x..."
+            },
+            {
+              "notes": "x.......x......."
+            },
+            {
+              "notes": "x...x...x...x..."
+            }
+          ],
           "options": [
             "two and four",
             "one and three",
-            "every beat",
-            "only on one"
+            "every beat"
           ],
           "answer": 0,
           "why": "Two and four. One and three are the kick on its own.",
           "whyWrong": {
             "1": "One and three are where the kick sits alone. The clap answers it on two and four.",
-            "2": "Every beat is the kick's job. The clap is on every other one.",
-            "3": "One is the start of the bar, where the kick lands."
+            "2": "Every beat is the kick's job. The clap is on every other one."
           }
         },
         {
@@ -4220,7 +4263,21 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Why does adding a clap on two and four make the beat feel groovier?",
+          "q": "Hear the kick on its own, then with the clap on two and four. Why does the second one feel groovier?",
+          "play": [
+            {
+              "mute": [
+                "clap"
+              ],
+              "label": "kick alone"
+            },
+            {
+              "with": [
+                "clap"
+              ],
+              "label": "with the clap"
+            }
+          ],
           "options": [
             "it pulls against the kick, so the beat goes down and up",
             "it makes the song faster",
@@ -4327,7 +4384,16 @@
         },
         {
           "kind": "ask",
-          "q": "How many sixteenth notes fit in one beat?",
+          "q": "These are sixteenth hats over your kick. Count the hats from one kick to the next: how many sixteenths fit in one beat?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "play": {
+            "notes": {
+              "hat": "xxxxxxxxxxxxxxxx"
+            }
+          },
           "options": [
             "four",
             "two",
@@ -4344,7 +4410,25 @@
         },
         {
           "kind": "ask",
-          "q": "You switch your hats from eighths to sixteenths. What happens to the tempo?",
+          "q": "Hear your hats as eighths, then as sixteenths. What happens to the tempo?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "notes": {
+                "hat": "x.x.x.x.x.x.x.x."
+              },
+              "label": "eighths"
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "label": "sixteenths"
+            }
+          ],
           "options": [
             "it stays the same",
             "it doubles",
@@ -4488,7 +4572,27 @@
         },
         {
           "kind": "ask",
-          "q": "Your hats are only on the eighths. You turn swing up. What happens?",
+          "q": "Your hats on the eighths only, with no swing and then with swing turned up. What happens?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "notes": {
+                "hat": "x.x.x.x.x.x.x.x."
+              },
+              "swing": 0,
+              "label": "no swing"
+            },
+            {
+              "notes": {
+                "hat": "x.x.x.x.x.x.x.x."
+              },
+              "swing": 0.6,
+              "label": "swing up"
+            }
+          ],
           "options": [
             "nothing changes, swing needs sixteenths",
             "the hats get louder",
@@ -4505,19 +4609,41 @@
         },
         {
           "kind": "ask",
-          "q": "About how much swing gives a triplet feel?",
+          "q": "Which of these has a triplet feel?",
+          "part": "hats",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0.5
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0
+            },
+            {
+              "notes": {
+                "hat": "xxxxxxxxxxxxxxxx"
+              },
+              "swing": 0.25
+            }
+          ],
           "options": [
             "50 percent",
             "0 percent",
-            "5 percent",
-            "100 percent"
+            "25 percent"
           ],
           "answer": 0,
           "why": "At around 50 percent the off notes land a third of the way along, like a triplet.",
           "whyWrong": {
-            "1": "Zero is straight, no swing at all.",
-            "2": "5 percent is a hint you can barely hear.",
-            "3": "The knob tops out before that."
+            "1": "At 0 percent every sixteenth is dead straight.",
+            "2": "25 percent leans the off notes a little late, a lazy shuffle, but not yet a triplet."
           }
         },
         {
@@ -4665,7 +4791,18 @@
         },
         {
           "kind": "ask",
-          "q": "What changed between the quiet note and the loud note?",
+          "q": "Hear your melody quiet, then loud. What changed?",
+          "part": "lead",
+          "play": [
+            {
+              "level": 0.45,
+              "label": "quiet"
+            },
+            {
+              "level": 0.85,
+              "label": "loud"
+            }
+          ],
           "options": [
             "how hard the air was pushed",
             "how fast the air moved back and forth",
@@ -4682,7 +4819,18 @@
         },
         {
           "kind": "ask",
-          "q": "A piano and a guitar play the same note. Why do they still sound different?",
+          "q": "Your melody twice: the same notes at the same loudness, on two different waves. Why do they sound different?",
+          "part": "lead",
+          "play": [
+            {
+              "wave": 0,
+              "label": "one wave"
+            },
+            {
+              "wave": 1,
+              "label": "another wave"
+            }
+          ],
           "options": [
             "the shape of their waves is different",
             "one is always louder",
@@ -4883,7 +5031,11 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Two notes an octave apart sound",
+          "q": "Your lead plays a note, then the same note an octave up. How do they sound?",
+          "part": "lead",
+          "play": {
+            "notes": "1 - - - . . . . 1' - - - . . . ."
+          },
           "options": [
             "like the same note, one higher",
             "completely different",
@@ -4901,19 +5053,29 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Which of these is a low frequency sound?",
+          "q": "Which of these is the lowest sound?",
+          "sounds": [
+            {
+              "part": "kick"
+            },
+            {
+              "part": "hat"
+            },
+            {
+              "part": "lead",
+              "notes": "5' - 5' - . . 5' - 5' - . . . . . ."
+            }
+          ],
           "options": [
             "a kick drum's body",
             "a hi hat",
-            "a whistle",
-            "birdsong"
+            "a high lead note"
           ],
           "answer": 0,
           "why": "The kick's body hums at around 50 hz, slow big pushes of air you feel in your chest.",
           "whyWrong": {
-            "1": "Hi hats are mostly high frequencies, thousands of hertz, which is why they sound bright.",
-            "2": "A whistle is a few thousand hertz, fast wiggles.",
-            "3": "Birds sing high, usually well above 2,000 hz."
+            "1": "A hi hat is all high frequencies, a hiss up top.",
+            "2": "A high note wiggles hundreds of times a second more than a kick's body."
           }
         },
         {
@@ -5009,7 +5171,18 @@
         },
         {
           "kind": "ask",
-          "q": "Two notes have the same pitch but one is louder. What's different?",
+          "q": "Hear your melody, then the same melody louder. What's different?",
+          "part": "lead",
+          "play": [
+            {
+              "level": 0.5,
+              "label": "softer"
+            },
+            {
+              "level": 0.85,
+              "label": "louder"
+            }
+          ],
           "options": [
             "amplitude, how hard the air is pushed",
             "frequency, how fast it wiggles",
@@ -5060,7 +5233,19 @@
         },
         {
           "kind": "ask",
-          "q": "Why does a drop feel bigger after a breakdown?",
+          "q": "Hear your song with the drums out, like a breakdown, then with everything back in. Why does the drop feel bigger after a breakdown?",
+          "play": [
+            {
+              "mute": [
+                "drums",
+                "hats"
+              ],
+              "label": "breakdown"
+            },
+            {
+              "label": "drop"
+            }
+          ],
           "options": [
             "the quiet part before makes the loud part stand out",
             "the tempo speeds up",
@@ -5190,7 +5375,18 @@
         },
         {
           "kind": "ask",
-          "q": "You turn the cutoff down on your melody. What happens?",
+          "q": "Hear your melody, then with the cutoff turned down. What happens?",
+          "part": "lead",
+          "play": [
+            {
+              "cutoff": 0.85,
+              "label": "open"
+            },
+            {
+              "cutoff": 0.15,
+              "label": "cutoff down"
+            }
+          ],
           "options": [
             "it gets darker, the high harmonics are cut",
             "it gets higher in pitch",
@@ -5207,19 +5403,32 @@
         },
         {
           "kind": "ask",
-          "q": "Which wave has the most harmonics?",
+          "q": "Which of these has the most harmonics?",
+          "part": "lead",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 1
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.05
+            },
+            {
+              "wave": 1,
+              "cutoff": 1
+            }
+          ],
           "options": [
             "the saw",
             "the soft, round wave",
-            "they all have the same",
-            "none of them have any"
+            "the square"
           ],
           "answer": 0,
           "why": "The saw's sharp drop is made of loads of harmonics, which is why it sounds the buzziest.",
           "whyWrong": {
-            "1": "The round wave is nearly pure, with very few harmonics.",
-            "2": "That's why they sound so different.",
-            "3": "Everything except a pure sine has some."
+            "1": "The soft, round one has almost none left: the filter took them away.",
+            "2": "The square is hollow: it has only every other harmonic, so fewer than the saw."
           }
         },
         {
@@ -5315,19 +5524,33 @@
         },
         {
           "kind": "ask",
-          "q": "Which wave is best for a deep, soft sub bass?",
+          "q": "Which of these would make the best deep, soft sub bass?",
+          "part": "bass",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 0.03,
+              "sub": 0.8
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.8
+            },
+            {
+              "wave": 1,
+              "cutoff": 0.8
+            }
+          ],
           "options": [
-            "sine",
+            "the sine-like one",
             "saw",
-            "square",
-            "noise"
+            "square"
           ],
           "answer": 0,
           "why": "A sine is pure, with almost no harmonics, so it's mostly felt as a deep rumble.",
           "whyWrong": {
             "1": "A saw is bright and buzzy, more for leads and mid basses.",
-            "2": "A square is hollow and reedy.",
-            "3": "Noise has no pitch at all."
+            "2": "A square is hollow and reedy."
           }
         },
         {
@@ -5349,7 +5572,12 @@
         },
         {
           "kind": "ask",
-          "q": "What does a square wave sound like?",
+          "q": "This is your melody on a square wave. What does it sound like?",
+          "part": "lead",
+          "play": {
+            "wave": 1,
+            "cutoff": 0.8
+          },
           "options": [
             "hollow and reedy, like old video games",
             "pure and soft",
@@ -5367,19 +5595,33 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "How can you get close to a sine on this synth?",
+          "q": "Which of these is closest to a sine on this synth?",
+          "part": "lead",
+          "sounds": [
+            {
+              "wave": 0,
+              "cutoff": 0.04
+            },
+            {
+              "wave": 1,
+              "cutoff": 1
+            },
+            {
+              "wave": 0,
+              "cutoff": 0.9,
+              "level": 0.95
+            }
+          ],
           "options": [
             "a saw with the cutoff closed right down",
             "the square with cutoff open",
-            "turn the level up",
-            "play higher notes"
+            "a saw with the level up"
           ],
           "answer": 0,
           "why": "Closing the filter removes the harmonics, leaving something close to the pure note.",
           "whyWrong": {
             "1": "That's the brightest, buzziest setting.",
-            "2": "Level changes loudness, not shape.",
-            "3": "Pitch doesn't change the wave's shape."
+            "2": "Level changes loudness, not shape."
           }
         },
         {
@@ -5563,7 +5805,9 @@
         },
         {
           "kind": "ask",
-          "q": "Why can't you hum the note of a hi hat?",
+          "q": "Listen to your hi hat on its own. Why can't you hum its note?",
+          "part": "hat",
+          "play": {},
           "options": [
             "it's noise, it has no single pitch",
             "it's too quiet",
@@ -5580,7 +5824,17 @@
         },
         {
           "kind": "ask",
-          "q": "What makes an open hat different from a closed one?",
+          "q": "Hear a closed hat, then an open one. What makes the open hat different?",
+          "play": [
+            {
+              "part": "hat",
+              "label": "closed"
+            },
+            {
+              "part": "open hat",
+              "label": "open"
+            }
+          ],
           "options": [
             "it rings for longer",
             "it has a note",
@@ -5597,7 +5851,9 @@
         },
         {
           "kind": "ask",
-          "q": "What is a clap made of?",
+          "q": "Listen to your clap on its own. What is it made of?",
+          "part": "clap",
+          "play": {},
           "options": [
             "a few quick bursts of noise",
             "a low sine wave",
@@ -5699,7 +5955,20 @@
         },
         {
           "kind": "ask",
-          "q": "How does minor usually sound compared with major?",
+          "q": "Hear a scale as major, then as minor, from the same home note. How does minor sound next to major?",
+          "part": "lead",
+          "play": [
+            {
+              "scale": "major",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "major"
+            },
+            {
+              "scale": "minor",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "minor"
+            }
+          ],
           "options": [
             "darker, moodier",
             "faster",
@@ -5733,7 +6002,11 @@
         },
         {
           "kind": "ask",
-          "q": "What is a half step?",
+          "q": "Hear a note and the note a half step above it, back and forth. What is a half step?",
+          "part": "lead",
+          "play": {
+            "notes": "1 - - - b2 - - - 1 - - - b2 - - -"
+          },
           "options": [
             "the very next key",
             "two keys apart",
@@ -5846,7 +6119,18 @@
         },
         {
           "kind": "ask",
-          "q": "How do small intervals usually feel in a melody?",
+          "q": "Hear a melody that moves in small steps, then one that leaps. How do the small steps feel?",
+          "part": "lead",
+          "play": [
+            {
+              "notes": "1 - 2 - 3 - 2 - 1 - 2 - 3 - - -",
+              "label": "small steps"
+            },
+            {
+              "notes": "1 - 5 - 1' - 3 - 6, - 1' - 5 - - -",
+              "label": "big leaps"
+            }
+          ],
           "options": [
             "smooth, like walking",
             "dramatic, like leaping",
@@ -5942,7 +6226,18 @@
         },
         {
           "kind": "ask",
-          "q": "What makes an answer phrase feel finished?",
+          "q": "Hear an answer phrase that ends away from home, then one that lands on it. What makes the second feel finished?",
+          "part": "lead",
+          "play": [
+            {
+              "notes": "3 - 2 - 1 - 2 - 3 - - - 2 - - -",
+              "label": "ends away"
+            },
+            {
+              "notes": "3 - 2 - 1 - 2 - 3 - - - 1 - - -",
+              "label": "ends home"
+            }
+          ],
           "options": [
             "it lands on the home note, the first key",
             "it's louder",
@@ -5959,7 +6254,11 @@
         },
         {
           "kind": "ask",
-          "q": "Why repeat the motif with one change instead of something totally new?",
+          "q": "Hear a motif, then the same motif with one note changed. Why repeat it with one change instead of something totally new?",
+          "part": "lead",
+          "play": {
+            "notes": "1 - 3 - 5 - 3 - . . . . . . . . 1 - 3 - 6 - 3 - . . . . . . . ."
+          },
           "options": [
             "repetition sticks, the change keeps it interesting",
             "it's quicker to play",
@@ -6168,7 +6467,20 @@
         },
         {
           "kind": "ask",
-          "q": "What makes a chord major or minor?",
+          "q": "Hear a major chord, then a minor chord on the same root. Only one note moved. What makes a chord major or minor?",
+          "part": "chords",
+          "play": [
+            {
+              "scale": "major",
+              "notes": "1+3+5 - - - - - - - . . . . . . . .",
+              "label": "major"
+            },
+            {
+              "scale": "minor",
+              "notes": "1+3+5 - - - - - - - . . . . . . . .",
+              "label": "minor"
+            }
+          ],
           "options": [
             "the middle note, the third",
             "how loud it is",
@@ -6298,19 +6610,24 @@
         },
         {
           "kind": "ask",
-          "q": "In your scale, which chord feels like home?",
+          "q": "Which of these progressions ends on the chord that feels like home?",
+          "part": "chords",
+          "sounds": [
+            {
+              "notes": "6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - - 1+3+5 - - -"
+            },
+            {
+              "notes": "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 7,+2+4 - - -"
+            }
+          ],
           "options": [
-            "i, the first chord",
-            "VII",
-            "the loudest one",
-            "whichever is last"
+            "the one ending on i, the first chord",
+            "the one ending on VII"
           ],
           "answer": 0,
           "why": "The chord built on the first note of the scale is home.",
           "whyWrong": {
-            "1": "VII pulls back toward i.",
-            "2": "Loudness doesn't decide home.",
-            "3": "It's about the note it's built on."
+            "1": "VII pulls back toward i."
           }
         },
         {
@@ -6579,7 +6896,19 @@
         },
         {
           "kind": "ask",
-          "q": "What is a breakdown?",
+          "q": "Hear your song, then the same loop as a breakdown. What is a breakdown?",
+          "play": [
+            {
+              "label": "full"
+            },
+            {
+              "mute": [
+                "drums",
+                "hats"
+              ],
+              "label": "breakdown"
+            }
+          ],
           "options": [
             "a section with the drums taken out",
             "the loudest part",
@@ -6871,7 +7200,24 @@
         },
         {
           "kind": "ask",
-          "q": "You move one kick onto an \"and\". What stays the same?",
+          "q": "Hear the kick on every beat, then with one kick moved onto an \"and\". What stays the same?",
+          "part": "drums",
+          "play": [
+            {
+              "notes": {
+                "kick": "x...x...x...x...",
+                "clap": "....x.......x..."
+              },
+              "label": "every beat"
+            },
+            {
+              "notes": {
+                "kick": "x...x...x.x.....",
+                "clap": "....x.......x..."
+              },
+              "label": "one moved"
+            }
+          ],
           "options": [
             "the pulse",
             "the rhythm",
@@ -6977,7 +7323,26 @@
         },
         {
           "kind": "ask",
-          "q": "Syncopation means",
+          "q": "Hear a straight beat, then a syncopated one. Syncopation means:",
+          "part": "drums",
+          "play": [
+            {
+              "notes": {
+                "kick": "x...x...x...x...",
+                "clap": "....x.......x...",
+                "hat": "x.x.x.x.x.x.x.x."
+              },
+              "label": "straight"
+            },
+            {
+              "notes": {
+                "kick": "x..x..x...x..x..",
+                "clap": "....x.......x...",
+                "hat": "..x...x...x...x."
+              },
+              "label": "syncopated"
+            }
+          ],
           "options": [
             "accenting the offbeats and weak beats",
             "playing only on the main beats",
@@ -7029,7 +7394,14 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "What happens if everything is syncopated and nothing marks the one?",
+          "q": "Hear a beat where everything is off the beat and nothing marks the one. What happens?",
+          "part": "drums",
+          "play": {
+            "notes": {
+              "kick": "...x..x....x..x.",
+              "clap": "..x.......x....."
+            }
+          },
           "options": [
             "listeners lose the pulse",
             "the groove gets tighter",
@@ -7410,7 +7782,18 @@
         },
         {
           "kind": "ask",
-          "q": "What is reverb?",
+          "q": "Hear your lead dry, then with reverb. What is reverb?",
+          "part": "lead",
+          "play": [
+            {
+              "send": 0,
+              "label": "dry"
+            },
+            {
+              "send": 0.8,
+              "label": "with reverb"
+            }
+          ],
           "options": [
             "reflections off surfaces, blurred into a tail",
             "a sound speeding up",
@@ -7427,19 +7810,35 @@
         },
         {
           "kind": "ask",
-          "q": "How do you push your lead further back?",
+          "q": "Which of these puts your lead further back?",
+          "part": "lead",
+          "with": [
+            "drums"
+          ],
+          "sounds": [
+            {
+              "send": 0.7,
+              "level": 0.55
+            },
+            {
+              "send": 0.7,
+              "level": 0.9
+            },
+            {
+              "send": 0,
+              "level": 0.75
+            }
+          ],
           "options": [
             "more reverb and a lower level",
             "more reverb and a higher level",
-            "a higher pitch",
-            "a faster tempo"
+            "no reverb, the same level"
           ],
           "answer": 0,
           "why": "Far sounds are quieter and mostly tail, so turn both knobs that way.",
           "whyWrong": {
-            "1": "Louder pulls it forward again.",
-            "2": "Pitch doesn't change distance.",
-            "3": "Tempo doesn't change distance."
+            "1": "Louder pulls it forward again, even with the reverb.",
+            "2": "Dry and at the same level, it stays right up front."
           }
         },
         {
@@ -7543,7 +7942,19 @@
         },
         {
           "kind": "ask",
-          "q": "Masking means",
+          "q": "Hear your bass alone, then with the kick. Listen to the low end where they overlap. Masking means:",
+          "part": "bass",
+          "play": [
+            {
+              "label": "bass alone"
+            },
+            {
+              "with": [
+                "kick"
+              ],
+              "label": "with the kick"
+            }
+          ],
           "options": [
             "a loud sound hides quieter sounds near its pitch",
             "a filter removes a frequency",
@@ -7595,7 +8006,21 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Turn a track up and it sounds fuller. Why?",
+          "q": "Hear your song quietly, then turned up. Why does it sound fuller turned up?",
+          "play": [
+            {
+              "master": {
+                "out": 0.35
+              },
+              "label": "quiet"
+            },
+            {
+              "master": {
+                "out": 0.75
+              },
+              "label": "turned up"
+            }
+          ],
           "options": [
             "at low volume we lose bass and treble first",
             "turning up adds new notes",
@@ -7961,7 +8386,18 @@
         },
         {
           "kind": "ask",
-          "q": "You changed your lead's wave. What happened to your notes?",
+          "q": "Your lead on one wave, then on another. What happened to your notes?",
+          "part": "lead",
+          "play": [
+            {
+              "wave": 0,
+              "label": "one wave"
+            },
+            {
+              "wave": 1,
+              "label": "another wave"
+            }
+          ],
           "options": [
             "nothing, only the sound changed",
             "they moved up an octave",
@@ -8238,7 +8674,20 @@
         },
         {
           "kind": "ask",
-          "q": "Dorian is natural minor with",
+          "q": "Hear natural minor, then dorian, from the same home note. Dorian is natural minor with:",
+          "part": "lead",
+          "play": [
+            {
+              "scale": "minor",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "natural minor"
+            },
+            {
+              "scale": "dorian",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "dorian"
+            }
+          ],
           "options": [
             "a raised sixth",
             "a raised third",
@@ -8273,7 +8722,20 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "Harmonic minor raises which note?",
+          "q": "Hear natural minor, then harmonic minor. Harmonic minor raises which note?",
+          "part": "lead",
+          "play": [
+            {
+              "scale": "minor",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "natural minor"
+            },
+            {
+              "scale": "harmonic minor",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "harmonic minor"
+            }
+          ],
           "options": [
             "the seventh",
             "the third",
@@ -8512,7 +8974,12 @@
         },
         {
           "kind": "ask",
-          "q": "What makes a diminished chord tense?",
+          "q": "Hear a diminished chord move to home. What makes the diminished chord so tense?",
+          "part": "chords",
+          "play": {
+            "scale": "minor",
+            "notes": "2+4+6 - - - - - - - 1+3+5 - - - - - - -"
+          },
           "options": [
             "it contains a tritone",
             "it has four notes",
@@ -8529,7 +8996,18 @@
         },
         {
           "kind": "ask",
-          "q": "A sus chord replaces the middle note with",
+          "q": "Hear a chord, then the same chord as a sus 4. A sus chord replaces the middle note with:",
+          "part": "chords",
+          "play": [
+            {
+              "notes": "1+3+5 - - - - - - - . . . . . . . .",
+              "label": "triad"
+            },
+            {
+              "notes": "1+4+5 - - - - - - - . . . . . . . .",
+              "label": "sus 4"
+            }
+          ],
           "options": [
             "the second or the fourth",
             "the seventh",
@@ -8664,7 +9142,11 @@
         },
         {
           "kind": "ask",
-          "q": "A progression that ends away from home sounds",
+          "q": "Hear a progression that ends away from home. How does it sound?",
+          "part": "chords",
+          "play": {
+            "notes": "1+3+5 - - - 6,+1+3 - - - 3+5+7 - - - 7,+2+4 - - -"
+          },
           "options": [
             "unfinished, like a question",
             "finished and settled",
@@ -8768,7 +9250,12 @@
         },
         {
           "kind": "ask",
-          "q": "A pad is",
+          "q": "Hear your chords played as a pad. What is a pad?",
+          "part": "chords",
+          "play": {
+            "attack": 0.75,
+            "release": 0.85
+          },
           "options": [
             "a long sustained chord sound",
             "a short chord hit",
@@ -8785,7 +9272,18 @@
         },
         {
           "kind": "ask",
-          "q": "To turn your chords into stabs you",
+          "q": "Hear your chords, then as stabs. What turns chords into stabs?",
+          "part": "chords",
+          "play": [
+            {
+              "label": "as they are"
+            },
+            {
+              "attack": 0.02,
+              "release": 0.08,
+              "label": "stabs"
+            }
+          ],
           "options": [
             "shorten the release and the attack",
             "lengthen the release",
@@ -8802,7 +9300,18 @@
         },
         {
           "kind": "ask",
-          "q": "Why keep chord notes out of the low end?",
+          "q": "Hear the same chord low down, then two octaves higher. Why keep chord notes out of the low end?",
+          "part": "chords",
+          "play": [
+            {
+              "notes": "1,,+3,,+5,, - - - - - - - . . . . . . . .",
+              "label": "low"
+            },
+            {
+              "notes": "1+3+5 - - - - - - - . . . . . . . .",
+              "label": "higher"
+            }
+          ],
           "options": [
             "low notes close together sound muddy",
             "low notes are out of key",
@@ -8915,7 +9424,26 @@
         },
         {
           "kind": "ask",
-          "q": "The strongest pull towards home is",
+          "q": "Which of these pulls home the hardest?",
+          "part": "chords",
+          "sounds": [
+            {
+              "scale": "major",
+              "notes": "5,+7,+2 - - - - - - - 1+3+5 - - - - - - -"
+            },
+            {
+              "scale": "major",
+              "notes": "4,+6,+1 - - - - - - - 1+3+5 - - - - - - -"
+            },
+            {
+              "scale": "major",
+              "notes": "2+4+6 - - - - - - - 1+3+5 - - - - - - -"
+            },
+            {
+              "scale": "major",
+              "notes": "6,+1+3 - - - - - - - 1+3+5 - - - - - - -"
+            }
+          ],
           "options": [
             "V to I",
             "IV to I",
@@ -8932,7 +9460,12 @@
         },
         {
           "kind": "ask",
-          "q": "The leading tone sits",
+          "q": "Hear the leading tone pull up to home. Where does it sit?",
+          "part": "lead",
+          "play": {
+            "scale": "major",
+            "notes": "7, - - - - - - - 1 - - - - - - -"
+          },
           "options": [
             "a semitone below home",
             "a fifth above home",
@@ -8950,7 +9483,12 @@
         {
           "kind": "ask",
           "more": true,
-          "q": "In a deceptive cadence, V goes to",
+          "q": "Hear a deceptive cadence: V, then not the chord your ear expects. In a deceptive cadence, V goes to:",
+          "part": "chords",
+          "play": {
+            "scale": "major",
+            "notes": "5,+7,+2 - - - - - - - 6,+1+3 - - - - - - -"
+          },
           "options": [
             "vi",
             "I",

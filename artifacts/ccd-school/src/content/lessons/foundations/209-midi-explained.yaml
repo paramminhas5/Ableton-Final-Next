@@ -88,7 +88,9 @@ steps:
       3: Speakers just play what comes out.
 
   - kind: ask
-    q: You changed your lead's wave. What happened to your notes?
+    q: Your lead on one wave, then on another. What happened to your notes?
+    part: lead
+    play: [{wave: 0, label: "one wave"}, {wave: 1, label: "another wave"}]
     options: ["nothing, only the sound changed", "they moved up an octave", "they got shorter", "they were deleted"]
     answer: 0
     why: Same instructions, new instrument reading them.

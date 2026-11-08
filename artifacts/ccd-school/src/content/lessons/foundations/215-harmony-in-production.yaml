@@ -78,7 +78,9 @@ steps:
         the one you like.
 
   - kind: ask
-    q: A pad is
+    q: Hear your chords played as a pad. What is a pad?
+    part: chords
+    play: {attack: 0.75, release: 0.85}
     options: ["a long sustained chord sound", "a short chord hit", "a drum sound", "a type of compressor"]
     answer: 0
     why: A pad is a long bed of harmony under the rest of the song.
@@ -88,7 +90,9 @@ steps:
       3: Compressors control level.
 
   - kind: ask
-    q: To turn your chords into stabs you
+    q: Hear your chords, then as stabs. What turns chords into stabs?
+    part: chords
+    play: [{label: "as they are"}, {attack: 0.02, release: 0.08, label: "stabs"}]
     options: ["shorten the release and the attack", "lengthen the release", "add reverb", "raise the tempo"]
     answer: 0
     why: Fast in, quick out, and each chord becomes a hit.
@@ -98,7 +102,9 @@ steps:
       3: Tempo changes everything's speed, not chord length.
 
   - kind: ask
-    q: Why keep chord notes out of the low end?
+    q: Hear the same chord low down, then two octaves higher. Why keep chord notes out of the low end?
+    part: chords
+    play: [{notes: "1,,+3,,+5,, - - - - - - - . . . . . . . .", label: "low"}, {notes: "1+3+5 - - - - - - - . . . . . . . .", label: "higher"}]
     options: ["low notes close together sound muddy", "low notes are out of key", "chords can't play low", "it makes the song faster"]
     answer: 0
     why: Leave the low notes to the bass and keep the chords in the middle.

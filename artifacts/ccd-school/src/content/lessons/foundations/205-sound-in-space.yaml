@@ -79,7 +79,9 @@ steps:
         it comes right up close. Stop where you like it.
 
   - kind: ask
-    q: What is reverb?
+    q: Hear your lead dry, then with reverb. What is reverb?
+    part: lead
+    play: [{send: 0, label: "dry"}, {send: 0.8, label: "with reverb"}]
     options: ["reflections off surfaces, blurred into a tail", "a sound speeding up", "a change of pitch", "a kind of distortion"]
     answer: 0
     why: Reverb is the blur of many reflections arriving just after the direct sound.
@@ -89,14 +91,16 @@ steps:
       3: Distortion changes the shape of the wave. Reverb adds reflections.
 
   - kind: ask
-    q: How do you push your lead further back?
-    options: ["more reverb and a lower level", "more reverb and a higher level", "a higher pitch", "a faster tempo"]
+    q: Which of these puts your lead further back?
+    part: lead
+    with: ["drums"]
+    sounds: [{send: 0.7, level: 0.55}, {send: 0.7, level: 0.9}, {send: 0, level: 0.75}]
+    options: ["more reverb and a lower level", "more reverb and a higher level", "no reverb, the same level"]
     answer: 0
     why: Far sounds are quieter and mostly tail, so turn both knobs that way.
     whyWrong:
-      1: Louder pulls it forward again.
-      2: Pitch doesn't change distance.
-      3: Tempo doesn't change distance.
+      1: Louder pulls it forward again, even with the reverb.
+      2: Dry and at the same level, it stays right up front.
 
   - kind: ask
     q: Pre-delay is

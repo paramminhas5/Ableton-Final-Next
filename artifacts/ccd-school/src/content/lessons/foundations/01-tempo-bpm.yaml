@@ -137,7 +137,9 @@ steps:
       3: Twelve a second would be a buzz, not a beat.
 
   - kind: ask
-    q: You turn the tempo from 120 up to 140. What happens to your kick?
+    q: Hear your kick at 120 bpm, then at 140. What happens to it?
+    part: kick
+    play: [{bpm: 120, label: "120 bpm"}, {bpm: 140, label: "140 bpm"}]
     options: ["the kicks come closer together", "the kick gets louder", "the kick gets higher in pitch", "you get more kicks in each bar"]
     answer: 0
     why: Same pattern, played faster. Each beat is shorter, so the kicks arrive sooner.
@@ -147,14 +149,14 @@ steps:
       3: Still one kick per beat. There are just more beats in each minute.
 
   - kind: ask
-    q: Roughly what tempo does house music usually sit at?
-    options: ["120 to 128 bpm", "60 to 80 bpm", "170 to 180 bpm", "200 bpm and up"]
+    q: Which of these is at a house tempo?
+    sounds: [{bpm: 124}, {bpm: 70}, {bpm: 175}]
+    options: ["120 to 128 bpm", "60 to 80 bpm", "170 to 180 bpm"]
     answer: 0
     why: House usually sits between 120 and 128. Techno goes a little faster.
     whyWrong:
       1: That's ballad speed, slower than most dance music.
       2: That's drum and bass territory.
-      3: That's faster than almost any dance floor.
 
   - kind: ask
     q: Why does the click play while you record?
@@ -168,14 +170,15 @@ steps:
 
   - kind: ask
     more: true
-    q: At 60 bpm, how long is one beat?
-    options: ["one second", "half a second", "two seconds", "a tenth of a second"]
+    q: One of these is your kick at 60 bpm. Which one?
+    part: kick
+    sounds: [{bpm: 60}, {bpm: 120}, {bpm: 90}]
+    options: ["60 bpm, one beat every second", "120 bpm, a beat every half second", "90 bpm, three beats every two seconds"]
     answer: 0
     why: 60 beats in 60 seconds, so one beat every second.
     whyWrong:
-      1: Half a second is a beat at 120 bpm.
-      2: Two seconds a beat would be 30 bpm.
-      3: That would be 600 bpm.
+      1: "That's twice as fast: two kicks every second."
+      2: Close, but the kicks come a little quicker than once a second.
 
   - kind: ask
     more: true

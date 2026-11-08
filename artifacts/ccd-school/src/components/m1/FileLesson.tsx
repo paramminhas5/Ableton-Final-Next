@@ -415,7 +415,7 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
         {q.options.map((o, k) => {
           const cls = right && k === q.answer ? "is-right" : out.includes(k) ? "is-out" : "";
           const shown = !byEar || right || out.includes(k);
-          const btn = <button key={k} type="button" role="radio" aria-checked={right && k === q.answer} aria-label={byEar && !shown ? `Answer ${letter(k)}` : undefined} disabled={right || out.includes(k)} className={`fl-opt ${cls}`} onClick={() => pick(k)}>{byEar ? <><b className="ae-letter">{letter(k)}</b>{shown ? o : <span className="ae-blind">this one</span>}</> : o}</button>;
+          const btn = <button key={k} type="button" role="radio" aria-checked={right && k === q.answer} aria-label={byEar && !shown ? `Answer ${letter(k)}` : undefined} disabled={right || out.includes(k)} className={`fl-opt ${cls}`} onClick={() => pick(k)}>{byEar ? (shown ? <><b className="ae-letter">{letter(k)}</b>{o}</> : <span className="ae-blind">pick <b>{letter(k)}</b></span>) : o}</button>;
           return byEar ? <div key={k} className="ae-opt"><EarKey s={ear} id={`o${k}`} label={letter(k)} aria={`sound ${letter(k)}`} />{btn}</div> : btn;
         })}
       </div>

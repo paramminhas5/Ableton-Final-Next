@@ -97,14 +97,14 @@ steps:
       3: Fills are drums.
 
   - kind: ask
-    q: In your scale, which chord feels like home?
-    options: ["i, the first chord", "VII", "the loudest one", "whichever is last"]
+    q: Which of these progressions ends on the chord that feels like home?
+    part: chords
+    sounds: [{notes: "6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - - 1+3+5 - - -"}, {notes: "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 7,+2+4 - - -"}]
+    options: ["the one ending on i, the first chord", "the one ending on VII"]
     answer: 0
     why: The chord built on the first note of the scale is home.
     whyWrong:
       1: VII pulls back toward i.
-      2: Loudness doesn't decide home.
-      3: It's about the note it's built on.
 
   - kind: ask
     q: How many chords are in a lot of pop and dance loops?
