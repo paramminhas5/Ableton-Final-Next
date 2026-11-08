@@ -28,8 +28,8 @@ export function useImagine({ song, layer, choices, answer, level }: { song: Trac
   const root = song?.root ?? 45, scale = song?.scale ?? "minor";
   const parsed = useMemo(() => choices.map(c => parsePattern(layer, c, root, scale)), [choices, layer, root, scale]);
   const shown = parsed[answer] ?? parsed[0];
-  // Rows from every phrase, so the grid's rows don't give away which notes are the shown ones.
-  const rows = useMemo(() => rowsFor(layer, parsed.flatMap(p => p.events), root, scale, level), [parsed, layer, root, scale, level]);
+  // Rows around the shown phrase, as the copy grid has them: few enough to read, so it fits a phone with the picks under it.
+  const rows = useMemo(() => (shown?.events.length ? rowsFor(layer, shown.events, root, scale, level) : []), [shown, layer, root, scale, level]);
   const tracks = useMemo(() => (song ? choices.map(c => earTrack(song, { part: layer, notes: c })) : []), [song, choices, layer]);
   const [phase, setPhase] = useState<Phase>("imagine");
   const [now, setNow] = useState<number | null>(null);
@@ -83,7 +83,8 @@ export function useImagine({ song, layer, choices, answer, level }: { song: Trac
   const loop = shown?.loop ?? 4;
   const view: GridView = {
     loop, rows, mine: shown?.events ?? [], target: shown?.events ?? [], hints: [] as NoteEvent[], marks: new Map(), tap: () => {},
-    playing: phase === "imagine" ? ghost >= 0 : playing && now === answer, beat: phase === "imagine" ? ghost : beat,
+    // While listening the grid stays still whatever plays: a playhead that only moved for the right phrase would give it away.
+    playing: phase === "imagine" ? ghost >= 0 : phase === "heard" && playing && now === answer, beat: phase === "imagine" ? ghost : beat,
   };
   return { phase, setPhase, press, pick, now: playing ? now : null, out, right, view, stop, playing, notes: shown?.events.length ?? 0 };
 }
@@ -130,6 +131,8 @@ export function ImagineStep({ screen, onNext, tail }: { screen: Of; onNext: () =
   const n = screen.choices.length;
   const what = layer === "drums" ? "beat" : layer === "chords" ? "chords" : layer === "bass" ? "bass line" : "melody";
   const next = () => { m.stop(); onNext(); };
+  // On a phone the picks sit under the grid: bring them up when it's time to listen.
+  useEffect(() => { if (m.phase === "listen") document.querySelector(".ae-opt")?.scrollIntoView({ block: "center", behavior: "smooth" }); }, [m.phase]);
   useEnter(m.right ? next : m.phase === "imagine" ? () => m.setPhase("listen") : null);
   const go = m.right
     ? { label: "next", onClick: next, aria: "Next" }
