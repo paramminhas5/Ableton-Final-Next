@@ -40,6 +40,21 @@ steps:
         Turn detune up until it sounds big but not wobbly. Then turn glide up a little and hear the notes
         slide.
 
+  - kind: match
+    layer: lead
+    knobs: [detune, glide]
+    target: {detune: 0.75, glide: 0.5}
+    say: >-
+      Match this lead by ear: how wide it is (detune) and how it slides between notes (glide).
+    hint: "Listen to the gaps between notes for the slide."
+
+  - kind: copy
+    layer: lead
+    pattern: "5 - 4 3 - 1 - . 2 - 3 - 1 - - -"
+    say: >-
+      Copy this lead line by ear before you widen it. Hum it back first, then find each note going up or down from the last.
+    hint: "It starts high and walks down to the root, then steps back up and comes home."
+
   - kind: ask
     q: What does detune do?
     options: ["makes a sound thicker and wider", "changes the key", "slows the song", "makes it quieter"]

@@ -74,6 +74,14 @@ steps:
         Turn low for more or less boom. Turn mid down a little if it sounds muddy. Turn high for a bit of
         edge.
 
+  - kind: match
+    layer: bass
+    knobs: [low, high]
+    target: {low: 0.75, high: 0.25}
+    say: >-
+      Match this eq by ear: the target has more low end and less top than yours.
+    hint: "Set the low first, then take some high away."
+
   - kind: ask
     q: Roughly where do the lows sit?
     options: ["below about 200 hz", "above about 3 khz", "between 1 and 3 khz", "everywhere"]

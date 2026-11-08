@@ -47,6 +47,13 @@ steps:
           The same four chords, in major or minor order, sit under an enormous number of hits. Producers
           don't worry about that: the sound, rhythm and melody on top are what make a track yours.
 
+  - kind: copy
+    layer: chords
+    pattern: "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - -"
+    say: >-
+      Copy this progression by ear: four chords, one per beat. Work out the lowest note of each chord first, then fill in the rest.
+    hint: "The lowest notes go root, down, down, up."
+
   - kind: play
     layer: chords
     surface: pads

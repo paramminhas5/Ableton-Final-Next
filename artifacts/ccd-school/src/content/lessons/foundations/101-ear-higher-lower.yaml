@@ -29,6 +29,13 @@ steps:
     rounds: 8
     say: Two notes. Which one was higher? Replay as often as you like.
 
+  - kind: copy
+    layer: lead
+    pattern: "1 - . . 3 - . . 2 - . . 1 - . ."
+    say: >-
+      Copy four notes by ear. For each one, ask: higher or lower than the last?
+    hint: "Up, down, down: it ends where it started."
+
   - kind: ask
     q: Two notes, one at 220 hz and one at 233 hz. Which is higher?
     options: ["233 hz", "220 hz", "they're the same", "you can't tell from the numbers"]

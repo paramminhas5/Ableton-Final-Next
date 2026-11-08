@@ -45,7 +45,6 @@ steps:
         Res makes it whistly. Env makes each note go bright then dark. Attack makes notes fade in slowly.
         Release makes them ring out after. Try a short pluck, then a long dreamy pad.
 
-
   - kind: match
     layer: lead
     knobs: [attack, release]

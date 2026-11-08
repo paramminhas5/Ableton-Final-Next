@@ -47,6 +47,13 @@ steps:
         A step is the very next key. A third skips one. A fifth is five keys along. An octave is eight along,
         and sounds like the same note but higher.
 
+  - kind: copy
+    layer: lead
+    pattern: "1 - - - 5 - - - 1 - - - 3 - - -"
+    say: >-
+      Copy these two intervals by ear: the root, a jump, back to the root, a smaller jump. Hear how far each one reaches.
+    hint: "The first jump is a fifth, the second a third."
+
   - kind: play
     layer: lead
     surface: keys

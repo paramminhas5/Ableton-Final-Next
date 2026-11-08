@@ -71,6 +71,14 @@ steps:
       eli5: >-
         Turn lfo up. A little robot now wiggles the knob for you. Rate is how fast it wiggles.
 
+  - kind: match
+    layer: lead
+    knobs: [lfo, lforate]
+    target: {lfo: 0.5, lforate: 0.25}
+    say: >-
+      Match the movement by ear: how much the lfo moves the sound, and how fast.
+    hint: "Count the wobbles in a bar for the rate, then set how deep they go."
+
   - kind: ask
     q: What does lfo stand for?
     options: ["low frequency oscillator", "loud filter output", "left fader offset", "long fade out"]

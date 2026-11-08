@@ -57,6 +57,13 @@ steps:
           The tempo box sits in the Control Bar at the top of Live. Turn on the Metronome to hear the pulse
           while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm.
 
+  - kind: copy
+    layer: drums
+    pattern: {kick: "x...x...x...x...", clap: "....x.......x..."}
+    say: >-
+      Copy this beat by ear: a kick and a clap. Find the clap first, then the kicks.
+    hint: "The clap is on two and four, the kick on every beat."
+
   - kind: play
     layer: drums
     surface: pads

@@ -28,6 +28,13 @@ steps:
         Boom, clap, boom, clap. A clap is like hands clapping. A snare is a drum with tiny wires that buzz.
         Both go on two and four.
 
+  - kind: copy
+    layer: drums
+    pattern: {kick: "x.....x.x.......", snare: "....x.......x..."}
+    say: >-
+      Copy this beat by ear: a kick that skips around, and a snare on the backbeat. Find the snare first (it is the easy one), then the kicks.
+    hint: "The snare lands on two and four. The kick plays on one, just before three, and on three."
+
   - kind: play
     layer: drums
     surface: pads

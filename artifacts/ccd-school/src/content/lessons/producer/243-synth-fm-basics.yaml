@@ -71,6 +71,14 @@ steps:
       eli5: >-
         fm makes a second sound shake the first one really fast. It turns a smooth lead into a growly one.
 
+  - kind: match
+    layer: lead
+    knobs: [fm]
+    target: {fm: 0.5}
+    say: >-
+      Match this fm sound by ear: one knob, how much one oscillator bends the other.
+    hint: "More fm means a brighter, more metallic sound."
+
   - kind: ask
     q: In fm, which wave do you actually hear?
     options: ["the carrier", "the modulator", "neither", "the lfo"]

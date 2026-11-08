@@ -27,6 +27,13 @@ steps:
         Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of
         each chord. That note is called the root.
 
+  - kind: copy
+    layer: bass
+    pattern: "1 - - - 6, - - - 4, - - - 5, - - -"
+    say: >-
+      Copy the roots of a chord progression by ear. One bass note per beat, the bottom of each chord.
+    hint: "It starts on the root and moves down, then down again, then up a step."
+
   - kind: play
     layer: bass
     surface: keys

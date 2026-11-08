@@ -26,6 +26,13 @@ steps:
         Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom
         and the bass take turns.
 
+  - kind: copy
+    layer: bass
+    pattern: ". . 1 - . . 1 - . . 1' - . . 5 -"
+    say: >-
+      Copy this bass line by ear. Each note sits in a gap between two kicks, which is where a bass line lives. The grid only shows notes in your song's key, so every row is a fair guess.
+    hint: "Every note is halfway between two beats. The first two are the same note; listen for how far the last two jump."
+
   - kind: play
     layer: bass
     surface: keys
@@ -53,7 +60,6 @@ steps:
         Cutoff: warm and round when low, buzzy when high. Decay: plucky when short, rolling when long.
       eli5: >-
         Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like.
-
 
   - kind: match
     layer: bass

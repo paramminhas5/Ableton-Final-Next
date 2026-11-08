@@ -35,6 +35,7 @@ import { ArrangeStep } from "./ArrangeStep";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
 import { MatchSoundStep } from "./MatchSound";
+import { CopyStep } from "./CopyEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
@@ -60,6 +61,7 @@ const pageName = (p: Page | undefined): string => {
     case "play": return "play it in";
     case "shape": return "shape it";
     case "matchsound": return "match this sound";
+    case "copy": return "copy it by ear";
     case "arrange": return p.goal === "export" ? "finish it" : p.goal === "fills" ? "fills" : p.goal === "drop" ? "the drop" : "arrange it";
     case "mix": return p.goal === "match" ? "match the tempo" : p.goal === "blend" ? "the blend" : "the mixer";
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
@@ -274,7 +276,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     const drumish = line.type === "drums" || line.type === "hats";
     return readTrackV2().layers.some(l => l.type === line.type && l.events.length && (!drumish || l.events.some(e => want.has(e.note))));
   }, [take, line]);
-  const keepOnly = useMemo(() => (!(mission.screens ?? []).some(s => s.kind === "play") || skippedOnOwn) && songHasMusic() && !missingPart, [mission.screens, missingPart, skippedOnOwn]);
+  const keepOnly = useMemo(() => (!(mission.screens ?? []).some(s => s.kind === "play" || s.kind === "copy") || skippedOnOwn) && songHasMusic() && !missingPart, [mission.screens, missingPart, skippedOnOwn]);
   // A dj lesson marks your song where its mixer move lands (src/lib/cues.ts).
   const mixGoal = useMemo(() => (changeNoun(mission.screens ?? []) === "mix" ? [...(mission.screens ?? [])].reverse().find(s => s.kind === "mix") : undefined), [mission.screens]);
   // A skipped mixer step leaves nothing to mark: the song is kept as it is, and the copy says so.
@@ -580,7 +582,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     // A bonus round adds nothing to your song, so it has no add step.
     // Nothing goes into your song in a bonus round or a lesson with nothing to play, shape or set (the dj
     // mixer lessons), so those have no add step.
-    ...(curItem(mission.slug)?.kind === "bonus" || !changesSong(screens) ? [] : [{ kind: "add" as const, keep: !screens.some(s => s.kind === "play") && !!changeNoun(screens), mark: changeNoun(screens) === "mix" }]),
+    ...(curItem(mission.slug)?.kind === "bonus" || !changesSong(screens) ? [] : [{ kind: "add" as const, keep: !screens.some(s => s.kind === "play" || s.kind === "copy") && !!changeNoun(screens), mark: changeNoun(screens) === "mix" }]),
     ...(main.length ? [{ kind: "check" as const }] : []),
     { kind: "done" as const },
   ], [screens, main.length]);
@@ -588,6 +590,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const SESSION = `ccd.lesson.${mission.slug}`;
   const [idx, setIdx] = useState(0);
   const [take, setTake] = useState<Take | null>(null);
+  // What this lesson's copy step gave you, if it has one.
+  const copied = useRef<Take | null>(null);
   const [score, setScore] = useState({ first: 0, asked: 0 });
   const [extra, setExtra] = useState(false);
   const finished = useRef(false);
@@ -658,6 +662,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     case "hear": body = <HearStep screen={cur} meta="listen" onNext={next} tail={ways} />; break;
     case "shape": body = <ShapeStep mission={mission} screen={cur} meta="shape it" accent={accent} onNext={next} tail={ways} />; break;
     case "matchsound": body = <MatchSoundStep mission={mission} screen={cur} onNext={next} tail={ways} />; break;
+    // What you copy becomes this lesson's part (the add step puts it in your song); a play step after it starts from it.
+    case "copy": body = <CopyStep mission={mission} screen={cur} onNext={next} tail={ways} onKeep={t => { copied.current = t; setTake(t); saveTake(mission.slug, t); }} />; break;
     case "arrange": body = <ArrangeStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "mix": body = <MixStep screen={cur} accent={accent} onNext={next} tail={ways} />; break;
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
@@ -665,7 +671,8 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     case "play":
       body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways, snap: cur.snap }} initial={take?.type === ttype ? take.events : undefined} title="play it in"
         onUse={t => { setTake(t); saveTake(mission.slug, t); next(); }}
-        onSkip={() => { setTake(null); saveTake(mission.slug, null); next(); }} />;
+        // Skipping the play-in after a copy step keeps what you copied as the lesson's part.
+        onSkip={() => { const keep = copied.current; setTake(keep); saveTake(mission.slug, keep); next(); }} />;
       break;
     case "add": body = <AddStep mission={mission} take={take} hasQuestions={main.length > 0} onNext={next} onSkipQuestions={() => go(at("done"))} />; break;
     case "check":

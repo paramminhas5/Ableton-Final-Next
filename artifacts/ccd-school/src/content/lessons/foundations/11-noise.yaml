@@ -60,6 +60,14 @@ steps:
       eli5: >-
         Decay makes your tss short or long. Tune makes it brighter or darker. Play until it sounds good.
 
+  - kind: match
+    layer: hats
+    knobs: [tune]
+    target: {tune: 0.75}
+    say: >-
+      Match the pitch of this noise hit by ear: one knob, tune.
+    hint: "Higher sounds smaller and sharper."
+
   - kind: ask
     q: Why can't you hum the note of a hi hat?
     options: ["it's noise, it has no single pitch", "it's too quiet", "it's too fast", "it's out of tune"]

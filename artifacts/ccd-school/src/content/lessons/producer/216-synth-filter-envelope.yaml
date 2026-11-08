@@ -77,6 +77,14 @@ steps:
         Turn cutoff down so it's dark. Turn env up so each note flashes bright. Add a little res for a whistle.
         Keep the one you like.
 
+  - kind: match
+    layer: lead
+    knobs: [cutoff, env]
+    target: {cutoff: 0.25, env: 0.75}
+    say: >-
+      Match this by ear: a dark sound that opens up at the start of each note. Set the cutoff first, then how far the envelope opens it.
+    hint: "Get the dark part right with cutoff, then add env until each note has the same bright blip."
+
   - kind: ask
     q: What does a filter envelope move on each note?
     options: ["the cutoff", "the volume", "the pitch", "the tempo"]

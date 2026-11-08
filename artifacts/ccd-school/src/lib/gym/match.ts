@@ -8,6 +8,7 @@
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine/params.gen";
 import { emptyTrackV2, newLayerV2, type LayerType, type LayerV2, type NoteEvent, type TrackV2 } from "../track2";
 import type { Rng } from "./engine";
+import { notch, notchesFor } from "../matchScore";
 
 export type MatchPart = "kick" | "bass" | "lead" | "pad";
 export const MATCH_PARTS: MatchPart[] = ["kick", "bass", "lead", "pad"];
@@ -31,7 +32,8 @@ export function matchKnob(part: MatchPart, key: string): MatchKnob | undefined {
   return [...own, ...LAYER_PARAMS.map(sp => ({ index: sp.index, spec: sp as ParamSpec }))].find(k => k.spec.key === key);
 }
 
-export const matchKnobCount = (level: number) => (level <= 2 ? 2 : level <= 5 ? 3 : 4);
+/** One knob at level 1, as Syntorial's first challenge has one control; two at 2 and 3, three at 4 to 6, four at 7 and 8. */
+export const matchKnobCount = (level: number) => (level <= 1 ? 1 : level <= 3 ? 2 : level <= 6 ? 3 : 4);
 
 /** How far (share of travel) each hidden setting sits from where the knob starts: plainer to hear at level 1. */
 export const matchSpread = (level: number) => Math.max(0.2, 0.38 - (Math.max(1, Math.min(8, level)) - 1) * 0.025);
@@ -49,7 +51,6 @@ export interface MatchQuestion {
   bpm: number;
 }
 
-const q05 = (v: number) => Math.round(v * 20) / 20;
 
 export function makeMatchQuestion(level: number, rng: Rng, prev?: MatchPart): MatchQuestion {
   const pool = MATCH_PARTS.filter(p => p !== prev);
@@ -57,14 +58,17 @@ export function makeMatchQuestion(level: number, rng: Rng, prev?: MatchPart): Ma
   const knobs = MATCH_KNOBS[part].slice(0, matchKnobCount(level));
   const d = matchSpread(level);
   const target: Record<string, number> = {}, start: Record<string, number> = {};
+  // Knobs and targets sit on the level's notches (five positions at first, then nine, then every 5%).
+  const n = notchesFor(level);
   for (const key of knobs) {
-    const s = matchKnob(part, key)!.spec.default;
+    const s = notch(matchKnob(part, key)!.spec.default, n);
     start[key] = s;
-    // Up or down from the start, whichever has room, by at least the level's spread.
-    const room = { up: 0.92 - s, down: s - 0.08 };
-    const up = room.up >= d && (room.down < d || rng() < 0.5);
-    const far = d + rng() * Math.max(0, (up ? room.up : room.down) - d) * 0.6;
-    target[key] = q05(Math.max(0.08, Math.min(0.92, up ? s + far : s - far)));
+    // A notch away from the start by at least the level's spread, inside the knob's useful range; the
+    // farthest one when none is that far.
+    const all = Array.from({ length: n + 1 }, (_, i) => i / n).filter(v => v >= 0.08 && v <= 0.92 && Math.abs(v - s) > 1e-6);
+    const far = all.filter(v => Math.abs(v - s) >= d - 0.5 / n);
+    const pool = far.length ? far : [all.reduce((a, b) => (Math.abs(b - s) > Math.abs(a - s) ? b : a))];
+    target[key] = pool[Math.floor(rng() * pool.length)];
   }
   return { drill: "match", part, knobs, target, start, transpose: Math.floor(rng() * 7) - 3, bpm: 112 + Math.floor(rng() * 4) * 4 };
 }

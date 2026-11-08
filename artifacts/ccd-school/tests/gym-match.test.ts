@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { GYM_DRILLS, advance, initialLevel, mulberry32, summarize } from "../src/lib/gym/engine";
 import { MATCH_KNOBS, MATCH_PARTS, makeMatchQuestion, matchKnob, matchKnobCount, matchSong, matchSpread } from "../src/lib/gym/match";
 import { freshSaved } from "../src/lib/gym/store";
+import { knobMarks, matchStars, notch, notchesFor } from "../src/lib/matchScore";
 
 describe("match this sound in the ear gym", () => {
   it("is a gym drill with its own level and streaks", () => {
@@ -13,10 +14,10 @@ describe("match this sound in the ear gym", () => {
     expect(summarize([{ drill: "match", level: 2, correct: true, responseMs: 9000 }]).byDrill.match).toEqual({ answered: 1, correct: 1, maxLevel: 2 });
   });
 
-  it("adds knobs with the level: two, then three, then four", () => {
-    expect([1, 2, 3, 5, 6, 8].map(matchKnobCount)).toEqual([2, 2, 3, 3, 4, 4]);
+  it("adds knobs with the level: one, then two, three and four", () => {
+    expect([1, 2, 3, 4, 6, 7, 8].map(matchKnobCount)).toEqual([1, 2, 2, 3, 3, 4, 4]);
     const rng = mulberry32(3);
-    expect(makeMatchQuestion(1, rng).knobs.length).toBe(2);
+    expect(makeMatchQuestion(1, rng).knobs.length).toBe(1);
     expect(makeMatchQuestion(4, rng).knobs.length).toBe(3);
     expect(makeMatchQuestion(7, rng).knobs.length).toBe(4);
   });
@@ -43,8 +44,11 @@ describe("match this sound in the ear gym", () => {
       for (const k of q.knobs) {
         expect(q.target[k]).toBeGreaterThanOrEqual(0.08);
         expect(q.target[k]).toBeLessThanOrEqual(0.92);
-        // the 0.05 rounding can take at most 0.025 off the spread
-        expect(Math.abs(q.target[k] - q.start[k])).toBeGreaterThanOrEqual(matchSpread(level) - 0.026);
+        // on the level's notches, and never where the knob starts
+        const n = notchesFor(level);
+        expect(Math.abs(q.target[k] * n - Math.round(q.target[k] * n))).toBeLessThan(1e-9);
+        expect(Math.abs(q.start[k] * n - Math.round(q.start[k] * n))).toBeLessThan(1e-9);
+        expect(Math.abs(q.target[k] - q.start[k])).toBeGreaterThanOrEqual(1 / n - 1e-9);
       }
     }
     expect(parts.size).toBe(4);
@@ -59,5 +63,23 @@ describe("match this sound in the ear gym", () => {
     expect(part.events.length).toBeGreaterThan(0);
     expect(part.events.every(e => e.start + e.len <= 4)).toBe(true);
     for (const k of q.knobs) expect(part.params[matchKnob(q.part, k)!.index]).toBe(q.start[k]);
+  });
+
+  it("notches knobs like Syntorial: five positions at first, finer as the level rises", () => {
+    expect([1, 2, 3, 5, 6, 8].map(l => notchesFor(l))).toEqual([4, 4, 8, 8, 20, 20]);
+    expect(notchesFor("gentle")).toBe(4);
+    expect(notch(0.4, 4)).toBe(0.5);
+    expect(notch(0.37, 8)).toBe(0.375);
+    expect(notch(1.2, 4)).toBe(1);
+  });
+
+  it("marks each knob green or red, and says which way a red one goes", () => {
+    const m = knobMarks([{ key: "cutoff", mine: 0.5, target: 0.5 }, { key: "decay", mine: 0.25, target: 0.75 }], 4);
+    expect(m.cutoff).toEqual({ ok: true, up: false });
+    expect(m.decay).toEqual({ ok: false, up: true });
+  });
+
+  it("gives stars like Syntorial", () => {
+    expect([matchStars(1, 0), matchStars(2, 0), matchStars(3, 0), matchStars(1, 1), matchStars(6, 1)]).toEqual([3, 3, 2, 2, 1]);
   });
 });

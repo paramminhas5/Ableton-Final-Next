@@ -60,7 +60,7 @@ export function soundsSame(a: TrackV2, b: TrackV2): boolean {
 }
 
 /** Steps that change your song, so a lesson with one of them ends with an add (or keep, or mark) step. */
-const SONG_STEPS = new Set(["play", "shape", "tempo", "arrange", "mix"]);
+const SONG_STEPS = new Set(["play", "copy", "shape", "tempo", "arrange", "mix"]);
 export const changesSong = (screens: { kind: string }[]): boolean => screens.some(s => SONG_STEPS.has(s.kind));
 
 /** The song started from a bar: every event moved back by that many bars, wrapping round the song. */

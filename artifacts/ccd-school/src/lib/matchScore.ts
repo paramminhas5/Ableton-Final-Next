@@ -115,6 +115,27 @@ export const KNOB_TOL = 0.08;
 /** A match passes when it is close overall and every lit knob is near the target: one knob right is not a match. */
 export const passes = (s: Score | null) => !!s && s.close >= MATCH_PASS && s.worstKnob <= KNOB_TOL;
 
+/**
+ * Notched knobs while matching (Syntorial's single best idea: "the settings are notched to just a few
+ * available values per control"). A beginner can't hear 1% of a knob, but can hear five clearly different
+ * positions. The count is steps across the knob: 4 (five positions) at first, 8, then 20 (every 5%).
+ */
+export const notchesFor = (level: number | "gentle" | "standard" | "hard") =>
+  level === "gentle" ? 4 : level === "standard" ? 8 : level === "hard" ? 20 : level <= 2 ? 4 : level <= 5 ? 8 : 20;
+export const notch = (v: number, n: number) => Math.round(Math.max(0, Math.min(1, v)) * n) / n;
+
+/** Green or red per knob after a check, as Syntorial marks them, and which way a red one should go. */
+export function knobMarks(knobs: { key: string; mine: number; target: number }[], n: number): Record<string, { ok: boolean; up: boolean }> {
+  const tol = Math.max(KNOB_TOL, 0.5 / n + 1e-6);
+  return Object.fromEntries(knobs.map(k => [k.key, { ok: Math.abs(k.mine - k.target) < tol, up: k.target > k.mine }]));
+}
+
+/** Stars for a match: three on the first or second check with no hint, fewer with more of either. */
+export function matchStars(tries: number, hints: number): 1 | 2 | 3 {
+  const cost = Math.max(0, tries - 2) + hints * 2;
+  return cost === 0 ? 3 : cost <= 3 ? 2 : 1;
+}
+
 /** Mono from a stereo render. */
 export const mono = (l: Float32Array, r: Float32Array) => Float32Array.from(l, (v, i) => 0.5 * (v + r[i]));
 

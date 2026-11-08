@@ -44,6 +44,13 @@ steps:
         Turn up duck: the bass gets quieter every time the boom hits, so they take turns. Then turn decay
         down to make bass notes shorter. Keep turning until both sound clear.
 
+  - kind: copy
+    layer: bass
+    pattern: ". . 1 . . 1 . . . . 1 . . 1 5, ."
+    say: >-
+      This bass line dodges the kick: no note starts on a beat, so the kick always has the low end to itself. Copy it by ear, and listen for where each note sits against the beat.
+    hint: "No note is on a beat. Two land halfway between beats, two just before the next kick."
+
   - kind: ask
     q: Why do kick and bass fight?
     options: ["they both live in the low end", "they're the same sound", "the bass is always too quiet", "the kick is out of tune"]

@@ -75,6 +75,14 @@ steps:
         Attack makes notes start fast or slow. Release makes them stop fast or ring on. Try both short, then
         both long. Pick your favourite.
 
+  - kind: match
+    layer: lead
+    knobs: [attack, release]
+    target: {attack: 0.5, release: 0.75}
+    say: >-
+      Match the envelope by ear: how the target fades in (attack) and how it fades out after each note (release).
+    hint: "Listen to the start of each note for attack, and the gap after it for release."
+
   - kind: ask
     q: Which part of the envelope is how fast a note fades in?
     options: ["attack", "decay", "sustain", "release"]

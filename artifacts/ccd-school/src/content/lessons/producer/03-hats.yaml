@@ -58,6 +58,14 @@ steps:
       eli5: >-
         Decay makes the tss short or long. Tune makes it brighter or darker. Find the one you like.
 
+  - kind: match
+    layer: hats
+    knobs: [decay]
+    target: {decay: 0.75}
+    say: >-
+      Match a hat by ear: one knob, decay. Listen to the tail of each hat, then turn yours until it rings the same.
+    hint: "Short and tight, or long and washy?"
+
   - kind: ask
     q: Where does the classic house open hat land?
     options: ["on the offbeat, halfway between the kicks", "on every kick", "only on beat one", "on two and four"]

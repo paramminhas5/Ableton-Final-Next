@@ -135,6 +135,14 @@ steps:
         Turn the knobs while your tune plays. Shape changes the drawing from buzzy saw to video game square.
         Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it.
 
+  - kind: match
+    layer: lead
+    knobs: [cutoff]
+    target: {cutoff: 0.25}
+    say: >-
+      Match this sound by ear with one knob: cutoff. Is the target brighter than yours, or darker?
+    hint: "Darker means the cutoff is lower."
+
   - kind: ask
     q: What is sound?
     options: ["air being pushed and pulled", "electricity in the speaker", "light from the screen", "numbers in the synth"]

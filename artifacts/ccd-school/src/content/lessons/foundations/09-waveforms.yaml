@@ -69,6 +69,14 @@ steps:
         Turn the shape knob to change your tune's wave. Then turn cutoff to make it softer or
         brighter. Keep the one you like.
 
+  - kind: match
+    layer: lead
+    knobs: [wave]
+    target: {wave: 0.75}
+    say: >-
+      Match the shape of this sound by ear. Turn shape until yours has the same buzz as the target.
+    hint: "A buzzier sound has more harmonics: turn shape further."
+
   - kind: ask
     q: Which wave is best for a deep, soft sub bass?
     options: ["sine", "saw", "square", "noise"]

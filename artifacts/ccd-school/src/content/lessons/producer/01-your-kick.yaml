@@ -66,6 +66,13 @@ steps:
           move to. You will see it written as 4/4. Other counts exist, like the 3/4 of a waltz, and you will
           meet them later.
 
+  - kind: copy
+    layer: drums
+    pattern: {kick: "x...x...x...x..."}
+    say: >-
+      Before you play a kick, copy one by ear. The target plays a kick pattern: tap the squares where you hear it, switch to yours to compare, and check. Check as often as you like.
+    hint: "Count along with the target: one, two, three, four. A kick on each count."
+
   - kind: play
     layer: drums
     surface: pads
@@ -180,6 +187,14 @@ steps:
 
         The decay knob makes the hum shorter or longer. The tune knob makes it deeper or higher, like a big
         drum or a small drum. Your kick is playing, so turn them and listen. Stop when you like it.
+
+  - kind: match
+    layer: drums
+    knobs: [decay]
+    target: {decay: 0.25}
+    say: >-
+      Now match one by ear. A kick with a hidden decay plays: switch between it and yours, turn decay until they sound the same, and check. The knob clicks between a few clear positions, so every turn is a change you can hear.
+    hint: "Listen to how long the kick rings after the hit."
 
   - kind: ask
     q: How many beats are in one bar here?

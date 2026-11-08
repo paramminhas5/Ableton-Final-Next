@@ -68,6 +68,13 @@ steps:
       eli5: >-
         Count twelve rows up: same note, higher. One row up: the tiniest step.
 
+  - kind: copy
+    layer: bass
+    pattern: "1 . 1' . 1 . 1' . 1 . 1' . 5 . 5' ."
+    say: >-
+      Copy this bass line by ear. It bounces between a note and the same note an octave up. Same name, twice as high.
+    hint: "Low, high, low, high: the root and its octave, then the fifth and its octave."
+
   - kind: ask
     q: How many notes before the pattern repeats?
     options: ["twelve", "seven", "eight", "ten"]

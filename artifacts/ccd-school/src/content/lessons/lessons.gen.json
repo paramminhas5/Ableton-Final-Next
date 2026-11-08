@@ -5302,6 +5302,18 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "wave"
+          ],
+          "target": {
+            "wave": 0.75
+          },
+          "say": "Match the shape of this sound by ear. Turn shape until yours has the same buzz as the target.",
+          "hint": "A buzzier sound has more harmonics: turn shape further."
+        },
+        {
           "kind": "ask",
           "q": "Which wave is best for a deep, soft sub bass?",
           "options": [
@@ -5538,6 +5550,18 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "hats",
+          "knobs": [
+            "tune"
+          ],
+          "target": {
+            "tune": 0.75
+          },
+          "say": "Match the pitch of this noise hit by ear: one knob, tune.",
+          "hint": "Higher sounds smaller and sharper."
+        },
+        {
           "kind": "ask",
           "q": "Why can't you hum the note of a hi hat?",
           "options": [
@@ -5650,6 +5674,13 @@
           ]
         },
         {
+          "kind": "copy",
+          "layer": "lead",
+          "pattern": "1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 .",
+          "say": "Copy the scale by ear: eight notes, each one step higher than the last. On this grid, every row is a note of your song's scale.",
+          "hint": "Each note is the row above the one before."
+        },
+        {
           "kind": "ask",
           "q": "What is a scale?",
           "options": [
@@ -5760,6 +5791,13 @@
           }
         },
         {
+          "kind": "copy",
+          "layer": "lead",
+          "pattern": "1 - - - 5 - - - 1 - - - 3 - - -",
+          "say": "Copy these two intervals by ear: the root, a jump, back to the root, a smaller jump. Hear how far each one reaches.",
+          "hint": "The first jump is a fifth, the second a third."
+        },
+        {
           "kind": "play",
           "layer": "lead",
           "surface": "keys",
@@ -5864,6 +5902,13 @@
             "straight": "Phrase one ends unfinished (a question), phrase two repeats it and lands on the home note (an answer).",
             "eli5": "A tune can ask a question and then answer it. The first part ends up in the air. The second part is nearly the same, but it comes home to the first key."
           }
+        },
+        {
+          "kind": "copy",
+          "layer": "lead",
+          "pattern": "1 - 3 - 5 - 3 - 2 - 1 - - - . .",
+          "say": "Copy this melody by ear: it climbs, then steps back down home. Sing it back first if you can, then find it on the grid.",
+          "hint": "Up in two jumps, then down one step at a time."
         },
         {
           "kind": "play",
@@ -6085,6 +6130,13 @@
           ]
         },
         {
+          "kind": "copy",
+          "layer": "chords",
+          "pattern": "1+3+5 - - - - - - - 4+6+1' - - - - - - -",
+          "say": "Copy two chords by ear. A chord is three notes at once: find the lowest, then the two above it.",
+          "hint": "The first chord stacks the first, third and fifth notes of your scale."
+        },
+        {
           "kind": "play",
           "layer": "chords",
           "surface": "pads",
@@ -6197,6 +6249,13 @@
           ]
         },
         {
+          "kind": "copy",
+          "layer": "chords",
+          "pattern": "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - -",
+          "say": "Copy this progression by ear: four chords, one per beat. Work out the lowest note of each chord first, then fill in the rest.",
+          "hint": "The lowest notes go root, down, down, up."
+        },
+        {
           "kind": "play",
           "layer": "chords",
           "surface": "pads",
@@ -6303,6 +6362,13 @@
             "straight": "Low notes define the chord. The simplest bass line plays the root, the note each chord is built on.",
             "eli5": "Low notes are like the floor a chord stands on. The easiest bass line just plays the lowest note of each chord. That note is called the root."
           }
+        },
+        {
+          "kind": "copy",
+          "layer": "bass",
+          "pattern": "1 - - - 6, - - - 4, - - - 5, - - -",
+          "say": "Copy the roots of a chord progression by ear. One bass note per beat, the bottom of each chord.",
+          "hint": "It starts on the root and moves down, then down again, then up a step."
         },
         {
           "kind": "play",
@@ -6583,6 +6649,13 @@
           "say": "Two notes. Which one was higher? Replay as often as you like."
         },
         {
+          "kind": "copy",
+          "layer": "lead",
+          "pattern": "1 - . . 3 - . . 2 - . . 1 - . .",
+          "say": "Copy four notes by ear. For each one, ask: higher or lower than the last?",
+          "hint": "Up, down, down: it ends where it started."
+        },
+        {
           "kind": "ask",
           "q": "Two notes, one at 220 hz and one at 233 hz. Which is higher?",
           "options": [
@@ -6736,6 +6809,16 @@
               "say": "The tempo box sits in the Control Bar at the top of Live. Turn on the Metronome to hear the pulse while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm."
             }
           ]
+        },
+        {
+          "kind": "copy",
+          "layer": "drums",
+          "pattern": {
+            "kick": "x...x...x...x...",
+            "clap": "....x.......x..."
+          },
+          "say": "Copy this beat by ear: a kick and a clap. Find the clap first, then the kicks.",
+          "hint": "The clap is on two and four, the kick on every beat."
         },
         {
           "kind": "play",
@@ -7991,6 +8074,13 @@
           }
         },
         {
+          "kind": "copy",
+          "layer": "bass",
+          "pattern": "1 . 1' . 1 . 1' . 1 . 1' . 5 . 5' .",
+          "say": "Copy this bass line by ear. It bounces between a note and the same note an octave up. Same name, twice as high.",
+          "hint": "Low, high, low, high: the root and its octave, then the fifth and its octave."
+        },
+        {
           "kind": "ask",
           "q": "How many notes before the pattern repeats?",
           "options": [
@@ -8930,6 +9020,15 @@
           ]
         },
         {
+          "kind": "copy",
+          "layer": "drums",
+          "pattern": {
+            "kick": "x...x...x...x..."
+          },
+          "say": "Before you play a kick, copy one by ear. The target plays a kick pattern: tap the squares where you hear it, switch to yours to compare, and check. Check as often as you like.",
+          "hint": "Count along with the target: one, two, three, four. A kick on each count."
+        },
+        {
           "kind": "play",
           "layer": "drums",
           "surface": "pads",
@@ -8987,6 +9086,18 @@
             "straight": "The picture shows your kick as a wave. The sharp spike at the start is the click. The swinging part after it is the body, and the dotted line shows it fading out.\nDecay controls how long the body takes to fade. Tune controls its pitch, how low or high it sits. Turn each one while the loop plays until the kick sounds right to you.",
             "eli5": "The pink line is a drawing of your kick. See the quick little spike at the start? That is the click, like the tap of a finger. The wobbly part after it is the body, the big low hum.\nThe decay knob makes the hum shorter or longer. The tune knob makes it deeper or higher, like a big drum or a small drum. Your kick is playing, so turn them and listen. Stop when you like it."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "drums",
+          "knobs": [
+            "decay"
+          ],
+          "target": {
+            "decay": 0.25
+          },
+          "say": "Now match one by ear. A kick with a hidden decay plays: switch between it and yours, turn decay until they sound the same, and check. The knob clicks between a few clear positions, so every turn is a change you can hear.",
+          "hint": "Listen to how long the kick rings after the hit."
         },
         {
           "kind": "ask",
@@ -9200,6 +9311,18 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "cutoff"
+          ],
+          "target": {
+            "cutoff": 0.25
+          },
+          "say": "Match this sound by ear with one knob: cutoff. Is the target brighter than yours, or darker?",
+          "hint": "Darker means the cutoff is lower."
+        },
+        {
           "kind": "ask",
           "q": "What is sound?",
           "options": [
@@ -9384,6 +9507,18 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "hats",
+          "knobs": [
+            "decay"
+          ],
+          "target": {
+            "decay": 0.75
+          },
+          "say": "Match a hat by ear: one knob, decay. Listen to the tail of each hat, then turn yours until it rings the same.",
+          "hint": "Short and tight, or long and washy?"
+        },
+        {
           "kind": "ask",
           "q": "Where does the classic house open hat land?",
           "options": [
@@ -9466,6 +9601,16 @@
             "straight": "The clap on two and four is the backbeat. A clap is a few bursts of noise; a snare is a drum with rattling wires, so it has tone as well as noise.",
             "eli5": "Boom, clap, boom, clap. A clap is like hands clapping. A snare is a drum with tiny wires that buzz. Both go on two and four."
           }
+        },
+        {
+          "kind": "copy",
+          "layer": "drums",
+          "pattern": {
+            "kick": "x.....x.x.......",
+            "snare": "....x.......x..."
+          },
+          "say": "Copy this beat by ear: a kick that skips around, and a snare on the backbeat. Find the snare first (it is the easy one), then the kicks.",
+          "hint": "The snare lands on two and four. The kick plays on one, just before three, and on three."
         },
         {
           "kind": "play",
@@ -9580,6 +9725,13 @@
             "straight": "The bass lives low. In dance music it often plays between the kicks so the two take turns.",
             "eli5": "Bass is the really low sound you feel in your tummy. It likes to go in between the booms, so the boom and the bass take turns."
           }
+        },
+        {
+          "kind": "copy",
+          "layer": "bass",
+          "pattern": ". . 1 - . . 1 - . . 1' - . . 5 -",
+          "say": "Copy this bass line by ear. Each note sits in a gap between two kicks, which is where a bass line lives. The grid only shows notes in your song's key, so every row is a fair guess.",
+          "hint": "Every note is halfway between two beats. The first two are the same note; listen for how far the last two jump."
         },
         {
           "kind": "play",
@@ -9705,6 +9857,13 @@
             "straight": "Duck: the bass dips every time the kick hits (sidechain). Decay: shorter notes leave the kick room. Use both until the kick punches through.",
             "eli5": "Turn up duck: the bass gets quieter every time the boom hits, so they take turns. Then turn decay down to make bass notes shorter. Keep turning until both sound clear."
           }
+        },
+        {
+          "kind": "copy",
+          "layer": "bass",
+          "pattern": ". . 1 . . 1 . . . . 1 . . 1 5, .",
+          "say": "This bass line dodges the kick: no note starts on a beat, so the kick always has the low end to itself. Copy it by ear, and listen for where each note sits against the beat.",
+          "hint": "No note is on a beat. Two land halfway between beats, two just before the next kick."
         },
         {
           "kind": "ask",
@@ -9908,6 +10067,13 @@
           }
         },
         {
+          "kind": "copy",
+          "layer": "chords",
+          "pattern": "1+3+5 - - - - - - - 6,+1+3 - - - - - - -",
+          "say": "Copy these two chords by ear. Each one is three notes at once: find the lowest note first, then build up.",
+          "hint": "The first chord is built on your song's root. The second starts lower."
+        },
+        {
           "kind": "play",
           "layer": "chords",
           "surface": "pads",
@@ -9932,6 +10098,18 @@
             "straight": "Release: long for pads, short for stabs. Spread: wider, bigger chords.",
             "eli5": "Release makes chords ring long or stop short. Spread makes them sound bigger."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "chords",
+          "knobs": [
+            "release"
+          ],
+          "target": {
+            "release": 0.75
+          },
+          "say": "Match how the target's chords fade out by ear: one knob, release.",
+          "hint": "Listen to what is left after each chord stops."
         },
         {
           "kind": "ask",
@@ -10188,6 +10366,27 @@
             "straight": "Detune up until it thickens; back off before it sounds out of tune. Add a little glide.",
             "eli5": "Turn detune up until it sounds big but not wobbly. Then turn glide up a little and hear the notes slide."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "detune",
+            "glide"
+          ],
+          "target": {
+            "detune": 0.75,
+            "glide": 0.5
+          },
+          "say": "Match this lead by ear: how wide it is (detune) and how it slides between notes (glide).",
+          "hint": "Listen to the gaps between notes for the slide."
+        },
+        {
+          "kind": "copy",
+          "layer": "lead",
+          "pattern": "5 - 4 3 - 1 - . 2 - 3 - 1 - - -",
+          "say": "Copy this lead line by ear before you widen it. Hum it back first, then find each note going up or down from the last.",
+          "hint": "It starts high and walks down to the root, then steps back up and comes home."
         },
         {
           "kind": "ask",
@@ -10489,6 +10688,18 @@
             "straight": "Send: how much lead goes to reverb. Echo: how much to the echo. The dry sound stays; you blend in space. Start low.",
             "eli5": "Send adds a big-room sound. Echo adds repeats. A little bit is usually enough."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "send"
+          ],
+          "target": {
+            "send": 0.5
+          },
+          "say": "Match the space by ear: how much of the lead goes to the reverb.",
+          "hint": "More send puts the lead further back in the room."
         },
         {
           "kind": "ask",
@@ -12577,6 +12788,20 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "cutoff",
+            "res"
+          ],
+          "target": {
+            "cutoff": 0.375,
+            "res": 0.75
+          },
+          "say": "Match the filter by ear: where it cuts, and how much it rings at that point.",
+          "hint": "Resonance adds a whistle at the cutoff. Find the cutoff first."
+        },
+        {
           "kind": "ask",
           "q": "What does a low-pass filter do?",
           "options": [
@@ -12691,6 +12916,20 @@
             "straight": "Attack is how fast each note comes in. Release is how long it rings after. Short and short is a pluck, long and long a pad. Keep one.",
             "eli5": "Attack makes notes start fast or slow. Release makes them stop fast or ring on. Try both short, then both long. Pick your favourite."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "attack",
+            "release"
+          ],
+          "target": {
+            "attack": 0.5,
+            "release": 0.75
+          },
+          "say": "Match the envelope by ear: how the target fades in (attack) and how it fades out after each note (release).",
+          "hint": "Listen to the start of each note for attack, and the gap after it for release."
         },
         {
           "kind": "ask",
@@ -12808,6 +13047,20 @@
             "straight": "Cutoff down for a dark base. Env up and each note bites open and closes. Res adds a whistle. Keep what suits your melody.",
             "eli5": "Turn cutoff down so it's dark. Turn env up so each note flashes bright. Add a little res for a whistle. Keep the one you like."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "cutoff",
+            "env"
+          ],
+          "target": {
+            "cutoff": 0.25,
+            "env": 0.75
+          },
+          "say": "Match this by ear: a dark sound that opens up at the start of each note. Set the cutoff first, then how far the envelope opens it.",
+          "hint": "Get the dark part right with cutoff, then add env until each note has the same bright blip."
         },
         {
           "kind": "ask",
@@ -14903,6 +15156,18 @@
           }
         },
         {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "detune"
+          ],
+          "target": {
+            "detune": 0.75
+          },
+          "say": "Match how wide and thick the target is with one knob: detune.",
+          "hint": "A wider, wobblier sound has more detune."
+        },
+        {
           "kind": "ask",
           "q": "Why does detuning two oscillators make a sound wider?",
           "options": [
@@ -15019,6 +15284,20 @@
             "straight": "Turn lfo up and the filter moves by itself. lfo rate sets the speed, lfo to picks filter, pitch or volume. Leave it where it sounds good.",
             "eli5": "Turn lfo up. A little robot now wiggles the knob for you. Rate is how fast it wiggles."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "lfo",
+            "lforate"
+          ],
+          "target": {
+            "lfo": 0.5,
+            "lforate": 0.25
+          },
+          "say": "Match the movement by ear: how much the lfo moves the sound, and how fast.",
+          "hint": "Count the wobbles in a bar for the rate, then set how deep they go."
         },
         {
           "kind": "ask",
@@ -15251,6 +15530,18 @@
             "straight": "fm bends one oscillator with another. fm is how much, ratio is the modulator's speed compared to the note, env makes it settle after the attack. Keep it where the lead has bite.",
             "eli5": "fm makes a second sound shake the first one really fast. It turns a smooth lead into a growly one."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "lead",
+          "knobs": [
+            "fm"
+          ],
+          "target": {
+            "fm": 0.5
+          },
+          "say": "Match this fm sound by ear: one knob, how much one oscillator bends the other.",
+          "hint": "More fm means a brighter, more metallic sound."
         },
         {
           "kind": "ask",
@@ -16917,6 +17208,20 @@
             "straight": "Low: weight, down if it swamps the kick. Mid: try a small cut for less mud. High: edge for small speakers.",
             "eli5": "Turn low for more or less boom. Turn mid down a little if it sounds muddy. Turn high for a bit of edge."
           }
+        },
+        {
+          "kind": "match",
+          "layer": "bass",
+          "knobs": [
+            "low",
+            "high"
+          ],
+          "target": {
+            "low": 0.75,
+            "high": 0.25
+          },
+          "say": "Match this eq by ear: the target has more low end and less top than yours.",
+          "hint": "Set the low first, then take some high away."
         },
         {
           "kind": "ask",

@@ -77,6 +77,14 @@ steps:
         Turn detune up until your tune sounds big and shimmery. Too far sounds wobbly, so turn it back a bit.
         Then try shape for a buzzier sound.
 
+  - kind: match
+    layer: lead
+    knobs: [detune]
+    target: {detune: 0.75}
+    say: >-
+      Match how wide and thick the target is with one knob: detune.
+    hint: "A wider, wobblier sound has more detune."
+
   - kind: ask
     q: Why does detuning two oscillators make a sound wider?
     options: ["their pitches drift in and out of line and shimmer", "it makes the note louder", "it adds a second melody", "it slows the song"]

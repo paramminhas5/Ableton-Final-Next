@@ -6,9 +6,10 @@
  */
 
 import type { MatchQuestion } from "./match";
+import type { CopyQuestion } from "../copyEar";
 
-export type GymDrill = "eq" | "compression" | "groove" | "match";
-export const GYM_DRILLS: GymDrill[] = ["eq", "compression", "groove", "match"];
+export type GymDrill = "eq" | "compression" | "groove" | "match" | "copy";
+export const GYM_DRILLS: GymDrill[] = ["eq", "compression", "groove", "match", "copy"];
 
 export const MIN_LEVEL = 1;
 export const MAX_LEVEL = 8;
@@ -161,7 +162,7 @@ export function makeGrooveQuestion(level: number, rng: Rng, prev?: GrooveKind): 
 }
 
 /** "match": turn the lit knobs until yours sounds like the hidden target (src/lib/gym/match.ts). */
-export type GymQuestion = EqQuestion | CompressionQuestion | GrooveQuestion | MatchQuestion;
+export type GymQuestion = EqQuestion | CompressionQuestion | GrooveQuestion | MatchQuestion | CopyQuestion;
 
 // ─── Session ─────────────────────────────────────────────────────────────────
 

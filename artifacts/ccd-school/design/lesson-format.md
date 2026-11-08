@@ -46,7 +46,18 @@ steps:
     layer: drums             # matched by ear (switch target and yours, turn the lit knobs, check); a closeness
     knobs: [tune, decay]     # score from the sound and the settings, hints after two tries, and a close match
     target: {tune: 0.3, decay: 0.2}   # is kept in their song. target: each knob's hidden value, 0 to 1
+                             # Knobs are notched while matching (5, 9 or 21 positions by level), marked green
+                             # or red after each check, and the step is 3 sounds (2 on gentle): warm-ups first,
+                             # this target last.
     say: ...
+  - kind: copy               # copy by ear (Building Blocks): a hidden pattern plays, the learner writes it on a
+    layer: bass              # grid of only the rows worth trying; notes come back right, wrong (with an arrow) or
+    pattern: ". . 1 - . . 1 - . . 1' - . . 5 -"   # missed; unlimited checks, a hint outlines a missing note, stars.
+    say: ...                 # drums: {kick: "x...x...x...x...", clap: "....x.......x..."} (x hit, o soft);
+                             # a tune: one token per 16th, scale steps of the song's own scale (1 is the root),
+                             # ' and , for octaves, b and # for a semitone, + for a chord (1+3+5), . rest, - hold.
+                             # 16 or 32 steps. What they copy becomes the lesson's part; a play step after it
+                             # starts from it (src/lib/copyEar.ts).
   - kind: ask                # question about what they just heard or made; replaces quiz
     q: ...
     options: [...]

@@ -68,6 +68,13 @@ steps:
           That's why switching a song from a minor to C major can feel subtle: the home changes, not the
           notes.
 
+  - kind: copy
+    layer: lead
+    pattern: "1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 ."
+    say: >-
+      Copy the scale by ear: eight notes, each one step higher than the last. On this grid, every row is a note of your song's scale.
+    hint: "Each note is the row above the one before."
+
   - kind: ask
     q: What is a scale?
     options: ["a set of notes chosen to fit together", "how loud a song is", "the speed of the song", "a type of drum"]

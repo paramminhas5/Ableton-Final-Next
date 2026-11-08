@@ -49,6 +49,13 @@ steps:
           Notes right next to each other rub and buzz. Skipping one each time gives notes that share
           harmonics, so they blend. That's the harmonic series from the harmonics lesson again.
 
+  - kind: copy
+    layer: chords
+    pattern: "1+3+5 - - - - - - - 4+6+1' - - - - - - -"
+    say: >-
+      Copy two chords by ear. A chord is three notes at once: find the lowest, then the two above it.
+    hint: "The first chord stacks the first, third and fifth notes of your scale."
+
   - kind: play
     layer: chords
     surface: pads

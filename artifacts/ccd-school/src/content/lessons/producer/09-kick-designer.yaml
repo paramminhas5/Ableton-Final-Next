@@ -44,7 +44,6 @@ steps:
         Tune makes the boom deeper or higher. Decay makes it short or long. Drive makes it crunchy. Level makes
         it louder or quieter. Play until it's your favourite kick.
 
-
   - kind: match
     layer: drums
     knobs: [tune, decay]

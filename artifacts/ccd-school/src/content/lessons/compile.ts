@@ -3,6 +3,7 @@ import * as P from "../../engine/params.gen";
 import type { LayerType } from "../../lib/track2";
 import { CLIP_IDS } from "./clips";
 import { SCALES } from "../../lib/theory";
+import { patternProblems, type CopyLayer } from "../../lib/copyEar";
 import { DRILLS, LAYERS, LEVELS, STEP_KINDS, SURFACES, VOICES, type Lesson } from "./schema";
 
 export { resolveLesson, resolveLearn } from "./resolve";
@@ -47,6 +48,7 @@ const STEP_FIELDS: Record<string, string[]> = {
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
   match: ["kind", "layer", "knobs", "target", "say", "hint", "levels"],
+  copy: ["kind", "layer", "pattern", "say", "hint", "levels"],
   tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
   mix: ["kind", "say", "goal", "bank", "hint", "levels"],
   arrange: ["kind", "say", "goal", "hint", "levels"],
@@ -220,6 +222,13 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
             for (const k of ks) if (typeof tg[k as string] !== "number" || (tg[k as string] as number) < 0 || (tg[k as string] as number) > 1) at(where, `target.${String(k)} must be a number from 0 to 1`);
             for (const k of Object.keys(tg)) if (!ks.includes(k)) at(where, `target.${k} is not one of the step's knobs`);
           }
+          voice(where, "say", raw.say);
+          break;
+        }
+        case "copy": {
+          // A hidden pattern to write on the grid by ear (src/lib/copyEar.ts reads and checks it).
+          if (!["drums", "bass", "chords", "lead"].includes(String(raw.layer))) { at(where, "layer must be drums, bass, chords or lead"); break; }
+          for (const p of patternProblems(raw.layer as CopyLayer, raw.pattern)) at(where, `pattern: ${p}`);
           voice(where, "say", raw.say);
           break;
         }

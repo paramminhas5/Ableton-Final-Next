@@ -928,3 +928,31 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ws-sec.is-on{border-color:var(--led-mint);background:color-mix(in srgb,var(--led-mint) 14%,transparent)}
 .ws-player{display:flex;flex-direction:column;min-height:300px}
 .ws-player .st-player{min-height:300px}
+/* copy by ear (CopyEar.tsx): few rows, taller squares, marks after a check */
+.cp-roll{margin-top:12px;overflow-x:auto}
+.cp-row{grid-template-columns:34px repeat(var(--cols),minmax(0,1fr))}
+.cp-roll:has(.cp-key.is-drum) .cp-row{grid-template-columns:58px repeat(var(--cols),minmax(0,1fr))}
+.cp-key{line-height:24px;font-size:10px}
+.cp-key.is-drum{background:#2A2A2E;color:var(--disp-ink,#E9E9E6);text-align:left;padding-left:6px}
+.cp-cell{position:relative;height:24px;display:flex;align-items:center;justify-content:center;font:600 13px/1 var(--m1-mono,ui-monospace,monospace);color:#0b0b0d}
+.cp-cell.is-note{background:color-mix(in srgb,var(--c) 80%,#0b0b0d);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+.cp-cell.is-right{background:var(--led-mint);box-shadow:0 0 8px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.cp-cell.is-wrong{background:var(--led-red,#FF4A5A);color:#fff}
+.cp-cell.is-ghost{background:transparent;box-shadow:inset 0 0 0 2px var(--led-mint);animation:cp-pulse 1.2s ease-in-out infinite}
+.cp-cell:disabled{cursor:default}
+@keyframes cp-pulse{50%{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--led-mint) 35%,transparent)}}
+@media (prefers-reduced-motion:reduce){.cp-cell.is-ghost{animation:none}}
+@media (pointer:coarse){.cp-cell{height:30px}.cp-key{line-height:30px}}
+@media (max-width:700px){.cp-row{grid-template-columns:28px repeat(var(--cols),minmax(0,1fr))}.cp-roll:has(.cp-key.is-drum) .cp-row{grid-template-columns:50px repeat(var(--cols),minmax(0,1fr))}.cp-key.is-drum{font-size:9px;padding-left:4px}}
+.cp-stars{display:inline-flex;gap:2px;margin-left:auto;font-size:18px}
+.cp-stars b{color:rgba(255,255,255,.18);font-weight:400}
+.cp-stars b.is-on{color:#FFD24A;text-shadow:0 0 8px rgba(255,210,74,.6)}
+.cp-cell.is-now{background:rgba(255,255,255,.17);box-shadow:none}
+.cp-cell.is-now.is-beat{box-shadow:inset 1px 0 0 rgba(255,255,255,.18)}
+/* match: a mark under each knob after a check (Syntorial's green and red) */
+.ms-k{display:flex;flex-direction:column;align-items:center;min-width:0}
+.ms-mark{margin-top:4px;font-size:11px;font-weight:600;letter-spacing:.01em;white-space:nowrap}
+.ms-k.is-ok .ms-mark{color:var(--led-mint)}
+.ms-k.is-off .ms-mark{color:var(--led-red)}
+.ms-k.is-ok .m1-knob-ring,.ms-k.is-ok svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--led-mint) 70%,transparent))}
+.ms-k.is-off svg{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--led-red) 70%,transparent))}

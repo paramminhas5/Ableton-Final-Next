@@ -80,6 +80,14 @@ steps:
         Cutoff makes your tune darker. Low cut makes it thinner. Both together make it sound like a phone. Res
         makes it whistle. Circuit changes how it whistles. Pick the sound you like.
 
+  - kind: match
+    layer: lead
+    knobs: [cutoff, res]
+    target: {cutoff: 0.375, res: 0.75}
+    say: >-
+      Match the filter by ear: where it cuts, and how much it rings at that point.
+    hint: "Resonance adds a whistle at the cutoff. Find the cutoff first."
+
   - kind: ask
     q: What does a low-pass filter do?
     options: ["keeps the lows, cuts the highs", "keeps the highs, cuts the lows", "keeps only the middle", "makes it louder"]

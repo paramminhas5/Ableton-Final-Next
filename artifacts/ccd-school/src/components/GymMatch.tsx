@@ -2,14 +2,15 @@
 /**
  * The ear gym's "match this sound" drill (src/lib/gym/match.ts): a short phrase on a kick, a bass, a lead
  * or a pad plays with hidden settings of two to four knobs; switch between the target and yours, turn the
- * knobs, and check once. The check is the answer: a match (src/lib/matchScore.ts `passes`) counts as right
- * in the gym's streaks, anything else as a miss, and the screen then shows how close it was and where the
- * target's knobs were. The same engine pieces as the lessons' match step (src/components/m1/MatchSound.tsx).
+ * knobs, and check. The knobs are notched by level (five positions at levels 1 and 2), and level 1 has one
+ * knob, as Syntorial starts. A first check that misses marks each knob green or red and gives one more check
+ * (Syntorial's fix-the-red loop); a match (src/lib/matchScore.ts `passes`) on either check counts as right in
+ * the gym's streaks. The screen then shows how close it was and where the target's knobs were. The same engine pieces as the lessons' match step (src/components/m1/MatchSound.tsx).
  */
 import { useMemo, useState } from "react";
 import { MAX_LEVEL } from "@/lib/gym/engine";
 import { matchKnob, matchSong, type MatchQuestion } from "@/lib/gym/match";
-import { KNOB_TOL, passes, which } from "@/lib/matchScore";
+import { KNOB_TOL, notchesFor, passes, which } from "@/lib/matchScore";
 import { MatchKnobs, MatchMeter, MatchSides, useMatch, type K } from "@/components/m1/MatchSound";
 import { GoPill, Icon, Key, Screen, Silk } from "@/components/m1/controls";
 
@@ -25,13 +26,16 @@ export function GymMatch({ q, level, count, feedback, onAnswer, onEnd, onNext, t
   const knobs = useMemo(() => q.knobs.map(k => matchKnob(q.part, k)).filter((k): k is K => !!k), [q]);
   const target = useMemo(() => Object.fromEntries(knobs.map(k => [k.index, q.target[k.spec.key]])) as Record<number, number>, [knobs, q]);
   const start = useMemo(() => Object.fromEntries(knobs.map(k => [k.index, q.start[k.spec.key]])) as Record<number, number>, [knobs, q]);
-  const m = useMatch({ song, part, knobs, target, start });
+  const m = useMatch({ song, part, knobs, target, start, notches: notchesFor(level) });
+  const [second, setSecond] = useState(false);
   const [touched, setTouched] = useState<string | null>(null);
   const passed = passes(m.result);
   const check = async () => {
     const s = await m.check();
     if (!s) return;
     const ok = passes(s);
+    // The first miss marks the knobs and gives one more check.
+    if (!ok && !second) { setSecond(true); return; }
     // The knob furthest off says which way the target was.
     let w: { k: K; d: number } | null = null;
     for (const k of knobs) { const d = target[k.index] - m.value(k); if (!w || Math.abs(d) > Math.abs(w.d)) w = { k, d }; }
@@ -50,12 +54,12 @@ export function GymMatch({ q, level, count, feedback, onAnswer, onEnd, onNext, t
               <span>level {level} of {MAX_LEVEL}</span>
             </div>
             <div className="ls-title" aria-live="polite">
-              {feedback ? feedback.note : `${PART_NAME[q.part]}, ${["", "one", "two", "three", "four"][knobs.length]} knobs set out of sight. turn yours until it sounds the same.`}
+              {feedback ? feedback.note : second ? `${m.result?.close ?? 0}% close. the red ${Object.values(m.marks).filter(x => !x.ok).length === 1 ? "knob is off: fix it" : "knobs are off: fix them"}, then one more check.` : `${PART_NAME[q.part]}, ${["", "one knob", "two knobs", "three knobs", "four knobs"][knobs.length]} set out of sight. turn yours until it sounds the same.`}
             </div>
             <MatchMeter m={m} hint={null} passed={passed} />
             <div className="ls-meta" style={{ marginTop: 10 }}>
               <span>{touched ?? (m.side === "target" ? "playing the target" : "playing yours")}</span>
-              <span>{feedback ? "the target's settings are under each knob" : "one check is your answer"}</span>
+              <span>{feedback ? "the target's settings are under each knob" : second ? "last check" : "two checks"}</span>
             </div>
           </Screen>
           <Silk label="switch between them" right={m.side === "target" ? "the target" : "yours"} />

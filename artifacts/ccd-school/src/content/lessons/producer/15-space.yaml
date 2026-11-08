@@ -41,6 +41,14 @@ steps:
       eli5: >-
         Send adds a big-room sound. Echo adds repeats. A little bit is usually enough.
 
+  - kind: match
+    layer: lead
+    knobs: [send]
+    target: {send: 0.5}
+    say: >-
+      Match the space by ear: how much of the lead goes to the reverb.
+    hint: "More send puts the lead further back in the room."
+
   - kind: ask
     q: What's the difference between reverb and echo?
     options: ["reverb is a blur of reflections, echo is clear repeats", "they're the same", "echo is louder", "reverb only works on drums"]
