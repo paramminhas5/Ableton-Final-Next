@@ -141,9 +141,65 @@ All three are our own code, written from the papers; the tests are in `engine/te
 
 Every engine test passes (`cargo test --release`). Clips: the 16 `/sound` "now" clips these change were re-rendered (bass, both filter circuits, lead, pad, the three resonators, table, feedback, phase, hall, echo, drive, the song twice).
 
+## Round 2 (8 Nov): closing the gaps that were ours to close
+
+Param: "Do what you can but make it stellar", and still "rewrite the methods only if they are superior". Every number below is printed by `cargo test --release --test gaps -- --nocapture` (engine/tests/gaps.rs, each against a frozen copy of the old code or the old engine) or measured with `scripts/shootout/measure.py` on renders from `engine/src/bin/shootout.rs` (the `wide` group is new). Surge and Vital were re-rendered at three widths from the same patches (`a_width` and `oscillator_1_stereo_spread`, the names the plugins report to a host). Nothing here says ours sounds better; the pairs on `/sound/compare` are re-rendered for Param's blind test.
+
+### 1. Stereo synth voices ("width")
+
+A new knob on the chord synth and the lead, "width" (Live 12's Utility "Width"; Surge XT "Width", Vital "Stereo Spread"; `spread` was already the chord synth's detune). It is mid/side inside the voice: the mid is the voice exactly as it was; the side is the supersaw's six side saws, each panned (one far, one middle and one near saw a side, detuned both ways, so neither side is sharper), through the same high-pass and mix law, then through a filter and filter drive of its own set like the mid's, and the same amp. On the chord synth each voice also takes its own place (left, right, centre for a triad, as the OB-X's per-voice pans), everything but its sub. Half the loudness a wide stack gains is taken back, worked out from the mix law, so turning width up does not just make it louder. The strip carries two channels for a wide part (two of everything with a state, set by the same knobs; pan becomes a balance with the same law on each side; the sends take the middle). The bass has no width: it stays mono, and so does every sub.
+
+Lead supersaw (detune 0.6, the shootout's phrase), each synth against its own width 0:
+
+| | width | left/right | side over mid | mono sum | stereo loudness |
+|---|---|---|---|---|---|
+| Surge XT (scene width) | 50% / 100% | 0.867 / 0.380 | -11.5 / -3.5 dB | -0.44 / -2.43 dB | -0.27 / -0.90 LU |
+| Vitalium (stereo spread) | 50% / 100% | 0.804 / 0.222 | -9.6 / -2.0 dB | -0.65 / -3.06 dB | -0.21 / -0.91 LU |
+| ours | 0.25 / 0.5 / 0.75 / 1 | 0.906 / 0.677 / 0.469 / 0.401 | -13.1 / -7.2 / -4.4 / -3.7 dB | -0.09 / -0.32 / -0.58 / -0.67 dB | +0.13 / +0.46 / +0.78 / +0.90 LU |
+
+At full width ours is about as wide as Surge's (0.40 against 0.38; Vital's 0.22 is wider still) and its mono sum stays within 0.7 dB where theirs lose 2.4 and 3.1 dB. The chord synth's own default patch (spread 0.4, a sub in): 0.813 at width 0.5, 0.601 at 1, mono sum -0.14 / -0.30 dB; on the wavetable (no supersaw) the voices alone give 0.913. At full width the sub sits 97.5 dB down in the side, the saws 3.6 dB (tests/gaps.rs). Width 0 is bit for bit the old sound (a lead, a chord and a six-part song with width sent at 0 hash the same), so are parts that never touch it, and a part that turns it back to 0 takes the mono path again once its notes have rung out. Default: 0, so every saved song and every new part sounds as before; theirs default to full width (see the question for Param in the build status).
+
+### 2. The plate's early density
+
+What worked for the hall, outside the tank so the tail is untouched (the first try added taps inside the tank and lost smoothness): an onset read off the diffused input, smeared by two allpasses of its own, high-passed at 500 Hz (keeps the low band's decay honest), forty taps a side at their own times over 150 ms, 12 dB down by the end, at 0.7 of the tank. Output trimmed 2.1 dB so the plate sits where it was on our snare and chord (-0.49 / +0.49 LU).
+
+| | Dragonfly Plate | ours before | ours after |
+|---|---|---|---|
+| first sound | 56.0 ms | 16.9 ms | 8.7 ms |
+| echo density, first 50 ms / 50 to 100 ms | 0.87 / 0.92 | 0.51 / 0.54 | 0.84 / 0.96 |
+| density per 50 ms over the first 400 ms | 0.87 0.93 0.88 0.90 0.94 0.92 0.91 0.83 | 0.50 0.54 0.71 0.87 0.86 0.89 0.95 0.95 | 0.83 0.96 0.90 0.90 0.87 0.88 0.94 0.95 |
+| density reaches 0.9 / 0.95 | 35 / 70 ms | 190 / 330 ms | 35 / 40 ms |
+| smoothness from 0.3 s / 0.5 s / 0.2 to 0.7 s | 0.479 / 0.507 / 0.535 | 0.457 / 0.453 / 0.542 | 0.458 / 0.454 / 0.547 |
+| early against late energy, C50 / C80 | -4.0 / -1.3 dB | -7.6 / -4.6 dB | -4.0 / -0.3 dB |
+| RT60 125 / 1k / 8k (s) | 2.99 / 2.38 / 1.88 | 2.53 / 2.52 / 1.61 | 2.31 / 2.48 / 1.53 |
+| left/right in the tail | 0.165 | 0.000 | 0.002 |
+
+Dense from its first 50 ms like Dragonfly's, as smooth as before on every window, the late decay the tank's own (-15 to -35 dB: 2.61 / 2.46 s at 250 Hz / 1 kHz, before 2.61 / 2.47). T20 reads a little shorter (-9% at 125 Hz, -2% at 1 kHz) because the onset's energy tilts the top of the decay curve; the onset is a little more front-loaded than Dragonfly's (C80 -0.3 against -1.3 dB). Plate is not the default reverb, so no default sound moved.
+
+### 3. The ladder at the top of the keyboard
+
+Second-order ADAA (Bilbao, Esqueda, Parker and Valimaki, IEEE Signal Processing Letters 2017) on the same residual the first-order one took (what the clip takes from a straight line), with the paper's fallbacks; slow steps take the residual at the triangle's centre (within -110 dB). On its own it is 3 to 4 dB cleaner; at twice the voice's rate (192 kHz, the filter inside the engine's own half-band pair, every circuit so the delay is the same whichever is picked) it is 12 to 18 dB cleaner. That costs about two thirds more per voice, so the lead always runs at twice the rate, and a chord voice from note 79 up (chosen as each note starts, so nothing jumps); under 79 second-order ADAA alone keeps it under -77 dB. Through the whole engine, the chord synth's plain saw with the filter open (the shootout's test), notes 84 / 96 / 102 / 108:
+
+| | off the harmonics (dB) |
+|---|---|
+| Surge XT | -85.3 / -82.7 / -84.7 / -77.3 |
+| Vitalium | -88.6 / -91.0 / -89.0 / -88.8 |
+| ours before | -74.1 / -70.0 / -67.9 / -67.2 |
+| ours after | -86.4 / -87.6 / -87.0 / -78.9 |
+
+The filter alone (tests/gaps.rs): twice the rate -86.8 / -87.9 / -85.0 / -78.9, second-order ADAA alone -77.3 / -73.6 / -71.8 / -71.0; 10 dB hotter at note 108 -53.1 before, -64.3 after. The lead's wavetable saw at note 108: -84.8 before, -87.8 after. The resonant peak over the bass at 1 kHz, resonance 0.3 / 0.6 / 0.9: -2.60 / +6.30 / +21.02 dB before, -2.60 / +6.29 / +20.98 after (twice the rate), -2.60 / +6.33 / +21.19 (second-order ADAA alone); where the peak sits at resonance 0.9 with the cutoff at 500 Hz, 2, 6 and 12 kHz moved 0.0 cents (the tuning and the resonance range are untouched, for Param's ear). The lead's filter adds 2.5 samples at 96 kHz; its pad was one sample at 48 kHz, so it now sits a quarter of a sample (5 microseconds) behind the drums. The bass and the part filter are unchanged.
+
+### CPU
+
+CPU_ROUND2
+
+### Clips
+
+`/sound/compare`: the 13 "after" sides these move were re-rendered (both supersaws now with ours at full width as theirs are, the three filter sweeps, the fm piano and bell, the pad, both halls through the new chords, both plates, the tape); the plate on a snare has an "after" now. 5.1 MB in all. `/sound`: the 12 clips these move (lead, pad, echo, pluck, mallet, keys, table, feedback, phase, plate, the song twice) and a new after-only clip, "width". (The drum clips on `/sound` were already behind the engine before this round; left as they were.)
+
 ## Left over, with numbers
 
-- **Stereo voices.** Their supersaws are wide (left/right 0.22 Vital, 0.36 Surge), ours is mono (1.00). It needs the synth to hand the strip two channels (eq, drive and crush on both), the biggest of these to build.
+- **Stereo voices:** done in round 2 (width). Open: the wavetable, feedback and phase oscillators have no unison, so on the lead width does nothing for them (on the chord synth the voices still spread); the bass's width is left out on purpose.
 - **Resonance range and the ladder's tuning.** Surge's ladder rings to +40 dB where ours stops at +14, ms2 reaches only +5.7 dB at 90%, our ladder's peak sits about a semitone low. Each changes saved songs' sound, so it wants Param's ear first.
-- **The plate's density** (0.51 against 0.87 in the first 50 ms), **tape hysteresis**, **fm ratios off the whole numbers**, **a position knob on the chord synth's table**.
-- **Aliasing through prd** is still 10 to 20 dB behind theirs at the top of the keyboard (-67 against -77 to -89 dB): a second-order ADAA or running the ladder's clip at 4x would be the next step.
+- **The plate's density:** done in round 2. **Tape hysteresis**, **fm ratios off the whole numbers**, **a position knob on the chord synth's table**: open.
+- **Aliasing through prd:** round 2 brought it to -79 to -88 dB (Surge -77 to -85, Vital -89 to -91). Vital is still ahead at note 108 (-88.8 against -78.9): four times the rate would be the next step, at about twice the cost again.

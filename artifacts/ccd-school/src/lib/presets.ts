@@ -30,14 +30,14 @@ const CHORDS: Preset[] = [
   chords("warm", {}),
   chords("stab", { voicing: 0.3, spread: 0.3, attack: 0, release: 0.2, cutoff: 0.7, res: 0.2, env: 0.7, drift: 0.2 }),
   chords("organ", { voicing: 1, spread: 0.1, attack: 0.02, release: 0.15, cutoff: 0.85, res: 0.05, env: 0.1, drift: 0.1 }),
-  chords("glass", { voicing: 0.8, spread: 0.7, attack: 0.2, release: 0.8, cutoff: 0.9, res: 0.1, env: 0.2, drift: 0.4 }),
+  chords("glass", { voicing: 0.8, spread: 0.7, attack: 0.2, release: 0.8, cutoff: 0.9, res: 0.1, env: 0.2, drift: 0.4, width: 0.6 }),
 ];
 
 const LEAD: Preset[] = [
   lead("saw", {}),
   lead("square", { cutoff: 0.55, res: 0.2, attack: 0.05, release: 0.3, glide: 0.1, wave: 1, detune: 0.1, env: 0.3 }),
   lead("soft", { cutoff: 0.4, res: 0.15, attack: 0.3, release: 0.6, glide: 0.3, wave: 0, detune: 0.4, env: 0.15 }),
-  lead("hoover", { cutoff: 0.7, res: 0.4, attack: 0.1, release: 0.5, glide: 0.5, wave: 0.2, detune: 1, env: 0.5 }),
+  lead("hoover", { cutoff: 0.7, res: 0.4, attack: 0.1, release: 0.5, glide: 0.5, wave: 0.2, detune: 1, env: 0.5, width: 0.75 }),
 ];
 
 const FX: Preset[] = [
