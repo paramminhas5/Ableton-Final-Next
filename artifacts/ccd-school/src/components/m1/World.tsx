@@ -67,7 +67,7 @@ export function World({ world }: { world: WorldId }) {
           <Screen>
             {next && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={missionImage(next.slug, world)} alt="" className="wv-img" style={{ filter: `url(#duo-${world})` }} />
+              <img src={missionImage(next.slug, world, "md")} alt="" decoding="async" className="wv-img" style={{ filter: `url(#duo-${world})` }} />
             )}
             <div className="m1-ss">{ABOUT[world].then}</div>
             <p className="wv-about">{ABOUT[world].line}</p>

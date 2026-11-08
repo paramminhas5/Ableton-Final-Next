@@ -6,7 +6,8 @@
  * 2026) are in git history; every one of their lessons is placed in a path here.
  */
 import { CURRICULUM, partOf, type CurItem } from "./curriculum";
-import { MISSIONS } from "./missions";
+// Which lessons exist, from the small lesson index (src/lib/lessonInfo.ts), not every lesson's content.
+import LESSONS from "./lessonIndex.gen.json";
 
 export type LearningPath = {
   slug: string;
@@ -23,7 +24,7 @@ export type LearningPath = {
   items: CurItem[];
 };
 
-const EXISTS = new Set(MISSIONS.map(m => m.slug));
+const EXISTS = new Set((LESSONS as { slug: string }[]).map(m => m.slug));
 const COLOR = { fundamentals: "bg-acid", producer: "bg-sun", dj: "bg-ink" } as const;
 
 export const PATHS: LearningPath[] = CURRICULUM.map(p => {

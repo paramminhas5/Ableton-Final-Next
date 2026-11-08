@@ -50,7 +50,8 @@ describe("placement: the song still gets the skipped lessons' parts", () => {
   beforeEach(() => { vi.resetModules(); stubBrowser(); });
 
   it("producer level 1 gives a kick, a lead, hats and a clap", async () => {
-    const { placeIn, buildPlacedSong } = await import("../src/lib/placement");
+    const { placeIn } = await import("../src/lib/placement");
+    const { buildPlacedSong } = await import("../src/lib/placementSong");
     const r = placeIn("producer", { ...strong, matchStars: 0 });
     expect(r.slug).toBe("first-bass");
     const t = buildPlacedSong(r.skipped, "producer");
@@ -63,7 +64,8 @@ describe("placement: the song still gets the skipped lessons' parts", () => {
   });
 
   it("producer level 3 adds the bass and chords too, and placing twice changes nothing", async () => {
-    const { placeIn, buildPlacedSong } = await import("../src/lib/placement");
+    const { placeIn } = await import("../src/lib/placement");
+    const { buildPlacedSong } = await import("../src/lib/placementSong");
     const t2 = await import("../src/lib/track2");
     const r = placeIn("producer", strong);
     const t = buildPlacedSong(r.skipped, "producer");
@@ -74,12 +76,13 @@ describe("placement: the song still gets the skipped lessons' parts", () => {
   });
 
   it("basics and dj build a song too", async () => {
-    const { placeIn, buildPlacedSong } = await import("../src/lib/placement");
+    const { placeIn } = await import("../src/lib/placement");
+    const { buildPlacedSong } = await import("../src/lib/placementSong");
     const b = buildPlacedSong(placeIn("fundamentals", strong).skipped, "fundamentals");
     expect(b.layers.find(l => l.type === "drums")?.events.length).toBeGreaterThan(0);
     expect(b.layers.find(l => l.type === "lead")?.events.length).toBeGreaterThan(0);
     vi.resetModules(); stubBrowser();
-    const p2 = await import("../src/lib/placement");
+    const p2 = { ...(await import("../src/lib/placement")), ...(await import("../src/lib/placementSong")) };
     const d = p2.buildPlacedSong(p2.placeIn("dj", strong).skipped, "dj");
     expect(d.layers.some(l => l.events.length)).toBe(true);
   });

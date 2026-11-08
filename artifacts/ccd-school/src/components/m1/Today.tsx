@@ -14,7 +14,7 @@ import { readTrackV2 } from "@/lib/track2";
 import { audition, playTrack, stopTrack } from "@/lib/track-engine";
 import { journey, nextStep, worldSteps, worldDone, missionAny, missionImage, missionTools, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk, Switch } from "./controls";
-import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
+import { PALETTE_OPEN_EVENT } from "@/lib/palette";
 import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 
 const WORLD_KEY = "ccd.world";
@@ -195,7 +195,7 @@ export function Today() {
       {cur && mission && (
         <Link href={`/learn/${cur.slug}`} className="m1-m is-wide td-upnext" key={`c-${cur.slug}`} style={{ marginTop: 14, height: 108, justifyContent: "flex-start", gap: 14, padding: "0 12px" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={missionImage(cur.slug, world)} alt="" className="td-pop" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
+          <img src={missionImage(cur.slug, world, "sm")} alt="" width={72} height={72} decoding="async" className="td-pop" style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flex: "none", filter: `url(#duo-${world})`, boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2), 0 1px 0 var(--hi)" }} />
           <div style={{ flex: 1, textAlign: "left", minWidth: 0 }}>
             <div className="m1-eng" style={{ fontSize: 11, fontWeight: 500 }}>{isDone ? "go again" : cur.slug === next?.slug ? "up next" : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
             <div className="m1-t22" style={{ marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "lowercase" }}>{mission.title.toLowerCase()}</div>

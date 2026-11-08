@@ -37,7 +37,8 @@ type Stem = "drums" | "hats" | "bass";
 const STEMS: Stem[] = ["drums", "hats", "bass"];
 const LOOP_LENS = [1, 2, 4, 8];
 /** Set when the learner skipped the mixer step on this page: the lesson then has no move to mark on the song. */
-export const MIX_SKIP = "ccd.mixskip";
+import { MIX_SKIP } from "./stepKeys";
+export { MIX_SKIP };
 
 const PHRASES_A = [{ beat: 0, name: "phrase 1" }, { beat: 32, name: "phrase 2" }];
 const sectionAt = (b: number) => (b < 16 ? "intro" : b < 48 ? "main" : b < 56 ? "break" : "drop");

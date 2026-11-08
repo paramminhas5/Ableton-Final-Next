@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { useState, useEffect, useRef, createContext, useContext } from "react";
-import { CommandPalette } from "@/components/CommandPalette";
+import { LazyPalette } from "@/components/LazyPalette";
 import { TransportProvider } from "@/components/TransportProvider";
 import { MasterTransportBar } from "@/components/MasterTransportBar";
 import { LearnModeProvider } from "@/lib/mode";
@@ -155,7 +155,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   <InstallPromptBanner />
                   {/* Desktop UI */}
                   <MasterTransportBar />
-                  <CommandPalette />
+                  <LazyPalette />
                   {/* Easter eggs: Konami code, idle cat, secret clicks */}
                   {/* Easter eggs retired: nothing appears unless you touch something */}
                 </AnalyticsProvider>

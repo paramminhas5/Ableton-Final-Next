@@ -41,7 +41,7 @@ for (const theme of themes) {
     for (const v of r.violations) {
       const e = byRule.get(v.id) ?? { n: 0, impact: v.impact, ex: [] };
       e.n += v.nodes.length;
-      if (e.ex.length < 3) e.ex.push(`${pg.name}: ${v.nodes[0].target.join(" ")} ${v.nodes[0].failureSummary?.split("\n")[1]?.trim() ?? ""}`.slice(0, 220));
+      if (e.ex.length < 8) e.ex.push(`${pg.name}: ${v.nodes[0].target.join(" ")} ${v.nodes[0].failureSummary?.split("\n")[1]?.trim() ?? ""}`.slice(0, 220));
       byRule.set(v.id, e);
     }
     await ctx.close();

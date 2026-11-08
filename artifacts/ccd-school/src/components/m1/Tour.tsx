@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { GoPill } from "./controls";
 import { TOUR_KEY } from "./Welcome";
-import { missionBySlug } from "@/content/missions";
+import { missionAny } from "@/lib/worldOrder";
 
 const STOPS: { sel: string; title: string; line: string }[] = [
   { sel: ".td-lessoncard, .td-upnext", title: "your next lesson", line: "always here. press play on it to start." },
@@ -64,7 +64,7 @@ export function DashTour() {
     let first = "";
     try { first = sessionStorage.getItem(TOUR_KEY) ?? ""; sessionStorage.removeItem(TOUR_KEY); } catch { /* ignore */ }
     // The tour closes, then lesson one opens on its own screen.
-    setLeaving(first ? (missionBySlug(first)?.title ?? "lesson one").toLowerCase() : "");
+    setLeaving(first ? (missionAny(first)?.title ?? "lesson one").toLowerCase() : "");
     window.setTimeout(() => router.replace(first ? `/learn/${first}` : "/dashboard"), 1100);
   };
   if (leaving !== null) return <div className="tr-go" role="status"><span>lesson one</span><b>{leaving}</b></div>;

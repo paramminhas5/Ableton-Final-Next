@@ -16,7 +16,7 @@ import { useProgress } from "@/lib/progress";
 import { copyStars } from "@/lib/copyEar";
 import { matchKnob, matchSong, type MatchQuestion } from "@/lib/gym/match";
 import { matchStars, notch, passes, which } from "@/lib/matchScore";
-import { buildPlacedSong, LEVEL_SAYS, medianOffset, placeIn, readPlacement, savePlacement, type PlaceResult, type PlaceScores } from "@/lib/placement";
+import { LEVEL_SAYS, medianOffset, placeIn, readPlacement, savePlacement, type PlaceResult, type PlaceScores } from "@/lib/placement";
 import { learn } from "@/lib/learnEvents";
 import { emptyTrackV2, newLayerV2, readTrackV2, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { nameSongIfNew, newSong } from "@/lib/songs";
@@ -51,7 +51,7 @@ function Top({ world, at, onClose }: { world: WorldId; at: number; onClose?: () 
       <div className="fl-row">
         {onClose ? <button type="button" className="fl-back" onClick={onClose} aria-label="Close find your level"><Icon name="close" /></button>
           : <Link href="/learn" className="fl-back" aria-label="Back to all lessons"><Icon name="back" /></Link>}
-        <div className="fl-crumb"><span>find your level · {WORLD_LABEL[world]}</span><b>{st ? st.name : at === 0 ? "already make music?" : "your level"}</b></div>
+        <div className="fl-crumb"><span>find your level · {WORLD_LABEL[world]}</span><h1>{st ? st.name : at === 0 ? "already make music?" : "your level"}</h1></div>
         {st ? <div className="fl-count" aria-label={`Part ${at} of 4`}>{at}<i>/</i>4</div> : null}
       </div>
       <div className="ls-seg" style={{ ["--c" as string]: WORLD_LED[world] } as CSSProperties} aria-hidden>
@@ -363,12 +363,13 @@ export function Placement({ world: w0, onDone, onClose, startNow }: { world?: Wo
   const begin = () => { scores.current = { timingMs: null, copyStars: 0, ears: 0, earsTotal: 4, matchStars: 0 }; t0.current = Date.now(); setStage("time"); };
   const toResult = () => setResult(placeIn(world, scores.current));
   useEffect(() => { if (result) setStage("result"); }, [result]);
-  const finish = (r: PlaceResult, chose: "placed" | "top") => {
+  const finish = async (r: PlaceResult, chose: "placed" | "top") => {
     learn("placement_result", { world: r.world, level: r.level, slug: chose === "placed" ? r.slug : steps0(r.world), skipped: chose === "placed" ? r.skipped.length : 0, chose, timingMs: r.scores.timingMs, copyStars: r.scores.copyStars, ears: r.scores.ears, matchStars: r.scores.matchStars, seconds: Math.round((Date.now() - t0.current) / 1000), retake: !!last });
     if (chose === "placed" && r.skipped.length) {
       // A song with music that no lesson made (the studio's starter loop) stays as it is: the placed parts go in a new song.
       const t = readTrackV2();
       if (t.layers.some(l => l.events.length) && !t.added.length) newSong();
+      const { buildPlacedSong } = await import("@/lib/placementSong");
       buildPlacedSong(r.skipped, r.world);
       nameSongIfNew();
       window.dispatchEvent(new Event("ccd:song"));
@@ -412,7 +413,7 @@ export function Placement({ world: w0, onDone, onClose, startNow }: { world?: Wo
         {stage === "copy" && <CopyStation onDone={st => { scores.current.copyStars = st; setStage("ears"); }} />}
         {stage === "ears" && <EarsStation onDone={(r, n) => { scores.current.ears = r; scores.current.earsTotal = n; setStage("match"); }} />}
         {stage === "match" && <MatchStation onDone={st => { scores.current.matchStars = st; toResult(); }} />}
-        {stage === "result" && result && <Result r={result} onPlace={() => finish(result, "placed")} onTop={() => finish(result, "top")} again={() => { setResult(null); begin(); }} />}
+        {stage === "result" && result && <Result r={result} onPlace={() => void finish(result, "placed")} onTop={() => void finish(result, "top")} again={() => { setResult(null); begin(); }} />}
       </div>
     </div>
   );

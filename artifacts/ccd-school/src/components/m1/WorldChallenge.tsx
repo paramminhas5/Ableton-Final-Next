@@ -28,7 +28,7 @@ function Top({ world, title, at, of, sub }: { world: WorldId; title: string; at:
     <header className="fl-top">
       <div className="fl-row">
         <Link href={`/world/${world}`} className="fl-back" aria-label={`Back to ${WORLD_LABEL[world]}`}><Icon name="back" /></Link>
-        <div className="fl-crumb"><span>{WORLD_LABEL[world]} · end of world challenge</span><b>{title}</b></div>
+        <div className="fl-crumb"><span>{WORLD_LABEL[world]} · end of world challenge</span><h1>{title}</h1></div>
         {at > 0 ? <div className="fl-count" aria-label={`Round ${at} of ${of}`}>{at}<i>/</i>{of}</div> : null}
       </div>
       <div className="ls-seg" style={{ ["--c" as string]: WORLD_LED[world] } as CSSProperties} aria-hidden>

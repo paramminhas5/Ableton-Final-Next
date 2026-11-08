@@ -2,9 +2,7 @@
 import { Icon } from "@/components/m1/controls";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { MISSIONS } from "@/content/missions";
-import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
-import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
+import LESSONS from "@/content/lessonIndex.gen.json";
 import { DEVICES } from "@/content/devices";
 import { PATHS } from "@/content/paths";
 
@@ -17,7 +15,8 @@ type Item = {
   go: () => void;
 };
 
-export const PALETTE_OPEN_EVENT = "command-palette:open";
+import { PALETTE_OPEN_EVENT } from "@/lib/palette";
+export { PALETTE_OPEN_EVENT };
 
 // Tag style map
 const TAG_STYLES: Record<Item["tag"], string> = {
@@ -27,8 +26,8 @@ const TAG_STYLES: Record<Item["tag"], string> = {
   PAGE:    "bg-bone text-ink border border-ink/20",
 };
 
-export function CommandPalette() {
-  const [open, setOpen] = useState(false);
+export function CommandPalette({ startOpen = false }: { startOpen?: boolean } = {}) {
+  const [open, setOpen] = useState(startOpen);
   const [q, setQ] = useState("");
   const [activeIdx, setActiveIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -73,7 +72,7 @@ export function CommandPalette() {
     const out: Item[] = [];
 
     // All missions — foundations + DJ + producer
-    const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
+    const ALL_MISSIONS = LESSONS as { slug: string; title: string; tagline: string; world: string }[];
     const WORLD_ICON: Record<string, string> = { dj: "dj" };
     ALL_MISSIONS.forEach(m => {
       out.push({

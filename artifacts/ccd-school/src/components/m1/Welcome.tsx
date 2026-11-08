@@ -12,10 +12,9 @@ import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { usePrefs, type Voice } from "@/lib/prefs";
 import dynamic from "next/dynamic";
-import { missionBySlug } from "@/content/missions";
 import { emptyTrackV2, newLayerV2, toV1View, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { getCtx } from "@/lib/audio";
-import { type WorldId } from "@/lib/worldOrder";
+import type { WorldId } from "@/lib/worldOrder";
 import { Fader, GoPill, Icon, Knob, CAP, Pad, Screen } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
 import { useEngineTrack } from "./useEngineTrack";
@@ -23,10 +22,10 @@ import { WaveShape } from "./LessonVisuals";
 import "./lesson.css";
 
 type Know = "new" | "some" | "lots";
-const MAKE: { id: WorldId; name: string; line: string; first: string }[] = [
-  { id: "fundamentals", name: "start from the basics", line: "a beat, notes, chords and your ears. the best place to begin", first: "tempo-bpm" },
-  { id: "producer", name: "make my own tracks", line: "build a song from a kick drum up, one part per lesson", first: "your-kick" },
-  { id: "dj", name: "mix tracks as a dj", line: "beatmatch, blend, read a room. later, your own tracks", first: "what-is-djing" },
+const MAKE: { id: WorldId; name: string; line: string; first: string; firstTitle: string }[] = [
+  { id: "fundamentals", name: "start from the basics", line: "a beat, notes, chords and your ears. the best place to begin", first: "tempo-bpm", firstTitle: "pulse and tempo" },
+  { id: "producer", name: "make my own tracks", line: "build a song from a kick drum up, one part per lesson", first: "your-kick", firstTitle: "your kick" },
+  { id: "dj", name: "mix tracks as a dj", line: "beatmatch, blend, read a room. later, your own tracks", first: "what-is-djing", firstTitle: "what is djing?" },
 ];
 const KNOW: { id: Know; name: string; line: string }[] = [
   { id: "new", name: "completely new", line: "never made or mixed music" },
@@ -133,6 +132,17 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
 
   const pads = useRef(0);
   const [lit, setLit] = useState(false);
+  // The engine's files download while the first screen is read, so the first touch sounds at once.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      for (const href of ["/engine/ccd_engine.wasm", "/engine/ccd-worklet.js"]) {
+        if (document.querySelector(`link[href="${href}"]`)) continue;
+        const l = document.createElement("link"); l.rel = "prefetch"; l.href = href; document.head.appendChild(l);
+      }
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, []);
+  const kick = () => void ready().then(() => { engine.noteOn(0, K, 0.95); window.setTimeout(() => engine.noteOff(0, K), 120); });
   const tap = () => { void ready().then(() => { engine.noteOn(0, K, 0.95); window.setTimeout(() => engine.noteOff(0, K), 120); }); pads.current++; setLit(true); window.setTimeout(() => setLit(false), 140); };
 
   const go = () => {
@@ -173,7 +183,8 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
             <div className="wl-tag">ccd school · by cats can dance</div>
             <h1 className="wl-hero">make music.<br />learn by making it.</h1>
             <p className="wl-lead">from your first kick drum to mixing your own tracks at a ccd night. every lesson ends with something new in your song. let us show you how it works, it takes a minute and you can play along.</p>
-            <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }}>show me <Icon name="play" small /></GoPill></div>
+            {/* The first touch is already a sound: a kick, then the tour. */}
+            <div className="wl-go"><GoPill onClick={() => { kick(); next(); }} style={{ height: 72, width: "100%" }}>show me <Icon name="play" small /></GoPill></div>
             <a className="ls-skip" href="/dashboard">i&apos;ve been here before</a>
           </div>
         )}
@@ -265,7 +276,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
             <Choice items={WAYS} value={prefs.voice} onPick={id => setPrefs({ voice: id })} />
             <div className="wl-go"><GoPill onClick={go} style={{ height: 72, width: "100%" }}>take me in <Icon name="play" small /></GoPill></div>
             {know === "lots" && <button type="button" className="ls-skip" onClick={() => setPlacement(true)}>find my level again</button>}
-            <div className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>a quick look round your dashboard, then your first lesson: {(missionBySlug(make.first)?.title ?? "").toLowerCase()}</div>
+            <div className="m1-t11" style={{ textAlign: "center", marginTop: 8 }}>a quick look round your dashboard, then your first lesson: {make.firstTitle}</div>
           </Part>
         )}
       </div>

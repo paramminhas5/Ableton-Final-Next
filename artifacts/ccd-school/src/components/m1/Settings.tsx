@@ -1,6 +1,7 @@
 "use client";
 /** Settings: interface sounds, learning mode, and a way back to the old build. Voices live in each lesson step now. */
-import { useEffect, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { applyContrast, readContrast, type Contrast } from "@/lib/contrast";
 import { GoPill, Silk, Switch } from "./controls";
 import { ListRow, RefPage } from "./parts";
 import { useProgress } from "@/lib/progress";
@@ -37,6 +38,10 @@ export function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [contrast, setContrast] = useState<Contrast>("system");
+  useEffect(() => setContrast(readContrast()), []);
+  const pickContrast = (c: Contrast) => { setContrast(c); applyContrast(c); };
+
   const pickLevel = (level: Level) => {
     setPrefs({ level });
     if (progress.difficulty !== difficultyFromLevel(level)) setDifficulty(difficultyFromLevel(level));
@@ -51,6 +56,10 @@ export function Settings() {
       <ListRow led="var(--led-mint)" title="learning mode" sub="journey takes lessons in order. see all opens every lesson at once."
         right={<div style={{ width: 124 }}><Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
           options={[{ id: "flow", label: "journey" }, { id: "free", label: "see all" }]} /></div>} />
+
+      <ListRow led={contrast === "high" ? "var(--led-white)" : undefined} title="contrast" sub="high makes text darker and puts a solid edge on every key, like live's high contrast theme. device follows your phone's setting."
+        right={<div style={{ width: 168 }}><Switch label="Contrast" value={contrast} onChange={id => pickContrast(id as Contrast)}
+          options={[{ id: "system", label: "device" }, { id: "normal", label: "normal" }, { id: "high", label: "high" }]} /></div>} />
 
       <Silk label="elsewhere" />
       <ListRow title="old version" sub="the build from before the redesign, as it was." href={OLD_UI_URL}

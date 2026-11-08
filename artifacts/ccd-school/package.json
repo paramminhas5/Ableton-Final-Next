@@ -18,7 +18,7 @@
     "engine:types": "cd ../../engine && cargo run --release --bin gen-types -- ../artifacts/ccd-school/src/engine/params.gen.ts",
     "engine:wasm": "../../engine-wasm/build.sh",
     "engine": "npm run engine:types && npm run engine:wasm",
-    "lessons": "tsx scripts/compile-lessons.mjs && tsx scripts/gen-curriculum.mjs",
+    "lessons": "tsx scripts/compile-lessons.mjs && tsx scripts/gen-curriculum.mjs && tsx scripts/gen-lesson-index.mjs",
     "prebuild": "npm run lessons"
   },
   "dependencies": {

@@ -1,21 +1,23 @@
 "use client";
 /**
- * The lesson route. Flow mode and free mode both use the Model 1 lesson player; flow
- * mode has hearts, free mode has none. The last screen has its own next key, so there
- * is no interstitial: you go on when you choose to.
+ * A lesson. The server works out the lesson (app/learn/[slug]/page.tsx) and hands it here, so the browser gets
+ * one lesson's content, not every lesson's. Lessons written as files play in FileLesson; the old player (with
+ * the 47 sims) loads only for a review.
  */
-import { Suspense, useMemo } from "react";
-import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
+import { Component, Suspense, type ErrorInfo, type ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { M1Lesson } from "@/components/m1/Lesson";
-import { missionBySlug, nextMission } from "@/content/missions";
+import type { LessonScreen, Mission } from "@/content/types";
 import { getMissionContext } from "@/lib/missionContext";
-import { nextAfter, worldOf } from "@/lib/worldOrder";
 import { useAuth } from "@/lib/auth";
 import { isLocked } from "@/lib/gating";
 import { useGatingMode } from "@/components/ClientProviders";
+import { FileLesson, type Alts } from "@/components/m1/FileLesson";
 import { GoPill, Icon, Key, Screen } from "@/components/m1/controls";
+import { Bottom, Meta } from "@/components/m1/LessonParts";
 import { CAT_SRC } from "@/components/m1/shell";
+
+const M1Lesson = dynamic(() => import("@/components/m1/Lesson").then(m => m.M1Lesson), { ssr: false, loading: () => <div className="m1-page" style={{ minHeight: "100dvh" }} /> });
 
 function Message({ title, line, back, go }: { title: string; line: string; back: string; go?: { label: string; href: string } }) {
   return (
@@ -36,20 +38,28 @@ function Message({ title, line, back, go }: { title: string; line: string; back:
   );
 }
 
-function Inner({ slug }: { slug: string }) {
+class Boundary extends Component<{ children: ReactNode; slug: string }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  componentDidCatch(error: Error, info: ErrorInfo) { console.error("[lesson]", this.props.slug, error, info); }
+  render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div className="ls">
+        <Screen><Meta left="something broke" /><div className="ls-title">this lesson hit a snag. it has been logged.</div><p className="ls-sub">{this.state.error.message}</p></Screen>
+        <Bottom left={{ label: "lessons", icon: "back", href: "/learn" }} go={{ label: "try again", onClick: () => this.setState({ error: null }) }} />
+      </div>
+    );
+  }
+}
+
+type Props = { slug: string; mission: Mission; alts: Alts | null; next: { slug: string; title: string } | null };
+
+function Inner({ slug, mission, alts, next }: Props) {
   const params = useSearchParams();
   const isReview = params.get("review") === "1";
   const { plan } = useAuth();
   const gatingMode = useGatingMode();
-
-  const base = missionBySlug(slug);
-  // One voice for now (process.md). Questions run easy to hard, so there is no level either.
-  const mission = useMemo(() => {
-    const f = fileLesson(slug);
-    return f ? lessonToMission(f, { voice: "mentor", level: "standard" }) : base;
-  }, [slug, base]);
-  if (!mission) return <Message title="no lesson here" line={`we couldn't find a lesson called ${slug}.`} back="/learn" go={{ label: "all lessons", href: "/learn" }} />;
-
   const ctx = getMissionContext(slug);
   if (isLocked(mission, plan, gatingMode)) {
     return (
@@ -58,32 +68,24 @@ function Inner({ slug }: { slug: string }) {
       </div>
     );
   }
-
-  // Next follows the song: after a song lesson, the next song lesson; after a deeper lesson or a
-  // bonus round, the song lesson after the one it hangs off (design/curriculum.md).
-  const after = nextAfter(slug);
-  const next = (after ? missionBySlug(after) : undefined) ?? (worldOf(slug) ? undefined : nextMission(slug));
+  if (mission.fromFile && !isReview) {
+    return <Boundary slug={slug}><FileLesson key={slug} mission={mission} alts={alts} nextSlug={next?.slug} nextTitle={next?.title} onComplete={() => { /* the last screen carries its own next key */ }} /></Boundary>;
+  }
   const spine = ctx.path?.songSlugs ?? [];
   const missionIndex = spine.includes(slug) ? spine.indexOf(slug) + 1 : ctx.path ? ctx.path.missionSlugs.indexOf(slug) + 1 : mission.number;
   const missionTotal = spine.includes(slug) ? spine.length : ctx.path?.missionSlugs.length ?? 1;
   return (
-    <M1Lesson
-      key={slug}
-      mission={mission}
-      nextSlug={next?.slug}
-      nextTitle={next?.title}
-      isReview={isReview}
-      missionIndex={missionIndex}
-      missionTotal={missionTotal}
-      onComplete={() => { /* the last screen carries its own next key */ }}
-    />
+    <M1Lesson key={slug} mission={mission} nextSlug={next?.slug} nextTitle={next?.title} isReview={isReview} missionIndex={missionIndex} missionTotal={missionTotal}
+      onComplete={() => { /* the last screen carries its own next key */ }} />
   );
 }
 
-export function LessonPageClient({ slug }: { slug: string }) {
+export function LessonPageClient(props: Props) {
   return (
     <Suspense fallback={<div className="m1-page" style={{ minHeight: "100dvh" }} />}>
-      <Inner slug={slug} />
+      <Inner {...props} />
     </Suspense>
   );
 }
+
+export type { LessonScreen };

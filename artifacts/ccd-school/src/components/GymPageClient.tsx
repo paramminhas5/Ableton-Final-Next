@@ -327,6 +327,7 @@ export function GymPageClient() {
       ...GYM_DRILLS.map(d => open(d)
         ? { id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) }
         : { id: d, label: `${NAME[d]}: opens after ${TAUGHT_BY[d].title}`, pic: d, c: "#8A8A8E", tag: "lesson first", href: `/learn/${TAUGHT_BY[d].first}` }),
+      { id: "remakes", label: "remakes: famous sounds", pic: "match", c: "#5CC8FF", tag: "new", href: "/gym/remakes" },
       { id: "review", label: "review", pic: "review", c: "#FFB35C", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },

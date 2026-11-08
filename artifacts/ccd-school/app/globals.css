@@ -73,7 +73,7 @@
   --t1: #F7F6F2; --t2: #E7E6E1; --hi: rgba(255,255,255,1); --lo: rgba(0,0,0,.06);
   --s1: #CFCDC6; --s2: #BCBAB3; --shA: rgba(55,45,35,.24); --shB: rgba(55,45,35,.16);
   --c0: #ECEAE5; --c1: #FFFFFF; --cs1: #D2D0C9; --cs2: #BFBDB6;
-  --ink: #18181A; --sub: #5C5A54; --print: #6F6D67;
+  --ink: #18181A; --sub: #4F4D48; --print: #6F6D67;
   --well: #C7C6C0; --k1: #F8F7F3; --k2: #D3D1CB; --ledoff: #BDBBB4;
   --padt: #E9E8E3; --pads: #C4C2BB; --slot: #232325; --tick: rgba(0,0,0,.32);
   --recess: #BDBCB6; --tag: #A9A7A1; --line: rgba(0,0,0,.09);
@@ -570,3 +570,22 @@ body[data-focus="1"] nav[aria-label="Modes"], body[data-focus="1"] header[role="
   .m1-modebar{left:calc(50% - (min(1320px, 100vw - 48px) - 56px) / 6)!important;right:calc(50% - (min(1320px, 100vw - 48px) - 56px) / 6)!important}
 }
 @media (min-width:900px){.m1-page.pf{max-width:1320px;padding-bottom:130px}.pf-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:28px;align-items:start}}
+
+/* ═══ HIGH CONTRAST (src/lib/contrast.ts; Live 12 has one) ═══════════════ */
+html[data-contrast="high"].light, html[data-contrast="high"]:not(.dark) {
+  --deck: #E6E5E0; --deck2: #DCDBD5; --t1: #FFFFFF; --t2: #F3F2EE; --recess: #CFCEC8;
+  --ink: #000000; --sub: #1D1D1D; --print: #262626; --line: rgba(0,0,0,.55); --tick: rgba(0,0,0,.75);
+  --mint: #00684B; --cobalt: #1E36A6; --go: #8A0C4B; --lilac: #4B26B8; --red: #9B0F20;
+  --grain: none;
+}
+html[data-contrast="high"].dark {
+  --deck: #000000; --deck2: #000000; --t1: #222326; --t2: #17181A; --recess: #000000;
+  --ink: #FFFFFF; --sub: #EDEDED; --print: #DCDCDC; --line: rgba(255,255,255,.6); --tick: rgba(255,255,255,.8);
+  --grain: none;
+}
+html[data-contrast="high"] { --disp-ink: #FFFFFF; --disp-sub: #DADADF; }
+html[data-contrast="high"] :is(.m1-m, .ls-pad, .ls-chip, .ls-panel, .fl-opt, .fl-back, .fl-songplay, .pl-rows li, .wc-card, .wc-rounds li, .pl-tap, .wl-ans) { outline: 1.5px solid var(--ink); outline-offset: -1.5px; }
+html[data-contrast="high"] .m1-scr { box-shadow: 0 0 0 2px var(--ink); }
+html[data-contrast="high"] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 2px !important; box-shadow: 0 0 0 5px var(--deck) !important; }
+html[data-contrast="high"] .ls-pad.is-lit, html[data-contrast="high"] .ls-pad.is-right { outline: 3px solid var(--ink); }
+html[data-contrast="high"] .ls-pad.is-wrong { outline: 3px dashed var(--ink); }

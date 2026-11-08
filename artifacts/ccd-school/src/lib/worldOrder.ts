@@ -3,21 +3,20 @@
  * the next lesson, a world's 16-step banks, a lesson's picture.
  */
 import { curItem, curPathOf, curPaths, extrasOf, partOf, songItems, type CurItem, type CurKind } from "../content/curriculum";
-import { MISSIONS } from "../content/missions";
-import { FOUNDATIONS_MISSIONS } from "../content/missions-foundations";
-import { DJ_WORLD_MISSIONS } from "../content/missions-dj";
-import type { Mission } from "../content/types";
+// Lists and cards read a small index of the lessons (src/lib/lessonInfo.ts), not every lesson's content.
+import INDEX from "../content/lessonIndex.gen.json";
+import type { LessonInfo, Use } from "./lessonInfo";
 
 export type WorldId = "fundamentals" | "dj" | "producer";
 export const WORLD_IDS: WorldId[] = ["fundamentals", "producer", "dj"];
 export const WORLD_LABEL: Record<WorldId, string> = { fundamentals: "basics", dj: "dj", producer: "producer" };
 
-const ALL: Mission[] = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
-const BY_SLUG = new Map<string, Mission>();
-for (const m of ALL) if (!BY_SLUG.has(m.slug) || m.fromFile) BY_SLUG.set(m.slug, m);
+const BY_SLUG = new Map<string, LessonInfo>();
+for (const m of INDEX as LessonInfo[]) BY_SLUG.set(m.slug, m);
+/** A lesson's title, tagline and world, from the index (the full lesson is src/lib/lessonInfo.ts missionFull). */
 export const missionAny = (slug: string) => BY_SLUG.get(slug);
 /** A lesson that is written as a lesson file and plays in the new player. */
-export const isRebuilt = (slug: string) => !!BY_SLUG.get(slug)?.fromFile;
+export const isRebuilt = (slug: string) => !!BY_SLUG.get(slug)?.rebuilt;
 
 /** A song lesson you can open, in world order: the spine of the journey. */
 export type Step = { slug: string; title: string; path: string; pathTitle: string; chapter: string; index: number };
@@ -109,49 +108,21 @@ export function journey(world: WorldId, done: Record<string, unknown>): JourneyP
   });
 }
 
-/** First picture in the lesson, or the world's picture. */
-export function missionImage(slug: string, world: WorldId): string {
-  const m = BY_SLUG.get(slug);
-  const shot = m?.screens?.find(s => "imageUrl" in s && (s as { imageUrl?: string }).imageUrl) as { imageUrl?: string } | undefined;
-  return shot?.imageUrl ?? `/ai-images/world-${world}.webp`;
+/** First picture in the lesson, or the world's picture: "sm" for a thumbnail (192 px), "md" for a card (720 px). */
+export function missionImage(slug: string, world: WorldId, size?: "sm" | "md"): string {
+  return BY_SLUG.get(slug)?.image ?? `/ai-images/world-${world}${size ? `-${size}` : ""}.webp`;
 }
 
-/** The real control each kind of try-it step puts in your hands. */
-const SIM_TOOL: Record<string, string> = {
-  "drum-pad": "drum pads", "beat-builder": "step sequencer", "groove-extractor": "swing knob", "bpm-tap": "tap tempo",
-  "piano-roll": "piano roll", "note-explorer": "keys", "chord-stacker": "keys", "chord-progression": "keys", "melody-shaper": "keys",
-  "bassline-lab": "keys", "scale-aware": "keys", "mixer": "faders", "decibel-meter": "level meter", "comp-lake": "compressor",
-  "sidechain": "sidechain", "send-return": "send knob", "device-chain": "device rack", "device-lab": "device knobs",
-  "subtractive-synth": "filter knob", "filter-envelope": "filter envelope", "osc-mixer": "oscillator mix", "lfo-lab": "lfo",
-  "waveform-visualizer": "oscillator", "signal-flow-builder": "patch cables", "routing-puzzle": "routing",
-  "session-grid": "clip grid", "arrangement": "arrangement", "warp-lab": "warp markers", "midi-map": "midi map",
-  "midi-vs-audio": "clips", "beatmatch-trainer": "pitch fader", "hot-cue-drill": "hot cues", "loop-roll": "loop roll",
-  "harmonic-mix-wheel": "key wheel", "ear-training": "your ears", "song-structure": "arrangement", "granular": "grain knobs",
-  "stem-splitter": "stems", "midi-transform": "midi tools", "push3": "push pads", "interface-tour": "live's interface", "browser-tour": "browser",
-};
-
-export type Use = { tool: string; why: string };
+export type { Use };
 
 /** What you will touch in this lesson, named for the thing being learnt, with what it is for. */
 export function missionUses(slug: string): Use[] {
-  const m = BY_SLUG.get(slug);
-  const out: Use[] = [];
-  for (const s of m?.screens ?? []) {
-    if (s.kind === "interact") {
-      const tool = SIM_TOOL[s.sim] ?? s.sim.replace(/-/g, " ");
-      if (!out.some(u => u.tool === tool)) out.push({ tool, why: s.prompt.toLowerCase().replace(/\.$/, "") });
-    }
-  }
-  const q = (m?.screens ?? []).filter(s => s.kind === "quiz" || s.kind === "audio-id" || s.kind === "match" || s.kind === "type-answer" || s.kind === "sequence").length;
-  if (q) out.push({ tool: "answer pads", why: `${q} quick ${q === 1 ? "question" : "questions"}` });
-  return out.slice(0, 3);
+  return BY_SLUG.get(slug)?.uses ?? [];
 }
 
 /** What the lesson teaches, from its summary. */
 export function missionLearns(slug: string): string[] {
-  const m = BY_SLUG.get(slug);
-  const sum = m?.screens?.find(s => s.kind === "summary") as { learned?: string[] } | undefined;
-  return (sum?.learned ?? []).slice(0, 3);
+  return BY_SLUG.get(slug)?.learns ?? [];
 }
 
 /** Short form for one line: the first tool by name. */
@@ -160,6 +131,5 @@ export function missionTools(slug: string): string[] {
 }
 
 export function minutesFor(slug: string): number {
-  const n = BY_SLUG.get(slug)?.screens?.length ?? 8;
-  return Math.max(3, Math.round(n * 0.7));
+  return BY_SLUG.get(slug)?.minutes ?? 6;
 }

@@ -23,15 +23,11 @@ import { CatMark, WeekDots } from "@/components/m1/shell";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { allWorldRanks, WORLD_NAME } from "@/lib/worldRanks";
-import { PALETTE_OPEN_EVENT } from "@/components/CommandPalette";
+import { PALETTE_OPEN_EVENT } from "@/lib/palette";
 import { useLearnMode } from "@/lib/mode";
 import { getMissionContext } from "@/lib/missionContext";
-import { MISSIONS } from "@/content/missions";
-import { FOUNDATIONS_MISSIONS } from "@/content/missions-foundations";
-import { DJ_WORLD_MISSIONS } from "@/content/missions-dj";
 import { trackCatClick } from "@/components/EasterEggs";
 
-const ALL_MISSIONS = [...FOUNDATIONS_MISSIONS, ...DJ_WORLD_MISSIONS, ...MISSIONS];
 
 const PRIMARY_NAV = [
   { to: "/worlds",    label: "Worlds"   },

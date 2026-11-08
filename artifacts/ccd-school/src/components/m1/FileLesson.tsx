@@ -26,23 +26,27 @@ import { worldRankFor, WORLD_NAME } from "@/lib/worldRanks";
 import type { CurWorld } from "@/content/curriculum";
 import { curItem, curPathOf, extrasOf, songItems } from "@/content/curriculum";
 import { isRebuilt, partOf, worldOf, WORLD_LABEL } from "@/lib/worldOrder";
-import { fileLesson, lessonToMission } from "@/content/lessons/adapt";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
-import { TryIt } from "./TryIt";
-import { MIX_SKIP, MixStep } from "./MixStep";
-import { ArrangeStep } from "./ArrangeStep";
+import dynamic from "next/dynamic";
+import { MIX_SKIP } from "./stepKeys";
 import { presetTake } from "./AddToTrack";
 import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShape, songHasMusic, startsFresh } from "./LessonSteps";
-import { MatchSoundStep } from "./MatchSound";
-import { CopyStep } from "./CopyEar";
 import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 import "./lesson.css";
+
+// The bigger steps load when a lesson reaches them (and are fetched while the first step plays), so a lesson
+// opens on its first step without the whole instrument set.
+const TryIt = dynamic(() => import(/* webpackPrefetch: true */ "./TryIt").then(m => m.TryIt), { ssr: false });
+const MixStep = dynamic(() => import(/* webpackPrefetch: true */ "./MixStep").then(m => m.MixStep), { ssr: false });
+const ArrangeStep = dynamic(() => import(/* webpackPrefetch: true */ "./ArrangeStep").then(m => m.ArrangeStep), { ssr: false });
+const MatchSoundStep = dynamic(() => import(/* webpackPrefetch: true */ "./MatchSound").then(m => m.MatchSoundStep), { ssr: false });
+const CopyStep = dynamic(() => import(/* webpackPrefetch: true */ "./CopyEar").then(m => m.CopyStep), { ssr: false });
 
 /** What each song-wide or tool step is called in the progress line. */
 const STEP_LABEL: Record<string, string> = {
@@ -187,7 +191,7 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
     <header className="fl-top">
       <div className="fl-row">
         <Link href={back} className="fl-back" aria-label="Back to your lessons"><Icon name="back" /></Link>
-        <div className="fl-crumb"><span>{crumb}</span><b>{title}</b></div>
+        <div className="fl-crumb"><span>{crumb}</span><h1>{title}</h1></div>
         {onPrev && <button type="button" className="fl-stepback" onClick={onPrev} aria-label="Previous step"><Icon name="back" small />step back</button>}
         <div className="fl-count" aria-label={`Step ${at + 1} of ${pages.length}`}>{at + 1}<i>/</i>{pages.length}</div>
       </div>
@@ -584,7 +588,10 @@ function Ways({ way, setWay, has }: { way: Way; setWay: (w: Way) => void; has: {
 }
 
 // ── the player ───────────────────────────────────────────────────────────────
-export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { mission: Mission; nextSlug?: string; nextTitle?: string; onComplete: () => void }) {
+/** The other two ways of saying each step, lined up with the lesson's screens (worked out on the server). */
+export type Alts = { straight: LessonScreen[]; eli5: LessonScreen[] };
+
+export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComplete }: { mission: Mission; alts?: Alts | null; nextSlug?: string; nextTitle?: string; onComplete: () => void }) {
   const screens = useMemo(() => mission.screens ?? [], [mission.screens]);
   const { progress, completeMission } = useProgress();
   const alreadyDone = !!progress.completedMissions[mission.slug];
@@ -616,12 +623,6 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const [extra, setExtra] = useState(false);
   const finished = useRef(false);
   const [reward, setReward] = useState<Reward | null>(null);
-  // The other ways of saying each step, lined up with this lesson's screens.
-  const alts = useMemo(() => {
-    const f = fileLesson(mission.slug);
-    if (!f) return null;
-    return { straight: lessonToMission(f, { voice: "straight", level: "standard" }).screens ?? [], eli5: lessonToMission(f, { voice: "eli5", level: "standard" }).screens ?? [] };
-  }, [mission.slug]);
   // You start in the way you picked when you joined; the buttons switch it for one step.
   const [prefs] = usePrefs();
   const [way, setWay] = useState<Way>(prefs.voice);
@@ -647,7 +648,9 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
 
   useEffect(() => { try { sessionStorage.setItem(SESSION, JSON.stringify({ idx, at: Date.now() })); } catch { /* ignore */ } }, [idx, SESSION]);
 
-  const go = useCallback((n: number) => { setIdx(Math.max(0, Math.min(pages.length - 1, n))); window.scrollTo({ top: 0 }); }, [pages.length]);
+  // Set when the learner moves to another step, so the new step takes focus (not on first load).
+  const moved = useRef(false);
+  const go = useCallback((n: number) => { moved.current = true; setIdx(Math.max(0, Math.min(pages.length - 1, n))); window.scrollTo({ top: 0 }); }, [pages.length]);
   const next = useCallback(() => go(idx + 1), [go, idx]);
   const base = pages[idx];
   useEffect(() => setWay(prefs.voice), [idx, prefs.voice]);
@@ -717,7 +720,9 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
       <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
       <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
-      <div className="ls-stage fl-stage" key={idx}>{body}</div>
+      {/* A screen reader hears which step it is, and focus moves to the new step (the key that was pressed is gone). */}
+      <div className="sr-only" aria-live="polite">{`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`}</div>
+      <div className="ls-stage fl-stage" key={idx} tabIndex={-1} aria-label={`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`} ref={el => { if (el && moved.current) { moved.current = false; el.focus({ preventScroll: true }); } }}>{body}</div>
     </div>
   );
 }

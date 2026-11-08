@@ -64,7 +64,7 @@ export function Worlds() {
               <div className="wd-top">
                 {n && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={missionImage(n.slug, w)} alt="" style={{ filter: `url(#duo-${w})` }} />
+                  <img src={missionImage(n.slug, w, "sm")} alt="" width={64} height={64} loading="lazy" decoding="async" style={{ filter: `url(#duo-${w})` }} />
                 )}
                 <div style={{ minWidth: 0 }}>
                   <div className="wd-step">{wi + 1} · {INFO[w].why}</div>

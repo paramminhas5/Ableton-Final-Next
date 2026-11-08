@@ -158,6 +158,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             r.classList.add(d ? 'dark' : 'light');
             r.setAttribute('data-theme', 'field');
             r.setAttribute('data-learn-mode', localStorage.getItem('ccd.learnMode') || 'flow');
+            var c = localStorage.getItem('ccd.contrast');
+            if (c === 'high' || (c !== 'normal' && window.matchMedia('(prefers-contrast: more)').matches)) r.setAttribute('data-contrast', 'high');
           } catch(e) {}
         ` }} />
 

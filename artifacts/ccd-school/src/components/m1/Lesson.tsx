@@ -125,7 +125,7 @@ function HookStep({ mission, screen, world, index, accent, back, onNext }: { mis
     <div className="ls-col">
       <Screen>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={missionImage(mission.slug, world)} alt="" className="ls-hookimg" />
+        <img src={missionImage(mission.slug, world, "md")} alt="" decoding="async" className="ls-hookimg" />
         <div style={{ position: "relative" }}>
           <Meta left={`${WORLD_LABEL[world]} ${String(index).padStart(2, "0")} · ${minutesFor(mission.slug)} min · +${mission.xp} xp`} />
           <div className="ls-title is-big">{mission.title.toLowerCase()}</div>
