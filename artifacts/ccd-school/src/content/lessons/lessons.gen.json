@@ -6719,11 +6719,11 @@
           "layer": "chords",
           "pattern": "1+3+5 - - - 4,+6,+1 - - - 6,+1+3 - - - 5,+7,+2 - - -",
           "say": {
-            "mentor": "Four chords on the grid, no sound. Each stack is one chord; watch where the lowest note of each stack moves. Hear the first one in your head, then imagine the stack moving down, down again, then up a little. Then play the progressions and pick the one you saw.",
+            "mentor": "Four chords on the grid, no sound. Each stack is one chord; watch where the lowest note of each stack moves. Hear the first one in your head, then imagine the stack moving down, then up, then down a step. Then play the progressions and pick the one you saw.",
             "straight": "Read the four chords, imagine them, then pick the matching progression. Watch the lowest note of each stack.",
-            "eli5": "Each stack of squares is one chord. Look at where the bottom square goes: down, down, up. Imagine it, then pick the one that sounds like that."
+            "eli5": "Each stack of squares is one chord. Look at where the bottom square goes: down, up, then down a little. Imagine it, then pick the one that sounds like that."
           },
-          "hint": "Listen for the bottom note of each chord. Here it goes down, down again, then up."
+          "hint": "Listen for the bottom note of each chord. Here it goes down, then up, then down one step."
         },
         {
           "kind": "copy",
