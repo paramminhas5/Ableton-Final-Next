@@ -75,17 +75,20 @@ steps:
           line and lets notes slide into each other. A polyphonic synth plays several at once, which chords
           need. Your bass here is monophonic, and its glide knob slides between notes when they overlap.
 
-  - kind: ask
-    q: Hear your bass with no sub, then with the sub up. What does a sub oscillator add?
-    part: bass
-    play: [{sub: 0, label: "no sub"}, {sub: 0.9, label: "sub up"}]
-    options: ["weight, from a sine an octave below", "brightness on top", "echo", "a faster tempo"]
-    answer: 0
-    why: The sub plays a sine an octave under your notes, the deep weight you feel.
-    whyWrong:
-      1: Brightness comes from the saw and square on top.
-      2: Echo is an effect.
-      3: Sound knobs don't touch tempo.
+  - kind: match
+    layer: bass
+    knobs: [sub]
+    target: {sub: 0.8}
+    say:
+      mentor: >-
+        Match the weight by ear. The target is your bass with the sub turned up: a sine an octave under your
+        notes, the deep weight you feel more than hear. Switch between them and turn sub until yours has the
+        same weight underneath.
+      straight: >-
+        Match the target's sub level. The sub is a sine an octave below your notes, the weight under the bass.
+      eli5: >-
+        The target has a deep rumble under it. Turn sub until yours rumbles the same.
+    hint: "Listen low down. More rumble underneath means more sub."
 
   - kind: ask
     q: Hear your bass with no drift, then with lots. What does drift do?

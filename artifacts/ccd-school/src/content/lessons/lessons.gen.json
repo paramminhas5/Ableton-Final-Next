@@ -91,7 +91,14 @@
         },
         {
           "kind": "ask",
-          "q": "Two tracks play together and you hear double kicks. What is wrong?",
+          "q": "Hear two tracks playing together. Something's off: you hear double kicks. What is wrong?",
+          "part": "drums",
+          "play": {
+            "notes": {
+              "kick": "xx..xx..xx..xx..",
+              "clap": "....x.......x..."
+            }
+          },
           "options": [
             "their beats are not lined up",
             "one is too quiet",
@@ -108,7 +115,25 @@
         },
         {
           "kind": "ask",
-          "q": "Where does the clap usually land in a dance groove?",
+          "q": "Where does the clap usually land in a dance groove? Pick it by ear.",
+          "part": "clap",
+          "with": [
+            "kick"
+          ],
+          "sounds": [
+            {
+              "notes": "....x.......x..."
+            },
+            {
+              "notes": "x...x...x...x..."
+            },
+            {
+              "notes": "x..............."
+            },
+            {
+              "notes": "..x...x...x...x."
+            }
+          ],
           "options": [
             "on two and four",
             "on every beat",
@@ -392,7 +417,21 @@
         },
         {
           "kind": "ask",
-          "q": "Why do djs swap the bass instead of playing both?",
+          "q": "Hear one bass line, then two playing at once, as in a blend with both lows up. Why do djs swap the bass instead of playing both?",
+          "part": "bass",
+          "with": [
+            "kick"
+          ],
+          "play": [
+            {
+              "notes": ". . 1 . . . 1 . . . 1 . . . 1 .",
+              "label": "one bass line"
+            },
+            {
+              "notes": "6, . 1+6, . 6, . 1+6, . 6, . 1+6, . 6, . 1+6, .",
+              "label": "two at once"
+            }
+          ],
           "options": [
             "two bass lines together turn to mud",
             "the bass is too quiet",
@@ -543,7 +582,21 @@
         },
         {
           "kind": "ask",
-          "q": "What does the low knob on a mixer channel do?",
+          "q": "Hear your song, then with the low knob turned down on the bass. What does the low knob on a channel do?",
+          "part": "bass",
+          "with": [
+            "song"
+          ],
+          "play": [
+            {
+              "low": 0.5,
+              "label": "low at noon"
+            },
+            {
+              "low": 0,
+              "label": "low down"
+            }
+          ],
           "options": [
             "turns that track's bass up or down",
             "changes the key",
@@ -2187,24 +2240,41 @@
         },
         {
           "kind": "ask",
-          "q": "Roughly what bpm is house music?",
+          "q": "Which of these is at a house tempo?",
+          "sounds": [
+            {
+              "bpm": 124
+            },
+            {
+              "bpm": 85
+            },
+            {
+              "bpm": 170
+            }
+          ],
           "options": [
             "120 to 130",
             "70 to 100",
-            "160 to 180",
-            "over 200"
+            "160 to 180"
           ],
           "answer": 0,
           "why": "House sits around 120 to 130.",
           "whyWrong": {
             "1": "That's hip-hop.",
-            "2": "That's drum and bass.",
-            "3": "That's faster than any genre here."
+            "2": "That's drum and bass."
           }
         },
         {
           "kind": "ask",
-          "q": "What is half-time feel?",
+          "q": "Hear this beat at 140 bpm. Why does it feel slower than 140?",
+          "part": "drums",
+          "play": {
+            "bpm": 140,
+            "notes": {
+              "kick": "x.........x.....",
+              "clap": "........x......."
+            }
+          },
           "options": [
             "the groove feels half as fast as the bpm",
             "the track plays at half volume",
@@ -2955,7 +3025,20 @@
         },
         {
           "kind": "ask",
-          "q": "What do 8A and 8B have in common?",
+          "q": "Hear the notes of a minor key from its home, then the same notes from the major home. What do 8A and 8B have in common?",
+          "part": "lead",
+          "play": [
+            {
+              "scale": "minor",
+              "notes": "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -",
+              "label": "minor home"
+            },
+            {
+              "scale": "minor",
+              "notes": "3 - 4 - 5 - 6 - 7 - 1' - 2' - 3' -",
+              "label": "major home"
+            }
+          ],
           "options": [
             "the same notes, one minor and one major",
             "the same bpm",
@@ -13243,32 +13326,20 @@
           ]
         },
         {
-          "kind": "ask",
-          "q": "Hear your bass with no sub, then with the sub up. What does a sub oscillator add?",
-          "part": "bass",
-          "play": [
-            {
-              "sub": 0,
-              "label": "no sub"
-            },
-            {
-              "sub": 0.9,
-              "label": "sub up"
-            }
+          "kind": "match",
+          "layer": "bass",
+          "knobs": [
+            "sub"
           ],
-          "options": [
-            "weight, from a sine an octave below",
-            "brightness on top",
-            "echo",
-            "a faster tempo"
-          ],
-          "answer": 0,
-          "why": "The sub plays a sine an octave under your notes, the deep weight you feel.",
-          "whyWrong": {
-            "1": "Brightness comes from the saw and square on top.",
-            "2": "Echo is an effect.",
-            "3": "Sound knobs don't touch tempo."
-          }
+          "target": {
+            "sub": 0.8
+          },
+          "say": {
+            "mentor": "Match the weight by ear. The target is your bass with the sub turned up: a sine an octave under your notes, the deep weight you feel more than hear. Switch between them and turn sub until yours has the same weight underneath.",
+            "straight": "Match the target's sub level. The sub is a sine an octave below your notes, the weight under the bass.",
+            "eli5": "The target has a deep rumble under it. Turn sub until yours rumbles the same."
+          },
+          "hint": "Listen low down. More rumble underneath means more sub."
         },
         {
           "kind": "ask",
@@ -15145,32 +15216,20 @@
           }
         },
         {
-          "kind": "ask",
-          "q": "Hear your kick clean, then saturated. What does saturation add?",
-          "part": "kick",
-          "play": [
-            {
-              "drive": 0,
-              "label": "clean"
-            },
-            {
-              "drive": 0.85,
-              "label": "saturated"
-            }
+          "kind": "match",
+          "layer": "drums",
+          "knobs": [
+            "drive"
           ],
-          "options": [
-            "harmonics, new higher notes on top",
-            "reverb",
-            "a second kick",
-            "more tempo"
-          ],
-          "answer": 0,
-          "why": "Bending the wave adds harmonics that weren't in the original.",
-          "whyWrong": {
-            "1": "Reverb is space, a different effect.",
-            "2": "It's the same kick, with more harmonics.",
-            "3": "Tempo is the speed of the song."
-          }
+          "target": {
+            "drive": 0.65
+          },
+          "say": {
+            "mentor": "Match the grit by ear. The target is your kick with some drive on it: bending the wave adds harmonics, new higher notes on top of the original. Switch between the target and yours, and turn drive until yours has the same edge.",
+            "straight": "Match the target's drive on your kick. More drive bends the wave and adds harmonics on top.",
+            "eli5": "The target is your kick with some crunch. Turn drive until yours crunches the same amount."
+          },
+          "hint": "More crunch on top means more drive."
         },
         {
           "kind": "ask",

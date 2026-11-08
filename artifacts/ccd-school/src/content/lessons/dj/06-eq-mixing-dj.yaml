@@ -37,7 +37,10 @@ steps:
         Push deck b up, then turn deck a's low knob down. Now only one bass plays.
 
   - kind: ask
-    q: What does the low knob on a mixer channel do?
+    q: Hear your song, then with the low knob turned down on the bass. What does the low knob on a channel do?
+    part: bass
+    with: ["song"]
+    play: [{low: 0.5, label: "low at noon"}, {low: 0, label: "low down"}]
     options: ["turns that track's bass up or down", "changes the key", "changes the tempo", "starts the track"]
     answer: 0
     why: It's an eq for the low end of that channel.

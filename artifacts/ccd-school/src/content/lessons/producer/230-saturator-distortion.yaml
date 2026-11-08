@@ -77,17 +77,20 @@ steps:
         Turn drive up and listen to your kick get fatter. Stop before it sounds broken. Then turn level down a
         bit so it's not just louder. Still better? Keep it.
 
-  - kind: ask
-    q: Hear your kick clean, then saturated. What does saturation add?
-    part: kick
-    play: [{drive: 0, label: "clean"}, {drive: 0.85, label: "saturated"}]
-    options: ["harmonics, new higher notes on top", "reverb", "a second kick", "more tempo"]
-    answer: 0
-    why: Bending the wave adds harmonics that weren't in the original.
-    whyWrong:
-      1: Reverb is space, a different effect.
-      2: It's the same kick, with more harmonics.
-      3: Tempo is the speed of the song.
+  - kind: match
+    layer: drums
+    knobs: [drive]
+    target: {drive: 0.65}
+    say:
+      mentor: >-
+        Match the grit by ear. The target is your kick with some drive on it: bending the wave adds harmonics,
+        new higher notes on top of the original. Switch between the target and yours, and turn drive until
+        yours has the same edge.
+      straight: >-
+        Match the target's drive on your kick. More drive bends the wave and adds harmonics on top.
+      eli5: >-
+        The target is your kick with some crunch. Turn drive until yours crunches the same amount.
+    hint: "More crunch on top means more drive."
 
   - kind: ask
     q: Hear your kick, then with drive turned up. It sounds better. What do you check?

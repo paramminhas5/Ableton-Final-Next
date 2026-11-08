@@ -72,7 +72,10 @@ steps:
       3: That's too far round the wheel.
 
   - kind: ask
-    q: What do 8A and 8B have in common?
+    q: Hear the notes of a minor key from its home, then the same notes from the major home. What do 8A and 8B have
+      in common?
+    part: lead
+    play: [{scale: "minor", notes: "1 - 2 - 3 - 4 - 5 - 6 - 7 - 1' -", label: "minor home"}, {scale: "minor", notes: "3 - 4 - 5 - 6 - 7 - 1' - 2' - 3' -", label: "major home"}]
     options: ["the same notes, one minor and one major", "the same bpm", "nothing", "the same artist"]
     answer: 0
     why: Relative minor and major share their notes.

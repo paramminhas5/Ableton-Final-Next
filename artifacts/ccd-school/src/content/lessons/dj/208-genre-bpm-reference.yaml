@@ -69,17 +69,19 @@ steps:
         to yours?
 
   - kind: ask
-    q: Roughly what bpm is house music?
-    options: ["120 to 130", "70 to 100", "160 to 180", "over 200"]
+    q: Which of these is at a house tempo?
+    sounds: [{bpm: 124}, {bpm: 85}, {bpm: 170}]
+    options: ["120 to 130", "70 to 100", "160 to 180"]
     answer: 0
     why: House sits around 120 to 130.
     whyWrong:
       1: That's hip-hop.
       2: That's drum and bass.
-      3: That's faster than any genre here.
 
   - kind: ask
-    q: What is half-time feel?
+    q: Hear this beat at 140 bpm. Why does it feel slower than 140?
+    part: drums
+    play: {bpm: 140, notes: {kick: "x.........x.....", clap: "........x......."}}
     options: ["the groove feels half as fast as the bpm", "the track plays at half volume", "half the track is missing", "the tempo halves every bar"]
     answer: 0
     why: The bpm is high but the kick and snare land like a slower tempo.

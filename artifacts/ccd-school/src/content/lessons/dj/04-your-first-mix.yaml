@@ -41,7 +41,11 @@ steps:
     hint: Do it slowly. A blend usually takes 16 or 32 bars.
 
   - kind: ask
-    q: Why do djs swap the bass instead of playing both?
+    q: Hear one bass line, then two playing at once, as in a blend with both lows up. Why do djs swap the bass
+      instead of playing both?
+    part: bass
+    with: ["kick"]
+    play: [{notes: ". . 1 . . . 1 . . . 1 . . . 1 .", label: "one bass line"}, {notes: "6, . 1+6, . 6, . 1+6, . 6, . 1+6, . 6, . 1+6, .", label: "two at once"}]
     options: ["two bass lines together turn to mud", "the bass is too quiet", "only one deck can have bass", "it changes the tempo"]
     answer: 0
     why: Two low ends stack up into a muddy blur.

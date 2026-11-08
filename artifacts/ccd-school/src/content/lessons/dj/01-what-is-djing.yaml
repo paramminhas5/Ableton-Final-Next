@@ -121,7 +121,9 @@ steps:
       3: Some DJs talk, but the job is the music.
 
   - kind: ask
-    q: Two tracks play together and you hear double kicks. What is wrong?
+    q: "Hear two tracks playing together. Something's off: you hear double kicks. What is wrong?"
+    part: drums
+    play: {notes: {kick: "xx..xx..xx..xx..", clap: "....x.......x..."}}
     options: ["their beats are not lined up", "one is too quiet", "they are in different keys", "nothing, that is normal"]
     answer: 0
     why: Double kicks mean the beats are not hitting at the same moment. Lining them up is beatmatching.
@@ -131,7 +133,10 @@ steps:
       3: A good mix sounds like one groove, not two.
 
   - kind: ask
-    q: Where does the clap usually land in a dance groove?
+    q: Where does the clap usually land in a dance groove? Pick it by ear.
+    part: clap
+    with: ["kick"]
+    sounds: [{notes: "....x.......x..."}, {notes: "x...x...x...x..."}, {notes: "x..............."}, {notes: "..x...x...x...x."}]
     options: ["on two and four", "on every beat", "on one only", "between the beats"]
     answer: 0
     why: The clap or snare on two and four is the backbeat.
