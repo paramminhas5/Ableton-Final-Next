@@ -116,6 +116,7 @@ export function AdminPageClient() {
         <div className="max-w-2xl mx-auto px-4 py-8">
           <div className="font-mono text-[10px] uppercase opacity-70 mb-1">// ADMIN</div>
           <h1 className="font-display text-5xl leading-none">ADMIN</h1>
+          <a href="/admin/learning" className="font-mono text-xs underline mt-3 inline-block">learning funnel: where learners stop</a>
         </div>
       </header>
       <div className="max-w-4xl mx-auto px-4 py-8 pb-24">
