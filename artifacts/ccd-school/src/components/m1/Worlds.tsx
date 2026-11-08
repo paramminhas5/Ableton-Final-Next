@@ -4,12 +4,14 @@
  * inside each. One screen on a laptop; stacked on a phone.
  */
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
+import { readPlacement, type PlaceResult } from "@/lib/placement";
 import { useProgress } from "@/lib/progress";
 import { journey, missionAny, missionImage, nextStep, partOf, worldDone, WORLD_IDS, type WorldId } from "@/lib/worldOrder";
 import { Icon, Silk, WORLD_LED } from "./controls";
 import { DuoFilters } from "./Today";
 import "./lesson.css";
+import "./placement.css";
 
 const INFO: Record<WorldId, { name: string; line: string; slug: string; why: string }> = {
   fundamentals: { name: "basics", line: "sound, rhythm, melody and harmony, from zero", slug: "fundamentals", why: "start here. how music works" },
@@ -18,8 +20,12 @@ const INFO: Record<WorldId, { name: string; line: string; slug: string; why: str
 };
 const LOOP = ["learn", "make", "practice", "studio", "mix"];
 
+const WORLD_INFO_NAME: Record<WorldId, string> = { fundamentals: "basics", producer: "producer", dj: "dj" };
+
 export function Worlds() {
   const { progress } = useProgress();
+  const [placed, setPlaced] = useState<PlaceResult | null>(null);
+  useEffect(() => { const r = readPlacement(); if (r && r.skipped.length) setPlaced(r); }, []);
   const done = progress.completedMissions;
   return (
     <div className="m1-page wd">
@@ -30,6 +36,11 @@ export function Worlds() {
           <div className="m1-t11">three worlds, one song</div>
         </div>
       </header>
+      {!placed && Object.keys(done).length < 3 ? (
+        <Link href="/placement" className="wc-card pl-offer" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties}>
+          <span>already make music? find your level<small>about 3 minutes, by ear and by hand. we start you where it gets new.</small></span><Icon name="play" small />
+        </Link>
+      ) : null}
       <ol className="wd-loop" aria-label="How the parts connect">{LOOP.map((l, i) => <li key={l}><b>{i + 1}</b>{l}</li>)}</ol>
 
       <div className="wd-cols">
@@ -78,8 +89,8 @@ export function Worlds() {
       </div>
 
       <div className="wd-foot">
-        <span className="m1-t11">already know some of this?</span>
-        <Link href="/placement" className="ls-chip">find my level</Link>
+        <span className="m1-t11">{placed ? `you started ${WORLD_INFO_NAME[placed.world]} at ${partOf(placed.slug)}, from find your level` : "already make music?"}</span>
+        <Link href="/placement" className="ls-chip">{placed ? "take it again" : "find your level"}</Link>
       </div>
       <DuoFilters />
     </div>

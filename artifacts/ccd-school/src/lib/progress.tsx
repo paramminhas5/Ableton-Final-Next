@@ -51,7 +51,8 @@ export type Progress = {
   streakShield: boolean;
   streakShieldUsedAt: string | null;
   lastDay: string | null;
-  completedMissions: Record<string, { score: number; at: number }>;
+  /** `placed`: passed by the placement (find your level), not done; no xp, gems or review card. */
+  completedMissions: Record<string, { score: number; at: number; placed?: boolean }>;
   lessonStrengths: Record<string, LessonStrength>;  // legacy — kept for migration
   fsrsCards: Record<string, FSRSCardStored>;          // NEW: FSRS cards per mission
   badges: string[];
@@ -281,6 +282,18 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
 
   const setDifficulty = (difficulty: Progress["difficulty"]) => commit({ ...(latest ?? pRender), difficulty });
   const setPlacement = (chapter: number) => commit({ ...(latest ?? pRender), placementDone: true, unlockedChapter: chapter });
+  /**
+   * Find your level: mark the song lessons before where the learner lands as passed (no xp, gems or review
+   * card), and give back ones an earlier placement passed that this one doesn't (`unplace`). Lessons the
+   * learner actually did are never touched.
+   */
+  const placeOut = (slugs: string[], unplace: string[] = []) => {
+    const cur = latest ?? pRender;
+    const cm = { ...cur.completedMissions };
+    for (const s of unplace) if (cm[s]?.placed && !slugs.includes(s)) delete cm[s];
+    for (const s of slugs) if (!cm[s]) cm[s] = { score: 1, at: Date.now(), placed: true };
+    commit({ ...cur, completedMissions: cm, placementDone: true });
+  };
   const reset = () => commit(empty());
 
   // FSRS-powered review queue (uses retrievability < 0.9 threshold)
@@ -313,7 +326,7 @@ function buildProgressValue(p: Progress, setP: (next: Progress) => void) {
 
   return {
     progress: p, completeMission, reviewMission, loseHeart, refillHeart,
-    spendGems, addXp, reset, setOnboarding, setDifficulty, setPlacement,
+    spendGems, addXp, reset, setOnboarding, setDifficulty, setPlacement, placeOut,
     heartRefillSeconds, dailyGoalPct, dailyGoalDone, missionsNeedingReview,
   };
 }

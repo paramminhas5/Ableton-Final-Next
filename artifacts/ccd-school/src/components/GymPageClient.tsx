@@ -5,6 +5,7 @@
  * one screen: compare a and b, pick an answer, check. It gets harder after four right in
  * a row and easier after two misses. Levels are matched, so loudness never gives it away.
  */
+import { learn } from "@/lib/learnEvents";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import { ensureAudio, playCorrect, playWrong } from "@/lib/audio";
@@ -272,6 +273,7 @@ export function GymPageClient() {
     persist(next);
     setSummary(s);
     setPhase("done");
+    learn("gym_session", { answered: s.answered, correct: s.correct, accuracy: s.accuracy, counts: s.counts, drills: Object.keys(s.byDrill).join(" ") });
     if (s.counts) track("gym_session_completed", { drills: Object.keys(s.byDrill).length, accuracy: Math.round(s.accuracy * 100) / 100, difficulty: Math.max(...Object.values(s.byDrill).map(d => d.maxLevel)) });
     fetch("/api/gym/results", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ results: results.current }) }).catch(() => {});
   }, [persist]);

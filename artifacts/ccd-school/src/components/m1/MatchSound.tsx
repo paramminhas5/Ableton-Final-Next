@@ -22,6 +22,7 @@ import { Body, Meta, useEnter } from "./LessonParts";
 import { Gloss } from "./Gloss";
 import { useEngineTrack } from "./useEngineTrack";
 import { readShape, shapeKey } from "./LessonSteps";
+import { stepResult } from "@/lib/learnEvents";
 
 type Of = Extract<LessonScreen, { kind: "matchsound" }>;
 export type K = { index: number; spec: ParamSpec };
@@ -224,9 +225,14 @@ export function MatchSoundStep({ mission, screen, onNext, tail }: { mission: Mis
   const worst = m.worst;
   const hint = (m.tries >= 2 || nearlyBut) && !passed && worst && Math.abs(worst.d) > (nearlyBut ? KNOB_TOL : 0) ? `try ${worst.k.spec.label}: the target's is ${which(worst.k.spec.key, worst.d > 0)}` : null;
   const lastRound = round >= rounds - 1;
+  // For the learning events: checks over every sound in the step, and sounds that needed a hint (two checks or more).
+  const tally = useRef({ checks: 0, hinted: 0 });
   const keep = () => {
+    tally.current.checks += m.tries;
+    if (m.tries >= 2) tally.current.hinted++;
     // A warm-up passed: the next sound, starting from where your knobs are.
     if (!lastRound) { setCarry({ ...m.mine }); setRound(r => r + 1); return; }
+    stepResult({ checks: tally.current.checks, hints: tally.current.hinted, stars: matchStars(m.tries, 0), sounds: rounds });
     // Your matched knobs go into your song with the rest of this lesson's sound.
     try { sessionStorage.setItem(shapeKey(mission.slug, otherType), JSON.stringify({ ...shaped, ...m.mine })); } catch { /* ignore */ }
     onNext();

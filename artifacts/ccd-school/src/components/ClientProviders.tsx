@@ -1,4 +1,5 @@
 "use client";
+import { LearnSync } from "@/components/LearnSync";
 import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
@@ -146,6 +147,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
                   <BeatSync />
                   <CloudSyncEffect />
                   <ServerEventQueue />
+                  <LearnSync />
                   <CelebrationLayer />
                   {children}
                   {/* Mobile phone UI: hidden on desktop via CSS */}

@@ -12,6 +12,8 @@ import { useProgress } from "@/lib/progress";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import { getMissionContext } from "@/lib/missionContext";
 import { track } from "@/lib/analytics";
+import { learn } from "@/lib/learnEvents";
+import { useLearnSteps } from "@/lib/useLearnSteps";
 import { applyTake, drumNames, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
 import { offerFor, readTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
@@ -640,6 +642,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
     } catch { /* fresh */ }
     setTake(readTake(mission.slug));
     track("lesson_started", { missionSlug: mission.slug, world: mission.world, xp: mission.xp, alreadyCompleted: alreadyDone });
+    learn("lesson_started", { slug: mission.slug, world, again: alreadyDone, steps: pages.length });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { try { sessionStorage.setItem(SESSION, JSON.stringify({ idx, at: Date.now() })); } catch { /* ignore */ } }, [idx, SESSION]);
@@ -652,6 +655,7 @@ export function FileLesson({ mission, nextSlug, nextTitle, onComplete }: { missi
   const altOf = (w: "straight" | "eli5") => (alts && si >= 0 ? alts[w][si] : undefined);
   const has = { straight: !!textOf(altOf("straight")) && textOf(altOf("straight")) !== textOf(base as LessonScreen), eli5: !!textOf(altOf("eli5")) && textOf(altOf("eli5")) !== textOf(base as LessonScreen) };
   const cur = (way !== "mentor" && altOf(way)?.kind === base?.kind ? altOf(way) : base) as Page | undefined;
+  useLearnSteps(mission.slug, idx, cur?.kind, world);
   const ways = <Ways way={way} setWay={w => { setWay(w); track("lesson_way", { missionSlug: mission.slug, step: idx, way: w }); }} has={has} />;
 
   useEffect(() => {

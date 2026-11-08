@@ -1,0 +1,26 @@
+/* find your level (Placement.tsx) and the end-of-world challenges (WorldChallenge.tsx) */
+.pl-taps{display:block;margin-top:10px;max-height:64px}
+.pl-tap{margin-top:12px;height:132px;width:100%;border:0;border-radius:18px;font:600 20px Outfit,system-ui;letter-spacing:.04em;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.pl-tap.is-on{background:var(--led-mint);color:#06241B;box-shadow:0 0 0 2px var(--led-mint),0 0 24px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.pl-tap:disabled{opacity:.5;cursor:default}
+.pl-tap:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
+.pl-rows{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.pl-rows li{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);font-size:14px;color:var(--ink)}
+.pl-rows li .ls-led{margin-top:0;flex:none}
+.pl-rows b{font-weight:600;min-width:76px}
+.pl-rows li>span:last-child{color:var(--print);margin-left:auto;text-align:right}
+.pl-last{color:var(--print)}
+.pl .ls-pads.is-one small{min-width:70px;font-size:15px;font-weight:600;color:var(--ink)}
+.wc-stars{display:inline-flex;gap:2px;font-size:16px;letter-spacing:1px;color:color-mix(in srgb,var(--ink) 25%,transparent)}
+.wc-stars b{font-weight:400}
+.wc-stars b.is-on{color:#F3C14F}
+.wc-card{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px 14px;border-radius:14px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.wc-card>span:first-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14px;font-weight:600}
+.wc-card small{font-size:12px;font-weight:400;color:var(--print)}
+.wc-card:focus-visible{outline:2px solid var(--c,var(--led-mint));outline-offset:2px}
+.wc-rounds{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.wc-rounds li{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);font-size:14px}
+.wc-rounds li.is-now{outline:2px solid var(--c,var(--led-mint));outline-offset:-2px}
+.wc-rounds li>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.wc-rounds small{font-size:12px;color:var(--print)}
+.wc-clock{font-variant-numeric:tabular-nums}

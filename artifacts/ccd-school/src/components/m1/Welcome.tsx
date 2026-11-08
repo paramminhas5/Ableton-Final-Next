@@ -11,7 +11,7 @@ import { FLAG, OUT, LAYER_PARAMS, LEAD_PARAMS, DRUM_PAD_NOTES } from "@/engine";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { usePrefs, type Voice } from "@/lib/prefs";
-import { PlacementTest } from "@/components/PlacementTest";
+import dynamic from "next/dynamic";
 import { missionBySlug } from "@/content/missions";
 import { emptyTrackV2, newLayerV2, toV1View, type NoteEvent, type TrackV2 } from "@/lib/track2";
 import { getCtx } from "@/lib/audio";
@@ -31,13 +31,15 @@ const MAKE: { id: WorldId; name: string; line: string; first: string }[] = [
 const KNOW: { id: Know; name: string; line: string }[] = [
   { id: "new", name: "completely new", line: "never made or mixed music" },
   { id: "some", name: "a little", line: "played around with an app or a controller" },
-  { id: "lots", name: "i know my way around", line: "straight to a few quick questions that find your level" },
+  { id: "lots", name: "i know my way around", line: "straight to a short test, by ear and by hand, that finds your level" },
 ];
 const WAYS: { id: Voice; name: string; line: string }[] = [
   { id: "mentor", name: "walk me through it", line: "the full picture, step by step" },
   { id: "straight", name: "give me the short version", line: "just the point, i'll ask for more if i need it" },
   { id: "eli5", name: "keep it simple", line: "plain words and everyday examples" },
 ];
+// Find your level loads only when someone asks for it, so the first screen stays light.
+const Placement = dynamic(() => import("./Placement").then(m => m.Placement), { ssr: false });
 const TOUR = ["hello", "learn", "make", "practice", "studio", "mix", "start", "know", "explain"] as const;
 type At = (typeof TOUR)[number];
 export const TOUR_KEY = "ccd.tour.first";
@@ -143,7 +145,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const next = () => setStep(s => Math.min(TOUR.length - 1, s + 1));
   const back = () => setStep(s => Math.max(0, s - 1));
   // "i know my way around" goes straight to placement (Param, 5 Nov). Skipping it carries on with the tour's last step.
-  if (placement) return <PlacementTest world={make.id} startNow onSkip={() => { setPlacement(false); next(); }} onComplete={slug => {
+  if (placement) return <Placement world={make.id} startNow onClose={() => { setPlacement(false); next(); }} onDone={slug => {
     onLeave?.();
     setOnboarding(make.id, "hard");
     setLearnMode("flow");

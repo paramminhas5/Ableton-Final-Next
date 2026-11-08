@@ -18,6 +18,7 @@ import { GoPill, Icon, Key, Screen, Silk } from "./controls";
 import { Body, Meta, useEnter } from "./LessonParts";
 import { Gloss } from "./Gloss";
 import { useEngineTrack } from "./useEngineTrack";
+import { stepResult } from "@/lib/learnEvents";
 
 type Of = Extract<LessonScreen, { kind: "copy" }>;
 export type Level = "gentle" | "standard" | "hard";
@@ -210,6 +211,7 @@ export function CopyStep({ screen, onNext, tail, onKeep }: { mission: Mission; s
   const keep = () => {
     if (kept.current) return;
     kept.current = true;
+    stepResult({ checks: c.checks, hints: c.hints.length, stars: c.stars ?? 0 });
     // In a lesson, what you copied becomes the lesson's part: its add step puts it in your song, and a play
     // step after this one starts from it. Drum hits on the hats part stay out of a drum rack take.
     if (onKeep) {
