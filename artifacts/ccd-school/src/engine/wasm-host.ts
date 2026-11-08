@@ -24,7 +24,24 @@ export class WasmHost implements EngineHost {
     return this.starting;
   }
 
+  /**
+   * A page that asks for the engine before anyone has touched it (a lesson step that plays on arrival) waits for
+   * the first touch or key, or three seconds, before downloading and compiling it: the browser keeps the audio
+   * asleep until a touch anyway, and on a slow phone the download would compete with the page itself.
+   */
+  private firstTouch(): Promise<void> {
+    const ua = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation;
+    if (!ua || ua.hasBeenActive) return Promise.resolve();
+    return new Promise(res => {
+      const go = () => { clearTimeout(t); removeEventListener("pointerdown", go, true); removeEventListener("keydown", go, true); res(); };
+      const t = setTimeout(go, 3000);
+      addEventListener("pointerdown", go, true);
+      addEventListener("keydown", go, true);
+    });
+  }
+
   private async boot() {
+    await this.firstTouch();
     // latencyHint 0 asks for the smallest buffer the device supports.
     const ctx = new AudioContext({ latencyHint: 0 });
     this.ctx = ctx;
