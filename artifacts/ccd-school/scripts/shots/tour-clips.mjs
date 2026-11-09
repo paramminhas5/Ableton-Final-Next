@@ -14,20 +14,27 @@ const song = { v: 2, bpm: 122, root: 45, scale: "minor", swing: 0, loop: 16, add
 ] };
 const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"].map(s => [`ccd.walk.${s}`, "1"]));
 const done = s => Object.fromEntries(s.map(x => [x, { score: 90, at: Date.now() - 3600e3 }]));
-const store = (d) => ({ ...seen, "ccd.track.v2": song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() }] }, "ccd.studio.seeded": "1", "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: done(d), xp: 120, streakDays: 0 } });
+const newSeen = Object.fromEntries(Object.keys(JSON.parse(readFileSync(new URL("../../src/content/taught.gen.json", import.meta.url), "utf8")).first).map(k => [`ccd.new.studio:${k}`, "1"]));
+const SECS = [{ name: "intro", bars: 4, off: ["lead-synth-what-is-sound"] }, { name: "drop", bars: 4, off: [] }];
+const store = (d, secs) => ({ ...seen, ...newSeen, "ccd.track.v2": secs ? { ...song, sections: SECS } : song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() }] }, "ccd.studio.seeded": "1", "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: done(d), xp: 120, streakDays: 0 } });
+// The finger: rests at the bottom, glides to each control (420 ms, eased), presses with a ring, follows drags closely.
 const finger = () => {
-  let f;
+  let f, ring;
   const get = () => {
     if (f && f.isConnected) return f;
     f = document.createElement("div");
-    Object.assign(f.style, { position: "fixed", left: "-60px", top: "-60px", width: "40px", height: "40px", margin: "-20px 0 0 -20px", borderRadius: "50%", background: "rgba(255,255,255,.30)", border: "2px solid rgba(255,255,255,.9)", boxShadow: "0 0 0 8px rgba(255,255,255,.10), 0 4px 14px rgba(0,0,0,.4)", pointerEvents: "none", zIndex: "2147483647", opacity: "0", transition: "opacity 140ms, transform 90ms" });
+    Object.assign(f.style, { position: "fixed", left: "195px", top: "900px", width: "44px", height: "44px", margin: "-22px 0 0 -22px", borderRadius: "50%", background: "rgba(255,255,255,.28)", border: "2px solid rgba(255,255,255,.92)", boxShadow: "0 6px 18px rgba(0,0,0,.45)", pointerEvents: "none", zIndex: "2147483647", opacity: "1", transition: "left 420ms cubic-bezier(.25,.8,.3,1), top 420ms cubic-bezier(.25,.8,.3,1), transform 110ms ease-out, opacity 300ms" });
+    ring = document.createElement("i");
+    Object.assign(ring.style, { position: "absolute", inset: "-2px", borderRadius: "50%", border: "2px solid rgba(255,255,255,.7)", opacity: "0", transition: "transform 380ms ease-out, opacity 380ms ease-out" });
+    f.appendChild(ring);
     document.documentElement.appendChild(f);
     return f;
   };
-  const mv = e => { const d = get(); d.style.left = `${e.clientX}px`; d.style.top = `${e.clientY}px`; };
-  addEventListener("pointerdown", e => { mv(e); const d = get(); d.style.opacity = "1"; d.style.transform = "scale(.8)"; }, true);
-  addEventListener("pointermove", e => { mv(e); if (e.buttons) get().style.opacity = "1"; }, true);
-  addEventListener("pointerup", () => { const d = get(); d.style.transform = "scale(1)"; setTimeout(() => { d.style.opacity = "0"; }, 280); }, true);
+  const to = (e, fast) => { const d = get(); d.style.transitionDuration = fast ? "40ms, 40ms, 110ms, 300ms" : ""; d.style.left = `${e.clientX}px`; d.style.top = `${e.clientY}px`; };
+  addEventListener("DOMContentLoaded", () => get());
+  addEventListener("pointermove", e => to(e, !!e.buttons), true);
+  addEventListener("pointerdown", e => { to(e, true); const d = get(); d.style.transform = "scale(.82)"; ring.style.transition = "none"; ring.style.transform = "scale(1)"; ring.style.opacity = ".9"; requestAnimationFrame(() => { ring.style.transition = "transform 380ms ease-out, opacity 380ms ease-out"; ring.style.transform = "scale(1.9)"; ring.style.opacity = "0"; }); }, true);
+  addEventListener("pointerup", () => { get().style.transform = "scale(1)"; }, true);
 };
 // Sound: every connection to the speakers is also sent to a recorder, so each clip carries what the app played.
 const tapAudio = () => {
@@ -77,7 +84,7 @@ async function session(name, url, d, run) {
   await cast();
   const t0 = Date.now();
   p.on("pageerror", e => console.log(`  ${name} pageerror`, e.message.slice(0, 160)));
-  await p.addInitScript(([s]) => { if (sessionStorage.getItem("__s")) return; sessionStorage.setItem("__s", "1"); localStorage.setItem("ccd.mode", "dark"); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); }, [store(d)]);
+  await p.addInitScript(([s]) => { if (sessionStorage.getItem("__s")) return; sessionStorage.setItem("__s", "1"); localStorage.setItem("ccd.mode", "dark"); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); }, [store(d, name === "studio")]);
   await p.addInitScript(finger);
   await p.addInitScript(tapAudio);
   await p.goto(base + url, { waitUntil: "load", timeout: 120000 });
@@ -85,10 +92,23 @@ async function session(name, url, d, run) {
   const m = {};
   const at = () => Date.now() / 1000;
   const W = ms => p.waitForTimeout(ms);
-  const center = async loc => { await loc.evaluate(e => { const r = e.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight - 150) e.scrollIntoView({ block: "center" }); }, null, { timeout: 4000 }).catch(() => {}); await p.waitForTimeout(150); const r = await loc.boundingBox({ timeout: 4000 }).catch(() => null); return r ? [r.x + r.width / 2, r.y + r.height / 2] : null; };
-  const tap = async (loc, hold = 90) => { const c = await center(loc); if (!c) { console.log("  miss", name); return; } await p.mouse.move(c[0], c[1], { steps: 6 }); await p.mouse.down(); await W(hold); await p.mouse.up(); };
-  const drag = async (loc, dx, dy, ms = 900) => { const c = await center(loc); if (!c) { console.log("  miss drag", name); return; } await p.mouse.move(c[0], c[1], { steps: 5 }); await p.mouse.down(); const n = Math.max(8, Math.round(ms / 30)); for (let i = 1; i <= n; i++) { await p.mouse.move(c[0] + (dx * i) / n, c[1] + (dy * i) / n); await W(ms / n); } await p.mouse.up(); };
-  await run({ p, W, tap, drag, center, cast, mark: k => { m[k] = at(); void p.screenshot({ path: `${raw}/${name}-${k}.png` }).catch(() => {}); } });
+  const center = async loc => { const r = await loc.boundingBox({ timeout: 4000 }).catch(() => null); return r ? [r.x + r.width / 2, r.y + r.height / 2] : null; };
+  const glide = async c => { await p.mouse.move(c[0], c[1], { steps: 1 }); await W(480); };
+  const tap = async (loc, hold = 110, after = 350) => { const c = await center(loc); if (!c) { console.log("  miss", name); return; } await glide(c); await p.mouse.down(); await W(hold); await p.mouse.up(); await W(after); };
+  const drag = async (loc, dx, dy, ms = 1100) => { const c = await center(loc); if (!c) { console.log("  miss drag", name); return; } await glide(c); await p.mouse.down(); const n = Math.max(10, Math.round(ms / 30)); for (let i = 1; i <= n; i++) { const e = i / n; const k = e < 0.5 ? 2 * e * e : 1 - Math.pow(-2 * e + 2, 2) / 2; await p.mouse.move(c[0] + dx * k, c[1] + dy * k); await W(ms / n); } await p.mouse.up(); await W(300); };
+  // a horizontal fader follows the finger 1:1: start on its cap, end where the value should be
+  const slideTo = async (loc, frac, ms = 1600) => {
+    const r = await loc.boundingBox({ timeout: 4000 }).catch(() => null); if (!r) { console.log("  miss slide", name); return; }
+    const v = (+(await loc.getAttribute("aria-valuenow")) || 0) / 100;
+    const y = r.y + r.height / 2, x0 = r.x + v * r.width, x1 = r.x + frac * r.width;
+    await glide([x0, y]); await p.mouse.down();
+    const n = Math.max(12, Math.round(ms / 30));
+    for (let i = 1; i <= n; i++) { const e = i / n; const k = e < 0.5 ? 2 * e * e : 1 - Math.pow(-2 * e + 2, 2) / 2; await p.mouse.move(x0 + (x1 - x0) * k, y); await W(ms / n); }
+    await p.mouse.up(); await W(300);
+  };
+  const caps = [];
+  await run({ p, W, tap, drag, slideTo, center, glide, cast, cap: text => caps.push({ t: at(), text }), mark: k => { m[k] = at(); void p.screenshot({ path: `${raw}/${name}-${k}.png` }).catch(() => {}); } });
+  m.caps = caps;
   await W(400);
   const audio = await p.evaluate(() => window.__dumpAudio ? window.__dumpAudio() : []).catch(() => []);
   const tracks = audio.map((a, i) => { writeFileSync(`${dir}/audio${i}.webm`, Buffer.from(a.b64, "base64")); return { file: `audio${i}.webm`, t0: a.t0 / 1000 }; });
@@ -101,71 +121,111 @@ async function session(name, url, d, run) {
 }
 
 const role = (p, name, r = "button") => p.getByRole(r, { name, exact: true }).first();
-if (only.includes("learn")) await session("learn", "/learn/hats", ["your-kick", "synth-what-is-sound"], async ({ p, W, tap, drag, mark }) => {
-  mark("a0"); await W(900);
-  await tap(p.locator(".fl-bottom .is-wide, .ls-bottom .is-wide").first()); await W(1000);
-  // hits on every "and" after the four-click count-in, timed from the moment rec is pressed
-  await tap(p.getByRole("button", { name: /^Record/ }).first());
+const go = p => p.locator(".fl-bottom .is-wide, .ls-bottom .is-wide").first();
+
+if (only.includes("learn")) await session("learn", "/learn/hats", ["your-kick", "synth-what-is-sound"], async ({ p, W, tap, drag, glide, mark, cap }) => {
+  await go(p).click(); await W(1600); // onto the play-in before the clip starts: one screen per clip
+  mark("a0"); cap("a lesson: the instrument, and what to do"); await W(1600);
+  cap("press rec. four clicks count you in");
+  await tap(p.getByRole("button", { name: /^Record/ }).first(), 110, 0);
   const beat = 60000 / 122;
   await p.waitForFunction(() => /count in · 2/.test(document.querySelector(".m1-glass")?.textContent ?? ""), null, { timeout: 15000, polling: 8 }).catch(() => {});
   const pb = await role(p, "open hat").boundingBox(); const pad = [pb.x + pb.width / 2, pb.y + pb.height / 2];
-  await p.mouse.move(pad[0], pad[1], { steps: 8 });
+  await p.mouse.move(pad[0], pad[1], { steps: 1 });
   await p.waitForFunction(() => /recording · beat 1 of/.test(document.querySelector(".m1-glass")?.textContent ?? ""), null, { timeout: 15000, polling: 8 }).catch(() => {});
+  cap("tap the open hat on every \"and\"");
   const t = Date.now();
-  for (let k = 0; k < 4; k++) { const due = t + beat / 2 + k * beat - 40; while (Date.now() < due) await W(4); await p.mouse.down(); await W(60); await p.mouse.up(); }
-  await W(700); mark("a1"); mark("b0");
-  await tap(p.locator(".fl-bottom .is-wide, .ls-bottom .is-wide").first()); await W(1800);
-  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, -60, 1200); await W(500);
-  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, 90, 1200); await W(1200);
+  for (let k = 0; k < 4; k++) { const due = t + beat / 2 + k * beat - 40; while (Date.now() < due) await W(4); await p.mouse.down(); await W(70); await p.mouse.up(); }
+  await W(500); cap("four of four: your hats are in"); await W(1900);
+  mark("a1");
+  await tap(go(p), 110, 0); await W(1700); // keep it: the next step opens before clip b starts
+  mark("b0"); cap("kept. now shape it"); await W(1500);
+  cap("decay makes each hat short or long");
+  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, -40, 1300); await W(400);
+  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, 60, 1300);
+  cap("the screen draws what the knob is doing"); await W(2200);
   mark("b1");
 });
-if (only.includes("practice")) await session("practice", "/gym", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, mark }) => {
-  mark("a0"); await W(1000);
-  await tap(p.locator(".ls-pad", { hasText: "copy by ear" }).first()); await W(2600);
-  mark("a1"); mark("b0");
-  await tap(p.locator(":is(button,[role=radio]):visible", { hasText: "yours" }).first()); await W(500);
-  for (const s of [1, 5, 9, 13]) { await tap(p.locator(`[aria-label="kick, step ${s}"]:visible`).first()); await W(380); }
-  await tap(p.locator(":is(button,[role=radio]):visible", { hasText: "the target" }).first()); await W(1300);
-  await tap(p.locator("[aria-label='Check your notes']:visible, button:visible:has-text('check')").first()); await W(2600);
+
+if (only.includes("practice")) await session("practice", "/gym", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, glide, mark, cap, center }) => {
+  mark("a0"); cap("five minutes a day, picked from your lessons"); await W(1800);
+  cap("each drill trains one thing your ears need");
+  const c = await center(p.locator(".ls-pad", { hasText: "copy by ear" }).first()); if (c) await glide(c);
+  await W(1600);
+  cap("open copy by ear"); await W(900);
+  mark("a1");
+  await p.mouse.down(); await W(110); await p.mouse.up(); await W(2600);
+  mark("b0"); cap("listen to the target, then write it down"); await W(1600);
+  await tap(p.locator(":is(button,[role=radio]):visible", { hasText: "yours" }).first());
+  cap("tap the steps you heard");
+  for (const st of [1, 5, 9, 13]) await tap(p.locator(`[aria-label="kick, step ${st}"]:visible`).first(), 90, 120);
+  await tap(p.locator(":is(button,[role=radio]):visible", { hasText: "the target" }).first()); await W(900);
+  cap("check: it marks every note right or off");
+  await tap(p.locator("[aria-label='Check your notes']:visible, button:visible:has-text('check')").first(), 110, 2400);
   mark("b1");
 });
-if (only.includes("studio")) await session("studio", "/studio?all=1", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, drag, mark }) => {
-  mark("a0"); await W(600);
-  for (const n of ["kick", "closed hat", "clap", "closed hat", "kick", "open hat", "clap", "closed hat"]) { await tap(role(p, n), 70); await W(190); }
-  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, -70, 900); await W(500);
-  mark("a1"); mark("b0");
-  await tap(p.locator(".st-transport button").first()); await W(600);
-  const arr = p.locator("[role=radio]:visible", { hasText: "arrange" }).first();
-  await tap(arr); await W(1100);
-  await tap(p.locator("button:visible", { hasText: /to a new section/ }).first()); await W(1000);
-  await tap(arr); await W(2000);
-  await tap(p.locator("button:visible", { hasText: "to live" }).first()); await W(1800);
+
+if (only.includes("studio")) await session("studio", "/studio?all=1", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, drag, mark, cap }) => {
+  mark("a0"); cap("the studio: your song on real instruments"); await W(1700);
+  cap("play the pads");
+  for (const n of ["kick", "closed hat", "clap", "closed hat", "kick", "open hat", "clap", "closed hat"]) await tap(role(p, n), 70, 60);
+  await W(300); cap("turn a knob and watch the sound change");
+  await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, -45, 1200); await W(1400);
+  mark("a1");
+  await W(300);
+  mark("b0"); cap("press play"); await W(800);
+  await tap(p.locator(".st-transport button").first(), 110, 500);
+  cap("arrange: your loop as sections");
+  await tap(p.locator("[role=radio]:visible", { hasText: "arrange" }).first(), 110, 900);
+  cap("switch a part on or off in each section");
+  await tap(p.locator('[aria-label^="lead in intro"]:visible').first(), 110, 500);
+  await tap(p.locator('[aria-label^="lead in intro"]:visible').first(), 110, 700);
+  cap("to live sends your song to Ableton Live");
+  await tap(p.locator("button:visible", { hasText: "to live" }).first(), 110, 2200);
   mark("b1");
 });
-if (only.includes("dj")) await session("dj", "/dj?all=1", ["your-kick", "synth-what-is-sound", "hats", "what-is-djing"], async ({ p, W, tap, drag, mark }) => {
-  mark("a0"); await W(500);
-  await tap(role(p, "Play deck a")); await W(1000);
-  await tap(role(p, "Play deck b")); await W(700);
-  await drag(p.getByRole("slider", { name: "crossfader" }), 120, 0, 2400); await W(700);
-  mark("a1"); mark("b0");
-  await drag(p.getByRole("slider", { name: "low a" }), 0, 60, 900); await W(300);
-  await drag(p.getByRole("slider", { name: "tempo deck b" }), 0, -30, 900); await W(300);
-  await tap(role(p, "Sync deck b")); await W(900);
-  await drag(p.getByRole("slider", { name: "crossfader" }), -120, 0, 1800); await W(800);
+
+if (only.includes("dj")) await session("dj", "/dj?all=1", ["your-kick", "synth-what-is-sound", "hats", "what-is-djing"], async ({ p, W, tap, drag, slideTo, mark, cap }) => {
+  await p.evaluate(() => window.scrollTo({ top: 150 })); await W(700); // decks and mixer in view before the clip starts
+  mark("a0"); cap("two decks and a mixer, like a real controller"); await W(1600);
+  cap("play deck a: your song");
+  await tap(role(p, "Play deck a"), 110, 600);
+  cap("play deck b");
+  await tap(role(p, "Play deck b"), 110, 500);
+  cap("slide the crossfader from a to b");
+  await slideTo(p.getByRole("slider", { name: "crossfader" }), 0.96, 2600); await W(1200);
+  mark("a1");
+  await W(300);
+  mark("b0"); cap("turn down the bass on deck a"); await W(600);
+  await drag(p.getByRole("slider", { name: "low a" }), 0, 36, 1200);
+  cap("match deck b's tempo");
+  await drag(p.getByRole("slider", { name: "tempo deck b" }), 0, -30, 1200);
+  cap("or press sync");
+  await tap(role(p, "Sync deck b"), 110, 700);
+  cap("and mix back");
+  await slideTo(p.getByRole("slider", { name: "crossfader" }), 0.04, 2000); await W(1200);
   mark("b1");
 });
-if (only.includes("library")) await session("library", "/atlas", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, mark, cast }) => {
-  mark("a0"); await W(600);
-  await tap(p.locator("#lb-q")); await p.keyboard.type("warm", { delay: 160 }); await W(1500);
-  await tap(p.locator(".lb-intent", { hasText: "more space" })); await W(1700);
-  mark("a1"); mark("b0");
-  await tap(p.locator(".lb-tile", { hasText: "reverb" }).first()); await p.waitForURL(/device/); await cast(); await W(1800);
-  await p.locator(".dl-scr").evaluate(e => window.scrollTo({ top: e.getBoundingClientRect().top + window.scrollY - 8 })); await W(500);
-  await tap(p.locator(".dl-transport button").first()); await W(600);
+
+if (only.includes("library")) await session("library", "/atlas", ["your-kick", "synth-what-is-sound", "hats"], async ({ p, W, tap, mark, cap, center, glide }) => {
+  mark("a0"); cap("every device in Live, in one place"); await W(1600);
+  cap("search by name, or by what you want to hear");
+  await tap(p.locator("#lb-q"), 90, 200); await p.keyboard.type("warm", { delay: 170 }); await W(1500);
+  cap("more space: the devices that do it");
+  await tap(p.locator(".lb-intent", { hasText: "more space" }), 110, 1800);
+  mark("a1");
+  await p.locator(".lb-tile", { hasText: "reverb" }).first().locator(".lb-tilelink").click();
+  await p.waitForURL(/device/); await W(1500);
+  await p.evaluate(() => { const e = document.querySelector(".dl-scr"); if (e) window.scrollTo({ top: e.getBoundingClientRect().top + window.scrollY - 8 }); }); await W(900);
+  mark("b0"); cap("each device opens on a loop"); await W(1500);
+  cap("press play");
+  await tap(p.locator(".dl-transport button").first(), 110, 700);
+  cap("turn a knob: the screen says what it does");
   const k = p.locator(".dl-knob [role=slider]");
-  for (const [i, dy] of [[0, -70], [1, -50]]) { const c = await k.nth(i).boundingBox(); if (!c) continue; await p.mouse.move(c.x + c.width / 2, c.y + c.height / 2, { steps: 6 }); await p.mouse.down(); for (let j = 1; j <= 26; j++) { await p.mouse.move(c.x + c.width / 2, c.y + c.height / 2 + (dy * j) / 26); await W(36); } await p.mouse.up(); await W(500); }
-  const ab = await p.locator(".dl-ab").boundingBox();
-  if (ab) for (let j = 0; j < 2; j++) { await p.mouse.move(ab.x + ab.width / 2, ab.y + ab.height / 2, { steps: 6 }); await p.mouse.down(); await W(80); await p.mouse.up(); await W(900); }
+  for (const [i, dy] of [[0, -42], [1, -34]]) { const c = await center(k.nth(i)); if (!c) continue; await glide(c); await p.mouse.down(); for (let j = 1; j <= 30; j++) { await p.mouse.move(c[0], c[1] + (dy * j) / 30); await W(36); } await p.mouse.up(); await W(600); }
+  cap("a and b: hear it without, then with");
+  await tap(p.locator(".dl-ab"), 110, 1100);
+  await tap(p.locator(".dl-ab"), 110, 1500);
   mark("b1");
 });
 writeFileSync(`${raw}/marks.json`, JSON.stringify(marks, null, 1));

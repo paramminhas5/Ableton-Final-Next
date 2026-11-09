@@ -1,0 +1,192 @@
+{
+ "learn-a": {
+  "dur": 9.64,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "a lesson: the instrument, and what to do"
+   },
+   {
+    "t": 1.61,
+    "text": "press rec. four clicks count you in"
+   },
+   {
+    "t": 4.24,
+    "text": "tap the open hat on every \"and\""
+   },
+   {
+    "t": 6.54,
+    "text": "four of four: your hats are in"
+   }
+  ]
+ },
+ "learn-b": {
+  "dur": 11.24,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "kept. now shape it"
+   },
+   {
+    "t": 1.5,
+    "text": "decay makes each hat short or long"
+   },
+   {
+    "t": 7.84,
+    "text": "the screen draws what the knob is doing"
+   }
+  ]
+ },
+ "practice-a": {
+  "dur": 6.05,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "five minutes a day, picked from your lessons"
+   },
+   {
+    "t": 1.8,
+    "text": "each drill trains one thing your ears need"
+   },
+   {
+    "t": 3.95,
+    "text": "open copy by ear"
+   }
+  ]
+ },
+ "practice-b": {
+  "dur": 11.59,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "listen to the target, then write it down"
+   },
+   {
+    "t": 2.57,
+    "text": "tap the steps you heard"
+   },
+   {
+    "t": 7.36,
+    "text": "check: it marks every note right or off"
+   }
+  ]
+ },
+ "studio-a": {
+  "dur": 13.19,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "the studio: your song on real instruments"
+   },
+   {
+    "t": 1.7,
+    "text": "play the pads"
+   },
+   {
+    "t": 7.6,
+    "text": "turn a knob and watch the sound change"
+   }
+  ]
+ },
+ "studio-b": {
+  "dur": 10.6,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "press play"
+   },
+   {
+    "t": 2.59,
+    "text": "arrange: your loop as sections"
+   },
+   {
+    "t": 4.14,
+    "text": "switch a part on or off in each section"
+   },
+   {
+    "t": 6.58,
+    "text": "to live sends your song to Ableton Live"
+   }
+  ]
+ },
+ "dj-a": {
+  "dur": 12.58,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "two decks and a mixer, like a real controller"
+   },
+   {
+    "t": 1.6,
+    "text": "play deck a: your song"
+   },
+   {
+    "t": 2.88,
+    "text": "play deck b"
+   },
+   {
+    "t": 4.1,
+    "text": "slide the crossfader from a to b"
+   }
+  ]
+ },
+ "dj-b": {
+  "dur": 16.12,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "turn down the bass on deck a"
+   },
+   {
+    "t": 4.25,
+    "text": "match deck b's tempo"
+   },
+   {
+    "t": 7.6,
+    "text": "or press sync"
+   },
+   {
+    "t": 8.98,
+    "text": "and mix back"
+   }
+  ]
+ },
+ "library-a": {
+  "dur": 8.37,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "every device in Live, in one place"
+   },
+   {
+    "t": 1.6,
+    "text": "search by name, or by what you want to hear"
+   },
+   {
+    "t": 4.74,
+    "text": "more space: the devices that do it"
+   }
+  ]
+ },
+ "library-b": {
+  "dur": 16.79,
+  "steps": [
+   {
+    "t": 0.0,
+    "text": "each device opens on a loop"
+   },
+   {
+    "t": 1.5,
+    "text": "press play"
+   },
+   {
+    "t": 2.97,
+    "text": "turn a knob: the screen says what it does"
+   },
+   {
+    "t": 11.67,
+    "text": "a and b: hear it without, then with"
+   }
+  ]
+ }
+}

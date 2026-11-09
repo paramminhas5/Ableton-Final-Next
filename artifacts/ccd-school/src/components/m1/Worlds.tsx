@@ -102,7 +102,7 @@ export function Worlds() {
                 return (
                   <div key={p.slug} className="sy-path">
                     <Silk label={`path ${p.number} · ${p.title.toLowerCase()}`} right={`${dn}/${tot}`} />
-                    <ol className="sy-lessons">
+                    <ol className="sy-lessons" data-budget="list">
                       {p.lessons.map((l, i) => (
                         <li key={l.slug} id={`l-${l.slug}`}>
                           <div className="sy-line">

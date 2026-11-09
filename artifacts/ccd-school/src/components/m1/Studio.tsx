@@ -63,10 +63,11 @@ import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
 import { Lanes } from "./shell";
 import { useProgress } from "@/lib/progress";
-import { ctlKey, learntSet } from "@/lib/taught";
+import { ctlKey, learntSet, whereTaught } from "@/lib/taught";
+import { missionAny } from "@/lib/worldOrder";
 import { DepthKey, useEverything } from "./Everything";
 import { ArrangeView } from "./ArrangeView";
-import { Walkthrough } from "./Walkthrough";
+import { NewControl, Walkthrough } from "./Walkthrough";
 import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
@@ -720,6 +721,22 @@ export function Studio() {
     setTouched(null);
   };
   const songName = songs?.songs.find(x => x.id === songs.active)?.name ?? "my track";
+  // The first time a control you learnt shows up here, point at it once (design pass 3).
+  const [introduced, setIntroduced] = useState<Set<string>>(new Set(["__loading"]));
+  useEffect(() => {
+    const k = new Set<string>();
+    try { for (let i = 0; i < localStorage.length; i++) { const n = localStorage.key(i); if (n?.startsWith("ccd.new.studio:")) k.add(n.slice(8)); } } catch { /* no storage */ }
+    setIntroduced(k);
+  }, [selId]);
+  const freshKnob = (() => {
+    if (everything || !sel || introduced.has("__loading")) return null;
+    const k = knobs.find(x => learnt.has(ctlKey(sel.type, x.spec.key)) && !introduced.has(`studio:${ctlKey(sel.type, x.spec.key)}`));
+    if (!k) return null;
+    const key = ctlKey(sel.type, k.spec.key);
+    const w = whereTaught(key);
+    const title = w ? missionAny(w.slug)?.title?.toLowerCase() : null;
+    return { id: `studio:${key}`, label: k.spec.label, line: `${title ? `you learnt this in ${title}. ` : ""}turn it while your loop plays and listen to what changes.` };
+  })();
 
   return (
     <div className="st-root" onPointerDownCapture={unlock}>
@@ -844,7 +861,7 @@ export function Studio() {
         {midiOpen ? (
           <div className="st-main">
             <Silk label="to live" right="chance and conditions in a midi file" />
-            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+            <div className="st-tray" data-budget="surface" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
               {([["heard", `as you hear it: ${track.sections?.length ? "the arrangement" : `${Math.round((heardPasses(track.loop) * track.loop) / 4)} bars`}${track.sections?.length && heardPasses(arranged(track).loop) > 1 ? ` ${heardPasses(arranged(track).loop)} times` : ""}, chance rolled as it plays`], ["every", "every note, chance left out (a midi file can't hold it)"]] as ["heard" | "every", string][]).map(([m, label]) => (
                 <button key={m} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }}
                   onClick={() => { downloadSongMidi(track, m); setMidiOpen(false); setTouched({ label: "to live", text: m === "heard" ? "as heard" : "every note" }); }}>{label}</button>
@@ -854,7 +871,7 @@ export function Studio() {
         ) : wavOpen ? (
           <div className="st-main">
             <Silk label="save a wav" right="the whole song, arranged" />
-            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+            <div className="st-tray" data-budget="surface" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
               {([[false, "for streaming and sharing (-14 lufs)"], [true, "loud, for club play (-9 lufs)"]] as [boolean, string][]).map(([loud, label]) => (
                 <button key={label} type="button" className="st-sp st-song" style={{ width: "auto", flex: "none" }}
                   onClick={() => { void downloadWav(track, loud); setWavOpen(false); setMidiOpen(false); }}>{label}</button>
@@ -864,7 +881,7 @@ export function Studio() {
         ) : resetOpen ? (
           <div className="st-main">
             <Silk label="start over" right="undo brings it back" />
-            <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
+            <div className="st-tray" data-budget="surface" style={{ display: "flex", flexDirection: "column", gap: 6, justifyContent: "flex-start" }}>
               {([
                 ["layer", sel ? `clear ${TYPE[sel.type].label ?? sel.type} notes` : "clear this layer", !!sel, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => (l.id === sel?.id ? { ...l, events: [] } : l)) })],
                 ["notes", "clear every layer's notes, keep the sounds", track.layers.length > 0, (t: TrackV2) => ({ ...t, layers: t.layers.map(l => ({ ...l, events: [] })) })],
@@ -1012,6 +1029,8 @@ export function Studio() {
             {!everything && !knobs.some(k => learnt.has(ctlKey(sel.type, k.spec.key))) ? (
               <p className="st-noknobs">the knobs for your {TYPE[sel.type].label} arrive with the lessons that teach them.</p>
             ) : null}
+            {freshKnob ? <NewControl key={freshKnob.id} id={freshKnob.id} sel={`.st-knobs [role=slider][aria-label="${freshKnob.label}"]`}
+              title={`new: ${freshKnob.label}`} line={freshKnob.line} /> : null}
             <div className="m1-g st-knobs" ref={knobsRef}>
               {knobs.filter(k => everything || learnt.has(ctlKey(sel.type, k.spec.key))).map(({ spec, index }, i) => {
                 const eng = TYPE[sel.type].engine;
@@ -1180,7 +1199,7 @@ function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: 
     return best;
   };
   return (
-    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+    <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
       {order.map(p => {
         const note = DRUM_PAD_NOTES[p];
         const d = ripple(p);
@@ -1202,7 +1221,7 @@ function ScalePads({ layer, root, scale, held, hits, rings, noteHandlers, chord 
   const c = TYPE[layer.type].color;
   const notes = padGrid(root, scale);
   return (
-    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+    <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
       {notes.map((n, i) => {
         const on = held.has(n) || !!hits[`${layer.id}:${n}`];
         const isRoot = pitchClass(n) === pitchClass(root);
@@ -1319,7 +1338,7 @@ function DrumSteps({ layer, page, pages, setPage, playStep, grid, bars, setBars,
     : lanes.map(n => DRUM_PAD_NAMES[DRUM_PAD_NOTES.indexOf(n as (typeof DRUM_PAD_NOTES)[number])].replace("closed hat", "hat"));
   return (
     <>
-      <div className="st-tray" style={{ gridTemplateColumns: "44px repeat(8,1fr)", gridTemplateRows: `repeat(${lanes.length},1fr)` }}>
+      <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "44px repeat(8,1fr)", gridTemplateRows: `repeat(${lanes.length},1fr)` }}>
         {lanes.map((note, li) => (
           <LaneRow key={note} name={names[li]} note={note} layer={layer} page={page} playStep={playStep} color={c} grid={grid} onToggle={onToggle} lockAt={lockAt} onHold={onHold} onRelease={onRelease} partSteps={partSteps} />
         ))}
@@ -1367,7 +1386,7 @@ function MelodicSteps({ layer, page, pages, setPage, playStep, grid, bars, setBa
   const c = TYPE[layer.type].color;
   return (
     <>
-      <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
         {Array.from({ length: 16 }, (_, k) => {
           const s = page * 16 + k;
           if (partSteps !== undefined && s >= partSteps) return <span key={k} className="st-sp st-past" aria-hidden />;
@@ -1393,7 +1412,7 @@ function SamplePads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits
   const c = TYPE[layer.type].color;
   const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
   return (
-    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+    <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
       {order.map(k => {
         const note = SAMPLER_NOTE_BASE + k;
         const name = layer.samples?.[k];
@@ -1437,7 +1456,7 @@ function SampleLoader({ layer, onPatch, onPreview }: { layer: LayerV2; onPatch: 
   return (
     <>
       <input ref={input} type="file" accept="audio/*" hidden onChange={e => void onFile(e.target.files?.[0])} />
-      <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+      <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
         {order.map(k => {
           const name = layer.samples?.[k];
           return (
@@ -1468,7 +1487,7 @@ function FxPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Re
   const c = TYPE[layer.type].color;
   const order = [4, 5, 6, 7, 0, 1, 2, 3];
   return (
-    <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(2,1fr)" }}>
+    <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(2,1fr)" }}>
       {order.map(k => {
         const note = FX_NOTE_BASE + k;
         const lit = !!hits[`${layer.id}:${note}`];
@@ -1492,7 +1511,7 @@ function SongsPanel({ songs, onChange }: { songs: SongIndex | null; onChange: (i
   return (
     <>
       <Silk label="songs" right={`${songs.songs.length} saved`} />
-      <div className="st-tray" style={{ display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", justifyContent: "flex-start" }}>
+      <div className="st-tray" data-budget="surface" style={{ display: "flex", flexDirection: "column", gap: 4, overflowY: "auto", justifyContent: "flex-start" }}>
         {songs.songs.map(s => (
           <div key={s.id} style={{ display: "flex", alignItems: "center", flex: "none" }}>
             <button type="button" className={`st-sp st-song ${s.id === songs.active ? "is-on" : ""}`} style={{ flex: 1, width: "auto" }} aria-pressed={s.id === songs.active} onClick={() => onChange(switchSong(s.id))}>
@@ -1528,7 +1547,7 @@ function AddPanel({ track, sel, onAdd, onRemove }: { track: TrackV2; sel: LayerV
   return (
     <>
       <Silk label="add a layer" right={full ? "track is full" : `${MAX_LAYERS - track.layers.length} free`} />
-      <div className="st-tray" style={{ gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "repeat(3,1fr)" }}>
+      <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(3,1fr)", gridTemplateRows: "repeat(3,1fr)" }}>
         {LAYER_ORDER.map(t => (
           <button key={t} type="button" className="st-sp is-rest" style={{ ["--c" as string]: TYPE[t].color } as CSSProperties} disabled={full} onClick={() => onAdd(t)}>
             <span className="st-lb" style={{ fontSize: 15 }}>{TYPE[t].label}</span>

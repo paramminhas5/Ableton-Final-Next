@@ -171,14 +171,18 @@ async function playLesson(p, { answers = "first", maxSteps = 80, stopAtQuestion 
 console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
 {
   const { ctx, p, errs } = await fresh();
+  // First visit (9 Nov): hello, ten screens of the real app recorded, then two questions, then home.
   await p.goto(BASE + "/");
-  await p.getByRole("button", { name: /start learning/i }).filter({ visible: true }).first().click();
-  await p.waitForURL(/dashboard|learn/, { timeout: 8000 });
-  await p.getByText(/what is sound\?/i).first().waitFor({ timeout: 8000 });
-  ok(true, "onboarding lands on a first lesson: what is sound?");
-  await p.goto(BASE + "/dashboard");
-  await p.getByText(/what is sound\?/i).first().waitFor({ timeout: 8000 });
-  ok(await p.locator('a[href="/learn/what-is-sound"]').count() > 0, "today offers the first lesson with one go key");
+  await p.getByRole("button", { name: /see how it works/i }).first().click();
+  for (let i = 0; i < 10; i++) { await p.locator(".wl-go button").first().click(); await p.waitForTimeout(120); }
+  ok(await p.locator("video.wt-video").count() === 0 && await p.getByText(/two questions/i).count() > 0, "the first visit shows every product, then asks two questions");
+  await p.getByRole("button", { name: /make tracks/i }).first().click();
+  await p.getByRole("button", { name: /completely new/i }).first().click();
+  await p.getByRole("button", { name: /take me in/i }).first().click();
+  await p.waitForURL(/dashboard/, { timeout: 8000 });
+  await p.getByText(/your first song starts here/i).first().waitFor({ timeout: 8000 });
+  ok(true, "a new learner lands on home: your first song starts here");
+  ok(await p.locator('a.hm-go[href^="/learn/"]').count() === 1, "home offers the first lesson with one go key");
 
   await p.goto(BASE + "/learn/what-is-sound");
   await p.getByRole("dialog", { name: /how hearts work/i }).waitFor({ timeout: 5000 }).catch(() => {});

@@ -1,7 +1,7 @@
 // Shots for the 9 Nov "simple first" screens at four sizes, light and dark.
 // Usage: node scripts/shots/screens-9nov.mjs <out> <tag> <themes: dark,light> <sizes: 390,820,1180,1440> <scenes: dj,dj-all,...>
 import { chromium } from "playwright";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 const [out, tag = "after", themes = "dark", sizes = "390", scenes = ""] = process.argv.slice(2);
 mkdirSync(out, { recursive: true });
 const base = process.env.BASE ?? "http://localhost:3000";
@@ -14,7 +14,8 @@ const song = { v: 2, bpm: 122, root: 45, scale: "minor", swing: 0, loop: 16, add
   layer("lead", "synth-what-is-sound", [[57, 0], [60, 1.5], [64, 3], [62, 4], [60, 5.5], [57, 7], [57, 8], [60, 9.5], [64, 11], [67, 12], [64, 13.5], [62, 15]].map(([note, start]) => ({ note, start, vel: 0.8, len: 1 }))),
 ] };
 const done = s => Object.fromEntries(s.map(x => [x, { score: 90, at: Date.now() - 3600e3 }]));
-const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"].map(s => [`ccd.walk.${s}`, "1"]));
+const seen = { ...Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"].map(s => [`ccd.walk.${s}`, "1"])),
+  ...(process.env.NEWCTL ? {} : Object.fromEntries(Object.keys(JSON.parse(readFileSync(new URL("../../src/content/taught.gen.json", import.meta.url), "utf8")).first).map(k => [`ccd.new.studio:${k}`, "1"]))) };
 const songs = { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() - 3600e3 }] };
 const P = (world, d, xp = 340) => ({ onboardingDone: true, selectedWorld: world, completedMissions: done(d), xp, streakDays: 3, dailyXp: 999, lastActiveDate: new Date().toISOString().slice(0, 10) });
 const mine = { "ccd.track.v2": song, "ccd.songs.v1": songs, "ccd.studio.seeded": "1", ...seen };

@@ -41,7 +41,7 @@ export function PlayerSurface({ kind, settings, color, onApply, note }: {
   return (
     <div className="st-player" style={{ ["--c" as string]: color } as CSSProperties}>
       <div
-        className="st-tray st-xy st-playerxy"
+        data-budget="surface" className="st-tray st-xy st-playerxy"
         role="slider"
         tabIndex={0}
         aria-label={`${label}: left to right simple to complex, bottom to top soft to loud`}

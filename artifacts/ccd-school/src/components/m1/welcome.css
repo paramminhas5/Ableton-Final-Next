@@ -151,3 +151,18 @@
 .wt-sound::after{content:"";position:absolute;inset:-6px}
 .wt-sound i{width:7px;height:7px;border-radius:50%;background:#3A3B3F}
 .wt-sound.is-on i{background:var(--led-mint);box-shadow:0 0 6px var(--led-mint)}
+/* the walkthrough beside each clip (design pass 3): its steps, the one happening now lit */
+.wt-steps{display:none;list-style:none;margin:var(--sp-5) 0 0;padding:0;flex-direction:column;gap:var(--sp-2)}
+.wt-steps li{display:flex;align-items:center;gap:10px;font-size:var(--fs-4);color:var(--print);transition:color 200ms}
+.wt-steps li i{flex:none;width:8px;height:8px;border-radius:50%;background:color-mix(in srgb,var(--ink) 18%,transparent);transition:background 200ms,box-shadow 200ms}
+.wt-steps li.is-done{color:var(--sub)}
+.wt-steps li.is-done i{background:color-mix(in srgb,var(--led-mint) 55%,transparent)}
+.wt-steps li.is-now{color:var(--ink);font-weight:600}
+.wt-steps li.is-now i{background:var(--led-mint);box-shadow:0 0 8px var(--led-mint)}
+.wt-now{min-height:22px;margin:var(--sp-3) auto 0;max-width:360px;text-align:center;font-size:var(--fs-4);font-weight:600;color:var(--ink);animation:wt-cap 220ms ease-out}
+@keyframes wt-cap{from{opacity:.3}to{opacity:1}}
+.wt3 .wt-screen{animation:wt-in 280ms var(--ease-pop,ease-out) both}
+@keyframes wt-in{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wt3 .wt-screen,.wt-now{animation:none}}
+@media (min-width:900px){.wt-steps{display:flex}.wt-now{display:none}}
+.wt-phone{height:min(calc(100dvh - 400px),580px)}@media (min-width:900px){.wt-phone{height:min(calc(100dvh - 180px),640px)}}

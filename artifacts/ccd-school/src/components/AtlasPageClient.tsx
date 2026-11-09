@@ -168,7 +168,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
       {tab === "home" ? (
         <>
           <div className="fr-l">
-            <div className="lb-cats o3" role="group" aria-label="Kind of device">
+            <div className="lb-cats o3" data-budget="group" role="group" aria-label="Kind of device">
               {CATS.map(c => (
                 <button key={c.id} type="button" aria-pressed={cat === c.id} className={`lb-cat ${cat === c.id ? "is-on" : ""}`} onClick={() => setCat(c.id)}>
                   {c.id !== "all" ? <i className="lb-catpic"><GroupPic g={LAB_GROUP[c.id]} /></i> : null}<span>{c.label}</span><em>{counts[c.id]}</em>
@@ -191,13 +191,13 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
                 <input id="lb-q" type="search" value={q} onChange={e => setQ(e.target.value)} placeholder={HINTS[hint]} autoComplete="off" />
                 <kbd className="lb-kbd" aria-hidden>/</kbd>
               </label>
-              <div className="lb-intents" role="group" aria-label="What do you want to hear">
+              <div className="lb-intents" data-budget="group" role="group" aria-label="What do you want to hear">
                 {INTENTS.slice(0, 8).map(i => <button key={i.w} type="button" className={`lb-intent ${intent?.w === i.w ? "is-on" : ""}`} onClick={() => setQ(intent?.w === i.w ? "" : i.w)}>{i.w}</button>)}
               </div>
             </div>
             <section className="o4" aria-live="polite">
               <Silk label={t ? (intent ? `to make it ${intent.w}` : `devices for "${t}"`) : "play with a device"} right={`${labs.length}`} />
-              <div className="lb-grid">
+              <div className="lb-grid" data-budget="list">
                 {labs.map((d, i) => (
                   <div key={d.slug} className={`lb-tile ${intent && i < intent.slugs.length ? "is-pick" : ""} ${hearing === d.slug ? "is-hearing" : ""}`}>
                     <Link href={`/device/${d.slug}`} className="lb-tilelink">

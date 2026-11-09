@@ -173,7 +173,7 @@ export function Today() {
         {/* 4. the map */}
         <section aria-label={`${WORLD_LABEL[world]} map`} className="o4">
           <Silk label={`${WORLD_LABEL[world]} · your road`} right={`${counts.done} of ${counts.total} parts`} />
-          <ol className="hm-map">
+          <ol className="hm-map" data-budget="list">
             {paths.map(p => {
               const open = zones[zi]?.path === p.slug;
               const tot = p.songTotal || p.lessons.length;

@@ -46,6 +46,7 @@ if "--frames" in sys.argv:
     sheet.save(f"{out}/contact.png")
     sys.exit()
 
+captions = {}
 for name, m in marks.items():
     for seg in "ab":
         key = f"{name}-{seg}"
@@ -62,7 +63,9 @@ for name, m in marks.items():
                 f.write(f"file '{os.path.abspath(raw)}/{name}/{i:05d}.jpg'\nduration {end - start:.4f}\n")
             f.write(f"file '{os.path.abspath(raw)}/{name}/{max(i0, i1 - 1):05d}.jpg'\n")
         top, h = CROP[key]
-        vf = f"scale=780:1688,crop=780:{h * 2}:0:{top * 2},scale=600:-2,fps=30,format=yuv420p"
+        hold = 1.2  # the last frame holds, then fades, so the loop never jumps
+        total = (s1 - s0) + hold
+        vf = f"scale=780:1688,crop=780:{h * 2}:0:{top * 2},scale=600:-2,fps=30,tpad=stop_mode=clone:stop_duration={hold},fade=t=in:st=0:d=0.3,fade=t=out:st={total - 0.4:.3f}:d=0.4,format=yuv420p"
         mp4 = f"{out}/{key}.mp4"
         # sound: each recorded track lined up to the segment start, mixed, levelled
         tracks = json.load(open(f"{raw}/{name}/audio.json")) if os.path.exists(f"{raw}/{name}/audio.json") else []
@@ -83,7 +86,11 @@ for name, m in marks.items():
         fc.append(f"[0:v]{vf}[vout]")
         cmd += ["-filter_complex", ";".join(fc), "-map", "[vout]"]
         cmd += (["-map", "[aout]", "-c:a", "aac", "-b:a", "96k"] if tracks else ["-an"])
-        cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "27", "-t", f"{dur:.3f}", "-movflags", "+faststart", mp4]
+        cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "27", "-t", f"{total:.3f}", "-movflags", "+faststart", mp4]
         subprocess.run(cmd, check=True)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "0.05", "-i", mp4, "-frames:v", "1", "-q:v", "4", f"{out}/{key}.jpg"], check=True)
+        steps = [{"t": round(max(0.0, c["t"] - s0), 2), "text": c["text"]} for c in m.get("caps", []) if s0 - 0.05 <= c["t"] < s1]
+        captions[key] = {"dur": round(total, 2), "steps": steps}
         print(key, f"{s1 - s0:.1f}s", os.path.getsize(mp4) // 1024, "KB", f"{len(tracks)} sound")
+
+json.dump(captions, open(f"{out}/captions.json", "w"), indent=1)

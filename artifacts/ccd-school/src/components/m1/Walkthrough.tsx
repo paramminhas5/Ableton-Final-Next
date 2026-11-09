@@ -131,7 +131,8 @@ export function NewControl({ sel, title, line, id }: { sel: string; title: strin
   const [open, setOpen] = useState(false);
   useEffect(() => {
     let seen = true;
-    try { seen = !!localStorage.getItem(`ccd.new.${id}`); } catch { /* no storage */ }
+    // never on top of the screen's own first walkthrough: wait until that has been seen
+    try { seen = !!localStorage.getItem(`ccd.new.${id}`) || !localStorage.getItem(`ccd.walk.${id.split(":")[0]}`); } catch { /* no storage */ }
     if (!seen) { const t = window.setTimeout(() => setOpen(true), 900); return () => window.clearTimeout(t); }
   }, [id]);
   if (!open) return null;

@@ -103,7 +103,7 @@ export function GlideSurface({ ctx }: { ctx: SurfaceCtx }) {
   return (
     <>
       <div
-        className="st-tray st-lanes"
+        data-budget="surface" className="st-tray st-lanes"
         style={{ gridTemplateColumns: "repeat(8,1fr)", touchAction: "none", position: "relative", ...dotColor(color) }}
         role="group"
         aria-label="Glide strip: slide across the notes"
@@ -184,7 +184,7 @@ export function CircleSurface({ ctx }: { ctx: SurfaceCtx }) {
         ))}
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 78px", gap: 8, flex: 1, minHeight: 0 }}>
-        <div className="st-tray st-ring" style={{ display: "flex", alignItems: "center", justifyContent: "center", ...dotColor(color) }}>
+        <div data-budget="surface" className="st-tray st-ring" style={{ display: "flex", alignItems: "center", justifyContent: "center", ...dotColor(color) }}>
           <svg viewBox="-100 -100 200 200" width="100%" height="100%" role="img" aria-label={`${name}: ${hits} hits of 16, rotated ${rot}`}>
             {pattern.map((on, i) => {
               const a = (i / 16) * Math.PI * 2 - Math.PI / 2;
@@ -275,7 +275,7 @@ export function ChordSurface({ ctx }: { ctx: SurfaceCtx }) {
 
   return (
     <>
-      <div className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(2,1fr)", ...dotColor(color) }}>
+      <div data-budget="surface" className="st-tray" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(2,1fr)", ...dotColor(color) }}>
         {list.map((c, i) => {
           const ns = chordNotes(track, c);
           const lit = sel === i;
@@ -361,7 +361,7 @@ export function XYSurface({ ctx }: { ctx: SurfaceCtx }) {
 
   return (
     <div
-      className="st-tray st-xy"
+      data-budget="surface" className="st-tray st-xy"
       role="group"
       aria-label="Lead pad: slide for the note, up to open the filter"
       style={{ touchAction: "none", position: "relative", ...dotColor(color) }}
@@ -432,7 +432,7 @@ export function RollsSurface({ ctx, rate, setRate }: { ctx: SurfaceCtx; rate: nu
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr 62px", gap: 8, flex: 1, minHeight: 0 }}>
-      <div className="st-tray" style={{ gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" }}>
+      <div data-budget="surface" className="st-tray" style={{ gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr" }}>
         {HAT_PADS.map((n, i) => {
           const lit = !!ctx.hits[`${ctx.layer.id}:${n}`];
           return (
@@ -443,7 +443,7 @@ export function RollsSurface({ ctx, rate, setRate }: { ctx: SurfaceCtx; rate: nu
           );
         })}
       </div>
-      <div className="st-tray st-rates" role="radiogroup" aria-label="Roll speed" style={{ gridTemplateRows: "repeat(4,1fr)", gridTemplateColumns: "1fr", ...dotColor(color) }}>
+      <div data-budget="surface" className="st-tray st-rates" role="radiogroup" aria-label="Roll speed" style={{ gridTemplateRows: "repeat(4,1fr)", gridTemplateColumns: "1fr", ...dotColor(color) }}>
         {ROLLS.map((r, i) => (
           <button key={r.label} type="button" role="radio" aria-checked={rate === i} className={rate === i ? "is-on" : ""} onClick={() => pick(i)}>
             {r.label}
@@ -481,7 +481,7 @@ export function RiserSurface({ ctx }: { ctx: SurfaceCtx }) {
 
   return (
     <>
-      <div className="st-tray st-bars" aria-hidden style={{ alignItems: "flex-end", display: "flex", gap: 6, padding: "8px 10px", ...dotColor(color) }}>
+      <div data-budget="surface" className="st-tray st-bars" aria-hidden style={{ alignItems: "flex-end", display: "flex", gap: 6, padding: "8px 10px", ...dotColor(color) }}>
         {Array.from({ length: 8 }, (_, i) => (
           <i key={i} className={build * 8 > i + 0.01 ? "is-on" : ""} style={{ height: `${22 + i * 9}%` }} />
         ))}

@@ -377,7 +377,7 @@ export function GymPageClient() {
         <div className="fr-c">
           <section className="o3">
             <Silk label="drills" right="or pick one" />
-            <div className="ls-pads gy-pads" data-tour="drills">
+            <div className="ls-pads gy-pads" data-tour="drills" data-budget="list">
               {pads.filter(p => everything || !p.locked).map(p => {
                 const inner = (
                   <>

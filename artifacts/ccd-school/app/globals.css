@@ -608,3 +608,5 @@ html[data-contrast="high"] .ls-pad.is-wrong { outline: 3px dashed var(--ink); }
 .m1-streak>a{flex:none;height:30px;display:inline-flex;align-items:center;padding:0 12px;border-radius:9px;font-weight:600;color:var(--ink);text-decoration:none;background-image:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
 .m1-streak>button{flex:none;width:30px;height:30px;border:0;background:none;color:var(--print);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 @media (max-width:1199px){.m1-streak{margin:8px 16px 0}}
+/* the studio has no mode dock, so no room is kept for one (it made the instrument scroll 118 px) */
+main:has(.st-root){padding-bottom:0!important}

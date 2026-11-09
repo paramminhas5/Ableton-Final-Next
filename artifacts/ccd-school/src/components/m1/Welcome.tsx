@@ -5,7 +5,7 @@
  * that part of ccd school working (scripts/shots/tour-clips.mjs records them, tour-encode.py cuts them),
  * with a heading and one line. hello, learn, practice, studio, dj decks, library, then two questions.
  */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { DRUM_PAD_NOTES } from "@/engine";
@@ -72,18 +72,37 @@ function useTick(ms: number, on = true) {
 }
 
 
-/** One recording of the real app: plays inline and loops, muted until you turn the sound on.
- *  With reduced motion it waits for a tap. */
-function Clip({ k, sound, onSound }: { k: string; sound: boolean; onSound: () => void }) {
+type Caps = Record<string, { dur: number; steps: { t: number; text: string }[] }>;
+
+/** One recording of the real app: plays inline and loops, muted until you turn the sound on. Reports its time,
+ *  so the steps beside it light up as they happen. With reduced motion it waits for a tap. */
+function Clip({ k, sound, onSound, onTime }: { k: string; sound: boolean; onSound: () => void; onTime: (t: number) => void }) {
   const [still, setStill] = useState(false);
+  const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => setStill(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
+  useEffect(() => {
+    let raf = 0;
+    const tick = () => { if (ref.current) onTime(ref.current.currentTime); raf = requestAnimationFrame(tick); };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [k, onTime]);
   return (
     <div className="wt-phone">
-      <video key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline loop autoPlay={!still} controls={still} preload="auto" aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+      <video ref={ref} key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline loop autoPlay={!still} controls={still} preload="auto" aria-label={`${CLIP[k].h}: a recording of ccd school`} />
       <button type="button" className={`wt-sound ${sound ? "is-on" : ""}`} aria-pressed={sound} onClick={onSound}>
         <i aria-hidden />{sound ? "sound on" : "sound off"}
       </button>
     </div>
+  );
+}
+
+/** The walkthrough beside a clip: every step it shows, the one happening now lit. */
+function Steps({ steps, now }: { steps: { t: number; text: string }[]; now: number }) {
+  if (!steps.length) return null;
+  return (
+    <ol className="wt-steps" aria-label="What happens in this clip">
+      {steps.map((st, i) => <li key={i} className={i === now ? "is-now" : i < now ? "is-done" : ""}><i aria-hidden />{st.text}</li>)}
+    </ol>
   );
 }
 
@@ -93,6 +112,10 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const [know, setKnow] = useState<Know | null>(null);
   const [placement, setPlacement] = useState(false);
   const [sound, setSound] = useState(false);
+  const [caps, setCaps] = useState<Caps>({});
+  const [time, setTime] = useState(0);
+  useEffect(() => { void fetch("/tour/captions.json").then(r => (r.ok ? r.json() : {})).then(setCaps).catch(() => {}); }, []);
+  const onTime = useCallback((t: number) => setTime(x => (Math.abs(x - t) > 0.05 ? t : x)), []);
   const { setOnboarding } = useProgress();
   const { setLearnMode } = useLearnMode();
   const router = useRouter();
@@ -127,6 +150,8 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const helloParts = 1 + Math.min(3, Math.floor((tick % 24) / 5));
   const group = prod ? PRODS.indexOf(prod) + 1 : at === "you" ? 6 : 0;
   const nextKey = STEPS[step + 1];
+  const stepsNow = caps[at.replace(":", "-")]?.steps ?? [];
+  const stepNow = stepsNow.reduce((n, st, i) => (time + 0.05 >= st.t ? i : n), 0);
 
   return (
     <main className="m1-page wl wt2 wt3" data-step={at}>
@@ -162,8 +187,9 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
               <Silk label={NAME[prod]} right={at.endsWith(":a") ? "1 of 2" : "2 of 2"} />
               <h1 className="wt-big">{CLIP[at].h}</h1>
               <p className="wt-sub">{CLIP[at].line}</p>
+              <Steps steps={stepsNow} now={stepNow} />
             </div>
-            <div className="wt-show"><Clip k={at} sound={sound} onSound={() => setSound(v => !v)} /></div>
+            <div className="wt-show"><Clip k={at} sound={sound} onSound={() => setSound(v => !v)} onTime={onTime} /><p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
             <div className="wt-foot"><div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div></div>
             {nextKey && nextKey.includes(":") ? <link rel="prefetch" href={`${src(nextKey)}.mp4`} /> : null}
           </>

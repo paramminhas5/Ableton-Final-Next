@@ -448,7 +448,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       </div>
 
       <Silk label={drumLike ? "pads" : type === "chords" ? "chord pads" : "keys"} right={drumLike ? "tap in time" : `only notes in ${keyName}`} />
-      <div className={`ls-tray ${drumLike || type === "chords" ? "is-pads" : "is-keys"}`} style={drumLike && pads.length !== 8 ? { gridTemplateColumns: `repeat(${pads.length}, minmax(0, 1fr))` } : undefined}>
+      <div data-budget="surface" className={`ls-tray ${drumLike || type === "chords" ? "is-pads" : "is-keys"}`} style={drumLike && pads.length !== 8 ? { gridTemplateColumns: `repeat(${pads.length}, minmax(0, 1fr))` } : undefined}>
         {pads.map((p, i) => {
           const hasTarget = !!coach && !goalMet && goalNote !== undefined && pads.some(q => q.notes[0] === goalNote);
           const on = held.has(i) || p.notes.some(n => lit[n]);
