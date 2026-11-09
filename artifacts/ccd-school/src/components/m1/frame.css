@@ -63,3 +63,8 @@ a.wg:active{transform:translateY(2px);box-shadow:var(--m1-pressed)}
 /* small keys keep a 44 px touch area with an invisible ring, so they can look small and still be easy to hit */
 .tb-k,.tb .hk.is-q{position:relative;min-height:0!important}
 .tb-k::after,.tb .hk.is-q::after{content:"";position:absolute;inset:-3px}
+/* instrument screens share the top bar's keys (design pass 2): lesson, dj decks, studio */
+.fl-back,.fl-row .hk.is-q,.tb .hk:not(.is-q){height:38px!important;min-height:0!important;border-radius:11px}
+.fl-back{width:38px}
+.fl-row .hk.is-q{width:38px;border:0;font:600 14px Outfit,system-ui;color:var(--ink);background-image:var(--grain),linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.tb .hk:not(.is-q){padding:0 12px;font-size:13px}

@@ -310,3 +310,16 @@
   .st-side .st-knobs{grid-template-columns:repeat(2,minmax(0,1fr))!important;row-gap:10px}
   .st-side .st-knobs>.m1-m{height:auto!important;aspect-ratio:1}
 }
+/* laptop left column (design pass 2): the sounds for the part you're on, and the keys */
+.st-sounds,.st-shortcuts{display:none}
+@media (min-width:1200px) and (min-height:560px){
+  .st-sounds{display:flex;flex-direction:column;gap:2px;margin-top:var(--sp-3);padding:var(--sp-3);border-radius:14px;background:var(--deck2);box-shadow:inset 0 2px 5px var(--shA),0 1px 0 var(--hi);min-height:0;overflow-y:auto;flex:0 1 auto}
+  .st-sounds b,.st-shortcuts b{font-size:var(--fs-6);font-weight:500;letter-spacing:.06em;color:var(--print);margin:0 4px 6px}
+  .st-sounds button{height:34px;padding:0 10px;border:0;border-radius:9px;background:transparent;font:500 13px Outfit,system-ui;color:var(--ink);text-align:left;cursor:pointer;min-height:0}
+  .st-sounds button.is-on{background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);font-weight:600}
+  @media (hover:hover){.st-sounds button:not(.is-on):hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}}
+  .st-shortcuts{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding:var(--sp-3) 4px 0}
+  .st-shortcuts span{display:flex;align-items:center;gap:8px;font-size:var(--fs-5);color:var(--print)}
+  .st-shortcuts kbd{min-width:44px;height:24px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;font:600 var(--fs-6) Outfit,system-ui;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 20%,transparent)}
+}
+@media (hover:none){.st-shortcuts{display:none!important}}

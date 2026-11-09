@@ -14,10 +14,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { YouCard } from "./YouCard";
 import { useProgress } from "@/lib/progress";
-import { useTrack } from "@/lib/track";
+import { useTrack, KIND } from "@/lib/track";
 import { readTrackV2 } from "@/lib/track2";
 import { playTrack, stopTrack } from "@/lib/track-engine";
-import { journey, nextStep, partOf, worldSteps, worldDone, missionAny, missionImage, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { journey, nextStep, partOf, worldSteps, worldDone, missionAny, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { CAP, Icon, Key, Knob, Screen, Silk, WORLD_LED } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
 import { SongKey, useSongName, SONG_EVENT } from "./SongKey";
@@ -94,6 +94,8 @@ export function Today() {
   };
 
   const isDone = !!(cur && done[cur.slug]);
+  const addWord = cur ? partOf(cur.slug).toLowerCase() : "";
+  const addKind = ((Object.keys(KIND) as (keyof typeof KIND)[]).find(k => addWord.includes(k)) ?? (addWord.includes("snare") ? "clap" : addWord.includes("synth") || addWord.includes("melody") ? "lead" : addWord.includes("chord") ? "chords" : "perc"));
   const led = WORLD_LED[world];
   const anyDone = Object.keys(done).length > 0;
   return (
@@ -147,15 +149,18 @@ export function Today() {
             </div>
           </div>
         </section>
-        {anyDone && <div className="o7 fr-side"><YouCard xp={progress.xp} streak={progress.streakDays} done={done} /></div>}
+        {anyDone && <div className="o7 fr-side"><YouCard xp={progress.xp} streak={progress.streakDays} done={done} compact /></div>}
       </div>
 
       <div className="fr-c">
         {/* 2. continue: the one pink key on the screen */}
         {cur && mission && (
           <Link href={`/learn/${cur.slug}`} className="m1-m is-wide hm-go o2" key={`c-${cur.slug}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={missionImage(cur.slug, world, "sm")} alt="" width={72} height={72} decoding="async" className="td-pop" style={{ filter: `url(#duo-${world})` }} />
+            {/* what the lesson adds, drawn on your song: its lane dashed in, where it will go (design pass 2) */}
+            <span className="hm-gopic" aria-hidden style={{ ["--pc" as string]: KIND[addKind].color } as CSSProperties}>
+              <span className="hm-gopart"><i />{partOf(cur.slug)}</span>
+              <span className="hm-golanes"><Lanes track={track} next={{ kind: addKind, isNew: !track.layers.some(l => l.kind === addKind) }} /></span>
+            </span>
             <div className="hm-go-t">
               <div className="m1-eng">{isDone ? "go again" : cur.slug === next?.slug ? (hasSong ? "continue" : "start") : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
               <div className="m1-t22 hm-go-n">{mission.title.toLowerCase()}</div>
@@ -207,11 +212,13 @@ export function Today() {
 
       {/* Laptop: working windows onto the rest of ccd school. Phone keeps review only. */}
       <div className="fr-r">
-        <div className="o5"><ReviewWidget due={missionsNeedingReview.length} any={anyDone} /></div>
-        <div className="fr-side o6"><PracticeWidget /></div>
+        {/* review leads only when something is due; otherwise it waits at the bottom */}
+        {missionsNeedingReview.length > 0 && <div className="o5"><ReviewWidget due={missionsNeedingReview.length} any={anyDone} /></div>}
+        <div className="fr-side o6"><PracticeWidget done={done} /></div>
         <div className="fr-side o6"><StudioWidget parts={hasSong ? layers : 0} /></div>
         <div className="fr-side o6"><DecksWidget /></div>
         <div className="fr-side o6"><WordWidget /></div>
+        {missionsNeedingReview.length === 0 && <div className="o7"><ReviewWidget due={0} any={anyDone} /></div>}
       </div>
       <DuoFilters />
     </div>

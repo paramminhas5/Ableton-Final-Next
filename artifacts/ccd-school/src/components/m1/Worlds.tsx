@@ -29,7 +29,7 @@ export function Worlds() {
   const { progress, missionsNeedingReview } = useProgress();
   const [placed, setPlaced] = useState<PlaceResult | null>(null);
   const [stars, setStars] = useState<ReturnType<typeof readChallenges>>({});
-  const [open, setOpen] = useState<WorldId | null>(null);
+  const [open, setOpen] = useState<WorldId | null>("fundamentals"); // a world is open from the first paint, so nothing jumps
   // Inside your world only one path is open at a time: the one you're on, or the one you tap.
   const [openPath, setOpenPath] = useState<string | null>(null);
   // Deeper lessons fold under their song lesson until you ask for them (design pass, 9 Nov night).

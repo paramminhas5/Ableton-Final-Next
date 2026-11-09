@@ -9,20 +9,23 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { TERMS } from "@/content/glossary";
 import { loadGym } from "@/lib/gym/store";
 import { weekStatus } from "@/lib/gym/week";
+import { drillOpen } from "@/lib/gym/taught";
+import type { GymDrill } from "@/lib/gym/engine";
 import { Icon } from "./controls";
 import "./frame.css";
 import "./widgets.css";
 
 const DRILL_NAME: Record<string, string> = { eq: "eq ear", compression: "compression", groove: "tempo and groove", match: "match this sound", copy: "copy by ear", imagine: "imagine it first" };
 
-export function PracticeWidget() {
+/** Today's practice: this week's sessions and your level in the drills your lessons have opened, nothing locked. */
+export function PracticeWidget({ done }: { done: Record<string, unknown> }) {
   const [w, setW] = useState<{ filled: number; target: number; levels: [string, number][] } | null>(null);
   useEffect(() => {
     const g = loadGym();
     const s = weekStatus(g.week, new Date());
-    const levels = (Object.entries(g.levels) as [string, { level: number }][]).map(([k, v]) => [k, v.level] as [string, number]).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const levels = (Object.entries(g.levels) as [GymDrill, { level: number }][]).filter(([k]) => drillOpen(k, done)).map(([k, v]) => [k, v.level] as [string, number]).sort((a, b) => b[1] - a[1]).slice(0, 3);
     setW({ filled: s.filled, target: s.target, levels });
-  }, []);
+  }, [done]);
   return (
     <Link href="/gym" className="wg wg-practice">
       <div className="wg-h"><b>practice</b><span>this week</span></div>
@@ -33,7 +36,7 @@ export function PracticeWidget() {
         </span>
       </div>
       <div className="wg-bars">
-        {(w?.levels ?? [["groove", 1], ["copy", 1]]).map(([k, lv]) => (
+        {(w?.levels ?? []).map(([k, lv]) => (
           <div key={k} className="wg-bar"><span>{DRILL_NAME[k] ?? k}</span><i style={{ ["--w" as string]: `${Math.min(100, lv * 12)}%` } as CSSProperties} /><em>lv {lv}</em></div>
         ))}
       </div>

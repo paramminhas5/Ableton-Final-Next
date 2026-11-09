@@ -50,6 +50,11 @@ export const TOURS: Record<string, Stop[]> = {
     { sel: ".sy-row:not(.is-small)", title: "song lessons", line: "each adds a part to your song, in order." },
     { sel: ".sy-more", title: "go deeper", line: "+3 means three more lessons on that part. tap to open them." },
   ],
+  device: [
+    { sel: ".dl-scr", title: "the screen", line: "shows the knob you're turning, its value and what it does to the sound." },
+    { sel: ".dl-transport", title: "play, then compare", line: "play runs a loop through the device. a and b switch it off and on so you hear the difference." },
+    { sel: ".dl-knobs", title: "turn anything", line: "every knob is live. nothing you turn can break it." },
+  ],
   wiki: [
     { sel: "input[type=search]", title: "search", line: "type a device, a word, or what you want to hear." },
     { sel: ".lb-intents", title: "search by sound", line: "warmer, wider, more space: tap one to see the devices that do it." },

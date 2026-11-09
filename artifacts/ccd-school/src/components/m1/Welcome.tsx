@@ -72,13 +72,17 @@ function useTick(ms: number, on = true) {
 }
 
 
-/** One recording of the real app: muted, looping, plays inline. With reduced motion it waits for a tap. */
-function Clip({ k }: { k: string }) {
+/** One recording of the real app: plays inline and loops, muted until you turn the sound on.
+ *  With reduced motion it waits for a tap. */
+function Clip({ k, sound, onSound }: { k: string; sound: boolean; onSound: () => void }) {
   const [still, setStill] = useState(false);
   useEffect(() => setStill(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
   return (
     <div className="wt-phone">
-      <video key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted playsInline loop autoPlay={!still} controls={still} preload="auto" aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+      <video key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline loop autoPlay={!still} controls={still} preload="auto" aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+      <button type="button" className={`wt-sound ${sound ? "is-on" : ""}`} aria-pressed={sound} onClick={onSound}>
+        <i aria-hidden />{sound ? "sound on" : "sound off"}
+      </button>
     </div>
   );
 }
@@ -88,6 +92,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const [want, setWant] = useState<Want | null>(null);
   const [know, setKnow] = useState<Know | null>(null);
   const [placement, setPlacement] = useState(false);
+  const [sound, setSound] = useState(false);
   const { setOnboarding } = useProgress();
   const { setLearnMode } = useLearnMode();
   const router = useRouter();
@@ -158,7 +163,7 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
               <h1 className="wt-big">{CLIP[at].h}</h1>
               <p className="wt-sub">{CLIP[at].line}</p>
             </div>
-            <div className="wt-show"><Clip k={at} /></div>
+            <div className="wt-show"><Clip k={at} sound={sound} onSound={() => setSound(v => !v)} /></div>
             <div className="wt-foot"><div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div></div>
             {nextKey && nextKey.includes(":") ? <link rel="prefetch" href={`${src(nextKey)}.mp4`} /> : null}
           </>

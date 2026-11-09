@@ -12,7 +12,7 @@ const song = { v: 2, bpm: 122, root: 45, scale: "minor", swing: 0, loop: 16, add
   layer("drums", "your-kick", [...hit(36, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 1), ...hit(39, [1, 3, 5, 7, 9, 11, 13, 15], 0.8)].sort((a, b) => a.start - b.start)),
   layer("lead", "synth-what-is-sound", [[57, 0], [60, 1.5], [64, 3], [62, 4], [60, 5.5], [57, 7], [57, 8], [60, 9.5], [64, 11], [67, 12], [64, 13.5], [62, 15]].map(([note, start]) => ({ note, start, vel: 0.8, len: 1 }))),
 ] };
-const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki"].map(s => [`ccd.walk.${s}`, "1"]));
+const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"].map(s => [`ccd.walk.${s}`, "1"]));
 const done = s => Object.fromEntries(s.map(x => [x, { score: 90, at: Date.now() - 3600e3 }]));
 const store = (d) => ({ ...seen, "ccd.track.v2": song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() }] }, "ccd.studio.seeded": "1", "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: done(d), xp: 120, streakDays: 0 } });
 const finger = () => {
@@ -28,6 +28,39 @@ const finger = () => {
   addEventListener("pointerdown", e => { mv(e); const d = get(); d.style.opacity = "1"; d.style.transform = "scale(.8)"; }, true);
   addEventListener("pointermove", e => { mv(e); if (e.buttons) get().style.opacity = "1"; }, true);
   addEventListener("pointerup", () => { const d = get(); d.style.transform = "scale(1)"; setTimeout(() => { d.style.opacity = "0"; }, 280); }, true);
+};
+// Sound: every connection to the speakers is also sent to a recorder, so each clip carries what the app played.
+const tapAudio = () => {
+  if (!window.AudioNode || !window.MediaRecorder) return;
+  const orig = AudioNode.prototype.connect;
+  const recs = new Map();
+  window.__audio = [];
+  const ensure = ctx => {
+    if (recs.has(ctx)) return recs.get(ctx);
+    const dest = ctx.createMediaStreamDestination();
+    const r = new MediaRecorder(dest.stream, { mimeType: "audio/webm;codecs=opus", audioBitsPerSecond: 128000 });
+    const o = { dest, r, chunks: [], t0: 0 };
+    r.ondataavailable = e => { if (e.data.size) o.chunks.push(e.data); };
+    r.onstart = () => { o.t0 = Date.now(); };
+    r.start(200);
+    recs.set(ctx, o); window.__audio.push(o);
+    return o;
+  };
+  AudioNode.prototype.connect = function (target, ...rest) {
+    const out = orig.call(this, target, ...rest);
+    try { if (target instanceof AudioDestinationNode) orig.call(this, ensure(this.context).dest, ...rest); } catch { /* not a node we can tap */ }
+    return out;
+  };
+  window.__dumpAudio = async () => {
+    const res = [];
+    for (const o of window.__audio) {
+      await new Promise(done => { o.r.onstop = done; o.r.stop(); });
+      const u = new Uint8Array(await new Blob(o.chunks, { type: "audio/webm" }).arrayBuffer());
+      let bin = ""; for (let i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode(...u.subarray(i, i + 0x8000));
+      res.push({ t0: o.t0, b64: btoa(bin) });
+    }
+    return res;
+  };
 };
 const marks = existsSync(`${raw}/marks.json`) ? JSON.parse(readFileSync(`${raw}/marks.json`, "utf8")) : {};
 const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
@@ -46,6 +79,7 @@ async function session(name, url, d, run) {
   p.on("pageerror", e => console.log(`  ${name} pageerror`, e.message.slice(0, 160)));
   await p.addInitScript(([s]) => { if (sessionStorage.getItem("__s")) return; sessionStorage.setItem("__s", "1"); localStorage.setItem("ccd.mode", "dark"); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); }, [store(d)]);
   await p.addInitScript(finger);
+  await p.addInitScript(tapAudio);
   await p.goto(base + url, { waitUntil: "load", timeout: 120000 });
   await p.waitForTimeout(2200);
   const m = {};
@@ -56,6 +90,9 @@ async function session(name, url, d, run) {
   const drag = async (loc, dx, dy, ms = 900) => { const c = await center(loc); if (!c) { console.log("  miss drag", name); return; } await p.mouse.move(c[0], c[1], { steps: 5 }); await p.mouse.down(); const n = Math.max(8, Math.round(ms / 30)); for (let i = 1; i <= n; i++) { await p.mouse.move(c[0] + (dx * i) / n, c[1] + (dy * i) / n); await W(ms / n); } await p.mouse.up(); };
   await run({ p, W, tap, drag, center, cast, mark: k => { m[k] = at(); void p.screenshot({ path: `${raw}/${name}-${k}.png` }).catch(() => {}); } });
   await W(400);
+  const audio = await p.evaluate(() => window.__dumpAudio ? window.__dumpAudio() : []).catch(() => []);
+  const tracks = audio.map((a, i) => { writeFileSync(`${dir}/audio${i}.webm`, Buffer.from(a.b64, "base64")); return { file: `audio${i}.webm`, t0: a.t0 / 1000 }; });
+  writeFileSync(`${dir}/audio.json`, JSON.stringify(tracks));
   await cdp.send("Page.stopScreencast").catch(() => {});
   await ctx.close();
   writeFileSync(`${dir}/frames.json`, JSON.stringify(frames));
@@ -97,6 +134,7 @@ if (only.includes("studio")) await session("studio", "/studio?all=1", ["your-kic
   for (const n of ["kick", "closed hat", "clap", "closed hat", "kick", "open hat", "clap", "closed hat"]) { await tap(role(p, n), 70); await W(190); }
   await drag(p.getByRole("slider", { name: /decay/i }).first(), 0, -70, 900); await W(500);
   mark("a1"); mark("b0");
+  await tap(p.locator(".st-transport button").first()); await W(600);
   const arr = p.locator("[role=radio]:visible", { hasText: "arrange" }).first();
   await tap(arr); await W(1100);
   await tap(p.locator("button:visible", { hasText: /to a new section/ }).first()); await W(1000);

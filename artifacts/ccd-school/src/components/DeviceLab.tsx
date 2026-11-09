@@ -24,6 +24,7 @@ const SAMPLES: { id: SampleName; label: string }[] = [
 ];
 
 export function DeviceLab({
+  subtitle,
   factory,
   params,
   presets,
@@ -154,9 +155,9 @@ export function DeviceLab({
   return (
     <div className="dl">
       <Screen className="dl-scr">
-        <div className="dl-meta"><span>{deviceLabel.toLowerCase()}</span><span>{!playing ? "press play" : bypassed ? "a: without it" : "b: with it"}</span></div>
-        <div className="dl-big">{focused ? <>{focused.label.toLowerCase()} <b>{fmt(focused)}</b></> : "turn any knob"}</div>
-        <p className="dl-explain">{focused?.explain ?? "each knob says here what it does. nothing you turn can break it."}</p>
+        <div className="dl-meta"><span>{focused ? deviceLabel.toLowerCase() : "device lab"}</span><span>{!playing ? "press play" : bypassed ? "a: without it" : "b: with it"}</span></div>
+        <div className="dl-big">{focused ? <>{focused.label.toLowerCase()} <b>{fmt(focused)}</b></> : deviceLabel.toLowerCase()}</div>
+        <p className="dl-explain">{focused?.explain ?? (subtitle ? `${subtitle} Press play, then turn any knob.` : "Press play, then turn any knob.")}</p>
         <div className="dl-spec"><SpectrumMeter analyser={engineRef.current?.analyserOut ?? null} height={64} /></div>
         <div className="dl-meters">
           <span>in</span><i><b style={{ width: `${peakInPct}%` }} /></i>

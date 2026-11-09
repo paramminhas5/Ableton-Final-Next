@@ -42,3 +42,7 @@
   .dl>.dl-transport,.dl>.dl-sources{grid-column:2}
   .dl>*:not(.dl-scr):not(.dl-transport):not(.dl-sources){grid-column:1/-1}
 }
+/* the lab's space is held while it loads, so the page doesn't jump (CLS) */
+.dl-skel{height:760px;border-radius:14px;padding:16px;background:radial-gradient(120% 60% at 50% 0%,#0C0C0E,#030304);box-shadow:0 0 0 1.5px #000,inset 0 6px 14px rgba(0,0,0,.6);color:var(--disp-sub);font-size:var(--fs-5)}
+@media (min-width:700px){.dl-skel{height:640px}}
+@media (min-width:1024px){.dl-skel{height:560px}}

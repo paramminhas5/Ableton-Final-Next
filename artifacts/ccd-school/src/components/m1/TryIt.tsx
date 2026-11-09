@@ -354,6 +354,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const unit = drumLike ? "hit" : type === "chords" ? "chord" : "note";
   const hitName = coach?.goal.note ?? "kick";
   const shown = Math.min(goalHits, coach?.goal.notes ?? goalHits);
+  const [more, setMore] = useState(false);
+  const firstPara = coach ? coach.body.split(/\n+/)[0] : "";
+  const sentences = firstPara.split(/(?<=[.?!])\s+/);
+  const turnLead = sentences[0] ?? "";
+  const turnRest = sentences.slice(1).join(" ");
+  const hasMore = !!turnRest || (coach ? coach.body.split(/\n+/).length > 1 : false);
   const nowLine = !coach ? "" : countIn ? `count-in ${Math.max(1, Math.ceil(-pos.beat))}. listen, don't tap yet`
     : recording && goalMet ? `${shown} of ${coach.goal.notes}, that's the lot. press keep it, or keep playing`
     : recording && offBeat ? `recording. the red ${offBeat === 1 ? "one was" : "ones were"} off the beat. finish the bar, then undo ${offBeat === 1 ? "it" : "them"}`
@@ -469,10 +475,15 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             <div className="fl-turnhead"><span>your turn</span><span>{goalMet ? "done" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes}`}</span></div>
             {clean > 0 && clean < 3 ? <p className="ti-clean" role="status">{clean} clean take{clean > 1 ? "s" : ""} in a row{clean < 3 ? `. ${3 - clean} more and you can go faster` : ""}</p> : null}
             {clean >= 3 ? <p className="ti-clean" role="status">three clean takes. <button type="button" className="ls-chip" onClick={faster}>faster · {session.bpm + 5} bpm</button></p> : null}
-            <p className="fl-turnwhy"><Gloss>{coach.body.split(/\n+/)[0]}</Gloss></p>
+            {/* the instruction is already on the screen above (nowLine); here only the goal, the rest on request (design pass 2) */}
+            <p className="fl-turnwhy"><Gloss>{turnLead}</Gloss></p>
+            {hasMore ? <button type="button" className="ls-chip ti-more" aria-expanded={more} onClick={() => setMore(m => !m)}>{more ? "less" : "the details"}</button> : null}
           </div>
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>
-          {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+          {more ? <>
+            {turnRest ? <p className="ls-read"><Gloss>{turnRest}</Gloss></p> : null}
+            {coach.body.split(/\n+/).slice(1).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+          </> : null}
           {heard.length && !recording && !countIn ? (
             <div className="ti-heard" role="status" aria-label="What it heard in your notes">
               <div className="fl-turnhead"><span>what it heard</span><span>{heard.filter(h => h.ok).length} of {heard.length}</span></div>

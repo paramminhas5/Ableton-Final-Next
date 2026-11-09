@@ -41,6 +41,7 @@ import { Gloss } from "./Gloss";
 import { AddedForYou, SongKey, useSongName } from "./SongKey";
 import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
+import "./frame.css";
 
 // The bigger steps load when a lesson reaches them (and are fetched while the first step plays), so a lesson
 // opens on its first step without the whole instrument set.

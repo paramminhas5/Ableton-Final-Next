@@ -9,6 +9,7 @@
  * Everything runs on the CCD engine (WebAssembly in the browser, native in the app).
  */
 import "./studio.css";
+import "./frame.css";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import {
@@ -367,6 +368,22 @@ export function Studio() {
       engine.record(4);
     }
   };
+
+  // Laptop keys (design pass 2): space plays, r records, z undoes. Never while typing in a field.
+  const keysRef = useRef({ transportPlay, transportRec, undo });
+  keysRef.current = { transportPlay, transportRec, undo };
+  useEffect(() => {
+    const k = (e: globalThis.KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+      if (e.key === " " && !(t && (t.tagName === "BUTTON" || t.getAttribute("role") === "slider"))) { e.preventDefault(); keysRef.current.transportPlay(); }
+      else if (e.key === "r") keysRef.current.transportRec();
+      else if (e.key === "z") keysRef.current.undo();
+    };
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, []);
 
   // ── shaping ───────────────────────────────────────────────────────────────
   const knobs = sel ? bankKnobs(sel, bank, shift) : [];
@@ -764,6 +781,16 @@ export function Studio() {
               <Icon name="plus" />
             </button>
           ) : null}
+          {/* laptop only: the sounds for the part you're on, and the keys that save time */}
+          {sel && mode === "play" && (everything || knows("instruments-overview")) ? (
+            <div className="st-sounds" role="radiogroup" aria-label={`Sounds for ${TYPE[sel.type].label}`}>
+              <b>sounds · {TYPE[sel.type].label}</b>
+              {PRESETS[sel.type].map((p, i) => (
+                <button key={p.name} type="button" role="radio" aria-checked={(sel.preset ?? 0) === i} className={(sel.preset ?? 0) === i ? "is-on" : ""} onClick={() => patchSel(l => applyPreset(l, i))}>{p.name}</button>
+              ))}
+            </div>
+          ) : null}
+          <div className="st-shortcuts" aria-label="Keyboard shortcuts"><b>keys</b><span><kbd>space</kbd>play</span><span><kbd>r</kbd>record</span><span><kbd>z</kbd>undo</span></div>
         </div>
 
         {mode === "mix" ? (

@@ -147,3 +147,7 @@
   .wt-phone{height:min(calc(100dvh - 180px),640px)}
   .wt3 .wt-screen{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 }
+.wt-sound{position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;min-height:0;border:0;border-radius:16px;font:600 12px Outfit,system-ui;color:var(--disp-ink);background:rgba(10,10,12,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);backdrop-filter:none;cursor:pointer}
+.wt-sound::after{content:"";position:absolute;inset:-6px}
+.wt-sound i{width:7px;height:7px;border-radius:50%;background:#3A3B3F}
+.wt-sound.is-on i{background:var(--led-mint);box-shadow:0 0 6px var(--led-mint)}

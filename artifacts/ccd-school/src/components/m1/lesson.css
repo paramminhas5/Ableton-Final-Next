@@ -1050,7 +1050,7 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-songplay{margin-top:2px}
 .fl-songname{min-height:26px}
 .fl-songname>span{font-size:12px}
-.fl-seed{font-style:normal;font-weight:600;color:#C98A1E}
+.fl-seed{font-style:normal;font-weight:600;color:#7A4F00}
 .dark .fl-seed{color:#E9A93A}
 /* practice (design pass, 9 Nov night): phone is one column; from 1024 the shared frame (frame.css) lays it out */
 .gy-desc{display:none}
@@ -1066,3 +1066,4 @@ a.jv-lane:hover{transform:translateX(3px)}
 }
 .hk{position:relative;min-height:0!important;min-width:0!important}
 .hk::after{content:"";position:absolute;inset:-7px -2px}
+.ti-more{margin-top:var(--sp-2)}

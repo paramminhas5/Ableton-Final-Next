@@ -5,7 +5,10 @@
  * is on once you've done a lesson that uses it. Tap a row to open it.
  */
 import Link from "next/link";
-import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { DeviceEngine } from "@/lib/device-engine";
+import { getCtx } from "@/lib/audio";
+import { DevicePic } from "@/components/m1/DevicePic";
 import { editionNeeded, ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
 import { TERMS } from "@/content/glossary";
 import { DEVICES, type DeviceDef } from "@/content/devices";
@@ -134,6 +137,26 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
     return () => { window.clearInterval(id); window.removeEventListener("keydown", key); };
   }, []);
   const today = DEVICES[Math.floor(Date.now() / 86400000) % DEVICES.length];
+  // Hear a device without leaving the library: its first preset on its loop, for a few seconds.
+  const [hearing, setHearing] = useState<string | null>(null);
+  const prev = useRef<{ eng: DeviceEngine; t: number } | null>(null);
+  const stopHear = () => { if (prev.current) { window.clearTimeout(prev.current.t); prev.current.eng.stop(); prev.current.eng.dispose(); prev.current = null; } setHearing(null); };
+  const hear = async (d: DeviceDef) => {
+    const was = hearing;
+    stopHear();
+    if (was === d.slug) return;
+    const c = getCtx(); if (!c) return;
+    if (c.state !== "running") { try { await c.resume(); } catch { /* blocked */ } }
+    const values: Record<string, number | string> = Object.fromEntries(d.params.map(p => [p.id, p.default]));
+    Object.assign(values, d.presets[0]?.values ?? {});
+    const eng = new DeviceEngine();
+    eng.attachDevice(d.factory(), values);
+    eng.setSample(d.defaultSample ?? "drum-loop");
+    await eng.play();
+    prev.current = { eng, t: window.setTimeout(stopHear, 4000) };
+    setHearing(d.slug);
+  };
+  useEffect(() => () => stopHear(), []); // eslint-disable-line react-hooks/exhaustive-deps
   const counts = useMemo(() => Object.fromEntries(CATS.map(c => [c.id, c.id === "all" ? DEVICES.length : DEVICES.filter(d => d.category === c.id).length])), []);
   const more = MORE.filter(m => !t || `${m.label} ${m.what}`.includes(t));
   const used = (id: string) => (lessons[id] ?? []).find(l => !!progress.completedMissions[l.slug]);
@@ -176,11 +199,16 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
               <Silk label={t ? (intent ? `to make it ${intent.w}` : `devices for "${t}"`) : "play with a device"} right={`${labs.length}`} />
               <div className="lb-grid">
                 {labs.map((d, i) => (
-                  <Link key={d.slug} href={`/device/${d.slug}`} className={`lb-tile ${intent && i < intent.slugs.length ? "is-pick" : ""}`}>
-                    <GroupPic g={LAB_GROUP[d.category]} />
-                    <b>{d.name.toLowerCase()}</b>
-                    <small>{tag(d.tagline)}</small>
-                  </Link>
+                  <div key={d.slug} className={`lb-tile ${intent && i < intent.slugs.length ? "is-pick" : ""} ${hearing === d.slug ? "is-hearing" : ""}`}>
+                    <Link href={`/device/${d.slug}`} className="lb-tilelink">
+                      <span className="lb-pic"><DevicePic slug={d.slug} color={GROUP_COLOR[LAB_GROUP[d.category]]} /></span>
+                      <b>{d.name.toLowerCase()}</b>
+                      <small>{tag(d.tagline)}</small>
+                    </Link>
+                    <button type="button" className="lb-hear" aria-pressed={hearing === d.slug} aria-label={hearing === d.slug ? `Stop ${d.name}` : `Hear ${d.name} on a loop`} onClick={() => hear(d)}>
+                      <Icon name={hearing === d.slug ? "stop" : "hear"} small />
+                    </button>
+                  </div>
                 ))}
               </div>
               {!labs.length && <p className="lb-empty">nothing called that yet. try <button type="button" onClick={() => setQ("reverb")}>reverb</button>, <button type="button" onClick={() => setQ("warmer")}>warmer</button> or <button type="button" onClick={() => setQ("punchier")}>punchier</button>.</p>}
@@ -197,7 +225,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
           <div className="fr-r">
             <Link href={`/device/${today.slug}`} className="wg fr-side lb-today">
               <div className="wg-h"><b>device of the day</b><span>{LAB_WORD[today.category]}</span></div>
-              <span className="lb-todaypic"><GroupPic g={LAB_GROUP[today.category]} /></span>
+              <span className="lb-todaypic lb-pic"><DevicePic slug={today.slug} color={GROUP_COLOR[LAB_GROUP[today.category]]} size={80} /></span>
               <span className="wg-t">{today.name.toLowerCase()}</span>
               <span className="wg-s">{tag(today.tagline)}</span>
               <span className="wg-key"><Icon name="play" small />play with it</span>

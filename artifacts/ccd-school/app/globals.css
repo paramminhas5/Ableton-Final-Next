@@ -89,7 +89,7 @@
   --t1: #303135; --t2: #25262A; --hi: rgba(255,255,255,.10); --lo: rgba(0,0,0,.35);
   --s1: #111113; --s2: #0A0A0B; --shA: rgba(0,0,0,.62); --shB: rgba(0,0,0,.45);
   --c0: #2B2C30; --c1: #45464C; --cs1: #151517; --cs2: #0B0B0C;
-  --ink: #EEEEEB; --sub: #A6A7AC; --print: #8E8F94;
+  --ink: #EEEEEB; --sub: #A6A7AC; --print: #9EA0A5;
   --well: #101112; --k1: #4A4B50; --k2: #2A2B2F; --ledoff: #3A3B3F;
   --padt: #323337; --pads: #121214; --slot: #060607; --tick: rgba(255,255,255,.26);
   --recess: #0E0F10; --tag: #4A4B50; --line: rgba(255,255,255,.08);
@@ -298,9 +298,9 @@ a.m1-m:active, button.m1-m:active { transform: translateY(3px); box-shadow: var(
 }
 .m1-m:active .m1-cap, button.m1-cap:active, a.m1-cap:active { transform: translateY(3px); box-shadow: inset 0 2px 1px var(--hi), 0 1px 0 var(--cs1), 0 2px 0 var(--cs2), 0 3px 4px var(--shA); }
 .m1-cap.is-blk { background: radial-gradient(circle at 50% 58%, #141416 0 42%, #3B3B3F 84%, #1A1A1C 100%); color: #F2F2F0; box-shadow: inset 0 2px 1px rgba(255,255,255,.18), 0 1px 0 #0A0A0B, 0 2px 0 #0A0A0B, 0 3px 0 #000, 0 4px 0 #000, 0 5px 0 #000, 0 9px 10px -2px var(--shA); }
-.m1-cap.is-go { background: radial-gradient(circle at 50% 58%, #DC3A82 0 40%, #FF7DB4 84%, #E44A8E 100%); color: #fff; box-shadow: inset 0 2px 1px rgba(255,255,255,.55), 0 1px 0 #B42766, 0 2px 0 #B42766, 0 3px 0 #921C51, 0 4px 0 #921C51, 0 5px 0 #921C51, 0 10px 14px -2px rgba(210,48,122,.42); }
+.m1-cap.is-go { background: radial-gradient(circle at 50% 58%, #C92A72 0 46%, #F46AA6 86%, #D63A80 100%); color: #fff; text-shadow: 0 1px 1px rgba(80,0,30,.35); box-shadow: inset 0 2px 1px rgba(255,255,255,.55), 0 1px 0 #B42766, 0 2px 0 #B42766, 0 3px 0 #921C51, 0 4px 0 #921C51, 0 5px 0 #921C51, 0 10px 14px -2px rgba(210,48,122,.42); }
 .m1-cap.is-pill { aspect-ratio: auto; border-radius: 999px; }
-.m1-cap.is-pill.is-go { background: radial-gradient(70% 120% at 50% 60%, #DC3A82 0 45%, #FF7DB4 90%); }
+.m1-cap.is-pill.is-go { background: radial-gradient(70% 120% at 50% 60%, #C92A72 0 52%, #F46AA6 96%); } /* white text holds 5:1 on the centre (design pass 2) */
 
 .m1-leg { font-weight: 200; line-height: 1; font-variant-numeric: tabular-nums; }
 .m1-ml, .m1-eng { color: var(--print); text-shadow: 0 1px 0 var(--ehi), 0 -1px 0 var(--elo); }

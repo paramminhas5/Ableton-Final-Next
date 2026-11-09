@@ -23,6 +23,7 @@ import { Icon, LED, Screen } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { useEverything, DepthKey } from "./Everything";
 import { Walkthrough } from "./Walkthrough";
+import "./frame.css";
 
 const BEATS = 64;
 const P = { low: 0, mid: 1, high: 2, cut: 3, level: 8, lp: 12 } as const;
@@ -97,11 +98,9 @@ export function DJ() {
 
   return (
     <div className="m1-page dj">
-      <header className="dj-head">
-        <Link href="/dashboard" className="m1-m" aria-label="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Link>
-        <span className="m1-t22" style={{ flex: 1 }}>dj</span>
-        <DepthKey value={everything} onChange={setEverything} />
-        <Walkthrough screen="dj" />
+      <header className="tb dj-head">
+        <div className="tb-l"><Link href="/dashboard" className="tb-k" aria-label="Back"><Icon name="back" small /></Link><h1 className="tb-title">dj decks<small>deck a plays your song</small></h1></div>
+        <div className="tb-r"><DepthKey value={everything} onChange={setEverything} /><Walkthrough screen="dj" /></div>
       </header>
       <DeckRig
         decks={[

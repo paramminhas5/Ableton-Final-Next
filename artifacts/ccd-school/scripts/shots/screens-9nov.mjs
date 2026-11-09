@@ -14,7 +14,7 @@ const song = { v: 2, bpm: 122, root: 45, scale: "minor", swing: 0, loop: 16, add
   layer("lead", "synth-what-is-sound", [[57, 0], [60, 1.5], [64, 3], [62, 4], [60, 5.5], [57, 7], [57, 8], [60, 9.5], [64, 11], [67, 12], [64, 13.5], [62, 15]].map(([note, start]) => ({ note, start, vel: 0.8, len: 1 }))),
 ] };
 const done = s => Object.fromEntries(s.map(x => [x, { score: 90, at: Date.now() - 3600e3 }]));
-const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki"].map(s => [`ccd.walk.${s}`, "1"]));
+const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"].map(s => [`ccd.walk.${s}`, "1"]));
 const songs = { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() - 3600e3 }] };
 const P = (world, d, xp = 340) => ({ onboardingDone: true, selectedWorld: world, completedMissions: done(d), xp, streakDays: 3, dailyXp: 999, lastActiveDate: new Date().toISOString().slice(0, 10) });
 const mine = { "ccd.track.v2": song, "ccd.songs.v1": songs, "ccd.studio.seeded": "1", ...seen };
@@ -33,6 +33,12 @@ const S = {
   "lesson-tour": ["/learn/clap-and-snare?tour=1", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "practice": ["/practice", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "syllabus": ["/learn", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
+  "home-new": ["/dashboard", { ...seen, "ccd.progress.v2": P("fundamentals", [], 0) }],
+  "practice-new": ["/gym", { ...seen, "ccd.progress.v2": P("fundamentals", [], 0) }],
+  "wiki-new": ["/atlas", { ...seen, "ccd.progress.v2": P("fundamentals", [], 0) }],
+  "syllabus-new": ["/learn", { ...seen, "ccd.progress.v2": P("fundamentals", [], 0) }],
+  "studio-new": ["/studio", { ...seen, "ccd.progress.v2": P("fundamentals", [], 0) }],
+  "lesson-hats": ["/learn/hats", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound"]) }],
   "device": ["/device/reverb", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "wiki-warm": ["/atlas", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "wiki": ["/atlas", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
@@ -52,6 +58,7 @@ for (const th of themes.split(",")) for (const sz of sizes.split(",")) for (cons
   if (name.endsWith("-tour")) await p.waitForTimeout(900);
   if (name === "studio-arrange") { await p.getByRole("radio", { name: "arrange" }).click().catch(() => {}); await p.waitForTimeout(500); }
   if (name.startsWith("w") && name.length === 3) await p.waitForTimeout(1300);
+  if (name === "lesson-hats") { await p.locator(".fl-bottom .is-wide, .ls-bottom .is-wide").first().click(); await p.waitForTimeout(900); }
   if (name === "wiki-warm") { await p.locator("#lb-q").fill("warm"); await p.waitForTimeout(500); }
   const file = `${out}/${tag}-${th}-${sz}-${name}.png`;
   await p.screenshot({ path: file });

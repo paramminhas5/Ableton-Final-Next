@@ -64,7 +64,26 @@ for name, m in marks.items():
         top, h = CROP[key]
         vf = f"scale=780:1688,crop=780:{h * 2}:0:{top * 2},scale=600:-2,fps=30,format=yuv420p"
         mp4 = f"{out}/{key}.mp4"
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-vf", vf,
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "27", "-movflags", "+faststart", "-an", mp4], check=True)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-sseof", "-0.1", "-i", mp4, "-frames:v", "1", "-q:v", "4", f"{out}/{key}.jpg"], check=True)
-        print(key, f"{s1 - s0:.1f}s", os.path.getsize(mp4) // 1024, "KB")
+        # sound: each recorded track lined up to the segment start, mixed, levelled
+        tracks = json.load(open(f"{raw}/{name}/audio.json")) if os.path.exists(f"{raw}/{name}/audio.json") else []
+        tracks = [t for t in tracks if os.path.getsize(f"{raw}/{name}/{t['file']}") > 2000]
+        dur = s1 - s0
+        cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst]
+        fc = []
+        for j, t in enumerate(tracks):
+            cmd += ["-i", f"{raw}/{name}/{t['file']}"]
+            off = s0 - t["t0"]
+            if off >= 0:
+                fc.append(f"[{j + 1}:a]atrim=start={off:.3f},asetpts=PTS-STARTPTS,apad,atrim=0:{dur:.3f}[a{j}]")
+            else:
+                fc.append(f"[{j + 1}:a]adelay={int(-off * 1000)}:all=1,apad,atrim=0:{dur:.3f}[a{j}]")
+        if tracks:
+            mix = "".join(f"[a{j}]" for j in range(len(tracks)))
+            fc.append(f"{mix}amix=inputs={len(tracks)}:normalize=0,alimiter=limit=0.89:level=false,afade=t=in:d=0.08,afade=t=out:st={max(0, dur - 0.25):.3f}:d=0.25[aout]")
+        fc.append(f"[0:v]{vf}[vout]")
+        cmd += ["-filter_complex", ";".join(fc), "-map", "[vout]"]
+        cmd += (["-map", "[aout]", "-c:a", "aac", "-b:a", "96k"] if tracks else ["-an"])
+        cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "27", "-t", f"{dur:.3f}", "-movflags", "+faststart", mp4]
+        subprocess.run(cmd, check=True)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "0.05", "-i", mp4, "-frames:v", "1", "-q:v", "4", f"{out}/{key}.jpg"], check=True)
+        print(key, f"{s1 - s0:.1f}s", os.path.getsize(mp4) // 1024, "KB", f"{len(tracks)} sound")

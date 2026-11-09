@@ -16,6 +16,7 @@ import { LESSON_LINKS } from "@/content/lessonLinks";
 import { missionBySlug } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 import { Icon, Key, Screen, Silk } from "@/components/m1/controls";
+import { TopBar } from "@/components/m1/TopBar";
 import "@/components/m1/lesson.css";
 
 export function DevicePageClient({ slug }: { slug: string }) {
@@ -39,24 +40,10 @@ export function DevicePageClient({ slug }: { slug: string }) {
 
   return (
     <main className="m1-page dv" style={{ paddingTop: 4 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, height: 60 }}>
-        <Key href="/devices" ariaLabel="All devices" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 500, margin: 0, letterSpacing: "-.02em" }}>{d.name.toLowerCase()}</h1>
-          <div className="m1-t11">library · devices</div>
-        </div>
-        {a && <span className="m1-tag">in live 12</span>}
-      </div>
-
-      <Screen>
-        <div className="ls-meta"><span>{d.category.toLowerCase()}</span><span>device lab</span></div>
-        <div className="ls-title">{d.name.toLowerCase()}</div>
-        <p className="ls-sub">{d.tagline}</p>
-      </Screen>
-
-      <Silk label="try it" right="turn anything, nothing breaks" />
+      {/* One top bar and one screen (design pass 2): the lab's glass carries the name and what it does. */}
+      <TopBar title={d.name.toLowerCase()} sub={`library · ${d.category.toLowerCase()}`} back="/atlas" screen="device" extra={a ? <span className="m1-tag">in live 12</span> : null} />
       <div className="ls-sim">
-        <ClientOnly fallback={<div className="m1-t11" style={{ padding: 20 }}>loading the sound</div>}>
+        <ClientOnly fallback={<div className="dl-skel" role="status"><span>loading the sound</span></div>}>
           <DeviceLab key={d.slug} title={d.name} subtitle={d.tagline} deviceLabel={d.name} deviceSlug={d.slug} factory={d.factory} params={d.params} listenFor={d.listenFor} signalFlow={d.signalFlow} presets={d.presets} />
         </ClientOnly>
       </div>
