@@ -1,0 +1,65 @@
+/* The frame every main screen shares (design pass, 9 Nov night).
+   Type: 36 display / 22 title / 17 heading / 15 body / 12 meta / 11 label. Nothing else.
+   Space: 4, 8, 12, 16, 24, 32. Cards: radius 14, padding 16.
+   Laptop: content screens are 3-4-3 (home, practice, library, syllabus), instruments 2-6-2 (studio). */
+
+/* ── top bar ── */
+.tb{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);height:56px;min-width:0}
+.tb-l,.tb-r{display:flex;align-items:center;gap:var(--sp-2);min-width:0}
+.tb-r{flex:none}
+.tb-title{display:flex;flex-direction:column;margin:0;font-size:var(--fs-2);font-weight:400;letter-spacing:-.02em;line-height:1.1;white-space:nowrap;min-width:0}
+.tb-title small{font-size:var(--fs-6);font-weight:500;letter-spacing:.02em;color:var(--print);margin-top:2px;overflow:hidden;text-overflow:ellipsis}
+.tb-brand{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink);text-decoration:none;font-size:var(--fs-4);font-weight:600;white-space:nowrap}
+.tb-xp{font-size:var(--fs-4);font-weight:300;font-variant-numeric:tabular-nums;margin:0 var(--sp-1)}
+.tb-xp small{font-size:var(--fs-6);margin-left:3px;color:var(--print)}
+.tb-k,.tb .hk.is-q{flex:none;width:38px;height:38px;min-width:38px;padding:0;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:11px;font:600 14px Outfit,system-ui;color:var(--ink);text-decoration:none;background-image:var(--grain),linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);cursor:pointer;transition:transform 70ms,box-shadow 70ms}
+.tb-k:active,.tb .hk.is-q:active{transform:translateY(2px);box-shadow:var(--m1-pressed)}
+.tb-k:focus-visible,.tb .hk.is-q:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
+@media (max-width:480px){.tb-streak{display:none}.tb-you{display:none}}
+
+/* ── widgets: small cards for the side columns ── */
+.wg{display:flex;flex-direction:column;gap:var(--sp-3);padding:var(--sp-4);border-radius:14px;color:var(--ink);text-decoration:none;background-image:var(--grain),linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);min-width:0}
+a.wg{transition:transform 120ms var(--ease-pop),box-shadow 120ms}
+a.wg:active{transform:translateY(2px);box-shadow:var(--m1-pressed)}
+@media (hover:hover){a.wg:hover{transform:translateY(-2px)}}
+.wg-h{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);font-size:var(--fs-6);font-weight:500;letter-spacing:.06em;color:var(--print)}
+.wg-h b{font-weight:600;color:var(--ink);letter-spacing:.02em}
+.wg-t{font-size:var(--fs-3);font-weight:500;letter-spacing:-.01em;line-height:1.2}
+.wg-s{font-size:var(--fs-5);color:var(--print);line-height:1.35}
+.wg-row{display:flex;align-items:center;gap:var(--sp-3);min-width:0}
+.wg-glass{border-radius:10px;background:radial-gradient(120% 90% at 50% 0%,#0C0C0E,#030304);box-shadow:0 0 0 1.5px #000,inset 0 4px 10px rgba(0,0,0,.6);color:var(--disp-ink);padding:var(--sp-3)}
+.wg-n{font-size:var(--fs-1);font-weight:300;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.wg-key{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 var(--sp-3);border:0;border-radius:10px;font:600 13px Outfit,system-ui;color:var(--ink);text-decoration:none;background:var(--deck2);box-shadow:inset 0 2px 5px var(--shA,rgba(0,0,0,.3)),0 1px 0 var(--hi);cursor:pointer}
+.wg-leds{display:flex;gap:6px}
+.wg-leds i{width:10px;height:10px;border-radius:3px;background:color-mix(in srgb,var(--ink) 14%,transparent);box-shadow:inset 0 1px 1px rgba(0,0,0,.35)}
+.wg-leds i.is-on{background:var(--c,var(--led-mint));box-shadow:0 0 7px var(--c,var(--led-mint))}
+
+/* ── the 3-4-3 page ── */
+.fr{display:flex;flex-direction:column;gap:0}
+.fr-l,.fr-c,.fr-r{display:contents}
+.fr-side{display:none}
+@media (min-width:1200px){
+  .m1-page.fr{max-width:1440px;padding:8px 32px 48px;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,4fr) minmax(0,3fr);column-gap:var(--sp-5);align-items:start;align-content:start}
+  .fr>.tb{grid-column:1/-1;margin-bottom:var(--sp-2)}
+  .fr-l,.fr-c,.fr-r{display:flex;flex-direction:column;gap:var(--sp-4);min-width:0}
+  .fr-l{grid-column:1}.fr-c{grid-column:2}.fr-r{grid-column:3}
+  .fr-side{display:flex;flex-direction:column}
+  .fr .m1-silk{margin:0 2px 8px}
+  .m1-page.fr.is-inst{grid-template-columns:minmax(0,2fr) minmax(0,6fr) minmax(0,2fr)}
+  .m1-page.fr.is-wide-c{grid-template-columns:minmax(0,2fr) minmax(0,6fr) minmax(0,2fr)}
+}
+/* phone order for the pieces of a 3-4-3 page (the columns flatten into one list) */
+.o1{order:1}.o2{order:2}.o3{order:3}.o4{order:4}.o5{order:5}.o6{order:6}.o7{order:7}.o8{order:8}.o9{order:9}
+/* iPad landscape and small laptops (1024 to 1199): two columns, the third column becomes a row of widgets */
+@media (min-width:1024px) and (max-width:1199px){
+  .m1-page.fr{max-width:1120px;padding:8px 32px 130px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:var(--sp-5);align-items:start;align-content:start}
+  .fr>.tb{grid-column:1/-1}
+  .fr-l,.fr-c{display:flex;flex-direction:column;gap:var(--sp-4);min-width:0}
+  .fr-l{grid-column:1}.fr-c{grid-column:2}
+  .fr-r{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--sp-4);margin-top:var(--sp-5)}
+  .fr-side{display:flex;flex-direction:column}
+  .fr-r>*>.wg{height:100%}
+}
+/* small keys keep a 44 px touch area with an invisible ring, so they can look small and still be easy to hit */
+.tb-k,.tb .hk.is-q{position:relative;min-height:0!important}
+.tb-k::after,.tb .hk.is-q::after{content:"";position:absolute;inset:-3px}

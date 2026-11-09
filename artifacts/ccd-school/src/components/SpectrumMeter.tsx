@@ -30,7 +30,7 @@ export function SpectrumMeter({
     const draw = () => {
       analyser.getByteFrequencyData(data);
       const W = canvas.width, H = canvas.height;
-      ctx.fillStyle = "#F5F1E8"; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#050506"; ctx.fillRect(0, 0, W, H);
       // Use log-ish band grouping so lows aren't crammed into one bar.
       const bw = W / bars - 2;
       const nyquistBins = data.length;
@@ -44,14 +44,13 @@ export function SpectrumMeter({
         const v = sum / (hi - lo) / 255;
         const h = v * (H - (showLabels ? 12 : 2));
         // Hue ramp red→violet across bands. saturation high, lightness scales with level.
-        const hue = (i / bars) * 290; // 0..290 deg
-        const light = 35 + v * 30;
-        ctx.fillStyle = `hsl(${hue}, 95%, ${light}%)`;
+        // one colour, the screen's mint, brighter as the band gets louder (design pass, 9 Nov night)
+        ctx.fillStyle = `rgba(79, 227, 182, ${0.35 + v * 0.65})`;
         ctx.fillRect(i * (bw + 2) + 1, H - h - (showLabels ? 12 : 2), bw, h);
       }
       if (showLabels) {
-        ctx.fillStyle = "#0A0A0A";
-        ctx.font = "9px monospace";
+        ctx.fillStyle = "#9A9AA0";
+        ctx.font = "500 10px Outfit, system-ui";
         ctx.textBaseline = "bottom";
         const labels = ["20Hz", "200", "1k", "4k", "12k+"];
         labels.forEach((l, i) => {
@@ -59,12 +58,10 @@ export function SpectrumMeter({
           ctx.fillText(l, x, H - 1);
         });
       }
-      ctx.strokeStyle = "#0A0A0A"; ctx.lineWidth = 3;
-      ctx.strokeRect(1.5, 1.5, W - 3, H - 3);
       raf = requestAnimationFrame(draw);
     };
     draw();
     return () => cancelAnimationFrame(raf);
   }, [analyser, bars, showLabels]);
-  return <canvas ref={ref} width={480} height={height} className="w-full brutal-border bg-bone" style={{ height }} />;
+  return <canvas ref={ref} width={480} height={height} className="w-full" style={{ height, borderRadius: 8, background: "#050506" }} />;
 }

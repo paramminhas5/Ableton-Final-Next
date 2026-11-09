@@ -26,7 +26,8 @@ import { makeCopyQuestion, type CopyQuestion } from "@/lib/copyEar";
 import { GymImagine } from "./GymImagine";
 import { makeImagineQuestion, type ImagineQuestion } from "@/lib/imagine";
 import "@/components/m1/lesson.css";
-import { Walkthrough } from "@/components/m1/Walkthrough";
+import { TopBar } from "@/components/m1/TopBar";
+import { AnswersWidget, ReviewWidget, WordWidget } from "@/components/m1/Widgets";
 import { useEverything } from "@/components/m1/Everything";
 
 /** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
@@ -336,64 +337,90 @@ export function GymPageClient() {
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },
     ];
+    const DESC: Record<string, string> = {
+      eq: "hear which band was turned up", compression: "hear when a sound gets squashed", groove: "hear tempo and swing",
+      match: "turn knobs until it sounds the same", copy: "hear a part, then write it down", imagine: "hear the next note before it plays",
+      remakes: "build well-known sounds from scratch", review: "lessons come back before they slip", daily: "one new puzzle a day", train: "intervals, chords and scales",
+    };
+    const locked = pads.filter(p => p.locked);
     return (
-      <main className="m1-page gy-home" style={{ paddingTop: 4 }}>
-        <header className="gy-head"><span className="m1-t22" style={{ flex: 1 }}>practice</span><Walkthrough screen="practice" /></header>
-        <div className="m1-g gy-today" data-tour="today">
-          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start today's 5 minutes"}</GoPill>
+      <main className="m1-page gy-home fr" style={{ paddingTop: 4 }}>
+        <TopBar title="practice" sub="five minutes a day" screen="practice" />
+        <div className="fr-l">
+          <div className="m1-g gy-today o1" data-tour="today">
+            <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start today's 5 minutes"}</GoPill>
+          </div>
+
+          <Screen className="o2">
+            <div className="ls-meta">
+              <span>your ears</span>
+              <span style={{ display: "inline-flex", gap: 5, alignItems: "center" }} role="img" aria-label={`${week.filled} of ${week.target} sessions this week`}>
+                {Array.from({ length: week.target }, (_, i) => <i key={i} className="ls-led" style={{ ["--c" as string]: i < week.filled ? "var(--led-mint)" : "#2A2A2E", boxShadow: i < week.filled ? undefined : "none", background: i < week.filled ? undefined : "#2A2A2E" } as CSSProperties} />)}
+                <b style={{ fontWeight: 500, marginLeft: 6 }}>{week.filled} of {week.target} this week</b>
+              </span>
+            </div>
+            {phase === "done" && summary ? (
+              <div className="ls-title" aria-live="polite">{summary.counts ? `session done. ${summary.correct} of ${summary.answered} right.` : `${summary.correct} of ${summary.answered}. answer five to count.`}</div>
+            ) : null}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
+              {openDrills.map(d => (
+                <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13, color: "var(--disp-ink)" }}>
+                  <span style={{ width: 118 }}>{NAME[d]}</span>
+                  <Bars level={saved.levels[d].level} c={COLOR[d]} />
+                  <span style={{ width: 30, textAlign: "right", color: "var(--disp-sub)", fontSize: 11 }}>lv {saved.levels[d].level}</span>
+                </div>
+              ))}
+            </div>
+            <div className="ls-meta" style={{ marginTop: 14 }}>
+              <span>{week.met ? "week done. anything more is a bonus." : `${week.remaining} more ${week.remaining === 1 ? "session" : "sessions"} this week`}</span>
+              <span>missing a day resets nothing</span>
+            </div>
+          </Screen>
+          <div className="fr-side o5"><AnswersWidget /></div>
+          {error && <div className="ls-panel o4"><span className="ls-led" style={{ ["--c" as string]: "var(--led-red)" } as CSSProperties} /><span>{error}</span></div>}
+          {ready && canUsePass(saved.week, now) && (
+            <button type="button" className="ls-panel is-link o4" onClick={() => persist({ ...saved, week: takeFreePass(saved.week, new Date()) })}>
+              <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>busy week? use this week&apos;s free pass.</span>
+            </button>
+          )}
         </div>
 
-        <Screen>
-          <div className="ls-meta">
-            <span>practice · 5 minutes</span>
-            <span style={{ display: "inline-flex", gap: 5, alignItems: "center" }} role="img" aria-label={`${week.filled} of ${week.target} sessions this week`}>
-              {Array.from({ length: week.target }, (_, i) => <i key={i} className="ls-led" style={{ ["--c" as string]: i < week.filled ? "var(--led-mint)" : "#2A2A2E", boxShadow: i < week.filled ? undefined : "none", background: i < week.filled ? undefined : "#2A2A2E" } as CSSProperties} />)}
-              <b style={{ fontWeight: 500, marginLeft: 6 }}>{week.filled} of {week.target}</b>
-            </span>
-          </div>
-          {phase === "done" && summary ? (
-            <div className="ls-title" aria-live="polite">{summary.counts ? `session done. ${summary.correct} of ${summary.answered} right.` : `${summary.correct} of ${summary.answered}. answer five to count.`}</div>
+        <div className="fr-c">
+          <section className="o3">
+            <Silk label="drills" right="or pick one" />
+            <div className="ls-pads gy-pads" data-tour="drills">
+              {pads.filter(p => everything || !p.locked).map(p => {
+                const inner = (
+                  <>
+                    <span style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "flex-start" }}>
+                      <Pic kind={p.pic} c={p.c} />
+                      {p.tag ? <span className="m1-tag">{p.tag}</span> : null}
+                    </span>
+                    <span className="gy-padname">{p.label}{p.sub ? <small>{p.sub}</small> : <small className="gy-desc">{DESC[p.id]}</small>}</span>
+                  </>
+                );
+                const st = { minHeight: 112, ["--c" as string]: p.c } as CSSProperties;
+                return p.href
+                  ? <Link key={p.id} href={p.href} className={`ls-pad ${p.locked ? "is-later" : ""}`} style={st} data-tour={p.id === "review" ? "review" : undefined}>{inner}</Link>
+                  : <button key={p.id} type="button" className={`ls-pad ${p.tag === "today" ? "is-glowpad" : ""}`} style={st} onClick={p.onClick}>{inner}</button>;
+              })}
+            </div>
+            {!everything && locked.length ? <p className="m1-t11 gy-more">{locked.length} more drills open as your lessons teach them.</p> : null}
+          </section>
+        </div>
+
+        <div className="fr-r">
+          <div className="fr-side"><ReviewWidget due={missionsNeedingReview.length} any={Object.keys(progress.completedMissions).length > 0} /></div>
+          {locked.length > 0 && !everything ? (
+            <div className="fr-side wg gy-next">
+              <div className="wg-h"><b>opens next</b><span>{locked.length} drills</span></div>
+              {locked.map(p => (
+                <Link key={p.id} href={p.href!} className="gy-nextrow"><span className="wg-t" style={{ fontSize: "var(--fs-4)" }}>{p.label}</span><span className="wg-s">{p.sub}</span></Link>
+              ))}
+            </div>
           ) : null}
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 16 }}>
-            {openDrills.map(d => (
-              <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13, color: "var(--disp-ink)" }}>
-                <span style={{ width: 118 }}>{NAME[d]}</span>
-                <Bars level={saved.levels[d].level} c={COLOR[d]} />
-                <span style={{ width: 30, textAlign: "right", color: "var(--disp-sub)", fontSize: 11 }}>lv {saved.levels[d].level}</span>
-              </div>
-            ))}
-          </div>
-          <div className="ls-meta" style={{ marginTop: 14 }}>
-            <span>{week.met ? "week done. anything more is a bonus." : `${week.remaining} more ${week.remaining === 1 ? "session" : "sessions"} this week`}</span>
-            <span>missing a day resets nothing</span>
-          </div>
-        </Screen>
-
-        <Silk label="drills" right="or pick one" />
-        <div className="ls-pads" data-tour="drills">
-          {pads.filter(p => everything || !p.locked).map(p => {
-            const inner = (
-              <>
-                <span style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "flex-start" }}>
-                  <Pic kind={p.pic} c={p.c} />
-                  {p.tag ? <span className="m1-tag">{p.tag}</span> : null}
-                </span>
-                <span className="gy-padname">{p.label}{p.sub ? <small>{p.sub}</small> : null}</span>
-              </>
-            );
-            const st = { minHeight: 112, ["--c" as string]: p.c } as CSSProperties;
-            return p.href
-              ? <Link key={p.id} href={p.href} className={`ls-pad ${p.locked ? "is-later" : ""}`} style={st} data-tour={p.id === "review" ? "review" : undefined}>{inner}</Link>
-              : <button key={p.id} type="button" className={`ls-pad ${p.tag === "today" ? "is-glowpad" : ""}`} style={st} onClick={p.onClick}>{inner}</button>;
-          })}
+          <div className="fr-side"><WordWidget /></div>
         </div>
-        {!everything && pads.some(p => p.locked) ? <p className="m1-t11 gy-more">{pads.filter(p => p.locked).length} more drills open as your lessons teach them.</p> : null}
-        {error && <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-red)" } as CSSProperties} /><span>{error}</span></div>}
-        {ready && canUsePass(saved.week, now) && (
-          <button type="button" className="ls-panel is-link" onClick={() => persist({ ...saved, week: takeFreePass(saved.week, new Date()) })}>
-            <span className="ls-led" style={{ ["--c" as string]: "var(--led-lilac)" } as CSSProperties} /><span>busy week? use this week&apos;s free pass.</span>
-          </button>
-        )}
       </main>
     );
   }

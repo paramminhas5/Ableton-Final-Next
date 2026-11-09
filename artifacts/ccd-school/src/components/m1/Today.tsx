@@ -19,10 +19,10 @@ import { readTrackV2 } from "@/lib/track2";
 import { playTrack, stopTrack } from "@/lib/track-engine";
 import { journey, nextStep, partOf, worldSteps, worldDone, missionAny, missionImage, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
 import { CAP, Icon, Key, Knob, Screen, Silk, WORLD_LED } from "./controls";
-import { PALETTE_OPEN_EVENT } from "@/lib/palette";
-import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
+import { CAT_SRC, Lanes } from "./shell";
 import { SongKey, useSongName, SONG_EVENT } from "./SongKey";
-import { Walkthrough } from "./Walkthrough";
+import { TopBar } from "./TopBar";
+import { PracticeWidget, StudioWidget, DecksWidget, WordWidget, ReviewWidget } from "./Widgets";
 
 const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "producer", "dj"];
@@ -95,28 +95,14 @@ export function Today() {
 
   const isDone = !!(cur && done[cur.slug]);
   const led = WORLD_LED[world];
+  const anyDone = Object.keys(done).length > 0;
   return (
-    <div className="m1-page hm" style={{ ["--c" as string]: led } as CSSProperties}>
-      <header className="hm-head">
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <CatMark />
-          <span className="m1-t15" style={{ fontWeight: 600 }}>ccd school</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <WeekDots days={progress.streakDays} />
-          <span className="hm-xp">{progress.xp}<small>xp</small></span>
-          <div className="td-tools">
-            <button type="button" aria-label="Search lessons" onClick={() => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT))}><Icon name="search" small /></button>
-            <Link href="/settings" aria-label="Settings"><Icon name="settings" small /></Link>
-            <Link href="/profile" aria-label="Profile"><Icon name="user" small /></Link>
-          </div>
-          <Walkthrough screen="home" />
-        </div>
-      </header>
+    <div className="m1-page hm fr" style={{ ["--c" as string]: led } as CSSProperties}>
+      <TopBar screen="home" />
 
-      <div className="hm-a">
+      <div className="fr-l">
         {/* 1. your song */}
-        <section aria-label="Your song" data-tour="song">
+        <section aria-label="Your song" data-tour="song" className="o1">
           <div className="hm-row">
             <Silk label="your song" style={{ flex: 1, margin: "4px 2px" }} />
             {hasSong && <SongKey />}
@@ -146,9 +132,28 @@ export function Today() {
           )}
         </section>
 
-        {/* 2. continue */}
+        {/* 3. the knobs */}
+        <section aria-label="Turn to choose" className="o3">
+          <Silk label="turn to choose" right={`lesson ${li + 1} of ${inZone.length}`} />
+          <div className="td-knobs">
+            <div><span className="m1-ss">world</span>
+              <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={64} height={150} led={led} detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
+            </div>
+            <div><span className="m1-ss">path</span>
+              <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={58} height={150} led={led} detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
+            </div>
+            <div><span className="m1-ss">lesson</span>
+              <Knob onStep={() => pickLesson(steps.indexOf(inZone[(li + 1) % Math.max(1, inZone.length)]))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={52} height={150} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(steps.indexOf(inZone[idxOf(v, inZone.length)]))} />
+            </div>
+          </div>
+        </section>
+        {anyDone && <div className="o7 fr-side"><YouCard xp={progress.xp} streak={progress.streakDays} done={done} /></div>}
+      </div>
+
+      <div className="fr-c">
+        {/* 2. continue: the one pink key on the screen */}
         {cur && mission && (
-          <Link href={`/learn/${cur.slug}`} className="m1-m is-wide hm-go" key={`c-${cur.slug}`}>
+          <Link href={`/learn/${cur.slug}`} className="m1-m is-wide hm-go o2" key={`c-${cur.slug}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={missionImage(cur.slug, world, "sm")} alt="" width={72} height={72} decoding="async" className="td-pop" style={{ filter: `url(#duo-${world})` }} />
             <div className="hm-go-t">
@@ -160,27 +165,11 @@ export function Today() {
           </Link>
         )}
 
-        {/* 3. the knobs */}
-        <Silk label="turn to choose" right={`lesson ${li + 1} of ${inZone.length}`} />
-        <div className="td-knobs">
-          <div><span className="m1-ss">world</span>
-            <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={64} height={150} led={led} detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
-          </div>
-          <div><span className="m1-ss">path</span>
-            <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={58} height={150} led={led} detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
-          </div>
-          <div><span className="m1-ss">lesson</span>
-            <Knob onStep={() => pickLesson(steps.indexOf(inZone[(li + 1) % Math.max(1, inZone.length)]))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={52} height={150} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(steps.indexOf(inZone[idxOf(v, inZone.length)]))} />
-          </div>
-        </div>
-      </div>
-
-      <div className="hm-b">
         {/* 4. the map */}
-        <section aria-label={`${WORLD_LABEL[world]} map`}>
+        <section aria-label={`${WORLD_LABEL[world]} map`} className="o4">
           <Silk label={`${WORLD_LABEL[world]} · your road`} right={`${counts.done} of ${counts.total} parts`} />
           <ol className="hm-map">
-            {paths.map((p, pi) => {
+            {paths.map(p => {
               const open = zones[zi]?.path === p.slug;
               const tot = p.songTotal || p.lessons.length;
               const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
@@ -212,23 +201,17 @@ export function Today() {
               );
             })}
           </ol>
-          <Link href="/learn" className="hm-all">the whole syllabus · {WORLDS.map(w => WORLD_LABEL[w]).join(", ")}<Icon name="play" small /></Link>
+          <Link href="/learn" className="hm-all">the whole syllabus<Icon name="play" small /></Link>
         </section>
-
-        {/* 5. review and you */}
-        <Link href="/review" className="td-review">
-          <span className="td-rv-n">{missionsNeedingReview.length}</span>
-          <span><b>review</b>{missionsNeedingReview.length ? `${missionsNeedingReview.length === 1 ? "lesson is" : "lessons are"} ready for a quick refresh` : Object.keys(done).length ? "nothing due. you're fresh" : "lessons come back here so they stick"}</span>
-          <Icon name="reset" />
-        </Link>
-        {Object.keys(done).length > 0 && <YouCard xp={progress.xp} streak={progress.streakDays} done={done} />}
       </div>
-      {/* Wide screens: the rest of ccd school, one tap away, so the page isn't half empty. */}
-      <div className="hm-c" aria-label="More of ccd school">
-        <Link href="/gym" className="hm-tile"><Icon name="practice" /><b>practice</b><span>today&apos;s 5 minutes</span></Link>
-        <Link href="/studio" className="hm-tile"><Icon name="studio" /><b>studio</b><span>build your song out</span></Link>
-        <Link href="/dj" className="hm-tile"><Icon name="dj" /><b>dj decks</b><span>play your song out</span></Link>
-        <Link href="/atlas" className="hm-tile"><Icon name="library" /><b>library</b><span>devices you can play</span></Link>
+
+      {/* Laptop: working windows onto the rest of ccd school. Phone keeps review only. */}
+      <div className="fr-r">
+        <div className="o5"><ReviewWidget due={missionsNeedingReview.length} any={anyDone} /></div>
+        <div className="fr-side o6"><PracticeWidget /></div>
+        <div className="fr-side o6"><StudioWidget parts={hasSong ? layers : 0} /></div>
+        <div className="fr-side o6"><DecksWidget /></div>
+        <div className="fr-side o6"><WordWidget /></div>
       </div>
       <DuoFilters />
     </div>

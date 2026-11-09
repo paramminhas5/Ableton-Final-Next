@@ -5,7 +5,8 @@ import { DeviceEngine } from "@/lib/device-engine";
 import { SpectrumMeter } from "@/components/SpectrumMeter";
 import { getCtx, type SampleName } from "@/lib/audio";
 import type { DeviceNode } from "@/lib/audio-bus";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
+import { CAP, GoPill, Icon, Knob, Screen, Silk } from "@/components/m1/controls";
+import "@/components/m1/devicelab.css";
 import { SignalFlowSVG } from "@/components/SignalFlowSVG";
 
 export type ParamSpec =
@@ -140,255 +141,87 @@ export function DeviceLab({
   const peakOutPct = Math.min(100, Math.round(peakOut * 140));
   const focused = params.find((p) => p.id === focusParam) ?? null;
 
+  const fmt = (p: ParamSpec | null) => {
+    if (!p) return "";
+    if (p.kind === "select") return String(values[p.id] ?? p.default);
+    const v = num(values[p.id], p.default);
+    return `${v.toFixed(p.step && p.step < 1 ? 2 : 0)}${p.unit ? ` ${p.unit}` : ""}`;
+  };
+  const knobs = params.filter((p): p is Extract<ParamSpec, { kind: "knob" }> => p.kind === "knob");
+  const selects = params.filter((p): p is Extract<ParamSpec, { kind: "select" }> => p.kind === "select");
+
+  // Model 1 look (design pass, 9 Nov night): the glass shows what you touch, one pink key plays, knobs are real knobs.
   return (
-    <div className="space-y-4 pb-12">
-      {/* Transport */}
-      <div className="brutal-border bg-ink text-bone p-3 space-y-3">
-        <div className="flex flex-wrap gap-3 items-center">
-          <button
-            onClick={togglePlay}
-            className={`brutal-border px-5 py-3 font-display text-xl brutal-press ${
-              playing ? "bg-hot text-bone" : "bg-acid text-ink"
-            }`}
-          >
-            {playing ? "■ STOP" : "▶ PLAY"}
-          </button>
-
-          <button
-            onClick={toggleBypass}
-            disabled={!ready}
-            className={`brutal-border px-4 py-3 font-display text-lg brutal-press ${
-              bypassed ? "bg-bone text-ink" : "bg-volt text-bone"
-            } ${!ready ? "opacity-50" : ""}`}
-            title="A = dry (no device). B = wet (device on)."
-          >
-            {bypassed ? "A · DRY" : "B · WET"}
-          </button>
-
-          <div className="flex gap-1 flex-wrap">
-            {SAMPLES.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => changeSample(s.id)}
-                className={`brutal-border px-2.5 py-1.5 font-mono text-[11px] uppercase ${
-                  sample === s.id ? "bg-acid text-ink" : "bg-bone text-ink"
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-
-          <label className="font-mono text-[11px] uppercase flex items-center gap-2 ml-auto">
-            BPM
-            <input type="range" min={60} max={180} step={1} value={bpm}
-              onChange={(e) => changeBpm(+e.target.value)} className="w-24" />
-            <span className="brutal-border bg-bone text-ink px-2 py-0.5 min-w-[40px] text-center">{bpm}</span>
-          </label>
-
+    <div className="dl">
+      <Screen className="dl-scr">
+        <div className="dl-meta"><span>{deviceLabel.toLowerCase()}</span><span>{!playing ? "press play" : bypassed ? "a: without it" : "b: with it"}</span></div>
+        <div className="dl-big">{focused ? <>{focused.label.toLowerCase()} <b>{fmt(focused)}</b></> : "turn any knob"}</div>
+        <p className="dl-explain">{focused?.explain ?? "each knob says here what it does. nothing you turn can break it."}</p>
+        <div className="dl-spec"><SpectrumMeter analyser={engineRef.current?.analyserOut ?? null} height={64} /></div>
+        <div className="dl-meters">
+          <span>in</span><i><b style={{ width: `${peakInPct}%` }} /></i>
+          <span>out</span><i><b style={{ width: `${peakOutPct}%` }} /></i>
+          {gainReduction > 0.01 ? <em>squashing {gainReduction.toFixed(1)} db</em> : null}
+          {ctxState !== "running" && ctxState !== "idle" ? <em>sound is {ctxState}</em> : null}
         </div>
+      </Screen>
 
-        {/* Diagnostic strip */}
-        <div className="grid grid-cols-[1fr,1fr,auto] items-center gap-3 font-mono text-[10px] uppercase">
-          <div className="flex items-center gap-2">
-            <span className="w-12">SOURCE</span>
-            <div className="flex-1 h-3 brutal-border bg-bone overflow-hidden">
-              <div className={`h-full ${peakIn > 0.7 ? "bg-hot" : peakIn > 0.05 ? "bg-acid" : "bg-bone"}`} style={{ width: `${peakInPct}%` }} />
+      <div className="dl-transport">
+        <GoPill onClick={() => void togglePlay()} style={{ height: 64 }}>{playing ? "stop" : <>play <Icon name="play" small /></>}</GoPill>
+        <button type="button" className={`dl-ab ${bypassed ? "" : "is-on"}`} onClick={toggleBypass} disabled={!ready} aria-pressed={!bypassed} title="a is the sound without the device, b is with it">
+          <i aria-hidden /><b>{bypassed ? "a" : "b"}</b><small>{bypassed ? "without" : "with it"}</small>
+        </button>
+      </div>
+      <div className="dl-sources" role="radiogroup" aria-label="What plays through it">
+        {SAMPLES.map((x) => <button key={x.id} type="button" role="radio" aria-checked={sample === x.id} className={`dl-src ${sample === x.id ? "is-on" : ""}`} onClick={() => changeSample(x.id)}>{x.label.toLowerCase()}</button>)}
+        <button type="button" className="dl-src" onClick={() => changeBpm(bpm >= 140 ? 80 : bpm + 10)} aria-label={`Tempo ${bpm} bpm, tap to change`}>{bpm} bpm</button>
+      </div>
+
+      <Silk label="knobs" right="turn anything" />
+      <div className="dl-knobs">
+        {knobs.map((p) => {
+          const v = num(values[p.id], p.default);
+          const n = (v - p.min) / (p.max - p.min);
+          const d = (p.default - p.min) / (p.max - p.min);
+          return (
+            <div key={p.id} className={`dl-knob ${focusParam === p.id ? "is-on" : ""}`} onPointerDown={() => setFocusParam(p.id)} onMouseEnter={() => setFocusParam(p.id)}>
+              <Knob label={p.label.toLowerCase()} value={Math.max(0, Math.min(1, n))} defaultValue={d} color={CAP.navy} size={56} height={128} led="var(--led-mint)"
+                onChange={(x) => { setFocusParam(p.id); const raw = p.min + x * (p.max - p.min); const st = p.step ?? 0; setParam(p.id, st ? Math.round(raw / st) * st : raw); }} />
             </div>
-            <span className="w-8 text-right">{peakInPct}</span>
+          );
+        })}
+      </div>
+      {selects.map((p) => (
+        <div key={p.id} className="dl-select" onMouseEnter={() => setFocusParam(p.id)}>
+          <span>{p.label.toLowerCase()}</span>
+          <div className="dl-seg" role="radiogroup" aria-label={p.label}>
+            {p.options.map((o) => <button key={o.value} type="button" role="radio" aria-checked={values[p.id] === o.value} className={values[p.id] === o.value ? "is-on" : ""} onClick={() => { setFocusParam(p.id); setParam(p.id, o.value); }}>{o.label.toLowerCase()}</button>)}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-12">OUTPUT</span>
-            <div className="flex-1 h-3 brutal-border bg-bone overflow-hidden">
-              <div className={`h-full ${peakOut > 0.7 ? "bg-hot" : peakOut > 0.05 ? "bg-acid" : "bg-bone"}`} style={{ width: `${peakOutPct}%` }} />
-            </div>
-            <span className="w-8 text-right">{peakOutPct}</span>
+        </div>
+      ))}
+
+      {presets && presets.length > 0 && (
+        <>
+          <Silk label="presets" right="tap to hear" />
+          <div className="dl-presets">
+            {presets.map((p) => <button key={p.name} type="button" className="dl-src" onClick={() => { applyPreset(p); if (!playing) void togglePlay(); }}>{p.name.toLowerCase()}</button>)}
           </div>
-          <div className="flex items-center gap-2 justify-end">
-            {ctxState !== "running" && ctxState !== "idle" && (
-              <span className="px-2 py-0.5 brutal-border bg-hot text-bone">CTX: {ctxState}</span>
-            )}
-          </div>
+        </>
+      )}
+
+      <div className="dl-notes">
+        <div className="dl-note">
+          <b>what changed</b>
+          <ul>{describeChanges(deviceSlug, values, params).map((l, i) => <li key={i}>{l}</li>)}</ul>
+        </div>
+        <div className="dl-note">
+          <b>listen for</b>
+          <ul>{listenFor.map((l, i) => <li key={i}>{l}</li>)}</ul>
         </div>
       </div>
 
-      {/* Main Device + Meters */}
-      <div className="grid md:grid-cols-[2fr,1fr] gap-4">
-        <div className="brutal-border bg-card p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="font-display text-2xl">{deviceLabel}</div>
-            {bypassed && <div className="font-mono text-xs text-hot">▸ BYPASSED · YOU ARE HEARING THE RAW SOURCE</div>}
-          </div>
-
-          {/* Sticky focused-param explainer: always visible above the knobs */}
-          <div className="brutal-border bg-acid text-ink p-3 sticky top-2 z-10">
-            <div className="font-mono text-[10px] uppercase opacity-70">▸ HOVER A KNOB</div>
-            <div className="font-mono text-sm font-bold">{focused ? focused.label : "Pick a knob to see what it does"}</div>
-            <div className="font-mono text-xs mt-1 leading-snug">
-              {focused?.explain ?? "Each control has a one-line explanation here. Twist it to hear the change."}
-            </div>
-          </div>
-
-          {gainReduction > 0.01 && (
-            <div className="brutal-border bg-bone p-3">
-              <div className="font-mono text-xs uppercase mb-2">Gain Reduction</div>
-              <div className="h-2 bg-ink overflow-hidden">
-                <div className="h-full bg-hot transition-all" style={{ width: `${Math.min(gainReduction * 5, 100)}%` }} />
-              </div>
-              <div className="font-mono text-xs mt-1">-{gainReduction.toFixed(1)} dB</div>
-            </div>
-          )}
-
-          <TooltipProvider delayDuration={150}>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {params.map((p) => (
-              <ParamControl
-                key={p.id}
-                param={p}
-                value={values[p.id]}
-                onChange={(v) => setParam(p.id, v)}
-                onFocus={() => setFocusParam(p.id)}
-              />
-            ))}
-          </div>
-          </TooltipProvider>
-
-          {presets && presets.length > 0 && (
-            <div>
-              <div className="font-mono text-xs uppercase mb-2">PRESETS: TAP TO HEAR</div>
-              <div className="flex flex-wrap gap-2">
-                {presets.map((p) => (
-                  <button
-                    key={p.name}
-                    onClick={() => applyPreset(p)}
-                    className="brutal-border bg-sun px-3 py-1 font-mono text-xs uppercase brutal-press hover:bg-acid"
-                  >
-                    {p.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-3">
-          <div className="brutal-border bg-ink text-bone p-2">
-            <div className="font-mono text-[10px] uppercase mb-1">OUTPUT SPECTRUM</div>
-            <SpectrumMeter analyser={engineRef.current?.analyserOut ?? null} height={90} />
-          </div>
-
-          {focused && (
-            <div className="brutal-border bg-acid text-ink p-3">
-              <div className="font-mono text-xs uppercase mb-1">▸ {focused.label}</div>
-              <div className="font-mono text-sm">{focused.explain}</div>
-            </div>
-          )}
-
-          <div className="brutal-border bg-volt text-bone p-4">
-            <div className="font-mono text-xs uppercase mb-2">WHAT CHANGED</div>
-            <ul className="space-y-1 font-mono text-xs">
-              {describeChanges(deviceSlug, values, params).map((l, i) => <li key={i}>▸ {l}</li>)}
-            </ul>
-          </div>
-
-          <div className="brutal-border bg-acid text-ink p-3">
-            <div className="font-mono text-xs uppercase mb-2">WHAT TO LISTEN FOR</div>
-            <ul className="space-y-1 font-mono text-xs">
-              {listenFor.map((l, i) => <li key={i}>▸ {l}</li>)}
-            </ul>
-          </div>
-
-          <div className="brutal-border bg-bone p-3 font-mono text-xs">
-            <div className="uppercase mb-1">HOW TO USE</div>
-            Press <b>PLAY</b> → tap a <b>PRESET</b> → toggle <b>A/B</b> to compare dry vs processed. Twist knobs to hear how each parameter changes the sound.
-          </div>
-        </div>
-      </div>
-
-      {/* Signal flow: collapsed by default at the bottom */}
       <SignalFlowSVG flow={signalFlow} defaultOpen={false} />
     </div>
-  );
-}
-
-function ParamControl({
-  param, value, onChange, onFocus,
-}: {
-  param: ParamSpec;
-  value: number | string;
-  onChange: (v: number | string) => void;
-  onFocus: () => void;
-}) {
-  if (param.kind === "select") {
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-        <div className="brutal-border bg-bone p-3" onMouseEnter={onFocus} onFocus={onFocus}>
-        <div className="font-mono text-xs uppercase mb-1">{param.label}</div>
-        <div className="flex flex-wrap gap-1">
-          {param.options.map((o) => (
-            <button
-              key={o.value}
-              onClick={() => { onFocus(); onChange(o.value); }}
-              className={`brutal-border px-2 py-1 font-mono text-xs uppercase ${
-                value === o.value ? "bg-acid text-ink" : "bg-card text-ink"
-              } brutal-press`}
-            >
-              {o.label}
-            </button>
-          ))}
-        </div>
-        </div>
-        </TooltipTrigger>
-        <TooltipContent side="top" align="center" collisionPadding={16} avoidCollisions
-          className="max-w-xs bg-ink text-bone font-mono text-xs leading-snug px-3 py-2 z-[100]">
-          <div className="font-bold mb-1">{param.label}</div>
-          {param.explain}
-        </TooltipContent>
-      </Tooltip>
-    );
-  }
-
-  const raw = typeof value === "number" ? value : parseFloat(String(value));
-  const v = Number.isFinite(raw) ? raw : param.default;
-  const pct = ((v - param.min) / (param.max - param.min)) * 100;
-  const angle = -135 + (Math.max(0, Math.min(100, pct)) / 100) * 270;
-
-  return (
-    <Tooltip>
-    <TooltipTrigger asChild>
-    <div
-      className="brutal-border bg-bone p-3 flex flex-col items-center gap-2"
-      onMouseEnter={onFocus}
-      onFocus={onFocus}
-    >
-      <div className="font-mono text-xs uppercase text-center">{param.label}</div>
-      <div className="bg-acid brutal-border w-20 h-20 rounded-full relative flex items-center justify-center">
-        <div
-          className="absolute left-1/2 top-1/2 origin-bottom h-8 w-1 bg-ink"
-          style={{ transform: `translate(-50%, -100%) rotate(${angle}deg)`, transformOrigin: "50% 100%" }}
-        />
-      </div>
-      <input
-        type="range"
-        min={param.min}
-        max={param.max}
-        step={param.step ?? (param.max - param.min) / 100}
-        value={v}
-        onChange={(e) => { onFocus(); onChange(+e.target.value); }}
-        className="w-full"
-      />
-      <div className="font-mono text-xs text-center">
-        {Number.isFinite(v) ? v.toFixed(param.step && param.step < 1 ? 2 : 0) : "-"} {param.unit ?? ""}
-      </div>
-    </div>
-    </TooltipTrigger>
-    <TooltipContent side="top" align="center" collisionPadding={16} avoidCollisions
-      className="max-w-xs bg-ink text-bone font-mono text-xs leading-snug px-3 py-2 z-[100]">
-      <div className="font-bold mb-1">{param.label}{param.unit ? ` (${param.unit})` : ""}</div>
-      {param.explain}
-    </TooltipContent>
-    </Tooltip>
   );
 }
 
@@ -457,6 +290,6 @@ function describeChanges(slug: string | undefined, vals: Record<string, number |
       });
     }
   }
-  if (out.length === 0) out.push("Defaults: toggle A/B or load a preset to hear the device.");
+  if (out.length === 0) out.push("Everything is at its default. Tap a preset, or switch between a and b to hear the difference.");
   return out;
 }

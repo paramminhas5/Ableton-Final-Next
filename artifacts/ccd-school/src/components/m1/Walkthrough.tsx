@@ -48,11 +48,12 @@ export const TOURS: Record<string, Stop[]> = {
   syllabus: [
     { sel: ".sy-whead", title: "three worlds", line: "basics, producer and dj. open any of them, any time." },
     { sel: ".sy-row:not(.is-small)", title: "song lessons", line: "each adds a part to your song, in order." },
-    { sel: ".sy-extras", title: "go deeper", line: "the lessons under a part go further into it. open one when you want more." },
+    { sel: ".sy-more", title: "go deeper", line: "+3 means three more lessons on that part. tap to open them." },
   ],
   wiki: [
-    { sel: "input[type=search]", title: "search everything", line: "every word from Live, rekordbox and synths, explained with sound." },
-    { sel: "[data-tour=met]", title: "words you've met", line: "every word you open in a lesson is kept here." },
+    { sel: "input[type=search]", title: "search", line: "type a device, a word, or what you want to hear." },
+    { sel: ".lb-intents", title: "search by sound", line: "warmer, wider, more space: tap one to see the devices that do it." },
+    { sel: ".lb-grid", title: "play with a device", line: "each one opens on a loop. turn its knobs and hear what it does." },
   ],
 };
 const KEY = (s: string) => `ccd.walk.${s}`;

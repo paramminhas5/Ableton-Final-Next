@@ -12,7 +12,8 @@ import { DEVICES, type DeviceDef } from "@/content/devices";
 import "@/components/m1/library.css";
 import { glossParts } from "@/lib/gloss";
 import { missionAny } from "@/lib/worldOrder";
-import { Walkthrough } from "@/components/m1/Walkthrough";
+import { TopBar } from "@/components/m1/TopBar";
+import { WordWidget } from "@/components/m1/Widgets";
 import { useProgress } from "@/lib/progress";
 import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
@@ -59,6 +60,27 @@ const MORE = [
 ];
 
 type Tab = "home" | "yours" | "devices" | "words" | "more";
+type Cat = DeviceDef["category"];
+const CATS: { id: Cat | "all"; label: string }[] = [
+  { id: "all", label: "all" }, { id: "EQ", label: "tone" }, { id: "DYNAMICS", label: "punch" }, { id: "DRIVE", label: "grit" },
+  { id: "TIME", label: "space" }, { id: "FILTER", label: "filter" }, { id: "MOD", label: "movement" },
+];
+/* Search by what you want to hear, not only by name (design pass, 9 Nov night). */
+const INTENTS: { w: string; slugs: string[] }[] = [
+  { w: "warmer", slugs: ["saturator", "overdrive", "eq"] },
+  { w: "more space", slugs: ["reverb", "delay", "echo"] },
+  { w: "punchier", slugs: ["compressor", "drum-buss", "glue-compressor"] },
+  { w: "wider", slugs: ["chorus", "auto-pan", "echo"] },
+  { w: "dirtier", slugs: ["overdrive", "erosion", "redux", "saturator"] },
+  { w: "darker", slugs: ["auto-filter", "eq", "eq-eight"] },
+  { w: "louder", slugs: ["limiter", "glue-compressor", "compressor"] },
+  { w: "moving", slugs: ["phaser", "flanger", "auto-filter", "vibrato", "auto-pan"] },
+  { w: "glitchy", slugs: ["grain-delay", "redux", "freq-shifter"] },
+  { w: "tighter", slugs: ["gate", "compressor", "eq-eight"] },
+];
+const HINTS = ["search", "try: warmer", "try: reverb", "try: more space", "try: punchier", "try: sidechain"];
+const tag = (t: string) => t.toLowerCase().replace(/\.$/, "");
+function intentFor(t: string) { return t.length >= 3 ? INTENTS.find(i => i.w.startsWith(t) || t.startsWith(i.w.split(" ").pop()!.slice(0, 4))) : undefined; }
 
 export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { slug: string; title: string }[]> }) {
   const { progress } = useProgress();
@@ -95,54 +117,101 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
   const t = q.trim().toLowerCase();
   const devices = useMemo(() => ATLAS.filter(d => (group === "all" || d.group === group) && (!t || `${d.name} ${d.does} ${d.reach}`.toLowerCase().includes(t))), [t, group]);
   const words = useMemo(() => TERMS.filter(w => !t || `${w.term} ${w.def}`.toLowerCase().includes(t)), [t]);
-  const labs = DEVICES.filter(d => !t || `${d.name} ${d.tagline} ${d.category}`.toLowerCase().includes(t));
+  const [cat, setCat] = useState<Cat | "all">("all");
+  const intent = intentFor(t);
+  const labs = useMemo(() => {
+    const byText = DEVICES.filter(d => (cat === "all" || d.category === cat) && (!t || `${d.name} ${d.tagline} ${d.what} ${LAB_WORD[d.category]}`.toLowerCase().includes(t)));
+    if (!intent) return byText;
+    const first = intent.slugs.map(sl => DEVICES.find(d => d.slug === sl)).filter((d): d is DeviceDef => !!d);
+    return [...first, ...byText.filter(d => !first.includes(d))];
+  }, [t, cat, intent]);
+  const [hint, setHint] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => setHint(h => (h + 1) % HINTS.length), 2200);
+    const key = (e: KeyboardEvent) => { if (e.key === "/" && !(e.target instanceof HTMLInputElement)) { e.preventDefault(); document.getElementById("lb-q")?.focus(); } };
+    window.addEventListener("keydown", key);
+    return () => { window.clearInterval(id); window.removeEventListener("keydown", key); };
+  }, []);
+  const today = DEVICES[Math.floor(Date.now() / 86400000) % DEVICES.length];
+  const counts = useMemo(() => Object.fromEntries(CATS.map(c => [c.id, c.id === "all" ? DEVICES.length : DEVICES.filter(d => d.category === c.id).length])), []);
   const more = MORE.filter(m => !t || `${m.label} ${m.what}`.includes(t));
   const used = (id: string) => (lessons[id] ?? []).find(l => !!progress.completedMissions[l.slug]);
 
   return (
-    <main className="m1-page lb" style={{ paddingTop: 4 }}>
-      <div className="lb-head">
-        <h1>library</h1>
-        <Walkthrough screen="wiki" />
-      </div>
-      <label className="lb-search">
-        <Icon name="search" />
-        <span className="sr-only">Search devices and words</span>
-        <input type="search" value={q} onChange={e => { setQ(e.target.value); if (tab !== "home") setTab("home"); }} placeholder="search" />
-      </label>
+    <main className={`m1-page lb ${tab === "home" ? "fr is-wide-c" : ""}`} style={{ paddingTop: 4 }}>
+      <TopBar title="library" sub={`${DEVICES.length} devices to play · ${TERMS.length} words`} screen="wiki" />
 
-      {tab === "home" && (
+      {tab === "home" ? (
         <>
-          {/* Devices you can play: each opens its lab, playing on a loop, every knob live. */}
-          <div className="lb-sec"><b>play with a device</b><span>{labs.length}</span></div>
-          <div className="lb-grid">
-            {labs.map(d => (
-              <Link key={d.slug} href={`/device/${d.slug}`} className="lb-tile">
-                <GroupPic g={LAB_GROUP[d.category]} />
-                <b>{d.name.toLowerCase()}</b>
-                <small>{LAB_WORD[d.category]}</small>
-              </Link>
-            ))}
-            {!labs.length && <p className="m1-t11">nothing called that. try reverb or eq.</p>}
+          <div className="fr-l">
+            <div className="lb-cats o3" role="group" aria-label="Kind of device">
+              {CATS.map(c => (
+                <button key={c.id} type="button" aria-pressed={cat === c.id} className={`lb-cat ${cat === c.id ? "is-on" : ""}`} onClick={() => setCat(c.id)}>
+                  {c.id !== "all" ? <i className="lb-catpic"><GroupPic g={LAB_GROUP[c.id]} /></i> : null}<span>{c.label}</span><em>{counts[c.id]}</em>
+                </button>
+              ))}
+            </div>
+            {met.length ? (
+              <section className="fr-side lb-yours o7">
+                <Silk label="your words" right={`${met.length}`} />
+                <div className="lb-chips">{met.slice(0, 16).map(w => <button key={w.term} type="button" className={`lb-chip ${openWord === w.term ? "is-on" : ""}`} onClick={() => setOpenWord(o => (o === w.term ? null : w.term))}>{w.term.toLowerCase()}</button>)}</div>
+              </section>
+            ) : null}
           </div>
-          {(t ? words.slice(0, 12) : met).length ? (
-            <>
-              <div className="lb-sec"><b>{t ? "words" : "your words"}</b><span>{t ? words.length : met.length}</span></div>
-              <div className="lb-chips">
-                {(t ? words.slice(0, 12) : met).map(w => (
-                  <button key={w.term} type="button" className={`lb-chip ${openWord === w.term ? "is-on" : ""}`} aria-expanded={openWord === w.term} onClick={() => setOpenWord(o => (o === w.term ? null : w.term))}>{w.term.toLowerCase()}</button>
+
+          <div className="fr-c">
+            <div className="o1">
+              <label className="lb-search">
+                <Icon name="search" />
+                <span className="sr-only">Search devices and words</span>
+                <input id="lb-q" type="search" value={q} onChange={e => setQ(e.target.value)} placeholder={HINTS[hint]} autoComplete="off" />
+                <kbd className="lb-kbd" aria-hidden>/</kbd>
+              </label>
+              <div className="lb-intents" role="group" aria-label="What do you want to hear">
+                {INTENTS.slice(0, 8).map(i => <button key={i.w} type="button" className={`lb-intent ${intent?.w === i.w ? "is-on" : ""}`} onClick={() => setQ(intent?.w === i.w ? "" : i.w)}>{i.w}</button>)}
+              </div>
+            </div>
+            <section className="o4" aria-live="polite">
+              <Silk label={t ? (intent ? `to make it ${intent.w}` : `devices for "${t}"`) : "play with a device"} right={`${labs.length}`} />
+              <div className="lb-grid">
+                {labs.map((d, i) => (
+                  <Link key={d.slug} href={`/device/${d.slug}`} className={`lb-tile ${intent && i < intent.slugs.length ? "is-pick" : ""}`}>
+                    <GroupPic g={LAB_GROUP[d.category]} />
+                    <b>{d.name.toLowerCase()}</b>
+                    <small>{tag(d.tagline)}</small>
+                  </Link>
                 ))}
               </div>
-              {openWord ? <p className="lb-def">{TERMS.find(w => w.term === openWord)?.def}</p> : null}
-            </>
-          ) : null}
-          <div className="lb-more">
-            <button type="button" className="lb-morekey" onClick={() => setTab("devices")}><b>{ATLAS.length}</b>every device in live</button>
-            <button type="button" className="lb-morekey" onClick={() => setTab("words")}><b>{TERMS.length}</b>every word</button>
-            <button type="button" className="lb-morekey" onClick={() => setTab("more")}><b>{MORE.length}</b>guides</button>
+              {!labs.length && <p className="lb-empty">nothing called that yet. try <button type="button" onClick={() => setQ("reverb")}>reverb</button>, <button type="button" onClick={() => setQ("warmer")}>warmer</button> or <button type="button" onClick={() => setQ("punchier")}>punchier</button>.</p>}
+            </section>
+            {t && words.length ? (
+              <section className="o5">
+                <Silk label="words" right={`${words.length}`} />
+                <div className="lb-chips">{words.slice(0, 14).map(w => <button key={w.term} type="button" className={`lb-chip ${openWord === w.term ? "is-on" : ""}`} aria-expanded={openWord === w.term} onClick={() => setOpenWord(o => (o === w.term ? null : w.term))}>{w.term.toLowerCase()}</button>)}</div>
+              </section>
+            ) : null}
+            {openWord ? <p className="lb-def o5"><b>{openWord.toLowerCase()}</b> {TERMS.find(w => w.term === openWord)?.def}</p> : null}
+          </div>
+
+          <div className="fr-r">
+            <Link href={`/device/${today.slug}`} className="wg fr-side lb-today">
+              <div className="wg-h"><b>device of the day</b><span>{LAB_WORD[today.category]}</span></div>
+              <span className="lb-todaypic"><GroupPic g={LAB_GROUP[today.category]} /></span>
+              <span className="wg-t">{today.name.toLowerCase()}</span>
+              <span className="wg-s">{tag(today.tagline)}</span>
+              <span className="wg-key"><Icon name="play" small />play with it</span>
+            </Link>
+            <div className="fr-side"><WordWidget /></div>
+            <div className="lb-more o6">
+              <button type="button" className="lb-morekey" onClick={() => setTab("devices")}><b>{ATLAS.length}</b>every device in live</button>
+              <button type="button" className="lb-morekey" onClick={() => setTab("words")}><b>{TERMS.length}</b>every word</button>
+              <button type="button" className="lb-morekey" onClick={() => setTab("more")}><b>{MORE.length}</b>guides</button>
+            </div>
           </div>
         </>
-      )}
+      ) : null}
+      {tab !== "home" ? <label className="lb-search"><Icon name="search" /><span className="sr-only">Search</span><input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="search" /></label> : null}
       {tab !== "home" ? <button type="button" className="ls-chip lb-back" onClick={() => setTab("home")}><Icon name="back" small />library</button> : null}
 
       {tab === "yours" && (

@@ -38,7 +38,7 @@ export function DevicePageClient({ slug }: { slug: string }) {
   const lessons = Object.entries(LESSON_LINKS).filter(([, l]) => atlasId && l.devices?.includes(atlasId)).map(([s]) => missionBySlug(s)).filter(Boolean).slice(0, 3);
 
   return (
-    <main className="m1-page" style={{ paddingTop: 4 }}>
+    <main className="m1-page dv" style={{ paddingTop: 4 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, height: 60 }}>
         <Key href="/devices" ariaLabel="All devices" style={{ width: 44, height: 44 }}><Icon name="back" /></Key>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -57,7 +57,7 @@ export function DevicePageClient({ slug }: { slug: string }) {
       <Silk label="try it" right="turn anything, nothing breaks" />
       <div className="ls-sim">
         <ClientOnly fallback={<div className="m1-t11" style={{ padding: 20 }}>loading the sound</div>}>
-          <DeviceLab key={d.slug} title={d.name} subtitle={d.tagline} deviceLabel={d.name.toUpperCase()} factory={d.factory} params={d.params} listenFor={d.listenFor} signalFlow={d.signalFlow} presets={d.presets} />
+          <DeviceLab key={d.slug} title={d.name} subtitle={d.tagline} deviceLabel={d.name} deviceSlug={d.slug} factory={d.factory} params={d.params} listenFor={d.listenFor} signalFlow={d.signalFlow} presets={d.presets} />
         </ClientOnly>
       </div>
 

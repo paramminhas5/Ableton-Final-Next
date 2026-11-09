@@ -1,0 +1,23 @@
+/* Widgets.tsx: small working windows onto the rest of ccd school. */
+.wg-bars{display:flex;flex-direction:column;gap:var(--sp-2)}
+.wg-bar{display:grid;grid-template-columns:minmax(0,1fr) 72px 34px;align-items:center;gap:var(--sp-2);font-size:var(--fs-5);color:var(--print)}
+.wg-bar i{height:6px;border-radius:3px;background:color-mix(in srgb,var(--ink) 12%,transparent);position:relative;overflow:hidden}
+.wg-bar i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--led-cobalt);box-shadow:0 0 6px var(--led-cobalt)}
+.wg-bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+.wg-pads{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:var(--sp-2);border-radius:10px;background:radial-gradient(120% 90% at 50% 0%,#0C0C0E,#030304);box-shadow:0 0 0 1.5px #000,inset 0 4px 10px rgba(0,0,0,.6)}
+.wg-pads i{height:26px;border-radius:6px;background:#1B1C1F;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);transition:background 90ms,box-shadow 90ms}
+.wg-pads i.is-on{background:var(--led-mint);box-shadow:0 0 12px var(--led-mint)}
+.wg-chip{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:7px;font-size:var(--fs-6);font-weight:600;color:var(--print);border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);white-space:nowrap}
+.wg-jogs{display:grid;grid-template-columns:1fr 44px 1fr;align-items:center;gap:var(--sp-3);padding:var(--sp-3);border-radius:10px;background:radial-gradient(120% 90% at 50% 0%,#0C0C0E,#030304);box-shadow:0 0 0 1.5px #000,inset 0 4px 10px rgba(0,0,0,.6)}
+.wg-jogs>i{justify-self:center;width:64px;height:64px;border-radius:50%;background:repeating-conic-gradient(#202124 0 6deg,#141416 6deg 12deg);box-shadow:0 0 0 2px var(--c),0 0 14px color-mix(in srgb,var(--c) 50%,transparent),inset 0 0 0 16px #0C0C0E;position:relative}
+.wg-jogs>i::after{content:"";position:absolute;left:50%;top:6px;width:2px;height:12px;margin-left:-1px;background:var(--disp-ink);border-radius:1px}
+@media (hover:hover){.wg-decks:hover .wg-jogs>i{animation:wg-spin 1.6s linear infinite}}
+html.ccd-playing .wg-jogs>i{animation:wg-spin 1.6s linear infinite}
+.wg-mixer{display:flex;justify-content:center;gap:8px;position:relative;height:64px}
+.wg-mixer em{width:4px;height:100%;border-radius:2px;background:#060607;position:relative}
+.wg-mixer em::after{content:"";position:absolute;left:-5px;top:30%;width:14px;height:8px;border-radius:2px;background:#C9C9CC}
+.wg-mixer b{position:absolute;left:-4px;right:-4px;bottom:-2px;height:4px;border-radius:2px;background:#060607}
+@keyframes wg-spin{to{transform:rotate(360deg)}}
+.wg-clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (prefers-reduced-motion:reduce){.wg-jogs>i{animation:none!important}}
+.wg-answers{flex-wrap:wrap;gap:5px}.wg-answers i{width:14px;height:14px;border-radius:4px}

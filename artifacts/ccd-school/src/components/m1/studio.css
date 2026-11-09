@@ -302,3 +302,11 @@
   .st-root{max-width:680px}
   .st-main .st-tray{flex:0 0 auto;aspect-ratio:1.25;max-height:52vh}
 }
+/* laptop (design pass, 9 Nov night): the studio is 2-6-2, your parts | the instrument | its knobs */
+@media (min-width:1200px) and (min-height:560px){
+  .st-root{max-width:1440px}
+  .st-body{grid-template-columns:minmax(0,2fr) minmax(0,6fr) minmax(0,2fr);column-gap:24px}
+  .st-songbar{grid-template-columns:minmax(0,2fr) minmax(0,8fr);gap:24px}
+  .st-side .st-knobs{grid-template-columns:repeat(2,minmax(0,1fr))!important;row-gap:10px}
+  .st-side .st-knobs>.m1-m{height:auto!important;aspect-ratio:1}
+}

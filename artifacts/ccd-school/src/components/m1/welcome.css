@@ -132,3 +132,18 @@
   .wt-text.is-you{grid-column:1/-1;max-width:640px;margin:0 auto;width:100%}
 }
 @media (min-width:900px){.wt-dj .dk-jog{max-width:200px}.wt-dj .dk-body{grid-template-columns:minmax(0,1fr) 220px minmax(0,1fr)}}
+/* first visit, second pass (9 Nov night): recordings of the real app, nothing to tap through */
+.wt3 .wt-screen{gap:14px}
+.wt3 .m1-silk{margin:4px 2px 0}
+.wt3 .wt-big{font-size:30px;margin-top:6px}
+.wt3 .wt-sub{font-size:var(--fs-4);line-height:1.4;margin-top:6px}
+.wt-phone{position:relative;margin:0 auto;height:min(calc(100dvh - 360px),580px);min-height:300px;aspect-ratio:390/580;max-width:100%;padding:6px;border-radius:24px;background:#050506;box-shadow:0 0 0 1.5px #000,inset 0 0 0 1px rgba(255,255,255,.06),0 24px 48px -12px rgba(0,0,0,.55);animation:wt-rise 260ms var(--ease-pop,ease-out) both}
+.wt-video{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:18px;background:#0B0B0D}
+@keyframes wt-rise{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wt-phone{animation:none}}
+@media (min-width:900px){
+  .wt3 .wt-big{font-size:52px}
+  .wt3 .wt-sub{font-size:20px}
+  .wt-phone{height:min(calc(100dvh - 180px),640px)}
+  .wt3 .wt-screen{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}

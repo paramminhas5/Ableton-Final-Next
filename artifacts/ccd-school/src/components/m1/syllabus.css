@@ -1,53 +1,51 @@
-/* The syllabus (Worlds.tsx, 9 Nov): worlds, paths, song lessons and their deeper lessons in one tree. */
+/* The syllabus (Worlds.tsx; design pass, 9 Nov night): one line per lesson, deeper lessons folded under "+3". */
 .m1-page.sy{padding-bottom:120px}
-@media (min-width:640px){.m1-page.sy{max-width:760px}}
-.sy-how{margin:10px 2px 4px;font-size:13px;line-height:1.45;color:var(--print)}
-.sy-how b{color:var(--ink);font-weight:600}
-.sy-world{margin-top:12px}
-.sy-whead{display:grid;grid-template-columns:34px minmax(0,1fr) auto 20px;gap:12px;align-items:center;width:100%;min-height:70px;padding:10px 14px;border:0;border-radius:14px;font:inherit;color:var(--ink);text-align:left;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);cursor:pointer}
+@media (min-width:640px) and (max-width:1023px){.m1-page.sy{max-width:640px}}
+.sy-key{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-4);margin:var(--sp-1) 2px var(--sp-3);font-size:var(--fs-5);color:var(--print)}
+.sy-key span{display:inline-flex;align-items:center;gap:6px}
+.sy-key b{font-size:var(--fs-5);font-weight:600;color:var(--ink)}
+.sy-dot{width:8px;height:8px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 6px var(--led-mint)}
+.sy-whead{display:grid;grid-template-columns:34px minmax(0,1fr) auto 20px;gap:12px;align-items:center;width:100%;min-height:64px;margin-top:var(--sp-2);padding:8px 14px;border:0;border-radius:14px;font:inherit;color:var(--ink);text-align:left;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude);cursor:pointer}
 .sy-whead:focus-visible{outline:2px solid var(--c);outline-offset:2px}
 .sy-whead>b{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--c);background:#0B0B0D;box-shadow:inset 0 2px 5px rgba(0,0,0,.6)}
-.sy-whead>span{display:flex;flex-direction:column;font-size:18px;font-weight:600;min-width:0}
-.sy-whead small{font-size:12px;font-weight:500;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sy-whead em{font-style:normal;font-size:12px;color:var(--print);font-variant-numeric:tabular-nums}
-.sy-world.is-open .sy-whead{box-shadow:var(--m1-extrude),inset 0 -3px 0 var(--c)}
-.sy-body{padding:4px 2px 0}
-.sy-path{margin-top:8px}
-.sy-lessons{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.sy-row{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border-radius:12px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.sy-whead>span{display:flex;flex-direction:column;font-size:var(--fs-3);font-weight:600;min-width:0}
+.sy-whead small{font-size:var(--fs-5);font-weight:500;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sy-whead em{font-style:normal;font-size:var(--fs-5);color:var(--print);font-variant-numeric:tabular-nums}
+.sy-whead.is-open{box-shadow:var(--m1-pressed),inset 0 -3px 0 var(--c)}
+.sy-body{padding:var(--sp-2) 0 0;--cx:color-mix(in srgb,var(--c) 62%,var(--ink))}
+.sy-path{margin-top:var(--sp-2)}
+.sy-lessons{list-style:none;margin:0;padding:0;display:grid;gap:var(--sp-2);grid-template-columns:minmax(0,1fr)}
+.sy-lessons>li{min-width:0}
+.sy-line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sp-2);align-items:stretch}
+.sy-row{display:flex;align-items:center;gap:12px;min-height:56px;min-width:0;padding:8px 12px;border-radius:12px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
 .sy-row:focus-visible{outline:2px solid var(--c);outline-offset:2px}
-.sy-n{flex:none;width:30px;display:inline-flex;justify-content:center;font-size:12px;font-weight:600;color:var(--print);font-variant-numeric:tabular-nums}
-.sy-row.is-done .sy-n{color:var(--c)}
-.sy-t{flex:1;min-width:0;display:flex;flex-direction:column;font-size:15px;font-weight:600}
-.sy-t small{font-size:11.5px;font-weight:500;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sy-next{flex:none;font-style:normal;font-size:11px;font-weight:600;color:var(--c)}
-.sy-row.is-next{box-shadow:var(--m1-extrude),inset 0 0 0 2px var(--c)}
-.sy-extras{list-style:none;margin:6px 0 4px 22px;padding:0 0 0 12px;display:grid;gap:4px;border-left:2px solid color-mix(in srgb,var(--c) 40%,transparent)}
-.sy-row.is-small{min-height:44px;padding:4px 8px;background:none;box-shadow:none;border-radius:10px}
-.sy-row.is-small:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
-.sy-row.is-small .sy-t{font-size:14px;font-weight:500}
-.sy-row.is-small .sy-n{width:auto}
-.sy-row.is-locked{opacity:.5}
-.sy-body .wc-card{margin-top:14px}
-.sy-lessons,.sy-extras{grid-template-columns:minmax(0,1fr)}
-.sy-lessons>li,.sy-extras>li{min-width:0}
-.sy-row{min-width:0}
-.sy{--cx:color-mix(in srgb,var(--c) 62%,var(--ink))}
-.sy-world{--cx:color-mix(in srgb,var(--c) 62%,var(--ink))}
+.sy-n{flex:none;width:28px;display:inline-flex;justify-content:center;font-size:var(--fs-5);font-weight:600;color:var(--print);font-variant-numeric:tabular-nums}
 .sy-row.is-done .sy-n,.sy-next{color:var(--cx)}
-.sy-fold{display:grid;grid-template-columns:auto minmax(0,1fr) auto 18px;gap:10px;align-items:center;width:100%;min-height:56px;padding:6px 6px;border:0;border-top:1px solid color-mix(in srgb,var(--ink) 9%,transparent);background:transparent;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
-.sy-fold b{font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--print)}
-.sy-fold span{display:flex;flex-direction:column;font-size:15px;font-weight:500;min-width:0}
-.sy-fold small{font-size:11.5px;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sy-fold em{font-style:normal;font-size:11px;color:var(--print);font-variant-numeric:tabular-nums}
+.sy-t{flex:1;min-width:0;display:flex;flex-direction:column;font-size:var(--fs-4);font-weight:600}
+.sy-t small{font-size:var(--fs-5);font-weight:500;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sy-next{flex:none;font-style:normal;font-size:var(--fs-6);font-weight:600}
+.sy-row.is-next{box-shadow:var(--m1-extrude),inset 0 0 0 2px var(--c)}
+.sy-more{display:flex;flex-direction:column;align-items:center;justify-content:center;width:62px;border:0;border-radius:12px;font:500 var(--fs-6) Outfit,system-ui;color:var(--print);background:var(--deck2);box-shadow:inset 0 2px 5px var(--shA,rgba(0,0,0,.3)),0 1px 0 var(--hi);cursor:pointer}
+.sy-more b{font-size:var(--fs-4);font-weight:600;color:var(--cx)}
+.sy-more.is-on{color:var(--ink)}
+.sy-extras{list-style:none;margin:var(--sp-1) 0 var(--sp-1) 22px;padding:0 0 0 12px;display:grid;gap:2px;grid-template-columns:minmax(0,1fr);border-left:2px solid color-mix(in srgb,var(--c) 40%,transparent);animation:sy-in 160ms ease-out}
+.sy-extras>li{min-width:0}
+.sy-row.is-small{min-height:44px;padding:4px 8px;background:none;box-shadow:none;border-radius:10px}
+@media (hover:hover){.sy-row.is-small:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}}
+.sy-row.is-small .sy-t{font-size:var(--fs-4);font-weight:500}
+.sy-row.is-small .sy-n{width:auto}
+.sy-sdot{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.sy-row.is-locked{opacity:.5}
+.sy-body .wc-card{margin-top:var(--sp-4)}
+.sy-fold{display:grid;grid-template-columns:auto minmax(0,1fr) auto 18px;gap:10px;align-items:center;width:100%;min-height:52px;padding:6px;border:0;border-top:1px solid var(--line);background:transparent;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.sy-fold b{font-size:var(--fs-6);font-weight:600;letter-spacing:.06em;color:var(--print)}
+.sy-fold span{font-size:var(--fs-4);font-weight:500;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sy-fold em{font-style:normal;font-size:var(--fs-5);color:var(--print);font-variant-numeric:tabular-nums}
 .sy-fold:focus-visible{outline:2px solid var(--c);outline-offset:-2px;border-radius:10px}
-/* syllabus on tablet and laptop: the three worlds on the left, the open world on the right */
-@media (min-width:900px){
-  .m1-page.sy{max-width:1180px;display:grid;grid-template-columns:320px minmax(0,1fr);column-gap:32px;align-content:start}
-  .sy>.wd-head,.sy>.sy-how{grid-column:1/-1}
-  .sy>.pl-offer{grid-column:1}
-  .sy-world{display:contents}
-  .sy-whead{grid-column:1;margin-top:10px}
-  .sy-body{grid-column:2;grid-row:3/span 12;align-self:start;padding-top:0}
-  .sy-body>.sy-path:first-child .m1-silk{margin-top:4px}
-}
+.sy .pl-offer{margin-top:var(--sp-3)}
+.sy-upgo{display:flex;margin-top:var(--sp-1)}
+.sy-upgo .m1-cap{display:flex;gap:8px;font-weight:600;font-size:var(--fs-4)}
+@keyframes sy-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.sy-extras{animation:none}}
+@media (min-width:1024px){.sy-key{margin-top:0}.sy-body{padding-top:0}.sy-body>.sy-path:first-child .m1-silk{margin-top:4px}}
+.sy-how{margin-top:var(--sp-4)}

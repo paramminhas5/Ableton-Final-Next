@@ -1052,13 +1052,17 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-songname>span{font-size:12px}
 .fl-seed{font-style:normal;font-weight:600;color:#C98A1E}
 .dark .fl-seed{color:#E9A93A}
-/* practice on tablet and laptop: today and your levels on the left, the drills as a grid on the right */
-@media (min-width:900px){
-  .m1-page.gy-home{max-width:1120px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);column-gap:32px;grid-auto-flow:row dense;align-content:start}
-  .gy-home>.gy-head{grid-column:1/-1}
-  .gy-home>.gy-today,.gy-home>.m1-scr,.gy-home>.ls-panel{grid-column:1}
-  .gy-home>.gy-today{margin-bottom:14px}
-  .gy-home>.m1-silk{grid-column:2;grid-row:2;margin-top:0}
-  .gy-home>.ls-pads{grid-column:2;grid-row:3/span 8;grid-template-columns:repeat(3,minmax(0,1fr));align-self:start}
-  .gy-home>.gy-more{grid-column:2}
+/* practice (design pass, 9 Nov night): phone is one column; from 1024 the shared frame (frame.css) lays it out */
+.gy-desc{display:none}
+.gy-home .m1-scr{margin-top:var(--sp-4)}
+@media (min-width:640px) and (max-width:1023px){.m1-page.gy-home{max-width:600px}}
+@media (min-width:1024px){
+  .gy-home .m1-scr{margin-top:0}
+  .gy-pads{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .gy-pads .ls-pad{min-height:132px!important}
+  .gy-desc{display:block;margin-top:4px;font-size:var(--fs-5);font-weight:500;color:var(--print);line-height:1.3}
+  .gy-next{gap:var(--sp-2)}
+  .gy-nextrow{display:flex;flex-direction:column;gap:2px;padding:var(--sp-2) 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
 }
+.hk{position:relative;min-height:0!important;min-width:0!important}
+.hk::after{content:"";position:absolute;inset:-7px -2px}

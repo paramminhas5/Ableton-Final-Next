@@ -542,23 +542,13 @@ function StreakWarningBanner() {
 
   if (!isAtRisk || dismissed) return null;
 
+  // Restyled in the design pass (9 Nov night): a slim strip in the house style, not a red alarm bar.
   return (
-    <div className="bg-hot text-bone px-4 py-2.5 flex items-center justify-between gap-3 border-b-4 border-ink">
-      <div className="flex items-center gap-2.5 font-sans text-sm">
-        <span className="text-base inline-flex"><Icon name="flame" small /></span>
-        <span>
-          Your <strong>{progress.streakDays}-day streak</strong> is at risk!{" "}
-          {progress.streakShield ? "Your shield will protect it tonight." : "Do at least one lesson before midnight."}
-        </span>
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <a href="/worlds"
-          className="brutal-border bg-bone text-hot px-3 py-1.5 font-display text-xs brutal-press hover:bg-acid hover:text-ink transition-colors">
-          Learn now →
-        </a>
-        <button onClick={() => setDismissed(true)} aria-label="Dismiss"
-          className="font-mono text-xs opacity-70 hover:opacity-100"><Icon name="close" small /></button>
-      </div>
+    <div className="m1-streak" role="status">
+      <i aria-hidden />
+      <span>{progress.streakShield ? `your ${progress.streakDays} day streak is safe tonight: your shield covers it.` : `your ${progress.streakDays} day streak ends at midnight. one lesson keeps it going.`}</span>
+      <a href="/dashboard">keep it</a>
+      <button type="button" onClick={() => setDismissed(true)} aria-label="Dismiss"><Icon name="close" small /></button>
     </div>
   );
 }
@@ -592,7 +582,7 @@ export function Header() {
   // A lesson is one instrument screen: it carries its own close key, progress and hearts.
   if (/^\/learn\/(?!world\/)[^/]+$/.test(pathname)) return null;
   // You and the library carry their own title bar (boards ZYou, ZLibrary).
-  if (pathname === "/profile" || pathname === "/atlas" || pathname === "/login" || pathname.startsWith("/device/")) return null;
+  if (pathname === "/" || pathname === "/profile" || pathname === "/atlas" || pathname === "/gym" || pathname === "/login" || pathname.startsWith("/device/")) return null;
 
   if (pathname === "/dashboard" || pathname === "/worlds" || pathname === "/learn" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
     return (
