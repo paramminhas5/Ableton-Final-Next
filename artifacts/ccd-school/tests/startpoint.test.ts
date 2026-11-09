@@ -19,7 +19,7 @@ describe("start point", () => {
     // design/curriculum.md: the first song lesson you can open from that path on
     expect(startSlug("producer", 3)).toBe("kick-designer");
     expect(startSlug("dj", 3)).toBe("music-library-dj");
-    expect(startSlug("fundamentals", 4)).toBe("major-scale");
+    expect(startSlug("fundamentals", 4)).toBe("notes-and-octaves"); // promoted to a song lesson, 10 Nov
   });
   it("falls back to chapter one for odd input", () => {
     expect(startSlug("producer", 0)).toBe("your-kick");

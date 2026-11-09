@@ -101,14 +101,14 @@ export function Worlds() {
                 return (
                   <div key={p.slug} className="sm-path">
                     <div className="sm-head"><b>{p.number}</b><span>{p.title.toLowerCase()}</span><em>{dn}/{tot}</em></div>
-                    <ol className="sm-row" data-budget="list" aria-label={`path ${p.number}, ${p.title}`}>
+                    <ol className="sm-row" data-budget="list" aria-label={`path ${p.number}, ${p.title}`} style={{ ["--n" as string]: Math.min(5, Math.max(4, p.lessons.length)) } as CSSProperties}>
                       {p.lessons.map((l, i) => {
-                        const part = l.kind === "song" ? partOf(l.slug) : "bonus";
+                        const part = l.kind === "song" ? partOf(l.slug) : l.title.replace(/^bonus: /, "").toLowerCase();
                         const isNext = l.slug === n?.slug && !l.done;
                         return (
                           <li key={l.slug} id={`l-${l.slug}`}>
-                            <button type="button" className={`sm-pad ${l.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${l.slug === selSlug ? "is-sel" : ""} ${l.exists ? "" : "is-locked"}`}
-                              style={{ ["--pc" as string]: partColor(part) } as CSSProperties} aria-pressed={l.slug === selSlug} aria-label={`${l.title}: adds ${part}${l.done ? ", done" : isNext ? ", up next" : ""}`} onClick={() => setPick(l.slug)}>
+                            <button type="button" className={`sm-pad ${l.done ? "is-done" : ""} ${l.covered ? "is-covered" : ""} ${isNext ? "is-next" : ""} ${l.slug === selSlug ? "is-sel" : ""} ${l.exists ? "" : "is-locked"}`}
+                              style={{ ["--pc" as string]: partColor(part) } as CSSProperties} aria-pressed={l.slug === selSlug} aria-label={`${l.title}: adds ${part}${l.covered ? ", covered in basics" : l.done ? ", done" : isNext ? ", up next" : ""}`} onClick={() => setPick(l.slug)}>
                               <small>{p.number}.{i + 1}</small>
                               <span>{short(part)}</span>
                               {l.extras.length ? <em aria-hidden>+{l.extras.length}</em> : null}
@@ -161,7 +161,7 @@ function Detail({ it, isNext }: { it: JourneyLesson; isNext: boolean }) {
       {it.exists ? (
         <Link href={`/learn/${it.slug}`} className="sm-go">
           <span className="sm-gotx">
-            <small>{it.done ? "done · go again" : isNext ? "up next" : "lesson"} · {minutesFor(it.slug)} min</small>
+            <small>{it.covered ? (it.covered === "tempo-bpm" ? "you set your tempo in lesson 1 · open it anyway" : "covered in basics · open it anyway") : it.done ? "done · go again" : isNext ? "up next" : "lesson"} · {minutesFor(it.slug)} min</small>
             <b>{it.title.replace(/^bonus: /, "").toLowerCase()}</b>
             <span>{part ? `adds ${part} to your song` : "a bonus round, nothing added"}</span>
           </span>

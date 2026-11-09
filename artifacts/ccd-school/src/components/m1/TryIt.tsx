@@ -69,6 +69,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const [fixNote, setFixNote] = useState<string | null>(null);
   const takeOpen = useRef(false);
   const recHeld = useRef<Held>(new Map());
+  // Capture (10 Nov): what you play over the loop without rec is kept for a moment, so "keep what you just
+  // played" can put it in, like Live's Capture MIDI. Nothing goes in unless you press it.
+  const freeHeld = useRef<Held>(new Map());
+  const free = useRef<{ ev: NoteEvent; at: number }[]>([]);
+  const [canKeep, setCanKeep] = useState(0);
+  const playingRef = useRef(false);
   const sessionRef = useRef(session);
   sessionRef.current = session;
 
@@ -80,6 +86,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   const playing = !!(pos.flags & FLAG.playing);
   const countIn = !!(pos.flags & FLAG.countIn);
   const recording = !!(pos.flags & FLAG.recording);
+  playingRef.current = playing && !recording && !countIn;
   const backing = session.layers.some((l, i) => i !== idx && l.events.length > 0);
 
   const setEvents = useCallback((fn: (e: NoteEvent[]) => NoteEvent[]) => {
@@ -105,7 +112,18 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         const opts = { loop: t.loop, snap, strength: 1, swing: t.swing };
         if (e.kind === OUT.playedOn && rec) {
           pressNote(recHeld.current, "take", e.note, e.vel, e.beat, !!(e.flags & FLAG.countIn));
+        } else if (e.kind === OUT.playedOn && playingRef.current) {
+          pressNote(freeHeld.current, "free", e.note, e.vel, e.beat, false);
         } else if (e.kind === OUT.playedOff) {
+          const loose = releaseNote(freeHeld.current, "free", e.note, e.beat, opts);
+          if (loose) {
+            const lat = coach ? msToBeats(latencyMs.current, t.bpm || 120) : 0;
+            const now = performance.now();
+            const keepMs = ((t.loop * 60) / (t.bpm || 120)) * 2000;
+            free.current = [...free.current.filter(f => now - f.at < keepMs), { ev: lat ? { ...loose, start: (((loose.start - lat) % t.loop) + t.loop) % t.loop } : loose, at: now }];
+            setCanKeep(free.current.length);
+            continue;
+          }
           const raw = releaseNote(recHeld.current, "take", e.note, e.beat, opts);
           if (!raw) continue;
           // The device's known delay comes off every hit (src/lib/latency.ts).
@@ -176,6 +194,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   useEffect(() => { if (started.current) engine.metronome(click); }, [click, engine, started]);
   const rec = async () => {
     await ready();
+    free.current = []; setCanKeep(0);
     engine.metronome(click);
     if (recording || countIn) engine.recordOff();
     else {
@@ -208,6 +227,20 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     if (!events.length) return;
     history.current.push(events);
     setEvents(() => []);
+  };
+  /** Put in what you played over the last time round the loop, without having pressed rec. */
+  const keepFree = () => {
+    const t = sessionRef.current;
+    const loopMs = ((t.loop * 60) / (t.bpm || 120)) * 1000;
+    const now = performance.now();
+    const latest = free.current.length ? free.current[free.current.length - 1].at : now;
+    const last = free.current.filter(f => latest - f.at <= loopMs + 200);
+    if (!last.length) return;
+    history.current.push(events);
+    const opts = { loop: t.loop, snap, strength: 1, swing: t.swing };
+    setEvents(cur => last.reduce((acc, f) => overdub(acc, f.ev, opts), cur));
+    free.current = [];
+    setCanKeep(0);
   };
   const use = () => {
     if (coach && !goalMet) {
@@ -426,11 +459,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         </svg>
         <div className="ls-meta" style={{ marginTop: 10 }}>
           <span style={{ color }}>{notesCount ? `${notesCount} ${coach?.goal.note ? (notesCount === 1 ? coach.goal.note : `${coach.goal.note}s`) : `${unit}${notesCount === 1 ? "" : "s"}`}` : "nothing yet"}{lastV ? <span style={{ color: VERDICT_C[lastV.c] }}> · last {lateWord(lastV.ms)}</span> : null}</span>
-          <span>{recording ? "press play to stop and hear it" : playing ? "press rec to add more on top" : backing ? "plays over your track" : "the click keeps time"}</span>
+          <span>{recording ? "press play to stop and hear it" : playing ? "play along. keep what you like" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>
       {fixNote ? <div className="ls-hint fl-fix" role="status">{fixNote}</div> : null}
       {coach && onBeatOnly && offBeat > 0 && misses >= 2 && !recording && !countIn ? <button type="button" className="ls-chip fl-snapme" onClick={snapForMe}>snap it for me</button> : null}
+      {canKeep > 0 && !recording && !countIn ? <button type="button" className="ls-chip fl-keepfree" onClick={keepFree} aria-label="Keep what you just played, without recording">keep what you just played</button> : null}
       <Silk label="transport" right={coach ? "undo takes back a hit · hold to clear" : "rec records · play loops it"} />
       <div className="m1-g">
         <Key label="rec" style={coach && ((!events.length && !recording && !countIn) || (nudge && !goalMet)) ? glow : undefined} led={recording || countIn ? "var(--led-red)" : null} ariaPressed={recording || countIn} onClick={rec} ariaLabel={recording || countIn ? "Stop recording" : "Record with a one bar count-in"}>

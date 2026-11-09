@@ -1105,3 +1105,5 @@ a.jv-lane:hover{transform:translateX(3px)}
   .fl-lead,.fl-gdo{display:none}
   .fl-startcol{max-width:720px}
 }
+/* keep what you just played (capture): appears once you've played over the loop without rec */
+.fl-keepfree{align-self:flex-start;margin-top:10px;border-color:var(--led-mint)!important;color:var(--ink);box-shadow:0 0 10px color-mix(in srgb,var(--led-mint) 30%,transparent)}

@@ -40,4 +40,9 @@ await shot("home-new", "/dashboard", { full: true });
 await shot("home-going", "/dashboard", { store: going, full: true });
 await shot("lesson", process.env.LESSON ?? "/learn/your-kick", { steps: Number(process.env.STEPS ?? 4) });
 await shot("syllabus", "/learn", { store: going, full: true });
+// producer after basics: its first loop's four parts show as covered, continue lands on the piano roll
+const basicsDone = Object.fromEntries(["tempo-bpm", "set-your-tempo", "bars-time-signatures", "note-values", "groove-feel", "what-is-sound"].map(s => [s, { score: 90, at: Date.now() - 3600e3 }]));
+const grad = { "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: basicsDone, xp: 600, streakDays: 4 }, "ccd.world": "producer", ...seen };
+await shot("syllabus-producer", "/learn", { store: grad, full: true });
+await shot("home-producer", "/dashboard", { store: grad, full: true });
 await b.close();

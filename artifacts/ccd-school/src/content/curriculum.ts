@@ -30,12 +30,12 @@ export const extrasOf = (slug: string) => {
  * song view. Lessons not listed show their title.
  */
 export const PART: Record<string, string> = {
-  "tempo-bpm": "kick and tempo", "bars-time-signatures": "clap", "note-values": "hats", "groove-feel": "swing",
+  "tempo-bpm": "kick", "set-your-tempo": "tempo", "bars-time-signatures": "clap", "note-values": "hats", "groove-feel": "swing",
   "what-is-sound": "first notes", "frequency-pitch": "a tune", "amplitude-volume": "dynamics", "timbre-tone": "tone",
   "waveforms": "wave shape", "overtones-harmonics": "a fifth", "noise": "noise hats", "samples-loops": "a sample",
-  "major-scale": "your scale", "intervals": "a phrase", "melody-writing": "the melody", "pentatonic-scales": "the hook",
+  "notes-and-octaves": "octave jumps", "major-scale": "your scale", "intervals": "a phrase", "melody-writing": "the melody", "pentatonic-scales": "the hook",
   "what-are-chords": "chords", "chord-progressions": "a progression", "bass-follows": "bass", "song-structure": "intro and drop",
-  "your-kick": "kick", "synth-what-is-sound": "lead", "hats": "hats", "clap-and-snare": "clap",
+  "your-kick": "kick", "synth-what-is-sound": "lead", "midi-piano-roll": "edited notes", "hats": "hats", "clap-and-snare": "clap",
   "first-bass": "bass", "kick-and-bass": "room for the kick", "shape-your-synth": "lead shape", "chords-on-top": "chords",
   "kick-designer": "your own kick", "real-drums": "a real kit", "lead-width": "width", "fx-riser": "riser",
   "balance": "levels", "eq-place": "eq", "space": "space", "glue": "glue",

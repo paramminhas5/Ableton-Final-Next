@@ -62,7 +62,7 @@
 .sm-head b{font-size:12px;font-weight:600;color:var(--cx);font-variant-numeric:tabular-nums}
 .sm-head span{flex:1;font-size:var(--fs-4);font-weight:600;color:var(--ink)}
 .sm-head em{font-style:normal;font-size:var(--fs-5);color:var(--print);font-variant-numeric:tabular-nums}
-.sm-row{list-style:none;margin:0;padding:8px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;border-radius:16px;background:var(--deck2);box-shadow:inset 0 2px 6px var(--shA,rgba(0,0,0,.35)),0 1px 0 var(--hi)}
+.sm-row{list-style:none;margin:0;padding:8px;display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:8px;border-radius:16px;background:var(--deck2);box-shadow:inset 0 2px 6px var(--shA,rgba(0,0,0,.35)),0 1px 0 var(--hi)}
 .sm-row>li{min-width:0}
 .sm-pad{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;width:100%;aspect-ratio:1/1;min-height:68px;max-height:96px;padding:8px;border:0;border-radius:11px;font:inherit;color:var(--print);text-align:left;cursor:pointer;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
 .sm-pad small{font-size:10px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.75}
@@ -99,3 +99,6 @@
   .sy .sy-whead em{font-size:11px}
   .sy .sy-wbar{grid-column:1}
 }
+/* a producer lesson whose part basics already gave your song: half lit */
+.sm-pad.is-done.is-covered{background:linear-gradient(180deg,var(--t1),var(--t2));color:var(--print);box-shadow:var(--m1-extrude),inset 0 0 0 2px color-mix(in srgb,var(--pc) 55%,transparent)}
+.sm-pad.is-done.is-covered span{color:var(--ink)}.sm-pad.is-done.is-covered em{color:var(--pc)}

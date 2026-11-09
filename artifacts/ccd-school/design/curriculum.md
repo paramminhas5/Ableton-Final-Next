@@ -27,6 +27,8 @@ Param's calls that shape it (4 Nov 23:31, 23:51, 5 Nov 00:05 and 00:21): the son
 - **Slugs are kept.** A rebuilt lesson takes the old slug so progress and trophies carry over. Until a lesson is a YAML file it opens in the old player, marked "old version" on its card.
 - **Legend:** S = song lesson, D = deeper (hangs off the song lesson above it), B = bonus round. Slugs in backticks. The "does to the song" column is the keep-able thing you do in that lesson.
 
+**10 Nov (Param):** the first lesson is split in two (your pulse, then tempo), so a first win comes in about five minutes. Notes and octaves and the piano roll move from deeper to song lessons: the scales need the first, and the second is how you fix a wrong note. Producer's first loop (kick, lead, hats, clap) repeats basics, so each counts as done for anyone who finished its basics twin (`COVERED_BY` in `src/lib/worldOrder.ts`); they stay open for anyone who wants them. Mute and solo are in the studio from day one, and "keep what you just played" works on every play step.
+
 ## Basics (world `foundations`, shown as "basics")
 
 What the song has after basics: a kick, a clap, hats with swing, a tempo, a melody in a scale you chose, played with dynamics, chords, a bass on the roots, an intro and a drop. Drums first (Param, 00:21): you have a beat within the first lesson, and everything after is heard over it.
@@ -34,8 +36,9 @@ What the song has after basics: a kick, a clap, hats with swing, a tempo, a melo
 ### Path 1: the pulse
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| S | `tempo-bpm` | pulse and tempo | adds drums.kick on the beat; sets the tempo (100, 120, 128, 140 by ear) | tempo step (one knob with detents) |
+| S | `tempo-bpm` | your pulse | adds drums.kick on the beat | |
 | D | `what-is-rhythm` | what is rhythm? | move one kick off the beat and back; feel what breaks | |
+| S | `set-your-tempo` | tempo | sets the tempo (100, 120, 128, 140 by ear) | tempo step (one knob with detents) |
 | S | `bars-time-signatures` | bars and counting | adds drums.clap on 2 and 4 (the backbeat) | |
 | S | `note-values` | subdivision | adds hats.hats on 8ths, then 16ths; snap taught | grid with snap on and off |
 | D | `syncopation` | syncopation | move a hat to an offbeat accent; keep it | |
@@ -68,7 +71,7 @@ What the song has after basics: a kick, a clap, hats with swing, a tempo, a melo
 ### Path 4: melody
 | | slug | title | does to the song | needs code |
 |---|---|---|---|---|
-| D | `notes-and-octaves` | notes and octaves | the twelve notes; play the five black keys on your lead | all-notes keys |
+| S | `notes-and-octaves` | notes and octaves | the twelve notes; play the five black keys on your lead | all-notes keys |
 | S | `major-scale` | scales: major and minor | sets song scale; relabels keys | scale step |
 | D | `minor-scale` | the minor scale and its cousins | changes scale (natural, harmonic); hear your melody in each | |
 | S | `intervals` | intervals | changes lead (a two-note phrase) | interval clip |
@@ -107,7 +110,7 @@ What the song has after producer: kick, hats, clap, a bass that makes room for t
 | D | `instruments-overview` | live's instruments | three voices on your lead line: synth, fm, sample; pick one | |
 | D | `synth-oscillators` | oscillators, the sound source | shape lead: wave | |
 | D | `synth-pitch-vs-amplitude` | pitch vs amplitude | detune your lead by a few cents; velocity on two notes | |
-| D | `midi-piano-roll` | the piano roll | your lead on the grid: add, move, lengthen, soften, delete notes | |
+| S | `midi-piano-roll` | the piano roll | your lead on the grid: add, move, lengthen, soften, delete notes | |
 | S | `hats` | hats | adds hats.hats; snap taught | snap toggle on the play-in, hat visual |
 | S | `clap-and-snare` | clap and snare | adds drums.clap | clip and goal exist |
 | D | `session-view` | session view | your song as clips: launch the drums alone, then everything | |

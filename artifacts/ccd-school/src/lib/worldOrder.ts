@@ -38,15 +38,37 @@ export function worldSteps(world: WorldId): Step[] {
   return out;
 }
 
+/**
+ * Producer's first loop gives your song a kick, a lead, hats and a clap, which basics already gave it.
+ * Once the basics lesson is done, its producer twin counts as done: continue skips it and the map shows it
+ * as covered, but it stays open (Param, 10 Nov). Nothing is written to progress, so it is undone by itself.
+ */
+export const COVERED_BY: Record<string, string> = {
+  "your-kick": "tempo-bpm", "synth-what-is-sound": "what-is-sound", "hats": "note-values", "clap-and-snare": "bars-time-signatures",
+};
+/** Lesson 1 used to set the tempo too; it was split in two on 10 Nov. Anyone who finished it before then has a tempo. */
+const SPLIT_AT = Date.UTC(2026, 10, 9, 21, 0); // when the split went live
+/** The lesson that already covers this one for you, if any. */
+export const coveredBy = (slug: string, done: Record<string, unknown>): string | null => {
+  if (done[slug]) return null;
+  if (slug === "set-your-tempo") {
+    const d = done["tempo-bpm"] as { at?: number } | true | undefined;
+    return d && typeof d === "object" && typeof d.at === "number" && d.at < SPLIT_AT ? "tempo-bpm" : null;
+  }
+  const twin = COVERED_BY[slug];
+  return twin && done[twin] ? twin : null;
+};
+const isDone = (slug: string, done: Record<string, unknown>) => !!done[slug] || !!coveredBy(slug, done);
+
 export function nextStep(world: WorldId, done: Record<string, unknown>): Step | undefined {
   const steps = worldSteps(world);
-  return steps.find(s => !done[s.slug]) ?? steps[steps.length - 1];
+  return steps.find(s => !isDone(s.slug, done)) ?? steps[steps.length - 1];
 }
 
 /** Song lessons done out of all song lessons in the world, counting the ones still to be made. */
 export function worldDone(world: WorldId, done: Record<string, unknown>) {
   const songs = songItems(world);
-  return { done: songs.filter(s => !!done[s.slug]).length, total: songs.length, open: worldSteps(world).length };
+  return { done: songs.filter(s => isDone(s.slug, done)).length, total: songs.length, open: worldSteps(world).length };
 }
 
 export function worldOf(slug: string): WorldId | null {
@@ -73,13 +95,17 @@ export function nextAfter(slug: string): string | undefined {
   return undefined;
 }
 
-export type JourneyItem = CurItem & { exists: boolean; rebuilt: boolean; done: boolean };
+/** `covered`: not done itself, but the basics lesson that gives your song the same part is (see COVERED_BY). */
+export type JourneyItem = CurItem & { exists: boolean; rebuilt: boolean; done: boolean; covered?: string };
 export type JourneyLesson = JourneyItem & { extras: JourneyItem[] };
 export type JourneyPath = { slug: string; number: number; title: string; note: string; lessons: JourneyLesson[]; songTotal: number; songDone: number; extraTotal: number; extraDone: number };
 
 /** A world's paths with their song lessons and, under each, its deeper lessons and bonus rounds. */
 export function journey(world: WorldId, done: Record<string, unknown>): JourneyPath[] {
-  const mark = (i: CurItem): JourneyItem => ({ ...i, exists: BY_SLUG.has(i.slug), rebuilt: isRebuilt(i.slug), done: !!done[i.slug] });
+  const mark = (i: CurItem): JourneyItem => {
+    const cov = coveredBy(i.slug, done);
+    return { ...i, exists: BY_SLUG.has(i.slug), rebuilt: isRebuilt(i.slug), done: !!done[i.slug] || !!cov, ...(cov ? { covered: cov } : {}) };
+  };
   return curPaths(world).map(p => {
     const lessons: JourneyLesson[] = [];
     const loose: JourneyItem[] = [];

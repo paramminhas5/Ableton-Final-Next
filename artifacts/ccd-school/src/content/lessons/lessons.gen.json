@@ -3924,18 +3924,16 @@
       "slug": "tempo-bpm",
       "world": "foundations",
       "number": 1,
-      "title": "pulse and tempo",
-      "minutes": 6,
+      "title": "your pulse",
+      "minutes": 4,
       "song": {
         "adds": "drums.kick",
-        "why": "every song starts with a pulse, and yours starts with a kick you play in yourself, at a speed you choose"
+        "why": "every song starts with a pulse, and yours starts with a kick you play in yourself"
       },
-      "learn": "The steady beat under every dance track, how fast it goes, and the first sound in your own song: a kick you play in and set to your own tempo.",
+      "learn": "The steady beat under every dance track, and the first sound in your own song: a kick you play in yourself, on the beat.",
       "youCan": [
         "feel the pulse of a track and count along with it",
-        "play a kick in on the beat",
-        "say what bpm means and roughly what speed house and techno sit at",
-        "set your song's tempo by ear"
+        "play a kick in on the beat"
       ],
       "steps": [
         {
@@ -3973,126 +3971,12 @@
           }
         },
         {
-          "kind": "tempo",
-          "why": "The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.",
-          "marks": [
-            100,
-            120,
-            128,
-            140
-          ],
-          "say": {
-            "mentor": "That's your kick, looping. Now turn the knob and listen to what happens.\nHow fast the pulse goes is called the tempo, and it's counted in bpm: beats per minute. At 120 bpm there are two beats every second. Turn it down and everything feels heavier and lazier. Turn it up and it gets urgent. House usually lives around 120 to 128, techno a bit faster, garage and dubstep around 140.\nTry the four speeds on the right, then pick the one that feels like your song. You can change it any time later.",
-            "straight": "This is your kick at different speeds. Tempo is measured in bpm, beats per minute: 120 bpm is two beats a second. House sits around 120 to 128, techno a little higher, garage and dubstep near 140. Pick a tempo for your song.",
-            "eli5": "Turn the big knob and listen: your kick goes faster or slower. How fast the booms come is called the tempo. We count it in bpm, which means booms per minute. 120 bpm is two booms every second.\nSlow feels sleepy and heavy. Fast feels exciting. Pick the speed you like best for your song."
-          },
-          "hint": "The number is how many kicks you'd hear in one minute."
-        },
-        {
           "kind": "say",
           "title": "your pulse",
           "say": {
-            "mentor": "So your song now has a pulse: a kick on every beat, at a tempo you chose. Everything you add from here lines up with it. The hats, the bass, the melody, all of it counts along with this kick.\nProducers set the tempo first because changing it later changes how everything feels. A tune that's cheeky at 128 can sound sad at 100.",
-            "straight": "Your song has a pulse and a tempo. Everything you add later is timed against it, which is why the tempo usually gets set first.",
-            "eli5": "Now your song has a heartbeat, and you picked how fast it goes. Every sound you add later will dance along to it."
-          },
-          "deeper": [
-            {
-              "title": "why 120 to 128 for house",
-              "say": "It's close to a brisk walking pace, which is about as fast as people can dance to for hours without getting tired. Early Chicago house sat around 120. Techno from Detroit and Berlin pushed faster."
-            },
-            {
-              "title": "half time",
-              "say": "Dubstep is 140 bpm, but it often feels like 70, because the big drums only hit on every other beat. The pulse is still 140 underneath. You'll hear the same trick in a lot of trap and drum and bass."
-            }
-          ]
-        },
-        {
-          "kind": "ask",
-          "q": "What does bpm stand for?",
-          "options": [
-            "beats per minute",
-            "bars per minute",
-            "beats per measure",
-            "bass per minute"
-          ],
-          "answer": 0,
-          "why": "Beats per minute. 120 bpm means 120 beats, 120 kicks here, in one minute.",
-          "whyWrong": {
-            "1": "A bar is a group of beats. Tempo counts the beats themselves.",
-            "2": "Close, but it's per minute. That's what makes it a speed.",
-            "3": "It's beats, the steady pulse you counted along with."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "At 120 bpm, how many beats happen every second?",
-          "options": [
-            "two",
-            "one",
-            "four",
-            "twelve"
-          ],
-          "answer": 0,
-          "why": "120 beats in 60 seconds is two every second.",
-          "whyWrong": {
-            "1": "One a second would be 60 bpm, half your song's speed.",
-            "2": "Four a second would be 240 bpm, far faster than any house track.",
-            "3": "Twelve a second would be a buzz, not a beat."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "Hear your kick at 120 bpm, then at 140. What happens to it?",
-          "part": "kick",
-          "play": [
-            {
-              "bpm": 120,
-              "label": "120 bpm"
-            },
-            {
-              "bpm": 140,
-              "label": "140 bpm"
-            }
-          ],
-          "options": [
-            "the kicks come closer together",
-            "the kick gets louder",
-            "the kick gets higher in pitch",
-            "you get more kicks in each bar"
-          ],
-          "answer": 0,
-          "why": "Same pattern, played faster. Each beat is shorter, so the kicks arrive sooner.",
-          "whyWrong": {
-            "1": "Tempo changes speed, not volume.",
-            "2": "The kick sounds the same, it just comes round more often.",
-            "3": "Still one kick per beat. There are just more beats in each minute."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "Which of these is at a house tempo?",
-          "sounds": [
-            {
-              "bpm": 124
-            },
-            {
-              "bpm": 70
-            },
-            {
-              "bpm": 175
-            }
-          ],
-          "options": [
-            "120 to 128 bpm",
-            "60 to 80 bpm",
-            "170 to 180 bpm"
-          ],
-          "answer": 0,
-          "why": "House usually sits between 120 and 128. Techno goes a little faster.",
-          "whyWrong": {
-            "1": "That's ballad speed, slower than most dance music.",
-            "2": "That's drum and bass territory."
+            "mentor": "So your song now has a pulse: a kick on every beat. Everything you add from here lines up with it. The hats, the bass, the melody, all of it counts along with this kick.\nNext you'll choose how fast it goes.",
+            "straight": "Your song has a pulse. Everything you add later is timed against it. Next: how fast it goes.",
+            "eli5": "Now your song has a heartbeat. Every sound you add later will dance along to it. Next you'll pick how fast it goes."
           }
         },
         {
@@ -4114,79 +3998,24 @@
         },
         {
           "kind": "ask",
-          "more": true,
-          "q": "One of these is your kick at 60 bpm. Which one?",
-          "part": "kick",
-          "sounds": [
-            {
-              "bpm": 60
-            },
-            {
-              "bpm": 120
-            },
-            {
-              "bpm": 90
-            }
-          ],
+          "q": "What is the pulse?",
           "options": [
-            "60 bpm, one beat every second",
-            "120 bpm, a beat every half second",
-            "90 bpm, three beats every two seconds"
+            "a steady beat that doesn't speed up or slow down",
+            "the loudest sound in a track",
+            "the tune you hum along to",
+            "how long the track lasts"
           ],
           "answer": 0,
-          "why": "60 beats in 60 seconds, so one beat every second.",
+          "why": "The pulse is beats in a row, evenly spaced. It's what your foot taps to.",
           "whyWrong": {
-            "1": "That's twice as fast: two kicks every second.",
-            "2": "Close, but the kicks come a little quicker than once a second."
-          }
-        },
-        {
-          "kind": "ask",
-          "more": true,
-          "q": "Why do producers usually set the tempo first?",
-          "options": [
-            "changing it later changes how everything feels",
-            "you can't change it later",
-            "the kick only works at one tempo",
-            "bpm sets how loud the song is"
-          ],
-          "answer": 0,
-          "why": "Every part is played against the pulse. Change the speed and the whole mood shifts with it.",
-          "whyWrong": {
-            "1": "You can change it any time. It just changes the feel of everything already there.",
-            "2": "A kick works at any tempo.",
-            "3": "Tempo is speed, not loudness."
-          }
-        },
-        {
-          "kind": "ask",
-          "more": true,
-          "q": "Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?",
-          "part": "drums",
-          "play": {
-            "bpm": 140,
-            "notes": {
-              "kick": "x.........x.....",
-              "clap": "........x......."
-            }
-          },
-          "options": [
-            "the big drums hit on every other beat",
-            "it's played slower in clubs",
-            "the bass is out of time",
-            "dubstep has no pulse"
-          ],
-          "answer": 0,
-          "why": "Half time. The pulse is still 140, but the heavy drums skip every other beat, so it feels half as fast.",
-          "whyWrong": {
-            "1": "Clubs play it at 140.",
-            "2": "The bass is right on the grid, it just leaves space.",
-            "3": "There's always a pulse underneath."
+            "1": "Loud or quiet, the pulse is about timing, not volume.",
+            "2": "The tune sits on top of the pulse. The pulse is the beat underneath.",
+            "3": "It's about the beat, not the length."
           }
         },
         {
           "kind": "keep",
-          "next": "Next: bars and counting. A clap on two and four turns your pulse into a groove, and your loop grows to four bars."
+          "next": "Next: tempo. Turn one knob and hear your kick get lazy or urgent, then pick the speed for your song."
         }
       ],
       "file": "foundations/01-tempo-bpm.yaml"
@@ -7135,6 +6964,224 @@
         }
       ],
       "file": "foundations/20-song-structure.yaml"
+    },
+    {
+      "slug": "set-your-tempo",
+      "world": "foundations",
+      "number": 21,
+      "title": "tempo",
+      "minutes": 4,
+      "song": {
+        "changes": "drums.kick",
+        "why": "how fast the pulse goes sets the mood of the whole song, so it gets chosen before anything else"
+      },
+      "learn": "How fast a track goes, how it's counted in bpm, roughly where house and techno sit, and a tempo for your own song, picked by ear.",
+      "youCan": [
+        "say what bpm means and roughly what speed house and techno sit at",
+        "set your song's tempo by ear"
+      ],
+      "steps": [
+        {
+          "kind": "tempo",
+          "why": "The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.",
+          "marks": [
+            100,
+            120,
+            128,
+            140
+          ],
+          "say": {
+            "mentor": "Here's your kick, looping. Turn the knob and listen to what happens.\nHow fast the pulse goes is called the tempo, and it's counted in bpm: beats per minute. At 120 bpm there are two beats every second. Turn it down and everything feels heavier and lazier. Turn it up and it gets urgent. House usually lives around 120 to 128, techno a bit faster, garage and dubstep around 140.\nTry the four speeds on the right, then pick the one that feels like your song. You can change it any time later.",
+            "straight": "Here's your kick at different speeds. Tempo is measured in bpm, beats per minute: 120 bpm is two beats a second. House sits around 120 to 128, techno a little higher, garage and dubstep near 140. Pick a tempo for your song.",
+            "eli5": "Turn the big knob and listen: your kick goes faster or slower. How fast the booms come is called the tempo. We count it in bpm, which means booms per minute. 120 bpm is two booms every second.\nSlow feels sleepy and heavy. Fast feels exciting. Pick the speed you like best for your song."
+          },
+          "hint": "The number is how many kicks you'd hear in one minute."
+        },
+        {
+          "kind": "say",
+          "title": "why tempo comes first",
+          "say": {
+            "mentor": "Producers set the tempo first because changing it later changes how everything feels. A tune that's cheeky at 128 can sound sad at 100.\nYour kick now runs at the speed you chose, and every part you add will play at it too.",
+            "straight": "Tempo usually gets set first, because changing it later changes how everything already there feels.",
+            "eli5": "You picked how fast your song's heartbeat goes. Every sound you add later will go at that speed."
+          },
+          "deeper": [
+            {
+              "title": "why 120 to 128 for house",
+              "say": "It's close to a brisk walking pace, which is about as fast as people can dance to for hours without getting tired. Early Chicago house sat around 120. Techno from Detroit and Berlin pushed faster."
+            },
+            {
+              "title": "half time",
+              "say": "Dubstep is 140 bpm, but it often feels like 70, because the big drums only hit on every other beat. The pulse is still 140 underneath. You'll hear the same trick in a lot of trap and drum and bass."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "What does bpm stand for?",
+          "options": [
+            "beats per minute",
+            "bars per minute",
+            "beats per measure",
+            "bass per minute"
+          ],
+          "answer": 0,
+          "why": "Beats per minute. 120 bpm means 120 beats, 120 kicks here, in one minute.",
+          "whyWrong": {
+            "1": "A bar is a group of beats. Tempo counts the beats themselves.",
+            "2": "Close, but it's per minute. That's what makes it a speed.",
+            "3": "It's beats, the steady pulse you counted along with."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "At 120 bpm, how many beats happen every second?",
+          "options": [
+            "two",
+            "one",
+            "four",
+            "twelve"
+          ],
+          "answer": 0,
+          "why": "120 beats in 60 seconds is two every second.",
+          "whyWrong": {
+            "1": "One a second would be 60 bpm, half your song's speed.",
+            "2": "Four a second would be 240 bpm, far faster than any house track.",
+            "3": "Twelve a second would be a buzz, not a beat."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Hear your kick at 120 bpm, then at 140. What happens to it?",
+          "part": "kick",
+          "play": [
+            {
+              "bpm": 120,
+              "label": "120 bpm"
+            },
+            {
+              "bpm": 140,
+              "label": "140 bpm"
+            }
+          ],
+          "options": [
+            "the kicks come closer together",
+            "the kick gets louder",
+            "the kick gets higher in pitch",
+            "you get more kicks in each bar"
+          ],
+          "answer": 0,
+          "why": "Same pattern, played faster. Each beat is shorter, so the kicks arrive sooner.",
+          "whyWrong": {
+            "1": "Tempo changes speed, not volume.",
+            "2": "The kick sounds the same, it just comes round more often.",
+            "3": "Still one kick per beat. There are just more beats in each minute."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which of these is at a house tempo?",
+          "sounds": [
+            {
+              "bpm": 124
+            },
+            {
+              "bpm": 70
+            },
+            {
+              "bpm": 175
+            }
+          ],
+          "options": [
+            "120 to 128 bpm",
+            "60 to 80 bpm",
+            "170 to 180 bpm"
+          ],
+          "answer": 0,
+          "why": "House usually sits between 120 and 128. Techno goes a little faster.",
+          "whyWrong": {
+            "1": "That's ballad speed, slower than most dance music.",
+            "2": "That's drum and bass territory."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "One of these is your kick at 60 bpm. Which one?",
+          "part": "kick",
+          "sounds": [
+            {
+              "bpm": 60
+            },
+            {
+              "bpm": 120
+            },
+            {
+              "bpm": 90
+            }
+          ],
+          "options": [
+            "60 bpm, one beat every second",
+            "120 bpm, a beat every half second",
+            "90 bpm, three beats every two seconds"
+          ],
+          "answer": 0,
+          "why": "60 beats in 60 seconds, so one beat every second.",
+          "whyWrong": {
+            "1": "That's twice as fast: two kicks every second.",
+            "2": "Close, but the kicks come a little quicker than once a second."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Why do producers usually set the tempo first?",
+          "options": [
+            "changing it later changes how everything feels",
+            "you can't change it later",
+            "the kick only works at one tempo",
+            "bpm sets how loud the song is"
+          ],
+          "answer": 0,
+          "why": "Every part is played against the pulse. Change the speed and the whole mood shifts with it.",
+          "whyWrong": {
+            "1": "You can change it any time. It just changes the feel of everything already there.",
+            "2": "A kick works at any tempo.",
+            "3": "Tempo is speed, not loudness."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?",
+          "part": "drums",
+          "play": {
+            "bpm": 140,
+            "notes": {
+              "kick": "x.........x.....",
+              "clap": "........x......."
+            }
+          },
+          "options": [
+            "the big drums hit on every other beat",
+            "it's played slower in clubs",
+            "the bass is out of time",
+            "dubstep has no pulse"
+          ],
+          "answer": 0,
+          "why": "Half time. The pulse is still 140, but the heavy drums skip every other beat, so it feels half as fast.",
+          "whyWrong": {
+            "1": "Clubs play it at 140.",
+            "2": "The bass is right on the grid, it just leaves space.",
+            "3": "There's always a pulse underneath."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: bars and counting. A clap on two and four turns your pulse into a groove, and your loop grows to four bars."
+        }
+      ],
+      "file": "foundations/21-set-your-tempo.yaml"
     },
     {
       "slug": "ear-higher-lower",
