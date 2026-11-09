@@ -990,3 +990,30 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ti-heard li.is-note b{color:#F3C14F}
 .fl-songname>span{color:var(--sub)}
 .fl-stage:focus{outline:none}
+
+/* Phones: the lesson starts higher. One slim row for your song (the long "nothing in it yet" line moves into it),
+   no "listen / next" row under the step bar (the bar and the count already say where you are), lower bottom keys. */
+@media (max-width:899px){
+  .fl-now{display:none}
+  .fl-top .ls-seg{margin:10px 0 2px}
+  .fl-song{margin:10px -16px 12px;padding:6px 16px;gap:10px}
+  .fl-songplay{width:36px;height:36px;border-radius:10px}
+  .fl-songempty{display:none}
+  .fl-songname{margin:0;align-items:center;min-height:36px}
+  .ls-bottom .m1-m{height:78px}
+  .ls-col{padding-bottom:104px}
+}
+/* practice pads: the drill's name, then (for one not open yet) what opens it, quietly; a later drill sits back a little */
+.gy-padname{display:flex;flex-direction:column;gap:3px;font-size:16px;line-height:1.2}
+.gy-padname small{font-size:12px;font-weight:500;color:var(--sub);line-height:1.3}
+.ls-pad.is-later{opacity:.72}
+.ls-pad.is-later:hover,.ls-pad.is-later:focus-visible{opacity:1}
+/* Phones: the four mode keys stay real keys, just lower: the light, a smaller cap, the name. 100 px of bar becomes 80. */
+@media (max-width:899px){
+  .m1-modebar{padding-top:8px!important}
+  .m1-modebar>.m1-m{height:66px!important;aspect-ratio:auto}
+  .m1-modebar>.m1-m .m1-cap{width:36px!important;margin-top:-10px!important}
+  .m1-modebar>.m1-m .m1-dot{top:6px}
+  .m1-modebar>.m1-m .m1-ml{bottom:5px}
+  .m1-page{padding-bottom:100px}
+}

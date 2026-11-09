@@ -924,13 +924,6 @@ export function Studio() {
               <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}
                 aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>solo</button>
             </div>
-            {bank === "sound" && !shift ? (
-              <div className="st-preset">
-                <button type="button" aria-label="Previous sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) - 1))}>‹</button>
-                <span>{PRESETS[sel.type][sel.preset ?? 0]?.name ?? "sound"}</span>
-                <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
-              </div>
-            ) : null}
             <div className="m1-modrow">
             {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
               <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
@@ -942,6 +935,14 @@ export function Studio() {
                   if (!k || !canTake(k.spec.key)) return;
                   patchMod(assign(TYPE[sel.type].engine, sel.params, sel.mods, src, to), `${srcLabel(TYPE[sel.type].engine, src)} to ${k.spec.label}`, "modulating");
                 }} />
+            ) : null}
+            {/* the sound's name with its arrows sits on the same row as the modulators and a/b, so the pads get the room */}
+            {bank === "sound" && !shift ? (
+              <div className="st-preset">
+                <button type="button" aria-label="Previous sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) - 1))}>‹</button>
+                <span>{PRESETS[sel.type][sel.preset ?? 0]?.name ?? "sound"}</span>
+                <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
+              </div>
             ) : <span style={{ flex: 1 }} />}
             {!lockAt ? <ABKey {...ab} /> : null}
             </div>

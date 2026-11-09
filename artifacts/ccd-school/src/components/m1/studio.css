@@ -242,3 +242,15 @@
 
 .st-keyshort{display:none}
 @media (max-width:480px){.st-keyfull{display:none}.st-keyshort{display:inline}}
+/* Phones: the header's tags never cut off. The play/mix switch is a little narrower, tempo, key and snap keep their
+   full width, and the song name takes what is left. */
+@media (max-width:430px){
+  .st-mode2{width:92px}
+  .st-head .st-tag{flex:none;overflow:visible}
+  .st-head .st-songtag{flex:0 1 auto!important;max-width:none;overflow:hidden}
+  .st-head>span{flex:1 1 0!important;min-width:0}
+  .st-head .st-keytag{flex:none!important}
+}
+.m1-modrow .st-preset{flex:1;min-width:0;margin-top:0}
+.m1-modrow .st-preset span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m1-modrow .st-preset button{width:36px}

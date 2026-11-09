@@ -323,10 +323,11 @@ export function GymPageClient() {
 
   // ── home ──────────────────────────────────────────────────────────────────
   if (phase === "idle" || phase === "done") {
-    const pads: { id: string; label: string; pic: string; c: string; tag?: string; onClick?: () => void; href?: string }[] = [
+    // A drill not open yet keeps its own name as the title; what opens it goes quietly underneath.
+    const pads: { id: string; label: string; sub?: string; locked?: boolean; pic: string; c: string; tag?: string; onClick?: () => void; href?: string }[] = [
       ...GYM_DRILLS.map(d => open(d)
         ? { id: d, label: PAD[d], pic: d, c: COLOR[d], tag: d === today ? "today" : undefined, onClick: () => void startSession(d) }
-        : { id: d, label: `${NAME[d]}: opens after ${TAUGHT_BY[d].title}`, pic: d, c: "#8A8A8E", tag: "lesson first", href: `/learn/${TAUGHT_BY[d].first}` }),
+        : { id: d, label: NAME[d], sub: `opens after ${TAUGHT_BY[d].title}`, locked: true, pic: d, c: "#8A8A8E", href: `/learn/${TAUGHT_BY[d].first}` }),
       { id: "remakes", label: "remakes: famous sounds", pic: "match", c: "#5CC8FF", tag: "new", href: "/gym/remakes" },
       { id: "review", label: "review", pic: "review", c: "#FFB35C", tag: missionsNeedingReview.length ? `${missionsNeedingReview.length} due` : undefined, href: "/review" },
       { id: "daily", label: "daily challenge", pic: "daily", c: "#F3C14F", href: "/daily" },
@@ -374,12 +375,12 @@ export function GymPageClient() {
                   <Pic kind={p.pic} c={p.c} />
                   {p.tag ? <span className="m1-tag">{p.tag}</span> : null}
                 </span>
-                <span style={{ fontSize: 16 }}>{p.label}</span>
+                <span className="gy-padname">{p.label}{p.sub ? <small>{p.sub}</small> : null}</span>
               </>
             );
             const st = { minHeight: 112, ["--c" as string]: p.c } as CSSProperties;
             return p.href
-              ? <Link key={p.id} href={p.href} className="ls-pad" style={st}>{inner}</Link>
+              ? <Link key={p.id} href={p.href} className={`ls-pad ${p.locked ? "is-later" : ""}`} style={st}>{inner}</Link>
               : <button key={p.id} type="button" className={`ls-pad ${p.tag === "today" ? "is-glowpad" : ""}`} style={st} onClick={p.onClick}>{inner}</button>;
           })}
         </div>
