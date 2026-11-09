@@ -18,7 +18,7 @@ import { bankLayers, bankTrack, CUES, DJ_BANK, songLayers, TRACK_BEATS } from "@
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { DeckWave } from "./DeckWave";
 import { songCommands } from "./MixStep";
-import { DeckRig, sectionsFor, type Chan, type DeckId } from "./DeckRig";
+import { DeckRig, sectionsFor, useLandscapePhone, type Chan, type DeckId } from "./DeckRig";
 import { Icon, LED, Screen } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { useEverything, DepthKey } from "./Everything";
@@ -29,6 +29,36 @@ const BEATS = 64;
 const P = { low: 0, mid: 1, high: 2, cut: 3, level: 8, lp: 12 } as const;
 const PHRASES = [{ beat: 0, name: "phrase 1" }, { beat: 32, name: "phrase 2" }];
 const sectionAt = (b: number) => CUES.filter(c => c.at <= b).slice(-1)[0]?.name ?? "intro";
+const UPRIGHT = "ccd.dj.upright";
+
+/** On a phone held upright the decks are squeezed, so we ask once to turn it. It goes away by itself when you do. */
+function useTurnAsk() {
+  const [ask, setAsk] = useState(false);
+  useEffect(() => {
+    const m = window.matchMedia("(orientation: portrait) and (max-width: 599px)");
+    let kept = false;
+    try { kept = !!localStorage.getItem(UPRIGHT); } catch { /* no storage */ }
+    const r = () => setAsk(m.matches && !kept);
+    r(); m.addEventListener("change", r);
+    return () => m.removeEventListener("change", r);
+  }, []);
+  const keep = () => { setAsk(false); try { localStorage.setItem(UPRIGHT, "1"); } catch { /* ignore */ } };
+  return [ask, keep] as const;
+}
+
+function TurnAsk({ onKeep }: { onKeep: () => void }) {
+  return (
+    <div className="dj-turn" role="dialog" aria-modal="true" aria-labelledby="dj-turn-h">
+      <div className="dj-turn-card">
+        <svg className="dj-turn-ph" viewBox="0 0 64 64" aria-hidden><rect x="22" y="8" width="20" height="38" rx="4" /><path d="M29 41h6" /><path d="M14 50a20 20 0 0 0 32 4" className="dj-turn-arc" /><path d="M46 48v6h-6" className="dj-turn-arc" /></svg>
+        <h2 id="dj-turn-h">turn your phone sideways</h2>
+        <p>the decks and the mixer fit side by side, like a real controller.</p>
+        <button type="button" className="ls-chip" onClick={onKeep}>keep it upright</button>
+      </div>
+    </div>
+  );
+}
+
 const chan0: Chan = { trim: 0.5, hi: 0.5, mid: 0.5, low: 0.5, filter: 0.5, fader: 0.8, phones: false, level: 0 };
 
 /** A deck's channel as engine params: trim and fader into level, three-band eq, and one filter knob (left a low-pass, right a high-pass). */
@@ -95,12 +125,21 @@ export function DJ() {
   const setChan = (d: DeckId, k: keyof Chan, v: number | boolean) => setCh(c => ({ ...c, [d]: { ...c[d], [k]: v } }));
   const touch = (label: string, v: number) => setHint(`${label} · ${Math.round(v * 100)}%`);
   const drift = Math.abs(bBpm - aBpm);
+  const [ask, keepUpright] = useTurnAsk();
+  const side = useLandscapePhone();
+  const [canFull, setCanFull] = useState(false);
+  useEffect(() => setCanFull(!!document.fullscreenEnabled), []);
+  const full = () => {
+    if (document.fullscreenElement) { void document.exitFullscreen().catch(() => {}); return; }
+    void document.documentElement.requestFullscreen({ navigationUI: "hide" }).then(() => (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.("landscape")).catch(() => {});
+  };
 
   return (
-    <div className="m1-page dj">
+    <div className={`m1-page dj ${side ? "is-side" : ""}`}>
+      {ask ? <TurnAsk onKeep={keepUpright} /> : null}
       <header className="tb dj-head">
         <div className="tb-l"><Link href="/dashboard" className="tb-k" aria-label="Back"><Icon name="back" small /></Link><h1 className="tb-title">dj decks<small>deck a plays your song</small></h1></div>
-        <div className="tb-r"><DepthKey value={everything} onChange={setEverything} /><Walkthrough screen="dj" /></div>
+        <div className="tb-r">{side && canFull ? <button type="button" className="tb-k" onClick={full} aria-label="Full screen"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button> : null}<DepthKey value={everything} onChange={setEverything} /><Walkthrough screen="dj" auto={!ask} /></div>
       </header>
       <DeckRig
         decks={[

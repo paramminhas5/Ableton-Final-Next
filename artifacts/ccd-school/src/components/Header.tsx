@@ -582,7 +582,7 @@ export function Header() {
   // A lesson is one instrument screen: it carries its own close key, progress and hearts.
   if (/^\/learn\/(?!world\/)[^/]+$/.test(pathname)) return null;
   // You and the library carry their own title bar (boards ZYou, ZLibrary).
-  if (pathname === "/" || pathname === "/profile" || pathname === "/atlas" || pathname === "/gym" || pathname === "/login" || pathname.startsWith("/device/")) return null;
+  if (pathname === "/" || pathname === "/start" || pathname === "/profile" || pathname === "/atlas" || pathname === "/gym" || pathname === "/login" || pathname.startsWith("/device/")) return null;
 
   if (pathname === "/dashboard" || pathname === "/worlds" || pathname === "/learn" || pathname.startsWith("/studio") || pathname.startsWith("/dj") || /^\/(learn\/)?world\/(fundamentals|dj|producer)$/.test(pathname)) {
     return (

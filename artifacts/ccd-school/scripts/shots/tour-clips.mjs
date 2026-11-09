@@ -16,16 +16,17 @@ const seen = Object.fromEntries(["home", "lesson", "studio", "dj", "practice", "
 const done = s => Object.fromEntries(s.map(x => [x, { score: 90, at: Date.now() - 3600e3 }]));
 const newSeen = Object.fromEntries(Object.keys(JSON.parse(readFileSync(new URL("../../src/content/taught.gen.json", import.meta.url), "utf8")).first).map(k => [`ccd.new.studio:${k}`, "1"]));
 const SECS = [{ name: "intro", bars: 4, off: ["lead-synth-what-is-sound"] }, { name: "drop", bars: 4, off: [] }];
-const store = (d, secs) => ({ ...seen, ...newSeen, "ccd.track.v2": secs ? { ...song, sections: SECS } : song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() }] }, "ccd.studio.seeded": "1", "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: done(d), xp: 120, streakDays: 0 } });
+const store = (d, secs) => ({ ...seen, ...newSeen, "ccd.dj.upright": "1", "ccd.track.v2": secs ? { ...song, sections: SECS } : song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() }] }, "ccd.studio.seeded": "1", "ccd.progress.v2": { onboardingDone: true, selectedWorld: "producer", completedMissions: done(d), xp: 120, streakDays: 0 } });
 // The finger: rests at the bottom, glides to each control (420 ms, eased), presses with a ring, follows drags closely.
 const finger = () => {
   let f, ring;
   const get = () => {
     if (f && f.isConnected) return f;
     f = document.createElement("div");
-    Object.assign(f.style, { position: "fixed", left: "195px", top: "900px", width: "44px", height: "44px", margin: "-22px 0 0 -22px", borderRadius: "50%", background: "rgba(255,255,255,.28)", border: "2px solid rgba(255,255,255,.92)", boxShadow: "0 6px 18px rgba(0,0,0,.45)", pointerEvents: "none", zIndex: "2147483647", opacity: "1", transition: "left 420ms cubic-bezier(.25,.8,.3,1), top 420ms cubic-bezier(.25,.8,.3,1), transform 110ms ease-out, opacity 300ms" });
+    // a small, quiet touch mark (10 Nov): a soft white dot with a dark edge, so it reads on light and dark controls
+    Object.assign(f.style, { position: "fixed", left: "195px", top: "900px", width: "18px", height: "18px", margin: "-9px 0 0 -9px", borderRadius: "50%", background: "rgba(255,255,255,.9)", boxShadow: "0 0 0 1.5px rgba(0,0,0,.45), 0 3px 8px rgba(0,0,0,.45)", pointerEvents: "none", zIndex: "2147483647", opacity: ".92", transition: "left 420ms cubic-bezier(.25,.8,.3,1), top 420ms cubic-bezier(.25,.8,.3,1), transform 110ms ease-out, opacity 300ms" });
     ring = document.createElement("i");
-    Object.assign(ring.style, { position: "absolute", inset: "-2px", borderRadius: "50%", border: "2px solid rgba(255,255,255,.7)", opacity: "0", transition: "transform 380ms ease-out, opacity 380ms ease-out" });
+    Object.assign(ring.style, { position: "absolute", inset: "-1px", borderRadius: "50%", border: "1.5px solid rgba(255,255,255,.85)", opacity: "0", transition: "transform 420ms ease-out, opacity 420ms ease-out" });
     f.appendChild(ring);
     document.documentElement.appendChild(f);
     return f;
@@ -33,7 +34,7 @@ const finger = () => {
   const to = (e, fast) => { const d = get(); d.style.transitionDuration = fast ? "40ms, 40ms, 110ms, 300ms" : ""; d.style.left = `${e.clientX}px`; d.style.top = `${e.clientY}px`; };
   addEventListener("DOMContentLoaded", () => get());
   addEventListener("pointermove", e => to(e, !!e.buttons), true);
-  addEventListener("pointerdown", e => { to(e, true); const d = get(); d.style.transform = "scale(.82)"; ring.style.transition = "none"; ring.style.transform = "scale(1)"; ring.style.opacity = ".9"; requestAnimationFrame(() => { ring.style.transition = "transform 380ms ease-out, opacity 380ms ease-out"; ring.style.transform = "scale(1.9)"; ring.style.opacity = "0"; }); }, true);
+  addEventListener("pointerdown", e => { to(e, true); const d = get(); d.style.transform = "scale(.8)"; ring.style.transition = "none"; ring.style.transform = "scale(1)"; ring.style.opacity = ".9"; requestAnimationFrame(() => { ring.style.transition = "transform 420ms ease-out, opacity 420ms ease-out"; ring.style.transform = "scale(2.6)"; ring.style.opacity = "0"; }); }, true);
   addEventListener("pointerup", () => { get().style.transform = "scale(1)"; }, true);
 };
 // Sound: every connection to the speakers is also sent to a recorder, so each clip carries what the app played.
@@ -80,7 +81,7 @@ async function session(name, url, d, run) {
   const frames = [];
   const cdp = await ctx.newCDPSession(p);
   cdp.on("Page.screencastFrame", f => { const i = frames.length; frames.push(f.metadata.timestamp); writeFileSync(`${dir}/${String(i).padStart(5, "0")}.jpg`, Buffer.from(f.data, "base64")); void cdp.send("Page.screencastFrameAck", { sessionId: f.sessionId }).catch(() => {}); });
-  const cast = () => cdp.send("Page.startScreencast", { format: "jpeg", quality: 88, maxWidth: 780, maxHeight: 1688, everyNthFrame: 1 }).catch(() => {});
+  const cast = () => cdp.send("Page.startScreencast", { format: "jpeg", quality: 95, maxWidth: 780, maxHeight: 1688, everyNthFrame: 1 }).catch(() => {});
   await cast();
   const t0 = Date.now();
   p.on("pageerror", e => console.log(`  ${name} pageerror`, e.message.slice(0, 160)));

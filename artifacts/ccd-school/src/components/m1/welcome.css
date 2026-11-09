@@ -166,3 +166,37 @@
 @media (prefers-reduced-motion:reduce){.wt3 .wt-screen,.wt-now{animation:none}}
 @media (min-width:900px){.wt-steps{display:flex}.wt-now{display:none}}
 .wt-phone{height:min(calc(100dvh - 400px),580px)}@media (min-width:900px){.wt-phone{height:min(calc(100dvh - 180px),640px)}}
+
+/* the walkthrough, 10 Nov: plays through like a film. The bar for the part you're in fills as its clips play. */
+.wt4 .wt-dots{gap:6px}
+.wt4 .wt-dots button{position:relative;width:34px;height:20px;padding:0;border:0;background:none;cursor:pointer;min-height:0}
+.wt4 .wt-dots button::before{content:"";position:absolute;left:0;right:0;top:8px;height:4px;border-radius:2px;background:color-mix(in srgb,var(--ink) 16%,transparent)}
+.wt4 .wt-dots button i{position:absolute;left:0;top:8px;height:4px;width:0;border-radius:2px;background:var(--ink);transition:width 120ms linear}
+.wt4 .wt-dots button.is-done i{width:100%;background:var(--led-mint)}
+.wt4 .wt-dots button:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px;border-radius:4px}
+.wt-keys{position:absolute;right:12px;bottom:12px;display:flex;gap:6px}
+.wt-keys .wt-sound{position:relative;right:auto;bottom:auto}
+.wt-video{cursor:pointer}
+.wt-paused{position:absolute;inset:6px;display:flex;align-items:center;justify-content:center;border-radius:18px;background:rgba(0,0,0,.35);pointer-events:none}
+.wt-paused .m1-ico{width:56px;height:56px;padding:16px;border-radius:50%;background:rgba(10,10,12,.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.wt-hint{margin:var(--sp-2) 2px 0;font-size:var(--fs-5);color:var(--print);text-align:center}
+.wt4 .wt-phone{height:min(calc(100dvh - 380px),620px)}
+/* laptop: one tight composition in the middle of the screen, words beside the clip, nothing stretched to the edges */
+@media (min-width:900px){
+  .m1-page.wt4{max-width:1000px;padding-top:12px}
+  .wt4 .wl-top{max-width:none}
+  .wt4 .wt-screen{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:56px;row-gap:24px;align-items:center;align-content:center;min-height:calc(100dvh - 96px)}
+  .wt4 .wt-text{grid-row:1;align-self:end;max-width:440px}
+  .wt4 .wt-foot{grid-row:2;align-self:start;max-width:440px}
+  .wt4 .wt-show{grid-row:1/3}
+  .wt4 .wt-big{font-size:46px}
+  .wt4 .wt-sub{font-size:var(--fs-3)}
+  .wt4 .wt-phone{height:min(calc(100dvh - 140px),720px)}
+  .wt4 .wl-go{max-width:260px}
+  .wt4 .wt-hint{text-align:left}
+  .wt4 .wt-text.is-you{grid-row:1/3}
+}
+.wt4 .wt-dots{display:grid;grid-template-columns:repeat(6,minmax(0,34px));justify-content:center;gap:5px}
+.wt4 .wt-dots button{width:auto}
+.wt-kb{display:none}
+@media (hover:hover) and (pointer:fine){.wt-kb{display:inline}}

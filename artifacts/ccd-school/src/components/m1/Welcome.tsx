@@ -1,19 +1,17 @@
 "use client";
 /**
- * First visit (Param, 9 Nov night, second pass): a product overview made of the real app.
- * Nothing to do and nothing to tap through: each product gets two screens, each a short recording of
- * that part of ccd school working (scripts/shots/tour-clips.mjs records them, tour-encode.py cuts them),
- * with a heading and one line. hello, learn, practice, studio, dj decks, library, then two questions.
+ * First visit (10 Nov): the walkthrough the front page's "start your song" opens. Each part of ccd school gets
+ * two screens, each a short recording of the real app (scripts/shots/tour-clips.mjs records them, tour-encode.py
+ * cuts them) with a heading, one line and its steps lit as they happen. When a clip ends the next one starts,
+ * so it plays through like a film; space or a tap on the clip pauses it. Then two questions.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { DRUM_PAD_NOTES } from "@/engine";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
-import { emptyTrackV2, newLayerV2, toV1View, type NoteEvent, type TrackV2 } from "@/lib/track2";
-import { GoPill, Icon, Pad, Screen, Silk } from "./controls";
-import { CAT_SRC, Lanes } from "./shell";
+import { GoPill, Icon, Pad, Silk } from "./controls";
 import "./lesson.css";
 import "./welcome.css";
 
@@ -21,7 +19,7 @@ export const TOUR_KEY = "ccd.tour.first";
 const Placement = dynamic(() => import("./Placement").then(m => m.Placement), { ssr: false });
 type Prod = "learn" | "practice" | "studio" | "dj" | "library";
 const PRODS: Prod[] = ["learn", "practice", "studio", "dj", "library"];
-const STEPS = ["hello", ...PRODS.flatMap(p => [`${p}:a`, `${p}:b`]), "you"] as const;
+const STEPS = [...PRODS.flatMap(p => [`${p}:a`, `${p}:b`]), "you"] as const;
 const NAME: Record<Prod, string> = { learn: "learn", practice: "practice", studio: "studio", dj: "dj decks", library: "library" };
 const CLIP: Record<string, { h: string; line: string }> = {
   "learn:a": { h: "learn by making a song", line: "short lessons. each one adds a part to a song that's yours." },
@@ -47,51 +45,31 @@ const KNOW: { id: Know; name: string; line: string }[] = [
 ];
 const worldFor = (want: Want | null, know: Know | null) => (know === "new" ? "fundamentals" : want === "dj" ? "dj" : "producer") as "fundamentals" | "producer" | "dj";
 
-const K = DRUM_PAD_NOTES[0], CLAP = DRUM_PAD_NOTES[2], OPEN = DRUM_PAD_NOTES[5];
-const hit = (note: number, starts: number[], vel = 0.9, len = 0.2): NoteEvent[] => starts.map(start => ({ note, vel, start, len }));
-
-/** hello's picture: your song filling up, part by part (the real lanes from the home screen). */
-function song(parts: number): TrackV2 {
-  const t = { ...emptyTrackV2(), bpm: 122, loop: 8 };
-  const d = newLayerV2("drums"); d.events = [...hit(K, [0, 1, 2, 3, 4, 5, 6, 7]), ...(parts > 1 ? hit(CLAP, [1, 3, 5, 7], 0.75) : [])];
-  const h = newLayerV2("hats"); h.events = hit(OPEN, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5], 0.6);
-  const l = newLayerV2("lead"); l.events = [[57, 0], [60, 1.5], [64, 3], [62, 4], [60, 5.5], [57, 7]].map(([note, start]) => ({ note, start, vel: 0.8, len: 1 }));
-  return { ...t, layers: [d, ...(parts > 2 ? [h] : []), ...(parts > 3 ? [l] : [])] };
-}
-/** A clock for the demos that play themselves: ticks every `ms` while the screen is open. */
-function useTick(ms: number, on = true) {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    if (!on) return;
-    const reduce = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-    const id = window.setInterval(() => setN(x => x + 1), ms);
-    return () => window.clearInterval(id);
-  }, [ms, on]);
-  return n;
-}
-
-
 type Caps = Record<string, { dur: number; steps: { t: number; text: string }[] }>;
 
-/** One recording of the real app: plays inline and loops, muted until you turn the sound on. Reports its time,
- *  so the steps beside it light up as they happen. With reduced motion it waits for a tap. */
-function Clip({ k, sound, onSound, onTime }: { k: string; sound: boolean; onSound: () => void; onTime: (t: number) => void }) {
+/** One recording of the real app. Plays once, muted until you turn the sound on, and reports its time so the steps
+ *  beside it light up as they happen; when it ends the walkthrough moves on. Tap it to pause. With reduced motion it
+ *  waits for you to press play. */
+function Clip({ k, sound, paused, onSound, onPause, onTime, onEnd }: { k: string; sound: boolean; paused: boolean; onSound: () => void; onPause: () => void; onTime: (t: number, dur: number) => void; onEnd: () => void }) {
   const [still, setStill] = useState(false);
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => setStill(window.matchMedia("(prefers-reduced-motion: reduce)").matches), []);
   useEffect(() => {
     let raf = 0;
-    const tick = () => { if (ref.current) onTime(ref.current.currentTime); raf = requestAnimationFrame(tick); };
+    const tick = () => { const v = ref.current; if (v) onTime(v.currentTime, v.duration || 0); raf = requestAnimationFrame(tick); };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [k, onTime]);
+  useEffect(() => { const v = ref.current; if (!v || still) return; if (paused) v.pause(); else void v.play().catch(() => {}); }, [paused, still, k]);
   return (
-    <div className="wt-phone">
-      <video ref={ref} key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline loop autoPlay={!still} controls={still} preload="auto" aria-label={`${CLIP[k].h}: a recording of ccd school`} />
-      <button type="button" className={`wt-sound ${sound ? "is-on" : ""}`} aria-pressed={sound} onClick={onSound}>
-        <i aria-hidden />{sound ? "sound on" : "sound off"}
-      </button>
+    <div className={`wt-phone ${paused ? "is-paused" : ""}`}>
+      <video ref={ref} key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline autoPlay={!still} controls={still} preload="auto"
+        onEnded={() => { if (!still) onEnd(); }} onClick={still ? undefined : onPause} aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+      {paused ? <span className="wt-paused" aria-hidden><Icon name="play" /></span> : null}
+      <div className="wt-keys">
+        {still ? null : <button type="button" className="wt-sound" aria-pressed={paused} onClick={onPause}>{paused ? "play" : "pause"}</button>}
+        <button type="button" className={`wt-sound ${sound ? "is-on" : ""}`} aria-pressed={sound} onClick={onSound}><i aria-hidden />{sound ? "sound on" : "sound off"}</button>
+      </div>
     </div>
   );
 }
@@ -112,23 +90,32 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const [know, setKnow] = useState<Know | null>(null);
   const [placement, setPlacement] = useState(false);
   const [sound, setSound] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [caps, setCaps] = useState<Caps>({});
   const [time, setTime] = useState(0);
+  const [dur, setDur] = useState(0);
   useEffect(() => { void fetch("/tour/captions.json").then(r => (r.ok ? r.json() : {})).then(setCaps).catch(() => {}); }, []);
-  const onTime = useCallback((t: number) => setTime(x => (Math.abs(x - t) > 0.05 ? t : x)), []);
+  const onTime = useCallback((t: number, d: number) => { setTime(x => (Math.abs(x - t) > 0.05 ? t : x)); setDur(x => (d && Math.abs(x - d) > 0.05 ? d : x)); }, []);
   const { setOnboarding } = useProgress();
   const { setLearnMode } = useLearnMode();
   const router = useRouter();
   const at = STEPS[step];
   const prod = at.includes(":") ? (at.split(":")[0] as Prod) : null;
-  const next = () => setStep(s => Math.min(STEPS.length - 1, s + 1));
-  const back = () => setStep(s => Math.max(0, s - 1));
-  const tick = useTick(380, at === "hello");
+  const goto = useCallback((n: number) => { setStep(Math.max(0, Math.min(STEPS.length - 1, n))); setTime(0); setDur(0); setPaused(false); }, []);
+  const stepRef = useRef(0);
+  stepRef.current = step;
+  const next = useCallback(() => goto(stepRef.current + 1), [goto]);
+  const back = useCallback(() => goto(stepRef.current - 1), [goto]);
   useEffect(() => {
-    const k = (e: KeyboardEvent) => { if (e.key === "ArrowRight") next(); if (e.key === "ArrowLeft") back(); };
+    const k = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement)?.closest?.("input,textarea,button,a")) return;
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") back();
+      if (e.key === " ") { e.preventDefault(); setPaused(p => !p); }
+    };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
-  }, []);
+  }, [next, back]);
 
   const go = () => {
     const w = worldFor(want, know);
@@ -146,41 +133,27 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
     router.push(`/learn/${slug}`);
   }} />;
 
-  const head = (tick * 2) % 16;
-  const helloParts = 1 + Math.min(3, Math.floor((tick % 24) / 5));
-  const group = prod ? PRODS.indexOf(prod) + 1 : at === "you" ? 6 : 0;
+  const group = prod ? PRODS.indexOf(prod) : PRODS.length;
+  const fill = prod ? ((at.endsWith(":b") ? 1 : 0) + (dur ? Math.min(1, time / dur) : 0)) / 2 : 0;
   const nextKey = STEPS[step + 1];
   const stepsNow = caps[at.replace(":", "-")]?.steps ?? [];
   const stepNow = stepsNow.reduce((n, st, i) => (time + 0.05 >= st.t ? i : n), 0);
 
   return (
-    <main className="m1-page wl wt2 wt3" data-step={at}>
+    <main className="m1-page wl wt2 wt3 wt4" data-step={at}>
       <div className="wl-top">
-        {step > 0 ? <button type="button" className="fl-stepback" onClick={back} aria-label="Back"><Icon name="back" small />back</button> : <span />}
-        <div className="wt-dots" aria-label={`part ${group + 1} of 7`}>{["hello", ...PRODS, "you"].map((p, i) => <i key={p} className={group > i ? "is-done" : group === i ? "is-now" : ""} />)}</div>
-        {step > 0 && at !== "you" ? <button type="button" className="fl-stepback" onClick={() => setStep(STEPS.length - 1)}>skip</button> : <span />}
+        {step > 0 ? <button type="button" className="fl-stepback" onClick={back} aria-label="Back"><Icon name="back" small />back</button> : <Link className="fl-stepback" href="/" aria-label="Back to the front page"><Icon name="back" small />back</Link>}
+        <div className="wt-dots" role="img" aria-label={`part ${group + 1} of ${PRODS.length + 1}`}>
+          {[...PRODS, "you"].map((p, i) => (
+            <button key={p} type="button" className={group > i ? "is-done" : group === i ? "is-now" : ""} onClick={() => goto(i < PRODS.length ? i * 2 : STEPS.length - 1)} aria-label={p === "you" ? "two questions" : NAME[p as Prod]}>
+              <i style={group === i && prod ? { width: `${fill * 100}%` } : undefined} />
+            </button>
+          ))}
+        </div>
+        {at !== "you" ? <button type="button" className="fl-stepback" onClick={() => goto(STEPS.length - 1)}>skip</button> : <span />}
       </div>
 
       <div className="wl-stage wt-screen" key={at}>
-        {at === "hello" && (
-          <>
-            <div className="wt-text">
-              <h1 className="wt-hero">make your own song.<br />then play it out.</h1>
-              <p className="wt-sub">ccd school teaches music production and djing on real instruments, in your browser.</p>
-            </div>
-            <div className="wt-show">
-              <Screen className="wt-stage is-hello">
-                <div className="wt-hellolanes"><Lanes track={toV1View(song(helloParts))} playhead={head} /></div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={CAT_SRC} alt="" className="m1-dancing wt-hellocat" />
-              </Screen>
-            </div>
-            <div className="wt-foot">
-              <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }}>see how it works <Icon name="play" small /></GoPill></div>
-              <a className="ls-skip" href="/dashboard">i&apos;ve been here before</a>
-            </div>
-          </>
-        )}
         {prod && (
           <>
             <div className="wt-text">
@@ -189,8 +162,11 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
               <p className="wt-sub">{CLIP[at].line}</p>
               <Steps steps={stepsNow} now={stepNow} />
             </div>
-            <div className="wt-show"><Clip k={at} sound={sound} onSound={() => setSound(v => !v)} onTime={onTime} /><p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
-            <div className="wt-foot"><div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div></div>
+            <div className="wt-show"><Clip k={at} sound={sound} paused={paused} onSound={() => setSound(v => !v)} onPause={() => setPaused(v => !v)} onTime={onTime} onEnd={next} /><p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
+            <div className="wt-foot">
+              <div className="wl-go"><GoPill onClick={next} style={{ height: 60, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div>
+              <p className="wt-hint">{paused ? <>paused. tap the clip<span className="wt-kb"> or press space</span> to carry on.</> : <>the next one starts by itself. tap the clip<span className="wt-kb"> or press space</span> to pause.</>}</p>
+            </div>
             {nextKey && nextKey.includes(":") ? <link rel="prefetch" href={`${src(nextKey)}.mp4`} /> : null}
           </>
         )}

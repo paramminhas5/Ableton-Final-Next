@@ -88,11 +88,21 @@ function RoundKey({ on, color, play, onClick, children, aria }: { on?: boolean; 
   );
 }
 
+/** True on a phone held sideways: landscape and no taller than 500 px. */
+export function useLandscapePhone() {
+  const [low, setLow] = useState(false);
+  useEffect(() => { const m = window.matchMedia(LANDSCAPE_PHONE); const r = () => setLow(m.matches); r(); m.addEventListener("change", r); return () => m.removeEventListener("change", r); }, []);
+  return low;
+}
+export const LANDSCAPE_PHONE = "(orientation: landscape) and (max-height: 500px)";
+
 export function DeckRig(p: Props) {
   const { decks, chans, show } = p;
   // A phone's mixer column is narrow: smaller knobs and faders there.
   const [small, setSmall] = useState(false);
   useEffect(() => { const m = window.matchMedia("(max-width: 599px)"); const r = () => setSmall(m.matches); r(); m.addEventListener("change", r); return () => m.removeEventListener("change", r); }, []);
+  // A phone on its side (10 Nov): the decks and mixer sit in one row, so every fader is shorter.
+  const low = useLandscapePhone();
   const deck = (d: DeckSide, i: 0 | 1) => (
     <section className={`dk-deck is-${d.id}`} aria-label={`Deck ${d.id}`} style={{ ["--c" as string]: d.color } as CSSProperties}>
       <div className="dk-deckhead"><b>{d.id}</b><span>{d.title}<small>{d.sub}</small></span></div>
@@ -102,7 +112,7 @@ export function DeckRig(p: Props) {
           <div className="dk-tempo">
             <span className="dk-silk">tempo</span>
             <div className="dk-tempofader">
-              <Fader label={`tempo deck ${d.id}`} value={0.5 - d.pitch / 2} onChange={v => p.onPitch?.(d.id, (0.5 - v) * 2)} onTouch={p.onTouch} height={small ? 96 : 150} width={small ? 26 : 36} defaultValue={0.5} valueText={`${(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)} bpm`} />
+              <Fader label={`tempo deck ${d.id}`} value={0.5 - d.pitch / 2} onChange={v => p.onPitch?.(d.id, (0.5 - v) * 2)} onTouch={p.onTouch} height={low ? 100 : small ? 96 : 150} width={low ? 28 : small ? 26 : 36} defaultValue={0.5} valueText={`${(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)} bpm`} />
             </div>
             <span className="dk-bpm">{(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)}</span>
           </div>
@@ -154,13 +164,13 @@ export function DeckRig(p: Props) {
             ))}
             {show.has("phones") ? <div className="dk-row">{phones(decks[0], chans[0])}<span className="dk-name">cue</span>{phones(decks[1], chans[1])}</div> : null}
             <div className="dk-row dk-faders">
-              <Fader label="channel a" led={decks[0].color} value={chans[0].fader} onChange={v => p.onChan("a", "fader", v)} onTouch={p.onTouch} height={small ? 110 : 124} width={small ? 30 : 36} />
+              <Fader label="channel a" led={decks[0].color} value={chans[0].fader} onChange={v => p.onChan("a", "fader", v)} onTouch={p.onTouch} height={low ? 104 : small ? 110 : 124} width={low ? 28 : small ? 30 : 36} />
               <div className="dk-meters">{meter(chans[0].level)}{meter(chans[1].level)}</div>
-              <Fader label="channel b" led={decks[1].color} value={chans[1].fader} onChange={v => p.onChan("b", "fader", v)} onTouch={p.onTouch} height={small ? 110 : 124} width={small ? 30 : 36} />
+              <Fader label="channel b" led={decks[1].color} value={chans[1].fader} onChange={v => p.onChan("b", "fader", v)} onTouch={p.onTouch} height={low ? 104 : small ? 110 : 124} width={low ? 28 : small ? 30 : 36} />
             </div>
           </div>
           <div className="dk-xf">
-            <Fader horizontal label="crossfader" value={p.xf} onChange={p.onXf} onTouch={p.onTouch} width={small ? 112 : 200} defaultValue={0.5} />
+            <Fader horizontal label="crossfader" value={p.xf} onChange={p.onXf} onTouch={p.onTouch} width={low ? 150 : small ? 112 : 200} defaultValue={0.5} />
             <div className="dk-xfl" aria-hidden><span>a</span><span>crossfader</span><span>b</span></div>
           </div>
         </section>

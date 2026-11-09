@@ -103,3 +103,60 @@
 @media (min-width:1000px) and (max-height:900px){.dk-jog{max-width:210px}}
 
 .dj-head .hk{margin-left:0}
+
+/* asking to turn the phone (10 Nov): once, on a phone held upright; it goes when you turn it */
+.dj-turn{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;padding:0 16px calc(24px + env(safe-area-inset-bottom));background:rgba(0,0,0,.55);animation:dj-fade 200ms ease-out both}
+.dj-turn-card{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-5) var(--sp-5) var(--sp-4);border-radius:20px;text-align:center;color:var(--ink);background-image:var(--grain),linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude),0 30px 60px -20px rgba(0,0,0,.7);animation:dj-up 280ms var(--ease-pop,ease-out) both}
+.dj-turn-card h2{margin:var(--sp-2) 0 0;font-size:var(--fs-2);font-weight:400;letter-spacing:-.02em}
+.dj-turn-card p{margin:0 0 var(--sp-3);max-width:300px;font-size:var(--fs-4);line-height:1.4;color:var(--print)}
+.dj-turn-ph{width:72px;height:72px;fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transform-origin:32px 27px;animation:dj-rot 2.4s var(--ease-pop,ease-in-out) infinite}
+.dj-turn-arc{stroke:var(--led-mint)}
+@keyframes dj-rot{0%,20%{transform:rotate(0)}45%,75%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@keyframes dj-fade{from{opacity:0}to{opacity:1}}
+@keyframes dj-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.dj-turn,.dj-turn-card,.dj-turn-ph{animation:none}}
+
+/* a phone on its side (10 Nov): deck a, the mixer and deck b in one row under a slim screen, like the hardware */
+@media (orientation:landscape) and (max-height:500px){
+  .m1-page.dj{max-width:none;padding:0 max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left))!important}
+  .tb.dj-head{height:40px}
+  .dj-head .tb-title{font-size:var(--fs-3);flex-direction:row;align-items:baseline;gap:8px}
+  .dj-head .tb-title small{margin:0}
+  .dj-head .tb-k,.dj-head .hk{width:34px;min-width:34px;height:34px!important}
+  .dj-head .hk:not(.is-q){width:auto}
+  .dk{gap:4px}
+  .dj-scr .m1-glass{padding:5px 10px!important;gap:3px}
+  .dj-scr .dw{margin-top:0}
+  .dj-scr .dw-top{display:none}
+  .dj-scr .dz{height:26px;margin-bottom:0}
+  .dj-meta{font-size:10px}
+  .dk-body{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:start}
+  .dk-deck{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto auto;column-gap:10px;row-gap:4px;align-items:center}
+  .dk-deckhead{grid-column:1/-1}
+  .dk-deckhead small{display:inline;margin-left:6px}
+  .dk-deckhead span{flex-direction:row;align-items:baseline}
+  .dk-top{grid-column:2;grid-row:2;grid-template-columns:minmax(0,1fr) 40px;gap:8px}
+  .dk-jog{max-width:min(180px,calc(100dvh - 250px));min-width:96px}
+  .dk-tempo-h{display:none}
+  .dk-tempo .dk-silk{font-size:8.5px}
+  .dk-bottom{display:contents}
+  .dk-transport{grid-column:1;grid-row:2;flex-direction:column;flex-wrap:nowrap;gap:6px;justify-content:center}
+  .dk-rkcap{width:40px;height:40px;font-size:11px}
+  .dk-rkl{display:none}
+  .dk-pads{grid-column:1/-1;grid-row:3;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px}
+  .dk-padmode{display:none}
+  .dk-pad{height:26px}
+  .dk-mixer{padding:0 10px;gap:4px}
+  .dk-grid{display:grid;grid-template-columns:auto auto;column-gap:12px;row-gap:1px;align-items:center}
+  .dk-grid>.dk-row:not(.dk-faders){grid-column:1;height:30px}
+  .dk-grid>.dk-row:not(.dk-faders)>*{max-height:30px}
+  .dk-faders{grid-column:2;grid-row:1/span 7;margin:0;align-self:end}
+  .dk-faders .dk-meters{margin-bottom:10px}
+  .dk-xf{padding-top:4px;margin-top:6px;gap:0}
+  .dk-xfl{max-width:150px}
+  .dj-bank{display:none}
+  main:has(.m1-page.dj){padding-bottom:0!important}
+  .m1-page.dj{min-height:100dvh;display:flex;flex-direction:column}
+  .m1-page.dj>.dk{flex:1}
+  .dk-body{flex:1;align-items:center;margin-top:6px}
+}

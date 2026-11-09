@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 const [out, tag = "after", themes = "dark", sizes = "390", scenes = ""] = process.argv.slice(2);
 mkdirSync(out, { recursive: true });
 const base = process.env.BASE ?? "http://localhost:3000";
-const SZ = { 390: [390, 844], 820: [820, 1180], 1180: [1180, 820], 1440: [1440, 900] };
+const SZ = { 390: [390, 844], 844: [844, 390], 932: [932, 430], 820: [820, 1180], 1180: [1180, 820], 1280: [1280, 800], 1440: [1440, 900] };
 const hit = (note, starts, vel = 0.9, len = 0.2) => starts.map(start => ({ note, vel, start, len }));
 const layer = (type, from, events) => ({ id: `${type}-${from}`, type, events, params: {}, mute: false, solo: false, duck: { src: null, note: null }, surface: type === "drums" || type === "hats" ? "pads" : "keys", pad: 0, from, world: "producer", variant: 0 });
 const song = { v: 2, bpm: 122, root: 45, scale: "minor", swing: 0, loop: 16, added: ["your-kick", "synth-what-is-sound", "hats"], updatedAt: Date.now(), layers: [
@@ -18,8 +18,9 @@ const seen = { ...Object.fromEntries(["home", "lesson", "studio", "dj", "practic
   ...(process.env.NEWCTL ? {} : Object.fromEntries(Object.keys(JSON.parse(readFileSync(new URL("../../src/content/taught.gen.json", import.meta.url), "utf8")).first).map(k => [`ccd.new.studio:${k}`, "1"]))) };
 const songs = { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() - 3600e3 }] };
 const P = (world, d, xp = 340) => ({ onboardingDone: true, selectedWorld: world, completedMissions: done(d), xp, streakDays: 3, dailyXp: 999, lastActiveDate: new Date().toISOString().slice(0, 10) });
-const mine = { "ccd.track.v2": song, "ccd.songs.v1": songs, "ccd.studio.seeded": "1", ...seen };
+const mine = { "ccd.track.v2": song, "ccd.songs.v1": songs, "ccd.studio.seeded": "1", "ccd.dj.upright": "1", ...seen };
 const S = {
+  "dj-turn": ["/dj", { "ccd.track.v2": song, "ccd.songs.v1": songs, ...Object.fromEntries(Object.entries(seen)), "ccd.progress.v2": P("dj", ["what-is-djing", "dj-equipment"]), "__noupright": "1" }],
   "dj": ["/dj", { ...mine, "ccd.progress.v2": P("dj", ["what-is-djing", "dj-equipment"]) }],
   "dj-mid": ["/dj", { ...mine, "ccd.progress.v2": P("dj", ["what-is-djing", "dj-equipment", "tempo-bpm-dj", "your-first-mix"]) }],
   "dj-all": ["/dj?all=1", { ...mine, "ccd.progress.v2": P("dj", ["what-is-djing"]) }],
@@ -43,6 +44,7 @@ const S = {
   "device": ["/device/reverb", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "wiki-warm": ["/atlas", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "wiki": ["/atlas", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
+  "landing": ["/", {}], "start": ["/start", {}], "start-b": ["/start", {}, 1], "start-you": ["/start", {}, 10],
   "w00": ["/", {}, 0], "w01": ["/", {}, 1], "w02": ["/", {}, 2], "w03": ["/", {}, 3], "w04": ["/", {}, 4], "w05": ["/", {}, 5], "w06": ["/", {}, 6], "w07": ["/", {}, 7], "w08": ["/", {}, 8], "w09": ["/", {}, 9], "w10": ["/", {}, 10], "w11": ["/", {}, 11],
 };
 const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
@@ -55,14 +57,16 @@ for (const th of themes.split(",")) for (const sz of sizes.split(",")) for (cons
   await p.addInitScript(([s, th]) => { if (sessionStorage.getItem("__s")) return; sessionStorage.setItem("__s", "1"); localStorage.setItem("ccd.mode", th); for (const [k, v] of Object.entries(s)) localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); }, [store, th]);
   await p.goto(base + url, { waitUntil: "load", timeout: 180000 });
   await p.waitForTimeout(1600);
-  for (let k = 0; k < steps; k++) { await p.locator(".wl-go button, .wl-go a").first().click(); await p.waitForTimeout(650); }
+  for (let k = 0; k < steps; k++) { await p.locator(".wl-go button, .wl-go a").first().click(); await p.waitForTimeout(name.startsWith("start") ? 150 : 650); }
   if (name.endsWith("-tour")) await p.waitForTimeout(900);
   if (name === "studio-arrange") { await p.getByRole("radio", { name: "arrange" }).click().catch(() => {}); await p.waitForTimeout(500); }
   if (name.startsWith("w") && name.length === 3) await p.waitForTimeout(1300);
   if (name === "lesson-hats") { await p.locator(".fl-bottom .is-wide, .ls-bottom .is-wide").first().click(); await p.waitForTimeout(900); }
   if (name === "wiki-warm") { await p.locator("#lb-q").fill("warm"); await p.waitForTimeout(500); }
+  if (name.startsWith("start")) await p.waitForTimeout(2500);
+  if (name === "landing") { for (let y = 0; y < 9000; y += 500) { await p.mouse.wheel(0, 500); await p.waitForTimeout(120); } await p.waitForTimeout(900); await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300); }
   const file = `${out}/${tag}-${th}-${sz}-${name}.png`;
-  await p.screenshot({ path: file });
+  await p.screenshot({ path: file, fullPage: name === "landing" });
   console.log(file.split("/").pop());
   await ctx.close();
 }

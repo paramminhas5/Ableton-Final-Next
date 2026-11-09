@@ -171,9 +171,11 @@ async function playLesson(p, { answers = "first", maxSteps = 80, stopAtQuestion 
 console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
 {
   const { ctx, p, errs } = await fresh();
-  // First visit (9 Nov): hello, ten screens of the real app recorded, then two questions, then home.
+  // First visit (10 Nov): the front page, then the walkthrough (ten recordings of the real app), two questions, home.
   await p.goto(BASE + "/");
-  await p.getByRole("button", { name: /see how it works/i }).first().click();
+  ok(await p.getByRole("heading", { name: /learn to make music by making it/i }).count() === 1, "the front page says what School is");
+  await p.getByRole("link", { name: /start your song/i }).first().click();
+  await p.waitForURL(/\/start/, { timeout: 8000 });
   for (let i = 0; i < 10; i++) { await p.locator(".wl-go button").first().click(); await p.waitForTimeout(120); }
   ok(await p.locator("video.wt-video").count() === 0 && await p.getByText(/two questions/i).count() > 0, "the first visit shows every product, then asks two questions");
   await p.getByRole("button", { name: /make tracks/i }).first().click();

@@ -13,6 +13,7 @@ for (const [url, max] of Object.entries(BUDGET)) {
   await ctx.addInitScript(() => {
     localStorage.setItem("ccd.progress.v2", JSON.stringify({ onboardingDone: true, selectedWorld: "fundamentals", completedMissions: {}, xp: 0, streakDays: 0 }));
     for (const s of ["home", "lesson", "studio", "dj", "practice", "syllabus", "wiki", "device"]) localStorage.setItem(`ccd.walk.${s}`, "1");
+    localStorage.setItem("ccd.dj.upright", "1");
   });
   const p = await ctx.newPage();
   await p.goto(base + url, { waitUntil: "load" });

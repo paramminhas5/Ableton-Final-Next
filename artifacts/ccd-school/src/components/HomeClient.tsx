@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { useProgress } from "@/lib/progress";
-import { Welcome } from "@/components/m1/Welcome";
+import { Landing } from "@/components/school/Landing";
 
-/** First visit: the welcome screen. Anyone who has started goes straight to Today. */
+/** First visit: the School front page (its "start" opens the walkthrough at /start). Anyone who has started goes straight to home. */
 export function HomeClient() {
   const { user } = useAuth();
   const router = useRouter();
@@ -19,5 +19,5 @@ export function HomeClient() {
 
   useEffect(() => { if (returning && !leaving.current) router.replace("/dashboard"); }, [returning, router]);
   if (returning && !leaving.current) return null;
-  return <Welcome onLeave={() => { leaving.current = true; }} />;
+  return <Landing />;
 }
