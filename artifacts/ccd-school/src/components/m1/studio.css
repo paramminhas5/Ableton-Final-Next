@@ -347,3 +347,9 @@
 .st-root[data-cue="rec"] .st-transport [aria-label="Record with a one bar count-in"],
 .st-root[data-cue="add"] .st-plus{outline:2px solid var(--led-mint);outline-offset:3px;border-radius:14px}
 .st-root[data-cue="surface"] .st-tray,.st-root[data-cue="knobs"] .st-knobs{box-shadow:0 0 0 2px color-mix(in srgb,var(--led-mint) 70%,transparent),0 0 16px color-mix(in srgb,var(--led-mint) 25%,transparent);border-radius:16px}
+
+/* 10 Nov: header keys a readable size: 13px text on a 28px key (the 44px touch ring stays) */
+.st-head .st-tag{height:28px;font-size:13px;padding:0 9px;border-radius:7px}
+html[data-text="big"] .st-head .st-tag{font-size:15px;height:32px}
+/* simple: plain words under each knob, and eight bigger drum pads */
+.st-tray.is-eight .st-lb{font-size:14px}

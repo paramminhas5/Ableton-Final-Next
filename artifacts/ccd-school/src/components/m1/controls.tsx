@@ -7,7 +7,7 @@
  */
 import "./pictures.css";
 import Link from "next/link";
-import { useCallback, useRef, useState, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { fingerTipPlace, fingerTipWidth } from "@/lib/fingerTip";
 
@@ -99,14 +99,49 @@ export function Silk({ label, right, style, n, lit, className }: { label: string
 }
 
 /**
+ * Read it to me (10 Nov): one key that reads a line out loud in the device's own voice, so someone who can't or
+ * doesn't want to read (a five-year-old, a sixty-year-old without glasses) still knows what to do. Press again to stop.
+ */
+export function speak(text: string, onEnd?: () => void): boolean {
+  try {
+    const synth = window.speechSynthesis;
+    if (!synth) return false;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[*_`#>]/g, "").replace(/\s+/g, " ").trim());
+    const voices = synth.getVoices();
+    const pick = voices.find(v => /en-(GB|IN|AU)/i.test(v.lang) && /female|samantha|serena|kate|veena|google uk/i.test(v.name)) ?? voices.find(v => /^en/i.test(v.lang));
+    if (pick) u.voice = pick;
+    u.rate = 0.95;
+    u.pitch = 1;
+    if (onEnd) { u.onend = onEnd; u.onerror = onEnd; }
+    synth.speak(u);
+    return true;
+  } catch { return false; }
+}
+export function SayKey({ text, label = "read it to me", className }: { text: string; label?: string; className?: string }) {
+  const [on, setOn] = useState(false);
+  const [can, setCan] = useState(true);
+  useEffect(() => { setCan(typeof window !== "undefined" && "speechSynthesis" in window); return () => { try { window.speechSynthesis?.cancel(); } catch { /* none */ } }; }, []);
+  if (!can || !text) return null;
+  return (
+    <button type="button" className={`m1-say ${on ? "is-on" : ""} ${className ?? ""}`} aria-pressed={on} aria-label={on ? "Stop reading" : "Read this out loud"}
+      onClick={e => { e.stopPropagation(); if (on) { try { window.speechSynthesis.cancel(); } catch { /* none */ } setOn(false); return; } if (speak(text, () => setOn(false))) setOn(true); }}>
+      <Icon name={on ? "stop" : "hear"} small />{label ? <span>{on ? "stop" : label}</span> : null}
+    </button>
+  );
+}
+
+/**
  * What to do now, in one line, with the number of the section it points at. Every instrument screen has one
  * under its header, so a first look says where to start (10 Nov).
  */
-export function Cue({ n, children, done, className }: { n?: number; children: ReactNode; done?: boolean; className?: string }) {
+export function Cue({ n, children, done, className, say }: { n?: number; children: ReactNode; done?: boolean; className?: string; say?: string }) {
+  const text = say ?? (typeof children === "string" ? children : "");
   return (
     <div className={`m1-cue ${done ? "is-done" : ""} ${className ?? ""}`} role="status" aria-live="polite">
       {n !== undefined ? <b className="m1-silkn is-lit" aria-hidden>{n}</b> : <i className="m1-cueled" aria-hidden />}
-      <span>{children}</span>
+      <span className="m1-cuetext">{children}</span>
+      {text ? <SayKey text={text} label="" className="m1-cuesay" /> : null}
     </div>
   );
 }

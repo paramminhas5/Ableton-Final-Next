@@ -6,7 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { FLAG, OUT, display, fromValue, toValue } from "@/engine";
-import { CONTROLS, knobLabel } from "@/lib/controlNames";
+import { CONTROLS, knobLabel, plainOf } from "@/lib/controlNames";
 import { clipVariants } from "@/content/lessons/clipTracks";
 import { CLIPS } from "@/content/lessons/clips";
 import type { LessonScreen, Mission } from "@/content/types";
@@ -315,13 +315,16 @@ export function ShapeStep({ mission, screen, meta, accent, onNext, tail }: { mis
       )}
       <div className="m1-g" style={{ gridTemplateColumns: `repeat(${Math.max(1, dialKnobs.length)}, 1fr)` }}>
         {dialKnobs.map(k => (
-          <Knob key={k.index} label={labelOf(k.spec)} color={CAP.navy} size={74} height={150}
+          <div key={k.index} className="st-kwrap">
+          <Knob label={labelOf(k.spec)} color={CAP.navy} size={74} height={150}
             {...bind(k.spec, heard[k.index] ?? k.spec.default)}
             mods={(ringsOf(inst, { ...lp, ...params }, shownLayer?.mods).get(k.index) ?? []).map(r => ({ color: SRC_COLOR[r.src], amt: r.amt, bipolar: r.bipolar }))}
             value={heard[k.index] ?? k.spec.default} defaultValue={k.spec.default} readout={display(k.spec, heard[k.index] ?? k.spec.default)}
             spot={spotKey === k.spec.key} dim={!!spotKey && spotKey !== k.spec.key && !turned.has(k.spec.key)}
             onChange={v => { if (abOn === "a") setAbOn("b"); setParams(p => ({ ...p, [k.index]: v })); if (!turned.has(k.spec.key)) setTurned(t => new Set(t).add(k.spec.key)); }}
             onTouch={(label, v) => setTouched(`${label} ${display(k.spec, v)}`)} />
+          {plainOf(k.spec.key) ? <small className="st-plain">{plainOf(k.spec.key)}</small> : null}
+          </div>
         ))}
       </div>
       <SameElsewhere keys={dialKnobs.map(k => k.spec.key)} labels={dialKnobs.map(k => labelOf(k.spec))} />

@@ -89,7 +89,7 @@ import { ChordTrackEditor } from "./ChordTrack";
 import { CONDS, hasFillSteps, setChance, setCond, stepTag, type Cond } from "@/lib/chance";
 import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
-import { elsewhereLine, knobLabel, stepName } from "@/lib/controlNames";
+import { elsewhereLine, knobLabel, plainOf, stepName } from "@/lib/controlNames";
 import { ElsewhereLine } from "./Elsewhere";
 import { commitLoop, goSection, sectionAt, sectionNow } from "@/lib/arrange";
 import { partLen, swingOf } from "@/lib/partLength";
@@ -777,12 +777,13 @@ export function Studio() {
           <span style={{ flex: 1 }} />
           <button type="button" className={`st-tag st-songtag ${seeded ? "is-seed" : ""}`}
             aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
-          <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
+          {/* simple shows the song's name and help only; tempo and the grid size sit under "all" (10 Nov) */}
+          {everything ? <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button> : null}
           {knows("major-scale") ? <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
             onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setMidiOpen(false); setKeyOpen(o => !o); }}>
             {/* a phone shows the short key (a min) so the chip is never cut to "a mi..." */}
             <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button> : null}
-          {mode !== "play" || !knows("note-values", "hats") ? null : (
+          {mode !== "play" || !everything ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}
           <DepthKey value={everything} onChange={setEverything} />
@@ -988,7 +989,7 @@ export function Studio() {
             {sel.surface === "own" && sel.type === "sample" && <SampleLoader layer={sel} onPatch={patchSel} onPreview={slot => { start(); engine.noteOn(selIndex, SAMPLER_NOTE_BASE + slot, 0.9); window.setTimeout(() => engine.noteOff(selIndex, SAMPLER_NOTE_BASE + slot), 600); }} />}
             {sel.surface === "pads" && sel.type === "sample" && <SamplePads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && drumLike && (
-              <DrumPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />
+              <DrumPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} few={!everything} />
             )}
             {sel.surface === "pads" && sel.type === "fx" && <FxPads layer={sel} hits={hits} rings={rings} noteHandlers={noteHandlers} />}
             {sel.surface === "pads" && !drumLike && sel.type !== "fx" && sel.type !== "sample" && (
@@ -1080,7 +1081,9 @@ export function Studio() {
                     ) : undefined}
                     onChange={v => setParam(index, spec, v)} />
                 );
-                return knob;
+                // simple: the real name on the key, plain words under it (10 Nov)
+                const plain = !everything ? plainOf(spec.key) : null;
+                return plain ? <div key={`${bank}${index}`} className="st-kwrap">{knob}<small className="st-plain">{plain}</small></div> : knob;
               })}
             </div>
             </div>
@@ -1213,10 +1216,14 @@ type Rings = Record<string, { t: number; v: number }>;
 const ringOf = (rings: Rings, key: string) => (rings[key] ? <PadRing key={rings[key].t} v={rings[key].v} /> : null);
 
 /** 16-pad drum rack, kick bottom left. Resting pads glow faintly; a hit ripples out. */
-function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers }) {
+function DrumPads({ layer, hits, rings, noteHandlers, few }: { layer: LayerV2; hits: Record<string, number>; rings: Rings; noteHandlers: NoteHandlers; few?: boolean }) {
   const c = TYPE[layer.type].color;
   // Screen order: top row first. Pad index p sits at row 3 - floor(p/4).
-  const order = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
+  // Simple (10 Nov): the eight everyday drums (kick, snare, clap, rim, the hats, shaker, ride), bigger. All 16
+  // come back with "all", or as soon as your part uses a pad that isn't in the eight.
+  const usesMore = layer.events.some(e => (DRUM_PAD_NOTES as readonly number[]).indexOf(e.note) >= 8);
+  const eight = few && !usesMore;
+  const order = eight ? [4, 5, 6, 7, 0, 1, 2, 3] : [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
   const hitPads = DRUM_PAD_NOTES.map((n, p) => (hits[`${layer.id}:${n}`] ? p : -1)).filter(p => p >= 0);
   const rc = (p: number) => [3 - Math.floor(p / 4), p % 4];
   const ripple = (p: number) => {
@@ -1229,7 +1236,7 @@ function DrumPads({ layer, hits, rings, noteHandlers }: { layer: LayerV2; hits: 
     return best;
   };
   return (
-    <div className="st-tray" data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: "repeat(4,1fr)" }}>
+    <div className={`st-tray ${eight ? "is-eight" : ""}`} data-budget="surface" style={{ gridTemplateColumns: "repeat(4,1fr)", gridTemplateRows: `repeat(${eight ? 2 : 4},1fr)` }}>
       {order.map(p => {
         const note = DRUM_PAD_NOTES[p];
         const d = ripple(p);

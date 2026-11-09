@@ -15,6 +15,7 @@ import { asScale, NOTE_NAMES, type Snap } from "@/lib/theory";
 import { velocityAt } from "@/lib/touch";
 import { briefChecks, type BriefCheck } from "@/lib/briefCheck";
 import { GoPill, Icon, Key, PadRing, Screen, Silk } from "./controls";
+import { playCorrect } from "@/lib/audio";
 import { useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
 
@@ -26,7 +27,9 @@ const TOL = 0.15;
 const CHECK_WORD: Record<BriefCheck, string> = { key: "in key", pentatonic: "on the five pentatonic keys", kick: "out of the kick's way", backbeat: "on two and four", bar: "filling the bar", home: "ending home", moves: "moving between notes", chord: "on the chord's notes", roots: "on the chords' roots", short: "short notes", repeat: "a motif that comes back" };
 
 const GOAL_NOTE: Record<string, number> = { kick: 36, snare: 38, clap: 39, hat: 42, "open hat": 46 };
-export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: BriefCheck[] }; tail?: ReactNode; snap?: boolean };
+export type Coach = { body: string; hint?: string; goal: { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: BriefCheck[] }; tail?: ReactNode; snap?: boolean;
+  /** The step's goal card (number, name, what it adds, why). On a phone it sits in the same card as the live instruction, so the step says what to do once (10 Nov). */
+  head?: ReactNode };
 
 export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   type: LayerType;
@@ -316,6 +319,14 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
     // A chord is one press, not three notes: count when things start, not how many notes sound.
     : presses;
   const goalMet = !coach || (goalHits >= coach.goal.notes && offBeat === 0);
+  // A clear win (10 Nov): a sound and a big tick the moment the goal is met, so it's obvious it worked.
+  const [won, setWon] = useState(false);
+  const wasMet = useRef(goalMet);
+  useEffect(() => {
+    if (coach && goalMet && !wasMet.current) { setWon(true); try { playCorrect(); } catch { /* no audio */ } }
+    if (!goalMet) setWon(false);
+    wasMet.current = goalMet;
+  }, [goalMet, coach]);
   // Write your own, checked: what can be heard in the notes, in words, once a take is down (never a gate).
   const heard = useMemo(() => (coach?.goal.check?.length && events.length ? briefChecks(coach.goal.check, events, { ...session, layers: session.layers.filter((_, i) => i !== idx) }, session.loop) : []), [coach, events, session, idx]);
   // When a take ends: a steady lateness is the device, so take it out; otherwise count it as a miss.
@@ -415,7 +426,17 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
   return (
     <div className={`ls-col ${coach ? "is-play" : ""}`}>
       {/* Phone: one live instruction above the instrument, so rec and the pads are on the first screen. */}
-      {coach && <div className={`ls-now fl-nowtop ${nudge ? "is-nudge" : ""}`} aria-hidden><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>}
+      {coach && coach.head ? (
+        <div className={`fl-goal fl-goalplay fl-nowtop ${won ? "is-won" : ""}`}>
+          {coach.head}
+          <div className={`fl-gnow ${nudge ? "is-nudge" : ""}`} aria-hidden>
+            <span className="ls-led" style={{ ["--c" as string]: won ? "var(--led-mint)" : "var(--led-mint)" } as CSSProperties} />
+            <span className="fl-gnowt">{won ? "done. that's your part, press keep it to put it in your song" : nowLine}</span>
+            <b className="fl-gcount">{goalMet ? <Icon name="check" small /> : `${Math.min(goalHits, coach.goal.notes)}/${coach.goal.notes}`}</b>
+          </div>
+        </div>
+      ) : coach ? <div className={`ls-now fl-nowtop ${nudge ? "is-nudge" : ""}`} aria-hidden><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div> : null}
+      {won ? <div className="fl-win" aria-live="polite"><span className="fl-wintick"><Icon name="check" /></span><b>nice one</b></div> : null}
       <div className="fl-inst">
       <Screen>
         <div className="ls-meta">
@@ -505,12 +526,12 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
       </div>
       {coach && <div className="fl-text">
         <>
-          <div className="fl-turn">
+          <div className={`fl-turn ${coach.head ? "has-head" : ""}`}>
             <div className="fl-turnhead"><span>your turn</span><span>{goalMet ? "done" : `${Math.min(goalHits, coach.goal.notes)} of ${coach.goal.notes}`}</span></div>
             {clean > 0 && clean < 3 ? <p className="ti-clean" role="status">{clean} clean take{clean > 1 ? "s" : ""} in a row{clean < 3 ? `. ${3 - clean} more and you can go faster` : ""}</p> : null}
             {clean >= 3 ? <p className="ti-clean" role="status">three clean takes. <button type="button" className="ls-chip" onClick={faster}>faster · {session.bpm + 5} bpm</button></p> : null}
             {/* the instruction is already on the screen above (nowLine); here only the goal, the rest on request (design pass 2) */}
-            <p className="fl-turnwhy"><Gloss>{turnLead}</Gloss></p>
+            <p className={`fl-turnwhy ${coach.head ? "is-dup" : ""}`}><Gloss>{turnLead}</Gloss></p>
             {hasMore ? <button type="button" className="ls-chip ti-more" aria-expanded={more} onClick={() => setMore(m => !m)}>{more ? "less" : "the details"}</button> : null}
           </div>
           <div className={`ls-now ${nudge ? "is-nudge" : ""}`} role="status"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} />{nowLine}</div>

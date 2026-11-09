@@ -27,7 +27,7 @@ import type { CurWorld } from "@/content/curriculum";
 import { curItem, curPathOf, extrasOf, songItems } from "@/content/curriculum";
 import { isRebuilt, partOf, worldOf, WORLD_LABEL } from "@/lib/worldOrder";
 import { clipVariants } from "@/content/lessons/clipTracks";
-import { GoPill, Icon, Key, Screen, Silk, WORLD_LED } from "./controls";
+import { GoPill, Icon, Key, SayKey, Screen, Silk, WORLD_LED } from "./controls";
 import { Bottom, Meta, useEnter } from "./LessonParts";
 import { CAT_SRC, Lanes } from "./shell";
 import dynamic from "next/dynamic";
@@ -606,10 +606,11 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
 // ── say it another way: the same idea in other words, or simpler ─────────────
 type Way = "mentor" | "straight" | "eli5";
 const textOf = (s: LessonScreen | undefined): string => (s && "body" in s && typeof s.body === "string" ? s.body : "");
-function Ways({ way, setWay, has }: { way: Way; setWay: (w: Way) => void; has: { straight: boolean; eli5: boolean } }) {
-  if (!has.straight && !has.eli5 && way === "mentor") return null;
+function Ways({ way, setWay, has, text }: { way: Way; setWay: (w: Way) => void; has: { straight: boolean; eli5: boolean }; text?: string }) {
+  if (!has.straight && !has.eli5 && way === "mentor" && !text) return null;
   return (
     <div className="fl-ways" role="group" aria-label="Explain it differently">
+      {text ? <SayKey text={text} /> : null}
       {way !== "mentor" && <button type="button" className="ls-chip" onClick={() => setWay("mentor")}>explain it fully</button>}
       {has.straight && way !== "straight" && <button type="button" className="ls-chip" onClick={() => setWay("straight")}>{way === "mentor" ? "say it another way" : "keep it short"}</button>}
       {has.eli5 && way !== "eli5" && <button type="button" className="ls-chip" onClick={() => setWay("eli5")}>simpler please</button>}
@@ -622,9 +623,9 @@ function Ways({ way, setWay, has }: { way: Way; setWay: (w: Way) => void; has: {
 const DOING = new Set(["play", "shape", "matchsound", "copy", "imagine", "tempo", "mix", "arrange"]);
 const PLAN_ICON: Record<string, string> = { hear: "hear", say: "note", play: "pads", shape: "knob", matchsound: "hear", copy: "hear", imagine: "brain", tempo: "knob", mix: "dj", arrange: "studio", ear: "hear", add: "plus", check: "check" };
 
-function StepGoal({ n, name, why, get, todo, accent }: { n: number; name: string; why?: string; get?: string; todo?: string; accent: string }) {
+function StepGoal({ n, name, why, get, todo, accent, bare, play }: { n: number; name: string; why?: string; get?: string; todo?: string; accent: string; bare?: boolean; play?: boolean }) {
   return (
-    <div className="fl-goal" style={{ ["--c" as string]: accent } as CSSProperties}>
+    <div className={bare ? "fl-goalin" : `fl-goal ${play ? "is-play" : ""}`} style={{ ["--c" as string]: accent } as CSSProperties}>
       <div className="fl-goalhead">
         <span className="fl-goaln" aria-hidden>{n}</span>
         <b>{name}</b>
@@ -653,10 +654,11 @@ function StartStep({ mission, pages, accent, get, back, onNext }: { mission: Mis
         <Meta left={`${ff?.minutes ?? 8} min`} />
         <div className="ls-title is-big">{mission.title.toLowerCase()}</div>
         <p className="fl-startlead"><Gloss>{lead}</Gloss></p>
+        <div className="fl-startsay"><SayKey text={[mission.title, ff?.learn ?? lead, ff?.why ? `What you'll make: ${ff.why}.` : "", `It has ${plan.length} steps.`].filter(Boolean).join(". ")} /></div>
       </Screen>
       <Silk label="what you'll make" right={get} />
       <Screen className="fl-make">
-        <div className="fl-makelanes"><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: !track.layers.some(l => l.kind === offer.kind) }} /></div>
+        <div className="fl-makelanes"><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: startsFresh(mission) || !track.layers.some(l => l.kind === offer.kind) }} /></div>
         {ff?.why ? <p className="fl-makewhy"><Gloss>{ff.why}</Gloss></p> : null}
       </Screen>
       <Silk label="how it goes" right={`${plan.length} steps`} />
@@ -751,7 +753,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   const has = { straight: !!textOf(altOf("straight")) && textOf(altOf("straight")) !== textOf(base as LessonScreen), eli5: !!textOf(altOf("eli5")) && textOf(altOf("eli5")) !== textOf(base as LessonScreen) };
   const cur = (way !== "mentor" && altOf(way)?.kind === base?.kind ? altOf(way) : base) as Page | undefined;
   useLearnSteps(mission.slug, idx, cur?.kind, world);
-  const ways = <Ways way={way} setWay={w => { setWay(w); track("lesson_way", { missionSlug: mission.slug, step: idx, way: w }); }} has={has} />;
+  const ways = <Ways way={way} setWay={w => { setWay(w); track("lesson_way", { missionSlug: mission.slug, step: idx, way: w }); }} has={has} text={[cur && "why" in cur && typeof cur.why === "string" ? cur.why : "", textOf(cur as LessonScreen)].filter(Boolean).join(" ")} />;
 
   useEffect(() => {
     if (cur?.kind !== "done" || finished.current) return;
@@ -772,7 +774,9 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   // What this step is for: its own line when the lesson has one, otherwise the lesson's.
   const doing = !!cur && DOING.has(cur.kind);
   const doN = doing ? pages.slice(0, idx + 1).filter(p => DOING.has(p.kind)).length : 0;
-  const goal = doing && cur ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={doN === 1 || cur.kind === "play" ? get : undefined} todo={cur.kind !== "play" && "body" in cur && typeof cur.body === "string" ? cur.body.split(/\n+/)[0] : undefined} accent={accent} /> : null;
+  // On a phone a play step's goal card and its live instruction are one card (TryIt draws it); on a laptop the card stays on top.
+  const goalHead = doing && cur && cur.kind === "play" ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={get} accent={accent} bare /> : null;
+  const goal = doing && cur ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={doN === 1 || cur.kind === "play" ? get : undefined} todo={cur.kind !== "play" && "body" in cur && typeof cur.body === "string" ? cur.body.split(/\n+/)[0] : undefined} accent={accent} play={cur.kind === "play"} /> : null;
 
   let body = null;
   if (cur) switch (cur.kind) {
@@ -795,7 +799,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
     case "tempo": body = <TempoStep screen={cur} accent={accent} onNext={next} tail={ways} mine={mineTrack} />; break;
     case "ear": body = <EarStep screen={cur} meta="ear round" level="standard" onNext={next} />; break;
     case "play":
-      body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways, snap: cur.snap }} initial={take?.type === ttype ? take.events : undefined} title="play it in"
+      body = <TryIt type={ttype} coach={{ body: cur.body, hint: cur.hint, goal: cur.goal, tail: ways, snap: cur.snap, head: goalHead }} initial={take?.type === ttype ? take.events : undefined} title="play it in"
         onUse={t => { setTake(t); saveTake(mission.slug, t); next(); }}
         // Skipping the play-in after a copy step keeps what you copied as the lesson's part.
         onSkip={() => { const keep = copied.current; setTake(keep); saveTake(mission.slug, keep); next(); }} />;

@@ -1107,3 +1107,27 @@ a.jv-lane:hover{transform:translateX(3px)}
 }
 /* keep what you just played (capture): appears once you've played over the loop without rec */
 .fl-keepfree{align-self:flex-start;margin-top:10px;border-color:var(--led-mint)!important;color:var(--ink);box-shadow:0 0 10px color-mix(in srgb,var(--led-mint) 30%,transparent)}
+/* start page read-aloud */
+.fl-startsay{margin-top:12px}
+
+/* ── one instruction per play step, and a clear win (10 Nov) ── */
+@media (max-width:899px){
+  .fl-goal.is-play{display:none}
+  .fl-turnwhy.is-dup,.fl-turn.has-head .fl-turnhead{display:none}
+}
+.fl-goalplay{margin-bottom:10px}
+.fl-gnow{display:flex;align-items:center;gap:10px;margin-top:10px;padding:10px 12px;border-radius:12px;font-size:16px;font-weight:600;line-height:1.35;color:var(--ink);background:color-mix(in srgb,var(--led-mint) 10%,var(--deck2));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--led-mint) 45%,transparent)}
+.fl-gnow.is-nudge{box-shadow:inset 0 0 0 2px var(--led-mint),0 0 14px color-mix(in srgb,var(--led-mint) 35%,transparent)}
+.fl-gnowt{flex:1;min-width:0}
+.fl-gcount{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:30px;padding:0 8px;border-radius:15px;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink);background:var(--deck2)}
+.fl-goalplay.is-won .fl-gnow{background:color-mix(in srgb,var(--led-mint) 22%,var(--deck2))}
+.fl-goalplay.is-won .fl-gcount{color:#08080A;background:var(--led-mint)}
+.fl-gcount svg{width:16px;height:16px}
+html[data-text="big"] .fl-gnow{font-size:18px}
+.fl-win{position:fixed;left:50%;top:42%;z-index:60;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;transform:translate(-50%,-50%);animation:fl-win 1.8s ease-out forwards}
+.fl-wintick{display:flex;align-items:center;justify-content:center;width:110px;height:110px;border-radius:50%;color:#08080A;background:var(--led-mint);box-shadow:0 0 40px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.fl-wintick svg{width:56px;height:56px;stroke-width:3}
+.fl-win b{font-size:22px;font-weight:600;color:var(--ink);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+@keyframes fl-win{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}25%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.fl-win{animation:fl-winr 1.8s forwards}@keyframes fl-winr{0%,80%{opacity:1}100%{opacity:0}}}
+.fl-win b{padding:6px 16px;border-radius:999px;background:rgba(8,8,10,.88);text-shadow:none}

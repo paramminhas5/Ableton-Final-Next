@@ -124,7 +124,8 @@
   --m1-pressed: inset 0 1.5px 0 var(--hi), inset 0 -2px 3px var(--lo), 0 1px 0 var(--s2), 0 3px 5px var(--shA);
 
   /* the type and space rules (design pass, 9 Nov night): six sizes, six steps, nothing in between */
-  --fs-1: 36px; --fs-2: 22px; --fs-3: 17px; --fs-4: 15px; --fs-5: 12px; --fs-6: 11px;
+  /* 10 Nov: the two smallest sizes up to 13px, so a label is never smaller than a 60 year old can read */
+  --fs-1: 36px; --fs-2: 22px; --fs-3: 17px; --fs-4: 15px; --fs-5: 13px; --fs-6: 13px;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
 }
 
@@ -623,3 +624,27 @@ main:has(.st-root){padding-bottom:0!important}
 .m1-cueled { flex: none; width: 8px; height: 8px; margin: 0 5px; border-radius: 50%; background: var(--led-mint); box-shadow: 0 0 6px var(--led-mint); }
 @media (prefers-reduced-motion: no-preference) { .m1-cue:not(.is-done) .m1-silkn { animation: m1-cue 2.2s ease-in-out infinite; } }
 @keyframes m1-cue { 50% { box-shadow: 0 0 2px color-mix(in srgb, var(--led-mint) 20%, transparent); } }
+
+/* ── readable at a glance (10 Nov): small print up a size everywhere; "bigger text" in settings goes further ── */
+.m1-silk { font-size: 13px; line-height: 16px; }
+.m1-silk i { margin-top: 8px; }
+.m1-ml { font-size: 12px; }
+.m1-cue { font-size: 15px; min-height: 42px; }
+html[data-text="big"] { --fs-1: 40px; --fs-2: 26px; --fs-3: 20px; --fs-4: 18px; --fs-5: 16px; --fs-6: 15px; }
+html[data-text="big"] .m1-silk { font-size: 15px; line-height: 18px; }
+html[data-text="big"] .m1-ml { font-size: 13.5px; }
+html[data-text="big"] .m1-cue { font-size: 17px; }
+html[data-text="big"] .ls-read { font-size: 20px; line-height: 30px; }
+html[data-text="big"] .m1-silkn { min-width: 22px; height: 22px; font-size: 13px; border-radius: 11px; }
+.m1-ss, .m1-t11, .ls-meta { font-size: 13px; }
+html[data-text="big"] .m1-ss, html[data-text="big"] .m1-t11, html[data-text="big"] .ls-meta { font-size: 15px; }
+/* read it to me */
+.m1-say { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent); border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; color: var(--ink); background: transparent; cursor: pointer; }
+.m1-say svg { width: 16px; height: 16px; }
+.m1-say.is-on { border-color: var(--led-mint); color: var(--ink); box-shadow: 0 0 10px color-mix(in srgb, var(--led-mint) 30%, transparent); }
+.m1-cuetext { flex: 1; min-width: 0; }
+.m1-cuesay { flex: none; min-height: 34px; width: 34px; padding: 0; justify-content: center; border-color: color-mix(in srgb, var(--led-mint) 45%, transparent); }
+/* plain words under a knob's real name (studio and lessons) */
+.st-kwrap { display: flex; flex-direction: column; align-items: stretch; gap: 4px; min-width: 0; }
+.st-plain { font-size: 12.5px; line-height: 1.25; font-weight: 500; color: var(--print); text-align: center; }
+html[data-text="big"] .st-plain { font-size: 14.5px; }

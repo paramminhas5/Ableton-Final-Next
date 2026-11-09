@@ -149,7 +149,7 @@ export function DJ() {
         <div className="tb-l"><Link href="/dashboard" className="tb-k" aria-label="Back"><Icon name="back" small /></Link><h1 className="tb-title">dj decks<small>deck a plays your song</small></h1></div>
         <div className="tb-r">{side && canFull ? <button type="button" className="tb-k" onClick={full} aria-label="Full screen"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button> : null}<DepthKey value={everything} onChange={setEverything} /><Walkthrough screen="dj" auto={!ask} /></div>
       </header>
-      <Cue n={step.n} done={step.done} className="dj-cue"><span className="dj-cuen">step {step.n} of 5 · </span>{step.text}</Cue>
+      <Cue n={step.n} done={step.done} className="dj-cue" say={`step ${step.n} of 5. ${step.text}`}><span className="dj-cuen">step {step.n} of 5 · </span>{step.text}</Cue>
       <DeckRig
         decks={[
           { id: "a", title: songName.toLowerCase(), sub: "your song", color: LED.mint, playing: play.a, bpm: base, pitch: pitch.a, synced: synced.a },

@@ -28,7 +28,7 @@ const store = {
   "ccd.track.v2": song, "ccd.songs.v1": { v: 1, active: "a1", songs: [{ id: "a1", name: "night bus", updatedAt: Date.now() - 3600e3 }] }, ...seen,
 };
 const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
-async function shot(name, url, { steps = 0, full = true, wait = 2000, act } = {}) {
+async function shot(name, url, { steps = 0, full = true, wait = 2000, act, big = false } = {}) {
   if (only && !only.includes(name)) return;
   const ctx = await b.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2, colorScheme: "dark" });
   const p = await ctx.newPage();
@@ -37,7 +37,7 @@ async function shot(name, url, { steps = 0, full = true, wait = 2000, act } = {}
     if (sessionStorage.getItem("__seeded")) return;
     sessionStorage.setItem("__seeded", "1");
     for (const [k, v] of Object.entries(s)) localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v));
-  }, store);
+  }, big ? { ...store, "ccd.textsize": "big" } : store);
   await p.goto(base + url, { waitUntil: "load", timeout: 180000 });
   await p.waitForTimeout(wait);
   for (let i = 0; i < steps; i++) { const go = p.locator(".ls-bottom .m1-g > :last-child").first(); if (await go.count()) { await go.click().catch(() => {}); await p.waitForTimeout(900); } }
@@ -58,4 +58,9 @@ await shot("practice", "/gym");
 await shot("library", "/atlas");
 await shot("shape", "/learn/hats", { steps: 2, full: false });
 await shot("home", "/dashboard");
+await shot("lesson-play", "/learn/tempo-bpm", { steps: 3, full: false });
+await shot("lesson-start", "/learn/tempo-bpm", { full: false });
+await shot("settings", "/settings");
+await shot("studio-big", "/studio", { full: false, big: true });
+await shot("home-big", "/dashboard", { full: false, big: true });
 await b.close();
