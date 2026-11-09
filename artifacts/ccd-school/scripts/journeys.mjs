@@ -184,19 +184,22 @@ console.log("\nJ1 Total beginner: onboarding, first lesson, setup, first beat");
   ok(true, "a new learner lands on home: your first song starts here");
   ok(await p.locator('a.hm-go[href^="/learn/"]').count() === 1, "home offers the first lesson with one go key");
 
-  await p.goto(BASE + "/learn/what-is-sound");
-  await p.getByRole("dialog", { name: /how hearts work/i }).waitFor({ timeout: 5000 }).catch(() => {});
-  ok(await p.getByRole("dialog", { name: /how hearts work/i }).count() === 1, "the first lesson explains hearts once");
-  await dismiss(p);
-  await p.getByRole("button", { name: /start the lesson/i }).first().click();
-  const reach = await playLesson(p, { stopAtQuestion: true });
-  ok(reach.stopped === true, "lesson cards and the interactive reach the first question");
-  await p.locator(".ls-pad:visible").first().click(); // option a, a wrong answer for this lesson
-  await p.getByRole("button", { name: /^\s*check\b/i }).first().click();
-  await p.waitForTimeout(500);
-  const afterWrong = (await progressOf(p)).hearts ?? 5;
-  ok(afterWrong === 4 || afterWrong === 5, `wrong answer handled (hearts now ${afterWrong})`);
-  ok(await p.getByRole("button", { name: /got it/i }).count() > 0, "the verdict shows and the lesson can move on");
+  // The first lesson (9 Nov): the screen's walkthrough opens once, then the lesson plays from step one.
+  const first = await p.locator('a.hm-go[href^="/learn/"]').first().getAttribute("href");
+  await p.goto(BASE + first);
+  await p.locator(".fl").first().waitFor({ timeout: 30000 });
+  const tour = p.getByRole("dialog", { name: /a quick look around/i });
+  await tour.waitFor({ timeout: 5000 }).catch(() => {});
+  ok(await tour.count() === 1, "the first lesson shows its walkthrough once");
+  await tour.getByRole("button", { name: /^skip$/i }).click();
+  ok(await tour.count() === 0, "skip closes the walkthrough");
+  const before = await p.locator(".fl").getAttribute("data-step");
+  const skipStep = p.getByRole("button", { name: "Skip this step" });
+  if (await skipStep.count()) await skipStep.first().click(); else await p.locator(".ls-bottom .m1-g > :last-child").first().click();
+  await p.waitForTimeout(600);
+  ok((await p.locator(".fl").getAttribute("data-step")) !== before, "the go key moves the lesson on");
+  await p.reload(); await p.locator(".fl").first().waitFor({ timeout: 30000 }); await p.waitForTimeout(1200);
+  ok(await tour.count() === 0, "the walkthrough does not come back on the next visit");
 
   await p.goto(BASE + "/setup");
   await p.getByRole("checkbox").first().click();

@@ -12,6 +12,8 @@ const b = await eng.launch({ args: eng === chromium ? ["--autoplay-policy=no-use
 const out = [];
 for (const slug of slugs) {
   const ctx = await b.newContext({ viewport: { width: W, height: H }, colorScheme: "dark" });
+  // the first-visit walkthrough is tested by the journeys; here it is marked seen so its card never covers a step
+  await ctx.addInitScript(() => { try { localStorage.setItem("ccd.walk.lesson", "1"); } catch {} });
   const p = await ctx.newPage(); const errs = [];
   p.on("pageerror", e => errs.push(e.message.slice(0, 140)));
   await p.goto(`${base}/learn/${slug}`, { waitUntil: "load" });
