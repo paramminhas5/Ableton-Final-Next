@@ -254,3 +254,17 @@
 .m1-modrow .st-preset{flex:1;min-width:0;margin-top:0}
 .m1-modrow .st-preset span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .m1-modrow .st-preset button{width:36px}
+/* knobs you have learnt (9 Nov): "hide" dims the rest and says where you learn them; "mark" lights the learnt ones */
+.st-learnt{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 6px;font-size:11.5px;font-weight:500;color:var(--print)}
+.st-learnt button{border:0;background:none;padding:4px 0;font:600 11.5px Outfit,system-ui;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.st-litdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--led-mint);box-shadow:0 0 6px var(--led-mint);vertical-align:1px}
+.st-unlearnt{position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;min-width:0}
+.st-unlearnt>.m1-m{opacity:.42;filter:saturate(0);pointer-events:none}
+.st-unlearnt small{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-size:9.5px;font-weight:600;color:var(--ink);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-unlearnt .m1-ml{visibility:hidden}
+.st-unlearnt small{display:flex;flex-direction:column;bottom:6px;line-height:1.15;font-weight:500;color:var(--print)}
+.st-unlearnt small b{font-size:12px;font-weight:600;color:var(--ink)}
+.st-mk{position:relative;display:flex;flex-direction:column;min-width:0}
+.st-mk>.m1-m{flex:1}
+.st-mk.is-learnt::after{content:"";position:absolute;left:10px;top:10px;width:7px;height:7px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 8px var(--led-mint);pointer-events:none}
+.st-mk:not(.is-learnt) .m1-ml{color:var(--print)!important;font-weight:500}

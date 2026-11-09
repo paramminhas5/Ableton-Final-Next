@@ -38,6 +38,7 @@ import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
+import { SongKey } from "./SongKey";
 import "./lesson.css";
 
 // The bigger steps load when a lesson reaches them (and are fetched while the first step plays), so a lesson
@@ -148,7 +149,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><b>{name.toLowerCase()}</b><Icon name="edit" small /></button>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <span className="fl-songkeys"><SongKey /><button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><Icon name="edit" small /></button></span>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}
@@ -523,6 +524,28 @@ function WithWithout({ slug }: { slug: string }) {
   );
 }
 
+/** Two roads out of a finished lesson, side by side and the same size: on to the next part, or deeper on this one. */
+function TwoRoads({ slug, nextHref, nextTitle }: { slug: string; nextHref: string; nextTitle?: string }) {
+  const item = curItem(slug);
+  const extras = extrasOf(item?.kind === "song" ? slug : item?.parent ?? "").filter(e => e.slug !== slug);
+  const nextSlug = nextHref.startsWith("/learn/") ? nextHref.slice(7) : "";
+  if (!extras.length) return null;
+  return (
+    <div className="fl-roads" role="group" aria-label="Where next">
+      <Link href={nextHref} className="fl-road">
+        <small>next part</small>
+        <b>{(nextTitle ?? "back to lessons").toLowerCase()}</b>
+        <span>{nextSlug ? `adds ${partOf(nextSlug)}` : "your road"}</span>
+      </Link>
+      <a href="#go-deeper" className="fl-road is-deeper" onClick={e => { e.preventDefault(); document.getElementById("go-deeper")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
+        <small>go deeper on {partOf(item?.kind === "song" ? slug : item?.parent ?? slug)}</small>
+        <b>{extras.length} {extras.length === 1 ? "lesson" : "lessons"}</b>
+        <span>{extras.slice(0, 2).map(e => e.title.replace(/^bonus: /, "").toLowerCase()).join(", ")}{extras.length > 2 ? "…" : ""}</span>
+      </a>
+    </div>
+  );
+}
+
 /** The deeper lessons and bonus rounds that hang off this lesson, or, in one of them, the way back. */
 function GoDeeper({ slug }: { slug: string }) {
   const item = curItem(slug);
@@ -530,7 +553,7 @@ function GoDeeper({ slug }: { slug: string }) {
   if (!extras.length) return null;
   return (
     <>
-      <Silk label={item?.kind === "song" ? "go deeper, if you like" : "more on this"} right={`${extras.length}`} />
+      <div id="go-deeper" style={{ scrollMarginTop: 80 }}><Silk label={item?.kind === "song" ? "go deeper, if you like" : "more on this"} right={`${extras.length}`} /></div>
       <ul className="fl-deeper">
         {extras.map(e => (
           <li key={e.slug}>
@@ -558,7 +581,8 @@ function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked,
       {f.next && <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
       </div>
       <div className="fl-text">
-      {/* The reward first, then what you can do now, then the optional deeper lessons. */}
+      {/* Where next, two equal roads (9 Nov): the next song lesson, or deeper on this part. Then the reward. */}
+      <TwoRoads slug={mission.slug} nextHref={nextHref} nextTitle={nextTitle} />
       {reward && <Rewards r={reward} />}
       <Silk label="you can now" />
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>

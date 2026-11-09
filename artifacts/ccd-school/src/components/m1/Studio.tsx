@@ -35,7 +35,7 @@ import { velocityAt } from "@/lib/touch";
 import { inScale, keyName, keyRow, noteName, padGrid, pitchClass, SCALE_NAMES, SCALES, snapToScale, SNAP_BEATS, stepOf, type ScaleName, type Snap } from "@/lib/theory";
 import { decodeFile, dropSample, putSample, SLOTS } from "@/lib/samples";
 import { applyPreset, PRESETS } from "@/lib/presets";
-import { deleteSong, duplicateSong, newSong, readSongs, renameSong, switchSong, type SongIndex } from "@/lib/songs";
+import { deleteSong, duplicateSong, loadStarter, newSong, readSongs, renameSong, seedOf, switchSong, type SongIndex } from "@/lib/songs";
 import {
   barsOf,
   DRUM_LANES,
@@ -47,6 +47,7 @@ import {
   paramOf,
   TYPE,
   useTrackV2,
+  readTrackV2,
   type Bank,
   type LayerV2,
   type Surface,
@@ -58,6 +59,9 @@ import {
 import { downloadSongMidi, heardPasses, variesByPass } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
+import { AddedForYou } from "./SongKey";
+import { useProgress } from "@/lib/progress";
+import { ctlKey, learntSet, readLearntView, saveLearntView, whereTaught, type LearntView } from "@/lib/taught";
 import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
@@ -184,8 +188,16 @@ export function Studio() {
 
   useEffect(() => setSongs(readSongs()), []);
 
-  // First visit ever: a loop is already in the track, and it plays on the first touch.
-  const autoplay = useRef(false);
+  // First visit ever, with no song: a starter loop goes in, marked "added for you". It plays when you press play (9 Nov).
+  // What you have learnt shapes the knobs (9 Nov, two designs to compare: "hide" and "mark").
+  const { progress: prog } = useProgress();
+  const learnt = useMemo(() => learntSet(prog.completedMissions), [prog.completedMissions]);
+  const [lview, setLview] = useState<LearntView>("hide");
+  useEffect(() => setLview(readLearntView()), []);
+  const pickView = (v: LearntView) => { setLview(v); saveLearntView(v); };
+  const [seedTick, setSeedTick] = useState(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const seeded = useMemo(() => !!seedOf(), [track, songs, seedTick]);
   useEffect(() => {
     try {
       if (hasTrackV2() || localStorage.getItem("ccd.studio.seeded")) return;
@@ -193,11 +205,11 @@ export function Studio() {
     } catch {
       return;
     }
-    update(() => starterTrack(), false);
-    // Named for what it is, so "my track" never claims a loop you didn't make.
-    try { const i = readSongs(); setSongs(renameSong(i.active, "starter loop")); window.dispatchEvent(new Event("ccd:song")); } catch { /* ignore */ }
-    autoplay.current = true;
-    setTouched({ label: "your loop", text: "tap a pad" });
+    setSongs(loadStarter(starterTrack()));
+    update(() => readTrackV2(), false);
+    window.dispatchEvent(new Event("ccd:song"));
+    setSeedTick(n => n + 1);
+    setTouched({ label: "starter loop", text: "press play" });
   }, [update]);
   // The step grid belongs to the song; the snap tag follows it (unless snap is off).
   const grid = gridOf(track);
@@ -628,10 +640,6 @@ export function Studio() {
 
   const unlock = () => {
     start();
-    if (autoplay.current) {
-      autoplay.current = false;
-      engine.play();
-    }
   };
 
   /** What the fourth surfaces play through: the same engine and the same recorder as the keys and pads. */
@@ -714,6 +722,7 @@ export function Studio() {
           )}
         </div>
 
+        {seeded ? <AddedForYou line short /> : null}
         {/* Only the layers that exist, then one plus. No empty slots, so the row stays big. */}
         <div className="st-slots" style={{ gridTemplateColumns: `${track.layers.length ? `repeat(${track.layers.length}, minmax(0,1fr))` : ""}${track.layers.length < MAX_LAYERS ? " 50px" : ""}` }}>
           {track.layers.map(l => {
@@ -950,13 +959,31 @@ export function Studio() {
               <SourcePanel engine={TYPE[sel.type].engine} src={modEdit} value={i => paramOf(sel, i)} onParam={(i, spec, v) => setParam(i, spec, v)} />
             ) : null}
             {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
+            {lview !== "all" || knobs.some(k => !learnt.has(ctlKey(sel.type, k.spec.key))) ? (
+              <div className="st-learnt" role="status">
+                {lview === "hide" ? <><span>showing what you&apos;ve learnt</span><button type="button" onClick={() => pickView("all")}>show everything</button></>
+                  : lview === "mark" ? <><span><i className="st-litdot" />lit: learnt in a lesson</span></>
+                  : <><span>showing everything</span><button type="button" onClick={() => pickView("hide")}>just what i&apos;ve learnt</button></>}
+              </div>
+            ) : null}
             <div className="m1-g st-knobs" ref={knobsRef}>
               {knobs.map(({ spec, index }, i) => {
+                const ck = ctlKey(sel.type, spec.key);
+                const isLearnt = learnt.has(ck);
+                if (lview === "hide" && !isLearnt) {
+                  const where = whereTaught(ck);
+                  return (
+                    <Link key={`${bank}${index}`} href={where ? `/learn/${where.slug}` : "/learn"} className="st-unlearnt" aria-label={`${spec.label}: ${where ? `you learn this in the ${where.part} lesson` : "comes in a later lesson"}`}>
+                      <Knob label={spec.label} size={32} color={CAP.grey} value={spec.default} dim />
+                      <small><b>{spec.label}</b>{where ? `in ${where.part}` : "later"}</small>
+                    </Link>
+                  );
+                }
                 const eng = TYPE[sel.type].engine;
                 const rs = liveRings.get(index) ?? [];
                 const mine = modEdit ? rs.find(r => r.src === modEdit) : undefined;
                 const takes = sourcesFor(eng).length > 0 && canTake(spec.key) && !lockAt;
-                return (
+                const knob = (
                   <Knob key={`${bank}${index}`} label={spec.label} size={32} color={KNOB_CAPS[i] ?? type!.color} title={elsewhereLine(spec.key) ?? undefined}
                     {...bind(spec, lockedValue(index) ?? paramOf(sel, index))} detents={spec.key === "character" || spec.key === "lpkind" || spec.key === "lfoto" ? 3 : undefined}
                     value={lockedValue(index) ?? paramOf(sel, index)} defaultValue={spec.default} tipValue={bigText(spec, lockedValue(index) ?? paramOf(sel, index))}
@@ -970,6 +997,7 @@ export function Studio() {
                     ) : undefined}
                     onChange={v => setParam(index, spec, v)} />
                 );
+                return lview === "mark" ? <div key={`${bank}${index}`} className={`st-mk ${isLearnt ? "is-learnt" : ""}`}>{knob}</div> : knob;
               })}
             </div>
             </div>

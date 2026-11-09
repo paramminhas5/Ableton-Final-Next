@@ -5,7 +5,8 @@
  */
 import { clearHistory, emptyTrackV2, readTrackV2, writeTrackV2, type TrackV2 } from "./track2";
 
-export type SongInfo = { id: string; name: string; updatedAt: number };
+/** `seed`: we put this song in, not the learner ("added for you"). It goes the moment a lesson adds their first part. */
+export type SongInfo = { id: string; name: string; updatedAt: number; seed?: "starter" };
 export type SongIndex = { v: 1; active: string; songs: SongInfo[] };
 
 const INDEX = "ccd.songs.v1";
@@ -138,7 +139,69 @@ export const SONG_NAMES = [
   "first light", "night bus", "two am", "soft static", "low tide", "neon cat", "slow burn", "after hours",
   "warm room", "blue hour", "late set", "paper moon", "cat nap", "side street", "small hours", "glow worm",
 ] as const;
-const isPlaceholder = (n: string) => n === "my track" || n === "my song" || /^song \d+$/.test(n);
+const isPlaceholder = (n: string) => n === "my track" || n === "my song" || n === STARTER_NAME || /^song \d+$/.test(n);
+
+// ── songs we put in for you ──────────────────────────────────────────────────
+export const STARTER_NAME = "starter loop";
+
+/** The open song, if we put it in and the learner hasn't added a part of their own yet. */
+export function seedOf(): SongInfo["seed"] | null {
+  const i = readSongs();
+  const info = i.songs.find(s => s.id === i.active);
+  if (!info?.seed) return null;
+  return readTrackV2().added.length ? null : info.seed;
+}
+
+/** Put the starter loop in: into the open song if it is empty, otherwise as a new song. Marked "added for you". */
+export function loadStarter(track: TrackV2): SongIndex {
+  let i = readSongs();
+  const cur = readTrackV2();
+  const empty = !cur.layers.some(l => l.events.length);
+  if (!empty) {
+    if (i.songs.length >= MAX_SONGS) return i;
+    stash(i);
+    const id = uid();
+    i = { ...i, active: id, songs: [...i.songs, { id, name: STARTER_NAME, updatedAt: Date.now(), seed: "starter" }] };
+  } else {
+    i = { ...i, songs: i.songs.map(s => (s.id === i.active ? { ...s, name: STARTER_NAME, seed: "starter" as const } : s)) };
+  }
+  save(i);
+  clearHistory();
+  writeTrackV2({ ...track, updatedAt: Date.now() });
+  return i;
+}
+
+/**
+ * After a lesson adds a part: if the open song was the starter loop, its starter parts go, so the song is
+ * only what the learner made, and it gets a name of its own. Returns true when it did that.
+ */
+export function settleSeed(): boolean {
+  const i = readSongs();
+  const info = i.songs.find(s => s.id === i.active);
+  if (!info?.seed) return false;
+  const t = readTrackV2();
+  if (!t.added.length) return false;
+  writeTrackV2({ ...t, layers: t.layers.filter(l => l.from !== "starter"), updatedAt: Date.now() });
+  save({ ...i, songs: i.songs.map(s => (s.id === i.active ? { ...s, seed: undefined } : s)) });
+  nameSongIfNew();
+  return true;
+}
+
+/** How many parts a song in the list has, read from where it is kept. */
+export function partsOf(id: string): number {
+  const i = readSongs();
+  let t: TrackV2 | null = null;
+  if (id === i.active) t = readTrackV2();
+  else {
+    try {
+      const raw = localStorage.getItem(slot(id));
+      t = raw ? (JSON.parse(raw) as TrackV2) : null;
+    } catch {
+      t = null;
+    }
+  }
+  return t ? new Set(t.layers.filter(l => l.events.length).map(l => l.type)).size : 0;
+}
 
 /** Give the open song a real name if it still has a placeholder one. Returns the name it has now. */
 export function nameSongIfNew(): string {

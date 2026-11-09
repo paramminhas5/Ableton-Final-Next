@@ -15,7 +15,7 @@ import type { Mission } from "@/content/types";
 import { CAP, GoPill, Icon, Key, Knob, Screen, Silk } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
 import { useEngineTrack } from "./useEngineTrack";
-import { nameSongIfNew } from "@/lib/songs";
+import { nameSongIfNew, settleSeed } from "@/lib/songs";
 
 /** The lesson's own pattern as a take, for when try it was skipped. */
 export function presetTake(mission: Mission): Take {
@@ -65,8 +65,9 @@ export function AddToTrack({ mission, xp, take, accent, keys }: { mission: Missi
     const now = readTrackV2();
     const next = applyTake(now, slug, line, world, params);
     writeTrackV2(next);
-    nameSongIfNew();
-    setBase(next);
+    // The starter loop was ours: once your first part is in, its parts go and the song is only yours.
+    if (!settleSeed()) nameSongIfNew();
+    setBase(readTrackV2());
     setAdded(true);
   };
 

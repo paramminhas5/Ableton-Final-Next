@@ -1,0 +1,31 @@
+/* First visit, 9 Nov (Welcome.tsx): the road, your first kick, two questions. */
+.wn .wl-top{grid-template-columns:72px 1fr 72px}
+.wn-count{justify-self:end;font-size:12px;font-weight:500;color:var(--print)}
+.wn-map{position:relative;padding-top:6px}
+.wn-cat{width:84px;display:block;margin:4px 0 6px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.45))}
+.wn .wl-hero{font-size:40px}
+.wn-road{margin-top:14px}
+.wn-parts{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.wn-parts li{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 11px 0 9px;border-radius:15px;font-size:13px;font-weight:500;color:var(--disp-ink);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);animation:wn-on 500ms var(--ease-snap,ease-out) both}
+.wn-parts li i{width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 7px var(--c)}
+.wn-parts .is-fundamentals,.wn-band.is-fundamentals{--c:var(--led-mint)}
+.wn-parts .is-producer,.wn-band.is-producer{--c:var(--led-lilac)}
+.wn-parts .is-dj,.wn-band.is-dj{--c:var(--led-cobalt)}
+.wn-bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)}
+.wn-band{display:flex;flex-direction:column;gap:3px;min-width:0;padding-top:8px;border-top:3px solid var(--c)}
+.wn-band b{font-size:14px;font-weight:600;color:var(--c)}
+.wn-band span{font-size:11.5px;line-height:1.3;color:var(--disp-ink)}
+.wn-band small{font-size:10.5px;color:var(--disp-sub);margin-top:2px}
+.wn-note{margin:12px 2px 0;font-size:13px;line-height:1.4;color:var(--print)}
+.wn-beats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.wn-beats i{height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:600;color:var(--disp-sub);background:rgba(255,255,255,.04)}
+.wn-beats i.is-now{color:#06241B;background:var(--led-mint);box-shadow:0 0 14px color-mix(in srgb,var(--led-mint) 60%,transparent)}
+.wn-beats i.is-in:not(.is-now){color:var(--led-mint);box-shadow:inset 0 0 0 1px var(--led-mint)}
+.wn-bar{position:relative;height:26px;margin-top:10px;border-radius:6px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 1px,transparent 1px 25%),rgba(255,255,255,.03)}
+.wn-bar b{position:absolute;top:4px;bottom:4px;width:6px;margin-left:-3px;border-radius:3px;background:var(--led-mint);box-shadow:0 0 8px var(--led-mint);animation:wn-on 300ms ease-out both}
+.wn-head{position:absolute;top:0;bottom:0;width:2px;background:var(--disp-ink);opacity:.7}
+.wn .wl-pad{height:170px}
+@keyframes wn-on{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wn-parts li,.wn-bar b{animation:none}}
+.wn .wl-choices{margin-top:14px}
+.wn .wl-tag{color:color-mix(in srgb,var(--led-mint) 60%,var(--ink))}

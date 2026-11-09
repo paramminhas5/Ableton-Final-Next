@@ -1017,3 +1017,16 @@ a.jv-lane:hover{transform:translateX(3px)}
   .m1-modebar>.m1-m .m1-ml{bottom:5px}
   .m1-page{padding-bottom:100px}
 }
+/* the song key on the strip, with rename beside it (9 Nov) */
+.fl-songkeys{display:inline-flex;align-items:center;gap:4px;min-width:0;flex:1 1 auto}
+.fl-songkeys .sk-key{height:28px}
+.fl-songkeys .fl-songrename{width:28px;height:28px;justify-content:center;flex:none}
+.fl-songname{align-items:center}
+/* done screen: two roads out, the same size (9 Nov) */
+.fl-roads{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 6px}
+.fl-road{display:flex;flex-direction:column;gap:3px;min-width:0;min-height:112px;padding:12px 14px;border-radius:14px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.fl-road small{font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--led-mint)}
+.fl-road.is-deeper small{color:var(--led-lilac)}
+.fl-road b{font-size:17px;font-weight:600;line-height:1.2}
+.fl-road span{font-size:12px;line-height:1.35;color:var(--print);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.fl-road:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
