@@ -14,11 +14,10 @@ import "./lesson.css";
 type Stop = { sel: string; title: string; line: string };
 export const TOURS: Record<string, Stop[]> = {
   home: [
-    { sel: "[data-tour=learn]", title: "1. learn", line: "start here. the pink key opens your next lesson. basics, then producer, then dj." },
-    { sel: "[data-tour=song]", title: "2. your song", line: "what the lessons build. each lesson you finish adds one part here." },
-    { sel: "[data-tour=practice]", title: "3. practice", line: "five minutes of ear drills and review, so it sticks." },
-    { sel: "[data-tour=play]", title: "4. instruments", line: "play anything freely: drums, synths, the dj decks, every device." },
-    { sel: ".m1-modebar", title: "the same four, always here", line: "the keys at the bottom take you to each part from anywhere." },
+    { sel: "[data-tour=learn]", title: "Start here", line: "Each lesson adds one part to your song. It tells you what to press at every step." },
+    { sel: "[data-tour=song]", title: "Your song", line: "Everything you make lands here. Tap a part to play it in the studio, or press play." },
+    { sel: "[data-tour=practice]", title: "Practice", line: "Five minutes a day, picked from what you learnt, so it sticks." },
+    { sel: "[data-tour=play]", title: "Instruments", line: "Play freely any time: the studio, the DJ decks and every device in the library." },
   ],
   lesson: [
     { sel: ".fl-song", title: "your song, always on top", line: "every lesson adds to it. press play any time to hear where it is." },

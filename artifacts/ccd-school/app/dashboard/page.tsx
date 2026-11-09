@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Today } from "@/components/m1/Today";
+import { Home } from "@/components/v2/Home";
 
 export const metadata: Metadata = {
   title: "today",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function DashboardPage() {
-  return <Today />;
+  return <Home />;
 }

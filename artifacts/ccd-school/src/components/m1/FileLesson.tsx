@@ -202,11 +202,26 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
         {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${pages.length - 2}`}>{at}<i>/</i>{pages.length - 2}</div> : null}
         <Walkthrough screen="lesson" />
       </div>
-      <div className="ls-seg" style={{ ["--c" as string]: accent } as CSSProperties} aria-hidden>
-        {pages.map((_, i) => <i key={i} className={i < at ? "is-done" : i === at ? "is-now" : ""} />)}
-      </div>
+      <div style={{ ["--c" as string]: accent } as CSSProperties}><Stages pages={pages} at={at} /></div>
       <div className="fl-now"><span>{pageName(pages[at])}</span>{pages[at + 1] ? <span>next: {pageName(pages[at + 1])}</span> : null}</div>
     </header>
+  );
+}
+
+// ── v2: the lesson's five stages, lit as you go ─────────────────────────────
+const STAGE_OF: Record<string, number> = { hear: 0, say: 0, imagine: 0, ear: 0, play: 1, copy: 1, add: 1, shape: 2, tempo: 2, arrange: 2, mix: 2, check: 3, matchsound: 4 };
+const STAGES = ["Learn", "Add", "Shape", "Check", "Match"];
+function Stages({ pages, at }: { pages: Page[]; at: number }) {
+  const has = STAGES.map((_, k) => pages.some(p => STAGE_OF[p.kind] === k));
+  const cur = pages[at]?.kind === "done" ? 5 : pages[at]?.kind === "start" ? -1 : STAGE_OF[pages[at]?.kind ?? ""] ?? -1;
+  return (
+    <nav className="v2-stages" aria-label="Lesson stages">
+      {STAGES.map((n, k) => (
+        <span key={n} className={!has[k] ? "off" : k < cur ? "done" : k === cur ? "now" : ""} aria-current={k === cur ? "step" : undefined}>
+          <i>{k < cur && has[k] ? <Icon name="check" small /> : k + 1}</i>{n}
+        </span>
+      ))}
+    </nav>
   );
 }
 
