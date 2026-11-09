@@ -68,7 +68,7 @@ import { missionAny } from "@/lib/worldOrder";
 import { DepthKey, useEverything } from "./Everything";
 import { ArrangeView } from "./ArrangeView";
 import { NewControl, Walkthrough } from "./Walkthrough";
-import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
+import { CAP, Cue, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
 import { ChordSurface, CircleSurface, GlideSurface, RollsSurface, RiserSurface, XYSurface, bassRoot, scaleOf, ROLLS, type SurfaceCtx } from "./Surfaces";
@@ -738,8 +738,33 @@ export function Studio() {
     return { id: `studio:${key}`, label: k.spec.label, line: `${title ? `you learnt this in ${title}. ` : ""}turn it while your loop plays and listen to what changes.` };
   })();
 
+  // ── what to do now (10 Nov): the studio in four numbered sections, and one line saying which to use next.
+  // What you've done is remembered, so the line moves on and doesn't nag on the next visit.
+  const DID_KEY = "ccd.studio.did";
+  const [did, setDid] = useState<{ play?: boolean; pad?: boolean; rec?: boolean; knob?: boolean }>({});
+  useEffect(() => { try { setDid(JSON.parse(localStorage.getItem(DID_KEY) ?? "{}")); } catch { /* fresh */ } }, []);
+  const mark = useCallback((k: "play" | "pad" | "rec" | "knob") => setDid(d => {
+    if (d[k]) return d;
+    const n = { ...d, [k]: true };
+    try { localStorage.setItem(DID_KEY, JSON.stringify(n)); } catch { /* ignore */ }
+    return n;
+  }), []);
+  useEffect(() => { if (playing) mark("play"); }, [playing, mark]);
+  useEffect(() => { if (recording) mark("rec"); }, [recording, mark]);
+  const partName = sel ? TYPE[sel.type].label : "part";
+  const surfaceWord = sel?.surface === "keys" ? "keys" : sel?.surface === "steps" ? "steps" : "pads";
+  const shownKnobs = sel ? knobs.filter(k => everything || learnt.has(ctlKey(sel.type, k.spec.key))).length : 0;
+  const cue: { n: number; text: string; done?: boolean; at?: string } = !track.layers.length ? { n: 1, text: "press + to add your first part", at: "add" }
+    : !sel ? { n: 1, text: "pick a part" }
+    : !did.play ? { n: 4, text: "press play to hear your song", at: "play" }
+    : !did.pad ? { n: 2, text: sel.surface === "steps" ? `tap the steps to add ${partName} hits` : `tap the ${surfaceWord} to play your ${partName} along`, at: "surface" }
+    : !did.rec ? { n: 4, text: `press rec to record what you play into your ${partName}`, at: "rec" }
+    : !did.knob && shownKnobs ? { n: 3, text: `turn a knob to shape your ${partName}`, at: "knobs" }
+    : { n: 1, text: "pick another part to work on, or press to live to send your song to ableton", done: true };
+  const zone = (n: number) => mode === "play" && cue.n === n && !cue.done;
+
   return (
-    <div className="st-root" onPointerDownCapture={unlock}>
+    <div className="st-root" onPointerDownCapture={unlock} data-cue={mode === "play" && !cue.done ? cue.at : undefined}>
       {/* For screen readers: a heading for the page, and the transport's state as it changes. */}
       <h1 className="sr-only">studio: {mode === "mix" ? "mix" : "play"}</h1>
       <div className="sr-only" aria-live="polite">{countIn ? "counting in" : recording ? "recording" : playing ? "playing" : "stopped"}</div>
@@ -763,6 +788,7 @@ export function Studio() {
           <DepthKey value={everything} onChange={setEverything} />
           <Walkthrough screen="studio" />
         </div>
+        {mode === "play" ? <Cue n={cue.n} done={cue.done} className="st-cue">{cue.text}</Cue> : null}
         {/* create, arrange, mix: their own row on a phone, beside your song's name on a wide screen. */}
         <div className="st-moderow">{modesNow.length > 1 ? <div className={`st-mode st-mode${modesNow.length}`} role="radiogroup" aria-label="Studio mode">
             {modesNow.map(m => (
@@ -780,6 +806,7 @@ export function Studio() {
         </div>
         {/* Only the layers that exist, then one plus. No empty slots, so the row stays big. */}
         <div className="st-slots" style={{ gridTemplateColumns: `${track.layers.length ? `repeat(${track.layers.length}, minmax(0,1fr))` : ""}${track.layers.length < MAX_LAYERS ? " 50px" : ""}` }}>
+          {mode === "play" ? <Silk n={1} lit={zone(1)} label="pick a part" right={`${track.layers.length} in your song`} className="st-zone" /> : null}
           {track.layers.map(l => {
             const on = l.id === selId;
             const c = TYPE[l.type].color;
@@ -904,7 +931,8 @@ export function Studio() {
           <div className="st-main"><AddPanel track={track} sel={sel} onAdd={addLayer} onRemove={removeSel} /></div>
         ) : sel ? (
           <>
-            <div className="st-main">
+            <div className="st-main" onPointerDownCapture={() => mark("pad")}>
+            <Silk n={2} lit={zone(2)} label={`play your ${partName}`} right={surfaceWord} className="st-zone" />
             {/* Where you are in the arrangement, and commit (the EP-133's): in place of the "play on" label, to keep the phone's height for the pads. */}
             {knows("capture-midi", "sections") || track.sections?.length ? <div className="st-secrow" role="group" aria-label="Sections">
                 {secNow ? (
@@ -982,7 +1010,7 @@ export function Studio() {
 
             </div>
             <div className="st-side">
-            {everything ? <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" /> : null}
+            <Silk n={3} lit={zone(3)} label={`shape your ${partName}`} right={shownKnobs ? `${shownKnobs} ${shownKnobs === 1 ? "knob" : "knobs"}` : undefined} className="st-zone" />
             <div className="st-shape">
               {banksNow.length > 1 ? <div className="st-bank" role="radiogroup" aria-label="Knob bank">
                 {banksNow.map(b => (
@@ -1032,7 +1060,7 @@ export function Studio() {
             ) : null}
             {freshKnob ? <NewControl key={freshKnob.id} id={freshKnob.id} sel={`.st-knobs [role=slider][aria-label="${freshKnob.label}"]`}
               title={`new: ${freshKnob.label}`} line={freshKnob.line} /> : null}
-            <div className="m1-g st-knobs" ref={knobsRef}>
+            <div className="m1-g st-knobs" ref={knobsRef} onPointerDownCapture={() => mark("knob")}>
               {knobs.filter(k => everything || learnt.has(ctlKey(sel.type, k.spec.key))).map(({ spec, index }, i) => {
                 const eng = TYPE[sel.type].engine;
                 const rs = liveRings.get(index) ?? [];
@@ -1063,6 +1091,7 @@ export function Studio() {
       </div>
 
       <div className="m1-g st-transport">
+        <div className="st-tzone"><Silk n={4} lit={zone(4)} label="play, record, send" /></div>
         <button type="button" className="m1-m is-wide" aria-label={playing && !recording && !countIn ? "Stop" : "Play"} onClick={transportPlay}>
           <span className="m1-cap is-go is-pill" style={{ width: "88%", height: "56%", gap: 8, fontSize: 15, fontWeight: 500, marginTop: -12 }}>
             <Icon name={playing && !recording && !countIn ? "stop" : "play"} />{playing && !recording && !countIn ? "stop" : "play"}

@@ -336,13 +336,15 @@ export function GymPageClient() {
       <main className="m1-page gy-home fr" style={{ paddingTop: 4 }}>
         <TopBar title="practice" sub="five minutes a day" screen="practice" />
         <div className="fr-l">
+          <Silk n={1} lit={phase !== "done"} label="start here" right="today's 5 minutes" className="o1 gy-zone" />
           <div className="m1-g gy-today o1" data-tour="today">
             <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start today's 5 minutes"}</GoPill>
           </div>
 
-          <Screen className="o2">
+          <Silk n={3} label="your ears" right="how each drill is going" className="o4 gy-zone" />
+          <Screen className="o4">
             <div className="ls-meta">
-              <span>your ears</span>
+              <span>this week</span>
               <span style={{ display: "inline-flex", gap: 5, alignItems: "center" }} role="img" aria-label={`${week.filled} of ${week.target} sessions this week`}>
                 {Array.from({ length: week.target }, (_, i) => <i key={i} className="ls-led" style={{ ["--c" as string]: i < week.filled ? "var(--led-mint)" : "#2A2A2E", boxShadow: i < week.filled ? undefined : "none", background: i < week.filled ? undefined : "#2A2A2E" } as CSSProperties} />)}
                 <b style={{ fontWeight: 500, marginLeft: 6 }}>{week.filled} of {week.target} this week</b>
@@ -376,7 +378,7 @@ export function GymPageClient() {
 
         <div className="fr-c">
           <section className="o3">
-            <Silk label="drills" right="or pick one" />
+            <Silk n={2} label="or pick one drill" right={`${pads.filter(p => everything || !p.locked).length} open`} />
             <div className="ls-pads gy-pads" data-tour="drills" data-budget="list">
               {pads.filter(p => everything || !p.locked).map(p => {
                 const inner = (

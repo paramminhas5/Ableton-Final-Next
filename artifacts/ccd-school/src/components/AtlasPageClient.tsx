@@ -168,6 +168,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
       {tab === "home" ? (
         <>
           <div className="fr-l">
+            <Silk n={2} label="pick a kind" right="or see all" className="o3 lb-zone" />
             <div className="lb-cats o3" data-budget="group" role="group" aria-label="Kind of device">
               {CATS.map(c => (
                 <button key={c.id} type="button" aria-pressed={cat === c.id} className={`lb-cat ${cat === c.id ? "is-on" : ""}`} onClick={() => setCat(c.id)}>
@@ -185,6 +186,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
 
           <div className="fr-c">
             <div className="o1">
+              <Silk n={1} lit={!t} label="search, or tap what you want to hear" className="lb-zone" />
               <label className="lb-search">
                 <Icon name="search" />
                 <span className="sr-only">Search devices and words</span>
@@ -196,7 +198,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
               </div>
             </div>
             <section className="o4" aria-live="polite">
-              <Silk label={t ? (intent ? `to make it ${intent.w}` : `devices for "${t}"`) : "play with a device"} right={`${labs.length}`} />
+              <Silk n={3} lit={!!t} label={t ? (intent ? `to make it ${intent.w}` : `devices for "${t}"`) : "play one: the speaker hears it, the name opens it"} right={`${labs.length}`} />
               <div className="lb-grid" data-budget="list">
                 {labs.map((d, i) => (
                   <div key={d.slug} className={`lb-tile ${intent && i < intent.slugs.length ? "is-pick" : ""} ${hearing === d.slug ? "is-hearing" : ""}`}>

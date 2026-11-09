@@ -610,3 +610,16 @@ html[data-contrast="high"] .ls-pad.is-wrong { outline: 3px dashed var(--ink); }
 @media (max-width:1199px){.m1-streak{margin:8px 16px 0}}
 /* the studio has no mode dock, so no room is kept for one (it made the instrument scroll 118 px) */
 main:has(.st-root){padding-bottom:0!important}
+
+/* ── numbered sections and the cue line (10 Nov): every screen in numbered sections, in the order you use them ── */
+.m1-silk.has-n { align-items: center; }
+.m1-silk.has-n > i:not(.l):not(.rs):not(.r) { margin-top: 0; }
+.m1-silk.has-n > i.r, .m1-silk.has-n > i.rs { margin-top: 0; }
+.m1-silkn { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; font-size: 11px; font-weight: 600; letter-spacing: 0; color: var(--ink); background: var(--deck2); box-shadow: inset 0 1px 2px var(--shA, rgba(0,0,0,.35)), 0 1px 0 var(--hi); text-shadow: none; transition: background .2s, color .2s, box-shadow .2s; }
+.m1-silkn.is-lit { color: #08080A; background: var(--led-mint); box-shadow: 0 0 10px color-mix(in srgb, var(--led-mint) 55%, transparent); }
+.m1-cue { display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 6px 12px 6px 8px; border-radius: 12px; font-size: 13.5px; font-weight: 500; line-height: 1.3; color: var(--ink); background: color-mix(in srgb, var(--led-mint) 9%, var(--deck2)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--led-mint) 35%, transparent); }
+.m1-cue.is-done { background: var(--deck2); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent); color: var(--print); }
+.m1-cue.is-done .m1-silkn { color: var(--ink); background: var(--deck); box-shadow: none; }
+.m1-cueled { flex: none; width: 8px; height: 8px; margin: 0 5px; border-radius: 50%; background: var(--led-mint); box-shadow: 0 0 6px var(--led-mint); }
+@media (prefers-reduced-motion: no-preference) { .m1-cue:not(.is-done) .m1-silkn { animation: m1-cue 2.2s ease-in-out infinite; } }
+@keyframes m1-cue { 50% { box-shadow: 0 0 2px color-mix(in srgb, var(--led-mint) 20%, transparent); } }

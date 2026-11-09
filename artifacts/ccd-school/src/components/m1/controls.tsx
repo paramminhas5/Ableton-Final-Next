@@ -83,11 +83,31 @@ export function Icon({ name, small, className }: { name: keyof typeof P | string
 }
 
 // ── panel lettering ─────────────────────────────────────────────────────
-export function Silk({ label, right, style }: { label: string; right?: string; style?: CSSProperties }) {
+/**
+ * A section's name, silkscreened on the panel. `n` numbers the section (10 Nov: every screen in numbered
+ * sections, in the order you use them); `lit` lights the number when the screen's cue points at it.
+ */
+export function Silk({ label, right, style, n, lit, className }: { label: string; right?: string; style?: CSSProperties; n?: number; lit?: boolean; className?: string }) {
+  const num = n !== undefined ? <b className={`m1-silkn ${lit ? "is-lit" : ""}`} aria-hidden>{n}</b> : null;
+  const cls = `m1-silk ${n !== undefined ? "has-n" : ""} ${className ?? ""}`;
+  const name = n !== undefined ? <span><span className="sr-only">{n}. </span>{label}</span> : <span>{label}</span>;
   return right ? (
-    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i /><span>{right}</span><i className="rs" /></div>
+    <div className={cls} style={style}>{num ?? <i className="l" />}{name}<i /><span>{right}</span><i className="rs" /></div>
   ) : (
-    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i className="r" /></div>
+    <div className={cls} style={style}>{num ?? <i className="l" />}{name}<i className="r" /></div>
+  );
+}
+
+/**
+ * What to do now, in one line, with the number of the section it points at. Every instrument screen has one
+ * under its header, so a first look says where to start (10 Nov).
+ */
+export function Cue({ n, children, done, className }: { n?: number; children: ReactNode; done?: boolean; className?: string }) {
+  return (
+    <div className={`m1-cue ${done ? "is-done" : ""} ${className ?? ""}`} role="status" aria-live="polite">
+      {n !== undefined ? <b className="m1-silkn is-lit" aria-hidden>{n}</b> : <i className="m1-cueled" aria-hidden />}
+      <span>{children}</span>
+    </div>
   );
 }
 

@@ -27,11 +27,11 @@ export const TOURS: Record<string, Stop[]> = {
     { sel: ".ls-bottom .is-wide, .fl-bottom .is-wide", title: "the go key", line: "the one pink key moves you on. if it can't yet, it says why." },
   ],
   studio: [
-    { sel: ".st-slots", title: "your parts", line: "each part of your song. tap one to play it, the plus adds another." },
+    { sel: ".st-slots", title: "1. pick a part", line: "each part of your song. tap one to play it, the plus adds another." },
     { sel: ".st-scr", title: "the screen", line: "shows what you just touched and what it's doing to the sound." },
-    { sel: ".st-tray, .st-surface", title: "play it", line: "pads for drums, keys for everything else. press rec and play to record." },
-    { sel: ".st-knobs", title: "shape it", line: "the knobs you've learnt. more arrive as lessons teach them." },
-    { sel: ".st-transport", title: "play, record, send to live", line: "your song plays only when you press play. to live sends it to Ableton Live." },
+    { sel: ".st-tray, .st-surface", title: "2. play it", line: "pads for drums, keys for everything else. press rec and play to record." },
+    { sel: ".st-knobs", title: "3. shape it", line: "the knobs you've learnt. more arrive as lessons teach them." },
+    { sel: ".st-transport", title: "4. play, record, send to live", line: "your song plays only when you press play. to live sends it to Ableton Live." },
   ],
   dj: [
     { sel: ".dj-scr", title: "both tracks, lined up", line: "deck a on top, deck b under it. when the beats line up by eye, they line up by ear." },

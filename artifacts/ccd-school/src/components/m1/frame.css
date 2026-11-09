@@ -68,3 +68,6 @@ a.wg:active{transform:translateY(2px);box-shadow:var(--m1-pressed)}
 .fl-back{width:38px}
 .fl-row .hk.is-q{width:38px;border:0;font:600 14px Outfit,system-ui;color:var(--ink);background-image:var(--grain),linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
 .tb .hk:not(.is-q){padding:0 12px;font-size:13px}
+/* numbered section labels on content screens (10 Nov) */
+.gy-zone,.lb-zone{margin-top:6px}
+@media (min-width:1024px){.fr .gy-zone,.fr .lb-zone{margin:0 2px 8px}}

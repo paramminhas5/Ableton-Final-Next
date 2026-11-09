@@ -19,7 +19,7 @@ import { clipVariants } from "@/content/lessons/clipTracks";
 import { DeckWave } from "./DeckWave";
 import { songCommands } from "./MixStep";
 import { DeckRig, sectionsFor, useLandscapePhone, type Chan, type DeckId } from "./DeckRig";
-import { Icon, LED, Screen } from "./controls";
+import { Cue, Icon, LED, Screen } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
 import { useEverything, DepthKey } from "./Everything";
 import { Walkthrough } from "./Walkthrough";
@@ -134,13 +134,22 @@ export function DJ() {
     void document.documentElement.requestFullscreen({ navigationUI: "hide" }).then(() => (screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> }).lock?.("landscape")).catch(() => {});
   };
 
+  // Your first mix in five numbered steps, one at a time (10 Nov): the line says the step you're on.
+  const step: { n: number; text: string; done?: boolean } = !play.a ? { n: 1, text: "press play on deck a. that's your song" }
+    : !play.b ? { n: 2, text: "press play on deck b. its fader is down, so the room still hears only a" }
+    : drift > 0.3 && !synced.b ? { n: 3, text: `deck b is ${drift.toFixed(1)} bpm off. press sync on b, or move its tempo fader` }
+    : ch.b.fader < 0.6 ? { n: 4, text: "bring deck b's channel fader up, on the one" }
+    : xf < 0.85 ? { n: 5, text: "slide the crossfader across to b" }
+    : { n: 5, text: "you mixed from your song into the next track. try the low knobs to swap the bass", done: true };
+
   return (
-    <div className={`m1-page dj ${side ? "is-side" : ""}`}>
+    <div className={`m1-page dj ${side ? "is-side" : ""}`} data-step={step.done ? undefined : step.n}>
       {ask ? <TurnAsk onKeep={keepUpright} /> : null}
       <header className="tb dj-head">
         <div className="tb-l"><Link href="/dashboard" className="tb-k" aria-label="Back"><Icon name="back" small /></Link><h1 className="tb-title">dj decks<small>deck a plays your song</small></h1></div>
         <div className="tb-r">{side && canFull ? <button type="button" className="tb-k" onClick={full} aria-label="Full screen"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button> : null}<DepthKey value={everything} onChange={setEverything} /><Walkthrough screen="dj" auto={!ask} /></div>
       </header>
+      <Cue n={step.n} done={step.done} className="dj-cue"><span className="dj-cuen">step {step.n} of 5 · </span>{step.text}</Cue>
       <DeckRig
         decks={[
           { id: "a", title: songName.toLowerCase(), sub: "your song", color: LED.mint, playing: play.a, bpm: base, pitch: pitch.a, synced: synced.a },
@@ -165,7 +174,7 @@ export function DJ() {
           <Screen className="dj-scr">
             <div className="dj-meta">
               <span style={{ color: LED.mint }}>a · {aBpm.toFixed(1)} bpm</span>
-              <span className="dj-say" role="status">{hint ?? (!anyPlaying ? "press play on deck a" : play.a && !play.b ? "now play deck b, its fader is down" : drift > 0.3 ? `deck b is ${drift.toFixed(1)} bpm off: match the tempo` : "matched. bring b in on the one")}</span>
+              <span className="dj-say" role="status">{hint ?? (drift > 0.3 ? `${drift.toFixed(1)} bpm apart` : "tempos matched")}</span>
               <span style={{ color: LED.cobalt }}>b · {bBpm.toFixed(1)} bpm</span>
             </div>
             <DeckWave label="deck a" bands={bandsA} loading={!bandsA} beat={headA} lowDb={(ch.a.low - 0.5) * 30} phrases={PHRASES} zoom />
