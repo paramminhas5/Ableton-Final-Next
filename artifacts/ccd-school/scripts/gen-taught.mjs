@@ -2,22 +2,17 @@
 // in curriculum order (basics, producer, dj; song lessons before deeper ones). Writes src/content/taught.gen.json:
 // { first: { "drums:decay": "your-kick", ... }, bySlug: { "your-kick": ["drums:decay", "drums:tune"], ... } }.
 // The studio uses it to show only what you have learnt (or mark it), and the beginner check reads it.
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 const root = new URL("..", import.meta.url).pathname;
 const dir = join(root, "src/content/lessons");
 const bySlug = {};
-for (const w of ["foundations", "producer", "dj"]) {
-  for (const f of readdirSync(join(dir, w)).filter(f => f.endsWith(".yaml"))) {
-    const y = readFileSync(join(dir, w, f), "utf8");
-    const slug = y.match(/^slug:\s*(\S+)/m)?.[1];
-    if (!slug) continue;
-    const keys = [];
-    for (const m of y.matchAll(/kind:\s*shape\s*\n\s*layer:\s*(\w+)\s*\n\s*knobs:\s*\[([^\]]*)\]/g)) {
-      for (const k of m[2].split(",").map(s => s.trim()).filter(Boolean)) keys.push(`${m[1]}:${k}`);
-    }
-    if (keys.length) bySlug[slug] = [...new Set(keys)];
-  }
+// Read the compiled lessons, not the yaml text, so a field in any order (a step's why, say) never hides a knob.
+const gen = JSON.parse(readFileSync(join(dir, "lessons.gen.json"), "utf8"));
+for (const l of gen.lessons) {
+  const keys = [];
+  for (const s of l.steps) if (s.kind === "shape") for (const k of s.knobs ?? []) keys.push(`${s.layer}:${k}`);
+  if (keys.length) bySlug[l.slug] = [...new Set(keys)];
 }
 const cur = JSON.parse(readFileSync(join(root, "src/content/curriculum.gen.json"), "utf8"));
 const order = [];

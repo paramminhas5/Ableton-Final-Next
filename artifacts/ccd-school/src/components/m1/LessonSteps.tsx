@@ -58,13 +58,15 @@ export function SayStep({ screen, meta, onNext, tail, visual }: { screen: Of<"sa
     <div className={`ls-col ${visual ? "" : "is-one"}`}>
       <div className="fl-inst">
       <Screen>
-        <Meta left={meta} />
+        {visual ? null : <Meta left={meta} />}
         <div className="ls-title">{screen.title.toLowerCase()}</div>
+        {/* phone: what to do sits on the glass, above the picture, so it is read first (10 Nov) */}
+        {visual ? <p className="fl-lead"><Gloss>{screen.body.split(/\n+/)[0]}</Gloss></p> : null}
       </Screen>
       {visual}
       </div>
       <div className="fl-text">
-      {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+      {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${visual && i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
       <Folds items={screen.deeper} />
       {tail}
       </div>
@@ -139,6 +141,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
       <Screen>
         <Meta left={meta} right={def ? `${def.bpm} bpm` : undefined} />
         <div className="ls-title">{(def?.title ?? "listen").toLowerCase()}</div>
+        <p className="fl-lead"><Gloss>{screen.body.split(/\n+/)[0]}</Gloss></p>
         {isKick ? <KickShape decay={kickDecay} hit={playing ? beatN : -1} />
           : screen.clip === "synth-note" ? <AirWave playing={playing} />
           : screen.clip === "synth-pitch" ? <><WaveShape kind="soft" cycles={v === 0 ? 2 : 8} playing={playing} /><AirWave playing={playing} speed={v === 0 ? 0.6 : 2.2} /></>
@@ -160,7 +163,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
         </>
       )}
       </div>
-      <div className="fl-text">{screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}<Folds items={screen.deeper} />{tail}</div>
+      <div className="fl-text">{screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}<Folds items={screen.deeper} />{tail}</div>
       <div className="ls-bottom">
         <div className="m1-g">
           <Key label={playing ? "stop" : "play"} onClick={toggle} ariaPressed={playing} ariaLabel={playing ? "Stop" : "Play the clip"}><Icon name={playing ? "stop" : "hear"} /></Key>
@@ -537,7 +540,7 @@ function KitStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accent
         </div>
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {tail}
       </div>
@@ -579,7 +582,7 @@ function GlueStep({ screen, accent, onNext, tail }: { screen: Of<"tempo">; accen
         <SameElsewhere keys={["glue"]} />
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {tail}
       </div>
@@ -641,7 +644,7 @@ function ScaleStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
         </div>
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {tail}
       </div>
@@ -695,7 +698,7 @@ function SwingStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">
         </div>
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {tail}
       </div>
@@ -750,7 +753,7 @@ function BpmStep({ screen, accent, onNext, tail, mine }: { screen: Of<"tempo">; 
         </div>
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {tail}
       </div>

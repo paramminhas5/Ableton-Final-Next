@@ -14,11 +14,11 @@ import "./lesson.css";
 type Stop = { sel: string; title: string; line: string };
 export const TOURS: Record<string, Stop[]> = {
   home: [
-    { sel: "[data-tour=song]", title: "your song", line: "everything you make goes in here. press play to hear it, tap its name to load another." },
-    { sel: ".hm-go", title: "continue", line: "your next lesson, and the part it adds to your song." },
-    { sel: ".td-knobs", title: "turn to choose", line: "world, path and lesson. turn a knob to pick any lesson." },
-    { sel: ".hm-map", title: "your road", line: "every lesson in this world. +3 means three deeper lessons on that part, when you want more." },
-    { sel: ".m1-modebar", title: "the rest of ccd school", line: "practice to get better, the studio to build your song out, the library for every word and sound." },
+    { sel: "[data-tour=learn]", title: "1. learn", line: "start here. the pink key opens your next lesson. basics, then producer, then dj." },
+    { sel: "[data-tour=song]", title: "2. your song", line: "what the lessons build. each lesson you finish adds one part here." },
+    { sel: "[data-tour=practice]", title: "3. practice", line: "five minutes of ear drills and review, so it sticks." },
+    { sel: "[data-tour=play]", title: "4. instruments", line: "play anything freely: drums, synths, the dj decks, every device." },
+    { sel: ".m1-modebar", title: "the same four, always here", line: "the keys at the bottom take you to each part from anywhere." },
   ],
   lesson: [
     { sel: ".fl-song", title: "your song, always on top", line: "every lesson adds to it. press play any time to hear where it is." },

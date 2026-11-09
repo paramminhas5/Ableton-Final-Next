@@ -44,5 +44,5 @@ export function useStarter() {
 /** A step's body: one paragraph per blank line, glossary words linked. */
 export function Body({ text, starter = false }: { text: string; starter?: boolean }) {
   const t = starter ? starterCopy(text) : text;
-  return <>{t.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}</>;
+  return <>{t.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}</>;
 }

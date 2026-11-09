@@ -62,6 +62,8 @@ steps:
           dance to for a long time.
 
   - kind: play
+    why: >-
+      A clap on two and four turns a pulse into something people dance to. You'll hear the change the moment it's in.
     layer: drums
     surface: pads
     goal: {notes: 2, note: clap}

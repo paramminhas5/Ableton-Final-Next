@@ -1,68 +1,84 @@
 "use client";
 /**
- * Home (9 Nov). One job per zone, top to bottom:
- * 1. your song, once you have made one (before that: "your first song starts here");
- * 2. continue: the one pink key, the lesson and what it adds to your song;
- * 3. the knobs: world, path, lesson (turning them picks what continue opens);
- * 4. the map: the path you are on, open, with its deeper lessons; every other path folded to a row;
- * 5. review and your rank.
- * Your song never plays on its own here; its play key starts it.
+ * Home (10 Nov): ccd school in four numbered parts, so one look says what is part of what and where to begin.
+ *   01 learn        short lessons, in order. continue is the one pink key. basics, producer, dj below it.
+ *   02 your song    what the lessons build. every lesson you finish adds a part here. opens in the studio.
+ *   03 practice     five minutes a day: ear drills and review, so what you learnt sticks.
+ *   04 instruments  play freely: drums, synths, the dj decks, every device in the library.
+ * A new learner sees "start here" on 01 and nothing else asking for attention. On a laptop the four sit
+ * left to right in reading order. Your song never plays on its own here; its play key starts it.
  */
 import "@/components/m1/lesson.css";
 import "@/components/m1/home.css";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { YouCard } from "./YouCard";
 import { useProgress } from "@/lib/progress";
 import { useTrack, KIND } from "@/lib/track";
 import { readTrackV2 } from "@/lib/track2";
 import { playTrack, stopTrack } from "@/lib/track-engine";
-import { journey, nextStep, partOf, worldSteps, worldDone, missionAny, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
-import { CAP, Icon, Key, Knob, Screen, Silk, WORLD_LED } from "./controls";
+import { journey, nextStep, partOf, worldDone, missionAny, minutesFor, WORLD_LABEL, type WorldId } from "@/lib/worldOrder";
+import { loadGym } from "@/lib/gym/store";
+import { weekStatus } from "@/lib/gym/week";
+import { Icon, Key, Screen, WORLD_LED } from "./controls";
 import { CAT_SRC, Lanes } from "./shell";
+import { SevenSeg } from "./SevenSeg";
 import { SongKey, useSongName, SONG_EVENT } from "./SongKey";
 import { TopBar } from "./TopBar";
-import { PracticeWidget, StudioWidget, DecksWidget, WordWidget, ReviewWidget } from "./Widgets";
 
 const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "producer", "dj"];
+const WORLD_GIVES: Record<WorldId, string> = { fundamentals: "a beat", producer: "a finished track", dj: "a mix" };
 const GHOST = ["kick", "hats", "clap", "bass", "lead", "chords"];
+
+/** One numbered part of ccd school: a seven-segment number, its name, one line on what it is, and its state. */
+function Part({ n, name, line, state, color, start, children, className, id }: { n: number; name: string; line: string; state?: string; color: string; start?: boolean; children: ReactNode; className?: string; id: string }) {
+  return (
+    <section aria-labelledby={`hp-${id}`} data-tour={id} className={`hp ${start ? "is-start" : ""} ${className ?? ""}`} style={{ ["--c" as string]: color } as CSSProperties}>
+      <header className="hp-head">
+        <span className="hp-n" aria-hidden><SevenSeg text={String(n).padStart(2, "0")} color={color} digits={2} height={30} /></span>
+        <span className="hp-name">
+          <b id={`hp-${id}`}><span className="sr-only">{n}. </span>{name}</b>
+          <small>{line}</small>
+        </span>
+        {start ? <em className="hp-start">start here</em> : state ? <em className="hp-state">{state}</em> : null}
+      </header>
+      <div className="hp-body">{children}</div>
+    </section>
+  );
+}
 
 export function Today() {
   const { progress, missionsNeedingReview } = useProgress();
   const { track } = useTrack();
   const [world, setWorld] = useState<WorldId>("fundamentals");
-  const [sel, setSel] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [step, setStep] = useState(-1);
   const trackRef = useRef(track);
   trackRef.current = track;
   const { seed } = useSongName();
-
+  const [week, setWeek] = useState<{ filled: number; target: number }>({ filled: 0, target: 3 });
 
   useEffect(() => {
     let w: WorldId | null = null;
     try { w = localStorage.getItem(WORLD_KEY) as WorldId | null; } catch {}
     if (!w && progress.selectedWorld) w = progress.selectedWorld;
-    if (w) setWorld(w);
+    if (w && WORLDS.includes(w)) setWorld(w);
   }, [progress.selectedWorld]);
+  useEffect(() => { try { const g = loadGym(); const s = weekStatus(g.week, new Date()); setWeek({ filled: s.filled, target: s.target }); } catch { /* no practice yet */ } }, []);
   useEffect(() => () => stopTrack(), []);
   // Loading another song stops the one playing: nothing starts on its own.
   useEffect(() => { const h = () => { stopTrack(); setPlaying(false); setStep(-1); }; window.addEventListener(SONG_EVENT, h); return () => window.removeEventListener(SONG_EVENT, h); }, []);
 
   const done = progress.completedMissions;
-  const steps = worldSteps(world);
-  const next = nextStep(world, done);
-  const cur = steps.find(st => st.slug === sel) ?? next;
+  const anyDone = Object.keys(done).length > 0;
+  const cur = nextStep(world, done);
   const mission = cur ? missionAny(cur.slug) : undefined;
-  const counts = worldDone(world, done);
+  const counts = useMemo(() => Object.fromEntries(WORLDS.map(w => [w, worldDone(w, done)])) as Record<WorldId, ReturnType<typeof worldDone>>, [done]);
   const paths = useMemo(() => journey(world, done), [world, done]);
-  const zones = useMemo(() => Array.from(new Set(steps.map(st => st.path))).map(path => ({ path, title: steps.find(st => st.path === path)!.pathTitle })), [steps]);
-  const zi = Math.max(0, zones.findIndex(z => z.path === cur?.path));
-  const inZone = steps.filter(st => st.path === zones[zi]?.path);
-  const li = Math.max(0, inZone.findIndex(st => st.slug === cur?.slug));
+  const allSong = WORLDS.reduce((a, w) => ({ done: a.done + counts[w].done, total: a.total + counts[w].total }), { done: 0, total: 0 });
   const layers = new Set(track.layers.map(l => l.id.split(":")[0])).size;
-  // Home opens on your song only once you have made one: the starter loop we add is not yours yet (Param, 9 Nov).
+  // Home shows your song only once you have made one: the starter loop we add is not yours yet (Param, 9 Nov).
   const hasSong = layers > 0 && !seed;
   const [shape, setShape] = useState({ key: "a minor", length: "1 bar loop" });
   useEffect(() => {
@@ -74,19 +90,7 @@ export function Today() {
     setShape({ key: `${NOTE[((t.root % 12) + 12) % 12]} ${t.scale}`, length: secs.length ? `${bars} bars · ${secs.length} sections` : `${loopBars} bar loop` });
   }, [track]);
 
-  const pickWorld = (w: WorldId) => { setWorld(w); setSel(null); try { localStorage.setItem(WORLD_KEY, w); } catch {} };
-  const pickZone = (i: number) => {
-    const z = zones[i];
-    if (!z || i === zi) return;
-    const inz = steps.filter(st => st.path === z.path);
-    setSel((inz.find(st => !done[st.slug]) ?? inz[0]).slug);
-  };
-  const pickLesson = (i: number) => { const st = steps[i]; if (st && st.slug !== cur?.slug) setSel(st.slug); };
-  const idxOf = (v: number, n: number) => Math.max(0, Math.min(n - 1, Math.round(v * (n - 1))));
-  const val = (i: number, n: number) => (n > 1 ? i / (n - 1) : 0);
-  const wi = WORLDS.indexOf(world);
-  const short = (t: string, n = 14) => (t.length > n ? `${t.slice(0, n - 1).trim()}…` : t);
-
+  const pickWorld = (w: WorldId) => { setWorld(w); try { localStorage.setItem(WORLD_KEY, w); } catch {} };
   const hear = async () => {
     if (playing) { stopTrack(); setPlaying(false); setStep(-1); return; }
     setPlaying(true);
@@ -97,25 +101,60 @@ export function Today() {
   const addWord = cur ? partOf(cur.slug).toLowerCase() : "";
   const addKind = ((Object.keys(KIND) as (keyof typeof KIND)[]).find(k => addWord.includes(k)) ?? (addWord.includes("snare") ? "clap" : addWord.includes("synth") || addWord.includes("melody") ? "lead" : addWord.includes("chord") ? "chords" : "perc"));
   const led = WORLD_LED[world];
-  const anyDone = Object.keys(done).length > 0;
+  const curPath = paths.find(p => p.lessons.some(l => l.slug === cur?.slug));
+  const due = missionsNeedingReview.length;
+
   return (
     <div className="m1-page hm fr" style={{ ["--c" as string]: led } as CSSProperties}>
       <TopBar screen="home" />
 
       <div className="fr-l">
-        {/* 1. your song */}
-        <section aria-label="Your song" data-tour="song" className="o1">
-          <div className="hm-row">
-            <Silk label="your song" style={{ flex: 1, margin: "4px 2px" }} />
-            {hasSong && <SongKey />}
-          </div>
+        <Part n={1} id="learn" name="learn" line="short lessons, one idea each, in order" color={led} start={!anyDone} state={`${allSong.done} of ${allSong.total}`} className="o2">
+          {cur && mission && (
+            <Link href={`/learn/${cur.slug}`} className="m1-m is-wide hm-go" key={`c-${cur.slug}`}>
+              <span className="hm-gopic" aria-hidden style={{ ["--pc" as string]: KIND[addKind].color } as CSSProperties}>
+                <span className="hm-gopart"><i />{partOf(cur.slug)}</span>
+                <span className="hm-golanes"><Lanes track={track} next={{ kind: addKind, isNew: !track.layers.some(l => l.kind === addKind) }} /></span>
+              </span>
+              <div className="hm-go-t">
+                <div className="m1-eng">{isDone ? "go again" : anyDone ? "next lesson" : "your first lesson"} · {curPath ? `path ${curPath.number}` : WORLD_LABEL[world]}</div>
+                <div className="m1-t22 hm-go-n">{mission.title.toLowerCase()}</div>
+                <div className="m1-t11">adds {partOf(cur.slug)} to your song · {minutesFor(cur.slug)} min</div>
+              </div>
+              <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
+            </Link>
+          )}
+          {/* the three worlds as a road: tap one to make it what continue opens */}
+          <ol className="hp-road" aria-label="The three worlds, in order">
+            {WORLDS.map((w, i) => {
+              const c = counts[w];
+              const on = w === world;
+              return (
+                <li key={w}>
+                  <button type="button" className={`hp-world ${on ? "is-on" : ""}`} aria-pressed={on} onClick={() => pickWorld(w)} style={{ ["--w" as string]: WORLD_LED[w] } as CSSProperties}>
+                    <span className="hp-wn">1.{i + 1}</span>
+                    <span className="hp-wt">{WORLD_LABEL[w]}<small>you make {WORLD_GIVES[w]}</small></span>
+                    <i className="hp-wbar" aria-hidden><em style={{ width: `${c.total ? (c.done / c.total) * 100 : 0}%` }} /></i>
+                    <span className="hp-wc">{c.done}/{c.total}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <Link href="/learn" className="hp-link">every lesson, as a map<Icon name="play" small /></Link>
+        </Part>
+      </div>
+
+      <div className="fr-c">
+        <Part n={2} id="song" name="your song" line="each lesson you finish adds a part. it lives in the studio" color="var(--led-mint)" state={hasSong ? `${layers} ${layers === 1 ? "part" : "parts"}` : "empty"} className="o3">
           {hasSong ? (
             <div className="hm-song">
               <Screen className="hm-songscr">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={CAT_SRC} alt="" className={playing ? "m1-dancing hm-cat" : "hm-cat"} />
-                <div className="m1-ss">{layers} {layers === 1 ? "part" : "parts"} · {track.bpm} bpm · {shape.key} · {playing ? `step ${step + 1}` : shape.length}</div>
-                <div className="hm-lanes"><Lanes track={track} playhead={playing ? step : -1} /></div>
+                <div className="hp-songname"><SongKey /></div>
+                <div className="m1-ss">{track.bpm} bpm · {shape.key} · {playing ? `step ${step + 1}` : shape.length}</div>
+                <div className="hm-lanes"><Lanes track={track} playhead={playing ? step : -1} next={cur && !isDone ? { kind: addKind, isNew: !track.layers.some(l => l.kind === addKind) } : undefined} /></div>
               </Screen>
               <div className="hm-songkeys">
                 <Key label={playing ? "stop" : "play"} ariaLabel={playing ? "Stop your song" : "Play your song"} onClick={hear} led={playing ? "var(--led-mint)" : null}><Icon name={playing ? "stop" : "play"} /></Key>
@@ -126,99 +165,37 @@ export function Today() {
             <Screen className="hm-songscr is-empty">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={CAT_SRC} alt="" className="hm-cat m1-dancing" />
-              <div className="m1-t22" style={{ maxWidth: 220 }}>your first song starts here</div>
-              <div className="m1-ss" style={{ marginTop: 6, maxWidth: 250 }}>every lesson adds one part. your first lesson adds the {cur ? partOf(cur.slug) : "kick"}.</div>
-              {seed && <Link href="/studio" className="hm-seed"><span className="sk-tag">added for you</span>a starter loop is in the studio to play with</Link>}
+              <div className="m1-ss" style={{ maxWidth: 230 }}>nothing in it yet. {anyDone ? "your next lesson adds" : "lesson 1 adds"} the {cur ? partOf(cur.slug) : "kick"}, and each lesson after adds one more part.</div>
               <ol className="hm-ghost" aria-hidden>{GHOST.map((g, i) => <li key={g} style={{ animationDelay: `${i * 90}ms` }}><span>{g}</span><i /></li>)}</ol>
+              {seed && <Link href="/studio" className="hm-seed"><span className="sk-tag">added for you</span>a starter loop is in the studio to play with</Link>}
             </Screen>
           )}
-        </section>
-
-        {/* 3. the knobs */}
-        <section aria-label="Turn to choose" className="o3">
-          <Silk label="turn to choose" right={`lesson ${li + 1} of ${inZone.length}`} />
-          <div className="td-knobs">
-            <div><span className="m1-ss">world</span>
-              <Knob onStep={() => pickWorld(WORLDS[(wi + 1) % WORLDS.length])} label={WORLD_LABEL[world]} color={CAP.navy} size={64} height={150} led={led} detents={3} value={val(wi, 3)} defaultValue={val(wi, 3)} onChange={v => { const w = WORLDS[idxOf(v, 3)]; if (w !== world) pickWorld(w); }} />
-            </div>
-            <div><span className="m1-ss">path</span>
-              <Knob onStep={() => pickZone((zi + 1) % Math.max(1, zones.length))} label={short(zones[zi]?.title.toLowerCase() ?? "-")} color={CAP.navy} size={58} height={150} led={led} detents={zones.length} value={val(zi, zones.length)} defaultValue={val(zi, zones.length)} onChange={v => pickZone(idxOf(v, zones.length))} />
-            </div>
-            <div><span className="m1-ss">lesson</span>
-              <Knob onStep={() => pickLesson(steps.indexOf(inZone[(li + 1) % Math.max(1, inZone.length)]))} label={short(mission?.title.toLowerCase() ?? "-", 16)} color={CAP.grey} size={52} height={150} led="var(--led-cobalt, #8CA3FF)" detents={inZone.length} value={val(li, inZone.length)} defaultValue={val(li, inZone.length)} onChange={v => pickLesson(steps.indexOf(inZone[idxOf(v, inZone.length)]))} />
-            </div>
-          </div>
-        </section>
-        {anyDone && <div className="o7 fr-side"><YouCard xp={progress.xp} streak={progress.streakDays} done={done} compact /></div>}
+        </Part>
       </div>
 
-      <div className="fr-c">
-        {/* 2. continue: the one pink key on the screen */}
-        {cur && mission && (
-          <Link href={`/learn/${cur.slug}`} className="m1-m is-wide hm-go o2" key={`c-${cur.slug}`}>
-            {/* what the lesson adds, drawn on your song: its lane dashed in, where it will go (design pass 2) */}
-            <span className="hm-gopic" aria-hidden style={{ ["--pc" as string]: KIND[addKind].color } as CSSProperties}>
-              <span className="hm-gopart"><i />{partOf(cur.slug)}</span>
-              <span className="hm-golanes"><Lanes track={track} next={{ kind: addKind, isNew: !track.layers.some(l => l.kind === addKind) }} /></span>
-            </span>
-            <div className="hm-go-t">
-              <div className="m1-eng">{isDone ? "go again" : cur.slug === next?.slug ? (hasSong ? "continue" : "start") : "start this"} · {WORLD_LABEL[world]} {String(cur.index + 1).padStart(2, "0")}</div>
-              <div className="m1-t22 hm-go-n">{mission.title.toLowerCase()}</div>
-              <div className="m1-t11">adds {partOf(cur.slug)} · {minutesFor(cur.slug)} min</div>
-            </div>
-            <span className="m1-cap is-go" style={{ width: 62, flex: "none" }}><Icon name="play" /></span>
-          </Link>
-        )}
-
-        {/* 4. the map */}
-        <section aria-label={`${WORLD_LABEL[world]} map`} className="o4">
-          <Silk label={`${WORLD_LABEL[world]} · your road`} right={`${counts.done} of ${counts.total} parts`} />
-          <ol className="hm-map" data-budget="list">
-            {paths.map(p => {
-              const open = zones[zi]?.path === p.slug;
-              const tot = p.songTotal || p.lessons.length;
-              const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
-              return (
-                <li key={p.slug} className={`hm-path ${open ? "is-open" : ""} ${dn === tot ? "is-done" : ""}`}>
-                  <button type="button" className="hm-pathrow" aria-expanded={open} onClick={() => pickZone(zones.findIndex(z => z.path === p.slug))}>
-                    <b>path {p.number}</b><span>{p.title.toLowerCase()}</span>
-                    <i className="hm-meter" aria-hidden>{Array.from({ length: tot }, (_, k) => <em key={k} className={k < dn ? "is-on" : ""} />)}</i>
-                    <small>{dn}/{tot}</small>
-                  </button>
-                  {open && (
-                    <ol className="hm-lessons">
-                      {p.lessons.map(l => {
-                        const deeper = l.extras.length;
-                        const on = l.slug === cur?.slug;
-                        return (
-                          <li key={l.slug} className={`hm-lesson ${l.done ? "is-done" : ""} ${on ? "is-sel" : ""}`}>
-                            <button type="button" className="hm-lrow" onClick={() => setSel(l.slug)} aria-current={on || undefined}>
-                              <i className="hm-led" aria-hidden />
-                              <span className="hm-part">{l.kind === "song" ? partOf(l.slug) : "bonus"}<small>{l.title.replace(/^bonus: /, "").toLowerCase()}</small></span>
-                            </button>
-                            {deeper > 0 && <Link href={`/learn#${l.slug}`} className="hm-deeper" aria-label={`${deeper} deeper lessons on ${l.title}`}><b>+{deeper}</b>deeper</Link>}
-                          </li>
-                        );
-                      })}
-                    </ol>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-          <Link href="/learn" className="hm-all">the whole syllabus<Icon name="play" small /></Link>
-        </section>
-      </div>
-
-      {/* Laptop: working windows onto the rest of ccd school. Phone keeps review only. */}
       <div className="fr-r">
-        {/* review leads only when something is due; otherwise it waits at the bottom */}
-        {missionsNeedingReview.length > 0 && <div className="o5"><ReviewWidget due={missionsNeedingReview.length} any={anyDone} /></div>}
-        <div className="fr-side o6"><PracticeWidget done={done} /></div>
-        <div className="fr-side o6"><StudioWidget parts={hasSong ? layers : 0} /></div>
-        <div className="fr-side o6"><DecksWidget /></div>
-        <div className="fr-side o6"><WordWidget /></div>
-        {missionsNeedingReview.length === 0 && <div className="o7"><ReviewWidget due={0} any={anyDone} /></div>}
+        <Part n={3} id="practice" name="practice" line="five minutes, so what you learnt sticks" color="var(--led-cobalt, #8CA3FF)" state={`${week.filled} of ${week.target} this week`} className="o4">
+          <div className="hp-tiles is-two">
+            <Link href="/gym" className="hp-tile">
+              <span className="hp-ti"><Icon name="hear" /></span>
+              <span className="hp-tt">ear drills<small>{anyDone ? "today's five minutes" : "opens after lesson 1"}</small></span>
+            </Link>
+            <Link href="/review" className={`hp-tile ${due ? "is-due" : ""}`}>
+              <span className="hp-ti"><Icon name="loop" /></span>
+              <span className="hp-tt">review<small>{due ? `${due} ready to refresh` : anyDone ? "nothing due" : "lessons come back here"}</small></span>
+            </Link>
+          </div>
+        </Part>
+
+        <Part n={4} id="play" name="instruments" line="play freely, no lesson needed. in the library" color="var(--led-lilac, #C59BFF)" className="o5">
+          <div className="hp-tiles">
+            <Link href="/studio" className="hp-tile"><span className="hp-ti"><Icon name="pads" /></span><span className="hp-tt">drums and synths<small>the studio</small></span></Link>
+            <Link href="/dj" className="hp-tile"><span className="hp-ti"><Icon name="dj" /></span><span className="hp-tt">dj decks<small>two decks, a mixer</small></span></Link>
+            <Link href="/atlas" className="hp-tile"><span className="hp-ti"><Icon name="knob" /></span><span className="hp-tt">devices<small>every effect, playable</small></span></Link>
+            <Link href="/placement" className="hp-tile"><span className="hp-ti"><Icon name="bolt" /></span><span className="hp-tt">find your level<small>skip what you know</small></span></Link>
+          </div>
+        </Part>
+        {anyDone && <div className="o6 fr-side"><YouCard xp={progress.xp} streak={progress.streakDays} done={done} compact /></div>}
       </div>
       <DuoFilters />
     </div>

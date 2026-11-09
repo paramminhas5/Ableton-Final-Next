@@ -29,6 +29,8 @@ steps:
         Both go on two and four.
 
   - kind: copy
+    why: >-
+      Finding the backbeat by ear is how you'll pick apart any beat you like and rebuild it.
     layer: drums
     pattern: {kick: "x.....x.x.......", snare: "....x.......x..."}
     say: >-
@@ -36,6 +38,8 @@ steps:
     hint: "The snare lands on two and four. The kick plays on one, just before three, and on three."
 
   - kind: play
+    why: >-
+      A snare on two and four gives your beat its backbone. It's what makes heads nod.
     layer: drums
     surface: pads
     goal: {notes: 2, note: snare, check: [backbeat]}

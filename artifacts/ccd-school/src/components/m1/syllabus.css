@@ -49,3 +49,53 @@
 @media (prefers-reduced-motion:reduce){.sy-extras{animation:none}}
 @media (min-width:1024px){.sy-key{margin-top:0}.sy-body{padding-top:0}.sy-body>.sy-path:first-child .m1-silk{margin-top:4px}}
 .sy-how{margin-top:var(--sp-4)}
+
+/* ── the syllabus as a map (10 Nov): rows of pads, one per song lesson, named by the part it adds ── */
+.sm-k{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--deck2);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.sm-k.is-done{background:var(--led-mint);box-shadow:0 0 6px var(--led-mint)}
+.sm-k.is-next{background:transparent;box-shadow:inset 0 0 0 2px var(--led-mint)}
+.sy-wbar{grid-column:2/4;height:4px;border-radius:2px;background:color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden}
+.sy-wbar em{display:block;height:100%;background:var(--c)}
+.sy-whead{grid-template-columns:34px minmax(0,1fr) auto;row-gap:6px}
+.sm-path{margin-top:var(--sp-4)}
+.sm-head{display:flex;align-items:baseline;gap:8px;margin:0 2px 8px}
+.sm-head b{font-size:12px;font-weight:600;color:var(--cx);font-variant-numeric:tabular-nums}
+.sm-head span{flex:1;font-size:var(--fs-4);font-weight:600;color:var(--ink)}
+.sm-head em{font-style:normal;font-size:var(--fs-5);color:var(--print);font-variant-numeric:tabular-nums}
+.sm-row{list-style:none;margin:0;padding:8px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;border-radius:16px;background:var(--deck2);box-shadow:inset 0 2px 6px var(--shA,rgba(0,0,0,.35)),0 1px 0 var(--hi)}
+.sm-row>li{min-width:0}
+.sm-pad{position:relative;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;width:100%;aspect-ratio:1/1;min-height:68px;max-height:96px;padding:8px;border:0;border-radius:11px;font:inherit;color:var(--print);text-align:left;cursor:pointer;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.sm-pad small{font-size:10px;font-weight:600;font-variant-numeric:tabular-nums;opacity:.75}
+.sm-pad span{font-size:12.5px;font-weight:600;line-height:1.15;color:var(--ink);overflow:hidden;max-width:100%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.sm-pad em{position:absolute;top:7px;right:8px;font-style:normal;font-size:10.5px;font-weight:600;color:var(--pc)}
+.sm-pad.is-done{background:radial-gradient(120% 100% at 50% 100%,color-mix(in srgb,var(--pc) 70%,#000),color-mix(in srgb,var(--pc) 35%,#111));color:#0A0A0B;box-shadow:0 2px 0 #0A0A0B,0 0 14px color-mix(in srgb,var(--pc) 45%,transparent)}
+.sm-pad.is-done span{color:#0A0A0B}.sm-pad.is-done em{color:#0A0A0B}
+.sm-pad.is-next{box-shadow:0 2px 0 #0A0A0B,inset 0 0 0 2px var(--pc),0 0 12px color-mix(in srgb,var(--pc) 35%,transparent);animation:sm-next 1.8s ease-in-out infinite}
+@keyframes sm-next{50%{box-shadow:0 2px 0 #0A0A0B,inset 0 0 0 2px color-mix(in srgb,var(--pc) 45%,transparent)}}
+@media (prefers-reduced-motion:reduce){.sm-pad.is-next{animation:none}}
+.sm-pad.is-sel{transform:translateY(1px);outline:2px solid var(--ink);outline-offset:2px}
+.sm-pad.is-locked{opacity:.45}
+.sm-pad:focus-visible{outline:2px solid var(--pc);outline-offset:2px}
+.sm-detail{margin-top:10px;padding:12px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude),inset 3px 0 0 var(--pc);animation:sy-in 160ms ease-out}
+.sm-go{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+.sm-gotx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.sm-gotx small{font-size:11px;font-weight:500;color:var(--print)}
+.sm-gotx b{font-size:var(--fs-3);font-weight:600}
+.sm-gotx>span{font-size:var(--fs-5);color:var(--pc)}
+.sm-deeper{margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--ink) 9%,transparent)}
+.sm-dl{display:block;font-size:11px;font-weight:500;color:var(--print);margin-bottom:8px}
+.sm-deeper ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.sm-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;background:var(--deck2);box-shadow:inset 0 1px 3px var(--shA,rgba(0,0,0,.3)),0 1px 0 var(--hi)}
+.sm-chip small{font-size:10.5px;color:var(--print)}
+.sm-chip svg{width:12px;height:12px;color:var(--led-mint)}
+.sm-chip.is-locked{opacity:.5}
+/* phone: the three worlds sit side by side, short */
+@media (max-width:1023px){
+  .sy .fr-l{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .sy .fr-l>.sy-key,.sy .fr-l>.pl-offer,.sy .fr-l>.fr-side{grid-column:1/-1}
+  .sy .sy-whead{grid-template-columns:1fr;min-height:0;padding:10px;gap:4px;margin-top:0}
+  .sy .sy-whead>b{width:26px;height:26px;font-size:12px}
+  .sy .sy-whead small{white-space:normal;font-size:10.5px}
+  .sy .sy-whead em{font-size:11px}
+  .sy .sy-wbar{grid-column:1}
+}

@@ -100,6 +100,8 @@ steps:
           square sound richer than the soft wave.
 
   - kind: play
+    why: >-
+      This is the first tune in your song. Every key fits, so you can't play a wrong note.
     layer: lead
     surface: keys
     goal: {notes: 4}
@@ -120,6 +122,8 @@ steps:
         cannot get it wrong. Go slow, one key at a time.
 
   - kind: shape
+    why: >-
+      Two knobs take your synth from soft and dark to bright and buzzy. It's how producers get many sounds out of one synth.
     layer: lead
     knobs: [wave, cutoff]
     say:
@@ -136,6 +140,8 @@ steps:
         Cutoff makes it darker or brighter, like turning a lamp down or up. Stop when you like it.
 
   - kind: match
+    why: >-
+      Telling bright from dark by ear is how you'll judge every sound you make from here.
     layer: lead
     knobs: [cutoff]
     target: {cutoff: 0.25}

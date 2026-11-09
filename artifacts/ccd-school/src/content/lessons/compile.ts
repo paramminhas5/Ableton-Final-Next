@@ -48,14 +48,14 @@ const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !
 const STEP_FIELDS: Record<string, string[]> = {
   hear: ["kind", "clip", "say", "deeper", "levels"],
   say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
-  play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "snap"],
-  shape: ["kind", "layer", "knobs", "say", "hint", "levels"],
-  match: ["kind", "layer", "knobs", "target", "say", "hint", "levels"],
-  copy: ["kind", "layer", "pattern", "say", "hint", "levels"],
-  imagine: ["kind", "layer", "pattern", "others", "say", "hint", "levels"],
-  tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels"],
-  mix: ["kind", "say", "goal", "bank", "hint", "levels"],
-  arrange: ["kind", "say", "goal", "hint", "levels"],
+  play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "why", "snap"],
+  shape: ["kind", "layer", "knobs", "say", "hint", "levels", "why"],
+  match: ["kind", "layer", "knobs", "target", "say", "hint", "levels", "why"],
+  copy: ["kind", "layer", "pattern", "say", "hint", "levels", "why"],
+  imagine: ["kind", "layer", "pattern", "others", "say", "hint", "levels", "why"],
+  tempo: ["kind", "say", "marks", "set", "choices", "layer", "hint", "levels", "why"],
+  mix: ["kind", "say", "goal", "bank", "hint", "levels", "why"],
+  arrange: ["kind", "say", "goal", "hint", "levels", "why"],
   ask: ["kind", "q", "options", "answer", "why", "whyWrong", "hint", "more", "levels", "part", "with", "play", "sounds"],
   ear: ["kind", "drill", "rounds", "say", "hint", "levels"],
   keep: ["kind", "next", "levels"],
@@ -181,6 +181,7 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
       unknownKeys(where, raw, STEP_FIELDS[kind]);
       levels(where, raw.levels);
       if (raw.hint !== undefined) voice(where, "hint", raw.hint);
+      if (raw.kind !== "ask" && raw.why !== undefined) voice(where, "why", raw.why);
 
       const playOrShape = (w: string, o: Obj) => {
         if (!layer(w, o.layer)) return;

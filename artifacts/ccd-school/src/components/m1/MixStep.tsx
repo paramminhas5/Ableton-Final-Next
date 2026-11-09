@@ -294,7 +294,7 @@ export function MixStep({ screen, accent, onNext, tail }: { screen: Of<"mix">; a
         </div>
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {say ? <div className="ls-hint" role="status">{say}</div> : null}
         {stuck && !met ? <button type="button" className="ls-skip" onClick={() => { engine.stop(); try { sessionStorage.setItem(MIX_SKIP, location.pathname); } catch { /* ignore */ } onNext(); }}>skip this step</button> : null}

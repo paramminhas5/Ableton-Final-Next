@@ -861,7 +861,7 @@ a.jv-lane:hover{transform:translateX(3px)}
 .m1-scr:has(.ls-sticker:not(.is-low)) .ls-title{padding-right:80px}
 /* House style: lesson copy reads lowercase, like the rest of the app. Content is written in sentence case so it
    still reads well to screen readers and in exports; the page shows it lowercase. */
-.fl .ls-read,.fl .ls-title,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
+.fl .ls-read,.fl .ls-title,.fl .fl-lead,.fl .fl-gwhy,.fl .fl-gdo,.fl .fl-startlead,.fl .fl-makewhy,.fl .fl-cando li,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
 .gr-dice{display:flex;margin-top:10px}
 
 /* what changed in your song, on the done screen */
@@ -1067,3 +1067,41 @@ a.jv-lane:hover{transform:translateX(3px)}
 .hk{position:relative;min-height:0!important;min-width:0!important}
 .hk::after{content:"";position:absolute;inset:-7px -2px}
 .ti-more{margin-top:var(--sp-2)}
+
+/* ── 10 Nov: every lesson says what it's for first ──────────────────────────────
+   the start page (what you'll make, the steps in order, what you can do after), a goal card on every step
+   you do (why, and what you get), and on phones the step's first line read before the instrument. */
+.fl-start{position:relative}
+.fl-start .ls-sticker{width:56px}
+.fl-startlead{margin:8px 0 0;max-width:calc(100% - 62px);font-size:var(--fs-4);line-height:1.45;color:var(--disp-ink)}
+.fl-make .fl-makelanes{margin-top:2px}
+.fl-makewhy{margin:12px 0 0;font-size:var(--fs-5);line-height:1.45;color:var(--disp-ink)}
+.fl-plan{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.fl-plan li{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px 0 6px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink);background:var(--deck2);box-shadow:inset 0 1px 3px var(--shA,rgba(0,0,0,.3)),0 1px 0 var(--hi)}
+.fl-plan li b{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:600;color:var(--print);background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.fl-plan li svg{width:13px;height:13px;color:var(--print)}
+.fl-plan li.is-do b{color:#08080A;background:var(--c);box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent)}
+.fl-plan li.is-do svg{color:var(--c)}
+.fl-cando{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.fl-cando li{display:flex;gap:10px;align-items:flex-start;font-size:var(--fs-4);line-height:1.4;color:var(--ink)}
+.fl-cando svg{flex:none;width:14px;height:14px;margin-top:3px;color:var(--c)}
+.fl-startcol .m1-silk{margin-top:16px}
+/* the goal card: on every step you do, above the instrument */
+.fl-goal{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude),inset 3px 0 0 var(--c)}
+.fl-goalhead{display:flex;align-items:center;gap:10px}
+.fl-goaln{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:600;color:#08080A;background:var(--c);box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent)}
+.fl-goalhead b{flex:1;min-width:0;font-size:var(--fs-3);font-weight:600;color:var(--ink)}
+.fl-get{flex:none;font-style:normal;font-size:11px;font-weight:600;color:var(--c);padding:4px 9px;border-radius:999px;border:1.5px dashed var(--c);white-space:nowrap;max-width:48%;overflow:hidden;text-overflow:ellipsis}
+.fl-gwhy,.fl-gdo{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px;margin:8px 0 0;font-size:var(--fs-4);line-height:1.4;color:var(--ink)}
+.fl-gwhy>span:first-child,.fl-gdo>span:first-child{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--c);padding-top:2px}
+.fl-goal{padding:10px 12px}
+/* the step's first line, on the glass on phones; the same line in the text column on laptops */
+.fl-lead{margin:8px 0 0;font-size:var(--fs-4);line-height:1.45;color:var(--disp-ink)}
+@media (max-width:899px){
+  .fl .fl-text .ls-read.is-lead{display:none}
+  .fl .fl-text>.ls-read:not(.is-lead):first-of-type{margin-top:0}
+}
+@media (min-width:900px){
+  .fl-lead,.fl-gdo{display:none}
+  .fl-startcol{max-width:720px}
+}

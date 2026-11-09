@@ -1,6 +1,11 @@
 "use client";
 /**
- * The syllabus (9 Nov): every world, path and lesson in one tree. Each song lesson (it adds a part to your
+ * The syllabus as a map (10 Nov): each world's paths are rows of pads, one pad per song lesson, named by the
+ * part it adds to your song and coloured like that part. Lit is done, the outlined one is next. Tap a pad to
+ * see the lesson, start it, or open its deeper lessons. Replaces the long list (Param: "a lot of it needs to
+ * be conveyed visually").
+ *
+ * Before (9 Nov): every world, path and lesson in one tree. Each song lesson (it adds a part to your
  * song) has its deeper lessons and bonus rounds right under it, so going deeper is never hidden. The world
  * you are in is open; the others fold to one row. A link to "#slug" opens that lesson's world and scrolls to it.
  */
@@ -10,8 +15,9 @@ import { readPlacement, type PlaceResult } from "@/lib/placement";
 import { CHALLENGES, readChallenges, worldStars } from "@/lib/worldChallenge";
 import { Stars } from "./Stars";
 import { useProgress } from "@/lib/progress";
-import { journey, minutesFor, missionAny, nextStep, partOf, worldDone, worldOf, WORLD_IDS, type JourneyItem, type WorldId } from "@/lib/worldOrder";
-import { Icon, Silk, WORLD_LED } from "./controls";
+import { journey, minutesFor, missionAny, nextStep, partOf, worldDone, worldOf, WORLD_IDS, type JourneyItem, type JourneyLesson, type WorldId } from "@/lib/worldOrder";
+import { Icon, WORLD_LED } from "./controls";
+import { KIND } from "@/lib/track";
 import { DuoFilters } from "./Today";
 import { TopBar } from "./TopBar";
 import { ReviewWidget } from "./Widgets";
@@ -30,11 +36,8 @@ export function Worlds() {
   const [placed, setPlaced] = useState<PlaceResult | null>(null);
   const [stars, setStars] = useState<ReturnType<typeof readChallenges>>({});
   const [open, setOpen] = useState<WorldId | null>("fundamentals"); // a world is open from the first paint, so nothing jumps
-  // Inside your world only one path is open at a time: the one you're on, or the one you tap.
-  const [openPath, setOpenPath] = useState<string | null>(null);
-  // Deeper lessons fold under their song lesson until you ask for them (design pass, 9 Nov night).
-  const [deep, setDeep] = useState<Set<string>>(new Set());
-  const toggleDeep = (slug: string) => setDeep(d => { const n = new Set(d); if (n.has(slug)) n.delete(slug); else n.add(slug); return n; });
+  // The pad you tapped; until then, the lesson that is next.
+  const [pick, setPick] = useState<string | null>(null);
   useEffect(() => setStars(readChallenges()), []);
   useEffect(() => { const r = readPlacement(); if (r && r.skipped.length) setPlaced(r); }, []);
   useEffect(() => {
@@ -43,10 +46,10 @@ export function Worlds() {
     if (!w) { try { w = localStorage.getItem("ccd.world") as WorldId | null; } catch { /* default */ } }
     setOpen(w ?? progress.selectedWorld ?? "fundamentals");
     if (slug) {
-      const parent = w ? journey(w, {}).flatMap(p => p.lessons).find(l => l.extras.some(e => e.slug === slug)) : undefined;
-      if (parent) setDeep(new Set([parent.slug]));
+      const parent = w ? journey(w, {}).flatMap(p => p.lessons).find(l => l.slug === slug || l.extras.some(e => e.slug === slug)) : undefined;
+      if (parent) setPick(parent.slug);
+      window.setTimeout(() => document.getElementById(`l-${parent?.slug ?? slug}`)?.scrollIntoView({ block: "center" }), 80);
     }
-    if (slug) { setOpenPath(null); window.setTimeout(() => document.getElementById(`l-${slug}`)?.scrollIntoView({ block: "center" }), 80); }
   }, [progress.selectedWorld]);
   const done = progress.completedMissions;
   const totals = useMemo(() => WORLD_IDS.map(w => { const ps = journey(w, {}); return { w, song: ps.reduce((n, p) => n + p.songTotal, 0), deeper: ps.reduce((n, p) => n + p.extraTotal, 0) }; }), []);
@@ -59,16 +62,16 @@ export function Worlds() {
     <div className="m1-page sy fr">
       <TopBar title="syllabus" sub={`${all.song} song lessons · ${all.deeper} deeper`} back="/dashboard" screen="syllabus" />
       <div className="fr-l">
-        <p className="sy-key o1"><span><i className="sy-dot" />adds a part to your song</span><span><b>+3</b>deeper, when you want more</span></p>
+        <p className="sy-key o1"><span><i className="sm-k is-done" />done</span><span><i className="sm-k is-next" />next</span><span><i className="sm-k" />to come</span><span><b>+2</b>deeper lessons</span></p>
         {WORLD_IDS.map((w, wi) => {
           const c = worldDone(w, done);
           const isOpen = open === w;
           return (
-            <button key={w} type="button" className={`sy-whead o2 ${isOpen ? "is-open" : ""}`} style={{ ["--c" as string]: WORLD_LED[w] } as CSSProperties} aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : w)}>
+            <button key={w} type="button" className={`sy-whead o2 ${isOpen ? "is-open" : ""}`} style={{ ["--c" as string]: WORLD_LED[w] } as CSSProperties} aria-pressed={isOpen} onClick={() => { setOpen(w); setPick(null); }}>
               <b>{wi + 1}</b>
               <span>{INFO[w].name}<small>{INFO[w].line}</small></span>
               <em>{c.done}/{c.total}</em>
-              <Icon name={isOpen ? "up" : "down"} small />
+              <i className="sy-wbar" aria-hidden><em style={{ width: `${c.total ? (c.done / c.total) * 100 : 0}%` }} /></i>
             </button>
           );
         })}
@@ -79,7 +82,7 @@ export function Worlds() {
         ) : null}
         <div className="fr-side wg sy-how o4">
           <div className="wg-h"><b>how it works</b></div>
-          <span className="wg-s" style={{ fontSize: "var(--fs-4)", color: "var(--ink)" }}>song lessons go in order and each adds a part. deeper lessons are extra: open one when a part makes you curious.</span>
+          <span className="wg-s" style={{ fontSize: "var(--fs-4)", color: "var(--ink)" }}>each pad is a lesson, named for the part it adds to your song. go left to right, top to bottom. deeper lessons are extra: open one when a part makes you curious.</span>
         </div>
       </div>
 
@@ -91,32 +94,30 @@ export function Worlds() {
           return (
             <section key={w} className="sy-body o2" style={{ ["--c" as string]: WORLD_LED[w] } as CSSProperties} aria-label={INFO[w].name}>
               {paths.map(p => {
-                const here = openPath ? openPath === p.slug : p.lessons.some(l => l.slug === n?.slug || l.extras.some(e => e.slug === n?.slug)) || (!n && p.number === 1);
                 const tot = p.songTotal || p.lessons.length;
                 const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
-                if (!here) return (
-                  <button key={p.slug} type="button" className="sy-fold" aria-expanded={false} onClick={() => setOpenPath(p.slug)}>
-                    <b>path {p.number}</b><span>{p.title.toLowerCase()}</span><em>{dn}/{tot}</em><Icon name="down" small />
-                  </button>
-                );
+                const selSlug = pick ?? n?.slug;
+                const sel = p.lessons.find(l => l.slug === selSlug);
                 return (
-                  <div key={p.slug} className="sy-path">
-                    <Silk label={`path ${p.number} · ${p.title.toLowerCase()}`} right={`${dn}/${tot}`} />
-                    <ol className="sy-lessons" data-budget="list">
-                      {p.lessons.map((l, i) => (
-                        <li key={l.slug} id={`l-${l.slug}`}>
-                          <div className="sy-line">
-                            <Row it={l} n={i + 1} isNext={l.slug === n?.slug} sub={l.kind === "song" ? `adds ${partOf(l.slug)}` : "bonus"} />
-                            {l.extras.length > 0 && <button type="button" className={`sy-more ${deep.has(l.slug) ? "is-on" : ""}`} aria-expanded={deep.has(l.slug)} aria-label={`${l.extras.length} deeper lessons on ${l.title}`} onClick={() => toggleDeep(l.slug)}><b>+{l.extras.length}</b>deeper</button>}
-                          </div>
-                          {l.extras.length > 0 && deep.has(l.slug) && (
-                            <ol className="sy-extras" aria-label={`Go deeper on ${l.title}`}>
-                              {l.extras.map(e => <li key={e.slug} id={`l-${e.slug}`}><Row it={e} small /></li>)}
-                            </ol>
-                          )}
-                        </li>
-                      ))}
+                  <div key={p.slug} className="sm-path">
+                    <div className="sm-head"><b>{p.number}</b><span>{p.title.toLowerCase()}</span><em>{dn}/{tot}</em></div>
+                    <ol className="sm-row" data-budget="list" aria-label={`path ${p.number}, ${p.title}`}>
+                      {p.lessons.map((l, i) => {
+                        const part = l.kind === "song" ? partOf(l.slug) : "bonus";
+                        const isNext = l.slug === n?.slug && !l.done;
+                        return (
+                          <li key={l.slug} id={`l-${l.slug}`}>
+                            <button type="button" className={`sm-pad ${l.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${l.slug === selSlug ? "is-sel" : ""} ${l.exists ? "" : "is-locked"}`}
+                              style={{ ["--pc" as string]: partColor(part) } as CSSProperties} aria-pressed={l.slug === selSlug} aria-label={`${l.title}: adds ${part}${l.done ? ", done" : isNext ? ", up next" : ""}`} onClick={() => setPick(l.slug)}>
+                              <small>{p.number}.{i + 1}</small>
+                              <span>{short(part)}</span>
+                              {l.extras.length ? <em aria-hidden>+{l.extras.length}</em> : null}
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ol>
+                    {sel ? <Detail it={sel} isNext={sel.slug === n?.slug} /> : null}
                   </div>
                 );
               })}
@@ -145,15 +146,42 @@ export function Worlds() {
   );
 }
 
-function Row({ it, n, isNext, sub, small }: { it: JourneyItem; n?: number; isNext?: boolean; sub?: string; small?: boolean }) {
-  const meta = [sub, it.exists ? `${minutesFor(it.slug)} min` : "coming"].filter(Boolean).join(" · ");
-  const cls = `sy-row ${it.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${small ? "is-small" : ""} ${it.exists ? "" : "is-locked"}`;
-  const inner = (
-    <>
-      <b className="sy-n">{it.done ? <Icon name="check" small /> : small ? (it.kind === "bonus" ? <span className="jv-kind is-bonus">bonus</span> : <i className="sy-sdot" />) : String(n ?? 0).padStart(2, "0")}</b>
-      <span className="sy-t">{it.title.replace(/^bonus: /, "").toLowerCase()}<small>{meta}</small></span>
-      {isNext ? <em className="sy-next">up next</em> : null}
-    </>
+const short = (t: string) => (t.length > 18 ? `${t.split(/ and |, /)[0]}` : t);
+function partColor(part: string): string {
+  const w = part.toLowerCase();
+  const k = (Object.keys(KIND) as (keyof typeof KIND)[]).find(x => w.includes(x)) ?? (w.includes("snare") ? "clap" : w.includes("synth") || w.includes("melody") || w.includes("note") ? "lead" : w.includes("chord") || w.includes("harmony") ? "chords" : null);
+  return k ? KIND[k].color : "var(--c)";
+}
+
+/** The lesson under the pad you tapped: what it adds, how long, the key to start it and its deeper lessons. */
+function Detail({ it, isNext }: { it: JourneyLesson; isNext: boolean }) {
+  const part = it.kind === "song" ? partOf(it.slug) : "";
+  return (
+    <div className="sm-detail" style={{ ["--pc" as string]: partColor(part || "bonus") } as CSSProperties}>
+      {it.exists ? (
+        <Link href={`/learn/${it.slug}`} className="sm-go">
+          <span className="sm-gotx">
+            <small>{it.done ? "done · go again" : isNext ? "up next" : "lesson"} · {minutesFor(it.slug)} min</small>
+            <b>{it.title.replace(/^bonus: /, "").toLowerCase()}</b>
+            <span>{part ? `adds ${part} to your song` : "a bonus round, nothing added"}</span>
+          </span>
+          <span className={`m1-cap ${isNext ? "is-go" : ""}`} style={{ width: 52, height: 52, flex: "none" }}><Icon name={it.done ? "loop" : "play"} small /></span>
+        </Link>
+      ) : <div className="sm-go is-locked"><span className="sm-gotx"><b>{it.title.toLowerCase()}</b><span>coming soon</span></span></div>}
+      {it.extras.length ? (
+        <div className="sm-deeper">
+          <span className="sm-dl">go deeper on {part || "this"}, when you want</span>
+          <ul>
+            {it.extras.map(e => (
+              <li key={e.slug} id={`l-${e.slug}`}>
+                {e.exists
+                  ? <Link href={`/learn/${e.slug}`} className={`sm-chip ${e.done ? "is-done" : ""}`}>{e.done ? <Icon name="check" small /> : null}{e.title.replace(/^bonus: /, "").toLowerCase()}<small>{minutesFor(e.slug)} min</small></Link>
+                  : <span className="sm-chip is-locked">{e.title.toLowerCase()}<small>coming</small></span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   );
-  return it.exists ? <Link href={`/learn/${it.slug}`} className={cls}>{inner}</Link> : <div className={cls} aria-disabled>{inner}</div>;
 }

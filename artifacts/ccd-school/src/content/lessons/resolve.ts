@@ -144,6 +144,8 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
         out.push({ kind: "keep", next: voiceText(s.next, o.voice) });
         break;
     }
+    const w = s.kind !== "ask" && s.kind !== "keep" && "why" in s ? (s as { why?: VoiceText }).why : undefined;
+    if (w !== undefined && out.length) (out[out.length - 1] as { stepWhy?: string }).stepWhy = voiceText(w, o.voice);
   });
   return out;
 }

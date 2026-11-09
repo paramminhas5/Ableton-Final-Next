@@ -15,7 +15,7 @@ import { track } from "@/lib/analytics";
 import { learn } from "@/lib/learnEvents";
 import { useLearnSteps } from "@/lib/useLearnSteps";
 import { applyTake, drumNames, readTake, saveTake, takeType, withParams, type Take } from "@/lib/lessonTake";
-import { offerFor, readTrack } from "@/lib/track";
+import { offerFor, readTrack, useTrack } from "@/lib/track";
 import { readTrackV2, toV1View, writeTrackV2, type TrackV2 } from "@/lib/track2";
 import { changesSong, cueFor, cuesOf, soundsSame, withCue } from "@/lib/cues";
 import { songDiff } from "@/lib/songdiff";
@@ -59,7 +59,7 @@ const STEP_LABEL: Record<string, string> = {
 };
 
 type Quiz = Extract<LessonScreen, { kind: "quiz" }>;
-type Page = LessonScreen | { kind: "add"; keep?: boolean; mark?: boolean } | { kind: "check" } | { kind: "done" };
+type Page = { kind: "start" } | LessonScreen | { kind: "add"; keep?: boolean; mark?: boolean } | { kind: "check" } | { kind: "done" };
 
 export const SONG_EVENT = "ccd:song";
 const QUESTION_KINDS = new Set(["quiz", "ear"]);
@@ -67,6 +67,7 @@ const QUESTION_KINDS = new Set(["quiz", "ear"]);
 const pageName = (p: Page | undefined): string => {
   if (!p) return "";
   switch (p.kind) {
+    case "start": return "what you'll make";
     case "hear": return "listen";
     case "say": return p.title.toLowerCase();
     case "play": return "play it in";
@@ -79,7 +80,7 @@ const pageName = (p: Page | undefined): string => {
     case "tempo": return STEP_LABEL[p.set] ?? (p.set === "sample" ? (p.choices?.[0] === "slice" ? "slice it" : p.choices?.[0] === "warp" ? "warp it" : "shape a sample") : "set your tempo");
     case "ear": return "ear round";
     case "add": return p.mark ? "mark your song" : p.keep ? "keep it in your song" : "add it to your song";
-    case "check": return "earn your stripe";
+    case "check": return "questions";
     case "done": return "done";
     default: return p.kind;
   }
@@ -197,7 +198,8 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
         <Link href={back} className="fl-back" aria-label="Back to your lessons"><Icon name="back" /></Link>
         <div className="fl-crumb"><span>{crumb}</span><h1>{title}</h1></div>
         {onPrev && <button type="button" className="fl-stepback" onClick={onPrev} aria-label="Previous step"><Icon name="back" small />step back</button>}
-        <div className="fl-count" aria-label={`Step ${at + 1} of ${pages.length}`}>{at + 1}<i>/</i>{pages.length}</div>
+        {/* the count matches the numbered plan on the first page: the start and done pages are not steps */}
+        {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${pages.length - 2}`}>{at}<i>/</i>{pages.length - 2}</div> : null}
         <Walkthrough screen="lesson" />
       </div>
       <div className="ls-seg" style={{ ["--c" as string]: accent } as CSSProperties} aria-hidden>
@@ -615,6 +617,67 @@ function Ways({ way, setWay, has }: { way: Way; setWay: (w: Way) => void; has: {
   );
 }
 
+// ── what this lesson is for, before anything else (10 Nov) ─────────────────────
+/** Steps you do with your hands: each opens with what it is for and what you get, above the instrument. */
+const DOING = new Set(["play", "shape", "matchsound", "copy", "imagine", "tempo", "mix", "arrange"]);
+const PLAN_ICON: Record<string, string> = { hear: "hear", say: "note", play: "pads", shape: "knob", matchsound: "hear", copy: "hear", imagine: "brain", tempo: "knob", mix: "dj", arrange: "studio", ear: "hear", add: "plus", check: "check" };
+
+function StepGoal({ n, name, why, get, todo, accent }: { n: number; name: string; why?: string; get?: string; todo?: string; accent: string }) {
+  return (
+    <div className="fl-goal" style={{ ["--c" as string]: accent } as CSSProperties}>
+      <div className="fl-goalhead">
+        <span className="fl-goaln" aria-hidden>{n}</span>
+        <b>{name}</b>
+        {get ? <em className="fl-get">{get}</em> : null}
+      </div>
+      {why ? <p className="fl-gwhy"><span>why</span><span><Gloss>{why}</Gloss></span></p> : null}
+      {/* phone: what to do, before the instrument (on a laptop it reads beside it) */}
+      {todo ? <p className="fl-gdo"><span>do</span><span><Gloss>{todo}</Gloss></span></p> : null}
+    </div>
+  );
+}
+
+/** The first page of every lesson: what you will make, why, the steps in order, and what you can do after. */
+function StartStep({ mission, pages, accent, get, back, onNext }: { mission: Mission; pages: Page[]; accent: string; get: string; back: string; onNext: () => void }) {
+  const ff = mission.fromFile;
+  const { track } = useTrack();
+  const offer = useMemo(() => offerFor({ ...readTrack(), added: [] }, mission), [mission]);
+  useEnter(onNext);
+  const plan = pages.slice(1).filter(p => p.kind !== "done");
+  const lead = ff?.learn ? ff.learn.split(/(?<=[.!?])\s/)[0] : mission.tagline;
+  return (
+    <div className="ls-col is-one fl-startcol" style={{ ["--c" as string]: accent } as CSSProperties}>
+      <Screen className="fl-start">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
+        <Meta left={`${ff?.minutes ?? 8} min`} />
+        <div className="ls-title is-big">{mission.title.toLowerCase()}</div>
+        <p className="fl-startlead"><Gloss>{lead}</Gloss></p>
+      </Screen>
+      <Silk label="what you'll make" right={get} />
+      <Screen className="fl-make">
+        <div className="fl-makelanes"><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: !track.layers.some(l => l.kind === offer.kind) }} /></div>
+        {ff?.why ? <p className="fl-makewhy"><Gloss>{ff.why}</Gloss></p> : null}
+      </Screen>
+      <Silk label="how it goes" right={`${plan.length} steps`} />
+      <ol className="fl-plan">
+        {plan.map((p, i) => (
+          <li key={i} className={DOING.has(p.kind) ? "is-do" : ""}>
+            <b>{i + 1}</b><Icon name={PLAN_ICON[p.kind] ?? "note"} small /><span>{pageName(p)}</span>
+          </li>
+        ))}
+      </ol>
+      {ff?.items.length ? (
+        <>
+          <Silk label="after this you can" />
+          <ul className="fl-cando">{ff.items.slice(0, 4).map((l, i) => <li key={i}><Icon name="check" small />{l}</li>)}</ul>
+        </>
+      ) : null}
+      <Bottom left={{ label: "later", icon: "back", href: back, aria: "Not now, back home" }} go={{ label: <><Icon name="play" small />start</>, onClick: onNext, aria: "Start the lesson" }} />
+    </div>
+  );
+}
+
 // ── the player ───────────────────────────────────────────────────────────────
 /** The other two ways of saying each step, lined up with the lesson's screens (worked out on the server). */
 export type Alts = { straight: LessonScreen[]; eli5: LessonScreen[] };
@@ -632,6 +695,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   const main = quizzes.filter(q => !q.more);
   const bank = quizzes.filter(q => q.more);
   const pages: Page[] = useMemo(() => [
+    { kind: "start" as const },
     ...screens.filter(s => s.kind !== "hook" && s.kind !== "summary" && !QUESTION_KINDS.has(s.kind)),
     ...screens.filter(s => s.kind === "ear"),
     // A bonus round adds nothing to your song, so it has no add step.
@@ -703,8 +767,16 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
     onComplete();
   }, [cur?.kind]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const keeps = pages.some(p => p.kind === "add" && p.keep);
+  const get = curItem(mission.slug)?.kind === "bonus" || !pages.some(p => p.kind === "add") ? "" : `${keeps ? "changes" : "adds"} ${partOf(mission.slug)}`;
+  // What this step is for: its own line when the lesson has one, otherwise the lesson's.
+  const doing = !!cur && DOING.has(cur.kind);
+  const doN = doing ? pages.slice(0, idx + 1).filter(p => DOING.has(p.kind)).length : 0;
+  const goal = doing && cur ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={doN === 1 || cur.kind === "play" ? get : undefined} todo={cur.kind !== "play" && "body" in cur && typeof cur.body === "string" ? cur.body.split(/\n+/)[0] : undefined} accent={accent} /> : null;
+
   let body = null;
   if (cur) switch (cur.kind) {
+    case "start": body = <StartStep mission={mission} pages={pages} accent={accent} get={get} back={back} onNext={next} />; break;
     case "say": {
       // Once you've played something, the explanations after it show your own bar, looping.
       const after = at("play") >= 0 && idx > at("play") && take?.events.length;
@@ -750,7 +822,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
       <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
       {/* A screen reader hears which step it is, and focus moves to the new step (the key that was pressed is gone). */}
       <div className="sr-only" aria-live="polite">{`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`}</div>
-      <div className="ls-stage fl-stage" key={idx} tabIndex={-1} aria-label={`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`} ref={el => { if (el && moved.current) { moved.current = false; el.focus({ preventScroll: true }); } }}>{body}</div>
+      <div className="ls-stage fl-stage" key={idx} tabIndex={-1} aria-label={`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`} ref={el => { if (el && moved.current) { moved.current = false; el.focus({ preventScroll: true }); } }}>{goal}{body}</div>
     </div>
   );
 }

@@ -17,6 +17,14 @@ export type StepKind = (typeof STEP_KINDS)[number];
 
 /* ------------------------------ raw file shape ------------------------------ */
 
+/**
+ * `why` on a step you do (play, shape, match, copy, imagine, tempo, mix, arrange): one or two plain sentences
+ * on what this step is for and what you come away with. It shows above the instrument, before you touch
+ * anything (Param, 10 Nov: "asking me to play the steps without telling me why"). Left out, the lesson's
+ * song.why stands in.
+ */
+export type StepWhy = { why?: VoiceText };
+
 /** A string applies to every voice. An object must carry `mentor`; the others fall back to it. */
 export type VoiceText = string | { mentor: string; straight?: string; eli5?: string };
 
@@ -25,27 +33,27 @@ export type VoiceText = string | { mentor: string; straight?: string; eli5?: str
 export type PlayGoal = { notes: number; note?: string; on?: "beat" | "and" | "backbeat" | "between" | "different"; check?: BriefCheck[] };
 export type Rounds = number | { gentle: number; standard: number; hard: number };
 
-export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean };
-export type RawShape = { kind: "shape"; layer: LayerType; knobs: string[]; say: VoiceText; hint?: VoiceText; levels?: Level[] };
+export type RawPlay = { kind: "play"; layer: LayerType; surface: LessonSurface; goal: PlayGoal; say: VoiceText; hint?: VoiceText; levels?: Level[]; snap?: boolean } & StepWhy;
+export type RawShape = { kind: "shape"; layer: LayerType; knobs: string[]; say: VoiceText; hint?: VoiceText; levels?: Level[] } & StepWhy;
 export type RawTry = RawPlay | RawShape;
 /**
  * Match this sound (touch and hear, item 13; Syntorial's method on our own instruments): the engine plays
  * a target made from hidden settings of `knobs` on the learner's own part, and they turn the lit knobs
  * until theirs sounds the same. `target` holds each knob's hidden value, normalised 0..1.
  */
-export type RawMatch = { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; say: VoiceText; hint?: VoiceText; levels?: Level[] };
+export type RawMatch = { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; say: VoiceText; hint?: VoiceText; levels?: Level[] } & StepWhy;
 /**
  * Copy by ear (Building Blocks' recreation challenges): a hidden pattern plays and the learner writes it on a
  * grid. `pattern` is a drum map (`{kick: "x...x..."}`) or a tune line in the song's scale (`"1 - . . 3 - . ."`);
  * see src/lib/copyEar.ts. `layer` is drums, bass, chords or lead. What they copy goes into their song.
  */
-export type RawCopy = { kind: "copy"; layer: "drums" | "bass" | "chords" | "lead"; pattern: string | Record<string, string>; say: VoiceText; hint?: VoiceText; levels?: Level[] };
+export type RawCopy = { kind: "copy"; layer: "drums" | "bass" | "chords" | "lead"; pattern: string | Record<string, string>; say: VoiceText; hint?: VoiceText; levels?: Level[] } & StepWhy;
 /**
  * Imagine it first (Building Blocks' Mind's Ear, src/lib/imagine.ts): the notes of `pattern` show on the grid
  * with no sound; the learner hums it, then picks which of two or three phrases played on their song is the one
  * they saw, then hears it. `others`: phrases it could be mistaken for; made from the pattern when left out.
  */
-export type RawImagine = { kind: "imagine"; layer: "drums" | "bass" | "chords" | "lead"; pattern: string | Record<string, string>; others?: (string | Record<string, string>)[]; say: VoiceText; hint?: VoiceText; levels?: Level[] };
+export type RawImagine = { kind: "imagine"; layer: "drums" | "bass" | "chords" | "lead"; pattern: string | Record<string, string>; others?: (string | Record<string, string>)[]; say: VoiceText; hint?: VoiceText; levels?: Level[] } & StepWhy;
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
 
 export type RawHear = { kind: "hear"; clip: string; say: VoiceText; deeper?: RawDeeper[]; levels?: Level[] };
@@ -74,13 +82,13 @@ export type RawEar = { kind: "ear"; drill: Drill; rounds: Rounds; say?: VoiceTex
 export type RawKeep = { kind: "keep"; next: VoiceText; levels?: Level[] };
 /** Set the song's tempo on one knob, the loop playing at whatever it is turned to. `marks` are the speeds named on the dial. */
 /** `set: swing` turns the same step into the song's swing knob (marks are 0 to 0.75). */
-export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: VoiceText; levels?: Level[] };
+export type RawTempo = { kind: "tempo"; say: VoiceText; marks?: number[]; set?: "tempo" | "swing" | "scale" | "glue" | "kit" | "arp" | "key" | "grid" | "mic" | "comp" | "sample" | "macro" | "chords" | "player" | "chance" | "length" | "commit"; choices?: string[]; layer?: string; hint?: VoiceText; levels?: Level[] } & StepWhy;
 /** Two decks and a mixer. Deck a plays your song, deck b a bank track. `goal` is what has to happen before go. */
 export type MixGoal = "crossfade" | "match" | "blend" | "swap" | "key" | "cut" | "phrase" | "echo" | "free" | "sync" | "cue" | "loop" | "stems" | "shift" | "curve" | "file" | "record" | "punch";
-export type RawMix = { kind: "mix"; say: VoiceText; goal: MixGoal; bank?: string; hint?: VoiceText; levels?: Level[] };
+export type RawMix = { kind: "mix"; say: VoiceText; goal: MixGoal; bank?: string; hint?: VoiceText; levels?: Level[] } & StepWhy;
 /** Your song as sections: switch parts on and off per section, add fills, or export it. */
 export type ArrangeGoal = "sections" | "drop" | "fills" | "risers" | "export";
-export type RawArrange = { kind: "arrange"; say: VoiceText; goal: ArrangeGoal; hint?: VoiceText; levels?: Level[] };
+export type RawArrange = { kind: "arrange"; say: VoiceText; goal: ArrangeGoal; hint?: VoiceText; levels?: Level[] } & StepWhy;
 export type RawStep = RawHear | RawSay | RawPlay | RawShape | RawMatch | RawCopy | RawImagine | RawTempo | RawMix | RawArrange | RawAsk | RawEar | RawKeep;
 
 export type SongChange = { adds: string; changes?: undefined; why: VoiceText } | { changes: string; adds?: undefined; why: VoiceText };

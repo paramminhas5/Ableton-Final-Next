@@ -3959,6 +3959,7 @@
         },
         {
           "kind": "play",
+          "why": "This bar is the first thing in your song. Everything you add later lines up with it.",
           "layer": "drums",
           "surface": "pads",
           "goal": {
@@ -3973,6 +3974,7 @@
         },
         {
           "kind": "tempo",
+          "why": "The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.",
           "marks": [
             100,
             120,
@@ -4238,6 +4240,7 @@
         },
         {
           "kind": "play",
+          "why": "A clap on two and four turns a pulse into something people dance to. You'll hear the change the moment it's in.",
           "layer": "drums",
           "surface": "pads",
           "goal": {
@@ -4451,6 +4454,7 @@
         },
         {
           "kind": "play",
+          "why": "Hats between the kicks fill the gaps, so the beat keeps moving instead of stopping and starting.",
           "layer": "hats",
           "surface": "pads",
           "snap": true,
@@ -4621,6 +4625,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Swing is the difference between a beat that marches and one that bounces. A little goes a long way.",
           "set": "swing",
           "say": {
             "mentor": "Here's your own song with a swing knob on it. Turn it up and listen to your hats.\nSwing only moves the off sixteenths: the \"e\" and the \"a\" in \"one e and a\". The beats and the \"ands\" stay exactly where they are, so your kick and clap don't move. At about 50 percent the off notes land a third of the way along, a triplet feel. House producers often sit somewhere between 10 and 30 percent. Push it to the top for a heavy shuffle.\nPick the amount that makes you want to move.",
@@ -9757,6 +9762,7 @@
         },
         {
           "kind": "copy",
+          "why": "Hearing where a kick lands is the skill under everything else. Copy one first and you'll play yours with your ears open.",
           "layer": "drums",
           "pattern": {
             "kick": "x...x...x...x..."
@@ -9766,6 +9772,7 @@
         },
         {
           "kind": "play",
+          "why": "This bar becomes the loop your whole song sits on.",
           "layer": "drums",
           "surface": "pads",
           "goal": {
@@ -9812,6 +9819,7 @@
         },
         {
           "kind": "shape",
+          "why": "A short kick feels tight and punchy, a long one feels deep. This is where your kick gets its character.",
           "layer": "drums",
           "knobs": [
             "decay",
@@ -9825,6 +9833,7 @@
         },
         {
           "kind": "match",
+          "why": "Matching by ear trains you to hear decay in any track, not just read a number off a knob.",
           "layer": "drums",
           "knobs": [
             "decay"
@@ -10052,6 +10061,7 @@
         },
         {
           "kind": "play",
+          "why": "This is the first tune in your song. Every key fits, so you can't play a wrong note.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -10065,6 +10075,7 @@
         },
         {
           "kind": "shape",
+          "why": "Two knobs take your synth from soft and dark to bright and buzzy. It's how producers get many sounds out of one synth.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -10078,6 +10089,7 @@
         },
         {
           "kind": "match",
+          "why": "Telling bright from dark by ear is how you'll judge every sound you make from here.",
           "layer": "lead",
           "knobs": [
             "cutoff"
@@ -10270,6 +10282,7 @@
         },
         {
           "kind": "play",
+          "why": "Hats on the and between kicks push the groove forward. Without them the beat sounds empty.",
           "layer": "hats",
           "surface": "pads",
           "snap": true,
@@ -10287,6 +10300,7 @@
         },
         {
           "kind": "shape",
+          "why": "How long a hat rings changes how busy the beat feels. Short sits back, long fills the space.",
           "layer": "hats",
           "knobs": [
             "decay",
@@ -10300,6 +10314,7 @@
         },
         {
           "kind": "match",
+          "why": "This trains your ear to hear how long a sound rings, which you'll use on every drum.",
           "layer": "hats",
           "knobs": [
             "decay"
@@ -10431,6 +10446,7 @@
         },
         {
           "kind": "copy",
+          "why": "Finding the backbeat by ear is how you'll pick apart any beat you like and rebuild it.",
           "layer": "drums",
           "pattern": {
             "kick": "x.....x.x.......",
@@ -10441,6 +10457,7 @@
         },
         {
           "kind": "play",
+          "why": "A snare on two and four gives your beat its backbone. It's what makes heads nod.",
           "layer": "drums",
           "surface": "pads",
           "goal": {

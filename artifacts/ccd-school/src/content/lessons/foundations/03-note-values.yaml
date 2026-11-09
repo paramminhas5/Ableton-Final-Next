@@ -54,6 +54,8 @@ steps:
           producer's grid they're just the lines getting closer together.
 
   - kind: play
+    why: >-
+      Hats between the kicks fill the gaps, so the beat keeps moving instead of stopping and starting.
     layer: hats
     surface: pads
     snap: true

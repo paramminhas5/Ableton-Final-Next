@@ -28,6 +28,8 @@ steps:
         Boom, tss, boom, tss. The tss goes right in between the booms. Hear how it makes the beat bounce?
 
   - kind: play
+    why: >-
+      Hats on the and between kicks push the groove forward. Without them the beat sounds empty.
     layer: hats
     surface: pads
     snap: true
@@ -46,6 +48,8 @@ steps:
     hint: Count "one and two and" and tap on every "and".
 
   - kind: shape
+    why: >-
+      How long a hat rings changes how busy the beat feels. Short sits back, long fills the space.
     layer: hats
     knobs: [decay, tune]
     say:
@@ -59,6 +63,8 @@ steps:
         Decay makes the tss short or long. Tune makes it brighter or darker. Find the one you like.
 
   - kind: match
+    why: >-
+      This trains your ear to hear how long a sound rings, which you'll use on every drum.
     layer: hats
     knobs: [decay]
     target: {decay: 0.75}

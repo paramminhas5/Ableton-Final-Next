@@ -62,9 +62,9 @@ export function WeekDots({ days }: { days: number }) {
 
 export const MODES = [
   { id: "learn", label: "learn", href: "/dashboard", match: (p: string) => p === "/" || p === "/dashboard" || p.startsWith("/world") || p.startsWith("/learn") || p.startsWith("/path") || p === "/worlds" },
-  { id: "practice", label: "practice", href: "/gym", match: (p: string) => ["/gym", "/review", "/daily", "/beat", "/train", "/challenge", "/match", "/dj"].some(x => p.startsWith(x)) },
   { id: "studio", label: "studio", href: "/studio", match: (p: string) => p.startsWith("/studio") || p.startsWith("/build") || p.startsWith("/playground") },
-  { id: "library", label: "library", href: "/atlas", match: (p: string) => ["/atlas", "/devices", "/device", "/glossary", "/plugins", "/signal-flow", "/wiki", "/shortcuts"].some(x => p.startsWith(x)) },
+  { id: "practice", label: "practice", href: "/gym", match: (p: string) => ["/gym", "/review", "/daily", "/beat", "/train", "/challenge", "/match"].some(x => p.startsWith(x)) },
+  { id: "library", label: "library", href: "/atlas", match: (p: string) => ["/atlas", "/devices", "/device", "/glossary", "/plugins", "/signal-flow", "/wiki", "/shortcuts", "/dj"].some(x => p.startsWith(x)) },
 ] as const;
 
 const HIDE = [/^\/$/, /^\/start/, /^\/studio/, /^\/dj/, /^\/world\/[^/]+\/challenge/, /^\/gym\/remakes/, /^\/lab\//, /^\/learn\/[^/]+/, /^\/mission\/[^/]+/, /^\/placement/, /^\/onboarding/, /^\/login/];
@@ -75,13 +75,13 @@ export function ModeBar() {
   if (HIDE.some(r => r.test(pathname))) return null;
   return (
     <nav aria-label="Modes" className="m1-g m1-modebar" style={{ position: "fixed", left: "max(16px, calc(50% - 204px))", right: "max(16px, calc(50% - 204px))", bottom: "calc(16px + env(safe-area-inset-bottom, 0px))", zIndex: 40, maxWidth: 408, margin: "0 auto", padding: "10px 8px 0", borderRadius: 18, background: "var(--deck2)", boxShadow: "0 -14px 18px -4px var(--deck2)" }}>
-      {MODES.map(m => {
+      {MODES.map((m, i) => {
         const on = m.match(pathname);
         return (
           <Link key={m.id} href={m.href} className="m1-m" aria-label={m.label} aria-current={on ? "page" : undefined}>
             <span className={`m1-dot ${on ? "is-on" : ""}`} style={{ ["--c" as string]: LED.white } as CSSProperties} />
             <span className={`m1-cap ${on ? "is-blk" : ""}`} style={{ width: "52%", marginTop: -9 }}><Icon name={m.id} /></span>
-            <span className={`m1-ml ${on ? "is-on" : ""}`}>{m.label}</span>
+            <span className={`m1-ml ${on ? "is-on" : ""}`}><b className="m1-mn">{i + 1}</b>{m.label}</span>
           </Link>
         );
       })}

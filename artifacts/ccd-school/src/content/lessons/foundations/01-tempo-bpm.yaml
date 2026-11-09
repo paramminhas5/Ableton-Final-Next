@@ -50,6 +50,8 @@ steps:
         beat. Musicians love counting to four.
 
   - kind: play
+    why: >-
+      This bar is the first thing in your song. Everything you add later lines up with it.
     layer: drums
     surface: pads
     goal: {notes: 4, note: kick}
@@ -68,6 +70,8 @@ steps:
         times. If a tap is too early or too late it goes red, so you can try that one again.
 
   - kind: tempo
+    why: >-
+      The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.
     marks: [100, 120, 128, 140]
     say:
       mentor: >-

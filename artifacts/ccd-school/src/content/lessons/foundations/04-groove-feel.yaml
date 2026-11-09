@@ -28,6 +28,8 @@ steps:
         bounces now? That's called swing.
 
   - kind: tempo
+    why: >-
+      Swing is the difference between a beat that marches and one that bounces. A little goes a long way.
     set: swing
     say:
       mentor: >-

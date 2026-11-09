@@ -117,7 +117,7 @@ export function ArrangeStep({ screen, accent, onNext, tail }: { screen: Of<"arra
         )}
       </div>
       <div className="fl-text">
-        {screen.body.split(/\n+/).map((para, i) => <p key={i} className="ls-read"><Gloss>{para}</Gloss></p>)}
+        {screen.body.split(/\n+/).map((para, i) => <p key={i} className={`ls-read ${i === 0 ? "is-lead" : ""}`}><Gloss>{para}</Gloss></p>)}
         {screen.hint ? <div className="ls-hint"><Gloss>{screen.hint}</Gloss></div> : null}
         {onlyDrums && (screen.goal === "drop" || screen.goal === "risers") ? <div className="ls-hint">your song is only drums so far, so a break with the drums out is silence. tap riser on it so the break builds. once you add a lead or chords, they float there.</div> : null}
         {say ? <div className="ls-hint" role="status">{say}</div> : null}

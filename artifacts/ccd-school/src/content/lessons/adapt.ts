@@ -39,6 +39,9 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
       case "tempo": learned.push(TOOL_LEARNED[s.set] ?? (s.set === "kit" ? "swapping in a recorded kit" : s.set === "glue" ? "gluing your mix" : s.set === "swing" ? "swinging your groove" : s.set === "scale" ? "choosing your song's scale" : "setting your song's tempo")); screens.push({ kind: "tempo", body: s.say, marks: s.marks, set: s.set, choices: s.choices, layer: s.layer, hint: s.hint }); break;
       case "keep": next = s.next; break;
     }
+    // A step's own "why" rides on the screen it made (shown above the instrument).
+    const sw = (s as { stepWhy?: string }).stepWhy;
+    if (sw && screens.length > 1) (screens[screens.length - 1] as { why?: string }).why = sw;
   }
   screens.push({ kind: "summary", learned: [...learned, next].filter(Boolean) });
   return {

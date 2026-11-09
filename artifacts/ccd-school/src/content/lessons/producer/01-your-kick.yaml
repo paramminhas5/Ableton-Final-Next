@@ -67,6 +67,8 @@ steps:
           meet them later.
 
   - kind: copy
+    why: >-
+      Hearing where a kick lands is the skill under everything else. Copy one first and you'll play yours with your ears open.
     layer: drums
     pattern: {kick: "x...x...x...x..."}
     say: >-
@@ -74,6 +76,8 @@ steps:
     hint: "Count along with the target: one, two, three, four. A kick on each count."
 
   - kind: play
+    why: >-
+      This bar becomes the loop your whole song sits on.
     layer: drums
     surface: pads
     goal: {notes: 4, note: kick}
@@ -162,6 +166,8 @@ steps:
         empty barrel: it hums for a while after. Both are good. You will pick yours next.
 
   - kind: shape
+    why: >-
+      A short kick feels tight and punchy, a long one feels deep. This is where your kick gets its character.
     layer: drums
     knobs: [decay, tune]
     say:
@@ -189,6 +195,8 @@ steps:
         drum or a small drum. Your kick is playing, so turn them and listen. Stop when you like it.
 
   - kind: match
+    why: >-
+      Matching by ear trains you to hear decay in any track, not just read a number off a knob.
     layer: drums
     knobs: [decay]
     target: {decay: 0.25}
