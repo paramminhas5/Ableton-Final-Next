@@ -57,6 +57,8 @@ steps:
           sounds out of tune. Three oscillators all at full level in the same octave make a patch lose focus.
 
   - kind: shape
+    why: >-
+      Blending waves gives a synth more depth than any single wave can.
     layer: lead
     knobs: [wave, detune]
     say:

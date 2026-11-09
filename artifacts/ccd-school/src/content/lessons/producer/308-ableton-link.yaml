@@ -56,6 +56,8 @@ steps:
           and midi tab. Tempo changes from another device ease in rather than jumping.
 
   - kind: tempo
+    why: >-
+      Sharing where you are in the bar, not just the speed, is what keeps everyone landing on the one together.
     set: tempo
     marks: [120, 124, 128, 130]
     say:

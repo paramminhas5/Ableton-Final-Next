@@ -27,6 +27,8 @@ steps:
         Remember short and long kicks? Now you get four knobs to build your perfect kick.
 
   - kind: shape
+    why: >-
+      A kick tuned to your bass and shaped for your song sounds like yours, not a preset.
     layer: drums
     knobs: [tune, decay, drive, level]
     say:
@@ -45,6 +47,8 @@ steps:
         it louder or quieter. Play until it's your favourite kick.
 
   - kind: match
+    why: >-
+      Hearing how low a kick sits and how long it lasts is the skill behind every great kick.
     layer: drums
     knobs: [tune, decay]
     target: {tune: 0.3, decay: 0.2}

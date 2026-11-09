@@ -57,6 +57,8 @@ steps:
           You can automate a knob's base value and modulate around it at the same time.
 
   - kind: shape
+    why: >-
+      Movement around a value you set keeps a part alive without losing the level you chose.
     layer: lead
     knobs: [lfo, lfoto, lforate, level]
     say:

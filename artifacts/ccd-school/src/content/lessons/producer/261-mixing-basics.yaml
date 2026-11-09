@@ -62,6 +62,8 @@ steps:
           Take a break every 45 to 60 minutes. Tired ears make bad decisions.
 
   - kind: shape
+    why: >-
+      Placing your hats in level, brightness and distance is the start of a clean mix.
     layer: hats
     knobs: [level, high, send]
     say:
@@ -72,6 +74,8 @@ steps:
       eli5: >-
         Make the hats the right loudness, brightness and distance.
   - kind: shape
+    why: >-
+      Bass sits with the kick. Getting this right makes the whole song hit harder.
     layer: bass
     knobs: [level, low, duck]
     say:
@@ -82,6 +86,8 @@ steps:
       eli5: >-
         Now the bass. Make it fit under the kick.
   - kind: shape
+    why: >-
+      A lead that leads without shouting finishes a mix.
     layer: lead
     knobs: [level, pan, send]
     say:

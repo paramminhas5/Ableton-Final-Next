@@ -56,6 +56,8 @@ steps:
           answer. Tab gets you to any knob.
 
   - kind: shape
+    why: >-
+      Knowing the keyboard controls means you can work without a mouse, faster and more comfortably.
     layer: lead
     knobs: [level, cutoff]
     say:

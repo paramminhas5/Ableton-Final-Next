@@ -58,6 +58,8 @@ steps:
           The fx, risers and sweeps lesson puts one before your drop.
 
   - kind: shape
+    why: >-
+      Hats and risers are noise with a shape. Short and tight or long and open is up to you.
     layer: hats
     knobs: [decay, tune, lp, lpkind]
     say:

@@ -57,6 +57,8 @@ steps:
           A Live Pack is a single .alp file. Ableton uses packs to share sounds, and you can make your own.
 
   - kind: arrange
+    why: >-
+      Knowing what kind of file you have tells you what you can do with it and where it can go.
     goal: export
     say:
       mentor: >-

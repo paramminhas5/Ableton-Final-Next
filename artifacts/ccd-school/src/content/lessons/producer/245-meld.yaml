@@ -54,6 +54,8 @@ steps:
           routed to the blend, filters and more.
 
   - kind: shape
+    why: >-
+      Two layers on one note give a synth more depth than one can.
     layer: lead
     knobs: [wave, detune, env]
     say:

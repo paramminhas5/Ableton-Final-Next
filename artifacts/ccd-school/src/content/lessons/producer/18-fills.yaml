@@ -26,6 +26,8 @@ steps:
         A fill is a little drum roll at the end of a part that says, get ready, something new is coming!
 
   - kind: arrange
+    why: >-
+      A fill tells the listener something is about to change, so the next section lands.
     goal: fills
     say:
       mentor: >-
@@ -37,6 +39,8 @@ steps:
         Tap fill on the part before the drop. Listen to the drum roll.
 
   - kind: tempo
+    why: >-
+      A hit that only plays some of the time makes a loop feel less repeated.
     set: chance
     layer: hats
     say:

@@ -47,6 +47,8 @@ steps:
           look back at exactly what you played.
 
   - kind: mix
+    why: >-
+      Planning your next track before you play means the handover is ready when you need it.
     goal: blend
     say:
       mentor: >-

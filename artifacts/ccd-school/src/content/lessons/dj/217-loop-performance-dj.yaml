@@ -47,6 +47,8 @@ steps:
           for you to rearrange.
 
   - kind: mix
+    why: >-
+      Hot cues let you jump to the best parts of a track instantly. It's how djs remix live.
     goal: cue
     bank: morals
     say:

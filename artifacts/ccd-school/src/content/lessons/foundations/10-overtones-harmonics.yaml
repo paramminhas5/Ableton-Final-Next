@@ -48,6 +48,8 @@ steps:
         the fifth, make the smoothest friends for your note.
 
   - kind: play
+    why: >-
+      A fifth is the most settled jump there is. It makes a melody sound strong.
     layer: lead
     surface: keys
     goal: {notes: 2}

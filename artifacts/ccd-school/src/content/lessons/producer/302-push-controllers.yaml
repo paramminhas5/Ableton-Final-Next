@@ -59,6 +59,8 @@ steps:
           deeper lesson further down this path.
 
   - kind: play
+    why: >-
+      Finger drumming makes beats feel played. It's the main way people use pads on hardware.
     layer: drums
     surface: pads
     goal: {notes: 8}

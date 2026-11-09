@@ -59,6 +59,8 @@ steps:
           picking a source and a destination and setting an amount.
 
   - kind: shape
+    why: >-
+      An lfo moves a sound on its own, so it never sits still.
     layer: lead
     knobs: [lfo, lforate, lfoto, cutoff]
     say:
@@ -72,6 +74,8 @@ steps:
         Turn lfo up. A little robot now wiggles the knob for you. Rate is how fast it wiggles.
 
   - kind: match
+    why: >-
+      Hearing how much and how fast something moves is how you'll copy movement from other tracks.
     layer: lead
     knobs: [lfo, lforate]
     target: {lfo: 0.5, lforate: 0.25}

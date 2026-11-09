@@ -52,6 +52,8 @@ steps:
           while beatmatching.
 
   - kind: mix
+    why: >-
+      Shifting the key rescues a track that clashes, so you can still play the one you wanted.
     goal: shift
     bank: sandman
     say:

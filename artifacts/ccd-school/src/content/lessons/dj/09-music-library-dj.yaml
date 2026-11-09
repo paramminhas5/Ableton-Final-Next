@@ -24,6 +24,8 @@ steps:
         Good djs pick songs that go well together: similar speed, matching notes, same energy.
 
   - kind: mix
+    why: >-
+      Your own music is what makes a set yours. Load it and mix it like any other track.
     goal: file
     bank: skywalker
     say:

@@ -52,6 +52,13 @@ describe("producer's first loop after basics (10 Nov)", () => {
     // someone who skipped basics still starts on the kick
     expect(nextStep("producer", {})?.slug).toBe("your-kick");
   });
+  it("skips the bass and chords a basics grad already has", async () => {
+    const { coveredBy, nextStep } = await import("../src/lib/worldOrder");
+    const grad = { "tempo-bpm": true, "what-is-sound": true, "note-values": true, "bars-time-signatures": true, "bass-follows": true, "what-are-chords": true, "midi-piano-roll": true };
+    expect(coveredBy("first-bass", grad)).toBe("bass-follows");
+    expect(coveredBy("chords-on-top", grad)).toBe("what-are-chords");
+    expect(nextStep("producer", grad)?.slug).toBe("kick-and-bass");
+  });
 });
 
 describe("lesson 1 split (10 Nov)", () => {

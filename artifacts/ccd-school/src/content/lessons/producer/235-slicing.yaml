@@ -60,6 +60,8 @@ steps:
           note, without making a new track.
 
   - kind: tempo
+    why: >-
+      Slicing a loop lets you play it back in any order. It's how breakbeats get rearranged.
     set: sample
     choices: [slice]
     say:

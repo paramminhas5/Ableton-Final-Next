@@ -47,6 +47,8 @@ steps:
           a semitone shift. That's the next lesson.
 
   - kind: mix
+    why: >-
+      Tracks in matching keys blend smoothly. Ones that clash sound sour, however good the timing is.
     goal: key
     say:
       mentor: >-

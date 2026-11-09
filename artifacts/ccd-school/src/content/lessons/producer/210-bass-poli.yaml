@@ -31,6 +31,8 @@ steps:
         give it its sound.
 
   - kind: shape
+    why: >-
+      A thicker bass fills the low end without changing a single note.
     layer: bass
     knobs: [sub, wave, drift, character]
     say:
@@ -76,6 +78,8 @@ steps:
           need. Your bass here is monophonic, and its glide knob slides between notes when they overlap.
 
   - kind: match
+    why: >-
+      Low weight is felt more than heard. This trains your ear to notice it.
     layer: bass
     knobs: [sub]
     target: {sub: 0.8}

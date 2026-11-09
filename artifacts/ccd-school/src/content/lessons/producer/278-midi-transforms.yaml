@@ -56,6 +56,8 @@ steps:
           When a transformation makes new pitches, it follows the scale you've set for the song.
 
   - kind: tempo
+    why: >-
+      Strum and the other tools change how your chords are played in one press, without playing them again.
     set: grid
     layer: chords
     say:
@@ -72,6 +74,8 @@ steps:
         Press strum and your chords sound like a guitar. Humanize makes them less robotic. Try them.
 
   - kind: arrange
+    why: >-
+      A changed last beat sets up what comes next. It's the small move that makes sections join up.
     goal: fills
     say:
       mentor: >-

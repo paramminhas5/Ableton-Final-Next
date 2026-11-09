@@ -27,6 +27,8 @@ steps:
         makes notes slide like a trombone.
 
   - kind: shape
+    why: >-
+      A wider lead sounds bigger and fills the speakers. Glide makes notes slide like a voice.
     layer: lead
     knobs: [detune, glide]
     say:
@@ -41,6 +43,8 @@ steps:
         slide.
 
   - kind: match
+    why: >-
+      Hearing width and slide by ear is how you'll match leads from tracks you like.
     layer: lead
     knobs: [detune, glide]
     target: {detune: 0.75, glide: 0.5}
@@ -49,6 +53,8 @@ steps:
     hint: "Listen to the gaps between notes for the slide."
 
   - kind: copy
+    why: >-
+      Copying a lead line by ear is how you learn the shapes good leads use.
     layer: lead
     pattern: "5 - 4 3 - 1 - . 2 - 3 - 1 - - -"
     say: >-

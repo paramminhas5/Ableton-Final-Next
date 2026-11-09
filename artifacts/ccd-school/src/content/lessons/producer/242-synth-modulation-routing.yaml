@@ -59,6 +59,8 @@ steps:
           gives a sweep on every note with a slow wobble on top.
 
   - kind: shape
+    why: >-
+      The same wobble on a different target is a completely different effect.
     layer: lead
     knobs: [lfoto, lfo, env, lforate]
     say:

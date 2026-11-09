@@ -54,6 +54,8 @@ steps:
           bar, so you can make two notes the same pitch but different loudness.
 
   - kind: shape
+    why: >-
+      Pitch and loudness are separate things. Hearing the difference makes everything else easier to shape.
     layer: lead
     knobs: [detune, level]
     say:

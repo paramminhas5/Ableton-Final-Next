@@ -63,6 +63,8 @@ steps:
           soul it reached house and techno.
 
   - kind: imagine
+    why: >-
+      Reading a beat before you hear it trains you to feel the push of an off-beat kick.
     layer: drums
     pattern: {kick: "x..x..x...x.....", clap: "....x.......x..."}
     say:
@@ -78,6 +80,8 @@ steps:
     hint: "Say the counts out loud, one e and a. The second kick comes before beat two."
 
   - kind: play
+    why: >-
+      An accent off the beat gives your groove a lift that straight hits can't.
     layer: hats
     surface: pads
     snap: true

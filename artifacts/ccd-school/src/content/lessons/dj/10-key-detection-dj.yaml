@@ -38,6 +38,8 @@ steps:
         Look for the same number, or one bigger or smaller with the same letter.
 
   - kind: mix
+    why: >-
+      Hearing a clash and a fit side by side trains your ear to pick tracks that sound good together.
     goal: key
     bank: sandman
     say:

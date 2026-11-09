@@ -25,6 +25,8 @@ steps:
         Turn on the echo, then pull the song down. The last sound echoes away.
 
   - kind: mix
+    why: >-
+      An echo out leaves a track gracefully, so the new one can take over without a bump.
     goal: echo
     say:
       mentor: >-
@@ -36,6 +38,8 @@ steps:
         Turn up echo on deck a, then slide deck a down.
 
   - kind: mix
+    why: >-
+      Punch-in effects add drama at a key moment, and let go and it's back to normal.
     goal: punch
     say:
       mentor: >-

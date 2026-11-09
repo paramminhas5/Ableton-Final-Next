@@ -60,6 +60,8 @@ steps:
           sustain, and give the filter no attack, a short decay and no sustain.
 
   - kind: shape
+    why: >-
+      Separate envelopes for loudness and brightness give you far more control over how a note feels.
     layer: lead
     knobs: [release, frel, env, fdecay]
     say:

@@ -45,6 +45,8 @@ export function worldSteps(world: WorldId): Step[] {
  */
 export const COVERED_BY: Record<string, string> = {
   "your-kick": "tempo-bpm", "synth-what-is-sound": "what-is-sound", "hats": "note-values", "clap-and-snare": "bars-time-signatures",
+  // 10 Nov: the bass and the chords are basics parts too, so a basics grad doesn't record them twice
+  "first-bass": "bass-follows", "chords-on-top": "what-are-chords",
 };
 /** Lesson 1 used to set the tempo too; it was split in two on 10 Nov. Anyone who finished it before then has a tempo. */
 const SPLIT_AT = Date.UTC(2026, 10, 9, 21, 0); // when the split went live

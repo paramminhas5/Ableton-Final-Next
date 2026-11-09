@@ -62,6 +62,8 @@ steps:
           right up to the top.
 
   - kind: arrange
+    why: >-
+      Midi takes your song into Live, so you can keep working on it there.
     goal: export
     say:
       mentor: >-

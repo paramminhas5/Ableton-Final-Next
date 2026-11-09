@@ -51,6 +51,8 @@ steps:
           purpose.
 
   - kind: mix
+    why: >-
+      Sync matches tempo in one press, so you can spend your attention on when and how you mix.
     goal: sync
     bank: operator
     say:

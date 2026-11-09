@@ -51,6 +51,8 @@ steps:
           you plug in the other and the night carries on.
 
   - kind: mix
+    why: >-
+      One last run through the handover catches problems before anyone else hears them.
     goal: free
     say:
       mentor: >-

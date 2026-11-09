@@ -56,6 +56,8 @@ steps:
           When you're happy, consolidate the comp into one clip before you export.
 
   - kind: tempo
+    why: >-
+      Recording a few takes takes the pressure off. You keep the best and lose nothing.
     set: comp
     layer: bass
     say:

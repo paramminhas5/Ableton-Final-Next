@@ -58,6 +58,8 @@ steps:
           Cutting the lows on the sides keeps the low end mono and tight.
 
   - kind: shape
+    why: >-
+      Shaping bass with EQ decides how heavy it is and how clean it sits with the kick.
     layer: bass
     knobs: [low, mid, high]
     say:
@@ -75,6 +77,8 @@ steps:
         edge.
 
   - kind: match
+    why: >-
+      Hearing more low or less top by ear is the core skill of EQ.
     layer: bass
     knobs: [low, high]
     target: {low: 0.75, high: 0.25}

@@ -51,6 +51,8 @@ steps:
           Comping works on midi takes as well, so you can pick the best chord voicings bar by bar.
 
   - kind: tempo
+    why: >-
+      Several takes of your lead give you options to choose from, instead of one shot to get it right.
     set: comp
     layer: lead
     say:

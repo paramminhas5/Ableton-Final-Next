@@ -58,6 +58,8 @@ steps:
           out of an old record to study it.
 
   - kind: arrange
+    why: >-
+      Hearing each part on its own shows what every part adds, and how stems are used in remixes and dj sets.
     goal: sections
     say:
       mentor: >-

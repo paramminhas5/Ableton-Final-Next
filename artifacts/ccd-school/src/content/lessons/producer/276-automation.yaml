@@ -56,6 +56,8 @@ steps:
           Since Live 11 you can bend automation lines into curves instead of straight ramps.
 
   - kind: shape
+    why: >-
+      A knob that moves slowly over the song keeps it changing, so a long loop never sounds stuck.
     layer: lead
     knobs: [lfo, lforate, cutoff, lfoto]
     say:

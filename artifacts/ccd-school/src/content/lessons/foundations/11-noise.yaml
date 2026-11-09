@@ -48,6 +48,8 @@ steps:
           it becomes the riser you hear before a drop. You'll build one in the producer world.
 
   - kind: shape
+    why: >-
+      Hats are noise shaped into a beat. Length and brightness decide how busy they feel.
     layer: hats
     knobs: [decay, tune]
     say:
@@ -61,6 +63,8 @@ steps:
         Decay makes your tss short or long. Tune makes it brighter or darker. Play until it sounds good.
 
   - kind: match
+    why: >-
+      Hearing the pitch of something with no notes trains your ear for drums.
     layer: hats
     knobs: [tune]
     target: {tune: 0.75}

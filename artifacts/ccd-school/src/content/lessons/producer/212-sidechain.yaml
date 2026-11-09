@@ -32,6 +32,8 @@ steps:
         sidechain. It makes music go pump, pump, pump.
 
   - kind: shape
+    why: >-
+      Sidechain is the pump in dance music. It also keeps the kick clear.
     layer: bass
     knobs: [duck, decay]
     say:

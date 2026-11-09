@@ -64,6 +64,8 @@ steps:
           samples in with it.
 
   - kind: shape
+    why: >-
+      Every track has a fader and a pan. These two controls are the start of every mix.
     layer: drums
     knobs: [level, pan]
     say:

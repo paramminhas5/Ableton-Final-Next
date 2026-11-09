@@ -60,6 +60,8 @@ steps:
           Past about 20 cents most ears hear it as out of tune.
 
   - kind: shape
+    why: >-
+      Detune is how leads and pads get that thick, shimmering sound.
     layer: lead
     knobs: [detune, wave]
     say:
@@ -78,6 +80,8 @@ steps:
         Then try shape for a buzzier sound.
 
   - kind: match
+    why: >-
+      Hearing how wide a sound is trains your ear for stereo.
     layer: lead
     knobs: [detune]
     target: {detune: 0.75}

@@ -29,6 +29,8 @@ steps:
         The boom and the clap each have their own button, called a pad. Each pad has its own knobs too.
 
   - kind: shape
+    why: >-
+      Each pad is its own sound you can shape. This is how producers make a kit their own.
     layer: drums
     knobs: [tune, decay, drive]
     say:

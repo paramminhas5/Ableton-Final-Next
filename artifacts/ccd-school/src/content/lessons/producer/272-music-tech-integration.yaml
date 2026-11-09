@@ -57,6 +57,8 @@ steps:
           drive can break them.
 
   - kind: shape
+    why: >-
+      One knob from each stage shows you where a sound comes from, so you know where to go when you want to change it.
     layer: bass
     knobs: [cutoff, drive, low, duck]
     say:

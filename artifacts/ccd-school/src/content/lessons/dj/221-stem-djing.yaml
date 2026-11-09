@@ -45,6 +45,8 @@ steps:
         sneak into the wrong part.
 
   - kind: mix
+    why: >-
+      Taking parts out of a track lets you layer two tracks without them fighting.
     goal: stems
     bank: space-bass
     say:

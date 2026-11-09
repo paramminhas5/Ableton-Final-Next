@@ -26,6 +26,8 @@ steps:
         The cue button lets you hear the next song in your headphones before anyone else.
 
   - kind: mix
+    why: >-
+      Getting the next track ready before the room hears it is how djs keep the floor going.
     goal: match
     bank: warm-up
     say:

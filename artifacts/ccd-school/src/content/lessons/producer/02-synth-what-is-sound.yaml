@@ -225,4 +225,4 @@ steps:
 
   - kind: keep
     next: >-
-      Next: louder and higher are not the same thing. You will hear the difference between volume and pitch.
+      Next: the piano roll. Your lead's notes on a grid, where you can fix and move them.

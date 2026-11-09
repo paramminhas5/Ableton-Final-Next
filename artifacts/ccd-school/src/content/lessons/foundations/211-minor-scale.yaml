@@ -45,6 +45,8 @@ steps:
         are a tiny bit lower, and that makes it sound moody.
 
   - kind: tempo
+    why: >-
+      Small changes to a scale change the mood. This is how producers get a darker or lighter minor.
     set: scale
     choices: [minor, dorian]
     say:

@@ -46,6 +46,8 @@ steps:
           end yourself with loop in and loop out, and halve or double a loop while it plays.
 
   - kind: mix
+    why: >-
+      A loop buys you time. It stretches a section while you get the next track ready.
     goal: loop
     bank: operator
     say:

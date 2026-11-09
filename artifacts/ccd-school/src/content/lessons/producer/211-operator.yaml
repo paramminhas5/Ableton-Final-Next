@@ -63,6 +63,8 @@ steps:
           pushed high it turns to noise.
 
   - kind: shape
+    why: >-
+      FM makes bells, metals and growls from simple waves. One knob opens a whole new set of sounds.
     layer: lead
     knobs: [fm, ratio, wave, env]
     say:

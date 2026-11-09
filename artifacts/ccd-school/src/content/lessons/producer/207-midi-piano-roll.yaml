@@ -60,6 +60,8 @@ steps:
           the way for a looser feel.
 
   - kind: tempo
+    why: >-
+      The piano roll is where you fix a wrong note, move it or make it longer, without playing it again.
     set: grid
     layer: lead
     say:
@@ -104,4 +106,4 @@ steps:
 
   - kind: keep
     next: >-
-      Back to your song: next, a clap on two and four.
+      Next: hats. They go between your kicks and push the groove forward.

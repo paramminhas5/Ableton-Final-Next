@@ -58,6 +58,8 @@ steps:
           there, not in the effects.
 
   - kind: shape
+    why: >-
+      Building a sound from scratch is how you get one nobody else has.
     layer: lead
     knobs: [wave, detune, cutoff, res]
     say:
@@ -74,6 +76,8 @@ steps:
         cutoff.
 
   - kind: shape
+    why: >-
+      How a sound moves over time is half of its character.
     layer: lead
     knobs: [attack, release, env, echo]
     say:

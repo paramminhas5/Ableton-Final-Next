@@ -62,6 +62,8 @@ steps:
           lesson.
 
   - kind: shape
+    why: >-
+      Squeezing the loudest bits makes your drums punchier and more even.
     layer: drums
     knobs: [drive, level]
     say:

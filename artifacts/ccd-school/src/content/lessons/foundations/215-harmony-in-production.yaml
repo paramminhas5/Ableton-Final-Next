@@ -60,6 +60,8 @@ steps:
           a time. Put either one before the instrument in the device chain.
 
   - kind: shape
+    why: >-
+      How chords start and fade decides if they're a soft pad or a short stab.
     layer: chords
     knobs: [release, attack]
     say:

@@ -58,6 +58,8 @@ steps:
           before you patch.
 
   - kind: shape
+    why: >-
+      An envelope that opens the filter on every note gives your bass the pluck you hear on analogue synths.
     layer: bass
     knobs: [cutoff, env, res]
     say:

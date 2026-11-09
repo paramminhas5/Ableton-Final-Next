@@ -56,6 +56,8 @@ steps:
           every part in the same room. Returns can even send to other returns.
 
   - kind: shape
+    why: >-
+      One shared reverb keeps every part in the same room, which glues a mix together.
     layer: chords
     knobs: [send]
     say:

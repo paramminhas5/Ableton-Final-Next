@@ -58,6 +58,8 @@ steps:
           players can work together.
 
   - kind: mix
+    why: >-
+      Tempo and key tell you whether two tracks will mix before you hear them.
     goal: key
     say:
       mentor: >-

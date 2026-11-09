@@ -55,6 +55,8 @@ steps:
           saw with the filter closed right down, which gets close to a sine.
 
   - kind: shape
+    why: >-
+      The wave shape is the raw character of your melody. Pick the one that suits your song.
     layer: lead
     knobs: [wave, cutoff]
     say:
@@ -70,6 +72,8 @@ steps:
         brighter. Keep the one you like.
 
   - kind: match
+    why: >-
+      Hearing a wave's shape by ear means you can pick the right sound without guessing.
     layer: lead
     knobs: [wave]
     target: {wave: 0.75}

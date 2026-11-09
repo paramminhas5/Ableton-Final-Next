@@ -34,6 +34,8 @@ steps:
           use them to remix and master. They're coming to CCD School soon.
 
   - kind: arrange
+    why: >-
+      A finished song is one you can take out and play anywhere. This is where it leaves the app.
     goal: export
     say:
       mentor: >-

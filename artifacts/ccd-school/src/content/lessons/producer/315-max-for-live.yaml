@@ -57,6 +57,8 @@ steps:
           them. Hundreds more are shared free online as .amxd files, and they load like presets.
 
   - kind: shape
+    why: >-
+      One lfo pointed at different knobs gives you three kinds of movement. It's the most useful device to know.
     layer: lead
     knobs: [lfo, lforate, lfoto, cutoff]
     say:

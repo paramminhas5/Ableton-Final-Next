@@ -56,6 +56,8 @@ steps:
           sampled instrument sounds static, because a model reacts to every note differently.
 
   - kind: shape
+    why: >-
+      A struck shape makes chords sound like a real instrument: a hit, then a ring.
     layer: chords
     knobs: [attack, release, cutoff]
     say:

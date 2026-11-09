@@ -55,6 +55,8 @@ steps:
           permanent, so save a copy of your set first.
 
   - kind: play
+    why: >-
+      Sound that answers your finger right away is what makes playing feel good. Notice it now, so you'll notice when it's off.
     layer: hats
     surface: pads
     goal: {notes: 4}

@@ -61,6 +61,8 @@ steps:
           Pushed far enough, a filter's resonance can even ring on its own as a pure tone.
 
   - kind: shape
+    why: >-
+      Different filters carve different parts of a sound. They're the main tool for making room in a mix.
     layer: lead
     knobs: [cutoff, res, cut, character]
     say:
@@ -81,6 +83,8 @@ steps:
         makes it whistle. Circuit changes how it whistles. Pick the sound you like.
 
   - kind: match
+    why: >-
+      Hearing where a filter cuts is how you'll match sounds from tracks you love.
     layer: lead
     knobs: [cutoff, res]
     target: {cutoff: 0.375, res: 0.75}

@@ -41,6 +41,8 @@ steps:
         nearly the same, but it comes home to the first key.
 
   - kind: imagine
+    why: >-
+      Hearing a phrase in your head before it plays is how you write a melody instead of searching for one.
     layer: lead
     pattern: "1 - 3 - 5 - 3 - 2 - 3 - 1 - . ."
     say:
@@ -58,6 +60,8 @@ steps:
     hint: "Follow the shape: does it climb, then come back down? Pick the one that moves the same way."
 
   - kind: copy
+    why: >-
+      A melody that climbs and comes home sounds finished. Copying one shows you why.
     layer: lead
     pattern: "1 - 3 - 5 - 3 - 2 - 1 - - - . ."
     say: >-
@@ -65,6 +69,8 @@ steps:
     hint: "Up in two jumps, then down one step at a time."
 
   - kind: play
+    why: >-
+      Repeat an idea, then change its ending. That's how a melody becomes memorable.
     layer: lead
     surface: keys
     goal: {notes: 3, check: [repeat, home, key]}

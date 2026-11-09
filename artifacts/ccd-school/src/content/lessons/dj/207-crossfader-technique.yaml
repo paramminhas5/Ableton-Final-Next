@@ -51,6 +51,8 @@ steps:
           and many turntablists and hip-hop djs prefer it for certain cuts and scratches.
 
   - kind: mix
+    why: >-
+      The curve decides whether the crossfader blends or cuts. Pick the one that suits the move.
     goal: curve
     bank: operator
     say:

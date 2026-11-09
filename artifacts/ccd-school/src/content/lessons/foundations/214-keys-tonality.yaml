@@ -59,6 +59,8 @@ steps:
           minor make 24 keys in all.
 
   - kind: play
+    why: >-
+      Ending on home sounds finished. Ending anywhere else leaves people wanting more.
     layer: chords
     surface: pads
     goal: {notes: 4}

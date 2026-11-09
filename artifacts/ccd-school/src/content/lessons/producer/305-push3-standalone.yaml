@@ -54,6 +54,8 @@ steps:
           on your laptop.
 
   - kind: arrange
+    why: >-
+      A song in pieces you can launch is a song you can play live.
     goal: sections
     say:
       mentor: >-

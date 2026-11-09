@@ -47,6 +47,8 @@ steps:
           pad recalls one section.
 
   - kind: tempo
+    why: >-
+      Two saved sounds you can jump between give you a quick change for a new section, live or in the song.
     set: macro
     layer: lead
     say:

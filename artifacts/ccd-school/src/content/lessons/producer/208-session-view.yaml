@@ -60,6 +60,8 @@ steps:
           can also carry a tempo and time signature, so launching a scene can change the song's speed.
 
   - kind: arrange
+    why: >-
+      Seeing your song as a grid of parts and sections makes it easy to try ideas.
     goal: sections
     say:
       mentor: >-

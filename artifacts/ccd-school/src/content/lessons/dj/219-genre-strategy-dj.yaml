@@ -42,6 +42,8 @@ steps:
         Play the music you love most. Add new kinds slowly. Think about where you're playing.
 
   - kind: mix
+    why: >-
+      Tracks from the same world sit together. That's what makes a set feel like one story.
     goal: free
     say:
       mentor: >-

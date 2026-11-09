@@ -60,6 +60,8 @@ steps:
           and because they add harmonics high up, an EQ after them is useful to tame the top end.
 
   - kind: shape
+    why: >-
+      A bit of drive adds warmth and punch. More adds grit. It's how producers make drums cut through.
     layer: drums
     knobs: [drive, level]
     say:
@@ -78,6 +80,8 @@ steps:
         bit so it's not just louder. Still better? Keep it.
 
   - kind: match
+    why: >-
+      Grit is harmonics being added. Hearing it by ear is how you'll judge how much to use.
     layer: drums
     knobs: [drive]
     target: {drive: 0.65}

@@ -26,6 +26,8 @@ steps:
         Take the boom away for a while. Everyone waits. Then BOOM, it comes back, and everyone jumps.
 
   - kind: arrange
+    why: >-
+      Taking the drums away makes people miss them. Bringing them back is the drop.
     goal: drop
     say:
       mentor: >-

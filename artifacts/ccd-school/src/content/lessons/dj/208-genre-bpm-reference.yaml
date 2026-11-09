@@ -52,6 +52,8 @@ steps:
           counter says one number, your body hears half.
 
   - kind: mix
+    why: >-
+      Knowing which tempo range your song sits in tells you which tracks will mix with it.
     goal: free
     say:
       mentor: >-

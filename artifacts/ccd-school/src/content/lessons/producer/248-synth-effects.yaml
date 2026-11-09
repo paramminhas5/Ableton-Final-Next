@@ -58,6 +58,8 @@ steps:
           the same room and the mix holds together.
 
   - kind: shape
+    why: >-
+      Echo and drive add space and grit right on the synth, before any mixing.
     layer: lead
     knobs: [echo, send, drive]
     say:

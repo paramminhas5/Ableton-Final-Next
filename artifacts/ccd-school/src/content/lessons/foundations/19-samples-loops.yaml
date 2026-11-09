@@ -33,6 +33,8 @@ steps:
           recorded for CCD School and are free to use.
 
   - kind: tempo
+    why: >-
+      Recorded hits give your beat the grit and room of real drums.
     set: kit
     say:
       mentor: >-
@@ -65,4 +67,4 @@ steps:
 
   - kind: keep
     next: >-
-      Next: tension, release and structure. Your loop becomes a song.
+      Next: notes and octaves. The twelve notes every melody is made from.

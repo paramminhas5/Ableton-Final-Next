@@ -58,6 +58,8 @@ steps:
           song, nothing needs to be instant, so a larger buffer gives the computer room and stops the clicks.
 
   - kind: tempo
+    why: >-
+      Your song's default tempo means it always opens the way you left it.
     set: tempo
     marks: [120, 124, 128, 140]
     say:
@@ -75,6 +77,8 @@ steps:
     hint: Most house sits between 120 and 128.
 
   - kind: tempo
+    why: >-
+      The key is the mood every part shares. Set it once and every note you add fits.
     set: scale
     choices: [minor, major]
     say:

@@ -29,6 +29,8 @@ steps:
         two people talking at once.
 
   - kind: shape
+    why: >-
+      Kick and bass both live down low. Ducking gives each its own moment so neither gets lost.
     layer: bass
     knobs: [duck, decay]
     say:
@@ -45,6 +47,8 @@ steps:
         down to make bass notes shorter. Keep turning until both sound clear.
 
   - kind: copy
+    why: >-
+      A bass that dodges the kick keeps the low end clean. It's how most dance tracks do it.
     layer: bass
     pattern: ". . 1 . . 1 . . . . 1 . . 1 5, ."
     say: >-

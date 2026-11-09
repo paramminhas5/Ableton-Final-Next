@@ -90,6 +90,8 @@ steps:
           second. Different things, both measured as how often something happens.
 
   - kind: play
+    why: >-
+      Jumping an octave is the same note, bigger. It's one of the simplest ways to make a tune lift.
     layer: lead
     surface: keys
     goal: {notes: 4}

@@ -58,6 +58,8 @@ steps:
           effects don't work on audio tracks at all.
 
   - kind: shape
+    why: >-
+      Stacking notes onto your chords makes them fuller without writing a single new note.
     layer: chords
     knobs: [voicing, spread]
     say:

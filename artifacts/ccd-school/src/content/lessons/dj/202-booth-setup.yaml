@@ -61,6 +61,8 @@ steps:
           speakers. A problem found during setup takes minutes to fix. Found at midnight, it's dead air.
 
   - kind: mix
+    why: >-
+      Picking what goes on deck b is the first choice in every mix.
     goal: free
     say:
       mentor: >-

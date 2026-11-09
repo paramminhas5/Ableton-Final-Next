@@ -59,6 +59,8 @@ steps:
           outgrow it, right-click the Simpler's header to turn it into a Sampler with the same sample.
 
   - kind: tempo
+    why: >-
+      A sampler plays any sound you give it. It's how producers use their own sounds in a track.
     set: sample
     choices: [hit]
     say:

@@ -62,6 +62,8 @@ steps:
           of peaks appears. Close a low-pass filter and watch the top steps vanish first.
 
   - kind: shape
+    why: >-
+      Harmonics are why a saw sounds bright and a square sounds hollow.
     layer: lead
     knobs: [wave, cutoff]
     say:

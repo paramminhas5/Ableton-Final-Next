@@ -57,6 +57,8 @@ steps:
           suspended in time, and it can play grains backwards too.
 
   - kind: shape
+    why: >-
+      Soft, floating chord clouds are loved in ambient and house. You can make that shape here.
     layer: chords
     knobs: [attack, release, spread, send]
     say:

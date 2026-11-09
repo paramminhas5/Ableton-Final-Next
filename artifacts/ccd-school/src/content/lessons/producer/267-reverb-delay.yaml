@@ -59,6 +59,8 @@ steps:
           the reverb return around 200 hz, so the room doesn't muddy the low end.
 
   - kind: shape
+    why: >-
+      Reverb is a room, delay is repeats. Each gives drums a different kind of space.
     layer: drums
     knobs: [send, echo]
     say:
@@ -69,6 +71,8 @@ steps:
       eli5: >-
         Room and repeats on the drums.
   - kind: shape
+    why: >-
+      Different parts can take different amounts of space. Hats can usually take more.
     layer: hats
     knobs: [send, echo]
     say:

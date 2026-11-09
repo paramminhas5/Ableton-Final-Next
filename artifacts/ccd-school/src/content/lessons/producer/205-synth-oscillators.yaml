@@ -56,6 +56,8 @@ steps:
           70s sound.
 
   - kind: shape
+    why: >-
+      The oscillator is where a synth's sound starts. Every other knob shapes what it makes.
     layer: lead
     knobs: [wave]
     say:

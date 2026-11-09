@@ -59,6 +59,8 @@ steps:
           fm between its oscillators too.
 
   - kind: shape
+    why: >-
+      FM makes bright, metallic and bell-like sounds from simple waves.
     layer: lead
     knobs: [fm, ratio, env, cutoff]
     say:
@@ -72,6 +74,8 @@ steps:
         fm makes a second sound shake the first one really fast. It turns a smooth lead into a growly one.
 
   - kind: match
+    why: >-
+      Hearing how much one wave bends another trains your ear for FM sounds.
     layer: lead
     knobs: [fm]
     target: {fm: 0.5}

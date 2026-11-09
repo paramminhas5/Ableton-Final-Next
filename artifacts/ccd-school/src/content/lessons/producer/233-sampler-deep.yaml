@@ -66,6 +66,8 @@ steps:
           snap.
 
   - kind: tempo
+    why: >-
+      Where a sample starts and how it's shaped changes the hit completely.
     set: sample
     choices: [hit]
     say:

@@ -25,6 +25,8 @@ steps:
         Both songs together get a bit muddy down low. The mixer knobs fix it.
 
   - kind: mix
+    why: >-
+      Two bass lines at once sound muddy. Swapping the lows keeps the mix clean.
     goal: swap
     say:
       mentor: >-

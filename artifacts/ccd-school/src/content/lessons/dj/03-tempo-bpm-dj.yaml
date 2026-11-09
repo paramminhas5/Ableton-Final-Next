@@ -27,6 +27,8 @@ steps:
         Djs make them the same speed.
 
   - kind: mix
+    why: >-
+      Matching tempo stops two tracks drifting. It's the first skill every dj learns.
     goal: match
     bank: warm-up
     say:

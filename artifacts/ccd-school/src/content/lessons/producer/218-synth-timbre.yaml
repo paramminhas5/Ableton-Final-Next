@@ -59,6 +59,8 @@ steps:
           reach for the fader.
 
   - kind: shape
+    why: >-
+      The same melody with three timbres shows how much the sound itself changes the mood.
     layer: lead
     knobs: [wave, cutoff, res]
     say:

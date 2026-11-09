@@ -58,6 +58,8 @@ steps:
           while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm.
 
   - kind: copy
+    why: >-
+      Hearing where each hit sits is the first skill in rhythm. Once you can hear it, you can play it.
     layer: drums
     pattern: {kick: "x...x...x...x...", clap: "....x.......x..."}
     say: >-
@@ -65,6 +67,8 @@ steps:
     hint: "The clap is on two and four, the kick on every beat."
 
   - kind: play
+    why: >-
+      Breaking the pattern on purpose shows you what the beat was holding together.
     layer: drums
     surface: pads
     snap: true

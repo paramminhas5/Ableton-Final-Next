@@ -92,6 +92,8 @@ steps:
           and it is what most people clap along to without thinking.
 
   - kind: play
+    why: >-
+      Feeling two and four in your hands is what lets you hear where a track's beat is before you mix it.
     layer: drums
     surface: pads
     goal: {notes: 2, note: clap}

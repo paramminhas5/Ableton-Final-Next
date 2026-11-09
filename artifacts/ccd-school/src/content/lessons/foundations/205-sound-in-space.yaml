@@ -60,6 +60,8 @@ steps:
           same room.
 
   - kind: shape
+    why: >-
+      How much room a sound has decides whether it feels close to you or far away.
     layer: lead
     knobs: [send, level]
     say:

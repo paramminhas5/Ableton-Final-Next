@@ -25,6 +25,8 @@ steps:
         A cue point is a bookmark in a song. A loop plays the same bit over and over.
 
   - kind: mix
+    why: >-
+      Starting deck b on its first kick, on bar one, makes the two ones land together.
     goal: phrase
     say:
       mentor: >-

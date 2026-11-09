@@ -28,6 +28,8 @@ steps:
         loud and crackly.
 
   - kind: tempo
+    why: >-
+      Glue makes your mix sound like one track instead of separate parts.
     set: glue
     say:
       mentor: >-

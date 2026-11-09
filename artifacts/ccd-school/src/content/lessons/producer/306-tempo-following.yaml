@@ -58,6 +58,8 @@ steps:
           than the whole band and it tracks more steadily.
 
   - kind: tempo
+    why: >-
+      Following a drummer's speed is how electronic music plays with live players.
     set: tempo
     marks: [120, 124, 128, 130]
     say:

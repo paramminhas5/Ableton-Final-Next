@@ -27,6 +27,8 @@ steps:
         drums away, then bring it all back.
 
   - kind: arrange
+    why: >-
+      A loop becomes a song when parts come and go. Switching parts off in places is how you give it a shape.
     goal: sections
     say:
       mentor: >-

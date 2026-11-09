@@ -28,6 +28,8 @@ steps:
         your tune so the boom and bass have room.
 
   - kind: shape
+    why: >-
+      EQ gives every part its own slice of the sound, so nothing clashes.
     layer: lead
     knobs: [cut, low, mid, high]
     say:

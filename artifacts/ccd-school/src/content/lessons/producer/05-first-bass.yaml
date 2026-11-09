@@ -27,6 +27,8 @@ steps:
         and the bass take turns.
 
   - kind: imagine
+    why: >-
+      Seeing where bass notes sit against the kick helps you hear why it works.
     layer: bass
     pattern: ". . 1 - . . 5, - . . 1 - . . 1' -"
     say:
@@ -40,6 +42,8 @@ steps:
     hint: "Two notes are home, one dips below, the last jumps an octave up."
 
   - kind: copy
+    why: >-
+      A bass line sits in the gaps between kicks. Copying one shows you where those gaps are.
     layer: bass
     pattern: ". . 1 - . . 1 - . . 1' - . . 5 -"
     say: >-
@@ -47,6 +51,8 @@ steps:
     hint: "Every note is halfway between two beats. The first two are the same note; listen for how far the last two jump."
 
   - kind: play
+    why: >-
+      The bass is what people feel on a dance floor. This is your song's low end.
     layer: bass
     surface: keys
     goal: {notes: 2, on: between, check: [kick, short, moves]}
@@ -62,6 +68,8 @@ steps:
         Press rec, wait for four ticks. Play short bass notes in between the booms. Start with the first key.
 
   - kind: shape
+    why: >-
+      A warm bass or a buzzy one: shaping it decides how it sits under everything.
     layer: bass
     knobs: [cutoff, decay]
     say:
@@ -75,6 +83,8 @@ steps:
         Cutoff makes the bass softer or buzzier. Decay makes each note short or long. Find a bass you like.
 
   - kind: match
+    why: >-
+      Hearing brightness and length by ear is how you'll shape bass in any track.
     layer: bass
     knobs: [cutoff, decay]
     target: {cutoff: 0.3, decay: 0.25}

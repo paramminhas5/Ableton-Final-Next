@@ -57,6 +57,8 @@ steps:
           good they stumble on is always one press away.
 
   - kind: tempo
+    why: >-
+      Your best playing often happens when you're not recording. Keeping every take means nothing is lost.
     set: comp
     layer: lead
     say:

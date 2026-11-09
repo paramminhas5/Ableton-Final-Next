@@ -40,6 +40,8 @@ steps:
         Use keys one, three, four, five and seven. Skip key two and key six.
 
   - kind: play
+    why: >-
+      Five notes that always sound good together make it easy to write a hook that sticks.
     layer: lead
     surface: keys
     goal: {notes: 3, check: [pentatonic, moves, repeat]}
