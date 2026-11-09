@@ -6,7 +6,7 @@
  */
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { loadStarter, newSong, partsOf, readSongs, seedOf, switchSong, type SongIndex } from "@/lib/songs";
+import { loadStarter, newSong, partsOf, readSongs, renameSong, seedOf, switchSong, type SongIndex } from "@/lib/songs";
 import { starterTrack } from "@/lib/starter";
 import { Icon } from "./controls";
 import "./song.css";
@@ -43,13 +43,13 @@ export function AddedForYou({ line = false, short = false }: { line?: boolean; s
     : <span className="sk-tag">added for you</span>;
 }
 
-export function SongKey({ onChange, compact }: { onChange?: () => void; compact?: boolean }) {
+export function SongKey({ onChange, compact, flat }: { onChange?: () => void; compact?: boolean; flat?: boolean }) {
   const [open, setOpen] = useState(false);
   const { name, seed } = useSongName();
   return (
     <>
-      <button type="button" className={`sk-key ${compact ? "is-compact" : ""}`} data-song-key onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label={`Song: ${name}. Load another song`}>
-        <b>{name.toLowerCase()}</b>{seed && !compact ? <AddedForYou /> : null}<Icon name="down" small />
+      <button type="button" className={`sk-key ${compact ? "is-compact" : ""} ${flat ? "is-flat" : ""} ${seed ? "is-seed" : ""}`} data-song-key onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label={`Song: ${name}${seed ? ", added for you" : ""}. Load, rename or start another song`}>
+        <b>{name.toLowerCase()}</b>{seed && !compact && !flat ? <AddedForYou /> : null}<Icon name="down" small />
       </button>
       {open && <SongSheet onClose={() => setOpen(false)} onChange={onChange} />}
     </>
@@ -58,6 +58,7 @@ export function SongKey({ onChange, compact }: { onChange?: () => void; compact?
 
 export function SongSheet({ onClose, onChange }: { onClose: () => void; onChange?: () => void }) {
   const [i, setI] = useState<SongIndex | null>(null);
+  const [renaming, setRenaming] = useState(false);
   const [parts, setParts] = useState<Record<string, number>>({});
   useEffect(() => {
     const idx = readSongs();
@@ -89,6 +90,9 @@ export function SongSheet({ onClose, onChange }: { onClose: () => void; onChange
                     <span className="sk-name">{s.name.toLowerCase()}<small>{parts[s.id] ? `${parts[s.id]} ${parts[s.id] === 1 ? "part" : "parts"}` : "empty"} · {ago(s.updatedAt)}</small></span>
                     {ours ? <span className="sk-tag">added for you</span> : on ? <span className="sk-now">loaded</span> : null}
                   </button>
+                  {on && (renaming
+                    ? <input className="sk-rename" defaultValue={s.name} maxLength={24} autoFocus aria-label="Song name" onKeyDown={e => { if (e.key === "Enter") e.currentTarget.blur(); if (e.key === "Escape") setRenaming(false); }} onBlur={e => { if (e.currentTarget.value.trim()) renameSong(s.id, e.currentTarget.value); setRenaming(false); setI(readSongs()); window.dispatchEvent(new Event(SONG_EVENT)); }} />
+                    : <button type="button" className="sk-renamekey" onClick={() => setRenaming(true)}>rename</button>)}
                 </li>
               );
             })}

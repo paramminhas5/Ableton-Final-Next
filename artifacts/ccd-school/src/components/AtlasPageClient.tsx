@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { editionNeeded, ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
 import { TERMS } from "@/content/glossary";
+import { DEVICES, type DeviceDef } from "@/content/devices";
+import "@/components/m1/library.css";
 import { glossParts } from "@/lib/gloss";
 import { missionAny } from "@/lib/worldOrder";
 import { Walkthrough } from "@/components/m1/Walkthrough";
@@ -15,6 +17,8 @@ import { useProgress } from "@/lib/progress";
 import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
 
+const LAB_GROUP: Record<DeviceDef["category"], AtlasGroup> = { EQ: "eq", DYNAMICS: "dynamics", TIME: "space", MOD: "mod", FILTER: "eq", DRIVE: "drive" };
+const LAB_WORD: Record<DeviceDef["category"], string> = { EQ: "tone", DYNAMICS: "punch", TIME: "space", MOD: "movement", FILTER: "filter", DRIVE: "grit" };
 const GROUP_COLOR: Record<AtlasGroup, string> = {
   instrument: "#5CC8FF", midi: "#7D96FF", eq: "#4FE3B6", dynamics: "#B89CFF", space: "#7D96FF", drive: "#F3C14F",
   mod: "#4FE3B6", creative: "#FFB35C", utility: "#E9E9E6", rack: "#B89CFF", max: "#F3C14F",
@@ -54,12 +58,13 @@ const MORE = [
   { href: "/wiki", label: "wiki", what: "longer reads on the big ideas" },
 ];
 
-type Tab = "yours" | "devices" | "words" | "more";
+type Tab = "home" | "yours" | "devices" | "words" | "more";
 
 export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { slug: string; title: string }[]> }) {
   const { progress } = useProgress();
   const [q, setQ] = useState("");
-  const [tab, setTab] = useState<Tab>("devices");
+  const [tab, setTab] = useState<Tab>("home");
+  const [openWord, setOpenWord] = useState<string | null>(null);
   // Yours (9 Nov): the words from the lessons you've finished and the devices you've used, first, so the library
   // starts as your own notes and opens out from there.
   const met = useMemo(() => {
@@ -71,7 +76,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
     }
     return TERMS.filter(w => seen.has(w.term));
   }, [progress.completedMissions]);
-  useEffect(() => { if (Object.keys(progress.completedMissions).length) setTab(t => (t === "devices" ? "yours" : t)); }, [progress.completedMissions]);
+
   const [group, setGroup] = useState<AtlasGroup | "all">("all");
   const [open, setOpen] = useState<string | null>(null);
 
@@ -90,32 +95,55 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
   const t = q.trim().toLowerCase();
   const devices = useMemo(() => ATLAS.filter(d => (group === "all" || d.group === group) && (!t || `${d.name} ${d.does} ${d.reach}`.toLowerCase().includes(t))), [t, group]);
   const words = useMemo(() => TERMS.filter(w => !t || `${w.term} ${w.def}`.toLowerCase().includes(t)), [t]);
+  const labs = DEVICES.filter(d => !t || `${d.name} ${d.tagline} ${d.category}`.toLowerCase().includes(t));
   const more = MORE.filter(m => !t || `${m.label} ${m.what}`.includes(t));
   const used = (id: string) => (lessons[id] ?? []).find(l => !!progress.completedMissions[l.slug]);
 
   return (
-    <main className="m1-page" style={{ paddingTop: 4 }}>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", height: 52 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 400, letterSpacing: "-.02em", margin: 0 }}>library</h1>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}><span className="m1-t11">{ATLAS.length + TERMS.length + MORE.length} entries</span><Walkthrough screen="wiki" /></span>
+    <main className="m1-page lb" style={{ paddingTop: 4 }}>
+      <div className="lb-head">
+        <h1>library</h1>
+        <Walkthrough screen="wiki" />
       </div>
-      <Screen>
-        <label style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--disp-ink)" }}>
-          <span style={{ color: "var(--disp-sub)" }}><Icon name="search" /></span>
-          <span className="sr-only">Search the library</span>
-          <input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="search: reverb, bass, sidechain"
-            style={{ flex: 1, background: "none", border: 0, outline: "none", color: "var(--disp-ink)", font: "400 24px/1.2 Outfit, system-ui", caretColor: "var(--led-mint)", minWidth: 0 }} />
-        </label>
-        <div className="ls-meta" style={{ marginTop: 14, justifyContent: "flex-start", gap: 16 }} aria-live="polite">
-          <span style={{ color: tab === "devices" ? "var(--disp-ink)" : undefined }}>{devices.length} devices</span>
-          <span style={{ color: tab === "words" ? "var(--disp-ink)" : undefined }}>{words.length} words</span>
-          <span style={{ color: tab === "more" ? "var(--disp-ink)" : undefined }}>{more.length} guides</span>
-        </div>
-      </Screen>
+      <label className="lb-search">
+        <Icon name="search" />
+        <span className="sr-only">Search devices and words</span>
+        <input type="search" value={q} onChange={e => { setQ(e.target.value); if (tab !== "home") setTab("home"); }} placeholder="search" />
+      </label>
 
-      <div style={{ marginTop: 14 }}>
-        <Switch label="Library section" value={tab} onChange={id => setTab(id as Tab)} options={[{ id: "yours", label: "yours" }, { id: "devices", label: "devices" }, { id: "words", label: "words" }, { id: "more", label: "guides" }]} />
-      </div>
+      {tab === "home" && (
+        <>
+          {/* Devices you can play: each opens its lab, playing on a loop, every knob live. */}
+          <div className="lb-sec"><b>play with a device</b><span>{labs.length}</span></div>
+          <div className="lb-grid">
+            {labs.map(d => (
+              <Link key={d.slug} href={`/device/${d.slug}`} className="lb-tile">
+                <GroupPic g={LAB_GROUP[d.category]} />
+                <b>{d.name.toLowerCase()}</b>
+                <small>{LAB_WORD[d.category]}</small>
+              </Link>
+            ))}
+            {!labs.length && <p className="m1-t11">nothing called that. try reverb or eq.</p>}
+          </div>
+          {(t ? words.slice(0, 12) : met).length ? (
+            <>
+              <div className="lb-sec"><b>{t ? "words" : "your words"}</b><span>{t ? words.length : met.length}</span></div>
+              <div className="lb-chips">
+                {(t ? words.slice(0, 12) : met).map(w => (
+                  <button key={w.term} type="button" className={`lb-chip ${openWord === w.term ? "is-on" : ""}`} aria-expanded={openWord === w.term} onClick={() => setOpenWord(o => (o === w.term ? null : w.term))}>{w.term.toLowerCase()}</button>
+                ))}
+              </div>
+              {openWord ? <p className="lb-def">{TERMS.find(w => w.term === openWord)?.def}</p> : null}
+            </>
+          ) : null}
+          <div className="lb-more">
+            <button type="button" className="lb-morekey" onClick={() => setTab("devices")}><b>{ATLAS.length}</b>every device in live</button>
+            <button type="button" className="lb-morekey" onClick={() => setTab("words")}><b>{TERMS.length}</b>every word</button>
+            <button type="button" className="lb-morekey" onClick={() => setTab("more")}><b>{MORE.length}</b>guides</button>
+          </div>
+        </>
+      )}
+      {tab !== "home" ? <button type="button" className="ls-chip lb-back" onClick={() => setTab("home")}><Icon name="back" small />library</button> : null}
 
       {tab === "yours" && (
         <section data-tour="met">

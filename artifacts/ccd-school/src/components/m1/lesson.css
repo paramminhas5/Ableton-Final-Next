@@ -1038,3 +1038,27 @@ a.jv-lane:hover{transform:translateX(3px)}
 .ev-sw button[aria-checked=true]{color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
 .gy-head{display:flex;align-items:center;gap:10px;height:52px}
 .gy-more{text-align:center;margin:10px 0 0}
+/* header keys (9 Nov, night): "all" and "?" share the size of the studio's tags, so they sit in a header row */
+.hk{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:30px;min-width:30px;padding:0 9px;border:1px solid color-mix(in srgb,var(--ink) 22%,transparent);border-radius:9px;background:transparent;font:600 12px Outfit,system-ui;color:var(--print);cursor:pointer}
+.hk i{width:6px;height:6px;border-radius:50%;background:color-mix(in srgb,var(--ink) 20%,transparent)}
+.hk.is-on{color:var(--ink)}
+.hk.is-on i{background:var(--led-mint);box-shadow:0 0 6px var(--led-mint)}
+.hk.is-q{padding:0;width:30px;font-size:13px}
+.hk:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
+/* the lesson strip, 9 Nov night: play key at the top, name and tempo on one baseline, lanes the full width */
+.fl-song{align-items:flex-start}
+.fl-songplay{margin-top:2px}
+.fl-songname{min-height:26px}
+.fl-songname>span{font-size:12px}
+.fl-seed{font-style:normal;font-weight:600;color:#C98A1E}
+.dark .fl-seed{color:#E9A93A}
+/* practice on tablet and laptop: today and your levels on the left, the drills as a grid on the right */
+@media (min-width:900px){
+  .m1-page.gy-home{max-width:1120px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);column-gap:32px;grid-auto-flow:row dense;align-content:start}
+  .gy-home>.gy-head{grid-column:1/-1}
+  .gy-home>.gy-today,.gy-home>.m1-scr,.gy-home>.ls-panel{grid-column:1}
+  .gy-home>.gy-today{margin-bottom:14px}
+  .gy-home>.m1-silk{grid-column:2;grid-row:2;margin-top:0}
+  .gy-home>.ls-pads{grid-column:2;grid-row:3/span 8;grid-template-columns:repeat(3,minmax(0,1fr));align-self:start}
+  .gy-home>.gy-more{grid-column:2}
+}

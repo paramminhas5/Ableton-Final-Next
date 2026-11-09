@@ -223,6 +223,13 @@ export function Today() {
         </Link>
         {Object.keys(done).length > 0 && <YouCard xp={progress.xp} streak={progress.streakDays} done={done} />}
       </div>
+      {/* Wide screens: the rest of ccd school, one tap away, so the page isn't half empty. */}
+      <div className="hm-c" aria-label="More of ccd school">
+        <Link href="/gym" className="hm-tile"><Icon name="practice" /><b>practice</b><span>today&apos;s 5 minutes</span></Link>
+        <Link href="/studio" className="hm-tile"><Icon name="studio" /><b>studio</b><span>build your song out</span></Link>
+        <Link href="/dj" className="hm-tile"><Icon name="dj" /><b>dj decks</b><span>play your song out</span></Link>
+        <Link href="/atlas" className="hm-tile"><Icon name="library" /><b>library</b><span>devices you can play</span></Link>
+      </div>
       <DuoFilters />
     </div>
   );

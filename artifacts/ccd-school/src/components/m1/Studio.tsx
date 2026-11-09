@@ -48,6 +48,7 @@ import {
   TYPE,
   useTrackV2,
   readTrackV2,
+  toV1View,
   type Bank,
   type LayerV2,
   type Surface,
@@ -59,10 +60,11 @@ import {
 import { downloadSongMidi, heardPasses, variesByPass } from "@/lib/track2-midi";
 import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
-import { AddedForYou } from "./SongKey";
+import { Lanes } from "./shell";
 import { useProgress } from "@/lib/progress";
 import { ctlKey, learntSet } from "@/lib/taught";
-import { EverythingSwitch, useEverything } from "./Everything";
+import { DepthKey, useEverything } from "./Everything";
+import { ArrangeView } from "./ArrangeView";
 import { Walkthrough } from "./Walkthrough";
 import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
@@ -87,7 +89,7 @@ import { PlayerSurface } from "./PlayerSurface";
 import { applyPlayer } from "@/lib/players";
 import { elsewhereLine, knobLabel, stepName } from "@/lib/controlNames";
 import { ElsewhereLine } from "./Elsewhere";
-import { commitLoop, goSection, sectionNow } from "@/lib/arrange";
+import { commitLoop, goSection, sectionAt, sectionNow } from "@/lib/arrange";
 import { partLen, swingOf } from "@/lib/partLength";
 
 /** The screen's big readout: a stepped knob shows its short name ("svf"), the knob's own readout the rest. */
@@ -107,7 +109,7 @@ const DUCK_IDX = LAYER_PARAMS.find(p => p.id === "mix.duck")!.index;
 const shortKey = (k: string) => { const [r, ...rest] = k.split(" "); const sc = rest.join(" "); return sc ? `${r} ${sc.slice(0, 3)}` : r; };
 type Touched = { label: string; text: string; key?: string } | null;
 type LockAt = { note: number | null; step: number } | null;
-type Mode = "play" | "mix";
+type Mode = "play" | "arrange" | "mix";
 const NOTE_NAMES = ["c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "a#", "b"];
 
 
@@ -224,6 +226,8 @@ export function Studio() {
   const selIndex = sel ? track.layers.indexOf(sel) : -1;
   const type = sel ? TYPE[sel.type] : null;
   const drumLike = sel ? TYPE[sel.type].engine === "drums" : false;
+  // create, arrange and mix, each once a lesson has opened it (or with everything on).
+  const modesNow: Mode[] = ["play", ...(knows("sections", "capture-midi") || track.sections?.length ? ["arrange" as Mode] : []), ...(knows("balance") ? ["mix" as Mode] : [])];
   // Simple: the part's own surface (pads for drums, keys for the rest), plus the step grid once a lesson has taught it.
   const surfacesNow = sel ? TYPE[sel.type].surfaces.filter(x => everything || x === (drumLike ? "pads" : "keys") || (x === "steps" && knows("note-values", "hats"))) : [];
   const surfaceCount = surfacesNow.length + (everything ? 1 + (sel && (sel.type === "drums" || sel.type === "bass") ? 1 : 0) : 0);
@@ -710,26 +714,36 @@ export function Studio() {
           <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}>
             <Icon name="back" />
           </Link>
-          {knows("balance") ? <div className="st-mode st-mode2" role="radiogroup" aria-label="Studio mode">
-            {(["play", "mix"] as Mode[]).map(m => (
-              <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m}</button>
-            ))}
-          </div> : null}
+
           <span style={{ flex: 1 }} />
-          <button type="button" className="st-tag st-songtag"
+          <button type="button" className={`st-tag st-songtag ${seeded ? "is-seed" : ""}`}
             aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
           {knows("major-scale") ? <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
             onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setMidiOpen(false); setKeyOpen(o => !o); }}>
             {/* a phone shows the short key (a min) so the chip is never cut to "a mi..." */}
             <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button> : null}
-          {mode === "mix" || !knows("note-values", "hats") ? null : (
+          {mode !== "play" || !knows("note-values", "hats") ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}
+          <DepthKey value={everything} onChange={setEverything} />
+          <Walkthrough screen="studio" />
         </div>
-
-        <div className="st-ev"><EverythingSwitch value={everything} onChange={setEverything} /><Walkthrough screen="studio" /></div>
-        {seeded ? <AddedForYou line short /> : null}
+        {/* create, arrange, mix: their own row on a phone, beside your song's name on a wide screen. */}
+        <div className="st-moderow">{modesNow.length > 1 ? <div className={`st-mode st-mode${modesNow.length}`} role="radiogroup" aria-label="Studio mode">
+            {modesNow.map(m => (
+              <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m === "play" ? "create" : m}</button>
+            ))}
+          </div> : null}</div>
+        {/* Wide screens: your whole song across the top, so you see where a part or a section goes. */}
+        <div className="st-songbar" aria-hidden={false}>
+          <div className="st-songbar-l"><b>{songName.toLowerCase()}</b>{seeded ? <span className="sk-tag">added for you</span> : <span>{track.layers.length} parts{track.sections?.length ? ` · ${track.sections.length} sections` : ""}</span>}{modesNow.length > 1 ? <div className={`st-mode st-mode${modesNow.length}`} role="radiogroup" aria-label="Studio mode">
+            {modesNow.map(m => (
+              <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m === "play" ? "create" : m}</button>
+            ))}
+          </div> : null}</div>
+          <div className="st-songbar-lanes"><Lanes track={toV1View(track)} playhead={playing ? Math.floor(((((pos.beat % (track.loop || 4)) + (track.loop || 4)) % (track.loop || 4)) / (track.loop || 4)) * 16) : -1} width={900} /></div>
+        </div>
         {/* Only the layers that exist, then one plus. No empty slots, so the row stays big. */}
         <div className="st-slots" style={{ gridTemplateColumns: `${track.layers.length ? `repeat(${track.layers.length}, minmax(0,1fr))` : ""}${track.layers.length < MAX_LAYERS ? " 50px" : ""}` }}>
           {track.layers.map(l => {
@@ -754,6 +768,8 @@ export function Studio() {
 
         {mode === "mix" ? (
           <div className="st-mixwrap"><Mix track={track} engine={engine} selId={selId} onSelect={setSelId} update={update} playing={playing} /></div>
+        ) : mode === "arrange" ? (
+          <div className="st-mixwrap"><ArrangeView track={track} update={fn => update(fn)} onEdit={() => setMode("play")} playingSection={playing && track.sections?.length ? sectionAt(track.sections, pos.beat) : -1} /></div>
         ) : (
         <>
         <Screen className="st-scr" height={96}>
@@ -858,8 +874,8 @@ export function Studio() {
                     <button type="button" className="st-tag" onClick={() => update(t => goSection(t, 0))}>edit {track.sections[0].name}</button></>
                 ) : <span className="st-ss st-secname">your loop</span>}
                 <span style={{ flex: 1 }} />
-                <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into the next section and go there"
-                  onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "committed", text: `now in ${next.sections![next.at!].name}` }); }}>commit</button>
+                <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into a new section and go there"
+                  onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "copied to section", text: next.sections![next.at!].name }); }}>+ section</button>
               </div> : null}
             {everything || surfacesNow.length > 1 ? <div className={`st-pick ${surfaceCount > 4 ? "is-5" : ""}`} style={{ gridTemplateColumns: `repeat(${surfaceCount},minmax(0,1fr))` }}>
               {surfacesNow.map(s => (
@@ -922,7 +938,7 @@ export function Studio() {
 
             </div>
             <div className="st-side">
-            <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" />
+            {everything ? <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" /> : null}
             <div className="st-shape">
               {banksNow.length > 1 ? <div className="st-bank" role="radiogroup" aria-label="Knob bank">
                 {banksNow.map(b => (
@@ -934,7 +950,7 @@ export function Studio() {
                       setTouched(null);
                     }}>{b === "sound" && shift ? "sound 2" : b === "fx" && bank === "fx" && shift ? "filter" : b}</button>
                 ))}
-              </div> : <span className="st-ss" style={{ flex: 1 }}>sound</span>}
+              </div> : null}
               {knows("tracks") ? <><button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
                 aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>mute</button>
               <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}

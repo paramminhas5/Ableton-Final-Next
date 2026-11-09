@@ -44,3 +44,13 @@ export function EverythingSwitch({ value, onChange }: { value: boolean; onChange
     </div>
   );
 }
+
+/** The compact header key (9 Nov, night): one tag-sized key with a light, "all" lit when everything shows. */
+export function DepthKey({ value, onChange }: { value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button type="button" className={`hk ${value ? "is-on" : ""}`} aria-pressed={value} onClick={() => onChange(!value)}
+      aria-label={value ? "Showing every control. Tap for simple" : "Simple: only what you've learnt. Tap to show every control"}>
+      <i aria-hidden />all
+    </button>
+  );
+}

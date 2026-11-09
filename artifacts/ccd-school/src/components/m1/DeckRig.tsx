@@ -102,15 +102,9 @@ export function DeckRig(p: Props) {
           <div className="dk-tempo">
             <span className="dk-silk">tempo</span>
             <div className="dk-tempofader">
-              <Fader label={`tempo deck ${d.id}`} value={0.5 - d.pitch / 2} onChange={v => p.onPitch?.(d.id, (0.5 - v) * 2)} onTouch={p.onTouch} height={150} width={36} defaultValue={0.5} valueText={`${(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)} bpm`} />
+              <Fader label={`tempo deck ${d.id}`} value={0.5 - d.pitch / 2} onChange={v => p.onPitch?.(d.id, (0.5 - v) * 2)} onTouch={p.onTouch} height={small ? 96 : 150} width={small ? 26 : 36} defaultValue={0.5} valueText={`${(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)} bpm`} />
             </div>
             <span className="dk-bpm">{(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)}</span>
-          </div>
-        ) : null}
-        {show.has("tempo") ? (
-          <div className="dk-tempo-h">
-            <Fader horizontal label={`tempo deck ${d.id}`} value={0.5 + d.pitch / 2} onChange={v => p.onPitch?.(d.id, (v - 0.5) * 2)} onTouch={p.onTouch} width={96} defaultValue={0.5} valueText={`${(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)} bpm`} />
-            <span className="dk-bpm">tempo {(d.bpm * (1 + d.pitch * 0.08)).toFixed(1)}</span>
           </div>
         ) : null}
       </div>

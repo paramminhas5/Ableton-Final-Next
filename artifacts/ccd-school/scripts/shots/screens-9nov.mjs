@@ -25,6 +25,7 @@ const S = {
   "dj-tour": ["/dj?tour=1", { ...mine, "ccd.progress.v2": P("dj", ["what-is-djing", "dj-equipment", "tempo-bpm-dj"]) }],
   "studio": ["/studio", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "studio-all": ["/studio?all=1", { ...mine, "ccd.progress.v2": P("producer", ["your-kick"]) }],
+  "studio-arrange": ["/studio?all=1&mode=arrange", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "studio-tour": ["/studio?tour=1", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "home": ["/dashboard", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "home-tour": ["/dashboard?tour=1", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
@@ -33,7 +34,7 @@ const S = {
   "practice": ["/practice", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "syllabus": ["/learn", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
   "wiki": ["/atlas", { ...mine, "ccd.progress.v2": P("producer", ["your-kick", "synth-what-is-sound", "hats"]) }],
-  "welcome-1": ["/", {}], "welcome-2": ["/", {}, 1], "welcome-3": ["/", {}, 2], "welcome-4": ["/", {}, 3], "welcome-5": ["/", {}, 4], "welcome-6": ["/", {}, 5], "welcome-7": ["/", {}, 6],
+  "w00": ["/", {}, 0], "w01": ["/", {}, 1], "w02": ["/", {}, 2], "w03": ["/", {}, 3], "w04": ["/", {}, 4], "w05": ["/", {}, 5], "w06": ["/", {}, 6], "w07": ["/", {}, 7], "w08": ["/", {}, 8], "w09": ["/", {}, 9], "w10": ["/", {}, 10], "w11": ["/", {}, 11],
 };
 const b = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 for (const th of themes.split(",")) for (const sz of sizes.split(",")) for (const name of (scenes ? scenes.split(",") : Object.keys(S))) {
@@ -47,6 +48,8 @@ for (const th of themes.split(",")) for (const sz of sizes.split(",")) for (cons
   await p.waitForTimeout(1600);
   for (let k = 0; k < steps; k++) { await p.locator(".wl-go button, .wl-go a").first().click(); await p.waitForTimeout(650); }
   if (name.endsWith("-tour")) await p.waitForTimeout(900);
+  if (name === "studio-arrange") { await p.getByRole("radio", { name: "arrange" }).click().catch(() => {}); await p.waitForTimeout(500); }
+  if (name.startsWith("w") && name.length === 3) await p.waitForTimeout(1300);
   const file = `${out}/${tag}-${th}-${sz}-${name}.png`;
   await p.screenshot({ path: file });
   console.log(file.split("/").pop());

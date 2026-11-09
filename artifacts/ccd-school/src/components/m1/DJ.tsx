@@ -21,7 +21,7 @@ import { songCommands } from "./MixStep";
 import { DeckRig, sectionsFor, type Chan, type DeckId } from "./DeckRig";
 import { Icon, LED, Screen } from "./controls";
 import { useEngineTrack } from "./useEngineTrack";
-import { useEverything, EverythingSwitch } from "./Everything";
+import { useEverything, DepthKey } from "./Everything";
 import { Walkthrough } from "./Walkthrough";
 
 const BEATS = 64;
@@ -100,7 +100,7 @@ export function DJ() {
       <header className="dj-head">
         <Link href="/dashboard" className="m1-m" aria-label="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Link>
         <span className="m1-t22" style={{ flex: 1 }}>dj</span>
-        <EverythingSwitch value={everything} onChange={setEverything} />
+        <DepthKey value={everything} onChange={setEverything} />
         <Walkthrough screen="dj" />
       </header>
       <DeckRig

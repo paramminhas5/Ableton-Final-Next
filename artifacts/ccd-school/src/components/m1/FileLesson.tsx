@@ -144,14 +144,14 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
   const playhead = playing ? Math.floor(((((beat % loop) + loop) % loop) / loop) * 16) : -1;
   return (
     <section className="fl-song" aria-label="Your song">
-      <button type="button" className={`fl-songplay ${playing ? "is-on" : ""}`} onClick={toggle} disabled={empty} aria-label={playing ? "Stop your song" : "Play your song"}>
+      <button type="button" className={`fl-songplay ${playing ? "is-on" : ""}`} data-strip onClick={toggle} disabled={empty} aria-label={playing ? "Stop your song" : "Play your song"}>
         <Icon name={playing ? "stop" : "play"} />
       </button>
       <div className="fl-songbody" ref={bodyRef}>
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <span className="fl-songkeys"><SongKey compact /><button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><Icon name="edit" small /></button></span>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : seed ? <><AddedForYou /> {t?.bpm ?? 120} bpm</> : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <><SongKey flat /><span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : seed ? <em className="fl-seed">added for you</em> : `${t?.bpm ?? 120} bpm`}</span></>}</div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}

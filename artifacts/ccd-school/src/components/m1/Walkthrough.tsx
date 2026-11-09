@@ -69,7 +69,7 @@ export function Walkthrough({ screen, auto = true }: { screen: keyof typeof TOUR
   const close = useCallback(() => { setOpen(false); try { localStorage.setItem(KEY(screen), "1"); } catch { /* ignore */ } }, [screen]);
   return (
     <>
-      <button type="button" className="wk-q" onClick={() => setOpen(true)} aria-label="Show me around this screen">?</button>
+      <button type="button" className="hk is-q" onClick={() => setOpen(true)} aria-label="Show me around this screen">?</button>
       {open && <Tour stops={TOURS[screen] ?? []} onClose={close} />}
     </>
   );

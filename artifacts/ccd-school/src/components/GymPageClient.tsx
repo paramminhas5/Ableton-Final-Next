@@ -337,12 +337,12 @@ export function GymPageClient() {
       { id: "train", label: "more ear training", pic: "train", c: "#E9E9E6", href: "/train" },
     ];
     return (
-      <main className="m1-page" style={{ paddingTop: 4 }}>
+      <main className="m1-page gy-home" style={{ paddingTop: 4 }}>
         <header className="gy-head"><span className="m1-t22" style={{ flex: 1 }}>practice</span><Walkthrough screen="practice" /></header>
         <div className="m1-g gy-today" data-tour="today">
           <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start today's 5 minutes"}</GoPill>
         </div>
-        <p className="m1-t11" style={{ textAlign: "center", margin: "8px 0 12px" }}>headphones help. speakers work too.</p>
+
         <Screen>
           <div className="ls-meta">
             <span>practice · 5 minutes</span>

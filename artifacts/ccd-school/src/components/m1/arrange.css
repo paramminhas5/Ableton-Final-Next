@@ -1,0 +1,28 @@
+/* The studio's arrange mode (ArrangeView.tsx). */
+.av{display:flex;flex-direction:column;gap:12px;padding:4px 0 8px}
+.av-how{display:flex;align-items:center;gap:10px;justify-content:center;padding:18px 8px;border-radius:16px;background:radial-gradient(120% 90% at 50% 0%,#0C0C0E,#030304);color:var(--disp-ink);box-shadow:0 0 0 1.5px #000,inset 0 8px 18px rgba(0,0,0,.6)}
+.av-how .m1-ico-s{stroke:var(--disp-sub)}
+.av-blk{display:flex;flex-direction:column;gap:6px;min-width:64px;padding:8px;border-radius:10px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.av-blk b{font-size:12px;font-weight:600}
+.av-blk.is-now{box-shadow:inset 0 0 0 1.5px var(--led-mint)}
+.av-blk.is-new{box-shadow:inset 0 0 0 1.5px dashed var(--led-mint);border:1.5px dashed var(--led-mint);background:transparent;animation:av-new 1.6s ease-in-out infinite alternate}
+.av-mini{display:flex;flex-direction:column;gap:3px}
+.av-mini i{height:5px;border-radius:2px;background:var(--c);opacity:.85}
+.av-line{margin:0 4px;font-size:13px;line-height:1.4;color:var(--print);text-align:center}
+.av-go{height:64px!important;justify-content:flex-start!important;gap:12px;padding:0 14px!important;font-size:14px;font-weight:600}
+.av-go>span:last-child{margin-top:-6px}
+.av-meta{display:flex;justify-content:space-between;font-size:11px;font-weight:500;color:var(--print)}
+.av-grid{display:grid;gap:4px;align-items:stretch;padding:10px;border-radius:14px;background:radial-gradient(120% 90% at 50% 0%,#0C0C0E,#030304);box-shadow:0 0 0 1.5px #000,inset 0 8px 18px rgba(0,0,0,.6)}
+.av-sec{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:6px 8px;border:0;border-radius:8px;background:rgba(255,255,255,.05);color:var(--disp-ink);font:inherit;text-align:left;cursor:pointer}
+.av-sec b{font-size:13px;font-weight:600}
+.av-sec small{font-size:10px;color:var(--disp-sub)}
+.av-sec.is-edit{box-shadow:inset 0 0 0 1.5px var(--led-mint)}
+.av-sec.is-play{background:rgba(255,255,255,.14)}
+.av-part{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--disp-sub);min-width:0}
+.av-part i{width:6px;height:6px;border-radius:50%;background:var(--c);flex:none}
+.av-cell{height:22px;border:0;border-radius:4px;background:rgba(255,255,255,.05);cursor:pointer}
+.av-cell.is-on{background:var(--c);opacity:.85}
+.av-cell.is-on.is-play{opacity:1;box-shadow:0 0 8px var(--c)}
+.av-cell:focus-visible,.av-sec:focus-visible{outline:2px solid var(--led-mint);outline-offset:1px}
+@keyframes av-new{from{opacity:.55}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.av-blk.is-new{animation:none}}
