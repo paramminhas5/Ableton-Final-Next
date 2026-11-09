@@ -8,6 +8,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { editionNeeded, ATLAS, ATLAS_GROUPS, type AtlasGroup } from "@/content/atlas";
 import { TERMS } from "@/content/glossary";
+import { glossParts } from "@/lib/gloss";
+import { missionAny } from "@/lib/worldOrder";
+import { Walkthrough } from "@/components/m1/Walkthrough";
 import { useProgress } from "@/lib/progress";
 import { Icon, Screen, Silk, Switch } from "@/components/m1/controls";
 import "@/components/m1/lesson.css";
@@ -51,12 +54,24 @@ const MORE = [
   { href: "/wiki", label: "wiki", what: "longer reads on the big ideas" },
 ];
 
-type Tab = "devices" | "words" | "more";
+type Tab = "yours" | "devices" | "words" | "more";
 
 export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { slug: string; title: string }[]> }) {
   const { progress } = useProgress();
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<Tab>("devices");
+  // Yours (9 Nov): the words from the lessons you've finished and the devices you've used, first, so the library
+  // starts as your own notes and opens out from there.
+  const met = useMemo(() => {
+    const seen = new Set<string>();
+    for (const slug of Object.keys(progress.completedMissions)) {
+      const m = missionAny(slug);
+      const text = [m?.title ?? "", m?.tagline ?? "", ...(m?.learns ?? [])].join(" ");
+      for (const part of glossParts(text)) if (part.term) seen.add(part.term);
+    }
+    return TERMS.filter(w => seen.has(w.term));
+  }, [progress.completedMissions]);
+  useEffect(() => { if (Object.keys(progress.completedMissions).length) setTab(t => (t === "devices" ? "yours" : t)); }, [progress.completedMissions]);
   const [group, setGroup] = useState<AtlasGroup | "all">("all");
   const [open, setOpen] = useState<string | null>(null);
 
@@ -82,7 +97,7 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
     <main className="m1-page" style={{ paddingTop: 4 }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", height: 52 }}>
         <h1 style={{ fontSize: 26, fontWeight: 400, letterSpacing: "-.02em", margin: 0 }}>library</h1>
-        <span className="m1-t11">{ATLAS.length + TERMS.length + MORE.length} entries</span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}><span className="m1-t11">{ATLAS.length + TERMS.length + MORE.length} entries</span><Walkthrough screen="wiki" /></span>
       </div>
       <Screen>
         <label style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--disp-ink)" }}>
@@ -99,8 +114,29 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
       </Screen>
 
       <div style={{ marginTop: 14 }}>
-        <Switch label="Library section" value={tab} onChange={id => setTab(id as Tab)} options={[{ id: "devices", label: "devices" }, { id: "words", label: "words" }, { id: "more", label: "more" }]} />
+        <Switch label="Library section" value={tab} onChange={id => setTab(id as Tab)} options={[{ id: "yours", label: "yours" }, { id: "devices", label: "devices" }, { id: "words", label: "words" }, { id: "more", label: "guides" }]} />
       </div>
+
+      {tab === "yours" && (
+        <section data-tour="met">
+          <Silk label="words from your lessons" right={`${met.length}`} />
+          {met.length ? (
+            <div className="ls-panel" style={{ flexDirection: "column", gap: 0, padding: "4px 16px", marginTop: 0 }}>
+              {met.filter(w => !t || `${w.term} ${w.def}`.toLowerCase().includes(t)).map((w, i) => (
+                <div key={w.term} style={{ padding: "12px 0", borderTop: i ? "1px solid var(--line)" : 0, width: "100%" }}>
+                  <b style={{ fontWeight: 600 }}>{w.term.toLowerCase()}</b>
+                  <p style={{ margin: "4px 0 0", fontSize: 14, lineHeight: 1.45, color: "var(--sub)" }}>{w.def}</p>
+                </div>
+              ))}
+            </div>
+          ) : <p className="m1-t11" style={{ margin: "0 4px" }}>finish a lesson and every word it uses lands here.</p>}
+          <Silk label="devices you've used" right={`${ATLAS.filter(d => used(d.id)).length}`} />
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {ATLAS.filter(d => used(d.id)).map(d => <a key={d.id} href={`#${d.id}`} className="m1-tag" style={{ height: 28 }}>{d.name.toLowerCase()}</a>)}
+            {!ATLAS.some(d => used(d.id)) ? <p className="m1-t11" style={{ margin: "0 4px" }}>devices light up here as your lessons use them.</p> : null}
+          </div>
+        </section>
+      )}
 
       {tab === "devices" && (
         <>

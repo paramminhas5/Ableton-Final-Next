@@ -268,3 +268,6 @@
 .st-mk>.m1-m{flex:1}
 .st-mk.is-learnt::after{content:"";position:absolute;left:10px;top:10px;width:7px;height:7px;border-radius:50%;background:var(--led-mint);box-shadow:0 0 8px var(--led-mint);pointer-events:none}
 .st-mk:not(.is-learnt) .m1-ml{color:var(--print)!important;font-weight:500}
+/* simple / everything and the walkthrough key, under the studio header (9 Nov) */
+.st-ev{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 8px}
+.st-noknobs{margin:6px 4px;font-size:12.5px;color:var(--print);text-align:center}

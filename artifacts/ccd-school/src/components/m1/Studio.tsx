@@ -61,7 +61,9 @@ import { downloadWav } from "@/lib/bounce";
 import { starterTrack } from "@/lib/starter";
 import { AddedForYou } from "./SongKey";
 import { useProgress } from "@/lib/progress";
-import { ctlKey, learntSet, readLearntView, saveLearntView, whereTaught, type LearntView } from "@/lib/taught";
+import { ctlKey, learntSet } from "@/lib/taught";
+import { EverythingSwitch, useEverything } from "./Everything";
+import { Walkthrough } from "./Walkthrough";
 import { CAP, Dice, Icon, Key, Knob, PadRing, Screen, Silk } from "./controls";
 import { fillDrums, fillMelody, newSeed } from "@/lib/dice";
 import { Mix } from "./Mix";
@@ -192,9 +194,9 @@ export function Studio() {
   // What you have learnt shapes the knobs (9 Nov, two designs to compare: "hide" and "mark").
   const { progress: prog } = useProgress();
   const learnt = useMemo(() => learntSet(prog.completedMissions), [prog.completedMissions]);
-  const [lview, setLview] = useState<LearntView>("hide");
-  useEffect(() => setLview(readLearntView()), []);
-  const pickView = (v: LearntView) => { setLview(v); saveLearntView(v); };
+  // Simple shows what your lessons have taught; everything shows the whole instrument (9 Nov).
+  const [everything, setEverything] = useEverything();
+  const knows = (...slugs: string[]) => everything || slugs.some(x => !!prog.completedMissions[x]);
   const [seedTick, setSeedTick] = useState(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const seeded = useMemo(() => !!seedOf(), [track, songs, seedTick]);
@@ -222,6 +224,10 @@ export function Studio() {
   const selIndex = sel ? track.layers.indexOf(sel) : -1;
   const type = sel ? TYPE[sel.type] : null;
   const drumLike = sel ? TYPE[sel.type].engine === "drums" : false;
+  // Simple: the part's own surface (pads for drums, keys for the rest), plus the step grid once a lesson has taught it.
+  const surfacesNow = sel ? TYPE[sel.type].surfaces.filter(x => everything || x === (drumLike ? "pads" : "keys") || (x === "steps" && knows("note-values", "hats"))) : [];
+  const surfaceCount = surfacesNow.length + (everything ? 1 + (sel && (sel.type === "drums" || sel.type === "bass") ? 1 : 0) : 0);
+  const banksNow = BANKS.filter(b => b === "sound" || (b === "eq" && knows("eq-place")) || (b === "fx" && knows("space")) || (b === "mix" && knows("balance")));
   const playing = !!(pos.flags & FLAG.playing);
   const countIn = !!(pos.flags & FLAG.countIn);
   const recording = !!(pos.flags & FLAG.recording);
@@ -704,24 +710,25 @@ export function Studio() {
           <Link href="/dashboard" aria-label="Back" style={{ color: "var(--ink)", display: "flex", minHeight: 0, minWidth: 0 }}>
             <Icon name="back" />
           </Link>
-          <div className="st-mode st-mode2" role="radiogroup" aria-label="Studio mode">
+          {knows("balance") ? <div className="st-mode st-mode2" role="radiogroup" aria-label="Studio mode">
             {(["play", "mix"] as Mode[]).map(m => (
               <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => { setMode(m); setAdding(false); setTouched(null); }}>{m}</button>
             ))}
-          </div>
+          </div> : null}
           <span style={{ flex: 1 }} />
           <button type="button" className="st-tag st-songtag"
             aria-label={`Songs, now ${songName}`} aria-pressed={songsOpen} onClick={() => { setMode("play"); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setSongsOpen(o => !o); setAdding(false); }}>{songName}</button>
           <button type="button" className="st-tag" onClick={() => update(t => ({ ...t, bpm: t.bpm >= 140 ? 90 : t.bpm + 5 }))} aria-label={`Tempo ${track.bpm} bpm, tap to change`}>{track.bpm} bpm</button>
-          <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
+          {knows("major-scale") ? <button type="button" className="st-tag st-keytag" aria-pressed={keyOpen} aria-label={`Key ${keyName(track.root, scaleOf(track))}, tap to change`}
             onClick={() => { setMode("play"); setSongsOpen(false); setResetOpen(false); setAdding(false); setWavOpen(false); setMidiOpen(false); setKeyOpen(o => !o); }}>
             {/* a phone shows the short key (a min) so the chip is never cut to "a mi..." */}
-            <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button>
-          {mode === "mix" ? null : (
+            <span className="st-keyfull">{keyName(track.root, scaleOf(track))}</span><span className="st-keyshort" aria-hidden>{shortKey(keyName(track.root, scaleOf(track)))}</span></button> : null}
+          {mode === "mix" || !knows("note-values", "hats") ? null : (
             <button type="button" className="st-tag" onClick={cycleSnap} aria-label={`Steps and snap ${snap}, tap to change`}>{snap}</button>
           )}
         </div>
 
+        <div className="st-ev"><EverythingSwitch value={everything} onChange={setEverything} /><Walkthrough screen="studio" /></div>
         {seeded ? <AddedForYou line short /> : null}
         {/* Only the layers that exist, then one plus. No empty slots, so the row stays big. */}
         <div className="st-slots" style={{ gridTemplateColumns: `${track.layers.length ? `repeat(${track.layers.length}, minmax(0,1fr))` : ""}${track.layers.length < MAX_LAYERS ? " 50px" : ""}` }}>
@@ -839,7 +846,7 @@ export function Studio() {
           <>
             <div className="st-main">
             {/* Where you are in the arrangement, and commit (the EP-133's): in place of the "play on" label, to keep the phone's height for the pads. */}
-            <div className="st-secrow" role="group" aria-label="Sections">
+            {knows("capture-midi", "sections") || track.sections?.length ? <div className="st-secrow" role="group" aria-label="Sections">
                 {secNow ? (
                   <>
                     <button type="button" className="st-tag" aria-label="Previous section" disabled={secNow.index === 0} onClick={() => { update(t => goSection(t, secNow.index - 1)); setTouched({ label: "section", text: track.sections![secNow.index - 1].name }); }}>‹</button>
@@ -853,15 +860,15 @@ export function Studio() {
                 <span style={{ flex: 1 }} />
                 <button type="button" className="st-tag st-commit" aria-label="Commit: copy this loop into the next section and go there"
                   onClick={() => { const next = commitLoop(track); update(() => next); setTouched({ label: "committed", text: `now in ${next.sections![next.at!].name}` }); }}>commit</button>
-              </div>
-            <div className={`st-pick ${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0) > 4 ? "is-5" : ""}`} style={{ gridTemplateColumns: `repeat(${TYPE[sel.type].surfaces.length + 1 + (playerKind ? 1 : 0)},minmax(0,1fr))` }}>
-              {(TYPE[sel.type].surfaces).map(s => (
+              </div> : null}
+            {everything || surfacesNow.length > 1 ? <div className={`st-pick ${surfaceCount > 4 ? "is-5" : ""}`} style={{ gridTemplateColumns: `repeat(${surfaceCount},minmax(0,1fr))` }}>
+              {surfacesNow.map(s => (
                 <button key={s} type="button" className={`m1-m is-wide st-vk ${sel.surface === s ? "is-on" : ""}`} aria-pressed={sel.surface === s}
                   onClick={() => chooseSurface(s)}>
                   <span className={`m1-dot ${sel.surface === s ? "is-on" : ""}`} style={{ ["--c" as string]: "#F4F3F0" } as CSSProperties} />{s}
                 </button>
               ))}
-              <button type="button" className={`m1-m is-wide st-vk ${sel.surface === "own" ? "is-on" : ""}`} aria-pressed={sel.surface === "own"}
+              {everything ? <button type="button" className={`m1-m is-wide st-vk ${sel.surface === "own" ? "is-on" : ""}`} aria-pressed={sel.surface === "own"}
                 onClick={() => {
                   chooseSurface("own");
                   if (sel.type === "hats") setTouched({ label: "rolling", text: ROLLS[rate].label });
@@ -869,13 +876,13 @@ export function Studio() {
                   if (sel.type === "fx") setTouched({ label: "build", text: "0/8" });
                 }}>
                 <span className={`m1-dot ${sel.surface === "own" ? "is-on" : ""}`} style={{ ["--c" as string]: TYPE[sel.type].color } as CSSProperties} />{TYPE[sel.type].own.replace("chord pads", "chords")}
-              </button>
-              {playerKind ? (
+              </button> : null}
+              {playerKind && everything ? (
                 <button type="button" className={`m1-m is-wide st-vk ${sel.surface === "player" ? "is-on" : ""}`} aria-pressed={sel.surface === "player"} onClick={() => chooseSurface("player")}>
                   <span className={`m1-dot ${sel.surface === "player" ? "is-on" : ""}`} style={{ ["--c" as string]: TYPE[sel.type].color } as CSSProperties} />{playerKind === "drummer" ? "drummer" : "bass player"}
                 </button>
               ) : null}
-            </div>
+            </div> : null}
             <div style={{ height: 8, flex: "none" }} />
             {sel.surface === "player" && playerKind && (
               <PlayerSurface key={sel.id} kind={playerKind} settings={sel.player} color={TYPE[sel.type].color}
@@ -917,8 +924,8 @@ export function Studio() {
             <div className="st-side">
             <Silk label={`2 · shape ${TYPE[sel.type].label}`} right="after you play" />
             <div className="st-shape">
-              <div className="st-bank" role="radiogroup" aria-label="Knob bank">
-                {BANKS.map(b => (
+              {banksNow.length > 1 ? <div className="st-bank" role="radiogroup" aria-label="Knob bank">
+                {banksNow.map(b => (
                   <button key={b} type="button" role="radio" aria-checked={bank === b}
                     onClick={() => {
                       // Tap sound again for its second page.
@@ -927,14 +934,14 @@ export function Studio() {
                       setTouched(null);
                     }}>{b === "sound" && shift ? "sound 2" : b === "fx" && bank === "fx" && shift ? "filter" : b}</button>
                 ))}
-              </div>
-              <button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
+              </div> : <span className="st-ss" style={{ flex: 1 }}>sound</span>}
+              {knows("tracks") ? <><button type="button" className={`st-sp st-ms ${sel.mute ? "is-lit" : ""}`} style={{ ["--c" as string]: MUTE_C } as CSSProperties}
                 aria-pressed={sel.mute} aria-label="Mute" onClick={() => patchSel(l => ({ ...l, mute: !l.mute }))}>mute</button>
               <button type="button" className={`st-sp st-ms ${sel.solo ? "is-lit" : ""}`} style={{ ["--c" as string]: SOLO_C } as CSSProperties}
-                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>solo</button>
+                aria-pressed={sel.solo} aria-label="Solo" onClick={() => patchSel(l => ({ ...l, solo: !l.solo }))}>solo</button></> : null}
             </div>
-            <div className="m1-modrow">
-            {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt ? (
+            {knows("lead-width", "synth-lfo", "instruments-overview", "kick-and-bass") ? <div className="m1-modrow">
+            {sel && sourcesFor(TYPE[sel.type].engine).length && !lockAt && knows("lead-width", "synth-lfo") ? (
               <ModChips sources={sourcesFor(TYPE[sel.type].engine)} used={src => sourceUsed(TYPE[sel.type].engine, sel.params, sel.mods, src)} edit={modEdit}
                 label={src => srcLabel(TYPE[sel.type].engine, src)}
                 onEdit={src => { setModEdit(src); setTouched(src ? { label: srcLabel(TYPE[sel.type].engine, src), text: "set amounts" } : null); }}
@@ -946,39 +953,24 @@ export function Studio() {
                 }} />
             ) : null}
             {/* the sound's name with its arrows sits on the same row as the modulators and a/b, so the pads get the room */}
-            {bank === "sound" && !shift ? (
+            {bank === "sound" && !shift && knows("instruments-overview") ? (
               <div className="st-preset">
                 <button type="button" aria-label="Previous sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) - 1))}>‹</button>
                 <span>{PRESETS[sel.type][sel.preset ?? 0]?.name ?? "sound"}</span>
                 <button type="button" aria-label="Next sound" onClick={() => patchSel(l => applyPreset(l, (l.preset ?? 0) + 1))}>›</button>
               </div>
             ) : <span style={{ flex: 1 }} />}
-            {!lockAt ? <ABKey {...ab} /> : null}
-            </div>
+            {!lockAt && knows("kick-and-bass") ? <ABKey {...ab} /> : null}
+            </div> : null}
             {modEdit && sel && hasLayerLfo(TYPE[sel.type].engine) && !lockAt ? (
               <SourcePanel engine={TYPE[sel.type].engine} src={modEdit} value={i => paramOf(sel, i)} onParam={(i, spec, v) => setParam(i, spec, v)} />
             ) : null}
             {bank === "sound" ? <StudioPics layer={lockAt ? { ...sel, params: { ...sel.params, ...(sel.events.find(lockMatch(lockAt))?.p ?? {}) } } : sel} keys={knobs.map(k => k.spec.key)} clock={clock} onParam={setParam} /> : null}
-            {lview !== "all" || knobs.some(k => !learnt.has(ctlKey(sel.type, k.spec.key))) ? (
-              <div className="st-learnt" role="status">
-                {lview === "hide" ? <><span>showing what you&apos;ve learnt</span><button type="button" onClick={() => pickView("all")}>show everything</button></>
-                  : lview === "mark" ? <><span><i className="st-litdot" />lit: learnt in a lesson</span></>
-                  : <><span>showing everything</span><button type="button" onClick={() => pickView("hide")}>just what i&apos;ve learnt</button></>}
-              </div>
+            {!everything && !knobs.some(k => learnt.has(ctlKey(sel.type, k.spec.key))) ? (
+              <p className="st-noknobs">the knobs for your {TYPE[sel.type].label} arrive with the lessons that teach them.</p>
             ) : null}
             <div className="m1-g st-knobs" ref={knobsRef}>
-              {knobs.map(({ spec, index }, i) => {
-                const ck = ctlKey(sel.type, spec.key);
-                const isLearnt = learnt.has(ck);
-                if (lview === "hide" && !isLearnt) {
-                  const where = whereTaught(ck);
-                  return (
-                    <Link key={`${bank}${index}`} href={where ? `/learn/${where.slug}` : "/learn"} className="st-unlearnt" aria-label={`${spec.label}: ${where ? `you learn this in the ${where.part} lesson` : "comes in a later lesson"}`}>
-                      <Knob label={spec.label} size={32} color={CAP.grey} value={spec.default} dim />
-                      <small><b>{spec.label}</b>{where ? `in ${where.part}` : "later"}</small>
-                    </Link>
-                  );
-                }
+              {knobs.filter(k => everything || learnt.has(ctlKey(sel.type, k.spec.key))).map(({ spec, index }, i) => {
                 const eng = TYPE[sel.type].engine;
                 const rs = liveRings.get(index) ?? [];
                 const mine = modEdit ? rs.find(r => r.src === modEdit) : undefined;
@@ -997,7 +989,7 @@ export function Studio() {
                     ) : undefined}
                     onChange={v => setParam(index, spec, v)} />
                 );
-                return lview === "mark" ? <div key={`${bank}${index}`} className={`st-mk ${isLearnt ? "is-learnt" : ""}`}>{knob}</div> : knob;
+                return knob;
               })}
             </div>
             </div>
@@ -1020,18 +1012,18 @@ export function Studio() {
         <Key label="undo" onClick={undo} disabled={!canUndo} ariaLabel="Undo">
           <svg className="m1-ico" viewBox="0 0 24 24" aria-hidden><path d="M9 7 4.5 11.5 9 16" /><path d="M5 11.5h9a5 5 0 0 1 0 10h-2" /></svg>
         </Key>
-        <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
+        {everything ? <Key label="reset" onClick={() => { setMode("play"); setSongsOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(false); setAdding(false); setSureReset(null); setResetOpen(o => !o); }} ariaPressed={resetOpen} ariaLabel="Reset: clear notes, sounds or the whole song">
           <Icon name="reset" />
-        </Key>
+        </Key> : null}
         <Key label="to live" disabled={!track.layers.length} ariaPressed={midiOpen}
           onClick={() => { if (!variesByPass(track)) { downloadSongMidi(track); return; } setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setWavOpen(false); setMidiOpen(o => !o); }}
           ariaLabel={variesByPass(track) ? "Export to Ableton Live as MIDI: pick as heard or every note" : "Export to Ableton Live as MIDI"}>
           <Icon name="out" />
         </Key>
-        <Key label="wav" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setMidiOpen(false); setWavOpen(o => !o); }} ariaPressed={wavOpen} disabled={!track.layers.length}
+        {everything ? <Key label="wav" onClick={() => { setMode("play"); setSongsOpen(false); setAdding(false); setResetOpen(false); setKeyOpen(false); setMidiOpen(false); setWavOpen(o => !o); }} ariaPressed={wavOpen} disabled={!track.layers.length}
           ariaLabel="Save the song as a wav: pick streaming (-14 LUFS) or club (-9 LUFS) loudness">
           <Icon name="out" />
-        </Key>
+        </Key> : null}
       </div>
     </div>
   );

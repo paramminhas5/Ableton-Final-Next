@@ -45,7 +45,7 @@ const sectionAt = (b: number) => (b < 16 ? "intro" : b < 48 ? "main" : b < 56 ? 
 const PHRASES_B = [0, 32].map(b => ({ beat: b, name: sectionAt(b) }));
 
 /** The song's engine commands, recorded instead of sent, so the browser can render it offline once. */
-function songCommands(song: TrackV2) {
+export function songCommands(song: TrackV2) {
   return (send: (k: number, l: number, a: number, x: number, y: number, z: number) => void) => {
     const host = { name: "web", start: async () => {}, stop: async () => {}, send, note: () => {}, subscribe: () => () => {}, info: () => ({ kind: "web", sampleRate: 24000, bufferFrames: 256, outputLatency: 0, load: 0 }) } as unknown as EngineHost;
     const fake = new Engine(host);

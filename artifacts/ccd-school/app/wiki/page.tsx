@@ -1,16 +1,6 @@
-import type { Metadata } from "next";
-import { WikiPageClient } from "@/components/WikiPageClient";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "wiki",
-  description:
-    "Complete reference wiki for all three worlds: Fundamentals, DJ World and Producer. Every chapter, path and mission in one place.",
-  openGraph: {
-    title: "Wiki | CCD.SCHOOL",
-    description: "The full CCD.SCHOOL curriculum reference: 3 worlds, 16 paths, 198 lessons.",
-  },
-};
-
+/** The old lessons index is the syllabus now (9 Nov). The wiki itself is the library. */
 export default function WikiPage() {
-  return <WikiPageClient />;
+  redirect("/learn");
 }

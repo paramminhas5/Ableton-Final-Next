@@ -1,211 +1,144 @@
 "use client";
 /**
- * DJ. One screen laid out like a two-deck controller: deck · mixer · deck, crossfader below.
- * Deck A plays your track, deck B plays a house loop at the same tempo.
- * The screen shows both waveforms, tempo, sync, and a beat count for the blend.
+ * The dj decks (9 Nov): a two-channel controller laid out like a Pioneer DDJ (DeckRig.tsx), on our engine.
+ * Deck a plays your song, deck b a track from the bank. Above the controller, both waveforms stacked the way
+ * rekordbox shows them, so the beats line up by eye. Simple shows only what the dj lessons have taught you;
+ * "everything" shows the whole controller.
  */
-import { useEffect, useRef, useState, type PointerEvent } from "react";
-import { useTrack } from "@/lib/track";
-import { playTrack, stopTrack } from "@/lib/track-engine";
-import { ensureAudio, getCtx, getMaster, startLoop, type LoopHandle } from "@/lib/audio";
-import { CAP, Fader, Icon, Key, Knob, LED, Pad, Screen } from "./controls";
-import { CAT_SRC } from "./shell";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { FLAG, OUT } from "@/engine";
+import { useProgress } from "@/lib/progress";
+import { readTrackV2, type LayerV2, type TrackV2 } from "@/lib/track2";
+import { arranged } from "@/lib/arrange";
+import { fromBar } from "@/lib/cues";
+import { readSongs } from "@/lib/songs";
+import { bankBands, songBands, type Bands } from "@/lib/djWaves";
+import { bankLayers, bankTrack, CUES, DJ_BANK, songLayers, TRACK_BEATS } from "@/content/djBank";
+import { clipVariants } from "@/content/lessons/clipTracks";
+import { DeckWave } from "./DeckWave";
+import { songCommands } from "./MixStep";
+import { DeckRig, sectionsFor, type Chan, type DeckId } from "./DeckRig";
+import { Icon, LED, Screen } from "./controls";
+import { useEngineTrack } from "./useEngineTrack";
+import { useEverything, EverythingSwitch } from "./Everything";
+import { Walkthrough } from "./Walkthrough";
 
-type Deck = { input: GainNode; low: BiquadFilterNode; filt: BiquadFilterNode; vol: GainNode };
+const BEATS = 64;
+const P = { low: 0, mid: 1, high: 2, cut: 3, level: 8, lp: 12 } as const;
+const PHRASES = [{ beat: 0, name: "phrase 1" }, { beat: 32, name: "phrase 2" }];
+const sectionAt = (b: number) => CUES.filter(c => c.at <= b).slice(-1)[0]?.name ?? "intro";
+const chan0: Chan = { trim: 0.5, hi: 0.5, mid: 0.5, low: 0.5, filter: 0.5, fader: 0.8, phones: false, level: 0 };
 
-function makeDeck(c: AudioContext): Deck {
-  const input = c.createGain();
-  const low = c.createBiquadFilter(); low.type = "lowshelf"; low.frequency.value = 180;
-  const filt = c.createBiquadFilter(); filt.type = "allpass";
-  const vol = c.createGain();
-  input.connect(low).connect(filt).connect(vol).connect(getMaster());
-  return { input, low, filt, vol };
-}
-
-function wave(seed: number, n = 96) {
-  let x = seed * 9301 + 49297;
-  return Array.from({ length: n }, (_, i) => {
-    x = (x * 9301 + 49297) % 233280;
-    const r = x / 233280;
-    return Math.min(1, (0.35 + 0.5 * r) * ((i >> 4) % 4 === 3 ? 0.5 : 1) + (i % 8 === 0 ? 0.2 : 0));
-  });
-}
-const WA = wave(3), WB = wave(9);
-
-function Wave({ data, color, pos }: { data: number[]; color: string; pos: number }) {
-  const w = 330, h = 34, n = data.length;
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} aria-hidden style={{ display: "block" }}>
-      {data.map((a, i) => {
-        const x = (i * w) / n, bh = a * (h / 2 - 2);
-        return <rect key={i} x={x} y={h / 2 - bh} width={w / n - 1} height={bh * 2} fill={color} opacity={i / n > pos ? 1 : 0.45} />;
-      })}
-      <path d={`M${pos * w} 0V${h}`} stroke="#F3F2EF" strokeWidth={1.5} />
-    </svg>
-  );
-}
-
-function Jog({ color, playing, label }: { color: string; playing: boolean; label: string }) {
-  const [rot, setRot] = useState(0);
-  const last = useRef<number | null>(null);
-  const centre = useRef({ x: 0, y: 0 });
-  const down = (e: PointerEvent<HTMLDivElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    centre.current = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-    last.current = Math.atan2(e.clientY - centre.current.y, e.clientX - centre.current.x);
-    e.currentTarget.setPointerCapture(e.pointerId);
+/** A deck's channel as engine params: trim and fader into level, three-band eq, and one filter knob (left a low-pass, right a high-pass). */
+function chanParams(c: Chan, xfGain: number) {
+  const f = c.filter;
+  return {
+    [P.level]: Math.min(1, 0.75 * c.fader * xfGain * (0.5 + c.trim) * 1.2),
+    [P.low]: c.low, [P.mid]: c.mid, [P.high]: c.hi,
+    [P.lp]: f < 0.47 ? Math.max(0.05, f / 0.47) : 1,
+    [P.cut]: f > 0.53 ? (f - 0.53) / 0.47 : 0,
   };
-  const move = (e: PointerEvent<HTMLDivElement>) => {
-    if (last.current === null) return;
-    const a = Math.atan2(e.clientY - centre.current.y, e.clientX - centre.current.x);
-    setRot(r => r + ((a - last.current!) * 180) / Math.PI);
-    last.current = a;
-  };
-  const size = 116;
-  return (
-    <div className="m1-jog" role="img" aria-label={`Jog wheel, deck ${label}`} onPointerDown={down} onPointerMove={move} onPointerUp={() => (last.current = null)}
-      style={{ width: size, height: size }}>
-      <div style={{ position: "absolute", inset: 5, borderRadius: "50%", boxShadow: `0 0 0 2px ${color}, 0 0 ${playing ? 12 : 4}px ${color}`, opacity: playing ? 1 : 0.6 }} />
-      <div className="m1-plat" style={{ width: size - 28, height: size - 28, transform: `rotate(${rot}deg)` }}>
-        <div style={{ width: size * 0.36, height: size * 0.36, borderRadius: "50%", background: color, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={CAT_SRC} alt="" style={{ width: "70%" }} />
-        </div>
-        <span style={{ position: "absolute", top: 5, left: "50%", width: 2, height: 14, marginLeft: -1, background: "#F3F2EF", borderRadius: 1 }} />
-      </div>
-    </div>
-  );
 }
 
 export function DJ() {
-  const { track } = useTrack();
-  const decks = useRef<{ a: Deck; b: Deck } | null>(null);
-  const loopB = useRef<LoopHandle | null>(null);
-  const trackRef = useRef(track); trackRef.current = track;
-  const [playA, setPlayA] = useState(false);
-  const [playB, setPlayB] = useState(false);
-  const [beat, setBeat] = useState(-1);
-  const [mix, setMix] = useState({ lowA: 0.5, lowB: 0.5, filtA: 0.5, filtB: 0.5, volA: 0.8, volB: 0.8, xf: 0.5 });
-  const [cues, setCues] = useState([true, false, false, false, false, false, false, false]);
+  const { progress } = useProgress();
+  const [everything, setEverything] = useEverything();
+  const show = useMemo(() => sectionsFor(progress.completedMissions, everything), [progress.completedMissions, everything]);
+  // Your song is read after the page loads (it lives in this browser), so the server and the first render agree.
+  const [song, setSong] = useState<TrackV2 | null>(null);
+  const [songName, setSongName] = useState("your song");
+  useEffect(() => { setSong(readTrackV2()); const i = readSongs(); setSongName(i.songs.find(s => s.id === i.active)?.name ?? "your song"); }, []);
+  const mine = useMemo(() => (song && song.layers.some(l => l.events.length) ? song : clipVariants("kick-and-clap")[0].track), [song]);
+  const [bi, setBi] = useState(0);
+  const b = DJ_BANK[bi] ?? bankTrack("warm-up");
+  const base = mine.bpm || 120;
+
+  const [play, setPlay] = useState<Record<DeckId, boolean>>({ a: false, b: false });
+  const [pitch, setPitch] = useState<Record<DeckId, number>>({ a: 0, b: 0 });
+  const [synced, setSynced] = useState<Record<DeckId, boolean>>({ a: false, b: false });
+  const [ch, setCh] = useState<Record<DeckId, Chan>>({ a: { ...chan0 }, b: { ...chan0, fader: 0 } });
+  const [xf, setXf] = useState(0.5);
+  const [cueA, setCueA] = useState(1);
+  const [cueB, setCueB] = useState(0);
+  const [pads, setPads] = useState<[boolean[], boolean[]]>([[true, false, false, false], [true, false, false, false]]);
   const [hint, setHint] = useState<string | null>(null);
 
-  const ensure = async () => {
-    await ensureAudio();
-    const c = getCtx();
-    if (c && !decks.current) decks.current = { a: makeDeck(c), b: makeDeck(c) };
-    return decks.current;
-  };
-
-  // apply mixer to audio
+  const bBpm = synced.b ? base * (1 + pitch.a * 0.08) : b.bpm * (1 + pitch.b * 0.08);
+  const aBpm = base * (1 + pitch.a * 0.08);
+  const [ga, gb] = [Math.cos((xf * Math.PI) / 2) * 1.414, Math.sin((xf * Math.PI) / 2) * 1.414].map(g => Math.min(1, g));
+  const track: TrackV2 = useMemo(() => {
+    const A = songLayers(fromBar(arranged(mine), cueA), BEATS, "a", 5).map((l: LayerV2) => ({ ...l, mute: !play.a, params: { ...l.params, ...chanParams(ch.a, ga) } }));
+    const B = bankLayers(b, bBpm, aBpm, BEATS, "b", { off: cueB }).map(l => ({ ...l, mute: !play.b, params: { ...l.params, ...chanParams(ch.b, gb) } }));
+    return { ...mine, bpm: aBpm, loop: BEATS, layers: [...A, ...B].slice(0, 8) };
+  }, [mine, b, bBpm, aBpm, cueA, cueB, play, ch, ga, gb]);
+  const { engine, ready } = useEngineTrack(track);
+  const [beat, setBeat] = useState(-1);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => () => { try { engine.stop(); } catch { /* not started */ } }, [engine]);
+  const anyPlaying = play.a || play.b;
   useEffect(() => {
-    const d = decks.current; const c = getCtx();
-    if (!d || !c) return;
-    const xfA = Math.cos((mix.xf * Math.PI) / 2), xfB = Math.sin((mix.xf * Math.PI) / 2);
-    d.a.vol.gain.setTargetAtTime(mix.volA * xfA, c.currentTime, 0.02);
-    d.b.vol.gain.setTargetAtTime(mix.volB * xfB, c.currentTime, 0.02);
-    d.a.low.gain.value = (mix.lowA - 0.5) * 48 > 0 ? (mix.lowA - 0.5) * 12 : (mix.lowA - 0.5) * 48;
-    d.b.low.gain.value = (mix.lowB - 0.5) * 48 > 0 ? (mix.lowB - 0.5) * 12 : (mix.lowB - 0.5) * 48;
-    for (const [f, v] of [[d.a.filt, mix.filtA], [d.b.filt, mix.filtB]] as const) {
-      if (Math.abs(v - 0.5) < 0.04) { f.type = "allpass"; }
-      else if (v < 0.5) { f.type = "lowpass"; f.frequency.value = 200 * Math.pow(100, v / 0.5); f.Q.value = 1; }
-      else { f.type = "highpass"; f.frequency.value = 20 * Math.pow(250, (v - 0.5) / 0.5); f.Q.value = 1; }
-    }
-  }, [mix, playA, playB]);
+    if (anyPlaying) void ready().then(() => { engine.metronome(false); engine.play(); });
+    else try { engine.stop(); } catch { /* not started */ }
+  }, [anyPlaying]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => () => { stopTrack(); loopB.current?.stop(); }, []);
+  const [bandsA, setBandsA] = useState<Bands | null>(null);
+  useEffect(() => { let gone = false; void songBands(mine, songCommands(mine)).then(x => { if (!gone) setBandsA(x); }).catch(() => {}); return () => { gone = true; }; }, [mine]);
+  const bandsB = useMemo(() => bankBands(b.id), [b.id]);
 
-  const togA = async () => {
-    if (playA) { stopTrack(); setPlayA(false); setBeat(-1); return; }
-    const d = await ensure(); if (!d || !track.layers.length) return;
-    setPlayA(true);
-    await playTrack(() => trackRef.current, s => setBeat(s), { dest: d.a.input });
-  };
-  const togB = async () => {
-    if (playB) { loopB.current?.stop(); loopB.current = null; setPlayB(false); return; }
-    const d = await ensure(); if (!d) return;
-    loopB.current = startLoop("full-mix", track.bpm, d.b.input);
-    setPlayB(true);
-  };
-  const set = (k: keyof typeof mix) => (v: number) => setMix(m => ({ ...m, [k]: v }));
-  const touch = (label: string, v: number) => setHint(`${label} ${Math.round(v * 100)}%`);
+  const on = beat >= 0;
+  const headA = on && play.a ? beat : -1;
+  const headB = on && play.b ? ((beat * bBpm) / aBpm + cueB) % TRACK_BEATS : -1;
+  const level = (d: DeckId) => (play[d] && on ? Math.min(1, ch[d].fader * (d === "a" ? ga : gb) * (0.6 + 0.4 * Math.abs(Math.sin(beat * Math.PI)))) : 0);
 
-  const beatsLeft = beat < 0 ? null : 16 - beat;
-  const deck = (lbl: "a" | "b", color: string, playing: boolean, toggle: () => void, offset: number) => (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Jog color={color} playing={playing} label={lbl} />
-      <span className="m1-eng" style={{ fontSize: 11, marginTop: 4 }}>deck {lbl}</span>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 4, width: 116, marginTop: 6 }}>
-        {[0, 1, 2, 3].map(k => (
-          <Pad key={k} height={26} lit={cues[offset + k] ? color : null} ariaPressed={cues[offset + k]} ariaLabel={`Hot cue ${k + 1}, deck ${lbl}`}
-            onClick={() => setCues(c => c.map((x, i) => (i === offset + k ? !x : x)))} style={{ borderRadius: 6, fontSize: 10 }}>{k + 1}</Pad>
-        ))}
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, width: 116, marginTop: 8 }}>
-        <Key ariaLabel={`Cue deck ${lbl}`} onClick={() => { if (playing) toggle(); }}><span style={{ fontSize: 12, fontWeight: 600 }}>cue</span></Key>
-        <Key ariaLabel={`${playing ? "Pause" : "Play"} deck ${lbl}`} cap={playing ? "blk" : lbl === "a" || playA ? "go" : undefined} led={playing ? color : null} onClick={toggle} ariaPressed={playing}>
-          <Icon name={playing ? "stop" : "play"} />
-        </Key>
-      </div>
-    </div>
-  );
+  const setChan = (d: DeckId, k: keyof Chan, v: number | boolean) => setCh(c => ({ ...c, [d]: { ...c[d], [k]: v } }));
+  const touch = (label: string, v: number) => setHint(`${label} · ${Math.round(v * 100)}%`);
+  const drift = Math.abs(bBpm - aBpm);
 
   return (
-    <div className="m1-page">
-      <header style={{ display: "flex", alignItems: "center", gap: 10, height: 40 }}>
+    <div className="m1-page dj">
+      <header className="dj-head">
+        <Link href="/dashboard" className="m1-m" aria-label="Back" style={{ width: 44, height: 44 }}><Icon name="back" /></Link>
         <span className="m1-t22" style={{ flex: 1 }}>dj</span>
-        <span className="m1-tag">my mix</span>
+        <EverythingSwitch value={everything} onChange={setEverything} />
+        <Walkthrough screen="dj" />
       </header>
-
-      <Screen style={{ marginTop: 6 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <span className="m1-ss" style={{ color: LED.mint }}>a · my track</span>
-          <span className="m1-ss"><span style={{ color: "var(--disp-ink)" }}>{track.bpm.toFixed(1)}</span> bpm · {playA ? "playing" : "cued"}</span>
-        </div>
-        <div style={{ marginTop: 6 }}><Wave data={WA} color={LED.mint} pos={beat < 0 ? 0.02 : beat / 16} /></div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, margin: "8px 0" }}>
-          {Array.from({ length: 8 }, (_, i) => {
-            const on = beat >= 0 && Math.floor(beat / 2) >= i;
-            return <span key={i} style={{ width: 8, height: 8, borderRadius: 4, background: on ? "#F3F2EF" : "#2A2A2D", boxShadow: on && Math.floor(beat / 2) === i ? "0 0 5px #F3F2EF" : undefined }} />;
-          })}
-          <span className="m1-ss" style={{ color: "var(--disp-ink)", marginLeft: 6 }}>
-            {hint ?? (beatsLeft === null ? "play a, then bring b in" : `bring b in · ${Math.ceil(beatsLeft / 4)} beat${Math.ceil(beatsLeft / 4) === 1 ? "" : "s"}`)}
-          </span>
-        </div>
-        <div><Wave data={WB} color={LED.cobalt} pos={playB ? 0.3 : 0.02} /></div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-          <span className="m1-ss" style={{ color: LED.cobalt }}>b · house loop</span>
-          <span className="m1-ss"><span style={{ color: "var(--disp-ink)" }}>{track.bpm.toFixed(1)}</span> bpm · synced</span>
-        </div>
-      </Screen>
-
-      <div style={{ display: "grid", gridTemplateColumns: "116px 1fr 116px", gap: 8, marginTop: 14, alignItems: "stretch" }}>
-        {deck("a", LED.mint, playA, togA, 0)}
-        <div className="m1-m is-wide" style={{ flexDirection: "column", justifyContent: "flex-start", padding: "10px 4px", gap: 4 }}>
-          <div style={{ display: "flex", justifyContent: "space-around", width: "100%" }}><span className="m1-eng" style={{ fontSize: 10 }}>a</span><span className="m1-eng" style={{ fontSize: 10 }}>b</span></div>
-          <div style={{ display: "flex", justifyContent: "space-around", width: "100%" }}>
-            <Knob bare size={30} label="low a" color={CAP.grey} value={mix.lowA} defaultValue={0.5} onChange={set("lowA")} onTouch={touch} />
-            <Knob bare size={30} label="low b" color={CAP.grey} value={mix.lowB} defaultValue={0.5} onChange={set("lowB")} onTouch={touch} />
-          </div>
-          <span className="m1-eng" style={{ fontSize: 10 }}>low</span>
-          <div style={{ display: "flex", justifyContent: "space-around", width: "100%" }}>
-            <Knob bare size={30} label="filter a" color={CAP.grey} value={mix.filtA} defaultValue={0.5} onChange={set("filtA")} onTouch={touch} />
-            <Knob bare size={30} label="filter b" color={CAP.grey} value={mix.filtB} defaultValue={0.5} onChange={set("filtB")} onTouch={touch} />
-          </div>
-          <span className="m1-eng" style={{ fontSize: 10 }}>filter</span>
-          <div style={{ display: "flex", justifyContent: "space-around", width: "100%", marginTop: 16 }}>
-            <Fader label="volume a" led={LED.mint} value={mix.volA} onChange={set("volA")} onTouch={touch} height={92} width={34} />
-            <Fader label="volume b" led={LED.cobalt} value={mix.volB} onChange={set("volB")} onTouch={touch} height={92} width={34} />
-          </div>
-          <span className="m1-eng" style={{ fontSize: 10 }}>volume</span>
-        </div>
-        {deck("b", LED.cobalt, playB, togB, 4)}
-      </div>
-
-      <div className="m1-m is-wide" style={{ marginTop: 12, height: 78, flexDirection: "column", gap: 6 }}>
-        <Fader horizontal label="crossfader" value={mix.xf} onChange={set("xf")} onTouch={touch} width={210} defaultValue={0.5} />
-        <div style={{ display: "flex", justifyContent: "space-between", width: 230 }}>
-          <span className="m1-eng" style={{ fontSize: 11 }}>a</span><span className="m1-eng" style={{ fontSize: 11 }}>crossfader</span><span className="m1-eng" style={{ fontSize: 11 }}>b</span>
-        </div>
+      <DeckRig
+        decks={[
+          { id: "a", title: songName.toLowerCase(), sub: "your song", color: LED.mint, playing: play.a, bpm: base, pitch: pitch.a, synced: synced.a },
+          { id: "b", title: b.name.toLowerCase(), sub: `${b.key} · ${b.camelot}`, color: LED.cobalt, playing: play.b, bpm: synced.b ? aBpm : b.bpm, pitch: synced.b ? 0 : pitch.b, synced: synced.b },
+        ]}
+        chans={[{ ...ch.a, level: level("a") }, { ...ch.b, level: level("b") }]}
+        xf={xf}
+        show={show}
+        pads={pads}
+        onPlay={d => setPlay(p => ({ ...p, [d]: !p[d] }))}
+        onCue={d => { setPlay(p => ({ ...p, [d]: false })); if (d === "a") setCueA(1); else setCueB(0); }}
+        onSync={d => setSynced(s => ({ ...s, [d]: !s[d] }))}
+        onPitch={(d, v) => { setPitch(p => ({ ...p, [d]: v })); if (d === "b") setSynced(s => ({ ...s, b: false })); }}
+        onChan={setChan}
+        onXf={setXf}
+        onPad={(d, k) => {
+          setPads(ps => (d === "a" ? [ps[0].map((_, i) => i === k), ps[1]] : [ps[0], ps[1].map((_, i) => i === k)]));
+          if (d === "a") setCueA(1 + k * 2); else setCueB(CUES[k]?.at ?? 0);
+        }}
+        onTouch={touch}
+        screen={
+          <Screen className="dj-scr">
+            <div className="dj-meta">
+              <span style={{ color: LED.mint }}>a · {aBpm.toFixed(1)} bpm</span>
+              <span className="dj-say" role="status">{hint ?? (!anyPlaying ? "press play on deck a" : play.a && !play.b ? "now play deck b, its fader is down" : drift > 0.3 ? `deck b is ${drift.toFixed(1)} bpm off: match the tempo` : "matched. bring b in on the one")}</span>
+              <span style={{ color: LED.cobalt }}>b · {bBpm.toFixed(1)} bpm</span>
+            </div>
+            <DeckWave label="deck a" bands={bandsA} loading={!bandsA} beat={headA} lowDb={(ch.a.low - 0.5) * 30} phrases={PHRASES} zoom />
+            <DeckWave label="deck b" bands={bandsB} beat={headB} lowDb={(ch.b.low - 0.5) * 30} phrases={[0, 32].map(x => ({ beat: x, name: sectionAt(x) }))} zoom />
+          </Screen>
+        }
+      />
+      <div className="dj-bank" role="group" aria-label="Deck b track">
+        <button type="button" className="ls-chip" onClick={() => setBi(i => (i + DJ_BANK.length - 1) % DJ_BANK.length)} aria-label="Previous track on deck b"><Icon name="back" small /></button>
+        <span>deck b: <b>{b.name.toLowerCase()}</b> · {b.bpm} bpm · {b.camelot}</span>
+        <button type="button" className="ls-chip" onClick={() => setBi(i => (i + 1) % DJ_BANK.length)} aria-label="Next track on deck b"><Icon name="play" small /></button>
       </div>
     </div>
   );

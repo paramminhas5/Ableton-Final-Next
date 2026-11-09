@@ -38,7 +38,8 @@ import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss } from "./Gloss";
-import { SongKey } from "./SongKey";
+import { AddedForYou, SongKey, useSongName } from "./SongKey";
+import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
 
 // The bigger steps load when a lesson reaches them (and are fetched while the first step plays), so a lesson
@@ -90,6 +91,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
   const [beat, setBeat] = useState(-1);
+  const { seed } = useSongName();
   const rename = (n: string) => {
     setEditing(false);
     const i = readSongs();
@@ -149,7 +151,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
         <div className="fl-songname">{editing
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
-          : <span className="fl-songkeys"><SongKey /><button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><Icon name="edit" small /></button></span>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : `${t?.bpm ?? 120} bpm`}</span></div>
+          : <span className="fl-songkeys"><SongKey compact /><button type="button" className="fl-songrename" onClick={() => setEditing(true)} aria-label={`Rename ${name}`}><Icon name="edit" small /></button></span>}<span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : seed ? <><AddedForYou /> {t?.bpm ?? 120} bpm</> : `${t?.bpm ?? 120} bpm`}</span></div>
         {empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}
@@ -195,6 +197,7 @@ function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; 
         <div className="fl-crumb"><span>{crumb}</span><h1>{title}</h1></div>
         {onPrev && <button type="button" className="fl-stepback" onClick={onPrev} aria-label="Previous step"><Icon name="back" small />step back</button>}
         <div className="fl-count" aria-label={`Step ${at + 1} of ${pages.length}`}>{at + 1}<i>/</i>{pages.length}</div>
+        <Walkthrough screen="lesson" />
       </div>
       <div className="ls-seg" style={{ ["--c" as string]: accent } as CSSProperties} aria-hidden>
         {pages.map((_, i) => <i key={i} className={i < at ? "is-done" : i === at ? "is-now" : ""} />)}

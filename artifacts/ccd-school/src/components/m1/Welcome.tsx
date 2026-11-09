@@ -1,65 +1,90 @@
 "use client";
 /**
- * First visit, four screens (Param, 9 Nov: the old tour was random tasks with no why and no full picture).
- * 1. what you'll make: the whole road, your song filling up part by part, then a set, then a ccd night.
- * 2. your first sound: tap a kick in time with the click. It goes into your song and stays.
- * 3. what you want to do. 4. done this before (or find your level). Then straight into lesson 1.
- * How things are explained is not asked: every step has "say it another way" and "simpler please".
+ * First visit (Param, 9 Nov evening): a tour of what ccd school is, product by product, not a task.
+ * Each screen is one product: its name, what it is, why it's the best at it, and the real thing working under it
+ * (touch it and it plays; there's nothing to finish). Then two questions on one screen, then home, where the
+ * home walkthrough points out each part. Your first kick is made in lesson 1, where it belongs.
  * Sound only after a touch.
  */
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import { FLAG, OUT, DRUM_PAD_NOTES } from "@/engine";
+import { FLAG, OUT, LAYER_PARAMS, LEAD_PARAMS, DRUM_PAD_NOTES } from "@/engine";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
-import { emptyTrackV2, newLayerV2, readTrackV2, writeTrackV2, type TrackV2 } from "@/lib/track2";
-import { nameSongIfNew } from "@/lib/songs";
+import { emptyTrackV2, newLayerV2, toV1View, type NoteEvent, type TrackV2 } from "@/lib/track2";
+import { getCtx } from "@/lib/audio";
+import { lookupTerm } from "@/content/glossary";
 import { journey, worldSteps, type WorldId } from "@/lib/worldOrder";
-import { GoPill, Icon, Pad, Screen } from "./controls";
-import { CAT_SRC } from "./shell";
+import { GoPill, Icon, Key, Knob, CAP, LED, Pad, Screen } from "./controls";
+import { CAT_SRC, Lanes } from "./shell";
 import { useEngineTrack } from "./useEngineTrack";
+import { WaveShape } from "./LessonVisuals";
+import { DeckRig, type Chan } from "./DeckRig";
 import "./lesson.css";
 import "./welcome.css";
 
 export const TOUR_KEY = "ccd.tour.first";
 const Placement = dynamic(() => import("./Placement").then(m => m.Placement), { ssr: false });
-const STEPS = ["map", "kick", "want", "know"] as const;
+const STEPS = ["hello", "learn", "practice", "studio", "dj", "library", "you"] as const;
 type At = (typeof STEPS)[number];
+const NAME: Record<At, string> = { hello: "ccd school", learn: "learn", practice: "practice", studio: "studio", dj: "dj decks", library: "library", you: "you" };
 
 type Want = "make" | "dj" | "both";
 type Know = "new" | "some" | "lots";
-const WANT: { id: Want; name: string; line: string }[] = [
-  { id: "make", name: "make my own tracks", line: "a song from a kick drum up, one part per lesson" },
-  { id: "dj", name: "mix tracks as a dj", line: "blend one track into the next, then play your own" },
-  { id: "both", name: "both", line: "make a song, then play it out. the whole road" },
-];
+const WANT: { id: Want; name: string }[] = [{ id: "make", name: "make tracks" }, { id: "dj", name: "dj" }, { id: "both", name: "both" }];
 const KNOW: { id: Know; name: string; line: string }[] = [
-  { id: "new", name: "completely new", line: "we start with the basics: a beat, notes, your ears" },
-  { id: "some", name: "a little", line: "played with an app or a controller. straight to the good part" },
-  { id: "lots", name: "test me", line: "a few minutes, by ear and by hand, and we start you at your level" },
+  { id: "new", name: "completely new", line: "we start with the basics" },
+  { id: "some", name: "a little", line: "straight to the good part" },
+  { id: "lots", name: "test me", line: "a few minutes, we find your level" },
 ];
-const FIRST: Record<WorldId, { slug: string; title: string }> = {
-  fundamentals: { slug: "tempo-bpm", title: "pulse and tempo" },
-  producer: { slug: "your-kick", title: "your kick" },
-  dj: { slug: "what-is-djing", title: "what is djing?" },
-};
 const worldFor = (want: Want | null, know: Know | null): WorldId => (know === "new" ? "fundamentals" : want === "dj" ? "dj" : "producer");
 
-/** The parts your song gets, in the order the lessons add them, and the world each one is made in. */
-const ROAD: { part: string; world: WorldId }[] = [
-  { part: "kick", world: "fundamentals" }, { part: "clap", world: "fundamentals" }, { part: "hats", world: "fundamentals" },
-  { part: "melody", world: "fundamentals" }, { part: "chords", world: "fundamentals" }, { part: "bass", world: "fundamentals" },
-  { part: "your sound", world: "producer" }, { part: "the mix", world: "producer" }, { part: "the drop", world: "producer" },
-  { part: "a set", world: "dj" }, { part: "a ccd night", world: "dj" },
-];
-const BAND: Record<WorldId, { name: string; line: string }> = {
-  fundamentals: { name: "basics", line: "a beat, notes, chords, your ears" },
-  producer: { name: "producer", line: "your sound, the mix, the drop" },
-  dj: { name: "dj", line: "play it out with other tracks" },
-};
+// ── little tracks the tour plays ─────────────────────────────────────────────
+const CH: Chan = { trim: 0.5, hi: 0.5, mid: 0.5, low: 0.5, filter: 0.5, fader: 0.8, phones: false, level: 0 };
+const K = DRUM_PAD_NOTES[0], CLAP = DRUM_PAD_NOTES[2], OPEN = DRUM_PAD_NOTES[5];
+const hit = (note: number, starts: number[], vel = 0.9, len = 0.2): NoteEvent[] => starts.map(start => ({ note, vel, start, len }));
+const LEVEL = LAYER_PARAMS.find(p => p.key === "level")!.index;
+const lead = (key: string) => LEAD_PARAMS.find(p => p.key === key)!.index;
+function song(parts: number, cutoff = 0.5): TrackV2 {
+  const t = { ...emptyTrackV2(), bpm: 122, loop: 8 };
+  const d = newLayerV2("drums"); d.events = [...hit(K, [0, 1, 2, 3, 4, 5, 6, 7]), ...(parts > 1 ? hit(CLAP, [1, 3, 5, 7], 0.75) : [])];
+  const h = newLayerV2("hats"); h.events = hit(OPEN, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5], 0.6);
+  const l = newLayerV2("lead"); l.events = [[57, 0], [60, 1.5], [64, 3], [62, 4], [60, 5.5], [57, 7]].map(([note, start]) => ({ note, start, vel: 0.8, len: 1 }));
+  l.params = { [lead("cutoff")]: cutoff, [lead("detune")]: 0.15 };
+  return { ...t, layers: [d, ...(parts > 2 ? [h] : []), ...(parts > 3 ? [l] : [])] };
+}
+function decks(x: number): TrackV2 {
+  const t = { ...emptyTrackV2(), bpm: 124, loop: 8 };
+  const a = newLayerV2("drums"); a.events = [...hit(K, [0, 1, 2, 3, 4, 5, 6, 7]), ...hit(CLAP, [1, 3, 5, 7], 0.8)]; a.params = { [LEVEL]: 0.85 * Math.min(1, 2 * (1 - x)) };
+  const b = newLayerV2("hats"); b.events = hit(OPEN, [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5], 0.7);
+  const c = newLayerV2("lead"); c.events = [[64, 0], [67, 2], [69, 4], [67, 6]].map(([note, start]) => ({ note, start, vel: 0.75, len: 1.5 }));
+  b.params = { [LEVEL]: 0.85 * Math.min(1, 2 * x) }; c.params = { [LEVEL]: 0.85 * Math.min(1, 2 * x), [lead("cutoff")]: 0.45 };
+  return { ...t, layers: [a, b, c] };
+}
+function tone(midi: number, at: number) {
+  const ctx = getCtx(); if (!ctx) return;
+  void ctx.resume();
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = "triangle"; o.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+  const t = ctx.currentTime + at;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+  o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.65);
+}
 
-const K = DRUM_PAD_NOTES[0];
+/** One product: its name, what it is, why it's the best at it, the real thing, and the next key. */
+function Product({ n, at, title, line, best, children, next }: { n: number; at: At; title: string; line: string; best: string; children: ReactNode; next: ReactNode }) {
+  return (
+    <div className="wl-part wt-prod" data-at={at}>
+      <div className="wl-tag"><b>{n}</b>{NAME[at]}</div>
+      <h1 className="wl-big">{title}</h1>
+      <p className="wl-lead">{line}</p>
+      <p className="wt-best"><Icon name="check" small />{best}</p>
+      <div className="wl-try">{children}</div>
+      {next}
+    </div>
+  );
+}
 
 export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const [step, setStep] = useState(0);
@@ -72,164 +97,187 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
   const at: At = STEPS[step];
   const next = () => setStep(s => Math.min(STEPS.length - 1, s + 1));
   const back = () => setStep(s => Math.max(0, s - 1));
+  const sizes = useMemo(() => (["fundamentals", "producer", "dj"] as WorldId[]).map(w => ({ w, song: worldSteps(w).length, deeper: journey(w, {}).reduce((n, p) => n + p.extraTotal, 0) })), []);
 
-  // How big each stretch of the road is, read from the real curriculum.
-  const sizes = useMemo(() => (["fundamentals", "producer", "dj"] as WorldId[]).map(w => ({
-    w, song: worldSteps(w).length, deeper: journey(w, {}).reduce((n, p) => n + p.extraTotal, 0),
-  })), []);
-
-  // ── your first sound: a click, and the kicks you tap land in your song ──
-  const [taps, setTaps] = useState<number[]>([]);
-  const track = useMemo<TrackV2>(() => {
-    const t = { ...emptyTrackV2(), bpm: 110, loop: 4 };
-    const d = newLayerV2("drums", "welcome");
-    d.events = taps.map(start => ({ note: K, vel: 0.95, start, len: 0.2 }));
-    return { ...t, layers: [d] };
-  }, [taps]);
+  // the tour's sound: only after a tap
+  const [parts, setParts] = useState(2);
+  const [cut, setCut] = useState(0.3);
+  const [x, setX] = useState(0);
+  const track = useMemo(() => (at === "dj" ? decks(x) : song(at === "studio" ? 4 : parts, at === "studio" ? cut : 0.5)), [at, parts, cut, x]);
   const { engine, ready } = useEngineTrack(track);
   const [beat, setBeat] = useState(-1);
-  const beatRef = useRef(-1);
-  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) { const b = e.flags & FLAG.playing ? e.beat : -1; beatRef.current = b; setBeat(b); } }), [engine]);
-  useEffect(() => { if (at !== "kick") engine.stop(); }, [at, engine]);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  useEffect(() => { engine.stop(); }, [step, engine]);
   const playing = beat >= 0;
-  const [lit, setLit] = useState(false);
-  const tap = () => {
-    void ready().then(() => {
-      engine.noteOn(0, K, 0.95);
-      window.setTimeout(() => engine.noteOff(0, K), 120);
-      if (!playing) { engine.metronome(true); engine.play(); return; }
-      // Where the tap really was in the bar, to a 32nd: no snap before the lesson that teaches it.
-      const b = beatRef.current;
-      const at = Math.round((((b % 4) + 4) % 4) * 8) / 8;
-      setTaps(ts => (ts.some(x => Math.abs(x - at) < 0.1) || ts.length >= 8 ? ts : [...ts, at].sort((a, c) => a - c)));
-    });
-    setLit(true);
-    window.setTimeout(() => setLit(false), 140);
-  };
-  const onBeat = taps.filter(x => Math.abs(x - Math.round(x)) < 0.13).length;
+  const play = () => void ready().then(() => { engine.metronome(false); engine.play(); });
+  const toggle = () => (playing ? engine.stop() : play());
+  const [ear, setEar] = useState<{ hi: 0 | 1; picked: number | null }>({ hi: 1, picked: null });
+  useEffect(() => setEar({ hi: Math.random() < 0.5 ? 0 : 1, picked: null }), []);
+  const pair = () => { const a = 57, b = 64; tone(ear.hi === 0 ? b : a, 0); tone(ear.hi === 0 ? a : b, 0.7); };
+  const [q, setQ] = useState("sidechain");
+  const entry = lookupTerm(q.trim()) ?? null;
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      for (const href of ["/engine/ccd_engine.wasm", "/engine/ccd-worklet.js"]) {
+        if (document.querySelector(`link[href="${href}"]`)) continue;
+        const l = document.createElement("link"); l.rel = "prefetch"; l.href = href; document.head.appendChild(l);
+      }
+    }, 600);
+    return () => window.clearTimeout(t);
+  }, []);
 
-  const keepKick = () => {
-    if (!taps.length) return;
-    const cur = readTrackV2();
-    if (cur.layers.some(l => l.events.length)) return;
-    const d = newLayerV2("drums", "welcome");
-    d.events = taps.map(start => ({ note: K, vel: 0.95, start, len: 0.2 }));
-    writeTrackV2({ ...cur, bpm: 110, layers: [d], updatedAt: Date.now() });
-    nameSongIfNew();
-  };
-
-  const go = (k: Know) => {
-    const w = worldFor(want, k);
+  const go = () => {
+    const w = worldFor(want, know);
     onLeave?.();
-    keepKick();
     setOnboarding(w, "normal");
     setLearnMode("flow");
     try { localStorage.setItem("ccd.world", w); } catch { /* ignore */ }
-    router.push(`/learn/${FIRST[w].slug}?from=welcome`);
+    router.push("/dashboard");
   };
-
   if (placement) return <Placement world={worldFor(want, "lots")} startNow onClose={() => setPlacement(false)} onDone={slug => {
     onLeave?.();
-    keepKick();
     setOnboarding(worldFor(want, "lots"), "hard");
     setLearnMode("flow");
+    // Placed past the basics: the whole instrument from the start (simple or everything, 9 Nov).
+    try { localStorage.setItem("ccd.everything", "1"); } catch { /* ignore */ }
     router.push(`/learn/${slug}`);
   }} />;
 
-  const pos = playing ? (((beat % 4) + 4) % 4) : -1;
+  const loop = track.loop || 8;
+  const head = playing ? Math.floor(((((beat % loop) + loop) % loop) / loop) * 16) : -1;
+  const nextKey = (label: string) => <div className="wl-go"><GoPill onClick={next} style={{ height: 64, width: "100%" }}>{label}</GoPill></div>;
   return (
-    <main className="m1-page wl wn" data-step={at}>
+    <main className="m1-page wl wn wt" data-step={at}>
       <div className="wl-top">
         {step > 0 ? <button type="button" className="fl-stepback" onClick={back} aria-label="Back"><Icon name="back" small />back</button> : <span />}
         <div className="ls-seg" aria-hidden style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties}>{STEPS.map((_, i) => <i key={i} className={i < step ? "is-done" : i === step ? "is-now" : ""} />)}</div>
-        <span className="wn-count">{step + 1} of 4</span>
+        {step > 0 && at !== "you" ? <button type="button" className="fl-stepback" onClick={() => setStep(STEPS.length - 1)}>skip</button> : <span />}
       </div>
 
       <div className="wl-stage" key={at}>
-        {at === "map" && (
+        {at === "hello" && (
           <div className="wn-map">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={CAT_SRC} alt="" className="m1-dancing wn-cat" />
             <div className="wl-tag">ccd school · by cats can dance</div>
-            <h1 className="wl-hero">make your own song.<br />then play it out.</h1>
-            <p className="wl-lead">every lesson adds one part to a song that is yours. this is the whole road:</p>
-            <Screen className="wn-road">
-              <div className="wl-meta"><span>your song</span><span>{ROAD.length} stops</span></div>
-              <ol className="wn-parts" aria-label="What your song gets, in order">
-                {ROAD.map((r, i) => (
-                  <li key={r.part} className={`is-${r.world}`} style={{ animationDelay: `${300 + i * 110}ms` }}>
-                    <i aria-hidden /><span>{r.part}</span>
-                  </li>
-                ))}
-              </ol>
-              <div className="wn-bands">
-                {sizes.map(s => (
-                  <div key={s.w} className={`wn-band is-${s.w}`}>
-                    <b>{BAND[s.w].name}</b><span>{BAND[s.w].line}</span><small>{s.song} lessons · {s.deeper} deeper</small>
-                  </div>
-                ))}
-              </div>
-            </Screen>
-            <p className="wn-note">start anywhere, skip anything. go deeper on any part when you want more.</p>
-            <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }}>start my song <Icon name="play" small /></GoPill></div>
+            <h1 className="wl-hero">learn music<br />by making it.</h1>
+            <p className="wl-lead">from your first kick drum to a track of your own, played out at a ccd night. five things, one song:</p>
+            <ol className="wt-five">
+              {([["learn", "lessons that build your song"], ["practice", "get better, three minutes a day"], ["studio", "make tracks, send them to Ableton Live"], ["dj decks", "play your song out"], ["library", "every word and sound, explained"]] as const).map(([n, l], i) => (
+                <li key={n} style={{ animationDelay: `${200 + i * 90}ms` }}><b>{i + 1}</b><span>{n}<small>{l}</small></span></li>
+              ))}
+            </ol>
+            <div className="wl-go"><GoPill onClick={next} style={{ height: 72, width: "100%" }}>show me around <Icon name="play" small /></GoPill></div>
             <a className="ls-skip" href="/dashboard">i&apos;ve been here before</a>
           </div>
         )}
 
-        {at === "kick" && (
-          <div className="wl-part">
-            <div className="wl-tag"><b>1</b>your first sound</div>
-            <h1 className="wl-big">tap the kick with the click</h1>
-            <p className="wl-lead">this kick is the first part of your song. everything else you add lines up with it. tap once to start the click, then tap along.</p>
-            <div className="wl-try">
-              <Screen>
-                <div className="wl-meta"><span>your song · kick</span><span>{taps.length ? `${taps.length} in · ${onBeat} on the beat` : playing ? "tap on the beat" : "tap the pad"}</span></div>
-                <div className="wn-beats" aria-hidden>{[0, 1, 2, 3].map(i => <i key={i} className={`${Math.floor(pos) === i ? "is-now" : ""} ${taps.some(x => Math.floor(x + 0.13) % 4 === i) ? "is-in" : ""}`}>{i + 1}</i>)}</div>
-                <div className="wn-bar" aria-label={`${taps.length} kicks in your bar`}>
-                  {taps.map(x => <b key={x} style={{ left: `${(x / 4) * 100}%` }} />)}
-                  {pos >= 0 && <span className="wn-head" style={{ left: `${(pos / 4) * 100}%` }} />}
-                </div>
-                <button type="button" className={`wl-pad ${lit ? "is-on" : ""}`} onPointerDown={tap} aria-label="Kick">kick</button>
-              </Screen>
+        {at === "learn" && (
+          <Product n={1} at="learn" title="lessons that build your song" line="short lessons, one idea a step. every lesson ends with a new part in a song that's yours."
+            best="each step is explained three ways, your song is always on top, and every fact is checked against the real manuals."
+            next={nextKey("next: practice")}>
+            <Screen>
+              <div className="wl-meta"><span>your song</span><span>{parts} of 4 parts</span></div>
+              <div className="wl-lanes"><Lanes track={toV1View(track)} playhead={head} /></div>
+            </Screen>
+            <div className="wl-row">
+              <button type="button" className="ls-chip" onClick={toggle}>{playing ? "stop" : "play the song"}</button>
+              {parts < 4 && <button type="button" className="ls-chip" onClick={() => { setParts(p => p + 1); play(); }}>a lesson adds {["", "", "hats", "a synth line"][parts]}</button>}
             </div>
-            <div className="wl-go"><GoPill onClick={() => { engine.stop(); keepKick(); next(); }} disabled={taps.length < 2} style={{ height: 64, width: "100%" }}>{taps.length < 2 ? "tap a few kicks in" : "keep it in my song"}</GoPill></div>
-          </div>
+            <div className="wt-worlds">
+              {sizes.map(s => <span key={s.w} className={`wn-band is-${s.w}`}><b>{s.w === "fundamentals" ? "basics" : s.w}</b><small>{s.song} lessons · {s.deeper} deeper</small></span>)}
+            </div>
+          </Product>
         )}
 
-        {at === "want" && (
-          <div className="wl-part">
-            <div className="wl-tag"><b>2</b>you</div>
-            <h1 className="wl-big">what do you want to do?</h1>
-            <p className="wl-lead">your kick is in. this picks where your road starts. everything stays open.</p>
-            <div className="wl-choices" role="radiogroup">
-              {WANT.map(o => <Choice key={o.id} name={o.name} line={o.line} on={want === o.id} onPick={() => { setWant(o.id); next(); }} />)}
-            </div>
-          </div>
+        {at === "practice" && (
+          <Product n={2} at="practice" title="get better, three minutes a day" line="ear games, reviews of what you learnt, and match-this-sound, picked for your level."
+            best="every round is played on our engine from your own lessons, so what you practise is what you made."
+            next={nextKey("next: studio")}>
+            <Screen>
+              <div className="wl-meta"><span>ear gym · higher or lower</span><span>{ear.picked === null ? "listen, then pick" : ""}</span></div>
+              <button type="button" className="ls-chip" style={{ marginTop: 12 }} onClick={pair}>play the two notes</button>
+              <div className="wl-row" style={{ marginTop: 12 }}>
+                {["first", "second"].map((l, i) => (
+                  <button key={l} type="button" className={`wl-ans ${ear.picked === null ? "" : i === ear.hi ? "is-right" : ear.picked === i ? "is-wrong" : ""}`} onClick={() => setEar(e => ({ ...e, picked: i }))}>{l} was higher</button>
+                ))}
+              </div>
+            </Screen>
+          </Product>
         )}
 
-        {at === "know" && (
-          <div className="wl-part">
-            <div className="wl-tag"><b>3</b>you</div>
-            <h1 className="wl-big">done this before?</h1>
-            <p className="wl-lead">so lesson one is the right one.</p>
-            <div className="wl-choices" role="radiogroup">
-              {KNOW.map(o => <Choice key={o.id} name={o.name} line={o.line} on={know === o.id} onPick={() => { setKnow(o.id); if (o.id === "lots") setPlacement(true); else go(o.id); }} />)}
+        {at === "studio" && (
+          <Product n={3} at="studio" title="make tracks, send them to Live" line="build your song out on real instruments: pads, keys, knobs. then export it to Ableton Live in one tap."
+            best="a real sound engine in your browser, every control named the way Live names it."
+            next={nextKey("next: dj decks")}>
+            <Screen>
+              <div className="wl-meta"><span>studio · synth</span><span>brightness {Math.round(cut * 100)}%</span></div>
+              <WaveShape morph={0} bright={cut} cycles={3} playing={playing} />
+            </Screen>
+            <div className="wt-studio">
+              <div style={{ width: 120 }}><Knob label="brightness" value={cut} onChange={v => { setCut(v); if (!playing) play(); }} color={CAP.navy} size={62} height={140} led="var(--led-mint)" /></div>
+              <Key label={playing ? "stop" : "play"} onClick={toggle} ariaLabel={playing ? "Stop" : "Play"}><Icon name={playing ? "stop" : "play"} /></Key>
+              <Key label="to live" onClick={() => {}} ariaLabel="To Ableton Live (in the studio)"><Icon name="out" /></Key>
             </div>
-            <p className="wn-note">then lesson one, {FIRST[worldFor(want, know ?? "some")].title}. the kick you just tapped is already in your song.</p>
+          </Product>
+        )}
+
+        {at === "dj" && (
+          <Product n={4} at="dj" title="play your song out" line="two decks and a mixer, laid out like a real dj controller. your song on one deck, another track on the other."
+            best="you learn on the same layout as the controllers in the booth, so the skills carry over."
+            next={nextKey("next: library")}>
+            <div className="wt-dj">
+              <DeckRig
+                decks={[
+                  { id: "a", title: "deck a", sub: "a beat", color: LED.mint, playing, bpm: 124, pitch: 0, synced: false },
+                  { id: "b", title: "deck b", sub: "a melody", color: LED.cobalt, playing, bpm: 124, pitch: 0, synced: false },
+                ]}
+                chans={[{ ...CH, level: playing ? 1 - x : 0 }, { ...CH, level: playing ? x : 0 }]}
+                xf={x} show={new Set()} screen={null}
+                onPlay={toggle} onCue={() => engine.stop()} onChan={() => {}}
+                onXf={v => { setX(v); if (!playing) play(); }} />
+            </div>
+            <p className="m1-t11" style={{ textAlign: "center", margin: 0 }}>press play, then slide the crossfader from a to b</p>
+          </Product>
+        )}
+
+        {at === "library" && (
+          <Product n={5} at="library" title="better than any manual" line="every word from Live, rekordbox and synths, explained simply, with the lesson that teaches it."
+            best="every word you meet in a lesson is kept for you, so the library becomes your own notes."
+            next={nextKey("that's ccd school")}>
+            <Screen>
+              <label className="wt-search"><Icon name="search" /><span className="sr-only">Search the library</span>
+                <input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder="try: sidechain, swing, eq" />
+              </label>
+              {entry ? <div className="wt-entry"><b>{entry.term.toLowerCase()}</b><p>{entry.def}</p></div> : <p className="m1-ss" style={{ marginTop: 10 }}>{q.trim() ? "try another word: reverb, swing, eq" : ""}</p>}
+            </Screen>
+          </Product>
+        )}
+
+        {at === "you" && (
+          <div className="wl-part">
+            <div className="wl-tag"><b>6</b>you</div>
+            <h1 className="wl-big">two questions</h1>
+            <p className="wl-lead">so your first lesson is the right one. everything stays open.</p>
+            <p className="wt-q">what do you want to do?</p>
+            <div className="wt-want" role="radiogroup" aria-label="What do you want to do">
+              {WANT.map(o => <Pad key={o.id} lit={want === o.id ? "var(--led-mint)" : null} ariaPressed={want === o.id} onClick={() => setWant(o.id)} height={54}><span className="m1-t22" style={{ fontSize: 16, ...(want === o.id ? { color: "#06241B" } : {}) }}>{o.name}</span></Pad>)}
+            </div>
+            <p className="wt-q">done this before?</p>
+            <div className="wl-choices" role="radiogroup" aria-label="Done this before">
+              {KNOW.map(o => (
+                <Pad key={o.id} lit={know === o.id ? "var(--led-mint)" : null} ariaPressed={know === o.id} onClick={() => { setKnow(o.id); if (o.id === "lots") setPlacement(true); }} height={60} ariaLabel={`${o.name}: ${o.line}`}>
+                  <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2, padding: "0 16px", width: "100%", textAlign: "left" }}>
+                    <span className="m1-t22" style={{ fontSize: 17, ...(know === o.id ? { color: "#06241B" } : {}) }}>{o.name}</span>
+                    <span className="m1-t11" style={know === o.id ? { color: "#0D2A22" } : undefined}>{o.line}</span>
+                  </span>
+                </Pad>
+              ))}
+            </div>
+            <div className="wl-go"><GoPill onClick={go} disabled={!want || !know} style={{ height: 72, width: "100%" }}>{!want ? "pick what you want to do" : !know ? "pick how much you've done" : <>take me in <Icon name="play" small /></>}</GoPill></div>
           </div>
         )}
       </div>
     </main>
-  );
-}
-
-function Choice({ name, line, on, onPick }: { name: string; line: string; on: boolean; onPick: () => void }) {
-  return (
-    <Pad lit={on ? "var(--led-mint)" : null} ariaPressed={on} onClick={onPick} height={72} ariaLabel={`${name}: ${line}`}>
-      <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 3, padding: "0 16px", width: "100%", textAlign: "left" }}>
-        <span className="m1-t22" style={{ fontSize: 18, ...(on ? { color: "#06241B" } : {}) }}>{name}</span>
-        <span className="m1-t11" style={on ? { color: "#0D2A22" } : undefined}>{line}</span>
-      </span>
-    </Pad>
   );
 }

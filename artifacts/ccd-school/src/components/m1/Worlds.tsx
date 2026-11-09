@@ -13,6 +13,7 @@ import { useProgress } from "@/lib/progress";
 import { journey, minutesFor, missionAny, nextStep, partOf, worldDone, worldOf, WORLD_IDS, type JourneyItem, type WorldId } from "@/lib/worldOrder";
 import { Icon, Silk, WORLD_LED } from "./controls";
 import { DuoFilters } from "./Today";
+import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
 import "./placement.css";
 import "./syllabus.css";
@@ -28,6 +29,8 @@ export function Worlds() {
   const [placed, setPlaced] = useState<PlaceResult | null>(null);
   const [stars, setStars] = useState<ReturnType<typeof readChallenges>>({});
   const [open, setOpen] = useState<WorldId | null>(null);
+  // Inside your world only one path is open at a time: the one you're on, or the one you tap.
+  const [openPath, setOpenPath] = useState<string | null>(null);
   useEffect(() => setStars(readChallenges()), []);
   useEffect(() => { const r = readPlacement(); if (r && r.skipped.length) setPlaced(r); }, []);
   useEffect(() => {
@@ -35,7 +38,7 @@ export function Worlds() {
     let w: WorldId | null = slug ? worldOf(slug) : null;
     if (!w) { try { w = localStorage.getItem("ccd.world") as WorldId | null; } catch { /* default */ } }
     setOpen(w ?? progress.selectedWorld ?? "fundamentals");
-    if (slug) window.setTimeout(() => document.getElementById(`l-${slug}`)?.scrollIntoView({ block: "center" }), 80);
+    if (slug) { setOpenPath(null); window.setTimeout(() => document.getElementById(`l-${slug}`)?.scrollIntoView({ block: "center" }), 80); }
   }, [progress.selectedWorld]);
   const done = progress.completedMissions;
   const totals = useMemo(() => WORLD_IDS.map(w => { const ps = journey(w, {}); return { w, song: ps.reduce((n, p) => n + p.songTotal, 0), deeper: ps.reduce((n, p) => n + p.extraTotal, 0) }; }), []);
@@ -49,6 +52,7 @@ export function Worlds() {
           <div className="m1-t22">syllabus</div>
           <div className="m1-t11">3 worlds · {all.song} song lessons · {all.deeper} deeper lessons</div>
         </div>
+        <Walkthrough screen="syllabus" />
       </header>
       <p className="sy-how"><b>song lessons</b> each add a part to your song, in order. <b>deeper</b> lessons hang off the part they are about: open one when you want more, skip it when you don&apos;t.</p>
       {!placed && Object.keys(done).length < 3 ? (
@@ -73,7 +77,16 @@ export function Worlds() {
             </button>
             {isOpen && (
               <div className="sy-body">
-                {paths.map(p => (
+                {paths.map(p => {
+                  const here = openPath ? openPath === p.slug : p.lessons.some(l => l.slug === n?.slug || l.extras.some(e => e.slug === n?.slug)) || (!n && p.number === 1);
+                  const tot = p.songTotal || p.lessons.length;
+                  const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
+                  if (!here) return (
+                    <button key={p.slug} type="button" className="sy-fold" aria-expanded={false} onClick={() => setOpenPath(p.slug)}>
+                      <b>path {p.number}</b><span>{p.title.toLowerCase()}<small>{p.songTotal ? `${p.songTotal} song lessons · ${p.extraTotal} deeper` : "bonus and deeper"}</small></span><em>{dn}/{tot}</em><Icon name="down" small />
+                    </button>
+                  );
+                  return (
                   <div key={p.slug} className="sy-path">
                     <Silk label={`path ${p.number} · ${p.title.toLowerCase()}`} right={p.songTotal ? `${p.songDone}/${p.songTotal} · ${p.extraTotal} deeper` : "bonus and deeper"} />
                     <ol className="sy-lessons">
@@ -89,7 +102,8 @@ export function Worlds() {
                       ))}
                     </ol>
                   </div>
-                ))}
+                  );
+                })}
                 <Link href={`/world/${w}/challenge`} className="wc-card" aria-label={`${INFO[w].name} challenge: ${st.main} of 3 stars`}>
                   <span>end of world challenge<small>{st.main || st.bonus ? `bonus ${st.bonus} of ${st.bonusOf}` : `after ${CHALLENGES[w].afterTitle}`}</small></span>
                   <Stars n={st.main} />

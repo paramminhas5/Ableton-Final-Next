@@ -67,3 +67,5 @@
 .hm{--cx:color-mix(in srgb,var(--c) 62%,var(--ink))}
 .hm-path.is-open .hm-pathrow b,.hm-path.is-open .hm-pathrow span{color:var(--cx)}
 .hm-deeper b{color:var(--cx)}
+.hm-head .m1-t15{white-space:nowrap}
+@media (max-width:420px){.hm-head [aria-label$="day streak"]{display:none}}

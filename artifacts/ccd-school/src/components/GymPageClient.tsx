@@ -26,6 +26,8 @@ import { makeCopyQuestion, type CopyQuestion } from "@/lib/copyEar";
 import { GymImagine } from "./GymImagine";
 import { makeImagineQuestion, type ImagineQuestion } from "@/lib/imagine";
 import "@/components/m1/lesson.css";
+import { Walkthrough } from "@/components/m1/Walkthrough";
+import { useEverything } from "@/components/m1/Everything";
 
 /** A drill opens once a lesson has taught it: the gym practises what you've learnt, it doesn't test you on what you haven't. */
 const TAUGHT_BY: Record<GymDrill, { slugs: string[]; first: string; title: string }> = {
@@ -95,6 +97,7 @@ function Curve({ hz, c }: { hz: number; c: string }) {
 }
 
 export function GymPageClient() {
+  const [everything] = useEverything();
   const [saved, setSaved] = useState<GymSaved>(freshSaved);
   const [ready, setReady] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -335,6 +338,11 @@ export function GymPageClient() {
     ];
     return (
       <main className="m1-page" style={{ paddingTop: 4 }}>
+        <header className="gy-head"><span className="m1-t22" style={{ flex: 1 }}>practice</span><Walkthrough screen="practice" /></header>
+        <div className="m1-g gy-today" data-tour="today">
+          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start today's 5 minutes"}</GoPill>
+        </div>
+        <p className="m1-t11" style={{ textAlign: "center", margin: "8px 0 12px" }}>headphones help. speakers work too.</p>
         <Screen>
           <div className="ls-meta">
             <span>practice · 5 minutes</span>
@@ -361,14 +369,9 @@ export function GymPageClient() {
           </div>
         </Screen>
 
-        <div className="m1-g" style={{ marginTop: 14 }}>
-          <GoPill onClick={() => void startSession(today)} style={{ gridColumn: "1 / -1", height: 76 }}>{phase === "done" ? "go again" : "start 5 minutes"}</GoPill>
-        </div>
-        <p className="m1-t11" style={{ textAlign: "center", margin: "10px 0 6px" }}>headphones help. speakers work too.</p>
-
         <Silk label="drills" right="or pick one" />
-        <div className="ls-pads">
-          {pads.map(p => {
+        <div className="ls-pads" data-tour="drills">
+          {pads.filter(p => everything || !p.locked).map(p => {
             const inner = (
               <>
                 <span style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "flex-start" }}>
@@ -380,10 +383,11 @@ export function GymPageClient() {
             );
             const st = { minHeight: 112, ["--c" as string]: p.c } as CSSProperties;
             return p.href
-              ? <Link key={p.id} href={p.href} className={`ls-pad ${p.locked ? "is-later" : ""}`} style={st}>{inner}</Link>
+              ? <Link key={p.id} href={p.href} className={`ls-pad ${p.locked ? "is-later" : ""}`} style={st} data-tour={p.id === "review" ? "review" : undefined}>{inner}</Link>
               : <button key={p.id} type="button" className={`ls-pad ${p.tag === "today" ? "is-glowpad" : ""}`} style={st} onClick={p.onClick}>{inner}</button>;
           })}
         </div>
+        {!everything && pads.some(p => p.locked) ? <p className="m1-t11 gy-more">{pads.filter(p => p.locked).length} more drills open as your lessons teach them.</p> : null}
         {error && <div className="ls-panel"><span className="ls-led" style={{ ["--c" as string]: "var(--led-red)" } as CSSProperties} /><span>{error}</span></div>}
         {ready && canUsePass(saved.week, now) && (
           <button type="button" className="ls-panel is-link" onClick={() => persist({ ...saved, week: takeFreePass(saved.week, new Date()) })}>

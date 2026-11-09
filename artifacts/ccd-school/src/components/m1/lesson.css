@@ -1030,3 +1030,11 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-road b{font-size:17px;font-weight:600;line-height:1.2}
 .fl-road span{font-size:12px;line-height:1.35;color:var(--print);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .fl-road:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
+/* the "?" key that replays a screen's walkthrough, and the simple / everything switch (9 Nov) */
+.wk-q{flex:none;width:36px;height:36px;border:0;border-radius:50%;font:600 15px Outfit,system-ui;color:var(--ink);background:radial-gradient(circle at 50% 35%,var(--t1),var(--t2));box-shadow:0 1px 0 var(--cs1),0 3px 0 var(--cs2),0 6px 8px -3px var(--shA),inset 0 1px 0 var(--hi);cursor:pointer}
+.wk-q:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px}
+.ev-sw{display:inline-flex;padding:3px;border-radius:12px;background:var(--deck2);box-shadow:inset 0 1px 3px rgba(0,0,0,.35),0 1px 0 var(--hi)}
+.ev-sw button{height:30px;padding:0 10px;border:0;border-radius:9px;background:transparent;font:600 12px Outfit,system-ui;color:var(--print);cursor:pointer}
+.ev-sw button[aria-checked=true]{color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.gy-head{display:flex;align-items:center;gap:10px;height:52px}
+.gy-more{text-align:center;margin:10px 0 0}

@@ -29,3 +29,27 @@
 @media (prefers-reduced-motion:reduce){.wn-parts li,.wn-bar b{animation:none}}
 .wn .wl-choices{margin-top:14px}
 .wn .wl-tag{color:color-mix(in srgb,var(--led-mint) 60%,var(--ink))}
+/* the product tour (9 Nov evening) */
+.wt-five{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:2px}
+.wt-five li{display:flex;align-items:center;gap:12px;padding:8px 2px;border-top:1px solid color-mix(in srgb,var(--ink) 9%,transparent);animation:wn-on 420ms ease-out both}
+.wt-five b{flex:none;width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#06241B;background:var(--led-mint)}
+.wt-five span{display:flex;flex-direction:column;font-size:17px;font-weight:600;color:var(--ink)}
+.wt-five small{font-size:12.5px;font-weight:500;color:var(--print)}
+.wt-best{display:flex;gap:8px;align-items:flex-start;margin:10px 2px 0;font-size:13px;line-height:1.45;color:var(--print)}
+.wt-best .m1-ico-s{flex:none;margin-top:2px;stroke:var(--led-mint)}
+.wt-worlds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.wt-worlds .wn-band b{color:color-mix(in srgb,var(--c) 62%,var(--ink))}
+.wt-worlds .wn-band small{color:var(--print)}
+.wt-studio{display:flex;gap:10px;align-items:stretch}
+.wt-studio>.m1-m{width:88px!important;height:auto!important}
+.wt-search{display:flex;align-items:center;gap:10px;color:var(--disp-sub)}
+.wt-search input{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--disp-ink);font:400 22px/1.2 Outfit,system-ui;caret-color:var(--led-mint)}
+.wt-entry{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+.wt-entry b{font-size:17px;font-weight:600;color:var(--disp-ink)}
+.wt-entry p{margin:6px 0 0;font-size:14px;line-height:1.5;color:var(--disp-ink)}
+.wt-q{margin:16px 2px 8px;font-size:15px;font-weight:600;color:var(--ink)}
+.wt-want{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.wt .wl-hero{font-size:44px}
+@media (min-width:900px){.m1-page.wt{max-width:640px}}
+.wl-try>*{min-width:0}
+.wt-dj .dk{gap:8px}

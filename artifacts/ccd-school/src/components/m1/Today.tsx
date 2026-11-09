@@ -22,6 +22,7 @@ import { CAP, Icon, Key, Knob, Screen, Silk, WORLD_LED } from "./controls";
 import { PALETTE_OPEN_EVENT } from "@/lib/palette";
 import { CatMark, CAT_SRC, Lanes, WeekDots } from "./shell";
 import { SongKey, useSongName, SONG_EVENT } from "./SongKey";
+import { Walkthrough } from "./Walkthrough";
 
 const WORLD_KEY = "ccd.world";
 const WORLDS: WorldId[] = ["fundamentals", "producer", "dj"];
@@ -109,12 +110,13 @@ export function Today() {
             <Link href="/settings" aria-label="Settings"><Icon name="settings" small /></Link>
             <Link href="/profile" aria-label="Profile"><Icon name="user" small /></Link>
           </div>
+          <Walkthrough screen="home" />
         </div>
       </header>
 
       <div className="hm-a">
         {/* 1. your song */}
-        <section aria-label="Your song">
+        <section aria-label="Your song" data-tour="song">
           <div className="hm-row">
             <Silk label="your song" style={{ flex: 1, margin: "4px 2px" }} />
             {hasSong && <SongKey />}
