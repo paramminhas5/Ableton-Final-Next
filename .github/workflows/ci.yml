@@ -119,3 +119,22 @@ jobs:
 
       - name: Check for TypeScript errors (strict)
         run: npm run typecheck
+
+  # ── Job: security checks (9 Nov 2026 audit) ───────────────────────────────
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: artifacts/ccd-school
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: No critical advisories in production dependencies
+        run: npm audit --package-lock-only --omit=dev --audit-level=critical
+      - name: No secrets in the browser bundle
+        run: |
+          if grep -rlE "NEXT_PUBLIC_[A-Z_]*(SECRET|PASSWORD|SERVICE|PRIVATE)" app src auth.ts; then
+            echo "::error::A secret is read through a NEXT_PUBLIC_ variable, which ships it to every browser."; exit 1; fi
