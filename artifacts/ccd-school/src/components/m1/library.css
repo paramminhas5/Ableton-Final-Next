@@ -67,3 +67,13 @@
   .lb-cat.is-on{background:var(--ink);color:var(--deck);box-shadow:var(--m1-pressed)}
   .lb-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
+
+/* what a device is, said first (10 Nov) */
+.lb-kinds{margin:0 0 14px;padding:14px 16px;border-radius:16px;background:var(--recess);display:flex;flex-direction:column;gap:10px}
+.lb-kinds p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}
+.lb-kind3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lb-kind3 span{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45;color:var(--sub);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.lb-kind3 b{font-size:14px;font-weight:600;color:var(--ink)}
+.lb-kind3 em{font-style:normal;font-size:12px;font-weight:600;color:var(--ink)}
+.lb-kind3 span.is-here{box-shadow:inset 0 0 0 2px var(--led-mint),var(--m1-extrude)}
+@media (max-width:600px){.lb-kind3{grid-template-columns:1fr}}
