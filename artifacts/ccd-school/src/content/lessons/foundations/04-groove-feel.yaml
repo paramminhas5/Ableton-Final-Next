@@ -65,6 +65,9 @@ steps:
         When people play drums, they're never perfectly exact, and that wobble feels good. Swing adds a
         little wobble on purpose.
     deeper:
+      - title: in your daw · swing
+        say: >-
+          Every music program has a swing setting. Pick yours to see where it is.
       - title: swing in tracks you know
         say: >-
           Listen to almost any J Dilla beat for heavy, loose swing, or to UK garage, where swung hats and

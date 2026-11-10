@@ -5,7 +5,7 @@
  * cuts them) with a heading, one line and its steps lit as they happen. When a clip ends the next one starts,
  * so it plays through like a film; space or a tap on the clip pauses it. Then two questions.
  */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -21,17 +21,19 @@ type Prod = "learn" | "practice" | "studio" | "dj" | "library";
 const PRODS: Prod[] = ["learn", "practice", "studio", "dj", "library"];
 const STEPS = [...PRODS.flatMap(p => [`${p}:a`, `${p}:b`]), "you"] as const;
 const NAME: Record<Prod, string> = { learn: "learn", practice: "practice", studio: "studio", dj: "dj decks", library: "library" };
-const CLIP: Record<string, { h: string; line: string }> = {
-  "learn:a": { h: "learn by making a song", line: "short lessons. each one adds a part to a song that's yours." },
-  "learn:b": { h: "then shape what you made", line: "every knob you meet is explained on the screen as you turn it." },
-  "practice:a": { h: "practice five minutes a day", line: "ear training, picked from what your lessons have taught you." },
-  "practice:b": { h: "copy by ear", line: "hear a part, write it on the grid, see what you got right." },
-  "studio:a": { h: "build it out in the studio", line: "drum pads, keys and knobs, all playing your song." },
-  "studio:b": { h: "arrange it, then take it to Live", line: "copy your loop into sections, then send the song to Ableton Live." },
-  "dj:a": { h: "play it out on the decks", line: "two decks and a mixer, laid out like a real dj controller." },
-  "dj:b": { h: "mix with eq and tempo", line: "line up the tempo, swap the bass, slide from one track to the next." },
-  "library:a": { h: "every device in Live", line: "search by name, or by what you want to hear: warmer, wider, more space." },
-  "library:b": { h: "play with any of them", line: "each one opens on a loop. turn a knob and hear what it does." },
+// Each clip: a headline, one line on what it is, why it's good (a real reason, said plainly), and where it lives
+// in the app, so the first visit shows people around as well as showing off (10 Nov).
+const CLIP: Record<string, { h: string; line: string; why: string; where: string }> = {
+  "learn:a": { h: "learn by making a song", line: "short lessons, each one adding a part to a song that's yours.", why: "you're never doing an exercise for its own sake: every lesson ends with something new in your song, and the next one builds on it.", where: "home, 01 learn" },
+  "learn:b": { h: "then shape what you made", line: "every knob you meet is explained on the screen while you turn it.", why: "you hear what a control does before you're told its name, so the word sticks to the sound.", where: "inside every lesson" },
+  "practice:a": { h: "practice five minutes a day", line: "ear training picked from what your lessons have taught you.", why: "short and often beats long and rare. five minutes keeps what you learnt from slipping.", where: "home, 03 practice" },
+  "practice:b": { h: "copy by ear", line: "hear a part, write it on the grid, and see what you got right.", why: "this is how producers learn tracks they love: listen, copy, compare.", where: "practice, copy by ear" },
+  "studio:a": { h: "build it out in the studio", line: "drum pads, keys and knobs, all playing your song.", why: "the studio only shows the controls you've learnt, so it grows with you instead of hitting you with everything on day one.", where: "home, 04 studio" },
+  "studio:b": { h: "arrange it, then take it to Live", line: "copy your loop into sections, then send the whole song to Ableton Live.", why: "what you make here isn't stuck here. it opens in Live, track by track, ready to finish.", where: "studio, arrange" },
+  "dj:a": { h: "play it out on the decks", line: "two decks and a mixer, laid out like a real dj controller.", why: "the layout matches the controllers in clubs, so what you learn here works on real gear.", where: "home, 04 dj decks" },
+  "dj:b": { h: "mix with eq and tempo", line: "line up the tempo, swap the bass, slide from one track to the next.", why: "you mix your own song with other tracks, the way you would at a Cats Can Dance night.", where: "dj decks" },
+  "library:a": { h: "every device in Live", line: "search by name, or by what you want to hear: warmer, wider, more space.", why: "you don't need to know a device's name to find it. describe the sound and it shows you which ones do that.", where: "home, 04 library" },
+  "library:b": { h: "play with any of them", line: "each one opens on a loop. turn a knob and hear what it does.", why: "better than a manual: you hear every control, and the screen says what it's doing as you turn it.", where: "library, any device" },
 };
 const src = (k: string) => `/tour/${k.replace(":", "-")}`;
 
@@ -64,7 +66,7 @@ function Clip({ k, sound, paused, onSound, onPause, onTime, onEnd }: { k: string
   return (
     <div className={`wt-phone ${paused ? "is-paused" : ""}`}>
       <video ref={ref} key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline autoPlay={!still} controls={still} preload="auto"
-        onEnded={() => { if (!still) onEnd(); }} onClick={still ? undefined : onPause} aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+        onEnded={e => { const v = e.currentTarget; try { v.currentTime = Math.max(0, v.duration - 0.05); } catch { /* keep the frame */ } if (!still) onEnd(); }} onClick={still ? undefined : onPause} aria-label={`${CLIP[k].h}: a recording of ccd school`} />
       {paused ? <span className="wt-paused" aria-hidden><Icon name="play" /></span> : null}
       <div className="wt-keys">
         {still ? null : <button type="button" className="wt-sound" aria-pressed={paused} onClick={onPause}>{paused ? "play" : "pause"}</button>}
@@ -157,12 +159,24 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
         {prod && (
           <>
             <div className="wt-text">
+              {at === "learn:a" ? (
+                <div className="wt-map" aria-label="How ccd school fits together">
+                  <b className="wt-mapsong">your song</b>
+                  {[["learn", "adds parts"], ["practice", "keeps them"], ["studio", "builds it"], ["dj decks", "plays it out"], ["library", "explains any device"]].map(([n, d], i) => (
+                    <span key={n} style={{ ["--i" as string]: i } as CSSProperties}><b>{n}</b>{d}</span>
+                  ))}
+                </div>
+              ) : null}
               <Silk label={NAME[prod]} right={at.endsWith(":a") ? "1 of 2" : "2 of 2"} />
               <h1 className="wt-big">{CLIP[at].h}</h1>
               <p className="wt-sub">{CLIP[at].line}</p>
               <Steps steps={stepsNow} now={stepNow} />
+              <div className="wt-why"><b>why it's good</b><span>{CLIP[at].why}</span></div>
+              <div className="wt-where"><Icon name="learn" small /><span>find it in <b>{CLIP[at].where}</b></span></div>
             </div>
-            <div className="wt-show"><Clip k={at} sound={sound} paused={paused} onSound={() => setSound(v => !v)} onPause={() => setPaused(v => !v)} onTime={onTime} onEnd={next} /><p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
+            <div className="wt-show"><Clip k={at} sound={sound} paused={paused} onSound={() => setSound(v => !v)} onPause={() => setPaused(v => !v)} onTime={onTime} onEnd={next} />
+              {/* The next clip loads while this one plays, so the switch never shows an empty frame. */}
+              {nextKey && nextKey in CLIP ? <video key={`pre-${nextKey}`} src={`${src(nextKey)}.mp4`} preload="auto" muted playsInline aria-hidden tabIndex={-1} style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} /> : null}<p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
             <div className="wt-foot">
               <div className="wl-go"><GoPill onClick={next} style={{ height: 60, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div>
               <p className="wt-hint">{paused ? <>paused. tap the clip<span className="wt-kb"> or press space</span> to carry on.</> : <>the next one starts by itself. tap the clip<span className="wt-kb"> or press space</span> to pause.</>}</p>

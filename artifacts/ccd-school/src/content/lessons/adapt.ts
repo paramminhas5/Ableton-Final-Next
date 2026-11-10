@@ -24,7 +24,7 @@ export function lessonToMission(lesson: Lesson, opts: ResolveOpts): Mission {
     switch (s.kind) {
       case "hear": screens.push({ kind: "hear", clip: s.clip, body: s.say, ...(s.deeper.length ? { deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) } : {}) }); break;
       case "say":
-        screens.push({ kind: "say", title: s.title, body: s.say, ...(s.clip ? { clip: s.clip } : {}), deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) });
+        screens.push({ kind: "say", title: s.title, body: s.say, ...(s.clip ? { clip: s.clip } : {}), ...(s.show ? { show: s.show } : {}), deeper: s.deeper.map(d => ({ title: d.title, body: d.say })) });
         learned.push(s.title);
         break;
       case "play": screens.push({ kind: "play", layer: s.layer, goal: { notes: s.goal.notes ?? 1, note: s.goal.note, ...(s.goal.on ? { on: s.goal.on } : {}), ...(s.goal.check ? { check: s.goal.check } : {}) }, body: s.say, hint: s.hint, ...(s.snap ? { snap: true } : {}) }); break;

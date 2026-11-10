@@ -4,6 +4,7 @@
  * a header that says where you are, your song pinned under it with its own play button, then the
  * step. The order is always: the steps of the lesson, add to your song, optional questions, done.
  */
+import { readClick, saveClick, type ClickMode } from "@/lib/click";
 import { whatHow } from "@/lib/whatHow";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -38,7 +39,8 @@ import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShap
 import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
-import { Gloss } from "./Gloss";
+import { Gloss, GlossTip } from "./Gloss";
+import { RhythmPicture } from "./RhythmPicture";
 import { AddedForYou, SongKey, useSongName } from "./SongKey";
 import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
@@ -89,8 +91,11 @@ const pageName = (p: Page | undefined): string => {
 
 // ── your song, always on top ─────────────────────────────────────────────────
 /** `pending`: this lesson's part is recorded but not added yet, so the strip says so instead of "empty". */
-export function SongStrip({ focus, pending: wait, ghost, slug, changes, slim }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string; changes?: boolean; slim?: boolean }) {
+export function SongStrip({ focus, pending: wait, ghost, slug, changes, compact }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string; changes?: boolean; compact?: boolean }) {
+  // Past the first page it folds to one slim line (10 Nov: "the my track box lingers"); tap to open it.
   const [open, setOpen] = useState(false);
+  useEffect(() => { if (!compact) setOpen(false); }, [compact]);
+  const slim = !!compact && !open;
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
@@ -147,7 +152,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes, slim }: 
   const loop = t?.loop ?? 4;
   const playhead = playing ? Math.floor(((((beat % loop) + loop) % loop) / loop) * 16) : -1;
   return (
-    <section className={`fl-song ${slim && !open ? "is-slim" : ""}`} aria-label="Your song">
+    <section className={`fl-song ${slim ? "is-slim" : ""}`} aria-label="Your song">
       <button type="button" className={`fl-songplay ${playing ? "is-on" : ""}`} data-strip onClick={toggle} disabled={empty} aria-label={playing ? "Stop your song" : "Play your song"}>
         <Icon name={playing ? "stop" : "play"} />
       </button>
@@ -156,23 +161,23 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes, slim }: 
           ? <input className="fl-songinput" defaultValue={name} maxLength={24} autoFocus aria-label="Song name"
               onBlur={e => rename(e.currentTarget.value)} onKeyDown={e => { if (e.key === "Enter") rename(e.currentTarget.value); if (e.key === "Escape") setEditing(false); }} />
           : <><SongKey flat /><span>{pending ? `your ${focus ?? "part"} ${/(hats|chords|drums|claps|snares)$/.test(focus ?? "") ? "are" : "is"} recorded, not added yet` : empty ? (focus && !changes ? `empty · adds the ${focus}` : "empty so far") : seed ? <em className="fl-seed">added for you</em> : `${t?.bpm ?? 120} bpm`}</span></>}</div>
-        {empty
+        {slim ? null : empty
           ? <div className="fl-songempty">{pending ? `your ${focus ?? "part"} goes in when you add it at the end of this lesson` : changes ? "nothing in it yet. this lesson works on a starter loop, and it becomes your song" : focus ? `nothing in it yet. this lesson adds the ${focus}` : "nothing in it yet"}</div>
           : v1 && <Lanes track={v1} playhead={playhead} width={laneW} sel={v1.layers.find(l => focus && (l.kind === focus || focus.includes(l.kind)))?.id ?? null} />}
-        {!empty && t?.sections?.length ? (
+        {!slim && !empty && t?.sections?.length ? (
           // Your arrangement under the loop: one block per section, as long as it lasts, fainter where parts drop out.
           <div className="fl-secs" role="img" aria-label={`Arranged: ${t.sections.map(x => x.name).join(", ")}`}>
             {t.sections.map((x, i) => <i key={i} style={{ flexGrow: x.bars, opacity: 1 - Math.min(0.6, x.off.length * 0.2) }}>{x.name}</i>)}
           </div>
         ) : null}
-        {!empty && cuesOf(t).length ? (
+        {!slim && !empty && cuesOf(t).length ? (
           <div className="fl-cues" role="img" aria-label={`Cues: ${cuesOf(t).map(c => `${c.name}, bar ${c.bar}`).join("; ")}`}>
             {cuesOf(t).map(c => <i key={c.slug}><b>bar {c.bar}</b>{c.name}</i>)}
           </div>
         ) : null}
-        {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
+        {!slim && pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
       </div>
-      {slim ? <button type="button" className="fl-songopen" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-label={open ? "Hide your song" : "Show your song"}><Icon name={open ? "up" : "down"} small /></button> : null}
+      {compact ? <button type="button" className="fl-songfold" onClick={() => setOpen(o => !o)} aria-expanded={!slim} aria-label={slim ? "Show your song" : "Fold your song away"}><Icon name={slim ? "down" : "up"} small /></button> : null}
     </section>
   );
 }
@@ -211,18 +216,22 @@ export function stagesOf(pages: { kind: string; clip?: unknown }[]): number[] {
   });
 }
 
-function Top({ back, crumb, title, pages, at, accent, onPrev, reached, onJump }: { back: string; crumb: string; title: string; pages: Page[]; at: number; accent: string; onPrev?: () => void; reached: number; onJump: (i: number) => void }) {
+function Top({ back, crumb, title, pages, at, reached, accent, onPrev, onJump }: { back: string; crumb: string; title: string; pages: Page[]; at: number; reached: number; accent: string; onPrev?: () => void; onJump: (i: number) => void }) {
+  const steps = pages.length - 2;
   const st = stagesOf(pages as { kind: string; clip?: unknown }[]);
   const now = st[at] ?? 0;
   return (
     <header className="fl-top" style={{ ["--c" as string]: accent } as CSSProperties}>
       <div className="fl-row">
-        <Link href={back} className="fl-back" aria-label="Back to your lessons"><Icon name="back" /></Link>
+        {/* Back steps back through the lesson; only on the first page does it leave. */}
+        {onPrev
+          ? <button type="button" className="fl-back fl-back-step" onClick={onPrev} aria-label={`Back to step ${at - 1 > 0 ? at - 1 : "start"}: ${pageName(pages[at - 1])}`}><Icon name="back" /><span>Back</span></button>
+          : <Link href={back} className="fl-back fl-back-step" aria-label="Leave the lesson. Your place is saved"><Icon name="back" /><span>Lessons</span></Link>}
         <div className="fl-crumb"><span>{crumb}</span><h1>{title}</h1></div>
-        {/* the count matches the numbered plan on the first page: the start and done pages are not steps */}
-        {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${pages.length - 2}`}><span>step</span>{at}<i>/</i>{pages.length - 2}</div> : null}
+        {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${steps}`}><b>{at}</b><i>of</i>{steps}</div> : null}
         <Walkthrough screen="lesson" />
       </div>
+      {/* the five stages; every step you've reached is a dot you can tap to go back to it */}
       <nav className="fl-flow" aria-label="Where you are in this lesson">
         {STAGES.map((name, s) => {
           const mine = pages.map((_, i) => i).filter(i => st[i] === s);
@@ -233,19 +242,45 @@ function Top({ back, crumb, title, pages, at, accent, onPrev, reached, onJump }:
               <span className="fl-stdots">
                 {mine.map(i => (
                   <button key={i} type="button" className={i < at ? "is-done" : i === at ? "is-now" : ""} disabled={i > reached || i === at}
-                    onClick={() => onJump(i)} aria-label={`${i === at ? "this step" : "go to step"}: ${pageName(pages[i])}`} />
+                    onClick={() => onJump(i)} aria-label={`${i === 0 ? "Start" : i === pages.length - 1 ? "Done" : `Step ${i}`}: ${pageName(pages[i])}`} aria-current={i === at ? "step" : undefined} />
                 ))}
               </span>
             </div>
           );
         })}
       </nav>
+      <GlossTip />
       <div className="fl-nav">
-        <button type="button" className="fl-stepback" onClick={onPrev} disabled={!onPrev} aria-label="Previous step"><Icon name="back" small />back</button>
-        <span className="fl-navnow"><b>{STAGES[now]}</b>{pageName(pages[at])}</span>
-        <span className="fl-navnext">{pages[at + 1] ? <>next: {pageName(pages[at + 1])}</> : null}</span>
+        <span className="fl-navnow"><b>now · {STAGES[now]}</b>{pageName(pages[at])}</span>
+        <span className="fl-navnext">{pages[at + 1] ? <><b>next</b>{pageName(pages[at + 1])}</> : null}</span>
       </div>
     </header>
+  );
+}
+
+// ── the click: the metronome on its own, before anything asks you to play to it ──
+function ClickIntro() {
+  const track = useMemo(() => clipVariants("click")[0]?.track ?? readTrackV2(), []);
+  const { engine, ready } = useEngineTrack(track);
+  const [beat, setBeat] = useState(-1);
+  const [mode, setMode] = useState<ClickMode>("normal");
+  useEffect(() => setMode(readClick()), []);
+  useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos) setBeat(e.flags & FLAG.playing ? e.beat : -1); }), [engine]);
+  const start = () => void ready().then(() => { engine.metronome(true); engine.play(); }).catch(() => { /* needs a tap */ });
+  useEffect(() => { start(); return () => { try { engine.stop(); engine.metronome(false); } catch { /* not started */ } }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const n = beat >= 0 ? Math.floor(beat) % 4 : -1;
+  const set = (m: ClickMode) => { saveClick(m); setMode(m); engine.metronome(m !== "off"); if (m !== "off" && beat < 0) start(); };
+  return (
+    <Screen>
+      <Meta left={beat >= 0 ? (mode === "off" ? "click off" : "the click") : "press play"} right={`${track.bpm} bpm`} />
+      <div className="fl-count4 fl-clicks" aria-live="off">
+        {[1, 2, 3, 4].map((x, i) => <span key={x} className={`${i === n ? "is-on" : ""} ${i === 0 ? "is-one" : ""}`}>{i === 0 ? <><b>{x}</b><small>high</small></> : <><b>{x}</b><small>low</small></>}</span>)}
+      </div>
+      <div className="fl-barkeys fl-clickset" role="radiogroup" aria-label="Click">
+        {(["normal", "quiet", "off"] as ClickMode[]).map(m => <button key={m} type="button" role="radio" aria-checked={mode === m} className={`ls-chip ${mode === m ? "is-on" : ""}`} onClick={() => set(m)}>{m === "normal" ? "click on" : m === "quiet" ? "quieter" : "off"}</button>)}
+        <button type="button" className="ls-chip" onClick={() => { if (beat >= 0) engine.stop(); else start(); }}>{beat >= 0 ? "stop" : "play"}</button>
+      </div>
+    </Screen>
   );
 }
 
@@ -369,7 +404,10 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
     nameSongIfNew();
     setBase(next);
     setAdded(true);
-    playFanfare();
+    // The moment (10 Nov): no jingle. Your song starts with the new part in it, the part's name flies up into
+    // your song strip, and the strip's lane lights on the beat.
+    void ready().then(() => { try { engine.stop(); } catch { /* not started */ } window.setTimeout(() => engine.play(), 120); });
+    try { document.querySelector(".fl-song")?.classList.add("is-arrive"); window.setTimeout(() => document.querySelector(".fl-song")?.classList.remove("is-arrive"), 1600); } catch { /* no dom */ }
     window.dispatchEvent(new Event(SONG_EVENT));
     track("lesson_part_added", { missionSlug: slug, own: !!take?.events.length });
   };
@@ -392,6 +430,7 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={CAT_SRC} alt="" className={`ls-sticker ${playing ? "m1-dancing" : ""}`} />
         <Meta left={isIn ? "in your song" : noun ? "your song, as you left it" : take?.events.length ? `the ${part} you played` : "the lesson's pattern"} />
+        {isIn ? <div className="fl-burst" aria-hidden><span>+ {what}</span><i /><i /><i /></div> : null}
         <div className={`ls-title ${isIn ? "fl-pop" : ""}`}>{cue ? (isIn ? `your song is marked: ${cue.name}` : `mark your song: ${cue.name}`) : isIn ? `your ${what} ${is} in your song` : noun ? `keep your ${what}` : `add your ${part} to your song`}</div>
         <div className={`fl-lanes ${isIn ? "is-in" : ""}`}>{v1 && <Lanes track={v1} playhead={playhead} />}</div>
       </Screen>
@@ -407,14 +446,39 @@ function AddStep({ mission, take, hasQuestions, onNext, onSkipQuestions }: { mis
           : mixSkipped
           ? `you skipped the mixer, so there's no move to mark on your song this time. do the lesson again to mark it.`
           : isIn
-          ? `this is your song now. ${noun ? "every lesson from here builds on it." : `every lesson from here adds something on top of ${/s$/.test(part) && !/(ss|bass)$/.test(part) ? "these" : "this"} ${part}.`} ${hasQuestions ? "next: earn your stripe, a quick test of what you just learnt. or skip it and keep building." : ""}`
+          ? `this is your song now. ${noun ? "every lesson from here builds on it." : `every lesson from here adds something on top of ${/s$/.test(part) && !/(ss|bass)$/.test(part) ? "these" : "this"} ${part}.`}`
           : noun ? `this is your song with your ${what}. keep it and it stays.` : missingPart && !take?.events.length ? `your song has no ${part} yet, so this adds the lesson's ${part} line with the sound you made. add it and it stays.` : `this is what your song sounds like with your ${part} in it. add it and it stays.`}
       </p>
-      {isIn && hasQuestions && <button type="button" className="ls-skip" onClick={onSkipQuestions}>skip the challenge</button>}
+      {isIn ? <AfterAdd slug={slug} questions={hasQuestions} onSkip={onSkipQuestions} /> : null}
       </div>
       <Bottom
         left={{ label: playing ? "stop" : "hear", icon: playing ? "stop" : "hear", onClick: () => { if (playing) engine.stop(); else void ready().then(() => engine.play()); } }}
-        go={isIn ? { label: hasQuestions ? "earn your stripe" : "finish", onClick: onNext } : { label: <><Icon name="plus" />{cue ? "mark my song" : noun ? "keep in my song" : "add to my song"}</>, onClick: add, aria: cue ? "Mark my song" : noun ? "Keep in my song" : "Add to my song" }} />
+        go={isIn ? { label: hasQuestions ? "test yourself" : "finish", onClick: onNext } : { label: <><Icon name="plus" />{cue ? "mark my song" : noun ? "keep in my song" : "add to my song"}</>, onClick: add, aria: cue ? "Mark my song" : noun ? "Keep in my song" : "Add to my song" }} />
+    </div>
+  );
+}
+
+// ── right after a part goes in: go deeper first if you like, then the test, said plainly (10 Nov) ──
+function AfterAdd({ slug, questions, onSkip }: { slug: string; questions: boolean; onSkip: () => void }) {
+  const item = curItem(slug);
+  const deeper = extrasOf(item?.kind === "song" ? slug : "").filter(e => e.kind === "deeper").slice(0, 3);
+  return (
+    <div className="fl-after">
+      {deeper.length ? (
+        <div className="fl-afterdeep">
+          <div className="fl-afterh">go deeper first <span>optional · {deeper.length} short lesson{deeper.length === 1 ? "" : "s"}</span></div>
+          {deeper.map(d => (
+            <Link key={d.slug} href={`/learn/${d.slug}`} className="fl-deepcard"><span className="fl-deepk"><Icon name="brain" small /></span><span><b>{d.title.toLowerCase()}</b><small>{d.does}</small></span><Icon name="up" small /></Link>
+          ))}
+        </div>
+      ) : null}
+      {questions ? (
+        <div className="fl-aftertest">
+          <div className="fl-afterh">then test yourself</div>
+          <p>a few quick questions on what you just did, some by ear. get them all right first time and you earn a gold stripe for this lesson; finish them and it's silver. stripes collect on your profile.</p>
+          <button type="button" className="ls-chip" onClick={onSkip}>skip the questions</button>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -457,11 +521,11 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
   if (!q) return null;
   const letter = (k: number) => String.fromCharCode(97 + k);
   return (
-    <div className="ls-col">
+    <div className="ls-col is-one fl-check">
       <div className="fl-inst">
       <Screen>
         <div className="fl-stripes" aria-hidden>{list.map((_, k) => <i key={k} className={k < i || (k === i && right) ? "is-on" : ""} />)}</div>
-        <Meta left={`stripe challenge · ${i + 1} of ${list.length}${q.ear ? " · by ear" : ""}`} right={right ? "right" : out.length ? "try again" : byEar ? "listen, then pick" : q.ear?.play ? "listen first" : "tap one"} />
+        <Meta left={`question ${i + 1} of ${list.length}${q.ear ? " · by ear" : ""}`} right={right ? "right" : out.length ? "try again" : byEar ? "listen, then pick" : q.ear?.play ? "listen first" : "tap one"} />
         <div className="ls-title is-small"><Gloss>{q.q}</Gloss></div>
         {q.ear ? <EarPlayRow s={ear} ear={q.ear} /> : null}
       </Screen>
@@ -478,8 +542,10 @@ function CheckStep({ main, bank, onDone, onScore }: { main: Quiz[]; bank: Quiz[]
       {missed !== null && !right && <div className="fl-why is-wrong" role="status"><b>not quite.</b> <Gloss>{q.whyWrong?.[missed] ?? q.hint ?? (byEar ? "listen to each one again, then pick." : "have another go.")}</Gloss></div>}
       {right && <div className="fl-why is-right" role="status"><b>{out.length ? "got it." : "right."}</b> <Gloss>{q.explain}</Gloss></div>}
       {q.ear && !right && !out.length ? <div className="ls-hint">{byEar ? "press each letter to hear it on your song, as many times as you like. then pick the one that answers the question." : "press play to hear it on your song, then pick an answer."}</div> : null}
-      {q.ear && !right ? <button type="button" className="ls-skip" onClick={skipOne} aria-label="Skip this question">no sound here? skip this one</button> : null}
-      <button type="button" className="ls-skip" onClick={() => { ear.stop(); onDone(); }}>skip the challenge</button>
+      <div className="fl-skips">
+        {q.ear && !right ? <button type="button" className="ls-chip" onClick={skipOne} aria-label="Skip this question">no sound? skip this one</button> : null}
+        <button type="button" className="ls-chip" onClick={() => { ear.stop(); onDone(); }}>skip the questions</button>
+      </div>
       </div>
       <Bottom
         left={right && last && more.length ? { label: "ask more", icon: "plus", onClick: askMore, aria: "Ask me another question" } : undefined}
@@ -612,32 +678,45 @@ function GoDeeper({ slug }: { slug: string }) {
 
 function DoneStep({ reward, mission, nextHref, nextTitle, back, firstTry, asked, onRetune, onMore }: { reward: Reward | null; mission: Mission; nextHref: string; nextTitle?: string; back: string; firstTry: number; asked: number; onRetune?: () => void; onMore?: () => void }) {
   const f = mission.fromFile!;
-  useEffect(() => { playFanfare(); }, []);
+  // The reward is its own moment, a card over the page, once (10 Nov). The page itself says what you did,
+  // what you learnt and what's next, in that order.
+  const [pop, setPop] = useState(true);
+  const part = f.adds?.part;
   return (
-    <div className="ls-col">
+    <div className="ls-col fl-done">
       <div className="fl-inst">
       <Screen>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
-        <Meta left="lesson done" right={asked ? `${firstTry} of ${asked} first try` : undefined} />
-        <div className="ls-title is-big fl-pop">{mission.title.toLowerCase()}</div>
+        <Meta left="lesson done" right={asked ? `${firstTry} of ${asked} right first time` : undefined} />
+        <div className="ls-title is-big fl-pop">{part ? `your song has ${part} now` : mission.title.toLowerCase()}</div>
       </Screen>
+      <div className="fl-donesec"><span className="fl-donen">1</span><b>what you did</b></div>
       <WithWithout slug={mission.slug} />
-      {f.next && <div className="ls-panel fl-nextline"><span className="ls-led" style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} /><span><Gloss>{f.next}</Gloss></span></div>}
       </div>
       <div className="fl-text">
-      {/* Where next, two equal roads (9 Nov): the next song lesson, or deeper on this part. Then the reward. */}
-      <TwoRoads slug={mission.slug} nextHref={nextHref} nextTitle={nextTitle} />
-      {reward && <Rewards r={reward} />}
-      <Silk label="you can now" />
+      <div className="fl-donesec"><span className="fl-donen">2</span><b>what you learnt</b></div>
       <ul className="ls-learn is-ticks">{f.items.map((l, i) => <li key={i}><b><Icon name="check" small /></b>{l}</li>)}</ul>
       <div className="fl-again">
         {onRetune && <button type="button" className="ls-chip" onClick={onRetune}>tune it again</button>}
         {onMore && <button type="button" className="ls-chip" onClick={onMore}>more questions</button>}
       </div>
-      <GoDeeper slug={mission.slug} />
+      <div className="fl-donesec"><span className="fl-donen">3</span><b>what's next</b></div>
+      {f.next && <p className="ls-read fl-nexttext"><Gloss>{f.next}</Gloss></p>}
+      <TwoRoads slug={mission.slug} nextHref={nextHref} nextTitle={nextTitle} />
       </div>
       <Bottom left={{ label: "lessons", icon: "back", href: back }} go={{ label: nextTitle ? `next: ${nextTitle.toLowerCase()}` : "back to lessons", href: nextHref }} />
+      {reward && pop && (reward.stripe || reward.trophies.length || reward.xp) ? (
+        <div className="fl-rewardpop" role="dialog" aria-modal="true" aria-label="What you earned">
+          <div className="fl-rewardcard">
+            <Rewards r={reward} />
+            <div className="fl-rewardkeys">
+              <Link href="/profile" className="ls-chip">see it on your profile</Link>
+              <button type="button" className="fl-rewardgo" onClick={() => setPop(false)} autoFocus>carry on</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -647,12 +726,16 @@ type Way = "mentor" | "straight" | "eli5";
 const textOf = (s: LessonScreen | undefined): string => (s && "body" in s && typeof s.body === "string" ? s.body : "");
 function Ways({ way, setWay, has, text }: { way: Way; setWay: (w: Way) => void; has: { straight: boolean; eli5: boolean }; text?: string }) {
   if (!has.straight && !has.eli5 && way === "mentor" && !text) return null;
+  // Icon keys with a short name under each (10 Nov): read it out, in other words, simpler, and back to the full one.
+  const K = ({ icon, name, aria, on }: { icon: string; name: string; aria: string; on: () => void }) => (
+    <button type="button" className="fl-way" onClick={on} aria-label={aria} title={aria}><span className="fl-wayk"><Icon name={icon} small /></span><span className="fl-wayn">{name}</span></button>
+  );
   return (
     <div className="fl-ways" role="group" aria-label="Explain it differently">
-      {text ? <SayKey text={text} /> : null}
-      {way !== "mentor" && <button type="button" className="ls-chip" onClick={() => setWay("mentor")}>explain it fully</button>}
-      {has.straight && way !== "straight" && <button type="button" className="ls-chip" onClick={() => setWay("straight")}>{way === "mentor" ? "say it another way" : "keep it short"}</button>}
-      {has.eli5 && way !== "eli5" && <button type="button" className="ls-chip" onClick={() => setWay("eli5")}>simpler please</button>}
+      {text ? <span className="fl-way"><SayKey text={text} label="" className="fl-wayk" /><span className="fl-wayn">read out</span></span> : null}
+      {way !== "mentor" && <K icon="full" name="full" aria="Back to the full explanation" on={() => setWay("mentor")} />}
+      {has.straight && way !== "straight" && <K icon="swap" name="other words" aria="Say it another way" on={() => setWay("straight")} />}
+      {has.eli5 && way !== "eli5" && <K icon="simple" name="simpler" aria="Explain it more simply" on={() => setWay("eli5")} />}
     </div>
   );
 }
@@ -797,10 +880,20 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
 
   // Set when the learner moves to another step, so the new step takes focus (not on first load).
   const moved = useRef(false);
-  const go = useCallback((n: number) => { moved.current = true; setIdx(Math.max(0, Math.min(pages.length - 1, n))); window.scrollTo({ top: 0 }); }, [pages.length]);
-  // The furthest step you've reached: the stage dots in the header jump back to any of them.
   const [reached, setReached] = useState(0);
   useEffect(() => setReached(r => Math.max(r, idx)), [idx]);
+  // Each step is a history entry, so the phone's back gesture and the browser's back key step back too.
+  const go = useCallback((n: number, fromHistory = false) => {
+    const to = Math.max(0, Math.min(pages.length - 1, n));
+    moved.current = true; setIdx(to); window.scrollTo({ top: 0 });
+    if (!fromHistory) { try { window.history.pushState({ ...(window.history.state ?? {}), ccdStep: to }, ""); } catch { /* ignore */ } }
+  }, [pages.length]);
+  useEffect(() => {
+    try { window.history.replaceState({ ...(window.history.state ?? {}), ccdStep: idx }, ""); } catch { /* ignore */ }
+    const pop = (e: PopStateEvent) => { const st = (e.state as { ccdStep?: number } | null)?.ccdStep; if (typeof st === "number") go(st, true); };
+    window.addEventListener("popstate", pop);
+    return () => window.removeEventListener("popstate", pop);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const next = useCallback(() => go(idx + 1), [go, idx]);
   const base = pages[idx];
   useEffect(() => setWay(prefs.voice), [idx, prefs.voice]);
@@ -840,7 +933,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
     case "say": {
       // Once you've played something, the explanations after it show your own bar, looping.
       const after = at("play") >= 0 && idx > at("play") && take?.events.length;
-      const visual = cur.clip ? <CountAlong clip={cur.clip} /> : after && take ? <TakeBar mission={mission} take={take} /> : undefined;
+      const visual = cur.show ? <RhythmPicture show={cur.show} /> : cur.clip === "click" ? <ClickIntro /> : cur.clip ? <CountAlong clip={cur.clip} /> : after && take ? <TakeBar mission={mission} take={take} /> : undefined;
       body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} visual={visual} />;
       break;
     }
@@ -878,8 +971,8 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson\u00a0${songItems(cp.world).findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson\u00a0${n}`;
   return (
     <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind} data-stage={stagesOf(pages as { kind: string; clip?: unknown }[])[idx]}>
-      <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} reached={reached} onJump={go} />
-      <SongStrip slim={idx > 0} focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
+      <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} reached={reached} accent={accent} onPrev={idx > 0 ? () => go(idx - 1) : undefined} onJump={i => go(i)} />
+      <SongStrip compact={idx > 0 && !["add", "done"].includes(pages[idx]?.kind ?? "")} focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
       {/* A screen reader hears which step it is, and focus moves to the new step (the key that was pressed is gone). */}
       <div className="sr-only" aria-live="polite">{`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`}</div>
       <div className="ls-stage fl-stage" key={idx} tabIndex={-1} aria-label={`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`} ref={el => { if (el && moved.current) { moved.current = false; el.focus({ preventScroll: true }); } }}>{goal}{body}</div>

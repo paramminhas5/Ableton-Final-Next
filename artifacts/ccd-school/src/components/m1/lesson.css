@@ -1137,6 +1137,174 @@ html[data-text="big"] .fl-gnow{font-size:18px}
 .fl-gwhy>span:last-child,.fl-gdo>span:last-child{color:color-mix(in srgb,var(--ink) 82%,transparent)}
 .fl-gnowl{flex:none;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--led-mint)}
 
+/* 10 Nov: a clear where-am-I bar. Back steps back (labelled), the count reads "3 of 7", every reached step is a key. */
+.fl-back-step{width:auto!important;padding:0 14px 0 8px;gap:4px;font:600 14px Outfit,system-ui;text-decoration:none;cursor:pointer;border:0;height:40px!important}
+.fl-back-step span{line-height:1}
+.fl-count{display:inline-flex;align-items:baseline;gap:4px;font-size:15px;padding:0 4px}
+.fl-count b{font-size:20px;font-weight:600}
+.fl-count i{font-size:13px}
+.ls-seg-keys{display:flex;gap:4px;align-items:center;margin:10px 0 6px}
+.ls-seg-keys button{flex:1;height:24px;padding:0;border:0;background:none;display:flex;align-items:center;cursor:pointer}
+.ls-seg-keys button:disabled{cursor:default}
+.ls-seg-keys button i{display:block;width:100%;height:5px;border-radius:3px;background:var(--ledoff);transition:background 160ms,transform 160ms}
+.ls-seg-keys button.is-done i{background:var(--c);box-shadow:0 0 4px var(--c)}
+.ls-seg-keys button.is-now i{background:var(--ink);height:7px}
+.ls-seg-keys button:not(:disabled):hover i{transform:scaleY(1.6)}
+.fl-now{font-size:14px!important;min-height:20px!important;align-items:baseline}
+.fl-now b{font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--print);margin-right:6px}
+.fl-now span:first-child{font-weight:600}
+@media (max-width:899px){.fl-now{display:flex!important}}
+@media (min-width:900px){.fl-top{max-width:1180px;margin:0 auto;width:100%}.fl-row{min-height:52px}.fl-crumb h1{font-size:19px}.fl-crumb span{font-size:12.5px}}
+
+/* the click intro: four cells, beat one higher */
+.fl-clicks span{flex-direction:column;gap:2px}
+.fl-clicks span b{font-weight:300;font-size:40px;line-height:1}
+.fl-clicks span small{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.fl-clicks span.is-one b{font-weight:500}
+.fl-clickset{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.fl-clickset .ls-chip.is-on{color:#141210;background:var(--led-mint);box-shadow:0 0 12px color-mix(in srgb,var(--led-mint) 50%,transparent)}
+
+/* explain it differently: icon keys (10 Nov) */
+.fl-ways{gap:14px!important;margin-top:16px!important}
+.fl-way{display:inline-flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:0;background:none;cursor:pointer;color:var(--ink);font:inherit}
+.fl-wayk{width:44px!important;height:44px!important;padding:0!important;border-radius:22px!important;display:inline-flex!important;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--t1),var(--t2))!important;box-shadow:var(--m1-extrude)!important;color:var(--ink)!important;border:0!important}
+.fl-wayk span{display:none}
+.fl-wayn{font-size:11px;font-weight:600;color:var(--print);letter-spacing:.02em}
+.fl-way:hover .fl-wayn{color:var(--ink)}
+/* one-panel steps on a laptop: the glass and the words share the column's full width */
+@media (min-width:900px){
+  .fl .ls-col.is-one>.fl-inst,.fl .ls-col.is-one>.fl-text{width:100%}
+  .fl .ls-col.is-one>.fl-inst .m1-scr{width:100%}
+  .fl .ls-col.is-one>.fl-text{padding-top:16px}
+  .fl .ls-col.is-one .ls-read{font-size:17px;line-height:1.6}
+}
+
+/* the song strip folds to one slim line past the first page */
+.fl-song{position:relative}
+.fl-song.is-slim{padding-top:6px!important;padding-bottom:6px!important;min-height:0!important}
+.fl-song.is-slim .fl-songplay{width:34px!important;height:34px!important}
+.fl-songfold{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:18px;background:transparent;color:var(--print);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.fl-songfold:hover{color:var(--ink)}
+.fl-song.is-slim .fl-songname{padding-right:40px}
+
+/* the moment a part joins your song: its name flies up, rings go out, the song strip lights */
+.fl-burst{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;z-index:3}
+.fl-burst span{font:600 34px Outfit,system-ui;color:var(--led-mint);text-shadow:0 0 24px color-mix(in srgb,var(--led-mint) 70%,transparent);animation:flfly 1.3s cubic-bezier(.2,.8,.2,1) both}
+.fl-burst i{position:absolute;width:40px;height:40px;border-radius:50%;border:2px solid var(--led-mint);animation:flring 1.1s ease-out both}
+.fl-burst i:nth-child(3){animation-delay:.15s}.fl-burst i:nth-child(4){animation-delay:.3s}
+@keyframes flfly{0%{transform:scale(.4);opacity:0}25%{transform:scale(1.15);opacity:1}70%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-140px) scale(.5);opacity:0}}
+@keyframes flring{0%{transform:scale(.5);opacity:.9}100%{transform:scale(7);opacity:0}}
+.fl-song.is-arrive{animation:flarrive 1.4s ease-out}
+@keyframes flarrive{0%,100%{box-shadow:none}20%{box-shadow:0 0 0 2px var(--led-mint),0 0 30px color-mix(in srgb,var(--led-mint) 55%,transparent)}}
+@media (prefers-reduced-motion:reduce){.fl-burst span,.fl-burst i,.fl-song.is-arrive{animation:none}.fl-burst{display:none}}
+
+/* after the add: go deeper first, then the test explained */
+.fl-after{display:flex;flex-direction:column;gap:18px;margin-top:16px}
+.fl-afterh{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.fl-afterh span{font-size:12px;font-weight:500;color:var(--print);margin-left:6px}
+.fl-deepcard{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:8px;text-decoration:none;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.fl-deepcard>span:nth-child(2){flex:1;display:flex;flex-direction:column;gap:2px}
+.fl-deepcard b{font-size:15px;font-weight:600}
+.fl-deepcard small{font-size:13px;color:var(--print)}
+.fl-deepcard>svg{transform:rotate(90deg);color:var(--print)}
+.fl-deepk{width:34px;height:34px;border-radius:17px;display:flex;align-items:center;justify-content:center;background:var(--recess);color:var(--ink);flex:none}
+.fl-aftertest p{margin:0 0 10px;font-size:15px;line-height:1.5;color:var(--sub)}
+
+/* questions: one column, skip keys together in a row */
+.fl-skips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+@media (min-width:900px){.fl-check .fl-opts{max-width:none}}
+.m1-glass{position:relative}
+
+/* the end screen: three numbered parts, and the reward as its own card */
+.fl-donesec{display:flex;align-items:center;gap:10px;margin:18px 0 10px}
+.fl-donesec b{font-size:16px;font-weight:600;color:var(--ink)}
+.fl-donen{width:26px;height:26px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--deck);background:var(--ink)}
+.fl-done .fl-text .fl-donesec:first-child{margin-top:4px}
+.fl-nexttext{margin:0 0 12px}
+.fl-rewardpop{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(8,8,10,.55);backdrop-filter:blur(6px);animation:flfade .25s ease-out}
+.fl-rewardcard{width:100%;max-width:420px;border-radius:24px;padding:22px;background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:0 30px 60px -20px rgba(0,0,0,.6),var(--m1-extrude);animation:flup .35s cubic-bezier(.2,.8,.2,1)}
+.fl-rewardkeys{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:16px}
+.fl-rewardkeys .ls-chip{text-decoration:none}
+.fl-rewardgo{height:48px;padding:0 26px;border:0;border-radius:24px;font:600 15px Outfit,system-ui;color:#fff;background:var(--go-fill,#D9367C);cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--go-fill,#D9367C) 60%,#000)}
+@keyframes flfade{from{opacity:0}}
+@keyframes flup{from{transform:translateY(24px) scale(.96);opacity:0}}
+
+/* show me first */
+.ti-showme{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+.ti-showme .ls-chip{display:inline-flex;align-items:center;gap:6px}
+.ti-showme .ls-chip.is-glow{color:#141210;background:var(--led-mint);box-shadow:0 0 0 0 color-mix(in srgb,var(--led-mint) 60%,transparent);animation:tiglow 1.4s ease-in-out infinite}
+.ti-showme span{font-size:14px;font-weight:600;color:var(--ink)}
+@keyframes tiglow{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--led-mint) 20%,transparent)}}
+@media (prefers-reduced-motion:reduce){.ti-showme .ls-chip.is-glow{animation:none}}
+
+/* the built-in dictionary: a marked word opens its meaning in place (hover, tap or hold) */
+.ls-glw{position:relative;display:inline}
+button.ls-gl{all:unset;cursor:help;color:inherit;text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--led-mint);-webkit-touch-callout:none;user-select:none}
+button.ls-gl:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px;border-radius:3px}
+.ls-glpop{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);z-index:40;width:min(300px,80vw);display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:14px;text-align:left;font-size:14px;line-height:1.45;font-weight:400;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:0 18px 40px -12px rgba(0,0,0,.55),var(--m1-extrude);animation:glin .16s ease-out}
+.ls-glpop.is-up{top:auto;bottom:calc(100% + 8px)}
+.ls-glpop b{font-size:15px;font-weight:600}
+.ls-glelse{font-size:12.5px;color:var(--print)}
+.ls-glmore{font-size:12.5px;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+@keyframes glin{from{opacity:0;transform:translateX(-50%) translateY(4px)}}
+.ls-gltip{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0 0;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.45;color:var(--ink);background:color-mix(in srgb,var(--led-mint) 12%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--led-mint) 45%,transparent)}
+.ls-gltip>span:nth-child(2){flex:1;min-width:200px}
+.ls-gltipword{font-weight:600;text-decoration:underline dotted;text-decoration-color:var(--led-mint);text-underline-offset:3px}
+
+/* the zoomed timing view after a take */
+.ti-zoom{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--recess);display:flex;flex-direction:column;gap:6px}
+.ti-zoomh{display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;color:var(--print);margin-bottom:2px}
+.ti-zoomrow{display:grid;grid-template-columns:18px 1fr 120px;align-items:center;gap:10px}
+.ti-zoomn{font-size:11px;font-weight:700;color:var(--print);text-align:right}
+.ti-zoomtrack{position:relative;height:14px;border-radius:7px;background:repeating-linear-gradient(90deg,rgba(128,128,128,.18) 0 1px,transparent 1px 12.5%)}
+.ti-zoomslot{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--ink);opacity:.7}
+.ti-zoomtrack b{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:5px;transition:left .3s cubic-bezier(.2,.8,.2,1)}
+.ti-zoomms{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* rhythm pictures: one bar, the count above, the sounding cell lit */
+.rp{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.rp-row{display:grid;gap:3px;align-items:center}
+.rp-name{font-size:11px;font-weight:600;color:var(--disp-sub);text-transform:lowercase}
+.rp-count span{text-align:center;font:500 13px Outfit,system-ui;color:var(--disp-sub);padding:3px 0;border-radius:6px;transition:background 60ms,color 60ms}
+.rp-count span.is-beat{color:var(--disp-ink);font-weight:600}
+.rp-count span.is-now{background:var(--led-mint);color:#06241B}
+.rp-cell{position:relative;height:30px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.rp-cell.is-beat{background:rgba(255,255,255,.08)}
+.rp-cell.is-now{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--led-mint) 70%,transparent)}
+.rp-cell.is-galt{background:rgba(255,255,255,.015)}
+.rp-cell.is-galt.is-beat{background:rgba(255,255,255,.05)}
+.rp-cell.is-gstart{box-shadow:inset 2px 0 0 color-mix(in srgb,var(--led-mint) 70%,transparent)}
+.rp-cell b{width:56%;max-width:18px;height:46%;border-radius:4px;background:var(--disp-ink);opacity:.8;transition:transform 80ms}
+.rp-cell b.is-acc{height:72%;opacity:1;box-shadow:0 0 8px rgba(234,245,241,.5)}
+.rp-cell b.is-hit{background:var(--led-mint);opacity:1;transform:scale(1.15);box-shadow:0 0 12px var(--led-mint)}
+.rp-16 .rp-cell{height:26px}.rp-16 .rp-count span{font-size:11.5px}
+.rp-groups span{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:700;color:var(--led-mint)}
+.rp-groups span i{display:block;width:calc(100% - 6px);height:6px;border:2px solid var(--led-mint);border-bottom:0;border-radius:4px 4px 0 0;margin-bottom:2px}
+.rp-marks span{display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:600;color:var(--disp-ink);text-align:center;line-height:1.15}
+.rp-marks span i{display:block;width:0;height:0;border:5px solid transparent;border-bottom-color:var(--led-mint);margin-bottom:2px}
+.rp-cap{margin:10px 0 0;font-size:13px;color:var(--disp-sub);line-height:1.45}
+
+/* in your music program */
+.daw{display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.daw-intro{margin:0;font-size:14px;color:var(--sub)}
+.daw-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.daw-tabs button{height:36px;padding:0 14px;border:0;border-radius:18px;font:600 13px Outfit,system-ui;color:var(--sub);background:var(--recess);cursor:pointer}
+.daw-tabs button.is-on{color:var(--deck);background:var(--ink)}
+.daw-app{border-radius:12px;overflow:hidden;background:#1B1B1E;box-shadow:0 10px 20px -12px rgba(0,0,0,.6)}
+.daw-app.is-live{--daw:#BDBDB5}.daw-app.is-fl{--daw:#3C4A52}.daw-app.is-logic{--daw:#2A2A2E}
+.daw-bar{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:6px;padding:8px;background:var(--daw)}
+.daw-zone{display:flex;gap:4px;flex-wrap:wrap;align-items:center;min-height:26px;padding:3px;border-radius:6px;background:rgba(0,0,0,.18)}
+.daw-editor{min-height:64px;padding:10px;display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap;background:repeating-linear-gradient(0deg,#222226 0 22px,#1D1D20 22px 23px)}
+.daw-editor i{font-size:11px;color:rgba(255,255,255,.3);font-style:normal}
+.daw-ctl{font-size:11px;font-weight:600;padding:3px 7px;border-radius:5px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);transition:all .2s}
+.daw-app.is-live .daw-ctl{color:#1B1B1E;background:rgba(255,255,255,.55)}
+.daw-ctl.is-on{color:#141210!important;background:var(--led-mint)!important;box-shadow:0 0 12px var(--led-mint);transform:scale(1.06)}
+.daw-list{display:flex;gap:8px;flex-wrap:wrap}
+.daw-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 12px;border:0;border-radius:12px;cursor:pointer;font:inherit;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.daw-item b{font-size:13px;font-weight:600}.daw-item span{font-size:11px;color:var(--print)}
+.daw-item.is-on{box-shadow:inset 0 0 0 2px var(--led-mint),var(--m1-extrude)}
+.daw-how{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}
+
 /* ══ 10 Nov, round 7: one lesson frame ══════════════════════════════════════════════════════════════════
    Param: "on desktop boxes are all over the place". Every step now sits in the same frame:
    header (back, lesson, step x of y) → the five stages → your song, slim → the step.
@@ -1163,12 +1331,14 @@ html[data-text="big"] .fl-gnow{font-size:18px}
 .fl-st.is-none{opacity:.38}
 .fl-st.is-none .fl-stdots{visibility:hidden}
 /* back · where you are · what's next, one line under the stages */
-.fl-nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;min-height:32px}
+.fl-nav{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);align-items:center;gap:12px;min-height:34px;padding:2px 2px 0}
 .fl-nav .fl-stepback{padding:6px 10px 6px 4px;font-size:13px}
 .fl-nav .fl-stepback:disabled{opacity:.3;cursor:default}
 .fl-navnow{display:flex;align-items:baseline;gap:8px;min-width:0;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fl-navnow b{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--c);flex:none}
-.fl-navnext{font-size:12px;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
+.fl-navnow{font-size:15px;font-weight:600}
+.fl-navnext{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
+.fl-navnext b{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--print)}
 .fl-count span{font-size:11px;font-weight:500;color:var(--print);margin-right:5px}
 .fl-top>.ls-seg,.fl-top>.fl-now{display:none}
 /* phone: the stages as five short bars, only the one you're in named */
@@ -1179,7 +1349,8 @@ html[data-text="big"] .fl-gnow{font-size:18px}
   .fl-st .fl-stname{display:none}
   .fl-st.is-now{background:none;box-shadow:none}
   .fl-flow{width:100%;box-sizing:border-box;margin-bottom:2px}
-  .fl-navnext{display:none}
+  .fl-navnow{font-size:14px}
+  .fl-navnext{max-width:38vw;font-size:12px}
 }
 
 /* your song, slim after the first step: one line with play and its name, the lanes open on tap */

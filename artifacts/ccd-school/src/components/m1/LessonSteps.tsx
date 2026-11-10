@@ -32,6 +32,8 @@ import { ringsOf, SRC_COLOR } from "@/lib/modulation";
 import { levelMatch } from "@/lib/offline";
 import { ABKey, type Side } from "./AB";
 import { TYPE } from "@/lib/track2";
+import { dawTopicsOf } from "@/content/daw";
+import { DawPanel } from "./DawPanel";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
@@ -40,12 +42,15 @@ export function Folds({ items }: { items?: { title: string; body: string }[] }) 
   if (!items?.length) return null;
   return (
     <div className="fl-more">
-      {items.map(d => (
-        <details key={d.title} className="fl-fold">
-          <summary>{d.title.toLowerCase()}</summary>
-          {d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
-        </details>
-      ))}
+      {items.map(d => {
+        const daw = dawTopicsOf(d.title);
+        return (
+          <details key={d.title} className={`fl-fold ${daw ? "is-daw" : ""}`}>
+            <summary>{daw ? "in your music program" : d.title.toLowerCase()}</summary>
+            {daw?.length ? <DawPanel topics={daw} intro={d.body} /> : d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
+          </details>
+        );
+      })}
     </div>
   );
 }
@@ -133,7 +138,13 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos && e.flags & FLAG.playing) setBeatN(b => (Math.floor(e.beat) !== b ? Math.floor(e.beat) : b)); }), [engine]);
   const isKick = /kick/.test(screen.clip);
   const kickDecay = isKick && variants.length > 1 ? (v === 0 ? 0.12 : 0.9) : 0.5;
-  const pick = (i: number) => { if (i === v) return; setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150)); heard.current = true; };
+  // Tapping a choice always plays it, including the one that's already picked (a, before anything has played).
+  const [tapped, setTapped] = useState(false);
+  const pick = (i: number) => {
+    setTapped(true); heard.current = true;
+    if (i === v) { void ready().then(() => { try { engine.stop(); } catch { /* not started */ } engine.play(); }); return; }
+    setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150));
+  };
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -155,7 +166,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
           <Silk label="tap one to hear it" right={variants[v]?.label} />
           <div className="ls-pads" role="radiogroup" aria-label="Versions">
             {variants.map((x, i) => (
-              <button key={x.label} type="button" role="radio" aria-checked={v === i} className={`ls-pad ${v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
+              <button key={x.label} type="button" role="radio" aria-checked={tapped && v === i} className={`ls-pad ${tapped && v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
                 <small>{String.fromCharCode(97 + i)}</small><span>{x.label}</span>
               </button>
             ))}

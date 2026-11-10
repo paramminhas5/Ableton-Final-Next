@@ -3992,9 +3992,19 @@
           "title": "count along",
           "clip": "kick-alone",
           "say": {
-            "mentor": "Count with it, out loud if you can: one, two, three, four, then start again at one. Each kick is a beat. The pulse is just beats in a row.\nMusicians count in fours almost all the time, because it's easy to feel and easy to dance to. You'll hear why that matters in the next lesson.",
-            "straight": "Each kick is one beat. Count one to four and start again. Dance music almost always counts in fours.",
-            "eli5": "Let's count the booms: one, two, three, four, and again, one, two, three, four. Every boom is called a beat. Musicians love counting to four."
+            "mentor": "Count with it, out loud if you can: one, two, three, four, then back to one. Each kick is one beat, and the pulse is just beats in a row.\nEvery time you get back to one, a new bar starts. A bar is a group of beats, and in almost all dance music it's four beats long. That's what \"4/4\" means, said \"four four\": four beats in every bar. The screen counts the bars for you as they go past, bar 1, bar 2.\nBars are how musicians find their way around a song, the way sentences are made of words: \"the bass comes in after eight bars\". From here on, everything you make is built in bars of four.",
+            "straight": "Each kick is one beat. Four beats make a bar, so you count one to four and start again at one. Four beats per bar is written 4/4, said \"four four\", and nearly all dance music is in 4/4. Songs are measured in bars.",
+            "eli5": "Let's count the booms: one, two, three, four, and back to one. Every boom is a beat. Four beats together make a bar, like four steps make one little dance move. When you get back to one, a new bar starts. Music that counts in fours like this is called \"four four\"."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "the click",
+          "clip": "click",
+          "say": {
+            "mentor": "Before you play, meet the click. It's a metronome: a tick on every beat, at exactly the speed of the song. The higher tick is beat one, where each count of four starts. The three lower ticks are two, three and four.\nWhen you record, the click plays four times first to count you in, then keeps going so you have something steady to play along with. It's only a guide. It never goes into your song.\nIf it's too loud, make it quieter or turn it off. Whatever you pick is kept for every lesson.",
+            "straight": "This is the click, a metronome. One tick per beat: high on beat one, low on two, three and four. It counts you in before you record and keeps time while you play. It never goes into your song. Make it quieter or turn it off here.",
+            "eli5": "Tick, tick, tick, tick. That's the click. It's like a clock that keeps the beat for you. The high tick means \"one, start counting again\". It helps you play at the right time, and nobody hears it in your song but you."
           }
         },
         {
@@ -4092,7 +4102,22 @@
         {
           "kind": "say",
           "title": "count it in bars",
-          "clip": "kick-and-clap",
+          "show": {
+            "steps": 4,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "xxxx"
+              },
+              {
+                "name": "clap",
+                "sound": "clap",
+                "pattern": ".x.x"
+              }
+            ],
+            "caption": "One bar of 4/4: four beats. The kick plays all four, the clap plays two and four."
+          },
           "say": {
             "mentor": "Count along again: one, two, three, four. Notice where the clap lands: on two and on four, never on one or three. One and three are the kick on its own. Two and four get the clap.\nThose four beats together are called a bar. Musicians count music in bars, the way you'd count a walk in steps: \"the bass comes in after eight bars\". Dance music is almost always four beats to a bar, written 4/4 and said \"four four\".",
             "straight": "Four beats make a bar. The clap lands on beats two and four of every bar. Dance music is nearly always in 4/4: four beats per bar.",
@@ -4129,7 +4154,7 @@
           "kind": "say",
           "title": "the backbeat",
           "say": {
-            "mentor": "That's your first groove: kick on every beat, clap on two and four. The clap on two and four is the backbeat, and it's one of the oldest tricks in pop music.\nIt works because it pulls against the kick. The kick says \"down\", the clap says \"up\", and your body sits in between, nodding. Next time you hear a song, find two and four. You'll hear a clap or a snare there almost every time.",
+            "mentor": "That's your first groove: kick on every beat, clap on two and four. The clap on two and four is the backbeat, and it's one of the oldest tricks in pop music.\nThe backbeat is a rhythm in its own right: a pattern of when the clap plays, laid over the pulse. It works because it pulls against the kick. The kick says \"down\", the clap says \"up\", and your body sits in between, nodding. Next time you hear a song, find two and four. You'll hear a clap or a snare there almost every time.",
             "straight": "Kick on every beat, clap on two and four: that's the backbeat. The kick gives the down, the clap the up, and that back and forth is the groove.",
             "eli5": "Now your song goes boom, clap, boom, clap. That clap on two and four has a name: the backbeat. Almost every song has one. See if you can spot it in the next song you hear."
           },
@@ -4310,16 +4335,69 @@
         },
         {
           "kind": "say",
-          "title": "halves and quarters of a beat",
+          "title": "half a beat",
+          "show": {
+            "steps": 8,
+            "ticks": true,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "x.x.x.x."
+              },
+              {
+                "name": "hats",
+                "sound": "closed",
+                "pattern": ".x.x.x.x"
+              }
+            ],
+            "marks": [
+              {
+                "at": 0,
+                "word": "beat"
+              },
+              {
+                "at": 1,
+                "word": "half"
+              }
+            ],
+            "caption": "Each beat split in two. Count: one and two and three and four and."
+          },
           "say": {
-            "mentor": "Musicians call these note values. A quarter note is one beat. An eighth note is half a beat. A sixteenth is a quarter of a beat. The names come from how many fit in a bar: four quarters, eight eighths, sixteen sixteenths.\nPeople count eighths as \"one and two and three and four and\", and sixteenths as \"one e and a, two e and a\". Say it out loud over the sixteenths and you'll hear it lock in.",
-            "straight": "Quarter note: one beat. Eighth: half a beat. Sixteenth: a quarter of a beat. Count eighths as \"one and two and\", sixteenths as \"one e and a\".",
-            "eli5": "Grown-up musicians give these names. One tss per boom is a quarter note. Two per boom is an eighth note. Four per boom is a sixteenth note. You can count the fast ones as \"one e and a, two e and a\"."
+            "mentor": "Cut one beat exactly in half and you get two pieces. Musicians call each piece an eighth note, because eight of them fit in a bar of four beats.\nCount them by saying \"and\" between the numbers: one and two and three and four and. In the picture the kick sits on the numbers and the hat on every \"and\". Listen to the soft ticks: they mark every eighth, so you can hear the counting as well as see it.",
+            "straight": "Half a beat is an eighth note: eight fit in a bar. Count \"one and two and\". The kick is on the numbers, the hat on every \"and\".",
+            "eli5": "Take one beat and cut it in half, like a sandwich. Now there are two little pieces in every beat. Say \"one and two and\": the numbers are the boom, the \"and\" is the tss."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "a quarter of a beat",
+          "show": {
+            "steps": 16,
+            "ticks": true,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "x...x...x...x..."
+              },
+              {
+                "name": "hats",
+                "sound": "closed",
+                "pattern": "xxxxxxxxxxxxxxxx"
+              }
+            ],
+            "caption": "Each beat split in four. Count: one e and a, two e and a."
+          },
+          "say": {
+            "mentor": "Cut each half in half again and every beat has four pieces. Each one is a sixteenth note, because sixteen fit in a bar.\nCount them as \"one e and a, two e and a\". The number is the beat, the \"and\" is still exactly halfway, and the \"e\" and \"a\" sit either side of it. Say it over the picture as it plays and you'll feel the hats lock to your voice.\nThe tempo never changes in any of this. The beat is just cut more finely, so the groove feels busier and faster while your foot taps at the same speed.",
+            "straight": "A quarter of a beat is a sixteenth note: sixteen in a bar. Count \"one e and a\". The tempo stays the same; the beat is just cut finer, so it feels busier.",
+            "eli5": "Now cut each beat into four tiny pieces. Say \"one e and a, two e and a\" really quickly. That's four tss sounds for every boom, but the boom still goes at the same speed."
           },
           "deeper": [
             {
               "title": "why the names are fractions",
-              "say": "A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, in eight and you get eighths, in sixteen and you get sixteenths. Sheet music draws each one differently, but in a producer's grid they're just the lines getting closer together."
+              "say": "A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, which are the beats. Cut it in eight and you get eighths, in sixteen and you get sixteenths. Sheet music draws each one differently, but on a producer's grid they're just the lines getting closer together."
             }
           ]
         },
@@ -4330,12 +4408,14 @@
           "surface": "pads",
           "snap": true,
           "goal": {
-            "notes": 1
+            "notes": 4,
+            "note": "hat",
+            "on": "and"
           },
           "say": {
-            "mentor": "Now put hats in your song. Hats on the eighths between your kicks are the classic house sound.\nThis time you get help: snap. Snap moves every hit to the nearest line on the grid, so a hat that's a hair early still lands exactly on the eighth. It's set to eighths. Tap the snap key to change it to sixteenths or turn it off and hear the difference.\nPress rec, wait out the count-in, and tap the hat between the kicks: on every \"and\".",
-            "straight": "Record hats over your beat. Snap is on, set to eighths, so every hit lands on the nearest eighth. Tap the snap key to try sixteenths or off. Rec, count-in, then tap the hat on every \"and\".",
-            "eli5": "Your turn to add the tss. A helper called snap is switched on: it nudges every tap onto the nearest line, so it always sounds neat. Press rec, wait for four ticks, then tap the hat in between the booms."
+            "mentor": "Now put hats in your song: one on every \"and\", halfway between your kicks. That's the classic house hat.\nPress show me to watch it once, then press rec, wait out the four clicks, and tap the hat on each \"and\". After your take, the screen zooms in on every hit so you can see how close it was: a little early, a little late or right on it.",
+            "straight": "Record a hat on every \"and\", between the kicks. Watch it once with show me, then rec. After the take you'll see how close each hit was.",
+            "eli5": "Your turn to add the tss. Watch first with show me. Then press rec, wait for four ticks, and tap the hat in the gap between each boom, on every \"and\"."
           },
           "hint": "Say \"one and two and\" and tap on every \"and\"."
         },
@@ -4343,10 +4423,16 @@
           "kind": "say",
           "title": "snap",
           "say": {
-            "mentor": "That's snap, also called quantise. Almost every music program has it. It's brilliant for drums that need to be tight, like hats and kicks in a club track.\nBut it's not always what you want. A little looseness is what makes a groove feel human. Producers often play something in, snap it, then nudge a few hits back off the grid on purpose. You'll do that in the swing lesson next.",
-            "straight": "Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; turn it off or loosen it when you want a human feel.",
-            "eli5": "Snap is like a magnet that pulls your taps onto the lines. Great for neat drums. Sometimes you want a bit of wobble so it feels more alive, and then you switch the magnet off."
-          }
+            "mentor": "Nobody taps exactly on the grid, and the zoomed view showed you by how much. That's what snap is for. Snap, also called quantise, moves every hit to the nearest line on the grid, so a hat that was a few milliseconds late lands exactly on the \"and\". If you pressed grid after your take, that's what it did. Live, FL Studio and Logic all have it.\nIt's brilliant for drums that need to be tight, like hats and kicks in a club track. But a little looseness is what makes a groove feel human, so producers often snap a part, then nudge a few hits back off the grid on purpose. You'll do that in the swing lesson.",
+            "straight": "Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; leave some hits loose when you want a human feel.",
+            "eli5": "Snap is like a magnet that pulls your taps onto the lines, so they line up neatly. Sometimes a bit of wobble sounds more alive, and then you leave the magnet off."
+          },
+          "deeper": [
+            {
+              "title": "in your daw · quantise",
+              "say": "Every music program can snap notes you've played to the grid. Pick yours to see how."
+            }
+          ]
         },
         {
           "kind": "ask",
@@ -4514,6 +4600,10 @@
             "eli5": "When people play drums, they're never perfectly exact, and that wobble feels good. Swing adds a little wobble on purpose."
           },
           "deeper": [
+            {
+              "title": "in your daw · swing",
+              "say": "Every music program has a swing setting. Pick yours to see where it is."
+            },
             {
               "title": "swing in tracks you know",
               "say": "Listen to almost any J Dilla beat for heavy, loose swing, or to UK garage, where swung hats and shuffled snares are the whole sound. A lot of deep house has gentle swing you only notice when it's gone."
@@ -7440,11 +7530,11 @@
           "deeper": [
             {
               "title": "pulse, metre and accent",
-              "say": "The pulse is the steady beat. Metre is how those beats group into bars that repeat, like four beats in a bar of 4/4 or three in a waltz. Accents are the beats that get extra weight, and they are a big part of what gives a groove its feel."
+              "say": "The pulse is the steady beat. Metre is how those beats group into bars that repeat: four beats to a bar in 4/4, three in a waltz. Accents are hits played with extra weight, louder or sharper than the ones around them. Where the accents fall changes how a rhythm feels. In groove and swing you'll see how accents and timing together make a groove."
             },
             {
-              "title": "in live",
-              "say": "The tempo box sits in the Control Bar at the top of Live. Turn on the Metronome to hear the pulse while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm."
+              "title": "in your daw · tempo, metronome, tap",
+              "say": "Every music program has the same three things for the pulse: a tempo box, a metronome and a way to tap the tempo in. Pick yours to see where they are."
             }
           ]
         },
@@ -7456,8 +7546,8 @@
             "kick": "x...x...x...x...",
             "clap": "....x.......x..."
           },
-          "say": "Copy this beat by ear: a kick and a clap. Find the clap first, then the kicks.",
-          "hint": "The clap is on two and four, the kick on every beat."
+          "say": "Copy this beat by ear: a kick and a clap. Start with the kick, the steady one on every beat, since it holds the pulse. Then add the clap where you hear it land.",
+          "hint": "The kick is on every beat. The clap is on two and four."
         },
         {
           "kind": "play",
@@ -7596,6 +7686,42 @@
         },
         {
           "kind": "say",
+          "title": "downbeat and offbeat",
+          "show": {
+            "steps": 8,
+            "ticks": true,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "x.x.x.x."
+              },
+              {
+                "name": "open hat",
+                "sound": "open",
+                "pattern": ".x.x.x.x"
+              }
+            ],
+            "marks": [
+              {
+                "at": 0,
+                "word": "downbeat"
+              },
+              {
+                "at": 1,
+                "word": "offbeat"
+              }
+            ],
+            "caption": "Kick on the downbeats, open hat on the offbeats. Count it: one and two and."
+          },
+          "say": {
+            "mentor": "Two words first. A downbeat is a beat itself, the place where you'd say a number: one, two, three, four. Your kick lands on the downbeats. An offbeat is the point exactly halfway between two downbeats, where you'd say \"and\". Count \"one and two and\", and every \"and\" is an offbeat.\nWatch the picture as it plays. The kick sits under the numbers, the open hat under every \"and\". Downbeats feel solid, like feet on the ground. Offbeats feel like being in the air between steps.",
+            "straight": "Downbeat: on the beat, where you say the numbers. Offbeat: exactly halfway between two beats, the \"and\". Here the kick is on the downbeats and the open hat on the offbeats.",
+            "eli5": "When you count one, two, three, four, each number is a downbeat. Squeeze an \"and\" in between, one and two and, and each \"and\" is an offbeat. The boom is on the numbers. The tss is on the \"ands\"."
+          }
+        },
+        {
+          "kind": "say",
           "title": "tension and the next beat",
           "say": {
             "mentor": "A hit on the offbeat creates a little tension. Your body knows where the strong beat is, and the accent arrives somewhere else. Then the next downbeat lands and the tension lets go. That tiny push and pull, over and over, is a big part of why people dance.\nA pattern with no syncopation feels square, like a march. Add even one offbeat accent and the loop comes alive. Funk, reggae and most dance music live on it.",
@@ -7604,18 +7730,105 @@
           },
           "deeper": [
             {
-              "title": "the backbeat and the anticipation",
-              "say": "The clap on two and four is already a kind of syncopation, called the backbeat: the accent sits on the weaker beats instead of one and three. An anticipation is a hit just before a strong beat, arriving early so the music feels like it's rushing forward. Funk bass lines use it all the time."
-            },
-            {
-              "title": "three, three, two",
-              "say": "Split the eight eighths of a bar into groups of three, three and two and accent the first of each group. It feels off and inevitable at the same time. It's the shape of a lot of Latin rhythm and plenty of dance music."
-            },
-            {
               "title": "where it comes from",
               "say": "Syncopation in popular music traces back to West African rhythm. Through blues, jazz, funk and soul it reached house and techno."
             }
           ]
+        },
+        {
+          "kind": "say",
+          "title": "the backbeat is syncopation too",
+          "show": {
+            "steps": 4,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "xxxx"
+              },
+              {
+                "name": "clap",
+                "sound": "clap",
+                "pattern": ".x.x",
+                "accent": ".x.x"
+              }
+            ],
+            "marks": [
+              {
+                "at": 1,
+                "word": "two"
+              },
+              {
+                "at": 3,
+                "word": "four"
+              }
+            ],
+            "caption": "One and three are the strong beats. The clap puts its weight on two and four."
+          },
+          "say": {
+            "mentor": "You've already played some syncopation. In a bar of four, one and three are the strong beats, the ones a marching band would stamp on. Two and four are the weaker ones. Your clap lands on two and four, so it puts the weight exactly where a march wouldn't. That's the backbeat.\nThe backbeat is a rhythm, the same way the open hats are: a pattern laid over the pulse. The kick holds the pulse steady, and the clap and the hats lean against it. That lean is syncopation.",
+            "straight": "One and three are the strong beats, two and four the weak ones. The clap on two and four, the backbeat, puts the weight on the weak beats, so it's syncopation too.",
+            "eli5": "One and three are the big steps, two and four are the little ones. Your clap goes on the little ones. Putting the loud sound on the little steps is a kind of syncopation, and it has a name: the backbeat."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "anticipation",
+          "show": {
+            "steps": 16,
+            "ticks": true,
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "x...x..x....x..."
+              },
+              {
+                "name": "clap",
+                "sound": "clap",
+                "pattern": "....x.......x..."
+              }
+            ],
+            "marks": [
+              {
+                "at": 7,
+                "word": "early"
+              }
+            ],
+            "caption": "The third kick moves from beat three to one sixteenth before it."
+          },
+          "say": {
+            "mentor": "An anticipation is a hit that comes just before a strong beat instead of on it. In the picture, the third kick belongs on beat three. Instead it arrives one sixteenth early, on the \"a\" right before three, and beat three itself stays empty.\nYour ear expected the kick on three and got it early, so the whole bar seems to lean forward and rush ahead. Funk bass lines do this all the time, and so does a lot of house bass.",
+            "straight": "An anticipation lands just before a strong beat instead of on it. Here the third kick comes a sixteenth early, before beat three, and the bar leans forward.",
+            "eli5": "Listen for the boom that comes too early, just before three. It's like jumping in before your turn. That early hit is called an anticipation, and it makes the music feel like it's rushing forward."
+          }
+        },
+        {
+          "kind": "say",
+          "title": "three, three, two",
+          "show": {
+            "steps": 8,
+            "ticks": true,
+            "groups": [
+              3,
+              3,
+              2
+            ],
+            "rows": [
+              {
+                "name": "kick",
+                "sound": "kick",
+                "pattern": "x..x..x.",
+                "accent": "x..x..x."
+              }
+            ],
+            "caption": "The eight eighths of a bar grouped 3 + 3 + 2. Count: ONE two three, ONE two three, ONE two."
+          },
+          "say": {
+            "mentor": "Here's a shape that's everywhere once you hear it. Take the eight eighths in a bar and, instead of grouping them in twos, group them three, three, two. Play a hit on the first of each group.\nCount along with the picture: ONE two three, ONE two three, ONE two. The first hit lands on beat one and the last on beat four. The middle one lands on the \"and\" after two, between the beats, and that one gives it the push. It feels off and inevitable at the same time. It's called the tresillo, and it's the backbone of a lot of Latin music, reggaeton and plenty of dance music.",
+            "straight": "Group the eight eighths of a bar as 3 + 3 + 2 and hit the first of each group: beat one, the \"and\" of two, beat four. The middle hit, between the beats, gives it the push.",
+            "eli5": "Count to eight but in groups: ONE two three, ONE two three, ONE two. Clap on every big ONE. Two claps land on numbers, and the one in the middle lands in a gap, which makes it bounce."
+          }
         },
         {
           "kind": "imagine",

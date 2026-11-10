@@ -200,3 +200,16 @@
 .wt4 .wt-dots button{width:auto}
 .wt-kb{display:none}
 @media (hover:hover) and (pointer:fine){.wt-kb{display:inline}}
+
+/* first visit: why it's good, and where it lives (10 Nov) */
+.wt-why{display:flex;flex-direction:column;gap:4px;margin-top:16px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--led-mint) 10%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--led-mint) 35%,transparent)}
+.wt-why b{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--print)}
+.wt-why span{font-size:15px;line-height:1.5;color:var(--ink)}
+.wt-where{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--print)}
+.wt-where b{color:var(--ink);font-weight:600}
+.wt-map{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:0 0 18px;padding:12px;border-radius:16px;background:var(--recess);position:relative}
+.wt-mapsong{grid-column:1/-1;justify-self:center;font-size:13px;font-weight:700;padding:5px 14px;border-radius:99px;color:#06241B;background:var(--led-mint);margin-bottom:4px}
+.wt-map span{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;font-size:11px;line-height:1.25;color:var(--print);opacity:0;animation:wtmap .5s ease-out forwards;animation-delay:calc(var(--i) * .25s + .2s)}
+.wt-map span b{font-size:12.5px;font-weight:600;color:var(--ink)}
+@keyframes wtmap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.wt-map span{animation:none;opacity:1}}

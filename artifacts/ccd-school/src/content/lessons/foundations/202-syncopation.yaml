@@ -31,6 +31,31 @@ steps:
         beat bounce. Hitting in the gaps is called syncopation.
 
   - kind: say
+    title: downbeat and offbeat
+    show:
+      steps: 8
+      ticks: true
+      rows:
+        - {name: kick, sound: kick, pattern: "x.x.x.x."}
+        - {name: open hat, sound: open, pattern: ".x.x.x.x"}
+      marks: [{at: 0, word: downbeat}, {at: 1, word: offbeat}]
+      caption: "Kick on the downbeats, open hat on the offbeats. Count it: one and two and."
+    say:
+      mentor: >-
+        Two words first. A downbeat is a beat itself, the place where you'd say a number: one, two, three,
+        four. Your kick lands on the downbeats. An offbeat is the point exactly halfway between two downbeats,
+        where you'd say "and". Count "one and two and", and every "and" is an offbeat.
+
+        Watch the picture as it plays. The kick sits under the numbers, the open hat under every "and".
+        Downbeats feel solid, like feet on the ground. Offbeats feel like being in the air between steps.
+      straight: >-
+        Downbeat: on the beat, where you say the numbers. Offbeat: exactly halfway between two beats, the
+        "and". Here the kick is on the downbeats and the open hat on the offbeats.
+      eli5: >-
+        When you count one, two, three, four, each number is a downbeat. Squeeze an "and" in between, one and
+        two and, and each "and" is an offbeat. The boom is on the numbers. The tss is on the "ands".
+
+  - kind: say
     title: tension and the next beat
     say:
       mentor: >-
@@ -47,20 +72,84 @@ steps:
         A hit in the gap makes your body wait a tiny bit for the next boom. When the boom comes, it feels
         good. That's why it makes you want to move.
     deeper:
-      - title: the backbeat and the anticipation
-        say: >-
-          The clap on two and four is already a kind of syncopation, called the backbeat: the accent sits on
-          the weaker beats instead of one and three. An anticipation is a hit just before a strong beat,
-          arriving early so the music feels like it's rushing forward. Funk bass lines use it all the time.
-      - title: three, three, two
-        say: >-
-          Split the eight eighths of a bar into groups of three, three and two and accent the first of each
-          group. It feels off and inevitable at the same time. It's the shape of a lot of Latin rhythm and
-          plenty of dance music.
       - title: where it comes from
         say: >-
           Syncopation in popular music traces back to West African rhythm. Through blues, jazz, funk and
           soul it reached house and techno.
+
+  - kind: say
+    title: the backbeat is syncopation too
+    show:
+      steps: 4
+      rows:
+        - {name: kick, sound: kick, pattern: "xxxx"}
+        - {name: clap, sound: clap, pattern: ".x.x", accent: ".x.x"}
+      marks: [{at: 1, word: two}, {at: 3, word: four}]
+      caption: "One and three are the strong beats. The clap puts its weight on two and four."
+    say:
+      mentor: >-
+        You've already played some syncopation. In a bar of four, one and three are the strong beats, the
+        ones a marching band would stamp on. Two and four are the weaker ones. Your clap lands on two and
+        four, so it puts the weight exactly where a march wouldn't. That's the backbeat.
+
+        The backbeat is a rhythm, the same way the open hats are: a pattern laid over the pulse. The kick
+        holds the pulse steady, and the clap and the hats lean against it. That lean is syncopation.
+      straight: >-
+        One and three are the strong beats, two and four the weak ones. The clap on two and four, the
+        backbeat, puts the weight on the weak beats, so it's syncopation too.
+      eli5: >-
+        One and three are the big steps, two and four are the little ones. Your clap goes on the little ones.
+        Putting the loud sound on the little steps is a kind of syncopation, and it has a name: the backbeat.
+
+  - kind: say
+    title: anticipation
+    show:
+      steps: 16
+      ticks: true
+      rows:
+        - {name: kick, sound: kick, pattern: "x...x..x....x..."}
+        - {name: clap, sound: clap, pattern: "....x.......x..."}
+      marks: [{at: 7, word: early}]
+      caption: "The third kick moves from beat three to one sixteenth before it."
+    say:
+      mentor: >-
+        An anticipation is a hit that comes just before a strong beat instead of on it. In the picture, the
+        third kick belongs on beat three. Instead it arrives one sixteenth early, on the "a" right before
+        three, and beat three itself stays empty.
+
+        Your ear expected the kick on three and got it early, so the whole bar seems to lean forward and rush
+        ahead. Funk bass lines do this all the time, and so does a lot of house bass.
+      straight: >-
+        An anticipation lands just before a strong beat instead of on it. Here the third kick comes a
+        sixteenth early, before beat three, and the bar leans forward.
+      eli5: >-
+        Listen for the boom that comes too early, just before three. It's like jumping in before your turn.
+        That early hit is called an anticipation, and it makes the music feel like it's rushing forward.
+
+  - kind: say
+    title: three, three, two
+    show:
+      steps: 8
+      ticks: true
+      groups: [3, 3, 2]
+      rows:
+        - {name: kick, sound: kick, pattern: "x..x..x.", accent: "x..x..x."}
+      caption: "The eight eighths of a bar grouped 3 + 3 + 2. Count: ONE two three, ONE two three, ONE two."
+    say:
+      mentor: >-
+        Here's a shape that's everywhere once you hear it. Take the eight eighths in a bar and, instead of
+        grouping them in twos, group them three, three, two. Play a hit on the first of each group.
+
+        Count along with the picture: ONE two three, ONE two three, ONE two. The first hit lands on beat one
+        and the last on beat four. The middle one lands on the "and" after two, between the beats, and that
+        one gives it the push. It feels off and inevitable at the same time. It's called the tresillo, and
+        it's the backbone of a lot of Latin music, reggaeton and plenty of dance music.
+      straight: >-
+        Group the eight eighths of a bar as 3 + 3 + 2 and hit the first of each group: beat one, the "and"
+        of two, beat four. The middle hit, between the beats, gives it the push.
+      eli5: >-
+        Count to eight but in groups: ONE two three, ONE two three, ONE two. Clap on every big ONE. Two claps
+        land on numbers, and the one in the middle lands in a gap, which makes it bounce.
 
   - kind: imagine
     why: >-
