@@ -73,6 +73,9 @@ const P: Record<string, ReactNode> = {
   brain: <><path d="M9.500 4.500a3 3 0 0 0-3 3 3 3 0 0 0-1.500 5.500 3 3 0 0 0 2 4.500 3 3 0 0 0 5.500 1V5.500a3 3 0 0 0-3-1z" /><path d="M14.500 4.500a3 3 0 0 1 3 3 3 3 0 0 1 1.500 5.500 3 3 0 0 1-2 4.500 3 3 0 0 1-3 1.500" /></>,
   note: <><path d="M9 17V5.500l10-2V15" /><circle cx="6.500" cy="17" r="2.500" /><circle cx="16.500" cy="15" r="2.500" /></>,
   cat: <path d="M5 20V8l3.500 3h7L19 8v12z" />,
+  swap: <><path d="M4 8h13l-3-3" /><path d="M20 16H7l3 3" /></>,
+  simple: <><path d="M5 7h14" /><path d="M8 12h8" /><path d="M10.500 17h3" /></>,
+  full: <><path d="M5 6h14" /><path d="M5 10h14" /><path d="M5 14h14" /><path d="M5 18h9" /></>,
 };
 
 export function Icon({ name, small, className }: { name: keyof typeof P | string; small?: boolean; className?: string }) {

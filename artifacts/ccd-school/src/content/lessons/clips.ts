@@ -5,6 +5,7 @@
 export type ClipDef = { id: string; title: string; bars: number; bpm: number; description: string };
 
 export const CLIPS: readonly ClipDef[] = [
+  { id: "click", title: "the click", bars: 2, bpm: 120, description: "The metronome alone: a higher click on beat one of each bar, a lower one on two, three and four." },
   { id: "kick-alone", title: "kick alone", bars: 2, bpm: 120, description: "A single kick on every beat, nothing else." },
   { id: "kick-and-clap", title: "kick and clap", bars: 2, bpm: 120, description: "Kick on every beat with a clap on 2 and 4." },
   { id: "four-on-the-floor", title: "four on the floor", bars: 4, bpm: 124, description: "Kick on every beat, clap on 2 and 4, closed hats on the eighths." },

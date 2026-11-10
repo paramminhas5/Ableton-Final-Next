@@ -1,3 +1,4 @@
+import { readClick, CLICK_LEVEL } from "@/lib/click";
 /**
  * The CCD engine, from the UI's side. One API whether the sound comes from
  * WebAssembly in the browser or from native code in the iOS/Android app.
@@ -177,8 +178,10 @@ export class Engine {
   duck(layer: number, src: number, note = -1) {
     this.s(CMD.duck, layer, src < 0 ? 0xffffffff : src, note);
   }
+  /** Click while playing (on), plus the learner's click setting: its level, and whether the count-in clicks. */
   metronome(on: boolean) {
-    this.s(CMD.metronome, 0, on ? 1 : 0);
+    const m = readClick();
+    this.s(CMD.metronome, 0, (on && m !== "off" ? 1 : 0) | (m === "off" ? 2 : 0), CLICK_LEVEL[m]);
   }
   allOff(layer: number) {
     this.s(CMD.allOff, layer);

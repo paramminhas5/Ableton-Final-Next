@@ -133,7 +133,13 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
   useEffect(() => engine.on(evs => { for (const e of evs) if (e.kind === OUT.pos && e.flags & FLAG.playing) setBeatN(b => (Math.floor(e.beat) !== b ? Math.floor(e.beat) : b)); }), [engine]);
   const isKick = /kick/.test(screen.clip);
   const kickDecay = isKick && variants.length > 1 ? (v === 0 ? 0.12 : 0.9) : 0.5;
-  const pick = (i: number) => { if (i === v) return; setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150)); heard.current = true; };
+  // Tapping a choice always plays it, including the one that's already picked (a, before anything has played).
+  const [tapped, setTapped] = useState(false);
+  const pick = (i: number) => {
+    setTapped(true); heard.current = true;
+    if (i === v) { void ready().then(() => { try { engine.stop(); } catch { /* not started */ } engine.play(); }); return; }
+    setV(i); void ready().then(() => window.setTimeout(() => { engine.play(); }, 150));
+  };
   useEnter(onNext);
   return (
     <div className="ls-col">
@@ -155,7 +161,7 @@ export function HearStep({ screen, meta, onNext, tail }: { screen: Of<"hear">; m
           <Silk label="tap one to hear it" right={variants[v]?.label} />
           <div className="ls-pads" role="radiogroup" aria-label="Versions">
             {variants.map((x, i) => (
-              <button key={x.label} type="button" role="radio" aria-checked={v === i} className={`ls-pad ${v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
+              <button key={x.label} type="button" role="radio" aria-checked={tapped && v === i} className={`ls-pad ${tapped && v === i ? "is-lit" : ""}`} style={{ ["--c" as string]: "var(--led-mint)" } as CSSProperties} onClick={() => pick(i)}>
                 <small>{String.fromCharCode(97 + i)}</small><span>{x.label}</span>
               </button>
             ))}

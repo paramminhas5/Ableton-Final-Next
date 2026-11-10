@@ -3998,6 +3998,16 @@
           }
         },
         {
+          "kind": "say",
+          "title": "the click",
+          "clip": "click",
+          "say": {
+            "mentor": "Before you play, meet the click. It's a metronome: a tick on every beat, at exactly the speed of the song. The higher tick is beat one, where each count of four starts. The three lower ticks are two, three and four.\nWhen you record, the click plays four times first to count you in, then keeps going so you have something steady to play along with. It's only a guide. It never goes into your song.\nIf it's too loud, make it quieter or turn it off. Whatever you pick is kept for every lesson.",
+            "straight": "This is the click, a metronome. One tick per beat: high on beat one, low on two, three and four. It counts you in before you record and keeps time while you play. It never goes into your song. Make it quieter or turn it off here.",
+            "eli5": "Tick, tick, tick, tick. That's the click. It's like a clock that keeps the beat for you. The high tick means \"one, start counting again\". It helps you play at the right time, and nobody hears it in your song but you."
+          }
+        },
+        {
           "kind": "play",
           "why": "This bar is the first thing in your song. Everything you add later lines up with it.",
           "layer": "drums",

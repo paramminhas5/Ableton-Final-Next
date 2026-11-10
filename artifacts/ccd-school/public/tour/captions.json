@@ -1,6 +1,6 @@
 {
  "learn-a": {
-  "dur": 9.6,
+  "dur": 9.167,
   "steps": [
    {
     "t": 0.0,
@@ -21,24 +21,24 @@
   ]
  },
  "learn-b": {
-  "dur": 11.21,
+  "dur": 10.133,
   "steps": [
    {
     "t": 0.0,
     "text": "kept. now shape it"
    },
    {
-    "t": 1.5,
+    "t": 0.87,
     "text": "decay makes each hat short or long"
    },
    {
-    "t": 7.81,
+    "t": 7.18,
     "text": "the screen draws what the knob is doing"
    }
   ]
  },
  "practice-a": {
-  "dur": 6.05,
+  "dur": 5.633,
   "steps": [
    {
     "t": 0.0,
@@ -55,7 +55,7 @@
   ]
  },
  "practice-b": {
-  "dur": 11.64,
+  "dur": 11.2,
   "steps": [
    {
     "t": 0.0,
@@ -72,66 +72,66 @@
   ]
  },
  "studio-a": {
-  "dur": 13.01,
+  "dur": 12.0,
   "steps": [
    {
     "t": 0.0,
     "text": "the studio: your song on real instruments"
    },
    {
-    "t": 1.7,
+    "t": 1.13,
     "text": "play the pads"
    },
    {
-    "t": 7.56,
+    "t": 6.99,
     "text": "turn a knob and watch the sound change"
    }
   ]
  },
  "studio-b": {
-  "dur": 10.02,
+  "dur": 9.367,
   "steps": [
    {
     "t": 0.0,
     "text": "press play"
    },
    {
-    "t": 2.01,
+    "t": 1.81,
     "text": "arrange: your loop as sections"
    },
    {
-    "t": 3.56,
+    "t": 3.36,
     "text": "switch a part on or off in each section"
    },
    {
-    "t": 5.99,
+    "t": 5.79,
     "text": "to live sends your song to Ableton Live"
    }
   ]
  },
  "dj-a": {
-  "dur": 12.8,
+  "dur": 12.167,
   "steps": [
    {
     "t": 0.0,
     "text": "two decks and a mixer, like a real controller"
    },
    {
-    "t": 1.6,
+    "t": 1.4,
     "text": "play deck a: your song"
    },
    {
-    "t": 2.87,
+    "t": 2.67,
     "text": "play deck b"
    },
    {
-    "t": 4.09,
+    "t": 3.89,
     "text": "slide the crossfader from a to b"
    }
   ]
  },
  "dj-b": {
-  "dur": 16.1,
+  "dur": 15.667,
   "steps": [
    {
     "t": 0.0,
@@ -152,39 +152,39 @@
   ]
  },
  "library-a": {
-  "dur": 8.34,
+  "dur": 7.567,
   "steps": [
    {
     "t": 0.0,
     "text": "every device in Live, in one place"
    },
    {
-    "t": 1.6,
+    "t": 1.27,
     "text": "search by name, or by what you want to hear"
    },
    {
-    "t": 4.73,
+    "t": 4.4,
     "text": "more space: the devices that do it"
    }
   ]
  },
  "library-b": {
-  "dur": 15.95,
+  "dur": 15.367,
   "steps": [
    {
     "t": 0.0,
     "text": "each device opens on a loop"
    },
    {
-    "t": 1.5,
+    "t": 1.3,
     "text": "press play"
    },
    {
-    "t": 2.96,
+    "t": 2.76,
     "text": "turn a knob: the screen says what it does"
    },
    {
-    "t": 10.89,
+    "t": 10.69,
     "text": "a and b: hear it without, then with"
    }
   ]
