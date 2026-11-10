@@ -57,7 +57,22 @@ export type RawImagine = { kind: "imagine"; layer: "drums" | "bass" | "chords" |
 export type RawDeeper = { title: string; say: VoiceText; try?: RawTry };
 
 export type RawHear = { kind: "hear"; clip: string; say: VoiceText; deeper?: RawDeeper[]; levels?: Level[] };
-export type RawSay = { kind: "say"; title: string; say: VoiceText; clip?: string; deeper?: RawDeeper[]; hint?: VoiceText; levels?: Level[] };
+/** A rhythm picture you see and hear (10 Nov): one bar on a grid, the count above it lit as it plays. */
+export type Show = {
+  /** cells in the bar: 4 (beats), 8 (eighths) or 16 (sixteenths) */
+  steps: 4 | 8 | 16;
+  /** rows, top to bottom; pattern uses x for a hit and . for a rest, one character per cell */
+  rows: { name: string; sound: "kick" | "clap" | "snare" | "closed" | "open" | "rim" | "shaker"; pattern: string; accent?: string }[];
+  /** optional groups across the bar, e.g. [3, 3, 2], drawn as brackets with the first cell of each accented */
+  groups?: number[];
+  /** one cell or several to point at, with a word under it (e.g. "downbeat") */
+  marks?: { at: number; word: string }[];
+  /** also tick each cell, so the counting itself is heard */
+  ticks?: boolean;
+  bpm?: number;
+  caption?: string;
+};
+export type RawSay = { kind: "say"; title: string; say: VoiceText; clip?: string; show?: Show; deeper?: RawDeeper[]; hint?: VoiceText; levels?: Level[] };
 export type RawAsk = {
   kind: "ask";
   q: VoiceText;
@@ -113,7 +128,7 @@ export type ResolvedDeeper = { title: string; say: string; try?: ResolvedTry };
 
 export type ResolvedStep =
   | { kind: "hear"; clip: string; say: string; deeper: ResolvedDeeper[] }
-  | { kind: "say"; title: string; say: string; clip?: string; deeper: ResolvedDeeper[]; hint?: string }
+  | { kind: "say"; title: string; say: string; clip?: string; show?: Show; deeper: ResolvedDeeper[]; hint?: string }
   | ({ kind: "play" } & Omit<Extract<ResolvedTry, { kind: "play" }>, "kind">)
   | ({ kind: "shape" } & Omit<Extract<ResolvedTry, { kind: "shape" }>, "kind">)
   | { kind: "match"; layer: LayerType; knobs: string[]; target: Record<string, number>; level?: Level; say: string; hint?: string }

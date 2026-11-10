@@ -32,6 +32,8 @@ import { ringsOf, SRC_COLOR } from "@/lib/modulation";
 import { levelMatch } from "@/lib/offline";
 import { ABKey, type Side } from "./AB";
 import { TYPE } from "@/lib/track2";
+import { dawTopicsOf } from "@/content/daw";
+import { DawPanel } from "./DawPanel";
 import { BASS_PARAMS, CHORD_PARAMS, DRUM_PAD_PARAMS, DRUM_RACK_PARAMS, INSTRUMENT_BASE, LAYER_PARAMS, LEAD_PARAMS, type ParamSpec } from "@/engine";
 
 type Of<K extends LessonScreen["kind"]> = Extract<LessonScreen, { kind: K }>;
@@ -40,12 +42,15 @@ export function Folds({ items }: { items?: { title: string; body: string }[] }) 
   if (!items?.length) return null;
   return (
     <div className="fl-more">
-      {items.map(d => (
-        <details key={d.title} className="fl-fold">
-          <summary>{d.title.toLowerCase()}</summary>
-          {d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
-        </details>
-      ))}
+      {items.map(d => {
+        const daw = dawTopicsOf(d.title);
+        return (
+          <details key={d.title} className={`fl-fold ${daw ? "is-daw" : ""}`}>
+            <summary>{daw ? "in your music program" : d.title.toLowerCase()}</summary>
+            {daw?.length ? <DawPanel topics={daw} intro={d.body} /> : d.body.split(/\n+/).map((para, i) => <p key={i}><Gloss>{para}</Gloss></p>)}
+          </details>
+        );
+      })}
     </div>
   );
 }

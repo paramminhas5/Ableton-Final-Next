@@ -49,13 +49,14 @@ steps:
     deeper:
       - title: pulse, metre and accent
         say: >-
-          The pulse is the steady beat. Metre is how those beats group into bars that repeat, like four beats
-          in a bar of 4/4 or three in a waltz. Accents are the beats that get extra weight, and they are a big
-          part of what gives a groove its feel.
-      - title: in live
+          The pulse is the steady beat. Metre is how those beats group into bars that repeat: four beats to a
+          bar in 4/4, three in a waltz. Accents are hits played with extra weight, louder or sharper than the
+          ones around them. Where the accents fall changes how a rhythm feels. In groove and swing you'll see
+          how accents and timing together make a groove.
+      - title: in your daw · tempo, metronome, tap
         say: >-
-          The tempo box sits in the Control Bar at the top of Live. Turn on the Metronome to hear the pulse
-          while you work. Tap Tempo, next to the tempo box, lets you tap a beat to set the bpm.
+          Every music program has the same three things for the pulse: a tempo box, a metronome and a way to
+          tap the tempo in. Pick yours to see where they are.
 
   - kind: copy
     why: >-
@@ -63,8 +64,9 @@ steps:
     layer: drums
     pattern: {kick: "x...x...x...x...", clap: "....x.......x..."}
     say: >-
-      Copy this beat by ear: a kick and a clap. Find the clap first, then the kicks.
-    hint: "The clap is on two and four, the kick on every beat."
+      Copy this beat by ear: a kick and a clap. Start with the kick, the steady one on every beat, since it
+      holds the pulse. Then add the clap where you hear it land.
+    hint: "The kick is on every beat. The clap is on two and four."
 
   - kind: play
     why: >-

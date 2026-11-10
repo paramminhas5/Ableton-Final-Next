@@ -1260,3 +1260,47 @@ button.ls-gl:focus-visible{outline:2px solid var(--led-mint);outline-offset:2px;
 .ti-zoomslot{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--ink);opacity:.7}
 .ti-zoomtrack b{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:5px;transition:left .3s cubic-bezier(.2,.8,.2,1)}
 .ti-zoomms{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* rhythm pictures: one bar, the count above, the sounding cell lit */
+.rp{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.rp-row{display:grid;gap:3px;align-items:center}
+.rp-name{font-size:11px;font-weight:600;color:var(--disp-sub);text-transform:lowercase}
+.rp-count span{text-align:center;font:500 13px Outfit,system-ui;color:var(--disp-sub);padding:3px 0;border-radius:6px;transition:background 60ms,color 60ms}
+.rp-count span.is-beat{color:var(--disp-ink);font-weight:600}
+.rp-count span.is-now{background:var(--led-mint);color:#06241B}
+.rp-cell{position:relative;height:30px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.rp-cell.is-beat{background:rgba(255,255,255,.08)}
+.rp-cell.is-now{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--led-mint) 70%,transparent)}
+.rp-cell.is-galt{background:rgba(255,255,255,.015)}
+.rp-cell.is-galt.is-beat{background:rgba(255,255,255,.05)}
+.rp-cell.is-gstart{box-shadow:inset 2px 0 0 color-mix(in srgb,var(--led-mint) 70%,transparent)}
+.rp-cell b{width:56%;max-width:18px;height:46%;border-radius:4px;background:var(--disp-ink);opacity:.8;transition:transform 80ms}
+.rp-cell b.is-acc{height:72%;opacity:1;box-shadow:0 0 8px rgba(234,245,241,.5)}
+.rp-cell b.is-hit{background:var(--led-mint);opacity:1;transform:scale(1.15);box-shadow:0 0 12px var(--led-mint)}
+.rp-16 .rp-cell{height:26px}.rp-16 .rp-count span{font-size:11.5px}
+.rp-groups span{display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:700;color:var(--led-mint)}
+.rp-groups span i{display:block;width:calc(100% - 6px);height:6px;border:2px solid var(--led-mint);border-bottom:0;border-radius:4px 4px 0 0;margin-bottom:2px}
+.rp-marks span{display:flex;flex-direction:column;align-items:center;font-size:11px;font-weight:600;color:var(--disp-ink);text-align:center;line-height:1.15}
+.rp-marks span i{display:block;width:0;height:0;border:5px solid transparent;border-bottom-color:var(--led-mint);margin-bottom:2px}
+.rp-cap{margin:10px 0 0;font-size:13px;color:var(--disp-sub);line-height:1.45}
+
+/* in your music program */
+.daw{display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.daw-intro{margin:0;font-size:14px;color:var(--sub)}
+.daw-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.daw-tabs button{height:36px;padding:0 14px;border:0;border-radius:18px;font:600 13px Outfit,system-ui;color:var(--sub);background:var(--recess);cursor:pointer}
+.daw-tabs button.is-on{color:var(--deck);background:var(--ink)}
+.daw-app{border-radius:12px;overflow:hidden;background:#1B1B1E;box-shadow:0 10px 20px -12px rgba(0,0,0,.6)}
+.daw-app.is-live{--daw:#BDBDB5}.daw-app.is-fl{--daw:#3C4A52}.daw-app.is-logic{--daw:#2A2A2E}
+.daw-bar{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:6px;padding:8px;background:var(--daw)}
+.daw-zone{display:flex;gap:4px;flex-wrap:wrap;align-items:center;min-height:26px;padding:3px;border-radius:6px;background:rgba(0,0,0,.18)}
+.daw-editor{min-height:64px;padding:10px;display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap;background:repeating-linear-gradient(0deg,#222226 0 22px,#1D1D20 22px 23px)}
+.daw-editor i{font-size:11px;color:rgba(255,255,255,.3);font-style:normal}
+.daw-ctl{font-size:11px;font-weight:600;padding:3px 7px;border-radius:5px;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);transition:all .2s}
+.daw-app.is-live .daw-ctl{color:#1B1B1E;background:rgba(255,255,255,.55)}
+.daw-ctl.is-on{color:#141210!important;background:var(--led-mint)!important;box-shadow:0 0 12px var(--led-mint);transform:scale(1.06)}
+.daw-list{display:flex;gap:8px;flex-wrap:wrap}
+.daw-item{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 12px;border:0;border-radius:12px;cursor:pointer;font:inherit;color:var(--ink);background:linear-gradient(180deg,var(--t1),var(--t2));box-shadow:var(--m1-extrude)}
+.daw-item b{font-size:13px;font-weight:600}.daw-item span{font-size:11px;color:var(--print)}
+.daw-item.is-on{box-shadow:inset 0 0 0 2px var(--led-mint),var(--m1-extrude)}
+.daw-how{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink)}

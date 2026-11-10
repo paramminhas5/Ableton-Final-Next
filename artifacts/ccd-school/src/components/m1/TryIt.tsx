@@ -515,7 +515,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
             // A hit a hair before beat 1 belongs to beat 1, not the end of the bar.
             const st = e.start > loop - TOL ? e.start - loop : e.start;
             const x = Math.max(0, (st / loop) * Wd);
-            const w = drumLike ? Math.max(6, beatW * 0.45) : Math.max(6, (e.len / loop) * Wd - 2);
+            const w = drumLike ? Math.max(5, beatW * 0.16) : Math.max(6, (e.len / loop) * Wd - 2);
             const c = isOff(e) ? "#FF4A5A" : color;
             return <rect key={i} x={x + 1} y={r * rh + 1.5} width={Math.min(w, Wd - x - 1)} height={Math.max(4, rh - 3)} rx={2} fill={c} style={{ filter: `drop-shadow(0 0 3px ${c})` }} />;
           })}
@@ -557,7 +557,11 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         <Key label="undo" onClick={undoTap} onPointerDown={holdStart} onPointerUp={holdEnd} onPointerLeave={holdEnd} disabled={!history.current.length && !events.length} ariaLabel="Undo the last hit. Hold to clear everything"><Icon name="back" /></Key>
         {coach && !coach.snap
           ? <Key label="click" onClick={cycleClick} ariaPressed={click} led={click ? "var(--led-mint)" : null} ariaLabel={`Click ${clickMode === "normal" ? "on" : clickMode}. Tap for ${nextClick(clickMode) === "normal" ? "on" : nextClick(clickMode)}`}><span style={{ fontSize: 13, fontWeight: 600 }}>{clickMode === "normal" ? "on" : clickMode}</span></Key>
-          : <Key label="snap" style={coach?.snap ? glow : undefined} onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
+          : coach?.snap
+            ? <Key label="snap" style={events.some(e => { const v = verdictOf(e); return v && v.c !== "off" && Math.abs(v.ms) > 10; }) && !recording ? glow : undefined} onClick={snapForMe} disabled={!events.length || recording || countIn} ariaLabel="Snap your hits to the grid (quantise)">
+              <span style={{ fontSize: 13, fontWeight: 600 }}>grid</span>
+            </Key>
+            : <Key label="snap" onClick={() => setSnap(s => SNAPS[(SNAPS.indexOf(s) + 1) % SNAPS.length])} ariaLabel={`Snap ${snap}, tap to change`}>
           <span style={{ fontSize: 13, fontWeight: 600 }}>{snap}</span>
         </Key>}
       </div>

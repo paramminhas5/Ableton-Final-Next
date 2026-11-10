@@ -87,6 +87,7 @@ export function resolveLesson(lesson: Pick<Lesson, "slug" | "steps">, o: Resolve
           title: s.title,
           say: voiceText(s.say, o.voice),
           ...(s.clip ? { clip: s.clip } : {}),
+          ...(s.show ? { show: s.show } : {}),
           deeper: (s.deeper ?? []).map((d) => ({ title: d.title, say: voiceText(d.say, o.voice), ...(d.try ? { try: resolveTry(d.try, o) } : {}) })),
           ...hintOf(s.hint, o),
         });
