@@ -60,6 +60,8 @@ steps:
           nowhere higher to go. Bring the base cutoff down and you'll hear the envelope straight away.
 
   - kind: shape
+    why: >-
+      Brightness that moves with each note makes a sound feel alive.
     layer: lead
     knobs: [cutoff, env, res]
     say:
@@ -78,6 +80,8 @@ steps:
         Keep the one you like.
 
   - kind: match
+    why: >-
+      Matching a moving sound teaches you to hear the movement, not just the tone.
     layer: lead
     knobs: [cutoff, env]
     target: {cutoff: 0.25, env: 0.75}

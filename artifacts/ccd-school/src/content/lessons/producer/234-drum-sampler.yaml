@@ -53,6 +53,8 @@ steps:
           open hat.
 
   - kind: tempo
+    why: >-
+      One-shot samples are the building blocks of most drum kits in modern tracks.
     set: sample
     choices: [hit]
     say:

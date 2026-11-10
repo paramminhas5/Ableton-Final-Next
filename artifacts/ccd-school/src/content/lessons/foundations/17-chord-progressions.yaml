@@ -48,6 +48,8 @@ steps:
           don't worry about that: the sound, rhythm and melody on top are what make a track yours.
 
   - kind: imagine
+    why: >-
+      Seeing chords move before you hear them helps you predict where a progression is going.
     layer: chords
     pattern: "1+3+5 - - - 4,+6,+1 - - - 6,+1+3 - - - 5,+7,+2 - - -"
     say:
@@ -64,6 +66,8 @@ steps:
     hint: "Listen for the bottom note of each chord. Here it goes down, then up, then down one step."
 
   - kind: copy
+    why: >-
+      Copying a progression by ear is how you learn the ones you love from other songs.
     layer: chords
     pattern: "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - -"
     say: >-
@@ -71,6 +75,8 @@ steps:
     hint: "The lowest notes go root, down, down, up."
 
   - kind: play
+    why: >-
+      A chord progression is the journey of your song. It's what makes it feel like it's going somewhere.
     layer: chords
     surface: pads
     goal: {notes: 4, on: different, check: [bar, home]}
@@ -84,6 +90,8 @@ steps:
         Press rec. Play four chord pads, one on each tick. Start with i, then try VI, III and VII.
 
   - kind: tempo
+    why: >-
+      Writing the chords down for the whole song keeps everything else in key with them.
     set: chords
     say:
       mentor: >-

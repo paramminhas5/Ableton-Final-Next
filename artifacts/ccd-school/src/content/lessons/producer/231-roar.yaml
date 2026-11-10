@@ -60,6 +60,8 @@ steps:
           line you usually want it low, or the notes blur together.
 
   - kind: shape
+    why: >-
+      A growling bass holds its own on small speakers and in a loud room.
     layer: bass
     knobs: [drive, tone, level]
     say:

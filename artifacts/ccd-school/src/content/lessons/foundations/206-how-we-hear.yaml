@@ -59,6 +59,8 @@ steps:
           take breaks and wear earplugs at gigs.
 
   - kind: shape
+    why: >-
+      When two sounds share the same low space they blur. Ducking clears the way so you hear both.
     layer: bass
     knobs: [duck]
     say:

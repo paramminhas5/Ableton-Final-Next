@@ -28,6 +28,8 @@ steps:
         rest.
 
   - kind: shape
+    why: >-
+      Balance is the most important part of a mix. Get the levels right and most problems go away.
     layer: lead
     knobs: [level, pan]
     say:

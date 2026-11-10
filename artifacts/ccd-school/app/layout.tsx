@@ -161,6 +161,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             r.setAttribute('data-learn-mode', localStorage.getItem('ccd.learnMode') || 'flow');
             var c = localStorage.getItem('ccd.contrast');
             if (c === 'high' || (c !== 'normal' && window.matchMedia('(prefers-contrast: more)').matches)) r.setAttribute('data-contrast', 'high');
+            if (localStorage.getItem('ccd.textsize') === 'big') r.setAttribute('data-text', 'big');
           } catch(e) {}
         ` }} />
 

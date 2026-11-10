@@ -56,6 +56,8 @@ steps:
           locks. Only then does it go out to the room.
 
   - kind: mix
+    why: >-
+      Matching by ear means you can mix on any gear, even with no numbers on screen.
     goal: match
     bank: warm-up
     say:

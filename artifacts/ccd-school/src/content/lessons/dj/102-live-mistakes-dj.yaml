@@ -24,6 +24,8 @@ steps:
         When songs go out of time, take one away fast, fix it, try again.
 
   - kind: mix
+    why: >-
+      Mistakes happen to every dj. Fixing them fast is what the crowd remembers, not the mistake.
     goal: match
     bank: sandman
     say:

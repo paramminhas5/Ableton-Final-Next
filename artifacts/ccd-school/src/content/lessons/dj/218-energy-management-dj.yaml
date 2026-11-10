@@ -46,6 +46,8 @@ steps:
           drums at once. Rare, risky, and huge when it works.
 
   - kind: mix
+    why: >-
+      Knowing what each track does to the room lets you steer the night instead of just playing songs.
     goal: blend
     say:
       mentor: >-

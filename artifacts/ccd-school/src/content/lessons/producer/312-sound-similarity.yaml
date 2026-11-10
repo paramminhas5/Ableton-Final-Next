@@ -57,6 +57,8 @@ steps:
           one sound you love to ones you'd never have found by name.
 
   - kind: tempo
+    why: >-
+      Hearing two textures on one pattern trains you to choose sounds by feel, which is what similarity search helps with.
     set: kit
     say:
       mentor: >-

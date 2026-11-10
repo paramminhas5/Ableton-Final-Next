@@ -44,6 +44,8 @@ steps:
         Send your mix and your songs. Ask for fair pay. Write down what you need. Always turn up on time.
 
   - kind: mix
+    why: >-
+      A promo mix is how people find out what you sound like. This handover is where yours starts.
     goal: blend
     say:
       mentor: >-

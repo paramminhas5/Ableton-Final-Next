@@ -2,6 +2,7 @@
 /** Settings: interface sounds, learning mode, and a way back to the old build. Voices live in each lesson step now. */
 import { useEffect, useState, type CSSProperties } from "react";
 import { applyContrast, readContrast, type Contrast } from "@/lib/contrast";
+import { applyTextSize, readTextSize, type TextSize } from "@/lib/textSize";
 import { GoPill, Silk, Switch } from "./controls";
 import { ListRow, RefPage } from "./parts";
 import { useProgress } from "@/lib/progress";
@@ -41,6 +42,9 @@ export function Settings() {
   const [contrast, setContrast] = useState<Contrast>("system");
   useEffect(() => setContrast(readContrast()), []);
   const pickContrast = (c: Contrast) => { setContrast(c); applyContrast(c); };
+  const [text, setText] = useState<TextSize>("normal");
+  useEffect(() => setText(readTextSize()), []);
+  const pickText = (t: TextSize) => { setText(t); applyTextSize(t); };
 
   const pickLevel = (level: Level) => {
     setPrefs({ level });
@@ -57,6 +61,9 @@ export function Settings() {
         right={<div style={{ width: 124 }}><Switch label="Learning mode" value={learnMode === "flow" ? "flow" : "free"} onChange={id => setLearnMode(id === "flow" ? "flow" : "classic")}
           options={[{ id: "flow", label: "journey" }, { id: "free", label: "see all" }]} /></div>} />
 
+      <ListRow led={text === "big" ? "var(--led-white)" : undefined} title="text size" sub="bigger makes every word and label on every screen a size up."
+        right={<div style={{ width: 124 }}><Switch label="Text size" value={text} onChange={id => pickText(id as TextSize)}
+          options={[{ id: "normal", label: "normal" }, { id: "big", label: "bigger" }]} /></div>} />
       <ListRow led={contrast === "high" ? "var(--led-white)" : undefined} title="contrast" sub="high makes text darker and puts a solid edge on every key, like live's high contrast theme. device follows your phone's setting."
         right={<div style={{ width: 168 }}><Switch label="Contrast" value={contrast} onChange={id => pickContrast(id as Contrast)}
           options={[{ id: "system", label: "device" }, { id: "normal", label: "normal" }, { id: "high", label: "high" }]} /></div>} />

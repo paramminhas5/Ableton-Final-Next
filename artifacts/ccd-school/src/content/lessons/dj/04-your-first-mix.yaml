@@ -26,6 +26,8 @@ steps:
         fade away.
 
   - kind: mix
+    why: >-
+      This is a full mix from one track into another. Everything else in djing builds on it.
     goal: blend
     say:
       mentor: >-

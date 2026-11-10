@@ -7,7 +7,7 @@
  */
 import "./pictures.css";
 import Link from "next/link";
-import { useCallback, useRef, useState, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode, type KeyboardEvent, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { fingerTipPlace, fingerTipWidth } from "@/lib/fingerTip";
 
@@ -73,6 +73,9 @@ const P: Record<string, ReactNode> = {
   brain: <><path d="M9.500 4.500a3 3 0 0 0-3 3 3 3 0 0 0-1.500 5.500 3 3 0 0 0 2 4.500 3 3 0 0 0 5.500 1V5.500a3 3 0 0 0-3-1z" /><path d="M14.500 4.500a3 3 0 0 1 3 3 3 3 0 0 1 1.500 5.500 3 3 0 0 1-2 4.500 3 3 0 0 1-3 1.500" /></>,
   note: <><path d="M9 17V5.500l10-2V15" /><circle cx="6.500" cy="17" r="2.500" /><circle cx="16.500" cy="15" r="2.500" /></>,
   cat: <path d="M5 20V8l3.500 3h7L19 8v12z" />,
+  swap: <><path d="M4 8h13l-3-3" /><path d="M20 16H7l3 3" /></>,
+  simple: <><path d="M5 7h14" /><path d="M8 12h8" /><path d="M10.500 17h3" /></>,
+  full: <><path d="M5 6h14" /><path d="M5 10h14" /><path d="M5 14h14" /><path d="M5 18h9" /></>,
 };
 
 export function Icon({ name, small, className }: { name: keyof typeof P | string; small?: boolean; className?: string }) {
@@ -83,11 +86,66 @@ export function Icon({ name, small, className }: { name: keyof typeof P | string
 }
 
 // ── panel lettering ─────────────────────────────────────────────────────
-export function Silk({ label, right, style }: { label: string; right?: string; style?: CSSProperties }) {
+/**
+ * A section's name, silkscreened on the panel. `n` numbers the section (10 Nov: every screen in numbered
+ * sections, in the order you use them); `lit` lights the number when the screen's cue points at it.
+ */
+export function Silk({ label, right, style, n, lit, className }: { label: string; right?: string; style?: CSSProperties; n?: number; lit?: boolean; className?: string }) {
+  const num = n !== undefined ? <b className={`m1-silkn ${lit ? "is-lit" : ""}`} aria-hidden>{n}</b> : null;
+  const cls = `m1-silk ${n !== undefined ? "has-n" : ""} ${className ?? ""}`;
+  const name = n !== undefined ? <span><span className="sr-only">{n}. </span>{label}</span> : <span>{label}</span>;
   return right ? (
-    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i /><span>{right}</span><i className="rs" /></div>
+    <div className={cls} style={style}>{num ?? <i className="l" />}{name}<i /><span>{right}</span><i className="rs" /></div>
   ) : (
-    <div className="m1-silk" style={style}><i className="l" /><span>{label}</span><i className="r" /></div>
+    <div className={cls} style={style}>{num ?? <i className="l" />}{name}<i className="r" /></div>
+  );
+}
+
+/**
+ * Read it to me (10 Nov): one key that reads a line out loud in the device's own voice, so someone who can't or
+ * doesn't want to read (a five-year-old, a sixty-year-old without glasses) still knows what to do. Press again to stop.
+ */
+export function speak(text: string, onEnd?: () => void): boolean {
+  try {
+    const synth = window.speechSynthesis;
+    if (!synth) return false;
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text.replace(/[*_`#>]/g, "").replace(/\s+/g, " ").trim());
+    const voices = synth.getVoices();
+    const pick = voices.find(v => /en-(GB|IN|AU)/i.test(v.lang) && /female|samantha|serena|kate|veena|google uk/i.test(v.name)) ?? voices.find(v => /^en/i.test(v.lang));
+    if (pick) u.voice = pick;
+    u.rate = 0.95;
+    u.pitch = 1;
+    if (onEnd) { u.onend = onEnd; u.onerror = onEnd; }
+    synth.speak(u);
+    return true;
+  } catch { return false; }
+}
+export function SayKey({ text, label = "read it to me", className }: { text: string; label?: string; className?: string }) {
+  const [on, setOn] = useState(false);
+  const [can, setCan] = useState(true);
+  useEffect(() => { setCan(typeof window !== "undefined" && "speechSynthesis" in window); return () => { try { window.speechSynthesis?.cancel(); } catch { /* none */ } }; }, []);
+  if (!can || !text) return null;
+  return (
+    <button type="button" className={`m1-say ${on ? "is-on" : ""} ${className ?? ""}`} aria-pressed={on} aria-label={on ? "Stop reading" : "Read this out loud"}
+      onClick={e => { e.stopPropagation(); if (on) { try { window.speechSynthesis.cancel(); } catch { /* none */ } setOn(false); return; } if (speak(text, () => setOn(false))) setOn(true); }}>
+      <Icon name={on ? "stop" : "hear"} small />{label ? <span>{on ? "stop" : label}</span> : null}
+    </button>
+  );
+}
+
+/**
+ * What to do now, in one line, with the number of the section it points at. Every instrument screen has one
+ * under its header, so a first look says where to start (10 Nov).
+ */
+export function Cue({ n, children, done, className, say }: { n?: number; children: ReactNode; done?: boolean; className?: string; say?: string }) {
+  const text = say ?? (typeof children === "string" ? children : "");
+  return (
+    <div className={`m1-cue ${done ? "is-done" : ""} ${className ?? ""}`} role="status" aria-live="polite">
+      {n !== undefined ? <b className="m1-silkn is-lit" aria-hidden>{n}</b> : <i className="m1-cueled" aria-hidden />}
+      <span className="m1-cuetext">{children}</span>
+      {text ? <SayKey text={text} label="" className="m1-cuesay" /> : null}
+    </div>
   );
 }
 

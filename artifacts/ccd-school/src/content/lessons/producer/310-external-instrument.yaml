@@ -57,6 +57,8 @@ steps:
           free to play something else.
 
   - kind: shape
+    why: >-
+      A little detune and drive gives a synth the slightly imperfect feel of hardware.
     layer: lead
     knobs: [wave, detune, drive]
     say:

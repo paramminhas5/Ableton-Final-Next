@@ -47,6 +47,8 @@ steps:
           Name your lanes as you go, so future you knows which take was which.
 
   - kind: tempo
+    why: >-
+      Keeping every pass means you can play freely and keep the best one.
     set: comp
     layer: drums
     say:

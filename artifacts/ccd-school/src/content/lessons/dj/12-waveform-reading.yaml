@@ -25,6 +25,8 @@ steps:
         The wiggly line shows loud and quiet parts. A thin bit is a breakdown, then it gets fat at the drop.
 
   - kind: mix
+    why: >-
+      Reading where the intro and drop are tells you where it's safe to mix.
     goal: free
     say:
       mentor: >-

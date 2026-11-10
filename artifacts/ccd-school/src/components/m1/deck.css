@@ -160,3 +160,17 @@
   .m1-page.dj>.dk{flex:1}
   .dk-body{flex:1;align-items:center;margin-top:6px}
 }
+/* the five steps of a first mix, one line (10 Nov) */
+.dj-cue{margin:4px 0 10px}
+.dj-cuen{color:var(--print)}
+.dj.is-side .dj-cue{min-height:30px;margin:0 0 6px;padding:3px 10px 3px 6px;font-size:12.5px}
+/* the control the step points at glows, so the line and the hardware agree */
+.dj[data-step="1"] .dk-deck.is-a [aria-label="Play deck a"],
+.dj[data-step="2"] .dk-deck.is-b [aria-label="Play deck b"],
+.dj[data-step="3"] .dk-deck.is-b [aria-label="Sync deck b"],
+.dj[data-step="3"] [aria-label="tempo deck b"],
+.dj[data-step="4"] [aria-label="channel b"],
+.dj[data-step="5"] [aria-label="crossfader"]{outline:2px solid var(--led-mint);outline-offset:4px;border-radius:14px}
+@media (prefers-reduced-motion:no-preference){
+  .dj[data-step] .dk-deck [aria-label="Play deck a"],.dj[data-step] .dk-deck [aria-label="Play deck b"],.dj[data-step] [aria-label="Sync deck b"],.dj[data-step] [aria-label="tempo deck b"],.dj[data-step] [aria-label="channel b"],.dj[data-step] [aria-label="crossfader"]{transition:outline-color .3s}
+}

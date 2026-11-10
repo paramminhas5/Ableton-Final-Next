@@ -56,6 +56,8 @@ steps:
           are already hiding inside a single note.
 
   - kind: shape
+    why: >-
+      The same notes can sound soft or sharp. The filter is how you choose the colour.
     layer: lead
     knobs: [cutoff, wave]
     say:

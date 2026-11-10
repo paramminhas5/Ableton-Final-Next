@@ -62,6 +62,8 @@ steps:
           part stutters at every hit. And Re-Pitch on a vocal changes its key as soon as the tempo moves.
 
   - kind: tempo
+    why: >-
+      Each warp mode suits a different kind of sound. Hearing them side by side shows which to use.
     set: sample
     choices: [warp]
     say:

@@ -61,6 +61,8 @@ steps:
           master, turning tracks down rather than up.
 
   - kind: shape
+    why: >-
+      Level and pan give each part its own place, so nothing gets buried.
     layer: chords
     knobs: [level, pan]
     say:

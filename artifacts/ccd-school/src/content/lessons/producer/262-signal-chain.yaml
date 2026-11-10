@@ -56,6 +56,8 @@ steps:
           may not need it.
 
   - kind: shape
+    why: >-
+      The order sound goes through decides how it ends up. Knowing the chain lets you fix things at the right point.
     layer: lead
     knobs: [wave, cutoff, drive, send]
     say:

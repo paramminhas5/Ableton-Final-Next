@@ -58,6 +58,8 @@ steps:
           speed. The warping lesson goes into this.
 
   - kind: tempo
+    why: >-
+      Start, pitch and level are the three things you change on almost every recording.
     set: sample
     choices: [hit]
     say:

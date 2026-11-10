@@ -29,6 +29,8 @@ steps:
         always sound nice together. That team is called a scale.
 
   - kind: tempo
+    why: >-
+      Major and minor set the mood of the whole song: bright or dark.
     set: scale
     choices: [minor, major]
     say:
@@ -69,6 +71,8 @@ steps:
           notes.
 
   - kind: copy
+    why: >-
+      Hearing the scale step by step is how you'll find notes that fit without thinking.
     layer: lead
     pattern: "1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 ."
     say: >-

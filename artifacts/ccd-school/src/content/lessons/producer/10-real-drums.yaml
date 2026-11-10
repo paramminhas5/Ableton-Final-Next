@@ -28,6 +28,8 @@ steps:
         recordings. A sampler does that.
 
   - kind: tempo
+    why: >-
+      Recorded drums carry room and grit. Hearing both kits helps you pick what your song needs.
     set: kit
     say:
       mentor: >-

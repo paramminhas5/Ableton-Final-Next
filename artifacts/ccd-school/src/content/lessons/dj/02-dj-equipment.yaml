@@ -28,6 +28,8 @@ steps:
         other so the dancing never stops.
 
   - kind: mix
+    why: >-
+      Knowing what's on the desk means you'll know where to reach in any booth.
     goal: crossfade
     say:
       mentor: >-

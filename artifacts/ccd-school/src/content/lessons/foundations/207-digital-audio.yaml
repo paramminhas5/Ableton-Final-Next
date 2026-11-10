@@ -63,6 +63,8 @@ steps:
           volume steps, and its downsample control shaves off high detail the way a lower sample rate would.
 
   - kind: shape
+    why: >-
+      Lowering the quality on purpose is a sound in itself: the crunch of old samplers.
     layer: drums
     knobs: [crush]
     say:

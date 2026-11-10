@@ -61,6 +61,8 @@ steps:
           everything in the same space.
 
   - kind: shape
+    why: >-
+      Every effect family does a different job. Hearing one of each shows you which to reach for.
     layer: lead
     knobs: [high, drive, echo, send]
     say:

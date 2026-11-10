@@ -52,6 +52,8 @@ steps:
           Mapping too many things to one macro turns it to mush. Two or three is often plenty.
 
   - kind: tempo
+    why: >-
+      One knob that moves several makes big changes quick, especially when you play live.
     set: macro
     layer: lead
     say:

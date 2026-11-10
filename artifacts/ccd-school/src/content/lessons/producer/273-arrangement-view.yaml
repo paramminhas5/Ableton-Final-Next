@@ -58,6 +58,8 @@ steps:
           Add a locator from the Create menu to mark where each section starts, then jump between them.
 
   - kind: arrange
+    why: >-
+      Seeing your song as a timeline shows how long it runs and where each part comes in.
     goal: sections
     say:
       mentor: >-

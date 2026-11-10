@@ -323,3 +323,33 @@
   .st-shortcuts kbd{min-width:44px;height:24px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;font:600 var(--fs-6) Outfit,system-ui;color:var(--ink);border:1px solid color-mix(in srgb,var(--ink) 20%,transparent)}
 }
 @media (hover:none){.st-shortcuts{display:none!important}}
+
+/* ── numbered sections and the cue (10 Nov) ── */
+.st-cue{flex:none;margin-top:6px;font-size:13px;min-height:34px}
+.st-slots>.st-zone{grid-column:1/-1;margin:2px 2px 2px}
+.st-zone{margin:8px 2px 6px;flex:none}
+.st-main>.st-zone{margin-top:8px}
+.st-side>.st-zone{margin-top:8px}
+.st-transport{overflow:visible}
+.st-tzone{position:absolute;left:0;right:0;top:-24px;pointer-events:none}
+.st-tzone .m1-silk{margin:0 2px}
+@media (max-width:899px),(max-height:559px){
+  /* on a phone the sections stack in the order you use them, so the transport's label sits above it */
+  .st-body{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+}
+@media (min-width:900px) and (min-height:560px){
+  .st-cue{position:absolute;top:4px;left:240px;right:420px;margin:0;z-index:2}
+  .st-slots>.st-zone{margin:0 2px 4px}
+  .st-tzone{top:-26px}
+}
+/* the control the cue points at glows */
+.st-root[data-cue="play"] .st-transport [aria-label="Play"],
+.st-root[data-cue="rec"] .st-transport [aria-label="Record with a one bar count-in"],
+.st-root[data-cue="add"] .st-plus{outline:2px solid var(--led-mint);outline-offset:3px;border-radius:14px}
+.st-root[data-cue="surface"] .st-tray,.st-root[data-cue="knobs"] .st-knobs{box-shadow:0 0 0 2px color-mix(in srgb,var(--led-mint) 70%,transparent),0 0 16px color-mix(in srgb,var(--led-mint) 25%,transparent);border-radius:16px}
+
+/* 10 Nov: header keys a readable size: 13px text on a 28px key (the 44px touch ring stays) */
+.st-head .st-tag{height:28px;font-size:13px;padding:0 9px;border-radius:7px}
+html[data-text="big"] .st-head .st-tag{font-size:15px;height:32px}
+/* simple: plain words under each knob, and eight bigger drum pads */
+.st-tray.is-eight .st-lb{font-size:14px}

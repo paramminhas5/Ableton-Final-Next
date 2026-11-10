@@ -58,6 +58,8 @@ steps:
           note has already died during decay, so release has nothing left to do.
 
   - kind: shape
+    why: >-
+      How a note starts and ends decides if it's a pluck or a pad.
     layer: lead
     knobs: [attack, release]
     say:
@@ -76,6 +78,8 @@ steps:
         both long. Pick your favourite.
 
   - kind: match
+    why: >-
+      Training your ear on start and end makes every sound you design more deliberate.
     layer: lead
     knobs: [attack, release]
     target: {attack: 0.5, release: 0.75}

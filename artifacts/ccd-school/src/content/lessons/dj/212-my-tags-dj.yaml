@@ -48,6 +48,8 @@ steps:
           to find tracks.
 
   - kind: mix
+    why: >-
+      Tagging tracks by job means you can find the right one fast when you're playing.
     goal: free
     say:
       mentor: >-

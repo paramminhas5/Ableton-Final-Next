@@ -59,6 +59,8 @@ steps:
           lose half your pattern.
 
   - kind: tempo
+    why: >-
+      Notes and recordings behave differently when the tempo changes. Knowing which is which saves headaches.
     set: sample
     choices: [warp]
     say:

@@ -28,6 +28,8 @@ steps:
         each chord. That note is called the root.
 
   - kind: imagine
+    why: >-
+      A bass that follows the chords holds the song together. Reading it first makes it easy to hear.
     layer: bass
     pattern: "1 - - - 4, - - - 6, - - - 5, - - -"
     say:
@@ -42,6 +44,8 @@ steps:
     hint: "The first note is home. Follow each move from there: down, up, then one step down."
 
   - kind: copy
+    why: >-
+      The root of each chord is where a bass line starts. Hear it and you can write bass for any song.
     layer: bass
     pattern: "1 - - - 6, - - - 4, - - - 5, - - -"
     say: >-
@@ -49,6 +53,8 @@ steps:
     hint: "It starts on the root and moves down, then down again, then up a step."
 
   - kind: play
+    why: >-
+      Bass on the roots locks your chords and beat together. Your song gets its low end.
     layer: bass
     surface: keys
     goal: {notes: 2, check: [roots, key]}
@@ -65,6 +71,8 @@ steps:
         seven for VII.
 
   - kind: tempo
+    why: >-
+      Hearing another bass line on your chords gives you ideas for your own.
     set: player
     layer: bass
     say:

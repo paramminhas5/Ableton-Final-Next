@@ -46,6 +46,8 @@ steps:
         them only sometimes.
 
   - kind: mix
+    why: >-
+      Echo while you crossfade hides the change, so the mix sounds smooth even between very different tracks.
     goal: echo
     say:
       mentor: >-

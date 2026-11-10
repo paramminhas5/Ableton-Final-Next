@@ -58,6 +58,8 @@ steps:
           linked before a creative edit, so you don't cut something you meant to leave alone.
 
   - kind: arrange
+    why: >-
+      Parts that drop out together hit harder than parts that leave one at a time.
     goal: sections
     say:
       mentor: >-

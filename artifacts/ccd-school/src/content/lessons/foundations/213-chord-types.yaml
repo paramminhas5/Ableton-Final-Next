@@ -46,6 +46,8 @@ steps:
         one tiny step changes happy into sad.
 
   - kind: play
+    why: >-
+      Different chord types give different moods. Try them on your own song and keep what you like.
     layer: chords
     surface: pads
     goal: {notes: 3}

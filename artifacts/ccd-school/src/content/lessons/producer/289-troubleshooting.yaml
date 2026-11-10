@@ -55,6 +55,8 @@ steps:
           In the Link, Tempo and MIDI preferences, switch on Track for your controller's input port.
 
   - kind: arrange
+    why: >-
+      Switching parts off one at a time is how you find any problem in a mix. Practise it while nothing's wrong.
     goal: sections
     say:
       mentor: >-

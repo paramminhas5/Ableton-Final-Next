@@ -58,6 +58,8 @@ steps:
           values from 0 to 127. That's how a hardware knob can move a filter in a synth on your computer.
 
   - kind: shape
+    why: >-
+      Your melody is saved as notes, not sound, so you can change the instrument and keep the tune.
     layer: lead
     knobs: [wave, release]
     say:

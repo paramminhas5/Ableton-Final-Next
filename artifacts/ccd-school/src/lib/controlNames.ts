@@ -256,3 +256,21 @@ export function elsewhereForLabel(term: string): string | null {
   }
   return parts.length ? parts.join(" · ") : null;
 }
+
+/**
+ * Plain words under a control's real name (10 Nov: "easy for a five-year-old and a sixty-year-old"). The name
+ * stays Live's, so it carries over to other gear; this line says what it does to the sound, in a few words.
+ */
+export const PLAIN: Record<string, string> = {
+  tune: "higher or lower", decay: "how long it rings", attack: "how fast it starts", release: "how long it fades",
+  level: "how loud", pan: "left or right", cutoff: "brighter or darker", res: "a whistle at the edge",
+  env: "a sweep on each note", drive: "warmth and grit", crush: "rough and crunchy", tone: "brighter or softer",
+  echo: "repeats", send: "room around it", space: "room around it", reverb: "room around it", swing: "bounce",
+  wave: "the shape of the sound", shape: "the shape of the sound", detune: "wider and thicker", glide: "slides between notes",
+  sub: "a deep low layer", duck: "makes room for the kick", low: "the bass end", mid: "the middle", high: "the top end",
+  cut: "takes away the lows", width: "wider in stereo", spread: "spread out", lfo: "a slow wobble", lforate: "how fast it wobbles",
+  fm: "metallic, bell-like", ratio: "which bell sound", noise: "hiss", open: "how open the hat is", snap: "the crack",
+  drift: "a bit of wobble, like old gear", character: "the flavour", gate: "cuts it short", length: "how long each note is",
+  fdecay: "how fast it darkens", frel: "how the brightness fades", bright: "brighter", color: "the colour of the sound",
+};
+export const plainOf = (key: string): string | null => PLAIN[key] ?? null;

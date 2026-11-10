@@ -10,9 +10,9 @@
     "slug": "tempo-bpm",
     "kind": "song",
     "isNew": false,
-    "title": "pulse and tempo",
-    "does": "adds drums.kick on the beat; sets the tempo (100, 120, 128, 140 by ear)",
-    "code": "tempo step (one knob with detents)"
+    "title": "your pulse",
+    "does": "adds drums.kick on the beat",
+    "code": ""
    },
    {
     "slug": "what-is-rhythm",
@@ -22,6 +22,14 @@
     "does": "move one kick off the beat and back; feel what breaks",
     "code": "",
     "parent": "tempo-bpm"
+   },
+   {
+    "slug": "set-your-tempo",
+    "kind": "song",
+    "isNew": false,
+    "title": "tempo",
+    "does": "sets the tempo (100, 120, 128, 140 by ear)",
+    "code": "tempo step (one knob with detents)"
    },
    {
     "slug": "bars-time-signatures",
@@ -221,12 +229,11 @@
   "items": [
    {
     "slug": "notes-and-octaves",
-    "kind": "deeper",
+    "kind": "song",
     "isNew": false,
     "title": "notes and octaves",
     "does": "the twelve notes; play the five black keys on your lead",
-    "code": "all-notes keys",
-    "parent": "major-scale"
+    "code": "all-notes keys"
    },
    {
     "slug": "major-scale",
@@ -454,12 +461,11 @@
    },
    {
     "slug": "midi-piano-roll",
-    "kind": "deeper",
+    "kind": "song",
     "isNew": false,
     "title": "the piano roll",
     "does": "your lead on the grid: add, move, lengthen, soften, delete notes",
-    "code": "",
-    "parent": "synth-what-is-sound"
+    "code": ""
    },
    {
     "slug": "hats",

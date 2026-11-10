@@ -26,6 +26,8 @@ steps:
         Count the bars up to eight, then start again. Songs change at the start of each group of eight.
 
   - kind: mix
+    why: >-
+      Music moves in eights. Bringing a track in on bar one is what makes a mix sound planned.
     goal: phrase
     say:
       mentor: >-

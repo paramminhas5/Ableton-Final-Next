@@ -25,6 +25,8 @@ steps:
         A dj set starts gentle, gets bigger and bigger, then has a huge moment.
 
   - kind: mix
+    why: >-
+      A set that builds keeps people dancing. Order matters as much as the tracks themselves.
     goal: free
     say:
       mentor: >-

@@ -61,6 +61,8 @@ steps:
           Switch it off and on. If you can't hear any difference, it may not be doing much.
 
   - kind: tempo
+    why: >-
+      A little glue locks the drums and bass together. Too much flattens the life out.
     set: glue
     say:
       mentor: >-

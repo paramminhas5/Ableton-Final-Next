@@ -25,6 +25,8 @@ steps:
         Record your mixes and listen back. You'll hear what to fix.
 
   - kind: mix
+    why: >-
+      Listening back shows you what worked and what didn't, in a way you can't hear while you play.
     goal: record
     bank: operator
     say:

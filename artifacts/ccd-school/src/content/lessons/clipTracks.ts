@@ -19,6 +19,10 @@ function base(bpm: number, bars: number): TrackV2 {
 /** One or more playable versions of a clip. Most have one; short-vs-long has two. */
 export function clipVariants(id: string): ClipVariant[] {
   switch (id) {
+    case "click": {
+      // Nothing but the metronome: the player turns the click on for this clip.
+      return [{ label: "the click", track: { ...base(120, 2), layers: [newLayerV2("drums")] } }];
+    }
     case "kick-alone": {
       const t = base(120, 2);
       const l = newLayerV2("drums"); l.events = hits(NOTE("kick"), every(0, 8, 1));

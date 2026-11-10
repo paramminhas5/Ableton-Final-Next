@@ -113,6 +113,8 @@ steps:
           on top, quietly. Your ear hears that mix as brightness or buzz.
 
   - kind: play
+    why: >-
+      These are the first notes of your song. Every lesson after this builds on top of them.
     layer: lead
     surface: keys
     goal: {notes: 4}

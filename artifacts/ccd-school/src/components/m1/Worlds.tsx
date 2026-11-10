@@ -15,7 +15,7 @@ import { readPlacement, type PlaceResult } from "@/lib/placement";
 import { CHALLENGES, readChallenges, worldStars } from "@/lib/worldChallenge";
 import { Stars } from "./Stars";
 import { useProgress } from "@/lib/progress";
-import { journey, minutesFor, missionAny, nextStep, partOf, worldDone, worldOf, WORLD_IDS, type JourneyItem, type JourneyLesson, type WorldId } from "@/lib/worldOrder";
+import { journey, minutesFor, missionAny, nextStep, partOf, worldDone, worldOf, WORLD_IDS, type JourneyLesson, type WorldId } from "@/lib/worldOrder";
 import { Icon, WORLD_LED } from "./controls";
 import { KIND } from "@/lib/track";
 import { DuoFilters } from "./Today";
@@ -60,9 +60,9 @@ export function Worlds() {
   const nxtM = nxt ? missionAny(nxt.slug) : undefined;
   return (
     <div className="m1-page sy fr">
-      <TopBar title="syllabus" sub={`${all.song} song lessons · ${all.deeper} deeper`} back="/dashboard" screen="syllabus" />
+      <TopBar title="syllabus" sub={`${all.song} lessons · ${all.deeper} extras`} back="/dashboard" screen="syllabus" />
       <div className="fr-l">
-        <p className="sy-key o1"><span><i className="sm-k is-done" />done</span><span><i className="sm-k is-next" />next</span><span><i className="sm-k" />to come</span><span><b>+2</b>deeper lessons</span></p>
+        <p className="sy-key o1"><span><i className="sr-kd is-done"><Icon name="check" small /></i>done</span><span><i className="sr-kd is-next" />up next</span><span><i className="sr-kd" />to come</span><span><i className="sr-xtag">extra</i>optional, more on the same idea</span></p>
         {WORLD_IDS.map((w, wi) => {
           const c = worldDone(w, done);
           const isOpen = open === w;
@@ -82,7 +82,7 @@ export function Worlds() {
         ) : null}
         <div className="fr-side wg sy-how o4">
           <div className="wg-h"><b>how it works</b></div>
-          <span className="wg-s" style={{ fontSize: "var(--fs-4)", color: "var(--ink)" }}>each pad is a lesson, named for the part it adds to your song. go left to right, top to bottom. deeper lessons are extra: open one when a part makes you curious.</span>
+          <span className="wg-s" style={{ fontSize: "var(--fs-4)", color: "var(--ink)" }}>go top to bottom. each lesson adds one part to your song. under some lessons there are extras: optional lessons on the same idea, for when you want more.</span>
         </div>
       </div>
 
@@ -96,28 +96,15 @@ export function Worlds() {
               {paths.map(p => {
                 const tot = p.songTotal || p.lessons.length;
                 const dn = p.songTotal ? p.songDone : p.lessons.filter(l => l.done).length;
-                const selSlug = pick ?? n?.slug;
-                const sel = p.lessons.find(l => l.slug === selSlug);
                 return (
                   <div key={p.slug} className="sm-path">
                     <div className="sm-head"><b>{p.number}</b><span>{p.title.toLowerCase()}</span><em>{dn}/{tot}</em></div>
-                    <ol className="sm-row" data-budget="list" aria-label={`path ${p.number}, ${p.title}`}>
-                      {p.lessons.map((l, i) => {
-                        const part = l.kind === "song" ? partOf(l.slug) : "bonus";
-                        const isNext = l.slug === n?.slug && !l.done;
-                        return (
-                          <li key={l.slug} id={`l-${l.slug}`}>
-                            <button type="button" className={`sm-pad ${l.done ? "is-done" : ""} ${isNext ? "is-next" : ""} ${l.slug === selSlug ? "is-sel" : ""} ${l.exists ? "" : "is-locked"}`}
-                              style={{ ["--pc" as string]: partColor(part) } as CSSProperties} aria-pressed={l.slug === selSlug} aria-label={`${l.title}: adds ${part}${l.done ? ", done" : isNext ? ", up next" : ""}`} onClick={() => setPick(l.slug)}>
-                              <small>{p.number}.{i + 1}</small>
-                              <span>{short(part)}</span>
-                              {l.extras.length ? <em aria-hidden>+{l.extras.length}</em> : null}
-                            </button>
-                          </li>
-                        );
-                      })}
+                    <ol className="sr-list" data-budget="list" aria-label={`path ${p.number}, ${p.title}`}>
+                      {p.lessons.map((l, i) => (
+                        <Row key={l.slug} l={l} num={`${p.number}.${i + 1}`} isNext={l.slug === n?.slug && !l.done && !l.covered}
+                          open={pick === l.slug} onToggle={() => setPick(pick === l.slug ? null : l.slug)} />
+                      ))}
                     </ol>
-                    {sel ? <Detail it={sel} isNext={sel.slug === n?.slug} /> : null}
                   </div>
                 );
               })}
@@ -146,42 +133,51 @@ export function Worlds() {
   );
 }
 
-const short = (t: string) => (t.length > 18 ? `${t.split(/ and |, /)[0]}` : t);
 function partColor(part: string): string {
   const w = part.toLowerCase();
   const k = (Object.keys(KIND) as (keyof typeof KIND)[]).find(x => w.includes(x)) ?? (w.includes("snare") ? "clap" : w.includes("synth") || w.includes("melody") || w.includes("note") ? "lead" : w.includes("chord") || w.includes("harmony") ? "chords" : null);
   return k ? KIND[k].color : "var(--c)";
 }
 
-/** The lesson under the pad you tapped: what it adds, how long, the key to start it and its deeper lessons. */
-function Detail({ it, isNext }: { it: JourneyLesson; isNext: boolean }) {
-  const part = it.kind === "song" ? partOf(it.slug) : "";
+/** One lesson in the road: a numbered dot, its name and what it adds, start on the next one, and its extras
+ *  named right under it (10 Nov, Param: "+3 marks, i still don't know if there are any"). */
+function Row({ l, num, isNext, open, onToggle }: { l: JourneyLesson; num: string; isNext: boolean; open: boolean; onToggle: () => void }) {
+  const bonus = l.kind !== "song";
+  const part = bonus ? "" : partOf(l.slug);
+  const title = l.title.replace(/^bonus: /, "").toLowerCase();
+  const state = l.done && !l.covered ? "is-done" : l.covered ? "is-covered" : isNext ? "is-next" : "";
+  const sub = l.covered ? (l.covered === "tempo-bpm" ? "you set your tempo in lesson 1" : "you already did this in basics") : bonus ? "bonus round, nothing added to your song" : `adds ${part} to your song`;
+  const xs = l.extras;
+  const names = xs.map(e => e.title.replace(/^bonus: /, "").toLowerCase());
+  const xDone = xs.filter(e => e.done).length;
   return (
-    <div className="sm-detail" style={{ ["--pc" as string]: partColor(part || "bonus") } as CSSProperties}>
-      {it.exists ? (
-        <Link href={`/learn/${it.slug}`} className="sm-go">
-          <span className="sm-gotx">
-            <small>{it.done ? "done · go again" : isNext ? "up next" : "lesson"} · {minutesFor(it.slug)} min</small>
-            <b>{it.title.replace(/^bonus: /, "").toLowerCase()}</b>
-            <span>{part ? `adds ${part} to your song` : "a bonus round, nothing added"}</span>
-          </span>
-          <span className={`m1-cap ${isNext ? "is-go" : ""}`} style={{ width: 52, height: 52, flex: "none" }}><Icon name={it.done ? "loop" : "play"} small /></span>
+    <li id={`l-${l.slug}`} className={`sr ${state} ${l.exists ? "" : "is-locked"}`} style={{ ["--pc" as string]: partColor(part || "bonus") } as CSSProperties}>
+      <span className="sr-dot" aria-hidden>{l.done || l.covered ? <Icon name="check" small /> : num}</span>
+      {l.exists ? (
+        <Link href={`/learn/${l.slug}`} className="sr-main" aria-label={`${num} ${title}: ${sub}${l.done ? ", done" : isNext ? ", up next" : ""}`}>
+          <span className="sr-t">{isNext ? <em>up next</em> : null}<b>{title}</b>{bonus ? <i className="sr-xtag">bonus</i> : null}</span>
+          <small>{sub} · {minutesFor(l.slug)} min</small>
         </Link>
-      ) : <div className="sm-go is-locked"><span className="sm-gotx"><b>{it.title.toLowerCase()}</b><span>coming soon</span></span></div>}
-      {it.extras.length ? (
-        <div className="sm-deeper">
-          <span className="sm-dl">go deeper on {part || "this"}, when you want</span>
-          <ul>
-            {it.extras.map(e => (
-              <li key={e.slug} id={`l-${e.slug}`}>
-                {e.exists
-                  ? <Link href={`/learn/${e.slug}`} className={`sm-chip ${e.done ? "is-done" : ""}`}>{e.done ? <Icon name="check" small /> : null}{e.title.replace(/^bonus: /, "").toLowerCase()}<small>{minutesFor(e.slug)} min</small></Link>
-                  : <span className="sm-chip is-locked">{e.title.toLowerCase()}<small>coming</small></span>}
-              </li>
-            ))}
-          </ul>
-        </div>
+      ) : <span className="sr-main"><span className="sr-t"><b>{title}</b></span><small>coming soon</small></span>}
+      {isNext && l.exists ? <Link href={`/learn/${l.slug}`} className="m1-cap is-go is-pill sr-go" aria-hidden tabIndex={-1}>start <Icon name="play" small /></Link> : null}
+      {xs.length ? (
+        <button type="button" className={`sr-x ${open ? "is-open" : ""}`} aria-expanded={open} onClick={onToggle}>
+          <i className="sr-xtag">extra</i>
+          <span><b>{xs.length} more on this{xDone ? `, ${xDone} done` : ""}</b>{open ? null : <small>{names.slice(0, 2).join(" · ")}{names.length > 2 ? ` · +${names.length - 2}` : ""}</small>}</span>
+          <Icon name={open ? "up" : "down"} small />
+        </button>
       ) : null}
-    </div>
+      {open && xs.length ? (
+        <ul className="sr-xl">
+          {xs.map((e, i) => (
+            <li key={e.slug} id={`l-${e.slug}`}>
+              {e.exists
+                ? <Link href={`/learn/${e.slug}`} className={`sr-xi ${e.done ? "is-done" : ""}`}><span>{e.done ? <Icon name="check" small /> : i + 1}</span><b>{names[i]}</b><small>{minutesFor(e.slug)} min</small></Link>
+                : <span className="sr-xi is-locked"><span>{i + 1}</span><b>{names[i]}</b><small>coming</small></span>}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </li>
   );
 }

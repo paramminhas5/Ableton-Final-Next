@@ -30,6 +30,8 @@ steps:
     say: Two notes. Which one was higher? Replay as often as you like.
 
   - kind: copy
+    why: >-
+      Telling higher from lower is the ear skill every melody is built on.
     layer: lead
     pattern: "1 - . . 3 - . . 2 - . . 1 - . ."
     say: >-

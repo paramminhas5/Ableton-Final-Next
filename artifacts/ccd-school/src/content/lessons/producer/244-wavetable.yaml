@@ -51,6 +51,8 @@ steps:
           and unison for thick, stacked voices.
 
   - kind: shape
+    why: >-
+      A wavetable morphs between shapes, so one knob gives you a whole range of sounds.
     layer: lead
     knobs: [wave, cutoff]
     say:

@@ -63,6 +63,8 @@ steps:
           right before the final chorus is a classic pop lift.
 
   - kind: tempo
+    why: >-
+      Moving the whole song up or down changes how it feels without changing what it is.
     set: key
     say:
       mentor: >-

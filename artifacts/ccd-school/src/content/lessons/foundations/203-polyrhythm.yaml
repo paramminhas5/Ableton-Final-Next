@@ -65,6 +65,8 @@ steps:
           and Akan drumming are the usual examples.
 
   - kind: play
+    why: >-
+      A pattern of three over your four makes the groove roll instead of repeat.
     layer: hats
     surface: pads
     snap: true
@@ -90,6 +92,8 @@ steps:
     hint: Sixteenths 1, 4, 7, 10, 13 and 16 of the bar, counting from 1. Six shakes a bar.
 
   - kind: tempo
+    why: >-
+      A shorter part loops against the beat on its own, so the groove keeps changing without you touching it.
     set: length
     layer: hats
     say:

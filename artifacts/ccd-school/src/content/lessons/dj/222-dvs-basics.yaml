@@ -49,6 +49,8 @@ steps:
           Pro is Native Instruments' version.
 
   - kind: mix
+    why: >-
+      The crossfader cut is the basic move of hip-hop djing. Clean timing is everything.
     goal: cut
     say:
       mentor: >-

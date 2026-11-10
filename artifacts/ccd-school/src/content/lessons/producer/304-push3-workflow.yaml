@@ -57,6 +57,8 @@ steps:
           a deeper lesson on mpe further down this path.
 
   - kind: play
+    why: >-
+      Keys that only hold notes in your key let you play freely without hitting a wrong one.
     layer: lead
     surface: keys
     goal: {notes: 8}

@@ -56,6 +56,8 @@ steps:
           other programs and most theory books call it C4. The midi number is the one that never changes.
 
   - kind: tempo
+    why: >-
+      Every note repeats higher up. Knowing where the octave is lets you move a tune up or down and keep it the same.
     set: grid
     layer: lead
     say:
@@ -69,6 +71,8 @@ steps:
         Count twelve rows up: same note, higher. One row up: the tiniest step.
 
   - kind: copy
+    why: >-
+      An octave bounce is a classic bass move. Hearing it trains your ear for the same note, higher.
     layer: bass
     pattern: "1 . 1' . 1 . 1' . 1 . 1' . 5 . 5' ."
     say: >-
@@ -118,4 +122,4 @@ steps:
 
   - kind: keep
     next: >-
-      Back to the melody path. Next: scales, and the scale your song will use.
+      Next: scales, and the scale your song will use.

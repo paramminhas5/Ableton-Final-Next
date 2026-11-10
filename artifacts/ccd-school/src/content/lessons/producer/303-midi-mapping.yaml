@@ -62,6 +62,8 @@ steps:
           that key now controls it. Handy on a laptop with no controller.
 
   - kind: shape
+    why: >-
+      Cutoff is the knob most worth putting under your hand. One sweep lifts the whole song.
     layer: lead
     knobs: [cutoff, res]
     say:

@@ -27,6 +27,8 @@ steps:
         is release.
 
   - kind: arrange
+    why: >-
+      A loop becomes a song when parts come in and out. This is where it starts to tell a story.
     goal: sections
     say:
       mentor: >-

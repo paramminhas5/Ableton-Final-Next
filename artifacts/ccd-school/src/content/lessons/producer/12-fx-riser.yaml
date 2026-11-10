@@ -27,6 +27,8 @@ steps:
         the drop.
 
   - kind: arrange
+    why: >-
+      A riser tells the room a drop is coming. It builds the tension your drop releases.
     goal: risers
     say:
       mentor: >-

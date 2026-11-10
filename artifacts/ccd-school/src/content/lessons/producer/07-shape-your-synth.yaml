@@ -27,6 +27,8 @@ steps:
         that do it.
 
   - kind: shape
+    why: >-
+      These four knobs turn a plain synth into your synth. It's where your lead gets its character.
     layer: lead
     knobs: [res, env, attack, release]
     say:
@@ -46,6 +48,8 @@ steps:
         Release makes them ring out after. Try a short pluck, then a long dreamy pad.
 
   - kind: match
+    why: >-
+      Hearing how a sound starts and stops is how you'll copy any sound you like.
     layer: lead
     knobs: [attack, release]
     target: {attack: 0.6, release: 0.7}

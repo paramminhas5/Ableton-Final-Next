@@ -56,6 +56,8 @@ steps:
           Crash recovery isn't a save. It's a one-time rescue after a crash, so save often.
 
   - kind: arrange
+    why: >-
+      Naming and saving your song is the habit that stops you ever losing work.
     goal: export
     say:
       mentor: >-

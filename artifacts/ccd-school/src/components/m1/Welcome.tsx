@@ -64,7 +64,7 @@ function Clip({ k, sound, paused, onSound, onPause, onTime, onEnd }: { k: string
   return (
     <div className={`wt-phone ${paused ? "is-paused" : ""}`}>
       <video ref={ref} key={k} className="wt-video" src={`${src(k)}.mp4`} poster={`${src(k)}.jpg`} muted={!sound} playsInline autoPlay={!still} controls={still} preload="auto"
-        onEnded={() => { if (!still) onEnd(); }} onClick={still ? undefined : onPause} aria-label={`${CLIP[k].h}: a recording of ccd school`} />
+        onEnded={e => { const v = e.currentTarget; try { v.currentTime = Math.max(0, v.duration - 0.05); } catch { /* keep the frame */ } if (!still) onEnd(); }} onClick={still ? undefined : onPause} aria-label={`${CLIP[k].h}: a recording of ccd school`} />
       {paused ? <span className="wt-paused" aria-hidden><Icon name="play" /></span> : null}
       <div className="wt-keys">
         {still ? null : <button type="button" className="wt-sound" aria-pressed={paused} onClick={onPause}>{paused ? "play" : "pause"}</button>}
@@ -162,7 +162,9 @@ export function Welcome({ onLeave }: { onLeave?: () => void }) {
               <p className="wt-sub">{CLIP[at].line}</p>
               <Steps steps={stepsNow} now={stepNow} />
             </div>
-            <div className="wt-show"><Clip k={at} sound={sound} paused={paused} onSound={() => setSound(v => !v)} onPause={() => setPaused(v => !v)} onTime={onTime} onEnd={next} /><p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
+            <div className="wt-show"><Clip k={at} sound={sound} paused={paused} onSound={() => setSound(v => !v)} onPause={() => setPaused(v => !v)} onTime={onTime} onEnd={next} />
+              {/* The next clip loads while this one plays, so the switch never shows an empty frame. */}
+              {nextKey && nextKey in CLIP ? <video key={`pre-${nextKey}`} src={`${src(nextKey)}.mp4`} preload="auto" muted playsInline aria-hidden tabIndex={-1} style={{ position: "absolute", width: 1, height: 1, opacity: 0, pointerEvents: "none" }} /> : null}<p className="wt-now" key={`${at}-${stepNow}`} aria-live="polite">{stepsNow[stepNow]?.text ?? ""}</p></div>
             <div className="wt-foot">
               <div className="wl-go"><GoPill onClick={next} style={{ height: 60, width: "100%" }}>{at === "library:b" ? "that's ccd school" : "next"}</GoPill></div>
               <p className="wt-hint">{paused ? <>paused. tap the clip<span className="wt-kb"> or press space</span> to carry on.</> : <>the next one starts by itself. tap the clip<span className="wt-kb"> or press space</span> to pause.</>}</p>

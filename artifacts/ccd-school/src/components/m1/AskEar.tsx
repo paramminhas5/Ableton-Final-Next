@@ -38,6 +38,8 @@ export function useEarSounds(ear: AskEar | undefined, song: TrackV2 | null) {
     void ready().then(() => { engine.metronome(false); engine.play(); }).catch(() => { /* needs a tap */ });
   }, [now, ready, engine]);
   const press = (id: string) => {
+    // Unlock audio inside the tap itself (Safari only allows it there); the sound starts once it is set.
+    void ready().catch(() => { /* retried below */ });
     if (now === id && playing) { engine.stop(); return; }
     if (now === id) { void ready().then(() => { engine.metronome(false); engine.play(); }); return; }
     want.current = !playing;

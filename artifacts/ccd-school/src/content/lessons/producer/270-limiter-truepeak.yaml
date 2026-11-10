@@ -64,6 +64,8 @@ steps:
           at first, even when it's squashing the punch out.
 
   - kind: tempo
+    why: >-
+      A limiter makes your song loud without clipping, so it holds up next to other tracks.
     set: glue
     say:
       mentor: >-

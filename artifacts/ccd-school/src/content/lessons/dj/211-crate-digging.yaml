@@ -46,6 +46,8 @@ steps:
         has.
 
   - kind: mix
+    why: >-
+      Picking the next track is half of djing. Key and tempo narrow the search fast.
     goal: key
     say:
       mentor: >-

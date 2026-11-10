@@ -56,6 +56,8 @@ steps:
           clear.
 
   - kind: shape
+    why: >-
+      A bigger space behind your chords makes the song feel wider and deeper.
     layer: chords
     knobs: [send, release]
     say:

@@ -57,6 +57,8 @@ steps:
           that doesn't support it, bends still move every note together.
 
   - kind: shape
+    why: >-
+      Glide makes notes slide like a voice, so a melody sounds sung, not typed.
     layer: lead
     knobs: [glide, detune]
     say:

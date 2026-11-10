@@ -64,6 +64,8 @@ steps:
           digital vinyl.
 
   - kind: mix
+    why: >-
+      Switching between two records is where djing started. It's still the heart of every mix.
     goal: crossfade
     say:
       mentor: >-

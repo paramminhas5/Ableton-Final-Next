@@ -59,6 +59,8 @@ steps:
           one you learn deeply, so pick one and stay with it for a good while before you look around.
 
   - kind: arrange
+    why: >-
+      This is how every music app lays out a song. Learn it once and you can read any of them.
     goal: sections
     say:
       mentor: >-

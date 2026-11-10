@@ -53,6 +53,8 @@ steps:
           the synth. Turn one control at a time and listen before you move on.
 
   - kind: shape
+    why: >-
+      Taking a sound apart shows you how to build it. Then you can make your own.
     layer: lead
     knobs: [wave, cutoff, env, release]
     say:

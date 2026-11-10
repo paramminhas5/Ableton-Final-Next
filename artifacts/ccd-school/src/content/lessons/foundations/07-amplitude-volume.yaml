@@ -55,6 +55,8 @@ steps:
           Soft hits and hard hits in the same line are a big part of what makes playing sound human.
 
   - kind: shape
+    why: >-
+      Getting the melody's level right is the first mixing decision you make. Too loud and it shouts, too quiet and it disappears.
     layer: lead
     knobs: [level]
     say:

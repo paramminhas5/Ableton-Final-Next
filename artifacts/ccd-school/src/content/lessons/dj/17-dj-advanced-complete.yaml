@@ -25,6 +25,8 @@ steps:
         The best djs play songs they made themselves. You made one!
 
   - kind: mix
+    why: >-
+      Your own song in a set is where producing and djing meet. This is what the whole road was for.
     goal: blend
     say:
       mentor: >-

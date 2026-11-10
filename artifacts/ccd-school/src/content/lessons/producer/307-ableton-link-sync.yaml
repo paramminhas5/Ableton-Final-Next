@@ -59,6 +59,8 @@ steps:
           public wifi.
 
   - kind: tempo
+    why: >-
+      Link keeps everyone on the same tempo, so you can jam with friends on different devices.
     set: tempo
     marks: [120, 124, 128, 130]
     say:

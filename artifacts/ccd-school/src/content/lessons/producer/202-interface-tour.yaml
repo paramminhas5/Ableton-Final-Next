@@ -60,6 +60,8 @@ steps:
           small triangles at its edge or from the View menu, which helps a lot on a small laptop screen.
 
   - kind: tempo
+    why: >-
+      Everything in a song follows one tempo. This is where it's set in Live, and here.
     marks: [100, 120, 124, 128]
     say:
       mentor: >-

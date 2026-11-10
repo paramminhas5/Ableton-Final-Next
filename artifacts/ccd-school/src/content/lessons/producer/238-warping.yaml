@@ -59,6 +59,8 @@ steps:
           for drums. Re-Pitch is the odd one out: like a tape machine, it changes pitch along with speed.
 
   - kind: tempo
+    why: >-
+      Warping makes recordings follow your tempo, so loops from anywhere fit your song.
     set: sample
     choices: [warp]
     say:

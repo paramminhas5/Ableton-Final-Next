@@ -49,6 +49,8 @@ steps:
           in the wrong place. Do it for any track you plan to sync, because a wrong grid means a wrong sync.
 
   - kind: mix
+    why: >-
+      Reading both tempos tells you how far deck b needs to move before you touch anything.
     goal: match
     bank: operator
     say:

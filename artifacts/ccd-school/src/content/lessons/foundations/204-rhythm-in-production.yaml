@@ -58,6 +58,8 @@ steps:
           you recorded as midi follow the tempo, so the part plays back at full speed with your timing intact.
 
   - kind: play
+    why: >-
+      With snap off, your timing is the groove. Tiny early and late hits are what make it feel played by a person.
     layer: hats
     surface: pads
     goal: {notes: 4}
@@ -78,6 +80,8 @@ steps:
     hint: Count "one and two and" and tap on the "and", lazily.
 
   - kind: tempo
+    why: >-
+      Starting from a beat someone else plays and changing it is a fast way to get ideas.
     set: player
     layer: drums
     say:

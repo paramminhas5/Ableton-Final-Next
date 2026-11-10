@@ -55,6 +55,8 @@ steps:
           A compressor after the rack helps layered chains sound like one instrument.
 
   - kind: shape
+    why: >-
+      Two layers on one note give a sound more body than either on its own.
     layer: lead
     knobs: [fm, wave, detune, lfo]
     say:

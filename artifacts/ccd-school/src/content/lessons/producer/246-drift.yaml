@@ -54,6 +54,8 @@ steps:
           digital sound, and raise it for more instability.
 
   - kind: shape
+    why: >-
+      A little wobble between notes makes chords sound warm, like old hardware.
     layer: chords
     knobs: [drift, cutoff, res]
     say:

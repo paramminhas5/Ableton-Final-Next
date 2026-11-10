@@ -70,6 +70,8 @@ steps:
           you can pick the best bits afterwards.
 
   - kind: tempo
+    why: >-
+      Recording your own sounds makes your song sound like nobody else's.
     set: mic
     say:
       mentor: >-

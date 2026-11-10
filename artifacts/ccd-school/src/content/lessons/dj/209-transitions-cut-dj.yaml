@@ -46,6 +46,8 @@ steps:
         You can make a cut extra exciting with an echo or a rising whoosh first. Do it like you mean it.
 
   - kind: mix
+    why: >-
+      A cut on bar one sounds bold and deliberate. Off the phrase, it sounds like a mistake.
     goal: cut
     say:
       mentor: >-

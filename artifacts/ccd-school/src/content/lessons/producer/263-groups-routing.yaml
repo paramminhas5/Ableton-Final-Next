@@ -58,6 +58,8 @@ steps:
           A common move is a Glue Compressor on the drum group, so every drum is compressed together.
 
   - kind: shape
+    why: >-
+      Grouping parts lets you shape a whole kit at once.
     layer: drums
     knobs: [low, mid, high, drive]
     say:
@@ -68,6 +70,8 @@ steps:
       eli5: >-
         The drums all go through one channel.
   - kind: shape
+    why: >-
+      Matching your hats to the rest of the kit makes the drums sound like one instrument.
     layer: hats
     knobs: [high, level, drive]
     say:

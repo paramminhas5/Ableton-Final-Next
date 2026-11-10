@@ -61,6 +61,8 @@ steps:
           rather than reading the name. There's a whole deeper lesson on it further down this path.
 
   - kind: shape
+    why: >-
+      Same notes, new sound. It's how you'll search for the right preset without losing your tune.
     layer: lead
     knobs: [wave, cutoff]
     say:

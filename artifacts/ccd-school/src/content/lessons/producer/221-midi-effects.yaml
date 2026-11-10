@@ -61,6 +61,8 @@ steps:
           to force any stacked notes back into your key.
 
   - kind: tempo
+    why: >-
+      An arpeggiator turns held chords into moving notes. Instant movement without playing more.
     set: arp
     layer: chords
     say:

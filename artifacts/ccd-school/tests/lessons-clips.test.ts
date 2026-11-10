@@ -7,6 +7,8 @@ describe("lesson clips", () => {
     for (const c of CLIPS) {
       const v = clipVariants(c.id);
       expect(v.length, c.id).toBeGreaterThan(0);
+      // "click" is the metronome alone: the player turns the click on, so its track is empty on purpose.
+      if (c.id === "click") continue;
       for (const x of v) expect(x.track.layers.some(l => l.events.length > 0), c.id).toBe(true);
     }
   });

@@ -204,6 +204,10 @@ pub struct Transport {
     pub lpos: f64,
     pub link: bool,
     pub metronome: bool,
+    /// Click level, 0..1 (1 = the old fixed level). Set with the metronome command's x when x > 0.
+    pub click_level: f32,
+    /// The count-in clicks can be silenced (the count-in still runs, so recording starts on time).
+    pub count_in_click: bool,
     /// How many times the loop has come round since play started (trig conditions and chance read it).
     pub pass: u32,
     /// The fill key is held.
@@ -908,6 +912,8 @@ impl Core {
                 lpos: 0.0,
                 link: false,
                 metronome: false,
+                click_level: 0.55,
+                count_in_click: true,
                 pass: 0,
                 fill: false,
                 seed: 1,
@@ -1259,7 +1265,12 @@ impl Core {
                 l.duck_src = if c.a == u32::MAX { -1 } else { c.a as i32 };
                 l.duck_note = if c.x < 0.0 { -1 } else { c.x as i32 };
             }
-            cmd::METRONOME => self.tr.metronome = c.a != 0,
+            // a: bit 0 = click while playing, bit 1 = mute the count-in clicks. x > 0 sets the level (0..1).
+            cmd::METRONOME => {
+                self.tr.metronome = c.a & 1 != 0;
+                self.tr.count_in_click = c.a & 2 == 0;
+                if c.x > 0.0 { self.tr.click_level = c.x.min(1.0); }
+            }
             cmd::LINK_OFF => self.tr.link = false,
             cmd::ALL_OFF => self.layers[li].all_off(),
             cmd::LOCATE => {
@@ -1414,7 +1425,7 @@ impl Core {
             let running = tr.state != State::Stopped;
 
             // Metronome: every beat in the count-in, and while recording if on.
-            if running && (tr.count_in || (tr.metronome && tr.state == State::Playing)) {
+            if running && ((tr.count_in && tr.count_in_click) || (tr.metronome && tr.state == State::Playing)) {
                 // A whole beat falls inside this sample.
                 let b = tr.beat.ceil();
                 if b < tr.beat + bps {
@@ -1584,7 +1595,7 @@ impl Core {
             verb_in += self.punch.throw_send(ml, mr);
             let (el, er) = self.echo.tick(echo_in);
             let (vl, vr) = self.verb.tick(verb_in + (el + er) * 0.15);
-            let c = if self.click.env.is_active() { self.click.osc.next(self.click.hz / self.sr) * self.click.env.next() * 0.35 } else { 0.0 };
+            let c = if self.click.env.is_active() { self.click.osc.next(self.click.hz / self.sr) * self.click.env.next() * 0.35 * self.tr.click_level } else { 0.0 };
             ml += el + vl + c;
             mr += er + vr + c;
             // Punch-in effects: exactly the mix when no key is held.

@@ -28,6 +28,8 @@ steps:
         makes it feel further away.
 
   - kind: shape
+    why: >-
+      Reverb and echo place each part near or far. That's what makes a mix feel deep.
     layer: lead
     knobs: [send, echo]
     say:
@@ -42,6 +44,8 @@ steps:
         Send adds a big-room sound. Echo adds repeats. A little bit is usually enough.
 
   - kind: match
+    why: >-
+      Hearing how much reverb is on a sound helps you judge how much to use.
     layer: lead
     knobs: [send]
     target: {send: 0.5}

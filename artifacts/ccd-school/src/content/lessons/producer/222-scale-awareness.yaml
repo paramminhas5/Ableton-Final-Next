@@ -31,6 +31,8 @@ steps:
         play fits.
 
   - kind: tempo
+    why: >-
+      The scale sets the mood. Switching scales is the quickest way to hear how much it changes.
     set: scale
     choices: [minor, major, dorian, phrygian, minor pentatonic, harmonic minor]
     say:
@@ -49,6 +51,8 @@ steps:
         Each scale gives your song a different mood. Try a few. Your whole song changes. Pick one.
 
   - kind: play
+    why: >-
+      When the keys only offer notes in your scale, nothing you play can sound wrong.
     layer: lead
     surface: keys
     goal: {notes: 4}

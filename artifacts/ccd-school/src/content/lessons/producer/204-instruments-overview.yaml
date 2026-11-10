@@ -30,6 +30,8 @@ steps:
         and the same beat sounds new.
 
   - kind: tempo
+    why: >-
+      Synth drums or recorded drums: same pattern, a different feel. Pick what suits your song.
     set: kit
     say:
       mentor: >-

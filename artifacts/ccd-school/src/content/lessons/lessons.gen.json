@@ -60,6 +60,7 @@
         },
         {
           "kind": "play",
+          "why": "Feeling two and four in your hands is what lets you hear where a track's beat is before you mix it.",
           "layer": "drums",
           "surface": "pads",
           "goal": {
@@ -218,6 +219,7 @@
         },
         {
           "kind": "mix",
+          "why": "Knowing what's on the desk means you'll know where to reach in any booth.",
           "goal": "crossfade",
           "say": {
             "mentor": "This is your desk. Deck a is your own song. Deck b is a track from the bank; pick a different one below if you like. Each deck has a channel fader, how loud it is, and a low knob, which turns its bass up or down.\nThe wide slider in the middle is the crossfader. All the way left you only hear deck a, all the way right only deck b, in the middle both. Slide it all the way to b, then all the way back to a.",
@@ -320,6 +322,7 @@
         },
         {
           "kind": "mix",
+          "why": "Matching tempo stops two tracks drifting. It's the first skill every dj learns.",
           "goal": "match",
           "bank": "warm-up",
           "say": {
@@ -407,6 +410,7 @@
         },
         {
           "kind": "mix",
+          "why": "This is a full mix from one track into another. Everything else in djing builds on it.",
           "goal": "blend",
           "say": {
             "mentor": "Your song is on deck a, playing out loud. Deck b is matched and waiting with its fader down.\nOne: bring deck b's fader up. Hear both tracks? Two: turn deck a's low knob down, so only deck b's bass is left. That's the bass swap. Three: crossfade over to b, or pull deck a's fader down. You've just mixed out of your own song.",
@@ -497,6 +501,7 @@
         },
         {
           "kind": "mix",
+          "why": "Music moves in eights. Bringing a track in on bar one is what makes a mix sound planned.",
           "goal": "phrase",
           "say": {
             "mentor": "Watch the phrase counter on the screen: bar 1 of 8 up to 8 of 8. Deck b is matched and waiting with its fader down. Bring it up exactly as the counter goes back to bar one. If you bring it in mid phrase, pull it down and try again on the next one.",
@@ -573,6 +578,7 @@
         },
         {
           "kind": "mix",
+          "why": "Two bass lines at once sound muddy. Swapping the lows keeps the mix clean.",
           "goal": "swap",
           "say": {
             "mentor": "Deck b is matched. Bring its fader up and listen to the low end get muddy. Now turn deck a's low knob down and keep deck b's low up. Suddenly it's clean: one kick, one bass, and the rest of both tracks still playing. That's the bass swap.",
@@ -662,6 +668,7 @@
         },
         {
           "kind": "mix",
+          "why": "Getting the next track ready before the room hears it is how djs keep the floor going.",
           "goal": "match",
           "bank": "warm-up",
           "say": {
@@ -721,6 +728,7 @@
         },
         {
           "kind": "mix",
+          "why": "A clean cut on the one is the quickest way to change energy. It works when a long blend wouldn't.",
           "goal": "cut",
           "say": {
             "mentor": "Both decks are matched. Deck a is playing. Slam the crossfader from a to b in one quick move, right on the one of a bar. It should sound like the music meant to change there.",
@@ -779,6 +787,7 @@
         },
         {
           "kind": "mix",
+          "why": "Your own music is what makes a set yours. Load it and mix it like any other track.",
           "goal": "file",
           "bank": "skywalker",
           "say": {
@@ -847,6 +856,7 @@
         },
         {
           "kind": "mix",
+          "why": "Hearing a clash and a fit side by side trains your ear to pick tracks that sound good together.",
           "goal": "key",
           "bank": "sandman",
           "say": {
@@ -906,6 +916,7 @@
         },
         {
           "kind": "mix",
+          "why": "Starting deck b on its first kick, on bar one, makes the two ones land together.",
           "goal": "phrase",
           "say": {
             "mentor": "Deck b is cued to its first kick. Bring it in on bar one of your song's phrase so the two ones land together.",
@@ -964,6 +975,7 @@
         },
         {
           "kind": "mix",
+          "why": "Reading where the intro and drop are tells you where it's safe to mix.",
           "goal": "free",
           "say": {
             "mentor": "Play around: bring deck b in, swap the bass, crossfade. Think about where you'd do it in a full track: over the intro and outro, not across a drop.",
@@ -1022,6 +1034,7 @@
         },
         {
           "kind": "mix",
+          "why": "A set that builds keeps people dancing. Order matters as much as the tracks themselves.",
           "goal": "free",
           "say": {
             "mentor": "Look at the bank's tempos: 126 up to 135. In your head, put them in order for a set that builds. Then blend from your song into the one you'd play next.",
@@ -1080,6 +1093,7 @@
         },
         {
           "kind": "mix",
+          "why": "An echo out leaves a track gracefully, so the new one can take over without a bump.",
           "goal": "echo",
           "say": {
             "mentor": "Both decks are playing and matched. Turn deck a's echo up, then pull deck a's fader down (or crossfade to b). Listen to your song echo away under the new track.",
@@ -1089,6 +1103,7 @@
         },
         {
           "kind": "mix",
+          "why": "Punch-in effects add drama at a key moment, and let go and it's back to normal.",
           "goal": "punch",
           "say": {
             "mentor": "Now the punch-in effects: hold a key and the whole mix goes through it, let go and it is dry again. Beat repeat loops the last slice (higher on the key is a shorter slice), the filter sweeps from low pass to high pass, tape stop slows everything to a halt, and a reverb throw sends the mix into the reverb so it rings on after you let go. The EP-133 has these as its punch-in fx, Push 3 as its XY punch-in effects, and djay puts them on the crossfader.\nWith both decks playing, hold one for a beat or two, let go on the one, then try another.",
@@ -1147,6 +1162,7 @@
         },
         {
           "kind": "mix",
+          "why": "Practising the handovers you plan is what makes a set feel easy on the night.",
           "goal": "blend",
           "say": {
             "mentor": "Practise one transition now: your song into a bank track, the full blend.",
@@ -1205,6 +1221,7 @@
         },
         {
           "kind": "mix",
+          "why": "Listening back shows you what worked and what didn't, in a way you can't hear while you play.",
           "goal": "record",
           "bank": "operator",
           "say": {
@@ -1264,6 +1281,7 @@
         },
         {
           "kind": "mix",
+          "why": "Your own song in a set is where producing and djing meet. This is what the whole road was for.",
           "goal": "blend",
           "say": {
             "mentor": "Your song is on deck a. Play the bank track into it, or out of it, your choice: the full blend, your song in a set.",
@@ -1370,6 +1388,7 @@
         },
         {
           "kind": "mix",
+          "why": "Mistakes happen to every dj. Fixing them fast is what the crowd remembers, not the mistake.",
           "goal": "match",
           "bank": "sandman",
           "say": {
@@ -1449,6 +1468,7 @@
         },
         {
           "kind": "mix",
+          "why": "Switching between two records is where djing started. It's still the heart of every mix.",
           "goal": "crossfade",
           "say": {
             "mentor": "Now do Herc's move on your song. Deck a is your song, deck b a track from the bank. Slide the crossfader all the way to b, then all the way back to a.\nListen to the groove carry on across the switch. Herc did this with two copies of one record. You're doing it with two different tracks, which is exactly where djing went next.",
@@ -1565,6 +1585,7 @@
         },
         {
           "kind": "mix",
+          "why": "Picking what goes on deck b is the first choice in every mix.",
           "goal": "free",
           "say": {
             "mentor": "Here's your booth. Deck a is your song. Pick a track for deck b from the bank below.\nNow soundcheck. Slide the crossfader all the way to a and listen, then all the way to b. Both should come through.\nThen set the two channel faders so the decks sound about as loud as each other. When you crossfade, nothing should jump out. When it sounds even both ways, you're set up.",
@@ -1678,6 +1699,7 @@
         },
         {
           "kind": "mix",
+          "why": "Tempo and key tell you whether two tracks will mix before you hear them.",
           "goal": "key",
           "say": {
             "mentor": "Look at deck a. Next to your song's name you'll see its bpm and its key, written as a code like 8A. Those are the two things an analysis gives you.\nEvery bank track shows the same two numbers on its chip. Use them. Find a deck b track whose key fits your song: the screen tells you when it fits. You'll learn how the codes work properly in the key lesson.",
@@ -1790,6 +1812,7 @@
         },
         {
           "kind": "mix",
+          "why": "Matching by ear means you can mix on any gear, even with no numbers on screen.",
           "goal": "match",
           "bank": "warm-up",
           "say": {
@@ -1900,6 +1923,7 @@
         },
         {
           "kind": "mix",
+          "why": "Sync matches tempo in one press, so you can spend your attention on when and how you mix.",
           "goal": "sync",
           "bank": "operator",
           "say": {
@@ -2009,6 +2033,7 @@
         },
         {
           "kind": "mix",
+          "why": "Reading both tempos tells you how far deck b needs to move before you touch anything.",
           "goal": "match",
           "bank": "operator",
           "say": {
@@ -2122,6 +2147,7 @@
         },
         {
           "kind": "mix",
+          "why": "The curve decides whether the crossfader blends or cuts. Pick the one that suits the move.",
           "goal": "curve",
           "bank": "operator",
           "say": {
@@ -2231,6 +2257,7 @@
         },
         {
           "kind": "mix",
+          "why": "Knowing which tempo range your song sits in tells you which tracks will mix with it.",
           "goal": "free",
           "say": {
             "mentor": "Deck a shows your song's bpm. Which range is it in?\nNow look at the bank chips below, each with its own bpm. Warm up at 126 is house. Smooth at 128 and long roller at 130 sit right on the line between house and techno. Tool, skywalker and space bass at 131 and the fast one at 135 lean into techno. Tap through them. Deck b plays each one stretched to your song's tempo, so you hear how it would sit next to yours.",
@@ -2350,6 +2377,7 @@
         },
         {
           "kind": "mix",
+          "why": "A cut on bar one sounds bold and deliberate. Off the phrase, it sounds like a mistake.",
           "goal": "cut",
           "say": {
             "mentor": "Deck b is matched to your song, and the crossfader is on your song. Watch the phrase counter on the screen. As it comes round to bar 1, slam the crossfader from a to b in one quick move. Your song is gone and the new track hits on the one.\nIf it lands mid bar, slide back to a and wait for the next phrase.",
@@ -2459,6 +2487,7 @@
         },
         {
           "kind": "mix",
+          "why": "A loop buys you time. It stretches a section while you get the next track ready.",
           "goal": "loop",
           "bank": "operator",
           "say": {
@@ -2562,6 +2591,7 @@
         },
         {
           "kind": "mix",
+          "why": "Picking the next track is half of djing. Key and tempo narrow the search fast.",
           "goal": "key",
           "say": {
             "mentor": "Your song is on deck a. Dig through the bank below for the track that comes after it, and check two things.\nKey: the screen tells you when a deck b track fits your song. Energy: listen. Does it feel like a step up, a step down, or the same? Pick the one that fits your key and feels right after your song.",
@@ -2670,6 +2700,7 @@
         },
         {
           "kind": "mix",
+          "why": "Tagging tracks by job means you can find the right one fast when you're playing.",
           "goal": "free",
           "say": {
             "mentor": "Here's a tiny library: your song on deck a, seven bank tracks below. Tap through each one on deck b and listen against your song. Give each a tag in your head: warm up, peak or closing.\nThen tag your song. Where would you play it? Find three bank tracks that share its tag. That's your first filtered list.",
@@ -2778,6 +2809,7 @@
         },
         {
           "kind": "mix",
+          "why": "Planning your next track before you play means the handover is ready when you need it.",
           "goal": "blend",
           "say": {
             "mentor": "Your song is on deck a, the middle of your list. Deck b is the track after it: pick one from the bank.\nNow hand over. Bring deck b's fader up. Turn your song's low down so only one bass plays. Then crossfade to b, or pull deck a down. Your song has passed the set on.",
@@ -2891,6 +2923,7 @@
         },
         {
           "kind": "mix",
+          "why": "One last run through the handover catches problems before anyone else hears them.",
           "goal": "free",
           "say": {
             "mentor": "Before you export a set, play through the handover you're planning one last time. Your song on deck a, your next track on deck b: pick it from the bank.\nCheck they sit together at your tempo, check the keys don't clash, run the blend with the faders and the low knobs. If anything sounds off, this is where you fix it, not in the booth.",
@@ -2999,6 +3032,7 @@
         },
         {
           "kind": "mix",
+          "why": "Tracks in matching keys blend smoothly. Ones that clash sound sour, however good the timing is.",
           "goal": "key",
           "say": {
             "mentor": "Your song's key code is on deck a. Tap through the bank and find two tracks that fit: the screen says fits.\nThen find one that clashes and listen to it against your song. Hear the sourness? End on one that fits.",
@@ -3120,6 +3154,7 @@
         },
         {
           "kind": "mix",
+          "why": "Shifting the key rescues a track that clashes, so you can still play the one you wanted.",
           "goal": "shift",
           "bank": "sandman",
           "say": {
@@ -3229,6 +3264,7 @@
         },
         {
           "kind": "mix",
+          "why": "Hot cues let you jump to the best parts of a track instantly. It's how djs remix live.",
           "goal": "cue",
           "bank": "morals",
           "say": {
@@ -3338,6 +3374,7 @@
         },
         {
           "kind": "mix",
+          "why": "Knowing what each track does to the room lets you steer the night instead of just playing songs.",
           "goal": "blend",
           "say": {
             "mentor": "Is your song a builder, a peak or a release? Decide. Then pick deck b to do the next job: a track that pushes the energy on from your song, or one that lets it settle.\nBring deck b in, swap the bass with the low knobs, and take your song out. Listen to where the room would go.",
@@ -3440,6 +3477,7 @@
         },
         {
           "kind": "mix",
+          "why": "Tracks from the same world sit together. That's what makes a set feel like one story.",
           "goal": "free",
           "say": {
             "mentor": "Build a tiny set around your song. Look at its bpm on deck a and think about which genre it sits in.\nThen tap through the bank and keep the tracks that belong in the same world: close in tempo on their chips, and a groove that sits with yours when you play them against your song. Three that belong is a set with a sound.",
@@ -3542,6 +3580,7 @@
         },
         {
           "kind": "mix",
+          "why": "Echo while you crossfade hides the change, so the mix sounds smooth even between very different tracks.",
           "goal": "echo",
           "say": {
             "mentor": "Both decks are playing and matched, with the crossfader on your song. Turn deck a's echo up and let your song's last beats start to repeat.\nThen crossfade to b while the echo rings. Your song echoes away under the new track.",
@@ -3644,6 +3683,7 @@
         },
         {
           "kind": "mix",
+          "why": "Taking parts out of a track lets you layer two tracks without them fighting.",
           "goal": "stems",
           "bank": "space-bass",
           "say": {
@@ -3753,6 +3793,7 @@
         },
         {
           "kind": "mix",
+          "why": "The crossfader cut is the basic move of hip-hop djing. Clean timing is everything.",
           "goal": "cut",
           "say": {
             "mentor": "Hip-hop and turntablist djs live on the crossfader, so try their basic move. Deck b is matched and the crossfader is on your song.\nWatch the counter and, on the one, snap the crossfader from a to b in one quick move. On a dvs rig it's the same move, with your song on a timecode record.",
@@ -3855,6 +3896,7 @@
         },
         {
           "kind": "mix",
+          "why": "A promo mix is how people find out what you sound like. This handover is where yours starts.",
           "goal": "blend",
           "say": {
             "mentor": "A promo mix is this, done many times in a row. Play the handover that could open yours: your song on deck a, a bank track on deck b.\nBring deck b in, swap the bass with the low knobs, and take your song out. Make it clean enough that you'd send it.",
@@ -3924,18 +3966,16 @@
       "slug": "tempo-bpm",
       "world": "foundations",
       "number": 1,
-      "title": "pulse and tempo",
-      "minutes": 6,
+      "title": "your pulse",
+      "minutes": 4,
       "song": {
         "adds": "drums.kick",
-        "why": "every song starts with a pulse, and yours starts with a kick you play in yourself, at a speed you choose"
+        "why": "every song starts with a pulse, and yours starts with a kick you play in yourself"
       },
-      "learn": "The steady beat under every dance track, how fast it goes, and the first sound in your own song: a kick you play in and set to your own tempo.",
+      "learn": "The steady beat under every dance track, and the first sound in your own song: a kick you play in yourself, on the beat.",
       "youCan": [
         "feel the pulse of a track and count along with it",
-        "play a kick in on the beat",
-        "say what bpm means and roughly what speed house and techno sit at",
-        "set your song's tempo by ear"
+        "play a kick in on the beat"
       ],
       "steps": [
         {
@@ -3958,6 +3998,16 @@
           }
         },
         {
+          "kind": "say",
+          "title": "the click",
+          "clip": "click",
+          "say": {
+            "mentor": "Before you play, meet the click. It's a metronome: a tick on every beat, at exactly the speed of the song. The higher tick is beat one, where each count of four starts. The three lower ticks are two, three and four.\nWhen you record, the click plays four times first to count you in, then keeps going so you have something steady to play along with. It's only a guide. It never goes into your song.\nIf it's too loud, make it quieter or turn it off. Whatever you pick is kept for every lesson.",
+            "straight": "This is the click, a metronome. One tick per beat: high on beat one, low on two, three and four. It counts you in before you record and keeps time while you play. It never goes into your song. Make it quieter or turn it off here.",
+            "eli5": "Tick, tick, tick, tick. That's the click. It's like a clock that keeps the beat for you. The high tick means \"one, start counting again\". It helps you play at the right time, and nobody hears it in your song but you."
+          }
+        },
+        {
           "kind": "play",
           "why": "This bar is the first thing in your song. Everything you add later lines up with it.",
           "layer": "drums",
@@ -3973,126 +4023,12 @@
           }
         },
         {
-          "kind": "tempo",
-          "why": "The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.",
-          "marks": [
-            100,
-            120,
-            128,
-            140
-          ],
-          "say": {
-            "mentor": "That's your kick, looping. Now turn the knob and listen to what happens.\nHow fast the pulse goes is called the tempo, and it's counted in bpm: beats per minute. At 120 bpm there are two beats every second. Turn it down and everything feels heavier and lazier. Turn it up and it gets urgent. House usually lives around 120 to 128, techno a bit faster, garage and dubstep around 140.\nTry the four speeds on the right, then pick the one that feels like your song. You can change it any time later.",
-            "straight": "This is your kick at different speeds. Tempo is measured in bpm, beats per minute: 120 bpm is two beats a second. House sits around 120 to 128, techno a little higher, garage and dubstep near 140. Pick a tempo for your song.",
-            "eli5": "Turn the big knob and listen: your kick goes faster or slower. How fast the booms come is called the tempo. We count it in bpm, which means booms per minute. 120 bpm is two booms every second.\nSlow feels sleepy and heavy. Fast feels exciting. Pick the speed you like best for your song."
-          },
-          "hint": "The number is how many kicks you'd hear in one minute."
-        },
-        {
           "kind": "say",
           "title": "your pulse",
           "say": {
-            "mentor": "So your song now has a pulse: a kick on every beat, at a tempo you chose. Everything you add from here lines up with it. The hats, the bass, the melody, all of it counts along with this kick.\nProducers set the tempo first because changing it later changes how everything feels. A tune that's cheeky at 128 can sound sad at 100.",
-            "straight": "Your song has a pulse and a tempo. Everything you add later is timed against it, which is why the tempo usually gets set first.",
-            "eli5": "Now your song has a heartbeat, and you picked how fast it goes. Every sound you add later will dance along to it."
-          },
-          "deeper": [
-            {
-              "title": "why 120 to 128 for house",
-              "say": "It's close to a brisk walking pace, which is about as fast as people can dance to for hours without getting tired. Early Chicago house sat around 120. Techno from Detroit and Berlin pushed faster."
-            },
-            {
-              "title": "half time",
-              "say": "Dubstep is 140 bpm, but it often feels like 70, because the big drums only hit on every other beat. The pulse is still 140 underneath. You'll hear the same trick in a lot of trap and drum and bass."
-            }
-          ]
-        },
-        {
-          "kind": "ask",
-          "q": "What does bpm stand for?",
-          "options": [
-            "beats per minute",
-            "bars per minute",
-            "beats per measure",
-            "bass per minute"
-          ],
-          "answer": 0,
-          "why": "Beats per minute. 120 bpm means 120 beats, 120 kicks here, in one minute.",
-          "whyWrong": {
-            "1": "A bar is a group of beats. Tempo counts the beats themselves.",
-            "2": "Close, but it's per minute. That's what makes it a speed.",
-            "3": "It's beats, the steady pulse you counted along with."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "At 120 bpm, how many beats happen every second?",
-          "options": [
-            "two",
-            "one",
-            "four",
-            "twelve"
-          ],
-          "answer": 0,
-          "why": "120 beats in 60 seconds is two every second.",
-          "whyWrong": {
-            "1": "One a second would be 60 bpm, half your song's speed.",
-            "2": "Four a second would be 240 bpm, far faster than any house track.",
-            "3": "Twelve a second would be a buzz, not a beat."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "Hear your kick at 120 bpm, then at 140. What happens to it?",
-          "part": "kick",
-          "play": [
-            {
-              "bpm": 120,
-              "label": "120 bpm"
-            },
-            {
-              "bpm": 140,
-              "label": "140 bpm"
-            }
-          ],
-          "options": [
-            "the kicks come closer together",
-            "the kick gets louder",
-            "the kick gets higher in pitch",
-            "you get more kicks in each bar"
-          ],
-          "answer": 0,
-          "why": "Same pattern, played faster. Each beat is shorter, so the kicks arrive sooner.",
-          "whyWrong": {
-            "1": "Tempo changes speed, not volume.",
-            "2": "The kick sounds the same, it just comes round more often.",
-            "3": "Still one kick per beat. There are just more beats in each minute."
-          }
-        },
-        {
-          "kind": "ask",
-          "q": "Which of these is at a house tempo?",
-          "sounds": [
-            {
-              "bpm": 124
-            },
-            {
-              "bpm": 70
-            },
-            {
-              "bpm": 175
-            }
-          ],
-          "options": [
-            "120 to 128 bpm",
-            "60 to 80 bpm",
-            "170 to 180 bpm"
-          ],
-          "answer": 0,
-          "why": "House usually sits between 120 and 128. Techno goes a little faster.",
-          "whyWrong": {
-            "1": "That's ballad speed, slower than most dance music.",
-            "2": "That's drum and bass territory."
+            "mentor": "So your song now has a pulse: a kick on every beat. Everything you add from here lines up with it. The hats, the bass, the melody, all of it counts along with this kick.\nNext you'll choose how fast it goes.",
+            "straight": "Your song has a pulse. Everything you add later is timed against it. Next: how fast it goes.",
+            "eli5": "Now your song has a heartbeat. Every sound you add later will dance along to it. Next you'll pick how fast it goes."
           }
         },
         {
@@ -4114,79 +4050,24 @@
         },
         {
           "kind": "ask",
-          "more": true,
-          "q": "One of these is your kick at 60 bpm. Which one?",
-          "part": "kick",
-          "sounds": [
-            {
-              "bpm": 60
-            },
-            {
-              "bpm": 120
-            },
-            {
-              "bpm": 90
-            }
-          ],
+          "q": "What is the pulse?",
           "options": [
-            "60 bpm, one beat every second",
-            "120 bpm, a beat every half second",
-            "90 bpm, three beats every two seconds"
+            "a steady beat that doesn't speed up or slow down",
+            "the loudest sound in a track",
+            "the tune you hum along to",
+            "how long the track lasts"
           ],
           "answer": 0,
-          "why": "60 beats in 60 seconds, so one beat every second.",
+          "why": "The pulse is beats in a row, evenly spaced. It's what your foot taps to.",
           "whyWrong": {
-            "1": "That's twice as fast: two kicks every second.",
-            "2": "Close, but the kicks come a little quicker than once a second."
-          }
-        },
-        {
-          "kind": "ask",
-          "more": true,
-          "q": "Why do producers usually set the tempo first?",
-          "options": [
-            "changing it later changes how everything feels",
-            "you can't change it later",
-            "the kick only works at one tempo",
-            "bpm sets how loud the song is"
-          ],
-          "answer": 0,
-          "why": "Every part is played against the pulse. Change the speed and the whole mood shifts with it.",
-          "whyWrong": {
-            "1": "You can change it any time. It just changes the feel of everything already there.",
-            "2": "A kick works at any tempo.",
-            "3": "Tempo is speed, not loudness."
-          }
-        },
-        {
-          "kind": "ask",
-          "more": true,
-          "q": "Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?",
-          "part": "drums",
-          "play": {
-            "bpm": 140,
-            "notes": {
-              "kick": "x.........x.....",
-              "clap": "........x......."
-            }
-          },
-          "options": [
-            "the big drums hit on every other beat",
-            "it's played slower in clubs",
-            "the bass is out of time",
-            "dubstep has no pulse"
-          ],
-          "answer": 0,
-          "why": "Half time. The pulse is still 140, but the heavy drums skip every other beat, so it feels half as fast.",
-          "whyWrong": {
-            "1": "Clubs play it at 140.",
-            "2": "The bass is right on the grid, it just leaves space.",
-            "3": "There's always a pulse underneath."
+            "1": "Loud or quiet, the pulse is about timing, not volume.",
+            "2": "The tune sits on top of the pulse. The pulse is the beat underneath.",
+            "3": "It's about the beat, not the length."
           }
         },
         {
           "kind": "keep",
-          "next": "Next: bars and counting. A clap on two and four turns your pulse into a groove, and your loop grows to four bars."
+          "next": "Next: tempo. Turn one knob and hear your kick get lazy or urgent, then pick the speed for your song."
         }
       ],
       "file": "foundations/01-tempo-bpm.yaml"
@@ -4860,6 +4741,7 @@
         },
         {
           "kind": "play",
+          "why": "These are the first notes of your song. Every lesson after this builds on top of them.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -5048,6 +4930,7 @@
         },
         {
           "kind": "play",
+          "why": "Jumping an octave is the same note, bigger. It's one of the simplest ways to make a tune lift.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -5266,6 +5149,7 @@
         },
         {
           "kind": "shape",
+          "why": "Getting the melody's level right is the first mixing decision you make. Too loud and it shouts, too quiet and it disappears.",
           "layer": "lead",
           "knobs": [
             "level"
@@ -5444,6 +5328,7 @@
         },
         {
           "kind": "shape",
+          "why": "The same notes can sound soft or sharp. The filter is how you choose the colour.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -5615,6 +5500,7 @@
         },
         {
           "kind": "shape",
+          "why": "The wave shape is the raw character of your melody. Pick the one that suits your song.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -5628,6 +5514,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing a wave's shape by ear means you can pick the right sound without guessing.",
           "layer": "lead",
           "knobs": [
             "wave"
@@ -5784,6 +5671,7 @@
         },
         {
           "kind": "play",
+          "why": "A fifth is the most settled jump there is. It makes a melody sound strong.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -5907,6 +5795,7 @@
         },
         {
           "kind": "shape",
+          "why": "Hats are noise shaped into a beat. Length and brightness decide how busy they feel.",
           "layer": "hats",
           "knobs": [
             "decay",
@@ -5920,6 +5809,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing the pitch of something with no notes trains your ear for drums.",
           "layer": "hats",
           "knobs": [
             "tune"
@@ -6030,6 +5920,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Major and minor set the mood of the whole song: bright or dark.",
           "set": "scale",
           "choices": [
             "minor",
@@ -6058,6 +5949,7 @@
         },
         {
           "kind": "copy",
+          "why": "Hearing the scale step by step is how you'll find notes that fit without thinking.",
           "layer": "lead",
           "pattern": "1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 .",
           "say": "Copy the scale by ear: eight notes, each one step higher than the last. On this grid, every row is a note of your song's scale.",
@@ -6192,6 +6084,7 @@
         },
         {
           "kind": "imagine",
+          "why": "Seeing how far notes jump helps you hear big leaps and small steps before they play.",
           "layer": "lead",
           "pattern": "1 - - - 3 - - - 5 - - - 1' - - -",
           "say": {
@@ -6203,6 +6096,7 @@
         },
         {
           "kind": "copy",
+          "why": "Every melody is made of jumps. Hearing how far each one reaches is how you copy tunes you like.",
           "layer": "lead",
           "pattern": "1 - - - 5 - - - 1 - - - 3 - - -",
           "say": "Copy these two intervals by ear: the root, a jump, back to the root, a smaller jump. Hear how far each one reaches.",
@@ -6210,6 +6104,7 @@
         },
         {
           "kind": "play",
+          "why": "A jump followed by steps back is how most good phrases are shaped.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -6327,6 +6222,7 @@
         },
         {
           "kind": "imagine",
+          "why": "Hearing a phrase in your head before it plays is how you write a melody instead of searching for one.",
           "layer": "lead",
           "pattern": "1 - 3 - 5 - 3 - 2 - 3 - 1 - . .",
           "say": {
@@ -6338,6 +6234,7 @@
         },
         {
           "kind": "copy",
+          "why": "A melody that climbs and comes home sounds finished. Copying one shows you why.",
           "layer": "lead",
           "pattern": "1 - 3 - 5 - 3 - 2 - 1 - - - . .",
           "say": "Copy this melody by ear: it climbs, then steps back down home. Sing it back first if you can, then find it on the grid.",
@@ -6345,6 +6242,7 @@
         },
         {
           "kind": "play",
+          "why": "Repeat an idea, then change its ending. That's how a melody becomes memorable.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -6471,6 +6369,7 @@
         },
         {
           "kind": "play",
+          "why": "Five notes that always sound good together make it easy to write a hook that sticks.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -6589,6 +6488,7 @@
         },
         {
           "kind": "copy",
+          "why": "Chords are notes stacked up. Hearing the bottom one first makes the rest easy to find.",
           "layer": "chords",
           "pattern": "1+3+5 - - - - - - - 4+6+1' - - - - - - -",
           "say": "Copy two chords by ear. A chord is three notes at once: find the lowest, then the two above it.",
@@ -6596,6 +6496,7 @@
         },
         {
           "kind": "play",
+          "why": "Chords give your melody something to sit on. They are the harmony of your song.",
           "layer": "chords",
           "surface": "pads",
           "goal": {
@@ -6721,6 +6622,7 @@
         },
         {
           "kind": "imagine",
+          "why": "Seeing chords move before you hear them helps you predict where a progression is going.",
           "layer": "chords",
           "pattern": "1+3+5 - - - 4,+6,+1 - - - 6,+1+3 - - - 5,+7,+2 - - -",
           "say": {
@@ -6732,6 +6634,7 @@
         },
         {
           "kind": "copy",
+          "why": "Copying a progression by ear is how you learn the ones you love from other songs.",
           "layer": "chords",
           "pattern": "1+3+5 - - - 6,+1+3 - - - 4,+6,+1 - - - 5,+7,+2 - - -",
           "say": "Copy this progression by ear: four chords, one per beat. Work out the lowest note of each chord first, then fill in the rest.",
@@ -6739,6 +6642,7 @@
         },
         {
           "kind": "play",
+          "why": "A chord progression is the journey of your song. It's what makes it feel like it's going somewhere.",
           "layer": "chords",
           "surface": "pads",
           "goal": {
@@ -6757,6 +6661,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Writing the chords down for the whole song keeps everything else in key with them.",
           "set": "chords",
           "say": {
             "mentor": "Now write the progression down for the whole song, the way Logic's Chord Track does: one chord per bar, each with its name (am, f, c, g) and its roman numeral in your key. Tap a bar, then a chord, or tap a progression to fill all four bars. Your chords part plays it as you go.\nFrom now on your bass, lead and chord pads light the notes of the chord under the playhead in the studio, so you always know which notes fit. FL Studio's chord progression tool and Live 12's chord tools do the same job.",
@@ -6856,6 +6761,7 @@
         },
         {
           "kind": "imagine",
+          "why": "A bass that follows the chords holds the song together. Reading it first makes it easy to hear.",
           "layer": "bass",
           "pattern": "1 - - - 4, - - - 6, - - - 5, - - -",
           "say": {
@@ -6867,6 +6773,7 @@
         },
         {
           "kind": "copy",
+          "why": "The root of each chord is where a bass line starts. Hear it and you can write bass for any song.",
           "layer": "bass",
           "pattern": "1 - - - 6, - - - 4, - - - 5, - - -",
           "say": "Copy the roots of a chord progression by ear. One bass note per beat, the bottom of each chord.",
@@ -6874,6 +6781,7 @@
         },
         {
           "kind": "play",
+          "why": "Bass on the roots locks your chords and beat together. Your song gets its low end.",
           "layer": "bass",
           "surface": "keys",
           "goal": {
@@ -6891,6 +6799,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Hearing another bass line on your chords gives you ideas for your own.",
           "set": "player",
           "layer": "bass",
           "say": {
@@ -7000,6 +6909,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Recorded hits give your beat the grit and room of real drums.",
           "set": "kit",
           "say": {
             "mentor": "Here's your beat. The drums so far have been made by the engine. Switch to recorded and the same pattern plays on real recorded hits: a kick, a clap, a hat and a snare. Listen to the texture.",
@@ -7043,7 +6953,7 @@
         },
         {
           "kind": "keep",
-          "next": "Next: tension, release and structure. Your loop becomes a song."
+          "next": "Next: notes and octaves. The twelve notes every melody is made from."
         }
       ],
       "file": "foundations/19-samples-loops.yaml"
@@ -7076,6 +6986,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A loop becomes a song when parts come in and out. This is where it starts to tell a story.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your loop laid out as a song: intro, build, drop, break, drop. Each row is one of your parts. Tap a square to switch a part off or on in that section, and tap fill for a drum roll at the end. Play it through. You've just made a song.",
@@ -7137,6 +7048,224 @@
       "file": "foundations/20-song-structure.yaml"
     },
     {
+      "slug": "set-your-tempo",
+      "world": "foundations",
+      "number": 21,
+      "title": "tempo",
+      "minutes": 4,
+      "song": {
+        "changes": "drums.kick",
+        "why": "how fast the pulse goes sets the mood of the whole song, so it gets chosen before anything else"
+      },
+      "learn": "How fast a track goes, how it's counted in bpm, roughly where house and techno sit, and a tempo for your own song, picked by ear.",
+      "youCan": [
+        "say what bpm means and roughly what speed house and techno sit at",
+        "set your song's tempo by ear"
+      ],
+      "steps": [
+        {
+          "kind": "tempo",
+          "why": "The tempo sets the mood of the whole song. Pick it now, because every part after this plays at that speed.",
+          "marks": [
+            100,
+            120,
+            128,
+            140
+          ],
+          "say": {
+            "mentor": "Here's your kick, looping. Turn the knob and listen to what happens.\nHow fast the pulse goes is called the tempo, and it's counted in bpm: beats per minute. At 120 bpm there are two beats every second. Turn it down and everything feels heavier and lazier. Turn it up and it gets urgent. House usually lives around 120 to 128, techno a bit faster, garage and dubstep around 140.\nTry the four speeds on the right, then pick the one that feels like your song. You can change it any time later.",
+            "straight": "Here's your kick at different speeds. Tempo is measured in bpm, beats per minute: 120 bpm is two beats a second. House sits around 120 to 128, techno a little higher, garage and dubstep near 140. Pick a tempo for your song.",
+            "eli5": "Turn the big knob and listen: your kick goes faster or slower. How fast the booms come is called the tempo. We count it in bpm, which means booms per minute. 120 bpm is two booms every second.\nSlow feels sleepy and heavy. Fast feels exciting. Pick the speed you like best for your song."
+          },
+          "hint": "The number is how many kicks you'd hear in one minute."
+        },
+        {
+          "kind": "say",
+          "title": "why tempo comes first",
+          "say": {
+            "mentor": "Producers set the tempo first because changing it later changes how everything feels. A tune that's cheeky at 128 can sound sad at 100.\nYour kick now runs at the speed you chose, and every part you add will play at it too.",
+            "straight": "Tempo usually gets set first, because changing it later changes how everything already there feels.",
+            "eli5": "You picked how fast your song's heartbeat goes. Every sound you add later will go at that speed."
+          },
+          "deeper": [
+            {
+              "title": "why 120 to 128 for house",
+              "say": "It's close to a brisk walking pace, which is about as fast as people can dance to for hours without getting tired. Early Chicago house sat around 120. Techno from Detroit and Berlin pushed faster."
+            },
+            {
+              "title": "half time",
+              "say": "Dubstep is 140 bpm, but it often feels like 70, because the big drums only hit on every other beat. The pulse is still 140 underneath. You'll hear the same trick in a lot of trap and drum and bass."
+            }
+          ]
+        },
+        {
+          "kind": "ask",
+          "q": "What does bpm stand for?",
+          "options": [
+            "beats per minute",
+            "bars per minute",
+            "beats per measure",
+            "bass per minute"
+          ],
+          "answer": 0,
+          "why": "Beats per minute. 120 bpm means 120 beats, 120 kicks here, in one minute.",
+          "whyWrong": {
+            "1": "A bar is a group of beats. Tempo counts the beats themselves.",
+            "2": "Close, but it's per minute. That's what makes it a speed.",
+            "3": "It's beats, the steady pulse you counted along with."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "At 120 bpm, how many beats happen every second?",
+          "options": [
+            "two",
+            "one",
+            "four",
+            "twelve"
+          ],
+          "answer": 0,
+          "why": "120 beats in 60 seconds is two every second.",
+          "whyWrong": {
+            "1": "One a second would be 60 bpm, half your song's speed.",
+            "2": "Four a second would be 240 bpm, far faster than any house track.",
+            "3": "Twelve a second would be a buzz, not a beat."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Hear your kick at 120 bpm, then at 140. What happens to it?",
+          "part": "kick",
+          "play": [
+            {
+              "bpm": 120,
+              "label": "120 bpm"
+            },
+            {
+              "bpm": 140,
+              "label": "140 bpm"
+            }
+          ],
+          "options": [
+            "the kicks come closer together",
+            "the kick gets louder",
+            "the kick gets higher in pitch",
+            "you get more kicks in each bar"
+          ],
+          "answer": 0,
+          "why": "Same pattern, played faster. Each beat is shorter, so the kicks arrive sooner.",
+          "whyWrong": {
+            "1": "Tempo changes speed, not volume.",
+            "2": "The kick sounds the same, it just comes round more often.",
+            "3": "Still one kick per beat. There are just more beats in each minute."
+          }
+        },
+        {
+          "kind": "ask",
+          "q": "Which of these is at a house tempo?",
+          "sounds": [
+            {
+              "bpm": 124
+            },
+            {
+              "bpm": 70
+            },
+            {
+              "bpm": 175
+            }
+          ],
+          "options": [
+            "120 to 128 bpm",
+            "60 to 80 bpm",
+            "170 to 180 bpm"
+          ],
+          "answer": 0,
+          "why": "House usually sits between 120 and 128. Techno goes a little faster.",
+          "whyWrong": {
+            "1": "That's ballad speed, slower than most dance music.",
+            "2": "That's drum and bass territory."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "One of these is your kick at 60 bpm. Which one?",
+          "part": "kick",
+          "sounds": [
+            {
+              "bpm": 60
+            },
+            {
+              "bpm": 120
+            },
+            {
+              "bpm": 90
+            }
+          ],
+          "options": [
+            "60 bpm, one beat every second",
+            "120 bpm, a beat every half second",
+            "90 bpm, three beats every two seconds"
+          ],
+          "answer": 0,
+          "why": "60 beats in 60 seconds, so one beat every second.",
+          "whyWrong": {
+            "1": "That's twice as fast: two kicks every second.",
+            "2": "Close, but the kicks come a little quicker than once a second."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Why do producers usually set the tempo first?",
+          "options": [
+            "changing it later changes how everything feels",
+            "you can't change it later",
+            "the kick only works at one tempo",
+            "bpm sets how loud the song is"
+          ],
+          "answer": 0,
+          "why": "Every part is played against the pulse. Change the speed and the whole mood shifts with it.",
+          "whyWrong": {
+            "1": "You can change it any time. It just changes the feel of everything already there.",
+            "2": "A kick works at any tempo.",
+            "3": "Tempo is speed, not loudness."
+          }
+        },
+        {
+          "kind": "ask",
+          "more": true,
+          "q": "Hear this beat at 140 bpm. Dubstep is 140 too, but often feels like 70. Why?",
+          "part": "drums",
+          "play": {
+            "bpm": 140,
+            "notes": {
+              "kick": "x.........x.....",
+              "clap": "........x......."
+            }
+          },
+          "options": [
+            "the big drums hit on every other beat",
+            "it's played slower in clubs",
+            "the bass is out of time",
+            "dubstep has no pulse"
+          ],
+          "answer": 0,
+          "why": "Half time. The pulse is still 140, but the heavy drums skip every other beat, so it feels half as fast.",
+          "whyWrong": {
+            "1": "Clubs play it at 140.",
+            "2": "The bass is right on the grid, it just leaves space.",
+            "3": "There's always a pulse underneath."
+          }
+        },
+        {
+          "kind": "keep",
+          "next": "Next: bars and counting. A clap on two and four turns your pulse into a groove, and your loop grows to four bars."
+        }
+      ],
+      "file": "foundations/21-set-your-tempo.yaml"
+    },
+    {
       "slug": "ear-higher-lower",
       "world": "foundations",
       "number": 101,
@@ -7168,6 +7297,7 @@
         },
         {
           "kind": "copy",
+          "why": "Telling higher from lower is the ear skill every melody is built on.",
           "layer": "lead",
           "pattern": "1 - . . 3 - . . 2 - . . 1 - . .",
           "say": "Copy four notes by ear. For each one, ask: higher or lower than the last?",
@@ -7330,6 +7460,7 @@
         },
         {
           "kind": "copy",
+          "why": "Hearing where each hit sits is the first skill in rhythm. Once you can hear it, you can play it.",
           "layer": "drums",
           "pattern": {
             "kick": "x...x...x...x...",
@@ -7340,6 +7471,7 @@
         },
         {
           "kind": "play",
+          "why": "Breaking the pattern on purpose shows you what the beat was holding together.",
           "layer": "drums",
           "surface": "pads",
           "snap": true,
@@ -7497,6 +7629,7 @@
         },
         {
           "kind": "imagine",
+          "why": "Reading a beat before you hear it trains you to feel the push of an off-beat kick.",
           "layer": "drums",
           "pattern": {
             "kick": "x..x..x...x.....",
@@ -7511,6 +7644,7 @@
         },
         {
           "kind": "play",
+          "why": "An accent off the beat gives your groove a lift that straight hits can't.",
           "layer": "hats",
           "surface": "pads",
           "snap": true,
@@ -7677,6 +7811,7 @@
         },
         {
           "kind": "play",
+          "why": "A pattern of three over your four makes the groove roll instead of repeat.",
           "layer": "hats",
           "surface": "pads",
           "snap": true,
@@ -7692,6 +7827,7 @@
         },
         {
           "kind": "tempo",
+          "why": "A shorter part loops against the beat on its own, so the groove keeps changing without you touching it.",
           "set": "length",
           "layer": "hats",
           "say": {
@@ -7823,6 +7959,7 @@
         },
         {
           "kind": "play",
+          "why": "With snap off, your timing is the groove. Tiny early and late hits are what make it feel played by a person.",
           "layer": "hats",
           "surface": "pads",
           "goal": {
@@ -7837,6 +7974,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Starting from a beat someone else plays and changing it is a fast way to get ideas.",
           "set": "player",
           "layer": "drums",
           "say": {
@@ -7972,6 +8110,7 @@
         },
         {
           "kind": "shape",
+          "why": "How much room a sound has decides whether it feels close to you or far away.",
           "layer": "lead",
           "knobs": [
             "send",
@@ -8133,6 +8272,7 @@
         },
         {
           "kind": "shape",
+          "why": "When two sounds share the same low space they blur. Ducking clears the way so you hear both.",
           "layer": "bass",
           "knobs": [
             "duck"
@@ -8296,6 +8436,7 @@
         },
         {
           "kind": "shape",
+          "why": "Lowering the quality on purpose is a sound in itself: the crunch of old samplers.",
           "layer": "drums",
           "knobs": [
             "crush"
@@ -8429,6 +8570,7 @@
         },
         {
           "kind": "arrange",
+          "why": "This is how every music app lays out a song. Learn it once and you can read any of them.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song, opened the way a daw opens it. Each row is a track: your kick, your hats, your melody, every part you've made. Time runs left to right in sections. Each square is a clip of that part playing in that section.\nTap squares to switch parts off and on in different sections and play it through. That's arranging, the daw's sequencing job, and you'll go deeper on it later. Keep the layout if you like it, or leave your song as a loop for now.",
@@ -8559,6 +8701,7 @@
         },
         {
           "kind": "shape",
+          "why": "Your melody is saved as notes, not sound, so you can change the instrument and keep the tune.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -8704,6 +8847,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Every note repeats higher up. Knowing where the octave is lets you move a tune up or down and keep it the same.",
           "set": "grid",
           "layer": "lead",
           "say": {
@@ -8714,6 +8858,7 @@
         },
         {
           "kind": "copy",
+          "why": "An octave bounce is a classic bass move. Hearing it trains your ear for the same note, higher.",
           "layer": "bass",
           "pattern": "1 . 1' . 1 . 1' . 1 . 1' . 5 . 5' .",
           "say": "Copy this bass line by ear. It bounces between a note and the same note an octave up. Same name, twice as high.",
@@ -8790,7 +8935,7 @@
         },
         {
           "kind": "keep",
-          "next": "Back to the melody path. Next: scales, and the scale your song will use."
+          "next": "Next: scales, and the scale your song will use."
         }
       ],
       "file": "foundations/210-notes-and-octaves.yaml"
@@ -8832,6 +8977,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Small changes to a scale change the mood. This is how producers get a darker or lighter minor.",
           "set": "scale",
           "choices": [
             "minor",
@@ -9011,6 +9157,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Moving the whole song up or down changes how it feels without changing what it is.",
           "set": "key",
           "say": {
             "mentor": "Transposition moves the whole song up or down without changing a single interval, so it still sounds like your song, just higher or lower. Your song is playing. Turn shift and hear every melodic part move together while the drums stay put.\nUp two semitones is a classic lift. Down five is a different mood entirely, darker and heavier. The key name updates as you turn. A singer might need it in a different key; a dj might want it to fit the next track. Keep the key where your song feels best.",
@@ -9131,6 +9278,7 @@
         },
         {
           "kind": "play",
+          "why": "Different chord types give different moods. Try them on your own song and keep what you like.",
           "layer": "chords",
           "surface": "pads",
           "goal": {
@@ -9297,6 +9445,7 @@
         },
         {
           "kind": "play",
+          "why": "Ending on home sounds finished. Ending anywhere else leaves people wanting more.",
           "layer": "chords",
           "surface": "pads",
           "goal": {
@@ -9440,6 +9589,7 @@
         },
         {
           "kind": "shape",
+          "why": "How chords start and fade decides if they're a soft pad or a short stab.",
           "layer": "chords",
           "knobs": [
             "release",
@@ -9601,6 +9751,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A build before the drop is what makes the drop hit. Tension is what you release.",
           "goal": "risers",
           "say": {
             "mentor": "Producers build tension with risers, filters that close, a kick taken away and rising pitch or noise. The drop is the release, where the kick returns and the full groove lands.\nHere's your song in sections, with a riser row at the bottom. A riser is a sweep that climbs in pitch and brightness over a few bars. Turn it on in the section right before your drop and play it through. Listen for the moment it cuts off and the drop hits. One per drop is plenty.",
@@ -10249,7 +10400,7 @@
         },
         {
           "kind": "keep",
-          "next": "Next: louder and higher are not the same thing. You will hear the difference between volume and pitch."
+          "next": "Next: the piano roll. Your lead's notes on a grid, where you can fix and move them."
         }
       ],
       "file": "producer/02-synth-what-is-sound.yaml"
@@ -10590,6 +10741,7 @@
         },
         {
           "kind": "imagine",
+          "why": "Seeing where bass notes sit against the kick helps you hear why it works.",
           "layer": "bass",
           "pattern": ". . 1 - . . 5, - . . 1 - . . 1' -",
           "say": {
@@ -10601,6 +10753,7 @@
         },
         {
           "kind": "copy",
+          "why": "A bass line sits in the gaps between kicks. Copying one shows you where those gaps are.",
           "layer": "bass",
           "pattern": ". . 1 - . . 1 - . . 1' - . . 5 -",
           "say": "Copy this bass line by ear. Each note sits in a gap between two kicks, which is where a bass line lives. The grid only shows notes in your song's key, so every row is a fair guess.",
@@ -10608,6 +10761,7 @@
         },
         {
           "kind": "play",
+          "why": "The bass is what people feel on a dance floor. This is your song's low end.",
           "layer": "bass",
           "surface": "keys",
           "goal": {
@@ -10627,6 +10781,7 @@
         },
         {
           "kind": "shape",
+          "why": "A warm bass or a buzzy one: shaping it decides how it sits under everything.",
           "layer": "bass",
           "knobs": [
             "cutoff",
@@ -10640,6 +10795,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing brightness and length by ear is how you'll shape bass in any track.",
           "layer": "bass",
           "knobs": [
             "cutoff",
@@ -10758,6 +10914,7 @@
         },
         {
           "kind": "shape",
+          "why": "Kick and bass both live down low. Ducking gives each its own moment so neither gets lost.",
           "layer": "bass",
           "knobs": [
             "duck",
@@ -10771,6 +10928,7 @@
         },
         {
           "kind": "copy",
+          "why": "A bass that dodges the kick keeps the low end clean. It's how most dance tracks do it.",
           "layer": "bass",
           "pattern": ". . 1 . . 1 . . . . 1 . . 1 5, .",
           "say": "This bass line dodges the kick: no note starts on a beat, so the kick always has the low end to itself. Copy it by ear, and listen for where each note sits against the beat.",
@@ -10883,6 +11041,7 @@
         },
         {
           "kind": "shape",
+          "why": "These four knobs turn a plain synth into your synth. It's where your lead gets its character.",
           "layer": "lead",
           "knobs": [
             "res",
@@ -10898,6 +11057,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how a sound starts and stops is how you'll copy any sound you like.",
           "layer": "lead",
           "knobs": [
             "attack",
@@ -11033,6 +11193,7 @@
         },
         {
           "kind": "copy",
+          "why": "Hearing chords note by note makes it easy to find them on the keys.",
           "layer": "chords",
           "pattern": "1+3+5 - - - - - - - 6,+1+3 - - - - - - -",
           "say": "Copy these two chords by ear. Each one is three notes at once: find the lowest note first, then build up.",
@@ -11040,6 +11201,7 @@
         },
         {
           "kind": "play",
+          "why": "Chords fill out the middle of your song. Pads hold it, stabs push it.",
           "layer": "chords",
           "surface": "pads",
           "goal": {
@@ -11057,6 +11219,7 @@
         },
         {
           "kind": "shape",
+          "why": "Ring time and width decide if your chords are a bed under everything or punches between the kicks.",
           "layer": "chords",
           "knobs": [
             "release",
@@ -11070,6 +11233,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how long chords ring trains your ear for pads and stabs.",
           "layer": "chords",
           "knobs": [
             "release"
@@ -11176,6 +11340,7 @@
         },
         {
           "kind": "shape",
+          "why": "A kick tuned to your bass and shaped for your song sounds like yours, not a preset.",
           "layer": "drums",
           "knobs": [
             "tune",
@@ -11191,6 +11356,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how low a kick sits and how long it lasts is the skill behind every great kick.",
           "layer": "drums",
           "knobs": [
             "tune",
@@ -11287,6 +11453,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Recorded drums carry room and grit. Hearing both kits helps you pick what your song needs.",
           "set": "kit",
           "say": {
             "mentor": "Here's your own drum pattern on both kits. Switch between synth and recorded and listen to the texture: the recorded hits carry a bit of room and grit, the synth ones are cleaner and easier to shape. Lots of producers layer both. Pick the one that suits your song.",
@@ -11363,6 +11530,7 @@
         },
         {
           "kind": "shape",
+          "why": "A wider lead sounds bigger and fills the speakers. Glide makes notes slide like a voice.",
           "layer": "lead",
           "knobs": [
             "detune",
@@ -11376,6 +11544,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing width and slide by ear is how you'll match leads from tracks you like.",
           "layer": "lead",
           "knobs": [
             "detune",
@@ -11390,6 +11559,7 @@
         },
         {
           "kind": "copy",
+          "why": "Copying a lead line by ear is how you learn the shapes good leads use.",
           "layer": "lead",
           "pattern": "5 - 4 3 - 1 - . 2 - 3 - 1 - - -",
           "say": "Copy this lead line by ear before you widen it. Hum it back first, then find each note going up or down from the last.",
@@ -11488,6 +11658,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A riser tells the room a drop is coming. It builds the tension your drop releases.",
           "goal": "risers",
           "say": {
             "mentor": "Here's your song laid out in sections. There's a riser row at the bottom. Tap it on for the section right before a drop and listen to the build. One per drop is plenty.",
@@ -11547,6 +11718,7 @@
         },
         {
           "kind": "shape",
+          "why": "Balance is the most important part of a mix. Get the levels right and most problems go away.",
           "layer": "lead",
           "knobs": [
             "level",
@@ -11641,6 +11813,7 @@
         },
         {
           "kind": "shape",
+          "why": "EQ gives every part its own slice of the sound, so nothing clashes.",
           "layer": "lead",
           "knobs": [
             "cut",
@@ -11741,6 +11914,7 @@
         },
         {
           "kind": "shape",
+          "why": "Reverb and echo place each part near or far. That's what makes a mix feel deep.",
           "layer": "lead",
           "knobs": [
             "send",
@@ -11754,6 +11928,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how much reverb is on a sound helps you judge how much to use.",
           "layer": "lead",
           "knobs": [
             "send"
@@ -11858,6 +12033,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Glue makes your mix sound like one track instead of separate parts.",
           "set": "glue",
           "say": {
             "mentor": "Your whole song. Turn glue up and listen to how the drums and bass start to pump and lock together. Too much and it sounds squashed and tired. Out sets how hard the mix hits the limiter: louder, but push it too far and the punch goes. Find the point where it sounds like a finished record.",
@@ -11949,6 +12125,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A loop becomes a song when parts come and go. Switching parts off in places is how you give it a shape.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as five sections, with every part playing in all of them. Each row is one of your parts, each column a section. Tap a cell to switch that part off or on there. Thin out the intro and the break, keep the drops full, and play it through until the journey feels right.",
@@ -12025,6 +12202,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A fill tells the listener something is about to change, so the next section lands.",
           "goal": "fills",
           "say": {
             "mentor": "Your arrangement has a fill row. Tap fill on a section and its last beat drops the kick for a quick snare roll. Put fills before the drop and the break and listen to how they lead you in.",
@@ -12034,6 +12212,7 @@
         },
         {
           "kind": "tempo",
+          "why": "A hit that only plays some of the time makes a loop feel less repeated.",
           "set": "chance",
           "layer": "hats",
           "say": {
@@ -12101,6 +12280,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Taking the drums away makes people miss them. Bringing them back is the drop.",
           "goal": "drop",
           "say": {
             "mentor": "Take the drums out of one section and bring them back in the next. Add a riser and a fill before the drop if you like. Play it through and feel it land.",
@@ -12179,6 +12359,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A finished song is one you can take out and play anywhere. This is where it leaves the app.",
           "goal": "export",
           "say": {
             "mentor": "Here's your finished song. Give it a name and play it through once more. Then take it out two ways. Audio for streaming saves a wav at -14 lufs, the loudness the big streaming services turn songs to, so yours sounds the same there as here; loud for clubs pushes it to -9, with the peaks held under -1 dbtp either way. Midi for Live drops every part onto its own track to keep working. And if you're proud of it, send it to CCD: the best learner tracks get played at our nights.",
@@ -12389,6 +12570,7 @@
         },
         {
           "kind": "shape",
+          "why": "Every track has a fader and a pan. These two controls are the start of every mix.",
           "layer": "drums",
           "knobs": [
             "level",
@@ -12505,6 +12687,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Everything in a song follows one tempo. This is where it's set in Live, and here.",
           "marks": [
             100,
             120,
@@ -12603,6 +12786,7 @@
         },
         {
           "kind": "shape",
+          "why": "Each pad is its own sound you can shape. This is how producers make a kit their own.",
           "layer": "drums",
           "knobs": [
             "tune",
@@ -12734,6 +12918,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Synth drums or recorded drums: same pattern, a different feel. Pick what suits your song.",
           "set": "kit",
           "say": {
             "mentor": "Here's your song, with two instruments for your drums. Synth drums are made from scratch by the engine, out of waves and noise. Recorded drums play back real hits, recorded once and played on your pattern. An instrument that plays recordings like that is called a sampler.\nSwitch between them while it plays. The pattern doesn't change at all, only the sound. Keep the kit that suits your song.",
@@ -12861,6 +13046,7 @@
         },
         {
           "kind": "shape",
+          "why": "The oscillator is where a synth's sound starts. Every other knob shapes what it makes.",
           "layer": "lead",
           "knobs": [
             "wave"
@@ -12999,6 +13185,7 @@
         },
         {
           "kind": "shape",
+          "why": "Pitch and loudness are separate things. Hearing the difference makes everything else easier to shape.",
           "layer": "lead",
           "knobs": [
             "detune",
@@ -13137,6 +13324,7 @@
         },
         {
           "kind": "tempo",
+          "why": "The piano roll is where you fix a wrong note, move it or make it longer, without playing it again.",
           "set": "grid",
           "layer": "lead",
           "say": {
@@ -13198,7 +13386,7 @@
         },
         {
           "kind": "keep",
-          "next": "Back to your song: next, a clap on two and four."
+          "next": "Next: hats. They go between your kicks and push the groove forward."
         }
       ],
       "file": "producer/207-midi-piano-roll.yaml"
@@ -13250,6 +13438,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Seeing your song as a grid of parts and sections makes it easy to try ideas.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as a grid. Your parts run down the side, your sections run across. Each box is one part in one section, on or off. It's the same idea as session view turned on its side: in Live, tracks go across the top and scenes go down.\nMake the first section drums only: switch your lead off there. Then let everything play in the next one. Press play and hear the song build.",
@@ -13362,6 +13551,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Notes and recordings behave differently when the tempo changes. Knowing which is which saves headaches.",
           "set": "sample",
           "choices": [
             "warp"
@@ -13458,6 +13648,7 @@
         },
         {
           "kind": "shape",
+          "why": "A thicker bass fills the low end without changing a single note.",
           "layer": "bass",
           "knobs": [
             "sub",
@@ -13488,6 +13679,7 @@
         },
         {
           "kind": "match",
+          "why": "Low weight is felt more than heard. This trains your ear to notice it.",
           "layer": "bass",
           "knobs": [
             "sub"
@@ -13601,6 +13793,7 @@
         },
         {
           "kind": "shape",
+          "why": "FM makes bells, metals and growls from simple waves. One knob opens a whole new set of sounds.",
           "layer": "lead",
           "knobs": [
             "fm",
@@ -13713,6 +13906,7 @@
         },
         {
           "kind": "shape",
+          "why": "Sidechain is the pump in dance music. It also keeps the kick clear.",
           "layer": "bass",
           "knobs": [
             "duck",
@@ -13848,6 +14042,7 @@
         },
         {
           "kind": "shape",
+          "why": "Squeezing the loudest bits makes your drums punchier and more even.",
           "layer": "drums",
           "knobs": [
             "drive",
@@ -13997,6 +14192,7 @@
         },
         {
           "kind": "shape",
+          "why": "Different filters carve different parts of a sound. They're the main tool for making room in a mix.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -14012,6 +14208,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing where a filter cuts is how you'll match sounds from tracks you love.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -14167,6 +14364,7 @@
         },
         {
           "kind": "shape",
+          "why": "How a note starts and ends decides if it's a pluck or a pad.",
           "layer": "lead",
           "knobs": [
             "attack",
@@ -14180,6 +14378,7 @@
         },
         {
           "kind": "match",
+          "why": "Training your ear on start and end makes every sound you design more deliberate.",
           "layer": "lead",
           "knobs": [
             "attack",
@@ -14315,6 +14514,7 @@
         },
         {
           "kind": "shape",
+          "why": "Brightness that moves with each note makes a sound feel alive.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -14329,6 +14529,7 @@
         },
         {
           "kind": "match",
+          "why": "Matching a moving sound teaches you to hear the movement, not just the tone.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -14480,6 +14681,7 @@
         },
         {
           "kind": "shape",
+          "why": "Separate envelopes for loudness and brightness give you far more control over how a note feels.",
           "layer": "lead",
           "knobs": [
             "release",
@@ -14598,6 +14800,7 @@
         },
         {
           "kind": "shape",
+          "why": "The same melody with three timbres shows how much the sound itself changes the mood.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -14738,6 +14941,7 @@
         },
         {
           "kind": "shape",
+          "why": "Harmonics are why a saw sounds bright and a square sounds hollow.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -14867,6 +15071,7 @@
         },
         {
           "kind": "shape",
+          "why": "Blending waves gives a synth more depth than any single wave can.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -14994,6 +15199,7 @@
         },
         {
           "kind": "tempo",
+          "why": "An arpeggiator turns held chords into moving notes. Instant movement without playing more.",
           "set": "arp",
           "layer": "chords",
           "say": {
@@ -15088,6 +15294,7 @@
         },
         {
           "kind": "tempo",
+          "why": "The scale sets the mood. Switching scales is the quickest way to hear how much it changes.",
           "set": "scale",
           "choices": [
             "minor",
@@ -15105,6 +15312,7 @@
         },
         {
           "kind": "play",
+          "why": "When the keys only offer notes in your scale, nothing you play can sound wrong.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -15253,6 +15461,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Your best playing often happens when you're not recording. Keeping every take means nothing is lost.",
           "set": "comp",
           "layer": "lead",
           "say": {
@@ -15366,6 +15575,7 @@
         },
         {
           "kind": "shape",
+          "why": "A bit of drive adds warmth and punch. More adds grit. It's how producers make drums cut through.",
           "layer": "drums",
           "knobs": [
             "drive",
@@ -15379,6 +15589,7 @@
         },
         {
           "kind": "match",
+          "why": "Grit is harmonics being added. Hearing it by ear is how you'll judge how much to use.",
           "layer": "drums",
           "knobs": [
             "drive"
@@ -15493,6 +15704,7 @@
         },
         {
           "kind": "shape",
+          "why": "A growling bass holds its own on small speakers and in a loud room.",
           "layer": "bass",
           "knobs": [
             "drive",
@@ -15621,6 +15833,7 @@
         },
         {
           "kind": "tempo",
+          "why": "A sampler plays any sound you give it. It's how producers use their own sounds in a track.",
           "set": "sample",
           "choices": [
             "hit"
@@ -15736,6 +15949,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Where a sample starts and how it's shaped changes the hit completely.",
           "set": "sample",
           "choices": [
             "hit"
@@ -15847,6 +16061,7 @@
         },
         {
           "kind": "tempo",
+          "why": "One-shot samples are the building blocks of most drum kits in modern tracks.",
           "set": "sample",
           "choices": [
             "hit"
@@ -15945,6 +16160,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Slicing a loop lets you play it back in any order. It's how breakbeats get rearranged.",
           "set": "sample",
           "choices": [
             "slice"
@@ -16060,6 +16276,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Start, pitch and level are the three things you change on almost every recording.",
           "set": "sample",
           "choices": [
             "hit"
@@ -16179,6 +16396,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Recording your own sounds makes your song sound like nobody else's.",
           "set": "mic",
           "say": {
             "mentor": "Recording audio means capturing real sound. Press record mic and you have two seconds: clap, snap, tap the desk, say a word. Your browser will ask to use the microphone the first time.\nWhat you recorded lands on the sampler and plays on 2 and 4 in your song. Try it on every beat, or as keys where your sound is repitched into a melody. tune and start shape it, release trims the tail. If there's no mic here, load a file or use a recorded hit. In Live, this is an audio track with the input armed.",
@@ -16291,6 +16509,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Warping makes recordings follow your tempo, so loops from anywhere fit your song.",
           "set": "sample",
           "choices": [
             "warp"
@@ -16406,6 +16625,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Each warp mode suits a different kind of sound. Hearing them side by side shows which to use.",
           "set": "sample",
           "choices": [
             "warp"
@@ -16539,6 +16759,7 @@
         },
         {
           "kind": "shape",
+          "why": "Detune is how leads and pads get that thick, shimmering sound.",
           "layer": "lead",
           "knobs": [
             "detune",
@@ -16552,6 +16773,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how wide a sound is trains your ear for stereo.",
           "layer": "lead",
           "knobs": [
             "detune"
@@ -16695,6 +16917,7 @@
         },
         {
           "kind": "shape",
+          "why": "An lfo moves a sound on its own, so it never sits still.",
           "layer": "lead",
           "knobs": [
             "lfo",
@@ -16710,6 +16933,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how much and how fast something moves is how you'll copy movement from other tracks.",
           "layer": "lead",
           "knobs": [
             "lfo",
@@ -16848,6 +17072,7 @@
         },
         {
           "kind": "shape",
+          "why": "The same wobble on a different target is a completely different effect.",
           "layer": "lead",
           "knobs": [
             "lfoto",
@@ -16962,6 +17187,7 @@
         },
         {
           "kind": "shape",
+          "why": "FM makes bright, metallic and bell-like sounds from simple waves.",
           "layer": "lead",
           "knobs": [
             "fm",
@@ -16977,6 +17203,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing how much one wave bends another trains your ear for FM sounds.",
           "layer": "lead",
           "knobs": [
             "fm"
@@ -17099,6 +17326,7 @@
         },
         {
           "kind": "shape",
+          "why": "A wavetable morphs between shapes, so one knob gives you a whole range of sounds.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -17194,6 +17422,7 @@
         },
         {
           "kind": "shape",
+          "why": "Two layers on one note give a synth more depth than one can.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -17290,6 +17519,7 @@
         },
         {
           "kind": "shape",
+          "why": "A little wobble between notes makes chords sound warm, like old hardware.",
           "layer": "chords",
           "knobs": [
             "drift",
@@ -17435,6 +17665,7 @@
         },
         {
           "kind": "shape",
+          "why": "Hats and risers are noise with a shape. Short and tight or long and open is up to you.",
           "layer": "hats",
           "knobs": [
             "decay",
@@ -17570,6 +17801,7 @@
         },
         {
           "kind": "shape",
+          "why": "Echo and drive add space and grit right on the synth, before any mixing.",
           "layer": "lead",
           "knobs": [
             "echo",
@@ -17694,6 +17926,7 @@
         },
         {
           "kind": "shape",
+          "why": "Soft, floating chord clouds are loved in ambient and house. You can make that shape here.",
           "layer": "chords",
           "knobs": [
             "attack",
@@ -17808,6 +18041,7 @@
         },
         {
           "kind": "shape",
+          "why": "A struck shape makes chords sound like a real instrument: a hit, then a ring.",
           "layer": "chords",
           "knobs": [
             "attack",
@@ -17921,6 +18155,7 @@
         },
         {
           "kind": "shape",
+          "why": "Taking a sound apart shows you how to build it. Then you can make your own.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -18055,6 +18290,7 @@
         },
         {
           "kind": "shape",
+          "why": "Building a sound from scratch is how you get one nobody else has.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -18070,6 +18306,7 @@
         },
         {
           "kind": "shape",
+          "why": "How a sound moves over time is half of its character.",
           "layer": "lead",
           "knobs": [
             "attack",
@@ -18192,6 +18429,7 @@
         },
         {
           "kind": "shape",
+          "why": "Level and pan give each part its own place, so nothing gets buried.",
           "layer": "chords",
           "knobs": [
             "level",
@@ -18334,6 +18572,7 @@
         },
         {
           "kind": "shape",
+          "why": "Placing your hats in level, brightness and distance is the start of a clean mix.",
           "layer": "hats",
           "knobs": [
             "level",
@@ -18348,6 +18587,7 @@
         },
         {
           "kind": "shape",
+          "why": "Bass sits with the kick. Getting this right makes the whole song hit harder.",
           "layer": "bass",
           "knobs": [
             "level",
@@ -18362,6 +18602,7 @@
         },
         {
           "kind": "shape",
+          "why": "A lead that leads without shouting finishes a mix.",
           "layer": "lead",
           "knobs": [
             "level",
@@ -18497,6 +18738,7 @@
         },
         {
           "kind": "shape",
+          "why": "The order sound goes through decides how it ends up. Knowing the chain lets you fix things at the right point.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -18620,6 +18862,7 @@
         },
         {
           "kind": "shape",
+          "why": "Grouping parts lets you shape a whole kit at once.",
           "layer": "drums",
           "knobs": [
             "low",
@@ -18635,6 +18878,7 @@
         },
         {
           "kind": "shape",
+          "why": "Matching your hats to the rest of the kit makes the drums sound like one instrument.",
           "layer": "hats",
           "knobs": [
             "high",
@@ -18756,6 +19000,7 @@
         },
         {
           "kind": "shape",
+          "why": "Shaping bass with EQ decides how heavy it is and how clean it sits with the kick.",
           "layer": "bass",
           "knobs": [
             "low",
@@ -18770,6 +19015,7 @@
         },
         {
           "kind": "match",
+          "why": "Hearing more low or less top by ear is the core skill of EQ.",
           "layer": "bass",
           "knobs": [
             "low",
@@ -18892,6 +19138,7 @@
         },
         {
           "kind": "shape",
+          "why": "Every effect family does a different job. Hearing one of each shows you which to reach for.",
           "layer": "lead",
           "knobs": [
             "high",
@@ -19025,6 +19272,7 @@
         },
         {
           "kind": "shape",
+          "why": "One shared reverb keeps every part in the same room, which glues a mix together.",
           "layer": "chords",
           "knobs": [
             "send"
@@ -19157,6 +19405,7 @@
         },
         {
           "kind": "shape",
+          "why": "Reverb is a room, delay is repeats. Each gives drums a different kind of space.",
           "layer": "drums",
           "knobs": [
             "send",
@@ -19170,6 +19419,7 @@
         },
         {
           "kind": "shape",
+          "why": "Different parts can take different amounts of space. Hats can usually take more.",
           "layer": "hats",
           "knobs": [
             "send",
@@ -19318,6 +19568,7 @@
         },
         {
           "kind": "shape",
+          "why": "A bigger space behind your chords makes the song feel wider and deeper.",
           "layer": "chords",
           "knobs": [
             "send",
@@ -19443,6 +19694,7 @@
         },
         {
           "kind": "tempo",
+          "why": "A little glue locks the drums and bass together. Too much flattens the life out.",
           "set": "glue",
           "say": {
             "mentor": "Your whole song, with glue on the master. Turn glue up slowly and listen to your drums and bass lock together. Keep going until you hear the mix pump on the kick, then back off to just before that. That's usually the sweet spot.\nLeave out where it is for now. The next lesson is all about it.",
@@ -19584,6 +19836,7 @@
         },
         {
           "kind": "tempo",
+          "why": "A limiter makes your song loud without clipping, so it holds up next to other tracks.",
           "set": "glue",
           "say": {
             "mentor": "Your whole song. Out sets how hard your song hits the limiter. Turn it up and the song gets louder while the limiter stops it clipping.\nPush further and listen to the kick: it starts to lose its punch, flattened against the ceiling. Find the loudest point where the kick still hits.",
@@ -19718,6 +19971,7 @@
         },
         {
           "kind": "tempo",
+          "why": "One knob that moves several makes big changes quick, especially when you play live.",
           "set": "macro",
           "layer": "lead",
           "say": {
@@ -19835,6 +20089,7 @@
         },
         {
           "kind": "shape",
+          "why": "One knob from each stage shows you where a sound comes from, so you know where to go when you want to change it.",
           "layer": "bass",
           "knobs": [
             "cutoff",
@@ -19961,6 +20216,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Seeing your song as a timeline shows how long it runs and where each part comes in.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as a timeline: sections from left to right, each with its length in bars, and the total running time at the top. Each row is one of your parts.\nSwitch a few parts off in the intro and the break, then play it through and watch the playhead travel across your song.",
@@ -20074,6 +20330,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Sections that play one after another let your song build on its own, with no stopping.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as sections, which play one after another like scenes. Make the first one drums alone: switch everything but your drums off there. Leave the next one with everything on. Play it and hear the change land on the beat.",
@@ -20083,6 +20340,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Commit lets you build the next section while the music keeps playing, so ideas don't get lost.",
           "set": "commit",
           "say": {
             "mentor": "A quick way to make scenes as you play: commit. Teenage Engineering's EP-133 has a commit key that copies the loop you are playing into the next scene and takes you there, so you can change it without stopping. Ours does the same with your song: press commit, then make this new section different with the density fader. Your first section keeps the loop you started with.",
@@ -20200,6 +20458,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Muting a track in one section is the simplest way to make the song change as it goes.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song with every track as a row. Tap a cell to mute that track in that section. Mute your bass in the intro and your lead in the break. Play it through and hear how each part coming back lifts the next section.",
@@ -20320,6 +20579,7 @@
         },
         {
           "kind": "shape",
+          "why": "A knob that moves slowly over the song keeps it changing, so a long loop never sounds stuck.",
           "layer": "lead",
           "knobs": [
             "lfo",
@@ -20443,6 +20703,7 @@
         },
         {
           "kind": "shape",
+          "why": "Movement around a value you set keeps a part alive without losing the level you chose.",
           "layer": "lead",
           "knobs": [
             "lfo",
@@ -20566,6 +20827,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Strum and the other tools change how your chords are played in one press, without playing them again.",
           "set": "grid",
           "layer": "chords",
           "say": {
@@ -20576,6 +20838,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A changed last beat sets up what comes next. It's the small move that makes sections join up.",
           "goal": "fills",
           "say": {
             "mentor": "Here's your song with a fill row. A fill here is your beat changed for its last beat: the kick drops out and a snare roll takes over. Tap fill on the sections that lead into a change, and hear how the changed bar sets up what's next.",
@@ -20692,6 +20955,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Swing makes a straight beat bounce. It's often the difference between stiff and danceable.",
           "set": "swing",
           "say": {
             "mentor": "Here's your song with a swing knob. Turn it up and listen to your hats: the off sixteenths start to land late and the beat begins to bounce. Your kick and clap stay where they are.\nA little is a gentle shuffle, a lot is a heavy one. Stop where it makes you want to move.",
@@ -20824,6 +21088,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Keeping every pass means you can play freely and keep the best one.",
           "set": "comp",
           "layer": "drums",
           "say": {
@@ -20928,6 +21193,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Recording a few takes takes the pressure off. You keep the best and lose nothing.",
           "set": "comp",
           "layer": "bass",
           "say": {
@@ -21045,6 +21311,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Several takes of your lead give you options to choose from, instead of one shot to get it right.",
           "set": "comp",
           "layer": "lead",
           "say": {
@@ -21155,6 +21422,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Two saved sounds you can jump between give you a quick change for a new section, live or in the song.",
           "set": "macro",
           "layer": "lead",
           "say": {
@@ -21255,6 +21523,7 @@
         },
         {
           "kind": "shape",
+          "why": "Two layers on one note give a sound more body than either on its own.",
           "layer": "lead",
           "knobs": [
             "fm",
@@ -21386,6 +21655,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Midi takes your song into Live, so you can keep working on it there.",
           "goal": "export",
           "say": {
             "mentor": "Here's your finished song. Give it a name, play it through once more, and download the midi: the notes of every part, ready to drop into Live, where each part lands on its own track and plays on Live's instruments.",
@@ -21506,6 +21776,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Naming and saving your song is the habit that stops you ever losing work.",
           "goal": "export",
           "say": {
             "mentor": "Here's your song. Saving starts with a name. Give it a real one, not my song, and download the midi as your first saved copy. In Live, this is the moment you'd make the song its own folder.",
@@ -21622,6 +21893,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Knowing what kind of file you have tells you what you can do with it and where it can go.",
           "goal": "export",
           "say": {
             "mentor": "Here's your song. The midi file you download is another kind of file: just the notes, no sound, which is why it's tiny. Name it, download it, and find it with your other files. It travels anywhere, and almost any music program can open it.",
@@ -21738,6 +22010,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Hearing each part on its own shows what every part adds, and how stems are used in remixes and dj sets.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as sections. Turn one section into a drums stem: switch everything off except your drums. Make the next one a bass stem, then let the last bring everything back. Play it through and hear each part alone, then all together.",
@@ -21854,6 +22127,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Switching parts off one at a time is how you find any problem in a mix. Practise it while nothing's wrong.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as sections. Nothing's wrong with it, so practise the method. Pick a section and switch parts off one at a time, listening each time.\nIf something in your song ever sounds off, this is how you'd find it: whatever you switch off that takes the problem with it is the culprit.",
@@ -21971,6 +22245,7 @@
         },
         {
           "kind": "play",
+          "why": "Sound that answers your finger right away is what makes playing feel good. Notice it now, so you'll notice when it's off.",
           "layer": "hats",
           "surface": "pads",
           "goal": {
@@ -22087,6 +22362,7 @@
         },
         {
           "kind": "shape",
+          "why": "Same notes, new sound. It's how you'll search for the right preset without losing your tune.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -22203,6 +22479,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Your song's default tempo means it always opens the way you left it.",
           "set": "tempo",
           "marks": [
             120,
@@ -22219,6 +22496,7 @@
         },
         {
           "kind": "tempo",
+          "why": "The key is the mood every part shares. Set it once and every note you add fits.",
           "set": "scale",
           "choices": [
             "minor",
@@ -22335,6 +22613,7 @@
         },
         {
           "kind": "play",
+          "why": "Finger drumming makes beats feel played. It's the main way people use pads on hardware.",
           "layer": "drums",
           "surface": "pads",
           "goal": {
@@ -22455,6 +22734,7 @@
         },
         {
           "kind": "shape",
+          "why": "Cutoff is the knob most worth putting under your hand. One sweep lifts the whole song.",
           "layer": "lead",
           "knobs": [
             "cutoff",
@@ -22571,6 +22851,7 @@
         },
         {
           "kind": "play",
+          "why": "Keys that only hold notes in your key let you play freely without hitting a wrong one.",
           "layer": "lead",
           "surface": "keys",
           "goal": {
@@ -22687,6 +22968,7 @@
         },
         {
           "kind": "arrange",
+          "why": "A song in pieces you can launch is a song you can play live.",
           "goal": "sections",
           "say": {
             "mentor": "To play a song out, you need it in pieces you can bring in one after another. On Push those pieces are scenes, rows of clips you launch together. Here they're your sections.\nRows are your parts, columns are sections. Tap a cell to switch that part off or on there. Make an intro that's thin, a drop where everything plays, a break that takes something away. Play it through and shape it until it works as a set.",
@@ -22799,6 +23081,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Following a drummer's speed is how electronic music plays with live players.",
           "set": "tempo",
           "marks": [
             120,
@@ -22918,6 +23201,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Link keeps everyone on the same tempo, so you can jam with friends on different devices.",
           "set": "tempo",
           "marks": [
             120,
@@ -23036,6 +23320,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Sharing where you are in the bar, not just the speed, is what keeps everyone landing on the one together.",
           "set": "tempo",
           "marks": [
             120,
@@ -23154,6 +23439,7 @@
         },
         {
           "kind": "shape",
+          "why": "An envelope that opens the filter on every note gives your bass the pluck you hear on analogue synths.",
           "layer": "bass",
           "knobs": [
             "cutoff",
@@ -23271,6 +23557,7 @@
         },
         {
           "kind": "shape",
+          "why": "A little detune and drive gives a synth the slightly imperfect feel of hardware.",
           "layer": "lead",
           "knobs": [
             "wave",
@@ -23388,6 +23675,7 @@
         },
         {
           "kind": "arrange",
+          "why": "Parts that drop out together hit harder than parts that leave one at a time.",
           "goal": "sections",
           "say": {
             "mentor": "Here's your song as sections. Rows are your parts, columns are sections. Treat two of them as linked, say your kick and your bass, and make the same edit to both: switch them both off in the same section, so they drop out together and come back together.\nPlay it through. Hear how the two moving as one makes the gap feel deliberate.",
@@ -23500,6 +23788,7 @@
         },
         {
           "kind": "tempo",
+          "why": "Hearing two textures on one pattern trains you to choose sounds by feel, which is what similarity search helps with.",
           "set": "kit",
           "say": {
             "mentor": "Here's your own drum pattern on two kits. Switch between them and listen: the synth kit is clean and smooth, the recorded one carries the grit and room of real hits. Same pattern, same idea, two different textures, which is exactly the kind of swap similarity search is for.\nKeep the one that feels right for your song.",
@@ -23608,6 +23897,7 @@
         },
         {
           "kind": "shape",
+          "why": "Glide makes notes slide like a voice, so a melody sounds sung, not typed.",
           "layer": "lead",
           "knobs": [
             "glide",
@@ -23755,6 +24045,7 @@
         },
         {
           "kind": "shape",
+          "why": "Stacking notes onto your chords makes them fuller without writing a single new note.",
           "layer": "chords",
           "knobs": [
             "voicing",
@@ -23872,6 +24163,7 @@
         },
         {
           "kind": "shape",
+          "why": "One lfo pointed at different knobs gives you three kinds of movement. It's the most useful device to know.",
           "layer": "lead",
           "knobs": [
             "lfo",
@@ -23990,6 +24282,7 @@
         },
         {
           "kind": "shape",
+          "why": "Knowing the keyboard controls means you can work without a mouse, faster and more comfortably.",
           "layer": "lead",
           "knobs": [
             "level",

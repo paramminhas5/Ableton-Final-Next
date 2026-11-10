@@ -25,6 +25,8 @@ steps:
         You can change songs slowly, or super fast in one move.
 
   - kind: mix
+    why: >-
+      A clean cut on the one is the quickest way to change energy. It works when a long blend wouldn't.
     goal: cut
     say:
       mentor: >-
