@@ -102,3 +102,50 @@
 /* a producer lesson whose part basics already gave your song: half lit */
 .sm-pad.is-done.is-covered{background:linear-gradient(180deg,var(--t1),var(--t2));color:var(--print);box-shadow:var(--m1-extrude),inset 0 0 0 2px color-mix(in srgb,var(--pc) 55%,transparent)}
 .sm-pad.is-done.is-covered span{color:var(--ink)}.sm-pad.is-done.is-covered em{color:var(--pc)}
+
+/* ── the syllabus as a numbered road (10 Nov, round 6): one row per lesson, top to bottom, the next one with a
+   start key, and its extras named right under it instead of a "+3" ── */
+.sr-list{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.sr{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:6px 0}
+/* the road: a line through the dots, lit up to where you are */
+.sr::before{content:"";position:absolute;left:19px;top:0;bottom:0;width:2px;background:color-mix(in srgb,var(--ink) 12%,transparent)}
+.sr:first-child::before{top:26px}.sr:last-child::before{bottom:auto;height:26px}.sr:only-child::before{display:none}
+.sr.is-done::before,.sr.is-covered::before{background:color-mix(in srgb,var(--c) 70%,transparent)}
+.sr-dot{position:relative;z-index:1;grid-row:1;width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--print);background:var(--deck2);box-shadow:inset 0 2px 5px var(--shA,rgba(0,0,0,.4)),0 1px 0 var(--hi)}
+.sr-dot svg{width:18px;height:18px}
+.sr.is-done .sr-dot{color:#0A0A0B;background:var(--c);box-shadow:0 0 12px color-mix(in srgb,var(--c) 45%,transparent)}
+.sr.is-covered .sr-dot{color:var(--c);background:var(--deck2);box-shadow:inset 0 0 0 2px var(--c)}
+.sr.is-next .sr-dot{color:var(--ink);background:var(--deck);box-shadow:inset 0 0 0 3px var(--c),0 0 14px color-mix(in srgb,var(--c) 45%,transparent)}
+.sr-main{grid-row:1;display:flex;flex-direction:column;gap:2px;min-width:0;min-height:52px;justify-content:center;text-decoration:none;color:var(--ink)}
+.sr-main:focus-visible{outline:2px solid var(--c);outline-offset:3px;border-radius:8px}
+.sr-t{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.sr-t b{font-size:var(--fs-3);font-weight:600;line-height:1.2}
+.sr-t em{flex-basis:100%;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--c)}
+.sr-main small{font-size:var(--fs-5);color:var(--print);line-height:1.3}
+.sr.is-done .sr-t b{color:color-mix(in srgb,var(--ink) 80%,transparent)}
+.sr.is-next .sr-main small{color:var(--ink)}
+.sr-go{grid-row:1;display:inline-flex !important;align-items:center;gap:6px;height:44px;padding:0 16px;font-weight:600;font-size:var(--fs-4);text-decoration:none}
+.sr.is-locked{opacity:.5}
+/* the extras, named, under their lesson */
+.sr-xtag{display:inline-flex;align-items:center;flex:none;font-style:normal;font-size:10.5px;font-weight:600;letter-spacing:.05em;padding:2px 7px;border-radius:6px;color:var(--ink);background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.sy-key .sr-xtag{margin-right:2px}
+.sr-x{grid-column:2/4;display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:4px 0 2px;padding:6px 10px;border:1px dashed color-mix(in srgb,var(--ink) 22%,transparent);border-radius:12px;background:transparent;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.sr-x>span{flex:1;min-width:0;display:flex;flex-direction:column}
+.sr-x b{font-size:var(--fs-4);font-weight:600}
+.sr-x small{font-size:var(--fs-5);color:var(--print);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sr-x svg{width:16px;height:16px;color:var(--print)}
+.sr-x.is-open{border-style:solid;background:var(--deck2)}
+.sr-x:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.sr-xl{grid-column:2/4;list-style:none;margin:2px 0 6px;padding:4px;display:grid;gap:2px;border-radius:12px;background:var(--deck2);animation:sy-in 160ms ease-out}
+.sr-xi{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:44px;padding:4px 8px;border-radius:9px;text-decoration:none;color:var(--ink)}
+.sr-xi>span{font-size:12px;font-weight:600;color:var(--print);text-align:center}
+.sr-xi>span svg{width:14px;height:14px;color:var(--c)}
+.sr-xi b{font-size:var(--fs-4);font-weight:500}
+.sr-xi small{font-size:var(--fs-5);color:var(--print)}
+@media (hover:hover){.sr-xi:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}}
+.sr-xi.is-locked{opacity:.5}
+.sr-kd{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--deck2);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.sr-kd.is-done{background:var(--led-mint);color:#0A0A0B}.sr-kd.is-done svg{width:11px;height:11px}
+.sr-kd.is-next{background:transparent;box-shadow:inset 0 0 0 2.5px var(--led-mint)}
+.sm-head{margin-bottom:4px}
+html[data-text="big"] .sr-t b{font-size:calc(var(--fs-3) + 2px)}

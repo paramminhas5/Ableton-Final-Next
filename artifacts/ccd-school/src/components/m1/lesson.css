@@ -861,7 +861,7 @@ a.jv-lane:hover{transform:translateX(3px)}
 .m1-scr:has(.ls-sticker:not(.is-low)) .ls-title{padding-right:80px}
 /* House style: lesson copy reads lowercase, like the rest of the app. Content is written in sentence case so it
    still reads well to screen readers and in exports; the page shows it lowercase. */
-.fl .ls-read,.fl .ls-title,.fl .fl-lead,.fl .fl-gwhy,.fl .fl-gdo,.fl .fl-startlead,.fl .fl-makewhy,.fl .fl-cando li,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
+.fl .ls-read,.fl .ls-title,.fl .fl-lead,.fl .fl-gwhat,.fl .fl-gwhy,.fl .fl-gdo,.fl .fl-startlead,.fl .fl-makewhy,.fl .fl-cando li,.fl .fl-turnwhy,.fl .fl-opt,.fl .fl-why,.fl .ls-hint,.fl .ls-now,.fl .fl-nextline,.fl .fl-done li{text-transform:lowercase}
 .gr-dice{display:flex;margin-top:10px}
 
 /* what changed in your song, on the done screen */
@@ -1092,8 +1092,8 @@ a.jv-lane:hover{transform:translateX(3px)}
 .fl-goaln{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:600;color:#08080A;background:var(--c);box-shadow:0 0 8px color-mix(in srgb,var(--c) 50%,transparent)}
 .fl-goalhead b{flex:1;min-width:0;font-size:var(--fs-3);font-weight:600;color:var(--ink)}
 .fl-get{flex:none;font-style:normal;font-size:11px;font-weight:600;color:var(--c);padding:4px 9px;border-radius:999px;border:1.5px dashed var(--c);white-space:nowrap;max-width:48%;overflow:hidden;text-overflow:ellipsis}
-.fl-gwhy,.fl-gdo{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px;margin:8px 0 0;font-size:var(--fs-4);line-height:1.4;color:var(--ink)}
-.fl-gwhy>span:first-child,.fl-gdo>span:first-child{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--c);padding-top:2px}
+.fl-gwhat,.fl-gwhy,.fl-gdo{display:grid;grid-template-columns:34px minmax(0,1fr);gap:4px;margin:8px 0 0;font-size:var(--fs-4);line-height:1.4;color:var(--ink)}
+.fl-gwhat>span:first-child,.fl-gwhy>span:first-child,.fl-gdo>span:first-child{font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--c);padding-top:2px}
 .fl-goal{padding:10px 12px}
 /* the step's first line, on the glass on phones; the same line in the text column on laptops */
 .fl-lead{margin:8px 0 0;font-size:var(--fs-4);line-height:1.45;color:var(--disp-ink)}
@@ -1131,3 +1131,8 @@ html[data-text="big"] .fl-gnow{font-size:18px}
 @keyframes fl-win{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}25%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
 @media (prefers-reduced-motion:reduce){.fl-win{animation:fl-winr 1.8s forwards}@keyframes fl-winr{0%,80%{opacity:1}100%{opacity:0}}}
 .fl-win b{padding:6px 16px;border-radius:999px;background:rgba(8,8,10,.88);text-shadow:none}
+
+/* 10 Nov round 6: what comes first and reads loudest; why and how sit under it */
+.fl-gwhat>span:last-child{font-weight:600;font-size:calc(var(--fs-4) + 1px)}
+.fl-gwhy>span:last-child,.fl-gdo>span:last-child{color:color-mix(in srgb,var(--ink) 82%,transparent)}
+.fl-gnowl{flex:none;font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--led-mint)}

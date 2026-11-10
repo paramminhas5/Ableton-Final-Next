@@ -4,6 +4,7 @@
  * a header that says where you are, your song pinned under it with its own play button, then the
  * step. The order is always: the steps of the lesson, add to your song, optional questions, done.
  */
+import { whatHow } from "@/lib/whatHow";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { FLAG, OUT } from "@/engine";
@@ -623,7 +624,8 @@ function Ways({ way, setWay, has, text }: { way: Way; setWay: (w: Way) => void; 
 const DOING = new Set(["play", "shape", "matchsound", "copy", "imagine", "tempo", "mix", "arrange"]);
 const PLAN_ICON: Record<string, string> = { hear: "hear", say: "note", play: "pads", shape: "knob", matchsound: "hear", copy: "hear", imagine: "brain", tempo: "knob", mix: "dj", arrange: "studio", ear: "hear", add: "plus", check: "check" };
 
-function StepGoal({ n, name, why, get, todo, accent, bare, play }: { n: number; name: string; why?: string; get?: string; todo?: string; accent: string; bare?: boolean; play?: boolean }) {
+function StepGoal({ n, name, why, get, todo, kind, accent, bare, play }: { n: number; name: string; why?: string; get?: string; todo?: string; kind?: string; accent: string; bare?: boolean; play?: boolean }) {
+  const { what, how } = whatHow(todo, kind);
   return (
     <div className={bare ? "fl-goalin" : `fl-goal ${play ? "is-play" : ""}`} style={{ ["--c" as string]: accent } as CSSProperties}>
       <div className="fl-goalhead">
@@ -631,9 +633,11 @@ function StepGoal({ n, name, why, get, todo, accent, bare, play }: { n: number; 
         <b>{name}</b>
         {get ? <em className="fl-get">{get}</em> : null}
       </div>
+      {/* what, then why, then how (on a play step the live line under this card is the how) */}
+      {what ? <p className="fl-gwhat"><span>what</span><span><Gloss>{what}</Gloss></span></p> : null}
       {why ? <p className="fl-gwhy"><span>why</span><span><Gloss>{why}</Gloss></span></p> : null}
-      {/* phone: what to do, before the instrument (on a laptop it reads beside it) */}
-      {todo ? <p className="fl-gdo"><span>do</span><span><Gloss>{todo}</Gloss></span></p> : null}
+      {/* phone: the how, before the instrument (on a laptop the full text reads beside it) */}
+      {how && !play ? <p className="fl-gdo"><span>how</span><span><Gloss>{how}</Gloss></span></p> : null}
     </div>
   );
 }
@@ -775,8 +779,8 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   const doing = !!cur && DOING.has(cur.kind);
   const doN = doing ? pages.slice(0, idx + 1).filter(p => DOING.has(p.kind)).length : 0;
   // On a phone a play step's goal card and its live instruction are one card (TryIt draws it); on a laptop the card stays on top.
-  const goalHead = doing && cur && cur.kind === "play" ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={get} accent={accent} bare /> : null;
-  const goal = doing && cur ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={doN === 1 || cur.kind === "play" ? get : undefined} todo={cur.kind !== "play" && "body" in cur && typeof cur.body === "string" ? cur.body.split(/\n+/)[0] : undefined} accent={accent} play={cur.kind === "play"} /> : null;
+  const goalHead = doing && cur && cur.kind === "play" ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={get} todo={"body" in cur && typeof cur.body === "string" ? cur.body : undefined} kind={cur.kind} accent={accent} bare play /> : null;
+  const goal = doing && cur ? <StepGoal n={idx} name={pageName(cur)} why={("why" in cur && typeof cur.why === "string" ? cur.why : undefined) ?? mission.fromFile?.why} get={doN === 1 || cur.kind === "play" ? get : undefined} todo={"body" in cur && typeof cur.body === "string" ? cur.body : undefined} kind={cur.kind} accent={accent} play={cur.kind === "play"} /> : null;
 
   let body = null;
   if (cur) switch (cur.kind) {

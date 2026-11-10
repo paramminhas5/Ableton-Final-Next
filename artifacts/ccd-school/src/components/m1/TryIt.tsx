@@ -430,6 +430,7 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
         <div className={`fl-goal fl-goalplay fl-nowtop ${won ? "is-won" : ""}`}>
           {coach.head}
           <div className={`fl-gnow ${nudge ? "is-nudge" : ""}`} aria-hidden>
+            <span className="fl-gnowl">how</span>
             <span className="ls-led" style={{ ["--c" as string]: won ? "var(--led-mint)" : "var(--led-mint)" } as CSSProperties} />
             <span className="fl-gnowt">{won ? "done. that's your part, press keep it to put it in your song" : nowLine}</span>
             <b className="fl-gcount">{goalMet ? <Icon name="check" small /> : `${Math.min(goalHits, coach.goal.notes)}/${coach.goal.notes}`}</b>

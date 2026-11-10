@@ -47,8 +47,8 @@ export const TOURS: Record<string, Stop[]> = {
   ],
   syllabus: [
     { sel: ".sy-whead", title: "three worlds", line: "basics, producer and dj. open any of them, any time." },
-    { sel: ".sy-row:not(.is-small)", title: "song lessons", line: "each adds a part to your song, in order." },
-    { sel: ".sy-more", title: "go deeper", line: "+3 means three more lessons on that part. tap to open them." },
+    { sel: ".sr.is-next, .sr", title: "your lessons, in order", line: "top to bottom. each one adds a part to your song. the lit one is next." },
+    { sel: ".sr-x", title: "extras", line: "optional lessons on the same idea. tap to see them all, open one when you want more." },
   ],
   device: [
     { sel: ".dl-scr", title: "the screen", line: "shows the knob you're turning, its value and what it does to the sound." },
