@@ -168,7 +168,17 @@ export function AtlasPageClient({ lessons = {} }: { lessons?: Record<string, { s
       {tab === "home" ? (
         <>
           <div className="fr-l">
-            <Silk n={2} label="pick a kind" right="or see all" className="o3 lb-zone" />
+            {/* 10 Nov: say what a device is before anything else. Live calls everything on a track a device;
+                there are three kinds, and the ones you can play here all shape sound. */}
+            <section className="lb-kinds" aria-label="What a device is">
+              <p><b>Device</b> is Live&apos;s word for anything you put on a track. There are three kinds:</p>
+              <div className="lb-kind3">
+                <span><b>instruments</b>make the sound, from notes you play. Drift, Wavetable, Simpler, Drum Rack.</span>
+                <span className="is-here"><b>audio effects</b>shape a sound that&apos;s already there. EQ, compressor, reverb, delay. <em>these are the ones you can play below</em></span>
+                <span><b>MIDI effects</b>change the notes before they reach an instrument. Arpeggiator, Chord, Scale.</span>
+              </div>
+            </section>
+            <Silk n={2} label="pick a kind of audio effect" right="or see all" className="o3 lb-zone" />
             <div className="lb-cats o3" data-budget="group" role="group" aria-label="Kind of device">
               {CATS.map(c => (
                 <button key={c.id} type="button" aria-pressed={cat === c.id} className={`lb-cat ${cat === c.id ? "is-on" : ""}`} onClick={() => setCat(c.id)}>
