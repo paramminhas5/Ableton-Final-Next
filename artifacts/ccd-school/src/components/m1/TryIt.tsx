@@ -526,6 +526,22 @@ export function TryIt({ type, title, initial, coach, onUse, onSkip }: {
           <span>{recording ? "press play to stop and hear it" : playing ? "play along. keep what you like" : backing ? "plays over your track" : "the click keeps time"}</span>
         </div>
       </Screen>
+      {/* Zoomed in (10 Nov): after a take, every hit against its own slot, so "a little off" is visible. */}
+      {coach && !recording && !countIn && !demo && events.some(e => verdictOf(e)) ? (
+        <div className="ti-zoom" role="img" aria-label="Each hit against its slot, zoomed in">
+          <div className="ti-zoomh"><span>zoomed in: each hit against its slot</span><span>early · on time · late</span></div>
+          {events.filter(e => verdictOf(e)).slice(0, 8).map((e, i) => {
+            const v = verdictOf(e)!; const x = Math.max(-120, Math.min(120, v.ms));
+            return (
+              <div key={i} className="ti-zoomrow">
+                <span className="ti-zoomn">{i + 1}</span>
+                <span className="ti-zoomtrack"><i className="ti-zoomslot" /><b style={{ left: `calc(50% + ${(x / 120) * 50}%)`, background: VERDICT_C[v.c], boxShadow: `0 0 8px ${VERDICT_C[v.c]}` }} /></span>
+                <span className="ti-zoomms" style={{ color: VERDICT_C[v.c] }}>{lateWord(v)}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
       {fixNote ? <div className="ls-hint fl-fix" role="status">{fixNote}</div> : null}
       {coach && onBeatOnly && !recording && !countIn && ((offBeat > 0 && misses >= 2) || (coach.snap && events.some(e => { const v = verdictOf(e); return v && v.c !== "off" && Math.abs(v.ms) > 10; })))
         ? <button type="button" className="ls-chip fl-snapme" onClick={snapForMe}>{offBeat > 0 ? "snap it for me" : "snap to the grid (quantise)"}</button> : null}

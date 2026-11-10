@@ -5,14 +5,14 @@ import { AUTO_WRAP_KEYS, lookupTerm } from "../content/glossary";
 const SHORT = ["bar", "bpm"];
 const KEYS = [...new Set([...AUTO_WRAP_KEYS, ...SHORT])].sort((a, b) => b.length - a.length);
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const RE = new RegExp(`\\b(${KEYS.map(esc).join("|")})\\b`, "gi");
+const RE = new RegExp(`\\b(${KEYS.map(esc).join("|")})(?:s|es)?\\b`, "gi");
 
 export function glossParts(text: string): { text: string; term?: string }[] {
   const seen = new Set<string>();
   const out: { text: string; term?: string }[] = [];
   let last = 0;
   for (const m of text.matchAll(RE)) {
-    const t = lookupTerm(m[0]);
+    const t = lookupTerm(m[1]);
     if (!t || seen.has(t.term)) continue;
     seen.add(t.term);
     if (m.index! > last) out.push({ text: text.slice(last, m.index) });
