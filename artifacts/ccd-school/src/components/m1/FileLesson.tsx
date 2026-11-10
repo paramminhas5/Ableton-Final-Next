@@ -40,6 +40,7 @@ import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
 import { Gloss, GlossTip } from "./Gloss";
+import { RhythmPicture } from "./RhythmPicture";
 import { AddedForYou, SongKey, useSongName } from "./SongKey";
 import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
@@ -888,7 +889,7 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
     case "say": {
       // Once you've played something, the explanations after it show your own bar, looping.
       const after = at("play") >= 0 && idx > at("play") && take?.events.length;
-      const visual = cur.clip === "click" ? <ClickIntro /> : cur.clip ? <CountAlong clip={cur.clip} /> : after && take ? <TakeBar mission={mission} take={take} /> : undefined;
+      const visual = cur.show ? <RhythmPicture show={cur.show} /> : cur.clip === "click" ? <ClickIntro /> : cur.clip ? <CountAlong clip={cur.clip} /> : after && take ? <TakeBar mission={mission} take={take} /> : undefined;
       body = <SayStep screen={cur} meta={pageName(cur)} onNext={next} tail={ways} visual={visual} />;
       break;
     }

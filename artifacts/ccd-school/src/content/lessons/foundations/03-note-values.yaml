@@ -31,27 +31,62 @@ steps:
         four really quick ones. More tss makes it feel busier, but the song isn't going any faster.
 
   - kind: say
-    title: halves and quarters of a beat
+    title: half a beat
+    show:
+      steps: 8
+      ticks: true
+      rows:
+        - {name: kick, sound: kick, pattern: "x.x.x.x."}
+        - {name: hats, sound: closed, pattern: ".x.x.x.x"}
+      marks: [{at: 0, word: beat}, {at: 1, word: half}]
+      caption: "Each beat split in two. Count: one and two and three and four and."
     say:
       mentor: >-
-        Musicians call these note values. A quarter note is one beat. An eighth note is half a beat. A
-        sixteenth is a quarter of a beat. The names come from how many fit in a bar: four quarters, eight
-        eighths, sixteen sixteenths.
+        Cut one beat exactly in half and you get two pieces. Musicians call each piece an eighth note,
+        because eight of them fit in a bar of four beats.
 
-        People count eighths as "one and two and three and four and", and sixteenths as "one e and a, two e
-        and a". Say it out loud over the sixteenths and you'll hear it lock in.
+        Count them by saying "and" between the numbers: one and two and three and four and. In the picture
+        the kick sits on the numbers and the hat on every "and". Listen to the soft ticks: they mark every
+        eighth, so you can hear the counting as well as see it.
       straight: >-
-        Quarter note: one beat. Eighth: half a beat. Sixteenth: a quarter of a beat. Count eighths as "one and
-        two and", sixteenths as "one e and a".
+        Half a beat is an eighth note: eight fit in a bar. Count "one and two and". The kick is on the
+        numbers, the hat on every "and".
       eli5: >-
-        Grown-up musicians give these names. One tss per boom is a quarter note. Two per boom is an eighth
-        note. Four per boom is a sixteenth note. You can count the fast ones as "one e and a, two e and a".
+        Take one beat and cut it in half, like a sandwich. Now there are two little pieces in every beat.
+        Say "one and two and": the numbers are the boom, the "and" is the tss.
+
+  - kind: say
+    title: a quarter of a beat
+    show:
+      steps: 16
+      ticks: true
+      rows:
+        - {name: kick, sound: kick, pattern: "x...x...x...x..."}
+        - {name: hats, sound: closed, pattern: "xxxxxxxxxxxxxxxx"}
+      caption: "Each beat split in four. Count: one e and a, two e and a."
+    say:
+      mentor: >-
+        Cut each half in half again and every beat has four pieces. Each one is a sixteenth note, because
+        sixteen fit in a bar.
+
+        Count them as "one e and a, two e and a". The number is the beat, the "and" is still exactly halfway,
+        and the "e" and "a" sit either side of it. Say it over the picture as it plays and you'll feel the hats
+        lock to your voice.
+
+        The tempo never changes in any of this. The beat is just cut more finely, so the groove feels busier
+        and faster while your foot taps at the same speed.
+      straight: >-
+        A quarter of a beat is a sixteenth note: sixteen in a bar. Count "one e and a". The tempo stays the
+        same; the beat is just cut finer, so it feels busier.
+      eli5: >-
+        Now cut each beat into four tiny pieces. Say "one e and a, two e and a" really quickly. That's four
+        tss sounds for every boom, but the boom still goes at the same speed.
     deeper:
       - title: why the names are fractions
         say: >-
-          A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, in eight and you get
-          eighths, in sixteen and you get sixteenths. Sheet music draws each one differently, but in a
-          producer's grid they're just the lines getting closer together.
+          A bar of 4/4 holds one whole note. Cut it in four and you get quarter notes, which are the beats. Cut
+          it in eight and you get eighths, in sixteen and you get sixteenths. Sheet music draws each one
+          differently, but on a producer's grid they're just the lines getting closer together.
 
   - kind: play
     why: >-
@@ -59,40 +94,45 @@ steps:
     layer: hats
     surface: pads
     snap: true
-    goal: {notes: 1}
+    goal: {notes: 4, note: hat, on: and}
     say:
       mentor: >-
-        Now put hats in your song. Hats on the eighths between your kicks are the classic house sound.
+        Now put hats in your song: one on every "and", halfway between your kicks. That's the classic house
+        hat.
 
-        This time you get help: snap. Snap moves every hit to the nearest line on the grid, so a hat that's a
-        hair early still lands exactly on the eighth. It's set to eighths. Tap the snap key to change it to
-        sixteenths or turn it off and hear the difference.
-
-        Press rec, wait out the count-in, and tap the hat between the kicks: on every "and".
+        Press show me to watch it once, then press rec, wait out the four clicks, and tap the hat on each
+        "and". After your take, the screen zooms in on every hit so you can see how close it was: a little
+        early, a little late or right on it.
       straight: >-
-        Record hats over your beat. Snap is on, set to eighths, so every hit lands on the nearest eighth. Tap
-        the snap key to try sixteenths or off. Rec, count-in, then tap the hat on every "and".
+        Record a hat on every "and", between the kicks. Watch it once with show me, then rec. After the take
+        you'll see how close each hit was.
       eli5: >-
-        Your turn to add the tss. A helper called snap is switched on: it nudges every tap onto the nearest
-        line, so it always sounds neat. Press rec, wait for four ticks, then tap the hat in between the booms.
+        Your turn to add the tss. Watch first with show me. Then press rec, wait for four ticks, and tap the
+        hat in the gap between each boom, on every "and".
     hint: Say "one and two and" and tap on every "and".
 
   - kind: say
     title: snap
     say:
       mentor: >-
-        That's snap, also called quantise. Almost every music program has it. It's brilliant for drums that
-        need to be tight, like hats and kicks in a club track.
+        Nobody taps exactly on the grid, and the zoomed view showed you by how much. That's what snap is
+        for. Snap, also called quantise, moves every hit to the nearest line on the grid, so a hat that was
+        a few milliseconds late lands exactly on the "and". If you pressed grid after your take, that's what
+        it did. Live, FL Studio and Logic all have it.
 
-        But it's not always what you want. A little looseness is what makes a groove feel human. Producers
-        often play something in, snap it, then nudge a few hits back off the grid on purpose. You'll do that
-        in the swing lesson next.
+        It's brilliant for drums that need to be tight, like hats and kicks in a club track. But a little
+        looseness is what makes a groove feel human, so producers often snap a part, then nudge a few hits
+        back off the grid on purpose. You'll do that in the swing lesson.
       straight: >-
-        Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; turn it off or loosen it
+        Snap (quantise) moves hits to the nearest grid line. Use it for tight drums; leave some hits loose
         when you want a human feel.
       eli5: >-
-        Snap is like a magnet that pulls your taps onto the lines. Great for neat drums. Sometimes you want a
-        bit of wobble so it feels more alive, and then you switch the magnet off.
+        Snap is like a magnet that pulls your taps onto the lines, so they line up neatly. Sometimes a bit of
+        wobble sounds more alive, and then you leave the magnet off.
+    deeper:
+      - title: in your daw · quantise
+        say: >-
+          Every music program can snap notes you've played to the grid. Pick yours to see how.
 
   - kind: ask
     q: "These are sixteenth hats over your kick. Count the hats from one kick to the next: how many sixteenths fit

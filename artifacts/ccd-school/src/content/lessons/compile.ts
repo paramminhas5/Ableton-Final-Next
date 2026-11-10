@@ -47,7 +47,7 @@ const isObj = (v: unknown): v is Obj => typeof v === "object" && v !== null && !
 
 const STEP_FIELDS: Record<string, string[]> = {
   hear: ["kind", "clip", "say", "deeper", "levels"],
-  say: ["kind", "title", "say", "clip", "deeper", "hint", "levels"],
+  say: ["kind", "title", "say", "clip", "show", "deeper", "hint", "levels"],
   play: ["kind", "layer", "surface", "goal", "say", "hint", "levels", "why", "snap"],
   shape: ["kind", "layer", "knobs", "say", "hint", "levels", "why"],
   match: ["kind", "layer", "knobs", "target", "say", "hint", "levels", "why"],
@@ -213,6 +213,21 @@ export function parseLesson(yamlText: string, fileName: string): Lesson {
           if (raw.clip !== undefined && (typeof raw.clip !== "string" || !CLIP_IDS.has(raw.clip))) at(where, `clip "${String(raw.clip)}" is not in clips.ts`);
           title(where, "title", raw.title);
           voice(where, "say", raw.say);
+          if (raw.show !== undefined) {
+            const sh = raw.show as Obj;
+            const n = sh.steps;
+            if (!isObj(sh) || ![4, 8, 16].includes(n as number)) at(where, "show.steps must be 4, 8 or 16");
+            else {
+              const rows = sh.rows;
+              if (!Array.isArray(rows) || !rows.length) at(where, "show.rows lists at least one row");
+              else for (const r of rows as Obj[]) {
+                if (!isObj(r) || typeof r.name !== "string" || typeof r.pattern !== "string" || r.pattern.length !== n || /[^x.]/.test(r.pattern)) at(where, `show row "${String((r as Obj)?.name)}" needs a name and a pattern of ${String(n)} x or . characters`);
+                if (isObj(r) && !["kick", "clap", "snare", "closed", "open", "rim", "shaker"].includes(String(r.sound))) at(where, `show row sound must be kick, clap, snare, closed, open, rim or shaker`);
+                if (isObj(r) && r.accent !== undefined && (typeof r.accent !== "string" || r.accent.length !== n)) at(where, `show row accent must be ${String(n)} characters`);
+              }
+              if (sh.groups !== undefined && (!Array.isArray(sh.groups) || (sh.groups as number[]).reduce((a, b) => a + b, 0) !== n)) at(where, `show.groups must add up to ${String(n)}`);
+            }
+          }
           deeperOf(where, raw.deeper, playOrShape);
           break;
         case "play":

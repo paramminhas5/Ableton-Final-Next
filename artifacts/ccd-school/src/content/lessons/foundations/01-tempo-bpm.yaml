@@ -36,16 +36,23 @@ steps:
     clip: kick-alone
     say:
       mentor: >-
-        Count with it, out loud if you can: one, two, three, four, then start again at one. Each kick is a
-        beat. The pulse is just beats in a row.
+        Count with it, out loud if you can: one, two, three, four, then back to one. Each kick is one beat,
+        and the pulse is just beats in a row.
 
-        Musicians count in fours almost all the time, because it's easy to feel and easy to dance to. You'll
-        hear why that matters in the next lesson.
+        Every time you get back to one, a new bar starts. A bar is a group of beats, and in almost all dance
+        music it's four beats long. That's what "4/4" means, said "four four": four beats in every bar. The
+        screen counts the bars for you as they go past, bar 1, bar 2.
+
+        Bars are how musicians find their way around a song, the way sentences are made of words: "the bass
+        comes in after eight bars". From here on, everything you make is built in bars of four.
       straight: >-
-        Each kick is one beat. Count one to four and start again. Dance music almost always counts in fours.
+        Each kick is one beat. Four beats make a bar, so you count one to four and start again at one. Four
+        beats per bar is written 4/4, said "four four", and nearly all dance music is in 4/4. Songs are
+        measured in bars.
       eli5: >-
-        Let's count the booms: one, two, three, four, and again, one, two, three, four. Every boom is called a
-        beat. Musicians love counting to four.
+        Let's count the booms: one, two, three, four, and back to one. Every boom is a beat. Four beats
+        together make a bar, like four steps make one little dance move. When you get back to one, a new
+        bar starts. Music that counts in fours like this is called "four four".
 
   - kind: say
     title: the click

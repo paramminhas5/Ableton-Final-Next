@@ -32,7 +32,12 @@ steps:
 
   - kind: say
     title: count it in bars
-    clip: kick-and-clap
+    show:
+      steps: 4
+      rows:
+        - {name: kick, sound: kick, pattern: "xxxx"}
+        - {name: clap, sound: clap, pattern: ".x.x"}
+      caption: "One bar of 4/4: four beats. The kick plays all four, the clap plays two and four."
     say:
       mentor: >-
         Count along again: one, two, three, four. Notice where the clap lands: on two and on four, never on
@@ -89,7 +94,8 @@ steps:
         That's your first groove: kick on every beat, clap on two and four. The clap on two and four is the
         backbeat, and it's one of the oldest tricks in pop music.
 
-        It works because it pulls against the kick. The kick says "down", the clap says "up", and your body
+        The backbeat is a rhythm in its own right: a pattern of when the clap plays, laid over the pulse. It
+        works because it pulls against the kick. The kick says "down", the clap says "up", and your body
         sits in between, nodding. Next time you hear a song, find two and four. You'll hear a clap or a snare
         there almost every time.
       straight: >-
