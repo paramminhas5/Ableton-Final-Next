@@ -21,6 +21,7 @@ export const TOURS: Record<string, Stop[]> = {
     { sel: ".m1-modebar", title: "the same four, always here", line: "the keys at the bottom take you to each part from anywhere." },
   ],
   lesson: [
+    { sel: ".fl-flow", title: "every lesson, five stages", line: "what it is, how it works, play it, shape it, then add it to your song and move on. the lit one is where you are." },
     { sel: ".fl-song", title: "your song, always on top", line: "every lesson adds to it. press play any time to hear where it is." },
     { sel: ".fl-text, .ls-col", title: "one idea per step", line: "read, listen, then do it on the instrument." },
     { sel: ".fl-ways", title: "say it another way", line: "if a step doesn't land, hear it in other words, or simpler." },

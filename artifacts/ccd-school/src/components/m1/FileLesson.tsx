@@ -89,7 +89,8 @@ const pageName = (p: Page | undefined): string => {
 
 // ── your song, always on top ─────────────────────────────────────────────────
 /** `pending`: this lesson's part is recorded but not added yet, so the strip says so instead of "empty". */
-export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string; changes?: boolean }) {
+export function SongStrip({ focus, pending: wait, ghost, slug, changes, slim }: { focus?: string; pending?: boolean; ghost?: Take | null; slug?: string; changes?: boolean; slim?: boolean }) {
+  const [open, setOpen] = useState(false);
   const [t, setT] = useState<TrackV2 | null>(null);
   const [name, setName] = useState("my song");
   const [editing, setEditing] = useState(false);
@@ -146,7 +147,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
   const loop = t?.loop ?? 4;
   const playhead = playing ? Math.floor(((((beat % loop) + loop) % loop) / loop) * 16) : -1;
   return (
-    <section className="fl-song" aria-label="Your song">
+    <section className={`fl-song ${slim && !open ? "is-slim" : ""}`} aria-label="Your song">
       <button type="button" className={`fl-songplay ${playing ? "is-on" : ""}`} data-strip onClick={toggle} disabled={empty} aria-label={playing ? "Stop your song" : "Play your song"}>
         <Icon name={playing ? "stop" : "play"} />
       </button>
@@ -171,6 +172,7 @@ export function SongStrip({ focus, pending: wait, ghost, slug, changes }: { focu
         ) : null}
         {pending && ghost?.events.length ? <Ghost take={ghost} loop={loop} name={focus ?? "new part"} /> : null}
       </div>
+      {slim ? <button type="button" className="fl-songopen" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-label={open ? "Hide your song" : "Show your song"}><Icon name={open ? "up" : "down"} small /></button> : null}
     </section>
   );
 }
@@ -192,21 +194,57 @@ function Ghost({ take, loop, name }: { take: Take; loop: number; name: string })
 }
 
 // ── header: back, where you are, what's next ─────────────────────────────────
-function Top({ back, crumb, title, pages, at, accent, onPrev }: { back: string; crumb: string; title: string; pages: Page[]; at: number; accent: string; onPrev?: () => void }) {
+/**
+ * Every lesson runs the same five stages (10 Nov, Param): what it is, how it works, play it, shape it and play
+ * around, then add it to your song and move on (or go deeper). The header shows all five, the one you're in
+ * lit, and a dot for each step under its stage; a dot you've already reached takes you back to that step.
+ */
+export const STAGES = ["what it is", "how it works", "play it", "shape it", "add it, move on"] as const;
+const STAGE_OF: Record<string, number> = { start: 0, say: 0, hear: 1, play: 2, copy: 2, imagine: 2, tempo: 3, shape: 3, matchsound: 3, mix: 3, arrange: 3, ear: 4, add: 4, check: 4, done: 4 };
+export function stagesOf(pages: { kind: string; clip?: unknown }[]): number[] {
+  let s = 0;
+  return pages.map(p => {
+    // explanations after you've played stay in the stage you're in; a count-along shows how it works
+    const k = p.kind === "say" && p.clip ? 1 : STAGE_OF[p.kind] ?? s;
+    s = Math.max(s, k);
+    return s;
+  });
+}
+
+function Top({ back, crumb, title, pages, at, accent, onPrev, reached, onJump }: { back: string; crumb: string; title: string; pages: Page[]; at: number; accent: string; onPrev?: () => void; reached: number; onJump: (i: number) => void }) {
+  const st = stagesOf(pages as { kind: string; clip?: unknown }[]);
+  const now = st[at] ?? 0;
   return (
-    <header className="fl-top">
+    <header className="fl-top" style={{ ["--c" as string]: accent } as CSSProperties}>
       <div className="fl-row">
         <Link href={back} className="fl-back" aria-label="Back to your lessons"><Icon name="back" /></Link>
         <div className="fl-crumb"><span>{crumb}</span><h1>{title}</h1></div>
-        {onPrev && <button type="button" className="fl-stepback" onClick={onPrev} aria-label="Previous step"><Icon name="back" small />step back</button>}
         {/* the count matches the numbered plan on the first page: the start and done pages are not steps */}
-        {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${pages.length - 2}`}>{at}<i>/</i>{pages.length - 2}</div> : null}
+        {at > 0 && at < pages.length - 1 ? <div className="fl-count" aria-label={`Step ${at} of ${pages.length - 2}`}><span>step</span>{at}<i>/</i>{pages.length - 2}</div> : null}
         <Walkthrough screen="lesson" />
       </div>
-      <div className="ls-seg" style={{ ["--c" as string]: accent } as CSSProperties} aria-hidden>
-        {pages.map((_, i) => <i key={i} className={i < at ? "is-done" : i === at ? "is-now" : ""} />)}
+      <nav className="fl-flow" aria-label="Where you are in this lesson">
+        {STAGES.map((name, s) => {
+          const mine = pages.map((_, i) => i).filter(i => st[i] === s);
+          return (
+            <div key={s} className={`fl-st ${s === now ? "is-now" : s < now && mine.length ? "is-done" : ""} ${mine.length ? "" : "is-none"}`}>
+              <span className="fl-stn" aria-hidden>{s < now && mine.length ? <Icon name="check" small /> : s + 1}</span>
+              <span className="fl-stname">{name}</span>
+              <span className="fl-stdots">
+                {mine.map(i => (
+                  <button key={i} type="button" className={i < at ? "is-done" : i === at ? "is-now" : ""} disabled={i > reached || i === at}
+                    onClick={() => onJump(i)} aria-label={`${i === at ? "this step" : "go to step"}: ${pageName(pages[i])}`} />
+                ))}
+              </span>
+            </div>
+          );
+        })}
+      </nav>
+      <div className="fl-nav">
+        <button type="button" className="fl-stepback" onClick={onPrev} disabled={!onPrev} aria-label="Previous step"><Icon name="back" small />back</button>
+        <span className="fl-navnow"><b>{STAGES[now]}</b>{pageName(pages[at])}</span>
+        <span className="fl-navnext">{pages[at + 1] ? <>next: {pageName(pages[at + 1])}</> : null}</span>
       </div>
-      <div className="fl-now"><span>{pageName(pages[at])}</span>{pages[at + 1] ? <span>next: {pageName(pages[at + 1])}</span> : null}</div>
     </header>
   );
 }
@@ -649,9 +687,11 @@ function StartStep({ mission, pages, accent, get, back, onNext }: { mission: Mis
   const offer = useMemo(() => offerFor({ ...readTrack(), added: [] }, mission), [mission]);
   useEnter(onNext);
   const plan = pages.slice(1).filter(p => p.kind !== "done");
+  const planStages = stagesOf(pages as { kind: string; clip?: unknown }[]).slice(1, 1 + plan.length);
   const lead = ff?.learn ? ff.learn.split(/(?<=[.!?])\s/)[0] : mission.tagline;
   return (
     <div className="ls-col is-one fl-startcol" style={{ ["--c" as string]: accent } as CSSProperties}>
+      <div className="fl-startl">
       <Screen className="fl-start">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={CAT_SRC} alt="" className="ls-sticker m1-dancing" />
@@ -665,13 +705,21 @@ function StartStep({ mission, pages, accent, get, back, onNext }: { mission: Mis
         <div className="fl-makelanes"><Lanes track={startsFresh(mission) ? { ...track, layers: [] } : track} next={{ kind: offer.kind, isNew: startsFresh(mission) || !track.layers.some(l => l.kind === offer.kind) }} /></div>
         {ff?.why ? <p className="fl-makewhy"><Gloss>{ff.why}</Gloss></p> : null}
       </Screen>
+      </div>
+      <div className="fl-startr">
       <Silk label="how it goes" right={`${plan.length} steps`} />
-      <ol className="fl-plan">
-        {plan.map((p, i) => (
-          <li key={i} className={DOING.has(p.kind) ? "is-do" : ""}>
-            <b>{i + 1}</b><Icon name={PLAN_ICON[p.kind] ?? "note"} small /><span>{pageName(p)}</span>
-          </li>
-        ))}
+      {/* the steps, grouped under the five stages every lesson runs through */}
+      <ol className="fl-plan2">
+        {STAGES.map((name, s) => {
+          const mine = plan.map((p, i) => ({ p, i })).filter(({ i }) => planStages[i] === s);
+          return (
+            <li key={s} className={mine.length ? "" : "is-none"}>
+              <b>{s + 1}</b>
+              <span className="fl-p2name">{name}</span>
+              <span className="fl-p2steps">{mine.length ? mine.map(({ p, i }) => <span key={i} className={DOING.has(p.kind) ? "is-do" : ""}><Icon name={PLAN_ICON[p.kind] ?? "note"} small />{pageName(p)}</span>) : <em>not in this lesson</em>}</span>
+            </li>
+          );
+        })}
       </ol>
       {ff?.items.length ? (
         <>
@@ -679,6 +727,7 @@ function StartStep({ mission, pages, accent, get, back, onNext }: { mission: Mis
           <ul className="fl-cando">{ff.items.slice(0, 4).map((l, i) => <li key={i}><Icon name="check" small />{l}</li>)}</ul>
         </>
       ) : null}
+      </div>
       <Bottom left={{ label: "later", icon: "back", href: back, aria: "Not now, back home" }} go={{ label: <><Icon name="play" small />start</>, onClick: onNext, aria: "Start the lesson" }} />
     </div>
   );
@@ -749,6 +798,9 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   // Set when the learner moves to another step, so the new step takes focus (not on first load).
   const moved = useRef(false);
   const go = useCallback((n: number) => { moved.current = true; setIdx(Math.max(0, Math.min(pages.length - 1, n))); window.scrollTo({ top: 0 }); }, [pages.length]);
+  // The furthest step you've reached: the stage dots in the header jump back to any of them.
+  const [reached, setReached] = useState(0);
+  useEffect(() => setReached(r => Math.max(r, idx)), [idx]);
   const next = useCallback(() => go(idx + 1), [go, idx]);
   const base = pages[idx];
   useEffect(() => setWay(prefs.voice), [idx, prefs.voice]);
@@ -825,9 +877,9 @@ export function FileLesson({ mission, alts = null, nextSlug, nextTitle, onComple
   const cp = curPathOf(mission.slug);
   const crumb = ci?.kind === "deeper" && ci.parent ? `${WORLD_LABEL[world]} · go deeper on ${partOf(ci.parent)}` : ci?.kind === "bonus" ? `${WORLD_LABEL[world]} · bonus round` : cp ? `${WORLD_LABEL[world]} · ${cp.title} · lesson\u00a0${songItems(cp.world).findIndex(i => i.slug === mission.slug) + 1}` : `${WORLD_LABEL[world]} · lesson\u00a0${n}`;
   return (
-    <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind}>
-      <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} />
-      <SongStrip focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
+    <div className="ls fl" data-world={world} data-step={idx} data-page-kind={cur?.kind} data-stage={stagesOf(pages as { kind: string; clip?: unknown }[])[idx]}>
+      <Top back={back} crumb={crumb} title={mission.title.toLowerCase()} pages={pages} at={idx} accent={accent} onPrev={idx > 0 && cur?.kind !== "done" ? () => go(idx - 1) : undefined} reached={reached} onJump={go} />
+      <SongStrip slim={idx > 0} focus={pages.some(p => p.kind === "add") ? mission.fromFile?.adds.part : undefined} pending={!!take?.events.length && pages[idx]?.kind !== "done"} ghost={take} slug={mission.slug} changes={pages.some(p => p.kind === "add" && p.keep)} />
       {/* A screen reader hears which step it is, and focus moves to the new step (the key that was pressed is gone). */}
       <div className="sr-only" aria-live="polite">{`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`}</div>
       <div className="ls-stage fl-stage" key={idx} tabIndex={-1} aria-label={`step ${idx + 1} of ${pages.length}: ${pageName(cur)}`} ref={el => { if (el && moved.current) { moved.current = false; el.focus({ preventScroll: true }); } }}>{goal}{body}</div>
