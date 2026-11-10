@@ -39,7 +39,7 @@ import { EarStep, HearStep, SayStep, ShapeStep, TempoStep, otherShapes, readShap
 import { EarKey, EarPlayRow, useEarSounds } from "./AskEar";
 import { ImagineStep } from "./ImagineEar";
 import { engineOwner, useEngineTrack } from "./useEngineTrack";
-import { Gloss } from "./Gloss";
+import { Gloss, GlossTip } from "./Gloss";
 import { AddedForYou, SongKey, useSongName } from "./SongKey";
 import { Walkthrough } from "./Walkthrough";
 import "./lesson.css";
@@ -219,6 +219,7 @@ function Top({ back, crumb, title, pages, at, reached, accent, onPrev, onJump }:
             onClick={() => onJump(i)} aria-label={`${i === 0 ? "Start" : i === pages.length - 1 ? "Done" : `Step ${i}`}: ${pageName(p)}`} aria-current={i === at ? "step" : undefined}><i /></button>
         ))}
       </nav>
+      <GlossTip />
       <div className="fl-now"><span><b>Now</b> {pageName(pages[at])}</span>{pages[at + 1] ? <span><b>Next</b> {pageName(pages[at + 1])}</span> : null}</div>
     </header>
   );
