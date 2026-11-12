@@ -129,7 +129,7 @@ export function Landing() {
             <Link href={START} className="ld-key">Start your song</Link>
             <a href="#how" className="ld-ghost">How it works</a>
           </div>
-          <p className="ld-meta ld-fine">Free <span>/</span> no gear needed <span>/</span> 198 lessons</p>
+          <p className="ld-meta ld-fine">Free <span>/</span> no gear needed <span>/</span> 199 lessons</p>
         </div>
         <div className="ld-panel" ref={drift}>
           <div className="ld-phone"><Clip k="learn-a" label="A lesson: playing hats into your song" eager /></div>
@@ -174,7 +174,7 @@ export function Landing() {
           <article data-rv>
             <p className="ld-eyebrow">Short lessons</p>
             <h3 className="ld-d ld-h3">A few minutes, then you&apos;ve made something.</h3>
-            <p className="ld-p">57 lessons build one song, from your first kick to a finished track. 138 deeper ones are there when you want more.</p>
+            <p className="ld-p">60 lessons build one song, from your first kick to a finished track. Over a hundred extras are there when you want more.</p>
             <ul className="ld-checks"><Check>Basics, producing and djing</Check><Check>Five minutes of ear practice a day</Check><Check>Placement in three minutes</Check></ul>
             <div className="ld-card">
               <ol className="ld-list">
