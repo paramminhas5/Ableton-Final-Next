@@ -133,7 +133,7 @@ function LibraryDemo({ now }: { now: number }) {
 }
 
 const PARTS: Part[] = [
-  { id: "learn", group: 0, label: "Learn", h: "Learn by making a song", line: "Short lessons. Each one adds a part to a song that's yours, and tells you what to press at every step.", steps: ["Press rec. Four clicks count you in", "Tap Open hat on every \"and\"", "4 of 4: your hats are in your song"], demo: now => <LearnDemo now={now} /> },
+  { id: "learn", group: 0, label: "Learn", h: "Learn to make music by making it", line: "Short lessons. Each one adds a part to a song that's yours, and tells you what to press at every step.", steps: ["Press rec. Four clicks count you in", "Tap Open hat on every \"and\"", "4 of 4: your hats are in your song"], demo: now => <LearnDemo now={now} /> },
   { id: "practice", group: 1, label: "Practice", h: "Five minutes a day", line: "Ear training picked from what your lessons taught you, so it sticks.", steps: ["Hear a short part", "Tap the steps you heard", "See every note marked right or off"], demo: now => <PracticeDemo now={now} /> },
   { id: "studio", group: 2, label: "Studio · 1 of 2", h: "Build it on real instruments", line: "Pads, steps and keys, all playing your song. Knobs shape the sound.", steps: ["Pick a part of your song", "Play it on pads, steps or keys", "Turn a knob and hear it change"], demo: now => <StudioDemo now={now} /> },
   { id: "arrange", group: 2, label: "Studio · 2 of 2", h: "Arrange it, then take it to Live", line: "Your loop becomes sections. Then the whole song opens in Ableton Live.", steps: ["Copy your loop into sections", "Switch a part on or off in each", "Send the song to Ableton Live"], demo: now => <ArrangeDemo now={now} /> },

@@ -24,7 +24,7 @@ const NAME: Record<Prod, string> = { learn: "learn", practice: "practice", studi
 // Each clip: a headline, one line on what it is, why it's good (a real reason, said plainly), and where it lives
 // in the app, so the first visit shows people around as well as showing off (10 Nov).
 const CLIP: Record<string, { h: string; line: string; why: string; where: string }> = {
-  "learn:a": { h: "learn by making a song", line: "short lessons, each one adding a part to a song that's yours.", why: "you're never doing an exercise for its own sake: every lesson ends with something new in your song, and the next one builds on it.", where: "home, 01 learn" },
+  "learn:a": { h: "learn to make music by making it", line: "short lessons, each one adding a part to a song that's yours.", why: "you're never doing an exercise for its own sake: every lesson ends with something new in your song, and the next one builds on it.", where: "home, 01 learn" },
   "learn:b": { h: "then shape what you made", line: "every knob you meet is explained on the screen while you turn it.", why: "you hear what a control does before you're told its name, so the word sticks to the sound.", where: "inside every lesson" },
   "practice:a": { h: "practice five minutes a day", line: "ear training picked from what your lessons have taught you.", why: "short and often beats long and rare. five minutes keeps what you learnt from slipping.", where: "home, 03 practice" },
   "practice:b": { h: "copy by ear", line: "hear a part, write it on the grid, and see what you got right.", why: "this is how producers learn tracks they love: listen, copy, compare.", where: "practice, copy by ear" },
